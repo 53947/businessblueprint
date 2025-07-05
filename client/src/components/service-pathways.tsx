@@ -30,37 +30,37 @@ export function ServicePathways() {
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">Self-Guided Setup</h4>
-                    <p className="text-gray-600 text-sm">Step-by-step tutorials and guided workflows</p>
+                    <h4 className="font-semibold text-gray-900">Free Listing Platform</h4>
+                    <p className="text-gray-600 text-sm">Includes local SEO and listing distribution</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">Platform Access</h4>
-                    <p className="text-gray-600 text-sm">Full access to cloudpleaser.io, webhosted.io, airswiped.com</p>
+                    <h4 className="font-semibold text-gray-900">Social Media & Scheduling</h4>
+                    <p className="text-gray-600 text-sm">Post scheduling and social media management tools</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">Community Support</h4>
-                    <p className="text-gray-600 text-sm">Access to knowledge base and community forums</p>
+                    <h4 className="font-semibold text-gray-900">Reputation & CRM</h4>
+                    <p className="text-gray-600 text-sm">Citation builder, review management, and customer management</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">Automated Tools</h4>
-                    <p className="text-gray-600 text-sm">AI-powered content creation and optimization</p>
+                    <h4 className="font-semibold text-gray-900">AI Inbox & Website Builder</h4>
+                    <p className="text-gray-600 text-sm">Campaign Pro and complete website building platform</p>
                   </div>
                 </div>
               </div>
 
               <div className="border-t border-gray-100 pt-6">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-2xl font-bold text-gray-900">Starting at $49/mo</span>
-                  <Badge className="bg-green-100 text-green-800">Save 60%</Badge>
+                  <span className="text-2xl font-bold text-gray-900">Free - $299/mo</span>
+                  <Badge className="bg-green-100 text-green-800">Start Free</Badge>
                 </div>
                 <Button className="w-full bg-primary hover:bg-primary/90">
                   Choose DIY Path
