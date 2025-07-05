@@ -4,8 +4,9 @@ import { clients, inboxMessages, campaigns, dashboardAccess, clientAssessments }
 import { eq } from "drizzle-orm";
 
 interface VendastaConfig {
-  apiUser: string;
-  apiKey: string;
+  apiToken?: string;
+  apiUser?: string;
+  apiKey?: string;
   webhookSecret?: string;
   baseUrl: string;
 }
@@ -35,10 +36,11 @@ export class VendastaIntegrationService {
 
   constructor() {
     this.config = {
+      apiToken: process.env.VENDASTA_API_TOKEN,
       apiUser: process.env.VENDASTA_API_USER || "",
       apiKey: process.env.VENDASTA_API_KEY || "",
       webhookSecret: process.env.VENDASTA_WEBHOOK_SECRET,
-      baseUrl: "https://prod-api.vendasta.com" // Vendasta production API
+      baseUrl: process.env.VENDASTA_BASE_URL || "https://prod-api.vendasta.com"
     };
   }
 
@@ -64,15 +66,34 @@ export class VendastaIntegrationService {
   /**
    * Fetch client data from Vendasta API
    */
+  private getAuthHeaders(): HeadersInit {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (this.config.apiToken) {
+      headers['Authorization'] = `Bearer ${this.config.apiToken}`;
+    }
+
+    return headers;
+  }
+
+  private getAuthUrl(endpoint: string): string {
+    if (this.config.apiToken) {
+      return `${this.config.baseUrl}${endpoint}`;
+    } else {
+      const separator = endpoint.includes('?') ? '&' : '?';
+      return `${this.config.baseUrl}${endpoint}${separator}apiUser=${this.config.apiUser}&apiKey=${this.config.apiKey}`;
+    }
+  }
+
   async fetchClientData(customerIdentifier: string): Promise<VendastaClient | null> {
     try {
-      const url = `${this.config.baseUrl}/customer/${customerIdentifier}?apiUser=${this.config.apiUser}&apiKey=${this.config.apiKey}`;
+      const url = this.getAuthUrl(`/customer/${customerIdentifier}`);
       
       const response = await fetch(url, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+        headers: this.getAuthHeaders()
       });
 
       if (!response.ok) {
