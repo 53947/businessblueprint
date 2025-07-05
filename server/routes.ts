@@ -5,6 +5,7 @@ import { insertAssessmentSchema } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
 import { EmailService } from "./services/email";
+import { vendastaService } from "./services/vendasta";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const googleService = new GoogleBusinessService();
@@ -94,6 +95,154 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching assessments:", error);
       res.status(500).json({ message: "Failed to fetch assessments" });
+    }
+  });
+
+  // Vendasta webhook endpoint
+  app.post("/api/webhooks/vendasta", async (req, res) => {
+    try {
+      const signature = req.headers['x-vendasta-hmac'] as string;
+      const payload = JSON.stringify(req.body);
+      
+      // Verify webhook signature
+      if (!vendastaService.verifyWebhookSignature(payload, signature)) {
+        return res.status(401).json({ message: "Invalid signature" });
+      }
+
+      // Process webhook
+      const success = await vendastaService.handleWebhook(req.body);
+      
+      if (success) {
+        res.json({ success: true, message: "Webhook processed successfully" });
+      } else {
+        res.status(500).json({ message: "Failed to process webhook" });
+      }
+    } catch (error) {
+      console.error("Error processing Vendasta webhook:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Client data endpoints for Campaign Pro
+  app.get("/api/clients/:id", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const client = await storage.getClient(clientId);
+      
+      if (!client) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+      
+      res.json(client);
+    } catch (error) {
+      console.error("Error fetching client:", error);
+      res.status(500).json({ message: "Failed to fetch client" });
+    }
+  });
+
+  // Get client campaign data (client info + inbox messages + campaign history)
+  app.get("/api/clients/:id/campaign-data", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const campaignData = await vendastaService.getClientCampaignData(clientId);
+      
+      if (!campaignData) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+      
+      res.json(campaignData);
+    } catch (error) {
+      console.error("Error fetching campaign data:", error);
+      res.status(500).json({ message: "Failed to fetch campaign data" });
+    }
+  });
+
+  // Get client messages for inbox
+  app.get("/api/clients/:id/messages", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const limit = parseInt(req.query.limit as string) || 50;
+      
+      const messages = await storage.getClientMessages(clientId, limit);
+      res.json(messages);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      res.status(500).json({ message: "Failed to fetch messages" });
+    }
+  });
+
+  // Mark message as read
+  app.patch("/api/messages/:id/read", async (req, res) => {
+    try {
+      const messageId = parseInt(req.params.id);
+      await storage.markMessageRead(messageId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error marking message as read:", error);
+      res.status(500).json({ message: "Failed to mark message as read" });
+    }
+  });
+
+  // Create new campaign
+  app.post("/api/clients/:id/campaigns", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const campaignData = { ...req.body, clientId };
+      
+      const campaign = await storage.createCampaign(campaignData);
+      res.json(campaign);
+    } catch (error) {
+      console.error("Error creating campaign:", error);
+      res.status(500).json({ message: "Failed to create campaign" });
+    }
+  });
+
+  // Sync client from Vendasta
+  app.post("/api/clients/sync-vendasta", async (req, res) => {
+    try {
+      const { customerIdentifier } = req.body;
+      
+      if (!customerIdentifier) {
+        return res.status(400).json({ message: "Customer identifier is required" });
+      }
+
+      // Fetch client data from Vendasta
+      const vendastaClient = await vendastaService.fetchClientData(customerIdentifier);
+      
+      if (!vendastaClient) {
+        return res.status(404).json({ message: "Client not found in Vendasta" });
+      }
+
+      // Sync to our database
+      const clientId = await vendastaService.syncClientData(vendastaClient);
+      
+      if (clientId) {
+        const client = await storage.getClient(clientId);
+        res.json(client);
+      } else {
+        res.status(500).json({ message: "Failed to sync client data" });
+      }
+    } catch (error) {
+      console.error("Error syncing Vendasta client:", error);
+      res.status(500).json({ message: "Failed to sync client" });
+    }
+  });
+
+  // Dashboard access endpoint
+  app.get("/api/dashboard/:token", async (req, res) => {
+    try {
+      const { token } = req.params;
+      
+      // Here you would verify the token and redirect to the appropriate Vendasta dashboard
+      // For now, we'll return a placeholder response
+      res.json({ 
+        message: "Dashboard access", 
+        token,
+        redirectUrl: `https://business-app.vendasta.com/dashboard?token=${token}`
+      });
+    } catch (error) {
+      console.error("Error accessing dashboard:", error);
+      res.status(500).json({ message: "Failed to access dashboard" });
     }
   });
 
