@@ -36,11 +36,45 @@ The project uses a workspace-based monorepo with shared schemas and clear separa
 - **Assessments Table**: Stores business assessment data, analysis results, and status tracking
 - **Recommendations Table**: Stores AI-generated recommendations linked to assessments
 - **Sessions Table**: Handles session management for future authentication needs
+- **Clients Table**: Stores client data synced from Vendasta CRM with external references
+- **Inbox Messages Table**: Stores communication data from various platforms for Campaign Pro
+- **Campaigns Table**: Tracks marketing campaigns with metrics and scheduling
+- **Dashboard Access Table**: Manages secure access tokens for Vendasta dashboard integration
+- **Client Assessments Table**: Links assessments to specific clients for data correlation
 
 ### API Services
 - **Google Business Service**: Integrates with Google Places API for business data retrieval
 - **OpenAI Analysis Service**: Uses GPT-4o for intelligent business presence analysis
 - **Email Service**: Handles automated report delivery via SMTP
+- **Vendasta Integration Service**: Manages bi-directional sync with Vendasta CRM and Business Center API
+
+## Integration Architecture
+
+### Vendasta Data Flow Integration
+The platform now integrates with Vendasta to solve the challenge of connecting:
+1. **Form Submissions**: Embedded Vendasta forms on client websites automatically sync to our CRM
+2. **Campaign Pro Data**: Client details + inbox messages flow into campaign management
+3. **Dashboard Access**: Secure token-based access to Vendasta's business dashboard
+
+### Data Synchronization Strategy
+- **Real-time Webhooks**: Vendasta sends instant notifications for form submissions and client updates
+- **API Polling**: Periodic sync for bulk client data and message history
+- **Bi-directional Sync**: Assessment results can be pushed back to Vendasta CRM
+- **Secure Authentication**: HMAC-SHA1 signature verification for webhook security
+
+### Campaign Pro Integration
+The system collects and correlates:
+- **Client Business Details**: Company info, contact data, business category
+- **Communication History**: Emails, SMS, social media messages, reviews
+- **Sentiment Analysis**: AI-powered message sentiment tracking
+- **Campaign Performance**: Open rates, click-through rates, engagement metrics
+
+### Dashboard Selling Point
+Vendasta's business dashboard provides clients with:
+- **Real-time Analytics**: Business performance metrics and insights
+- **Multi-platform Management**: Unified control for listings, reviews, social media
+- **Automated Reporting**: Scheduled reports and performance tracking
+- **Mobile Access**: Full-featured mobile app for on-the-go management
 
 ### UI Components
 - **Assessment Form**: Multi-step form with validation for business data collection
@@ -101,6 +135,10 @@ Changelog:
 - Updated assessment timing from "2-3 minutes" to "24 hours" for accurate snapshot processing
 - Revised pricing structure: DIY from Free to $299/month, MSP starting at $499/month
 - Updated platform descriptions to include: Listing distribution (free), Local SEO, Social media platform, Reputation management, CRM, AI inbox, Campaign Pro, Website builder
+- Added comprehensive Vendasta integration architecture with webhooks and client data sync
+- Implemented database schema for clients, inbox messages, campaigns, and dashboard access
+- Created Vendasta API service for bi-directional data synchronization
+- Added webhook endpoints for real-time form submissions and client updates
 
 ## User Preferences
 

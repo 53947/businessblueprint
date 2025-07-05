@@ -65,6 +65,71 @@ export const recommendations = pgTable("recommendations", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Client data from Vendasta CRM
+export const clients = pgTable("clients", {
+  id: serial("id").primaryKey(),
+  vendastaId: text("vendasta_id").unique(), // External reference
+  companyName: text("company_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  website: text("website"),
+  address: text("address"),
+  businessCategory: text("business_category"),
+  enabledFeatures: text("enabled_features"), // CO,VI,SP,RE,SO,RI
+  lastLoginTime: timestamp("last_login_time"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Inbox/communication data for Campaign Pro
+export const inboxMessages = pgTable("inbox_messages", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  messageType: text("message_type").notNull(), // email, sms, chat, social
+  content: text("content").notNull(),
+  sender: text("sender"),
+  recipient: text("recipient"),
+  platform: text("platform"), // facebook, google, email, etc
+  timestamp: timestamp("timestamp").notNull(),
+  isRead: boolean("is_read").default(false),
+  sentiment: text("sentiment"), // positive, negative, neutral
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Campaign data for Campaign Pro
+export const campaigns = pgTable("campaigns", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  name: text("name").notNull(),
+  type: text("type").notNull(), // email, social, sms, etc
+  status: text("status").notNull(), // draft, active, paused, completed
+  content: text("content"),
+  scheduledFor: timestamp("scheduled_for"),
+  sentAt: timestamp("sent_at"),
+  metrics: jsonb("metrics"), // open rates, clicks, etc
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Dashboard access tracking
+export const dashboardAccess = pgTable("dashboard_access", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  accessToken: text("access_token").unique(),
+  vendastaDashboardUrl: text("vendasta_dashboard_url"),
+  lastAccessed: timestamp("last_accessed"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Link assessments to clients
+export const clientAssessments = pgTable("client_assessments", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  assessmentId: integer("assessment_id").references(() => assessments.id),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertAssessmentSchema = createInsertSchema(assessments).pick({
   businessName: true,
@@ -86,8 +151,47 @@ export const insertRecommendationSchema = createInsertSchema(recommendations).pi
   estimatedEffort: true,
 });
 
+export const insertClientSchema = createInsertSchema(clients).pick({
+  vendastaId: true,
+  companyName: true,
+  email: true,
+  phone: true,
+  website: true,
+  address: true,
+  businessCategory: true,
+  enabledFeatures: true,
+  lastLoginTime: true,
+});
+
+export const insertInboxMessageSchema = createInsertSchema(inboxMessages).pick({
+  clientId: true,
+  messageType: true,
+  content: true,
+  sender: true,
+  recipient: true,
+  platform: true,
+  timestamp: true,
+  sentiment: true,
+});
+
+export const insertCampaignSchema = createInsertSchema(campaigns).pick({
+  clientId: true,
+  name: true,
+  type: true,
+  status: true,
+  content: true,
+  scheduledFor: true,
+  metrics: true,
+});
+
 // Types
 export type Assessment = typeof assessments.$inferSelect;
 export type InsertAssessment = z.infer<typeof insertAssessmentSchema>;
 export type Recommendation = typeof recommendations.$inferSelect;
 export type InsertRecommendation = z.infer<typeof insertRecommendationSchema>;
+export type Client = typeof clients.$inferSelect;
+export type InsertClient = z.infer<typeof insertClientSchema>;
+export type InboxMessage = typeof inboxMessages.$inferSelect;
+export type InsertInboxMessage = z.infer<typeof insertInboxMessageSchema>;
+export type Campaign = typeof campaigns.$inferSelect;
+export type InsertCampaign = z.infer<typeof insertCampaignSchema>;
