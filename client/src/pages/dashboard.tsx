@@ -86,7 +86,21 @@ export default function Dashboard() {
     );
   }
 
-  const { assessment, recommendations } = data;
+  const assessment = (data as any)?.assessment;
+  const recommendations = (data as any)?.recommendations || [];
+  
+  if (!assessment) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Card className="max-w-md">
+          <CardContent className="p-6 text-center">
+            <p className="text-gray-600">Assessment not found.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   const analysisResults = assessment.analysisResults;
 
   if (assessment.status === "pending" || assessment.status === "analyzing") {
@@ -97,8 +111,8 @@ export default function Dashboard() {
             <Clock className="w-12 h-12 text-blue-500 mx-auto mb-4 animate-spin" />
             <h2 className="text-xl font-bold mb-2">Analysis in Progress</h2>
             <p className="text-gray-600 mb-4">
-              We're analyzing your business presence using Google's data and AI. 
-              This usually takes 2-3 minutes.
+              We're creating your comprehensive digital snapshot using Google's data and AI. 
+              This process takes up to 24 hours for the most accurate analysis.
             </p>
             <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
               <Mail className="w-4 h-4" />
@@ -301,14 +315,14 @@ export default function Dashboard() {
                   onClick={() => selectPathway("diy")} 
                   className="w-full justify-between bg-primary hover:bg-primary/90"
                 >
-                  <span>🛠️ DIY Path - $49/month</span>
+                  <span>🛠️ DIY Path - Free to $299/month</span>
                   <ArrowRight className="w-4 h-4" />
                 </Button>
                 <Button 
                   onClick={() => selectPathway("msp")} 
                   className="w-full justify-between bg-secondary hover:bg-secondary/90"
                 >
-                  <span>🎯 Managed Services - $299/month</span>
+                  <span>🎯 Managed Services - $499/month</span>
                   <ArrowRight className="w-4 h-4" />
                 </Button>
                 <div className="text-center pt-2">

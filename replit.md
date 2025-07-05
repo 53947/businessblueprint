@@ -98,6 +98,9 @@ Changelog:
 - Built complete assessment workflow with DIY/MSP pathway selection
 - Configured database with PostgreSQL and Drizzle ORM
 - Set up cloudpleaser.io branding throughout the application
+- Updated assessment timing from "2-3 minutes" to "24 hours" for accurate snapshot processing
+- Revised pricing structure: DIY from Free to $299/month, MSP starting at $499/month
+- Updated platform descriptions to include: Listing distribution (free), Local SEO, Social media platform, Reputation management, CRM, AI inbox, Campaign Pro, Website builder
 
 ## User Preferences
 

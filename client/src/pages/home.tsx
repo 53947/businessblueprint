@@ -50,10 +50,10 @@ export default function Home() {
                 </div>
               </div>
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                Get Your Business's <span className="text-primary">Digital Snapshot</span> in 60 Seconds
+                Get Your Business's <span className="text-primary">Digital Snapshot</span> Analysis
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Discover exactly what your business needs to succeed online. Our AI analyzes your Google presence and creates a personalized roadmap – no tech experience required.
+                Discover exactly what your business needs to succeed online. Our AI analyzes your Google presence over 24 hours and creates a comprehensive personalized roadmap – no tech experience required.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Button onClick={startAssessment} size="lg" className="bg-primary hover:bg-primary/90">
@@ -197,24 +197,24 @@ export default function Home() {
             {/* DIY Plans */}
             <Card className="border-2 border-primary p-8 text-center">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">DIY Plans</h3>
-              <div className="text-4xl font-bold text-primary mb-2">$49-149</div>
+              <div className="text-4xl font-bold text-primary mb-2">Free - $299</div>
               <div className="text-gray-500 mb-6">per month</div>
               <ul className="space-y-3 mb-8 text-left">
                 <li className="flex items-center">
                   <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                  All platform access
+                  Free listing distribution platform
                 </li>
                 <li className="flex items-center">
                   <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                  Guided tutorials
+                  Local SEO & social media tools
                 </li>
                 <li className="flex items-center">
                   <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                  Automated tools
+                  Reputation management & CRM
                 </li>
                 <li className="flex items-center">
                   <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                  Community support
+                  AI inbox & website builder
                 </li>
               </ul>
               <Button className="w-full bg-primary hover:bg-primary/90">
@@ -228,7 +228,7 @@ export default function Home() {
                 <span className="bg-secondary text-white px-4 py-2 rounded-full text-sm font-bold">RECOMMENDED</span>
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Managed Services</h3>
-              <div className="text-4xl font-bold text-secondary mb-2">$299+</div>
+              <div className="text-4xl font-bold text-secondary mb-2">$499+</div>
               <div className="text-gray-500 mb-6">per month</div>
               <ul className="space-y-3 mb-8 text-left">
                 <li className="flex items-center">
