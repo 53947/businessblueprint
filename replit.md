@@ -82,12 +82,19 @@ Vendasta's business dashboard provides clients with:
 ### Strategic Architecture
 The AI Coach is built directly into the platform architecture rather than as an afterthought, creating a cohesive user experience that leverages all collected assessment and business data.
 
+### AI Coach Business Model
+**Premium Add-On Strategy**: AI Coach is positioned as an optional enhancement across both pathways
+- **DIY + AI Coach**: $49/month add-on (essential for DIY success and user retention)
+- **MSP + AI Coach**: $99/month add-on (valuable for staff training and client transitions)
+
 ### AI Coach Capabilities
 - **Personalized Guidance**: Context-aware recommendations based on business profile, industry, and current digital score
 - **Step-by-Step Instructions**: Detailed breakdown of complex tasks into manageable actions
 - **Progress Analysis**: Achievement tracking with motivational messaging and next priority identification
 - **Experience-Level Adaptation**: Content tailored for beginner, intermediate, or advanced users
 - **Time-Conscious Planning**: Recommendations that respect user's available time constraints
+- **Team Training Support**: MSP staff onboarding and process standardization
+- **Client Transition Assistance**: Smooth handoffs from MSP to DIY pathways
 
 ### Integration Points
 1. **Assessment Enhancement**: AI explains findings in simple terms with actionable next steps
