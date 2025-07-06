@@ -60,7 +60,7 @@ export function ServicePathways() {
                   <Brain className="w-5 h-5 text-blue-500 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-gray-900">AI Business Coach</h4>
-                    <p className="text-gray-600 text-sm">Optional premium add-on (+$49/mo)</p>
+                    <p className="text-gray-600 text-sm">Optional premium add-on (+$99/mo)</p>
                   </div>
                 </div>
               </div>
