@@ -41,33 +41,34 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
     {
       plan: "diy",
       title: "DIY + AI Coach",
-      price: "$49",
+      price: "$99",
       period: "/month",
-      description: "Essential for independent business owners",
+      description: "Maximum support for independent business owners",
       features: [
         "All DIY platform features included",
-        "Personalized business guidance",
+        "Unlimited personalized guidance",
         "Step-by-step task instructions",
         "Progress tracking & motivation",
-        "24/7 AI availability"
+        "24/7 AI availability",
+        "Priority learning support"
       ],
-      highlight: false
+      highlight: true
     },
     {
       plan: "msp",
       title: "MSP + AI Coach",
-      price: "$99",
+      price: "$49",
       period: "/month", 
-      description: "Advanced coaching for teams and clients",
+      description: "Team training and standardization tool",
       features: [
         "All MSP platform features included",
         "Team training & onboarding",
+        "Process standardization",
         "Client transition support",
-        "Advanced analytics & insights",
-        "Priority AI responses",
-        "Multi-user access"
+        "Multi-user access",
+        "Volume pricing benefit"
       ],
-      highlight: true
+      highlight: false
     }
   ];
 
