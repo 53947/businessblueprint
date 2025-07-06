@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useLocation } from "wouter";
-import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight } from "lucide-react";
+import { useLocation, Link } from "wouter";
+import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, MessageCircle } from "lucide-react";
 import { HowItWorks } from "@/components/how-it-works";
 import { ServicePathways } from "@/components/service-pathways";
 
@@ -60,10 +60,12 @@ export default function Home() {
                   <BarChart3 className="w-5 h-5 mr-2" />
                   Start Free Assessment
                 </Button>
-                <Button variant="outline" size="lg" className="border-2">
-                  <Clock className="w-5 h-5 mr-2" />
-                  Watch Demo
-                </Button>
+                <Link href="/ai-coach">
+                  <Button variant="outline" size="lg" className="border-2 w-full sm:w-auto">
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    AI Business Coach
+                  </Button>
+                </Link>
               </div>
               <div className="flex items-center space-x-6 text-sm text-gray-500">
                 <div className="flex items-center">
