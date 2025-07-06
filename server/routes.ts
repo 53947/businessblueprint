@@ -6,6 +6,7 @@ import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
 import { EmailService } from "./services/email";
 import { vendastaService } from "./services/vendasta";
+import { aiCoachService } from "./services/aiCoach";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const googleService = new GoogleBusinessService();
@@ -243,6 +244,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error accessing dashboard:", error);
       res.status(500).json({ message: "Failed to access dashboard" });
+    }
+  });
+
+  // AI Coach endpoints
+  app.post("/api/ai-coach/guidance", async (req, res) => {
+    try {
+      const guidance = await aiCoachService.getPersonalizedGuidance(req.body);
+      res.json(guidance);
+    } catch (error) {
+      console.error("Error getting AI guidance:", error);
+      res.status(500).json({ message: "Failed to get AI guidance" });
+    }
+  });
+
+  app.post("/api/ai-coach/help", async (req, res) => {
+    try {
+      const { task, userContext } = req.body;
+      const help = await aiCoachService.getStepByStepHelp(task, userContext);
+      res.json(help);
+    } catch (error) {
+      console.error("Error getting step-by-step help:", error);
+      res.status(500).json({ message: "Failed to get help" });
+    }
+  });
+
+  app.post("/api/ai-coach/progress", async (req, res) => {
+    try {
+      const analysis = await aiCoachService.analyzeProgress(req.body);
+      res.json(analysis);
+    } catch (error) {
+      console.error("Error analyzing progress:", error);
+      res.status(500).json({ message: "Failed to analyze progress" });
     }
   });
 

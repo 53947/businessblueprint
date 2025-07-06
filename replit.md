@@ -47,6 +47,7 @@ The project uses a workspace-based monorepo with shared schemas and clear separa
 - **OpenAI Analysis Service**: Uses GPT-4o for intelligent business presence analysis
 - **Email Service**: Handles automated report delivery via SMTP
 - **Vendasta Integration Service**: Manages bi-directional sync with Vendasta CRM and Business Center API
+- **AI Coach Service**: Provides personalized guidance, step-by-step help, and progress tracking for DIY users
 
 ## Integration Architecture
 
@@ -75,6 +76,36 @@ Vendasta's business dashboard provides clients with:
 - **Multi-platform Management**: Unified control for listings, reviews, social media
 - **Automated Reporting**: Scheduled reports and performance tracking
 - **Mobile Access**: Full-featured mobile app for on-the-go management
+
+## AI Coach Integration
+
+### Strategic Architecture
+The AI Coach is built directly into the platform architecture rather than as an afterthought, creating a cohesive user experience that leverages all collected assessment and business data.
+
+### AI Coach Capabilities
+- **Personalized Guidance**: Context-aware recommendations based on business profile, industry, and current digital score
+- **Step-by-Step Instructions**: Detailed breakdown of complex tasks into manageable actions
+- **Progress Analysis**: Achievement tracking with motivational messaging and next priority identification
+- **Experience-Level Adaptation**: Content tailored for beginner, intermediate, or advanced users
+- **Time-Conscious Planning**: Recommendations that respect user's available time constraints
+
+### Integration Points
+1. **Assessment Enhancement**: AI explains findings in simple terms with actionable next steps
+2. **DIY Pathway Support**: Real-time guidance for platform navigation and optimization
+3. **Campaign Creation**: Assistance with setting up marketing campaigns and content
+4. **Performance Monitoring**: Ongoing insights and improvement suggestions
+
+### Technical Implementation
+- **OpenAI GPT-4o Integration**: Advanced language model for intelligent coaching responses
+- **Context-Aware Prompting**: Leverages business data, user progress, and platform status
+- **Fallback Mechanisms**: Graceful degradation with helpful default responses
+- **API Endpoints**: `/api/ai-coach/guidance`, `/api/ai-coach/help`, `/api/ai-coach/progress`
+
+### User Experience Design
+- **Multi-Tab Interface**: Organized guidance, progress tracking, and help sections
+- **Visual Progress Indicators**: Digital score tracking and achievement visualization
+- **Priority-Based Action Items**: Color-coded tasks with difficulty and time estimates
+- **Resource Integration**: Direct links to relevant tools and documentation
 
 ### UI Components
 - **Assessment Form**: Multi-step form with validation for business data collection
