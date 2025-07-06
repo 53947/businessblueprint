@@ -60,7 +60,7 @@ export function ServicePathways() {
                   <Brain className="w-5 h-5 text-blue-500 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-gray-900">AI Business Coach</h4>
-                    <p className="text-gray-600 text-sm">Step-by-step guidance and personalized recommendations</p>
+                    <p className="text-gray-600 text-sm">Optional premium add-on (+$49/mo)</p>
                   </div>
                 </div>
               </div>
@@ -121,6 +121,13 @@ export function ServicePathways() {
                   <div>
                     <h4 className="font-semibold text-gray-900">Monthly Optimization</h4>
                     <p className="text-gray-600 text-sm">Continuous improvements and performance tracking</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Brain className="w-5 h-5 text-blue-500 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-gray-900">AI Business Coach</h4>
+                    <p className="text-gray-600 text-sm">Optional premium add-on (+$99/mo)</p>
                   </div>
                 </div>
               </div>
