@@ -83,9 +83,9 @@ Vendasta's business dashboard provides clients with:
 The AI Coach is built directly into the platform architecture rather than as an afterthought, creating a cohesive user experience that leverages all collected assessment and business data.
 
 ### AI Coach Business Model
-**Premium Add-On Strategy**: AI Coach is positioned as an optional enhancement across both pathways
-- **DIY + AI Coach**: $99/month add-on (maximum support for independent business owners who need extensive guidance)
-- **MSP + AI Coach**: $49/month add-on (team training tool with volume pricing for agency use)
+**Tiered Add-On Strategy**: AI Coach is offered in two tiers, decoupled from DIY/MSP pathways for simplified scaling
+- **AI Coach Essential**: $59/month ($49 annual = $588/year) - Smart guidance with cloudpleaser.io automation
+- **AI Coach Pro**: $99/month ($79 annual = $948/year) - Unlimited individual support for maximum growth
 
 ### AI Coach Capabilities
 - **Personalized Guidance**: Context-aware recommendations based on business profile, industry, and current digital score
