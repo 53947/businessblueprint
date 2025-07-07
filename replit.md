@@ -1,8 +1,8 @@
-# DigitalPresencePro - AI-Powered Business Assessment Platform
+# cloudpleaser.io - Digital Empowerment Platform
 
 ## Overview
 
-DigitalPresencePro is a comprehensive web application that analyzes businesses' digital presence using AI and Google Business Intelligence. The platform provides automated assessments, generates detailed reports via email, and offers two service pathways (DIY and Managed Service Provider) to help businesses improve their online presence.
+cloudpleaser.io is a comprehensive digital empowerment platform that analyzes businesses' online presence using AI and Google Business Intelligence. The platform provides automated assessments, generates detailed reports, and includes a complete client portal for ongoing digital presence management. Built around the tagline "Digital Empowerment," the platform offers both DIY and Managed Service Provider pathways to help businesses succeed online.
 
 ## System Architecture
 
@@ -117,7 +117,36 @@ The AI Coach is built directly into the platform architecture rather than as an 
 ### UI Components
 - **Assessment Form**: Multi-step form with validation for business data collection
 - **Service Pathways**: Displays DIY vs MSP options with detailed comparisons
-- **Dashboard**: Shows assessment results and recommendations (planned feature)
+- **AI Coach Pricing**: Tiered pricing component with monthly/annual toggle
+- **Client Portal**: Complete dashboard interface for client management
+
+## Client Portal Architecture
+
+### Strategic Decision: Own the Client Experience
+Rather than embedding within Vendasta's dashboard, cloudpleaser.io owns the complete client experience. This provides:
+- **Complete UI Control**: No dependency on external vendor interface constraints
+- **Faster Feature Development**: Add capabilities without external approval processes
+- **Brand Consistency**: Full cloudpleaser.io branding throughout client journey
+- **Revenue Retention**: Clients associate value directly with the cloudpleaser.io platform
+
+### Portal Components
+- **Dashboard Overview**: Digital empowerment score, quick metrics, recent activity
+- **Business Listings**: Multi-platform listing management with real-time status
+- **Review Management**: Centralized review monitoring and response interface
+- **Campaign Tracking**: Marketing campaign performance and optimization
+- **Task Management**: Priority-based action items for digital improvement
+
+### Data Integration
+- **Vendasta API Sync**: Bi-directional data flow without UI dependency
+- **Real-time Updates**: Live webhook processing for instant data refresh
+- **Client Authentication**: Secure portal access via Replit Auth integration
+- **Performance Analytics**: Comprehensive metrics dashboard with visual indicators
+
+### Technical Implementation
+- **API Routes**: `/api/client/dashboard/:clientId`, `/api/client/listings/:clientId`
+- **Authentication**: Replit Auth with session management and role-based access
+- **Real-time Data**: WebSocket connections for live updates and notifications
+- **Mobile Responsive**: Full tablet and mobile optimization for on-the-go access
 
 ## Data Flow
 
@@ -169,7 +198,7 @@ Changelog:
 - Created email service for automated report delivery
 - Built complete assessment workflow with DIY/MSP pathway selection
 - Configured database with PostgreSQL and Drizzle ORM
-- Set up cloudpleaser.io branding throughout the application
+- Set up cloudpleaser.io branding throughout the application with "Digital Empowerment" tagline
 - Updated assessment timing from "2-3 minutes" to "24 hours" for accurate snapshot processing
 - Revised pricing structure: DIY from Free to $299/month, MSP starting at $499/month
 - Updated platform descriptions to include: Listing distribution (free), Local SEO, Social media platform, Reputation management, CRM, AI inbox, Campaign Pro, Website builder
@@ -177,6 +206,10 @@ Changelog:
 - Implemented database schema for clients, inbox messages, campaigns, and dashboard access
 - Created Vendasta API service for bi-directional data synchronization
 - Added webhook endpoints for real-time form submissions and client updates
+- January 07, 2025: Built complete client portal architecture with dashboard, listings, reviews, and campaign management
+- Implemented client-owned user experience removing dependency on Vendasta's UI constraints
+- Added Replit Auth integration for secure client authentication and session management
+- Created comprehensive client portal with tabs for overview, listings, reviews, campaigns, and tasks
 
 ## User Preferences
 

@@ -20,7 +20,7 @@ export default function Home() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
               <div className="text-2xl font-bold text-gray-900">
-                <span className="text-primary">Digital</span>Presence<span className="text-secondary">Pro</span>
+                cloud<span className="text-primary">pleaser</span><span className="text-secondary">.io</span>
               </div>
               <nav className="hidden md:flex space-x-6">
                 <a href="#assessment" className="text-gray-600 hover:text-primary transition-colors">Assessment</a>
@@ -30,6 +30,11 @@ export default function Home() {
               </nav>
             </div>
             <div className="flex items-center space-x-4">
+              <Link href="/portal/login">
+                <Button variant="outline" size="sm">
+                  Client Portal
+                </Button>
+              </Link>
               <Button onClick={startAssessment} className="bg-primary hover:bg-primary/90">
                 Get Started Free
               </Button>
@@ -50,10 +55,10 @@ export default function Home() {
                 </div>
               </div>
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                Get Your Business's <span className="text-primary">Digital Snapshot</span> Analysis
+                <span className="text-primary">Digital Empowerment</span> for Your Business
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Discover exactly what your business needs to succeed online. Our AI analyzes your Google presence over 24 hours and creates a comprehensive personalized roadmap – no tech experience required.
+                Discover exactly what your business needs to succeed online. Our AI analyzes your online presence using Google's business intelligence. It creates a comprehensive personalized roadmap in less than 24 hours. No tech experience required.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Button onClick={startAssessment} size="lg" className="bg-primary hover:bg-primary/90">
@@ -74,7 +79,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center">
                   <Clock className="w-4 h-4 text-green-500 mr-2" />
-                  Results in 2 Minutes
+                  Results in 24 Hours
                 </div>
                 <div className="flex items-center">
                   <Shield className="w-4 h-4 text-green-500 mr-2" />
@@ -271,10 +276,10 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
               <div className="text-2xl font-bold mb-4">
-                <span className="text-primary">Digital</span>Presence<span className="text-secondary">Pro</span>
+                cloud<span className="text-primary">pleaser</span><span className="text-secondary">.io</span>
               </div>
               <p className="text-gray-400 mb-6">
-                Helping businesses succeed online with AI-powered insights and managed digital services.
+                Digital empowerment for businesses through AI-powered insights and comprehensive online solutions.
               </p>
             </div>
             
@@ -310,7 +315,7 @@ export default function Home() {
           </div>
           
           <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 DigitalPresencePro. All rights reserved. Powered by cloudpleaser.io technology.</p>
+            <p>&copy; 2024 cloudpleaser.io. All rights reserved. Powered by cloudpleaser.io technology.</p>
           </div>
         </div>
       </footer>
