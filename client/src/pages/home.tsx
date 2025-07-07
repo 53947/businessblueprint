@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocation, Link } from "wouter";
-import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, MessageCircle } from "lucide-react";
+import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, MessageCircle, Brain, Globe, Zap } from "lucide-react";
 import { HowItWorks } from "@/components/how-it-works";
 import { ServicePathways } from "@/components/service-pathways";
 
@@ -166,6 +166,78 @@ export default function Home() {
 
       {/* Service Pathways */}
       <ServicePathways />
+
+      {/* Integrated Platform Ecosystem */}
+      <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Complete Digital Ecosystem</h2>
+            <p className="text-xl text-gray-600">Three specialized platforms working together for your success</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow p-6">
+              <CardContent>
+                <div className="flex justify-center mb-6">
+                  <Brain className="h-16 w-16 text-blue-500" />
+                </div>
+                <div className="text-2xl font-bold mb-2">
+                  <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
+                </div>
+                <p className="text-gray-600 mb-4">Digital Empowerment Platform</p>
+                <ul className="text-sm text-gray-500 space-y-2 mb-6">
+                  <li>• AI-powered business analysis</li>
+                  <li>• Personalized coaching</li>
+                  <li>• Client portal & dashboard</li>
+                </ul>
+                <Button className="w-full bg-blue-500 hover:bg-blue-600">
+                  Start Assessment
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center border-pink-200 hover:shadow-lg transition-shadow p-6">
+              <CardContent>
+                <div className="flex justify-center mb-6">
+                  <Globe className="h-16 w-16 text-pink-500" />
+                </div>
+                <div className="text-2xl font-bold mb-2">
+                  <span className="text-black">web</span><span className="text-pink-500">pleaser</span><span className="text-green-400">.io</span>
+                </div>
+                <p className="text-gray-600 mb-4">Website Hosting Platform</p>
+                <ul className="text-sm text-gray-500 space-y-2 mb-6">
+                  <li>• High-performance hosting</li>
+                  <li>• Domain management</li>
+                  <li>• Technical optimization</li>
+                </ul>
+                <Button className="w-full bg-pink-500 hover:bg-pink-600">
+                  Get Hosting
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
+              <CardContent>
+                <div className="flex justify-center mb-6">
+                  <Zap className="h-16 w-16 text-red-500" />
+                </div>
+                <div className="text-2xl font-bold mb-2">
+                  <span className="text-black">air</span><span className="text-red-500">pleaser</span><span className="text-green-400">.com</span>
+                </div>
+                <p className="text-gray-600 mb-4">Payment Gateway Platform</p>
+                <ul className="text-sm text-gray-500 space-y-2 mb-6">
+                  <li>• Secure payment processing</li>
+                  <li>• Transaction management</li>
+                  <li>• Financial analytics</li>
+                </ul>
+                <Button className="w-full bg-red-500 hover:bg-red-600">
+                  Setup Payments
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
 
       {/* Pricing */}
       <section id="pricing" className="bg-white py-16">
