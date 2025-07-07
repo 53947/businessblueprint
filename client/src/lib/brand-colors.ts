@@ -2,57 +2,60 @@
 export const brandColors = {
   // Primary platforms with signature colors
   cloudpleaser: {
-    signature: "text-blue-600", // Blue for digital empowerment
-    secondary: "text-purple-600",
-    home: { primary: "text-blue-600", secondary: "text-purple-600" }
+    home: { cloud: "text-black", pleaser: "text-blue-500", io: "text-green-400" }, // black-blue-fluorescent green
+    contact: { cloud: "text-black", pleaser: "text-yellow-500", io: "text-black" }, // black-yellow-black
+    about: { cloud: "text-black", pleaser: "text-orange-500", io: "text-black" }, // black-orange-black
+    pricing: { cloud: "text-black", pleaser: "text-green-500", io: "text-black" }, // black-green-black
+    portal: { cloud: "text-black", pleaser: "text-blue-500", io: "text-purple-600" } // black-blue-purple
   },
   
   webhosted: {
-    signature: "text-green-600", // Green for hosting/growth
-    secondary: "text-emerald-600", 
-    home: { primary: "text-green-600", secondary: "text-emerald-600" }
+    home: { web: "text-black", pleaser: "text-green-500", io: "text-emerald-400" },
+    contact: { web: "text-black", pleaser: "text-yellow-500", io: "text-black" },
+    about: { web: "text-black", pleaser: "text-orange-500", io: "text-black" },
+    pricing: { web: "text-black", pleaser: "text-green-500", io: "text-black" },
+    portal: { web: "text-black", pleaser: "text-green-500", io: "text-emerald-600" }
   },
   
   airswiped: {
-    signature: "text-orange-600", // Orange for payments/energy
-    secondary: "text-amber-600",
-    home: { primary: "text-orange-600", secondary: "text-amber-600" }
-  },
-
-  // Page-specific colors (consistent across all platforms)
-  pages: {
-    contact: "text-green-600", // All contact pages use green pleaser
-    portal: { primary: "text-blue-600", secondary: "text-purple-600" }, // All portal logins use blue/purple
-    about: "text-indigo-600", // All about pages use indigo pleaser
-    pricing: "text-purple-600", // All pricing pages use purple pleaser
-    support: "text-teal-600" // All support pages use teal pleaser
+    home: { air: "text-black", pleaser: "text-orange-500", com: "text-amber-400" },
+    contact: { air: "text-black", pleaser: "text-yellow-500", com: "text-black" },
+    about: { air: "text-black", pleaser: "text-orange-500", com: "text-black" },
+    pricing: { air: "text-black", pleaser: "text-green-500", com: "text-black" },
+    portal: { air: "text-black", pleaser: "text-orange-500", com: "text-amber-600" }
   }
 };
 
 // Helper function to generate brand component
 export function generateBrandLogo(
-  platform: keyof typeof brandColors,
-  page?: keyof typeof brandColors.pages,
+  platform: 'cloudpleaser' | 'webhosted' | 'airswiped',
+  page: 'home' | 'contact' | 'about' | 'pricing' | 'portal' = 'home',
   className?: string
 ) {
-  const colors = page 
-    ? brandColors.pages[page]
-    : brandColors[platform].home;
-
-  if (typeof colors === 'string') {
-    // Single color for specific pages
+  const colors = brandColors[platform][page];
+  
+  if (platform === 'cloudpleaser') {
     return (
       <div className={`text-2xl font-bold ${className || ''}`}>
-        {platform}<span className={colors}>pleaser</span>
-        <span className="text-gray-600">.io</span>
+        <span className={colors.cloud}>cloud</span>
+        <span className={colors.pleaser}>pleaser</span>
+        <span className={colors.io}>.io</span>
+      </div>
+    );
+  } else if (platform === 'webhosted') {
+    return (
+      <div className={`text-2xl font-bold ${className || ''}`}>
+        <span className={colors.web}>web</span>
+        <span className={colors.pleaser}>pleaser</span>
+        <span className={colors.io}>.io</span>
       </div>
     );
   } else {
-    // Dual color for home pages and portal
     return (
       <div className={`text-2xl font-bold ${className || ''}`}>
-        {platform}<span className={colors.primary}>pleaser</span>
-        <span className={colors.secondary}>.io</span>
+        <span className={colors.air}>air</span>
+        <span className={colors.pleaser}>pleaser</span>
+        <span className={colors.com}>.com</span>
       </div>
     );
   }
