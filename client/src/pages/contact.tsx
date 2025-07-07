@@ -16,9 +16,9 @@ export default function Contact() {
               <span className="text-black">cloud</span><span className="text-yellow-500">pleaser</span><span className="text-black">.io</span>
             </div>
             <nav className="hidden md:flex space-x-6">
-              <a href="/" className="text-gray-600 hover:text-green-600 transition-colors">Home</a>
-              <a href="/assessment" className="text-gray-600 hover:text-green-600 transition-colors">Assessment</a>
-              <a href="/ai-coach" className="text-gray-600 hover:text-green-600 transition-colors">AI Coach</a>
+              <a href="/" className="text-gray-600 hover:text-yellow-500 transition-colors">Home</a>
+              <a href="/assessment" className="text-gray-600 hover:text-yellow-500 transition-colors">Assessment</a>
+              <a href="/ai-coach" className="text-gray-600 hover:text-yellow-500 transition-colors">AI Coach</a>
             </nav>
           </div>
         </div>
@@ -39,7 +39,7 @@ export default function Contact() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5 text-green-600" />
+                <MessageSquare className="h-5 w-5 text-yellow-500" />
                 Send us a Message
               </CardTitle>
               <CardDescription>
@@ -77,7 +77,7 @@ export default function Contact() {
                 />
               </div>
               
-              <Button className="w-full bg-green-600 hover:bg-green-700">
+              <Button className="w-full bg-yellow-500 hover:bg-yellow-600">
                 Send Message
               </Button>
             </CardContent>
@@ -94,7 +94,7 @@ export default function Contact() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <Mail className="h-5 w-5 text-green-600 mt-1" />
+                  <Mail className="h-5 w-5 text-yellow-500 mt-1" />
                   <div>
                     <h3 className="font-medium">Email</h3>
                     <p className="text-gray-600">hello@cloudpleaser.io</p>
@@ -103,7 +103,7 @@ export default function Contact() {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <Phone className="h-5 w-5 text-green-600 mt-1" />
+                  <Phone className="h-5 w-5 text-yellow-500 mt-1" />
                   <div>
                     <h3 className="font-medium">Phone</h3>
                     <p className="text-gray-600">+1 (555) 123-4567</p>
@@ -112,7 +112,7 @@ export default function Contact() {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <MapPin className="h-5 w-5 text-green-600 mt-1" />
+                  <MapPin className="h-5 w-5 text-yellow-500 mt-1" />
                   <div>
                     <h3 className="font-medium">Office</h3>
                     <p className="text-gray-600">Remote-first company</p>
@@ -122,17 +122,17 @@ export default function Contact() {
               </CardContent>
             </Card>
 
-            <Card className="bg-green-50 border-green-200">
+            <Card className="bg-yellow-50 border-yellow-200">
               <CardContent className="p-6">
-                <h3 className="font-bold text-green-800 mb-2">
+                <h3 className="font-bold text-yellow-800 mb-2">
                   Start with a Free Assessment
                 </h3>
-                <p className="text-green-700 mb-4">
+                <p className="text-yellow-700 mb-4">
                   Not ready to talk? Get your digital empowerment score first.
                 </p>
                 <Button 
                   variant="outline" 
-                  className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
+                  className="border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white"
                 >
                   Take Free Assessment
                 </Button>
