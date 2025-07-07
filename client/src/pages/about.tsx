@@ -124,13 +124,13 @@ export default function About() {
               </CardContent>
             </Card>
 
-            <Card className="text-center border-pink-200 hover:shadow-lg transition-shadow">
+            <Card className="text-center border-fuchsia-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <Globe className="h-12 w-12 text-pink-500" />
+                  <Globe className="h-12 w-12 text-fuchsia-500" />
                 </div>
                 <CardTitle className="text-xl">
-                  <span className="text-black">web</span><span className="text-pink-500">pleaser</span><span className="text-green-400">.io</span>
+                  <span className="text-black">web</span><span className="text-fuchsia-500">pleaser</span><span className="text-green-400">.io</span>
                 </CardTitle>
                 <CardDescription>Website Hosting Platform</CardDescription>
               </CardHeader>
@@ -146,13 +146,13 @@ export default function About() {
               </CardContent>
             </Card>
 
-            <Card className="text-center border-orange-200 hover:shadow-lg transition-shadow">
+            <Card className="text-center border-rose-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <Zap className="h-12 w-12 text-red-500" />
+                  <Zap className="h-12 w-12 text-rose-500" />
                 </div>
                 <CardTitle className="text-xl">
-                  <span className="text-black">air</span><span className="text-red-500">pleaser</span><span className="text-green-400">.com</span>
+                  <span className="text-black">air</span><span className="text-rose-500">pleaser</span><span className="text-green-400">.com</span>
                 </CardTitle>
                 <CardDescription>Payment Gateway Platform</CardDescription>
               </CardHeader>
