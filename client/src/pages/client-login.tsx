@@ -65,7 +65,7 @@ export default function ClientLogin() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+            <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700">
               <LogIn className="w-4 h-4 mr-2" />
               Sign In to Portal
             </Button>
