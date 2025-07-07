@@ -20,7 +20,7 @@ export default function Home() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
               <div className="text-2xl font-bold text-gray-900">
-                cloud<span className="text-primary">pleaser</span><span className="text-secondary">.io</span>
+                cloud<span className="text-blue-600">pleaser</span><span className="text-purple-600">.io</span>
               </div>
               <nav className="hidden md:flex space-x-6">
                 <a href="#assessment" className="text-gray-600 hover:text-primary transition-colors">Assessment</a>
@@ -276,7 +276,7 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
               <div className="text-2xl font-bold mb-4">
-                cloud<span className="text-primary">pleaser</span><span className="text-secondary">.io</span>
+                cloud<span className="text-blue-600">pleaser</span><span className="text-purple-600">.io</span>
               </div>
               <p className="text-gray-400 mb-6">
                 Digital empowerment for businesses through AI-powered insights and comprehensive online solutions.
