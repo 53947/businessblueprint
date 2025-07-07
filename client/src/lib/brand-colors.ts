@@ -1,8 +1,8 @@
 // Brand color system for the pleaser ecosystem with consistent icons
 export const brandIcons = {
-  cloudpleaser: "Brain", // Intelligence/AI - Brain icon
-  webhosted: "Globe", // Global hosting - Globe icon  
-  airswiped: "Zap" // Energy/Speed - Lightning/Zap icon
+  cloudpleaser: "Brain", // Intelligence/AI - Brain icon (blue pleaser)
+  webhosted: "Globe", // Global hosting - Globe icon (pink pleaser)
+  airswiped: "Zap" // Energy/Speed - Lightning/Zap icon (red pleaser)
 };
 
 export const brandColors = {
@@ -16,19 +16,19 @@ export const brandColors = {
   },
   
   webhosted: {
-    home: { web: "text-black", pleaser: "text-green-500", io: "text-emerald-400" },
-    contact: { web: "text-black", pleaser: "text-yellow-500", io: "text-black" },
-    about: { web: "text-black", pleaser: "text-orange-500", io: "text-black" },
-    pricing: { web: "text-black", pleaser: "text-green-500", io: "text-black" },
-    portal: { web: "text-black", pleaser: "text-green-500", io: "text-emerald-600" }
+    home: { web: "text-black", pleaser: "text-pink-500", io: "text-green-400" }, // black-pink-fluorescent green
+    contact: { web: "text-black", pleaser: "text-yellow-500", io: "text-green-400" },
+    about: { web: "text-black", pleaser: "text-orange-500", io: "text-green-400" },
+    pricing: { web: "text-black", pleaser: "text-blue-500", io: "text-green-400" }, // avoiding pink on pricing page
+    portal: { web: "text-black", pleaser: "text-pink-500", io: "text-green-400" }
   },
   
   airswiped: {
-    home: { air: "text-black", pleaser: "text-orange-500", com: "text-amber-400" },
-    contact: { air: "text-black", pleaser: "text-yellow-500", com: "text-black" },
-    about: { air: "text-black", pleaser: "text-orange-500", com: "text-black" },
-    pricing: { air: "text-black", pleaser: "text-green-500", com: "text-black" },
-    portal: { air: "text-black", pleaser: "text-orange-500", com: "text-amber-600" }
+    home: { air: "text-black", pleaser: "text-red-500", com: "text-green-400" }, // black-red-fluorescent green
+    contact: { air: "text-black", pleaser: "text-yellow-500", com: "text-green-400" },
+    about: { air: "text-black", pleaser: "text-orange-500", com: "text-green-400" },
+    pricing: { air: "text-black", pleaser: "text-blue-500", com: "text-green-400" }, // avoiding red on pricing page
+    portal: { air: "text-black", pleaser: "text-red-500", com: "text-green-400" }
   }
 };
 
