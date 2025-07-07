@@ -145,35 +145,7 @@ export function ServicePathways() {
           </Card>
         </div>
 
-        {/* Integration showcase */}
-        <Card className="shadow-lg border border-gray-100">
-          <CardContent className="p-8">
-            <h3 className="text-2xl font-bold text-gray-900 text-center mb-8">Integrated Platform Ecosystem</h3>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <BarChart3 className="w-8 h-8 text-primary" />
-                </div>
-                <h4 className="font-bold text-gray-900 mb-2">cloudpleaser.io</h4>
-                <p className="text-gray-600 text-sm">Complete digital marketing suite with AI-powered recommendations</p>
-              </div>
-              <div className="text-center">
-                <div className="bg-secondary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Server className="w-8 h-8 text-secondary" />
-                </div>
-                <h4 className="font-bold text-gray-900 mb-2">webhosted.io</h4>
-                <p className="text-gray-600 text-sm">Reliable hosting platform with automatic scaling and security</p>
-              </div>
-              <div className="text-center">
-                <div className="bg-blue-600/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CreditCard className="w-8 h-8 text-blue-600" />
-                </div>
-                <h4 className="font-bold text-gray-900 mb-2">airswiped.com</h4>
-                <p className="text-gray-600 text-sm">Secure payment gateway with competitive rates and easy setup</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+
       </div>
     </section>
   );
