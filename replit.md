@@ -222,3 +222,9 @@ Business Context:
 - Focus on mass market automation to minimize manual intervention
 - Two primary pathways: DIY (self-service) and MSP (managed services)
 - AI-powered Google Business Intelligence drives assessment recommendations
+
+Brand Identity:
+- Consistent icon system: Brain (cloudpleaser), Globe (webhosted), Zap/Lightning (airswiped)
+- Color-coded pleaser system: Blue (cloudpleaser home), Yellow (contact), Orange (about), Purple (portal)
+- Homepage signatures: cloudpleaser (blue-fluorescent green), webhosted (green-emerald), airswiped (orange-amber)
+- All other pages use black for first word and extension, pleaser gets the signature color
