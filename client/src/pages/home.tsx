@@ -196,13 +196,13 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="text-center border-fuchsia-200 hover:shadow-lg transition-shadow p-6">
+            <Card className="text-center border-pink-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <Globe className="h-16 w-16 text-fuchsia-500" />
+                  <Globe className="h-16 w-16" style={{color: '#FC8EA0'}} />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">web</span><span className="text-fuchsia-500">pleaser</span><span className="text-green-400">.io</span>
+                  <span className="text-black">web</span><span style={{color: '#FC8EA0'}}>pleaser</span><span className="text-green-400">.io</span>
                 </div>
                 <p className="text-gray-600 mb-4">Website Hosting Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
@@ -210,19 +210,19 @@ export default function Home() {
                   <li>• Domain management</li>
                   <li>• Technical optimization</li>
                 </ul>
-                <Button className="w-full bg-fuchsia-500 hover:bg-fuchsia-600">
+                <Button className="w-full" style={{backgroundColor: '#FC8EA0'}} onMouseEnter={(e) => e.target.style.backgroundColor = '#f87394'} onMouseLeave={(e) => e.target.style.backgroundColor = '#FC8EA0'}>
                   Get Hosting
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="text-center border-rose-200 hover:shadow-lg transition-shadow p-6">
+            <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <Zap className="h-16 w-16 text-rose-500" />
+                  <Zap className="h-16 w-16" style={{color: '#CB0505'}} />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">air</span><span className="text-rose-500">pleaser</span><span className="text-green-400">.com</span>
+                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>pleaser</span><span className="text-green-400">.com</span>
                 </div>
                 <p className="text-gray-600 mb-4">Payment Gateway Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
@@ -230,7 +230,7 @@ export default function Home() {
                   <li>• Transaction management</li>
                   <li>• Financial analytics</li>
                 </ul>
-                <Button className="w-full bg-rose-500 hover:bg-rose-600">
+                <Button className="w-full" style={{backgroundColor: '#CB0505'}} onMouseEnter={(e) => e.target.style.backgroundColor = '#a80404'} onMouseLeave={(e) => e.target.style.backgroundColor = '#CB0505'}>
                   Setup Payments
                 </Button>
               </CardContent>

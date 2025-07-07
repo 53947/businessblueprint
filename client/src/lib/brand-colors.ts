@@ -1,8 +1,8 @@
 // Brand color system for the pleaser ecosystem with consistent icons
 export const brandIcons = {
   cloudpleaser: "Brain", // Intelligence/AI - Brain icon (blue pleaser)
-  webhosted: "Globe", // Global hosting - Globe icon (fuchsia pleaser)
-  airswiped: "Zap" // Energy/Speed - Lightning/Zap icon (rose pleaser)
+  webhosted: "Globe", // Global hosting - Globe icon (#FC8EA0 pink)
+  airswiped: "Zap" // Energy/Speed - Lightning/Zap icon (#CB0505 red)
 };
 
 export const brandColors = {
@@ -16,19 +16,19 @@ export const brandColors = {
   },
   
   webhosted: {
-    home: { web: "text-black", pleaser: "text-fuchsia-500", io: "text-green-400" }, // black-fuchsia-fluorescent green
+    home: { web: "text-black", pleaser: "text-[#FC8EA0]", io: "text-green-400" }, // black-pink-fluorescent green
     contact: { web: "text-black", pleaser: "text-yellow-500", io: "text-green-400" },
     about: { web: "text-black", pleaser: "text-orange-500", io: "text-green-400" },
-    pricing: { web: "text-black", pleaser: "text-blue-500", io: "text-green-400" }, // avoiding fuchsia on pricing page
-    portal: { web: "text-black", pleaser: "text-fuchsia-500", io: "text-green-400" }
+    pricing: { web: "text-black", pleaser: "text-blue-500", io: "text-green-400" }, // avoiding pink on pricing page
+    portal: { web: "text-black", pleaser: "text-[#FC8EA0]", io: "text-green-400" }
   },
   
   airswiped: {
-    home: { air: "text-black", pleaser: "text-rose-500", com: "text-green-400" }, // black-rose-fluorescent green
+    home: { air: "text-black", pleaser: "text-[#CB0505]", com: "text-green-400" }, // black-red-fluorescent green
     contact: { air: "text-black", pleaser: "text-yellow-500", com: "text-green-400" },
     about: { air: "text-black", pleaser: "text-orange-500", com: "text-green-400" },
-    pricing: { air: "text-black", pleaser: "text-blue-500", com: "text-green-400" }, // avoiding rose on pricing page
-    portal: { air: "text-black", pleaser: "text-rose-500", com: "text-green-400" }
+    pricing: { air: "text-black", pleaser: "text-blue-500", com: "text-green-400" }, // avoiding red on pricing page
+    portal: { air: "text-black", pleaser: "text-[#CB0505]", com: "text-green-400" }
   }
 };
 
