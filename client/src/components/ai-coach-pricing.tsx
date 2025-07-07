@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { CheckCircle, Brain, Users, Target, TrendingUp, Zap } from "lucide-react";
 
 interface AICoachPricingProps {
@@ -40,42 +42,43 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
 
   const pricingTiers = [
     {
-      plan: "diy",
-      title: "DIY + AI Coach",
-      monthlyPrice: "$99",
-      annualPrice: "$79",
-      annualTotal: "$948",
+      plan: "essential",
+      title: "AI Coach Essential",
+      monthlyPrice: "$59",
+      annualPrice: "$49",
+      annualTotal: "$588",
       period: "/month",
-      description: "Maximum support for independent business owners",
+      description: "Smart guidance with cloudpleaser.io automation",
       features: [
-        "All DIY platform features included",
-        "Unlimited personalized guidance",
-        "Step-by-step task instructions",
-        "Progress tracking & motivation",
-        "24/7 AI availability",
-        "Priority learning support"
-      ],
-      highlight: true,
-      savings: "Save $240/year"
-    },
-    {
-      plan: "msp",
-      title: "MSP + AI Coach",
-      monthlyPrice: "$49",
-      annualPrice: "$39",
-      annualTotal: "$468",
-      period: "/month", 
-      description: "Team training and standardization tool",
-      features: [
-        "All MSP platform features included",
-        "Team training & onboarding",
-        "Process standardization",
-        "Client transition support",
-        "Multi-user access",
-        "Volume pricing benefit"
+        "Core AI business guidance",
+        "Automated task suggestions",
+        "Basic progress tracking",
+        "cloudpleaser.io workflow integration",
+        "Standard response time",
+        "Essential coaching features"
       ],
       highlight: false,
       savings: "Save $120/year"
+    },
+    {
+      plan: "pro",
+      title: "AI Coach Pro",
+      monthlyPrice: "$99",
+      annualPrice: "$79",
+      annualTotal: "$948",
+      period: "/month", 
+      description: "Unlimited individual support for maximum growth",
+      features: [
+        "Unlimited personalized guidance",
+        "Advanced step-by-step instructions",
+        "Real-time progress analysis",
+        "Priority AI responses",
+        "24/7 availability",
+        "Premium coaching algorithms",
+        "Custom business strategies"
+      ],
+      highlight: true,
+      savings: "Save $240/year"
     }
   ];
 
@@ -136,9 +139,26 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             AI Business Coach Add-On
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
             Enhance any plan with intelligent guidance that adapts to your business needs and experience level
           </p>
+          
+          {/* Billing Toggle */}
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <span className={`text-sm font-medium ${billingPeriod === 'monthly' ? 'text-gray-900' : 'text-gray-500'}`}>
+              Monthly
+            </span>
+            <Switch 
+              checked={billingPeriod === 'annual'} 
+              onCheckedChange={(checked) => setBillingPeriod(checked ? 'annual' : 'monthly')}
+            />
+            <span className={`text-sm font-medium ${billingPeriod === 'annual' ? 'text-gray-900' : 'text-gray-500'}`}>
+              Annual
+            </span>
+            {billingPeriod === 'annual' && (
+              <Badge variant="secondary" className="ml-2">Save up to $240/year</Badge>
+            )}
+          </div>
         </div>
 
         {/* Features Grid */}
@@ -170,10 +190,22 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
                 <CardTitle className="text-2xl">{tier.title}</CardTitle>
                 <CardDescription>{tier.description}</CardDescription>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold text-gray-900">{tier.price}</span>
+                  <span className="text-4xl font-bold text-gray-900">
+                    {billingPeriod === 'annual' ? tier.annualPrice : tier.monthlyPrice}
+                  </span>
                   <span className="text-lg text-gray-600">{tier.period}</span>
+                  {billingPeriod === 'annual' && (
+                    <div className="text-sm text-green-600 font-medium">
+                      {tier.savings}
+                    </div>
+                  )}
                 </div>
-                <p className="text-sm text-gray-500">Add-on pricing</p>
+                <p className="text-sm text-gray-500">
+                  {billingPeriod === 'annual' 
+                    ? `${tier.annualTotal} billed annually` 
+                    : 'Add-on pricing'
+                  }
+                </p>
               </CardHeader>
               <CardContent className="space-y-4">
                 {tier.features.map((feature, index) => (
@@ -189,7 +221,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
                       : 'bg-gray-900 hover:bg-gray-800'
                   }`}
                 >
-                  Add to {tier.plan.toUpperCase()} Plan
+                  Get {tier.title}
                 </Button>
               </CardContent>
             </Card>
