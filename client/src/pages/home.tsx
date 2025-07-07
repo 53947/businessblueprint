@@ -196,13 +196,13 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow p-6">
+            <Card className="text-center border-pink-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <Globe className="h-16 w-16 text-purple-500" />
+                  <Globe className="h-16 w-16 text-pink-500" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">web</span><span className="text-purple-500">pleaser</span><span className="text-green-400">.io</span>
+                  <span className="text-black">web</span><span className="text-pink-500">pleaser</span><span className="text-green-400">.io</span>
                 </div>
                 <p className="text-gray-600 mb-4">Website Hosting Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
@@ -210,7 +210,7 @@ export default function Home() {
                   <li>• Domain management</li>
                   <li>• Technical optimization</li>
                 </ul>
-                <Button className="w-full bg-purple-500 hover:bg-purple-600">
+                <Button className="w-full bg-pink-500 hover:bg-pink-600">
                   Get Hosting
                 </Button>
               </CardContent>
@@ -350,7 +350,7 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
               <div className="text-2xl font-bold mb-4">
-                <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
+                <span className="text-white">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
               </div>
               <p className="text-gray-400 mb-6">
                 Digital empowerment for businesses through AI-powered insights and comprehensive online solutions.
