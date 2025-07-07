@@ -202,7 +202,7 @@ export default function Home() {
                   <Globe className="h-16 w-16" style={{color: '#FC8EA0'}} />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">web</span><span style={{color: '#FC8EA0'}}>pleaser</span><span className="text-green-400">.io</span>
+                  <span className="text-black">web</span><span style={{color: '#FC8EA0'}}>hosted</span><span className="text-green-400">.io</span>
                 </div>
                 <p className="text-gray-600 mb-4">Website Hosting Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
@@ -222,7 +222,7 @@ export default function Home() {
                   <Zap className="h-16 w-16" style={{color: '#CB0505'}} />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>pleaser</span><span className="text-green-400">.com</span>
+                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span className="text-green-400">.com</span>
                 </div>
                 <p className="text-gray-600 mb-4">Payment Gateway Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">

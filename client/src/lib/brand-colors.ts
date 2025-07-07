@@ -16,19 +16,19 @@ export const brandColors = {
   },
   
   webhosted: {
-    home: { web: "text-black", pleaser: "text-[#FC8EA0]", io: "text-green-400" }, // black-pink-fluorescent green
-    contact: { web: "text-black", pleaser: "text-yellow-500", io: "text-green-400" },
-    about: { web: "text-black", pleaser: "text-orange-500", io: "text-green-400" },
-    pricing: { web: "text-black", pleaser: "text-blue-500", io: "text-green-400" }, // avoiding pink on pricing page
-    portal: { web: "text-black", pleaser: "text-[#FC8EA0]", io: "text-green-400" }
+    home: { web: "text-black", hosted: "text-[#FC8EA0]", io: "text-green-400" }, // black-pink-fluorescent green
+    contact: { web: "text-black", hosted: "text-yellow-500", io: "text-green-400" },
+    about: { web: "text-black", hosted: "text-orange-500", io: "text-green-400" },
+    pricing: { web: "text-black", hosted: "text-blue-500", io: "text-green-400" }, // avoiding pink on pricing page
+    portal: { web: "text-black", hosted: "text-[#FC8EA0]", io: "text-green-400" }
   },
   
   airswiped: {
-    home: { air: "text-black", pleaser: "text-[#CB0505]", com: "text-green-400" }, // black-red-fluorescent green
-    contact: { air: "text-black", pleaser: "text-yellow-500", com: "text-green-400" },
-    about: { air: "text-black", pleaser: "text-orange-500", com: "text-green-400" },
-    pricing: { air: "text-black", pleaser: "text-blue-500", com: "text-green-400" }, // avoiding red on pricing page
-    portal: { air: "text-black", pleaser: "text-[#CB0505]", com: "text-green-400" }
+    home: { air: "text-black", swiped: "text-[#CB0505]", com: "text-green-400" }, // black-red-fluorescent green
+    contact: { air: "text-black", swiped: "text-yellow-500", com: "text-green-400" },
+    about: { air: "text-black", swiped: "text-orange-500", com: "text-green-400" },
+    pricing: { air: "text-black", swiped: "text-blue-500", com: "text-green-400" }, // avoiding red on pricing page
+    portal: { air: "text-black", swiped: "text-[#CB0505]", com: "text-green-400" }
   }
 };
 

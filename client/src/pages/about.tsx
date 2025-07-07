@@ -130,7 +130,7 @@ export default function About() {
                   <Globe className="h-12 w-12" style={{color: '#FC8EA0'}} />
                 </div>
                 <CardTitle className="text-xl">
-                  <span className="text-black">web</span><span style={{color: '#FC8EA0'}}>pleaser</span><span className="text-green-400">.io</span>
+                  <span className="text-black">web</span><span style={{color: '#FC8EA0'}}>hosted</span><span className="text-green-400">.io</span>
                 </CardTitle>
                 <CardDescription>Website Hosting Platform</CardDescription>
               </CardHeader>
@@ -152,7 +152,7 @@ export default function About() {
                   <Zap className="h-12 w-12" style={{color: '#CB0505'}} />
                 </div>
                 <CardTitle className="text-xl">
-                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>pleaser</span><span className="text-green-400">.com</span>
+                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span className="text-green-400">.com</span>
                 </CardTitle>
                 <CardDescription>Payment Gateway Platform</CardDescription>
               </CardHeader>
