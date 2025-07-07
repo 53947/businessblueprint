@@ -23,7 +23,7 @@ export default function ClientLogin() {
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="text-3xl font-bold">
-              cloud<span className="text-blue-600">pleaser</span><span className="text-purple-600">.io</span>
+              <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-purple-600">.io</span>
             </div>
           </div>
           <CardTitle className="text-2xl">Client Portal</CardTitle>

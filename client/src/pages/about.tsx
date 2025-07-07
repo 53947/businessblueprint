@@ -19,8 +19,8 @@ export default function About() {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="text-2xl font-bold text-gray-900">
-              cloud<span className="text-indigo-600">pleaser</span><span className="text-gray-600">.io</span>
+            <div className="text-2xl font-bold">
+              <span className="text-black">cloud</span><span className="text-orange-500">pleaser</span><span className="text-black">.io</span>
             </div>
             <nav className="hidden md:flex space-x-6">
               <a href="/" className="text-gray-600 hover:text-indigo-600 transition-colors">Home</a>
