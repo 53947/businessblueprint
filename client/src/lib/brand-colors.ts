@@ -1,7 +1,7 @@
 // Brand color system for the pleaser ecosystem with consistent icons
 export const brandIcons = {
   cloudpleaser: "Brain", // Intelligence/AI - Brain icon (blue pleaser)
-  webhosted: "Globe", // Global hosting - Globe icon (pink pleaser)
+  webhosted: "Globe", // Global hosting - Globe icon (purple pleaser)
   airswiped: "Zap" // Energy/Speed - Lightning/Zap icon (red pleaser)
 };
 
@@ -16,11 +16,11 @@ export const brandColors = {
   },
   
   webhosted: {
-    home: { web: "text-black", pleaser: "text-pink-500", io: "text-green-400" }, // black-pink-fluorescent green
+    home: { web: "text-black", pleaser: "text-purple-500", io: "text-green-400" }, // black-purple-fluorescent green
     contact: { web: "text-black", pleaser: "text-yellow-500", io: "text-green-400" },
     about: { web: "text-black", pleaser: "text-orange-500", io: "text-green-400" },
-    pricing: { web: "text-black", pleaser: "text-blue-500", io: "text-green-400" }, // avoiding pink on pricing page
-    portal: { web: "text-black", pleaser: "text-pink-500", io: "text-green-400" }
+    pricing: { web: "text-black", pleaser: "text-blue-500", io: "text-green-400" }, // avoiding purple on pricing page
+    portal: { web: "text-black", pleaser: "text-purple-500", io: "text-green-400" }
   },
   
   airswiped: {

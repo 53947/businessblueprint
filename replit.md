@@ -226,6 +226,6 @@ Business Context:
 Brand Identity:
 - Consistent icon system: Brain (cloudpleaser), Globe (webhosted), Zap/Lightning (airswiped)
 - Unified TLD system: All platforms use fluorescent green for .io/.com extensions
-- Platform signatures: cloudpleaser (blue pleaser), webhosted (pink pleaser), airswiped (red pleaser)
+- Platform signatures: cloudpleaser (blue pleaser), webhosted (purple pleaser), airswiped (red pleaser)
 - Page-specific pleaser colors: Yellow (contact), Orange (about), Blue (pricing), avoiding platform colors
 - Format: black-[pleaser-color]-fluorescent-green across all platforms
