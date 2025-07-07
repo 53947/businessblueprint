@@ -37,7 +37,7 @@ export default function Home() {
                   Client Portal
                 </Button>
               </Link>
-              <Button onClick={startAssessment} className="bg-primary hover:bg-primary/90">
+              <Button onClick={startAssessment} className="bg-blue-500 hover:bg-blue-600">
                 Get Started Free
               </Button>
             </div>
@@ -63,7 +63,7 @@ export default function Home() {
                 Discover exactly what your business needs to succeed online. Our AI analyzes your online presence using Google's business intelligence. It creates a comprehensive personalized roadmap in less than 24 hours. No tech experience required.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button onClick={startAssessment} size="lg" className="bg-primary hover:bg-primary/90">
+                <Button onClick={startAssessment} size="lg" className="bg-blue-500 hover:bg-blue-600">
                   <BarChart3 className="w-5 h-5 mr-2" />
                   Start Free Assessment
                 </Button>
@@ -226,7 +226,7 @@ export default function Home() {
                   AI inbox & website builder
                 </li>
               </ul>
-              <Button className="w-full bg-primary hover:bg-primary/90">
+              <Button className="w-full bg-blue-500 hover:bg-blue-600">
                 Start DIY Journey
               </Button>
             </Card>
@@ -257,7 +257,7 @@ export default function Home() {
                   Monthly optimization
                 </li>
               </ul>
-              <Button className="w-full bg-secondary hover:bg-secondary/90">
+              <Button className="w-full bg-blue-500 hover:bg-blue-600">
                 Get Managed Services
               </Button>
             </Card>
@@ -265,7 +265,7 @@ export default function Home() {
 
           <div className="text-center mt-12">
             <p className="text-gray-600 mb-4">Need a custom solution? We'll create a plan that fits your business perfectly.</p>
-            <Button variant="link" className="text-primary">
+            <Button variant="link" className="text-blue-500">
               Schedule a consultation <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </div>
