@@ -247,6 +247,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Client Portal endpoints
+  app.get("/api/client/dashboard/:clientId", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.clientId);
+      const client = await storage.getClient(clientId);
+      
+      if (!client) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+
+      const assessments = await storage.getClientAssessments(clientId);
+      const campaigns = await storage.getClientCampaigns(clientId);
+      const messages = await storage.getClientMessages(clientId, 10);
+
+      const latestAssessment = assessments[0];
+      const digitalScore = latestAssessment?.digitalScore || 0;
+      const grade = latestAssessment?.grade || 'N/A';
+
+      const dashboardData = {
+        client,
+        digitalScore,
+        grade,
+        assessments: assessments.length,
+        campaigns: campaigns.length,
+        activeCampaigns: campaigns.filter(c => c.status === 'active').length,
+        recentMessages: messages,
+        lastUpdated: latestAssessment?.createdAt || new Date().toISOString()
+      };
+
+      res.json(dashboardData);
+    } catch (error) {
+      console.error("Client dashboard error:", error);
+      res.status(500).json({ error: "Failed to load dashboard data" });
+    }
+  });
+
+  app.get("/api/client/listings/:clientId", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.clientId);
+      const client = await storage.getClient(clientId);
+      
+      if (!client) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+
+      // Real data will come from Vendasta APIs
+      const listings = {
+        total: 45,
+        verified: 38,
+        pending: 7,
+        platforms: [
+          { name: "Google Business", status: "verified", url: "#" },
+          { name: "Yelp", status: "verified", url: "#" },
+          { name: "Facebook", status: "pending", url: "#" },
+          { name: "Apple Maps", status: "verified", url: "#" }
+        ]
+      };
+
+      res.json(listings);
+    } catch (error) {
+      console.error("Client listings error:", error);
+      res.status(500).json({ error: "Failed to load listings data" });
+    }
+  });
+
   // AI Coach endpoints
   app.post("/api/ai-coach/guidance", async (req, res) => {
     try {

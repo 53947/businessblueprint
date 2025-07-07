@@ -7,6 +7,8 @@ import Home from "@/pages/home";
 import Assessment from "@/pages/assessment";
 import Dashboard from "@/pages/dashboard";
 import AICoachPage from "@/pages/ai-coach";
+import ClientPortal from "@/pages/client-portal";
+import ClientLogin from "@/pages/client-login";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -16,6 +18,8 @@ function Router() {
       <Route path="/assessment" component={Assessment} />
       <Route path="/dashboard/:id" component={Dashboard} />
       <Route path="/ai-coach" component={AICoachPage} />
+      <Route path="/portal/login" component={ClientLogin} />
+      <Route path="/portal" component={ClientPortal} />
       <Route component={NotFound} />
     </Switch>
   );
