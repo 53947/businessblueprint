@@ -9,6 +9,7 @@ interface AICoachPricingProps {
 }
 
 export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPricingProps) {
+  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('annual');
   const features = [
     {
       icon: Brain,
@@ -41,7 +42,9 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
     {
       plan: "diy",
       title: "DIY + AI Coach",
-      price: "$99",
+      monthlyPrice: "$99",
+      annualPrice: "$79",
+      annualTotal: "$948",
       period: "/month",
       description: "Maximum support for independent business owners",
       features: [
@@ -52,12 +55,15 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
         "24/7 AI availability",
         "Priority learning support"
       ],
-      highlight: true
+      highlight: true,
+      savings: "Save $240/year"
     },
     {
       plan: "msp",
       title: "MSP + AI Coach",
-      price: "$49",
+      monthlyPrice: "$49",
+      annualPrice: "$39",
+      annualTotal: "$468",
       period: "/month", 
       description: "Team training and standardization tool",
       features: [
@@ -68,7 +74,8 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
         "Multi-user access",
         "Volume pricing benefit"
       ],
-      highlight: false
+      highlight: false,
+      savings: "Save $120/year"
     }
   ];
 
