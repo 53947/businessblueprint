@@ -22,7 +22,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
               <Search className="w-8 h-8 text-primary group-hover:text-white" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-4">1. AI Analysis</h3>
-            <p className="text-gray-600">Our AI scans your Google Business presence, reviews, and digital footprint over 24 hours to create a comprehensive snapshot</p>
+            <p className="text-gray-600">Our AI scans your Google Business presence, reviews, and digital footprint to create a comprehensive snapshot within 24 hours</p>
           </div>
 
           {/* Step 2 */}

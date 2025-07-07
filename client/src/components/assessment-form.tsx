@@ -46,7 +46,7 @@ export function AssessmentForm() {
     onSuccess: (data) => {
       toast({
         title: "Assessment Started!",
-        description: "We're analyzing your business. You'll receive results via email within 2-3 minutes.",
+        description: "We're analyzing your business. You'll receive results via email within 24 hours.",
       });
       setLocation(`/dashboard/${data.assessmentId}`);
     },
