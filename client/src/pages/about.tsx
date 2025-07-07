@@ -23,9 +23,9 @@ export default function About() {
               <span className="text-black">cloud</span><span className="text-orange-500">pleaser</span><span className="text-black">.io</span>
             </div>
             <nav className="hidden md:flex space-x-6">
-              <a href="/" className="text-gray-600 hover:text-indigo-600 transition-colors">Home</a>
-              <a href="/assessment" className="text-gray-600 hover:text-indigo-600 transition-colors">Assessment</a>
-              <a href="/contact" className="text-gray-600 hover:text-indigo-600 transition-colors">Contact</a>
+              <a href="/" className="text-gray-600 hover:text-orange-500 transition-colors">Home</a>
+              <a href="/assessment" className="text-gray-600 hover:text-orange-500 transition-colors">Assessment</a>
+              <a href="/contact" className="text-gray-600 hover:text-orange-500 transition-colors">Contact</a>
             </nav>
           </div>
         </div>
@@ -57,15 +57,15 @@ export default function About() {
             </p>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-indigo-600" />
+                <CheckCircle className="h-5 w-5 text-orange-500" />
                 <span>AI-powered business intelligence</span>
               </div>
               <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-indigo-600" />
+                <CheckCircle className="h-5 w-5 text-orange-500" />
                 <span>Personalized digital strategies</span>
               </div>
               <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-indigo-600" />
+                <CheckCircle className="h-5 w-5 text-orange-500" />
                 <span>Complete ecosystem integration</span>
               </div>
             </div>
@@ -175,7 +175,7 @@ export default function About() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-indigo-600" />
+                <Users className="h-5 w-5 text-orange-500" />
                 Our Team
               </CardTitle>
             </CardHeader>
@@ -186,37 +186,37 @@ export default function About() {
               </p>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <Target className="h-4 w-4 text-indigo-600" />
+                  <Target className="h-4 w-4 text-orange-500" />
                   <span className="text-sm">Customer-first approach</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Brain className="h-4 w-4 text-indigo-600" />
+                  <Brain className="h-4 w-4 text-orange-500" />
                   <span className="text-sm">Innovation through AI</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Globe className="h-4 w-4 text-indigo-600" />
+                  <Globe className="h-4 w-4 text-orange-500" />
                   <span className="text-sm">Global perspective</span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-indigo-50 border-indigo-200">
+          <Card className="bg-orange-50 border-orange-200">
             <CardHeader>
-              <CardTitle className="text-indigo-900">Ready to Get Started?</CardTitle>
-              <CardDescription className="text-indigo-700">
+              <CardTitle className="text-orange-900">Ready to Get Started?</CardTitle>
+              <CardDescription className="text-orange-700">
                 Join thousands of businesses already empowering their digital presence
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <Link href="/assessment">
-                <Button className="w-full bg-indigo-600 hover:bg-indigo-700">
+                <Button className="w-full bg-orange-500 hover:bg-orange-600">
                   Start Free Assessment
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button variant="outline" className="w-full border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white">
+                <Button variant="outline" className="w-full border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white">
                   Contact Our Team
                 </Button>
               </Link>
