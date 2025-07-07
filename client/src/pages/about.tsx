@@ -108,7 +108,7 @@ export default function About() {
                   <Brain className="h-12 w-12 text-blue-500" />
                 </div>
                 <CardTitle className="text-xl">
-                  cloud<span className="text-blue-500">pleaser</span><span className="text-purple-600">.io</span>
+                  <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
                 </CardTitle>
                 <CardDescription>Digital Empowerment Platform</CardDescription>
               </CardHeader>
@@ -127,10 +127,10 @@ export default function About() {
             <Card className="text-center border-green-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <Globe className="h-12 w-12 text-green-500" />
+                  <Globe className="h-12 w-12 text-pink-500" />
                 </div>
                 <CardTitle className="text-xl">
-                  web<span className="text-green-500">pleaser</span><span className="text-emerald-600">.io</span>
+                  <span className="text-black">web</span><span className="text-pink-500">pleaser</span><span className="text-green-400">.io</span>
                 </CardTitle>
                 <CardDescription>Website Hosting Platform</CardDescription>
               </CardHeader>
@@ -149,10 +149,10 @@ export default function About() {
             <Card className="text-center border-orange-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <Zap className="h-12 w-12 text-orange-500" />
+                  <Zap className="h-12 w-12 text-red-500" />
                 </div>
                 <CardTitle className="text-xl">
-                  air<span className="text-orange-500">pleaser</span><span className="text-amber-600">.com</span>
+                  <span className="text-black">air</span><span className="text-red-500">pleaser</span><span className="text-green-400">.com</span>
                 </CardTitle>
                 <CardDescription>Payment Gateway Platform</CardDescription>
               </CardHeader>
