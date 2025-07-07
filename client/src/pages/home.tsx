@@ -23,10 +23,12 @@ export default function Home() {
                 cloud<span className="text-blue-600">pleaser</span><span className="text-purple-600">.io</span>
               </div>
               <nav className="hidden md:flex space-x-6">
+                <Link href="/about" className="text-gray-600 hover:text-primary transition-colors">About</Link>
                 <a href="#assessment" className="text-gray-600 hover:text-primary transition-colors">Assessment</a>
                 <a href="#services" className="text-gray-600 hover:text-primary transition-colors">Services</a>
                 <a href="#how-it-works" className="text-gray-600 hover:text-primary transition-colors">How It Works</a>
                 <a href="#pricing" className="text-gray-600 hover:text-primary transition-colors">Pricing</a>
+                <Link href="/contact" className="text-gray-600 hover:text-primary transition-colors">Contact</Link>
               </nav>
             </div>
             <div className="flex items-center space-x-4">
