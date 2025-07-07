@@ -1,4 +1,10 @@
-// Brand color system for the pleaser ecosystem
+// Brand color system for the pleaser ecosystem with consistent icons
+export const brandIcons = {
+  cloudpleaser: "Brain", // Intelligence/AI - Brain icon
+  webhosted: "Globe", // Global hosting - Globe icon  
+  airswiped: "Zap" // Energy/Speed - Lightning/Zap icon
+};
+
 export const brandColors = {
   // Primary platforms with signature colors
   cloudpleaser: {
@@ -59,4 +65,9 @@ export function generateBrandLogo(
       </div>
     );
   }
+}
+
+// Helper function to get brand icon
+export function getBrandIcon(platform: 'cloudpleaser' | 'webhosted' | 'airswiped') {
+  return brandIcons[platform];
 }
