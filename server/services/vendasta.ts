@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import jwt from "jsonwebtoken";
 import { db } from "../db";
 import { clients, inboxMessages, campaigns, dashboardAccess, clientAssessments } from "@shared/schema";
 import { eq } from "drizzle-orm";
@@ -7,6 +8,7 @@ interface VendastaConfig {
   apiToken?: string;
   apiUser?: string;
   apiKey?: string;
+  privateKey?: string;
   webhookSecret?: string;
   baseUrl: string;
 }
@@ -47,6 +49,7 @@ export class VendastaIntegrationService {
       apiToken: process.env.VENDASTA_API_TOKEN,
       apiUser: process.env.VENDASTA_CLIENT_ID || "", 
       apiKey: process.env.VENDASTA_API_KEY || "",
+      privateKey: process.env.VENDASTA_API_KEY || "", // Service account private key
       webhookSecret: process.env.VENDASTA_WEBHOOK_SECRET,
       baseUrl: "https://business-center-api.vendasta.com" // Correct Vendasta Business Center API URL
     };
@@ -57,6 +60,45 @@ export class VendastaIntegrationService {
       baseUrl: this.config.baseUrl,
       apiKeyStartsWith: this.config.apiKey ? this.config.apiKey.substring(0, 10) + '...' : 'none'
     });
+  }
+
+  /**
+   * Generate JWT token for service account authentication
+   */
+  private generateServiceAccountToken(): string | null {
+    try {
+      if (!this.config.privateKey || !this.config.apiUser) {
+        console.log('Missing private key or API user for service account authentication');
+        return null;
+      }
+
+      // Check if the private key is in PEM format
+      if (!this.config.privateKey.includes('-----BEGIN')) {
+        console.log('Private key does not appear to be in PEM format');
+        return null;
+      }
+
+      const now = Math.floor(Date.now() / 1000);
+      const payload = {
+        iss: this.config.apiUser, // Service account email/identifier
+        sub: this.config.apiUser,
+        aud: 'https://business-center-api.vendasta.com',
+        iat: now,
+        exp: now + 3600, // 1 hour expiration
+        scope: 'https://business-center-api.vendasta.com'
+      };
+
+      const token = jwt.sign(payload, this.config.privateKey, {
+        algorithm: 'RS256',
+        keyid: 'vendasta-service-account'
+      });
+
+      console.log('Generated JWT token for service account authentication');
+      return token;
+    } catch (error) {
+      console.error('Error generating service account token:', error);
+      return null;
+    }
   }
 
   /**
@@ -86,6 +128,14 @@ export class VendastaIntegrationService {
       'Content-Type': 'application/json',
     };
 
+    // Try service account JWT authentication first
+    const serviceToken = this.generateServiceAccountToken();
+    if (serviceToken) {
+      headers['Authorization'] = `Bearer ${serviceToken}`;
+      return headers;
+    }
+
+    // Fallback to API token if available
     if (this.config.apiToken) {
       headers['Authorization'] = `Bearer ${this.config.apiToken}`;
     }
@@ -94,19 +144,28 @@ export class VendastaIntegrationService {
   }
 
   private getAuthUrl(endpoint: string): string {
-    // Ensure we always use the correct base URL
+    // For service account authentication, we use headers instead of query parameters
     const baseUrl = this.config.baseUrl;
     console.log(`Building URL with baseUrl: ${baseUrl}, endpoint: ${endpoint}`);
     
+    // Check if we can use service account authentication
+    const serviceToken = this.generateServiceAccountToken();
+    if (serviceToken) {
+      console.log('Using service account JWT authentication via headers');
+      return `${baseUrl}${endpoint}`;
+    }
+
+    // Fallback to API token
     if (this.config.apiToken) {
       return `${baseUrl}${endpoint}`;
-    } else {
-      const separator = endpoint.includes('?') ? '&' : '?';
-      const apiKeyEncoded = this.config.apiKey ? encodeURIComponent(this.config.apiKey) : "";
-      const fullUrl = `${baseUrl}${endpoint}${separator}apiUser=${this.config.apiUser}&apiKey=${apiKeyEncoded}`;
-      console.log(`Built authenticated URL to: ${baseUrl}${endpoint}${separator}apiUser=${this.config.apiUser}&apiKey=[REDACTED]`);
-      return fullUrl;
     }
+    
+    // Legacy API key method (likely won't work with service accounts)
+    const separator = endpoint.includes('?') ? '&' : '?';
+    const apiKeyEncoded = this.config.apiKey ? encodeURIComponent(this.config.apiKey) : "";
+    const fullUrl = `${baseUrl}${endpoint}${separator}apiUser=${this.config.apiUser}&apiKey=${apiKeyEncoded}`;
+    console.log(`Built authenticated URL to: ${baseUrl}${endpoint}${separator}apiUser=${this.config.apiUser}&apiKey=[REDACTED]`);
+    return fullUrl;
   }
 
   async fetchClientData(customerIdentifier: string): Promise<VendastaClient | null> {
