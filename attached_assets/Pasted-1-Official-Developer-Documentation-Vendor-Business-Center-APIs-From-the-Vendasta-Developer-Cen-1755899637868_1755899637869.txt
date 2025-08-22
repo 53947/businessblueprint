@@ -1,0 +1,70 @@
+1. Official Developer Documentation (Vendor / Business-Center APIs)
+
+From the Vendasta Developer Center and the Appspot-hosted Business Center API documentation, here are key endpoints commonly used by white-label partners (i.e., agencies or resellers using Vendasta APIs to build custom branded workflows):
+
+Business-Center API Endpoints
+
+These are foundational REST endpoints for managing accounts, users, product associations—crucial for white-label integrations:
+	•	Associate a Business App user with an Account Group (v2.0)
+POST https://business-center-api.vendasta.com/api/v2/accountGroup/associateUser/
+￼ ￼
+	•	Create Account (v3.0)
+POST https://business-center-api.vendasta.com/api/v3/account/create/
+￼
+	•	Update Account (v3.0)
+POST https://business-center-api.vendasta.com/api/v3/account/update/
+￼
+	•	Delete Account (v3.0)
+POST https://business-center-api.vendasta.com/api/v3/account/delete/
+￼
+	•	Get Account (v3.0)
+GET https://business-center-api.vendasta.com/api/v3/account/get/
+￼
+	•	Search Account (v3.0)
+GET https://business-center-api.vendasta.com/api/v3/account/search/ (supports pagination)
+￼
+	•	Add New Product to Account (v3.0)
+POST https://business-center-api.vendasta.com/api/v3/account/addProduct/
+￼
+	•	Create Business Center Association (v2.0)
+POST https://business-center-api.vendasta.com/api/v2/userAssociation/create/
+￼
+	•	Lookup Business Center Associations (v2.2)
+GET https://business-center-api.vendasta.com/api/v2/userAssociation/lookup/
+￼
+	•	Remove All Associations for a Business Center Product (v2.0)
+POST https://business-center-api.vendasta.com/api/v2/productAssociation/remove/
+￼
+	•	Remove a Business Center Association (v2.0)
+POST https://business-center-api.vendasta.com/api/v2/userAssociation/remove/
+￼
+
+User Management Endpoints
+
+These support Business Center user operations, important for white-label partner user provisioning:
+	•	Lookup All Users (v3.0)
+POST/GET https://business-center-api.vendasta.com/api/v3/user/lookup/
+￼
+	•	Search User (v3.0)
+GET https://business-center-api.vendasta.com/api/v3/user/search/
+￼
+	•	Create Business Center Users (v2.2)
+POST https://business-center-api.vendasta.com/api/v2/user/create/
+￼
+	•	Update a Business Center User (v2.0)
+POST https://business-center-api.vendasta.com/api/v2/user/update/
+￼
+	•	Retrieve a Business Center User (v2.0)
+GET https://business-center-api.vendasta.com/api/v2/user/get/
+￼
+	•	Delete a Business Center User (v2.0)
+POST https://business-center-api.vendasta.com/api/v2/user/delete/
+￼
+
+⸻
+
+2. Branding & White-Labeling Context
+
+While the above endpoints are essential for implementing white-label features, Vendasta supports white-labeling more broadly via these configuration layers:
+	•	In documentation “White‑labeling & Branding” (Developer Center), Vendasta highlights branding capabilities like customizing dashboard colors, logos, and using the Account API to manage white-labeled experiences.  ￼ ￼
+	•	The Support guide “Getting Started Guide: Set up and white label the platform” explains domain and email customization, white-label branding of products, customizing Business App UX—these are UI-level settings, not necessarily API endpoints but critical for white-label partners.  ￼
