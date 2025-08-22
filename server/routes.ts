@@ -204,14 +204,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { customerIdentifier } = req.body;
       
       if (!customerIdentifier) {
-        return res.status(400).json({ message: "Customer identifier is required" });
+        return res.status(400).json({ 
+          message: "Customer identifier is required",
+          example: "Try using your actual Vendasta customer ID"
+        });
       }
+
+      console.log(`🔄 Attempting to sync Vendasta customer: ${customerIdentifier}`);
 
       // Fetch client data from Vendasta
       const vendastaClient = await vendastaService.fetchClientData(customerIdentifier);
       
       if (!vendastaClient) {
-        return res.status(404).json({ message: "Client not found in Vendasta" });
+        return res.status(404).json({ 
+          message: "Customer not found in Vendasta",
+          customerIdentifier,
+          details: "This customer ID doesn't exist in your Vendasta account",
+          suggestion: "Check your Vendasta Business Center for the correct customer identifier",
+          connectionStatus: "API connection is working - customer ID issue"
+        });
       }
 
       // Sync to our database
@@ -219,13 +230,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (clientId) {
         const client = await storage.getClient(clientId);
-        res.json(client);
+        console.log(`✅ Successfully synced customer: ${customerIdentifier}`);
+        res.json({
+          success: true,
+          message: "Client synced successfully",
+          client
+        });
       } else {
-        res.status(500).json({ message: "Failed to sync client data" });
+        res.status(500).json({ 
+          message: "Failed to sync client data to database",
+          vendastaData: "Retrieved successfully",
+          databaseSync: "Failed"
+        });
       }
     } catch (error) {
       console.error("Error syncing Vendasta client:", error);
-      res.status(500).json({ message: "Failed to sync client" });
+      res.status(500).json({ 
+        message: "Failed to sync client",
+        error: error.message,
+        suggestion: "Check server logs for detailed error information"
+      });
     }
   });
 
