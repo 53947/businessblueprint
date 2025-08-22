@@ -40,6 +40,7 @@ export const assessments = pgTable("assessments", {
   // AI Analysis results
   analysisResults: jsonb("analysis_results"),
   digitalScore: integer("digital_score"),
+  grade: varchar("grade", { length: 10 }), // A, B, C, D, F
   
   // Status tracking
   status: varchar("status", { length: 50 }).default("pending"), // pending, analyzing, completed, failed

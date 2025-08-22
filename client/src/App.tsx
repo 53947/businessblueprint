@@ -9,6 +9,7 @@ import Dashboard from "@/pages/dashboard";
 import AICoachPage from "@/pages/ai-coach";
 import ClientPortal from "@/pages/client-portal";
 import ClientLogin from "@/pages/client-login";
+import VendastaIntegration from "@/pages/vendasta-integration";
 import Contact from "@/pages/contact";
 import About from "@/pages/about";
 import NotFound from "@/pages/not-found";
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/ai-coach" component={AICoachPage} />
       <Route path="/portal/login" component={ClientLogin} />
       <Route path="/portal" component={ClientPortal} />
+      <Route path="/vendasta" component={VendastaIntegration} />
       <Route path="/contact" component={Contact} />
       <Route path="/about" component={About} />
       <Route component={NotFound} />
