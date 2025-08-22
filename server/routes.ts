@@ -399,9 +399,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Test API connection if credentials are available
       try {
-        const testClient = await vendastaService.fetchClientData("test");
-        testResults.apiConnection = testClient !== null;
+        // Check if all required credentials are present
+        const hasApiKey = !!process.env.VENDASTA_API_KEY;
+        const hasClientId = !!process.env.VENDASTA_CLIENT_ID;
+        const hasClientSecret = !!process.env.VENDASTA_CLIENT_SECRET;
+        
+        if (hasApiKey && hasClientId) {
+          const testClient = await vendastaService.fetchClientData("test");
+          testResults.apiConnection = testClient !== null;
+        } else {
+          testResults.apiConnection = false;
+        }
       } catch (error) {
+        console.error('API test error:', error);
         testResults.apiConnection = false;
       }
 
@@ -410,11 +420,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ready: testResults.apiConnection && testResults.databaseSchema,
         details: testResults,
         nextSteps: [
-          testResults.apiConnection ? "✅ API Connection" : "❌ Add VENDASTA_API_KEY secret",
+          testResults.apiConnection ? "✅ API Connection Working" : "⚠️ API Connection Failed - Check credentials and endpoints",
           "✅ Database Schema Ready",
           "✅ Webhook Endpoints Ready", 
           "✅ Client Sync Service Ready",
-          "✅ Campaign Pro Integration Ready"
+          "✅ Campaign Pro Integration Ready",
+          "✅ RS256 JWT Security Implemented"
         ]
       });
     } catch (error) {
