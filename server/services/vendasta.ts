@@ -190,20 +190,19 @@ export class VendastaIntegrationService {
   }
 
   /**
-   * Create dashboard access for client
+   * Create secure JWT dashboard access for client
    */
-  async createDashboardAccess(clientId: number, vendastaDashboardUrl: string): Promise<string | null> {
+  async createDashboardAccess(clientId: number, vendastaDashboardUrl: string, vendastaId?: string): Promise<string | null> {
     try {
-      const accessToken = crypto.randomBytes(32).toString('hex');
+      const { jwtService } = await import('./jwt');
       
-      await db.insert(dashboardAccess).values({
-        clientId,
-        accessToken,
-        vendastaDashboardUrl,
-        isActive: true,
-      });
-
-      return accessToken;
+      if (vendastaId) {
+        // Create Vendasta-specific dashboard token
+        return await jwtService.createVendastaDashboardToken(clientId, vendastaId, vendastaDashboardUrl);
+      } else {
+        // Create general dashboard token
+        return await jwtService.createDashboardToken(clientId);
+      }
     } catch (error) {
       console.error('Error creating dashboard access:', error);
       return null;
