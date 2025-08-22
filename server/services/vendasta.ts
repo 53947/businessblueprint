@@ -59,8 +59,8 @@ export class VendastaIntegrationService {
 
     this.config = {
       apiToken: process.env.VENDASTA_API_TOKEN,
-      apiUser: process.env.VENDASTA_CLIENT_ID || "", 
-      apiKey: process.env.VENDASTA_API_KEY || "",
+      apiUser: serviceAccountData.user_id, // Use service account user_id as apiUser
+      apiKey: process.env.VENDASTA_API_KEY || serviceAccountData.private_key_id, // Try API key from env, fallback to key ID
       privateKey: privateKey, // Service account private key (properly formatted)
       webhookSecret: process.env.VENDASTA_WEBHOOK_SECRET,
       baseUrl: "https://business-center-api.vendasta.com" // Correct Vendasta Business Center API URL
