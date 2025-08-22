@@ -7,6 +7,9 @@ import { OpenAIAnalysisService } from "./services/openai";
 import { EmailService } from "./services/email";
 import { vendastaService } from "./services/vendasta";
 import { aiCoachService } from "./services/aiCoach";
+import { dashboardAccess } from "@shared/schema";
+import { eq } from "drizzle-orm";
+import { db } from "./db";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const googleService = new GoogleBusinessService();
@@ -226,21 +229,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Dashboard access endpoint
+  // Dashboard access endpoint with JWT verification
   app.get("/api/dashboard/:token", async (req, res) => {
     try {
       const { token } = req.params;
+      const { jwtService } = await import('./services/jwt');
       
-      // Here you would verify the token and redirect to the appropriate Vendasta dashboard
-      // For now, we'll return a placeholder response
+      // Verify JWT token
+      const payload = jwtService.verifyToken(token);
+      
+      // Check if token is still active in database
+      const isActive = await jwtService.isTokenActive(token);
+      if (!isActive) {
+        return res.status(401).json({ message: "Token has been revoked" });
+      }
+      
+      // Get dashboard URL from database
+      const [dashboardRecord] = await db
+        .select()
+        .from(dashboardAccess)
+        .where(eq(dashboardAccess.accessToken, token));
+      
+      if (!dashboardRecord) {
+        return res.status(404).json({ message: "Dashboard access not found" });
+      }
+      
       res.json({ 
-        message: "Dashboard access", 
-        token,
-        redirectUrl: `https://business-app.vendasta.com/dashboard?token=${token}`
+        message: "Dashboard access verified", 
+        clientId: payload.clientId,
+        vendastaId: payload.vendastaId,
+        permissions: payload.permissions,
+        redirectUrl: dashboardRecord.vendastaDashboardUrl || `https://business-app.vendasta.com/dashboard?token=${token}`
       });
     } catch (error) {
       console.error("Error accessing dashboard:", error);
-      res.status(500).json({ message: "Failed to access dashboard" });
+      if (error instanceof Error && error.message.includes('Invalid token')) {
+        res.status(401).json({ message: "Invalid or expired token" });
+      } else {
+        res.status(500).json({ message: "Failed to access dashboard" });
+      }
+    }
+  });
+
+  // JWT public key endpoint for external verification
+  app.get("/api/auth/jwks", async (req, res) => {
+    try {
+      const { jwtService } = await import('./services/jwt');
+      const jwk = jwtService.getJWK();
+      
+      res.json({
+        keys: [jwk]
+      });
+    } catch (error) {
+      console.error("Error getting JWK:", error);
+      res.status(500).json({ message: "Failed to get public key" });
+    }
+  });
+
+  // Create dashboard token endpoint
+  app.post("/api/clients/:id/dashboard-token", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const { vendastaId, dashboardUrl } = req.body;
+      
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+      
+      const token = await vendastaService.createDashboardAccess(
+        clientId, 
+        dashboardUrl || `https://business-app.vendasta.com/dashboard?client=${clientId}`,
+        vendastaId || client.vendastaId || undefined
+      );
+      
+      if (token) {
+        res.json({ 
+          token,
+          dashboardUrl: `/api/dashboard/${token}`,
+          expiresIn: '24h'
+        });
+      } else {
+        res.status(500).json({ message: "Failed to create dashboard token" });
+      }
+    } catch (error) {
+      console.error("Error creating dashboard token:", error);
+      res.status(500).json({ message: "Failed to create dashboard token" });
     }
   });
 

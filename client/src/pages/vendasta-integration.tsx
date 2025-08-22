@@ -259,6 +259,37 @@ export default function VendastaIntegrationPage() {
         </CardContent>
       </Card>
 
+      {/* JWT Security Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Security Features</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div>
+              <h4 className="font-medium text-green-600">✅ RS256 JWT Implementation</h4>
+              <p className="text-sm text-gray-600">
+                Secure token signing with RSA asymmetric encryption for dashboard access
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-medium text-green-600">✅ Token Verification</h4>
+              <p className="text-sm text-gray-600">
+                Automatic token validation and revocation system for enhanced security
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-medium text-green-600">✅ Public Key Distribution</h4>
+              <p className="text-sm text-gray-600">
+                JWK endpoint available at <code className="bg-gray-100 px-1 rounded">/api/auth/jwks</code> for external verification
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Integration Features */}
       <Card>
         <CardHeader>
