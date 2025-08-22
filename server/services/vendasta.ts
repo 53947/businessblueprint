@@ -37,11 +37,17 @@ export class VendastaIntegrationService {
   constructor() {
     this.config = {
       apiToken: process.env.VENDASTA_API_TOKEN,
-      apiUser: process.env.VENDASTA_API_USER || "",
+      apiUser: process.env.VENDASTA_CLIENT_ID || "", // Use CLIENT_ID as apiUser
       apiKey: process.env.VENDASTA_API_KEY || "",
       webhookSecret: process.env.VENDASTA_WEBHOOK_SECRET,
-      baseUrl: process.env.VENDASTA_BASE_URL || "https://prod-api.vendasta.com"
+      baseUrl: process.env.VENDASTA_BASE_URL || "https://api.vendasta.com"
     };
+    
+    console.log('Vendasta config initialized:', {
+      hasApiKey: !!this.config.apiKey,
+      hasApiUser: !!this.config.apiUser,
+      baseUrl: this.config.baseUrl
+    });
   }
 
   /**
@@ -89,7 +95,15 @@ export class VendastaIntegrationService {
 
   async fetchClientData(customerIdentifier: string): Promise<VendastaClient | null> {
     try {
-      const url = this.getAuthUrl(`/customer/${customerIdentifier}`);
+      // Test with a simple ping endpoint first
+      if (customerIdentifier === "test") {
+        return this.testConnection();
+      }
+      
+      // Use Business Center API endpoint structure
+      const url = this.getAuthUrl(`/api/business-center/customers/${customerIdentifier}`);
+      
+      console.log(`Attempting Vendasta API call to: ${url}`);
       
       const response = await fetch(url, {
         method: 'GET',
@@ -98,6 +112,8 @@ export class VendastaIntegrationService {
 
       if (!response.ok) {
         console.error(`Vendasta API error: ${response.status} ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('Response body:', errorText);
         return null;
       }
 
@@ -105,6 +121,34 @@ export class VendastaIntegrationService {
       return this.transformVendastaClient(clientData);
     } catch (error) {
       console.error('Error fetching Vendasta client data:', error);
+      return null;
+    }
+  }
+  
+  private async testConnection(): Promise<VendastaClient | null> {
+    try {
+      // Try a basic API endpoint to test connection
+      const testUrl = this.getAuthUrl('/api/ping');
+      console.log(`Testing Vendasta connection to: ${testUrl}`);
+      
+      const response = await fetch(testUrl, {
+        method: 'GET',
+        headers: this.getAuthHeaders()
+      });
+      
+      console.log(`Test connection response: ${response.status} ${response.statusText}`);
+      
+      if (response.ok) {
+        return {
+          customerIdentifier: 'test',
+          companyName: 'Test Connection Success',
+          email: 'test@example.com'
+        };
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Test connection error:', error);
       return null;
     }
   }
