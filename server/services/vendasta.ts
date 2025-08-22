@@ -201,11 +201,25 @@ export class VendastaIntegrationService {
     const accessToken = await this.getOAuth2AccessToken();
     if (accessToken) {
       headers['Authorization'] = `Bearer ${accessToken}`;
-      return headers;
+    }
+
+    // Add required apiUser and apiKey to headers (Vendasta expects both OAuth2 + API key auth)
+    if (this.config.apiUser) {
+      headers['X-API-User'] = this.config.apiUser;
+    }
+    
+    if (this.config.apiKey) {
+      headers['X-API-Key'] = this.config.apiKey;
+    }
+
+    // Also try standard API key header formats
+    if (this.config.apiUser && this.config.apiKey) {
+      headers['apiUser'] = this.config.apiUser;
+      headers['apiKey'] = this.config.apiKey;
     }
 
     // Fallback to API token if available
-    if (this.config.apiToken) {
+    if (this.config.apiToken && !accessToken) {
       headers['Authorization'] = `Bearer ${this.config.apiToken}`;
     }
 
@@ -227,25 +241,65 @@ export class VendastaIntegrationService {
         return this.testConnection();
       }
       
-      // Use correct Vendasta Business Center API endpoint structure
-      const url = this.getAuthUrl(`/api/v3/account/${customerIdentifier}`);
+      // Use correct Vendasta Business Center API endpoint from official documentation
+      const url = this.getAuthUrl(`/api/v3/account/get/`);
       
-      console.log(`Attempting Vendasta API call to: ${this.config.baseUrl}/api/v3/account/${customerIdentifier} [authenticated]`);
+      console.log(`Attempting Vendasta API call to: ${this.config.baseUrl}/api/v3/account/get/ with customer: ${customerIdentifier} [authenticated]`);
       
-      const response = await fetch(url, {
+      // Try GET first with customerIdentifier parameter (auth now in headers)
+      const getParams = new URLSearchParams({
+        customerIdentifier: customerIdentifier
+      });
+      
+      const getResponse = await fetch(`${url}?${getParams}`, {
         method: 'GET',
         headers: await this.getAuthHeaders()
       });
 
-      if (!response.ok) {
-        console.error(`Vendasta API error: ${response.status} ${response.statusText}`);
-        const errorText = await response.text();
-        console.error('Response body:', errorText);
-        return null;
+      if (getResponse.ok) {
+        const clientData = await getResponse.json();
+        return this.transformVendastaClient(clientData);
       }
 
-      const clientData = await response.json();
-      return this.transformVendastaClient(clientData);
+      // If GET doesn't work, try POST with body (some Vendasta endpoints require POST)
+      const postResponse = await fetch(url, {
+        method: 'POST',
+        headers: await this.getAuthHeaders(),
+        body: JSON.stringify({ 
+          customerIdentifier: customerIdentifier
+        })
+      });
+
+      if (postResponse.ok) {
+        const clientData = await postResponse.json();
+        return this.transformVendastaClient(clientData);
+      }
+
+      // Try the search endpoint as fallback
+      const searchUrl = this.getAuthUrl(`/api/v3/account/search/`);
+      const searchParams = new URLSearchParams({
+        customerIdentifier: customerIdentifier
+      });
+      
+      const searchResponse = await fetch(`${searchUrl}?${searchParams}`, {
+        method: 'GET',
+        headers: await this.getAuthHeaders()
+      });
+
+      if (searchResponse.ok) {
+        const searchResults = await searchResponse.json();
+        // Extract first result if search returns multiple accounts
+        if (searchResults && searchResults.length > 0) {
+          return this.transformVendastaClient(searchResults[0]);
+        }
+      }
+
+      // Log the final error details
+      console.error(`Vendasta API error: ${postResponse.status} ${postResponse.statusText}`);
+      const errorText = await postResponse.text();
+      console.error('Response body:', errorText);
+      return null;
+
     } catch (error) {
       console.error('Error fetching Vendasta client data:', error);
       return null;
@@ -261,12 +315,12 @@ export class VendastaIntegrationService {
         apiUserSample: this.config.apiUser ? this.config.apiUser.substring(0, 10) + '...' : 'none'
       });
 
-      // Try Vendasta Business Center API endpoints based on testing results
+      // Try Vendasta Business Center API endpoints from official documentation
       const endpoints = [
-        '/api/v3/account/create', // Found working endpoint - returns proper 401 auth error
-        '/api/v3/account',       // Try account list  
-        '/account',              // Fallback basic endpoint
-        '/account/list'          // Fallback list endpoint
+        '/api/v3/account/get/',    // Official endpoint for getting account details
+        '/api/v3/account/search/', // Official endpoint for searching accounts
+        '/api/v3/account/create/', // Official endpoint for creating accounts
+        '/api/v3/user/lookup/'     // Official endpoint for user lookup
       ];
       
       for (const endpoint of endpoints) {
