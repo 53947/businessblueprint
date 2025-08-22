@@ -45,11 +45,23 @@ export class VendastaIntegrationService {
       VENDASTA_BASE_URL_value: process.env.VENDASTA_BASE_URL
     });
     
+    // Extract the properly formatted private key from JSON if it looks like JSON
+    let privateKey = process.env.VENDASTA_API_KEY || "";
+    if (privateKey.includes('"private_key":')) {
+      try {
+        const serviceAccountData = JSON.parse(privateKey);
+        privateKey = serviceAccountData.private_key || privateKey;
+        console.log('Extracted private key from service account JSON');
+      } catch (e) {
+        console.log('Failed to parse VENDASTA_API_KEY as JSON, using as-is');
+      }
+    }
+
     this.config = {
       apiToken: process.env.VENDASTA_API_TOKEN,
       apiUser: process.env.VENDASTA_CLIENT_ID || "", 
       apiKey: process.env.VENDASTA_API_KEY || "",
-      privateKey: process.env.VENDASTA_API_KEY || "", // Service account private key
+      privateKey: privateKey, // Service account private key (properly formatted)
       webhookSecret: process.env.VENDASTA_WEBHOOK_SECRET,
       baseUrl: "https://business-center-api.vendasta.com" // Correct Vendasta Business Center API URL
     };
@@ -63,40 +75,94 @@ export class VendastaIntegrationService {
   }
 
   /**
-   * Generate JWT token for service account authentication
+   * Generate JWT token for Vendasta service account authentication
    */
   private generateServiceAccountToken(): string | null {
     try {
-      if (!this.config.privateKey || !this.config.apiUser) {
-        console.log('Missing private key or API user for service account authentication');
+      if (!this.config.privateKey) {
+        console.log('Missing private key for service account authentication');
         return null;
       }
 
+      // Convert escaped newlines to actual newlines in the private key
+      let privateKey = this.config.privateKey;
+      console.log('Original private key format check:', {
+        hasEscapedNewlines: privateKey.includes('\\n'),
+        hasActualNewlines: privateKey.includes('\n'),
+        startsWithBegin: privateKey.startsWith('-----BEGIN'),
+        firstFiftyChars: privateKey.substring(0, 50) + '...'
+      });
+      
+      if (privateKey.includes('\\n')) {
+        privateKey = privateKey.replace(/\\n/g, '\n');
+        console.log('Converted escaped newlines to actual newlines');
+      }
+      
       // Check if the private key is in PEM format
-      if (!this.config.privateKey.includes('-----BEGIN')) {
+      if (!privateKey.includes('-----BEGIN')) {
         console.log('Private key does not appear to be in PEM format');
         return null;
       }
 
       const now = Math.floor(Date.now() / 1000);
+      
+      // Use the correct values from the service account JSON
       const payload = {
-        iss: this.config.apiUser, // Service account email/identifier
-        sub: this.config.apiUser,
-        aud: 'https://business-center-api.vendasta.com',
+        iss: 'vendasta-cloudpleaser1@partner-service-account.apigateway.co',
+        sub: 'vendasta-cloudpleaser1@partner-service-account.apigateway.co',
+        aud: 'https://iam-prod.apigateway.co',
         iat: now,
         exp: now + 3600, // 1 hour expiration
         scope: 'https://business-center-api.vendasta.com'
       };
 
-      const token = jwt.sign(payload, this.config.privateKey, {
+      const token = jwt.sign(payload, privateKey, {
         algorithm: 'RS256',
-        keyid: 'vendasta-service-account'
+        keyid: 'a9d70dec-f6b9-43dd-a5ea-202fdd849f5e' // Key ID from service account
       });
 
-      console.log('Generated JWT token for service account authentication');
+      console.log('Generated JWT token for Vendasta service account authentication');
       return token;
     } catch (error) {
       console.error('Error generating service account token:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get OAuth2 access token using service account JWT
+   */
+  private async getOAuth2AccessToken(): Promise<string | null> {
+    try {
+      const assertion = this.generateServiceAccountToken();
+      if (!assertion) {
+        return null;
+      }
+
+      const tokenUri = 'https://sso-api-prod.apigateway.co/oauth2/token';
+      const response = await fetch(tokenUri, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+          assertion: assertion
+        })
+      });
+
+      if (!response.ok) {
+        console.error('OAuth2 token request failed:', response.status, response.statusText);
+        const errorText = await response.text();
+        console.error('OAuth2 error response:', errorText);
+        return null;
+      }
+
+      const tokenData = await response.json();
+      console.log('Successfully obtained OAuth2 access token');
+      return tokenData.access_token;
+    } catch (error) {
+      console.error('Error getting OAuth2 access token:', error);
       return null;
     }
   }
@@ -123,15 +189,15 @@ export class VendastaIntegrationService {
   /**
    * Fetch client data from Vendasta API
    */
-  private getAuthHeaders(): HeadersInit {
+  private async getAuthHeaders(): Promise<HeadersInit> {
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
     };
 
-    // Try service account JWT authentication first
-    const serviceToken = this.generateServiceAccountToken();
-    if (serviceToken) {
-      headers['Authorization'] = `Bearer ${serviceToken}`;
+    // Try OAuth2 service account authentication first
+    const accessToken = await this.getOAuth2AccessToken();
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
       return headers;
     }
 
@@ -147,25 +213,8 @@ export class VendastaIntegrationService {
     // For service account authentication, we use headers instead of query parameters
     const baseUrl = this.config.baseUrl;
     console.log(`Building URL with baseUrl: ${baseUrl}, endpoint: ${endpoint}`);
-    
-    // Check if we can use service account authentication
-    const serviceToken = this.generateServiceAccountToken();
-    if (serviceToken) {
-      console.log('Using service account JWT authentication via headers');
-      return `${baseUrl}${endpoint}`;
-    }
-
-    // Fallback to API token
-    if (this.config.apiToken) {
-      return `${baseUrl}${endpoint}`;
-    }
-    
-    // Legacy API key method (likely won't work with service accounts)
-    const separator = endpoint.includes('?') ? '&' : '?';
-    const apiKeyEncoded = this.config.apiKey ? encodeURIComponent(this.config.apiKey) : "";
-    const fullUrl = `${baseUrl}${endpoint}${separator}apiUser=${this.config.apiUser}&apiKey=${apiKeyEncoded}`;
-    console.log(`Built authenticated URL to: ${baseUrl}${endpoint}${separator}apiUser=${this.config.apiUser}&apiKey=[REDACTED]`);
-    return fullUrl;
+    console.log('Using OAuth2 service account authentication via headers');
+    return `${baseUrl}${endpoint}`;
   }
 
   async fetchClientData(customerIdentifier: string): Promise<VendastaClient | null> {
@@ -182,7 +231,7 @@ export class VendastaIntegrationService {
       
       const response = await fetch(url, {
         method: 'GET',
-        headers: this.getAuthHeaders()
+        headers: await this.getAuthHeaders()
       });
 
       if (!response.ok) {
@@ -224,7 +273,7 @@ export class VendastaIntegrationService {
           
           const response = await fetch(testUrl, {
             method: 'GET',
-            headers: this.getAuthHeaders()
+            headers: await this.getAuthHeaders()
           });
           
           console.log(`Endpoint ${endpoint} response: ${response.status} ${response.statusText}`);
