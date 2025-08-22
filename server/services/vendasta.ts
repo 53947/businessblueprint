@@ -119,7 +119,7 @@ export class VendastaIntegrationService {
       // Use correct Vendasta Business Center API endpoint structure
       const url = this.getAuthUrl(`/api/v3/account/${customerIdentifier}`);
       
-      console.log(`Attempting Vendasta API call to: ${url}`);
+      console.log(`Attempting Vendasta API call to: ${this.config.baseUrl}/api/v3/account/${customerIdentifier} [authenticated]`);
       
       const response = await fetch(url, {
         method: 'GET',
