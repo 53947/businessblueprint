@@ -99,6 +99,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // List available Vendasta customers for debugging
+  app.get("/api/vendasta/customers", async (req, res) => {
+    try {
+      const customers = await vendastaService.listAvailableCustomers();
+      res.json({
+        success: true,
+        customers: customers,
+        totalFound: customers.length,
+        message: "These are the customer accounts accessible through your API credentials"
+      });
+    } catch (error) {
+      console.error("Error listing Vendasta customers:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to list customers",
+        error: error.message
+      });
+    }
+  });
+
   // Vendasta webhook endpoint
   app.post("/api/webhooks/vendasta", async (req, res) => {
     try {
