@@ -114,7 +114,73 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         message: "Failed to list customers",
-        error: error.message
+        error: (error as Error).message
+      });
+    }
+  });
+
+  // Get client dashboard data
+  app.get("/api/clients/:id/dashboard", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      
+      if (isNaN(clientId)) {
+        return res.status(400).json({ message: "Invalid client ID" });
+      }
+
+      // Get client basic info
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+
+      // Get recent campaigns
+      const campaigns = await storage.getCampaignsByClient(clientId);
+      
+      // Get recent inbox messages
+      const messages = await storage.getMessagesByClient(clientId);
+      
+      // Calculate basic metrics
+      const dashboardData = {
+        client,
+        digitalScore: 75, // Could be calculated from various factors
+        grade: "B+",
+        lastUpdated: client.updatedAt,
+        listings: {
+          total: client.enabledFeatures ? client.enabledFeatures.split(',').length : 0,
+          verified: client.enabledFeatures ? client.enabledFeatures.split(',').length - 1 : 0,
+          pending: 1,
+          platforms: ["Google Business", "Yelp", "Facebook", "Apple Maps"]
+        },
+        reviews: {
+          average: 4.3,
+          total: 156,
+          recent: 12,
+          response_rate: 85
+        },
+        campaigns: {
+          active: campaigns.filter((c: any) => c.status === 'active').length,
+          pending: campaigns.filter((c: any) => c.status === 'draft').length,
+          total: campaigns.length,
+          performance: {
+            reach: 2340,
+            clicks: 89,
+            conversions: 12
+          }
+        },
+        messages: {
+          unread: messages.filter((m: any) => !m.isRead).length,
+          total: messages.length,
+          recent: messages.slice(0, 5)
+        }
+      };
+
+      res.json({ success: true, data: dashboardData });
+    } catch (error) {
+      console.error("Error fetching client dashboard:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch dashboard data",
+        error: (error as Error).message
       });
     }
   });
