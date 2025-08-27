@@ -249,63 +249,42 @@ export class VendastaIntegrationService {
         return this.testConnection();
       }
       
-      // Use correct Vendasta Business Center API endpoint from official documentation
-      const url = this.getAuthUrl(`/api/v3/account/get/`);
+      console.log(`🔍 Searching for Vendasta customer: ${customerIdentifier}`);
       
-      console.log(`Attempting Vendasta API call to: ${this.config.baseUrl}/api/v3/account/get/ with customer: ${customerIdentifier} [authenticated]`);
-      
-      // Try GET first with customerIdentifier parameter (auth now in headers)
-      const getParams = new URLSearchParams({
-        customerIdentifier: customerIdentifier
-      });
-      
-      const getResponse = await fetch(`${url}&${getParams}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-
-      if (getResponse.ok) {
-        const clientData = await getResponse.json();
-        return this.transformVendastaClient(clientData);
-      }
-
-      // If GET doesn't work, try POST with body (some Vendasta endpoints require POST)
-      const postResponse = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          customerIdentifier: customerIdentifier
-        })
-      });
-
-      if (postResponse.ok) {
-        const clientData = await postResponse.json();
-        return this.transformVendastaClient(clientData);
-      }
-
-      // Try the search endpoint as fallback
+      // Use the search endpoint that we know works, and filter results
       const searchUrl = this.getAuthUrl(`/api/v3/account/search/`);
-      const searchParams = new URLSearchParams({
-        customerIdentifier: customerIdentifier
-      });
       
-      const searchResponse = await fetch(`${searchUrl}&${searchParams}`, {
+      const searchResponse = await fetch(searchUrl, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
 
       if (searchResponse.ok) {
         const searchResults = await searchResponse.json();
-        // Extract first result if search returns multiple accounts
-        if (searchResults && searchResults.length > 0) {
-          return this.transformVendastaClient(searchResults[0]);
+        console.log(`📊 Found ${searchResults.totalResults} total accounts`);
+        
+        // Look for the specific account in the results
+        if (searchResults.data && Array.isArray(searchResults.data)) {
+          const foundAccount = searchResults.data.find((account: any) => 
+            account.accountId === customerIdentifier || 
+            account.customerIdentifier === customerIdentifier
+          );
+          
+          if (foundAccount) {
+            console.log(`✅ Found customer: ${foundAccount.companyName}`);
+            console.log('Raw account data:', JSON.stringify(foundAccount, null, 2));
+            return this.transformVendastaClient(foundAccount);
+          } else {
+            console.log(`❌ Customer ${customerIdentifier} not found in ${searchResults.data.length} returned accounts`);
+            console.log('Available account IDs:', searchResults.data.map((acc: any) => acc.accountId).join(', '));
+          }
         }
+      } else {
+        console.error(`Vendasta search API error: ${searchResponse.status} ${searchResponse.statusText}`);
+        const errorText = await searchResponse.text();
+        console.error('Search response body:', errorText);
       }
 
-      // Log the final error details
-      console.error(`Vendasta API error: ${postResponse.status} ${postResponse.statusText}`);
-      const errorText = await postResponse.text();
-      console.error('Response body:', errorText);
       return null;
 
     } catch (error) {
@@ -391,6 +370,45 @@ export class VendastaIntegrationService {
     } catch (error) {
       console.error('Test connection error:', error);
       return null;
+    }
+  }
+
+  /**
+   * List all available customers from Vendasta
+   */
+  async listAvailableCustomers(): Promise<any[]> {
+    try {
+      const url = this.getAuthUrl('/api/v3/account/search/');
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Raw Vendasta search response:', JSON.stringify(data, null, 2));
+        
+        // Extract customer data from response
+        if (data.data && Array.isArray(data.data)) {
+          return data.data.map((account: any) => ({
+            customerIdentifier: account.id || account.customerIdentifier,
+            businessName: account.businessName || account.name,
+            email: account.email,
+            status: account.status
+          }));
+        }
+        
+        return [];
+      } else {
+        console.error('Failed to fetch customers:', response.status, response.statusText);
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error listing customers:', error);
+      return [];
     }
   }
 
@@ -551,16 +569,24 @@ export class VendastaIntegrationService {
   }
 
   private transformVendastaClient(data: any): VendastaClient {
-    return {
-      customerIdentifier: data.customerIdentifier || data.srid,
+    console.log('🔄 Transforming Vendasta client data:', {
+      customerIdentifier: data.customerIdentifier || data.accountId || data.srid,
       companyName: data.companyName,
-      email: data.email,
-      phone: data.phone,
-      website: data.website,
+      businessName: data.businessName,
+      name: data.name,
+      email: data.email
+    });
+    
+    return {
+      customerIdentifier: data.customerIdentifier || data.accountId || data.srid,
+      companyName: data.companyName || data.businessName || data.name || 'Unknown Business',
+      email: data.email || data.contactEmail || '',
+      phone: data.workNumber?.[0] || data.contactPhoneNumber || data.cellNumber || data.phone || '',
+      website: data.website || '',
       address: this.formatAddress(data),
-      businessCategory: data.businessCategory,
-      enabledFeatures: data.enabledFeatures,
-      lastLoginTime: data.lastLoginTime,
+      businessCategory: data.taxonomyId?.[0] || data.businessCategory || '',
+      enabledFeatures: Object.keys(data.services || {}) || data.enabledFeatures || [],
+      lastLoginTime: data.updatedDateTime || data.lastLoginTime,
     };
   }
 
