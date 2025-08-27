@@ -30,6 +30,7 @@ export default function ClientPortal() {
   const [, setLocation] = useLocation();
   const [clientId, setClientId] = useState<string | null>(null);
   const [vendastaId, setVendastaId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("overview");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -94,6 +95,36 @@ export default function ClientPortal() {
       title: "Messages",
       description: "Message management interface is being developed. Check back soon!"
     });
+  };
+
+  const navigateToTab = (tab: string) => {
+    setActiveTab(tab);
+    toast({
+      title: "Navigation",
+      description: `Switched to ${tab.charAt(0).toUpperCase() + tab.slice(1)} tab`
+    });
+  };
+
+  const handleActivityClick = (activity: string) => {
+    switch (activity) {
+      case 'New review response needed':
+        navigateToTab('reviews');
+        break;
+      case 'Listing verification pending':
+        navigateToTab('listings');
+        break;
+      case 'Campaign performance update':
+        navigateToTab('campaigns');
+        break;
+      case 'Task deadline approaching':
+        navigateToTab('tasks');
+        break;
+      default:
+        toast({
+          title: activity,
+          description: "More details available in the relevant tab"
+        });
+    }
   };
 
   if (isLoading) {
@@ -230,7 +261,7 @@ export default function ClientPortal() {
         </div>
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="overview" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="listings">Listings</TabsTrigger>
@@ -290,18 +321,27 @@ export default function ClientPortal() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+                    <button 
+                      className="w-full flex items-center gap-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors text-left"
+                      onClick={() => handleActivityClick('Listing verification pending')}
+                    >
                       <CheckCircle className="h-4 w-4 text-green-600" />
                       <span className="text-sm">Google listing updated successfully</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                    </button>
+                    <button 
+                      className="w-full flex items-center gap-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors text-left"
+                      onClick={() => handleActivityClick('New review response needed')}
+                    >
                       <MessageSquare className="h-4 w-4 text-blue-600" />
                       <span className="text-sm">New review received on Yelp</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
+                    </button>
+                    <button 
+                      className="w-full flex items-center gap-3 p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors text-left"
+                      onClick={() => handleActivityClick('Campaign performance update')}
+                    >
                       <AlertCircle className="h-4 w-4 text-orange-600" />
                       <span className="text-sm">Campaign performance report ready</span>
-                    </div>
+                    </button>
                   </div>
                 </CardContent>
               </Card>
