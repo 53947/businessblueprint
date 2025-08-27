@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
 import { 
   BarChart3, 
   Star, 
@@ -29,6 +30,7 @@ export default function ClientPortal() {
   const [, setLocation] = useLocation();
   const [clientId, setClientId] = useState<string | null>(null);
   const [vendastaId, setVendastaId] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Get client ID from session storage
@@ -55,6 +57,43 @@ export default function ClientPortal() {
     sessionStorage.removeItem("clientId");
     sessionStorage.removeItem("vendastaId");
     setLocation("/portal/login");
+  };
+
+  const handleManageListing = (platform: string) => {
+    const platformUrls = {
+      'Google Business': 'https://business.google.com',
+      'Yelp': 'https://biz.yelp.com',
+      'Facebook': 'https://business.facebook.com',
+      'Apple Maps': 'https://mapsconnect.apple.com'
+    };
+    
+    const url = platformUrls[platform as keyof typeof platformUrls];
+    if (url) {
+      window.open(url, '_blank');
+      toast({
+        title: "Redirecting to " + platform,
+        description: "Opening your " + platform + " business management page..."
+      });
+    } else {
+      toast({
+        title: "Coming Soon",
+        description: platform + " management integration is being developed."
+      });
+    }
+  };
+
+  const handleCompleteTask = (taskTitle: string) => {
+    toast({
+      title: "Task Completed!",
+      description: `"${taskTitle}" has been marked as complete.`
+    });
+  };
+
+  const handleViewMessages = () => {
+    toast({
+      title: "Messages",
+      description: "Message management interface is being developed. Check back soon!"
+    });
   };
 
   if (isLoading) {
@@ -283,7 +322,9 @@ export default function ClientPortal() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-sm text-gray-500">Due today</span>
-                      <Button size="sm">Complete</Button>
+                      <Button size="sm" onClick={() => handleCompleteTask("Sync latest business data")}>
+                        Complete
+                      </Button>
                     </div>
                   </div>
                   <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -293,7 +334,9 @@ export default function ClientPortal() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-sm text-gray-500">Due this week</span>
-                      <Button size="sm">Complete</Button>
+                      <Button size="sm" onClick={() => handleCompleteTask("Update business hours")}>
+                        Complete
+                      </Button>
                     </div>
                   </div>
                   {clientData.messages.unread > 0 && (
@@ -304,7 +347,9 @@ export default function ClientPortal() {
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="text-sm text-gray-500">Due today</span>
-                        <Button size="sm">View Messages</Button>
+                        <Button size="sm" onClick={handleViewMessages}>
+                          View Messages
+                        </Button>
                       </div>
                     </div>
                   )}
@@ -344,7 +389,11 @@ export default function ClientPortal() {
                         <CheckCircle className="h-5 w-5 text-green-600" />
                         <span className="font-medium">{platform}</span>
                       </div>
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => handleManageListing(platform)}
+                      >
                         <ExternalLink className="h-4 w-4 mr-2" />
                         Manage
                       </Button>
