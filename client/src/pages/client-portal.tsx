@@ -323,7 +323,7 @@ export default function ClientPortal() {
                     <div className="flex items-center gap-3">
                       <span className="text-sm text-gray-500">Due today</span>
                       <Button size="sm" onClick={() => handleCompleteTask("Sync latest business data")}>
-                        Complete
+                        Mark Complete
                       </Button>
                     </div>
                   </div>
@@ -335,7 +335,7 @@ export default function ClientPortal() {
                     <div className="flex items-center gap-3">
                       <span className="text-sm text-gray-500">Due this week</span>
                       <Button size="sm" onClick={() => handleCompleteTask("Update business hours")}>
-                        Complete
+                        Mark Complete
                       </Button>
                     </div>
                   </div>
