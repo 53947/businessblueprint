@@ -59,7 +59,7 @@ export class VendastaIntegrationService {
 
     this.config = {
       apiToken: process.env.VENDASTA_API_TOKEN,
-      apiUser: serviceAccountData.user_id, // Use service account user_id as apiUser
+      apiUser: process.env.VENDASTA_USER_ID || serviceAccountData.user_id, // Use provided user ID or fallback to service account
       apiKey: process.env.VENDASTA_API_KEY || serviceAccountData.private_key_id, // Try API key from env, fallback to key ID
       privateKey: privateKey, // Service account private key (properly formatted)
       webhookSecret: process.env.VENDASTA_WEBHOOK_SECRET,
@@ -227,11 +227,19 @@ export class VendastaIntegrationService {
   }
 
   private getAuthUrl(endpoint: string): string {
-    // For service account authentication, we use headers instead of query parameters
+    // Use legacy apiUser/apiKey authentication via query parameters
     const baseUrl = this.config.baseUrl;
     console.log(`Building URL with baseUrl: ${baseUrl}, endpoint: ${endpoint}`);
-    console.log('Using OAuth2 service account authentication via headers');
-    return `${baseUrl}${endpoint}`;
+    console.log('Using legacy apiUser/apiKey authentication via query parameters');
+    
+    if (!this.config.apiUser || !this.config.apiKey) {
+      throw new Error('apiUser and apiKey are required for Vendasta Business Center API');
+    }
+    
+    // Add credentials as query parameters
+    const url = `${baseUrl}${endpoint}`;
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}apiUser=${encodeURIComponent(this.config.apiUser)}&apiKey=${encodeURIComponent(this.config.apiKey)}`;
   }
 
   async fetchClientData(customerIdentifier: string): Promise<VendastaClient | null> {
@@ -251,9 +259,9 @@ export class VendastaIntegrationService {
         customerIdentifier: customerIdentifier
       });
       
-      const getResponse = await fetch(`${url}?${getParams}`, {
+      const getResponse = await fetch(`${url}&${getParams}`, {
         method: 'GET',
-        headers: await this.getAuthHeaders()
+        headers: { 'Content-Type': 'application/json' }
       });
 
       if (getResponse.ok) {
@@ -264,7 +272,7 @@ export class VendastaIntegrationService {
       // If GET doesn't work, try POST with body (some Vendasta endpoints require POST)
       const postResponse = await fetch(url, {
         method: 'POST',
-        headers: await this.getAuthHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           customerIdentifier: customerIdentifier
         })
@@ -281,9 +289,9 @@ export class VendastaIntegrationService {
         customerIdentifier: customerIdentifier
       });
       
-      const searchResponse = await fetch(`${searchUrl}?${searchParams}`, {
+      const searchResponse = await fetch(`${searchUrl}&${searchParams}`, {
         method: 'GET',
-        headers: await this.getAuthHeaders()
+        headers: { 'Content-Type': 'application/json' }
       });
 
       if (searchResponse.ok) {
