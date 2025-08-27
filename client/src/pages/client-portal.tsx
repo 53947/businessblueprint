@@ -47,7 +47,7 @@ export default function ClientPortal() {
 
   // Fetch client dashboard data
   const { data: dashboardData, isLoading, error } = useQuery({
-    queryKey: ['/api/clients', clientId, 'dashboard'],
+    queryKey: [`/api/clients/${clientId}/dashboard`],
     enabled: !!clientId,
   });
 
