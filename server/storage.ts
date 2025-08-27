@@ -40,11 +40,13 @@ export interface IStorage {
   // Inbox operations for Campaign Pro
   createInboxMessage(message: InsertInboxMessage): Promise<InboxMessage>;
   getClientMessages(clientId: number, limit?: number): Promise<InboxMessage[]>;
+  getMessagesByClient(clientId: number): Promise<InboxMessage[]>;
   markMessageRead(messageId: number): Promise<void>;
 
   // Campaign operations
   createCampaign(campaign: InsertCampaign): Promise<Campaign>;
   getClientCampaigns(clientId: number): Promise<Campaign[]>;
+  getCampaignsByClient(clientId: number): Promise<Campaign[]>;
   updateCampaign(id: number, data: Partial<Campaign>): Promise<Campaign>;
 
   // Link operations
@@ -182,6 +184,14 @@ export class DatabaseStorage implements IStorage {
       .from(campaigns)
       .where(eq(campaigns.clientId, clientId))
       .orderBy(desc(campaigns.createdAt));
+  }
+
+  async getCampaignsByClient(clientId: number): Promise<Campaign[]> {
+    return this.getClientCampaigns(clientId);
+  }
+
+  async getMessagesByClient(clientId: number): Promise<InboxMessage[]> {
+    return this.getClientMessages(clientId);
   }
 
   async updateCampaign(id: number, data: Partial<Campaign>): Promise<Campaign> {

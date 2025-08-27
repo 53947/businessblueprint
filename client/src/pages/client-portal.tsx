@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
   BarChart3, 
   Star, 
@@ -17,48 +20,90 @@ import {
   ExternalLink,
   CheckCircle,
   AlertCircle,
-  Clock
+  Clock,
+  LogOut,
+  Brain
 } from "lucide-react";
 
 export default function ClientPortal() {
-  // Mock client data - will be replaced with real API calls
-  const clientData = {
-    businessName: "Local Coffee Shop",
-    digitalScore: 72,
-    grade: "B+",
-    lastUpdated: "2024-01-15",
-    contact: {
-      email: "owner@localcoffee.com",
-      phone: "(555) 123-4567",
-      address: "123 Main St, Anytown, CA 90210"
-    },
-    listings: {
-      total: 45,
-      verified: 38,
-      pending: 7,
-      platforms: ["Google Business", "Yelp", "Facebook", "Apple Maps"]
-    },
-    reviews: {
-      average: 4.3,
-      total: 156,
-      recent: 12,
-      response_rate: 85
-    },
-    campaigns: {
-      active: 3,
-      pending: 1,
-      performance: {
-        reach: 2340,
-        clicks: 89,
-        conversions: 12
-      }
-    },
-    tasks: [
-      { title: "Respond to recent Google review", priority: "high", dueDate: "2024-01-16" },
-      { title: "Update business hours for holidays", priority: "medium", dueDate: "2024-01-18" },
-      { title: "Post weekly social media content", priority: "low", dueDate: "2024-01-20" }
-    ]
+  const [, setLocation] = useLocation();
+  const [clientId, setClientId] = useState<string | null>(null);
+  const [vendastaId, setVendastaId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Get client ID from session storage
+    const storedClientId = sessionStorage.getItem("clientId");
+    const storedVendastaId = sessionStorage.getItem("vendastaId");
+    
+    if (!storedClientId) {
+      // Redirect to login if no client ID
+      setLocation("/portal/login");
+      return;
+    }
+    
+    setClientId(storedClientId);
+    setVendastaId(storedVendastaId);
+  }, [setLocation]);
+
+  // Fetch client dashboard data
+  const { data: dashboardData, isLoading, error } = useQuery({
+    queryKey: ['/api/clients', clientId, 'dashboard'],
+    enabled: !!clientId,
+  });
+
+  const handleSignOut = () => {
+    sessionStorage.removeItem("clientId");
+    sessionStorage.removeItem("vendastaId");
+    setLocation("/portal/login");
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <header className="bg-white shadow-sm border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <div className="flex items-center space-x-4">
+                <h1 className="text-2xl font-bold text-gray-900">
+                  cloud<span className="text-blue-600">pleaser</span><span className="text-purple-600">.io</span>
+                </h1>
+                <Badge variant="outline" className="text-sm">
+                  Client Dashboard
+                </Badge>
+              </div>
+            </div>
+          </div>
+        </header>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="space-y-6">
+            <Skeleton className="h-32 w-full" />
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-24" />
+              ))}
+            </div>
+            <Skeleton className="h-96 w-full" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Alert className="max-w-md">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Unable to load dashboard data. Please try signing in again.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  const clientData = dashboardData?.data;
+  if (!clientData) return null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -75,8 +120,9 @@ export default function ClientPortal() {
               </Badge>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Welcome back, {clientData.businessName}</span>
-              <Button variant="outline" size="sm">
+              <span className="text-sm text-gray-600">Welcome back, {clientData.client.companyName}</span>
+              <Button variant="outline" size="sm" onClick={handleSignOut}>
+                <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
               </Button>
             </div>
@@ -93,11 +139,16 @@ export default function ClientPortal() {
                 <div>
                   <h2 className="text-2xl font-bold mb-2">Digital Empowerment Score</h2>
                   <p className="text-blue-100">Your comprehensive online presence rating</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <Brain className="h-5 w-5" />
+                    <span className="text-sm">Powered by cloudpleaser AI</span>
+                  </div>
                 </div>
                 <div className="text-center">
                   <div className="text-5xl font-bold mb-2">{clientData.digitalScore}</div>
                   <div className="text-2xl font-semibold">{clientData.grade}</div>
-                  <p className="text-sm text-blue-100 mt-1">Updated {clientData.lastUpdated}</p>
+                  <p className="text-sm text-blue-100 mt-1">Updated {new Date(clientData.lastUpdated).toLocaleDateString()}</p>
+                  <p className="text-xs text-blue-200">Vendasta ID: {vendastaId}</p>
                 </div>
               </div>
             </CardContent>
@@ -163,15 +214,29 @@ export default function ClientPortal() {
                 <CardContent className="space-y-3">
                   <div className="flex items-center gap-3">
                     <Mail className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm">{clientData.contact.email}</span>
+                    <span className="text-sm">{clientData.client.email}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <Phone className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm">{clientData.contact.phone}</span>
+                    <span className="text-sm">{clientData.client.phone}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <MapPin className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm">{clientData.contact.address}</span>
+                    <span className="text-sm">{clientData.client.address}</span>
+                  </div>
+                  {clientData.client.website && (
+                    <div className="flex items-center gap-3">
+                      <Globe className="h-4 w-4 text-gray-500" />
+                      <a href={clientData.client.website} target="_blank" rel="noopener noreferrer" 
+                         className="text-sm text-blue-600 hover:text-blue-800">
+                        {clientData.client.website}
+                      </a>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-3">
+                    <Badge variant="outline" className="text-xs">
+                      {clientData.client.businessCategory}
+                    </Badge>
                   </div>
                 </CardContent>
               </Card>
@@ -211,22 +276,38 @@ export default function ClientPortal() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {clientData.tasks.map((task, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Badge variant="default">medium</Badge>
+                      <span className="font-medium">Sync latest business data</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm text-gray-500">Due today</span>
+                      <Button size="sm">Complete</Button>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Badge variant="secondary">low</Badge>
+                      <span className="font-medium">Update business hours</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm text-gray-500">Due this week</span>
+                      <Button size="sm">Complete</Button>
+                    </div>
+                  </div>
+                  {clientData.messages.unread > 0 && (
+                    <div className="flex items-center justify-between p-4 border rounded-lg">
                       <div className="flex items-center gap-3">
-                        <Badge 
-                          variant={task.priority === 'high' ? 'destructive' : task.priority === 'medium' ? 'default' : 'secondary'}
-                        >
-                          {task.priority}
-                        </Badge>
-                        <span className="font-medium">{task.title}</span>
+                        <Badge variant="destructive">high</Badge>
+                        <span className="font-medium">Respond to {clientData.messages.unread} unread messages</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-sm text-gray-500">Due {task.dueDate}</span>
-                        <Button size="sm">Complete</Button>
+                        <span className="text-sm text-gray-500">Due today</span>
+                        <Button size="sm">View Messages</Button>
                       </div>
                     </div>
-                  ))}
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -240,6 +321,22 @@ export default function ClientPortal() {
                 <CardDescription>Manage your presence across all platforms</CardDescription>
               </CardHeader>
               <CardContent>
+                <div className="mb-4">
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                      <div className="text-2xl font-bold text-green-600">{clientData.listings.verified}</div>
+                      <p className="text-sm text-gray-600">Verified</p>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-orange-600">{clientData.listings.pending}</div>
+                      <p className="text-sm text-gray-600">Pending</p>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-blue-600">{clientData.listings.total}</div>
+                      <p className="text-sm text-gray-600">Total</p>
+                    </div>
+                  </div>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {clientData.listings.platforms.map((platform, index) => (
                     <div key={index} className="p-4 border rounded-lg flex items-center justify-between">
@@ -281,8 +378,23 @@ export default function ClientPortal() {
                 <CardDescription>Track and manage your marketing efforts</CardDescription>
               </CardHeader>
               <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                  <div className="text-center p-4 bg-green-50 rounded-lg">
+                    <div className="text-2xl font-bold text-green-600">{clientData.campaigns.active}</div>
+                    <p className="text-sm text-gray-600">Active Campaigns</p>
+                  </div>
+                  <div className="text-center p-4 bg-orange-50 rounded-lg">
+                    <div className="text-2xl font-bold text-orange-600">{clientData.campaigns.pending}</div>
+                    <p className="text-sm text-gray-600">Pending</p>
+                  </div>
+                  <div className="text-center p-4 bg-blue-50 rounded-lg">
+                    <div className="text-2xl font-bold text-blue-600">{clientData.campaigns.performance.reach}</div>
+                    <p className="text-sm text-gray-600">Monthly Reach</p>
+                  </div>
+                </div>
                 <div className="text-center py-8 text-gray-500">
-                  Campaign management interface coming soon...
+                  <p>Campaign management interface coming soon...</p>
+                  <p className="text-sm mt-2">Your campaigns are currently managed through Vendasta.</p>
                 </div>
               </CardContent>
             </Card>

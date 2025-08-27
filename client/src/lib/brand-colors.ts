@@ -32,39 +32,12 @@ export const brandColors = {
   }
 };
 
-// Helper function to generate brand component
-export function generateBrandLogo(
+// Helper function to get brand classes for manual assembly
+export function getBrandClasses(
   platform: 'cloudpleaser' | 'webhosted' | 'airswiped',
-  page: 'home' | 'contact' | 'about' | 'pricing' | 'portal' = 'home',
-  className?: string
+  page: 'home' | 'contact' | 'about' | 'pricing' | 'portal' = 'home'
 ) {
-  const colors = brandColors[platform][page];
-  
-  if (platform === 'cloudpleaser') {
-    return (
-      <div className={`text-2xl font-bold ${className || ''}`}>
-        <span className={colors.cloud}>cloud</span>
-        <span className={colors.pleaser}>pleaser</span>
-        <span className={colors.io}>.io</span>
-      </div>
-    );
-  } else if (platform === 'webhosted') {
-    return (
-      <div className={`text-2xl font-bold ${className || ''}`}>
-        <span className={colors.web}>web</span>
-        <span className={colors.pleaser}>pleaser</span>
-        <span className={colors.io}>.io</span>
-      </div>
-    );
-  } else {
-    return (
-      <div className={`text-2xl font-bold ${className || ''}`}>
-        <span className={colors.air}>air</span>
-        <span className={colors.pleaser}>pleaser</span>
-        <span className={colors.com}>.com</span>
-      </div>
-    );
-  }
+  return brandColors[platform][page];
 }
 
 // Helper function to get brand icon
