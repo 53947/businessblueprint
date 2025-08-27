@@ -56,11 +56,11 @@ export default function ClientLogin() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="text-3xl font-bold">
+            <a href="/" className="text-3xl font-bold hover:opacity-80 transition-opacity">
               <span className="text-black">cloud</span>
               <span className="text-blue-500">pleaser</span>
               <span className="text-purple-600">.io</span>
-            </div>
+            </a>
           </div>
           <CardTitle className="text-2xl">Client Portal</CardTitle>
           <CardDescription>
