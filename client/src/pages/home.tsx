@@ -174,6 +174,7 @@ export default function Home() {
       {/* <AddOnServices /> */}
 
       {/* Integrated Platform Ecosystem */
+      <>
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -348,6 +349,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-16">
