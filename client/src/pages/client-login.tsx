@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLocation } from "wouter";
 import { LogIn, Building, AlertCircle } from "lucide-react";
 import { getBrandClasses } from "@/lib/brand-colors";
+import companyLogos from "@assets/Final Logos 3 Companies_1756371047136.png";
 
 export default function ClientLogin() {
   const [customerIdentifier, setCustomerIdentifier] = useState("");
@@ -55,11 +56,20 @@ export default function ClientLogin() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <a href="/" className="text-3xl font-bold hover:opacity-80 transition-opacity">
-              <span className="text-black">cloud</span>
-              <span className="text-blue-500">pleaser</span>
-              <span className="text-purple-600">.io</span>
+          <div className="flex justify-center items-center mb-4">
+            <a href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <div className="w-10 h-10 bg-cover bg-no-repeat" 
+                   style={{
+                     backgroundImage: `url(${companyLogos})`,
+                     backgroundPosition: '0% 50%',
+                     backgroundSize: '300% 100%'
+                   }}>
+              </div>
+              <span className="text-3xl font-bold">
+                <span className="text-black">cloud</span>
+                <span className="text-blue-500">pleaser</span>
+                <span className="text-purple-600">.io</span>
+              </span>
             </a>
           </div>
           <CardTitle className="text-2xl">Client Portal</CardTitle>
