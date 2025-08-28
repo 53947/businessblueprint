@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocation, Link } from "wouter";
-import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, MessageCircle, Brain, Globe, Zap, Wrench, Bell } from "lucide-react";
+import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, MessageCircle, Brain, Globe, Zap, Compass, MapPin, Gem } from "lucide-react";
+import { HowItWorks } from "@/components/how-it-works";
+import { ServicePathways } from "@/components/service-pathways";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -93,24 +95,70 @@ export default function Home() {
               </div>
             </div>
             <div className="lg:text-center">
-              <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Your Digital Treasure Map</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center text-left">
-                    <div className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">1</div>
-                    <span className="text-gray-700">AI analyzes your online presence</span>
+              <div className="bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 p-8 rounded-xl shadow-lg border-4 border-dashed border-amber-400 relative overflow-hidden">
+                {/* Treasure Map Background Pattern */}
+                <div className="absolute inset-0 opacity-10">
+                  <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <defs>
+                      <pattern id="compass" patternUnits="userSpaceOnUse" width="20" height="20">
+                        <circle cx="10" cy="10" r="1" fill="currentColor" opacity="0.3"/>
+                      </pattern>
+                    </defs>
+                    <rect width="100" height="100" fill="url(#compass)"/>
+                  </svg>
+                </div>
+                
+                {/* Compass in top corner */}
+                <div className="absolute top-4 right-4">
+                  <Compass className="w-8 h-8 text-amber-600 animate-spin" style={{animationDuration: '10s'}} />
+                </div>
+                
+                <div className="relative z-10">
+                  <div className="flex items-center justify-center mb-4">
+                    <MapPin className="w-6 h-6 text-red-500 mr-2" />
+                    <h3 className="text-2xl font-bold text-gray-900">Your Digital Treasure Map</h3>
+                    <Gem className="w-6 h-6 text-blue-500 ml-2" />
                   </div>
-                  <div className="flex items-center text-left">
-                    <div className="bg-green-100 text-green-600 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">2</div>
-                    <span className="text-gray-700">Get your personalized roadmap</span>
+                  
+                  {/* Treasure Map Path */}
+                  <div className="space-y-6">
+                    <div className="flex items-center text-left relative">
+                      <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 shadow-lg border-2 border-white">
+                        1
+                      </div>
+                      <span className="text-gray-700 font-medium">🔍 AI analyzes your online presence</span>
+                      {/* Dotted path */}
+                      <div className="absolute left-5 top-10 w-0.5 h-4 bg-dotted bg-amber-400 opacity-50"></div>
+                    </div>
+                    
+                    <div className="flex items-center text-left relative ml-6">
+                      <div className="bg-gradient-to-r from-green-500 to-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 shadow-lg border-2 border-white">
+                        2
+                      </div>
+                      <span className="text-gray-700 font-medium">📊 Get your personalized roadmap</span>
+                      <div className="absolute left-5 top-10 w-0.5 h-4 bg-dotted bg-amber-400 opacity-50"></div>
+                    </div>
+                    
+                    <div className="flex items-center text-left relative">
+                      <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 shadow-lg border-2 border-white">
+                        3
+                      </div>
+                      <span className="text-gray-700 font-medium">🛤️ Choose DIY or managed services</span>
+                      <div className="absolute left-5 top-10 w-0.5 h-4 bg-dotted bg-amber-400 opacity-50"></div>
+                    </div>
+                    
+                    <div className="flex items-center text-left ml-6">
+                      <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 shadow-lg border-2 border-white animate-pulse">
+                        🏆
+                      </div>
+                      <span className="text-gray-700 font-medium">💎 Watch your business grow</span>
+                    </div>
                   </div>
-                  <div className="flex items-center text-left">
-                    <div className="bg-purple-100 text-purple-600 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">3</div>
-                    <span className="text-gray-700">Choose DIY or managed services</span>
-                  </div>
-                  <div className="flex items-center text-left">
-                    <div className="bg-yellow-100 text-yellow-600 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">4</div>
-                    <span className="text-gray-700">Watch your business grow</span>
+                  
+                  {/* X marks the spot */}
+                  <div className="mt-6 text-center">
+                    <div className="inline-block text-4xl text-red-600 font-bold animate-bounce">×</div>
+                    <p className="text-sm text-gray-600 mt-1">Digital Success Awaits!</p>
                   </div>
                 </div>
               </div>
@@ -146,179 +194,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How It Works - Detailed Treasure Map */}
-      <section id="how-it-works" className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Your Digital Journey Map</h2>
-            <p className="text-xl text-gray-600">Follow these treasure map steps to transform your digital presence</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <div className="text-center group">
-              <div className="bg-primary/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                <Search className="w-8 h-8 text-primary group-hover:text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">1. AI Analysis</h3>
-              <p className="text-gray-600">Our AI scans your Google Business presence, reviews, and digital footprint to create a comprehensive snapshot within 24 hours</p>
-            </div>
-
-            <div className="text-center group">
-              <div className="bg-secondary/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-secondary group-hover:text-white transition-all duration-300">
-                <BarChart3 className="w-8 h-8 text-secondary group-hover:text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">2. Custom Report</h3>
-              <p className="text-gray-600">Receive a detailed email report with your digital score and specific recommendations to improve your online presence</p>
-            </div>
-
-            <div className="text-center group">
-              <div className="bg-blue-600/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                <Rocket className="w-8 h-8 text-blue-600 group-hover:text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">3. Choose Your Path</h3>
-              <p className="text-gray-600">Select to implement recommendations yourself (DIY) or let our managed services team handle everything for you</p>
-            </div>
-          </div>
-
-          <Card className="bg-gradient-to-r from-primary via-secondary to-blue-600 text-white text-center">
-            <CardContent className="p-8">
-              <h3 className="text-2xl font-bold mb-4">Ready to See Your Digital Score?</h3>
-              <p className="text-lg mb-6 opacity-90">Join 10,000+ businesses who've improved their online presence</p>
-              <Button 
-                onClick={startAssessment}
-                className="bg-white text-gray-900 hover:bg-gray-100 font-medium"
-              >
-                Start Your Digital Assessment
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+      {/* How It Works */}
+      <HowItWorks onStartAssessment={startAssessment} />
 
       {/* Service Pathways */}
-      <section id="services" className="bg-gray-50 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Choose Your Digital Journey</h2>
-            <p className="text-xl text-gray-600">Two paths to digital success - pick what works best for you</p>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-8 mb-12">
-            <Card className="shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-8">
-                <div className="flex items-center mb-6">
-                  <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mr-4">
-                    <Wrench className="w-8 h-8 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">DIY Path</h3>
-                    <p className="text-gray-600">Perfect for hands-on business owners</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Free Listing Platform</h4>
-                      <p className="text-gray-600 text-sm">Includes local SEO and listing distribution</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Social Media & Scheduling</h4>
-                      <p className="text-gray-600 text-sm">Post scheduling and social media management tools</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Reputation & CRM</h4>
-                      <p className="text-gray-600 text-sm">Citation builder, review management, and customer management</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold text-gray-900">AI Inbox & Website Builder</h4>
-                      <p className="text-gray-600 text-sm">AI-powered communication and simple website creation</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="border-t pt-6">
-                  <div className="text-center mb-4">
-                    <span className="text-3xl font-bold text-primary">Free - $299</span>
-                    <span className="text-gray-500 ml-2">per month</span>
-                  </div>
-                  <Button className="w-full bg-primary hover:bg-primary/90">
-                    Start DIY Journey
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg border-2 border-secondary hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="bg-secondary text-white px-6 py-2 rounded-full text-sm font-bold">RECOMMENDED</span>
-              </div>
-              <CardContent className="p-8">
-                <div className="flex items-center mb-6">
-                  <div className="bg-secondary/10 w-16 h-16 rounded-full flex items-center justify-center mr-4">
-                    <Bell className="w-8 h-8 text-secondary" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">Managed Services</h3>
-                    <p className="text-gray-600">Let our experts handle everything</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Full Implementation</h4>
-                      <p className="text-gray-600 text-sm">Complete setup and optimization by our experts</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Dedicated Account Manager</h4>
-                      <p className="text-gray-600 text-sm">Personal point of contact for all your needs</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold text-gray-900">24/7 Priority Support</h4>
-                      <p className="text-gray-600 text-sm">Round-the-clock assistance when you need it</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                    <div>
-                      <h4 className="font-semibold text-gray-900">Monthly Optimization</h4>
-                      <p className="text-gray-600 text-sm">Continuous improvement and performance monitoring</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="border-t pt-6">
-                  <div className="text-center mb-4">
-                    <span className="text-3xl font-bold text-secondary">$499+</span>
-                    <span className="text-gray-500 ml-2">per month</span>
-                  </div>
-                  <Button className="w-full bg-secondary hover:bg-secondary/90">
-                    Get Managed Services
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+      <ServicePathways />
 
       {/* Platform Ecosystem */}
       <section className="bg-white py-16">

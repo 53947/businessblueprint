@@ -20,12 +20,12 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="text-2xl font-bold">
-              <span className="text-black">cloud</span><span className="text-orange-500">pleaser</span><span className="text-black">.io</span>
+              <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
             </div>
             <nav className="hidden md:flex space-x-6">
-              <a href="/" className="text-gray-600 hover:text-orange-500 transition-colors">Home</a>
-              <a href="/assessment" className="text-gray-600 hover:text-orange-500 transition-colors">Assessment</a>
-              <a href="/contact" className="text-gray-600 hover:text-orange-500 transition-colors">Contact</a>
+              <a href="/" className="text-gray-600 hover:text-blue-500 transition-colors">Home</a>
+              <a href="/assessment" className="text-gray-600 hover:text-blue-500 transition-colors">Assessment</a>
+              <a href="/contact" className="text-gray-600 hover:text-blue-500 transition-colors">Contact</a>
             </nav>
           </div>
         </div>
