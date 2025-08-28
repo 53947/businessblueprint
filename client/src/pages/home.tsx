@@ -180,192 +180,263 @@ export default function Home() {
             </div>
           </div>
 
-          {/* The 11 Strategic Treasure Locations */}
+          {/* The 11 Strategic Journey Steps */}
           <div className="grid lg:grid-cols-2 gap-8 mb-16">
-            {/* Location 1: ADVERTISING */}
+            {/* Step 1: Business Foundation */}
             <Card className="border-4 border-dashed border-amber-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
               <div className="absolute -top-4 -left-4 bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">1</div>
               <CardContent className="p-6 pt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  📢 ADVERTISING
+                  🏗️ Business Foundation
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> How to create ads that get noticed and bring customers to your door.
+                  <strong>What you'll discover:</strong> The core of who you are as a business - your mission, values, and what makes you special.
                 </p>
-                <div className="bg-red-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-red-800"><strong>🔍 Look for:</strong> Simple ad platforms like Google Ads and Facebook, clear targeting to reach your ideal customers, and budget-friendly ways to start advertising.</p>
+                <div className="bg-amber-50 p-4 rounded-lg mb-4">
+                  <p className="text-sm text-amber-800"><strong>🔍 Look for:</strong> Clear answers to "What do I do?" and "Why should customers choose me?" This builds your confidence by giving you a clear identity online.</p>
                 </div>
-                <p className="text-sm text-gray-500 italic">Smart advertising brings the right customers to you at the right time.</p>
+                <div className="bg-red-50 p-4 rounded-lg mt-4">
+                  <p className="text-xs text-red-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
+                  <div className="flex flex-wrap gap-1">
+                    <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">DOMAINS</span>
+                    <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">HOSTING</span>
+                    <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">WEBSITE</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Location 2: REPUTATION */}
+            {/* Step 2: Know Your Current Position */}
             <Card className="border-4 border-dashed border-green-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
               <div className="absolute -top-4 -left-4 bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">2</div>
               <CardContent className="p-6 pt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  ⭐ REPUTATION
+                  📍 Know Your Current Position
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> How to build and protect your online reputation with happy customer reviews.
+                  <strong>What you'll discover:</strong> Exactly where you stand online right now - your digital presence assessment.
                 </p>
                 <div className="bg-green-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-green-800"><strong>🔍 Look for:</strong> Simple ways to ask for reviews, professional responses to all feedback, and systems to showcase your best customer stories.</p>
+                  <p className="text-sm text-green-800"><strong>🔍 Look for:</strong> Your current Google Business profile, reviews, and how customers find you. No judgment here - we're just mapping your starting point!</p>
                 </div>
-                <p className="text-sm text-gray-500 italic">Great reviews are the most powerful marketing - they build trust instantly!</p>
+                <div className="bg-green-50 p-4 rounded-lg mt-4">
+                  <p className="text-xs text-green-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
+                  <div className="flex flex-wrap gap-1">
+                    <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">LOCAL SEO</span>
+                    <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">REPUTATION</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Location 3: LOCAL SEO */}
+            {/* Step 3: Know Your Ideal Customers */}
             <Card className="border-4 border-dashed border-purple-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
               <div className="absolute -top-4 -left-4 bg-purple-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">3</div>
               <CardContent className="p-6 pt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  📍 LOCAL SEO
+                  🎯 Know Your Ideal Customers
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> How to be found by people searching for your services in your local area.
+                  <strong>What you'll discover:</strong> Who your perfect customers are and what they're looking for.
                 </p>
                 <div className="bg-purple-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-purple-800"><strong>🔍 Look for:</strong> Complete Google Business Profile, accurate business listings across the web, and local keywords that help neighbors find you.</p>
+                  <p className="text-sm text-purple-800"><strong>🔍 Look for:</strong> Customer demographics, problems they need solved, and where they spend time online. This helps you speak directly to the people who need you most.</p>
                 </div>
-                <p className="text-sm text-gray-500 italic">Local SEO connects you with customers right in your neighborhood!</p>
+                <div className="bg-purple-50 p-4 rounded-lg mt-4">
+                  <p className="text-xs text-purple-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
+                  <div className="flex flex-wrap gap-1">
+                    <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs">SOCIAL</span>
+                    <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs">CONTENT & EXPERIENCE</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Location 4: WEBSITE */}
+            {/* Step 4: Your Brand Voice & Style */}
             <Card className="border-4 border-dashed border-pink-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
               <div className="absolute -top-4 -left-4 bg-pink-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">4</div>
               <CardContent className="p-6 pt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  🏠 WEBSITE
+                  🎨 Your Brand Voice & Style
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> Creating a welcoming digital home that turns visitors into customers.
+                  <strong>What you'll discover:</strong> How to communicate consistently and professionally across all platforms.
                 </p>
                 <div className="bg-pink-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-pink-800"><strong>🔍 Look for:</strong> Clear navigation, compelling headlines about your services, easy contact methods, and mobile-friendly design.</p>
+                  <p className="text-sm text-pink-800"><strong>🔍 Look for:</strong> Your unique tone of voice, visual style, and key messaging that feels authentically "you". This makes you memorable and builds trust with customers.</p>
                 </div>
-                <p className="text-sm text-gray-500 italic">Your website is your 24/7 salesperson working to grow your business!</p>
+                <div className="bg-pink-50 p-4 rounded-lg mt-4">
+                  <p className="text-xs text-pink-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
+                  <div className="flex flex-wrap gap-1">
+                    <span className="px-2 py-1 bg-pink-100 text-pink-800 rounded text-xs">WEBSITE</span>
+                    <span className="px-2 py-1 bg-pink-100 text-pink-800 rounded text-xs">SOCIAL</span>
+                    <span className="px-2 py-1 bg-pink-100 text-pink-800 rounded text-xs">CONTENT & EXPERIENCE</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Location 5: SEO WEBSITE */}
+            {/* Step 5: Your Digital Home Base */}
             <Card className="border-4 border-dashed border-indigo-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
               <div className="absolute -top-4 -left-4 bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">5</div>
               <CardContent className="p-6 pt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  🔍 SEO WEBSITE
+                  🏠 Your Digital Home Base
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> How to optimize your website so it shows up higher in Google search results.
+                  <strong>What you'll discover:</strong> Creating a website that welcomes visitors and turns them into customers.
                 </p>
                 <div className="bg-indigo-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-indigo-800"><strong>🔍 Look for:</strong> Keywords your customers use to search, fast loading speeds, and content that answers their questions.</p>
+                  <p className="text-sm text-indigo-800"><strong>🔍 Look for:</strong> Clear navigation, compelling headlines, and simple ways for customers to contact you. Your website is your 24/7 salesperson - make it count!</p>
                 </div>
-                <p className="text-sm text-gray-500 italic">SEO helps customers find you naturally when they need your services!</p>
+                <div className="bg-indigo-50 p-4 rounded-lg mt-4">
+                  <p className="text-xs text-indigo-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
+                  <div className="flex flex-wrap gap-1">
+                    <span className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs">WEBSITE</span>
+                    <span className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs">SEO WEBSITE</span>
+                    <span className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs">HOSTING</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Location 6: SOCIAL */}
+            {/* Step 6: Be Found Locally */}
             <Card className="border-4 border-dashed border-yellow-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
               <div className="absolute -top-4 -left-4 bg-yellow-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">6</div>
               <CardContent className="p-6 pt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  💬 SOCIAL
+                  🗺️ Be Found Locally
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> How to use social media to build relationships and connect with your community.
+                  <strong>What you'll discover:</strong> How to show up when people in your area search for your services.
                 </p>
                 <div className="bg-yellow-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-yellow-800"><strong>🔍 Look for:</strong> Platforms where your customers spend time, content that starts real conversations, and consistent posting that shows your personality.</p>
+                  <p className="text-sm text-yellow-800"><strong>🔍 Look for:</strong> Complete Google Business profile, accurate listings, and local keyword optimization. Most customers start their search locally - be there when they look!</p>
                 </div>
-                <p className="text-sm text-gray-500 italic">Social media turns strangers into friends and friends into customers!</p>
+                <div className="bg-yellow-50 p-4 rounded-lg mt-4">
+                  <p className="text-xs text-yellow-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
+                  <div className="flex flex-wrap gap-1">
+                    <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">LOCAL SEO</span>
+                    <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">SEO WEBSITE</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Location 7: CONTENT & EXPERIENCE */}
+            {/* Step 7: Social Connection Strategy */}
             <Card className="border-4 border-dashed border-cyan-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
               <div className="absolute -top-4 -left-4 bg-cyan-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">7</div>
               <CardContent className="p-6 pt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  ✨ CONTENT & EXPERIENCE
+                  💬 Social Connection Strategy
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> Creating valuable content and experiences that keep customers coming back.
+                  <strong>What you'll discover:</strong> How to use social media to build relationships, not just post randomly.
                 </p>
                 <div className="bg-cyan-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-cyan-800"><strong>🔍 Look for:</strong> Helpful articles, how-to guides, and customer experiences that solve problems and add value to their lives.</p>
+                  <p className="text-sm text-cyan-800"><strong>🔍 Look for:</strong> Platforms where your customers spend time, content that starts conversations, and consistent posting schedules. Social media is about relationships - be helpful and authentic.</p>
                 </div>
-                <p className="text-sm text-gray-500 italic">Great content positions you as the helpful expert customers trust!</p>
+                <div className="bg-cyan-50 p-4 rounded-lg mt-4">
+                  <p className="text-xs text-cyan-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
+                  <div className="flex flex-wrap gap-1">
+                    <span className="px-2 py-1 bg-cyan-100 text-cyan-800 rounded text-xs">SOCIAL</span>
+                    <span className="px-2 py-1 bg-cyan-100 text-cyan-800 rounded text-xs">SOCIAL MEDIA</span>
+                    <span className="px-2 py-1 bg-cyan-100 text-cyan-800 rounded text-xs">CONTENT & EXPERIENCE</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Location 8: HOSTING */}
+            {/* Step 8: Build Trust & Reputation */}
             <Card className="border-4 border-dashed border-emerald-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
               <div className="absolute -top-4 -left-4 bg-emerald-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">8</div>
               <CardContent className="p-6 pt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  🔧 HOSTING
+                  ⭐ Build Trust & Reputation
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> Reliable hosting that keeps your website running fast and secure.
+                  <strong>What you'll discover:</strong> How to encourage reviews and handle feedback professionally.
                 </p>
                 <div className="bg-emerald-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-emerald-800"><strong>🔍 Look for:</strong> Fast loading times, reliable uptime, security features, and easy backup systems to protect your business.</p>
+                  <p className="text-sm text-emerald-800"><strong>🔍 Look for:</strong> Review request systems, professional responses to feedback, and showcasing customer success stories. Reviews are digital word-of-mouth - the most powerful marketing!</p>
                 </div>
-                <p className="text-sm text-gray-500 italic">Good hosting is like a solid foundation - you need it for everything else to work!</p>
+                <div className="bg-emerald-50 p-4 rounded-lg mt-4">
+                  <p className="text-xs text-emerald-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
+                  <div className="flex flex-wrap gap-1">
+                    <span className="px-2 py-1 bg-emerald-100 text-emerald-800 rounded text-xs">REPUTATION</span>
+                    <span className="px-2 py-1 bg-emerald-100 text-emerald-800 rounded text-xs">CONTENT & EXPERIENCE</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Location 9: DOMAINS */}
+            {/* Step 9: Nurture Customer Relationships */}
             <Card className="border-4 border-dashed border-orange-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
               <div className="absolute -top-4 -left-4 bg-orange-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">9</div>
               <CardContent className="p-6 pt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  🌐 DOMAINS
+                  📧 Nurture Customer Relationships
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> Choosing the perfect web address that customers can easily remember and trust.
+                  <strong>What you'll discover:</strong> How to stay in touch with customers and provide ongoing value.
                 </p>
                 <div className="bg-orange-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-orange-800"><strong>🔍 Look for:</strong> Simple, memorable names that match your business, proper extensions (.com, .org), and domain security features.</p>
+                  <p className="text-sm text-orange-800"><strong>🔍 Look for:</strong> Simple email systems, helpful content ideas, and ways to stay top-of-mind without being pushy. Regular, valuable communication keeps customers coming back.</p>
                 </div>
-                <p className="text-sm text-gray-500 italic">Your domain is your digital address - make it easy to find and remember!</p>
+                <div className="bg-orange-50 p-4 rounded-lg mt-4">
+                  <p className="text-xs text-orange-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
+                  <div className="flex flex-wrap gap-1">
+                    <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">EMAIL MARKETING</span>
+                    <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">CONTENT & EXPERIENCE</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Location 10: EMAIL MARKETING */}
+            {/* Step 10: Strategic Growth Investment */}
             <Card className="border-4 border-dashed border-red-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
               <div className="absolute -top-4 -left-4 bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">10</div>
               <CardContent className="p-6 pt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  📧 EMAIL MARKETING
+                  🚀 Strategic Growth Investment
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> How to stay in touch with customers through helpful, valuable email communications.
+                  <strong>What you'll discover:</strong> When and how to invest in advertising to reach more ideal customers.
                 </p>
                 <div className="bg-red-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-red-800"><strong>🔍 Look for:</strong> Simple email tools, valuable content ideas, and ways to nurture relationships without being pushy or spammy.</p>
+                  <p className="text-sm text-red-800"><strong>🔍 Look for:</strong> Simple ad platforms, clear targeting options, and budget-friendly starting points. Start small, test what works, then scale your successful campaigns.</p>
                 </div>
-                <p className="text-sm text-gray-500 italic">Email marketing keeps you top-of-mind when customers are ready to buy!</p>
+                <div className="bg-red-50 p-4 rounded-lg mt-4">
+                  <p className="text-xs text-red-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
+                  <div className="flex flex-wrap gap-1">
+                    <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">ADVERTISING</span>
+                    <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">SOCIAL MEDIA</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Location 11: SOCIAL MEDIA */}
+            {/* Step 11: Measure & Improve */}
             <Card className="border-4 border-dashed border-violet-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
               <div className="absolute -top-4 -left-4 bg-violet-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">11</div>
               <CardContent className="p-6 pt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  📱 SOCIAL MEDIA
+                  📊 Measure & Improve
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> Advanced social media strategies and management tools for consistent growth.
+                  <strong>What you'll discover:</strong> Simple ways to track what's working and continuously improve your results.
                 </p>
                 <div className="bg-violet-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-violet-800"><strong>🔍 Look for:</strong> Scheduling tools, performance analytics, content planning, and advanced engagement strategies to build a strong following.</p>
+                  <p className="text-sm text-violet-800"><strong>🔍 Look for:</strong> Easy-to-understand reports, key metrics that matter, and actionable insights for growth. Data helps you make smart decisions and invest your time wisely.</p>
                 </div>
-                <p className="text-sm text-gray-500 italic">Strategic social media management turns followers into loyal customers!</p>
+                <div className="bg-violet-50 p-4 rounded-lg mt-4">
+                  <p className="text-xs text-violet-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
+                  <div className="flex flex-wrap gap-1">
+                    <span className="px-2 py-1 bg-violet-100 text-violet-800 rounded text-xs">REPUTATION</span>
+                    <span className="px-2 py-1 bg-violet-100 text-violet-800 rounded text-xs">SOCIAL MEDIA</span>
+                    <span className="px-2 py-1 bg-violet-100 text-violet-800 rounded text-xs">EMAIL MARKETING</span>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
