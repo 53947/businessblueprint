@@ -205,10 +205,10 @@ export default function Home() {
             <Card className="text-center border-pink-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <Globe className="h-16 w-16" style={{color: '#FC8EA0'}} />
+                  <Globe className="h-16 w-16 text-[#FC8EA0]" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">web</span><span style={{color: '#FC8EA0'}}>hosted</span><span className="text-green-400">.io</span>
+                  <span className="text-black">web</span><span className="text-[#FC8EA0]">hosted</span><span className="text-green-400">.io</span>
                 </div>
                 <p className="text-gray-600 mb-4">Website Hosting Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
@@ -216,7 +216,7 @@ export default function Home() {
                   <li>• Domain management</li>
                   <li>• Technical optimization</li>
                 </ul>
-                <Button className="w-full" style={{backgroundColor: '#FC8EA0'}} onMouseEnter={(e) => { (e.target as HTMLElement).style.backgroundColor = '#f87394'; }} onMouseLeave={(e) => { (e.target as HTMLElement).style.backgroundColor = '#FC8EA0'; }}>
+                <Button className="w-full bg-[#FC8EA0] hover:bg-[#f87394]">
                   Get Hosting
                 </Button>
               </CardContent>
@@ -225,10 +225,10 @@ export default function Home() {
             <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <Zap className="h-16 w-16" style={{color: '#CB0505'}} />
+                  <Zap className="h-16 w-16 text-[#CB0505]" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span className="text-green-400">.com</span>
+                  <span className="text-black">air</span><span className="text-[#CB0505]">swiped</span><span className="text-green-400">.com</span>
                 </div>
                 <p className="text-gray-600 mb-4">Payment Gateway Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
@@ -236,7 +236,7 @@ export default function Home() {
                   <li>• Transaction management</li>
                   <li>• Financial analytics</li>
                 </ul>
-                <Button className="w-full" style={{backgroundColor: '#CB0505'}} onMouseEnter={(e) => { (e.target as HTMLElement).style.backgroundColor = '#a80404'; }} onMouseLeave={(e) => { (e.target as HTMLElement).style.backgroundColor = '#CB0505'; }}>
+                <Button className="w-full bg-[#CB0505] hover:bg-[#a80404]">
                   Setup Payments
                 </Button>
               </CardContent>
@@ -245,7 +245,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pricing */}
       <section id="pricing" className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
