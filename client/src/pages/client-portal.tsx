@@ -184,7 +184,7 @@ export default function ClientPortal() {
             <div className="flex items-center space-x-4">
               <a href="/" className="flex items-center gap-2 text-2xl font-bold text-gray-900 hover:opacity-80 transition-opacity">
                 <Brain className="h-6 w-6 text-blue-600" />
-                cloud<span className="text-blue-600">pleaser</span><span className="text-purple-600">.io</span>
+                <span><span className="text-black">cloud</span><span className="text-blue-600">pleaser</span><span className="text-purple-600">.io</span></span>
               </a>
               <Badge variant="outline" className="text-sm">
                 Client Dashboard
