@@ -25,7 +25,6 @@ import {
   LogOut,
   Brain
 } from "lucide-react";
-import companyLogos from "@assets/Final Logos 3 Companies_1756371047136.png";
 
 export default function ClientPortal() {
   const [, setLocation] = useLocation();
@@ -184,13 +183,7 @@ export default function ClientPortal() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <a href="/" className="flex items-center gap-2 text-2xl font-bold text-gray-900 hover:opacity-80 transition-opacity">
-                <div className="w-8 h-8 bg-cover bg-no-repeat" 
-                     style={{
-                       backgroundImage: `url(${companyLogos})`,
-                       backgroundPosition: '0% 50%',
-                       backgroundSize: '300% 100%'
-                     }}>
-                </div>
+                <Brain className="h-6 w-6 text-blue-600" />
                 cloud<span className="text-blue-600">pleaser</span><span className="text-purple-600">.io</span>
               </a>
               <Badge variant="outline" className="text-sm">
