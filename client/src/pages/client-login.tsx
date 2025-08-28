@@ -59,9 +59,7 @@ export default function ClientLogin() {
             <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <Brain className="h-8 w-8 text-blue-500" />
               <span className="text-3xl font-bold">
-                <span className="text-black">cloud</span>
-                <span className="text-blue-500">pleaser</span>
-                <span className="text-purple-600">.io</span>
+                <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-purple-600">.io</span>
               </span>
             </a>
           </div>
