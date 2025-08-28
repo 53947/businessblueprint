@@ -49,7 +49,7 @@ export default function ClientPortal() {
   }, [setLocation]);
 
   // Fetch client dashboard data
-  const { data: dashboardData, isLoading, error } = useQuery({
+  const { data: dashboardData, isLoading, error } = useQuery<any>({
     queryKey: [`/api/clients/${clientId}/dashboard`],
     enabled: !!clientId,
   });
@@ -424,7 +424,7 @@ export default function ClientPortal() {
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {clientData.listings.platforms.map((platform, index) => (
+                  {clientData.listings.platforms.map((platform: string, index: number) => (
                     <div key={index} className="p-4 border rounded-lg flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <CheckCircle className="h-5 w-5 text-green-600" />
