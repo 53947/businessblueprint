@@ -21,7 +21,7 @@ export default function Home() {
             <div className="flex items-center space-x-8">
               <a href="/" className="flex items-center gap-2 text-2xl font-bold hover:opacity-80 transition-opacity">
                 <Brain className="h-6 w-6 text-blue-500" />
-                <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
+                <span><span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span></span>
               </a>
               <nav className="hidden md:flex space-x-6">
                 <Link href="/about" className="text-gray-600 hover:text-primary transition-colors">About</Link>
@@ -352,7 +352,7 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2 text-2xl font-bold mb-4">
                 <Brain className="h-6 w-6 text-blue-500" />
-                <span className="text-white">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
+                <span><span className="text-white">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span></span>
               </div>
               <p className="text-gray-400 mb-6">
                 Digital empowerment for businesses through AI-powered insights and comprehensive online solutions.
