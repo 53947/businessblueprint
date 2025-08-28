@@ -4,6 +4,7 @@ import { useLocation, Link } from "wouter";
 import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, MessageCircle, Brain, Globe, Zap } from "lucide-react";
 import { HowItWorks } from "@/components/how-it-works";
 import { ServicePathways } from "@/components/service-pathways";
+import { AddOnServices } from "@/components/add-on-services";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -27,6 +28,7 @@ export default function Home() {
                 <Link href="/about" className="text-gray-600 hover:text-primary transition-colors">About</Link>
                 <a href="#assessment" className="text-gray-600 hover:text-primary transition-colors">Assessment</a>
                 <a href="#services" className="text-gray-600 hover:text-primary transition-colors">Services</a>
+                <a href="#add-ons" className="text-gray-600 hover:text-primary transition-colors">Add-Ons</a>
                 <a href="#how-it-works" className="text-gray-600 hover:text-primary transition-colors">How It Works</a>
                 <a href="#pricing" className="text-gray-600 hover:text-primary transition-colors">Pricing</a>
                 <Link href="/contact" className="text-gray-600 hover:text-primary transition-colors">Contact</Link>
@@ -168,7 +170,10 @@ export default function Home() {
       {/* Service Pathways */}
       <ServicePathways />
 
-      {/* Integrated Platform Ecosystem */}
+      {/* Add-On Services */}
+      {/* <AddOnServices /> */}
+
+      {/* Integrated Platform Ecosystem */
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -211,7 +216,7 @@ export default function Home() {
                   <li>• Domain management</li>
                   <li>• Technical optimization</li>
                 </ul>
-                <Button className="w-full" style={{backgroundColor: '#FC8EA0'}} onMouseEnter={(e) => e.target.style.backgroundColor = '#f87394'} onMouseLeave={(e) => e.target.style.backgroundColor = '#FC8EA0'}>
+                <Button className="w-full" style={{backgroundColor: '#FC8EA0'}} onMouseEnter={(e) => { (e.target as HTMLElement).style.backgroundColor = '#f87394'; }} onMouseLeave={(e) => { (e.target as HTMLElement).style.backgroundColor = '#FC8EA0'; }}>
                   Get Hosting
                 </Button>
               </CardContent>
@@ -231,7 +236,7 @@ export default function Home() {
                   <li>• Transaction management</li>
                   <li>• Financial analytics</li>
                 </ul>
-                <Button className="w-full" style={{backgroundColor: '#CB0505'}} onMouseEnter={(e) => e.target.style.backgroundColor = '#a80404'} onMouseLeave={(e) => e.target.style.backgroundColor = '#CB0505'}>
+                <Button className="w-full" style={{backgroundColor: '#CB0505'}} onMouseEnter={(e) => { (e.target as HTMLElement).style.backgroundColor = '#a80404'; }} onMouseLeave={(e) => { (e.target as HTMLElement).style.backgroundColor = '#CB0505'; }}>
                   Setup Payments
                 </Button>
               </CardContent>
