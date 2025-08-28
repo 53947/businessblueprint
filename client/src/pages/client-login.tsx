@@ -5,9 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLocation } from "wouter";
-import { LogIn, Building, AlertCircle } from "lucide-react";
+import { LogIn, Building, AlertCircle, Brain } from "lucide-react";
 import { getBrandClasses } from "@/lib/brand-colors";
-import companyLogos from "@assets/Final Logos 3 Companies_1756371047136.png";
 
 export default function ClientLogin() {
   const [customerIdentifier, setCustomerIdentifier] = useState("");
@@ -57,14 +56,8 @@ export default function ClientLogin() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center items-center mb-4">
-            <a href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <div className="w-10 h-10 bg-cover bg-no-repeat" 
-                   style={{
-                     backgroundImage: `url(${companyLogos})`,
-                     backgroundPosition: '0% 50%',
-                     backgroundSize: '300% 100%'
-                   }}>
-              </div>
+            <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <Brain className="h-8 w-8 text-blue-500" />
               <span className="text-3xl font-bold">
                 <span className="text-black">cloud</span>
                 <span className="text-blue-500">pleaser</span>
