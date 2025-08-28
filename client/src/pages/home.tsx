@@ -19,9 +19,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
-              <div className="text-2xl font-bold">
+              <a href="/" className="flex items-center gap-2 text-2xl font-bold hover:opacity-80 transition-opacity">
+                <Brain className="h-6 w-6 text-blue-500" />
                 <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
-              </div>
+              </a>
               <nav className="hidden md:flex space-x-6">
                 <Link href="/about" className="text-gray-600 hover:text-primary transition-colors">About</Link>
                 <a href="#assessment" className="text-gray-600 hover:text-primary transition-colors">Assessment</a>
@@ -349,8 +350,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
-              <div className="text-2xl font-bold mb-4">
-                <span className="text-white">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
+              <div className="flex items-center gap-2 text-2xl font-bold mb-4">
+                <Brain className="h-6 w-6 text-blue-500" />
+                <span>
+                  <span className="text-white">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
+                </span>
               </div>
               <p className="text-gray-400 mb-6">
                 Digital empowerment for businesses through AI-powered insights and comprehensive online solutions.
