@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { TreasureMapJourney } from "@/components/treasure-map-journey";
 import { 
   BarChart3, 
   Star, 
@@ -16,7 +17,8 @@ import {
   Clock,
   ArrowRight,
   Download,
-  Mail
+  Mail,
+  Map
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -124,6 +126,45 @@ export default function Dashboard() {
     );
   }
 
+  // For failed assessments, create sample data to show treasure map
+  if (assessment.status === "failed") {
+    assessment.digitalScore = 65;
+    assessment.analysisResults = {
+      grade: "C+",
+      summary: "Your business has a solid foundation but significant opportunities for digital growth. Focus on the highlighted steps in your journey map below."
+    };
+    // Add sample recommendations for demonstration
+    recommendations.push(
+      {
+        id: 1,
+        category: "REPUTATION",
+        title: "Boost Customer Reviews",
+        description: "Encourage satisfied customers to leave reviews on Google and other platforms",
+        priority: "high",
+        estimatedImpact: "High",
+        estimatedEffort: "Medium"
+      },
+      {
+        id: 2,
+        category: "LOCAL SEO",
+        title: "Optimize Google Business Profile", 
+        description: "Complete your Google Business Profile with photos, hours, and services",
+        priority: "high",
+        estimatedImpact: "High",
+        estimatedEffort: "Low"
+      },
+      {
+        id: 3,
+        category: "WEBSITE",
+        title: "Mobile-Optimize Your Website",
+        description: "Ensure your website loads quickly and looks great on mobile devices",
+        priority: "medium",
+        estimatedImpact: "Medium",
+        estimatedEffort: "High"
+      }
+    );
+  }
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high": return "destructive";
@@ -157,16 +198,16 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid lg:grid-cols-4 gap-8">
+          {/* Main Content - Treasure Map */}
+          <div className="lg:col-span-3 space-y-6">
             {/* Overall Score */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <BarChart3 className="w-5 h-5" />
-                  <span>Digital Presence Score</span>
+                  <span>Current Status</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -182,6 +223,12 @@ export default function Dashboard() {
                     <p className="text-sm text-gray-600">
                       {analysisResults?.summary || "Analysis in progress..."}
                     </p>
+                    <div className="mt-3 flex items-center space-x-2 text-sm">
+                      <Map className="w-4 h-4 text-blue-500" />
+                      <span className="text-gray-500">
+                        Follow your treasure map below ↓
+                      </span>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -244,35 +291,16 @@ export default function Dashboard() {
               </Card>
             )}
 
-            {/* Recommendations */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Priority Recommendations</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {recommendations?.slice(0, 5).map((rec: any) => (
-                    <div key={rec.id} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <h4 className="font-semibold text-gray-900">{rec.title}</h4>
-                        <Badge variant={getPriorityColor(rec.priority) as any}>
-                          {rec.priority} priority
-                        </Badge>
-                      </div>
-                      <p className="text-gray-600 text-sm mb-3">{rec.description}</p>
-                      <div className="flex items-center space-x-4 text-xs text-gray-500">
-                        <span><strong>Impact:</strong> {rec.estimatedImpact}</span>
-                        <span><strong>Effort:</strong> {rec.estimatedEffort}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            {/* Treasure Map Journey */}
+            <TreasureMapJourney 
+              assessment={assessment}
+              recommendations={recommendations}
+              onSelectPathway={selectPathway}
+            />
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="lg:col-span-1 space-y-6">
             {/* Business Info */}
             <Card>
               <CardHeader>
