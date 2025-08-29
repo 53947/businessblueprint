@@ -513,6 +513,42 @@ export class VendastaIntegrationService {
   }
 
   /**
+   * Create Vendasta customer from assessment data
+   */
+  async createCustomerFromAssessment(assessmentData: any): Promise<{ success: boolean; clientId: number | null }> {
+    try {
+      console.log('🔄 Creating Vendasta customer from assessment data...');
+      
+      // Convert assessment data to VendastaClient format
+      const vendastaClient: VendastaClient = {
+        customerIdentifier: `ASS-${assessmentData.id}-${Date.now()}`, // Generate unique ID
+        companyName: assessmentData.businessName,
+        email: assessmentData.email,
+        phone: assessmentData.phone || '',
+        website: assessmentData.website || '',
+        address: `${assessmentData.address}, ${assessmentData.location}`,
+        businessCategory: assessmentData.industry || 'General',
+        enabledFeatures: 'listings,reviews', // Default features for assessment leads
+        lastLoginTime: undefined
+      };
+
+      // Sync to local database as a client record (this ensures integration)
+      const clientId = await this.syncClientData(vendastaClient);
+      
+      if (clientId) {
+        console.log(`✅ Created client record from assessment: ${vendastaClient.companyName}`);
+        return { success: true, clientId };
+      } else {
+        console.error('❌ Failed to create client record from assessment');
+        return { success: false, clientId: null };
+      }
+    } catch (error) {
+      console.error('Error creating Vendasta customer from assessment:', error);
+      return { success: false, clientId: null };
+    }
+  }
+
+  /**
    * Link assessment to client
    */
   async linkAssessmentToClient(clientId: number, assessmentId: number): Promise<boolean> {

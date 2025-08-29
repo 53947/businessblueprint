@@ -24,7 +24,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create assessment with pending status
       const assessment = await storage.createAssessment(validatedData);
 
-      // Start background analysis
+      // HYBRID APPROACH: Also create Vendasta customer record (non-blocking)
+      try {
+        console.log('🔄 Starting Vendasta integration for assessment...');
+        const vendastaResult = await vendastaService.createCustomerFromAssessment(assessment);
+        
+        if (vendastaResult.success && vendastaResult.clientId) {
+          // Link the assessment to the client record
+          await vendastaService.linkAssessmentToClient(vendastaResult.clientId, assessment.id);
+          console.log(`✅ Assessment ${assessment.id} linked to Vendasta client ${vendastaResult.clientId}`);
+        } else {
+          console.log('⚠️ Vendasta integration failed, but continuing with Google assessment');
+        }
+      } catch (vendastaError) {
+        // Log error but don't fail the main process
+        console.error('⚠️ Vendasta integration error (non-blocking):', vendastaError);
+      }
+
+      // Start background analysis (original Google assessment flow)
       processAssessmentAsync(assessment.id, googleService, aiService, emailService, storage);
 
       res.json({ 
