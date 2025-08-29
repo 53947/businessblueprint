@@ -20,12 +20,12 @@ import {
   Lightbulb
 } from "lucide-react";
 
-// The 11 strategic treasure map steps matching user's actual product categories
+// The 11 strategic treasure map steps - logical order for beginners
 const treasureMapSteps = [
   {
     id: 1,
     title: "Business Foundation",
-    description: "Establish your digital presence fundamentals",
+    description: "Learn digital marketing fundamentals and plan your strategy",
     category: "ADVERTISING",
     icon: Target,
     color: "bg-blue-500",
@@ -34,23 +34,23 @@ const treasureMapSteps = [
   },
   {
     id: 2,
-    title: "Reputation Management", 
-    description: "Build trust through positive reviews and testimonials",
-    category: "REPUTATION",
-    icon: Star,
-    color: "bg-yellow-500",
-    lightColor: "bg-yellow-50",
-    borderColor: "border-yellow-200"
+    title: "Domain Strategy",
+    description: "Secure your brand with the perfect domain name",
+    category: "DOMAINS",
+    icon: Globe,
+    color: "bg-teal-500",
+    lightColor: "bg-teal-50",
+    borderColor: "border-teal-200"
   },
   {
     id: 3,
-    title: "Local Discovery",
-    description: "Dominate local search results and map listings",
-    category: "LOCAL SEO",
-    icon: Search,
-    color: "bg-green-500",
-    lightColor: "bg-green-50",
-    borderColor: "border-green-200"
+    title: "Reliable Hosting",
+    description: "Build your foundation with fast, secure website hosting",
+    category: "HOSTING",
+    icon: Server,
+    color: "bg-cyan-500",
+    lightColor: "bg-cyan-50",
+    borderColor: "border-cyan-200"
   },
   {
     id: 4,
@@ -65,7 +65,7 @@ const treasureMapSteps = [
   {
     id: 5,
     title: "Search Optimization",
-    description: "Attract qualified traffic through strategic SEO",
+    description: "Optimize your website to attract qualified traffic",
     category: "SEO WEBSITE",
     icon: Zap,
     color: "bg-orange-500",
@@ -74,16 +74,26 @@ const treasureMapSteps = [
   },
   {
     id: 6,
-    title: "Social Presence",
-    description: "Engage customers on social media platforms",
-    category: "SOCIAL",
-    icon: Users,
-    color: "bg-pink-500",
-    lightColor: "bg-pink-50",
-    borderColor: "border-pink-200"
+    title: "Local Discovery",
+    description: "Dominate local search results and map listings",
+    category: "LOCAL SEO",
+    icon: Search,
+    color: "bg-green-500",
+    lightColor: "bg-green-50",
+    borderColor: "border-green-200"
   },
   {
     id: 7,
+    title: "Reputation Management", 
+    description: "Build trust through positive reviews and testimonials",
+    category: "REPUTATION",
+    icon: Star,
+    color: "bg-yellow-500",
+    lightColor: "bg-yellow-50",
+    borderColor: "border-yellow-200"
+  },
+  {
+    id: 8,
     title: "Content Strategy",
     description: "Create valuable content that converts visitors",
     category: "CONTENT & EXPERIENCE",
@@ -93,24 +103,14 @@ const treasureMapSteps = [
     borderColor: "border-indigo-200"
   },
   {
-    id: 8,
-    title: "Reliable Hosting",
-    description: "Ensure fast, secure, and reliable website performance",
-    category: "HOSTING",
-    icon: Server,
-    color: "bg-cyan-500",
-    lightColor: "bg-cyan-50",
-    borderColor: "border-cyan-200"
-  },
-  {
     id: 9,
-    title: "Domain Strategy",
-    description: "Secure your brand with strategic domain management",
-    category: "DOMAINS",
-    icon: Globe,
-    color: "bg-teal-500",
-    lightColor: "bg-teal-50",
-    borderColor: "border-teal-200"
+    title: "Social Presence",
+    description: "Engage customers on social media platforms",
+    category: "SOCIAL",
+    icon: Users,
+    color: "bg-pink-500",
+    lightColor: "bg-pink-50",
+    borderColor: "border-pink-200"
   },
   {
     id: 10,
