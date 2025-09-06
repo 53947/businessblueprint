@@ -11,7 +11,7 @@ export function Footer() {
           <div className="col-span-1">
             <div className="flex items-center space-x-2 mb-4">
               <Brain className="w-8 h-8 text-blue-400" />
-              <div className="flex items-baseline space-x-1">
+              <div className="flex items-baseline">
                 <span className="text-xl font-bold text-white">cloud</span>
                 <span className="text-xl font-bold text-blue-400">pleaser</span>
                 <span className="text-lg font-medium text-green-400">.io</span>

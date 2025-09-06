@@ -325,9 +325,9 @@ export default function Dashboard() {
                 {assessment.website && (
                   <div>
                     <label className="text-sm font-medium text-gray-500">Website</label>
-                    <p className="text-sm">
+                    <p className="text-sm break-words">
                       <a href={assessment.website} target="_blank" rel="noopener noreferrer" 
-                         className="text-blue-600 hover:underline">
+                         className="text-blue-600 hover:underline break-all">
                         {assessment.website}
                       </a>
                     </p>
@@ -344,20 +344,20 @@ export default function Dashboard() {
               <CardContent className="space-y-4">
                 <Button 
                   onClick={() => selectPathway("diy")} 
-                  className="w-full justify-between bg-primary hover:bg-primary/90"
+                  className="w-full justify-between bg-primary hover:bg-primary/90 text-left"
                 >
-                  <span>🛠️ DIY Path - Free to $299/month</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span className="truncate">🛠️ DIY Path - Free to $299/month</span>
+                  <ArrowRight className="w-4 h-4 flex-shrink-0 ml-2" />
                 </Button>
                 <Button 
                   onClick={() => selectPathway("msp")} 
-                  className="w-full justify-between bg-secondary hover:bg-secondary/90"
+                  className="w-full justify-between bg-secondary hover:bg-secondary/90 text-left"
                 >
-                  <span>🎯 Managed Services - $499/month</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span className="truncate">🎯 Managed Services - $499/month</span>
+                  <ArrowRight className="w-4 h-4 flex-shrink-0 ml-2" />
                 </Button>
                 <div className="text-center pt-2">
-                  <Button variant="link" className="text-sm">
+                  <Button variant="link" className="text-sm text-wrap">
                     Need help deciding? Schedule a consultation
                   </Button>
                 </div>
