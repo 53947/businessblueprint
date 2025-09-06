@@ -4,6 +4,8 @@ import { useLocation, Link } from "wouter";
 import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, MessageCircle, Brain, Globe, Zap, Compass, MapPin, Gem } from "lucide-react";
 import { HowItWorks } from "@/components/how-it-works";
 import { ServicePathways } from "@/components/service-pathways";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -13,42 +15,8 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-8">
-              <a href="/" className="flex items-center gap-2 text-2xl font-bold hover:opacity-80 transition-opacity">
-                <Brain className="h-6 w-6 text-blue-500" />
-                <span>
-                  <span className="text-black">cloud</span>
-                  <span className="text-blue-500">pleaser</span>
-                  <span className="text-green-400">.io</span>
-                </span>
-              </a>
-              <nav className="hidden md:flex space-x-6">
-                <Link href="/about" className="text-gray-600 hover:text-primary transition-colors">About</Link>
-                <a href="#assessment" className="text-gray-600 hover:text-primary transition-colors">Assessment</a>
-                <a href="#services" className="text-gray-600 hover:text-primary transition-colors">Services</a>
-                <a href="#how-it-works" className="text-gray-600 hover:text-primary transition-colors">How It Works</a>
-                <a href="#pricing" className="text-gray-600 hover:text-primary transition-colors">Pricing</a>
-                <Link href="/contact" className="text-gray-600 hover:text-primary transition-colors">Contact</Link>
-              </nav>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/portal/login">
-                <Button variant="outline" size="sm">
-                  Client Portal
-                </Button>
-              </Link>
-              <Button onClick={startAssessment} className="bg-blue-500 hover:bg-blue-600">
-                Get Started Free
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-white flex flex-col">
+      <Header showNavigation={false} />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-50 via-white to-blue-50 py-12 lg:py-20">
@@ -648,60 +616,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8 mb-12">
-            <div>
-              <div className="flex items-center gap-2 text-2xl font-bold mb-4">
-                <Brain className="h-6 w-6 text-blue-500" />
-                <span>
-                  <span className="text-white">cloud</span>
-                  <span className="text-blue-500">pleaser</span>
-                  <span className="text-green-400">.io</span>
-                </span>
-              </div>
-              <p className="text-gray-400 mb-6">
-                Digital empowerment for businesses through AI-powered insights and comprehensive online solutions.
-              </p>
-            </div>
-            
-            <div>
-              <h4 className="font-bold mb-4">Services</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#assessment" className="hover:text-white transition-colors">Business Assessment</a></li>
-                <li><a href="#services" className="hover:text-white transition-colors">Digital Marketing</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Website Hosting</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Payment Processing</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-bold mb-4">Resources</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/ai-coach" className="hover:text-white transition-colors">AI Business Coach</Link></li>
-                <li><a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>
-                <li><Link href="/portal/login" className="hover:text-white transition-colors">Client Portal</Link></li>
-                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-bold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 cloudpleaser.io. All rights reserved. Powered by cloudpleaser.io technology.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
