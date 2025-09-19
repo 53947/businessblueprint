@@ -252,7 +252,11 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
 
                     {/* Technical Step Content */}
                     <div className="flex-1 min-w-0">
-                      <div className="blueprint-step-component relative">
+                      <div className={`blueprint-step-component relative ${
+                        stepStatus === "current" ? "blueprint-step-current" :
+                        stepStatus === "completed" ? "blueprint-step-completed" :
+                        "blueprint-step-upcoming"
+                      }`}>
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
                             <h4 className="font-semibold text-white text-lg">{step.title}</h4>
@@ -271,15 +275,30 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                           </div>
                           
                           {/* Step Navigation Arrow */}
-                          {nextStep && (
+                          {(stepStatus === "completed" || nextStep) && (
                             <button
-                              onClick={() => scrollToStep(nextStep.id)}
-                              className="blueprint-nav-arrow"
-                              title={`Next: ${nextStep.title}`}
-                              aria-label={`Navigate to step ${nextStep.id}: ${nextStep.title}`}
-                              data-testid={`button-next-step-${nextStep.id}`}
+                              onClick={() => {
+                                if (stepStatus === "completed" && step.id < digitalBlueprintSteps.length) {
+                                  // For completed steps, scroll to next incomplete step
+                                  const nextIncompleteStep = digitalBlueprintSteps.find(s => getStepStatus(s.id) !== "completed");
+                                  if (nextIncompleteStep) scrollToStep(nextIncompleteStep.id);
+                                } else if (nextStep) {
+                                  scrollToStep(nextStep.id);
+                                }
+                              }}
+                              className={`blueprint-nav-arrow ${stepStatus === "completed" ? "completed-arrow" : "next-arrow"}`}
+                              title={stepStatus === "completed" ? "Go to current step" : `Next: ${nextStep?.title}`}
+                              aria-label={stepStatus === "completed" ? "Navigate to current step" : `Navigate to step ${nextStep?.id}: ${nextStep?.title}`}
+                              data-testid={`button-${stepStatus === "completed" ? "current" : "next"}-step-${stepStatus === "completed" ? currentStep : nextStep?.id}`}
                             >
-                              <ArrowRight className="w-4 h-4" />
+                              {stepStatus === "completed" ? (
+                                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                  <path d="M7 13l3 3 7-7" />
+                                  <path d="M12 17v5" />
+                                </svg>
+                              ) : (
+                                <ArrowRight className="w-4 h-4" />
+                              )}
                             </button>
                           )}
                         </div>
