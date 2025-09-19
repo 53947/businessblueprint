@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,8 +17,7 @@ import {
   ArrowRight,
   MapPin,
   Trophy,
-  Lightbulb,
-  Eye
+  Lightbulb
 } from "lucide-react";
 
 // The 11 strategic digital blueprint steps - logical order for beginners
@@ -143,15 +141,6 @@ interface DigitalBlueprintProps {
 }
 
 export function DigitalBlueprint({ assessment, recommendations, onSelectPathway }: DigitalBlueprintProps) {
-  // Preview toggle state
-  const [previewStyle, setPreviewStyle] = useState<'current' | 'component' | 'callout' | 'schematic'>('current');
-  const previewOptions = [
-    { key: 'current', label: 'Current Style' },
-    { key: 'component', label: 'Component Boxes' },
-    { key: 'callout', label: 'Callouts' },
-    { key: 'schematic', label: 'Schematic Flow' }
-  ];
-
   // Calculate progress based on digital score and recommendations
   const digitalScore = assessment.digitalScore || 0;
   const completedSteps = Math.floor((digitalScore / 100) * digitalBlueprintSteps.length);
@@ -171,18 +160,15 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
     return "upcoming";
   };
 
-  const getStepPriority = (stepId: number) => {
-    if (stepId <= completedSteps) return "completed";
-    if (stepId === currentStep) return "high";
-    if (stepId === currentStep + 1) return "medium";
-    return "low";
-  };
-
-  // Toggle to next preview style
-  const togglePreviewStyle = () => {
-    const currentIndex = previewOptions.findIndex(option => option.key === previewStyle);
-    const nextIndex = (currentIndex + 1) % previewOptions.length;
-    setPreviewStyle(previewOptions[nextIndex].key as any);
+  // Scroll to next step functionality
+  const scrollToStep = (stepId: number) => {
+    const element = document.getElementById(`blueprint-step-${stepId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Add temporary highlight
+      element.classList.add('blueprint-step-highlight');
+      setTimeout(() => element.classList.remove('blueprint-step-highlight'), 2000);
+    }
   };
 
   return (
@@ -221,19 +207,11 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
 
       {/* Blueprint Progress */}
       <Card className="blueprint-surface blueprint-surface--content">
-        <CardHeader className="relative">
+        <CardHeader>
           <CardTitle className="flex items-center space-x-2 text-white">
             <Lightbulb className="w-5 h-5" />
             <span>Digital Blueprint</span>
           </CardTitle>
-          <button 
-            onClick={togglePreviewStyle}
-            className="blueprint-preview-toggle"
-            title="Preview different blueprint styles"
-          >
-            <Eye className="w-3 h-3 mr-1 inline" />
-            {previewOptions.find(opt => opt.key === previewStyle)?.label}
-          </button>
         </CardHeader>
         <CardContent className="blueprint-content">
           <div className="relative">
@@ -245,146 +223,137 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
             ></div>
 
             {/* Blueprint Steps */}
-            {previewStyle === 'schematic' ? (
-              <div className="blueprint-schematic-container">
-                {digitalBlueprintSteps.map((step, index) => {
-                  const stepStatus = getStepStatus(step.id);
-                  const IconComponent = step.icon;
-                  
-                  return (
-                    <div key={step.id} className="blueprint-step-schematic">
-                      <div className="blueprint-step-box">
-                        <div className="flex items-center gap-2 mb-2">
-                          <IconComponent className="w-4 h-4" />
-                          <h4 className="font-semibold">{step.title}</h4>
-                        </div>
-                        <p className="text-sm opacity-80">{step.description}</p>
-                      </div>
-                      {index < digitalBlueprintSteps.length - 1 && (
-                        <div className="blueprint-flow-arrow">→</div>
+            <div className="space-y-6">
+              {digitalBlueprintSteps.map((step, index) => {
+                const stepStatus = getStepStatus(step.id);
+                const stepRecs = getRecommendationsForStep(step.category);
+                const IconComponent = step.icon;
+                const nextStep = digitalBlueprintSteps[index + 1];
+                
+                return (
+                  <div 
+                    key={step.id} 
+                    id={`blueprint-step-${step.id}`}
+                    className="relative flex items-start space-x-4 blueprint-step-container"
+                  >
+                    {/* Technical Step Icon */}
+                    <div className={`
+                      relative z-10 w-12 h-12 flex items-center justify-center border-2 transition-all duration-300 blueprint-step-icon
+                      ${stepStatus === "completed" ? "bg-white/20 border-white text-white" : 
+                        stepStatus === "current" ? "bg-white/30 border-white border-2 text-white" :
+                        "bg-white/10 border-white/30 text-white/60"}
+                    `}>
+                      {stepStatus === "completed" ? (
+                        <CheckCircle className="w-6 h-6" />
+                      ) : (
+                        <IconComponent className="w-6 h-6" />
                       )}
                     </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className={previewStyle === 'current' ? "space-y-6" : "space-y-4"}>
-                {digitalBlueprintSteps.map((step, index) => {
-                  const stepStatus = getStepStatus(step.id);
-                  const stepRecs = getRecommendationsForStep(step.category);
-                  const IconComponent = step.icon;
-                  
-                  return (
-                    <div key={step.id} className="relative flex items-start space-x-4">
-                      {/* Step Icon - only show for current style */}
-                      {previewStyle === 'current' && (
-                        <div className={`
-                          relative z-10 w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300
-                          ${stepStatus === "completed" ? `${step.color} border-white text-white` : 
-                            stepStatus === "current" ? `${step.lightColor} ${step.borderColor} border-2` :
-                            "bg-gray-100 border-gray-200"}
-                        `}>
-                          {stepStatus === "completed" ? (
-                            <CheckCircle className="w-6 h-6" />
-                          ) : (
-                            <IconComponent className={`w-6 h-6 ${
-                              stepStatus === "current" ? step.color.replace('bg-', 'text-') : "text-gray-400"
-                            }`} />
-                          )}
-                        </div>
-                      )}
 
-                      {/* Step Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className={`
-                          transition-all duration-300 
-                          ${previewStyle === 'current' ? `
-                            rounded-lg border-2 p-4
-                            ${stepStatus === "current" ? `${step.lightColor} ${step.borderColor}` :
-                              stepStatus === "completed" ? "bg-green-50 border-green-200" :
-                              "bg-white border-gray-200"}
-                          ` : previewStyle === 'component' ? 'blueprint-step-component' : 
-                            'blueprint-step-callout'}
-                        `}
-                        data-step-number={step.id}
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                              {previewStyle !== 'current' && <IconComponent className="w-4 h-4" />}
-                              <h4 className={`font-semibold ${
-                                previewStyle === 'current' ? 'text-gray-900' : 
-                                previewStyle === 'component' ? 'text-white' : 'text-gray-900'
-                              }`}>{step.title}</h4>
-                            </div>
-                            {previewStyle === 'current' && (
-                              <Badge variant={
-                                stepStatus === "completed" ? "default" :
-                                stepStatus === "current" ? "destructive" : "secondary"
-                              }>
-                                {stepStatus === "completed" ? "✓ Complete" :
-                                 stepStatus === "current" ? "👈 You Are Here" : "Upcoming"}
-                              </Badge>
-                            )}
+                    {/* Technical Step Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="blueprint-step-component relative">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-3">
+                            <h4 className="font-semibold text-white text-lg">{step.title}</h4>
+                            <Badge 
+                              variant="outline" 
+                              className={`
+                                border-white/40 text-xs font-mono
+                                ${stepStatus === "completed" ? "bg-green-500/20 text-green-200 border-green-300" :
+                                  stepStatus === "current" ? "bg-yellow-500/20 text-yellow-200 border-yellow-300" :
+                                  "bg-white/10 text-white/60"}
+                              `}
+                            >
+                              {stepStatus === "completed" ? "✓ COMPLETE" :
+                               stepStatus === "current" ? "→ CURRENT" : "PENDING"}
+                            </Badge>
                           </div>
                           
-                          <p className={`text-sm mb-3 ${
-                            previewStyle === 'current' ? 'text-gray-600' : 
-                            previewStyle === 'component' ? 'text-white/80' : 'text-gray-600'
-                          }`}>{step.description}</p>
-                        
-                          {/* Step Recommendations - only show for current style */}
-                          {previewStyle === 'current' && stepRecs.length > 0 && stepStatus !== "completed" && (
-                            <div className="space-y-2">
-                              <h5 className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Recommended Actions
-                              </h5>
-                              {stepRecs.map((rec: any) => (
-                                <div key={rec.id} className="bg-white rounded p-3 border">
-                                  <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                      <p className="text-sm font-medium text-gray-900">{rec.title}</p>
-                                      <p className="text-xs text-gray-600 mt-1">{rec.description}</p>
-                                    </div>
-                                    <Badge variant="outline" className="ml-2 text-xs">
-                                      {rec.priority}
-                                    </Badge>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* Current Step Action - only show for current style */}
-                          {previewStyle === 'current' && stepStatus === "current" && (
-                            <div className="mt-4 pt-3 border-t border-gray-200">
-                              <div className="flex items-center justify-between">
-                                <p className="text-sm font-medium text-gray-900">Ready to take action?</p>
-                                <div className="flex space-x-2">
-                                  <Button 
-                                    size="sm" 
-                                    variant="outline"
-                                    onClick={() => onSelectPathway("diy")}
-                                  >
-                                    DIY Guide
-                                  </Button>
-                                  <Button 
-                                    size="sm"
-                                    onClick={() => onSelectPathway("msp")}
-                                  >
-                                    Get Help
-                                    <ArrowRight className="w-3 h-3 ml-1" />
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
+                          {/* Step Navigation Arrow */}
+                          {nextStep && (
+                            <button
+                              onClick={() => scrollToStep(nextStep.id)}
+                              className="blueprint-nav-arrow"
+                              title={`Next: ${nextStep.title}`}
+                              aria-label={`Navigate to step ${nextStep.id}: ${nextStep.title}`}
+                              data-testid={`button-next-step-${nextStep.id}`}
+                            >
+                              <ArrowRight className="w-4 h-4" />
+                            </button>
                           )}
                         </div>
+                        
+                        <p className="text-white/80 text-sm mb-4 font-mono leading-relaxed">
+                          {step.description}
+                        </p>
+
+                        {/* Technical Specifications - Recommendations */}
+                        {stepRecs.length > 0 && stepStatus !== "completed" && (
+                          <div className="space-y-2 mb-4">
+                            <h5 className="text-xs font-mono font-medium text-white/70 uppercase tracking-wider border-b border-white/20 pb-1">
+                              RECOMMENDED ACTIONS
+                            </h5>
+                            {stepRecs.map((rec: any) => (
+                              <div key={rec.id} className="bg-white/5 border border-white/20 p-3 blueprint-recommendation">
+                                <div className="flex items-start justify-between">
+                                  <div className="flex-1">
+                                    <p className="text-sm font-medium text-white font-mono">{rec.title}</p>
+                                    <p className="text-xs text-white/60 mt-1 font-mono">{rec.description}</p>
+                                  </div>
+                                  <Badge 
+                                    variant="outline" 
+                                    className={`ml-2 text-xs font-mono border-white/30 ${
+                                      rec.priority === 'high' ? 'bg-red-500/20 text-red-200 border-red-300' :
+                                      rec.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-200 border-yellow-300' :
+                                      'bg-blue-500/20 text-blue-200 border-blue-300'
+                                    }`}
+                                  >
+                                    {rec.priority?.toUpperCase() || 'NORMAL'}
+                                  </Badge>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Action Station - Current Step Actions */}
+                        {stepStatus === "current" && (
+                          <div className="mt-4 pt-4 border-t border-white/20 bg-white/5 -m-4 p-4 blueprint-action-station">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="text-sm font-medium text-white font-mono mb-1">ACTION REQUIRED</p>
+                                <p className="text-xs text-white/70 font-mono">Select implementation pathway</p>
+                              </div>
+                              <div className="flex space-x-2">
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => onSelectPathway("diy")}
+                                  className="border-white/40 text-white hover:bg-white/10 font-mono text-xs"
+                                  data-testid="button-diy-guide"
+                                >
+                                  DIY GUIDE
+                                </Button>
+                                <Button 
+                                  size="sm"
+                                  onClick={() => onSelectPathway("msp")}
+                                  className="bg-white/20 text-white hover:bg-white/30 font-mono text-xs border-white/40"
+                                  data-testid="button-get-help"
+                                >
+                                  GET HELP
+                                  <ArrowRight className="w-3 h-3 ml-1" />
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </CardContent>
       </Card>
