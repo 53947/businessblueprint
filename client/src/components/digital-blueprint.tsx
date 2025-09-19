@@ -202,14 +202,14 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
       </Card>
 
       {/* Blueprint Progress */}
-      <Card>
+      <Card className="blueprint-background">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
+          <CardTitle className="flex items-center space-x-2 text-white">
             <Lightbulb className="w-5 h-5" />
             <span>Digital Blueprint</span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="blueprint-content">
           <div className="relative">
             {/* Progress Line */}
             <div className="absolute left-6 top-0 w-0.5 h-full bg-gray-200"></div>
