@@ -33,7 +33,7 @@ export default function Home() {
                 <span className="text-primary">Digital Empowerment</span> for Your Business
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Discover exactly what your business needs to succeed online. Our AI analyzes your online presence using Google's business intelligence. It creates a comprehensive personalized roadmap in less than 24 hours. No tech experience required.
+Discover exactly what your business needs to succeed online. Our AI analyzes your online presence using Google's business intelligence. It creates a comprehensive Digital Blueprint in less than 24 hours. No tech experience required.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Button onClick={startAssessment} size="lg" className="bg-blue-500 hover:bg-blue-600">
@@ -72,7 +72,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center text-left">
                     <div className="bg-green-100 text-green-600 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">2</div>
-                    <span className="text-gray-700">Get your personalized roadmap</span>
+                    <span className="text-gray-700">Get your Digital Blueprint</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="bg-purple-100 text-purple-600 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">3</div>
@@ -116,17 +116,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Strategic Treasure Map */}
-      <section id="treasure-map" className="bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 py-20 relative overflow-hidden">
+      {/* Digital Blueprint */}
+      <section id="digital-blueprint" className="bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 py-20 relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             <defs>
-              <pattern id="treasure-dots" patternUnits="userSpaceOnUse" width="10" height="10">
+              <pattern id="blueprint-dots" patternUnits="userSpaceOnUse" width="10" height="10">
                 <circle cx="5" cy="5" r="1" fill="currentColor"/>
               </pattern>
             </defs>
-            <rect width="100" height="100" fill="url(#treasure-dots)"/>
+            <rect width="100" height="100" fill="url(#blueprint-dots)"/>
           </svg>
         </div>
         
@@ -139,16 +139,16 @@ export default function Home() {
             <div className="pt-8">
               <div className="flex items-center justify-center mb-4">
                 <MapPin className="w-8 h-8 text-red-500 mr-3" />
-                <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">Your Business Treasure Map</h2>
+                <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">Your Digital Blueprint</h2>
                 <Gem className="w-8 h-8 text-blue-500 ml-3" />
               </div>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                A step-by-step journey designed for complete beginners. Follow this map to build confidence and discover the treasures that will make your business thrive online.
+A step-by-step guide designed for complete beginners. Follow this blueprint to build confidence and watch your business grow online and offline.
               </p>
             </div>
           </div>
 
-          {/* The 11 Strategic Journey Steps */}
+          {/* The 11 Strategic Blueprint Steps */}
           <div className="grid lg:grid-cols-2 gap-8 mb-16">
             {/* Step 1: Business Foundation */}
             <Card className="border-4 border-dashed border-amber-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
@@ -415,7 +415,7 @@ export default function Home() {
             <CardContent className="p-12 pt-16">
               <div className="flex items-center justify-center mb-6">
                 <Gem className="w-12 h-12 mr-4 animate-pulse" />
-                <h3 className="text-4xl font-bold">Digital Success Treasure!</h3>
+                <h3 className="text-4xl font-bold">Digital Success Blueprint!</h3>
                 <Gem className="w-12 h-12 ml-4 animate-pulse" />
               </div>
               <p className="text-2xl mb-6 opacity-90">
@@ -426,10 +426,10 @@ export default function Home() {
                 size="lg"
                 className="bg-white text-yellow-600 hover:bg-gray-100 font-bold text-xl px-8 py-4"
               >
-                🗺️ Start Your Treasure Hunt
+📋 Start Your Blueprint
               </Button>
               <p className="mt-4 text-sm opacity-75">
-                Your personalized map will show you which treasures to find first!
+Your personalized blueprint will show you which steps to take first!
               </p>
             </CardContent>
           </Card>
@@ -572,7 +572,7 @@ export default function Home() {
                 </li>
               </ul>
               <Button className="w-full bg-blue-500 hover:bg-blue-600">
-                Start DIY Journey
+Start Step-by-Step Guide
               </Button>
             </Card>
 

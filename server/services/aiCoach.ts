@@ -165,7 +165,7 @@ Provide an encouraging progress analysis with specific achievements and next pri
         progressScore: Math.round(context.businessInfo.digitalScore),
         achievements: ["Completed initial assessment"],
         nextPriorities: ["Optimize Google Business listing"],
-        motivationalMessage: "You're making great progress on your digital presence journey!"
+        motivationalMessage: "You're making great progress with your Digital Blueprint!"
       };
     }
   }
@@ -193,7 +193,7 @@ Current Platform Status:
 Please provide personalized guidance including:
 1. A supportive message acknowledging their current situation
 2. 3-5 specific action items prioritized by impact and difficulty
-3. Encouragement for their journey
+3. Encouragement for their progress
 4. Next major milestone to work toward
 
 Format as JSON with actionItems array containing task, priority, estimatedTime, difficulty, and resources.

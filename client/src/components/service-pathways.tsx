@@ -9,7 +9,7 @@ export function ServicePathways() {
     <section id="services" className="bg-gray-50 py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Choose Your Digital Journey</h2>
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Choose Your Path Forward</h2>
           <p className="text-xl text-gray-600">Two paths to digital success - pick what works best for you</p>
         </div>
 
