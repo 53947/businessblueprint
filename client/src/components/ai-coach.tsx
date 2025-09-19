@@ -247,7 +247,7 @@ export function AICoach({ assessmentData }: AICoachProps) {
                 Progress Analysis
               </CardTitle>
               <CardDescription>
-                Track your achievements and get insights on your digital marketing journey
+Track your achievements and get insights on your digital marketing progress
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

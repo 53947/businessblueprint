@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { TreasureMapJourney } from "@/components/treasure-map-journey";
+import { DigitalBlueprint } from "@/components/digital-blueprint";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { 
@@ -128,12 +128,12 @@ export default function Dashboard() {
     );
   }
 
-  // For failed assessments, create sample data to show treasure map
+  // For failed assessments, create sample data to show digital blueprint
   if (assessment.status === "failed") {
     assessment.digitalScore = 65;
     assessment.analysisResults = {
       grade: "C+",
-      summary: "Your business has a solid foundation but significant opportunities for digital growth. Focus on the highlighted steps in your journey map below."
+      summary: "Your business has a solid foundation but significant opportunities for digital growth. Follow your step-by-step blueprint below."
     };
     // Add sample recommendations for demonstration
     recommendations.push(
@@ -203,7 +203,7 @@ export default function Dashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-4 gap-8">
-          {/* Main Content - Treasure Map */}
+          {/* Main Content - Digital Blueprint */}
           <div className="lg:col-span-3 space-y-6">
             {/* Overall Score */}
             <Card>
@@ -229,7 +229,7 @@ export default function Dashboard() {
                     <div className="mt-3 flex items-center space-x-2 text-sm">
                       <Map className="w-4 h-4 text-blue-500" />
                       <span className="text-gray-500">
-                        Follow your treasure map below ↓
+                        Follow your step-by-step blueprint below ↓
                       </span>
                     </div>
                   </div>
@@ -294,8 +294,8 @@ export default function Dashboard() {
               </Card>
             )}
 
-            {/* Treasure Map Journey */}
-            <TreasureMapJourney 
+            {/* Digital Blueprint */}
+            <DigitalBlueprint 
               assessment={assessment}
               recommendations={recommendations}
               onSelectPathway={selectPathway}

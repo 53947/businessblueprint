@@ -20,8 +20,8 @@ import {
   Lightbulb
 } from "lucide-react";
 
-// The 11 strategic treasure map steps - logical order for beginners
-const treasureMapSteps = [
+// The 11 strategic digital blueprint steps - logical order for beginners
+const digitalBlueprintSteps = [
   {
     id: 1,
     title: "Business Foundation",
@@ -134,19 +134,19 @@ const treasureMapSteps = [
   }
 ];
 
-interface TreasureMapJourneyProps {
+interface DigitalBlueprintProps {
   assessment: any;
   recommendations: any[];
   onSelectPathway: (pathway: "diy" | "msp") => void;
 }
 
-export function TreasureMapJourney({ assessment, recommendations, onSelectPathway }: TreasureMapJourneyProps) {
+export function DigitalBlueprint({ assessment, recommendations, onSelectPathway }: DigitalBlueprintProps) {
   // Calculate progress based on digital score and recommendations
   const digitalScore = assessment.digitalScore || 0;
-  const completedSteps = Math.floor((digitalScore / 100) * treasureMapSteps.length);
-  const currentStep = Math.min(completedSteps + 1, treasureMapSteps.length);
+  const completedSteps = Math.floor((digitalScore / 100) * digitalBlueprintSteps.length);
+  const currentStep = Math.min(completedSteps + 1, digitalBlueprintSteps.length);
   
-  // Map recommendations to treasure map steps
+  // Map recommendations to digital blueprint steps
   const getRecommendationsForStep = (stepCategory: string) => {
     return recommendations.filter(rec => 
       rec.category?.toUpperCase().includes(stepCategory.split(' ')[0]) ||
@@ -169,22 +169,22 @@ export function TreasureMapJourney({ assessment, recommendations, onSelectPathwa
 
   return (
     <div className="space-y-6">
-      {/* Journey Header */}
+      {/* Blueprint Header */}
       <Card className="bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 text-white">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold mb-2 flex items-center space-x-2">
                 <Trophy className="w-6 h-6" />
-                <span>Your Digital Empowerment Journey</span>
+                <span>Your Digital Blueprint</span>
               </h2>
               <p className="text-lg opacity-90">
-                Strategic roadmap to transform your business presence
+                Watch your business grow step by step — Online and Offline
               </p>
               <div className="mt-4 flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
                   <MapPin className="w-4 h-4" />
-                  <span className="text-sm">Step {currentStep} of {treasureMapSteps.length}</span>
+                  <span className="text-sm">Step {currentStep} of {digitalBlueprintSteps.length}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="w-4 h-4" />
@@ -201,12 +201,12 @@ export function TreasureMapJourney({ assessment, recommendations, onSelectPathwa
         </CardContent>
       </Card>
 
-      {/* Journey Progress */}
+      {/* Blueprint Progress */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Lightbulb className="w-5 h-5" />
-            <span>Strategic Journey Map</span>
+            <span>Digital Blueprint</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -215,12 +215,12 @@ export function TreasureMapJourney({ assessment, recommendations, onSelectPathwa
             <div className="absolute left-6 top-0 w-0.5 h-full bg-gray-200"></div>
             <div 
               className="absolute left-6 top-0 w-0.5 bg-gradient-to-b from-blue-500 to-green-500 transition-all duration-1000"
-              style={{ height: `${(completedSteps / treasureMapSteps.length) * 100}%` }}
+              style={{ height: `${(completedSteps / digitalBlueprintSteps.length) * 100}%` }}
             ></div>
 
-            {/* Journey Steps */}
+            {/* Blueprint Steps */}
             <div className="space-y-6">
-              {treasureMapSteps.map((step, index) => {
+              {digitalBlueprintSteps.map((step, index) => {
                 const stepStatus = getStepStatus(step.id);
                 const stepRecs = getRecommendationsForStep(step.category);
                 const IconComponent = step.icon;
@@ -320,7 +320,7 @@ export function TreasureMapJourney({ assessment, recommendations, onSelectPathwa
         </CardContent>
       </Card>
 
-      {/* Journey Summary */}
+      {/* Step-by-Step Summary */}
       <Card>
         <CardContent className="p-6">
           <div className="grid md:grid-cols-3 gap-6">
@@ -329,12 +329,12 @@ export function TreasureMapJourney({ assessment, recommendations, onSelectPathwa
               <p className="text-sm text-gray-600">Steps Completed</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">{treasureMapSteps.length - completedSteps}</div>
-              <p className="text-sm text-gray-600">Opportunities Ahead</p>
+              <div className="text-3xl font-bold text-blue-600 mb-2">{digitalBlueprintSteps.length - completedSteps}</div>
+              <p className="text-sm text-gray-600">Steps Remaining</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">{Math.round((completedSteps / treasureMapSteps.length) * 100)}%</div>
-              <p className="text-sm text-gray-600">Journey Progress</p>
+              <div className="text-3xl font-bold text-purple-600 mb-2">{Math.round((completedSteps / digitalBlueprintSteps.length) * 100)}%</div>
+              <p className="text-sm text-gray-600">Step-by-Step Progress</p>
             </div>
           </div>
         </CardContent>
