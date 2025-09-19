@@ -206,29 +206,33 @@ export default function Dashboard() {
           {/* Main Content - Digital Blueprint */}
           <div className="lg:col-span-3 space-y-6">
             {/* Overall Score */}
-            <Card>
+            <Card className="blueprint-surface blueprint-surface--header">
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
+                <CardTitle className="flex items-center space-x-2 text-white">
                   <BarChart3 className="w-5 h-5" />
                   <span>Current Status</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="blueprint-content">
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-center">
-                    <div className={`text-5xl font-bold ${getScoreColor(assessment.digitalScore || 0)}`}>
+                    <div className={`text-5xl font-bold ${
+                      assessment.digitalScore >= 80 ? "text-green-300" :
+                      assessment.digitalScore >= 60 ? "text-yellow-300" :
+                      "text-red-300"
+                    }`}>
                       {analysisResults?.grade || 'N/A'}
                     </div>
-                    <div className="text-2xl text-gray-600">{assessment.digitalScore}/100</div>
+                    <div className="text-2xl text-white/80">{assessment.digitalScore}/100</div>
                   </div>
                   <div className="flex-1 ml-8">
                     <Progress value={assessment.digitalScore || 0} className="h-3 mb-2" />
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-white/70">
                       {analysisResults?.summary || "Analysis in progress..."}
                     </p>
                     <div className="mt-3 flex items-center space-x-2 text-sm">
-                      <Map className="w-4 h-4 text-blue-500" />
-                      <span className="text-gray-500">
+                      <Map className="w-4 h-4 text-blue-300" />
+                      <span className="text-white/60">
                         Follow your step-by-step blueprint below ↓
                       </span>
                     </div>
