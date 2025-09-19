@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +18,8 @@ import {
   ArrowRight,
   MapPin,
   Trophy,
-  Lightbulb
+  Lightbulb,
+  Eye
 } from "lucide-react";
 
 // The 11 strategic digital blueprint steps - logical order for beginners
@@ -141,6 +143,15 @@ interface DigitalBlueprintProps {
 }
 
 export function DigitalBlueprint({ assessment, recommendations, onSelectPathway }: DigitalBlueprintProps) {
+  // Preview toggle state
+  const [previewStyle, setPreviewStyle] = useState<'current' | 'component' | 'callout' | 'schematic'>('current');
+  const previewOptions = [
+    { key: 'current', label: 'Current Style' },
+    { key: 'component', label: 'Component Boxes' },
+    { key: 'callout', label: 'Callouts' },
+    { key: 'schematic', label: 'Schematic Flow' }
+  ];
+
   // Calculate progress based on digital score and recommendations
   const digitalScore = assessment.digitalScore || 0;
   const completedSteps = Math.floor((digitalScore / 100) * digitalBlueprintSteps.length);
@@ -165,6 +176,13 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
     if (stepId === currentStep) return "high";
     if (stepId === currentStep + 1) return "medium";
     return "low";
+  };
+
+  // Toggle to next preview style
+  const togglePreviewStyle = () => {
+    const currentIndex = previewOptions.findIndex(option => option.key === previewStyle);
+    const nextIndex = (currentIndex + 1) % previewOptions.length;
+    setPreviewStyle(previewOptions[nextIndex].key as any);
   };
 
   return (
@@ -203,11 +221,19 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
 
       {/* Blueprint Progress */}
       <Card className="blueprint-surface blueprint-surface--content">
-        <CardHeader>
+        <CardHeader className="relative">
           <CardTitle className="flex items-center space-x-2 text-white">
             <Lightbulb className="w-5 h-5" />
             <span>Digital Blueprint</span>
           </CardTitle>
+          <button 
+            onClick={togglePreviewStyle}
+            className="blueprint-preview-toggle"
+            title="Preview different blueprint styles"
+          >
+            <Eye className="w-3 h-3 mr-1 inline" />
+            {previewOptions.find(opt => opt.key === previewStyle)?.label}
+          </button>
         </CardHeader>
         <CardContent className="blueprint-content">
           <div className="relative">
@@ -219,103 +245,146 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
             ></div>
 
             {/* Blueprint Steps */}
-            <div className="space-y-6">
-              {digitalBlueprintSteps.map((step, index) => {
-                const stepStatus = getStepStatus(step.id);
-                const stepRecs = getRecommendationsForStep(step.category);
-                const IconComponent = step.icon;
-                
-                return (
-                  <div key={step.id} className="relative flex items-start space-x-4">
-                    {/* Step Icon */}
-                    <div className={`
-                      relative z-10 w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300
-                      ${stepStatus === "completed" ? `${step.color} border-white text-white` : 
-                        stepStatus === "current" ? `${step.lightColor} ${step.borderColor} border-2` :
-                        "bg-gray-100 border-gray-200"}
-                    `}>
-                      {stepStatus === "completed" ? (
-                        <CheckCircle className="w-6 h-6" />
-                      ) : (
-                        <IconComponent className={`w-6 h-6 ${
-                          stepStatus === "current" ? step.color.replace('bg-', 'text-') : "text-gray-400"
-                        }`} />
+            {previewStyle === 'schematic' ? (
+              <div className="blueprint-schematic-container">
+                {digitalBlueprintSteps.map((step, index) => {
+                  const stepStatus = getStepStatus(step.id);
+                  const IconComponent = step.icon;
+                  
+                  return (
+                    <div key={step.id} className="blueprint-step-schematic">
+                      <div className="blueprint-step-box">
+                        <div className="flex items-center gap-2 mb-2">
+                          <IconComponent className="w-4 h-4" />
+                          <h4 className="font-semibold">{step.title}</h4>
+                        </div>
+                        <p className="text-sm opacity-80">{step.description}</p>
+                      </div>
+                      {index < digitalBlueprintSteps.length - 1 && (
+                        <div className="blueprint-flow-arrow">→</div>
                       )}
                     </div>
-
-                    {/* Step Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className={`
-                        rounded-lg border-2 p-4 transition-all duration-300
-                        ${stepStatus === "current" ? `${step.lightColor} ${step.borderColor}` :
-                          stepStatus === "completed" ? "bg-green-50 border-green-200" :
-                          "bg-white border-gray-200"}
-                      `}>
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-semibold text-gray-900">{step.title}</h4>
-                          <Badge variant={
-                            stepStatus === "completed" ? "default" :
-                            stepStatus === "current" ? "destructive" : "secondary"
-                          }>
-                            {stepStatus === "completed" ? "✓ Complete" :
-                             stepStatus === "current" ? "👈 You Are Here" : "Upcoming"}
-                          </Badge>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className={previewStyle === 'current' ? "space-y-6" : "space-y-4"}>
+                {digitalBlueprintSteps.map((step, index) => {
+                  const stepStatus = getStepStatus(step.id);
+                  const stepRecs = getRecommendationsForStep(step.category);
+                  const IconComponent = step.icon;
+                  
+                  return (
+                    <div key={step.id} className="relative flex items-start space-x-4">
+                      {/* Step Icon - only show for current style */}
+                      {previewStyle === 'current' && (
+                        <div className={`
+                          relative z-10 w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300
+                          ${stepStatus === "completed" ? `${step.color} border-white text-white` : 
+                            stepStatus === "current" ? `${step.lightColor} ${step.borderColor} border-2` :
+                            "bg-gray-100 border-gray-200"}
+                        `}>
+                          {stepStatus === "completed" ? (
+                            <CheckCircle className="w-6 h-6" />
+                          ) : (
+                            <IconComponent className={`w-6 h-6 ${
+                              stepStatus === "current" ? step.color.replace('bg-', 'text-') : "text-gray-400"
+                            }`} />
+                          )}
                         </div>
+                      )}
+
+                      {/* Step Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className={`
+                          transition-all duration-300 
+                          ${previewStyle === 'current' ? `
+                            rounded-lg border-2 p-4
+                            ${stepStatus === "current" ? `${step.lightColor} ${step.borderColor}` :
+                              stepStatus === "completed" ? "bg-green-50 border-green-200" :
+                              "bg-white border-gray-200"}
+                          ` : previewStyle === 'component' ? 'blueprint-step-component' : 
+                            'blueprint-step-callout'}
+                        `}
+                        data-step-number={step.id}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              {previewStyle !== 'current' && <IconComponent className="w-4 h-4" />}
+                              <h4 className={`font-semibold ${
+                                previewStyle === 'current' ? 'text-gray-900' : 
+                                previewStyle === 'component' ? 'text-white' : 'text-gray-900'
+                              }`}>{step.title}</h4>
+                            </div>
+                            {previewStyle === 'current' && (
+                              <Badge variant={
+                                stepStatus === "completed" ? "default" :
+                                stepStatus === "current" ? "destructive" : "secondary"
+                              }>
+                                {stepStatus === "completed" ? "✓ Complete" :
+                                 stepStatus === "current" ? "👈 You Are Here" : "Upcoming"}
+                              </Badge>
+                            )}
+                          </div>
+                          
+                          <p className={`text-sm mb-3 ${
+                            previewStyle === 'current' ? 'text-gray-600' : 
+                            previewStyle === 'component' ? 'text-white/80' : 'text-gray-600'
+                          }`}>{step.description}</p>
                         
-                        <p className="text-sm text-gray-600 mb-3">{step.description}</p>
-                        
-                        {/* Step Recommendations */}
-                        {stepRecs.length > 0 && stepStatus !== "completed" && (
-                          <div className="space-y-2">
-                            <h5 className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Recommended Actions
-                            </h5>
-                            {stepRecs.map((rec: any) => (
-                              <div key={rec.id} className="bg-white rounded p-3 border">
-                                <div className="flex items-start justify-between">
-                                  <div className="flex-1">
-                                    <p className="text-sm font-medium text-gray-900">{rec.title}</p>
-                                    <p className="text-xs text-gray-600 mt-1">{rec.description}</p>
+                          {/* Step Recommendations - only show for current style */}
+                          {previewStyle === 'current' && stepRecs.length > 0 && stepStatus !== "completed" && (
+                            <div className="space-y-2">
+                              <h5 className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Recommended Actions
+                              </h5>
+                              {stepRecs.map((rec: any) => (
+                                <div key={rec.id} className="bg-white rounded p-3 border">
+                                  <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                      <p className="text-sm font-medium text-gray-900">{rec.title}</p>
+                                      <p className="text-xs text-gray-600 mt-1">{rec.description}</p>
+                                    </div>
+                                    <Badge variant="outline" className="ml-2 text-xs">
+                                      {rec.priority}
+                                    </Badge>
                                   </div>
-                                  <Badge variant="outline" className="ml-2 text-xs">
-                                    {rec.priority}
-                                  </Badge>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Current Step Action - only show for current style */}
+                          {previewStyle === 'current' && stepStatus === "current" && (
+                            <div className="mt-4 pt-3 border-t border-gray-200">
+                              <div className="flex items-center justify-between">
+                                <p className="text-sm font-medium text-gray-900">Ready to take action?</p>
+                                <div className="flex space-x-2">
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline"
+                                    onClick={() => onSelectPathway("diy")}
+                                  >
+                                    DIY Guide
+                                  </Button>
+                                  <Button 
+                                    size="sm"
+                                    onClick={() => onSelectPathway("msp")}
+                                  >
+                                    Get Help
+                                    <ArrowRight className="w-3 h-3 ml-1" />
+                                  </Button>
                                 </div>
                               </div>
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Current Step Action */}
-                        {stepStatus === "current" && (
-                          <div className="mt-4 pt-3 border-t border-gray-200">
-                            <div className="flex items-center justify-between">
-                              <p className="text-sm font-medium text-gray-900">Ready to take action?</p>
-                              <div className="flex space-x-2">
-                                <Button 
-                                  size="sm" 
-                                  variant="outline"
-                                  onClick={() => onSelectPathway("diy")}
-                                >
-                                  DIY Guide
-                                </Button>
-                                <Button 
-                                  size="sm"
-                                  onClick={() => onSelectPathway("msp")}
-                                >
-                                  Get Help
-                                  <ArrowRight className="w-3 h-3 ml-1" />
-                                </Button>
-                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
