@@ -378,20 +378,20 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
       </Card>
 
       {/* Step-by-Step Summary */}
-      <Card>
-        <CardContent className="p-6">
+      <Card className="blueprint-surface blueprint-surface--content">
+        <CardContent className="blueprint-content p-6">
           <div className="grid md:grid-cols-3 gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">{completedSteps}</div>
-              <p className="text-sm text-gray-600">Steps Completed</p>
+              <div className="text-3xl font-bold text-green-300 mb-2">{completedSteps}</div>
+              <p className="text-sm text-white/70">Steps Completed</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">{digitalBlueprintSteps.length - completedSteps}</div>
-              <p className="text-sm text-gray-600">Steps Remaining</p>
+              <div className="text-3xl font-bold text-blue-300 mb-2">{digitalBlueprintSteps.length - completedSteps}</div>
+              <p className="text-sm text-white/70">Steps Remaining</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">{Math.round((completedSteps / digitalBlueprintSteps.length) * 100)}%</div>
-              <p className="text-sm text-gray-600">Step-by-Step Progress</p>
+              <div className="text-3xl font-bold text-purple-300 mb-2">{Math.round((completedSteps / digitalBlueprintSteps.length) * 100)}%</div>
+              <p className="text-sm text-white/70">Step-by-Step Progress</p>
             </div>
           </div>
         </CardContent>
