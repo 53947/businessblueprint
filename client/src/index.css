@@ -61,26 +61,26 @@
 /* Digital Blueprint Variables */
 :root { 
   --bp-grid: 48px; 
-  --bp-line: hsla(0,0%,100%,0.12); 
-  --bp-line-thick: 2px; 
+  --bp-line: hsla(0,0%,100%,0.02); 
+  --bp-line-thick: 1px; 
   --bp-base-1: #0f1e4d; 
   --bp-base-2: #16367d; 
 }
 
-/* Cloudy Blueprint Paper Surface */
+/* Cloudy Blueprint Paper Surface with Faded Grid */
 .blueprint-surface {
   position: relative;
   background:
-    radial-gradient(1200px 800px at 20% 15%, rgba(255,255,255,0.08), transparent 60%),
-    radial-gradient(1000px 600px at 80% 35%, rgba(255,255,255,0.06), transparent 60%),
-    radial-gradient(900px 700px at 30% 80%, rgba(255,255,255,0.05), transparent 65%),
+    radial-gradient(1400px 900px at 15% 20%, rgba(255,255,255,0.04), transparent 70%),
+    radial-gradient(1100px 650px at 75% 40%, rgba(255,255,255,0.03), transparent 65%),
+    radial-gradient(950px 750px at 35% 75%, rgba(255,255,255,0.025), transparent 60%),
     linear-gradient(var(--bp-line) var(--bp-line-thick), transparent var(--bp-line-thick)),
     linear-gradient(90deg, var(--bp-line) var(--bp-line-thick), transparent var(--bp-line-thick)),
     linear-gradient(180deg, var(--bp-base-1), var(--bp-base-2) 55%, var(--bp-base-1));
   background-size:
     auto, auto, auto,
-    var(--bp-grid) var(--bp-grid),
-    var(--bp-grid) var(--bp-grid),
+    52px 52px,
+    44px 44px,
     100% 100%;
   background-color: var(--bp-base-1);
   border-radius: 0.5rem;
@@ -116,11 +116,12 @@
 
 /* Step Size Variations */
 .blueprint-step-current {
-  padding: 20px;
+  padding: 24px;
   background: rgba(255,255,255,0.16);
   border-color: rgba(255,255,255,0.6);
   border-width: 3px;
   transform: scale(1.02);
+  min-height: 160px;
 }
 
 .blueprint-step-completed {
