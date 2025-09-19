@@ -170,8 +170,8 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
   return (
     <div className="space-y-6">
       {/* Blueprint Header */}
-      <Card className="bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 text-white">
-        <CardContent className="p-6">
+      <Card className="blueprint-surface blueprint-surface--header text-white">
+        <CardContent className="blueprint-content p-6">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold mb-2 flex items-center space-x-2">
@@ -202,7 +202,7 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
       </Card>
 
       {/* Blueprint Progress */}
-      <Card className="blueprint-background">
+      <Card className="blueprint-surface blueprint-surface--content">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2 text-white">
             <Lightbulb className="w-5 h-5" />
@@ -212,9 +212,9 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
         <CardContent className="blueprint-content">
           <div className="relative">
             {/* Progress Line */}
-            <div className="absolute left-6 top-0 w-0.5 h-full bg-gray-200"></div>
+            <div className="absolute left-6 top-0 w-0.5 h-full bg-white/20"></div>
             <div 
-              className="absolute left-6 top-0 w-0.5 bg-gradient-to-b from-blue-500 to-green-500 transition-all duration-1000"
+              className="absolute left-6 top-0 w-0.5 bg-gradient-to-b from-cyan-300 to-emerald-300 transition-all duration-1000"
               style={{ height: `${(completedSteps / digitalBlueprintSteps.length) * 100}%` }}
             ></div>
 

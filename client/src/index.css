@@ -58,16 +58,46 @@
   }
 }
 
-/* Digital Blueprint Grid Pattern */
-.blueprint-background {
-  background-color: #1e3a8a; /* Deep blueprint blue */
-  background-image: 
-    linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
-  background-size: 20px 20px; /* Grid squares */
+/* Digital Blueprint Variables */
+:root { 
+  --bp-grid: 48px; 
+  --bp-line: hsla(0,0%,100%,0.12); 
+  --bp-line-thick: 2px; 
+  --bp-base-1: #0f1e4d; 
+  --bp-base-2: #16367d; 
+}
+
+/* Cloudy Blueprint Paper Surface */
+.blueprint-surface {
+  position: relative;
+  background:
+    radial-gradient(1200px 800px at 20% 15%, rgba(255,255,255,0.08), transparent 60%),
+    radial-gradient(1000px 600px at 80% 35%, rgba(255,255,255,0.06), transparent 60%),
+    radial-gradient(900px 700px at 30% 80%, rgba(255,255,255,0.05), transparent 65%),
+    linear-gradient(var(--bp-line) var(--bp-line-thick), transparent var(--bp-line-thick)),
+    linear-gradient(90deg, var(--bp-line) var(--bp-line-thick), transparent var(--bp-line-thick)),
+    linear-gradient(180deg, var(--bp-base-1), var(--bp-base-2) 55%, var(--bp-base-1));
+  background-size:
+    auto, auto, auto,
+    var(--bp-grid) var(--bp-grid),
+    var(--bp-grid) var(--bp-grid),
+    100% 100%;
+  background-color: var(--bp-base-1);
+  border-radius: 0.5rem;
+}
+
+/* Blueprint variants for different sections */
+.blueprint-surface--header { 
+  --bp-grid: 56px; 
+  --bp-line-thick: 2px; 
+}
+
+.blueprint-surface--content { 
+  --bp-grid: 48px; 
+  --bp-line-thick: 2px; 
 }
 
 .blueprint-content {
   position: relative;
-  z-index: 1; /* Ensure content stays above grid */
+  z-index: 1;
 }
