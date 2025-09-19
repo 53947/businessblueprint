@@ -102,7 +102,7 @@
   z-index: 1;
 }
 
-/* Option 1: Blueprint Component Boxes */
+/* Hybrid Blueprint Component Boxes */
 .blueprint-step-component {
   position: relative;
   background: rgba(255,255,255,0.12);
@@ -134,6 +134,91 @@
   right: -2px;
   border-left: none;
   border-top: none;
+}
+
+/* Blueprint Step Icon Styling */
+.blueprint-step-icon {
+  border-radius: 0 !important;
+  box-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+
+/* Navigation Arrow Button */
+.blueprint-nav-arrow {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  padding: 8px;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blueprint-nav-arrow:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.5);
+  transform: translateX(2px);
+}
+
+/* Step Highlight Animation */
+.blueprint-step-highlight {
+  animation: blueprintHighlight 2s ease-in-out;
+}
+
+@keyframes blueprintHighlight {
+  0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.5); }
+  50% { box-shadow: 0 0 0 10px rgba(255,255,255,0.1); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
+
+/* Blueprint Recommendation Cards */
+.blueprint-recommendation {
+  border-radius: 0;
+  position: relative;
+  backdrop-filter: blur(1px);
+}
+
+.blueprint-recommendation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -20px;
+  width: 15px;
+  height: 1px;
+  background: rgba(255,255,255,0.3);
+}
+
+/* Action Station Styling */
+.blueprint-action-station {
+  border-radius: 0;
+  position: relative;
+  backdrop-filter: blur(2px);
+}
+
+.blueprint-action-station::before {
+  content: 'ACTION STATION';
+  position: absolute;
+  top: -12px;
+  left: 0;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-size: 8px;
+  font-family: 'Courier New', monospace;
+  padding: 2px 6px;
+  border: 1px solid rgba(255,255,255,0.2);
+  letter-spacing: 1px;
+}
+
+/* Step Container Styling */
+.blueprint-step-container {
+  transition: all 0.3s ease;
+}
+
+.blueprint-step-container:hover .blueprint-step-component {
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.5);
 }
 
 /* Option 2: Blueprint Callouts */
