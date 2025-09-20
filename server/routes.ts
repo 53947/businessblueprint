@@ -1,12 +1,14 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertAssessmentSchema } from "@shared/schema";
+import { insertAssessmentSchema, subscriptionPlans, subscriptionAddons, subscriptions, insertSubscriptionSchema } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
 import { EmailService } from "./services/email";
 import { vendastaService } from "./services/vendasta";
 import { aiCoachService } from "./services/aiCoach";
+import { PricingEngine } from "./services/pricing";
+import { NMIService } from "./services/nmi";
 import { dashboardAccess } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import { db } from "./db";
@@ -50,7 +52,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Assessment started. You'll receive results via email within 2-3 minutes."
       });
     } catch (error) {
-      console.error("Error creating assessment:", error);
+      console.error("Error creating assessment:", error as Error);
       res.status(400).json({ 
         success: false, 
         message: "Invalid assessment data provided" 
@@ -682,8 +684,249 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Subscription Management endpoints
+  
+  // Get available subscription plans
+  app.get("/api/subscription-plans", async (req, res) => {
+    try {
+      const plans = await db.select().from(subscriptionPlans)
+        .where(eq(subscriptionPlans.isActive, true));
+      
+      res.json({ 
+        success: true, 
+        plans: plans.map(plan => ({
+          ...plan,
+          features: Array.isArray(plan.features) ? plan.features : [],
+          popular: plan.tierLevel === 'professional',
+          recommended: plan.pathway === 'msp' && plan.tierLevel === 'basic'
+        }))
+      });
+    } catch (error) {
+      console.error("Error fetching subscription plans:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch subscription plans" 
+      });
+    }
+  });
+
+  // Get available subscription addons
+  app.get("/api/subscription-addons", async (req, res) => {
+    try {
+      const addons = await db.select().from(subscriptionAddons)
+        .where(eq(subscriptionAddons.isActive, true));
+      
+      // Map icons for frontend (simple mapping based on category)
+      const addonsWithIcons = addons.map(addon => ({
+        ...addon,
+        icon: 'Brain', // Will be mapped on frontend
+        billingType: addon.billingCycle === 'one_time' ? 'one_time' : 'monthly'
+      }));
+      
+      res.json({ 
+        success: true, 
+        addons: addonsWithIcons 
+      });
+    } catch (error) {
+      console.error("Error fetching subscription addons:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch subscription addons" 
+      });
+    }
+  });
+
+  // Calculate pricing for selected plan and addons
+  app.post("/api/pricing/calculate", async (req, res) => {
+    try {
+      const { planId, addons: selectedAddons = [], billingCycle = 'monthly' } = req.body;
+      
+      if (!planId) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Plan ID is required" 
+        });
+      }
+
+      // Get plan details
+      const plan = await db.select().from(subscriptionPlans)
+        .where(eq(subscriptionPlans.planId, planId))
+        .limit(1);
+      
+      if (plan.length === 0) {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Plan not found" 
+        });
+      }
+
+      // Get addon details
+      const addons = await db.select().from(subscriptionAddons)
+        .where(eq(subscriptionAddons.isActive, true));
+
+      // Calculate pricing using PricingEngine
+      const pricing = PricingEngine.calculateSubscriptionPrice(
+        plan[0],
+        addons,
+        selectedAddons,
+        billingCycle
+      );
+
+      res.json({ 
+        success: true, 
+        pricing 
+      });
+    } catch (error) {
+      console.error("Error calculating pricing:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to calculate pricing" 
+      });
+    }
+  });
+
+  // Create new subscription
+  app.post("/api/subscriptions", async (req, res) => {
+    try {
+      const { 
+        planId, 
+        addons: selectedAddons = [], 
+        billingCycle, 
+        paymentToken, 
+        customerInfo 
+      } = req.body;
+
+      // Validate required fields
+      if (!planId || !paymentToken || !customerInfo) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Missing required subscription data" 
+        });
+      }
+
+      // Get plan details
+      const plan = await db.select().from(subscriptionPlans)
+        .where(eq(subscriptionPlans.planId, planId))
+        .limit(1);
+      
+      if (plan.length === 0) {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Plan not found" 
+        });
+      }
+
+      // Get addon details for subscription creation
+      const addons = await db.select().from(subscriptionAddons)
+        .where(eq(subscriptionAddons.isActive, true));
+
+      // SECURITY: Recalculate pricing server-side - never trust client amounts
+      const pricing = PricingEngine.calculateSubscriptionPrice(
+        plan[0],
+        addons,
+        selectedAddons,
+        billingCycle
+      );
+
+      // Handle setup fee separately if present (including setup fee tax)
+      let setupTransactionResult = null;
+      if (pricing.setupFee > 0) {
+        setupTransactionResult = await NMIService.processTransaction(
+          paymentToken,
+          pricing.oneTimeTotal.toFixed(2), // setupFee + setupFeeTax
+          `${plan[0].name} Setup Fee`
+        );
+
+        if (setupTransactionResult.response !== '1') {
+          return res.status(400).json({ 
+            success: false, 
+            message: setupTransactionResult.responsetext || 'Setup fee payment failed' 
+          });
+        }
+      }
+
+      // Create NMI subscription for recurring charges only (no setup fee components)
+      const recurringAmount = pricing.recurringTotal.toFixed(2); // recurringSubtotal + recurringTax
+      const nmiRequest = {
+        planId: plan[0].planId,
+        customerData: {
+          firstName: customerInfo.firstName,
+          lastName: customerInfo.lastName,
+          email: customerInfo.email,
+          phone: customerInfo.phone || '',
+          address: customerInfo.address || '',
+          city: customerInfo.city || '',
+          state: customerInfo.state || '',
+          zip: customerInfo.zip || ''
+        },
+        paymentToken,
+        planAmount: recurringAmount,
+        billingCycle
+      };
+
+      const nmiResult = await NMIService.createSubscription(nmiRequest);
+
+      if (nmiResult.response !== '1') {
+        return res.status(400).json({ 
+          success: false, 
+          message: nmiResult.responsetext || 'Subscription creation failed' 
+        });
+      }
+
+      // Create local subscription record with proper separated amounts
+      const subscriptionData = {
+        nmiSubscriptionId: nmiResult.subscription_id,
+        planId: plan[0].id,
+        status: 'active',
+        baseAmount: pricing.basePrice.toFixed(2),
+        addonAmount: pricing.totalAddons.toFixed(2),
+        totalAmount: pricing.recurringTotal.toFixed(2), // Only recurring charges in subscription record
+        billingCycle,
+        paymentMethod: {
+          type: 'card',
+          maskedNumber: '****1234',
+          lastFour: '1234'
+        },
+        currentPeriodStart: new Date(),
+        currentPeriodEnd: calculateNextBillingDate(billingCycle),
+        nextPaymentDate: calculateNextBillingDate(billingCycle)
+      };
+
+      const [newSubscription] = await db.insert(subscriptions)
+        .values(subscriptionData)
+        .returning();
+
+      res.json({ 
+        success: true, 
+        subscription: newSubscription,
+        nmiSubscriptionId: nmiResult.subscription_id,
+        message: "Subscription created successfully" 
+      });
+
+    } catch (error) {
+      console.error("Error creating subscription:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to create subscription" 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
+}
+
+// Helper function to calculate next billing date
+function calculateNextBillingDate(billingCycle: string): Date {
+  const now = new Date();
+  switch (billingCycle) {
+    case 'quarterly':
+      return new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000); // 90 days
+    case 'annual':
+      return new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000); // 365 days
+    default: // monthly
+      return new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days
+  }
 }
 
 // Background processing function
