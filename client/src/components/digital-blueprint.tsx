@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   Target, 
   Star, 
@@ -17,7 +19,10 @@ import {
   ArrowRight,
   MapPin,
   Trophy,
-  Lightbulb
+  Lightbulb,
+  Crown,
+  Wrench,
+  CheckCircle2
 } from "lucide-react";
 
 // The 11 strategic digital blueprint steps - logical order for beginners
@@ -141,6 +146,7 @@ interface DigitalBlueprintProps {
 }
 
 export function DigitalBlueprint({ assessment, recommendations, onSelectPathway }: DigitalBlueprintProps) {
+  const [showPathwayModal, setShowPathwayModal] = useState(false);
   // Calculate progress based on digital score and recommendations
   const digitalScore = assessment.digitalScore || 0;
   const completedSteps = Math.floor((digitalScore / 100) * digitalBlueprintSteps.length);
@@ -250,7 +256,7 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                           variant="outline" 
                           size="sm" 
                           className="text-xs border-blue-400 text-blue-700 hover:bg-blue-50"
-                          onClick={() => onSelectPathway("diy")}
+                          onClick={() => setShowPathwayModal(true)}
                         >
                           SELECT PATHWAY
                         </Button>
@@ -400,37 +406,7 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                           </div>
                         )}
 
-                        {/* Action Station - Current Step Actions */}
-                        {stepStatus === "current" && (
-                          <div className="mt-4 pt-4 border-t border-white/20 bg-white/5 -m-4 p-4 blueprint-action-station">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="text-sm font-medium text-white font-mono mb-1">ACTION REQUIRED</p>
-                                <p className="text-xs text-white/70 font-mono">Select implementation pathway</p>
-                              </div>
-                              <div className="flex space-x-2">
-                                <Button 
-                                  size="sm" 
-                                  variant="outline"
-                                  onClick={() => onSelectPathway("diy")}
-                                  className="border-white/40 text-white hover:bg-white/10 font-mono text-xs"
-                                  data-testid="button-diy-guide"
-                                >
-                                  DIY GUIDE
-                                </Button>
-                                <Button 
-                                  size="sm"
-                                  onClick={() => onSelectPathway("msp")}
-                                  className="bg-white/20 text-white hover:bg-white/30 font-mono text-xs border-white/40"
-                                  data-testid="button-get-help"
-                                >
-                                  GET HELP
-                                  <ArrowRight className="w-3 h-3 ml-1" />
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        )}
+                        {/* Removed action station to avoid confusion with main pathway selection */}
                       </div>
                     </div>
                   </div>
@@ -460,6 +436,107 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
           </div>
         </CardContent>
       </Card>
+
+      {/* Pathway Selection Modal */}
+      <Dialog open={showPathwayModal} onOpenChange={setShowPathwayModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-bold text-gray-900">
+              Choose Your Implementation Path
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="grid md:grid-cols-2 gap-6 py-6">
+            {/* Managed Services - Recommended */}
+            <div className="relative border-2 border-blue-500 rounded-lg p-6 bg-blue-50">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <Badge className="bg-blue-600 text-white px-3 py-1">
+                  <Crown className="w-3 h-3 mr-1" />
+                  RECOMMENDED
+                </Badge>
+              </div>
+              
+              <div className="text-center mb-4">
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Users className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-blue-900">Managed Services</h3>
+                <p className="text-blue-700 text-sm">Let our experts handle everything</p>
+              </div>
+              
+              <ul className="space-y-2 mb-6 text-sm">
+                <li className="flex items-center text-blue-800">
+                  <CheckCircle2 className="w-4 h-4 mr-2 text-blue-600" />
+                  Professional implementation
+                </li>
+                <li className="flex items-center text-blue-800">
+                  <CheckCircle2 className="w-4 h-4 mr-2 text-blue-600" />
+                  Ongoing optimization
+                </li>
+                <li className="flex items-center text-blue-800">
+                  <CheckCircle2 className="w-4 h-4 mr-2 text-blue-600" />
+                  Dedicated account manager
+                </li>
+                <li className="flex items-center text-blue-800">
+                  <CheckCircle2 className="w-4 h-4 mr-2 text-blue-600" />
+                  Faster results
+                </li>
+              </ul>
+              
+              <Button 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={() => {
+                  onSelectPathway("msp");
+                  setShowPathwayModal(false);
+                }}
+              >
+                Get Expert Help
+              </Button>
+            </div>
+            
+            {/* DIY Path */}
+            <div className="border-2 border-gray-300 rounded-lg p-6">
+              <div className="text-center mb-4">
+                <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Wrench className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Do It Yourself</h3>
+                <p className="text-gray-600 text-sm">Follow our step-by-step guides</p>
+              </div>
+              
+              <ul className="space-y-2 mb-6 text-sm">
+                <li className="flex items-center text-gray-700">
+                  <CheckCircle2 className="w-4 h-4 mr-2 text-orange-500" />
+                  Detailed instructions
+                </li>
+                <li className="flex items-center text-gray-700">
+                  <CheckCircle2 className="w-4 h-4 mr-2 text-orange-500" />
+                  Self-paced learning
+                </li>
+                <li className="flex items-center text-gray-700">
+                  <CheckCircle2 className="w-4 h-4 mr-2 text-orange-500" />
+                  Cost-effective option
+                </li>
+                <li className="flex items-center text-gray-700">
+                  <CheckCircle2 className="w-4 h-4 mr-2 text-orange-500" />
+                  Build internal expertise
+                </li>
+              </ul>
+              
+              <Button 
+                variant="outline" 
+                className="w-full border-orange-500 text-orange-600 hover:bg-orange-50"
+                onClick={() => {
+                  onSelectPathway("diy");
+                  setShowPathwayModal(false);
+                }}
+              >
+                Do It Myself
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
