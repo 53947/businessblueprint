@@ -142,6 +142,42 @@
   opacity: 0.7;
 }
 
+/* Inverted Blueprint Component (White with Blue lines) */
+.blueprint-step-inverted {
+  position: relative;
+  background: white;
+  border: 2px dashed rgba(59,130,246,0.6);
+  border-radius: 0;
+  padding: 24px;
+  color: black;
+  backdrop-filter: blur(1px);
+  transition: all 0.3s ease;
+  min-height: 160px;
+}
+
+.blueprint-step-inverted::before,
+.blueprint-step-inverted::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(59,130,246,0.7);
+}
+
+.blueprint-step-inverted::before {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.blueprint-step-inverted::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}
+
 .blueprint-step-component::before,
 .blueprint-step-component::after {
   content: '';

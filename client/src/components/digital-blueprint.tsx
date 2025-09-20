@@ -219,9 +219,7 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
         <CardContent className="blueprint-content">
           {/* Current Step - Featured at Top - WHITE background with BLUE lines */}
           {currentStepObj && (
-            <div className="mb-8 p-6 bg-white border-2 border-dashed border-blue-400" style={{
-              backgroundImage: `url("data:image/svg+xml,%3csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='%23dbeafe' fill-opacity='0.4'%3e%3cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3e%3c/g%3e%3c/svg%3e")`
-            }}>
+            <div className="mb-8 blueprint-step-inverted">
               <div className="flex items-center space-x-2 mb-3">
                 <Badge className="bg-blue-600 text-white border-blue-600">
                   → CURRENT
@@ -229,7 +227,10 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
               </div>
               <div className="flex items-start space-x-4">
                 <div className="w-16 h-16 flex items-center justify-center bg-blue-100 border-2 border-dashed border-blue-400">
-                  <currentStepObj.icon className="w-8 h-8 text-blue-600" />
+                  {(() => {
+                    const IconComponent = currentStepObj.icon;
+                    return <IconComponent className="w-8 h-8 text-blue-600" />;
+                  })()}
                 </div>
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-black mb-2">{currentStepObj.title}</h3>
