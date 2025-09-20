@@ -26,6 +26,20 @@ export interface PricingInput {
 export class PricingEngine {
   
   /**
+   * Convert dollar amount to cents for precise arithmetic
+   */
+  private static toCents(dollars: number): number {
+    return Math.round(dollars * 100);
+  }
+  
+  /**
+   * Convert cents back to dollars with proper 2-decimal rounding
+   */
+  private static toDollars(cents: number): number {
+    return Math.round(cents) / 100;
+  }
+  
+  /**
    * Calculate total subscription cost with dynamic pricing
    */
   static calculateSubscriptionPrice(
@@ -35,13 +49,9 @@ export class PricingEngine {
     billingCycle: 'monthly' | 'quarterly' | 'annual' = 'monthly'
   ): PricingCalculation {
     
-    // Base plan pricing with billing cycle discounts
-    const basePrice = this.applyBillingCycleDiscount(
-      parseFloat(plan.basePrice), 
-      billingCycle
-    );
-    
-    const setupFee = parseFloat(plan.setupFee || '0');
+    // Base plan pricing in cents for precise arithmetic
+    const basePriceCents = this.toCents(parseFloat(plan.basePrice));
+    const setupFeeCents = this.toCents(parseFloat(plan.setupFee || '0'));
     
     // Calculate addon costs (with compatibility check)
     const addonPrices: { addonId: string; name: string; price: number; }[] = [];
@@ -66,31 +76,41 @@ export class PricingEngine {
       }
     });
     
-    // Calculate volume discounts on monthly equivalent amounts
-    const monthlySubtotal = parseFloat(plan.basePrice) + 
+    // Calculate monthly subtotal in cents for volume discount calculation
+    const monthlySubtotalCents = basePriceCents + 
       selectedAddons.reduce((sum, selection) => {
         const addon = addons.find(a => a.addonId === selection.addonId);
         if (addon && addon.compatiblePathways && addon.compatiblePathways.includes(plan.pathway)) {
-          return sum + (parseFloat(addon.price) * (selection.quantity || 1));
+          return sum + (this.toCents(parseFloat(addon.price)) * (selection.quantity || 1));
         }
         return sum;
       }, 0);
     
-    const volumeDiscount = this.calculateVolumeDiscount(monthlySubtotal, plan.pathway);
-    const discountedMonthlySubtotal = monthlySubtotal - volumeDiscount;
+    // Volume discount calculation on monthly equivalent
+    const monthlySubtotalDollars = this.toDollars(monthlySubtotalCents);
+    const volumeDiscountDollars = this.calculateVolumeDiscount(monthlySubtotalDollars, plan.pathway);
+    const volumeDiscountCents = this.toCents(volumeDiscountDollars);
+    
+    const discountedMonthlySubtotalCents = monthlySubtotalCents - volumeDiscountCents;
     
     // Apply billing cycle discount to the discounted monthly subtotal
-    const subtotal = this.applyBillingCycleDiscount(discountedMonthlySubtotal, billingCycle);
+    const discountedMonthlySubtotalDollars = this.toDollars(discountedMonthlySubtotalCents);
+    const subtotalDollars = this.applyBillingCycleDiscount(discountedMonthlySubtotalDollars, billingCycle);
+    const subtotalCents = this.toCents(subtotalDollars);
     
     // Calculate taxes on subtotal + setup fee (setup fees are typically taxable)
-    const taxableAmount = subtotal + setupFee;
-    const taxes = Math.round(taxableAmount * 0.085 * 100) / 100;
+    const taxableAmountCents = subtotalCents + setupFeeCents;
+    const taxesCents = Math.round(taxableAmountCents * 0.085);
     
-    const total = subtotal + taxes + setupFee;
+    const totalCents = subtotalCents + taxesCents + setupFeeCents;
     
-    // Recalculate addon prices for display (already includes billing cycle discount)
+    // Calculate display values with proper rounding
+    const basePrice = this.applyBillingCycleDiscount(parseFloat(plan.basePrice), billingCycle);
+    const setupFee = parseFloat(plan.setupFee || '0');
+    
+    // Recalculate addon prices for display (with billing cycle discount)
     const displayAddonPrices: { addonId: string; name: string; price: number; }[] = [];
-    let displayTotalAddons = 0;
+    let displayTotalAddonsCents = 0;
     
     selectedAddons.forEach(selection => {
       const addon = addons.find(a => a.addonId === selection.addonId);
@@ -98,30 +118,31 @@ export class PricingEngine {
         const quantity = selection.quantity || 1;
         const monthlyAddonPrice = parseFloat(addon.price) * quantity;
         const addonPrice = this.applyBillingCycleDiscount(monthlyAddonPrice, billingCycle);
+        const addonPriceCents = this.toCents(addonPrice);
         
         displayAddonPrices.push({
           addonId: addon.addonId,
           name: addon.name,
-          price: addonPrice
+          price: this.toDollars(addonPriceCents)
         });
         
-        displayTotalAddons += addonPrice;
+        displayTotalAddonsCents += addonPriceCents;
       }
     });
     
     // Calculate cycle-adjusted savings for display consistency
-    const cycleAdjustedSavings = volumeDiscount > 0 
-      ? this.applyBillingCycleDiscount(volumeDiscount, billingCycle)
+    const cycleAdjustedSavings = volumeDiscountDollars > 0 
+      ? this.toDollars(this.toCents(this.applyBillingCycleDiscount(volumeDiscountDollars, billingCycle)))
       : undefined;
     
     return {
-      basePrice,
+      basePrice: this.toDollars(this.toCents(basePrice)),
       addonPrices: displayAddonPrices,
-      totalAddons: displayTotalAddons,
-      setupFee,
-      subtotal,
-      taxes,
-      total,
+      totalAddons: this.toDollars(displayTotalAddonsCents),
+      setupFee: this.toDollars(setupFeeCents),
+      subtotal: this.toDollars(subtotalCents),
+      taxes: this.toDollars(taxesCents),
+      total: this.toDollars(totalCents),
       savings: cycleAdjustedSavings,
       billingCycle
     };
