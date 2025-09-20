@@ -20,7 +20,8 @@ import {
   ArrowRight,
   Download,
   Mail,
-  Map
+  Map,
+  Brain
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -133,7 +134,7 @@ export default function Dashboard() {
     assessment.digitalScore = 65;
     assessment.analysisResults = {
       grade: "C+",
-      summary: "Your business has a solid foundation but significant opportunities for digital growth. Follow your step-by-step blueprint below."
+      summary: "Your business has a solid foundation but significant opportunities for digital growth. Follow your step-by-step blueprint."
     };
     // Add sample recommendations for demonstration
     recommendations.push(
@@ -294,7 +295,7 @@ export default function Dashboard() {
             <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-blue-900">
-                  <BarChart3 className="w-5 h-5" />
+                  <Brain className="w-5 h-5" />
                   <span>Digital IQ Assessment</span>
                 </CardTitle>
               </CardHeader>
@@ -307,7 +308,7 @@ export default function Dashboard() {
                     {getDigitalIQDescription(getDigitalIQ(assessment.digitalScore || 0)).label}
                   </div>
                   <div className="text-sm text-gray-600">
-                    Based on {assessment.digitalScore}/100 digital presence score
+                    Professional digital intelligence assessment
                   </div>
                 </div>
                 

@@ -179,7 +179,7 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold mb-2 flex items-center space-x-2">
-                <Trophy className="w-6 h-6" />
+                <Lightbulb className="w-6 h-6" />
                 <span>Your Digital Blueprint</span>
               </h2>
               <p className="text-lg opacity-90">
