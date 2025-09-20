@@ -197,9 +197,9 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
               </div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold mb-1">{digitalScore}</div>
-              <div className="text-sm opacity-75">Digital Score</div>
-              <Progress value={digitalScore} className="w-24 h-2 mt-2" />
+              <div className="text-4xl font-bold mb-1">{Math.round((completedSteps / digitalBlueprintSteps.length) * 100)}%</div>
+              <div className="text-sm opacity-75">Blueprint Progress</div>
+              <Progress value={(completedSteps / digitalBlueprintSteps.length) * 100} className="w-24 h-2 mt-2" />
             </div>
           </div>
         </CardContent>
