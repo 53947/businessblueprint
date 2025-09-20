@@ -242,10 +242,10 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                     return stepRecs.length > 0 && (
                       <div className="space-y-2 mb-4">
                         <div className="blueprint-action-station bg-gray-100 border border-dashed border-blue-300 p-4">
-                          <h5 className="text-xs font-mono font-medium text-blue-800 uppercase tracking-wider mb-3">
+                          <h5 className="text-xs font-mono font-medium text-black uppercase tracking-wider mb-3">
                             ACTION REQUIRED
                           </h5>
-                          <div className="text-sm text-gray-700 mb-3">
+                          <div className="text-sm text-black mb-3">
                             Select implementation pathway
                           </div>
                           <div className="flex space-x-2">

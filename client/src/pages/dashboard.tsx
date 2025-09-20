@@ -309,7 +309,7 @@ export default function Dashboard() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-blue-900">
                   <Brain className="w-5 h-5" />
-                  <span>Business Overview</span>
+                  <span>Digital IQ Assessment</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -318,11 +318,11 @@ export default function Dashboard() {
                   <div className="text-6xl font-bold text-blue-600 mb-2">
                     {getDigitalIQ(assessment.digitalScore || 0)}
                   </div>
+                  <div className="text-2xl text-gray-600 mb-1">
+                    {getDigitalIQ(assessment.digitalScore || 0)}/{getDigitalIQ(100)}
+                  </div>
                   <div className={`text-lg font-semibold mb-1 ${getDigitalIQDescription(getDigitalIQ(assessment.digitalScore || 0)).color}`}>
                     {getDigitalIQDescription(getDigitalIQ(assessment.digitalScore || 0)).label}
-                  </div>
-                  <div className="text-sm text-gray-600 mb-3">
-                    Professional digital intelligence assessment
                   </div>
                   <p className="text-sm text-gray-700 leading-relaxed">
                     {analysisResults?.summary || "Digital assessment analysis in progress..."}

@@ -145,7 +145,11 @@
 /* Inverted Blueprint Component (White with Blue lines) */
 .blueprint-step-inverted {
   position: relative;
-  background: white;
+  background: 
+    linear-gradient(rgba(59,130,246,0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,0.1) 1px, transparent 1px),
+    white;
+  background-size: 52px 52px, 44px 44px, 100% 100%;
   border: 2px dashed rgba(59,130,246,0.6);
   border-radius: 0;
   padding: 24px;
