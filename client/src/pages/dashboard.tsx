@@ -229,7 +229,7 @@ export default function Dashboard() {
                 {assessment.pathway === "msp" ? "🎯 Managed Services" : "🛠️ DIY Path"}
               </Badge>
             </div>
-            <span className="text-xs text-blue-600">Change plan in sidebar →</span>
+            <span className="text-xs text-blue-600">Change plan below ↓</span>
           </div>
         </div>
         
@@ -304,46 +304,71 @@ export default function Dashboard() {
 
           {/* Sidebar */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Digital IQ Assessment */}
+            {/* Business Info with Digital IQ */}
             <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-blue-900">
                   <Brain className="w-5 h-5" />
-                  <span>Digital IQ Assessment</span>
+                  <span>Business Overview</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="text-center">
+                {/* Digital IQ Section */}
+                <div className="text-center pb-4 border-b border-blue-200">
                   <div className="text-6xl font-bold text-blue-600 mb-2">
                     {getDigitalIQ(assessment.digitalScore || 0)}
                   </div>
                   <div className={`text-lg font-semibold mb-1 ${getDigitalIQDescription(getDigitalIQ(assessment.digitalScore || 0)).color}`}>
                     {getDigitalIQDescription(getDigitalIQ(assessment.digitalScore || 0)).label}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 mb-3">
                     Professional digital intelligence assessment
                   </div>
-                </div>
-                
-                <div className="pt-4 border-t border-blue-200">
                   <p className="text-sm text-gray-700 leading-relaxed">
                     {analysisResults?.summary || "Digital assessment analysis in progress..."}
                   </p>
                 </div>
+                
+                {/* Business Information */}
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">Business Name</label>
+                    <p className="text-sm">{assessment.businessName}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">Industry</label>
+                    <p className="text-sm">{assessment.industry}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">Location</label>
+                    <p className="text-sm">{assessment.location}</p>
+                  </div>
+                  {assessment.website && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-500">Website</label>
+                      <p className="text-sm break-words">
+                        <a href={assessment.website} target="_blank" rel="noopener noreferrer" 
+                           className="text-blue-600 hover:underline break-all">
+                          {assessment.website}
+                        </a>
+                      </p>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
             
-            {/* Upgrade Your Plan */}
-            <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50">
+            {/* Plan Options */}
+            <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-orange-50">
               <CardHeader>
-                <CardTitle className="text-purple-900">Upgrade Your Plan</CardTitle>
-                <p className="text-sm text-purple-700">Ready to accelerate your growth?</p>
+                <CardTitle className="text-blue-900">Your Plan Options</CardTitle>
+                <p className="text-sm text-blue-700">Choose the path that fits your needs</p>
               </CardHeader>
               <CardContent className="space-y-3">
                 {assessment.pathway !== "msp" && (
                   <Button 
                     onClick={() => selectPathway("msp")} 
-                    className="w-full justify-between bg-purple-600 hover:bg-purple-700 text-white"
+                    className="w-full justify-between bg-orange-600 hover:bg-orange-700 text-white"
                   >
                     <div className="text-left">
                       <div className="font-semibold">🎯 Managed Services</div>
@@ -356,7 +381,7 @@ export default function Dashboard() {
                   <Button 
                     onClick={() => selectPathway("diy")} 
                     variant="outline" 
-                    className="w-full justify-between border-purple-300 text-purple-700 hover:bg-purple-50"
+                    className="w-full justify-between border-blue-300 text-blue-700 hover:bg-blue-50"
                   >
                     <div className="text-left">
                       <div className="font-semibold">🛠️ DIY Path</div>
@@ -365,43 +390,11 @@ export default function Dashboard() {
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 )}
-                <div className="pt-2 border-t border-purple-200">
-                  <Button variant="link" className="text-sm text-purple-600 p-0">
+                <div className="pt-2 border-t border-blue-200">
+                  <Button variant="link" className="text-sm text-blue-600 p-0">
                     💬 Schedule consultation
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-            
-            {/* Business Info */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Business Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Business Name</label>
-                  <p className="text-sm">{assessment.businessName}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Industry</label>
-                  <p className="text-sm">{assessment.industry}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-500">Location</label>
-                  <p className="text-sm">{assessment.location}</p>
-                </div>
-                {assessment.website && (
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Website</label>
-                    <p className="text-sm break-words">
-                      <a href={assessment.website} target="_blank" rel="noopener noreferrer" 
-                         className="text-blue-600 hover:underline break-all">
-                        {assessment.website}
-                      </a>
-                    </p>
-                  </div>
-                )}
               </CardContent>
             </Card>
 

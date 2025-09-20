@@ -219,20 +219,20 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
         <CardContent className="blueprint-content">
           {/* Current Step - Featured at Top */}
           {currentStepObj && (
-            <div className="mb-8 p-6 bg-gradient-to-r from-blue-600/30 to-purple-600/30 border-2 border-white/40 rounded-lg">
+            <div className="mb-8 p-6 bg-white border-2 border-blue-300 rounded-lg">
               <div className="flex items-center space-x-2 mb-3">
-                <Badge className="bg-yellow-500/20 text-yellow-200 border-yellow-300">
+                <Badge className="bg-blue-100 text-blue-800 border-blue-300">
                   ⭐ YOUR CURRENT STAGE
                 </Badge>
               </div>
               <div className="flex items-start space-x-4">
-                <div className="w-16 h-16 flex items-center justify-center bg-white/30 border-2 border-white rounded-lg">
-                  <currentStepObj.icon className="w-8 h-8 text-white" />
+                <div className="w-16 h-16 flex items-center justify-center bg-blue-50 border-2 border-blue-300 rounded-lg">
+                  <currentStepObj.icon className="w-8 h-8 text-blue-600" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-white mb-2">{currentStepObj.title}</h3>
-                  <p className="text-white/90 text-lg mb-4">{currentStepObj.description}</p>
-                  <div className="text-sm text-white/80">
+                  <h3 className="text-2xl font-bold text-black mb-2">{currentStepObj.title}</h3>
+                  <p className="text-gray-800 text-lg mb-4">{currentStepObj.description}</p>
+                  <div className="text-sm text-gray-600">
                     🎯 Focus on this step to move forward in your digital journey
                   </div>
                 </div>
