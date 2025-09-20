@@ -220,40 +220,18 @@ export default function Dashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Pathway Selection - Top of Page */}
-        <Card className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-          <CardHeader>
-            <CardTitle className="text-blue-900">Choose Your Path Forward</CardTitle>
-            <p className="text-sm text-blue-700">You can change your pathway at any time</p>
-          </CardHeader>
-          <CardContent className="flex flex-col sm:flex-row gap-4">
-            <Button 
-              onClick={() => selectPathway("diy")} 
-              className="flex-1 justify-between bg-primary hover:bg-primary/90 text-left h-auto p-4"
-            >
-              <div>
-                <div className="font-semibold">🛠️ DIY Path</div>
-                <div className="text-sm opacity-90">Free to $299/month</div>
-              </div>
-              <ArrowRight className="w-5 h-5 flex-shrink-0" />
-            </Button>
-            <Button 
-              onClick={() => selectPathway("msp")} 
-              className="flex-1 justify-between bg-secondary hover:bg-secondary/90 text-left h-auto p-4"
-            >
-              <div>
-                <div className="font-semibold">🎯 Managed Services</div>
-                <div className="text-sm opacity-90">$499/month</div>
-              </div>
-              <ArrowRight className="w-5 h-5 flex-shrink-0" />
-            </Button>
-            <div className="flex items-center">
-              <Button variant="outline" className="text-sm">
-                Need help deciding?
-              </Button>
+        {/* Current Path Indicator - Small banner */}
+        <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg px-4 py-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-blue-700">Current Plan:</span>
+              <Badge variant="outline" className="text-blue-800 border-blue-300">
+                {assessment.pathway === "msp" ? "🎯 Managed Services" : "🛠️ DIY Path"}
+              </Badge>
             </div>
-          </CardContent>
-        </Card>
+            <span className="text-xs text-blue-600">Change plan in sidebar →</span>
+          </div>
+        </div>
         
         <div className="grid lg:grid-cols-5 gap-8">
           {/* Main Content - Digital Blueprint */}
@@ -351,6 +329,46 @@ export default function Dashboard() {
                   <p className="text-sm text-gray-700 leading-relaxed">
                     {analysisResults?.summary || "Digital assessment analysis in progress..."}
                   </p>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Upgrade Your Plan */}
+            <Card className="border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50">
+              <CardHeader>
+                <CardTitle className="text-purple-900">Upgrade Your Plan</CardTitle>
+                <p className="text-sm text-purple-700">Ready to accelerate your growth?</p>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {assessment.pathway !== "msp" && (
+                  <Button 
+                    onClick={() => selectPathway("msp")} 
+                    className="w-full justify-between bg-purple-600 hover:bg-purple-700 text-white"
+                  >
+                    <div className="text-left">
+                      <div className="font-semibold">🎯 Managed Services</div>
+                      <div className="text-xs opacity-90">$499/month - Full service</div>
+                    </div>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                )}
+                {assessment.pathway !== "diy" && (
+                  <Button 
+                    onClick={() => selectPathway("diy")} 
+                    variant="outline" 
+                    className="w-full justify-between border-purple-300 text-purple-700 hover:bg-purple-50"
+                  >
+                    <div className="text-left">
+                      <div className="font-semibold">🛠️ DIY Path</div>
+                      <div className="text-xs opacity-90">Free to $299/month</div>
+                    </div>
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                )}
+                <div className="pt-2 border-t border-purple-200">
+                  <Button variant="link" className="text-sm text-purple-600 p-0">
+                    💬 Schedule consultation
+                  </Button>
                 </div>
               </CardContent>
             </Card>

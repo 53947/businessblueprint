@@ -146,6 +146,9 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
   const completedSteps = Math.floor((digitalScore / 100) * digitalBlueprintSteps.length);
   const currentStep = Math.min(completedSteps + 1, digitalBlueprintSteps.length);
   
+  // Get the current step object
+  const currentStepObj = digitalBlueprintSteps.find(step => step.id === currentStep);
+  
   // Map recommendations to digital blueprint steps
   const getRecommendationsForStep = (stepCategory: string) => {
     return recommendations.filter(rec => 
@@ -214,6 +217,29 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
           </CardTitle>
         </CardHeader>
         <CardContent className="blueprint-content">
+          {/* Current Step - Featured at Top */}
+          {currentStepObj && (
+            <div className="mb-8 p-6 bg-gradient-to-r from-blue-600/30 to-purple-600/30 border-2 border-white/40 rounded-lg">
+              <div className="flex items-center space-x-2 mb-3">
+                <Badge className="bg-yellow-500/20 text-yellow-200 border-yellow-300">
+                  ⭐ YOUR CURRENT STAGE
+                </Badge>
+              </div>
+              <div className="flex items-start space-x-4">
+                <div className="w-16 h-16 flex items-center justify-center bg-white/30 border-2 border-white rounded-lg">
+                  <currentStepObj.icon className="w-8 h-8 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-white mb-2">{currentStepObj.title}</h3>
+                  <p className="text-white/90 text-lg mb-4">{currentStepObj.description}</p>
+                  <div className="text-sm text-white/80">
+                    🎯 Focus on this step to move forward in your digital journey
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <div className="relative">
             {/* Progress Line */}
             <div className="absolute left-6 top-0 w-0.5 h-full bg-white/20"></div>
@@ -222,8 +248,13 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
               style={{ height: `${(completedSteps / digitalBlueprintSteps.length) * 100}%` }}
             ></div>
 
-            {/* Blueprint Steps */}
+            {/* All Blueprint Steps */}
             <div className="space-y-6">
+              <div className="mb-4">
+                <h4 className="text-lg font-semibold text-white/80 mb-4 border-b border-white/20 pb-2">
+                  📋 All Steps Overview
+                </h4>
+              </div>
               {digitalBlueprintSteps.map((step, index) => {
                 const stepStatus = getStepStatus(step.id);
                 const stepRecs = getRecommendationsForStep(step.category);
@@ -239,12 +270,12 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                     {/* Technical Step Icon */}
                     <div className={`
                       relative z-10 flex items-center justify-center border-2 transition-all duration-300 blueprint-step-icon
-                      ${stepStatus === "completed" ? "w-8 h-8 bg-white/20 border-white text-white" : 
+                      ${stepStatus === "completed" ? "w-6 h-6 bg-white/20 border-white text-white" : 
                         stepStatus === "current" ? "w-12 h-12 bg-white/30 border-white border-2 text-white" :
                         "w-12 h-12 bg-white/10 border-white/30 text-white/60"}
                     `}>
                       {stepStatus === "completed" ? (
-                        <CheckCircle className="w-4 h-4" />
+                        <CheckCircle className="w-3 h-3" />
                       ) : (
                         <IconComponent className="w-6 h-6" />
                       )}
@@ -253,14 +284,14 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                     {/* Technical Step Content */}
                     <div className="flex-1 min-w-0">
                       <div className={`blueprint-step-component relative ${
-                        stepStatus === "current" ? "blueprint-step-current" :
+                        stepStatus === "current" ? "blueprint-step-current border-2 border-yellow-400/50" :
                         stepStatus === "completed" ? "blueprint-step-completed" :
                         "blueprint-step-upcoming"
                       }`}>
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
                             <h4 className={`font-semibold text-white ${
-                              stepStatus === "completed" ? "text-sm" : "text-lg"
+                              stepStatus === "completed" ? "text-xs" : "text-lg"
                             }`}>{step.title}</h4>
                             <Badge 
                               variant="outline" 
@@ -305,11 +336,11 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                           )}
                         </div>
                         
-                        <p className={`text-white/80 mb-4 font-mono leading-relaxed ${
-                          stepStatus === "completed" ? "text-xs" : "text-sm"
-                        }`}>
-                          {step.description}
-                        </p>
+                        {stepStatus !== "completed" && (
+                          <p className="text-white/80 mb-4 font-mono leading-relaxed text-sm">
+                            {step.description}
+                          </p>
+                        )}
 
                         {/* Technical Specifications - Recommendations */}
                         {stepRecs.length > 0 && stepStatus !== "completed" && (
