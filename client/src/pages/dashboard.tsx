@@ -176,6 +176,23 @@ export default function Dashboard() {
     }
   };
 
+  // Digital IQ calculation functions
+  const getDigitalIQ = (score: number): number => {
+    // Convert 0-100 score to IQ scale (70-140 range)
+    // 100 = 100 IQ (average), scale appropriately
+    return Math.round(70 + (score * 0.7));
+  };
+
+  const getDigitalIQDescription = (iq: number): { label: string; color: string } => {
+    if (iq >= 130) return { label: "Digital Genius", color: "text-purple-600" };
+    if (iq >= 120) return { label: "Digital Expert", color: "text-blue-600" };
+    if (iq >= 110) return { label: "Above Average Digital Presence", color: "text-green-600" };
+    if (iq >= 90) return { label: "Average Digital Presence", color: "text-gray-600" };
+    if (iq >= 80) return { label: "Below Average", color: "text-yellow-600" };
+    if (iq >= 70) return { label: "Significant Digital Gaps", color: "text-orange-600" };
+    return { label: "Major Digital Presence Issues", color: "text-red-600" };
+  };
+
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-green-600";
     if (score >= 60) return "text-yellow-600";
@@ -205,41 +222,6 @@ export default function Dashboard() {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Main Content - Digital Blueprint */}
           <div className="lg:col-span-3 space-y-6">
-            {/* Overall Score */}
-            <Card className="blueprint-surface blueprint-surface--header">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2 text-white">
-                  <BarChart3 className="w-5 h-5" />
-                  <span>Current Status</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="blueprint-content">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-center">
-                    <div className={`text-5xl font-bold ${
-                      assessment.digitalScore >= 80 ? "text-green-300" :
-                      assessment.digitalScore >= 60 ? "text-yellow-300" :
-                      "text-red-300"
-                    }`}>
-                      {analysisResults?.grade || 'N/A'}
-                    </div>
-                    <div className="text-2xl text-white/80">{assessment.digitalScore}/100</div>
-                  </div>
-                  <div className="flex-1 ml-8">
-                    <Progress value={assessment.digitalScore || 0} className="h-3 mb-2" />
-                    <p className="text-sm text-white/70">
-                      {analysisResults?.summary || "Analysis in progress..."}
-                    </p>
-                    <div className="mt-3 flex items-center space-x-2 text-sm">
-                      <Map className="w-4 h-4 text-blue-300" />
-                      <span className="text-white/60">
-                        Follow your step-by-step blueprint below ↓
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
 
             {/* Detailed Scores */}
             {assessment.googleBusinessData && (
@@ -308,6 +290,35 @@ export default function Dashboard() {
 
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
+            {/* Digital IQ Assessment */}
+            <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2 text-blue-900">
+                  <BarChart3 className="w-5 h-5" />
+                  <span>Digital IQ Assessment</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="text-center">
+                  <div className="text-6xl font-bold text-blue-600 mb-2">
+                    {getDigitalIQ(assessment.digitalScore || 0)}
+                  </div>
+                  <div className={`text-lg font-semibold mb-1 ${getDigitalIQDescription(getDigitalIQ(assessment.digitalScore || 0)).color}`}>
+                    {getDigitalIQDescription(getDigitalIQ(assessment.digitalScore || 0)).label}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Based on {assessment.digitalScore}/100 digital presence score
+                  </div>
+                </div>
+                
+                <div className="pt-4 border-t border-blue-200">
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {analysisResults?.summary || "Digital assessment analysis in progress..."}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+            
             {/* Business Info */}
             <Card>
               <CardHeader>
