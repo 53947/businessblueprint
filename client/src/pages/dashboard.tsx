@@ -226,7 +226,7 @@ export default function Dashboard() {
             <div className="flex items-center space-x-2">
               <span className="text-sm text-blue-700">Current Plan:</span>
               <Badge variant="outline" className="text-blue-800 border-blue-300">
-                {assessment.pathway === "msp" ? "🎯 Managed Services" : "🛠️ DIY Path"}
+                {assessment.pathway === "msp" ? "🎯 Managed Services (MSP)" : "🛠️ Do It Yourself (DIY)"}
               </Badge>
             </div>
             <span className="text-xs text-blue-600">Change plan below ↓</span>
@@ -361,7 +361,7 @@ export default function Dashboard() {
             {/* Plan Options */}
             <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-orange-50">
               <CardHeader>
-                <CardTitle className="text-blue-900">Upgrade Your Plan</CardTitle>
+                <CardTitle className="text-blue-900">Upgrade Your Path</CardTitle>
                 <p className="text-sm text-blue-700">Ready to accelerate your growth?</p>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -371,7 +371,7 @@ export default function Dashboard() {
                     className="w-full justify-between bg-blue-600 hover:bg-white hover:text-blue-600 hover:border-blue-600 border-2 border-blue-600 text-white transition-all"
                   >
                     <div className="text-left">
-                      <div className="font-semibold">🎯 Managed Services</div>
+                      <div className="font-semibold">🎯 Managed Services (MSP)</div>
                       <div className="text-xs opacity-90">$499/month - Full service</div>
                     </div>
                     <ArrowRight className="w-4 h-4" />
@@ -383,7 +383,7 @@ export default function Dashboard() {
                     className="w-full justify-between bg-orange-600 hover:bg-white hover:text-orange-600 hover:border-orange-600 border-2 border-orange-600 text-white transition-all"
                   >
                     <div className="text-left">
-                      <div className="font-semibold">🛠️ DIY Path</div>
+                      <div className="font-semibold">🛠️ Do It Yourself (DIY)</div>
                       <div className="text-xs opacity-90">Free to $299/month</div>
                     </div>
                     <ArrowRight className="w-4 h-4" />
