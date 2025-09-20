@@ -217,48 +217,57 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
           </CardTitle>
         </CardHeader>
         <CardContent className="blueprint-content">
-          {/* Current Step - Featured at Top */}
+          {/* Current Step - Featured at Top - WHITE background with BLUE lines */}
           {currentStepObj && (
-            <div className="mb-8 p-6 bg-white blueprint-step-component blueprint-step-current border-2" style={{borderColor: 'rgba(59, 130, 246, 0.3)'}}>
+            <div className="mb-8 p-6 bg-white border-2 border-dashed border-blue-400" style={{
+              backgroundImage: `url("data:image/svg+xml,%3csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='%23dbeafe' fill-opacity='0.4'%3e%3cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3e%3c/g%3e%3c/svg%3e")`
+            }}>
               <div className="flex items-center space-x-2 mb-3">
-                <Badge className="bg-blue-100 text-blue-800 border-blue-300">
-                  ⭐ YOUR CURRENT STAGE
+                <Badge className="bg-blue-600 text-white border-blue-600">
+                  → CURRENT
                 </Badge>
               </div>
               <div className="flex items-start space-x-4">
-                <div className="w-16 h-16 flex items-center justify-center bg-blue-50 border-2 border-blue-300 rounded-lg">
+                <div className="w-16 h-16 flex items-center justify-center bg-blue-100 border-2 border-dashed border-blue-400">
                   <currentStepObj.icon className="w-8 h-8 text-blue-600" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-black mb-2">{currentStepObj.title}</h3>
                   <p className="text-gray-800 text-lg mb-4">{currentStepObj.description}</p>
                   
-                  {/* Add same buttons as bottom steps */}
+                  {/* Action buttons same as bottom sections */}
                   {(() => {
                     const stepRecs = getRecommendationsForStep(currentStepObj.category);
                     return stepRecs.length > 0 && (
                       <div className="space-y-2 mb-4">
-                        <h5 className="text-xs font-mono font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200 pb-1">
-                          RECOMMENDED ACTIONS
-                        </h5>
-                        {stepRecs.map((rec, index) => (
-                          <div key={index} className="blueprint-recommendation bg-blue-50 border border-blue-200 p-3 text-sm text-black">
-                            <div className="font-medium mb-1">{rec.title}</div>
-                            <div className="text-gray-600 text-xs">{rec.description}</div>
-                            {rec.priority && (
-                              <Badge variant="outline" className="mt-2 text-xs border-blue-300 text-blue-700">
-                                {rec.priority} Priority
-                              </Badge>
-                            )}
+                        <div className="blueprint-action-station bg-gray-100 border border-dashed border-blue-300 p-4">
+                          <h5 className="text-xs font-mono font-medium text-blue-800 uppercase tracking-wider mb-3">
+                            ACTION REQUIRED
+                          </h5>
+                          <div className="text-sm text-gray-700 mb-3">
+                            Select implementation pathway
                           </div>
-                        ))}
+                          <div className="flex space-x-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="text-xs border-blue-400 text-blue-700 hover:bg-blue-50"
+                              onClick={() => onSelectPathway("diy")}
+                            >
+                              SELECT PATHWAY
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="text-xs border-blue-400 text-blue-700 hover:bg-blue-50"
+                            >
+                              GET HELP →
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     );
                   })()}
-                  
-                  <div className="text-sm text-gray-600">
-                    🎯 Focus on this step to move forward in your digital journey
-                  </div>
                 </div>
               </div>
             </div>
