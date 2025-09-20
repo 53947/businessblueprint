@@ -12,6 +12,7 @@ import ClientLogin from "@/pages/client-login";
 import VendastaIntegration from "@/pages/vendasta-integration";
 import Contact from "@/pages/contact";
 import About from "@/pages/about";
+import Subscription from "@/pages/subscription";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/vendasta" component={VendastaIntegration} />
       <Route path="/contact" component={Contact} />
       <Route path="/about" component={About} />
+      <Route path="/subscription" component={Subscription} />
       <Route component={NotFound} />
     </Switch>
   );

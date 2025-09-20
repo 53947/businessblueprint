@@ -9,9 +9,14 @@ export interface PricingCalculation {
   addonPrices: { addonId: string; name: string; price: number; }[];
   totalAddons: number;
   setupFee: number;
+  setupFeeTax: number;
+  oneTimeTotal: number; // setupFee + setupFeeTax
+  recurringSubtotal: number;
+  recurringTax: number;
+  recurringTotal: number; // recurringSubtotal + recurringTax
   subtotal: number;
-  taxes: number;
-  total: number;
+  taxes: number; // total taxes (setup + recurring)
+  total: number; // oneTimeTotal + recurringTotal
   savings?: number;
   billingCycle: string;
 }
@@ -98,11 +103,14 @@ export class PricingEngine {
     const subtotalDollars = this.applyBillingCycleDiscount(discountedMonthlySubtotalDollars, billingCycle);
     const subtotalCents = this.toCents(subtotalDollars);
     
-    // Calculate taxes on subtotal + setup fee (setup fees are typically taxable)
-    const taxableAmountCents = subtotalCents + setupFeeCents;
-    const taxesCents = Math.round(taxableAmountCents * 0.085);
+    // CRITICAL: Separate tax calculation for setup fee vs recurring charges
+    const setupFeeTaxCents = Math.round(setupFeeCents * 0.085);
+    const recurringTaxCents = Math.round(subtotalCents * 0.085);
+    const totalTaxesCents = setupFeeTaxCents + recurringTaxCents;
     
-    const totalCents = subtotalCents + taxesCents + setupFeeCents;
+    const oneTimeTotalCents = setupFeeCents + setupFeeTaxCents;
+    const recurringTotalCents = subtotalCents + recurringTaxCents;
+    const totalCents = oneTimeTotalCents + recurringTotalCents;
     
     // Calculate display values with proper rounding
     const basePrice = this.applyBillingCycleDiscount(parseFloat(plan.basePrice), billingCycle);
@@ -140,8 +148,13 @@ export class PricingEngine {
       addonPrices: displayAddonPrices,
       totalAddons: this.toDollars(displayTotalAddonsCents),
       setupFee: this.toDollars(setupFeeCents),
+      setupFeeTax: this.toDollars(setupFeeTaxCents),
+      oneTimeTotal: this.toDollars(oneTimeTotalCents),
+      recurringSubtotal: this.toDollars(subtotalCents),
+      recurringTax: this.toDollars(recurringTaxCents),
+      recurringTotal: this.toDollars(recurringTotalCents),
       subtotal: this.toDollars(subtotalCents),
-      taxes: this.toDollars(taxesCents),
+      taxes: this.toDollars(totalTaxesCents),
       total: this.toDollars(totalCents),
       savings: cycleAdjustedSavings,
       billingCycle
@@ -149,7 +162,7 @@ export class PricingEngine {
   }
   
   /**
-   * Apply billing cycle discounts (annual = 20% off, quarterly = 10% off)
+   * Apply billing cycle discounts (annual = 15% off, quarterly = 5% off)
    */
   private static applyBillingCycleDiscount(
     monthlyPrice: number, 
@@ -157,9 +170,9 @@ export class PricingEngine {
   ): number {
     switch (billingCycle) {
       case 'annual':
-        return Math.round(monthlyPrice * 12 * 0.8 * 100) / 100; // 20% discount
+        return Math.round(monthlyPrice * 12 * 0.85 * 100) / 100; // 15% discount (aligned with UI)
       case 'quarterly':
-        return Math.round(monthlyPrice * 3 * 0.9 * 100) / 100; // 10% discount
+        return Math.round(monthlyPrice * 3 * 0.95 * 100) / 100; // 5% discount (aligned with UI)
       case 'monthly':
       default:
         return monthlyPrice;
