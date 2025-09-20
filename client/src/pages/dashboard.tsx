@@ -220,7 +220,42 @@ export default function Dashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid lg:grid-cols-4 gap-8">
+        {/* Pathway Selection - Top of Page */}
+        <Card className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+          <CardHeader>
+            <CardTitle className="text-blue-900">Choose Your Path Forward</CardTitle>
+            <p className="text-sm text-blue-700">You can change your pathway at any time</p>
+          </CardHeader>
+          <CardContent className="flex flex-col sm:flex-row gap-4">
+            <Button 
+              onClick={() => selectPathway("diy")} 
+              className="flex-1 justify-between bg-primary hover:bg-primary/90 text-left h-auto p-4"
+            >
+              <div>
+                <div className="font-semibold">🛠️ DIY Path</div>
+                <div className="text-sm opacity-90">Free to $299/month</div>
+              </div>
+              <ArrowRight className="w-5 h-5 flex-shrink-0" />
+            </Button>
+            <Button 
+              onClick={() => selectPathway("msp")} 
+              className="flex-1 justify-between bg-secondary hover:bg-secondary/90 text-left h-auto p-4"
+            >
+              <div>
+                <div className="font-semibold">🎯 Managed Services</div>
+                <div className="text-sm opacity-90">$499/month</div>
+              </div>
+              <ArrowRight className="w-5 h-5 flex-shrink-0" />
+            </Button>
+            <div className="flex items-center">
+              <Button variant="outline" className="text-sm">
+                Need help deciding?
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <div className="grid lg:grid-cols-5 gap-8">
           {/* Main Content - Digital Blueprint */}
           <div className="lg:col-span-3 space-y-6">
 
@@ -290,7 +325,7 @@ export default function Dashboard() {
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-2 space-y-6">
             {/* Digital IQ Assessment */}
             <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50">
               <CardHeader>
@@ -352,55 +387,6 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            {/* Pathway Selection */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Choose Your Path Forward</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button 
-                  onClick={() => selectPathway("diy")} 
-                  className="w-full justify-between bg-primary hover:bg-primary/90 text-left"
-                >
-                  <span className="truncate">🛠️ DIY Path - Free to $299/month</span>
-                  <ArrowRight className="w-4 h-4 flex-shrink-0 ml-2" />
-                </Button>
-                <Button 
-                  onClick={() => selectPathway("msp")} 
-                  className="w-full justify-between bg-secondary hover:bg-secondary/90 text-left"
-                >
-                  <span className="truncate">🎯 Managed Services - $499/month</span>
-                  <ArrowRight className="w-4 h-4 flex-shrink-0 ml-2" />
-                </Button>
-                <div className="text-center pt-2">
-                  <Button variant="link" className="text-sm text-wrap">
-                    Need help deciding? Schedule a consultation
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Status */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Assessment Status</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span className="text-sm">Analysis Complete</span>
-                </div>
-                {assessment.emailSent && (
-                  <div className="flex items-center space-x-2">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span className="text-sm">Report Sent via Email</span>
-                  </div>
-                )}
-                <div className="text-xs text-gray-500">
-                  Generated on {new Date(assessment.createdAt).toLocaleDateString()}
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>

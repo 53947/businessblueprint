@@ -238,13 +238,13 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                   >
                     {/* Technical Step Icon */}
                     <div className={`
-                      relative z-10 w-12 h-12 flex items-center justify-center border-2 transition-all duration-300 blueprint-step-icon
-                      ${stepStatus === "completed" ? "bg-white/20 border-white text-white" : 
-                        stepStatus === "current" ? "bg-white/30 border-white border-2 text-white" :
-                        "bg-white/10 border-white/30 text-white/60"}
+                      relative z-10 flex items-center justify-center border-2 transition-all duration-300 blueprint-step-icon
+                      ${stepStatus === "completed" ? "w-8 h-8 bg-white/20 border-white text-white" : 
+                        stepStatus === "current" ? "w-12 h-12 bg-white/30 border-white border-2 text-white" :
+                        "w-12 h-12 bg-white/10 border-white/30 text-white/60"}
                     `}>
                       {stepStatus === "completed" ? (
-                        <CheckCircle className="w-6 h-6" />
+                        <CheckCircle className="w-4 h-4" />
                       ) : (
                         <IconComponent className="w-6 h-6" />
                       )}
@@ -259,7 +259,9 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                       }`}>
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
-                            <h4 className="font-semibold text-white text-lg">{step.title}</h4>
+                            <h4 className={`font-semibold text-white ${
+                              stepStatus === "completed" ? "text-sm" : "text-lg"
+                            }`}>{step.title}</h4>
                             <Badge 
                               variant="outline" 
                               className={`
@@ -303,7 +305,9 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                           )}
                         </div>
                         
-                        <p className="text-white/80 text-sm mb-4 font-mono leading-relaxed">
+                        <p className={`text-white/80 mb-4 font-mono leading-relaxed ${
+                          stepStatus === "completed" ? "text-xs" : "text-sm"
+                        }`}>
                           {step.description}
                         </p>
 
