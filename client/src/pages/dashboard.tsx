@@ -361,14 +361,14 @@ export default function Dashboard() {
             {/* Plan Options */}
             <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-orange-50">
               <CardHeader>
-                <CardTitle className="text-blue-900">Your Plan Options</CardTitle>
-                <p className="text-sm text-blue-700">Choose the path that fits your needs</p>
+                <CardTitle className="text-blue-900">Upgrade Your Plan</CardTitle>
+                <p className="text-sm text-blue-700">Ready to accelerate your growth?</p>
               </CardHeader>
               <CardContent className="space-y-3">
                 {assessment.pathway !== "msp" && (
                   <Button 
                     onClick={() => selectPathway("msp")} 
-                    className="w-full justify-between bg-orange-600 hover:bg-orange-700 text-white"
+                    className="w-full justify-between bg-blue-600 hover:bg-white hover:text-blue-600 hover:border-blue-600 border-2 border-blue-600 text-white transition-all"
                   >
                     <div className="text-left">
                       <div className="font-semibold">🎯 Managed Services</div>
@@ -380,8 +380,7 @@ export default function Dashboard() {
                 {assessment.pathway !== "diy" && (
                   <Button 
                     onClick={() => selectPathway("diy")} 
-                    variant="outline" 
-                    className="w-full justify-between border-blue-300 text-blue-700 hover:bg-blue-50"
+                    className="w-full justify-between bg-orange-600 hover:bg-white hover:text-orange-600 hover:border-orange-600 border-2 border-orange-600 text-white transition-all"
                   >
                     <div className="text-left">
                       <div className="font-semibold">🛠️ DIY Path</div>

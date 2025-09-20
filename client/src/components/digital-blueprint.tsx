@@ -219,7 +219,7 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
         <CardContent className="blueprint-content">
           {/* Current Step - Featured at Top */}
           {currentStepObj && (
-            <div className="mb-8 p-6 bg-white border-2 border-blue-300 rounded-lg">
+            <div className="mb-8 p-6 bg-white blueprint-step-component blueprint-step-current border-2" style={{borderColor: 'rgba(59, 130, 246, 0.3)'}}>
               <div className="flex items-center space-x-2 mb-3">
                 <Badge className="bg-blue-100 text-blue-800 border-blue-300">
                   ⭐ YOUR CURRENT STAGE
@@ -232,6 +232,30 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-black mb-2">{currentStepObj.title}</h3>
                   <p className="text-gray-800 text-lg mb-4">{currentStepObj.description}</p>
+                  
+                  {/* Add same buttons as bottom steps */}
+                  {(() => {
+                    const stepRecs = getRecommendationsForStep(currentStepObj.category);
+                    return stepRecs.length > 0 && (
+                      <div className="space-y-2 mb-4">
+                        <h5 className="text-xs font-mono font-medium text-gray-700 uppercase tracking-wider border-b border-gray-200 pb-1">
+                          RECOMMENDED ACTIONS
+                        </h5>
+                        {stepRecs.map((rec, index) => (
+                          <div key={index} className="blueprint-recommendation bg-blue-50 border border-blue-200 p-3 text-sm text-black">
+                            <div className="font-medium mb-1">{rec.title}</div>
+                            <div className="text-gray-600 text-xs">{rec.description}</div>
+                            {rec.priority && (
+                              <Badge variant="outline" className="mt-2 text-xs border-blue-300 text-blue-700">
+                                {rec.priority} Priority
+                              </Badge>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
+                  
                   <div className="text-sm text-gray-600">
                     🎯 Focus on this step to move forward in your digital journey
                   </div>
