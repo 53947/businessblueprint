@@ -236,39 +236,34 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                   <h3 className="text-2xl font-bold text-black mb-2">{currentStepObj.title}</h3>
                   <p className="text-gray-800 text-lg mb-4">{currentStepObj.description}</p>
                   
-                  {/* Action buttons same as bottom sections */}
-                  {(() => {
-                    const stepRecs = getRecommendationsForStep(currentStepObj.category);
-                    return stepRecs.length > 0 && (
-                      <div className="space-y-2 mb-4">
-                        <div className="blueprint-action-station bg-gray-100 border border-dashed border-blue-300 p-4">
-                          <h5 className="text-xs font-mono font-medium text-black uppercase tracking-wider mb-3">
-                            ACTION REQUIRED
-                          </h5>
-                          <div className="text-sm text-black mb-3">
-                            Select implementation pathway
-                          </div>
-                          <div className="flex space-x-2">
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="text-xs border-blue-400 text-blue-700 hover:bg-blue-50"
-                              onClick={() => onSelectPathway("diy")}
-                            >
-                              SELECT PATHWAY
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="text-xs border-blue-400 text-blue-700 hover:bg-blue-50"
-                            >
-                              GET HELP →
-                            </Button>
-                          </div>
-                        </div>
+                  {/* Action Station - Always show on top step */}
+                  <div className="space-y-2 mb-4">
+                    <div className="blueprint-action-station bg-gray-100 border border-dashed border-blue-300 p-4">
+                      <h5 className="text-xs font-mono font-medium text-black uppercase tracking-wider mb-3">
+                        ACTION REQUIRED
+                      </h5>
+                      <div className="text-sm text-black mb-3">
+                        Select implementation pathway
                       </div>
-                    );
-                  })()}
+                      <div className="flex space-x-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="text-xs border-blue-400 text-blue-700 hover:bg-blue-50"
+                          onClick={() => onSelectPathway("diy")}
+                        >
+                          SELECT PATHWAY
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="text-xs border-blue-400 text-blue-700 hover:bg-blue-50"
+                        >
+                          GET HELP →
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
