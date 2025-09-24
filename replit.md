@@ -1,8 +1,16 @@
-# cloudpleaser.io - Digital Empowerment Platform
+# cloudpleaser.io - Digital Intelligence Platform
 
 ## Overview
 
-cloudpleaser.io is a comprehensive digital empowerment platform designed to analyze businesses' online presence using AI and Google Business Intelligence. Its core purpose is to provide automated assessments, generate detailed reports, and offer a complete client portal for ongoing digital presence management. The platform aims to empower businesses digitally through both DIY and Managed Service Provider (MSP) pathways, focusing on mass market automation to minimize manual intervention.
+cloudpleaser.io helps local businesses succeed online through AI-powered digital intelligence and strategic guidance. Our core value proposition is simple: Get Found, Get Customers, Get Business. The platform analyzes businesses' online presence using Google Business Intelligence, creates personalized Digital Blueprints, and provides both DIY and Managed Service Provider (MSP) pathways. We focus on mass market automation to minimize manual intervention while maximizing business growth outcomes.
+
+## Brand Positioning
+
+**Strategic Positioning:** Digital Intelligence Incubator - nurturing businesses from digital obscurity to digital maturity through systematic, data-driven growth programs.
+
+**Customer-Facing Message:** Helping Local Businesses Succeed Online
+
+**Value Proposition:** Get Found, Get Customers, Get Business
 
 ## User Preferences
 
@@ -17,13 +25,15 @@ Business Context:
 - AI-powered Google Business Intelligence drives assessment recommendations
 
 Brand Identity:
-- Consistent icon system: Brain (cloudpleaser), Globe (webhosted), Zap/Lightning (airswiped)
+- Official Brand Assets: cloudpleaser logo, webhosted logo, airswiped logo, AI Coach logo, Digital Blueprint icon
+- Digital IQ Assessment preserves Brain icon (per specific requirement)
 - Unified TLD system: All platforms use fluorescent green for .io/.com extensions
 - Platform signatures: cloudpleaser (blue pleaser), webhosted (#FC8EA0 hosted), airswiped (#CB0505 swiped)
 - Custom hex colors: Pink #FC8EA0, Red #CB0505 (user-specified exact colors)
 - Purple reserved for portal pages across all platforms
 - Page-specific pleaser colors: Yellow (contact), Orange (about), Blue (pricing), avoiding platform colors
 - Format: black-[pleaser-color]-fluorescent-green across all platforms
+- Dark background adaptations: Brand logos use brightness-0 invert for white appearance on dark backgrounds
 
 ## System Architecture
 
