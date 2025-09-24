@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocation, Link } from "wouter";
-import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, MessageCircle, Compass, MapPin, Gem } from "lucide-react";
+import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, Compass, MapPin, Gem } from "lucide-react";
 import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
 import webhostedLogo from "@assets/webnhosted_1758744493181.png";
 import airswipedLogo from "@assets/airswiped_1758744493180.png";
+import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
 import { HowItWorks } from "@/components/how-it-works";
 import { ServicePathways } from "@/components/service-pathways";
 import { Header } from "@/components/header";
@@ -45,7 +46,7 @@ Discover exactly what your business needs to succeed online. Our AI analyzes you
                 </Button>
                 <Link href="/ai-coach">
                   <Button variant="outline" size="lg" className="border-2 w-full sm:w-auto">
-                    <MessageCircle className="w-5 h-5 mr-2" />
+                    <img src={aiCoachLogo} alt="AI Coach" className="w-5 h-5 mr-2" />
                     AI Business Coach
                   </Button>
                 </Link>
