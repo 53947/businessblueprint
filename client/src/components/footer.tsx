@@ -12,7 +12,7 @@ export function Footer() {
           {/* Brand Section */}
           <div className="col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-              <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="w-8 h-8" />
+              <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="w-8 h-8 brightness-0 invert" />
               <div className="flex items-baseline">
                 <span className="text-xl font-bold text-white">cloud</span>
                 <span className="text-xl font-bold text-blue-400">pleaser</span>
@@ -24,11 +24,11 @@ export function Footer() {
             </p>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <img src={webhostedLogo} alt="webhosted.io" className="w-4 h-4" />
+                <img src={webhostedLogo} alt="webhosted.io" className="w-4 h-4 brightness-0 invert" />
                 <span className="text-sm text-gray-400">webhosted<span className="text-green-400">.io</span></span>
               </div>
               <div className="flex items-center space-x-2">
-                <img src={airswipedLogo} alt="airswiped.com" className="w-4 h-4" />
+                <img src={airswipedLogo} alt="airswiped.com" className="w-4 h-4 brightness-0 invert" />
                 <span className="text-sm text-gray-400">airswiped<span className="text-green-400">.com</span></span>
               </div>
             </div>
