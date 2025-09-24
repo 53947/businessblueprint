@@ -46,7 +46,7 @@ Discover exactly what your business needs to succeed online. Our AI analyzes you
                 </Button>
                 <Link href="/ai-coach">
                   <Button variant="outline" size="lg" className="border-2 w-full sm:w-auto">
-                    <img src={aiCoachLogo} alt="AI Coach" className="w-5 h-5 mr-2" />
+                    <img src={aiCoachLogo} alt="AI Coach" className="w-8 h-8 mr-2" />
                     AI Business Coach
                   </Button>
                 </Link>

@@ -90,7 +90,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
       <Card className="max-w-md mx-auto border-2 border-blue-200 bg-blue-50/50">
         <CardHeader className="text-center pb-4">
           <div className="flex justify-center mb-3">
-            <img src={aiCoachLogo} alt="AI Coach" className="h-12 w-12" />
+            <img src={aiCoachLogo} alt="AI Coach" className="h-18 w-18" />
           </div>
           <CardTitle className="text-2xl">Unlock AI Business Coach</CardTitle>
           <CardDescription>
@@ -135,7 +135,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
-            <img src={aiCoachLogo} alt="AI Coach" className="h-16 w-16" />
+            <img src={aiCoachLogo} alt="AI Coach" className="h-24 w-24" />
           </div>
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             AI Business Coach Add-On
