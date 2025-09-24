@@ -1,4 +1,6 @@
-import { Brain, Globe, Zap } from "lucide-react";
+import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
+import webhostedLogo from "@assets/webnhosted_1758744493181.png";
+import airswipedLogo from "@assets/airswiped_1758744493180.png";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -10,7 +12,7 @@ export function Footer() {
           {/* Brand Section */}
           <div className="col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-              <Brain className="w-8 h-8 text-blue-400" />
+              <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="w-8 h-8" />
               <div className="flex items-baseline">
                 <span className="text-xl font-bold text-white">cloud</span>
                 <span className="text-xl font-bold text-blue-400">pleaser</span>
@@ -22,11 +24,11 @@ export function Footer() {
             </p>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <Globe className="w-4 h-4 text-pink-400" />
+                <img src={webhostedLogo} alt="webhosted.io" className="w-4 h-4" />
                 <span className="text-sm text-gray-400">webhosted<span className="text-green-400">.io</span></span>
               </div>
               <div className="flex items-center space-x-2">
-                <Zap className="w-4 h-4 text-red-400" />
+                <img src={airswipedLogo} alt="airswiped.com" className="w-4 h-4" />
                 <span className="text-sm text-gray-400">airswiped<span className="text-green-400">.com</span></span>
               </div>
             </div>

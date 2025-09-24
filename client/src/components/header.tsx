@@ -6,13 +6,14 @@ import {
   LogOut, 
   Menu,
   X,
-  Brain,
   BarChart3,
   Users,
   FileText,
   Star,
   Bell
 } from "lucide-react";
+import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
+import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -26,7 +27,7 @@ export function Header({ showNavigation = false }: HeaderProps) {
     { name: "Reports", icon: FileText, href: "/reports" },
     { name: "Reviews", icon: Star, href: "/reviews" },
     { name: "Campaigns", icon: Users, href: "/campaigns" },
-    { name: "AI Coach", icon: Brain, href: "/ai-coach" },
+    { name: "AI Coach", icon: () => <img src={aiCoachLogo} alt="AI Coach" className="w-4 h-4" />, href: "/ai-coach" },
   ];
 
   return (
@@ -36,7 +37,7 @@ export function Header({ showNavigation = false }: HeaderProps) {
           {/* Logo */}
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <Brain className="w-8 h-8 text-blue-600" />
+              <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="w-8 h-8" />
               <div className="flex items-baseline">
                 <span className="text-xl font-bold text-black">cloud</span>
                 <span className="text-xl font-bold text-blue-600">pleaser</span>
