@@ -19,11 +19,11 @@ import {
   ArrowRight,
   MapPin,
   Trophy,
-  Lightbulb,
   Crown,
   Wrench,
   CheckCircle2
 } from "lucide-react";
+import blueprintIcon from "@assets/BluePrint Icon_1758754185405.png";
 
 // The 11 strategic digital blueprint steps - logical order for beginners
 const digitalBlueprintSteps = [
@@ -188,7 +188,7 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold mb-2 flex items-center space-x-2">
-                <Lightbulb className="w-6 h-6" />
+                <img src={blueprintIcon} alt="Blueprint" className="w-6 h-6" />
                 <span>Your Digital Blueprint</span>
               </h2>
               <p className="text-lg opacity-90">
@@ -218,7 +218,7 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
       <Card className="blueprint-surface blueprint-surface--content">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2 text-white">
-            <Lightbulb className="w-5 h-5" />
+            <img src={blueprintIcon} alt="Blueprint" className="w-5 h-5" />
             <span>Digital Blueprint</span>
           </CardTitle>
         </CardHeader>
