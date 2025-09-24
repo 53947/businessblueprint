@@ -34,10 +34,10 @@ export default function Home() {
                 </div>
               </div>
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                <span className="text-primary">Digital Empowerment</span> for Your Business
+                <span className="text-primary">Get Found, Get Customers,</span> Get Business
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-Discover exactly what your business needs to succeed online. Our AI analyzes your online presence using Google's business intelligence. It creates a comprehensive Digital Blueprint in less than 24 hours. No tech experience required.
+Helping local businesses succeed online. Our AI analyzes your online presence using Google's business intelligence and creates a comprehensive Digital Blueprint in less than 24 hours. No tech experience required.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Button onClick={startAssessment} size="lg" className="bg-blue-500 hover:bg-blue-600">
