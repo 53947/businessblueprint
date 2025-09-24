@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLocation } from "wouter";
-import { LogIn, Building, AlertCircle, Brain } from "lucide-react";
+import { LogIn, Building, AlertCircle } from "lucide-react";
+import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
 import { getBrandClasses } from "@/lib/brand-colors";
 
 export default function ClientLogin() {
@@ -57,7 +58,7 @@ export default function ClientLogin() {
         <CardHeader className="text-center">
           <div className="flex justify-center items-center mb-4">
             <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <Brain className="h-8 w-8 text-blue-500" />
+              <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="h-8 w-8" />
               <span className="text-3xl font-bold">
                 <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-purple-600">.io</span>
               </span>
