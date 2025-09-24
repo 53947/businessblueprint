@@ -20,7 +20,7 @@ export function Footer() {
               </div>
             </div>
             <p className="text-gray-400 text-sm mb-4">
-              Empowering businesses digitally through AI-powered assessments and strategic guidance.
+              Helping local businesses succeed online. Get found, get customers, get business.
             </p>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
