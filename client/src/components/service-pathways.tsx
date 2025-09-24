@@ -58,7 +58,7 @@ export function ServicePathways() {
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <img src={aiCoachLogo} alt="AI Coach" className="w-5 h-5 mt-0.5" />
+                  <img src={aiCoachLogo} alt="AI Coach" className="w-8 h-8 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-gray-900">AI Business Coach</h4>
                     <p className="text-gray-600 text-sm">Optional premium add-on (+$99/mo)</p>
@@ -125,7 +125,7 @@ export function ServicePathways() {
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <img src={aiCoachLogo} alt="AI Coach" className="w-5 h-5 mt-0.5" />
+                  <img src={aiCoachLogo} alt="AI Coach" className="w-8 h-8 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-gray-900">AI Business Coach</h4>
                     <p className="text-gray-600 text-sm">Optional premium add-on (+$99/mo)</p>
