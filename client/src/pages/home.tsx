@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocation, Link } from "wouter";
-import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, MessageCircle, Brain, Globe, Zap, Compass, MapPin, Gem } from "lucide-react";
+import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, MessageCircle, Compass, MapPin, Gem } from "lucide-react";
+import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
+import webhostedLogo from "@assets/webnhosted_1758744493181.png";
+import airswipedLogo from "@assets/airswiped_1758744493180.png";
 import { HowItWorks } from "@/components/how-it-works";
 import { ServicePathways } from "@/components/service-pathways";
 import { Header } from "@/components/header";
@@ -454,7 +457,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <Brain className="h-16 w-16 text-blue-500" />
+                  <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="h-16 w-16" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
                   <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
@@ -474,7 +477,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-pink-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <Globe className="h-16 w-16 text-[#FC8EA0]" />
+                  <img src={webhostedLogo} alt="webhosted.io" className="h-16 w-16" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
                   <span className="text-black">web</span><span className="text-[#FC8EA0]">hosted</span><span className="text-green-400">.io</span>
@@ -494,7 +497,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <Zap className="h-16 w-16 text-[#CB0505]" />
+                  <img src={airswipedLogo} alt="airswiped.com" className="h-16 w-16" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
                   <span className="text-black">air</span><span className="text-[#CB0505]">swiped</span><span className="text-green-400">.com</span>
