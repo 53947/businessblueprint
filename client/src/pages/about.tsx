@@ -41,11 +41,10 @@ export default function About() {
             About cloudpleaser.io
           </Badge>
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            Digital Empowerment for Every Business
+            Helping Local Businesses Succeed Online
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            We believe every business deserves to succeed online. Our AI-powered platform provides the insights, 
-            tools, and guidance needed to transform your digital presence and accelerate growth.
+            We help local businesses get found, get customers, and get business. Our AI-powered platform provides the digital intelligence and step-by-step guidance needed to succeed online.
           </p>
         </div>
 
