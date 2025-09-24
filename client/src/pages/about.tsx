@@ -11,6 +11,9 @@ import {
   CheckCircle,
   ArrowRight
 } from "lucide-react";
+import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
+import webhostedLogo from "@assets/webnhosted_1758744493181.png";
+import airswipedLogo from "@assets/airswiped_1758744493180.png";
 
 export default function About() {
   return (
@@ -105,7 +108,7 @@ export default function About() {
             <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <Brain className="h-12 w-12 text-blue-500" />
+                  <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="h-12 w-12" />
                 </div>
                 <CardTitle className="text-xl">
                   <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
@@ -127,7 +130,7 @@ export default function About() {
             <Card className="text-center border-pink-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <Globe className="h-12 w-12" style={{color: '#FC8EA0'}} />
+                  <img src={webhostedLogo} alt="webhosted.io" className="h-12 w-12" />
                 </div>
                 <CardTitle className="text-xl">
                   <span className="text-black">web</span><span style={{color: '#FC8EA0'}}>hosted</span><span className="text-green-400">.io</span>
@@ -149,7 +152,7 @@ export default function About() {
             <Card className="text-center border-red-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <Zap className="h-12 w-12" style={{color: '#CB0505'}} />
+                  <img src={airswipedLogo} alt="airswiped.com" className="h-12 w-12" />
                 </div>
                 <CardTitle className="text-xl">
                   <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span className="text-green-400">.com</span>

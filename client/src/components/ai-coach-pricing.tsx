@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { CheckCircle, Brain, Users, Target, TrendingUp, Zap } from "lucide-react";
+import { CheckCircle, Users, Target, TrendingUp, Zap } from "lucide-react";
+import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
 
 interface AICoachPricingProps {
   currentPlan?: "diy" | "msp";
@@ -14,7 +15,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('annual');
   const features = [
     {
-      icon: Brain,
+      icon: () => <img src={aiCoachLogo} alt="AI Coach" className="w-5 h-5" />,
       title: "Personalized Business Guidance",
       description: "AI analyzes your specific business context and provides tailored recommendations"
     },
