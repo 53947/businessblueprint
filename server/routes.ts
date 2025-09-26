@@ -12,6 +12,7 @@ import { NMIService } from "./services/nmi";
 import { dashboardAccess } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import { db } from "./db";
+import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const googleService = new GoogleBusinessService();
@@ -438,7 +439,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error syncing Vendasta client:", error);
       res.status(500).json({ 
         message: "Failed to sync client",
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         suggestion: "Check server logs for detailed error information"
       });
     }
@@ -622,8 +623,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (hasApiKey && hasClientId) {
           const testClient = await vendastaService.fetchClientData("test");
           // Consider auth error as connection success since endpoint exists
-          testResults.apiConnection = testClient !== null || 
-            (testClient?.customerIdentifier === 'auth-config-needed');
+          testResults.apiConnection = testClient !== null;
         } else {
           testResults.apiConnection = false;
         }
@@ -788,21 +788,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create new subscription
   app.post("/api/subscriptions", async (req, res) => {
     try {
+      // Validate request body with Zod schema
+      const subscriptionSchema = z.object({
+        planId: z.string().min(1, "Plan ID is required"),
+        addons: z.array(z.object({
+          addonId: z.string(),
+          quantity: z.number().optional()
+        })).default([]),
+        billingCycle: z.enum(['monthly', 'quarterly', 'annual']),
+        paymentToken: z.string().min(16, "Valid payment token required"),
+        customerInfo: z.object({
+          firstName: z.string().min(1, "First name is required"),
+          lastName: z.string().min(1, "Last name is required"),
+          email: z.string().email("Valid email required"),
+          phone: z.string().optional(),
+          address: z.string().optional(),
+          city: z.string().optional(),
+          state: z.string().optional(),
+          zip: z.string().optional()
+        })
+      });
+
+      const validation = subscriptionSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Invalid subscription data",
+          errors: validation.error.errors
+        });
+      }
+
       const { 
         planId, 
-        addons: selectedAddons = [], 
+        addons: selectedAddons, 
         billingCycle, 
         paymentToken, 
         customerInfo 
-      } = req.body;
-
-      // Validate required fields
-      if (!planId || !paymentToken || !customerInfo) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "Missing required subscription data" 
-        });
-      }
+      } = validation.data;
 
       // Get plan details
       const plan = await db.select().from(subscriptionPlans)
