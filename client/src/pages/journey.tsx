@@ -58,7 +58,7 @@ export default function Journey() {
       id: "coach",
       title: "AI Business Coach",
       description: "Ongoing guidance and optimization",
-      icon: () => <img src={aiCoachIcon} alt="AI Coach" className="w-24 h-24" />,
+      icon: () => <img src={aiCoachIcon} alt="AI Coach" className="w-[86px] h-[86px]" />,
       color: "orange" as const,
       path: "/ai-coach",
       features: ["24/7 AI Guidance", "Progress Tracking", "Strategy Optimization", "Performance Insights"]
@@ -67,7 +67,7 @@ export default function Journey() {
       id: "success",
       title: "Digital Success",
       description: "Get found, get customers, get business",
-      icon: () => <img src={digitalSuccessIcon} alt="Digital Success" className="w-16 h-16" />,
+      icon: () => <img src={digitalSuccessIcon} alt="Digital Success" className="w-[74px] h-[74px]" />,
       color: "emerald" as const,
       path: "/portal",
       features: ["Increased Visibility", "More Customers", "Revenue Growth", "Market Leadership"]
