@@ -68,7 +68,7 @@ export class NMIService {
     this.validateConfig();
 
     // Calculate billing frequency based on cycle
-    const dayFrequency = this.getBillingFrequency(request.billingCycle);
+    const monthFrequency = this.getMonthlyFrequency(request.billingCycle);
     
     // Prepare subscription data
     const subscriptionData = new URLSearchParams({
@@ -79,7 +79,7 @@ export class NMIService {
       // Plan details
       plan_amount: request.planAmount,
       plan_payments: '0', // Unlimited payments
-      day_frequency: dayFrequency.toString(),
+      month_frequency: monthFrequency.toString(),
       
       // Customer information
       first_name: request.customerData.firstName,
@@ -214,18 +214,18 @@ export class NMIService {
   }
 
   /**
-   * Get billing frequency in days for different cycles
+   * Get billing frequency in months for different cycles (NMI month_frequency parameter)
    */
-  private static getBillingFrequency(cycle: 'monthly' | 'quarterly' | 'annual'): number {
+  private static getMonthlyFrequency(cycle: 'monthly' | 'quarterly' | 'annual'): number {
     switch (cycle) {
       case 'monthly':
-        return 30;
+        return 1;
       case 'quarterly':
-        return 90;
+        return 3;
       case 'annual':
-        return 365;
+        return 12;
       default:
-        return 30;
+        return 1;
     }
   }
 
