@@ -785,6 +785,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Check trial status for a subscription
+  app.get("/api/subscriptions/:id/trial-status", async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      const [subscription] = await db.select()
+        .from(subscriptions)
+        .where(eq(subscriptions.id, parseInt(id)));
+      
+      if (!subscription) {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Subscription not found" 
+        });
+      }
+
+      const now = new Date();
+      const isTrialActive = subscription.isTrialActive && 
+        subscription.trialPeriodEnd && 
+        now < subscription.trialPeriodEnd;
+
+      res.json({
+        success: true,
+        trialStatus: {
+          isTrialActive,
+          trialPeriodEnd: subscription.trialPeriodEnd,
+          daysRemaining: isTrialActive && subscription.trialPeriodEnd ? 
+            Math.ceil((subscription.trialPeriodEnd.getTime() - now.getTime()) / (24 * 60 * 60 * 1000)) : 0
+        }
+      });
+    } catch (error) {
+      console.error("Error checking trial status:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to check trial status" 
+      });
+    }
+  });
+
   // Create new subscription
   app.post("/api/subscriptions", async (req, res) => {
     try {
@@ -867,6 +906,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
+      // Check if AI Coach addon is selected for trial eligibility
+      const hasAiCoachAddon = selectedAddons.some(addon => 
+        addons.find(a => a.addonId === addon.addonId)?.category === 'ai-coach'
+      );
+
+      // 7-day trial for AI Coach addons
+      const isTrialEligible = hasAiCoachAddon;
+      const trialPeriodEnd = isTrialEligible ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null;
+
       // Create NMI subscription for recurring charges only (no setup fee components)
       const recurringAmount = pricing.recurringTotal.toFixed(2); // recurringSubtotal + recurringTax
       const nmiRequest = {
@@ -883,7 +931,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         paymentToken,
         planAmount: recurringAmount,
-        billingCycle
+        billingCycle,
+        startDate: trialPeriodEnd ? trialPeriodEnd.toISOString().split('T')[0] : undefined // Start billing after trial
       };
 
       const nmiResult = await NMIService.createSubscription(nmiRequest);
@@ -899,7 +948,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const subscriptionData = {
         nmiSubscriptionId: nmiResult.subscription_id,
         planId: plan[0].id,
-        status: 'active',
+        status: isTrialEligible ? 'trial' : 'active',
         baseAmount: pricing.basePrice.toFixed(2),
         addonAmount: pricing.totalAddons.toFixed(2),
         totalAmount: pricing.recurringTotal.toFixed(2), // Only recurring charges in subscription record
@@ -911,7 +960,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         },
         currentPeriodStart: new Date(),
         currentPeriodEnd: calculateNextBillingDate(billingCycle),
-        nextPaymentDate: calculateNextBillingDate(billingCycle)
+        nextPaymentDate: isTrialEligible ? trialPeriodEnd : calculateNextBillingDate(billingCycle),
+        trialPeriodEnd: trialPeriodEnd,
+        isTrialActive: isTrialEligible
       };
 
       const [newSubscription] = await db.insert(subscriptions)
