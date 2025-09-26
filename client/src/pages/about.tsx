@@ -14,25 +14,13 @@ import {
 import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
 import webhostedLogo from "@assets/webnhosted_1758744493181.png";
 import airswipedLogo from "@assets/airswiped_1758744493180.png";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 
 export default function About() {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="text-2xl font-bold">
-              <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
-            </div>
-            <nav className="hidden md:flex space-x-6">
-              <a href="/" className="text-gray-600 hover:text-blue-500 transition-colors">Home</a>
-              <a href="/assessment" className="text-gray-600 hover:text-blue-500 transition-colors">Assessment</a>
-              <a href="/contact" className="text-gray-600 hover:text-blue-500 transition-colors">Contact</a>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header showNavigation={true} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Hero Section */}
@@ -226,6 +214,7 @@ export default function About() {
           </Card>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -183,7 +183,7 @@ export default function SubscriptionPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Header showNavigation={true} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
@@ -410,7 +410,7 @@ export default function SubscriptionPage() {
                       </div>
                     )}
                     
-                    {pricing.savings > 0 && (
+                    {pricing.savings && pricing.savings > 0 && (
                       <div className="flex justify-between text-sm text-green-600">
                         <span>Total Savings</span>
                         <span>-${pricing.savings.toFixed(2)}</span>

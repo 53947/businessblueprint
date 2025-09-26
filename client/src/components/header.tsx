@@ -10,7 +10,12 @@ import {
   Users,
   FileText,
   Star,
-  Bell
+  Bell,
+  Home,
+  CreditCard,
+  Info,
+  Mail,
+  Compass
 } from "lucide-react";
 import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
@@ -19,15 +24,17 @@ interface HeaderProps {
   showNavigation?: boolean;
 }
 
-export function Header({ showNavigation = false }: HeaderProps) {
+export function Header({ showNavigation = true }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigationItems = [
-    { name: "Dashboard", icon: BarChart3, href: "/dashboard" },
-    { name: "Reports", icon: FileText, href: "/reports" },
-    { name: "Reviews", icon: Star, href: "/reviews" },
-    { name: "Campaigns", icon: Users, href: "/campaigns" },
+    { name: "Home", icon: Home, href: "/" },
+    { name: "Assessment", icon: BarChart3, href: "/assessment" },
+    { name: "Pricing", icon: CreditCard, href: "/subscription" },
     { name: "AI Coach", icon: () => <img src={aiCoachLogo} alt="AI Coach" className="w-4 h-4" />, href: "/ai-coach" },
+    { name: "About", icon: Info, href: "/about" },
+    { name: "Contact", icon: Mail, href: "/contact" },
+    { name: "Site Map", icon: Compass, href: "/sitemap" },
   ];
 
   return (

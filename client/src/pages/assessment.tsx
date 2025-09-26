@@ -5,7 +5,7 @@ import { Footer } from "@/components/footer";
 export default function Assessment() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Header showNavigation={false} />
+      <Header showNavigation={true} />
       <div className="flex-1">
         <AssessmentForm />
       </div>
