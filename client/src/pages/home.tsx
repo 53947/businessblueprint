@@ -20,7 +20,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <Header showNavigation={false} />
+      <Header showNavigation={true} />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gray-50 via-white to-blue-50 py-12 lg:py-20">

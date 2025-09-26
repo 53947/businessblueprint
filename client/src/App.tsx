@@ -13,6 +13,7 @@ import VendastaIntegration from "@/pages/vendasta-integration";
 import Contact from "@/pages/contact";
 import About from "@/pages/about";
 import Subscription from "@/pages/subscription";
+import Sitemap from "@/pages/sitemap";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -28,6 +29,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/about" component={About} />
       <Route path="/subscription" component={Subscription} />
+      <Route path="/sitemap" component={Sitemap} />
       <Route component={NotFound} />
     </Switch>
   );
