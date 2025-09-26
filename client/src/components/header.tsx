@@ -44,7 +44,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
     { name: "Software", icon: Settings2, href: "/ai-coach" },
     { name: "Pricing", icon: CreditCard, href: "/subscription" },
     { name: "Resources", icon: BookOpen, href: "/sitemap" },
-    { name: "Your Journey", icon: () => <img src={digitalJourneyIcon} alt="Your Journey" className="w-5 h-5" />, href: "/journey" },
+    { name: "Your Journey", icon: Route, href: "/journey" },
   ];
 
   return (
@@ -366,7 +366,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <IconComponent className="w-5 h-5" />
+                    {item.name === "Your Journey" ? (
+                      <img src={digitalJourneyIcon} alt="Your Journey" className="w-5 h-5" />
+                    ) : (
+                      <IconComponent className="w-5 h-5" />
+                    )}
                     <span>{item.name}</span>
                   </a>
                 );
