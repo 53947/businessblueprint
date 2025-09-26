@@ -35,6 +35,14 @@ Brand Identity:
 - Format: black-[pleaser-color]-fluorescent-green across all platforms
 - Dark background adaptations: Brand logos use brightness-0 invert for white appearance on dark backgrounds
 
+**Official 5-Step Journey Icons & Sizing Standards:**
+- Digital Assessment: w-16 h-16 (64px) - standard size
+- Digital Blueprint: w-16 h-16 (64px) - standard size  
+- Choose Your Path: w-16 h-16 (64px) - standard size
+- AI Coach: w-[86px] h-[86px] (86px) - 10% smaller than base size
+- Digital Success: w-[74px] h-[74px] (74px) - 15% bigger than base size
+- These 5 standardized icons and names must never be varied across all platform uses
+
 ## System Architecture
 
 The application employs a full-stack architecture with a monorepo structure, separating frontend, backend, and shared components.
