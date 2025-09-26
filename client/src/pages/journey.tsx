@@ -19,6 +19,9 @@ import {
 } from "lucide-react";
 import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
+import blueprintIcon from "@assets/BluePrint Icon_1758869435053.png";
+import digitalSuccessIcon from "@assets/digital success accellerated revenue_1758869401542.png";
+import digitalAssessmentIcon from "@assets/Digital Assessment_1758869419650.png";
 
 export default function Journey() {
   const journeySteps = [
@@ -26,7 +29,7 @@ export default function Journey() {
       id: "assessment",
       title: "Digital Assessment",
       description: "AI-powered analysis of your online presence",
-      icon: BarChart3,
+      icon: () => <img src={digitalAssessmentIcon} alt="Digital Assessment" className="w-16 h-16" />,
       color: "blue" as const,
       path: "/assessment",
       features: ["Google Business Intelligence", "Digital IQ Score (70-140)", "Competitive Analysis", "Priority Action Items"]
@@ -35,7 +38,7 @@ export default function Journey() {
       id: "blueprint",
       title: "Digital Blueprint",
       description: "Personalized roadmap for your growth",
-      icon: Compass,
+      icon: () => <img src={blueprintIcon} alt="Digital Blueprint" className="w-16 h-16" />,
       color: "purple" as const, 
       path: "/assessment",
       features: ["Custom Growth Strategy", "Step-by-Step Guide", "Resource Recommendations", "Timeline & Milestones"]
@@ -44,7 +47,7 @@ export default function Journey() {
       id: "pathway",
       title: "Choose Your Path",
       description: "DIY tools or managed services",
-      icon: Target,
+      icon: Compass,
       color: "green" as const,
       path: "/subscription",
       features: ["DIY Self-Service Tools", "Full Managed Services", "Hybrid Approach", "Scalable Solutions"]
@@ -53,7 +56,7 @@ export default function Journey() {
       id: "coach",
       title: "AI Business Coach",
       description: "Ongoing guidance and optimization",
-      icon: () => <img src={aiCoachLogo} alt="AI Coach" className="w-6 h-6" />,
+      icon: () => <img src={aiCoachLogo} alt="AI Coach" className="w-24 h-24" />,
       color: "orange" as const,
       path: "/ai-coach",
       features: ["24/7 AI Guidance", "Progress Tracking", "Strategy Optimization", "Performance Insights"]
@@ -62,7 +65,7 @@ export default function Journey() {
       id: "success",
       title: "Digital Success",
       description: "Get found, get customers, get business",
-      icon: TrendingUp,
+      icon: () => <img src={digitalSuccessIcon} alt="Digital Success" className="w-16 h-16" />,
       color: "emerald" as const,
       path: "/portal",
       features: ["Increased Visibility", "More Customers", "Revenue Growth", "Market Leadership"]
@@ -133,8 +136,8 @@ export default function Journey() {
                       {/* Step Card */}
                       <Card className="mt-32 hover:shadow-lg transition-shadow">
                         <CardHeader className="text-center">
-                          <div className={`w-12 h-12 ${colorClasses[step.color]} bg-opacity-10 rounded-lg flex items-center justify-center mx-auto mb-4`}>
-                            <IconComponent className={`w-6 h-6 ${colorClasses[step.color]}`} />
+                          <div className={`w-20 h-20 ${colorClasses[step.color]} bg-opacity-10 rounded-lg flex items-center justify-center mx-auto mb-4`}>
+                            <IconComponent className={step.id === 'coach' ? 'w-12 h-12' : step.id === 'pathway' ? `w-8 h-8 ${colorClasses[step.color]}` : 'w-8 h-8'} />
                           </div>
                           <CardTitle className="text-lg">{step.title}</CardTitle>
                           <CardDescription>{step.description}</CardDescription>
@@ -188,8 +191,8 @@ export default function Journey() {
                         <div className={`w-12 h-12 ${colorClasses[step.color]} bg-white border-4 rounded-full flex items-center justify-center font-bold text-lg`}>
                           {index + 1}
                         </div>
-                        <div className={`w-12 h-12 ${colorClasses[step.color]} bg-opacity-10 rounded-lg flex items-center justify-center`}>
-                          <IconComponent className={`w-6 h-6 ${colorClasses[step.color]}`} />
+                        <div className={`w-16 h-16 ${colorClasses[step.color]} bg-opacity-10 rounded-lg flex items-center justify-center`}>
+                          <IconComponent className={step.id === 'coach' ? 'w-10 h-10' : step.id === 'pathway' ? `w-6 h-6 ${colorClasses[step.color]}` : 'w-6 h-6'} />
                         </div>
                         <div>
                           <CardTitle className="text-lg">{step.title}</CardTitle>
