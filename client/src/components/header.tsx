@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
+import digitalJourneyIcon from "@assets/digital journey_1758878816963.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -43,7 +44,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
     { name: "Software", icon: Settings2, href: "/ai-coach" },
     { name: "Pricing", icon: CreditCard, href: "/subscription" },
     { name: "Resources", icon: BookOpen, href: "/sitemap" },
-    { name: "Your Journey", icon: Route, href: "/journey" },
+    { name: "Your Journey", icon: () => <img src={digitalJourneyIcon} alt="Your Journey" className="w-5 h-5" />, href: "/journey" },
   ];
 
   return (
@@ -299,7 +300,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
                         href="/journey"
                       >
-                        <Route className="w-4 h-4 mr-2" />
+                        <img src={digitalJourneyIcon} alt="Your Journey" className="w-4 h-4 mr-2" />
                         Your Journey
                       </NavigationMenuLink>
                     </NavigationMenuItem>
