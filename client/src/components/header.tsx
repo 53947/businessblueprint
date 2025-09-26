@@ -11,11 +11,10 @@ import {
   FileText,
   Star,
   Bell,
-  Home,
   CreditCard,
-  Info,
-  Mail,
-  Compass
+  BookOpen,
+  Building,
+  Zap
 } from "lucide-react";
 import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
@@ -28,13 +27,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigationItems = [
-    { name: "Home", icon: Home, href: "/" },
-    { name: "Assessment", icon: BarChart3, href: "/assessment" },
+    { name: "Solutions", icon: Zap, href: "/assessment" },
     { name: "Pricing", icon: CreditCard, href: "/subscription" },
-    { name: "AI Coach", icon: () => <img src={aiCoachLogo} alt="AI Coach" className="w-4 h-4" />, href: "/ai-coach" },
-    { name: "About", icon: Info, href: "/about" },
-    { name: "Contact", icon: Mail, href: "/contact" },
-    { name: "Site Map", icon: Compass, href: "/sitemap" },
+    { name: "Resources", icon: BookOpen, href: "/ai-coach" },
+    { name: "Company", icon: Building, href: "/about" },
   ];
 
   return (
@@ -43,14 +39,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
+            <a href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
               <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="w-8 h-8" />
               <div className="flex items-baseline">
                 <span className="text-xl font-bold text-black">cloud</span>
                 <span className="text-xl font-bold text-blue-600">pleaser</span>
                 <span className="text-lg font-medium text-green-400">.io</span>
               </div>
-            </div>
+            </a>
             
             {showNavigation && (
               <>
