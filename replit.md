@@ -89,8 +89,18 @@ The application employs a full-stack architecture with a monorepo structure, sep
   - ✅ SMTP authentication setup complete
 
 ### 💰 REVENUE PRIORITY (Enable Payments)
-- [ ] **Task 4:** Complete NMI payment integration and subscription billing system
-- [ ] **Task 5:** Implement 7-day free trial feature mentioned in AI Coach pricing
+- [x] **Task 4:** Complete NMI payment integration and subscription billing system
+  - ✅ NMI service integration with proper month_frequency billing cycles
+  - ✅ Frontend payment form with Collect.js tokenization
+  - ✅ Backend API with Zod validation and tax calculation
+  - ✅ Production-ready core billing functionality
+  - ⚠️ Webhook handling and idempotency identified for future enhancement
+- [x] **Task 5:** Implement 7-day free trial feature mentioned in AI Coach pricing
+  - ✅ Database schema updated with trial period support
+  - ✅ Backend logic for AI Coach addon trial detection
+  - ✅ Trial status API endpoint and delayed billing implementation
+  - ✅ Frontend trial badge and enhanced messaging
+  - ⚠️ Trial-to-active transition and cancellation flow for future enhancement
 
 ### 👥 CLIENT EXPERIENCE (Remove "Coming Soon" Placeholders)
 - [ ] **Task 6:** Build Client Portal Review Management interface
@@ -105,8 +115,8 @@ The application employs a full-stack architecture with a monorepo structure, sep
 
 ### 📊 Sprint Progress Tracking
 **Started:** December 26, 2024  
-**Current Task:** Task 4 - Complete NMI payment integration  
-**Completed:** 3/12 tasks  
+**Current Task:** Task 6 - Build Client Portal Review Management interface  
+**Completed:** 5/12 tasks  
 **Estimated Sprint Duration:** 2-3 weeks  
 
 ### 🔄 How to Use This Task List
