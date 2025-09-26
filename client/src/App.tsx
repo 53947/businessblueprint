@@ -14,6 +14,7 @@ import Contact from "@/pages/contact";
 import About from "@/pages/about";
 import Subscription from "@/pages/subscription";
 import Sitemap from "@/pages/sitemap";
+import Journey from "@/pages/journey";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -30,6 +31,7 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/subscription" component={Subscription} />
       <Route path="/sitemap" component={Sitemap} />
+      <Route path="/journey" component={Journey} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -14,7 +14,10 @@ import {
   CreditCard,
   BookOpen,
   Building,
-  Zap
+  Zap,
+  Package,
+  Settings2,
+  Route
 } from "lucide-react";
 import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
@@ -27,10 +30,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigationItems = [
-    { name: "Solutions", icon: Zap, href: "/assessment" },
+    { name: "Products", icon: Package, href: "/assessment" },
+    { name: "Solutions", icon: Zap, href: "/subscription" },
+    { name: "Software", icon: Settings2, href: "/ai-coach" },
     { name: "Pricing", icon: CreditCard, href: "/subscription" },
-    { name: "Resources", icon: BookOpen, href: "/ai-coach" },
-    { name: "Company", icon: Building, href: "/about" },
+    { name: "Resources", icon: BookOpen, href: "/sitemap" },
+    { name: "Your Journey", icon: Route, href: "/journey" },
   ];
 
   return (
