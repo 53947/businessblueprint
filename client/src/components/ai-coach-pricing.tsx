@@ -122,9 +122,15 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
             Add AI Coach to Plan
           </Button>
 
-          <p className="text-xs text-center text-gray-500">
-            Cancel anytime. 7-day free trial included.
-          </p>
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              7-Day Free Trial Included
+            </div>
+            <p className="text-xs text-gray-500">
+              Cancel anytime during trial. No commitment required.
+            </p>
+          </div>
         </CardContent>
       </Card>
     );

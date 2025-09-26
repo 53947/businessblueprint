@@ -229,9 +229,13 @@ export const subscriptions = pgTable("subscriptions", {
   planId: integer("plan_id").references(() => subscriptionPlans.id),
   
   // Subscription details
-  status: varchar("status", { length: 30 }).notNull(), // active, cancelled, paused, past_due
+  status: varchar("status", { length: 30 }).notNull(), // active, cancelled, paused, past_due, trial
   currentPeriodStart: timestamp("current_period_start"),
   currentPeriodEnd: timestamp("current_period_end"),
+  
+  // Trial period support
+  trialPeriodEnd: timestamp("trial_period_end"),
+  isTrialActive: boolean("is_trial_active").default(false),
   
   // Pricing
   baseAmount: decimal("base_amount", { precision: 10, scale: 2 }).notNull(),
