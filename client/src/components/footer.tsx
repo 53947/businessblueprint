@@ -8,7 +8,7 @@ export function Footer() {
   return (
     <footer className="bg-gray-900 text-white mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div className="col-span-1">
             <div className="flex items-center space-x-2 mb-4">
@@ -38,7 +38,7 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Services</h3>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Digital Assessment</a></li>
+              <li><a href="/assessment" className="hover:text-white transition-colors">Digital Assessment</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Website Development</a></li>
               <li><a href="#" className="hover:text-white transition-colors">SEO Optimization</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Reputation Management</a></li>
@@ -51,12 +51,25 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Solutions</h3>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">DIY Tools</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Managed Services</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">AI Coach</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Client Portal</a></li>
+              <li><a href="/subscription" className="hover:text-white transition-colors">DIY Tools</a></li>
+              <li><a href="/subscription" className="hover:text-white transition-colors">Managed Services</a></li>
+              <li><a href="/ai-coach" className="hover:text-white transition-colors">AI Coach</a></li>
+              <li><a href="/portal" className="hover:text-white transition-colors">Client Portal</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Analytics Dashboard</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Hosting Solutions</a></li>
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Company</h3>
+            <ul className="space-y-2 text-sm text-gray-400">
+              <li><a href="/about" className="hover:text-white transition-colors">About Us</a></li>
+              <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
+              <li><a href="/sitemap" className="hover:text-white transition-colors">Site Map</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Press</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Partners</a></li>
             </ul>
           </div>
 
@@ -66,7 +79,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-gray-400">
               <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact Support</a></li>
+              <li><a href="/contact" className="hover:text-white transition-colors">Contact Support</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Live Chat</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Training Videos</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Community Forum</a></li>
