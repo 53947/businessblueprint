@@ -16,6 +16,12 @@ cloudpleaser.io helps local businesses succeed online through AI-powered digital
 
 Preferred communication style: Simple, everyday language.
 
+**Logo Design Process:**
+- DO NOT change any logo elements unless specifically instructed
+- Only modify exactly what is requested - no additional "improvements"
+- Keep compass design consistent across iterations unless told otherwise
+- businessblueprint.io logo concept: Compass + Pencil = "AI" using actual blueprint tools
+
 Business Context:
 - cloudpleaser.io: Digital marketing platform (never mention Vendasta)
 - webhosted.io: Website hosting platform (never mention WPMUDev)
