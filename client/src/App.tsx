@@ -15,6 +15,7 @@ import About from "@/pages/about";
 import Subscription from "@/pages/subscription";
 import Sitemap from "@/pages/sitemap";
 import Journey from "@/pages/journey";
+import LogoPreview from "@/pages/logo-preview";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/subscription" component={Subscription} />
       <Route path="/sitemap" component={Sitemap} />
       <Route path="/journey" component={Journey} />
+      <Route path="/logo-preview" component={LogoPreview} />
       <Route component={NotFound} />
     </Switch>
   );
