@@ -48,6 +48,19 @@ export default function LogoPreview() {
           </div>
           <p className="text-gray-600">Bold geometric style matching webhosted/airswiped simplicity</p>
         </div>
+
+        {/* Blueprint Tools Version */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Blueprint Tools "AI" Logo</h2>
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/attached_assets/generated_images/Blueprint_compass_and_pencil_AI_2e460681.png" 
+              alt="Blueprint Tools businessblueprint.io AI Logo" 
+              className="w-48 h-48 object-contain"
+            />
+          </div>
+          <p className="text-gray-600">Actual compass + pencil blueprint tools forming "AI" letters</p>
+        </div>
         
         {/* Three Company Logos Comparison */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
@@ -55,7 +68,7 @@ export default function LogoPreview() {
           <div className="flex justify-center items-center gap-12 mb-6 flex-wrap">
             <div className="text-center">
               <img 
-                src="/attached_assets/generated_images/Bold_geometric_AI_logo_74443b81.png" 
+                src="/attached_assets/generated_images/Blueprint_compass_and_pencil_AI_2e460681.png" 
                 alt="businessblueprint.io Logo" 
                 className="w-24 h-24 object-contain mx-auto mb-2"
               />
