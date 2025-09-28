@@ -67,12 +67,12 @@ export default function LogoPreview() {
           <h2 className="text-2xl font-semibold mb-6 text-gray-700">Cleaned Up Original Design</h2>
           <div className="flex justify-center mb-4">
             <img 
-              src="/attached_assets/generated_images/Cleaned_up_original_design_2df92c10.png" 
+              src="/attached_assets/generated_images/Original_design_cleanup_4b351127.png" 
               alt="Cleaned businessblueprint.io AI Logo" 
               className="w-48 h-48 object-contain"
             />
           </div>
-          <p className="text-gray-600">Your original compass + pencil design, cleaned up for logo/icon use</p>
+          <p className="text-gray-600">Your exact original design, cleaned up for logo/icon use</p>
         </div>
         
         {/* Three Company Logos Comparison */}
@@ -81,7 +81,7 @@ export default function LogoPreview() {
           <div className="flex justify-center items-center gap-12 mb-6 flex-wrap">
             <div className="text-center">
               <img 
-                src="/attached_assets/generated_images/Cleaned_up_original_design_2df92c10.png" 
+                src="/attached_assets/generated_images/Clean_vector_logo_lines_502463dc.png" 
                 alt="businessblueprint.io Logo" 
                 className="w-24 h-24 object-contain mx-auto mb-2"
               />
