@@ -10,17 +10,30 @@ export default function LogoPreview() {
           businessblueprint.io Logo Concepts
         </h1>
         
-        {/* Green Blueprint B Logo */}
+        {/* Original User Concept */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Green Blueprint "B" Logo</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Your Original "AI" Concept</h2>
           <div className="flex justify-center mb-4">
             <img 
-              src="/attached_assets/generated_images/Blueprint_green_B_logo_a2a73ac3.png" 
-              alt="Green Blueprint B Logo" 
+              src="/attached_assets/businessblueprint_1759093924503.png" 
+              alt="Original businessblueprint.io AI Logo" 
               className="w-48 h-48 object-contain"
             />
           </div>
-          <p className="text-gray-600">Classic blueprint green with white line work forming geometric "B"</p>
+          <p className="text-gray-600">Compass + Pencil = "AI" using blueprint tools - brilliant concept!</p>
+        </div>
+        
+        {/* Refined Version */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Refined "AI" Logo</h2>
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/attached_assets/generated_images/Refined_businessblueprint_AI_logo_cd9ced09.png" 
+              alt="Refined businessblueprint.io AI Logo" 
+              className="w-48 h-48 object-contain"
+            />
+          </div>
+          <p className="text-gray-600">Cleaner geometric version - maintains AI concept with blueprint styling</p>
         </div>
         
         {/* Three Company Logos Comparison */}
@@ -29,7 +42,7 @@ export default function LogoPreview() {
           <div className="flex justify-center items-center gap-12 mb-6 flex-wrap">
             <div className="text-center">
               <img 
-                src="/attached_assets/generated_images/Blueprint_green_B_logo_a2a73ac3.png" 
+                src="/attached_assets/generated_images/Refined_businessblueprint_AI_logo_cd9ced09.png" 
                 alt="businessblueprint.io Logo" 
                 className="w-24 h-24 object-contain mx-auto mb-2"
               />
