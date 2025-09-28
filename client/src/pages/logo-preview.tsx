@@ -25,18 +25,43 @@ export default function LogoPreview() {
         
         {/* Three Company Logos Comparison */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700">All Three Company Logos</h2>
-          <div className="flex justify-center mb-4">
-            <img 
-              src="/attached_assets/generated_images/Three_company_logos_comparison_900c2fbb.png" 
-              alt="Three Company Logos Comparison" 
-              className="max-w-full h-auto"
-            />
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Your Complete Brand Ecosystem</h2>
+          <div className="flex justify-center items-center gap-12 mb-6 flex-wrap">
+            <div className="text-center">
+              <img 
+                src="/attached_assets/generated_images/Blueprint_green_B_logo_a2a73ac3.png" 
+                alt="businessblueprint.io Logo" 
+                className="w-24 h-24 object-contain mx-auto mb-2"
+              />
+              <p className="text-sm font-medium text-green-600">businessblueprint.io</p>
+              <p className="text-xs text-gray-500">Strategy & Planning</p>
+            </div>
+            
+            <div className="text-center">
+              <img 
+                src="/attached_assets/webnhosted_1758744493181.png" 
+                alt="webhosted.io Logo" 
+                className="w-24 h-24 object-contain mx-auto mb-2"
+              />
+              <p className="text-sm font-medium text-purple-600">webhosted.io</p>
+              <p className="text-xs text-gray-500">Website Hosting</p>
+            </div>
+            
+            <div className="text-center">
+              <img 
+                src="/attached_assets/airswiped_1758744493180.png" 
+                alt="airswiped.com Logo" 
+                className="w-24 h-24 object-contain mx-auto mb-2"
+              />
+              <p className="text-sm font-medium text-red-600">airswiped.com</p>
+              <p className="text-xs text-gray-500">Payment Processing</p>
+            </div>
           </div>
           <p className="text-gray-600">
-            <span className="font-medium text-green-600">businessblueprint.io</span> (green) • 
-            <span className="font-medium text-purple-600"> webhosted.io</span> (purple) • 
-            <span className="font-medium text-red-600"> airswiped.com</span> (red)
+            Your complete digital business ecosystem: 
+            <span className="font-medium text-green-600"> Strategy</span> → 
+            <span className="font-medium text-purple-600"> Technology</span> → 
+            <span className="font-medium text-red-600"> Payments</span>
           </p>
         </div>
         
