@@ -62,17 +62,17 @@ export default function LogoPreview() {
           <p className="text-gray-600">Actual compass + pencil blueprint tools forming "AI" letters</p>
         </div>
 
-        {/* Cleaned Up Original */}
+        {/* Professional Cleaned Up Version */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Cleaned Up Original Design</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Professional Logo - Ready to Use</h2>
           <div className="flex justify-center mb-4">
             <img 
-              src="/attached_assets/generated_images/Original_design_cleanup_4b351127.png" 
-              alt="Cleaned businessblueprint.io AI Logo" 
+              src="/attached_assets/generated_images/Cleaned_up_compass_pencil_logo_eee3aaf0.png" 
+              alt="Professional businessblueprint.io AI Logo" 
               className="w-48 h-48 object-contain"
             />
           </div>
-          <p className="text-gray-600">Your exact original design, cleaned up for logo/icon use</p>
+          <p className="text-gray-600">Your compass + pencil design, professionally cleaned up for logo and icon use</p>
         </div>
         
         {/* Three Company Logos Comparison */}
@@ -81,7 +81,7 @@ export default function LogoPreview() {
           <div className="flex justify-center items-center gap-12 mb-6 flex-wrap">
             <div className="text-center">
               <img 
-                src="/attached_assets/generated_images/Clean_vector_logo_lines_502463dc.png" 
+                src="/attached_assets/generated_images/Cleaned_up_compass_pencil_logo_eee3aaf0.png" 
                 alt="businessblueprint.io Logo" 
                 className="w-24 h-24 object-contain mx-auto mb-2"
               />
