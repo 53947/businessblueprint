@@ -61,6 +61,19 @@ export default function LogoPreview() {
           </div>
           <p className="text-gray-600">Actual compass + pencil blueprint tools forming "AI" letters</p>
         </div>
+
+        {/* Final Refined Version */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Final businessblueprint.io Logo</h2>
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/attached_assets/generated_images/Refined_compass_pencil_logo_07e864c7.png" 
+              alt="Final businessblueprint.io AI Logo" 
+              className="w-48 h-48 object-contain"
+            />
+          </div>
+          <p className="text-gray-600">Perfect visual balance - pencil width matches compass legs</p>
+        </div>
         
         {/* Three Company Logos Comparison */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
@@ -68,7 +81,7 @@ export default function LogoPreview() {
           <div className="flex justify-center items-center gap-12 mb-6 flex-wrap">
             <div className="text-center">
               <img 
-                src="/attached_assets/generated_images/Blueprint_compass_and_pencil_AI_2e460681.png" 
+                src="/attached_assets/generated_images/Refined_compass_pencil_logo_07e864c7.png" 
                 alt="businessblueprint.io Logo" 
                 className="w-24 h-24 object-contain mx-auto mb-2"
               />
