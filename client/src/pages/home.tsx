@@ -461,7 +461,7 @@ Your personalized blueprint will show you which steps to take first!
                   <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="h-16 w-16" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-green-400">.io</span>
+                  <span className="text-black">cloud</span><span style={{color: '#0080FF'}}>pleaser</span><span className="text-green-400">.io</span>
                 </div>
                 <p className="text-gray-600 mb-4">Digital Empowerment Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
@@ -475,7 +475,7 @@ Your personalized blueprint will show you which steps to take first!
               </CardContent>
             </Card>
 
-            <Card className="text-center border-pink-200 hover:shadow-lg transition-shadow p-6">
+            <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
                   <img src={webhostedLogo} alt="webhosted.io" className="h-16 w-16" />
@@ -501,7 +501,7 @@ Your personalized blueprint will show you which steps to take first!
                   <img src={airswipedLogo} alt="airswiped.com" className="h-16 w-16" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">air</span><span className="text-[#CB0505]">swiped</span><span className="text-green-400">.com</span>
+                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span className="text-green-400">.com</span>
                 </div>
                 <p className="text-gray-600 mb-4">Payment Gateway Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
