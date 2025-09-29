@@ -38,7 +38,7 @@ Brand Identity:
   - webhosted.io: black "web" + webhosted purple #660099 + fluorescent green ".io"
   - airswiped.com: black "air" + airswiped red #CB0505 + fluorescent green ".com"
   - Common colors: Black #000000, White #FFFFFF
-  - Fluorescent green TLD: #FF0040 (used for all .io/.com extensions)
+  - Fluorescent green TLD: #AAFF00 (used for all .io/.com extensions)
 - Purple reserved for portal pages across all platforms
 - Page-specific pleaser colors: Yellow (contact), Orange (about), Blue (pricing), avoiding platform colors
 - Format: black-[signature-color]-fluorescent-green across all platforms

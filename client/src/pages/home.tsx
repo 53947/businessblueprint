@@ -461,7 +461,7 @@ Your personalized blueprint will show you which steps to take first!
                   <img src={businessBlueprintLogo} alt="businessblueprint.io" className="h-16 w-16" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#FF0040'}}>.io</span>
+                  <span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#AAFF00'}}>.io</span>
                 </div>
                 <p className="text-gray-600 mb-4">Digital Intelligence Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
@@ -481,7 +481,7 @@ Your personalized blueprint will show you which steps to take first!
                   <img src={webhostedLogo} alt="webhosted.io" className="h-16 w-16" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">web</span><span style={{color: '#660099'}}>hosted</span><span style={{color: '#FF0040'}}>.io</span>
+                  <span className="text-black">web</span><span style={{color: '#660099'}}>hosted</span><span style={{color: '#AAFF00'}}>.io</span>
                 </div>
                 <p className="text-gray-600 mb-4">Website Hosting Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
@@ -501,7 +501,7 @@ Your personalized blueprint will show you which steps to take first!
                   <img src={airswipedLogo} alt="airswiped.com" className="h-16 w-16" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span style={{color: '#FF0040'}}>.com</span>
+                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span style={{color: '#AAFF00'}}>.com</span>
                 </div>
                 <p className="text-gray-600 mb-4">Payment Gateway Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
