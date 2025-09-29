@@ -481,7 +481,7 @@ Your personalized blueprint will show you which steps to take first!
                   <img src={webhostedLogo} alt="webhosted.io" className="h-16 w-16" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">web</span><span className="text-[#FC8EA0]">hosted</span><span className="text-green-400">.io</span>
+                  <span className="text-black">web</span><span style={{color: '#660099'}}>hosted</span><span style={{color: '#FF0040'}}>.io</span>
                 </div>
                 <p className="text-gray-600 mb-4">Website Hosting Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
@@ -489,7 +489,7 @@ Your personalized blueprint will show you which steps to take first!
                   <li>• Domain management</li>
                   <li>• Technical optimization</li>
                 </ul>
-                <Button className="w-full bg-[#FC8EA0] hover:bg-[#f87394]">
+                <Button className="w-full bg-[#660099] hover:bg-[#5a0088]">
                   Get Hosting
                 </Button>
               </CardContent>

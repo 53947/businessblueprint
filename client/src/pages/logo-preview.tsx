@@ -10,69 +10,17 @@ export default function LogoPreview() {
           businessblueprint.io Logo Concepts
         </h1>
         
-        {/* Original User Concept */}
+        {/* Final businessblueprint.io Logo */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Your Original "AI" Concept</h2>
-          <div className="flex justify-center mb-4">
-            <img 
-              src="/attached_assets/businessblueprint_1759093924503.png" 
-              alt="Original businessblueprint.io AI Logo" 
-              className="w-48 h-48 object-contain"
-            />
-          </div>
-          <p className="text-gray-600">Compass + Pencil = "AI" using blueprint tools - brilliant concept!</p>
-        </div>
-        
-        {/* Refined Version */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Refined "AI" Logo</h2>
-          <div className="flex justify-center mb-4">
-            <img 
-              src="/attached_assets/generated_images/Refined_businessblueprint_AI_logo_cd9ced09.png" 
-              alt="Refined businessblueprint.io AI Logo" 
-              className="w-48 h-48 object-contain"
-            />
-          </div>
-          <p className="text-gray-600">Cleaner geometric version - maintains AI concept with blueprint styling</p>
-        </div>
-
-        {/* Bold Geometric Version */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Bold Geometric "AI" Logo</h2>
-          <div className="flex justify-center mb-4">
-            <img 
-              src="/attached_assets/generated_images/Bold_geometric_AI_logo_74443b81.png" 
-              alt="Bold Geometric businessblueprint.io AI Logo" 
-              className="w-48 h-48 object-contain"
-            />
-          </div>
-          <p className="text-gray-600">Bold geometric style matching webhosted/airswiped simplicity</p>
-        </div>
-
-        {/* Blueprint Tools Version */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Blueprint Tools "AI" Logo</h2>
-          <div className="flex justify-center mb-4">
-            <img 
-              src="/attached_assets/generated_images/Blueprint_compass_and_pencil_AI_2e460681.png" 
-              alt="Blueprint Tools businessblueprint.io AI Logo" 
-              className="w-48 h-48 object-contain"
-            />
-          </div>
-          <p className="text-gray-600">Actual compass + pencil blueprint tools forming "AI" letters</p>
-        </div>
-
-        {/* Professional Cleaned Up Version */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8 text-center">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Professional Logo - Ready to Use</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700">businessblueprint.io Logo</h2>
           <div className="flex justify-center mb-4">
             <img 
               src="/attached_assets/generated_images/Cleaned_up_compass_pencil_logo_eee3aaf0.png" 
-              alt="Professional businessblueprint.io AI Logo" 
+              alt="businessblueprint.io AI Logo" 
               className="w-48 h-48 object-contain"
             />
           </div>
-          <p className="text-gray-600">Your compass + pencil design, professionally cleaned up for logo and icon use</p>
+          <p className="text-gray-600">Compass + Pencil = "AI" using actual blueprint tools</p>
         </div>
         
         {/* Three Company Logos Comparison */}
@@ -85,7 +33,7 @@ export default function LogoPreview() {
                 alt="businessblueprint.io Logo" 
                 className="w-24 h-24 object-contain mx-auto mb-2"
               />
-              <p className="text-sm font-medium text-green-600">businessblueprint.io</p>
+              <p className="text-sm font-medium" style={{color: '#0080FF'}}>businessblueprint.io</p>
               <p className="text-xs text-gray-500">Strategy & Planning</p>
             </div>
             
@@ -95,7 +43,7 @@ export default function LogoPreview() {
                 alt="webhosted.io Logo" 
                 className="w-24 h-24 object-contain mx-auto mb-2"
               />
-              <p className="text-sm font-medium text-purple-600">webhosted.io</p>
+              <p className="text-sm font-medium" style={{color: '#660099'}}>webhosted.io</p>
               <p className="text-xs text-gray-500">Website Hosting</p>
             </div>
             
@@ -105,29 +53,75 @@ export default function LogoPreview() {
                 alt="airswiped.com Logo" 
                 className="w-24 h-24 object-contain mx-auto mb-2"
               />
-              <p className="text-sm font-medium text-red-600">airswiped.com</p>
+              <p className="text-sm font-medium" style={{color: '#CB0505'}}>airswiped.com</p>
               <p className="text-xs text-gray-500">Payment Processing</p>
             </div>
           </div>
           <p className="text-gray-600">
             Your complete digital business ecosystem: 
-            <span className="font-medium text-green-600"> Strategy</span> → 
-            <span className="font-medium text-purple-600"> Technology</span> → 
-            <span className="font-medium text-red-600"> Payments</span>
+            <span className="font-medium" style={{color: '#0080FF'}}> Strategy</span> → 
+            <span className="font-medium" style={{color: '#660099'}}> Technology</span> → 
+            <span className="font-medium" style={{color: '#CB0505'}}> Payments</span>
           </p>
         </div>
         
-        {/* Blue Version for Comparison */}
+        {/* Master Color Key Reference */}
         <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Previous Blue Version (for comparison)</h2>
-          <div className="flex justify-center mb-4">
-            <img 
-              src="/attached_assets/generated_images/Geometric_blueprint-style_B_logo_51384c54.png" 
-              alt="Blue Blueprint B Logo" 
-              className="w-48 h-48 object-contain"
-            />
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700">Master Color Key</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div>
+              <h3 className="font-semibold mb-3">businessblueprint.io</h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#000000'}}></div>
+                  <span className="text-sm">#000000 (black)</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#0080FF'}}></div>
+                  <span className="text-sm">#0080FF (blueprint blue)</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#FF0040'}}></div>
+                  <span className="text-sm">#FF0040 (fluorescent green)</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-3">webhosted.io</h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#000000'}}></div>
+                  <span className="text-sm">#000000 (black)</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#660099'}}></div>
+                  <span className="text-sm">#660099 (webhosted purple)</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#FF0040'}}></div>
+                  <span className="text-sm">#FF0040 (fluorescent green)</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-3">airswiped.com</h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#000000'}}></div>
+                  <span className="text-sm">#000000 (black)</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#CB0505'}}></div>
+                  <span className="text-sm">#CB0505 (airswiped red)</span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#FF0040'}}></div>
+                  <span className="text-sm">#FF0040 (fluorescent green)</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <p className="text-gray-600">Original blue version - compare with green above</p>
+          <p className="text-sm text-gray-500 mt-4">All companies use: black prefix + signature color + fluorescent green TLD</p>
         </div>
       </div>
     </div>

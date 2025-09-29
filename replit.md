@@ -33,13 +33,17 @@ Business Context:
 Brand Identity:
 - Official Brand Assets: cloudpleaser logo, webhosted logo, airswiped logo, AI Coach logo, Digital Blueprint icon
 - Digital IQ Assessment preserves Brain icon (per specific requirement)
-- Unified TLD system: All platforms use fluorescent green for .io/.com extensions
-- Platform signatures: cloudpleaser (blue pleaser), webhosted (#FC8EA0 hosted), airswiped (#CB0505 swiped)
-- Custom hex colors: Pink #FC8EA0, Red #CB0505 (user-specified exact colors)
+- **Master Color Key** (from attached_assets/Master Color Key for Logos and Icons_1759184165353.png):
+  - businessblueprint.io: black "business" + blueprint blue #0080FF + fluorescent green ".io"
+  - webhosted.io: black "web" + webhosted purple #660099 + fluorescent green ".io"
+  - airswiped.com: black "air" + airswiped red #CB0505 + fluorescent green ".com"
+  - Common colors: Black #000000, White #FFFFFF
+  - Fluorescent green TLD: #FF0040 (used for all .io/.com extensions)
 - Purple reserved for portal pages across all platforms
 - Page-specific pleaser colors: Yellow (contact), Orange (about), Blue (pricing), avoiding platform colors
-- Format: black-[pleaser-color]-fluorescent-green across all platforms
+- Format: black-[signature-color]-fluorescent-green across all platforms
 - Dark background adaptations: Brand logos use brightness-0 invert for white appearance on dark backgrounds
+- **DEPRECATED:** Pink #FC8EA0 (replaced by webhosted purple #660099)
 
 **Official 5-Step Journey Icons & Sizing Standards:**
 - Digital Assessment: w-16 h-16 (64px) - standard size
