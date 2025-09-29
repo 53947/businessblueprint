@@ -26,7 +26,7 @@ import {
   TrendingUp,
   Building
 } from "lucide-react";
-import businessBlueprintLogo from "@assets/generated_images/Cleaned_up_compass_pencil_logo_eee3aaf0.png";
+import businessBlueprintLogo from "@assets/businessblueprint_1759187364583.png";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
 import digitalJourneyIcon from "@assets/digital journey_1758878816963.png";
 

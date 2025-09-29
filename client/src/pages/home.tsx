@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocation, Link } from "wouter";
 import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, Compass, MapPin, Gem } from "lucide-react";
-import businessBlueprintLogo from "@assets/generated_images/Cleaned_up_compass_pencil_logo_eee3aaf0.png";
+import businessBlueprintLogo from "@assets/businessblueprint_1759187364583.png";
 import webhostedLogo from "@assets/webnhosted_1758744493181.png";
 import airswipedLogo from "@assets/airswiped_1758744493180.png";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";

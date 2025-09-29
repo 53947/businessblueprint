@@ -1,4 +1,4 @@
-import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
+import businessBlueprintLogo from "@assets/businessblueprint_1759187364583.png";
 import webhostedLogo from "@assets/webnhosted_1758744493181.png";
 import airswipedLogo from "@assets/airswiped_1758744493180.png";
 
@@ -12,11 +12,11 @@ export function Footer() {
           {/* Brand Section */}
           <div className="col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-              <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="w-8 h-8 brightness-0 invert" />
+              <img src={businessBlueprintLogo} alt="businessblueprint.io" className="w-8 h-8 brightness-0 invert" />
               <div className="flex items-baseline">
-                <span className="text-xl font-bold text-white">cloud</span>
-                <span className="text-xl font-bold text-blue-400">pleaser</span>
-                <span className="text-lg font-medium text-green-400">.io</span>
+                <span className="text-xl font-bold text-white">business</span>
+                <span className="text-xl font-bold" style={{color: '#0080FF'}}>blueprint</span>
+                <span className="text-lg font-medium" style={{color: '#FF0040'}}>.io</span>
               </div>
             </div>
             <p className="text-gray-400 text-sm mb-4">
@@ -25,11 +25,11 @@ export function Footer() {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <img src={webhostedLogo} alt="webhosted.io" className="w-4 h-4 brightness-0 invert" />
-                <span className="text-sm text-gray-400">webhosted<span className="text-green-400">.io</span></span>
+                <span className="text-sm text-gray-400">webhosted<span style={{color: '#FF0040'}}>.io</span></span>
               </div>
               <div className="flex items-center space-x-2">
                 <img src={airswipedLogo} alt="airswiped.com" className="w-4 h-4 brightness-0 invert" />
-                <span className="text-sm text-gray-400">airswiped<span className="text-green-400">.com</span></span>
+                <span className="text-sm text-gray-400">airswiped<span style={{color: '#FF0040'}}>.com</span></span>
               </div>
             </div>
           </div>
@@ -91,7 +91,7 @@ export function Footer() {
         <div className="border-t border-gray-800 pt-8 mt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-sm text-gray-400 mb-4 md:mb-0">
-              © {currentYear} cloudpleaser.io. All rights reserved.
+              © {currentYear} businessblueprint.io. All rights reserved.
             </div>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
               <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>

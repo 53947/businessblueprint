@@ -11,7 +11,7 @@ import {
   CheckCircle,
   ArrowRight
 } from "lucide-react";
-import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
+import businessBlueprintLogo from "@assets/businessblueprint_1759187364583.png";
 import webhostedLogo from "@assets/webnhosted_1758744493181.png";
 import airswipedLogo from "@assets/airswiped_1758744493180.png";
 import { Header } from "@/components/header";
@@ -26,7 +26,7 @@ export default function About() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <Badge variant="outline" className="mb-4 text-indigo-600 border-indigo-200">
-            About cloudpleaser.io
+            About businessblueprint.io
           </Badge>
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
             Helping Local Businesses Succeed Online
@@ -95,12 +95,12 @@ export default function About() {
             <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="h-12 w-12" />
+                  <img src={businessBlueprintLogo} alt="businessblueprint.io" className="h-12 w-12" />
                 </div>
                 <CardTitle className="text-xl">
-                  <span className="text-black">cloud</span><span style={{color: '#0080FF'}}>pleaser</span><span className="text-green-400">.io</span>
+                  <span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#FF0040'}}>.io</span>
                 </CardTitle>
-                <CardDescription>Digital Empowerment Platform</CardDescription>
+                <CardDescription>Digital Intelligence Platform</CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-4">
@@ -120,7 +120,7 @@ export default function About() {
                   <img src={webhostedLogo} alt="webhosted.io" className="h-12 w-12" />
                 </div>
                 <CardTitle className="text-xl">
-                  <span className="text-black">web</span><span style={{color: '#660099'}}>hosted</span><span className="text-green-400">.io</span>
+                  <span className="text-black">web</span><span style={{color: '#660099'}}>hosted</span><span style={{color: '#FF0040'}}>.io</span>
                 </CardTitle>
                 <CardDescription>Website Hosting Platform</CardDescription>
               </CardHeader>
@@ -142,7 +142,7 @@ export default function About() {
                   <img src={airswipedLogo} alt="airswiped.com" className="h-12 w-12" />
                 </div>
                 <CardTitle className="text-xl">
-                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span className="text-green-400">.com</span>
+                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span style={{color: '#FF0040'}}>.com</span>
                 </CardTitle>
                 <CardDescription>Payment Gateway Platform</CardDescription>
               </CardHeader>

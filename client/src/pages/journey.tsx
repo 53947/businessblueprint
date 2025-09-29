@@ -17,7 +17,7 @@ import {
   Settings,
   Compass
 } from "lucide-react";
-import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
+import businessBlueprintLogo from "@assets/businessblueprint_1759187364583.png";
 import aiCoachIcon from "@assets/AI Coach_1758878797456.png";
 import blueprintIcon from "@assets/BluePrint Icon_1758878797458.png";
 import digitalSuccessIcon from "@assets/digital success accellerated revenue_1758878797458.png";
@@ -103,7 +103,7 @@ export default function Journey() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              The cloudpleaser.io Process
+              The businessblueprint.io Process
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Our systematic approach combines AI intelligence, proven strategies, 
@@ -393,7 +393,7 @@ export default function Journey() {
             Ready to Start Your Digital Journey?
           </h2>
           <p className="text-xl text-blue-100 mb-8">
-            Join thousands of businesses that have transformed their online presence with cloudpleaser.io
+            Join thousands of businesses that have transformed their online presence with businessblueprint.io
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/assessment">

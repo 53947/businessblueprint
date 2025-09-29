@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLocation } from "wouter";
 import { LogIn, Building, AlertCircle } from "lucide-react";
-import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
+import businessBlueprintLogo from "@assets/businessblueprint_1759187364583.png";
 import { getBrandClasses } from "@/lib/brand-colors";
 
 export default function ClientLogin() {
@@ -58,15 +58,15 @@ export default function ClientLogin() {
         <CardHeader className="text-center">
           <div className="flex justify-center items-center mb-4">
             <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="h-8 w-8" />
+              <img src={businessBlueprintLogo} alt="businessblueprint.io" className="h-8 w-8" />
               <span className="text-3xl font-bold">
-                <span className="text-black">cloud</span><span className="text-blue-500">pleaser</span><span className="text-purple-600">.io</span>
+                <span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#FF0040'}}>.io</span>
               </span>
             </a>
           </div>
           <CardTitle className="text-2xl">Client Portal</CardTitle>
           <CardDescription>
-            Access your digital empowerment dashboard
+            Access your digital intelligence dashboard
           </CardDescription>
         </CardHeader>
         <CardContent>
