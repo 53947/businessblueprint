@@ -67,7 +67,7 @@ curl http://localhost:5000/api/vendasta/test
 
 ### Architecture Highlights
 - **Multi-Domain Ecosystem**: Ready for webhosted.io and airswiped.com expansion
-- **Brand Consistency**: Custom color system implemented per Master Color Key (#0080FF blueprint blue, #660099 webhosted purple, #CB0505 airswiped red, #FF0040 fluorescent green)
+- **Brand Consistency**: Custom color system implemented per Master Color Key (#0080FF blueprint blue, #660099 webhosted purple, #CB0505 airswiped red, #AAFF00 fluorescent green)
 - **Scalable Design**: Built for both DIY and MSP service pathways
 - **Enterprise Security**: JWT-based authentication with proper token management
 

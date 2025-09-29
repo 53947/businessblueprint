@@ -98,7 +98,7 @@ export default function About() {
                   <img src={businessBlueprintLogo} alt="businessblueprint.io" className="h-12 w-12" />
                 </div>
                 <CardTitle className="text-xl">
-                  <span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#FF0040'}}>.io</span>
+                  <span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#AAFF00'}}>.io</span>
                 </CardTitle>
                 <CardDescription>Digital Intelligence Platform</CardDescription>
               </CardHeader>
@@ -120,7 +120,7 @@ export default function About() {
                   <img src={webhostedLogo} alt="webhosted.io" className="h-12 w-12" />
                 </div>
                 <CardTitle className="text-xl">
-                  <span className="text-black">web</span><span style={{color: '#660099'}}>hosted</span><span style={{color: '#FF0040'}}>.io</span>
+                  <span className="text-black">web</span><span style={{color: '#660099'}}>hosted</span><span style={{color: '#AAFF00'}}>.io</span>
                 </CardTitle>
                 <CardDescription>Website Hosting Platform</CardDescription>
               </CardHeader>
@@ -142,7 +142,7 @@ export default function About() {
                   <img src={airswipedLogo} alt="airswiped.com" className="h-12 w-12" />
                 </div>
                 <CardTitle className="text-xl">
-                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span style={{color: '#FF0040'}}>.com</span>
+                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span style={{color: '#AAFF00'}}>.com</span>
                 </CardTitle>
                 <CardDescription>Payment Gateway Platform</CardDescription>
               </CardHeader>

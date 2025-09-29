@@ -60,7 +60,7 @@ export default function ClientLogin() {
             <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img src={businessBlueprintLogo} alt="businessblueprint.io" className="h-8 w-8" />
               <span className="text-3xl font-bold">
-                <span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#FF0040'}}>.io</span>
+                <span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#AAFF00'}}>.io</span>
               </span>
             </a>
           </div>

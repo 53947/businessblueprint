@@ -81,8 +81,8 @@ export default function LogoPreview() {
                   <span className="text-sm">#0080FF (blueprint blue)</span>
                 </div>
                 <div className="flex items-center justify-center gap-2">
-                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#FF0040'}}></div>
-                  <span className="text-sm">#FF0040 (fluorescent green)</span>
+                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#AAFF00'}}></div>
+                  <span className="text-sm">#AAFF00 (fluorescent green)</span>
                 </div>
               </div>
             </div>
@@ -98,8 +98,8 @@ export default function LogoPreview() {
                   <span className="text-sm">#660099 (webhosted purple)</span>
                 </div>
                 <div className="flex items-center justify-center gap-2">
-                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#FF0040'}}></div>
-                  <span className="text-sm">#FF0040 (fluorescent green)</span>
+                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#AAFF00'}}></div>
+                  <span className="text-sm">#AAFF00 (fluorescent green)</span>
                 </div>
               </div>
             </div>
@@ -115,13 +115,13 @@ export default function LogoPreview() {
                   <span className="text-sm">#CB0505 (airswiped red)</span>
                 </div>
                 <div className="flex items-center justify-center gap-2">
-                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#FF0040'}}></div>
-                  <span className="text-sm">#FF0040 (fluorescent green)</span>
+                  <div className="w-8 h-8 rounded" style={{backgroundColor: '#AAFF00'}}></div>
+                  <span className="text-sm">#AAFF00 (fluorescent green)</span>
                 </div>
               </div>
             </div>
           </div>
-          <p className="text-sm text-gray-500 mt-4">All companies use: black prefix + signature color + fluorescent green TLD</p>
+          <p className="text-sm text-gray-500 mt-4">All companies use: black prefix + signature color + fluorescent green (#AAFF00) TLD</p>
         </div>
       </div>
     </div>

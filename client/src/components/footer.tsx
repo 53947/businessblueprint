@@ -16,7 +16,7 @@ export function Footer() {
               <div className="flex items-baseline">
                 <span className="text-xl font-bold text-white">business</span>
                 <span className="text-xl font-bold" style={{color: '#0080FF'}}>blueprint</span>
-                <span className="text-lg font-medium" style={{color: '#FF0040'}}>.io</span>
+                <span className="text-lg font-medium" style={{color: '#AAFF00'}}>.io</span>
               </div>
             </div>
             <p className="text-gray-400 text-sm mb-4">
@@ -25,11 +25,11 @@ export function Footer() {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <img src={webhostedLogo} alt="webhosted.io" className="w-4 h-4 brightness-0 invert" />
-                <span className="text-sm text-gray-400">webhosted<span style={{color: '#FF0040'}}>.io</span></span>
+                <span className="text-sm text-gray-400">webhosted<span style={{color: '#AAFF00'}}>.io</span></span>
               </div>
               <div className="flex items-center space-x-2">
                 <img src={airswipedLogo} alt="airswiped.com" className="w-4 h-4 brightness-0 invert" />
-                <span className="text-sm text-gray-400">airswiped<span style={{color: '#FF0040'}}>.com</span></span>
+                <span className="text-sm text-gray-400">airswiped<span style={{color: '#AAFF00'}}>.com</span></span>
               </div>
             </div>
           </div>

@@ -58,7 +58,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
               <div className="flex items-baseline">
                 <span className="text-xl font-bold text-black">business</span>
                 <span className="text-xl font-bold" style={{color: '#0080FF'}}>blueprint</span>
-                <span className="text-lg font-medium" style={{color: '#FF0040'}}>.io</span>
+                <span className="text-lg font-medium" style={{color: '#AAFF00'}}>.io</span>
               </div>
             </a>
             
