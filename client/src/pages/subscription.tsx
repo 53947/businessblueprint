@@ -145,7 +145,7 @@ export default function SubscriptionPage() {
       
       toast({
         title: 'Subscription Created Successfully!',
-        description: `Welcome to cloudpleaser.io ${selectedPlan.name}! Your account is now active.`,
+        description: `Welcome to businessblueprint.io ${selectedPlan.name}! Your account is now active.`,
       });
 
       // Redirect to dashboard or confirmation page
@@ -191,7 +191,7 @@ export default function SubscriptionPage() {
             Choose Your Digital Success Plan
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Select the perfect plan to transform your business's digital presence with cloudpleaser.io
+            Select the perfect plan to transform your business's digital presence with businessblueprint.io
           </p>
         </div>
 
@@ -482,7 +482,7 @@ export default function SubscriptionPage() {
                       onPaymentToken={handlePaymentToken}
                       onError={handlePaymentError}
                       amount={pricing.total}
-                      description={`cloudpleaser.io ${selectedPlan.name} Subscription`}
+                      description={`businessblueprint.io ${selectedPlan.name} Subscription`}
                       loading={isProcessingPayment}
                       disabled={isProcessingPayment}
                     />

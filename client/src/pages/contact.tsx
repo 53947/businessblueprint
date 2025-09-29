@@ -85,7 +85,7 @@ export default function Contact() {
                   <Mail className="h-5 w-5 text-yellow-500 mt-1" />
                   <div>
                     <h3 className="font-medium">Email</h3>
-                    <p className="text-gray-600">hello@cloudpleaser.io</p>
+                    <p className="text-gray-600">hello@businessblueprint.io</p>
                     <p className="text-sm text-gray-500">We respond within 24 hours</p>
                   </div>
                 </div>
