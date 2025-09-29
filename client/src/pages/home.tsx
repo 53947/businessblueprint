@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocation, Link } from "wouter";
 import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, Compass, MapPin, Gem } from "lucide-react";
-import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
+import businessBlueprintLogo from "@assets/generated_images/Cleaned_up_compass_pencil_logo_eee3aaf0.png";
 import webhostedLogo from "@assets/webnhosted_1758744493181.png";
 import airswipedLogo from "@assets/airswiped_1758744493180.png";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
@@ -458,18 +458,18 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="h-16 w-16" />
+                  <img src={businessBlueprintLogo} alt="businessblueprint.io" className="h-16 w-16" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">cloud</span><span style={{color: '#0080FF'}}>pleaser</span><span className="text-green-400">.io</span>
+                  <span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#FF0040'}}>.io</span>
                 </div>
-                <p className="text-gray-600 mb-4">Digital Empowerment Platform</p>
+                <p className="text-gray-600 mb-4">Digital Intelligence Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
                   <li>• AI-powered business analysis</li>
                   <li>• Personalized coaching</li>
                   <li>• Client portal & dashboard</li>
                 </ul>
-                <Button className="w-full bg-blue-500 hover:bg-blue-600">
+                <Button className="w-full bg-[#0080FF] hover:bg-[#0070DD]">
                   Start Assessment
                 </Button>
               </CardContent>
@@ -501,7 +501,7 @@ Your personalized blueprint will show you which steps to take first!
                   <img src={airswipedLogo} alt="airswiped.com" className="h-16 w-16" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span className="text-green-400">.com</span>
+                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span style={{color: '#FF0040'}}>.com</span>
                 </div>
                 <p className="text-gray-600 mb-4">Payment Gateway Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
