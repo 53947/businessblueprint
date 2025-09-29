@@ -8,27 +8,27 @@ export const brandIcons = {
 export const brandColors = {
   // Primary platforms with signature colors
   cloudpleaser: {
-    home: { cloud: "text-black", pleaser: "text-[#0080FF]", io: "text-[#FF0040]" }, // black-blue-fluorescent green
+    home: { cloud: "text-black", pleaser: "text-[#0080FF]", io: "text-green-400" }, // black-blue-green
     contact: { cloud: "text-black", pleaser: "text-yellow-500", io: "text-black" }, // black-yellow-black
     about: { cloud: "text-black", pleaser: "text-orange-500", io: "text-black" }, // black-orange-black
     pricing: { cloud: "text-black", pleaser: "text-green-500", io: "text-black" }, // black-green-black
-    portal: { cloud: "text-black", pleaser: "text-[#0080FF]", io: "text-[#FF0040]" } // black-blue-fluorescent green
+    portal: { cloud: "text-black", pleaser: "text-[#0080FF]", io: "text-green-400" } // black-blue-green
   },
   
   webhosted: {
-    home: { web: "text-black", hosted: "text-[#660099]", io: "text-[#FF0040]" }, // black-purple-fluorescent green
-    contact: { web: "text-black", hosted: "text-yellow-500", io: "text-[#FF0040]" },
-    about: { web: "text-black", hosted: "text-orange-500", io: "text-[#FF0040]" },
-    pricing: { web: "text-black", hosted: "text-blue-500", io: "text-[#FF0040]" }, // avoiding purple on pricing page
-    portal: { web: "text-black", hosted: "text-[#660099]", io: "text-[#FF0040]" }
+    home: { web: "text-black", hosted: "text-[#660099]", io: "text-green-400" }, // black-purple-green
+    contact: { web: "text-black", hosted: "text-yellow-500", io: "text-green-400" },
+    about: { web: "text-black", hosted: "text-orange-500", io: "text-green-400" },
+    pricing: { web: "text-black", hosted: "text-blue-500", io: "text-green-400" }, // avoiding purple on pricing page
+    portal: { web: "text-black", hosted: "text-[#660099]", io: "text-green-400" }
   },
   
   airswiped: {
-    home: { air: "text-black", swiped: "text-[#CB0505]", com: "text-[#FF0040]" }, // black-red-fluorescent green
-    contact: { air: "text-black", swiped: "text-yellow-500", com: "text-[#FF0040]" },
-    about: { air: "text-black", swiped: "text-orange-500", com: "text-[#FF0040]" },
-    pricing: { air: "text-black", swiped: "text-blue-500", com: "text-[#FF0040]" }, // avoiding red on pricing page
-    portal: { air: "text-black", swiped: "text-[#CB0505]", com: "text-[#FF0040]" }
+    home: { air: "text-black", swiped: "text-[#CB0505]", com: "text-green-400" }, // black-red-green
+    contact: { air: "text-black", swiped: "text-yellow-500", com: "text-green-400" },
+    about: { air: "text-black", swiped: "text-orange-500", com: "text-green-400" },
+    pricing: { air: "text-black", swiped: "text-blue-500", com: "text-green-400" }, // avoiding red on pricing page
+    portal: { air: "text-black", swiped: "text-[#CB0505]", com: "text-green-400" }
   }
 };
 
