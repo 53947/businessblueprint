@@ -135,7 +135,7 @@ export default function ClientPortal() {
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center space-x-4">
                 <h1 className="text-2xl font-bold text-gray-900">
-                  cloud<span className="text-blue-600">pleaser</span><span className="text-purple-600">.io</span>
+                  business<span className="text-blue-600">blueprint</span><span style={{color: '#FF0040'}}>.io</span>
                 </h1>
                 <Badge variant="outline" className="text-sm">
                   Client Dashboard
@@ -184,7 +184,7 @@ export default function ClientPortal() {
             <div className="flex items-center space-x-4">
               <a href="/" className="flex items-center gap-2 text-2xl font-bold text-gray-900 hover:opacity-80 transition-opacity">
                 <Brain className="h-6 w-6 text-blue-600" />
-                <span><span className="text-black">cloud</span><span className="text-blue-600">pleaser</span><span className="text-purple-600">.io</span></span>
+                <span><span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#FF0040'}}>.io</span></span>
               </a>
               <Badge variant="outline" className="text-sm">
                 Client Dashboard
@@ -212,7 +212,7 @@ export default function ClientPortal() {
                   <p className="text-blue-100">Your comprehensive online presence rating</p>
                   <div className="flex items-center gap-2 mt-2">
                     <Brain className="h-5 w-5" />
-                    <span className="text-sm">Powered by cloudpleaser AI</span>
+                    <span className="text-sm">Powered by businessblueprint AI</span>
                   </div>
                 </div>
                 <div className="text-center">

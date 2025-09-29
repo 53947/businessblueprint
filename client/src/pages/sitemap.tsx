@@ -22,7 +22,7 @@ export default function Sitemap() {
     {
       title: "Home",
       path: "/",
-      description: "Main landing page with overview of cloudpleaser.io services and value proposition",
+      description: "Main landing page with overview of businessblueprint.io services and value proposition",
       icon: Home,
       category: "Main"
     },
@@ -50,7 +50,7 @@ export default function Sitemap() {
     {
       title: "About Us",
       path: "/about",
-      description: "Learn about cloudpleaser.io mission, values, and approach to digital success",
+      description: "Learn about businessblueprint.io mission, values, and approach to digital success",
       icon: Info,
       category: "Company"
     },
@@ -94,7 +94,7 @@ export default function Sitemap() {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Site Map</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Navigate through all available pages and features on cloudpleaser.io. 
+            Navigate through all available pages and features on businessblueprint.io. 
             Find exactly what you're looking for with our organized page directory.
           </p>
         </div>
