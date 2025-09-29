@@ -26,7 +26,7 @@ import {
   TrendingUp,
   Building
 } from "lucide-react";
-import cloudpleaserLogo from "@assets/cloudpleaser_1758744493180.png";
+import businessBlueprintLogo from "@assets/generated_images/Cleaned_up_compass_pencil_logo_eee3aaf0.png";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
 import digitalJourneyIcon from "@assets/digital journey_1758878816963.png";
 
@@ -54,11 +54,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
           {/* Logo */}
           <div className="flex items-center space-x-4">
             <a href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <img src={cloudpleaserLogo} alt="cloudpleaser.io" className="w-8 h-8" />
+              <img src={businessBlueprintLogo} alt="businessblueprint.io" className="w-8 h-8" />
               <div className="flex items-baseline">
-                <span className="text-xl font-bold text-black">cloud</span>
-                <span className="text-xl font-bold" style={{color: '#0080FF'}}>pleaser</span>
-                <span className="text-lg font-medium text-green-400">.io</span>
+                <span className="text-xl font-bold text-black">business</span>
+                <span className="text-xl font-bold" style={{color: '#0080FF'}}>blueprint</span>
+                <span className="text-lg font-medium" style={{color: '#FF0040'}}>.io</span>
               </div>
             </a>
             
