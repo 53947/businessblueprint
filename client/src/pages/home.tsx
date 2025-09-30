@@ -498,7 +498,9 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <img src={airswipedLogo} alt="airswiped.com" className="h-16 w-16 bg-white rounded" />
+                  <div className="h-16 w-16 bg-white rounded-md p-1 shadow-sm ring-1 ring-gray-200">
+                    <img src={airswipedLogo} alt="airswiped.com" className="h-full w-full object-contain block" />
+                  </div>
                 </div>
                 <div className="text-2xl font-bold mb-2">
                   <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span style={{color: '#AAFF00'}}>.com</span>
