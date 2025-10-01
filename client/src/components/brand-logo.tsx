@@ -1,7 +1,10 @@
 // Reusable brand logo components using Archivo font with icons
-import bbIconLight from "@assets/BluePrint Icon_1758878797458.png";
-import webhostedIconLight from "@assets/webnhosted_1758744493181.png";
-import airswipedIconLight from "@assets/airswiped_1758744493180.png";
+import bbIconLight from "@assets/BB Light Version Logo and Icon_1759340998899.png";
+import bbIconDark from "@assets/BB Dark Version Logo and Icon_1759340998899.png";
+import webhostedIconLight from "@assets/Web Hosted Light Version Logo and Icon_1759340998900.png";
+import webhostedIconDark from "@assets/Web Hosted Dark Version Logo and Icon_1759340998899.png";
+import airswipedIconLight from "@assets/Air Swiped Light Version Logo and Icon_1759340998898.png";
+import airswipedIconDark from "@assets/Air Swiped Dark Version Logo and Icon_1759340998897.png";
 
 interface BrandLogoProps {
   brand: 'businessblueprint' | 'webhosted' | 'airswiped';
@@ -30,7 +33,8 @@ export function BrandLogo({
   
   const brandConfig = {
     businessblueprint: {
-      icon: bbIconLight,
+      iconLight: bbIconLight,
+      iconDark: bbIconDark,
       parts: [
         { text: 'business', color: isDark ? 'text-white' : 'text-black' },
         { text: 'blueprint', color: 'text-[#0080FF]' },
@@ -38,7 +42,8 @@ export function BrandLogo({
       ]
     },
     webhosted: {
-      icon: webhostedIconLight,
+      iconLight: webhostedIconLight,
+      iconDark: webhostedIconDark,
       parts: [
         { text: 'web', color: isDark ? 'text-white' : 'text-black' },
         { text: 'hosted', color: 'text-[#660099]' },
@@ -46,7 +51,8 @@ export function BrandLogo({
       ]
     },
     airswiped: {
-      icon: airswipedIconLight,
+      iconLight: airswipedIconLight,
+      iconDark: airswipedIconDark,
       parts: [
         { text: 'air', color: isDark ? 'text-white' : 'text-black' },
         { text: 'swiped', color: 'text-[#CB0505]' },
@@ -56,14 +62,15 @@ export function BrandLogo({
   };
 
   const config = brandConfig[brand];
+  const iconSrc = isDark ? config.iconDark : config.iconLight;
   
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       {showIcon && (
         <img 
-          src={config.icon} 
+          src={iconSrc} 
           alt={`${brand} icon`} 
-          className={`${iconSize} object-contain ${isDark ? 'brightness-0 invert' : ''}`}
+          className={`${iconSize} object-contain`}
         />
       )}
       <div className={`font-archivo font-bold ${textSize} leading-none`}>
@@ -95,16 +102,18 @@ export function BrandIcon({
   const { icon: iconSize } = sizeConfig[size];
   
   const iconMap = {
-    businessblueprint: bbIconLight,
-    webhosted: webhostedIconLight,
-    airswiped: airswipedIconLight
+    businessblueprint: { light: bbIconLight, dark: bbIconDark },
+    webhosted: { light: webhostedIconLight, dark: webhostedIconDark },
+    airswiped: { light: airswipedIconLight, dark: airswipedIconDark }
   };
+  
+  const iconSrc = isDark ? iconMap[brand].dark : iconMap[brand].light;
   
   return (
     <img 
-      src={iconMap[brand]} 
+      src={iconSrc} 
       alt={`${brand} icon`} 
-      className={`${iconSize} object-contain ${isDark ? 'brightness-0 invert' : ''} ${className}`}
+      className={`${iconSize} object-contain ${className}`}
     />
   );
 }
