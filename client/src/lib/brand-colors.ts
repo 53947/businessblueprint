@@ -2,33 +2,33 @@
 export const brandIcons = {
   businessblueprint: "Compass", // Compass + Pencil = AI (blueprint blue #0080FF)
   webhosted: "Globe", // Global hosting - Globe icon (purple #660099)
-  airswiped: "Zap" // Energy/Speed - Lightning/Zap icon (red #CB0505)
+  airswiped: "Zap" // Energy/Speed - Lightning/Zap icon (red #FF0040)
 };
 
 export const brandColors = {
-  // Primary platforms with signature colors - Master Color Key pattern: black prefix + signature hex + fluorescent green #AAFF00
+  // Primary platforms with signature colors - Master Color Key pattern: #09080E prefix + signature hex + green #84D71A
   businessblueprint: {
-    home: { business: "text-black", blueprint: "text-[#0080FF]", io: "text-[#AAFF00]" }, // black-blue-fluorescent green
-    contact: { business: "text-black", blueprint: "text-yellow-500", io: "text-black" }, // black-yellow-black
-    about: { business: "text-black", blueprint: "text-orange-500", io: "text-black" }, // black-orange-black
-    pricing: { business: "text-black", blueprint: "text-green-500", io: "text-black" }, // black-green-black
-    portal: { business: "text-black", blueprint: "text-[#0080FF]", io: "text-[#AAFF00]" } // black-blue-fluorescent green
+    home: { business: "text-[#09080E]", blueprint: "text-[#0080FF]", io: "text-[#84D71A]" }, // #09080E-blue-green
+    contact: { business: "text-[#09080E]", blueprint: "text-yellow-500", io: "text-[#09080E]" }, // #09080E-yellow-#09080E
+    about: { business: "text-[#09080E]", blueprint: "text-orange-500", io: "text-[#09080E]" }, // #09080E-orange-#09080E
+    pricing: { business: "text-[#09080E]", blueprint: "text-green-500", io: "text-[#09080E]" }, // #09080E-green-#09080E
+    portal: { business: "text-[#09080E]", blueprint: "text-[#0080FF]", io: "text-[#84D71A]" } // #09080E-blue-green
   },
   
   webhosted: {
-    home: { web: "text-black", hosted: "text-[#660099]", io: "text-[#AAFF00]" }, // black-purple-fluorescent green
-    contact: { web: "text-black", hosted: "text-yellow-500", io: "text-[#AAFF00]" },
-    about: { web: "text-black", hosted: "text-orange-500", io: "text-[#AAFF00]" },
-    pricing: { web: "text-black", hosted: "text-blue-500", io: "text-[#AAFF00]" }, // avoiding purple on pricing page
-    portal: { web: "text-black", hosted: "text-[#660099]", io: "text-[#AAFF00]" }
+    home: { web: "text-[#09080E]", hosted: "text-[#660099]", io: "text-[#84D71A]" }, // #09080E-purple-green
+    contact: { web: "text-[#09080E]", hosted: "text-yellow-500", io: "text-[#84D71A]" },
+    about: { web: "text-[#09080E]", hosted: "text-orange-500", io: "text-[#84D71A]" },
+    pricing: { web: "text-[#09080E]", hosted: "text-blue-500", io: "text-[#84D71A]" }, // avoiding purple on pricing page
+    portal: { web: "text-[#09080E]", hosted: "text-[#660099]", io: "text-[#84D71A]" }
   },
   
   airswiped: {
-    home: { air: "text-black", swiped: "text-[#CB0505]", com: "text-[#AAFF00]" }, // black-red-fluorescent green
-    contact: { air: "text-black", swiped: "text-yellow-500", com: "text-[#AAFF00]" },
-    about: { air: "text-black", swiped: "text-orange-500", com: "text-[#AAFF00]" },
-    pricing: { air: "text-black", swiped: "text-blue-500", com: "text-[#AAFF00]" }, // avoiding red on pricing page
-    portal: { air: "text-black", swiped: "text-[#CB0505]", com: "text-[#AAFF00]" }
+    home: { air: "text-[#09080E]", swiped: "text-[#FF0040]", com: "text-[#84D71A]" }, // #09080E-red-green
+    contact: { air: "text-[#09080E]", swiped: "text-yellow-500", com: "text-[#84D71A]" },
+    about: { air: "text-[#09080E]", swiped: "text-orange-500", com: "text-[#84D71A]" },
+    pricing: { air: "text-[#09080E]", swiped: "text-blue-500", com: "text-[#84D71A]" }, // avoiding red on pricing page
+    portal: { air: "text-[#09080E]", swiped: "text-[#FF0040]", com: "text-[#84D71A]" }
   }
 };
 

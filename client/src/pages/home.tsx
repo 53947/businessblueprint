@@ -498,7 +498,7 @@ Your personalized blueprint will show you which steps to take first!
                   <li>• Transaction management</li>
                   <li>• Financial analytics</li>
                 </ul>
-                <Button className="w-full bg-[#CB0505] hover:bg-[#a80404]">
+                <Button className="w-full bg-[#FF0040] hover:bg-[#cc0033]">
                   Setup Payments
                 </Button>
               </CardContent>
