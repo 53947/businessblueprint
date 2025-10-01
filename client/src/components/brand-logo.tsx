@@ -1,10 +1,10 @@
 // Reusable brand logo components using Archivo font with icons
-import bbIconLight from "@assets/BB Light Version Logo and Icon_1759340998899.png";
-import bbIconDark from "@assets/BB Dark Version Logo and Icon_1759340998899.png";
-import webhostedIconLight from "@assets/Web Hosted Light Version Logo and Icon_1759340998900.png";
-import webhostedIconDark from "@assets/Web Hosted Dark Version Logo and Icon_1759340998899.png";
-import airswipedIconLight from "@assets/Air Swiped Light Version Logo and Icon_1759340998898.png";
-import airswipedIconDark from "@assets/Air Swiped Dark Version Logo and Icon_1759340998897.png";
+import bbIconLight from "@assets/businessblueprintio icon light version_1759341905090.png";
+import bbIconDark from "@assets/businessblueprintio icon dark version_1759341905089.png";
+import webhostedIconLight from "@assets/webhostedio icon light version_1759341946145.png";
+import webhostedIconDark from "@assets/webhostedio icon dark version_1759341923576.png";
+import airswipedIconLight from "@assets/airswipedcom icon light version_1759341905088.png";
+import airswipedIconDark from "@assets/airswipedio icon dark version_1759341905089.png";
 
 interface BrandLogoProps {
   brand: 'businessblueprint' | 'webhosted' | 'airswiped';
