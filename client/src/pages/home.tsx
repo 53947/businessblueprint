@@ -2,14 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocation, Link } from "wouter";
 import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, Compass, MapPin, Gem } from "lucide-react";
-import businessBlueprintLogo from "@assets/businessblueprint_1759187364583.png";
-import webhostedLogo from "@assets/webnhosted_1758744493181.png";
-import airswipedLogo from "@assets/airswiped_1758744493180.png";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
 import { HowItWorks } from "@/components/how-it-works";
 import { ServicePathways } from "@/components/service-pathways";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { BrandLogo } from "@/components/brand-logo";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -458,10 +456,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <img src={businessBlueprintLogo} alt="businessblueprint.io" className="h-16 w-16" />
-                </div>
-                <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#AAFF00'}}>.io</span>
+                  <BrandLogo brand="businessblueprint" variant="light" size="lg" className="justify-center" />
                 </div>
                 <p className="text-gray-600 mb-4">Digital Intelligence Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
@@ -478,10 +473,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <img src={webhostedLogo} alt="webhosted.io" className="h-16 w-16" />
-                </div>
-                <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">web</span><span style={{color: '#660099'}}>hosted</span><span style={{color: '#AAFF00'}}>.io</span>
+                  <BrandLogo brand="webhosted" variant="light" size="lg" className="justify-center" />
                 </div>
                 <p className="text-gray-600 mb-4">Website Hosting Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">
@@ -498,12 +490,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
               <CardContent>
                 <div className="flex justify-center mb-6">
-                  <div className="h-16 w-16 bg-white rounded-md p-1 shadow-sm ring-1 ring-gray-200">
-                    <img src={airswipedLogo} alt="airswiped.com" className="h-full w-full object-contain block" />
-                  </div>
-                </div>
-                <div className="text-2xl font-bold mb-2">
-                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span style={{color: '#AAFF00'}}>.com</span>
+                  <BrandLogo brand="airswiped" variant="light" size="lg" className="justify-center" />
                 </div>
                 <p className="text-gray-600 mb-4">Payment Gateway Platform</p>
                 <ul className="text-sm text-gray-500 space-y-2 mb-6">

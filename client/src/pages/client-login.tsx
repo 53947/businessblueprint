@@ -6,8 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLocation } from "wouter";
 import { LogIn, Building, AlertCircle } from "lucide-react";
-import businessBlueprintLogo from "@assets/businessblueprint_1759187364583.png";
 import { getBrandClasses } from "@/lib/brand-colors";
+import { BrandLogo } from "@/components/brand-logo";
 
 export default function ClientLogin() {
   const [customerIdentifier, setCustomerIdentifier] = useState("");
@@ -57,11 +57,8 @@ export default function ClientLogin() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center items-center mb-4">
-            <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <img src={businessBlueprintLogo} alt="businessblueprint.io" className="h-8 w-8" />
-              <span className="text-3xl font-bold">
-                <span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#AAFF00'}}>.io</span>
-              </span>
+            <a href="/" className="hover:opacity-80 transition-opacity">
+              <BrandLogo brand="businessblueprint" variant="light" size="md" />
             </a>
           </div>
           <CardTitle className="text-2xl">Client Portal</CardTitle>
