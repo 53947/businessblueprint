@@ -1,6 +1,4 @@
-import businessBlueprintLogo from "@assets/businessblueprint_1759187364583.png";
-import webhostedLogo from "@assets/webnhosted_1758744493181.png";
-import airswipedLogo from "@assets/airswiped_1758744493180.png";
+import { BrandLogo, BrandLogoCompact } from "@/components/brand-logo";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -11,26 +9,15 @@ export function Footer() {
         <div className="grid md:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div className="col-span-1">
-            <div className="flex items-center space-x-2 mb-4">
-              <img src={businessBlueprintLogo} alt="businessblueprint.io" className="w-8 h-8 brightness-0 invert" />
-              <div className="flex items-baseline">
-                <span className="text-xl font-bold text-white">business</span>
-                <span className="text-xl font-bold" style={{color: '#0080FF'}}>blueprint</span>
-                <span className="text-lg font-medium" style={{color: '#AAFF00'}}>.io</span>
-              </div>
+            <div className="mb-4">
+              <BrandLogo brand="businessblueprint" variant="dark" size="sm" />
             </div>
             <p className="text-gray-400 text-sm mb-4">
               Helping local businesses succeed online. Get found, get customers, get business.
             </p>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <img src={webhostedLogo} alt="webhosted.io" className="w-4 h-4 brightness-0 invert" />
-                <span className="text-sm text-gray-400">webhosted<span style={{color: '#AAFF00'}}>.io</span></span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <img src={airswipedLogo} alt="airswiped.com" className="w-4 h-4 brightness-0 invert" />
-                <span className="text-sm text-gray-400">airswiped<span style={{color: '#AAFF00'}}>.com</span></span>
-              </div>
+            <div className="flex flex-col space-y-2">
+              <BrandLogoCompact brand="webhosted" variant="dark" />
+              <BrandLogoCompact brand="airswiped" variant="dark" />
             </div>
           </div>
 

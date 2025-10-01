@@ -26,7 +26,7 @@ import {
   TrendingUp,
   Building
 } from "lucide-react";
-import businessBlueprintLogo from "@assets/businessblueprint_1759187364583.png";
+import { BrandLogo } from "@/components/brand-logo";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
 import digitalJourneyIcon from "@assets/digital journey_1758878816963.png";
 
@@ -53,13 +53,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <a href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-              <img src={businessBlueprintLogo} alt="businessblueprint.io" className="w-8 h-8" />
-              <div className="flex items-baseline">
-                <span className="text-xl font-bold text-black">business</span>
-                <span className="text-xl font-bold" style={{color: '#0080FF'}}>blueprint</span>
-                <span className="text-lg font-medium" style={{color: '#AAFF00'}}>.io</span>
-              </div>
+            <a href="/" className="hover:opacity-80 transition-opacity">
+              <BrandLogo brand="businessblueprint" variant="light" size="sm" />
             </a>
             
             {showNavigation && (

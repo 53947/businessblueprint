@@ -11,11 +11,9 @@ import {
   CheckCircle,
   ArrowRight
 } from "lucide-react";
-import businessBlueprintLogo from "@assets/businessblueprint_1759187364583.png";
-import webhostedLogo from "@assets/webnhosted_1758744493181.png";
-import airswipedLogo from "@assets/airswiped_1758744493180.png";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { BrandLogo } from "@/components/brand-logo";
 
 export default function About() {
   return (
@@ -95,11 +93,8 @@ export default function About() {
             <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <img src={businessBlueprintLogo} alt="businessblueprint.io" className="h-12 w-12" />
+                  <BrandLogo brand="businessblueprint" variant="light" size="md" className="justify-center" />
                 </div>
-                <CardTitle className="text-xl">
-                  <span className="text-black">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#AAFF00'}}>.io</span>
-                </CardTitle>
                 <CardDescription>Digital Intelligence Platform</CardDescription>
               </CardHeader>
               <CardContent>
@@ -117,11 +112,8 @@ export default function About() {
             <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <img src={webhostedLogo} alt="webhosted.io" className="h-12 w-12" />
+                  <BrandLogo brand="webhosted" variant="light" size="md" className="justify-center" />
                 </div>
-                <CardTitle className="text-xl">
-                  <span className="text-black">web</span><span style={{color: '#660099'}}>hosted</span><span style={{color: '#AAFF00'}}>.io</span>
-                </CardTitle>
                 <CardDescription>Website Hosting Platform</CardDescription>
               </CardHeader>
               <CardContent>
@@ -139,11 +131,8 @@ export default function About() {
             <Card className="text-center border-red-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <img src={airswipedLogo} alt="airswiped.com" className="h-12 w-12" />
+                  <BrandLogo brand="airswiped" variant="light" size="md" className="justify-center" />
                 </div>
-                <CardTitle className="text-xl">
-                  <span className="text-black">air</span><span style={{color: '#CB0505'}}>swiped</span><span style={{color: '#AAFF00'}}>.com</span>
-                </CardTitle>
                 <CardDescription>Payment Gateway Platform</CardDescription>
               </CardHeader>
               <CardContent>

@@ -17,8 +17,8 @@ import {
   Settings,
   Compass
 } from "lucide-react";
-import businessBlueprintLogo from "@assets/businessblueprint_1759187364583.png";
 import aiCoachIcon from "@assets/AI Coach_1758878797456.png";
+import { BrandLogo } from "@/components/brand-logo";
 import blueprintIcon from "@assets/BluePrint Icon_1758878797458.png";
 import digitalSuccessIcon from "@assets/digital success accellerated revenue_1758878797458.png";
 import digitalAssessmentIcon from "@assets/Digital Assessment_1758878797458.png";

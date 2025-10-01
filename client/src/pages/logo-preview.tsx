@@ -1,15 +1,6 @@
 import { Header } from "@/components/header";
+import { BrandLogo } from "@/components/brand-logo";
 import masterReference from "@assets/BluePrint Master Logos and Icons and Names_1759269072017.png";
-
-// Light environment logos
-import bbLightLogo from "@assets/BB Light Version Logo and Icon_1759270239473.png";
-import webhostedLightLogo from "@assets/Web Hosted Light Version Logo and Icon_1759270239476.png";
-import airswipedLightLogo from "@assets/Air Swiped Light Version Logo and Icon_1759270239472.png";
-
-// Dark environment logos
-import bbDarkLogo from "@assets/BB Dark Version Logo and Icon_1759270239473.png";
-import webhostedDarkLogo from "@assets/Web Hosted Dark Version Logo and Icon_1759270239474.png";
-import airswipedDarkLogo from "@assets/Air Swiped Dark Version Logo and Icon_1759270239472.png";
 
 export default function LogoPreview() {
   return (
@@ -21,7 +12,7 @@ export default function LogoPreview() {
           Official Brand Assets Reference
         </h1>
         <p className="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
-          This page displays all approved logos, icons, and naming conventions. 
+          This page displays all approved logos, icons, and naming conventions using the <span className="font-archivo font-semibold">Archivo font</span>.
           <span className="font-semibold text-red-600"> Only assets shown here may be used without express permission.</span>
         </p>
 
@@ -47,34 +38,26 @@ export default function LogoPreview() {
             <div className="border-2 border-gray-200 rounded-lg p-6 bg-white">
               <div className="text-sm font-semibold text-gray-500 mb-4 text-center">LIGHT ENVIRONMENT</div>
               <div className="bg-white p-6 rounded flex flex-col items-center justify-center min-h-[200px]">
-                <img 
-                  src={bbLightLogo} 
-                  alt="businessblueprint.io light version" 
-                  className="max-w-full h-auto object-contain"
-                />
+                <BrandLogo brand="businessblueprint" variant="light" size="lg" />
               </div>
               <p className="text-xs text-gray-500 mt-4 text-center">Use on: White backgrounds, light colored pages</p>
-              <p className="text-xs text-green-600 mt-2 text-center font-medium">✓ BB Light Version Logo and Icon</p>
+              <p className="text-xs text-blue-600 mt-2 text-center font-medium">✓ Icon + Archivo font text</p>
             </div>
 
             {/* Dark Environment */}
             <div className="border-2 border-gray-600 rounded-lg p-6 bg-gray-900">
               <div className="text-sm font-semibold text-gray-300 mb-4 text-center">DARK ENVIRONMENT</div>
               <div className="bg-gray-900 p-6 rounded flex flex-col items-center justify-center min-h-[200px]">
-                <img 
-                  src={bbDarkLogo} 
-                  alt="businessblueprint.io dark version" 
-                  className="max-w-full h-auto object-contain"
-                />
+                <BrandLogo brand="businessblueprint" variant="dark" size="lg" />
               </div>
               <p className="text-xs text-gray-400 mt-4 text-center">Use on: Dark backgrounds, night mode, dark sections</p>
-              <p className="text-xs text-green-400 mt-2 text-center font-medium">✓ BB Dark Version Logo and Icon</p>
+              <p className="text-xs text-blue-400 mt-2 text-center font-medium">✓ Icon + Archivo font text</p>
             </div>
           </div>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-gray-700">
-              <span className="font-semibold">Color Pattern:</span> Light: black "business" + blueprint blue (#0080FF) + fluorescent green (#AAFF00) ".io" | Dark: white "business" + blueprint blue (#0080FF) + fluorescent green (#AAFF00) ".io"
+              <span className="font-semibold">Font:</span> Archivo | <span className="font-semibold">Color Pattern:</span> Light: black "business" + blueprint blue (#0080FF) + fluorescent green (#AAFF00) ".io" | Dark: white "business" + blueprint blue (#0080FF) + fluorescent green (#AAFF00) ".io"
             </p>
             <p className="text-sm text-gray-700 mt-1">
               <span className="font-semibold">Icon:</span> Compass + Pencil = "AI" using actual blueprint tools
@@ -91,34 +74,26 @@ export default function LogoPreview() {
             <div className="border-2 border-gray-200 rounded-lg p-6 bg-white">
               <div className="text-sm font-semibold text-gray-500 mb-4 text-center">LIGHT ENVIRONMENT</div>
               <div className="bg-white p-6 rounded flex flex-col items-center justify-center min-h-[200px]">
-                <img 
-                  src={webhostedLightLogo} 
-                  alt="webhosted.io light version" 
-                  className="max-w-full h-auto object-contain"
-                />
+                <BrandLogo brand="webhosted" variant="light" size="lg" />
               </div>
               <p className="text-xs text-gray-500 mt-4 text-center">Use on: White backgrounds, light colored pages</p>
-              <p className="text-xs text-green-600 mt-2 text-center font-medium">✓ Web Hosted Light Version Logo and Icon</p>
+              <p className="text-xs text-blue-600 mt-2 text-center font-medium">✓ Icon + Archivo font text</p>
             </div>
 
             {/* Dark Environment */}
             <div className="border-2 border-gray-600 rounded-lg p-6 bg-gray-900">
               <div className="text-sm font-semibold text-gray-300 mb-4 text-center">DARK ENVIRONMENT</div>
               <div className="bg-gray-900 p-6 rounded flex flex-col items-center justify-center min-h-[200px]">
-                <img 
-                  src={webhostedDarkLogo} 
-                  alt="webhosted.io dark version" 
-                  className="max-w-full h-auto object-contain"
-                />
+                <BrandLogo brand="webhosted" variant="dark" size="lg" />
               </div>
               <p className="text-xs text-gray-400 mt-4 text-center">Use on: Dark backgrounds, night mode, dark sections</p>
-              <p className="text-xs text-green-400 mt-2 text-center font-medium">✓ Web Hosted Dark Version Logo and Icon</p>
+              <p className="text-xs text-blue-400 mt-2 text-center font-medium">✓ Icon + Archivo font text</p>
             </div>
           </div>
 
           <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
             <p className="text-sm text-gray-700">
-              <span className="font-semibold">Color Pattern:</span> Light: black "web" + webhosted purple (#660099) + fluorescent green (#AAFF00) ".io" | Dark: white "web" + webhosted purple (#660099) + fluorescent green (#AAFF00) ".io"
+              <span className="font-semibold">Font:</span> Archivo | <span className="font-semibold">Color Pattern:</span> Light: black "web" + webhosted purple (#660099) + fluorescent green (#AAFF00) ".io" | Dark: white "web" + webhosted purple (#660099) + fluorescent green (#AAFF00) ".io"
             </p>
             <p className="text-sm text-gray-700 mt-1">
               <span className="font-semibold">Icon:</span> Globe with purple accents
@@ -135,34 +110,26 @@ export default function LogoPreview() {
             <div className="border-2 border-gray-200 rounded-lg p-6 bg-white">
               <div className="text-sm font-semibold text-gray-500 mb-4 text-center">LIGHT ENVIRONMENT</div>
               <div className="bg-white p-6 rounded flex flex-col items-center justify-center min-h-[200px]">
-                <img 
-                  src={airswipedLightLogo} 
-                  alt="airswiped.com light version" 
-                  className="max-w-full h-auto object-contain"
-                />
+                <BrandLogo brand="airswiped" variant="light" size="lg" />
               </div>
               <p className="text-xs text-gray-500 mt-4 text-center">Use on: White backgrounds, light colored pages</p>
-              <p className="text-xs text-green-600 mt-2 text-center font-medium">✓ Air Swiped Light Version Logo and Icon</p>
+              <p className="text-xs text-blue-600 mt-2 text-center font-medium">✓ Icon + Archivo font text</p>
             </div>
 
             {/* Dark Environment */}
             <div className="border-2 border-gray-600 rounded-lg p-6 bg-gray-900">
               <div className="text-sm font-semibold text-gray-300 mb-4 text-center">DARK ENVIRONMENT</div>
               <div className="bg-gray-900 p-6 rounded flex flex-col items-center justify-center min-h-[200px]">
-                <img 
-                  src={airswipedDarkLogo} 
-                  alt="airswiped.com dark version" 
-                  className="max-w-full h-auto object-contain"
-                />
+                <BrandLogo brand="airswiped" variant="dark" size="lg" />
               </div>
               <p className="text-xs text-gray-400 mt-4 text-center">Use on: Dark backgrounds, night mode, dark sections</p>
-              <p className="text-xs text-green-400 mt-2 text-center font-medium">✓ Air Swiped Dark Version Logo and Icon</p>
+              <p className="text-xs text-blue-400 mt-2 text-center font-medium">✓ Icon + Archivo font text</p>
             </div>
           </div>
 
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <p className="text-sm text-gray-700">
-              <span className="font-semibold">Color Pattern:</span> Light: black "air" + airswiped red (#CB0505) + fluorescent green (#AAFF00) ".com" | Dark: white "air" + airswiped red (#CB0505) + fluorescent green (#AAFF00) ".com"
+              <span className="font-semibold">Font:</span> Archivo | <span className="font-semibold">Color Pattern:</span> Light: black "air" + airswiped red (#CB0505) + fluorescent green (#AAFF00) ".com" | Dark: white "air" + airswiped red (#CB0505) + fluorescent green (#AAFF00) ".com"
             </p>
             <p className="text-sm text-gray-700 mt-1">
               <span className="font-semibold">Icon:</span> Card with red lightning bolt
@@ -178,64 +145,67 @@ export default function LogoPreview() {
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center flex-shrink-0 mt-1">✓</div>
               <div>
-                <p className="font-semibold text-gray-900">Light Environment Assets</p>
-                <p className="text-sm text-gray-600">Use the "Light Version" logo files on white or light backgrounds</p>
+                <p className="font-semibold text-gray-900">Archivo Font Required</p>
+                <p className="text-sm text-gray-600">All brand text must use the Archivo font family (font-archivo in Tailwind)</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center flex-shrink-0 mt-1">✓</div>
+              <div>
+                <p className="font-semibold text-gray-900">Light Environment</p>
+                <p className="text-sm text-gray-600">Use black prefix text with brand icons on white or light backgrounds</p>
               </div>
             </div>
             
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center flex-shrink-0 mt-1">✓</div>
               <div>
-                <p className="font-semibold text-gray-900">Dark Environment Assets</p>
-                <p className="text-sm text-gray-600">Use the "Dark Version" logo files on dark or black backgrounds</p>
+                <p className="font-semibold text-gray-900">Dark Environment</p>
+                <p className="text-sm text-gray-600">Use white prefix text with inverted brand icons on dark backgrounds</p>
               </div>
             </div>
             
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center flex-shrink-0 mt-1">✓</div>
               <div>
-                <p className="font-semibold text-gray-900">Color Pattern Consistency</p>
-                <p className="text-sm text-gray-600">All platforms maintain signature colors (blue, purple, red) + fluorescent green (#AAFF00) across both environments</p>
+                <p className="font-semibold text-gray-900">Signature Colors</p>
+                <p className="text-sm text-gray-600">Maintain signature colors (blue, purple, red) + fluorescent green (#AAFF00) across all environments</p>
               </div>
             </div>
             
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center flex-shrink-0 mt-1">✗</div>
               <div>
-                <p className="font-semibold text-gray-900">No Unauthorized Assets</p>
-                <p className="text-sm text-gray-600">Do not use any logos, icons, or variations not shown in the master reference sheet above</p>
+                <p className="font-semibold text-gray-900">No Font Substitution</p>
+                <p className="text-sm text-gray-600">Never use a different font family for brand names - Archivo is mandatory</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Approved Assets Summary */}
+        {/* Implementation Example */}
         <div className="bg-green-50 border-2 border-green-400 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-green-900 mb-3">✓ All Approved Assets Loaded</h3>
+          <h3 className="text-lg font-semibold text-green-900 mb-3">✓ Using the BrandLogo Component</h3>
           
-          <div className="grid md:grid-cols-3 gap-4">
-            <div>
-              <p className="font-semibold text-green-900 mb-2">businessblueprint.io</p>
-              <ul className="text-sm text-green-800 space-y-1">
-                <li>✓ Light Version</li>
-                <li>✓ Dark Version</li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-semibold text-green-900 mb-2">webhosted.io</p>
-              <ul className="text-sm text-green-800 space-y-1">
-                <li>✓ Light Version</li>
-                <li>✓ Dark Version</li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-semibold text-green-900 mb-2">airswiped.com</p>
-              <ul className="text-sm text-green-800 space-y-1">
-                <li>✓ Light Version</li>
-                <li>✓ Dark Version</li>
-              </ul>
-            </div>
+          <div className="bg-white rounded-lg p-4 mb-4">
+            <code className="text-sm text-gray-800 font-mono block whitespace-pre">
+{`import { BrandLogo } from "@/components/brand-logo";
+
+// Light version with icon
+<BrandLogo brand="businessblueprint" variant="light" size="lg" />
+
+// Dark version with icon  
+<BrandLogo brand="webhosted" variant="dark" size="md" />
+
+// Small version
+<BrandLogo brand="airswiped" variant="light" size="sm" />`}
+            </code>
           </div>
+
+          <p className="text-sm text-green-800">
+            The BrandLogo component automatically handles Archivo font styling, color patterns, and icon display for all three brands.
+          </p>
         </div>
       </div>
     </div>
