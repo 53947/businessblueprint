@@ -57,7 +57,7 @@ export default function LogoPreview() {
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-gray-700">
-              <span className="font-semibold">Font:</span> Archivo | <span className="font-semibold">Color Pattern:</span> Light: black "business" + blueprint blue (#0080FF) + fluorescent green (#AAFF00) ".io" | Dark: white "business" + blueprint blue (#0080FF) + fluorescent green (#AAFF00) ".io"
+              <span className="font-semibold">Font:</span> Archivo | <span className="font-semibold">Color Pattern:</span> Light: #09080E "business" + blueprint blue (#0080FF) + green (#84D71A) ".io" | Dark: white "business" + blueprint blue (#0080FF) + green (#84D71A) ".io"
             </p>
             <p className="text-sm text-gray-700 mt-1">
               <span className="font-semibold">Icon:</span> Compass + Pencil = "AI" using actual blueprint tools
@@ -93,7 +93,7 @@ export default function LogoPreview() {
 
           <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
             <p className="text-sm text-gray-700">
-              <span className="font-semibold">Font:</span> Archivo | <span className="font-semibold">Color Pattern:</span> Light: black "web" + webhosted purple (#660099) + fluorescent green (#AAFF00) ".io" | Dark: white "web" + webhosted purple (#660099) + fluorescent green (#AAFF00) ".io"
+              <span className="font-semibold">Font:</span> Archivo | <span className="font-semibold">Color Pattern:</span> Light: #09080E "web" + webhosted purple (#660099) + green (#84D71A) ".io" | Dark: white "web" + webhosted purple (#660099) + green (#84D71A) ".io"
             </p>
             <p className="text-sm text-gray-700 mt-1">
               <span className="font-semibold">Icon:</span> Globe with purple accents
@@ -129,7 +129,7 @@ export default function LogoPreview() {
 
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <p className="text-sm text-gray-700">
-              <span className="font-semibold">Font:</span> Archivo | <span className="font-semibold">Color Pattern:</span> Light: black "air" + airswiped red (#CB0505) + fluorescent green (#AAFF00) ".com" | Dark: white "air" + airswiped red (#CB0505) + fluorescent green (#AAFF00) ".com"
+              <span className="font-semibold">Font:</span> Archivo | <span className="font-semibold">Color Pattern:</span> Light: #09080E "air" + airswiped red (#FF0040) + green (#84D71A) ".com" | Dark: white "air" + airswiped red (#FF0040) + green (#84D71A) ".com"
             </p>
             <p className="text-sm text-gray-700 mt-1">
               <span className="font-semibold">Icon:</span> Card with red lightning bolt
@@ -170,7 +170,7 @@ export default function LogoPreview() {
               <div className="w-6 h-6 rounded-full bg-green-500 text-white flex items-center justify-center flex-shrink-0 mt-1">✓</div>
               <div>
                 <p className="font-semibold text-gray-900">Signature Colors</p>
-                <p className="text-sm text-gray-600">Maintain signature colors (blue, purple, red) + fluorescent green (#AAFF00) across all environments</p>
+                <p className="text-sm text-gray-600">Maintain signature colors (blue #0080FF, purple #660099, red #FF0040) + green (#84D71A) across all environments</p>
               </div>
             </div>
             

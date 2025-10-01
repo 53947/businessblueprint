@@ -36,27 +36,27 @@ export function BrandLogo({
       iconLight: bbIconLight,
       iconDark: bbIconDark,
       parts: [
-        { text: 'business', color: isDark ? 'text-white' : 'text-black' },
+        { text: 'business', color: isDark ? 'text-white' : 'text-[#09080E]' },
         { text: 'blueprint', color: 'text-[#0080FF]' },
-        { text: '.io', color: 'text-[#AAFF00]' }
+        { text: '.io', color: 'text-[#84D71A]' }
       ]
     },
     webhosted: {
       iconLight: webhostedIconLight,
       iconDark: webhostedIconDark,
       parts: [
-        { text: 'web', color: isDark ? 'text-white' : 'text-black' },
+        { text: 'web', color: isDark ? 'text-white' : 'text-[#09080E]' },
         { text: 'hosted', color: 'text-[#660099]' },
-        { text: '.io', color: 'text-[#AAFF00]' }
+        { text: '.io', color: 'text-[#84D71A]' }
       ]
     },
     airswiped: {
       iconLight: airswipedIconLight,
       iconDark: airswipedIconDark,
       parts: [
-        { text: 'air', color: isDark ? 'text-white' : 'text-black' },
-        { text: 'swiped', color: 'text-[#CB0505]' },
-        { text: '.com', color: 'text-[#AAFF00]' }
+        { text: 'air', color: isDark ? 'text-white' : 'text-[#09080E]' },
+        { text: 'swiped', color: 'text-[#FF0040]' },
+        { text: '.com', color: 'text-[#84D71A]' }
       ]
     }
   };
