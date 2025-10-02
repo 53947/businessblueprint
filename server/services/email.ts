@@ -29,7 +29,7 @@ export class EmailService {
       const htmlContent = this.generateReportHTML(data);
       
       const mailOptions = {
-        from: process.env.FROM_EMAIL || 'noreply@digitalpresencepro.com',
+        from: process.env.FROM_EMAIL || 'le847@icloud.com',
         to: email,
         subject: `Your Digital Presence Assessment Results - Grade: ${data.grade}`,
         html: htmlContent,
@@ -100,16 +100,16 @@ export class EmailService {
             <h2>Choose Your Path Forward</h2>
             <p>Ready to improve your digital presence? We offer two paths to success:</p>
             
-            <a href="${process.env.FRONTEND_URL || 'https://digitalpresencepro.com'}/dashboard/${data.assessmentId}?path=diy" class="cta-button">
+            <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}?path=diy" class="cta-button">
                 🛠️ DIY Path - $49/month
             </a>
             
-            <a href="${process.env.FRONTEND_URL || 'https://digitalpresencepro.com'}/dashboard/${data.assessmentId}?path=msp" class="cta-button secondary-button">
+            <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}?path=msp" class="cta-button secondary-button">
                 🎯 Managed Services - $299/month
             </a>
             
             <p style="margin-top: 20px;">
-                <a href="${process.env.FRONTEND_URL || 'https://digitalpresencepro.com'}/dashboard/${data.assessmentId}">View Full Report</a>
+                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}">View Full Report</a>
             </p>
         </div>
     </div>
@@ -117,7 +117,7 @@ export class EmailService {
     <div class="footer">
         <p>This assessment was powered by Google Business Intelligence and AI analysis.</p>
         <p>Questions? Reply to this email or visit our support center.</p>
-        <p><small>© 2024 DigitalPresencePro - Powered by cloudpleaser.io</small></p>
+        <p><small>© 2024 businessblueprint.io</small></p>
     </div>
 </body>
 </html>`;
