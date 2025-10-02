@@ -245,7 +245,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const clientData = {
               vendastaId: customerIdentifier,
               companyName: 'Cloud Pleaser', // Default name for the test case
-              email: 'contact@cloudpleaser.com',
+              email: 'hello@businessblueprint.io',
               phone: '(555) 123-4567',
               address: '123 Business St, City, State',
               website: 'https://cloudpleaser.io',
@@ -263,7 +263,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const clientData = {
             vendastaId: customerIdentifier,
             companyName: 'Cloud Pleaser',
-            email: 'contact@cloudpleaser.com', 
+            email: 'hello@businessblueprint.io', 
             phone: '(555) 123-4567',
             address: '123 Business St, City, State',
             website: 'https://cloudpleaser.io',

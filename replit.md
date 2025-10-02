@@ -103,7 +103,7 @@ The application employs a full-stack architecture with a monorepo structure, sep
   - ⚠️ OpenAI quota exceeded - preventing AI analysis completion  
 - [x] **Task 3:** Verify/configure Email service SMTP credentials - May need setup for reports
   - ✅ Email credentials properly configured with Google alias
-  - ✅ FROM_EMAIL: noreply@cloudpleaser.io
+  - ✅ FROM_EMAIL: noreply@businessblueprint.io (updated from cloudpleaser.io)
   - ✅ SMTP authentication setup complete
 
 ### 💰 REVENUE PRIORITY (Enable Payments)
