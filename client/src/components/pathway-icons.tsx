@@ -116,32 +116,38 @@ export function CaptainIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
     <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
       {/* Outer wheel rim */}
-      <circle cx="50" cy="50" r="35" fill="none" stroke="#0080FF" strokeWidth="5" />
+      <circle cx="50" cy="50" r="38" fill="none" stroke="#0080FF" strokeWidth="4" />
       
-      {/* Inner hub with better visibility */}
-      <circle cx="50" cy="50" r="12" fill="#0080FF" stroke="#0080FF" strokeWidth="2" />
+      {/* Inner hub */}
+      <circle cx="50" cy="50" r="10" fill="#0080FF" />
       
-      {/* 8 prominent wheel spokes with handles */}
-      {/* Vertical spokes */}
-      <path d="M50 15 L50 38 L45 38 L50 43 L55 38 L50 38 Z" fill="#0080FF" />
-      <path d="M50 85 L50 62 L45 62 L50 57 L55 62 L50 62 Z" fill="#0080FF" />
+      {/* 8 spokes connecting hub to rim */}
+      {/* Top spoke */}
+      <line x1="50" y1="12" x2="50" y2="40" stroke="#0080FF" strokeWidth="3" />
+      {/* Top-right spoke */}
+      <line x1="78.28" y1="21.72" x2="57.07" y2="42.93" stroke="#0080FF" strokeWidth="3" />
+      {/* Right spoke */}
+      <line x1="88" y1="50" x2="60" y2="50" stroke="#0080FF" strokeWidth="3" />
+      {/* Bottom-right spoke */}
+      <line x1="78.28" y1="78.28" x2="57.07" y2="57.07" stroke="#0080FF" strokeWidth="3" />
+      {/* Bottom spoke */}
+      <line x1="50" y1="88" x2="50" y2="60" stroke="#0080FF" strokeWidth="3" />
+      {/* Bottom-left spoke */}
+      <line x1="21.72" y1="78.28" x2="42.93" y2="57.07" stroke="#0080FF" strokeWidth="3" />
+      {/* Left spoke */}
+      <line x1="12" y1="50" x2="40" y2="50" stroke="#0080FF" strokeWidth="3" />
+      {/* Top-left spoke */}
+      <line x1="21.72" y1="21.72" x2="42.93" y2="42.93" stroke="#0080FF" strokeWidth="3" />
       
-      {/* Horizontal spokes */}
-      <path d="M15 50 L38 50 L38 45 L43 50 L38 55 L38 50 Z" fill="#0080FF" />
-      <path d="M85 50 L62 50 L62 45 L57 50 L62 55 L62 50 Z" fill="#0080FF" />
-      
-      {/* Diagonal spokes */}
-      <path d="M25.8 25.8 L40 40" stroke="#0080FF" strokeWidth="5" strokeLinecap="round" />
-      <circle cx="25.8" cy="25.8" r="4" fill="#0080FF" />
-      
-      <path d="M74.2 74.2 L60 60" stroke="#0080FF" strokeWidth="5" strokeLinecap="round" />
-      <circle cx="74.2" cy="74.2" r="4" fill="#0080FF" />
-      
-      <path d="M74.2 25.8 L60 40" stroke="#0080FF" strokeWidth="5" strokeLinecap="round" />
-      <circle cx="74.2" cy="25.8" r="4" fill="#0080FF" />
-      
-      <path d="M25.8 74.2 L40 60" stroke="#0080FF" strokeWidth="5" strokeLinecap="round" />
-      <circle cx="25.8" cy="74.2" r="4" fill="#0080FF" />
+      {/* Handles on the outer rim (8 positions) */}
+      <circle cx="50" cy="12" r="5" fill="#0080FF" />
+      <circle cx="78.28" cy="21.72" r="5" fill="#0080FF" />
+      <circle cx="88" cy="50" r="5" fill="#0080FF" />
+      <circle cx="78.28" cy="78.28" r="5" fill="#0080FF" />
+      <circle cx="50" cy="88" r="5" fill="#0080FF" />
+      <circle cx="21.72" cy="78.28" r="5" fill="#0080FF" />
+      <circle cx="12" cy="50" r="5" fill="#0080FF" />
+      <circle cx="21.72" cy="21.72" r="5" fill="#0080FF" />
     </svg>
   );
 }
