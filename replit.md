@@ -53,6 +53,13 @@ Brand Identity:
 - Digital Success: w-[74px] h-[74px] (74px) - 15% bigger than base size
 - These 5 standardized icons and names must never be varied across all platform uses
 
+**Pathway Icons (SVG Components):**
+- DIY Path: Gear + tools in blueprint blue #0080FF (client/src/components/pathway-icons.tsx)
+- MSP Path: Gear + person in orange #FF6B35
+- AI Business Coach: Cap with "AI" letters in blueprint blue #0080FF
+- Captain Your Journey: Ship's wheel in blueprint blue #0080FF
+- All icons use brand colors and vector paths for consistent scaling
+
 ## System Architecture
 
 The application employs a full-stack architecture with a monorepo structure, separating frontend, backend, and shared components.
@@ -119,6 +126,15 @@ The application employs a full-stack architecture with a monorepo structure, sep
   - ✅ Trial status API endpoint and delayed billing implementation
   - ✅ Frontend trial badge and enhanced messaging
   - ⚠️ Trial-to-active transition and cancellation flow for future enhancement
+- [x] **Task 5.1:** Redesign subscription pricing and automated purchase flow (October 4, 2025)
+  - ✅ Simplified pricing structure: DIY $99/mo, MSP $299/mo (eliminated 3-tier complexity)
+  - ✅ Created brand-consistent pathway icons: DIY (gear+tools blue), MSP (gear+person orange), AI Coach (cap with AI), Captain (ship wheel)
+  - ✅ AI Business Coach addon: $99/mo for DIY, $59/mo for MSP (pathway-specific pricing via separate addons)
+  - ✅ NEW: Captain Your Journey addon at $249/mo for 8-week personalized oversight
+  - ✅ Automated purchase flow: Direct links from home page to /subscription with pathway pre-selection
+  - ✅ Removed all "book a demo" language - instant self-service signup enabled
+  - ✅ Database updated: Inactive plans deactivated, main plans reflect new pricing
+  - ✅ Production-ready and architect-approved
 
 ### 👥 CLIENT EXPERIENCE (Remove "Coming Soon" Placeholders)
 - [ ] **Task 6:** Build Client Portal Review Management interface
@@ -134,8 +150,27 @@ The application employs a full-stack architecture with a monorepo structure, sep
 ### 📊 Sprint Progress Tracking
 **Started:** December 26, 2024  
 **Current Task:** Task 6 - Build Client Portal Review Management interface  
-**Completed:** 5/12 tasks  
-**Estimated Sprint Duration:** 2-3 weeks  
+**Completed:** 6/12 tasks (Task 5.1 added and completed October 4, 2025)
+**Estimated Sprint Duration:** 2-3 weeks
+
+### 💳 Current Subscription Pricing (Live)
+**DIY Platform - $99/mo**
+- Automated Listing Management (100+ directories)
+- Social Media Automation & Scheduling
+- Review & Reputation Tools
+- Campaign & Website Builder
+- Add-ons: AI Coach +$99/mo, Captain Your Journey +$249/mo
+
+**Managed Services - $299/mo**
+- Full Platform Access (all DIY features)
+- Expert Support Team (Synup-powered)
+- Priority Assistance
+- Monthly Performance Reports
+- Add-ons: AI Coach +$59/mo, Captain Your Journey +$249/mo
+
+**Addons Available:**
+- AI Business Coach: $99/mo (DIY) or $59/mo (MSP) - Personalized AI guidance
+- Captain Your Journey: $249/mo (8 weeks) - Personal oversight during launch phase  
 
 ### 🔄 How to Use This Task List
 1. **Check Daily:** Review current task and progress
