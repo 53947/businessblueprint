@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocation, Link } from "wouter";
 import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, Compass, MapPin, Gem } from "lucide-react";
-import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
+import { AICoachIcon } from "@/components/pathway-icons";
 import { HowItWorks } from "@/components/how-it-works";
 import { ServicePathways } from "@/components/service-pathways";
 import { Header } from "@/components/header";
@@ -44,7 +44,7 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
                 </Button>
                 <Link href="/ai-coach">
                   <Button variant="outline" size="lg" className="border-2 w-full sm:w-auto">
-                    <img src={aiCoachLogo} alt="AI Coach" className="w-8 h-8 mr-2" />
+                    <AICoachIcon className="w-8 h-8 mr-2" />
                     AI Business Coach
                   </Button>
                 </Link>

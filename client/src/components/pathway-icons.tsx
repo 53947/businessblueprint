@@ -63,39 +63,50 @@ export function MSPIcon({ className = "w-16 h-16" }: PathwayIconProps) {
 export function AICoachIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
     <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Cap visor */}
-      <ellipse cx="50" cy="45" rx="35" ry="8" fill="#0080FF" />
-      {/* Cap top */}
+      {/* Baseball cap */}
       <path
-        d="M50 25 Q65 30 65 45 L35 45 Q35 30 50 25 Z"
+        d="M25 45 Q25 25 50 25 Q75 25 75 45 L25 45 Z"
         fill="#0080FF"
       />
-      {/* AI letters on cap - vector paths instead of text */}
+      {/* Cap visor */}
+      <ellipse cx="50" cy="45" rx="28" ry="6" fill="#0080FF" />
+      
+      {/* AI letters on cap */}
       {/* Letter A */}
       <path
-        d="M42 42 L45 32 L48 42 M43 38 L47 38"
+        d="M42 40 L45 30 L48 40 M43 36 L47 36"
         stroke="white"
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        fill="none"
       />
       {/* Letter I */}
       <path
-        d="M54 32 L54 42"
+        d="M54 30 L54 40"
         stroke="white"
         strokeWidth="2.5"
         strokeLinecap="round"
       />
-      {/* Head */}
-      <circle cx="50" cy="60" r="18" fill="none" stroke="#0080FF" strokeWidth="3" />
-      {/* Shoulders */}
+      
+      {/* Left headphone */}
       <path
-        d="M32 78 Q32 68 40 68 L60 68 Q68 68 68 78"
-        fill="none"
+        d="M22 55 Q22 50 25 50 Q28 50 28 55 L28 65 Q28 68 25 68 Q22 68 22 65 Z"
+        fill="#0080FF"
+      />
+      
+      {/* Right headphone */}
+      <path
+        d="M72 55 Q72 50 75 50 Q78 50 78 55 L78 65 Q78 68 75 68 Q72 68 72 65 Z"
+        fill="#0080FF"
+      />
+      
+      {/* Face outline */}
+      <path
+        d="M28 55 Q28 48 35 48 L65 48 Q72 48 72 55 L72 70 Q72 80 50 80 Q28 80 28 70 Z"
         stroke="#0080FF"
-        strokeWidth="3"
-        strokeLinecap="round"
+        strokeWidth="4"
+        fill="none"
+        strokeLinejoin="round"
       />
     </svg>
   );
