@@ -1,179 +1,169 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { DIYIcon, MSPIcon, AICoachIcon, CaptainIcon } from "./pathway-icons";
 import { Link } from "wouter";
 
 export function ServicePathways() {
+  const features = [
+    {
+      category: "Core Platform Features",
+      items: [
+        { name: "Automated Listing Management", diy: true, msp: true, description: "100+ directory distribution" },
+        { name: "Social Media Automation", diy: true, msp: true, description: "Post scheduling & management" },
+        { name: "Review & Reputation Tools", diy: true, msp: true, description: "Automated monitoring & templates" },
+        { name: "Campaign & Website Builder", diy: true, msp: true, description: "Self-service creation tools" },
+      ]
+    },
+    {
+      category: "Support & Services",
+      items: [
+        { name: "Platform Access", diy: "Self-Service", msp: "Full Access", description: "" },
+        { name: "Expert Support Team", diy: false, msp: true, description: "Synup-powered assistance" },
+        { name: "Priority Help", diy: false, msp: true, description: "Faster response times" },
+        { name: "Performance Reports", diy: "Basic", msp: "Monthly Pro", description: "" },
+      ]
+    }
+  ];
+
   return (
     <section id="services" className="bg-gray-50 py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Choose Your Path Forward</h2>
-          <p className="text-xl text-gray-600">Two paths to digital success - pick what works best for you</p>
+          <p className="text-xl text-gray-600">Simple pricing, powerful automation</p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 mb-12">
-          {/* DIY Option */}
-          <Card className="shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-            <CardContent className="p-8">
-              <div className="flex items-center mb-6">
-                <div className="mr-4">
-                  <DIYIcon className="w-16 h-16" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900">DIY Path</h3>
-                  <p className="text-gray-600">Self-service platform for hands-on owners</p>
-                </div>
-              </div>
-              
-              <div className="space-y-4 mb-8">
-                <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Automated Listing Management</h4>
-                    <p className="text-gray-600 text-sm">Local SEO and listing distribution across 100+ directories</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Social Media Automation</h4>
-                    <p className="text-gray-600 text-sm">Post scheduling and social media management tools</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Review & Reputation Tools</h4>
-                    <p className="text-gray-600 text-sm">Automated review monitoring and response templates</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Campaign & Website Builder</h4>
-                    <p className="text-gray-600 text-sm">Self-service website and campaign creation platform</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t border-gray-100 pt-6 space-y-4">
-                <div className="flex items-start space-x-3 bg-blue-50 p-3 rounded-lg">
-                  <AICoachIcon className="w-8 h-8 flex-shrink-0" />
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">AI Business Coach</h4>
-                    <p className="text-gray-600 text-sm">Optional premium add-on</p>
-                    <p className="text-blue-600 font-bold text-sm mt-1">+$99/mo</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-3 bg-purple-50 p-3 rounded-lg">
-                  <CaptainIcon className="w-8 h-8 flex-shrink-0" />
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">Captain Your Journey</h4>
-                    <p className="text-gray-600 text-sm">Personal oversight for 8 weeks</p>
-                    <p className="text-purple-600 font-bold text-sm mt-1">+$249/mo</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between mb-4 pt-4">
-                  <span className="text-2xl font-bold text-gray-900">$99/mo</span>
-                  <Badge className="bg-green-100 text-green-800">Start Now</Badge>
-                </div>
-                <Link href="/subscription?pathway=diy">
-                  <Button className="w-full bg-primary hover:bg-primary/90" data-testid="button-choose-diy">
-                    Choose DIY Path
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* MSP Option */}
-          <Card className="shadow-lg border-2 border-secondary hover:shadow-xl transition-all duration-300 relative">
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <Badge className="bg-secondary text-white px-6 py-2">MOST POPULAR</Badge>
+        {/* Side-by-Side Comparison Table */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-12">
+          {/* Header Row */}
+          <div className="grid grid-cols-3 border-b border-gray-200 bg-gray-50">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-gray-900">Features</h3>
             </div>
-            
-            <CardContent className="p-8">
-              <div className="flex items-center mb-6">
-                <div className="mr-4">
-                  <MSPIcon className="w-16 h-16" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900">Managed Services</h3>
-                  <p className="text-gray-600">Fully automated with expert support</p>
-                </div>
+            <div className="p-6 border-l border-gray-200 text-center">
+              <div className="flex justify-center mb-3">
+                <DIYIcon className="w-12 h-12" />
               </div>
-              
-              <div className="space-y-4 mb-8">
-                <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Full Platform Access</h4>
-                    <p className="text-gray-600 text-sm">Complete automated listing, social, and review management</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Expert Support Team</h4>
-                    <p className="text-gray-600 text-sm">Professional support when you need guidance</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Priority Assistance</h4>
-                    <p className="text-gray-600 text-sm">Faster response times and dedicated help</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">Monthly Performance Reports</h4>
-                    <p className="text-gray-600 text-sm">Automated insights and optimization recommendations</p>
-                  </div>
-                </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-1">DIY Platform</h3>
+              <p className="text-sm text-gray-600 mb-3">Self-service automation</p>
+              <div className="text-3xl font-bold text-blue-600 mb-2">$99<span className="text-lg text-gray-500">/mo</span></div>
+            </div>
+            <div className="p-6 border-l border-gray-200 text-center bg-secondary/5 relative">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <Badge className="bg-secondary text-white px-4 py-1">MOST POPULAR</Badge>
               </div>
-
-              <div className="border-t border-gray-100 pt-6 space-y-4">
-                <div className="flex items-start space-x-3 bg-blue-50 p-3 rounded-lg">
-                  <AICoachIcon className="w-8 h-8 flex-shrink-0" />
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">AI Business Coach</h4>
-                    <p className="text-gray-600 text-sm">Optional premium add-on</p>
-                    <p className="text-blue-600 font-bold text-sm mt-1">+$59/mo</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3 bg-purple-50 p-3 rounded-lg">
-                  <CaptainIcon className="w-8 h-8 flex-shrink-0" />
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-900">Captain Your Journey</h4>
-                    <p className="text-gray-600 text-sm">Personal oversight for 8 weeks</p>
-                    <p className="text-purple-600 font-bold text-sm mt-1">+$249/mo</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between mb-4 pt-4">
-                  <span className="text-2xl font-bold text-gray-900">$299/mo</span>
-                  <Badge className="bg-blue-100 text-blue-800">Best Value</Badge>
-                </div>
-                <Link href="/subscription?pathway=msp">
-                  <Button className="w-full bg-secondary hover:bg-secondary/90" data-testid="button-choose-msp">
-                    Choose Managed Services
-                  </Button>
-                </Link>
+              <div className="flex justify-center mb-3 mt-2">
+                <MSPIcon className="w-12 h-12" />
               </div>
-            </CardContent>
-          </Card>
+              <h3 className="text-xl font-bold text-gray-900 mb-1">Managed Services</h3>
+              <p className="text-sm text-gray-600 mb-3">Automation + Expert support</p>
+              <div className="text-3xl font-bold text-secondary mb-2">$299<span className="text-lg text-gray-500">/mo</span></div>
+            </div>
+          </div>
+
+          {/* Feature Rows */}
+          {features.map((category, catIndex) => (
+            <div key={catIndex}>
+              <div className="bg-gray-100 px-6 py-3 border-b border-gray-200">
+                <h4 className="font-semibold text-gray-900">{category.category}</h4>
+              </div>
+              {category.items.map((feature, featureIndex) => (
+                <div key={featureIndex} className="grid grid-cols-3 border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                  <div className="p-4 flex items-center">
+                    <div>
+                      <div className="font-medium text-gray-900">{feature.name}</div>
+                      {feature.description && (
+                        <div className="text-sm text-gray-500 mt-1">{feature.description}</div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="p-4 border-l border-gray-100 flex items-center justify-center">
+                    {typeof feature.diy === 'boolean' ? (
+                      feature.diy ? (
+                        <Check className="w-6 h-6 text-green-500" />
+                      ) : (
+                        <X className="w-6 h-6 text-gray-300" />
+                      )
+                    ) : (
+                      <span className="text-sm font-medium text-gray-700">{feature.diy}</span>
+                    )}
+                  </div>
+                  <div className="p-4 border-l border-gray-100 flex items-center justify-center bg-secondary/5">
+                    {typeof feature.msp === 'boolean' ? (
+                      feature.msp ? (
+                        <Check className="w-6 h-6 text-green-500" />
+                      ) : (
+                        <X className="w-6 h-6 text-gray-300" />
+                      )
+                    ) : (
+                      <span className="text-sm font-medium text-gray-700">{feature.msp}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
+
+          {/* Addon Rows */}
+          <div className="bg-gray-100 px-6 py-3 border-b border-gray-200">
+            <h4 className="font-semibold text-gray-900">Optional Add-ons</h4>
+          </div>
+          
+          <div className="grid grid-cols-3 border-b border-gray-100 hover:bg-gray-50 transition-colors">
+            <div className="p-4 flex items-center">
+              <AICoachIcon className="w-10 h-10 mr-3 flex-shrink-0" />
+              <div>
+                <div className="font-medium text-gray-900">AI Business Coach</div>
+                <div className="text-sm text-gray-500 mt-1">Personalized AI guidance</div>
+              </div>
+            </div>
+            <div className="p-4 border-l border-gray-100 flex items-center justify-center">
+              <span className="text-lg font-bold text-blue-600">+$99/mo</span>
+            </div>
+            <div className="p-4 border-l border-gray-100 flex items-center justify-center bg-secondary/5">
+              <span className="text-lg font-bold text-secondary">+$59/mo</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 border-b border-gray-100 hover:bg-gray-50 transition-colors">
+            <div className="p-4 flex items-center">
+              <CaptainIcon className="w-10 h-10 mr-3 flex-shrink-0" />
+              <div>
+                <div className="font-medium text-gray-900">Captain Your Journey</div>
+                <div className="text-sm text-gray-500 mt-1">8 weeks personal oversight</div>
+              </div>
+            </div>
+            <div className="p-4 border-l border-gray-100 flex items-center justify-center">
+              <span className="text-lg font-bold text-purple-600">+$249/mo</span>
+            </div>
+            <div className="p-4 border-l border-gray-100 flex items-center justify-center bg-secondary/5">
+              <span className="text-lg font-bold text-purple-600">+$249/mo</span>
+            </div>
+          </div>
+
+          {/* CTA Row */}
+          <div className="grid grid-cols-3 bg-gray-50">
+            <div className="p-6"></div>
+            <div className="p-6 border-l border-gray-200">
+              <Link href="/subscription?pathway=diy">
+                <Button className="w-full bg-primary hover:bg-primary/90" size="lg" data-testid="button-choose-diy">
+                  Choose DIY Path
+                </Button>
+              </Link>
+            </div>
+            <div className="p-6 border-l border-gray-200 bg-secondary/5">
+              <Link href="/subscription?pathway=msp">
+                <Button className="w-full bg-secondary hover:bg-secondary/90" size="lg" data-testid="button-choose-msp">
+                  Choose Managed Services
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
 
         {/* Captain Your Journey Explanation */}
-        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-8 mb-8">
+        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-8">
           <div className="flex items-start space-x-4">
             <CaptainIcon className="w-20 h-20 flex-shrink-0" />
             <div>

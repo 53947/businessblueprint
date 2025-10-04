@@ -104,18 +104,33 @@ export function AICoachIcon({ className = "w-16 h-16" }: PathwayIconProps) {
 export function CaptainIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
     <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Captain's wheel */}
-      <circle cx="50" cy="50" r="30" fill="none" stroke="#0080FF" strokeWidth="3" />
-      <circle cx="50" cy="50" r="8" fill="#0080FF" />
-      {/* Spokes */}
-      <line x1="50" y1="20" x2="50" y2="35" stroke="#0080FF" strokeWidth="3" />
-      <line x1="50" y1="65" x2="50" y2="80" stroke="#0080FF" strokeWidth="3" />
-      <line x1="20" y1="50" x2="35" y2="50" stroke="#0080FF" strokeWidth="3" />
-      <line x1="65" y1="50" x2="80" y2="50" stroke="#0080FF" strokeWidth="3" />
-      <line x1="29.3" y1="29.3" x2="40.5" y2="40.5" stroke="#0080FF" strokeWidth="3" />
-      <line x1="59.5" y1="59.5" x2="70.7" y2="70.7" stroke="#0080FF" strokeWidth="3" />
-      <line x1="70.7" y1="29.3" x2="59.5" y2="40.5" stroke="#0080FF" strokeWidth="3" />
-      <line x1="40.5" y1="59.5" x2="29.3" y2="70.7" stroke="#0080FF" strokeWidth="3" />
+      {/* Outer wheel rim */}
+      <circle cx="50" cy="50" r="35" fill="none" stroke="#0080FF" strokeWidth="5" />
+      
+      {/* Inner hub with better visibility */}
+      <circle cx="50" cy="50" r="12" fill="#0080FF" stroke="#0080FF" strokeWidth="2" />
+      
+      {/* 8 prominent wheel spokes with handles */}
+      {/* Vertical spokes */}
+      <path d="M50 15 L50 38 L45 38 L50 43 L55 38 L50 38 Z" fill="#0080FF" />
+      <path d="M50 85 L50 62 L45 62 L50 57 L55 62 L50 62 Z" fill="#0080FF" />
+      
+      {/* Horizontal spokes */}
+      <path d="M15 50 L38 50 L38 45 L43 50 L38 55 L38 50 Z" fill="#0080FF" />
+      <path d="M85 50 L62 50 L62 45 L57 50 L62 55 L62 50 Z" fill="#0080FF" />
+      
+      {/* Diagonal spokes */}
+      <path d="M25.8 25.8 L40 40" stroke="#0080FF" strokeWidth="5" strokeLinecap="round" />
+      <circle cx="25.8" cy="25.8" r="4" fill="#0080FF" />
+      
+      <path d="M74.2 74.2 L60 60" stroke="#0080FF" strokeWidth="5" strokeLinecap="round" />
+      <circle cx="74.2" cy="74.2" r="4" fill="#0080FF" />
+      
+      <path d="M74.2 25.8 L60 40" stroke="#0080FF" strokeWidth="5" strokeLinecap="round" />
+      <circle cx="74.2" cy="25.8" r="4" fill="#0080FF" />
+      
+      <path d="M25.8 74.2 L40 60" stroke="#0080FF" strokeWidth="5" strokeLinecap="round" />
+      <circle cx="25.8" cy="74.2" r="4" fill="#0080FF" />
     </svg>
   );
 }
