@@ -82,9 +82,11 @@ export function ServicePathways() {
                   <span className="text-2xl font-bold text-gray-900">$99/mo</span>
                   <Badge className="bg-green-100 text-green-800">Start Now</Badge>
                 </div>
-                <Button className="w-full bg-primary hover:bg-primary/90" data-testid="button-choose-diy">
-                  Choose DIY Path
-                </Button>
+                <Link href="/subscription?pathway=diy">
+                  <Button className="w-full bg-primary hover:bg-primary/90" data-testid="button-choose-diy">
+                    Choose DIY Path
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
@@ -160,9 +162,11 @@ export function ServicePathways() {
                   <span className="text-2xl font-bold text-gray-900">$299/mo</span>
                   <Badge className="bg-blue-100 text-blue-800">Best Value</Badge>
                 </div>
-                <Button className="w-full bg-secondary hover:bg-secondary/90" data-testid="button-choose-msp">
-                  Choose Managed Services
-                </Button>
+                <Link href="/subscription?pathway=msp">
+                  <Button className="w-full bg-secondary hover:bg-secondary/90" data-testid="button-choose-msp">
+                    Choose Managed Services
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
