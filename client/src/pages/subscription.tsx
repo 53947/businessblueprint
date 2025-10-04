@@ -63,13 +63,17 @@ export default function SubscriptionPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   
+  // Read pathway from URL params
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlPathway = urlParams.get('pathway') as 'diy' | 'msp' | null;
+  
   // State management
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
   const [selectedAddons, setSelectedAddons] = useState<{ addonId: string; quantity?: number; }[]>([]);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'quarterly' | 'annual'>('monthly');
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [pathway, setPathway] = useState<'diy' | 'msp'>('msp'); // Default to MSP as recommended
+  const [pathway, setPathway] = useState<'diy' | 'msp'>(urlPathway || 'msp'); // Use URL param or default to MSP
 
   // Fetch plans and addons
   const { data: plansData, isLoading: plansLoading } = useQuery({
