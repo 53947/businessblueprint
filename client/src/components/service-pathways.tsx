@@ -1,8 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Wrench, Bell, BarChart3, Server, CreditCard, MessageCircle } from "lucide-react";
-import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
+import { CheckCircle } from "lucide-react";
+import { DIYIcon, MSPIcon, AICoachIcon, CaptainIcon } from "./pathway-icons";
 import { Link } from "wouter";
 
 export function ServicePathways() {
@@ -19,59 +19,70 @@ export function ServicePathways() {
           <Card className="shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
             <CardContent className="p-8">
               <div className="flex items-center mb-6">
-                <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mr-4">
-                  <Wrench className="w-8 h-8 text-primary" />
+                <div className="mr-4">
+                  <DIYIcon className="w-16 h-16" />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900">DIY Path</h3>
-                  <p className="text-gray-600">Perfect for hands-on business owners</p>
+                  <p className="text-gray-600">Self-service platform for hands-on owners</p>
                 </div>
               </div>
               
               <div className="space-y-4 mb-8">
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">Free Listing Platform</h4>
-                    <p className="text-gray-600 text-sm">Includes local SEO and listing distribution</p>
+                    <h4 className="font-semibold text-gray-900">Automated Listing Management</h4>
+                    <p className="text-gray-600 text-sm">Local SEO and listing distribution across 100+ directories</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">Social Media & Scheduling</h4>
+                    <h4 className="font-semibold text-gray-900">Social Media Automation</h4>
                     <p className="text-gray-600 text-sm">Post scheduling and social media management tools</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">Reputation & CRM</h4>
-                    <p className="text-gray-600 text-sm">Citation builder, review management, and customer management</p>
+                    <h4 className="font-semibold text-gray-900">Review & Reputation Tools</h4>
+                    <p className="text-gray-600 text-sm">Automated review monitoring and response templates</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">AI Inbox & Website Builder</h4>
-                    <p className="text-gray-600 text-sm">Campaign Pro and complete website building platform</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <img src={aiCoachLogo} alt="AI Coach" className="w-8 h-8 mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">AI Business Coach</h4>
-                    <p className="text-gray-600 text-sm">Optional premium add-on (+$99/mo)</p>
+                    <h4 className="font-semibold text-gray-900">Campaign & Website Builder</h4>
+                    <p className="text-gray-600 text-sm">Self-service website and campaign creation platform</p>
                   </div>
                 </div>
               </div>
 
-              <div className="border-t border-gray-100 pt-6">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-2xl font-bold text-gray-900">Free - $299/mo</span>
-                  <Badge className="bg-green-100 text-green-800">Start Free</Badge>
+              <div className="border-t border-gray-100 pt-6 space-y-4">
+                <div className="flex items-start space-x-3 bg-blue-50 p-3 rounded-lg">
+                  <AICoachIcon className="w-8 h-8 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-900">AI Business Coach</h4>
+                    <p className="text-gray-600 text-sm">Optional premium add-on</p>
+                    <p className="text-blue-600 font-bold text-sm mt-1">+$99/mo</p>
+                  </div>
                 </div>
-                <Button className="w-full bg-primary hover:bg-primary/90">
+                
+                <div className="flex items-start space-x-3 bg-purple-50 p-3 rounded-lg">
+                  <CaptainIcon className="w-8 h-8 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-900">Captain Your Journey</h4>
+                    <p className="text-gray-600 text-sm">Personal oversight for 8 weeks</p>
+                    <p className="text-purple-600 font-bold text-sm mt-1">+$249/mo</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mb-4 pt-4">
+                  <span className="text-2xl font-bold text-gray-900">$99/mo</span>
+                  <Badge className="bg-green-100 text-green-800">Start Now</Badge>
+                </div>
+                <Button className="w-full bg-primary hover:bg-primary/90" data-testid="button-choose-diy">
                   Choose DIY Path
                 </Button>
               </div>
@@ -86,59 +97,70 @@ export function ServicePathways() {
             
             <CardContent className="p-8">
               <div className="flex items-center mb-6">
-                <div className="bg-secondary/10 w-16 h-16 rounded-full flex items-center justify-center mr-4">
-                  <Bell className="w-8 h-8 text-secondary" />
+                <div className="mr-4">
+                  <MSPIcon className="w-16 h-16" />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900">Managed Services</h3>
-                  <p className="text-gray-600">We handle everything for you</p>
+                  <p className="text-gray-600">Fully automated with expert support</p>
                 </div>
               </div>
               
               <div className="space-y-4 mb-8">
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">Full Implementation</h4>
-                    <p className="text-gray-600 text-sm">Our team builds and optimizes everything</p>
+                    <h4 className="font-semibold text-gray-900">Full Platform Access</h4>
+                    <p className="text-gray-600 text-sm">Complete automated listing, social, and review management</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">Dedicated Account Manager</h4>
-                    <p className="text-gray-600 text-sm">Personal expert to guide your digital strategy</p>
+                    <h4 className="font-semibold text-gray-900">Expert Support Team</h4>
+                    <p className="text-gray-600 text-sm">Professional support when you need guidance</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">Priority Support</h4>
-                    <p className="text-gray-600 text-sm">24/7 monitoring and instant issue resolution</p>
+                    <h4 className="font-semibold text-gray-900">Priority Assistance</h4>
+                    <p className="text-gray-600 text-sm">Faster response times and dedicated help</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold text-gray-900">Monthly Optimization</h4>
-                    <p className="text-gray-600 text-sm">Continuous improvements and performance tracking</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <img src={aiCoachLogo} alt="AI Coach" className="w-8 h-8 mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold text-gray-900">AI Business Coach</h4>
-                    <p className="text-gray-600 text-sm">Optional premium add-on (+$99/mo)</p>
+                    <h4 className="font-semibold text-gray-900">Monthly Performance Reports</h4>
+                    <p className="text-gray-600 text-sm">Automated insights and optimization recommendations</p>
                   </div>
                 </div>
               </div>
 
-              <div className="border-t border-gray-100 pt-6">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-2xl font-bold text-gray-900">Starting at $299/mo</span>
-                  <Badge className="bg-blue-100 text-blue-800">Best ROI</Badge>
+              <div className="border-t border-gray-100 pt-6 space-y-4">
+                <div className="flex items-start space-x-3 bg-blue-50 p-3 rounded-lg">
+                  <AICoachIcon className="w-8 h-8 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-900">AI Business Coach</h4>
+                    <p className="text-gray-600 text-sm">Optional premium add-on</p>
+                    <p className="text-blue-600 font-bold text-sm mt-1">+$59/mo</p>
+                  </div>
                 </div>
-                <Button className="w-full bg-secondary hover:bg-secondary/90">
+
+                <div className="flex items-start space-x-3 bg-purple-50 p-3 rounded-lg">
+                  <CaptainIcon className="w-8 h-8 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-900">Captain Your Journey</h4>
+                    <p className="text-gray-600 text-sm">Personal oversight for 8 weeks</p>
+                    <p className="text-purple-600 font-bold text-sm mt-1">+$249/mo</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mb-4 pt-4">
+                  <span className="text-2xl font-bold text-gray-900">$299/mo</span>
+                  <Badge className="bg-blue-100 text-blue-800">Best Value</Badge>
+                </div>
+                <Button className="w-full bg-secondary hover:bg-secondary/90" data-testid="button-choose-msp">
                   Choose Managed Services
                 </Button>
               </div>
@@ -146,6 +168,34 @@ export function ServicePathways() {
           </Card>
         </div>
 
+        {/* Captain Your Journey Explanation */}
+        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-8 mb-8">
+          <div className="flex items-start space-x-4">
+            <CaptainIcon className="w-20 h-20 flex-shrink-0" />
+            <div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Captain Your Journey</h3>
+              <p className="text-gray-600 mb-4">
+                Get personalized oversight during your critical first 8 weeks. I'll personally guide your Digital Blueprint implementation, 
+                ensure everything is properly configured, and help you navigate challenges as they arise. Perfect for new businesses 
+                wanting expert reassurance during their digital launch.
+              </p>
+              <div className="grid md:grid-cols-3 gap-4 text-sm">
+                <div className="bg-white/60 p-3 rounded-lg">
+                  <div className="font-semibold text-purple-600 mb-1">Week 1-2</div>
+                  <p className="text-gray-700">Foundation setup and initial optimization</p>
+                </div>
+                <div className="bg-white/60 p-3 rounded-lg">
+                  <div className="font-semibold text-purple-600 mb-1">Week 3-6</div>
+                  <p className="text-gray-700">Active monitoring and strategic adjustments</p>
+                </div>
+                <div className="bg-white/60 p-3 rounded-lg">
+                  <div className="font-semibold text-purple-600 mb-1">Week 7-8</div>
+                  <p className="text-gray-700">Transition to independent success</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </section>
