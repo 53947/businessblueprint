@@ -49,11 +49,11 @@ export function ServicePathways() {
               <p className="text-sm text-gray-600 mb-3">Self-service automation</p>
               <div className="text-3xl font-bold text-blue-600 mb-2">$99<span className="text-lg text-gray-500">/mo</span></div>
             </div>
-            <div className="p-6 border-l border-gray-200 text-center bg-secondary/5 relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+            <div className="p-6 border-l border-gray-200 text-center bg-secondary/5 relative pt-8">
+              <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
                 <Badge className="bg-secondary text-white px-4 py-1">MOST POPULAR</Badge>
               </div>
-              <div className="flex justify-center mb-3 mt-2">
+              <div className="flex justify-center mb-3">
                 <MSPIcon className="w-12 h-12" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-1">Managed Services Provided (MSP)</h3>
