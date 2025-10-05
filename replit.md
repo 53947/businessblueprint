@@ -53,12 +53,14 @@ Brand Identity:
 - Digital Success: w-[74px] h-[74px] (74px) - 15% bigger than base size
 - These 5 standardized icons and names must never be varied across all platform uses
 
-**Pathway Icons (SVG Components):**
-- DIY Path: Gear + tools in blueprint blue #0080FF (client/src/components/pathway-icons.tsx)
-- MSP Path: Gear + person in orange #FF6B35
-- AI Business Coach: Cap with "AI" letters in blueprint blue #0080FF
-- Captain Your Journey: Ship's wheel in blueprint blue #0080FF
-- All icons use brand colors and vector paths for consistent scaling
+**Official Pathway Icons & Terminology (Updated October 5, 2025):**
+- **Do It Yourself (DIY):** Official icon from attached_assets/do it yourself icon_1759648904285.png
+- **Managed Services Provided (MSP):** Official icon from attached_assets/managed services icon_1759648904285.png
+- **AI Business Coach:** Official icon from attached_assets/ai business coach icon_1759648904283.png
+- **Captaining Your Journey:** Official icon from attached_assets/Captaining Icon_1759648904285.png
+- All icons displayed at 90% size coverage using flex containers with maxWidth/maxHeight
+- Consistent terminology: Always use "Do It Yourself (DIY)" and "Managed Services Provided (MSP)" in all titles, headings, categories, groups, and menus
+- Icons accompany pathway names wherever they appear (client/src/components/pathway-icons.tsx)
 
 ## System Architecture
 
