@@ -9,6 +9,7 @@ import { vendastaService } from "./services/vendasta";
 import { aiCoachService } from "./services/aiCoach";
 import { PricingEngine } from "./services/pricing";
 import { NMIService } from "./services/nmi";
+import { productRecommendationService } from "./services/productRecommendations";
 import { dashboardAccess } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import { db } from "./db";
@@ -985,6 +986,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get product recommendations for an assessment
+  app.get("/api/assessments/:id/product-recommendations", async (req, res) => {
+    try {
+      const assessmentId = parseInt(req.params.id);
+      const recommendations = await productRecommendationService.getRecommendations(assessmentId);
+      
+      res.json({ 
+        success: true, 
+        recommendations 
+      });
+    } catch (error) {
+      console.error("Error fetching product recommendations:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch product recommendations" 
+      });
+    }
+  });
+
+  // Get all products (filtered by delivery method)
+  app.get("/api/products", async (req, res) => {
+    try {
+      const deliveryMethod = req.query.deliveryMethod as string | undefined;
+      const category = req.query.category as string | undefined;
+      
+      const { products } = await import("@shared/schema");
+      const { eq, and } = await import("drizzle-orm");
+      
+      // Build where conditions
+      const conditions = [eq(products.isActive, true)];
+      if (category) {
+        conditions.push(eq(products.category, category));
+      }
+      
+      const allProducts = await db.select().from(products).where(and(...conditions));
+      
+      // Filter by delivery method if specified
+      const filteredProducts = deliveryMethod 
+        ? allProducts.filter(p => p.deliveryMethod?.includes(deliveryMethod))
+        : allProducts;
+      
+      res.json({ 
+        success: true, 
+        products: filteredProducts 
+      });
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch products" 
+      });
+    }
+  });
+
+  // Get single product by ID
+  app.get("/api/products/:id", async (req, res) => {
+    try {
+      const productId = parseInt(req.params.id);
+      const { products } = await import("@shared/schema");
+      const { eq } = await import("drizzle-orm");
+      
+      const [product] = await db.select().from(products).where(eq(products.id, productId));
+      
+      if (!product) {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Product not found" 
+        });
+      }
+      
+      res.json({ 
+        success: true, 
+        product 
+      });
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch product" 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
@@ -1025,6 +1109,21 @@ async function processAssessmentAsync(
 
     // Calculate presence score
     const presenceScore = googleService.calculatePresenceScore(googleData);
+
+    // Generate product recommendations based on scores
+    const productRecommendations = await productRecommendationService.generateRecommendations(
+      assessmentId,
+      {
+        visibility: presenceScore.scores.visibility,
+        reviews: presenceScore.scores.reviews,
+        completeness: presenceScore.scores.completeness,
+        engagement: presenceScore.scores.engagement,
+        overall: presenceScore.overallScore
+      }
+    );
+
+    // Save product recommendations to database
+    await productRecommendationService.saveRecommendations(assessmentId, productRecommendations);
 
     // Get AI analysis
     const analysisResult = await aiService.analyzeBusinessPresence({
