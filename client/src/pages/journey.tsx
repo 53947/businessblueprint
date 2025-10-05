@@ -48,11 +48,11 @@ export default function Journey() {
     {
       id: "pathway",
       title: "Choose Your Path",
-      description: "DIY tools or managed services",
+      description: "Do It Yourself (DIY) tools or Managed Services Provided (MSP)",
       icon: () => <img src={digitalPathIcon} alt="Choose Your Path" className="w-16 h-16" />,
       color: "green" as const,
       path: "/subscription",
-      features: ["DIY Self-Service Tools", "Full Managed Services", "Hybrid Approach", "Scalable Solutions"]
+      features: ["Do It Yourself (DIY) Self-Service Tools", "Full Managed Services Provided (MSP)", "Hybrid Approach", "Scalable Solutions"]
     },
     {
       id: "coach",
@@ -258,7 +258,7 @@ export default function Journey() {
                 <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Settings className="w-8 h-8 text-white" />
                 </div>
-                <CardTitle className="text-2xl text-blue-600">DIY Path</CardTitle>
+                <CardTitle className="text-2xl text-blue-600">Do It Yourself (DIY)</CardTitle>
                 <CardDescription className="text-lg">
                   Self-service tools and step-by-step guidance
                 </CardDescription>
@@ -284,7 +284,7 @@ export default function Journey() {
                 </ul>
                 <Link href="/subscription">
                   <Button className="w-full bg-blue-600 hover:bg-blue-700" data-testid="button-diy-path">
-                    Start DIY Journey
+                    Start Do It Yourself (DIY) Journey
                   </Button>
                 </Link>
               </CardContent>
@@ -296,7 +296,7 @@ export default function Journey() {
                 <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Users className="w-8 h-8 text-white" />
                 </div>
-                <CardTitle className="text-2xl text-purple-600">Managed Path</CardTitle>
+                <CardTitle className="text-2xl text-purple-600">Managed Services Provided (MSP)</CardTitle>
                 <CardDescription className="text-lg">
                   Full-service management by digital experts
                 </CardDescription>
@@ -322,7 +322,7 @@ export default function Journey() {
                 </ul>
                 <Link href="/subscription">
                   <Button className="w-full bg-purple-600 hover:bg-purple-700" data-testid="button-msp-path">
-                    Start Managed Journey
+                    Start Managed Services Provided (MSP) Journey
                   </Button>
                 </Link>
               </CardContent>

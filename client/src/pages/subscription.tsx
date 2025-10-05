@@ -213,7 +213,7 @@ export default function SubscriptionPage() {
                 data-testid="button-pathway-msp"
               >
                 <Crown className="w-4 h-4 inline mr-2" />
-                Managed Services (Recommended)
+                Managed Services Provided (MSP) (Recommended)
               </button>
               <button
                 onClick={() => setPathway('diy')}
@@ -225,7 +225,7 @@ export default function SubscriptionPage() {
                 data-testid="button-pathway-diy"
               >
                 <Zap className="w-4 h-4 inline mr-2" />
-                DIY Platform
+                Do It Yourself (DIY)
               </button>
             </div>
           </div>
@@ -262,12 +262,12 @@ export default function SubscriptionPage() {
                   {pathway === 'msp' ? (
                     <>
                       <Crown className="w-5 h-5 text-purple-600" />
-                      <span>Managed Service Plans</span>
+                      <span>Managed Services Provided (MSP) Plans</span>
                     </>
                   ) : (
                     <>
                       <Zap className="w-5 h-5 text-blue-600" />
-                      <span>DIY Platform Plans</span>
+                      <span>Do It Yourself (DIY) Plans</span>
                     </>
                   )}
                 </CardTitle>
