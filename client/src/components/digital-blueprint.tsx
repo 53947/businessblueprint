@@ -282,8 +282,8 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                         </h5>
                         <div className="text-sm text-green-700 mb-3">
                           {assessment.selectedPathway === 'msp' 
-                            ? 'Managed Services - Our experts will handle everything for you'
-                            : 'Do It Yourself - You\'ll receive step-by-step guidance'
+                            ? 'Managed Services Provided (MSP) - Our experts will handle everything for you'
+                            : 'Do It Yourself (DIY) - You\'ll receive step-by-step guidance'
                           }
                         </div>
                         <div className="flex space-x-2">
@@ -489,7 +489,7 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                 <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Users className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-blue-900">Managed Services</h3>
+                <h3 className="text-xl font-bold text-blue-900">Managed Services Provided (MSP)</h3>
                 <p className="text-blue-700 text-sm">Let our experts handle everything</p>
               </div>
               
@@ -529,7 +529,7 @@ export function DigitalBlueprint({ assessment, recommendations, onSelectPathway 
                 <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Wrench className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900">Do It Yourself</h3>
+                <h3 className="text-xl font-bold text-gray-900">Do It Yourself (DIY)</h3>
                 <p className="text-gray-600 text-sm">Follow our step-by-step guides</p>
               </div>
               
