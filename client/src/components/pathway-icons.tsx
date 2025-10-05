@@ -1,153 +1,52 @@
+import diyIcon from "@assets/do it yourself icon_1759648904285.png";
+import mspIcon from "@assets/managed services icon_1759648904285.png";
+import aiCoachIcon from "@assets/ai business coach icon_1759648904283.png";
+import captainingIcon from "@assets/Captaining Icon_1759648904285.png";
+
 interface PathwayIconProps {
   className?: string;
 }
 
 export function DIYIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
-    <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Gear outline */}
-      <path
-        d="M50 20 L55 18 L58 20 L60 18 L63 20 L68 22 L70 25 L72 28 L75 30 L78 35 L80 40 L80 45 L82 50 L80 55 L80 60 L78 65 L75 70 L72 72 L70 75 L68 78 L63 80 L60 82 L58 80 L55 82 L50 80 L45 82 L42 80 L40 82 L37 80 L32 78 L30 75 L28 72 L25 70 L22 65 L20 60 L20 55 L18 50 L20 45 L20 40 L22 35 L25 30 L28 28 L30 25 L32 22 L37 20 L40 18 L42 20 L45 18 Z"
-        stroke="#0080FF"
-        strokeWidth="3"
-        fill="none"
-        strokeLinejoin="round"
-      />
-      {/* Wrench */}
-      <path
-        d="M35 35 L40 30 L45 35 L42 38 L48 44 L55 37 L58 40 L51 47 L45 41 L39 47 L35 43 Z"
-        fill="#0080FF"
-        stroke="#0080FF"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Pencil */}
-      <path
-        d="M55 50 L65 40 L68 43 L58 53 L55 50 Z M65 40 L67 38 L70 41 L68 43 Z M55 50 L52 57 L58 53 Z"
-        fill="#660099"
-        stroke="#660099"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <img 
+      src={diyIcon} 
+      alt="Do It Yourself (DIY)" 
+      className={className}
+      style={{ objectFit: 'contain', width: '90%', height: '90%' }}
+    />
   );
 }
 
 export function MSPIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
-    <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Gear outline */}
-      <path
-        d="M50 20 L55 18 L58 20 L60 18 L63 20 L68 22 L70 25 L72 28 L75 30 L78 35 L80 40 L80 45 L82 50 L80 55 L80 60 L78 65 L75 70 L72 72 L70 75 L68 78 L63 80 L60 82 L58 80 L55 82 L50 80 L45 82 L42 80 L40 82 L37 80 L32 78 L30 75 L28 72 L25 70 L22 65 L20 60 L20 55 L18 50 L20 45 L20 40 L22 35 L25 30 L28 28 L30 25 L32 22 L37 20 L40 18 L42 20 L45 18 Z"
-        stroke="#FF6B35"
-        strokeWidth="3"
-        fill="none"
-        strokeLinejoin="round"
-      />
-      {/* Person - head */}
-      <circle cx="50" cy="42" r="8" fill="#FF6B35" />
-      {/* Person - body */}
-      <path
-        d="M50 50 L50 62 M50 55 L42 60 M50 55 L58 60"
-        stroke="#FF6B35"
-        strokeWidth="4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <img 
+      src={mspIcon} 
+      alt="Managed Services Provided (MSP)" 
+      className={className}
+      style={{ objectFit: 'contain', width: '90%', height: '90%' }}
+    />
   );
 }
 
 export function AICoachIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
-    <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Baseball cap */}
-      <path
-        d="M25 45 Q25 25 50 25 Q75 25 75 45 L25 45 Z"
-        fill="#0080FF"
-      />
-      {/* Cap visor */}
-      <ellipse cx="50" cy="45" rx="28" ry="6" fill="#0080FF" />
-      
-      {/* AI letters on cap */}
-      {/* Letter A */}
-      <path
-        d="M42 40 L45 30 L48 40 M43 36 L47 36"
-        stroke="white"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {/* Letter I */}
-      <path
-        d="M54 30 L54 40"
-        stroke="white"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
-      
-      {/* Left headphone */}
-      <path
-        d="M22 55 Q22 50 25 50 Q28 50 28 55 L28 65 Q28 68 25 68 Q22 68 22 65 Z"
-        fill="#0080FF"
-      />
-      
-      {/* Right headphone */}
-      <path
-        d="M72 55 Q72 50 75 50 Q78 50 78 55 L78 65 Q78 68 75 68 Q72 68 72 65 Z"
-        fill="#0080FF"
-      />
-      
-      {/* Face outline */}
-      <path
-        d="M28 55 Q28 48 35 48 L65 48 Q72 48 72 55 L72 70 Q72 80 50 80 Q28 80 28 70 Z"
-        stroke="#0080FF"
-        strokeWidth="4"
-        fill="none"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <img 
+      src={aiCoachIcon} 
+      alt="AI Business Coach" 
+      className={className}
+      style={{ objectFit: 'contain', width: '90%', height: '90%' }}
+    />
   );
 }
 
 export function CaptainIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
-    <svg viewBox="0 0 100 100" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Outer wheel rim */}
-      <circle cx="50" cy="50" r="38" fill="none" stroke="#0080FF" strokeWidth="4" />
-      
-      {/* Inner hub */}
-      <circle cx="50" cy="50" r="10" fill="#0080FF" />
-      
-      {/* 8 spokes connecting hub to rim */}
-      {/* Top spoke */}
-      <line x1="50" y1="12" x2="50" y2="40" stroke="#0080FF" strokeWidth="3" />
-      {/* Top-right spoke */}
-      <line x1="78.28" y1="21.72" x2="57.07" y2="42.93" stroke="#0080FF" strokeWidth="3" />
-      {/* Right spoke */}
-      <line x1="88" y1="50" x2="60" y2="50" stroke="#0080FF" strokeWidth="3" />
-      {/* Bottom-right spoke */}
-      <line x1="78.28" y1="78.28" x2="57.07" y2="57.07" stroke="#0080FF" strokeWidth="3" />
-      {/* Bottom spoke */}
-      <line x1="50" y1="88" x2="50" y2="60" stroke="#0080FF" strokeWidth="3" />
-      {/* Bottom-left spoke */}
-      <line x1="21.72" y1="78.28" x2="42.93" y2="57.07" stroke="#0080FF" strokeWidth="3" />
-      {/* Left spoke */}
-      <line x1="12" y1="50" x2="40" y2="50" stroke="#0080FF" strokeWidth="3" />
-      {/* Top-left spoke */}
-      <line x1="21.72" y1="21.72" x2="42.93" y2="42.93" stroke="#0080FF" strokeWidth="3" />
-      
-      {/* Handles on the outer rim (8 positions) */}
-      <circle cx="50" cy="12" r="5" fill="#0080FF" />
-      <circle cx="78.28" cy="21.72" r="5" fill="#0080FF" />
-      <circle cx="88" cy="50" r="5" fill="#0080FF" />
-      <circle cx="78.28" cy="78.28" r="5" fill="#0080FF" />
-      <circle cx="50" cy="88" r="5" fill="#0080FF" />
-      <circle cx="21.72" cy="78.28" r="5" fill="#0080FF" />
-      <circle cx="12" cy="50" r="5" fill="#0080FF" />
-      <circle cx="21.72" cy="21.72" r="5" fill="#0080FF" />
-    </svg>
+    <img 
+      src={captainingIcon} 
+      alt="Captaining Your Journey" 
+      className={className}
+      style={{ objectFit: 'contain', width: '90%', height: '90%' }}
+    />
   );
 }
