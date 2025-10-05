@@ -45,7 +45,7 @@ export function ServicePathways() {
               <div className="flex justify-center mb-3">
                 <DIYIcon className="w-12 h-12" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-1">DIY Platform</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-1">Do It Yourself (DIY)</h3>
               <p className="text-sm text-gray-600 mb-3">Self-service automation</p>
               <div className="text-3xl font-bold text-blue-600 mb-2">$99<span className="text-lg text-gray-500">/mo</span></div>
             </div>
@@ -56,7 +56,7 @@ export function ServicePathways() {
               <div className="flex justify-center mb-3 mt-2">
                 <MSPIcon className="w-12 h-12" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-1">Managed Services</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-1">Managed Services Provided (MSP)</h3>
               <p className="text-sm text-gray-600 mb-3">Automation + Expert support</p>
               <div className="text-3xl font-bold text-secondary mb-2">$299<span className="text-lg text-gray-500">/mo</span></div>
             </div>
@@ -130,7 +130,7 @@ export function ServicePathways() {
             <div className="p-4 flex items-center">
               <CaptainIcon className="w-10 h-10 mr-3 flex-shrink-0" />
               <div>
-                <div className="font-medium text-gray-900">Captain Your Journey</div>
+                <div className="font-medium text-gray-900">Captaining Your Journey</div>
                 <div className="text-sm text-gray-500 mt-1">8 weeks personal oversight</div>
               </div>
             </div>
@@ -148,14 +148,14 @@ export function ServicePathways() {
             <div className="p-6 border-l border-gray-200">
               <Link href="/subscription?pathway=diy">
                 <Button className="w-full bg-primary hover:bg-primary/90" size="lg" data-testid="button-choose-diy">
-                  Choose DIY Path
+                  Choose Do It Yourself (DIY)
                 </Button>
               </Link>
             </div>
             <div className="p-6 border-l border-gray-200 bg-secondary/5">
               <Link href="/subscription?pathway=msp">
                 <Button className="w-full bg-secondary hover:bg-secondary/90" size="lg" data-testid="button-choose-msp">
-                  Choose Managed Services
+                  Choose Managed Services Provided (MSP)
                 </Button>
               </Link>
             </div>
@@ -167,7 +167,7 @@ export function ServicePathways() {
           <div className="flex items-start space-x-4">
             <CaptainIcon className="w-20 h-20 flex-shrink-0" />
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Captain Your Journey</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Captaining Your Journey</h3>
               <p className="text-gray-600 mb-4">
                 Get personalized oversight during your critical first 8 weeks. I'll personally guide your Digital Blueprint implementation, 
                 ensure everything is properly configured, and help you navigate challenges as they arise. Perfect for new businesses 
