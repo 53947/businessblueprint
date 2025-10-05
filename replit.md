@@ -1,8 +1,10 @@
-# cloudpleaser.io - Digital Intelligence Platform
+# businessblueprint.io - Digital Intelligence Platform
 
 ## Overview
 
-cloudpleaser.io helps local businesses succeed online through AI-powered digital intelligence and strategic guidance. Our core value proposition is simple: Get Found, Get Customers, Get Business. The platform analyzes businesses' online presence using Google Business Intelligence, creates personalized Digital Blueprints, and provides both DIY and Managed Service Provider (MSP) pathways. We focus on mass market automation to minimize manual intervention while maximizing business growth outcomes.
+**OFFICIAL BRAND:** businessblueprint.io (always use this name, never cloudpleaser.io)
+
+businessblueprint.io helps local businesses succeed online through AI-powered digital intelligence and strategic guidance. Our core value proposition is simple: Get Found, Get Customers, Get Business. The platform analyzes businesses' online presence using Google Business Intelligence, creates personalized Digital Blueprints, and provides both DIY and Managed Service Provider (MSP) pathways. We focus on mass market automation to minimize manual intervention while maximizing business growth outcomes.
 
 ## Brand Positioning
 
@@ -23,12 +25,19 @@ Preferred communication style: Simple, everyday language.
 - businessblueprint.io logo concept: Compass + Pencil = "AI" using actual blueprint tools
 
 Business Context:
-- cloudpleaser.io: Digital marketing platform (never mention Vendasta)
+- businessblueprint.io: Digital marketing platform - OFFICIAL BRAND (never mention Vendasta or cloudpleaser.io)
 - webhosted.io: Website hosting platform (never mention WPMUDev)
 - airswiped.com: Payment gateway platform (never mention NMI Network)
 - Focus on mass market automation to minimize manual intervention
 - Two primary pathways: DIY (self-service) and MSP (managed services)
 - AI-powered Google Business Intelligence drives assessment recommendations
+
+**Online Images (Email Signatures) - Trigger: "online images":**
+- Email signature images: attached_assets/BB Signature for DLL_1759682563632.png
+- Logo: attached_assets/BB Light Version Logo and Icon-synup_1759682563631.png
+- **Action needed:** Upload to businessblueprint.io website at /assets/signature/
+- Email HTML must use public URL: https://businessblueprint.io/assets/signature/[filename]
+- Email clients require publicly hosted URLs (cannot access local/Replit files)
 
 Brand Identity:
 - Official Brand Assets: cloudpleaser logo, webhosted logo, airswiped logo, AI Coach logo, Digital Blueprint icon
