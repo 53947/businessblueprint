@@ -263,6 +263,56 @@ export const subscriptionAddonSelections = pgTable("subscription_addon_selection
   addedAt: timestamp("added_at").defaultNow(),
 }, (table) => [unique().on(table.subscriptionId, table.addonId)]);
 
+// Individual Products - Core services offered à la carte
+export const products = pgTable("products", {
+  id: serial("id").primaryKey(),
+  productId: varchar("product_id", { length: 50 }).unique().notNull(), // business-listings, review-management, etc.
+  name: varchar("name", { length: 100 }).notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 50 }).notNull(), // core, addon, solution
+  
+  // Assessment category this product improves
+  improvesCategory: text("improves_category").array(), // ["visibility", "reviews", "completeness", "engagement"]
+  
+  // Pricing
+  diyPrice: decimal("diy_price", { precision: 10, scale: 2 }), // Price for DIY delivery
+  mspPrice: decimal("msp_price", { precision: 10, scale: 2 }), // Price for MSP delivery
+  setupFee: decimal("setup_fee", { precision: 10, scale: 2 }).default('0.00'),
+  billingCycle: varchar("billing_cycle", { length: 20 }).notNull(), // monthly, one_time
+  
+  // Service details
+  features: jsonb("features"), // List of what's included
+  deliveryMethod: text("delivery_method").array(), // ["diy", "msp"] - which pathways can deliver this
+  estimatedImpact: varchar("estimated_impact", { length: 50 }), // How much it improves IQ score
+  
+  isActive: boolean("is_active").default(true),
+  displayOrder: integer("display_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Assessment-based product recommendations
+export const assessmentProductRecommendations = pgTable("assessment_product_recommendations", {
+  id: serial("id").primaryKey(),
+  assessmentId: integer("assessment_id").references(() => assessments.id),
+  productId: integer("product_id").references(() => products.id),
+  
+  // Why this product is recommended
+  reason: text("reason").notNull(), // AI-generated explanation
+  priority: varchar("priority", { length: 20 }).notNull(), // critical, high, medium, low
+  
+  // Impact prediction
+  currentScore: integer("current_score"), // Current score in category
+  projectedScore: integer("projected_score"), // Expected score after implementation
+  scoreImprovement: integer("score_improvement"), // Improvement points
+  categoryAffected: varchar("category_affected", { length: 50 }), // visibility, reviews, completeness, engagement
+  
+  // Recommendation metadata
+  isAccepted: boolean("is_accepted").default(false),
+  isPurchased: boolean("is_purchased").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Billing history and invoice tracking
 export const billingHistory = pgTable("billing_history", {
   id: serial("id").primaryKey(),
@@ -331,6 +381,33 @@ export const insertBillingHistorySchema = createInsertSchema(billingHistory).pic
   failureReason: true,
 });
 
+export const insertProductSchema = createInsertSchema(products).pick({
+  productId: true,
+  name: true,
+  description: true,
+  category: true,
+  improvesCategory: true,
+  diyPrice: true,
+  mspPrice: true,
+  setupFee: true,
+  billingCycle: true,
+  features: true,
+  deliveryMethod: true,
+  estimatedImpact: true,
+  displayOrder: true,
+});
+
+export const insertAssessmentProductRecommendationSchema = createInsertSchema(assessmentProductRecommendations).pick({
+  assessmentId: true,
+  productId: true,
+  reason: true,
+  priority: true,
+  currentScore: true,
+  projectedScore: true,
+  scoreImprovement: true,
+  categoryAffected: true,
+});
+
 // Types
 export type Assessment = typeof assessments.$inferSelect;
 export type InsertAssessment = z.infer<typeof insertAssessmentSchema>;
@@ -353,3 +430,9 @@ export type InsertSubscription = z.infer<typeof insertSubscriptionSchema>;
 export type SubscriptionAddonSelection = typeof subscriptionAddonSelections.$inferSelect;
 export type BillingHistory = typeof billingHistory.$inferSelect;
 export type InsertBillingHistory = z.infer<typeof insertBillingHistorySchema>;
+
+// Product types
+export type Product = typeof products.$inferSelect;
+export type InsertProduct = z.infer<typeof insertProductSchema>;
+export type AssessmentProductRecommendation = typeof assessmentProductRecommendations.$inferSelect;
+export type InsertAssessmentProductRecommendation = z.infer<typeof insertAssessmentProductRecommendationSchema>;
