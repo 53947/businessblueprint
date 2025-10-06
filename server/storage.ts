@@ -5,6 +5,9 @@ import {
   inboxMessages,
   campaigns,
   clientAssessments,
+  sendContacts,
+  sendLists,
+  sendListContacts,
   type Assessment,
   type InsertAssessment,
   type Recommendation,
@@ -15,9 +18,13 @@ import {
   type InsertInboxMessage,
   type Campaign,
   type InsertCampaign,
+  type SendContact,
+  type InsertSendContact,
+  type SendList,
+  type InsertSendList,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 
 export interface IStorage {
   // Assessment operations
@@ -52,6 +59,25 @@ export interface IStorage {
   // Link operations
   linkAssessmentToClient(clientId: number, assessmentId: number): Promise<void>;
   getClientAssessments(clientId: number): Promise<Assessment[]>;
+
+  // /send Contact operations
+  createSendContact(contact: InsertSendContact): Promise<SendContact>;
+  getSendContact(id: number): Promise<SendContact | undefined>;
+  getSendContactsByClient(clientId: number): Promise<SendContact[]>;
+  updateSendContact(id: number, data: Partial<SendContact>): Promise<SendContact>;
+  deleteSendContact(id: number): Promise<void>;
+  
+  // /send List operations
+  createSendList(list: InsertSendList): Promise<SendList>;
+  getSendList(id: number): Promise<SendList | undefined>;
+  getSendListsByClient(clientId: number): Promise<SendList[]>;
+  updateSendList(id: number, data: Partial<SendList>): Promise<SendList>;
+  deleteSendList(id: number): Promise<void>;
+  
+  // /send List-Contact operations
+  addContactToList(listId: number, contactId: number): Promise<void>;
+  removeContactFromList(listId: number, contactId: number): Promise<void>;
+  getListContacts(listId: number): Promise<SendContact[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -219,6 +245,113 @@ export class DatabaseStorage implements IStorage {
       .where(eq(clientAssessments.clientId, clientId));
     
     return result.map(row => row.assessment);
+  }
+
+  // /send Contact operations
+  async createSendContact(contactData: InsertSendContact): Promise<SendContact> {
+    const [contact] = await db
+      .insert(sendContacts)
+      .values(contactData)
+      .returning();
+    return contact;
+  }
+
+  async getSendContact(id: number): Promise<SendContact | undefined> {
+    const [contact] = await db
+      .select()
+      .from(sendContacts)
+      .where(eq(sendContacts.id, id));
+    return contact;
+  }
+
+  async getSendContactsByClient(clientId: number): Promise<SendContact[]> {
+    return await db
+      .select()
+      .from(sendContacts)
+      .where(eq(sendContacts.clientId, clientId))
+      .orderBy(desc(sendContacts.createdAt));
+  }
+
+  async updateSendContact(id: number, data: Partial<SendContact>): Promise<SendContact> {
+    const [contact] = await db
+      .update(sendContacts)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(sendContacts.id, id))
+      .returning();
+    return contact;
+  }
+
+  async deleteSendContact(id: number): Promise<void> {
+    await db
+      .delete(sendContacts)
+      .where(eq(sendContacts.id, id));
+  }
+
+  // /send List operations
+  async createSendList(listData: InsertSendList): Promise<SendList> {
+    const [list] = await db
+      .insert(sendLists)
+      .values(listData)
+      .returning();
+    return list;
+  }
+
+  async getSendList(id: number): Promise<SendList | undefined> {
+    const [list] = await db
+      .select()
+      .from(sendLists)
+      .where(eq(sendLists.id, id));
+    return list;
+  }
+
+  async getSendListsByClient(clientId: number): Promise<SendList[]> {
+    return await db
+      .select()
+      .from(sendLists)
+      .where(eq(sendLists.clientId, clientId))
+      .orderBy(desc(sendLists.createdAt));
+  }
+
+  async updateSendList(id: number, data: Partial<SendList>): Promise<SendList> {
+    const [list] = await db
+      .update(sendLists)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(sendLists.id, id))
+      .returning();
+    return list;
+  }
+
+  async deleteSendList(id: number): Promise<void> {
+    await db
+      .delete(sendLists)
+      .where(eq(sendLists.id, id));
+  }
+
+  // /send List-Contact operations
+  async addContactToList(listId: number, contactId: number): Promise<void> {
+    await db
+      .insert(sendListContacts)
+      .values({ listId, contactId })
+      .onConflictDoNothing();
+  }
+
+  async removeContactFromList(listId: number, contactId: number): Promise<void> {
+    await db
+      .delete(sendListContacts)
+      .where(and(
+        eq(sendListContacts.listId, listId),
+        eq(sendListContacts.contactId, contactId)
+      ));
+  }
+
+  async getListContacts(listId: number): Promise<SendContact[]> {
+    const result = await db
+      .select({ contact: sendContacts })
+      .from(sendListContacts)
+      .innerJoin(sendContacts, eq(sendListContacts.contactId, sendContacts.id))
+      .where(eq(sendListContacts.listId, listId));
+    
+    return result.map(row => row.contact);
   }
 }
 
