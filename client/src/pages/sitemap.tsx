@@ -1,5 +1,6 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -13,173 +14,306 @@ import {
   LogIn,
   Settings,
   Brain,
-  Compass
+  Compass,
+  Map,
+  MapPin,
+  Palette,
+  ChevronRight
 } from "lucide-react";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
 
 export default function Sitemap() {
-  const pages = [
-    {
-      title: "Home",
+  const siteStructure = {
+    root: {
+      title: "businessblueprint.io",
       path: "/",
-      description: "Main landing page with overview of businessblueprint.io services and value proposition",
-      icon: Home,
-      category: "Main"
-    },
-    {
-      title: "Digital Assessment", 
-      path: "/assessment",
-      description: "Free AI-powered analysis of your business's online presence and digital score",
-      icon: BarChart3,
-      category: "Main"
-    },
-    {
-      title: "Subscription Plans",
-      path: "/subscription", 
-      description: "Choose between DIY and Managed Service plans with pricing and 7-day trials",
-      icon: CreditCard,
-      category: "Main"
-    },
-    {
-      title: "AI Business Coach",
-      path: "/ai-coach",
-      description: "AI-powered guidance and coaching for your digital growth and business success",
-      icon: () => <img src={aiCoachLogo} alt="AI Coach" className="w-5 h-5" />,
-      category: "Features"
-    },
-    {
-      title: "About Us",
-      path: "/about",
-      description: "Learn about businessblueprint.io mission, values, and approach to digital success",
-      icon: Info,
-      category: "Company"
-    },
-    {
-      title: "Contact",
-      path: "/contact", 
-      description: "Get in touch with our team for support, questions, and consultations",
-      icon: Mail,
-      category: "Company"
-    },
-    {
-      title: "Client Portal",
-      path: "/portal",
-      description: "Secure portal for existing clients to manage services, view reports, and track progress",
-      icon: Users,
-      category: "Client Area"
-    },
-    {
-      title: "Client Login",
-      path: "/portal/login",
-      description: "Secure login page for existing clients to access their dashboard",
-      icon: LogIn,
-      category: "Client Area"
-    },
-    {
-      title: "Site Map",
-      path: "/sitemap",
-      description: "Complete navigation guide to all available pages and features (current page)",
-      icon: Compass,
-      category: "Navigation"
+      description: "Digital Intelligence Platform",
+      children: [
+        {
+          title: "Public Pages",
+          children: [
+            {
+              title: "Home",
+              path: "/",
+              icon: Home,
+              description: "Landing page with value proposition"
+            },
+            {
+              title: "About",
+              path: "/about",
+              icon: Info,
+              description: "Mission and company information"
+            },
+            {
+              title: "Contact",
+              path: "/contact",
+              icon: Mail,
+              description: "Get in touch"
+            },
+            {
+              title: "Site Map",
+              path: "/sitemap",
+              icon: Compass,
+              description: "Visual navigation tree (current page)",
+              current: true
+            }
+          ]
+        },
+        {
+          title: "Core Features",
+          children: [
+            {
+              title: "Digital Assessment",
+              path: "/assessment",
+              icon: BarChart3,
+              description: "Free AI-powered Digital IQ analysis",
+              badge: "Free"
+            },
+            {
+              title: "Digital Blueprint",
+              path: "/dashboard/:id",
+              icon: Map,
+              description: "Personalized recommendations dashboard",
+              dynamic: true
+            },
+            {
+              title: "AI Business Coach",
+              path: "/ai-coach",
+              icon: Brain,
+              description: "AI guidance for digital growth",
+              badge: "$99/mo DIY"
+            },
+            {
+              title: "Journey",
+              path: "/journey",
+              icon: MapPin,
+              description: "5-step journey visualization"
+            }
+          ]
+        },
+        {
+          title: "Subscription & Billing",
+          children: [
+            {
+              title: "Subscription Plans",
+              path: "/subscription",
+              icon: CreditCard,
+              description: "DIY ($99/mo) & MSP ($299/mo) plans"
+            }
+          ]
+        },
+        {
+          title: "Client Portal",
+          badge: "Secure",
+          children: [
+            {
+              title: "Portal Login",
+              path: "/portal/login",
+              icon: LogIn,
+              description: "Vendasta Account Group ID authentication"
+            },
+            {
+              title: "Client Dashboard",
+              path: "/portal",
+              icon: Users,
+              description: "Listings, reviews, campaigns, tasks",
+              requiresAuth: true
+            }
+          ]
+        },
+        {
+          title: "Admin/Development",
+          children: [
+            {
+              title: "Vendasta Integration",
+              path: "/vendasta",
+              icon: Settings,
+              description: "API connection testing"
+            },
+            {
+              title: "Logo Preview",
+              path: "/logo-preview",
+              icon: Palette,
+              description: "Brand asset preview"
+            }
+          ]
+        }
+      ]
     }
-  ];
+  };
 
-  const categories = ["Main", "Features", "Company", "Client Area", "Navigation"];
+  const TreeNode = ({ node, level = 0, isLast = false, parentConnector = "" }: any) => {
+    const hasChildren = node.children && node.children.length > 0;
+    const isLeaf = !hasChildren;
+    const IconComponent = node.icon || ChevronRight;
+    
+    return (
+      <div className="relative">
+        {/* Current node */}
+        {node.path && (
+          <div className={`flex items-start gap-3 mb-2 ${level > 0 ? 'ml-8' : ''}`}>
+            {level > 0 && (
+              <div className="flex items-center">
+                <div className={`w-6 h-px ${isLast ? 'bg-blue-300' : 'bg-blue-300'}`}></div>
+              </div>
+            )}
+            <Link href={node.dynamic ? node.path.replace(':id', '1') : node.path}>
+              <Card className={`flex-1 hover:shadow-md transition-all cursor-pointer border-l-4 ${
+                node.current ? 'border-l-blue-600 bg-blue-50' : 'border-l-gray-300 hover:border-l-blue-400'
+              }`}>
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-3 flex-1">
+                      <IconComponent className={`w-5 h-5 mt-0.5 ${node.current ? 'text-blue-600' : 'text-gray-600'}`} />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className={`font-semibold ${node.current ? 'text-blue-900' : 'text-gray-900'}`}>
+                            {node.title}
+                          </h3>
+                          {node.badge && (
+                            <Badge variant="secondary" className="text-xs">
+                              {node.badge}
+                            </Badge>
+                          )}
+                          {node.requiresAuth && (
+                            <Badge variant="outline" className="text-xs border-orange-300 text-orange-700">
+                              Requires Auth
+                            </Badge>
+                          )}
+                          {node.dynamic && (
+                            <Badge variant="outline" className="text-xs border-purple-300 text-purple-700">
+                              Dynamic
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600">{node.description}</p>
+                        <code className="text-xs text-blue-600 mt-1 block">{node.path}</code>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+        )}
+
+        {/* Section header (no path) */}
+        {!node.path && node.title && (
+          <div className={`mb-3 ${level > 0 ? 'ml-8' : ''}`}>
+            <div className="flex items-center gap-2">
+              {level > 0 && (
+                <div className={`w-6 h-px ${isLast ? 'bg-blue-300' : 'bg-blue-300'}`}></div>
+              )}
+              <h2 className={`font-bold ${level === 0 ? 'text-2xl text-gray-900' : 'text-lg text-gray-700'} flex items-center gap-2`}>
+                {node.title}
+                {node.badge && (
+                  <Badge variant="secondary">{node.badge}</Badge>
+                )}
+              </h2>
+            </div>
+            {node.description && (
+              <p className="text-sm text-gray-500 mt-1 ml-8">{node.description}</p>
+            )}
+          </div>
+        )}
+
+        {/* Vertical connector line for children */}
+        {hasChildren && level > 0 && (
+          <div className={`absolute left-3 top-16 bottom-0 w-px ${isLast ? 'bg-transparent' : 'bg-blue-300'}`}></div>
+        )}
+
+        {/* Children */}
+        {hasChildren && (
+          <div className={`space-y-4 ${level === 0 ? 'mt-6' : 'mt-2'}`}>
+            {node.children.map((child: any, index: number) => (
+              <TreeNode
+                key={index}
+                node={child}
+                level={level + 1}
+                isLast={index === node.children.length - 1}
+                parentConnector={parentConnector}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       <Header showNavigation={true} />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
         <div className="text-center mb-12">
+          <div className="flex justify-center mb-4">
+            <Compass className="w-16 h-16 text-blue-600" />
+          </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Site Map</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Navigate through all available pages and features on businessblueprint.io. 
-            Find exactly what you're looking for with our organized page directory.
+            Complete visual navigation tree of businessblueprint.io platform
           </p>
         </div>
 
-        {categories.map((category) => (
-          <div key={category} className="mb-12">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6 border-b border-gray-200 pb-2">
-              {category}
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {pages
-                .filter((page) => page.category === category)
-                .map((page) => {
-                  const IconComponent = page.icon;
-                  return (
-                    <Card key={page.path} className="hover:shadow-lg transition-shadow h-full">
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-3">
-                          <IconComponent className="w-5 h-5 text-blue-600" />
-                          {page.title}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="flex flex-col h-full">
-                        <CardDescription className="mb-4 flex-grow">
-                          {page.description}
-                        </CardDescription>
-                        <Link href={page.path}>
-                          <Button 
-                            variant="outline" 
-                            className="w-full hover:bg-blue-50 hover:border-blue-300"
-                            data-testid={`link-${page.title.toLowerCase().replace(/\s+/g, '-')}`}
-                          >
-                            Visit Page
-                          </Button>
-                        </Link>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-            </div>
-          </div>
-        ))}
+        {/* Visual Tree */}
+        <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+          <CardContent className="p-8">
+            <TreeNode node={siteStructure.root} level={0} />
+          </CardContent>
+        </Card>
 
-        {/* Quick Navigation Section */}
-        <div className="mt-16 bg-white rounded-lg shadow-sm border p-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-            Quick Access
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Link href="/assessment">
-              <Button className="w-full bg-blue-600 hover:bg-blue-700" data-testid="button-quick-assessment">
-                <BarChart3 className="w-4 h-4 mr-2" />
-                Start Assessment
-              </Button>
-            </Link>
-            <Link href="/subscription">
-              <Button variant="outline" className="w-full" data-testid="button-quick-pricing">
-                <CreditCard className="w-4 h-4 mr-2" />
-                View Pricing
-              </Button>
-            </Link>
-            <Link href="/ai-coach">
-              <Button variant="outline" className="w-full" data-testid="button-quick-ai-coach">
-                <img src={aiCoachLogo} alt="AI Coach" className="w-4 h-4 mr-2" />
-                AI Coach
-              </Button>
-            </Link>
-            <Link href="/contact">
-              <Button variant="outline" className="w-full" data-testid="button-quick-contact">
-                <Mail className="w-4 h-4 mr-2" />
-                Contact Us
-              </Button>
-            </Link>
-          </div>
+        {/* Stats */}
+        <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl font-bold text-blue-600">14</div>
+              <div className="text-sm text-gray-600">Total Pages</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl font-bold text-green-600">4</div>
+              <div className="text-sm text-gray-600">Core Features</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl font-bold text-purple-600">2</div>
+              <div className="text-sm text-gray-600">Client Portal</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl font-bold text-orange-600">5</div>
+              <div className="text-sm text-gray-600">Public Pages</div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Navigation Help */}
+        {/* Quick Actions */}
         <div className="mt-8 text-center">
-          <p className="text-gray-600">
+          <p className="text-gray-600 mb-4">
             Can't find what you're looking for? Visit our{" "}
-            <Link href="/contact" className="text-blue-600 hover:text-blue-800 underline">
+            <Link href="/contact" className="text-blue-600 hover:text-blue-800 underline font-medium">
               contact page
             </Link>{" "}
-            for personalized assistance.
+            for assistance.
           </p>
+          <div className="flex justify-center gap-3">
+            <Link href="/assessment">
+              <Button className="bg-blue-600 hover:bg-blue-700">
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Start Free Assessment
+              </Button>
+            </Link>
+            <Link href="/">
+              <Button variant="outline">
+                <Home className="w-4 h-4 mr-2" />
+                Return Home
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
       
