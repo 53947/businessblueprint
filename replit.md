@@ -2,16 +2,10 @@
 
 ## Overview
 
-**OFFICIAL BRAND:** businessblueprint.io (always use this name, never cloudpleaser.io)
+businessblueprint.io is an AI-powered digital intelligence platform designed to help local businesses enhance their online presence, attract customers, and grow. It offers AI-driven analysis of online presence, generates personalized Digital Blueprints, and provides both Do It Yourself (DIY) and Managed Service Provider (MSP) pathways for business growth. The platform aims for mass market automation, leveraging Google Business Intelligence to minimize manual intervention and maximize results.
 
-businessblueprint.io helps local businesses succeed online through AI-powered digital intelligence and strategic guidance. Our core value proposition is simple: Get Found, Get Customers, Get Business. The platform analyzes businesses' online presence using Google Business Intelligence, creates personalized Digital Blueprints, and provides both DIY and Managed Service Provider (MSP) pathways. We focus on mass market automation to minimize manual intervention while maximizing business growth outcomes.
-
-## Brand Positioning
-
-**Strategic Positioning:** Digital Intelligence Incubator - nurturing businesses from digital obscurity to digital maturity through systematic, data-driven growth programs.
-
+**Brand Positioning:** Digital Intelligence Incubator - nurturing businesses from digital obscurity to digital maturity through systematic, data-driven growth programs.
 **Customer-Facing Message:** Helping Local Businesses Succeed Online
-
 **Value Proposition:** Get Found, Get Customers, Get Business
 
 ## User Preferences
@@ -56,7 +50,7 @@ Brand Identity:
 
 **Official 5-Step Journey Icons & Sizing Standards:**
 - Digital Assessment: w-16 h-16 (64px) - standard size
-- Digital Blueprint: w-16 h-16 (64px) - standard size  
+- Digital Blueprint: w-16 h-16 (64px) - standard size
 - Choose Your Path: w-16 h-16 (64px) - standard size
 - AI Coach: w-[86px] h-[86px] (86px) - 10% smaller than base size
 - Digital Success: w-[74px] h-[74px] (74px) - 15% bigger than base size
@@ -73,12 +67,12 @@ Brand Identity:
 
 ## System Architecture
 
-The application employs a full-stack architecture with a monorepo structure, separating frontend, backend, and shared components.
+The application utilizes a full-stack monorepo architecture.
 
 **Frontend:**
 - **Framework:** React 18 with TypeScript
 - **Routing:** Wouter
-- **Styling:** Tailwind CSS with Shadcn/ui components
+- **Styling:** Tailwind CSS with Shadcn/ui
 - **State Management:** TanStack Query
 - **Forms:** React Hook Form with Zod validation
 - **Build Tool:** Vite
@@ -86,133 +80,28 @@ The application employs a full-stack architecture with a monorepo structure, sep
 **Backend:**
 - **Runtime:** Node.js with Express.js
 - **Language:** TypeScript with ES modules
-- **Database:** PostgreSQL with Drizzle ORM, hosted on Neon (serverless)
+- **Database:** PostgreSQL with Drizzle ORM on Neon (serverless)
 - **Session Management:** Connect-pg-simple
 - **Email Service:** Nodemailer
 
 **Core Features & Components:**
-- **AI Coach:** An integral part of the platform, leveraging OpenAI GPT-4o for personalized guidance, step-by-step instructions, and progress tracking. It offers tiered pricing (Essential and Pro) and adapts to user experience levels.
-- **Client Portal:** ✅ COMPLETED - A fully functional, cloudpleaser.io-branded portal providing clients with a comprehensive dashboard overview, business listings management, review management, campaign tracking, and task management. Features real-time Vendasta integration with Account Group ID authentication, purple portal branding, and mobile-responsive design.
-- **Vendasta Integration:** ✅ COMPLETED - Comprehensive API integration with Vendasta Business Center, including customer synchronization, dashboard data retrieval, and authentication flow using Account Group IDs.
-- **Data Flow:** Involves assessment creation, background processing (Google Business data, AI analysis), automated report delivery, and pathway selection (DIY/MSP).
-- **UI/UX Decisions:** Emphasis on consistent branding, custom color schemes, and a multi-tab interface for organized information within the AI Coach and Client Portal. Visual progress indicators and priority-based action items are utilized.
+- **AI Coach:** Leverages OpenAI GPT-4o for personalized guidance, offering tiered pricing.
+- **Client Portal:** A comprehensive portal providing dashboard overview, business listings, review management, campaign tracking, and task management, integrated with Vendasta and mobile-responsive.
+- **Vendasta Integration:** API integration for customer synchronization, dashboard data retrieval, and authentication.
+- **Data Flow:** Involves assessment creation, background processing of Google Business data and AI analysis, automated report delivery, and pathway selection.
+- **UI/UX Decisions:** Emphasizes consistent branding, custom color schemes, multi-tab interfaces, visual progress indicators, and priority-based action items.
+- **/send Platform:** A robust Email + SMS marketing platform with unified campaigns, GDPR/CAN-SPAM/TCPA compliance, contact management, and a production-ready RESTful API with JWT authentication and client ownership validation.
+- **Subscription & Billing:** Simplified DIY ($99/mo) and MSP ($299/mo) pricing, with AI Business Coach and Captain Your Journey addons. Automated purchase flows and NMI payment integration.
 
 ## External Dependencies
 
--   **Google Places API:** Used for retrieving business data and facilitating presence analysis.
--   **OpenAI API:** Essential for AI-powered analysis, recommendations generation, and the AI Coach functionality.
--   **SMTP Credentials:** Required for sending automated email reports and notifications.
--   **Neon PostgreSQL:** The primary serverless database solution.
--   **Drizzle ORM:** Used for type-safe database interactions.
--   **Shadcn/ui:** Component library for UI development.
--   **Tailwind CSS:** Utility-first CSS framework for styling.
--   **Vendasta API:** For bi-directional synchronization of client data, form submissions, and enabling dashboard access without embedding Vendasta's UI. This includes real-time webhooks and API polling for data integrity.
-
-## Recent Changes (October 6, 2025)
-
-### ✅ /send Platform - Email + SMS Marketing (Schema Complete)
-**Built a production-ready database architecture for businessblueprint.io's flagship Email + SMS marketing platform:**
-
-**Core Features:**
-- Unified email + SMS campaigns with Telnyx integration ($0.004/message - 50% cheaper than Twilio)
-- Full GDPR/CAN-SPAM/TCPA compliance with consent tracking and audit trails
-- Contact management with double opt-in, preference center, and global suppression
-- A/B testing, rate limiting, frequency capping, and per-channel scheduling
-- Bounce/complaint logging, unsubscribe tracking, and deliverability monitoring
-
-**Database Schema:**
-- 12 tables: contacts, lists, templates, campaigns, sends, automations, consent records, suppression list, bounce log, preference center, unsubscribe records
-- Production compliance: Check constraints, unique indexes, consent snapshots, audit trails
-- Scalability: Normalized join tables, no embedded arrays, proper indexing
-
-**Pricing Updated:**
-- AI Business Coach DIY: $99 ✓
-- /send: $59.99 DIY (bundled) or $89.99 standalone ✓
-- Steps 1, 2, 5: $29.99 DIY ✓
-
-**Next Steps:**
-- Build backend API routes for contact/campaign management
-- Create frontend UI for campaign builder
-- Implement email service integration (SMTP)
-- Add automation workflows and analytics dashboard
-
-## Current Development Sprint
-
-### 🚨 IMMEDIATE PRIORITY (Blocking Users)
-- [x] **Task 1:** Fix Digital Blueprint pathway selection - "ACTION REQUIRED" section currently blocks user progress
-  - ✅ Added conditional logic to only show ACTION REQUIRED when no pathway selected
-  - ✅ Added green confirmation section when pathway is chosen
-  - ✅ Users can now change their pathway selection
-- [x] **Task 2:** Verify/configure Google Places API key - Service is built but may need configuration  
-  - ✅ Google Places API key is properly configured and working
-  - ✅ Successfully tested with real business data (UX Webcrafters)
-  - ⚠️ OpenAI quota exceeded - preventing AI analysis completion  
-- [x] **Task 3:** Verify/configure Email service SMTP credentials - May need setup for reports
-  - ✅ Email credentials properly configured with Google alias
-  - ✅ FROM_EMAIL: noreply@businessblueprint.io (updated from cloudpleaser.io)
-  - ✅ SMTP authentication setup complete
-
-### 💰 REVENUE PRIORITY (Enable Payments)
-- [x] **Task 4:** Complete NMI payment integration and subscription billing system
-  - ✅ NMI service integration with proper month_frequency billing cycles
-  - ✅ Frontend payment form with Collect.js tokenization
-  - ✅ Backend API with Zod validation and tax calculation
-  - ✅ Production-ready core billing functionality
-  - ⚠️ Webhook handling and idempotency identified for future enhancement
-- [x] **Task 5:** Implement 7-day free trial feature mentioned in AI Coach pricing
-  - ✅ Database schema updated with trial period support
-  - ✅ Backend logic for AI Coach addon trial detection
-  - ✅ Trial status API endpoint and delayed billing implementation
-  - ✅ Frontend trial badge and enhanced messaging
-  - ⚠️ Trial-to-active transition and cancellation flow for future enhancement
-- [x] **Task 5.1:** Redesign subscription pricing and automated purchase flow (October 4, 2025)
-  - ✅ Simplified pricing structure: DIY $99/mo, MSP $299/mo (eliminated 3-tier complexity)
-  - ✅ Created brand-consistent pathway icons: DIY (gear+tools blue), MSP (gear+person orange), AI Coach (cap with AI), Captain (ship wheel)
-  - ✅ AI Business Coach addon: $99/mo for DIY, $59/mo for MSP (pathway-specific pricing via separate addons)
-  - ✅ NEW: Captain Your Journey addon at $249/mo for 8-week personalized oversight
-  - ✅ Automated purchase flow: Direct links from home page to /subscription with pathway pre-selection
-  - ✅ Removed all "book a demo" language - instant self-service signup enabled
-  - ✅ Database updated: Inactive plans deactivated, main plans reflect new pricing
-  - ✅ Production-ready and architect-approved
-
-### 👥 CLIENT EXPERIENCE (Remove "Coming Soon" Placeholders)
-- [ ] **Task 6:** Build Client Portal Review Management interface
-- [ ] **Task 7:** Build Client Portal Campaign Management interface  
-- [ ] **Task 8:** Build Client Portal Advanced Task Management
-
-### ✨ POLISH & GROWTH (Future Enhancements)
-- [ ] **Task 9:** Complete AI Coach feature implementation - verify all tabs functional
-- [ ] **Task 10:** Fix assessment timing promise - change from "24 hours" to realistic timeframe
-- [ ] **Task 11:** Research cost-effective alternatives to Vendasta/Synup
-- [ ] **Task 12:** Build embeddable dashboard system for client portal
-
-### 📊 Sprint Progress Tracking
-**Started:** December 26, 2024  
-**Current Task:** Task 6 - Build Client Portal Review Management interface  
-**Completed:** 6/12 tasks (Task 5.1 added and completed October 4, 2025)
-**Estimated Sprint Duration:** 2-3 weeks
-
-### 💳 Current Subscription Pricing (Live)
-**DIY Platform - $99/mo**
-- Automated Listing Management (100+ directories)
-- Social Media Automation & Scheduling
-- Review & Reputation Tools
-- Campaign & Website Builder
-- Add-ons: AI Coach +$99/mo, Captain Your Journey +$249/mo
-
-**Managed Services - $299/mo**
-- Full Platform Access (all DIY features)
-- Expert Support Team (Synup-powered)
-- Priority Assistance
-- Monthly Performance Reports
-- Add-ons: AI Coach +$59/mo, Captain Your Journey +$249/mo
-
-**Addons Available:**
-- AI Business Coach: $99/mo (DIY) or $59/mo (MSP) - Personalized AI guidance
-- Captain Your Journey: $249/mo (8 weeks) - Personal oversight during launch phase  
-
-### 🔄 How to Use This Task List
-1. **Check Daily:** Review current task and progress
-2. **Update Status:** Mark tasks as complete by changing `[ ]` to `[x]`
-3. **Add Notes:** Include implementation details below each completed task
-4. **Track Blockers:** Note any issues that prevent progress
+-   **Google Places API:** For retrieving business data and presence analysis.
+-   **OpenAI API:** For AI-powered analysis, recommendations, and AI Coach.
+-   **SMTP Credentials:** For sending automated emails.
+-   **Neon PostgreSQL:** Serverless database solution.
+-   **Drizzle ORM:** For type-safe database interactions.
+-   **Shadcn/ui:** Component library.
+-   **Tailwind CSS:** Utility-first CSS framework.
+-   **Vendasta API:** For bi-directional client data synchronization and dashboard access.
+-   **Telnyx:** For SMS messaging in the /send platform.
+-   **NMI (Network Merchants Inc.):** Payment gateway integration for subscription billing.
