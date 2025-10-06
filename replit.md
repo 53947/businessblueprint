@@ -108,6 +108,34 @@ The application employs a full-stack architecture with a monorepo structure, sep
 -   **Tailwind CSS:** Utility-first CSS framework for styling.
 -   **Vendasta API:** For bi-directional synchronization of client data, form submissions, and enabling dashboard access without embedding Vendasta's UI. This includes real-time webhooks and API polling for data integrity.
 
+## Recent Changes (October 6, 2025)
+
+### ✅ /send Platform - Email + SMS Marketing (Schema Complete)
+**Built a production-ready database architecture for businessblueprint.io's flagship Email + SMS marketing platform:**
+
+**Core Features:**
+- Unified email + SMS campaigns with Telnyx integration ($0.004/message - 50% cheaper than Twilio)
+- Full GDPR/CAN-SPAM/TCPA compliance with consent tracking and audit trails
+- Contact management with double opt-in, preference center, and global suppression
+- A/B testing, rate limiting, frequency capping, and per-channel scheduling
+- Bounce/complaint logging, unsubscribe tracking, and deliverability monitoring
+
+**Database Schema:**
+- 12 tables: contacts, lists, templates, campaigns, sends, automations, consent records, suppression list, bounce log, preference center, unsubscribe records
+- Production compliance: Check constraints, unique indexes, consent snapshots, audit trails
+- Scalability: Normalized join tables, no embedded arrays, proper indexing
+
+**Pricing Updated:**
+- AI Business Coach DIY: $99 ✓
+- /send: $59.99 DIY (bundled) or $89.99 standalone ✓
+- Steps 1, 2, 5: $29.99 DIY ✓
+
+**Next Steps:**
+- Build backend API routes for contact/campaign management
+- Create frontend UI for campaign builder
+- Implement email service integration (SMTP)
+- Add automation workflows and analytics dashboard
+
 ## Current Development Sprint
 
 ### 🚨 IMMEDIATE PRIORITY (Blocking Users)
