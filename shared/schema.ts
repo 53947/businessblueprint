@@ -213,6 +213,7 @@ export const subscriptionAddons = pgTable("subscription_addons", {
   name: varchar("name", { length: 100 }).notNull(),
   description: text("description"),
   category: varchar("category", { length: 50 }).notNull(), // seo, social, email, ppc, etc.
+  icon: varchar("icon", { length: 50 }), // Icon name from lucide-react (Brain, Ship, Sparkles, etc.)
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   billingCycle: varchar("billing_cycle", { length: 20 }).notNull(),
   compatiblePathways: text("compatible_pathways").array(), // ["msp", "diy"] or ["msp"]
