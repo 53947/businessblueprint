@@ -5,6 +5,10 @@
 businessblueprint.io is an AI-powered digital intelligence platform designed to help local businesses enhance their online presence, attract customers, and grow. It offers AI-driven analysis of online presence, generates personalized Digital Blueprints, and provides both Do It Yourself (DIY) and Managed Service Provider (MSP) pathways for business growth. The platform aims for mass market automation, leveraging Google Business Intelligence to minimize manual intervention and maximize results.
 
 **Recent Updates (October 7, 2025):**
+- ✅ Fixed subscription page order summary bug: JSON parsing issue resolved, pricing now displays correctly
+- ✅ Fixed useEffect infinite loop: Plan auto-selection no longer re-triggers on every render
+- ✅ Subscription page testing: MSP/DIY switching, addon selection, pricing calculation all working
+- ✅ Database schema: Added icon column to subscription_addons with appropriate icon names
 - ✅ Mega menu enhanced with dark mode support, gradient hover effects, and comprehensive test coverage
 - ✅ Updated to official icons: AI Business Coach (compass+pencil cap/whistle), /send (email/arrow)
 - ✅ Fixed pricing page: Dynamic calculations by billing cycle, "Digital Blueprint" branding
@@ -99,6 +103,58 @@ The application utilizes a full-stack monorepo architecture.
 - **UI/UX Decisions:** Emphasizes consistent branding, custom color schemes, multi-tab interfaces, visual progress indicators, and priority-based action items.
 - **/send Platform:** A robust Email + SMS marketing platform with unified campaigns, GDPR/CAN-SPAM/TCPA compliance, contact management, and a production-ready RESTful API with JWT authentication and client ownership validation.
 - **Subscription & Billing:** Simplified DIY ($99/mo) and MSP ($299/mo) pricing, with AI Business Coach and Captain Your Journey addons. Automated purchase flows and NMI payment integration.
+
+## Three Distinct Purchasing Flows
+
+The platform features **THREE separate purchasing scenarios**, each with different UI presentation and user journey:
+
+### Flow 3a: General Subscription Page (CURRENT - WORKING ✓)
+**Route:** `/subscription`
+**Purpose:** Direct subscription purchase with pathway selection
+**UI Layout:** Plan-focused presentation
+- **MSP/DIY pathway buttons** prominently displayed at top
+- Plans shown as primary focus with detailed feature lists
+- Order summary updates dynamically based on selections
+- Addon options displayed with checkboxes
+- **Current Status:** Fully functional - MSP/DIY switching, addon selection, pricing calculation all working
+
+### Flow 3b: Assessment/Diagnosis-Driven Recommendations (TO BUILD)
+**Route:** `/assessment-checkout` (or similar)
+**Purpose:** Post-diagnosis recommendations leading to purchase
+**UI Layout:** Diagnosis-driven with pathway preference integration
+- System completes Digital IQ Assessment first
+- AI recommends specific apps based on diagnosis results
+- **Pathway preference question:** "Do you prefer DIY, MSP, or a Combination?"
+- Order summary calculates bundle with recommended apps + pathway preference
+- Plans from 3a shown as **bundle options**, NOT prominently displayed
+- Different top verbiage emphasizing diagnosis-driven recommendations
+- Must feel like natural progression from assessment results
+
+### Flow 3c: A La Carte Individual App Ordering (TO BUILD)
+**Route:** `/apps-marketplace` (or similar)
+**Purpose:** Direct purchase of individual apps without assessment
+**UI Layout:** App-focused with bundle suggestions
+- Primary focus: Individual app cards with "Add to Cart" functionality
+- Different top verbiage from 3b - emphasizes individual app selection
+- Plans from 3a displayed as **"Bundle Options"** or **"Save with Packages"**
+- Order summary shows selected individual apps
+- May share same route/page as 3b but with **different presentation logic**
+- Bundle offerings positioned as value-add suggestions, not primary focus
+
+### Critical Design Requirements
+1. **Cannot reuse same UI across all three flows** - each needs distinct layout
+2. **Plans appear differently:**
+   - 3a: Prominent, primary focus (current implementation)
+   - 3b: Bundle offerings within diagnosis results
+   - 3c: Bundle options alongside individual apps
+3. **Order summary behavior:**
+   - 3a: Pathway selection → plan → addons
+   - 3b: Diagnosis → recommended apps → pathway preference → bundle calculation
+   - 3c: Individual apps → optional bundle upgrade
+4. **User context matters:**
+   - 3a: User knows they want a plan
+   - 3b: User completed assessment, wants recommendations
+   - 3c: User wants specific apps, may discover bundles
 
 ## External Dependencies
 
