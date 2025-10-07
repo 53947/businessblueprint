@@ -27,9 +27,24 @@ import {
   CreditCard,
   ArrowRight,
   Info,
-  Sparkles
+  Sparkles,
+  Ship,
+  LucideIcon
 } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
+
+// Icon mapping for addons from string to component
+const iconMap: Record<string, LucideIcon> = {
+  'Brain': Brain,
+  'Ship': Ship,
+  'Sparkles': Sparkles,
+  'Users': Users,
+  'Globe': Globe,
+  'Shield': Shield,
+  'Zap': Zap,
+  'Crown': Crown,
+  'Star': Star
+};
 
 // Using shared types from schema
 interface ExtendedSubscriptionPlan extends SubscriptionPlan {
@@ -363,33 +378,36 @@ export default function SubscriptionPage() {
                   <div className="mt-8">
                     <h4 className="text-lg font-semibold text-gray-900 mb-4">Add-on Services</h4>
                     <div className="space-y-3">
-                      {compatibleAddons.map((addon) => (
-                        <div
-                          key={addon.addonId}
-                          className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
-                        >
-                          <div className="flex items-start space-x-3">
-                            <Checkbox
-                              checked={selectedAddons.some(a => a.addonId === addon.addonId)}
-                              onCheckedChange={(checked) => handleAddonToggle(addon.addonId, checked as boolean)}
-                              data-testid={`checkbox-addon-${addon.addonId}`}
-                            />
-                            <div>
-                              <div className="flex items-center space-x-2">
-                                <addon.icon className="w-4 h-4 text-blue-600" />
-                                <span className="font-medium text-gray-900">{addon.name}</span>
+                      {compatibleAddons.map((addon) => {
+                        const AddonIcon = iconMap[addon.icon as string] || Sparkles;
+                        return (
+                          <div
+                            key={addon.addonId}
+                            className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                          >
+                            <div className="flex items-start space-x-3">
+                              <Checkbox
+                                checked={selectedAddons.some(a => a.addonId === addon.addonId)}
+                                onCheckedChange={(checked) => handleAddonToggle(addon.addonId, checked as boolean)}
+                                data-testid={`checkbox-addon-${addon.addonId}`}
+                              />
+                              <div>
+                                <div className="flex items-center space-x-2">
+                                  <AddonIcon className="w-4 h-4 text-blue-600" />
+                                  <span className="font-medium text-gray-900">{addon.name}</span>
+                                </div>
+                                <p className="text-sm text-gray-600 mt-1">{addon.description}</p>
                               </div>
-                              <p className="text-sm text-gray-600 mt-1">{addon.description}</p>
+                            </div>
+                            <div className="text-right">
+                              <div className="font-semibold text-gray-900">${addon.price}</div>
+                              <div className="text-sm text-gray-500">
+                                {addon.billingType === 'monthly' ? 'per month' : 'one-time'}
+                              </div>
                             </div>
                           </div>
-                          <div className="text-right">
-                            <div className="font-semibold text-gray-900">${addon.price}</div>
-                            <div className="text-sm text-gray-500">
-                              {addon.billingType === 'monthly' ? 'per month' : 'one-time'}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -412,39 +430,48 @@ export default function SubscriptionPage() {
                   <div className="space-y-4">
                     <div className="flex justify-between">
                       <span className="font-medium">{selectedPlan.name}</span>
-                      <span>${selectedPlan.basePrice}/mo</span>
+                      <span>${pricing.basePrice.toFixed(2)}</span>
                     </div>
                     
                     {pricing.addonPrices.map((addon) => (
                       <div key={addon.addonId} className="flex justify-between text-sm">
                         <span className="text-gray-600">{addon.name}</span>
-                        <span>${addon.price.toFixed(2)}/mo</span>
+                        <span>${addon.price.toFixed(2)}</span>
                       </div>
                     ))}
                     
                     {pricing.setupFee > 0 && (
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Setup Fee</span>
+                        <span className="text-gray-600">Setup Fee (one-time)</span>
                         <span>${pricing.setupFee.toFixed(2)}</span>
                       </div>
                     )}
                     
                     {pricing.savings && pricing.savings > 0 && (
                       <div className="flex justify-between text-sm text-green-600">
-                        <span>Total Savings</span>
+                        <span>Total Savings ({billingCycle})</span>
                         <span>-${pricing.savings.toFixed(2)}</span>
                       </div>
                     )}
                     
                     <Separator />
                     
-                    <div className="flex justify-between font-bold text-lg">
-                      <span>Total</span>
-                      <span>${pricing.total.toFixed(2)}</span>
-                    </div>
+                    {pricing.setupFee > 0 && (
+                      <>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Due Today</span>
+                          <span className="font-semibold">${pricing.oneTimeTotal.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Recurring ({pricing.billingCycle})</span>
+                          <span className="font-semibold">${pricing.recurringTotal.toFixed(2)}</span>
+                        </div>
+                      </>
+                    )}
                     
-                    <div className="text-sm text-gray-600 text-center">
-                      Recurring: ${pricing.recurringTotal.toFixed(2)}/{pricing.billingCycle || 'month'}
+                    <div className="flex justify-between font-bold text-lg">
+                      <span>Total {pricing.setupFee > 0 ? 'Due Today' : ''}</span>
+                      <span>${pricing.total.toFixed(2)}</span>
                     </div>
                     
                     {getBillingCycleDiscount() && (
