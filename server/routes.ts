@@ -99,7 +99,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       const { pathway } = req.body;
 
-      if (!["diy", "msp", "none"].includes(pathway)) {
+      if (!["diy", "msp", "combination", "none"].includes(pathway)) {
         return res.status(400).json({ message: "Invalid pathway selection" });
       }
 
@@ -808,6 +808,215 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Calculate bundle pricing from assessment recommendations  
+  app.post("/api/pricing/calculate-bundle", async (req, res) => {
+    try {
+      const { assessmentId, pathway, productIds = [], billingCycle = 'monthly' } = req.body;
+      
+      if (!assessmentId || !pathway) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Assessment ID and pathway are required" 
+        });
+      }
+
+      // Get the appropriate plan based on pathway
+      const planIdMap: Record<string, string> = {
+        'diy': 'diy-platform',
+        'msp': 'msp-starter',
+        'combination': 'msp-starter'
+      };
+
+      const planStringId = planIdMap[pathway];
+      const [plan] = await db.select().from(subscriptionPlans)
+        .where(eq(subscriptionPlans.planId, planStringId))
+        .limit(1);
+      
+      if (!plan) {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Plan not found for pathway" 
+        });
+      }
+
+      // Get selected products with pricing
+      const { products: productsTable } = await import("@shared/schema");
+      const { inArray } = await import("drizzle-orm");
+      
+      let selectedProducts: any[] = [];
+      let productsTotal = 0;
+      
+      if (productIds.length > 0) {
+        selectedProducts = await db.select().from(productsTable)
+          .where(inArray(productsTable.id, productIds));
+        
+        // Calculate total based on pathway
+        productsTotal = selectedProducts.reduce((sum, product) => {
+          const price = pathway === 'diy' 
+            ? parseFloat(product.diyPrice || '0') 
+            : parseFloat(product.mspPrice || '0');
+          return sum + price;
+        }, 0);
+      }
+
+      // Calculate pricing based on billing cycle
+      const basePriceMonthly = parseFloat(plan.basePrice);
+      const productsMonthly = productsTotal;
+      
+      // Multiply by billing cycle months
+      const cycleMonths = billingCycle === 'quarterly' ? 3 : billingCycle === 'annual' ? 12 : 1;
+      const subtotal = (basePriceMonthly + productsMonthly) * cycleMonths;
+      
+      // Apply discount for longer billing cycles
+      let discount = 0;
+      if (billingCycle === 'quarterly') {
+        discount = subtotal * 0.05; // 5% discount
+      } else if (billingCycle === 'annual') {
+        discount = subtotal * 0.15; // 15% discount
+      }
+      
+      const total = subtotal - discount;
+
+      // Transform to frontend-expected format
+      const pricing = {
+        planName: plan.name,
+        planPrice: basePriceMonthly * cycleMonths,
+        selectedAddons: selectedProducts.map(product => {
+          const monthlyPrice = pathway === 'diy' 
+            ? parseFloat(product.diyPrice || '0') 
+            : parseFloat(product.mspPrice || '0');
+          return {
+            name: product.name,
+            price: monthlyPrice * cycleMonths
+          };
+        }),
+        subtotal,
+        discount,
+        total,
+        billingCycle,
+        savings: discount
+      };
+
+      res.json({ 
+        success: true, 
+        pricing
+      });
+    } catch (error) {
+      console.error("Error calculating bundle pricing:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to calculate bundle pricing" 
+      });
+    }
+  });
+
+  // Create subscription from assessment
+  app.post("/api/subscriptions/create-from-assessment", async (req, res) => {
+    try {
+      const { assessmentId, pathway, productIds = [], billingCycle = 'monthly' } = req.body;
+      
+      if (!assessmentId || !pathway) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Assessment ID and pathway are required" 
+        });
+      }
+
+      // Get assessment details
+      const assessment = await storage.getAssessment(assessmentId);
+      if (!assessment) {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Assessment not found" 
+        });
+      }
+
+      // Map pathway to plan ID
+      const planIdMap: Record<string, string> = {
+        'diy': 'diy-platform',
+        'msp': 'msp-starter',
+        'combination': 'msp-starter'
+      };
+
+      const planStringId = planIdMap[pathway];
+      const [plan] = await db.select().from(subscriptionPlans)
+        .where(eq(subscriptionPlans.planId, planStringId))
+        .limit(1);
+      
+      if (!plan) {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Plan not found" 
+        });
+      }
+
+      // Get selected products for pricing
+      const { products: productsTable } = await import("@shared/schema");
+      const { inArray } = await import("drizzle-orm");
+      
+      let selectedProducts: any[] = [];
+      let productsTotal = 0;
+      
+      if (productIds.length > 0) {
+        selectedProducts = await db.select().from(productsTable)
+          .where(inArray(productsTable.id, productIds));
+        
+        productsTotal = selectedProducts.reduce((sum, product) => {
+          const price = pathway === 'diy' 
+            ? parseFloat(product.diyPrice || '0') 
+            : parseFloat(product.mspPrice || '0');
+          return sum + price;
+        }, 0);
+      }
+
+      // Calculate pricing based on billing cycle
+      const basePriceMonthly = parseFloat(plan.basePrice);
+      const productsMonthly = productsTotal;
+      
+      // Multiply by billing cycle months
+      const cycleMonths = billingCycle === 'quarterly' ? 3 : billingCycle === 'annual' ? 12 : 1;
+      const subtotal = (basePriceMonthly + productsMonthly) * cycleMonths;
+      
+      // Apply discount for longer billing cycles
+      let discount = 0;
+      if (billingCycle === 'quarterly') {
+        discount = subtotal * 0.05;
+      } else if (billingCycle === 'annual') {
+        discount = subtotal * 0.15;
+      }
+      
+      const total = subtotal - discount;
+
+      // Prepare subscription data with all required fields
+      const subscriptionData = {
+        assessmentId,
+        planId: plan.id,
+        status: 'pending_payment' as const,
+        baseAmount: (basePriceMonthly * cycleMonths).toString(),
+        addonAmount: (productsMonthly * cycleMonths).toString(),
+        totalAmount: total.toString(),
+        billingCycle,
+      };
+
+      // Create the subscription
+      const subscription = await db.insert(subscriptions)
+        .values(subscriptionData)
+        .returning();
+
+      res.json({ 
+        success: true, 
+        subscription: subscription[0],
+        message: "Subscription created successfully" 
+      });
+    } catch (error) {
+      console.error("Error creating subscription from assessment:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to create subscription" 
+      });
+    }
+  });
+
   // Check trial status for a subscription
   app.get("/api/subscriptions/:id/trial-status", async (req, res) => {
     try {
@@ -1012,7 +1221,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/assessments/:id/product-recommendations", async (req, res) => {
     try {
       const assessmentId = parseInt(req.params.id);
-      const recommendations = await productRecommendationService.getRecommendations(assessmentId);
+      const recs = await productRecommendationService.getRecommendations(assessmentId);
+      
+      // Flatten the nested product structure for frontend
+      const recommendations = recs.map(rec => ({
+        productId: rec.product.id,
+        productName: rec.product.name,
+        reason: rec.reason,
+        priority: rec.priority,
+        diyPrice: rec.product.diyPrice,
+        mspPrice: rec.product.mspPrice,
+        category: rec.product.category,
+        currentScore: rec.currentScore,
+        projectedScore: rec.projectedScore,
+        scoreImprovement: rec.scoreImprovement
+      }));
       
       res.json({ 
         success: true, 
