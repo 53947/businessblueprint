@@ -110,7 +110,7 @@ export default function SubscriptionPage() {
         billingCycle
       });
       
-      return response;
+      return await response.json();
     },
     enabled: !!selectedPlan,
     staleTime: 30000
@@ -130,13 +130,18 @@ export default function SubscriptionPage() {
     addon.compatiblePathways && addon.compatiblePathways.includes(pathway)
   );
 
-  // Auto-select recommended plan when pathway changes
+  // Auto-select recommended plan when pathway changes or when no plan is selected
   useEffect(() => {
     if (currentPathwayPlans.length > 0) {
-      const recommendedPlan = currentPathwayPlans.find(p => p.recommended) || currentPathwayPlans[0];
-      setSelectedPlan(recommendedPlan);
+      // Only auto-select if: no plan selected OR current plan is not in the current pathway
+      const currentPlanInPathway = selectedPlan && currentPathwayPlans.some(p => p.planId === selectedPlan.planId);
+      
+      if (!selectedPlan || !currentPlanInPathway) {
+        const recommendedPlan = currentPathwayPlans.find(p => p.recommended) || currentPathwayPlans[0];
+        setSelectedPlan(recommendedPlan);
+      }
     }
-  }, [pathway, plans]);
+  }, [pathway, currentPathwayPlans.length]);
 
   const handleAddonToggle = (addonId: string, checked: boolean) => {
     if (checked) {
