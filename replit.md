@@ -4,6 +4,13 @@
 
 businessblueprint.io is an AI-powered digital intelligence platform designed to help local businesses enhance their online presence, attract customers, and grow. It offers AI-driven analysis of online presence, generates personalized Digital Blueprints, and provides both Do It Yourself (DIY) and Managed Service Provider (MSP) pathways for business growth. The platform aims for mass market automation, leveraging Google Business Intelligence to minimize manual intervention and maximize results.
 
+**Recent Updates (October 7, 2025):**
+- ✅ Mega menu enhanced with dark mode support, gradient hover effects, and comprehensive test coverage
+- ✅ Updated to official icons: AI Business Coach (compass+pencil cap/whistle), /send (email/arrow)
+- ✅ Fixed pricing page: Dynamic calculations by billing cycle, "Digital Blueprint" branding
+- ✅ Homepage ecosystem cards: Overflow prevention, responsive sizing
+- ✅ Navigation improvements: Platform logos visible with names in Apps mega menu
+
 **Brand Positioning:** Digital Intelligence Incubator - nurturing businesses from digital obscurity to digital maturity through systematic, data-driven growth programs.
 **Customer-Facing Message:** Helping Local Businesses Succeed Online
 **Value Proposition:** Get Found, Get Customers, Get Business

@@ -84,7 +84,7 @@ export default function SubscriptionPage() {
     queryKey: ['/api/subscription-addons']
   });
 
-  const { data: pricingData, isLoading: pricingLoading } = useQuery({
+  const { data: pricingData, isLoading: pricingLoading, isFetching: pricingFetching } = useQuery({
     queryKey: ['/api/pricing/calculate', selectedPlan?.planId, selectedAddons, billingCycle],
     queryFn: async () => {
       if (!selectedPlan) return null;
@@ -97,7 +97,8 @@ export default function SubscriptionPage() {
       
       return response;
     },
-    enabled: !!selectedPlan
+    enabled: !!selectedPlan,
+    staleTime: 30000
   });
 
   const plans: ExtendedSubscriptionPlan[] = (plansData as any)?.plans || [];
@@ -239,18 +240,21 @@ export default function SubscriptionPage() {
             className="flex space-x-6"
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="monthly" id="monthly" />
+              <RadioGroupItem value="monthly" id="monthly" data-testid="radio-billing-monthly" />
               <Label htmlFor="monthly">Monthly</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="quarterly" id="quarterly" />
+              <RadioGroupItem value="quarterly" id="quarterly" data-testid="radio-billing-quarterly" />
               <Label htmlFor="quarterly">Quarterly <Badge variant="secondary" className="ml-1">5% off</Badge></Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="annual" id="annual" />
+              <RadioGroupItem value="annual" id="annual" data-testid="radio-billing-annual" />
               <Label htmlFor="annual">Annual <Badge variant="secondary" className="ml-1">15% off</Badge></Label>
             </div>
           </RadioGroup>
+          {pricingFetching && !pricingLoading && (
+            <div className="ml-4 text-sm text-gray-500 animate-pulse" data-testid="status-pricing-updating">Updating pricing...</div>
+          )}
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
