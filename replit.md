@@ -15,6 +15,10 @@ businessblueprint.io is an AI-powered digital intelligence platform designed to 
 - ✅ Homepage ecosystem cards: Overflow prevention, responsive sizing
 - ✅ Navigation improvements: Platform logos visible with names in Apps mega menu
 - ✅ **Flow 3b Assessment Checkout (COMPLETED):** Product-based pricing with proper billing cycle calculations, pathway support (DIY/MSP/Combination), correct discount application
+- ✅ **Terminology Standardization:** All DIY/MSP references now consistently use "Do It Yourself (DIY)" and "Managed Services Provided (MSP)" across site
+- ✅ **Pathway Icons Updated:** New orange/gold DIY icon and purple MSP icon implemented sitewide
+- ✅ **/send Branding Updated:** Golden icon and proper logo formatting applied in navigation and brand components
+- ✅ **Pathway Descriptions:** Added detailed excerpts for DIY/MSP pathways in navigation menu
 
 **Brand Positioning:** Digital Intelligence Incubator - nurturing businesses from digital obscurity to digital maturity through systematic, data-driven growth programs.
 **Customer-Facing Message:** Helping Local Businesses Succeed Online
@@ -181,3 +185,68 @@ The platform features **THREE separate purchasing scenarios**, each with differe
 -   **Vendasta API:** For bi-directional client data synchronization and dashboard access.
 -   **Telnyx:** For SMS messaging in the /send platform.
 -   **NMI (Network Merchants Inc.):** Payment gateway integration for subscription billing.
+
+## Integration Status
+
+### Completed Integrations ✅
+- **Vendasta (Synup):** ✅ Fully implemented
+  - API connection established with business-center-api.vendasta.com
+  - Database schema complete (clients, campaigns, inbox_messages, dashboard_access)
+  - Webhook handlers and client sync endpoints operational
+  - RS256 JWT enterprise authentication configured
+  
+- **NMI Payment Gateway:** ✅ Fully implemented
+  - Backend service complete (server/services/nmi.ts)
+  - Frontend payment form with Collect.js integration
+  - Subscription creation, transaction processing, token validation
+  - Supports monthly, quarterly, annual billing cycles
+
+### Partial Implementations ⚠️
+- **WPMUDev (webhosted.io):** Branding complete, technical integration not implemented
+  - Platform represents WordPress hosting/maintenance services
+  - Logo and brand assets configured
+  - Backend integration pending
+
+- **/send Email Platform:** Backend complete, UI pending
+  - Complete database schema (contacts, lists, templates, campaigns, automations)
+  - Storage interface fully implemented
+  - Email service (Nodemailer) configured
+  - SMS service (Telnyx) configured
+  - **Missing:** Frontend UI pages for campaign management, contact lists, template builder
+
+### Not Implemented ❌
+- **OpenSRS:** Not implemented
+  - Required for client self-service email domain and address setup
+  - User partnership exists with OpenSRS for domain/email management
+  - Integration needed for automated domain configuration
+
+## Deployment & Cost Information
+
+### Replit Deployment Costs
+All publishing costs deducted from monthly credits; usage-based fees apply after credits exhausted.
+
+**Deployment Types:**
+1. **Autoscale Deployments** (Recommended for variable traffic)
+   - Base fee: ~$1/month minimum
+   - Compute: Per million units
+   - Requests: Per million requests
+   - Example: Personal blog (4,500 requests/month) ≈ $1.05/month
+
+2. **Reserved VM Deployments** (Predictable costs)
+   - Shared VM (0.5 vCPU / 2GB RAM): $20/month
+   - Dedicated VM (1 vCPU / 4GB RAM): $40/month
+   
+3. **Static Deployments** (For static sites)
+   - Hosting: Free
+   - Data transfer: Per GB charged
+
+4. **Scheduled Deployments** (Background tasks)
+   - Base fee per month
+   - Compute units per million
+
+### Estimated Costs for businessblueprint.io
+**Current Setup:** Full-stack app with PostgreSQL database, real-time features
+**Recommended:** Reserved VM or Autoscale
+**Estimated Monthly Cost:** $20-40/month (Reserved VM) or usage-based (Autoscale)
+
+Monitor usage at: Account → Resource Usage page
