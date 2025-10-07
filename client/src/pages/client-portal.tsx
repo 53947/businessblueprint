@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
+import { SideNav } from "@/components/side-nav";
 import { 
   BarChart3, 
   Star, 
@@ -176,32 +177,35 @@ export default function ClientPortal() {
   if (!clientData) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <a href="/" className="flex items-center gap-2 text-2xl font-bold text-gray-900 hover:opacity-80 transition-opacity">
-                <Brain className="h-6 w-6 text-blue-600" />
-                <span><span className="text-[#09080E]">business</span><span style={{color: '#0080FF'}}>blueprint</span><span style={{color: '#84D71A'}}>.io</span></span>
-              </a>
-              <Badge variant="outline" className="text-sm">
-                Client Dashboard
-              </Badge>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Welcome back, {clientData.client.companyName}</span>
-              <Button variant="outline" size="sm" onClick={handleSignOut}>
-                <LogOut className="h-4 w-4 mr-2" />
-                Sign Out
-              </Button>
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Side Navigation */}
+      <SideNav 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab} 
+        onSignOut={handleSignOut}
+        data-testid="portal-side-nav"
+      />
+
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-auto">
+        {/* Top Bar */}
+        <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <div className="flex items-center space-x-4">
+                <h1 className="text-xl font-semibold text-gray-900">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
+                <Badge variant="outline" className="text-xs">
+                  Client Dashboard
+                </Badge>
+              </div>
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-gray-600 hidden sm:block">Welcome back, {clientData.client.companyName}</span>
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="px-4 sm:px-6 lg:px-8 py-8">
         {/* Digital Score Overview */}
         <div className="mb-8">
           <Card className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
@@ -505,6 +509,7 @@ export default function ClientPortal() {
             </Card>
           </TabsContent>
         </Tabs>
+      </div>
       </div>
     </div>
   );
