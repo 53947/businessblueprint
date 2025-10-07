@@ -54,7 +54,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   <NavigationMenuList>
                     {/* Apps - Cross-Platform Ecosystem */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2">
+                      <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-apps">
                         <Layers className="w-4 h-4" />
                         <span>Apps</span>
                       </NavigationMenuTrigger>
@@ -64,20 +64,24 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* businessblueprint.io */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-md"
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-xl hover:from-blue-50 hover:to-blue-100 dark:hover:from-blue-950 dark:hover:to-blue-900 hover:scale-[1.02]"
                                 href="/"
+                                data-testid="link-app-businessblueprint"
                               >
-                                <div className="flex items-center space-x-2 mb-2">
+                                <div className="flex items-center justify-between mb-2">
                                   <BrandLogo brand="businessblueprint" variant="light" size="sm" />
+                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">View Platform →</span>
+                                  </div>
                                 </div>
-                                <div className="text-sm font-medium">Digital Intelligence Platform</div>
-                                <p className="text-xs leading-relaxed text-muted-foreground">
+                                <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-businessblueprint-title">Digital Intelligence Platform</div>
+                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-businessblueprint-description">
                                   AI-powered assessment, business coaching, and growth strategies
                                 </p>
-                                <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-                                  <li>✓ Digital IQ Assessment</li>
-                                  <li>✓ AI Business Coach</li>
-                                  <li>✓ Client Portal & Dashboard</li>
+                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-businessblueprint-features">
+                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Digital IQ Assessment</li>
+                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> AI Business Coach</li>
+                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Client Portal & Dashboard</li>
                                 </ul>
                               </a>
                             </NavigationMenuLink>
@@ -85,21 +89,27 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* webhosted.io */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white p-4 leading-none no-underline outline-none transition-all hover:border-purple-500 hover:shadow-md"
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-purple-500 hover:shadow-xl hover:from-purple-50 hover:to-purple-100 dark:hover:from-purple-950 dark:hover:to-purple-900 hover:scale-[1.02]"
                                 href="#webhosted"
+                                data-testid="link-app-webhosted"
                               >
-                                <div className="flex items-center space-x-2 mb-2">
-                                  <img src={webhostedLogo} alt="webhosted.io" className="h-5" />
-                                  <span className="text-sm font-semibold">webhosted.io</span>
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center space-x-2">
+                                    <img src={webhostedLogo} alt="webhosted.io" className="h-5" />
+                                    <span className="text-sm font-semibold dark:text-white">webhosted.io</span>
+                                  </div>
+                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="text-xs font-semibold text-purple-600 dark:text-purple-400">View Platform →</span>
+                                  </div>
                                 </div>
-                                <div className="text-sm font-medium">Website Hosting & Builder</div>
-                                <p className="text-xs leading-relaxed text-muted-foreground">
+                                <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-webhosted-title">Website Hosting & Builder</div>
+                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-webhosted-description">
                                   WordPress hosting, site builder, and expert services
                                 </p>
-                                <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-                                  <li>✓ Managed WordPress Hosting</li>
-                                  <li>✓ Premium Plugin Suite</li>
-                                  <li>✓ 24/7 Expert Support</li>
+                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-webhosted-features">
+                                  <li className="flex items-center"><span className="text-purple-500 dark:text-purple-400 mr-1.5">✓</span> Managed WordPress Hosting</li>
+                                  <li className="flex items-center"><span className="text-purple-500 dark:text-purple-400 mr-1.5">✓</span> Premium Plugin Suite</li>
+                                  <li className="flex items-center"><span className="text-purple-500 dark:text-purple-400 mr-1.5">✓</span> 24/7 Expert Support</li>
                                 </ul>
                               </a>
                             </NavigationMenuLink>
@@ -107,21 +117,27 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* airswiped.com */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white p-4 leading-none no-underline outline-none transition-all hover:border-red-500 hover:shadow-md"
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-red-500 hover:shadow-xl hover:from-red-50 hover:to-red-100 dark:hover:from-red-950 dark:hover:to-red-900 hover:scale-[1.02]"
                                 href="#airswiped"
+                                data-testid="link-app-airswiped"
                               >
-                                <div className="flex items-center space-x-2 mb-2">
-                                  <img src={airswipedLogo} alt="airswiped.com" className="h-5" />
-                                  <span className="text-sm font-semibold">airswiped.com</span>
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center space-x-2">
+                                    <img src={airswipedLogo} alt="airswiped.com" className="h-5" />
+                                    <span className="text-sm font-semibold dark:text-white">airswiped.com</span>
+                                  </div>
+                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="text-xs font-semibold text-red-600 dark:text-red-400">View Platform →</span>
+                                  </div>
                                 </div>
-                                <div className="text-sm font-medium">Payment Gateway</div>
-                                <p className="text-xs leading-relaxed text-muted-foreground">
+                                <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-airswiped-title">Payment Gateway</div>
+                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-airswiped-description">
                                   Accept payments online with enterprise-grade security
                                 </p>
-                                <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-                                  <li>✓ Credit Card Processing</li>
-                                  <li>✓ Subscription Billing</li>
-                                  <li>✓ Fraud Protection</li>
+                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-airswiped-features">
+                                  <li className="flex items-center"><span className="text-red-500 dark:text-red-400 mr-1.5">✓</span> Credit Card Processing</li>
+                                  <li className="flex items-center"><span className="text-red-500 dark:text-red-400 mr-1.5">✓</span> Subscription Billing</li>
+                                  <li className="flex items-center"><span className="text-red-500 dark:text-red-400 mr-1.5">✓</span> Fraud Protection</li>
                                 </ul>
                               </a>
                             </NavigationMenuLink>
@@ -129,21 +145,27 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* /send */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white p-4 leading-none no-underline outline-none transition-all hover:border-green-500 hover:shadow-md"
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-green-500 hover:shadow-xl hover:from-green-50 hover:to-green-100 dark:hover:from-green-950 dark:hover:to-green-900 hover:scale-[1.02]"
                                 href="#send"
+                                data-testid="link-app-send"
                               >
-                                <div className="flex items-center space-x-2 mb-2">
-                                  <Mail className="w-6 h-6 text-green-600" />
-                                  <span className="text-sm font-semibold">/send</span>
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center space-x-2">
+                                    <Mail className="w-6 h-6 text-green-600 dark:text-green-400" />
+                                    <span className="text-sm font-semibold dark:text-white">/send</span>
+                                  </div>
+                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="text-xs font-semibold text-green-600 dark:text-green-400">View Platform →</span>
+                                  </div>
                                 </div>
-                                <div className="text-sm font-medium">Email + SMS Marketing</div>
-                                <p className="text-xs leading-relaxed text-muted-foreground">
+                                <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-send-title">Email + SMS Marketing</div>
+                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-send-description">
                                   Unified marketing campaigns with full compliance
                                 </p>
-                                <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
-                                  <li>✓ Email & SMS Campaigns</li>
-                                  <li>✓ Contact Management</li>
-                                  <li>✓ GDPR/CAN-SPAM Compliant</li>
+                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-send-features">
+                                  <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> Email & SMS Campaigns</li>
+                                  <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> Contact Management</li>
+                                  <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> GDPR/CAN-SPAM Compliant</li>
                                 </ul>
                               </a>
                             </NavigationMenuLink>
@@ -154,7 +176,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                     {/* Pathways - How to Work With Us */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2">
+                      <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pathways">
                         <Compass className="w-4 h-4" />
                         <span>Pathways</span>
                       </NavigationMenuTrigger>
@@ -166,15 +188,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <a
                                 className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-md"
                                 href="/subscription?pathway=diy"
+                                data-testid="link-pathway-diy"
                               >
-                                <div className="text-lg font-semibold text-blue-600">$99/mo</div>
-                                <div className="text-sm font-medium">Do It Yourself (DIY)</div>
-                                <p className="text-xs leading-relaxed text-muted-foreground">
+                                <div className="text-lg font-semibold text-blue-600" data-testid="text-pathway-diy-price">$99/mo</div>
+                                <div className="text-sm font-medium" data-testid="text-pathway-diy-title">Do It Yourself (DIY)</div>
+                                <p className="text-xs leading-relaxed text-muted-foreground" data-testid="text-pathway-diy-description">
                                   Self-service tools with AI guidance
                                 </p>
                                 <div className="mt-3 pt-3 border-t border-gray-200">
                                   <div className="text-xs font-medium text-gray-700 mb-2">Add-ons Available:</div>
-                                  <div className="space-y-1 text-xs text-muted-foreground">
+                                  <div className="space-y-1 text-xs text-muted-foreground" data-testid="list-pathway-diy-addons">
                                     <div>+ AI Business Coach ($99/mo)</div>
                                     <div>+ Captain Your Journey ($249/mo)</div>
                                   </div>
@@ -187,15 +210,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <a
                                 className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white p-4 leading-none no-underline outline-none transition-all hover:border-orange-500 hover:shadow-md"
                                 href="/subscription?pathway=msp"
+                                data-testid="link-pathway-msp"
                               >
-                                <div className="text-lg font-semibold text-orange-600">$299/mo</div>
-                                <div className="text-sm font-medium">Managed Services (MSP)</div>
-                                <p className="text-xs leading-relaxed text-muted-foreground">
+                                <div className="text-lg font-semibold text-orange-600" data-testid="text-pathway-msp-price">$299/mo</div>
+                                <div className="text-sm font-medium" data-testid="text-pathway-msp-title">Managed Services (MSP)</div>
+                                <p className="text-xs leading-relaxed text-muted-foreground" data-testid="text-pathway-msp-description">
                                   Expert team handles everything
                                 </p>
                                 <div className="mt-3 pt-3 border-t border-gray-200">
                                   <div className="text-xs font-medium text-gray-700 mb-2">Add-ons Available:</div>
-                                  <div className="space-y-1 text-xs text-muted-foreground">
+                                  <div className="space-y-1 text-xs text-muted-foreground" data-testid="list-pathway-msp-addons">
                                     <div>+ AI Business Coach ($59/mo)</div>
                                     <div>+ Captain Your Journey ($249/mo)</div>
                                   </div>
@@ -207,6 +231,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <a
                               className="block text-center text-sm text-blue-600 hover:text-blue-800 hover:underline"
                               href="/subscription"
+                              data-testid="link-compare-pathways"
                             >
                               Compare Pathways →
                             </a>
@@ -217,7 +242,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                     {/* Pricing */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2">
+                      <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pricing">
                         <CreditCard className="w-4 h-4" />
                         <span>Pricing</span>
                       </NavigationMenuTrigger>
