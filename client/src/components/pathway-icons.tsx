@@ -1,7 +1,8 @@
 import diyIcon from "@assets/do it yourself icon_1759648904285.png";
 import mspIcon from "@assets/managed services icon_1759648904285.png";
-import aiCoachIcon from "@assets/ai business coach icon_1759648904283.png";
+import aiCoachIcon from "@assets/AI Business Coach_1759795294968.png";
 import captainingIcon from "@assets/Captaining Icon_1759648904285.png";
+import sendIcon from "@assets/send_1759795294968.png";
 
 interface PathwayIconProps {
   className?: string;
@@ -49,6 +50,18 @@ export function CaptainIcon({ className = "w-16 h-16" }: PathwayIconProps) {
       <img 
         src={captainingIcon} 
         alt="Captaining Your Journey" 
+        style={{ objectFit: 'contain', maxWidth: '90%', maxHeight: '90%' }}
+      />
+    </div>
+  );
+}
+
+export function SendIcon({ className = "w-16 h-16" }: PathwayIconProps) {
+  return (
+    <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <img 
+        src={sendIcon} 
+        alt="/send - Email + SMS Marketing" 
         style={{ objectFit: 'contain', maxWidth: '90%', maxHeight: '90%' }}
       />
     </div>
