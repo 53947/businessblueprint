@@ -32,7 +32,8 @@ import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.p
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import airswipedLogo from "@assets/airswipedcom icon light version_1759341905088.png";
-import sendLogo from "@assets/send_1759858216817.png";
+import sendLogo from "@assets/send logo_1759873220203.png";
+import sendIcon from "@assets/send icon_1759873220203.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -163,10 +164,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               >
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
-                                    <img src={sendLogo} alt="/send" className="h-10 object-contain" />
-                                    <div className="font-archivo font-bold text-xl leading-none">
-                                      <span className="text-[#84D71A]">/send</span>
-                                    </div>
+                                    <img src={sendIcon} alt="/send icon" className="h-10 w-10 object-contain" />
+                                    <img src={sendLogo} alt="/send" className="h-8 object-contain" />
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-green-600 dark:text-green-400">Visit Platform →</span>
@@ -227,7 +226,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 data-testid="link-pathway-msp"
                               >
                                 <div className="text-lg font-semibold text-orange-600" data-testid="text-pathway-msp-price">$299/mo</div>
-                                <div className="text-sm font-medium" data-testid="text-pathway-msp-title">Managed Services (MSP)</div>
+                                <div className="text-sm font-medium" data-testid="text-pathway-msp-title">Managed Services Provided (MSP)</div>
                                 <p className="text-xs leading-relaxed text-muted-foreground" data-testid="text-pathway-msp-description">
                                   Expert team handles everything
                                 </p>
@@ -269,7 +268,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             >
                               <div className="text-sm font-medium leading-none">Platform Subscriptions</div>
                               <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                DIY and Managed Services pricing
+                                Do It Yourself (DIY) and Managed Services Provided (MSP) pricing
                               </p>
                             </a>
                           </NavigationMenuLink>

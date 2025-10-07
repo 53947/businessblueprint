@@ -1,8 +1,8 @@
-import diyIcon from "@assets/do it yourself icon_1759648904285.png";
-import mspIcon from "@assets/managed services icon_1759648904285.png";
+import diyIcon from "@assets/diy_1759873601017.png";
+import mspIcon from "@assets/msp_1759873601018.png";
 import aiCoachIcon from "@assets/AI Business Coach_1759795294968.png";
 import captainingIcon from "@assets/Captaining Icon_1759648904285.png";
-import sendIcon from "@assets/send_1759795294968.png";
+import sendIcon from "@assets/send icon_1759873220203.png";
 
 interface PathwayIconProps {
   className?: string;
