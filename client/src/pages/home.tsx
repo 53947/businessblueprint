@@ -454,51 +454,51 @@ Your personalized blueprint will show you which steps to take first!
           
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow p-6">
-              <CardContent>
-                <div className="flex justify-center mb-6">
-                  <BrandLogo brand="businessblueprint" variant="light" size="lg" className="justify-center" />
+              <CardContent className="flex flex-col">
+                <div className="flex justify-center items-center mb-6 h-16 overflow-hidden">
+                  <BrandLogo brand="businessblueprint" variant="light" size="lg" className="max-h-full max-w-full object-contain" />
                 </div>
-                <p className="text-gray-600 mb-4">Digital Intelligence Platform</p>
-                <ul className="text-sm text-gray-500 space-y-2 mb-6">
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">Digital Intelligence Platform</p>
+                <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
                   <li>• AI-powered business analysis</li>
                   <li>• Personalized coaching</li>
                   <li>• Client portal & dashboard</li>
                 </ul>
-                <Button className="w-full bg-[#0080FF] hover:bg-[#0070DD]">
+                <Button className="w-full bg-[#0080FF] hover:bg-[#0070DD] mt-auto">
                   Start Assessment
                 </Button>
               </CardContent>
             </Card>
 
             <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow p-6">
-              <CardContent>
-                <div className="flex justify-center mb-6">
-                  <BrandLogo brand="webhosted" variant="light" size="lg" className="justify-center" />
+              <CardContent className="flex flex-col">
+                <div className="flex justify-center items-center mb-6 h-16 overflow-hidden">
+                  <BrandLogo brand="webhosted" variant="light" size="lg" className="max-h-full max-w-full object-contain" />
                 </div>
-                <p className="text-gray-600 mb-4">Website Hosting Platform</p>
-                <ul className="text-sm text-gray-500 space-y-2 mb-6">
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">Website Hosting Platform</p>
+                <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
                   <li>• High-performance hosting</li>
                   <li>• Domain management</li>
                   <li>• Technical optimization</li>
                 </ul>
-                <Button className="w-full bg-[#660099] hover:bg-[#5a0088]">
+                <Button className="w-full bg-[#660099] hover:bg-[#5a0088] mt-auto">
                   Get Hosting
                 </Button>
               </CardContent>
             </Card>
 
             <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
-              <CardContent>
-                <div className="flex justify-center mb-6">
-                  <BrandLogo brand="airswiped" variant="light" size="lg" className="justify-center" />
+              <CardContent className="flex flex-col">
+                <div className="flex justify-center items-center mb-6 h-16 overflow-hidden">
+                  <BrandLogo brand="airswiped" variant="light" size="lg" className="max-h-full max-w-full object-contain" />
                 </div>
-                <p className="text-gray-600 mb-4">Payment Gateway Platform</p>
-                <ul className="text-sm text-gray-500 space-y-2 mb-6">
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">Payment Gateway Platform</p>
+                <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
                   <li>• Secure payment processing</li>
                   <li>• Transaction management</li>
                   <li>• Financial analytics</li>
                 </ul>
-                <Button className="w-full bg-[#FF0040] hover:bg-[#cc0033]">
+                <Button className="w-full bg-[#FF0040] hover:bg-[#cc0033] mt-auto">
                   Setup Payments
                 </Button>
               </CardContent>

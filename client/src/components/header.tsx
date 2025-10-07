@@ -89,7 +89,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="#webhosted"
                               >
                                 <div className="flex items-center space-x-2 mb-2">
-                                  <img src={webhostedLogo} alt="webhosted.io" className="h-6" />
+                                  <img src={webhostedLogo} alt="webhosted.io" className="h-5" />
+                                  <span className="text-sm font-semibold">webhosted.io</span>
                                 </div>
                                 <div className="text-sm font-medium">Website Hosting & Builder</div>
                                 <p className="text-xs leading-relaxed text-muted-foreground">
@@ -110,7 +111,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="#airswiped"
                               >
                                 <div className="flex items-center space-x-2 mb-2">
-                                  <img src={airswipedLogo} alt="airswiped.com" className="h-6" />
+                                  <img src={airswipedLogo} alt="airswiped.com" className="h-5" />
+                                  <span className="text-sm font-semibold">airswiped.com</span>
                                 </div>
                                 <div className="text-sm font-medium">Payment Gateway</div>
                                 <p className="text-xs leading-relaxed text-muted-foreground">

@@ -192,7 +192,7 @@ export default function SubscriptionPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Choose Your Digital Success Plan
+            Choose Your Digital Blueprint
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Select the perfect plan to transform your business's digital presence with businessblueprint.io
@@ -328,9 +328,20 @@ export default function SubscriptionPage() {
                           </div>
                           <div className="text-right ml-6">
                             <div className="text-3xl font-bold text-gray-900">
-                              ${plan.basePrice}
+                              ${selectedPlan?.planId === plan.planId && pricing 
+                                ? pricing.basePrice 
+                                : plan.basePrice}
                             </div>
-                            <div className="text-sm text-gray-500">per month</div>
+                            <div className="text-sm text-gray-500">
+                              {billingCycle === 'monthly' ? 'per month' : 
+                               billingCycle === 'quarterly' ? 'per quarter' : 
+                               'per year'}
+                            </div>
+                            {getBillingCycleDiscount() && selectedPlan?.planId === plan.planId && (
+                              <Badge variant="secondary" className="mt-1">
+                                {getBillingCycleDiscount()}
+                              </Badge>
+                            )}
                             {plan.setupFee && parseFloat(plan.setupFee) > 0 && (
                               <div className="text-sm text-gray-500 mt-1">
                                 ${plan.setupFee} setup fee
