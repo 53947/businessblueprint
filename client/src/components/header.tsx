@@ -27,8 +27,12 @@ import {
   Wallet
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
-import webhostedLogo from "@assets/webhostedio icon light version_1759341946145.png";
+import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
+import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.png";
+import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
+import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import airswipedLogo from "@assets/airswipedcom icon light version_1759341905088.png";
+import sendLogo from "@assets/send_1759858216817.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -43,8 +47,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <a href="/" className="hover:opacity-80 transition-opacity">
-              <BrandLogo brand="businessblueprint" variant="light" size="sm" />
+            <a href="/" className="hover:opacity-80 transition-opacity flex items-center gap-2">
+              <img src={bbIcon} alt="businessblueprint.io" className="h-8 w-8 object-contain" />
+              <img src={bbLogo} alt="businessblueprint.io" className="h-6 object-contain" />
             </a>
             
             {showNavigation && (
@@ -68,10 +73,13 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/"
                                 data-testid="link-app-businessblueprint"
                               >
-                                <div className="flex items-center justify-between mb-2">
-                                  <BrandLogo brand="businessblueprint" variant="light" size="sm" />
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-2">
+                                    <img src={bbIcon} alt="businessblueprint.io" className="h-7 w-7 object-contain" />
+                                    <img src={bbLogo} alt="businessblueprint.io" className="h-5 object-contain" />
+                                  </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">View Platform →</span>
+                                    <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">Visit Platform →</span>
                                   </div>
                                 </div>
                                 <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-businessblueprint-title">Digital Intelligence Platform</div>
@@ -93,13 +101,13 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="#webhosted"
                                 data-testid="link-app-webhosted"
                               >
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center space-x-2">
-                                    <img src={webhostedLogo} alt="webhosted.io" className="h-5" />
-                                    <span className="text-sm font-semibold dark:text-white">webhosted.io</span>
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-2">
+                                    <img src={webhostedIcon} alt="webhosted.io" className="h-7 w-7 object-contain" />
+                                    <img src={webhostedLogo} alt="webhosted.io" className="h-5 object-contain" />
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-xs font-semibold text-purple-600 dark:text-purple-400">View Platform →</span>
+                                    <span className="text-xs font-semibold text-purple-600 dark:text-purple-400">Visit Platform →</span>
                                   </div>
                                 </div>
                                 <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-webhosted-title">Website Hosting & Builder</div>
@@ -121,13 +129,13 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="#airswiped"
                                 data-testid="link-app-airswiped"
                               >
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center space-x-2">
-                                    <img src={airswipedLogo} alt="airswiped.com" className="h-5" />
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-2">
+                                    <img src={airswipedLogo} alt="airswiped.com" className="h-7 w-7 object-contain" />
                                     <span className="text-sm font-semibold dark:text-white">airswiped.com</span>
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-xs font-semibold text-red-600 dark:text-red-400">View Platform →</span>
+                                    <span className="text-xs font-semibold text-red-600 dark:text-red-400">Visit Platform →</span>
                                   </div>
                                 </div>
                                 <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-airswiped-title">Payment Gateway</div>
@@ -149,13 +157,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="#send"
                                 data-testid="link-app-send"
                               >
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center space-x-2">
-                                    <Mail className="w-6 h-6 text-green-600 dark:text-green-400" />
-                                    <span className="text-sm font-semibold dark:text-white">/send</span>
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-2">
+                                    <img src={sendLogo} alt="/send" className="h-7 object-contain" />
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-xs font-semibold text-green-600 dark:text-green-400">View Platform →</span>
+                                    <span className="text-xs font-semibold text-green-600 dark:text-green-400">Visit Platform →</span>
                                   </div>
                                 </div>
                                 <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-send-title">Email + SMS Marketing</div>
