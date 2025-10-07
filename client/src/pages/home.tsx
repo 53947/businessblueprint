@@ -8,6 +8,11 @@ import { ServicePathways } from "@/components/service-pathways";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
+import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.png";
+import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
+import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
+import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
+import airswipedLogo from "@assets/airswipedcom icon light version_1759341905088.png";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -455,14 +460,21 @@ Your personalized blueprint will show you which steps to take first!
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow p-6">
               <CardContent className="flex flex-col">
-                <div className="flex justify-center items-center mb-6 h-16 overflow-hidden">
-                  <BrandLogo brand="businessblueprint" variant="light" size="lg" className="max-h-full max-w-full object-contain" />
+                <div className="flex justify-center items-center mb-6 h-20">
+                  <div className="flex items-center gap-3">
+                    <img src={bbIcon} alt="businessblueprint.io" className="h-14 w-14 object-contain" />
+                    <img src={bbLogo} alt="businessblueprint.io" className="h-10 object-contain" />
+                  </div>
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">Digital Intelligence Platform</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
                   <li>• AI-powered business analysis</li>
                   <li>• Personalized coaching</li>
                   <li>• Client portal & dashboard</li>
+                  <li className="flex items-center justify-center gap-2">
+                    <strong className="text-green-600">└→ /send:</strong> 
+                    <span>Email + SMS Marketing</span>
+                  </li>
                 </ul>
                 <Button className="w-full bg-[#0080FF] hover:bg-[#0070DD] mt-auto">
                   Start Assessment
@@ -472,8 +484,11 @@ Your personalized blueprint will show you which steps to take first!
 
             <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow p-6">
               <CardContent className="flex flex-col">
-                <div className="flex justify-center items-center mb-6 h-16 overflow-hidden">
-                  <BrandLogo brand="webhosted" variant="light" size="lg" className="max-h-full max-w-full object-contain" />
+                <div className="flex justify-center items-center mb-6 h-20">
+                  <div className="flex items-center gap-3">
+                    <img src={webhostedIcon} alt="webhosted.io" className="h-14 w-14 object-contain" />
+                    <img src={webhostedLogo} alt="webhosted.io" className="h-10 object-contain" />
+                  </div>
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">Website Hosting Platform</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
@@ -489,8 +504,15 @@ Your personalized blueprint will show you which steps to take first!
 
             <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
               <CardContent className="flex flex-col">
-                <div className="flex justify-center items-center mb-6 h-16 overflow-hidden">
-                  <BrandLogo brand="airswiped" variant="light" size="lg" className="max-h-full max-w-full object-contain" />
+                <div className="flex justify-center items-center mb-6 h-20">
+                  <div className="flex items-center gap-3">
+                    <img src={airswipedLogo} alt="airswiped.com" className="h-14 w-14 object-contain" />
+                    <div className="font-archivo font-bold text-2xl leading-none">
+                      <span className="text-[#09080E]">air</span>
+                      <span className="text-[#FF0040]">swiped</span>
+                      <span className="text-[#84D71A]">.com</span>
+                    </div>
+                  </div>
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">Payment Gateway Platform</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
