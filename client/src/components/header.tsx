@@ -74,9 +74,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 data-testid="link-app-businessblueprint"
                               >
                                 <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center gap-3">
+                                  <div className="flex items-center gap-2">
                                     <img src={bbIcon} alt="businessblueprint.io" className="h-10 w-10 object-contain" />
-                                    <img src={bbLogo} alt="businessblueprint.io" className="h-7 object-contain" />
+                                    <img src={bbLogo} alt="businessblueprint.io" className="h-8 object-contain" />
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">Visit Platform →</span>
@@ -162,8 +162,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 data-testid="link-app-send"
                               >
                                 <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center gap-3">
+                                  <div className="flex items-center gap-2">
                                     <img src={sendLogo} alt="/send" className="h-10 object-contain" />
+                                    <div className="font-archivo font-bold text-xl leading-none">
+                                      <span className="text-[#84D71A]">/send</span>
+                                    </div>
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-green-600 dark:text-green-400">Visit Platform →</span>
