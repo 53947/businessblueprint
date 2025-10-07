@@ -726,10 +726,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const addons = await db.select().from(subscriptionAddons)
         .where(eq(subscriptionAddons.isActive, true));
       
-      // Map icons for frontend (simple mapping based on category)
+      // Map icons for frontend based on category
+      const categoryIconMap: Record<string, string> = {
+        'seo': 'Globe',
+        'social': 'Users',
+        'ppc': 'Zap',
+        'content': 'Sparkles',
+        'email': 'Users',
+        'reputation': 'Star',
+        'analytics': 'Sparkles',
+        'website': 'Globe',
+        'ai-coach': 'Brain',
+        'coaching': 'Ship'
+      };
+
       const addonsWithIcons = addons.map(addon => ({
         ...addon,
-        icon: 'Brain', // Will be mapped on frontend
+        icon: categoryIconMap[addon.category as string] || 'Sparkles',
         billingType: addon.billingCycle === 'one_time' ? 'one_time' : 'monthly'
       }));
       
