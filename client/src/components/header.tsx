@@ -206,7 +206,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="text-lg font-semibold text-blue-600" data-testid="text-pathway-diy-price">$99/mo</div>
                                 <div className="text-sm font-medium" data-testid="text-pathway-diy-title">Do It Yourself (DIY)</div>
                                 <p className="text-xs leading-relaxed text-muted-foreground" data-testid="text-pathway-diy-description">
-                                  Self-service tools with AI guidance
+                                  Full platform access with self-service automation tools. Perfect for hands-on business owners who want complete control with AI-powered guidance.
                                 </p>
                                 <div className="mt-3 pt-3 border-t border-gray-200">
                                   <div className="text-xs font-medium text-gray-700 mb-2">Add-ons Available:</div>
@@ -228,7 +228,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="text-lg font-semibold text-orange-600" data-testid="text-pathway-msp-price">$299/mo</div>
                                 <div className="text-sm font-medium" data-testid="text-pathway-msp-title">Managed Services Provided (MSP)</div>
                                 <p className="text-xs leading-relaxed text-muted-foreground" data-testid="text-pathway-msp-description">
-                                  Expert team handles everything
+                                  Platform automation plus dedicated expert support team. Ideal for busy owners who want results without the hands-on work.
                                 </p>
                                 <div className="mt-3 pt-3 border-t border-gray-200">
                                   <div className="text-xs font-medium text-gray-700 mb-2">Add-ons Available:</div>
