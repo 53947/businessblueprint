@@ -83,7 +83,7 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
                   </div>
                   <div className="flex items-center text-left">
                     <div className="bg-purple-100 text-purple-600 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">3</div>
-                    <span className="text-gray-700">Choose DIY or managed services</span>
+                    <span className="text-gray-700">Choose Do It Yourself (DIY) or Managed Services Provided (MSP)</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="bg-yellow-100 text-yellow-600 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">4</div>

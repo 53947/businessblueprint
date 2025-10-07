@@ -5,7 +5,8 @@ import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import airswipedIconLight from "@assets/airswipedcom icon light version_1759341905088.png";
 import airswipedIconDark from "@assets/airswipedio icon dark version_1759341905089.png";
-import sendLogo from "@assets/send_1759858216817.png";
+import sendLogo from "@assets/send logo_1759873220203.png";
+import sendIcon from "@assets/send icon_1759873220203.png";
 
 interface BrandLogoProps {
   brand: 'businessblueprint' | 'webhosted' | 'airswiped' | 'send';
@@ -76,6 +77,13 @@ export function BrandLogo({
   if (brand === 'send') {
     return (
       <div className={`flex items-center gap-3 ${className}`}>
+        {showIcon && (
+          <img 
+            src={sendIcon} 
+            alt="/send icon" 
+            className={`${iconSize} object-contain`}
+          />
+        )}
         <img 
           src={sendLogo} 
           alt="/send" 
@@ -132,7 +140,7 @@ export function BrandIcon({
     businessblueprint: bbIcon,
     webhosted: webhostedIcon,
     airswiped: isDark ? airswipedIconDark : airswipedIconLight,
-    send: sendLogo
+    send: sendIcon
   };
   
   const iconSrc = iconMap[brand];
