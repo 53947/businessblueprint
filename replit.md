@@ -14,6 +14,7 @@ businessblueprint.io is an AI-powered digital intelligence platform designed to 
 - ✅ Fixed pricing page: Dynamic calculations by billing cycle, "Digital Blueprint" branding
 - ✅ Homepage ecosystem cards: Overflow prevention, responsive sizing
 - ✅ Navigation improvements: Platform logos visible with names in Apps mega menu
+- ✅ **Flow 3b Assessment Checkout (COMPLETED):** Product-based pricing with proper billing cycle calculations, pathway support (DIY/MSP/Combination), correct discount application
 
 **Brand Positioning:** Digital Intelligence Incubator - nurturing businesses from digital obscurity to digital maturity through systematic, data-driven growth programs.
 **Customer-Facing Message:** Helping Local Businesses Succeed Online
@@ -118,8 +119,8 @@ The platform features **THREE separate purchasing scenarios**, each with differe
 - Addon options displayed with checkboxes
 - **Current Status:** Fully functional - MSP/DIY switching, addon selection, pricing calculation all working
 
-### Flow 3b: Assessment/Diagnosis-Driven Recommendations (TO BUILD)
-**Route:** `/assessment-checkout` (or similar)
+### Flow 3b: Assessment/Diagnosis-Driven Recommendations (COMPLETED ✓)
+**Route:** `/assessment-checkout`
 **Purpose:** Post-diagnosis recommendations leading to purchase
 **UI Layout:** Diagnosis-driven with pathway preference integration
 - System completes Digital IQ Assessment first
@@ -129,6 +130,18 @@ The platform features **THREE separate purchasing scenarios**, each with differe
 - Plans from 3a shown as **bundle options**, NOT prominently displayed
 - Different top verbiage emphasizing diagnosis-driven recommendations
 - Must feel like natural progression from assessment results
+
+**Implementation Details:**
+- **Backend:** Products-based pricing (not subscription addons)
+  - `/api/pricing/calculate-bundle` - Calculates pricing from product IDs with pathway
+  - `/api/subscriptions/create-from-assessment` - Creates subscription with products
+  - Pathway validation: accepts "diy", "msp", "combination", "none"
+  - Billing cycle math: Monthly price × cycle months (3/12) then apply discount (5%/15%)
+- **Frontend:** `client/src/pages/assessment-checkout.tsx`
+  - Dynamic pathway selection (DIY/MSP/Combination)
+  - Billing cycle selector (Monthly/Quarterly/Annual)
+  - Real-time order summary with proper discount display
+- **Architecture Decision:** Products (business-listings, review-management) are separate from subscription_addons (seo-local, social-premium)
 
 ### Flow 3c: A La Carte Individual App Ordering (TO BUILD)
 **Route:** `/apps-marketplace` (or similar)
