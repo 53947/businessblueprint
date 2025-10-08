@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -10,39 +9,54 @@ import {
   MessageSquare, 
   Users, 
   TrendingUp, 
-  BarChart3, 
   Plus, 
   Send, 
   FileText,
-  Clock,
   CheckCircle2,
-  AlertCircle,
   Activity
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLocation } from "wouter";
 import { BrandLogo } from "@/components/brand-logo";
 
+interface DashboardMetrics {
+  totalContacts: number;
+  contactsGrowth: number;
+  emailsSent: number;
+  emailsDelivered: number;
+  emailsOpened: number;
+  emailsClicked: number;
+  smsSent: number;
+  smsDelivered: number;
+  avgOpenRate: number;
+  avgClickRate: number;
+  avgDeliverability: number;
+}
+
+interface ActivityItem {
+  id: number;
+  type: 'campaign' | 'contact' | 'automation';
+  name: string;
+  status: string;
+  time: string;
+  recipients?: number;
+  triggered?: number;
+}
+
 export default function SendDashboard() {
   const [, setLocation] = useLocation();
-  const [timeRange, setTimeRange] = useState("30d");
 
   // Fetch dashboard metrics
-  const { data: metrics, isLoading: metricsLoading } = useQuery({
-    queryKey: ['/api/send/metrics', timeRange],
+  const { data: metrics, isLoading: metricsLoading } = useQuery<DashboardMetrics>({
+    queryKey: ['/api/send/metrics'],
   });
 
   // Fetch recent campaigns
-  const { data: recentCampaigns, isLoading: campaignsLoading } = useQuery({
+  const { data: recentCampaigns, isLoading: campaignsLoading } = useQuery<ActivityItem[]>({
     queryKey: ['/api/send/campaigns/recent'],
   });
 
-  // Fetch contacts summary
-  const { data: contactsSummary, isLoading: contactsLoading } = useQuery({
-    queryKey: ['/api/send/contacts/summary'],
-  });
-
-  // Mock data for development (remove when API is ready)
+  // Mock data for development (will be replaced by real API data)
   const mockMetrics = {
     totalContacts: 12847,
     contactsGrowth: 12.5,
@@ -64,6 +78,10 @@ export default function SendDashboard() {
     { id: 4, type: 'campaign', name: 'Product Launch SMS', status: 'scheduled', time: 'Tomorrow 9:00 AM', recipients: 2341 },
   ];
 
+  // Use real data when available, fallback to mock for development
+  const displayMetrics = metrics || mockMetrics;
+  const displayActivity = recentCampaigns || mockRecentActivity;
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <Header showNavigation={true} />
@@ -77,11 +95,11 @@ export default function SendDashboard() {
               <p className="text-gray-600 dark:text-gray-400">Email + SMS Marketing Platform</p>
             </div>
             <div className="flex items-center gap-3">
-              <Button variant="outline" onClick={() => setLocation('/send/contacts')}>
+              <Button variant="outline" onClick={() => setLocation('/send/contacts')} data-testid="button-manage-contacts">
                 <Users className="w-4 h-4 mr-2" />
                 Manage Contacts
               </Button>
-              <Button onClick={() => setLocation('/send/campaigns/new')} data-testid="button-new-campaign">
+              <Button onClick={() => setLocation('/send/campaigns/new')} data-testid="button-new-campaign" className="bg-[#E5A100] hover:bg-[#c98e00] text-white">
                 <Plus className="w-4 h-4 mr-2" />
                 New Campaign
               </Button>
@@ -90,77 +108,92 @@ export default function SendDashboard() {
         </div>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Contacts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-baseline justify-between">
-                <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {mockMetrics.totalContacts.toLocaleString()}
+        {metricsLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {[1, 2, 3, 4].map((i) => (
+              <Card key={i}>
+                <CardHeader className="pb-3">
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-24"></div>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-32"></div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Contacts</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-baseline justify-between">
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="metric-total-contacts">
+                    {displayMetrics.totalContacts.toLocaleString()}
+                  </div>
+                  <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300" data-testid="badge-contacts-growth">
+                    <TrendingUp className="w-3 h-3 mr-1" />
+                    +{displayMetrics.contactsGrowth}%
+                  </Badge>
                 </div>
-                <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
-                  <TrendingUp className="w-3 h-3 mr-1" />
-                  +{mockMetrics.contactsGrowth}%
-                </Badge>
-              </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">vs last {timeRange === '30d' ? 'month' : 'week'}</p>
-            </CardContent>
-          </Card>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">vs last month</p>
+              </CardContent>
+            </Card>
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Avg Open Rate</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-baseline justify-between">
-                <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {mockMetrics.avgOpenRate}%
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Avg Open Rate</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-baseline justify-between">
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="metric-open-rate">
+                    {displayMetrics.avgOpenRate}%
+                  </div>
+                  <Mail className="w-8 h-8 text-[#E5A100]" />
                 </div>
-                <Mail className="w-8 h-8 text-blue-500" />
-              </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Industry avg: 21.5%</p>
-            </CardContent>
-          </Card>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Industry avg: 21.5%</p>
+              </CardContent>
+            </Card>
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Avg Click Rate</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-baseline justify-between">
-                <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {mockMetrics.avgClickRate}%
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Avg Click Rate</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-baseline justify-between">
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="metric-click-rate">
+                    {displayMetrics.avgClickRate}%
+                  </div>
+                  <Activity className="w-8 h-8 text-[#E5A100]" />
                 </div>
-                <Activity className="w-8 h-8 text-purple-500" />
-              </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Industry avg: 2.6%</p>
-            </CardContent>
-          </Card>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Industry avg: 2.6%</p>
+              </CardContent>
+            </Card>
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Deliverability</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-baseline justify-between">
-                <div className="text-3xl font-bold text-gray-900 dark:text-white">
-                  {mockMetrics.avgDeliverability}%
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Deliverability</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-baseline justify-between">
+                  <div className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="metric-deliverability">
+                    {displayMetrics.avgDeliverability}%
+                  </div>
+                  <CheckCircle2 className="w-8 h-8 text-green-500" />
                 </div>
-                <CheckCircle2 className="w-8 h-8 text-green-500" />
-              </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Excellent performance</p>
-            </CardContent>
-          </Card>
-        </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Excellent performance</p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="campaigns">Recent Campaigns</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="overview" data-testid="tab-overview">Overview</TabsTrigger>
+            <TabsTrigger value="campaigns" data-testid="tab-campaigns">Recent Campaigns</TabsTrigger>
+            <TabsTrigger value="analytics" data-testid="tab-analytics">Analytics</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
@@ -174,41 +207,52 @@ export default function SendDashboard() {
                     <CardDescription>Latest campaigns, imports, and automations</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      {mockRecentActivity.map((activity) => (
-                        <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                          <div className="flex items-center gap-3">
-                            {activity.type === 'campaign' && <Send className="w-5 h-5 text-blue-500" />}
-                            {activity.type === 'contact' && <Users className="w-5 h-5 text-green-500" />}
-                            {activity.type === 'automation' && <Activity className="w-5 h-5 text-purple-500" />}
-                            <div>
-                              <p className="font-medium text-gray-900 dark:text-white">{activity.name}</p>
-                              <p className="text-sm text-gray-500 dark:text-gray-400">{activity.time}</p>
+                    {campaignsLoading ? (
+                      <div className="space-y-4">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4 mb-2"></div>
+                            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-1/2"></div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {displayActivity.map((activity) => (
+                          <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg" data-testid={`activity-${activity.id}`}>
+                            <div className="flex items-center gap-3">
+                              {activity.type === 'campaign' && <Send className="w-5 h-5 text-[#E5A100]" />}
+                              {activity.type === 'contact' && <Users className="w-5 h-5 text-green-500" />}
+                              {activity.type === 'automation' && <Activity className="w-5 h-5 text-[#E5A100]" />}
+                              <div>
+                                <p className="font-medium text-gray-900 dark:text-white" data-testid={`activity-name-${activity.id}`}>{activity.name}</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400" data-testid={`activity-time-${activity.id}`}>{activity.time}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {activity.recipients && (
+                                <span className="text-sm text-gray-600 dark:text-gray-400" data-testid={`activity-recipients-${activity.id}`}>
+                                  {activity.recipients.toLocaleString()} recipients
+                                </span>
+                              )}
+                              {activity.triggered && (
+                                <span className="text-sm text-gray-600 dark:text-gray-400" data-testid={`activity-triggered-${activity.id}`}>
+                                  {activity.triggered} triggered
+                                </span>
+                              )}
+                              <Badge variant={
+                                activity.status === 'sent' ? 'default' :
+                                activity.status === 'completed' ? 'default' :
+                                activity.status === 'active' ? 'default' :
+                                'secondary'
+                              } data-testid={`activity-status-${activity.id}`}>
+                                {activity.status}
+                              </Badge>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            {activity.recipients && (
-                              <span className="text-sm text-gray-600 dark:text-gray-400">
-                                {activity.recipients.toLocaleString()} recipients
-                              </span>
-                            )}
-                            {activity.triggered && (
-                              <span className="text-sm text-gray-600 dark:text-gray-400">
-                                {activity.triggered} triggered
-                              </span>
-                            )}
-                            <Badge variant={
-                              activity.status === 'sent' ? 'default' :
-                              activity.status === 'completed' ? 'default' :
-                              activity.status === 'active' ? 'default' :
-                              'secondary'
-                            }>
-                              {activity.status}
-                            </Badge>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </div>
@@ -285,19 +329,19 @@ export default function SendDashboard() {
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Sent</span>
-                        <span className="font-medium text-gray-900 dark:text-white">{mockMetrics.emailsSent.toLocaleString()}</span>
+                        <span className="font-medium text-gray-900 dark:text-white" data-testid="metric-emails-sent">{displayMetrics.emailsSent.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Delivered</span>
-                        <span className="font-medium text-gray-900 dark:text-white">{mockMetrics.emailsDelivered.toLocaleString()}</span>
+                        <span className="font-medium text-gray-900 dark:text-white" data-testid="metric-emails-delivered">{displayMetrics.emailsDelivered.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Opened</span>
-                        <span className="font-medium text-gray-900 dark:text-white">{mockMetrics.emailsOpened.toLocaleString()}</span>
+                        <span className="font-medium text-gray-900 dark:text-white" data-testid="metric-emails-opened">{displayMetrics.emailsOpened.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Clicked</span>
-                        <span className="font-medium text-gray-900 dark:text-white">{mockMetrics.emailsClicked.toLocaleString()}</span>
+                        <span className="font-medium text-gray-900 dark:text-white" data-testid="metric-emails-clicked">{displayMetrics.emailsClicked.toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
@@ -308,16 +352,16 @@ export default function SendDashboard() {
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Sent</span>
-                        <span className="font-medium text-gray-900 dark:text-white">{mockMetrics.smsSent.toLocaleString()}</span>
+                        <span className="font-medium text-gray-900 dark:text-white" data-testid="metric-sms-sent">{displayMetrics.smsSent.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Delivered</span>
-                        <span className="font-medium text-gray-900 dark:text-white">{mockMetrics.smsDelivered.toLocaleString()}</span>
+                        <span className="font-medium text-gray-900 dark:text-white" data-testid="metric-sms-delivered">{displayMetrics.smsDelivered.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-600 dark:text-gray-400">Delivery Rate</span>
-                        <span className="font-medium text-green-600 dark:text-green-400">
-                          {((mockMetrics.smsDelivered / mockMetrics.smsSent) * 100).toFixed(1)}%
+                        <span className="font-medium text-green-600 dark:text-green-400" data-testid="metric-sms-delivery-rate">
+                          {((displayMetrics.smsDelivered / displayMetrics.smsSent) * 100).toFixed(1)}%
                         </span>
                       </div>
                     </div>
