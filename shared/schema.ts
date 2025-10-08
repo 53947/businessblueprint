@@ -1368,7 +1368,7 @@ export const livechatSessions = pgTable("livechat_sessions", {
   
   // Session details
   sessionId: varchar("session_id", { length: 100 }).notNull().unique(),
-  visitorId: varchar("visitor_id", { length: 100 }).notNull(),
+  visitorId: varchar("visitor_id", { length: 100 }), // Optional - can be derived from sessionId or tracking
   visitorName: varchar("visitor_name", { length: 255 }),
   visitorEmail: varchar("visitor_email", { length: 255 }),
   
