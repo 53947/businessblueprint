@@ -8,7 +8,9 @@ import {
   subscriptions, 
   insertSubscriptionSchema,
   insertSendContactSchema,
-  insertSendListSchema
+  insertSendListSchema,
+  livechatSessions,
+  insertLivechatSessionSchema
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
@@ -1856,6 +1858,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Register inbox routes
+  await registerInboxRoutes(app);
+
   const httpServer = createServer(app);
   return httpServer;
 }
@@ -1962,4 +1967,45 @@ async function processAssessmentAsync(
     console.error("Error processing assessment:", error);
     await storage.updateAssessment(assessmentId, { status: "failed" });
   }
+}
+
+// ========================================
+// UNIFIED INBOX API ROUTES (Added to registerRoutes)
+// ========================================
+
+async function registerInboxRoutes(app: Express) {
+  // Create livechat session
+  app.post("/api/inbox/livechat/session", async (req, res) => {
+    try {
+      const validatedData = insertLivechatSessionSchema.parse(req.body);
+      
+      const [session] = await db.insert(livechatSessions).values({
+        ...validatedData,
+        status: 'active',
+      }).returning();
+      
+      res.json({ 
+        success: true, 
+        session: {
+          id: session.id,
+          sessionId: session.sessionId,
+          conversationId: session.conversationId,
+          status: session.status
+        }
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Invalid session data",
+          details: error.errors 
+        });
+      }
+      console.error("Error creating livechat session:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: "Failed to create session" 
+      });
+    }
+  });
 }

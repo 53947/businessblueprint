@@ -1158,3 +1158,335 @@ export type ImpersonationSession = typeof impersonationSessions.$inferSelect;
 export type InsertImpersonationSession = z.infer<typeof insertImpersonationSessionSchema>;
 export type ImpersonationAuditLog = typeof impersonationAuditLog.$inferSelect;
 export type InsertImpersonationAudit = z.infer<typeof insertImpersonationAuditSchema>;
+
+// ========================================
+// UNIFIED INBOX (Communications Hub)
+// ========================================
+
+// Channel connections - stores credentials and config for each messaging platform
+export const inboxChannelConnections = pgTable("inbox_channel_connections", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  
+  // Channel details
+  channelType: varchar("channel_type", { length: 50 }).notNull(), // livechat, email, sms, whatsapp, facebook, instagram, twitter, tiktok
+  channelIdentifier: varchar("channel_identifier", { length: 255 }).notNull(), // phone number, page ID, email address, etc
+  channelName: varchar("channel_name", { length: 255 }), // friendly name
+  
+  // Connection status
+  status: varchar("status", { length: 20 }).default("active"), // active, disconnected, expired, error
+  isDefault: boolean("is_default").default(false), // default channel for this type
+  
+  // Authentication & configuration (encrypted)
+  credentials: jsonb("credentials"), // API keys, tokens, etc (encrypted)
+  config: jsonb("config"), // channel-specific settings
+  
+  // Webhook info
+  webhookUrl: varchar("webhook_url", { length: 500 }),
+  webhookSecret: varchar("webhook_secret", { length: 255 }),
+  
+  // Metadata
+  lastSyncedAt: timestamp("last_synced_at"),
+  lastError: text("last_error"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  unique().on(table.clientId, table.channelType, table.channelIdentifier),
+]);
+
+// Conversations - unified thread for all messages from a contact across channels
+export const inboxConversations = pgTable("inbox_conversations", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  
+  // Contact/customer info
+  contactName: varchar("contact_name", { length: 255 }),
+  contactIdentifier: varchar("contact_identifier", { length: 255 }).notNull(), // phone, email, user ID
+  contactAvatar: text("contact_avatar"),
+  
+  // Primary channel for this conversation
+  primaryChannelType: varchar("primary_channel_type", { length: 50 }).notNull(),
+  primaryChannelId: integer("primary_channel_id").references(() => inboxChannelConnections.id),
+  
+  // Conversation metadata
+  subject: text("subject"), // for email threads
+  status: varchar("status", { length: 20 }).default("open"), // open, pending, resolved, closed, spam
+  priority: varchar("priority", { length: 20 }).default("normal"), // low, normal, high, urgent
+  
+  // Assignment
+  assignedToId: integer("assigned_to_id").references(() => clients.id),
+  assignedAt: timestamp("assigned_at"),
+  
+  // Tags and categorization
+  tags: text("tags").array(),
+  category: varchar("category", { length: 50 }), // support, sales, general
+  
+  // Message tracking
+  lastMessageAt: timestamp("last_message_at"),
+  lastMessagePreview: text("last_message_preview"),
+  unreadCount: integer("unread_count").default(0),
+  
+  // Customer satisfaction
+  sentiment: varchar("sentiment", { length: 20 }), // positive, neutral, negative
+  rating: integer("rating"), // 1-5 stars
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_conversation_client").on(table.clientId),
+  index("idx_conversation_status").on(table.status),
+  index("idx_conversation_assigned").on(table.assignedToId),
+]);
+
+// Messages - individual messages within conversations
+export const inboxMessages2 = pgTable("inbox_messages2", {
+  id: serial("id").primaryKey(),
+  conversationId: integer("conversation_id").references(() => inboxConversations.id, { onDelete: "cascade" }).notNull(),
+  
+  // Channel info
+  channelType: varchar("channel_type", { length: 50 }).notNull(),
+  channelId: integer("channel_id").references(() => inboxChannelConnections.id),
+  
+  // Message details
+  messageType: varchar("message_type", { length: 20 }).notNull(), // incoming, outgoing, internal_note
+  direction: varchar("direction", { length: 10 }).notNull(), // inbound, outbound
+  
+  // Content
+  content: text("content").notNull(),
+  contentType: varchar("content_type", { length: 50 }).default("text"), // text, html, image, video, audio, file
+  
+  // Sender/recipient
+  fromIdentifier: varchar("from_identifier", { length: 255 }).notNull(), // phone, email, user ID
+  fromName: varchar("from_name", { length: 255 }),
+  toIdentifier: varchar("to_identifier", { length: 255 }).notNull(),
+  toName: varchar("to_name", { length: 255 }),
+  
+  // Platform-specific IDs
+  externalMessageId: varchar("external_message_id", { length: 255 }), // ID from Facebook, WhatsApp, etc
+  threadId: varchar("thread_id", { length: 255 }), // thread ID from external platform
+  
+  // Attachments
+  hasAttachments: boolean("has_attachments").default(false),
+  attachments: jsonb("attachments"), // array of attachment objects
+  
+  // Message status
+  status: varchar("status", { length: 20 }).default("sent"), // queued, sent, delivered, read, failed
+  deliveredAt: timestamp("delivered_at"),
+  readAt: timestamp("read_at"),
+  
+  // Team member who sent (for outgoing)
+  sentById: integer("sent_by_id").references(() => clients.id),
+  
+  // Metadata
+  metadata: jsonb("metadata"), // platform-specific data
+  isInternal: boolean("is_internal").default(false), // internal note vs customer-facing
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_message_conversation").on(table.conversationId),
+  index("idx_message_external").on(table.externalMessageId),
+  index("idx_message_created").on(table.createdAt),
+]);
+
+// Message attachments
+export const inboxAttachments = pgTable("inbox_attachments", {
+  id: serial("id").primaryKey(),
+  messageId: integer("message_id").references(() => inboxMessages2.id, { onDelete: "cascade" }).notNull(),
+  
+  // File details
+  fileName: varchar("file_name", { length: 255 }).notNull(),
+  fileType: varchar("file_type", { length: 50 }).notNull(), // image/jpeg, application/pdf, etc
+  fileSize: integer("file_size"), // bytes
+  fileUrl: text("file_url").notNull(), // storage URL
+  
+  // Thumbnail for images/videos
+  thumbnailUrl: text("thumbnail_url"),
+  
+  // External reference
+  externalFileId: varchar("external_file_id", { length: 255 }),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Quick replies / canned responses
+export const inboxQuickReplies = pgTable("inbox_quick_replies", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  
+  // Reply details
+  shortcut: varchar("shortcut", { length: 50 }).notNull(), // /greeting, /hours, etc
+  title: varchar("title", { length: 255 }).notNull(),
+  content: text("content").notNull(),
+  
+  // Channel compatibility
+  channelTypes: text("channel_types").array(), // which channels this reply works on
+  
+  // Categorization
+  category: varchar("category", { length: 50 }),
+  tags: text("tags").array(),
+  
+  // Usage tracking
+  useCount: integer("use_count").default(0),
+  lastUsedAt: timestamp("last_used_at"),
+  
+  // Team sharing
+  isShared: boolean("is_shared").default(true), // shared with team or private
+  createdById: integer("created_by_id").references(() => clients.id),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  unique().on(table.clientId, table.shortcut),
+]);
+
+// Conversation participants (for group conversations)
+export const inboxParticipants = pgTable("inbox_participants", {
+  id: serial("id").primaryKey(),
+  conversationId: integer("conversation_id").references(() => inboxConversations.id, { onDelete: "cascade" }).notNull(),
+  
+  participantIdentifier: varchar("participant_identifier", { length: 255 }).notNull(),
+  participantName: varchar("participant_name", { length: 255 }),
+  participantType: varchar("participant_type", { length: 20 }).notNull(), // customer, agent, bot
+  
+  // Participant status
+  isActive: boolean("is_active").default(true),
+  joinedAt: timestamp("joined_at").defaultNow(),
+  leftAt: timestamp("left_at"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  unique().on(table.conversationId, table.participantIdentifier),
+]);
+
+// Live chat widget sessions
+export const livechatSessions = pgTable("livechat_sessions", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  conversationId: integer("conversation_id").references(() => inboxConversations.id),
+  
+  // Session details
+  sessionId: varchar("session_id", { length: 100 }).notNull().unique(),
+  visitorId: varchar("visitor_id", { length: 100 }).notNull(),
+  visitorName: varchar("visitor_name", { length: 255 }),
+  visitorEmail: varchar("visitor_email", { length: 255 }),
+  
+  // Widget context
+  pageUrl: text("page_url"),
+  pageTitle: text("page_title"),
+  referrer: text("referrer"),
+  userAgent: text("user_agent"),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  
+  // Location
+  country: varchar("country", { length: 100 }),
+  city: varchar("city", { length: 100 }),
+  
+  // Session status
+  status: varchar("status", { length: 20 }).default("active"), // active, ended, transferred
+  startedAt: timestamp("started_at").defaultNow(),
+  endedAt: timestamp("ended_at"),
+  
+  // Assignment
+  assignedToId: integer("assigned_to_id").references(() => clients.id),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_livechat_session").on(table.sessionId),
+  index("idx_livechat_visitor").on(table.visitorId),
+]);
+
+// Insert schemas for unified inbox
+export const insertChannelConnectionSchema = createInsertSchema(inboxChannelConnections).pick({
+  clientId: true,
+  channelType: true,
+  channelIdentifier: true,
+  channelName: true,
+  isDefault: true,
+  credentials: true,
+  config: true,
+  webhookUrl: true,
+  webhookSecret: true,
+});
+
+export const insertConversationSchema = createInsertSchema(inboxConversations).pick({
+  clientId: true,
+  contactName: true,
+  contactIdentifier: true,
+  contactAvatar: true,
+  primaryChannelType: true,
+  primaryChannelId: true,
+  subject: true,
+  status: true,
+  priority: true,
+  assignedToId: true,
+  tags: true,
+  category: true,
+  lastMessageAt: true,
+  lastMessagePreview: true,
+  sentiment: true,
+});
+
+export const insertInboxMessage2Schema = createInsertSchema(inboxMessages2).pick({
+  conversationId: true,
+  channelType: true,
+  channelId: true,
+  messageType: true,
+  direction: true,
+  content: true,
+  contentType: true,
+  fromIdentifier: true,
+  fromName: true,
+  toIdentifier: true,
+  toName: true,
+  externalMessageId: true,
+  threadId: true,
+  hasAttachments: true,
+  attachments: true,
+  sentById: true,
+  metadata: true,
+  isInternal: true,
+});
+
+export const insertQuickReplySchema = createInsertSchema(inboxQuickReplies).pick({
+  clientId: true,
+  shortcut: true,
+  title: true,
+  content: true,
+  channelTypes: true,
+  category: true,
+  tags: true,
+  isShared: true,
+  createdById: true,
+});
+
+export const insertLivechatSessionSchema = createInsertSchema(livechatSessions).pick({
+  clientId: true,
+  conversationId: true,
+  sessionId: true,
+  visitorId: true,
+  visitorName: true,
+  visitorEmail: true,
+  pageUrl: true,
+  pageTitle: true,
+  referrer: true,
+  userAgent: true,
+  ipAddress: true,
+  country: true,
+  city: true,
+  assignedToId: true,
+});
+
+// Types for unified inbox
+export type ChannelConnection = typeof inboxChannelConnections.$inferSelect;
+export type InsertChannelConnection = z.infer<typeof insertChannelConnectionSchema>;
+export type InboxConversation = typeof inboxConversations.$inferSelect;
+export type InsertConversation = z.infer<typeof insertConversationSchema>;
+export type InboxMessage2 = typeof inboxMessages2.$inferSelect;
+export type InsertInboxMessage2 = z.infer<typeof insertInboxMessage2Schema>;
+export type InboxAttachment = typeof inboxAttachments.$inferSelect;
+export type QuickReply = typeof inboxQuickReplies.$inferSelect;
+export type InsertQuickReply = z.infer<typeof insertQuickReplySchema>;
+export type LivechatSession = typeof livechatSessions.$inferSelect;
+export type InsertLivechatSession = z.infer<typeof insertLivechatSessionSchema>;
