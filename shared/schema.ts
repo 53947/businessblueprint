@@ -11,6 +11,7 @@ import {
   decimal,
   unique
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -884,3 +885,276 @@ export type SendCampaignSend = typeof sendCampaignSends.$inferSelect;
 export type SendAutomation = typeof sendAutomations.$inferSelect;
 export type InsertSendAutomation = z.infer<typeof insertSendAutomationSchema>;
 export type SendConsentRecord = typeof sendConsentRecords.$inferSelect;
+
+// ========================================
+// OPENSRS DOMAIN MANAGEMENT (webhosted.io)
+// ========================================
+
+// Domain registrations managed via OpenSRS
+export const domains = pgTable("domains", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  
+  // Domain details
+  domain: varchar("domain", { length: 255 }).notNull(),
+  tld: varchar("tld", { length: 20 }).notNull(), // com, net, org, etc
+  
+  // Registration details
+  registrar: varchar("registrar", { length: 50 }).default("opensrs"),
+  opensrsOrderId: varchar("opensrs_order_id", { length: 100 }),
+  registrationDate: timestamp("registration_date"),
+  expiryDate: timestamp("expiry_date"),
+  autoRenew: boolean("auto_renew").default(true),
+  
+  // Domain status
+  status: varchar("status", { length: 50 }).default("active"), // active, pending, expired, transferred, cancelled
+  locked: boolean("locked").default(true), // domain lock protection
+  
+  // DNS configuration
+  dnsProvider: varchar("dns_provider", { length: 50 }).default("opensrs"), // opensrs, cloudflare, other
+  nameservers: text("nameservers").array(), // array of nameserver hostnames
+  
+  // Contact information (WHOIS)
+  registrantContact: jsonb("registrant_contact"), // owner contact
+  adminContact: jsonb("admin_contact"),
+  techContact: jsonb("tech_contact"),
+  billingContact: jsonb("billing_contact"),
+  
+  // Privacy settings
+  whoisPrivacy: boolean("whois_privacy").default(false),
+  
+  // Transfer details
+  authCode: varchar("auth_code", { length: 100 }), // EPP/auth code for transfers
+  transferLocked: boolean("transfer_locked").default(false),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  unique().on(table.clientId, table.domain),
+]);
+
+// DNS Records management
+export const dnsRecords = pgTable("dns_records", {
+  id: serial("id").primaryKey(),
+  domainId: integer("domain_id").references(() => domains.id, { onDelete: "cascade" }),
+  
+  // DNS record details
+  recordType: varchar("record_type", { length: 10 }).notNull(), // A, AAAA, CNAME, MX, TXT, SPF, DKIM, etc
+  hostname: varchar("hostname", { length: 255 }).notNull(), // subdomain or @ for root
+  value: text("value").notNull(), // IP, domain, text value
+  ttl: integer("ttl").default(300), // Time to live in seconds
+  priority: integer("priority"), // For MX records
+  
+  // Status
+  status: varchar("status", { length: 20 }).default("active"), // active, pending, deleted
+  verified: boolean("verified").default(false),
+  verifiedAt: timestamp("verified_at"),
+  
+  // Metadata
+  autoCreated: boolean("auto_created").default(false), // auto-created by system vs manual
+  source: varchar("source", { length: 50 }), // wpmudev, manual, imported, etc
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Domain transfer tracking
+export const domainTransfers = pgTable("domain_transfers", {
+  id: serial("id").primaryKey(),
+  domainId: integer("domain_id").references(() => domains.id),
+  clientId: integer("client_id").references(() => clients.id),
+  
+  // Transfer details
+  domain: varchar("domain", { length: 255 }).notNull(),
+  transferType: varchar("transfer_type", { length: 20 }).notNull(), // inbound, outbound
+  authCode: varchar("auth_code", { length: 100 }),
+  
+  // Status tracking
+  status: varchar("status", { length: 50 }).default("pending"), // pending, pending_owner, pending_admin, pending_registry, completed, cancelled, failed
+  statusMessage: text("status_message"),
+  
+  // Dates
+  initiatedAt: timestamp("initiated_at").defaultNow(),
+  completedAt: timestamp("completed_at"),
+  
+  // OpenSRS tracking
+  opensrsTransferId: varchar("opensrs_transfer_id", { length: 100 }),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Nameserver change history
+export const nameserverHistory = pgTable("nameserver_history", {
+  id: serial("id").primaryKey(),
+  domainId: integer("domain_id").references(() => domains.id, { onDelete: "cascade" }),
+  
+  previousNameservers: text("previous_nameservers").array(),
+  newNameservers: text("new_nameservers").array(),
+  changedBy: integer("changed_by").references(() => clients.id),
+  reason: text("reason"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// ========================================
+// IMPERSONATION SYSTEM
+// ========================================
+
+// Impersonation sessions for admin support
+export const impersonationSessions = pgTable("impersonation_sessions", {
+  id: serial("id").primaryKey(),
+  
+  // Who is impersonating whom
+  adminId: integer("admin_id").references(() => clients.id).notNull(), // admin user
+  targetUserId: integer("target_user_id").references(() => clients.id).notNull(), // user being impersonated
+  
+  // Session tokens (dual-token system)
+  sessionToken: varchar("session_token", { length: 500 }).notNull().unique(), // JWT for impersonated user
+  superToken: varchar("super_token", { length: 500 }).notNull(), // JWT for admin
+  
+  // Request details
+  reason: text("reason").notNull(), // why impersonation was requested
+  requestedAt: timestamp("requested_at").defaultNow(),
+  
+  // User consent
+  requiresConsent: boolean("requires_consent").default(true),
+  consentGranted: boolean("consent_granted").default(false),
+  consentGrantedAt: timestamp("consent_granted_at"),
+  consentMethod: varchar("consent_method", { length: 50 }), // email, sms, in_app
+  
+  // Session lifecycle
+  status: varchar("status", { length: 20 }).default("pending"), // pending, active, expired, ended, rejected
+  startedAt: timestamp("started_at"),
+  endedAt: timestamp("ended_at"),
+  expiresAt: timestamp("expires_at"), // 30 min default timeout
+  
+  // Access restrictions
+  readOnly: boolean("read_only").default(true),
+  allowedActions: text("allowed_actions").array(), // specific actions admin can perform
+  restrictedActions: text("restricted_actions").array().default(sql`ARRAY['delete_account', 'change_password', 'modify_billing']`),
+  
+  // Metadata
+  ipAddress: varchar("ip_address", { length: 45 }),
+  userAgent: text("user_agent"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Comprehensive audit log for impersonation
+export const impersonationAuditLog = pgTable("impersonation_audit_log", {
+  id: serial("id").primaryKey(),
+  sessionId: integer("session_id").references(() => impersonationSessions.id, { onDelete: "cascade" }),
+  
+  adminId: integer("admin_id").references(() => clients.id).notNull(),
+  targetUserId: integer("target_user_id").references(() => clients.id).notNull(),
+  
+  // Action details
+  action: varchar("action", { length: 100 }).notNull(), // view_dashboard, update_contact, send_email, etc
+  actionCategory: varchar("action_category", { length: 50 }), // read, write, delete
+  resource: varchar("resource", { length: 100 }), // contacts, campaigns, settings
+  resourceId: varchar("resource_id", { length: 100 }),
+  
+  // Request details
+  method: varchar("method", { length: 10 }), // GET, POST, PUT, DELETE
+  endpoint: varchar("endpoint", { length: 255 }),
+  requestBody: jsonb("request_body"),
+  responseStatus: integer("response_status"),
+  
+  // Tracking
+  ipAddress: varchar("ip_address", { length: 45 }),
+  userAgent: text("user_agent"),
+  
+  // Result
+  success: boolean("success").default(true),
+  errorMessage: text("error_message"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Zod schemas for OpenSRS domain management
+export const insertDomainSchema = createInsertSchema(domains).pick({
+  clientId: true,
+  domain: true,
+  tld: true,
+  registrar: true,
+  opensrsOrderId: true,
+  registrationDate: true,
+  expiryDate: true,
+  autoRenew: true,
+  locked: true,
+  dnsProvider: true,
+  nameservers: true,
+  registrantContact: true,
+  adminContact: true,
+  techContact: true,
+  billingContact: true,
+  whoisPrivacy: true,
+  authCode: true,
+});
+
+export const insertDnsRecordSchema = createInsertSchema(dnsRecords).pick({
+  domainId: true,
+  recordType: true,
+  hostname: true,
+  value: true,
+  ttl: true,
+  priority: true,
+  autoCreated: true,
+  source: true,
+});
+
+export const insertDomainTransferSchema = createInsertSchema(domainTransfers).pick({
+  domainId: true,
+  clientId: true,
+  domain: true,
+  transferType: true,
+  authCode: true,
+  opensrsTransferId: true,
+});
+
+export const insertImpersonationSessionSchema = createInsertSchema(impersonationSessions).pick({
+  adminId: true,
+  targetUserId: true,
+  sessionToken: true,
+  superToken: true,
+  reason: true,
+  requiresConsent: true,
+  readOnly: true,
+  allowedActions: true,
+  expiresAt: true,
+  ipAddress: true,
+  userAgent: true,
+});
+
+export const insertImpersonationAuditSchema = createInsertSchema(impersonationAuditLog).pick({
+  sessionId: true,
+  adminId: true,
+  targetUserId: true,
+  action: true,
+  actionCategory: true,
+  resource: true,
+  resourceId: true,
+  method: true,
+  endpoint: true,
+  requestBody: true,
+  responseStatus: true,
+  ipAddress: true,
+  userAgent: true,
+  success: true,
+  errorMessage: true,
+});
+
+// Types for OpenSRS and Impersonation
+export type Domain = typeof domains.$inferSelect;
+export type InsertDomain = z.infer<typeof insertDomainSchema>;
+export type DnsRecord = typeof dnsRecords.$inferSelect;
+export type InsertDnsRecord = z.infer<typeof insertDnsRecordSchema>;
+export type DomainTransfer = typeof domainTransfers.$inferSelect;
+export type InsertDomainTransfer = z.infer<typeof insertDomainTransferSchema>;
+
+export type ImpersonationSession = typeof impersonationSessions.$inferSelect;
+export type InsertImpersonationSession = z.infer<typeof insertImpersonationSessionSchema>;
+export type ImpersonationAuditLog = typeof impersonationAuditLog.$inferSelect;
+export type InsertImpersonationAudit = z.infer<typeof insertImpersonationAuditSchema>;
