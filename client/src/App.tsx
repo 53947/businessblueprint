@@ -19,6 +19,7 @@ import Journey from "@/pages/journey";
 import LogoPreview from "@/pages/logo-preview";
 import SendDashboard from "@/pages/send-dashboard";
 import LiveChatDemo from "@/pages/livechat-demo";
+import InboxPage from "@/pages/inbox";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -40,6 +41,7 @@ function Router() {
       <Route path="/logo-preview" component={LogoPreview} />
       <Route path="/send" component={SendDashboard} />
       <Route path="/livechat-demo" component={LiveChatDemo} />
+      <Route path="/inbox" component={InboxPage} />
       <Route component={NotFound} />
     </Switch>
   );
