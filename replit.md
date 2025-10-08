@@ -16,7 +16,7 @@ Preferred communication style: Simple, everyday language.
 - Keep compass design consistent across iterations unless told otherwise
 - businessblueprint.io logo concept: Compass + Pencil = "AI" using actual blueprint tools
 
-Business Context:
+**Business Context:**
 - businessblueprint.io: Digital marketing platform - OFFICIAL BRAND (never mention Vendasta or cloudpleaser.io)
 - webhosted.io: Website hosting platform (never mention WPMUDev)
 - airswiped.com: Payment gateway platform (never mention NMI Network)
@@ -31,10 +31,10 @@ Business Context:
 - Email HTML must use public URL: https://businessblueprint.io/assets/signature/[filename]
 - Email clients require publicly hosted URLs (cannot access local/Replit files)
 
-Brand Identity:
+**Brand Identity:**
 - Official Brand Assets: cloudpleaser logo, webhosted logo, airswiped logo, AI Coach logo, Digital Blueprint icon
 - Digital IQ Assessment preserves Brain icon (per specific requirement)
-- **Master Color Key** (from attached_assets/Master Color Key for Logos and Icons_1759184165353.png):
+- **Master Color Key**:
   - businessblueprint.io: black "business" + blueprint blue #0080FF + fluorescent green ".io"
   - webhosted.io: black "web" + webhosted purple #660099 + fluorescent green ".io"
   - airswiped.com: black "air" + airswiped red #CB0505 + fluorescent green ".com"
@@ -44,7 +44,6 @@ Brand Identity:
 - Page-specific pleaser colors: Yellow (contact), Orange (about), Blue (pricing), avoiding platform colors
 - Format: black-[signature-color]-fluorescent-green across all platforms
 - Dark background adaptations: Brand logos use brightness-0 invert for white appearance on dark backgrounds
-- **DEPRECATED:** Pink #FC8EA0 (replaced by webhosted purple #660099)
 
 **Official 5-Step Journey Icons & Sizing Standards:**
 - Digital Assessment: w-16 h-16 (64px) - standard size
@@ -54,7 +53,7 @@ Brand Identity:
 - Digital Success: w-[74px] h-[74px] (74px) - 15% bigger than base size
 - These 5 standardized icons and names must never be varied across all platform uses
 
-**Official Pathway Icons & Terminology (Updated October 5, 2025):**
+**Official Pathway Icons & Terminology:**
 - **Do It Yourself (DIY):** Official icon from attached_assets/do it yourself icon_1759648904285.png
 - **Managed Services Provided (MSP):** Official icon from attached_assets/managed services icon_1759648904285.png
 - **AI Business Coach:** Official icon from attached_assets/ai business coach icon_1759648904283.png
@@ -83,34 +82,37 @@ The application utilizes a full-stack monorepo architecture.
 - **Email Service:** Nodemailer
 
 **Core Features & Components:**
-- **AI Coach:** Leverages OpenAI GPT-4o for personalized guidance, offering tiered pricing.
-- **Client Portal:** A comprehensive portal providing dashboard overview, business listings, review management, campaign tracking, and task management, integrated with Vendasta and mobile-responsive.
+- **AI Coach:** Leverages OpenAI GPT-4o for personalized guidance.
+- **Client Portal:** A comprehensive dashboard for business listings, review management, campaign tracking, and task management, integrated with Vendasta and mobile-responsive.
 - **Vendasta Integration:** API integration for customer synchronization, dashboard data retrieval, and authentication.
 - **Data Flow:** Involves assessment creation, background processing of Google Business data and AI analysis, automated report delivery, and pathway selection.
 - **UI/UX Decisions:** Emphasizes consistent branding, custom color schemes, multi-tab interfaces, visual progress indicators, and priority-based action items.
-- **/send Platform:** A robust Email + SMS marketing platform with unified campaigns, GDPR/CAN-SPAM/TCPA compliance, contact management, and a production-ready RESTful API with JWT authentication and client ownership validation.
+- **/send Platform:** An Email + SMS marketing platform with unified campaigns, compliance, contact management, and a production-ready RESTful API.
+- **Unified Inbox:** A multi-channel communications hub aggregating email, live chat, SMS, WhatsApp, Facebook Messenger, Instagram DMs, X (Twitter), and TikTok messages into a single interface. Features real-time WebSocket messaging, conversation threading, and agent assignment.
 - **Subscription & Billing:** Simplified DIY ($99/mo) and MSP ($299/mo) pricing, with AI Business Coach and Captain Your Journey addons. Automated purchase flows and NMI payment integration.
 
 **Three Distinct Purchasing Flows:**
 The platform features three separate purchasing scenarios, each with different UI presentation and user journey:
 
-1.  **Flow 3a: General Subscription Page (`/subscription`)**
-    *   **Purpose:** Direct subscription purchase with pathway selection.
-    *   **UI Layout:** Plan-focused presentation with prominent MSP/DIY buttons, detailed feature lists, and dynamic order summary.
-
-2.  **Flow 3b: Assessment/Diagnosis-Driven Recommendations (`/assessment-checkout`)**
-    *   **Purpose:** Post-diagnosis recommendations leading to purchase.
-    *   **UI Layout:** Diagnosis-driven, integrating pathway preference, AI-recommended apps, and bundle options presented as a natural progression from assessment results.
-
-3.  **Flow 3c: A La Carte Individual App Ordering (`/apps-marketplace`)**
-    *   **Purpose:** Direct purchase of individual apps without assessment.
-    *   **UI Layout:** App-focused with individual app cards, "Add to Cart" functionality, and bundle offerings positioned as value-add suggestions.
+1.  **General Subscription Page (`/subscription`):** Direct subscription purchase with pathway selection, prominent plan display, and detailed feature lists.
+2.  **Assessment/Diagnosis-Driven Recommendations (`/assessment-checkout`):** Post-diagnosis recommendations leading to purchase, integrating pathway preference and AI-recommended bundles.
+3.  **A La Carte Individual App Ordering (`/apps-marketplace`):** Direct purchase of individual apps with app cards, "Add to Cart" functionality, and optional bundle suggestions.
 
 **Critical Design Requirements for Flows:**
--   Cannot reuse the same UI across all three flows; each requires a distinct layout.
--   Plans appear differently based on the flow (prominent, bundle options, or alongside individual apps).
--   Order summary behavior adapts to the flow's context (pathway/plan/addons, diagnosis/recommendations/bundle, individual apps/optional bundle).
--   User context informs the presentation, catering to users who know their plan, completed an assessment, or seek specific apps.
+-   Each flow requires a distinct UI layout.
+-   Plans appear differently based on the flow context.
+-   Order summary behavior adapts to the flow.
+-   User context informs the presentation.
+
+**Impersonation System (All Platforms):**
+- **Purpose:** Secure admin support access for troubleshooting client issues.
+- **Security Model:** Dual-Token JWT, immutable audit logging, user consent, session limits, granular access control (read-only by default).
+- **Workflow:** Admin request, user consent, limited admin access with visual indicator, logged actions, session expiry.
+
+**OpenSRS Domain Management (webhosted.io):**
+- **Purpose:** Comprehensive domain and DNS management for client websites.
+- **Capabilities:** Domain Registration, Transfers, DNS Management (A, AAAA, CNAME, MX, TXT, SPF, DKIM), Nameservers, Security features (WHOIS privacy, domain locking, auto-renewal).
+- **Authentication:** API key + IP authorization.
 
 ## External Dependencies
 
@@ -122,162 +124,12 @@ The platform features three separate purchasing scenarios, each with different U
 -   **Shadcn/ui:** Component library.
 -   **Tailwind CSS:** Utility-first CSS framework.
 -   **Vendasta API:** For bi-directional client data synchronization and dashboard access.
--   **Telnyx:** For SMS messaging in the /send platform.
+-   **Telnyx:** For SMS messaging in the /send platform and Unified Inbox.
 -   **NMI (Network Merchants Inc.):** Payment gateway integration for subscription billing.
 -   **OpenSRS:** Domain registration, transfer, and DNS management API for webhosted.io.
-
-## Integration Details
-
-### OpenSRS Domain Management (webhosted.io)
-**Status:** ✅ Schema complete, backend service pending, UI design mapped
-
-**Purpose:** Comprehensive domain and DNS management for client websites
-
-**API Documentation:** https://domains.opensrs.guide/
-
-**Capabilities:**
-- **Domain Registration:** Using `sw_register` command with XML protocol
-- **Domain Transfers:** Auth code management, transfer status tracking
-- **DNS Management:** Full record support (A, AAAA, CNAME, MX, TXT, SPF, DKIM)
-- **Nameservers:** OpenSRS defaults (ns1.systemdns.com, ns2.systemdns.com) or custom
-- **Security:** WHOIS privacy, domain locking, auto-renewal
-- **Authentication:** API key + IP authorization (ports 55443, 55000 required)
-
-**Database Schema (Complete):**
-- `domains` - Domain registration tracking
-- `dns_records` - DNS record management with verification
-- `domain_transfers` - Transfer process tracking
-- `nameserver_history` - Nameserver change audit trail
-
-**UI Design Reference (WPMUDev Hub 2.0 style):**
-- Tab navigation: Registered Domains | Connected Domains | Transferred Domains
-- Visual status indicators (✓ verified DNS/SSL, ⊙ pending propagation)
-- One-click operations: Add DNS Records, Import Records, Check Nameservers
-- Auto-import from existing DNS providers
-- Modal-based DNS configuration
-- Color-coded status with copy-friendly record display
-
-**Implementation:** Service wrapper needed (server/services/opensrs.ts), DNS UI components
-
----
-
-### Impersonation System (All Platforms)
-**Status:** ✅ Schema complete, backend service pending
-
-**Purpose:** Secure admin support access for troubleshooting client issues
-
-**Security Model:**
-- **Dual-Token JWT:** Separate tokens for impersonated user and admin
-- **Audit Logging:** Immutable logs of all actions (who, what, when, where)
-- **User Consent:** Required approval via email/SMS/in-app notification
-- **Session Limits:** 30-minute auto-expiry, manual end option
-- **Access Control:**
-  - Read-only mode by default
-  - Restricted actions: delete_account, change_password, modify_billing
-  - Granular permissions per session
-- **Compliance:** SOC2/GDPR-ready with complete audit trail
-
-**Database Schema (Complete):**
-- `impersonation_sessions` - Session management with dual tokens
-- `impersonation_audit_log` - Comprehensive action tracking
-
-**Workflow:**
-1. Admin requests impersonation with reason
-2. System notifies user for consent
-3. User approves (or auto-approve after timeout for urgent support)
-4. Admin gains limited access with persistent visual indicator
-5. All actions logged with admin/user IDs, timestamps, IP addresses
-6. Session auto-expires or admin manually ends
-
-**UI Components Needed:**
-- Admin panel: Initiate impersonation, view active sessions
-- User consent modal: Approve/reject with notification
-- Persistent banner: "Admin [name] is viewing your account"
-- Exit impersonation button for admin
-
----
-
-### /send Email + SMS Platform
-**Status:** ✅ Backend complete, UI pending
-
-**Backend Complete:**
-- Database schema: contacts, lists, templates, campaigns, automations
-- Storage interface: Full CRUD operations
-- Email service: Nodemailer configured
-- SMS service: Telnyx configured
-- API routes: Protected with JWT auth, client ownership validation
-- Compliance: GDPR/CAN-SPAM/TCPA consent tracking
-
-**UI Components Needed:**
-1. **Dashboard:** ✅ Complete - Metrics overview, campaign performance, contact growth, activity feed
-2. **Contact Management:** Data table, import wizard, detail view, consent indicators, bulk actions
-3. **List/Segment Builder:** Visual list creation, dynamic segments with rule builder
-4. **Template Builder:** Drag-drop email blocks, HTML editor, device preview, personalization tags
-5. **Campaign Composer:** Step-by-step wizard, A/B testing, scheduling, multi-channel (email + SMS)
-6. **Automation Builder:** Visual workflow with triggers/actions/conditions, pre-built templates
-7. **Analytics Dashboard:** Performance metrics, deliverability reports, ROI tracking
-
----
-
-### Unified Inbox (Communications Hub)
-**Status:** ✅ Database schema & WebSocket infrastructure complete
-
-**Purpose:** Centralized communications hub for all customer messaging channels
-
-**Channels Supported:**
-- Live Chat Widget (website visitors)
-- Email (IMAP/SMTP integration)
-- SMS (Telnyx integration)
-- WhatsApp Business Cloud API
-- Facebook Messenger
-- Instagram Direct Messages  
-- X (Twitter) Direct Messages
-- TikTok Business Messaging
-
-**Database Schema (Complete):**
-- `inbox_channel_connections` - API credentials & webhook configuration for each platform
-- `inbox_conversations` - Unified conversation threads across channels
-- `inbox_messages2` - Individual messages with attachments, status tracking
-- `inbox_attachments` - File attachments with thumbnails
-- `inbox_quick_replies` - Canned responses and quick reply templates
-- `inbox_participants` - Multi-participant conversation support
-- `livechat_sessions` - Live chat widget session tracking with visitor context
-
-**WebSocket Infrastructure (Complete):**
-- Socket.IO server for real-time bidirectional messaging
-- Room-based architecture (client rooms, conversation rooms, session rooms)
-- Events: `chat:message`, `agent:message`, `typing:start/stop`, `messages:read`
-- Auto-conversation creation for new live chat sessions
-- Message persistence with status tracking (sent, delivered, read)
-- Typing indicators and read receipts
-
-**Live Chat Widget Features:**
-- Embeddable JavaScript widget for any website
-- WebSocket real-time messaging
-- Visitor context tracking (page URL, referrer, location, user agent)
-- Session persistence and reconnection handling
-- Agent assignment and transfer capabilities
-
-**Team Collaboration Features (Planned):**
-- Conversation assignment to team members
-- Internal notes (not visible to customers)
-- Conversation status management (open, pending, resolved, closed)
-- Tags and categorization
-- Priority levels
-- Sentiment analysis
-
-**Integration APIs (Planned):**
-- Facebook Graph API v19.0 for Messenger
-- Instagram Messenger Platform
-- WhatsApp Cloud API with template messaging
-- X/Twitter Account Activity API with CRC validation
-- TikTok Business Messaging API
-- Email: IMAP for receiving, existing Nodemailer for sending
-- SMS: Telnyx webhook integration for incoming messages
-
-**DIY Email Setup Flow (with OpenSRS):**
-1. Domain verification (via DNS TXT record)
-2. MX record auto-configuration
-3. SPF/DKIM setup for sender authentication
-4. Test email send to verify deliverability
-5. Guided first campaign creation
+-   **Socket.IO:** For real-time WebSocket communication in the Unified Inbox.
+-   **Facebook Graph API:** For Messenger integration.
+-   **Instagram Messenger Platform:** For Instagram DM integration.
+-   **WhatsApp Business Cloud API:** For WhatsApp messaging.
+-   **X/Twitter Account Activity API:** For X (Twitter) DM integration.
+-   **TikTok Business Messaging API:** For TikTok message integration.
