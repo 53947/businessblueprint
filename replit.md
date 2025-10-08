@@ -124,3 +124,102 @@ The platform features three separate purchasing scenarios, each with different U
 -   **Vendasta API:** For bi-directional client data synchronization and dashboard access.
 -   **Telnyx:** For SMS messaging in the /send platform.
 -   **NMI (Network Merchants Inc.):** Payment gateway integration for subscription billing.
+-   **OpenSRS:** Domain registration, transfer, and DNS management API for webhosted.io.
+
+## Integration Details
+
+### OpenSRS Domain Management (webhosted.io)
+**Status:** ✅ Schema complete, backend service pending, UI design mapped
+
+**Purpose:** Comprehensive domain and DNS management for client websites
+
+**API Documentation:** https://domains.opensrs.guide/
+
+**Capabilities:**
+- **Domain Registration:** Using `sw_register` command with XML protocol
+- **Domain Transfers:** Auth code management, transfer status tracking
+- **DNS Management:** Full record support (A, AAAA, CNAME, MX, TXT, SPF, DKIM)
+- **Nameservers:** OpenSRS defaults (ns1.systemdns.com, ns2.systemdns.com) or custom
+- **Security:** WHOIS privacy, domain locking, auto-renewal
+- **Authentication:** API key + IP authorization (ports 55443, 55000 required)
+
+**Database Schema (Complete):**
+- `domains` - Domain registration tracking
+- `dns_records` - DNS record management with verification
+- `domain_transfers` - Transfer process tracking
+- `nameserver_history` - Nameserver change audit trail
+
+**UI Design Reference (WPMUDev Hub 2.0 style):**
+- Tab navigation: Registered Domains | Connected Domains | Transferred Domains
+- Visual status indicators (✓ verified DNS/SSL, ⊙ pending propagation)
+- One-click operations: Add DNS Records, Import Records, Check Nameservers
+- Auto-import from existing DNS providers
+- Modal-based DNS configuration
+- Color-coded status with copy-friendly record display
+
+**Implementation:** Service wrapper needed (server/services/opensrs.ts), DNS UI components
+
+---
+
+### Impersonation System (All Platforms)
+**Status:** ✅ Schema complete, backend service pending
+
+**Purpose:** Secure admin support access for troubleshooting client issues
+
+**Security Model:**
+- **Dual-Token JWT:** Separate tokens for impersonated user and admin
+- **Audit Logging:** Immutable logs of all actions (who, what, when, where)
+- **User Consent:** Required approval via email/SMS/in-app notification
+- **Session Limits:** 30-minute auto-expiry, manual end option
+- **Access Control:**
+  - Read-only mode by default
+  - Restricted actions: delete_account, change_password, modify_billing
+  - Granular permissions per session
+- **Compliance:** SOC2/GDPR-ready with complete audit trail
+
+**Database Schema (Complete):**
+- `impersonation_sessions` - Session management with dual tokens
+- `impersonation_audit_log` - Comprehensive action tracking
+
+**Workflow:**
+1. Admin requests impersonation with reason
+2. System notifies user for consent
+3. User approves (or auto-approve after timeout for urgent support)
+4. Admin gains limited access with persistent visual indicator
+5. All actions logged with admin/user IDs, timestamps, IP addresses
+6. Session auto-expires or admin manually ends
+
+**UI Components Needed:**
+- Admin panel: Initiate impersonation, view active sessions
+- User consent modal: Approve/reject with notification
+- Persistent banner: "Admin [name] is viewing your account"
+- Exit impersonation button for admin
+
+---
+
+### /send Email + SMS Platform
+**Status:** ✅ Backend complete, UI pending
+
+**Backend Complete:**
+- Database schema: contacts, lists, templates, campaigns, automations
+- Storage interface: Full CRUD operations
+- Email service: Nodemailer configured
+- SMS service: Telnyx configured
+- API routes: Protected with JWT auth, client ownership validation
+- Compliance: GDPR/CAN-SPAM/TCPA consent tracking
+
+**UI Components Needed:**
+1. **Dashboard:** Metrics overview, campaign performance, contact growth, activity feed
+2. **Contact Management:** Data table, import wizard, detail view, consent indicators, bulk actions
+3. **List/Segment Builder:** Visual list creation, dynamic segments with rule builder
+4. **Template Builder:** Drag-drop email blocks, HTML editor, device preview, personalization tags
+5. **Campaign Composer:** Step-by-step wizard, A/B testing, scheduling, multi-channel (email + SMS)
+6. **Automation Builder:** Visual workflow with triggers/actions/conditions, pre-built templates
+7. **Analytics Dashboard:** Performance metrics, deliverability reports, ROI tracking
+
+**DIY Email Setup Flow (with OpenSRS):**
+1. Domain verification (via DNS TXT record)
+2. MX record auto-configuration
+3. SPF/DKIM setup for sender authentication
+4. Test email send to verify deliverability
+5. Guided first campaign creation
