@@ -18,6 +18,7 @@ import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
 import { EmailService } from "./services/email";
 import { vendastaService } from "./services/vendasta";
+import { inboxEmailService } from "./services/inbox-email";
 import { aiCoachService } from "./services/aiCoach";
 import { PricingEngine } from "./services/pricing";
 import { NMIService } from "./services/nmi";
@@ -2078,12 +2079,48 @@ async function registerInboxRoutes(app: Express) {
         return res.status(400).json({ error: "Missing required fields" });
       }
 
+      // Get conversation to determine channel type
+      const [conversation] = await db.select()
+        .from(inboxConversations)
+        .where(eq(inboxConversations.id, conversationId))
+        .limit(1);
+
+      if (!conversation) {
+        return res.status(404).json({ error: "Conversation not found" });
+      }
+
+      const agentName = 'Agent'; // TODO: Get from session
+      const agentEmail = 'agent@businessblueprint.io'; // TODO: Get from session
+
+      // Send via appropriate channel
+      let deliveryStatus = 'sent';
+      let errorMessage: string | null = null;
+      
+      if (conversation.primaryChannelType === 'email') {
+        try {
+          await inboxEmailService.sendMessage(conversationId, message, agentName);
+          deliveryStatus = 'delivered';
+        } catch (emailError: any) {
+          errorMessage = emailError.message;
+          console.error('Email send error:', errorMessage);
+          return res.status(500).json({ 
+            error: "Failed to send email",
+            details: errorMessage
+          });
+        }
+      }
+
       const [newMessage] = await db.insert(inboxMessages2).values({
         conversationId,
-        content: message,
+        channelType: conversation.primaryChannelType,
+        messageType: 'outgoing',
         direction: 'outbound',
-        fromName: 'Agent', // TODO: Get from session
-        deliveryStatus: 'sent',
+        content: message,
+        fromIdentifier: agentEmail,
+        fromName: agentName,
+        toIdentifier: conversation.contactIdentifier,
+        toName: conversation.contactName || undefined,
+        status: deliveryStatus,
       }).returning();
 
       // Update conversation timestamp

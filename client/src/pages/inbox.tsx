@@ -18,7 +18,8 @@ import {
   Twitter,
   Check,
   CheckCheck,
-  Loader2
+  Loader2,
+  AlertCircle
 } from 'lucide-react';
 import { SiWhatsapp, SiTiktok } from 'react-icons/si';
 import { apiRequest, queryClient } from '@/lib/queryClient';
@@ -44,7 +45,7 @@ interface Message {
   content: string;
   direction: 'inbound' | 'outbound';
   fromName: string;
-  deliveryStatus: string;
+  status: string;
   createdAt: string;
 }
 
@@ -100,11 +101,25 @@ export default function InboxPage() {
       queryClient.invalidateQueries({ queryKey: ['/api/inbox/conversations'] });
       setMessageInput('');
     },
-    onError: () => {
+    onError: async (error: any) => {
+      // Try to extract error details from response
+      let errorDetails = 'Please try again';
+      try {
+        if (error instanceof Response) {
+          const errorData = await error.json();
+          errorDetails = errorData.details || errorData.error || errorDetails;
+        } else if (error.message) {
+          errorDetails = error.message;
+        }
+      } catch {
+        // Use default error message
+      }
+      
       toast({
         variant: 'destructive',
         title: 'Failed to send message',
-        description: 'Please try again',
+        description: errorDetails,
+        duration: 5000, // Show longer for error messages
       });
     },
   });
@@ -352,10 +367,12 @@ export default function InboxPage() {
                           </p>
                           {message.direction === 'outbound' && (
                             <div className="ml-auto">
-                              {message.deliveryStatus === 'delivered' ? (
+                              {message.status === 'delivered' ? (
                                 <CheckCheck className="w-3 h-3" data-testid={`icon-delivered-${message.id}`} />
-                              ) : message.deliveryStatus === 'sent' ? (
+                              ) : message.status === 'sent' ? (
                                 <Check className="w-3 h-3" data-testid={`icon-sent-${message.id}`} />
+                              ) : message.status === 'failed' ? (
+                                <AlertCircle className="w-3 h-3 text-red-500" data-testid={`icon-failed-${message.id}`} />
                               ) : null}
                             </div>
                           )}
