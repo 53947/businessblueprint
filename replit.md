@@ -209,13 +209,71 @@ The platform features three separate purchasing scenarios, each with different U
 - Compliance: GDPR/CAN-SPAM/TCPA consent tracking
 
 **UI Components Needed:**
-1. **Dashboard:** Metrics overview, campaign performance, contact growth, activity feed
+1. **Dashboard:** ✅ Complete - Metrics overview, campaign performance, contact growth, activity feed
 2. **Contact Management:** Data table, import wizard, detail view, consent indicators, bulk actions
 3. **List/Segment Builder:** Visual list creation, dynamic segments with rule builder
 4. **Template Builder:** Drag-drop email blocks, HTML editor, device preview, personalization tags
 5. **Campaign Composer:** Step-by-step wizard, A/B testing, scheduling, multi-channel (email + SMS)
 6. **Automation Builder:** Visual workflow with triggers/actions/conditions, pre-built templates
 7. **Analytics Dashboard:** Performance metrics, deliverability reports, ROI tracking
+
+---
+
+### Unified Inbox (Communications Hub)
+**Status:** ✅ Database schema & WebSocket infrastructure complete
+
+**Purpose:** Centralized communications hub for all customer messaging channels
+
+**Channels Supported:**
+- Live Chat Widget (website visitors)
+- Email (IMAP/SMTP integration)
+- SMS (Telnyx integration)
+- WhatsApp Business Cloud API
+- Facebook Messenger
+- Instagram Direct Messages  
+- X (Twitter) Direct Messages
+- TikTok Business Messaging
+
+**Database Schema (Complete):**
+- `inbox_channel_connections` - API credentials & webhook configuration for each platform
+- `inbox_conversations` - Unified conversation threads across channels
+- `inbox_messages2` - Individual messages with attachments, status tracking
+- `inbox_attachments` - File attachments with thumbnails
+- `inbox_quick_replies` - Canned responses and quick reply templates
+- `inbox_participants` - Multi-participant conversation support
+- `livechat_sessions` - Live chat widget session tracking with visitor context
+
+**WebSocket Infrastructure (Complete):**
+- Socket.IO server for real-time bidirectional messaging
+- Room-based architecture (client rooms, conversation rooms, session rooms)
+- Events: `chat:message`, `agent:message`, `typing:start/stop`, `messages:read`
+- Auto-conversation creation for new live chat sessions
+- Message persistence with status tracking (sent, delivered, read)
+- Typing indicators and read receipts
+
+**Live Chat Widget Features:**
+- Embeddable JavaScript widget for any website
+- WebSocket real-time messaging
+- Visitor context tracking (page URL, referrer, location, user agent)
+- Session persistence and reconnection handling
+- Agent assignment and transfer capabilities
+
+**Team Collaboration Features (Planned):**
+- Conversation assignment to team members
+- Internal notes (not visible to customers)
+- Conversation status management (open, pending, resolved, closed)
+- Tags and categorization
+- Priority levels
+- Sentiment analysis
+
+**Integration APIs (Planned):**
+- Facebook Graph API v19.0 for Messenger
+- Instagram Messenger Platform
+- WhatsApp Cloud API with template messaging
+- X/Twitter Account Activity API with CRC validation
+- TikTok Business Messaging API
+- Email: IMAP for receiving, existing Nodemailer for sending
+- SMS: Telnyx webhook integration for incoming messages
 
 **DIY Email Setup Flow (with OpenSRS):**
 1. Domain verification (via DNS TXT record)

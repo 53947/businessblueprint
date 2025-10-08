@@ -18,6 +18,7 @@ import Sitemap from "@/pages/sitemap";
 import Journey from "@/pages/journey";
 import LogoPreview from "@/pages/logo-preview";
 import SendDashboard from "@/pages/send-dashboard";
+import LiveChatDemo from "@/pages/livechat-demo";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -38,6 +39,7 @@ function Router() {
       <Route path="/journey" component={Journey} />
       <Route path="/logo-preview" component={LogoPreview} />
       <Route path="/send" component={SendDashboard} />
+      <Route path="/livechat-demo" component={LiveChatDemo} />
       <Route component={NotFound} />
     </Switch>
   );
