@@ -24,7 +24,9 @@ import {
   DollarSign,
   Mail,
   Server,
-  Wallet
+  Wallet,
+  MessageSquare,
+  Inbox
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
@@ -159,7 +161,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-green-500 hover:shadow-xl hover:from-green-50 hover:to-green-100 dark:hover:from-green-950 dark:hover:to-green-900 hover:scale-[1.02]"
-                                href="#send"
+                                href="/send"
                                 data-testid="link-app-send"
                               >
                                 <div className="flex items-center justify-between mb-3">
@@ -179,6 +181,34 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> Email & SMS Campaigns</li>
                                   <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> Contact Management</li>
                                   <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> GDPR/CAN-SPAM Compliant</li>
+                                </ul>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* Inbox - Unified Communications */}
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-yellow-500 hover:shadow-xl hover:from-yellow-50 hover:to-yellow-100 dark:hover:from-yellow-950 dark:hover:to-yellow-900 hover:scale-[1.02]"
+                                href="/inbox"
+                                data-testid="link-app-inbox"
+                              >
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-2">
+                                    <MessageSquare className="h-10 w-10 text-yellow-600 dark:text-yellow-500" />
+                                    <div className="font-bold text-lg text-gray-900 dark:text-white">Inbox</div>
+                                  </div>
+                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="text-xs font-semibold text-yellow-600 dark:text-yellow-400">Visit Platform →</span>
+                                  </div>
+                                </div>
+                                <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-inbox-title">Unified Communications</div>
+                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-inbox-description">
+                                  Multi-channel messaging hub for all customer communications
+                                </p>
+                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-inbox-features">
+                                  <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Email, Chat & Social DMs</li>
+                                  <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Real-time Messaging</li>
+                                  <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Live Chat Widget</li>
                                 </ul>
                               </a>
                             </NavigationMenuLink>
@@ -372,10 +402,23 @@ export function Header({ showNavigation = true }: HeaderProps) {
             )}
           </div>
 
-          {/* Right side - Login/Signup Buttons */}
+          {/* Right side - Quick Access & Login/Signup Buttons */}
           <div className="flex items-center space-x-3">
             {showNavigation && (
               <>
+                {/* Quick Access Inbox */}
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="hidden md:flex items-center space-x-2 border-yellow-500 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700"
+                  asChild
+                  data-testid="button-quick-inbox"
+                >
+                  <a href="/inbox">
+                    <MessageSquare className="w-4 h-4" />
+                    <span>Inbox</span>
+                  </a>
+                </Button>
                 <Button 
                   variant="ghost" 
                   size="sm" 
