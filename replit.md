@@ -4,16 +4,17 @@
 **Last Updated:** January 8, 2025
 
 ### Latest Changes
-- **Unified Inbox:** Multi-channel communications hub complete with WebSocket messaging, live chat widget, and email integration
-- **Live Chat Widget:** Real-time customer chat with session persistence and conversation continuity
-- **Email Channel:** SMTP sending with comprehensive error handling and HTML templates
-- **Sitemap Updated:** Added /inbox, /livechat-demo, /send, and reorganized purchase pathways section
-- **Navigation Fix:** Added Inbox to Apps dropdown menu and quick-access header (pending)
+- **Pricing Tiers Restructured:** 6-tier system created - STARTER ($250), GROWTH ($316) for DIY; EXPANSION Standard ($399), EXPANSION Pro ($599), LEADERSHIP Standard ($999), LEADERSHIP Pro ($1499) for MSP
+- **Platform Integration:** /send, /inbox, and /livechat explicitly included in ALL 6 pricing tiers as core features
+- **Inbox Navigation:** Added to Apps mega-menu dropdown AND quick-access button in header with yellow accent
+- **Sitemap Updated:** Added /inbox, /livechat-demo, /send, /apps-marketplace and reorganized with "Purchase Pathways" and "Platform Apps" sections (18 total pages)
+- **Subscription Add-ons:** 6 add-ons created including AI Coach Essential/Pro, Captain Your Journey, Additional Locations (10/50), Priority Support
+- **Database Seed Script:** Created server/seed-subscription-plans.ts with onConflictDoUpdate for easy plan updates
 
 ### In Progress
-- Pricing tier restructure (6 tiers: Starter, Growth, Expansion Standard/Pro, Leadership Standard/Pro)
-- Unified cart system across all platforms (Amazon-style)
-- Apps marketplace à la carte ordering page
+- Assessment recommendation engine updates ($250 minimum subscription requirement)
+- Unified cart system across all platforms (Amazon-style brand separation)
+- Apps marketplace à la carte ordering page (/apps-marketplace)
 - "How to Get Started" purchase pathways landing page
 
 ## Overview
