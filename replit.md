@@ -1,5 +1,21 @@
 # businessblueprint.io - Digital Intelligence Platform
 
+## Recent Updates
+**Last Updated:** January 8, 2025
+
+### Latest Changes
+- **Unified Inbox:** Multi-channel communications hub complete with WebSocket messaging, live chat widget, and email integration
+- **Live Chat Widget:** Real-time customer chat with session persistence and conversation continuity
+- **Email Channel:** SMTP sending with comprehensive error handling and HTML templates
+- **Sitemap Updated:** Added /inbox, /livechat-demo, /send, and reorganized purchase pathways section
+- **Navigation Fix:** Added Inbox to Apps dropdown menu and quick-access header (pending)
+
+### In Progress
+- Pricing tier restructure (6 tiers: Starter, Growth, Expansion Standard/Pro, Leadership Standard/Pro)
+- Unified cart system across all platforms (Amazon-style)
+- Apps marketplace à la carte ordering page
+- "How to Get Started" purchase pathways landing page
+
 ## Overview
 businessblueprint.io is an AI-powered digital intelligence platform designed to help local businesses enhance their online presence, attract customers, and grow. It offers AI-driven analysis of online presence, generates personalized Digital Blueprints, and provides both Do It Yourself (DIY) and Managed Service Provider (MSP) pathways for business growth. The platform aims for mass market automation, leveraging Google Business Intelligence to minimize manual intervention and maximize results.
 

@@ -81,7 +81,7 @@ export default function Sitemap() {
               path: "/ai-coach",
               icon: Brain,
               description: "AI guidance for digital growth",
-              badge: "$99/mo DIY"
+              badge: "Add-on"
             },
             {
               title: "Journey",
@@ -92,13 +92,52 @@ export default function Sitemap() {
           ]
         },
         {
-          title: "Subscription & Billing",
+          title: "Purchase Pathways",
+          badge: "3 Options",
           children: [
             {
-              title: "Subscription Plans",
+              title: "General Subscription",
               path: "/subscription",
               icon: CreditCard,
-              description: "DIY ($99/mo) & MSP ($299/mo) plans"
+              description: "Direct subscription with DIY/MSP pathway selection"
+            },
+            {
+              title: "Assessment Checkout",
+              path: "/assessment-checkout",
+              icon: BarChart3,
+              description: "AI-recommended bundles based on assessment results"
+            },
+            {
+              title: "Apps Marketplace",
+              path: "/apps-marketplace",
+              icon: Users,
+              description: "À la carte individual app ordering",
+              badge: "Coming Soon"
+            }
+          ]
+        },
+        {
+          title: "Platform Apps",
+          badge: "Included",
+          children: [
+            {
+              title: "/send - Email & SMS Marketing",
+              path: "/send",
+              icon: Mail,
+              description: "Unified campaigns, compliance, contact management"
+            },
+            {
+              title: "Inbox - Unified Communications",
+              path: "/inbox",
+              icon: Mail,
+              description: "Multi-channel messaging hub (email, chat, SMS, social)",
+              badge: "New"
+            },
+            {
+              title: "Live Chat Widget Demo",
+              path: "/livechat-demo",
+              icon: Users,
+              description: "Real-time customer chat widget demonstration"
             }
           ]
         },
@@ -267,26 +306,26 @@ export default function Sitemap() {
         <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-3xl font-bold text-blue-600">14</div>
+              <div className="text-3xl font-bold text-blue-600">18</div>
               <div className="text-sm text-gray-600">Total Pages</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-3xl font-bold text-green-600">4</div>
+              <div className="text-3xl font-bold text-green-600">3</div>
+              <div className="text-sm text-gray-600">Purchase Pathways</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl font-bold text-purple-600">3</div>
+              <div className="text-sm text-gray-600">Platform Apps</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-3xl font-bold text-orange-600">4</div>
               <div className="text-sm text-gray-600">Core Features</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-3xl font-bold text-purple-600">2</div>
-              <div className="text-sm text-gray-600">Client Portal</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="text-3xl font-bold text-orange-600">5</div>
-              <div className="text-sm text-gray-600">Public Pages</div>
             </CardContent>
           </Card>
         </div>
