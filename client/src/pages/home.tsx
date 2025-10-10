@@ -12,7 +12,7 @@ import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.p
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
-import airswipedLogo from "@assets/airswipedcom icon light version_1759341905088.png";
+import airswipedLogo from "@assets/airswipedcom icon light version_1760075718468.png";
 
 export default function Home() {
   const [, setLocation] = useLocation();

@@ -3,13 +3,16 @@ import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_175
 import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
-import airswipedIconLight from "@assets/airswipedcom icon light version_1759341905088.png";
-import airswipedIconDark from "@assets/airswipedio icon dark version_1759341905089.png";
-import sendLogo from "@assets/send logo_1759873220203.png";
-import sendIcon from "@assets/send icon_1759873220203.png";
+import airswipedLogo from "@assets/airswipedcom icon light version_1760075718468.png";
+import sendLogo from "@assets/send logo_1760075605263.png";
+import sendIcon from "@assets/send icon_1760074368870.png";
+import inboxLogo from "@assets/inbox logo_1760075605262.png";
+import inboxIcon from "@assets/Unified mailbox_1760074368869.png";
+import livechatLogo from "@assets/livechat logo_1760075605262.png";
+import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
 
 interface BrandLogoProps {
-  brand: 'businessblueprint' | 'webhosted' | 'airswiped' | 'send';
+  brand: 'businessblueprint' | 'webhosted' | 'airswiped' | 'send' | 'inbox' | 'livechat';
   variant?: 'light' | 'dark';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showIcon?: boolean;
@@ -93,14 +96,13 @@ export function BrandLogo({
     );
   }
 
-  // airswiped still uses light/dark versions (no new asset provided)
+  // airswiped uses new lightning bolt icon
   if (brand === 'airswiped') {
-    const iconSrc = isDark ? airswipedIconDark : airswipedIconLight;
     return (
       <div className={`flex items-center gap-3 ${className}`}>
         {showIcon && (
           <img 
-            src={iconSrc} 
+            src={airswipedLogo} 
             alt="airswiped.com icon" 
             className={`${iconSize} object-contain`}
           />
@@ -110,6 +112,46 @@ export function BrandLogo({
           <span className="text-[#FF0040]">swiped</span>
           <span className="text-[#84D71A]">.com</span>
         </div>
+      </div>
+    );
+  }
+
+  // /inbox uses new icon and logo
+  if (brand === 'inbox') {
+    return (
+      <div className={`flex items-center gap-3 ${className}`}>
+        {showIcon && (
+          <img 
+            src={inboxIcon} 
+            alt="/inbox icon" 
+            className={`${iconSize} object-contain`}
+          />
+        )}
+        <img 
+          src={inboxLogo} 
+          alt="/inbox" 
+          className={`${logoSize} object-contain`}
+        />
+      </div>
+    );
+  }
+
+  // /livechat uses new icon and logo
+  if (brand === 'livechat') {
+    return (
+      <div className={`flex items-center gap-3 ${className}`}>
+        {showIcon && (
+          <img 
+            src={livechatIcon} 
+            alt="/livechat icon" 
+            className={`${iconSize} object-contain`}
+          />
+        )}
+        <img 
+          src={livechatLogo} 
+          alt="/livechat" 
+          className={`${logoSize} object-contain`}
+        />
       </div>
     );
   }
@@ -139,8 +181,10 @@ export function BrandIcon({
   const iconMap = {
     businessblueprint: bbIcon,
     webhosted: webhostedIcon,
-    airswiped: isDark ? airswipedIconDark : airswipedIconLight,
-    send: sendIcon
+    airswiped: airswipedLogo,
+    send: sendIcon,
+    inbox: inboxIcon,
+    livechat: livechatIcon
   };
   
   const iconSrc = iconMap[brand];
