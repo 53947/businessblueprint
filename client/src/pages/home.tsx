@@ -507,7 +507,7 @@ Your personalized blueprint will show you which steps to take first!
                 <div className="flex justify-center items-center mb-6 h-20">
                   <div className="flex items-center gap-3">
                     <img src={airswipedLogo} alt="airswiped.com" className="h-14 w-14 object-contain" />
-                    <div className="font-archivo font-bold text-2xl leading-none">
+                    <div className="font-archivo font-bold text-base leading-none">
                       <span className="text-[#09080E]">air</span>
                       <span className="text-[#FF0040]">swiped</span>
                       <span className="text-[#84D71A]">.com</span>

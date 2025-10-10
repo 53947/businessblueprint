@@ -19,7 +19,7 @@ export function ServicePathways() {
       category: "Support & Services",
       items: [
         { name: "Platform Access", diy: "Self-Service", msp: "Full Access", description: "" },
-        { name: "Expert Support Team", diy: false, msp: true, description: "Synup-powered assistance" },
+        { name: "Expert Support Team", diy: false, msp: true, description: "Business Blueprint-powered assistance" },
         { name: "Priority Help", diy: false, msp: true, description: "Faster response times" },
         { name: "Performance Reports", diy: "Basic", msp: "Monthly Pro", description: "" },
       ]
@@ -47,7 +47,8 @@ export function ServicePathways() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-1">Do It Yourself (DIY)</h3>
               <p className="text-sm text-gray-600 mb-3">Self-service automation</p>
-              <div className="text-3xl font-bold text-blue-600 mb-2">$99<span className="text-lg text-gray-500">/mo</span></div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">$250<span className="text-lg text-gray-500">/mo</span></div>
+              <p className="text-xs text-gray-500">STARTER tier</p>
             </div>
             <div className="p-6 border-l border-gray-200 text-center bg-secondary/5 relative pt-8">
               <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
@@ -58,7 +59,8 @@ export function ServicePathways() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-1">Managed Services Provided (MSP)</h3>
               <p className="text-sm text-gray-600 mb-3">Automation + Expert support</p>
-              <div className="text-3xl font-bold text-secondary mb-2">$299<span className="text-lg text-gray-500">/mo</span></div>
+              <div className="text-3xl font-bold text-secondary mb-2">$399<span className="text-lg text-gray-500">/mo</span></div>
+              <p className="text-xs text-gray-500">EXPANSION Essential tier</p>
             </div>
           </div>
 

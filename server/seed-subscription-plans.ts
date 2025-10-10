@@ -6,7 +6,7 @@ const plans = [
   {
     planId: "diy-starter",
     name: "STARTER",
-    description: "Do It Yourself (DIY) - Synup Agency base plan with 100 locations",
+    description: "Do It Yourself (DIY) - Business Blueprint base plan with 100 locations",
     pathway: "diy",
     tierLevel: "starter",
     basePrice: "250.00",
@@ -59,11 +59,11 @@ const plans = [
 
   // MSP TIERS
   {
-    planId: "msp-expansion-standard",
-    name: "EXPANSION Standard",
+    planId: "msp-expansion-essential",
+    name: "EXPANSION Essential",
     description: "Managed Services Provided (MSP) - Expert team handles implementation and management",
     pathway: "msp",
-    tierLevel: "expansion-standard",
+    tierLevel: "expansion-essential",
     basePrice: "399.00",
     setupFee: "499.00",
     billingCycle: "monthly",
@@ -92,7 +92,7 @@ const plans = [
     description: "Managed Services Provided (MSP) - Expansion with enhanced service levels",
     pathway: "msp",
     tierLevel: "expansion-pro",
-    basePrice: "599.00",
+    basePrice: "649.00",
     setupFee: "499.00",
     billingCycle: "monthly",
     features: [
@@ -118,11 +118,11 @@ const plans = [
     isActive: true
   },
   {
-    planId: "msp-leadership-standard",
-    name: "LEADERSHIP Standard",
+    planId: "msp-leadership-essential",
+    name: "LEADERSHIP Essential",
     description: "Managed Services Provided (MSP) - Enterprise-level managed services",
     pathway: "msp",
-    tierLevel: "leadership-standard",
+    tierLevel: "leadership-essential",
     basePrice: "999.00",
     setupFee: "999.00",
     billingCycle: "monthly",
@@ -153,7 +153,7 @@ const plans = [
     description: "Managed Services Provided (MSP) - Premium enterprise solution with unlimited resources",
     pathway: "msp",
     tierLevel: "leadership-pro",
-    basePrice: "1499.00",
+    basePrice: "1249.00",
     setupFee: "999.00",
     billingCycle: "monthly",
     features: [
