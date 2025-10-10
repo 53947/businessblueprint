@@ -13,12 +13,12 @@ export default function InboxLanding() {
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-yellow-50 to-amber-100 py-20">
+      <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={inboxIcon} alt="/inbox icon" className="h-20 w-20 object-contain" />
-              <img src={inboxLogo} alt="/inbox" className="h-16 object-contain" />
+              <img src={inboxIcon} alt="/inbox icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <img src={inboxLogo} alt="/inbox" className="h-16 object-contain drop-shadow-md" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Every Customer Message.<br />One Powerful Inbox.
@@ -30,7 +30,7 @@ export default function InboxLanding() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
-                className="bg-yellow-600 hover:bg-yellow-700 text-lg px-8 py-6"
+                className="bg-yellow-600 hover:bg-yellow-700 text-lg px-8 py-6 shadow-lg"
                 asChild
                 data-testid="button-get-started"
               >
@@ -39,7 +39,7 @@ export default function InboxLanding() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 py-6"
+                className="text-lg px-8 py-6 border-gray-300 shadow-md"
                 asChild
                 data-testid="button-view-pricing"
               >
@@ -63,59 +63,59 @@ export default function InboxLanding() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <Card className="border-2 border-yellow-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Mail className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-                <h3 className="font-bold" data-testid="text-channel-email">Email</h3>
+                <Mail className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <h3 className="font-bold text-gray-900" data-testid="text-channel-email">Email</h3>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-yellow-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <MessageSquare className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-                <h3 className="font-bold" data-testid="text-channel-livechat">Live Chat</h3>
+                <MessageSquare className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <h3 className="font-bold text-gray-900" data-testid="text-channel-livechat">Live Chat</h3>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-yellow-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Phone className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-                <h3 className="font-bold" data-testid="text-channel-sms">SMS</h3>
+                <Phone className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <h3 className="font-bold text-gray-900" data-testid="text-channel-sms">SMS</h3>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-yellow-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <SiWhatsapp className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-                <h3 className="font-bold" data-testid="text-channel-whatsapp">WhatsApp</h3>
+                <SiWhatsapp className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <h3 className="font-bold text-gray-900" data-testid="text-channel-whatsapp">WhatsApp</h3>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-yellow-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Facebook className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-                <h3 className="font-bold" data-testid="text-channel-facebook">Facebook</h3>
+                <Facebook className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <h3 className="font-bold text-gray-900" data-testid="text-channel-facebook">Facebook</h3>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-yellow-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Instagram className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-                <h3 className="font-bold" data-testid="text-channel-instagram">Instagram</h3>
+                <Instagram className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <h3 className="font-bold text-gray-900" data-testid="text-channel-instagram">Instagram</h3>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-yellow-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Twitter className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-                <h3 className="font-bold" data-testid="text-channel-x">X (Twitter)</h3>
+                <Twitter className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <h3 className="font-bold text-gray-900" data-testid="text-channel-x">X (Twitter)</h3>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-yellow-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <SiTiktok className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-                <h3 className="font-bold" data-testid="text-channel-tiktok">TikTok</h3>
+                <SiTiktok className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <h3 className="font-bold text-gray-900" data-testid="text-channel-tiktok">TikTok</h3>
               </CardContent>
             </Card>
           </div>

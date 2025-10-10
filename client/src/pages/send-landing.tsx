@@ -12,24 +12,25 @@ export default function SendLanding() {
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-green-50 to-emerald-100 py-20">
+      <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={sendIcon} alt="/send icon" className="h-20 w-20 object-contain" />
-              <img src={sendLogo} alt="/send" className="h-16 object-contain" />
+              <img src={sendIcon} alt="/send icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <img src={sendLogo} alt="/send" className="h-16 object-contain drop-shadow-md" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Email + SMS Marketing.<br />Unified. Compliant. Powerful.
+              Own Your Customer Relationships
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              The marketing platform built for businesses who need more than basic email. 
-              Reach customers everywhere with unified campaigns across email and SMS.
+              Direct email and SMS marketing built for businesses that demand complete control 
+              over their customer data and engagement strategy.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
-                className="bg-green-600 hover:bg-green-700 text-lg px-8 py-6"
+                className="text-lg px-8 py-6 shadow-lg"
+                style={{ backgroundColor: '#E6B747', color: '#000' }}
                 asChild
                 data-testid="button-get-started"
               >
@@ -38,7 +39,7 @@ export default function SendLanding() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 py-6"
+                className="text-lg px-8 py-6 border-gray-300 shadow-md"
                 asChild
                 data-testid="button-view-pricing"
               >
@@ -50,56 +51,57 @@ export default function SendLanding() {
       </section>
 
       {/* The /send Difference */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why /send Exists
+              Why We Built /send
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              We built /send because existing platforms like Synup don't offer native email/SMS marketing capabilities. 
-              Your business needs more than directory management—you need direct customer engagement.
+              Your customer data is your most valuable asset. We created /send so you maintain complete control 
+              over your customer relationships, contact information, and engagement history—without depending on 
+              third-party platforms that limit access to your own data.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-2 border-green-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Mail className="w-8 h-8 text-green-600" />
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#E6B747' }}>
+                    <Mail className="w-8 h-8 text-black" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3" data-testid="text-feature-unified-title">Unified Campaigns</h3>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-unified-title">Complete Data Ownership</h3>
                   <p className="text-gray-600" data-testid="text-feature-unified-description">
-                    Create once, deploy everywhere. Send coordinated email and SMS campaigns from a single platform.
+                    Your contacts, your campaigns, your data. No vendor lock-in, no access restrictions, no limitations on your customer information.
                   </p>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-green-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Shield className="w-8 h-8 text-green-600" />
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#E6B747' }}>
+                    <Shield className="w-8 h-8 text-black" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3" data-testid="text-feature-compliant-title">Full Compliance Built-In</h3>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-compliant-title">Privacy-First Design</h3>
                   <p className="text-gray-600" data-testid="text-feature-compliant-description">
-                    GDPR, CAN-SPAM, and TCPA compliant out of the box. Automated unsubscribe management and consent tracking.
+                    GDPR, CAN-SPAM, and TCPA compliant by design. Your customers' trust is protected with automated consent management.
                   </p>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-green-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <MessageSquare className="w-8 h-8 text-green-600" />
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#E6B747' }}>
+                    <MessageSquare className="w-8 h-8 text-black" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3" data-testid="text-feature-channels-title">Multi-Channel Power</h3>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-channels-title">Unified Multi-Channel</h3>
                   <p className="text-gray-600" data-testid="text-feature-channels-description">
-                    Reach customers on their preferred channels. Email for depth, SMS for urgency, both for maximum impact.
+                    Email and SMS from one platform. Create coordinated campaigns that reach customers wherever they are.
                   </p>
                 </div>
               </CardContent>
@@ -109,63 +111,63 @@ export default function SendLanding() {
       </section>
 
       {/* Key Features */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
             Everything You Need to Engage Customers
           </h2>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div className="flex gap-4">
+            <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <Users className="w-6 h-6 text-green-600" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#E6B747' }}>
+                  <Users className="w-6 h-6 text-black" />
                 </div>
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2">Contact Management</h3>
+                <h3 className="text-xl font-bold mb-2 text-gray-900">Contact Management</h3>
                 <p className="text-gray-600">
-                  Organize contacts with custom fields, segments, and lists. Import from anywhere, export anytime.
+                  Organize contacts with custom fields, segments, and lists. Import from anywhere, export anytime—your data, your way.
                 </p>
               </div>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <Zap className="w-6 h-6 text-green-600" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#E6B747' }}>
+                  <Zap className="w-6 h-6 text-black" />
                 </div>
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2">Campaign Automation</h3>
+                <h3 className="text-xl font-bold mb-2 text-gray-900">Campaign Automation</h3>
                 <p className="text-gray-600">
                   Schedule campaigns, set up drip sequences, and trigger messages based on customer behavior.
                 </p>
               </div>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <BarChart3 className="w-6 h-6 text-green-600" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#E6B747' }}>
+                  <BarChart3 className="w-6 h-6 text-black" />
                 </div>
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2">Real-Time Analytics</h3>
+                <h3 className="text-xl font-bold mb-2 text-gray-900">Real-Time Analytics</h3>
                 <p className="text-gray-600">
                   Track open rates, click-throughs, conversions, and ROI. Make data-driven decisions with detailed reporting.
                 </p>
               </div>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <Check className="w-6 h-6 text-green-600" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#E6B747' }}>
+                  <Check className="w-6 h-6 text-black" />
                 </div>
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2">Template Library</h3>
+                <h3 className="text-xl font-bold mb-2 text-gray-900">Template Library</h3>
                 <p className="text-gray-600">
                   Professional templates for every occasion. Customizable designs that look great on any device.
                 </p>
@@ -176,48 +178,56 @@ export default function SendLanding() {
       </section>
 
       {/* The Point of Difference */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-green-600 to-emerald-700 rounded-2xl p-8 md:p-12 text-white">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          <div className="rounded-2xl p-8 md:p-12 border border-gray-200 shadow-xl bg-white">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
               What Makes /send Different?
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Check className="w-6 h-6" />
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#E6B747' }}>
+                    <Check className="w-4 h-4 text-black" />
+                  </div>
                   Built for the businessblueprint.io Ecosystem
                 </h3>
-                <p className="text-green-50 mb-6">
+                <p className="text-gray-600 mb-6">
                   Unlike standalone marketing tools, /send is natively integrated with your Digital Blueprint, 
                   AI Coach, and client portal. Your marketing insights inform your growth strategy automatically.
                 </p>
 
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Check className="w-6 h-6" />
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#E6B747' }}>
+                    <Check className="w-4 h-4 text-black" />
+                  </div>
                   No Hidden Costs, No Surprises
                 </h3>
-                <p className="text-green-50">
+                <p className="text-gray-600">
                   Included in all 6 subscription tiers starting at $250/mo. No per-message fees, no contact limits, 
                   no "premium features" upsells. What you see is what you get.
                 </p>
               </div>
 
               <div>
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Check className="w-6 h-6" />
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#E6B747' }}>
+                    <Check className="w-4 h-4 text-black" />
+                  </div>
                   Purpose-Built for Local Businesses
                 </h3>
-                <p className="text-green-50 mb-6">
-                  Synup focuses on directories. Generic email tools are too complex. /send hits the sweet spot: 
-                  powerful enough for growth, simple enough to actually use.
+                <p className="text-gray-600 mb-6">
+                  Other platforms force you into their ecosystem. Generic email tools are too complex. 
+                  /send hits the sweet spot: powerful enough for growth, simple enough to actually use.
                 </p>
 
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Check className="w-6 h-6" />
+                <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#E6B747' }}>
+                    <Check className="w-4 h-4 text-black" />
+                  </div>
                   Compliance You Can Trust
                 </h3>
-                <p className="text-green-50">
+                <p className="text-gray-600">
                   Automated opt-in/opt-out management, geographic compliance rules, and audit trails. 
                   Sleep soundly knowing you're following the law.
                 </p>
@@ -228,18 +238,19 @@ export default function SendLanding() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-white border-t border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            Ready to Transform Your Marketing?
+            Take Control of Your Customer Data
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Join businesses who've moved beyond basic directories to direct customer engagement.
+            Join businesses who own their customer relationships and marketing strategy.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg" 
-              className="bg-green-600 hover:bg-green-700 text-lg px-8 py-6"
+              className="text-lg px-8 py-6 shadow-lg"
+              style={{ backgroundColor: '#E6B747', color: '#000' }}
               asChild
               data-testid="button-start-free"
             >
@@ -248,7 +259,7 @@ export default function SendLanding() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="text-lg px-8 py-6"
+              className="text-lg px-8 py-6 border-gray-300 shadow-md"
               asChild
               data-testid="button-explore-platform"
             >

@@ -250,11 +250,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Service Pathways - How to Work With Us */}
+                    {/* Pathways - How to Work With Us */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pathways">
                         <Compass className="w-4 h-4" />
-                        <span>Service Pathways</span>
+                        <span>Pathways</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="grid gap-4 p-6 w-[500px] lg:w-[600px]">
@@ -266,16 +266,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/subscription?pathway=diy"
                                 data-testid="link-pathway-diy"
                               >
-                                <div className="text-lg font-semibold text-blue-600" data-testid="text-pathway-diy-price">$99/mo</div>
+                                <div className="text-lg font-semibold text-blue-600" data-testid="text-pathway-diy-price">From $250/mo</div>
                                 <div className="text-sm font-medium" data-testid="text-pathway-diy-title">Do It Yourself (DIY)</div>
                                 <p className="text-xs leading-relaxed text-muted-foreground" data-testid="text-pathway-diy-description">
-                                  Full platform access with self-service automation tools. Perfect for hands-on business owners who want complete control with AI-powered guidance.
+                                  Self-service platform access with full automation suite. Includes all proprietary apps: /send, /inbox, /livechat, plus digital presence management.
                                 </p>
                                 <div className="mt-3 pt-3 border-t border-gray-200">
-                                  <div className="text-xs font-medium text-gray-700 mb-2">Add-ons Available:</div>
+                                  <div className="text-xs font-medium text-gray-700 mb-2">Starting Tiers:</div>
                                   <div className="space-y-1 text-xs text-muted-foreground" data-testid="list-pathway-diy-addons">
-                                    <div>+ AI Business Coach ($99/mo)</div>
-                                    <div>+ Captain Your Journey ($249/mo)</div>
+                                    <div>• STARTER ($250/mo)</div>
+                                    <div>• GROWTH ($316/mo)</div>
                                   </div>
                                 </div>
                               </a>
@@ -288,16 +288,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/subscription?pathway=msp"
                                 data-testid="link-pathway-msp"
                               >
-                                <div className="text-lg font-semibold text-orange-600" data-testid="text-pathway-msp-price">$299/mo</div>
+                                <div className="text-lg font-semibold text-orange-600" data-testid="text-pathway-msp-price">From $399/mo</div>
                                 <div className="text-sm font-medium" data-testid="text-pathway-msp-title">Managed Services Provided (MSP)</div>
                                 <p className="text-xs leading-relaxed text-muted-foreground" data-testid="text-pathway-msp-description">
-                                  Platform automation plus dedicated expert support team. Ideal for busy owners who want results without the hands-on work.
+                                  Full platform access plus dedicated expert support team. We handle the execution while you focus on running your business.
                                 </p>
                                 <div className="mt-3 pt-3 border-t border-gray-200">
-                                  <div className="text-xs font-medium text-gray-700 mb-2">Add-ons Available:</div>
+                                  <div className="text-xs font-medium text-gray-700 mb-2">Starting Tiers:</div>
                                   <div className="space-y-1 text-xs text-muted-foreground" data-testid="list-pathway-msp-addons">
-                                    <div>+ AI Business Coach ($59/mo)</div>
-                                    <div>+ Captain Your Journey ($249/mo)</div>
+                                    <div>• EXPANSION Essential ($399/mo)</div>
+                                    <div>• EXPANSION Pro ($649/mo)</div>
+                                    <div>• LEADERSHIP Essential ($999/mo)</div>
+                                    <div>• LEADERSHIP Pro ($1,249/mo)</div>
                                   </div>
                                 </div>
                               </a>
@@ -316,11 +318,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* 6-Tier Pricing */}
+                    {/* Pricing */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pricing">
                         <CreditCard className="w-4 h-4" />
-                        <span>6-Tier Pricing</span>
+                        <span>Pricing</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="grid gap-3 p-6 w-[400px]">
@@ -329,31 +331,31 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
                               href="/subscription"
                             >
-                              <div className="text-sm font-medium leading-none">Platform Subscriptions</div>
+                              <div className="text-sm font-medium leading-none">6-Tier Structure</div>
                               <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                Do It Yourself (DIY) and Managed Services Provided (MSP) pricing
+                                STARTER ($250) to LEADERSHIP Pro ($1,249) with Essential/Pro tiers
                               </p>
                             </a>
                           </NavigationMenuLink>
                           <NavigationMenuLink asChild>
                             <a
                               className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/subscription#addons"
+                              href="/subscription"
                             >
-                              <div className="text-sm font-medium leading-none">Add-on Services</div>
+                              <div className="text-sm font-medium leading-none">What's Included</div>
                               <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                AI Coach and Captain Your Journey
+                                All tiers include /send, /inbox, /livechat, and digital presence management
                               </p>
                             </a>
                           </NavigationMenuLink>
                           <NavigationMenuLink asChild>
                             <a
                               className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/subscription#alacarte"
+                              href="/subscription"
                             >
-                              <div className="text-sm font-medium leading-none">À La Carte Options</div>
+                              <div className="text-sm font-medium leading-none">À La Carte Marketplace</div>
                               <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                Individual apps and services
+                                Order individual apps and services separately
                               </p>
                             </a>
                           </NavigationMenuLink>
@@ -488,10 +490,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 Apps
               </a>
               <a href="/subscription" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                Service Pathways
+                Pathways
               </a>
               <a href="/subscription" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                6-Tier Pricing
+                Pricing
               </a>
               <a href="/journey" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                 Resources

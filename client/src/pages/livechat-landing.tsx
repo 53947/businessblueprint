@@ -12,12 +12,12 @@ export default function LivechatLanding() {
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-teal-50 to-cyan-100 py-20">
+      <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={livechatIcon} alt="/livechat icon" className="h-20 w-20 object-contain" />
-              <img src={livechatLogo} alt="/livechat" className="h-16 object-contain" />
+              <img src={livechatIcon} alt="/livechat icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <img src={livechatLogo} alt="/livechat" className="h-16 object-contain drop-shadow-md" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Turn Website Visitors<br />Into Conversations.
@@ -29,7 +29,7 @@ export default function LivechatLanding() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
-                className="bg-teal-600 hover:bg-teal-700 text-lg px-8 py-6"
+                className="bg-teal-600 hover:bg-teal-700 text-lg px-8 py-6 shadow-lg"
                 asChild
                 data-testid="button-get-started"
               >
@@ -38,7 +38,7 @@ export default function LivechatLanding() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 py-6"
+                className="text-lg px-8 py-6 border-gray-300 shadow-md"
                 asChild
                 data-testid="button-view-pricing"
               >
@@ -63,13 +63,13 @@ export default function LivechatLanding() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-2 border-teal-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 drop-shadow">
                     <MessageCircle className="w-8 h-8 text-teal-600" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3" data-testid="text-feature-instant-title">Instant Engagement</h3>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-instant-title">Instant Engagement</h3>
                   <p className="text-gray-600" data-testid="text-feature-instant-description">
                     Catch visitors at the exact moment they're interested. Answer questions before they bounce to competitors.
                   </p>
@@ -77,13 +77,13 @@ export default function LivechatLanding() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-teal-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 drop-shadow">
                     <Clock className="w-8 h-8 text-teal-600" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3" data-testid="text-feature-persistence-title">Session Persistence</h3>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-persistence-title">Session Persistence</h3>
                   <p className="text-gray-600" data-testid="text-feature-persistence-description">
                     Conversations don't disappear when visitors close their browser. Full history is preserved and accessible.
                   </p>
@@ -91,13 +91,13 @@ export default function LivechatLanding() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-teal-200">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 drop-shadow">
                     <Users className="w-8 h-8 text-teal-600" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3" data-testid="text-feature-unified-title">Unified in /inbox</h3>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-unified-title">Unified in /inbox</h3>
                   <p className="text-gray-600" data-testid="text-feature-unified-description">
                     Live chat flows directly into /inbox alongside email, SMS, and social messages. One interface for everything.
                   </p>
