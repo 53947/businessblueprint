@@ -4,6 +4,17 @@
 **Last Updated:** January 10, 2025
 
 ### Latest Changes
+- **App Landing Pages Complete:** Created dedicated landing pages for all proprietary apps:
+  - /send → SendLanding (introduces platform) → /send-app (actual marketing dashboard)
+  - /inbox → InboxLanding (introduces platform) → /inbox-app (actual unified inbox)
+  - /livechat → LivechatLanding (introduces platform) → /livechat-demo (actual live chat)
+  - Each landing page explains "why" app exists, key features, and point of difference
+- **Icon/Logo Refresh Complete:** All apps now use approved branding assets:
+  - /send: New green send icon + text-based "/send" logo
+  - /inbox: New yellow mailbox icon + text-based "/inbox" logo  
+  - /livechat: New teal widget icon + text-based "/livechat" logo
+  - airswiped.com: New lightning bolt icon throughout site
+- **Navigation Updates:** Menu titles corrected to "Service Pathways" and "6-Tier Pricing"
 - **Pricing System Finalized:** 6-tier structure with proper naming and $250 Essential/Pro differences:
   - DIY: STARTER ($250), GROWTH ($316)
   - MSP: EXPANSION Essential ($399), EXPANSION Pro ($649), LEADERSHIP Essential ($999), LEADERSHIP Pro ($1,249)
