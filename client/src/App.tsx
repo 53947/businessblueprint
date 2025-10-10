@@ -17,9 +17,12 @@ import Subscription from "@/pages/subscription";
 import Sitemap from "@/pages/sitemap";
 import Journey from "@/pages/journey";
 import LogoPreview from "@/pages/logo-preview";
+import SendLanding from "@/pages/send-landing";
 import SendDashboard from "@/pages/send-dashboard";
-import LiveChatDemo from "@/pages/livechat-demo";
+import InboxLanding from "@/pages/inbox-landing";
 import InboxPage from "@/pages/inbox";
+import LivechatLanding from "@/pages/livechat-landing";
+import LiveChatDemo from "@/pages/livechat-demo";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -39,9 +42,12 @@ function Router() {
       <Route path="/sitemap" component={Sitemap} />
       <Route path="/journey" component={Journey} />
       <Route path="/logo-preview" component={LogoPreview} />
-      <Route path="/send" component={SendDashboard} />
+      <Route path="/send" component={SendLanding} />
+      <Route path="/send-app" component={SendDashboard} />
+      <Route path="/inbox" component={InboxLanding} />
+      <Route path="/inbox-app" component={InboxPage} />
+      <Route path="/livechat" component={LivechatLanding} />
       <Route path="/livechat-demo" component={LiveChatDemo} />
-      <Route path="/inbox" component={InboxPage} />
       <Route component={NotFound} />
     </Switch>
   );
