@@ -34,9 +34,13 @@ import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_175
 import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
-import airswipedLogo from "@assets/airswipedcom icon light version_1759341905088.png";
-import sendLogo from "@assets/send logo_1759873220203.png";
-import sendIcon from "@assets/send icon_1759873220203.png";
+import airswipedLogo from "@assets/airswipedcom icon light version_1760075718468.png";
+import sendLogo from "@assets/send logo_1760075605263.png";
+import sendIcon from "@assets/send icon_1760074368870.png";
+import inboxLogo from "@assets/inbox logo_1760075605262.png";
+import inboxIcon from "@assets/Unified mailbox_1760074368869.png";
+import livechatLogo from "@assets/livechat logo_1760075605262.png";
+import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -174,7 +178,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <span className="text-xs font-semibold text-green-600 dark:text-green-400">Visit Platform →</span>
                                   </div>
                                 </div>
-                                <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-send-title">Email + SMS Marketing</div>
+                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-send-title">Email + SMS Marketing</div>
                                 <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-send-description">
                                   Unified marketing campaigns with full compliance
                                 </p>
@@ -195,14 +199,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               >
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
-                                    <MessageSquare className="h-8 w-8 text-yellow-600 dark:text-yellow-500" />
-                                    <div className="font-bold text-base text-gray-900 dark:text-white">/inbox</div>
+                                    <img src={inboxIcon} alt="/inbox icon" className="h-10 w-10 object-contain" />
+                                    <img src={inboxLogo} alt="/inbox" className="h-8 object-contain" />
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-yellow-600 dark:text-yellow-400">Visit Platform →</span>
                                   </div>
                                 </div>
-                                <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-inbox-title">Unified Communications</div>
+                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-inbox-title">Unified Communications</div>
                                 <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-inbox-description">
                                   Multi-channel messaging hub for all customer communications
                                 </p>
@@ -223,14 +227,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               >
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
-                                    <MessageCircle className="h-8 w-8 text-teal-600 dark:text-teal-500" />
-                                    <div className="font-bold text-base text-gray-900 dark:text-white">/livechat</div>
+                                    <img src={livechatIcon} alt="/livechat icon" className="h-10 w-10 object-contain" />
+                                    <img src={livechatLogo} alt="/livechat" className="h-8 object-contain" />
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-teal-600 dark:text-teal-400">Visit Platform →</span>
                                   </div>
                                 </div>
-                                <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-livechat-title">Live Chat Widget</div>
+                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-livechat-title">Live Chat Widget</div>
                                 <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-livechat-description">
                                   Real-time customer chat for your website
                                 </p>
@@ -246,11 +250,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Pathways - How to Work With Us */}
+                    {/* Service Pathways - How to Work With Us */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pathways">
                         <Compass className="w-4 h-4" />
-                        <span>Pathways</span>
+                        <span>Service Pathways</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="grid gap-4 p-6 w-[500px] lg:w-[600px]">
@@ -312,11 +316,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Pricing */}
+                    {/* 6-Tier Pricing */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pricing">
                         <CreditCard className="w-4 h-4" />
-                        <span>Pricing</span>
+                        <span>6-Tier Pricing</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="grid gap-3 p-6 w-[400px]">
@@ -484,10 +488,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 Apps
               </a>
               <a href="/subscription" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                Pathways
+                Service Pathways
               </a>
               <a href="/subscription" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                Pricing
+                6-Tier Pricing
               </a>
               <a href="/journey" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                 Resources
