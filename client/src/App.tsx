@@ -23,6 +23,7 @@ import InboxLanding from "@/pages/inbox-landing";
 import InboxPage from "@/pages/inbox";
 import LivechatLanding from "@/pages/livechat-landing";
 import LiveChatDemo from "@/pages/livechat-demo";
+import PricingPage from "@/pages/pricing";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -38,6 +39,7 @@ function Router() {
       <Route path="/vendasta" component={VendastaIntegration} />
       <Route path="/contact" component={Contact} />
       <Route path="/about" component={About} />
+      <Route path="/pricing" component={PricingPage} />
       <Route path="/subscription" component={Subscription} />
       <Route path="/sitemap" component={Sitemap} />
       <Route path="/journey" component={Journey} />
