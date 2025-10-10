@@ -26,6 +26,7 @@ import {
   Server,
   Wallet,
   MessageSquare,
+  MessageCircle,
   Inbox
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
@@ -135,7 +136,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-3">
                                     <img src={airswipedLogo} alt="airswiped.com" className="h-10 w-10 object-contain" />
-                                    <div className="font-archivo font-bold text-lg leading-none">
+                                    <div className="font-archivo font-bold text-base leading-none">
                                       <span className="text-[#09080E] dark:text-white">air</span>
                                       <span className="text-[#FF0040]">swiped</span>
                                       <span className="text-[#84D71A]">.com</span>
@@ -185,7 +186,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </a>
                             </NavigationMenuLink>
 
-                            {/* Inbox - Unified Communications */}
+                            {/* /inbox */}
                             <NavigationMenuLink asChild>
                               <a
                                 className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-yellow-500 hover:shadow-xl hover:from-yellow-50 hover:to-yellow-100 dark:hover:from-yellow-950 dark:hover:to-yellow-900 hover:scale-[1.02]"
@@ -194,8 +195,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               >
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
-                                    <MessageSquare className="h-10 w-10 text-yellow-600 dark:text-yellow-500" />
-                                    <div className="font-bold text-lg text-gray-900 dark:text-white">Inbox</div>
+                                    <MessageSquare className="h-8 w-8 text-yellow-600 dark:text-yellow-500" />
+                                    <div className="font-bold text-base text-gray-900 dark:text-white">/inbox</div>
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-yellow-600 dark:text-yellow-400">Visit Platform →</span>
@@ -208,7 +209,35 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-inbox-features">
                                   <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Email, Chat & Social DMs</li>
                                   <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Real-time Messaging</li>
-                                  <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Live Chat Widget</li>
+                                  <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Team Collaboration</li>
+                                </ul>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* /livechat */}
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-teal-500 hover:shadow-xl hover:from-teal-50 hover:to-teal-100 dark:hover:from-teal-950 dark:hover:to-teal-900 hover:scale-[1.02]"
+                                href="/livechat-demo"
+                                data-testid="link-app-livechat"
+                              >
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-2">
+                                    <MessageCircle className="h-8 w-8 text-teal-600 dark:text-teal-500" />
+                                    <div className="font-bold text-base text-gray-900 dark:text-white">/livechat</div>
+                                  </div>
+                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="text-xs font-semibold text-teal-600 dark:text-teal-400">Visit Platform →</span>
+                                  </div>
+                                </div>
+                                <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-livechat-title">Live Chat Widget</div>
+                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-livechat-description">
+                                  Real-time customer chat for your website
+                                </p>
+                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-livechat-features">
+                                  <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1.5">✓</span> Website Live Chat</li>
+                                  <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1.5">✓</span> Session Persistence</li>
+                                  <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1.5">✓</span> Conversation History</li>
                                 </ul>
                               </a>
                             </NavigationMenuLink>
