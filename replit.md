@@ -1,15 +1,26 @@
 # businessblueprint.io - Digital Intelligence Platform
 
 ## Recent Updates
-**Last Updated:** January 8, 2025
+**Last Updated:** January 10, 2025
 
 ### Latest Changes
-- **Pricing Tiers Restructured:** 6-tier system created - STARTER ($250), GROWTH ($316) for DIY; EXPANSION Standard ($399), EXPANSION Pro ($599), LEADERSHIP Standard ($999), LEADERSHIP Pro ($1499) for MSP
-- **Platform Integration:** /send, /inbox, and /livechat explicitly included in ALL 6 pricing tiers as core features
-- **Inbox Navigation:** Added to Apps mega-menu dropdown AND quick-access button in header with yellow accent
-- **Sitemap Updated:** Added /inbox, /livechat-demo, /send, /apps-marketplace and reorganized with "Purchase Pathways" and "Platform Apps" sections (18 total pages)
-- **Subscription Add-ons:** 6 add-ons created including AI Coach Essential/Pro, Captain Your Journey, Additional Locations (10/50), Priority Support
-- **Database Seed Script:** Created server/seed-subscription-plans.ts with onConflictDoUpdate for easy plan updates
+- **Pricing System Finalized:** 6-tier structure with proper naming and $250 Essential/Pro differences:
+  - DIY: STARTER ($250), GROWTH ($316)
+  - MSP: EXPANSION Essential ($399), EXPANSION Pro ($649), LEADERSHIP Essential ($999), LEADERSHIP Pro ($1,249)
+- **35% Markup Applied:** All pricing based on 35% markup over base Synup costs (~$185 base = $250 STARTER)
+- **Whitelabel Complete:** All "Synup" references replaced with "Business Blueprint"
+- **Platform Apps Standardized:** /send, /inbox, /livechat naming with "/" prefix throughout site
+- **Apps Mega-Menu Complete:** Added /livechat, standardized all heading sizes to text-base
+- **Homepage Pricing Updated:** "Choose Your Path Forward" shows DIY $250 (STARTER), MSP $399 (EXPANSION Essential)
+- **Ecosystem Logos Standardized:** All brand logos use consistent text-base sizing
+- **Database Seeded:** All 6 plans and 6 add-ons with correct Essential/Pro naming
+
+### Synup API Limitations (Why /send was built)
+- No native email/SMS marketing capabilities
+- Limited citation/directory coverage (76-80 vs needed 150-400+)
+- Manual verification still required for key platforms
+- No competitor analysis tools
+- Limited reporting customization
 
 ### In Progress
 - Assessment recommendation engine updates ($250 minimum subscription requirement)
