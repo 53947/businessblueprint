@@ -764,6 +764,110 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Marketplace orders - Process payment for à la carte items
+  app.post("/api/marketplace/orders", async (req, res) => {
+    try {
+      // Validate request body
+      const orderSchema = z.object({
+        items: z.array(z.object({
+          id: z.string(),
+          name: z.string(),
+          price: z.number(),
+          quantity: z.number(),
+          type: z.enum(['app', 'addon'])
+        })),
+        paymentToken: z.string().min(16, "Valid payment token required"),
+        customerInfo: z.object({
+          firstName: z.string().min(1, "First name is required"),
+          lastName: z.string().min(1, "Last name is required"),
+          email: z.string().email("Valid email required"),
+          phone: z.string().optional(),
+          address: z.string().optional(),
+          city: z.string().optional(),
+          state: z.string().optional(),
+          zip: z.string().optional()
+        }),
+        totals: z.object({
+          subtotal: z.number(),
+          tax: z.number(),
+          total: z.number()
+        })
+      });
+
+      const validation = orderSchema.safeParse(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Invalid order data",
+          errors: validation.error.errors
+        });
+      }
+
+      const { items, paymentToken, customerInfo, totals } = validation.data;
+
+      // SECURITY: Recalculate totals server-side
+      const calculatedSubtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const calculatedTax = calculatedSubtotal * 0.08; // 8% tax
+      const calculatedTotal = calculatedSubtotal + calculatedTax;
+
+      // Verify client-provided totals match server calculations (within 1 cent for rounding)
+      if (Math.abs(calculatedTotal - totals.total) > 0.01) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Order total mismatch. Please refresh and try again." 
+        });
+      }
+
+      // Create recurring subscription with NMI for the monthly total
+      const nmiRequest = {
+        planId: 'marketplace-order-' + Date.now(), // Unique identifier
+        customerData: {
+          firstName: customerInfo.firstName,
+          lastName: customerInfo.lastName,
+          email: customerInfo.email,
+          phone: customerInfo.phone || '',
+          address: customerInfo.address || '',
+          city: customerInfo.city || '',
+          state: customerInfo.state || '',
+          zip: customerInfo.zip || ''
+        },
+        paymentToken,
+        planAmount: calculatedTotal.toFixed(2),
+        billingCycle: 'monthly' as const
+      };
+
+      const nmiResult = await NMIService.createSubscription(nmiRequest);
+
+      if (nmiResult.response !== '1') {
+        return res.status(400).json({ 
+          success: false, 
+          message: nmiResult.responsetext || 'Payment processing failed' 
+        });
+      }
+
+      // Log successful order (could save to database if needed)
+      console.log('✅ Marketplace order successful:', {
+        subscriptionId: nmiResult.subscription_id,
+        customerEmail: customerInfo.email,
+        items: items.length,
+        total: calculatedTotal
+      });
+
+      res.json({ 
+        success: true, 
+        message: "Order processed successfully",
+        subscriptionId: nmiResult.subscription_id,
+        items: items.map(item => item.name)
+      });
+    } catch (error) {
+      console.error("Error processing marketplace order:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to process order. Please try again." 
+      });
+    }
+  });
+
   // Calculate pricing for selected plan and addons
   app.post("/api/pricing/calculate", async (req, res) => {
     try {

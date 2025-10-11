@@ -28,6 +28,24 @@
     - Bundle features: Cross-app analytics, unified customer profiles, conversation continuity
   - Full e2e test coverage: All pages, CTAs, colors, and pricing verified
   - Commverse is a mini ecosystem within Blue Link (businessblueprint.io, webhosted.io, airswiped.com)
+- **À La Carte Marketplace Complete:** New /marketplace page for individual app and addon purchases
+  - Navigation updated: "Pricing" menu now links to /pricing (animated) and /marketplace (à la carte)
+  - Product categories organized by purpose:
+    - **Commverse Apps:** Bundle ($75/mo saves $30) + individual apps (/send, /livechat, /inbox at $35 each)
+    - **Coaching & Growth:** AI Coach Essential ($99 for Starter), AI Coach Pro ($59.99 for higher tiers), Captain Your Journey ($249)
+    - **Business Expansion:** Additional 10 Locations ($49), Additional 50 Locations ($199)
+    - **Support & Services:** Priority Support Upgrade ($99)
+  - Shopping cart functionality: Add/remove items, quantity control, real-time total calculation
+  - Desktop sticky sidebar cart + mobile floating cart button with modal
+  - Cart persists via localStorage for seamless checkout flow
+  - **airswiped.com Branded Checkout:** /marketplace/checkout page with full white-label branding
+    - Prominent airswiped.com header with red gradient (brand colors: #FF0040 red, #84D71A green)
+    - Integration with existing NMI payment service via Collect.js tokenization
+    - Trust elements: 256-bit SSL badges, PCI compliance indicators, fraud protection messaging
+    - Order summary with itemized cart, tax calculation (8%), monthly total
+    - Secure payment form with customer information collection
+    - Post-purchase: Clear cart from localStorage, redirect to dashboard
+  - Smart AI Coach pricing: Both tiers displayed with clear badges (Starter Plan vs Higher Tiers)
 - **Animated Pricing Table Complete:** New /pricing page with smooth Framer Motion animations:
   - Pathway toggle: DIY (2 plans) ↔ MSP (4 plans) with card entrance/exit animations
   - Billing cycle toggle: Monthly, Quarterly (5% off), Annual (15% off)
@@ -60,8 +78,6 @@
 
 ### In Progress
 - Assessment recommendation engine updates ($250 minimum subscription requirement)
-- Unified cart system across all platforms (Amazon-style brand separation)
-- Apps marketplace à la carte ordering page (/apps-marketplace)
 - "How to Get Started" purchase pathways landing page
 
 ## Overview

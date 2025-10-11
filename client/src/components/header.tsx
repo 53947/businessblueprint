@@ -405,7 +405,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           <NavigationMenuLink asChild>
                             <a
                               className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/subscription"
+                              href="/pricing"
+                              data-testid="link-pricing-tiers"
                             >
                               <div className="text-sm font-medium leading-none">6-Tier Structure</div>
                               <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -416,7 +417,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           <NavigationMenuLink asChild>
                             <a
                               className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/subscription"
+                              href="/pricing"
+                              data-testid="link-pricing-included"
                             >
                               <div className="text-sm font-medium leading-none">What's Included</div>
                               <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -427,7 +429,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           <NavigationMenuLink asChild>
                             <a
                               className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/subscription"
+                              href="/marketplace"
+                              data-testid="link-marketplace"
                             >
                               <div className="text-sm font-medium leading-none">À La Carte Marketplace</div>
                               <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -568,7 +571,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
               <a href="/subscription" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                 Pathways
               </a>
-              <a href="/subscription" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+              <a href="/pricing" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" data-testid="link-mobile-pricing">
                 Pricing
               </a>
               <a href="/journey" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
