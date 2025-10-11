@@ -1,9 +1,27 @@
 # businessblueprint.io - Digital Intelligence Platform
 
 ## Recent Updates
-**Last Updated:** January 10, 2025
+**Last Updated:** October 11, 2025
 
 ### Latest Changes
+- **Synup API Migration:** Transitioning from Vendasta to Synup for business listings and reputation management
+  - Synup offers 80+ platform integrations (Google, Yelp, Facebook, Yellow Pages, etc.)
+  - AI-powered review responses and sentiment analysis
+  - White-label support with custom branding and domain integration
+  - Usage-based transparent pricing with better margins at scale
+  - Listing Management API: Bulk updates, NAP audit, performance analytics
+  - Reputation Management API: Real-time review monitoring, AI responses, review generation campaigns
+  - NOTE: No public API documentation - requires partner/reseller access for detailed specs
+  - Webhook availability to be confirmed with Synup partnership team
+- **Commverse Ecosystem Launch:** Unified communication platform consisting of 3 integrated apps
+  - /send: Email & SMS marketing (#E6B747 gold) - $35/month standalone
+  - /livechat: Website live chat widget (#8000FF purple) - $35/month standalone
+  - /inbox: Unified inbox for 8 channels (#0080FF blue, #FC6ACD pink) - $35/month standalone
+  - Complete Commverse bundle: All 3 apps for $75/month
+  - Each app works autonomously but gains power when integrated together
+  - Analytics sharing across apps for optimal customer engagement
+  - AI-powered inbox with learning capabilities for automated responses
+  - Commverse is a mini ecosystem within Blue Link (3-website ecosystem)
 - **Animated Pricing Table Complete:** New /pricing page with smooth Framer Motion animations:
   - Pathway toggle: DIY (2 plans) ↔ MSP (4 plans) with card entrance/exit animations
   - Billing cycle toggle: Monthly, Quarterly (5% off), Annual (15% off)
