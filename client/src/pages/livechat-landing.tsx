@@ -29,22 +29,52 @@ export default function LivechatLanding() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
-                className="bg-teal-600 hover:bg-teal-700 text-lg px-8 py-6 shadow-lg"
+                className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white"
+                style={{ backgroundColor: '#8000FF' }}
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/livechat-demo">Try Live Demo</a>
+                <a href="/livechat-demo">Get Started with /livechat</a>
               </Button>
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 py-6 border-gray-300 shadow-md"
+                className="text-lg px-8 py-6 shadow-md hover:bg-[#8000FF]/10 transition-colors"
+                style={{ borderColor: '#8000FF', color: '#8000FF' }}
                 asChild
                 data-testid="button-view-pricing"
               >
-                <a href="/subscription">View Pricing</a>
+                <a href="/commverse-pricing">View Pricing</a>
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 py-6 shadow-md hover:bg-[#8000FF]/10 transition-colors"
+                style={{ borderColor: '#8000FF', color: '#8000FF' }}
+                asChild
+                data-testid="button-try-demo"
+              >
+                <a href="/livechat-demo">Try Live Demo</a>
               </Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Callout */}
+      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="inline-flex items-center gap-4 mb-4">
+              <div className="text-4xl font-bold" style={{ color: '#8000FF' }}>$35/mo</div>
+              <span className="text-white text-xl">standalone</span>
+              <span className="text-gray-400 text-2xl">|</span>
+              <div className="text-4xl font-bold text-white">$75/mo</div>
+              <span className="text-white text-xl">for all 3 Commverse apps</span>
+            </div>
+            <p className="text-gray-300 text-sm">
+              /send + /livechat + /inbox = Complete communication ecosystem
+            </p>
           </div>
         </div>
       </section>
@@ -66,8 +96,8 @@ export default function LivechatLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 drop-shadow">
-                    <MessageCircle className="w-8 h-8 text-teal-600" />
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#8000FF' }}>
+                    <MessageCircle className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-instant-title">Instant Engagement</h3>
                   <p className="text-gray-600" data-testid="text-feature-instant-description">
@@ -80,8 +110,8 @@ export default function LivechatLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 drop-shadow">
-                    <Clock className="w-8 h-8 text-teal-600" />
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#8000FF' }}>
+                    <Clock className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-persistence-title">Session Persistence</h3>
                   <p className="text-gray-600" data-testid="text-feature-persistence-description">
@@ -94,8 +124,8 @@ export default function LivechatLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 drop-shadow">
-                    <Users className="w-8 h-8 text-teal-600" />
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#8000FF' }}>
+                    <Users className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-unified-title">Unified in /inbox</h3>
                   <p className="text-gray-600" data-testid="text-feature-unified-description">
@@ -118,8 +148,8 @@ export default function LivechatLanding() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="bg-teal-100 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <Zap className="w-6 h-6 text-teal-600" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#8000FF' }}>
+                  <Zap className="w-6 h-6 text-white" />
                 </div>
               </div>
               <div>
@@ -132,8 +162,8 @@ export default function LivechatLanding() {
 
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="bg-teal-100 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <Globe className="w-6 h-6 text-teal-600" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#8000FF' }}>
+                  <Globe className="w-6 h-6 text-white" />
                 </div>
               </div>
               <div>
@@ -146,8 +176,8 @@ export default function LivechatLanding() {
 
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="bg-teal-100 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <BarChart3 className="w-6 h-6 text-teal-600" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#8000FF' }}>
+                  <BarChart3 className="w-6 h-6 text-white" />
                 </div>
               </div>
               <div>
@@ -160,8 +190,8 @@ export default function LivechatLanding() {
 
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="bg-teal-100 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <Check className="w-6 h-6 text-teal-600" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#8000FF' }}>
+                  <Check className="w-6 h-6 text-white" />
                 </div>
               </div>
               <div>
@@ -178,7 +208,7 @@ export default function LivechatLanding() {
       {/* The Point of Difference */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-teal-600 to-cyan-700 rounded-2xl p-8 md:p-12 text-white">
+          <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #8000FF, #A020F0)' }}>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               What Makes /livechat Different?
             </h2>
@@ -186,20 +216,20 @@ export default function LivechatLanding() {
               <div>
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                   <Check className="w-6 h-6" />
-                  Not a Standalone Tool
+                  Works Autonomously & Together
                 </h3>
-                <p className="text-teal-50 mb-6">
-                  Generic chat widgets are isolated. /livechat is part of your complete digital ecosystem—
-                  connected to your Digital Blueprint, customer insights, and marketing automation.
+                <p className="text-purple-50 mb-6">
+                  /livechat functions perfectly on its own, but gains superpowers when integrated with /send and /inbox—
+                  connecting your Digital Blueprint, customer insights, and marketing automation for smarter conversations.
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                   <Check className="w-6 h-6" />
                   Conversation Continuity
                 </h3>
-                <p className="text-teal-50">
+                <p className="text-purple-50">
                   Visitors can start on live chat, continue via email, and follow up on WhatsApp. 
-                  One conversation thread, multiple channels. That's the /inbox integration.
+                  One conversation thread, multiple channels. That's the Commverse integration.
                 </p>
               </div>
 
@@ -208,7 +238,7 @@ export default function LivechatLanding() {
                   <Check className="w-6 h-6" />
                   Built for Local Business Scale
                 </h3>
-                <p className="text-teal-50 mb-6">
+                <p className="text-purple-50 mb-6">
                   Enterprise chat tools are overkill. Free tools lack features and reliability. 
                   /livechat hits the sweet spot for growing local businesses.
                 </p>
@@ -217,8 +247,8 @@ export default function LivechatLanding() {
                   <Check className="w-6 h-6" />
                   No Per-Chat or Per-Agent Fees
                 </h3>
-                <p className="text-teal-50">
-                  Included in all 6 subscription tiers starting at $250/mo. Unlimited chats, unlimited agents, 
+                <p className="text-purple-50">
+                  Standalone at $35/mo or bundled with /send + /inbox for $75/mo. Unlimited chats, unlimited agents, 
                   unlimited websites. Transparent, predictable pricing.
                 </p>
               </div>

@@ -29,7 +29,7 @@ export default function SendLanding() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
-                className="text-lg px-8 py-6 shadow-lg"
+                className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity"
                 style={{ backgroundColor: '#E6B747', color: '#000' }}
                 asChild
                 data-testid="button-get-started"
@@ -39,13 +39,42 @@ export default function SendLanding() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 py-6 border-gray-300 shadow-md"
+                className="text-lg px-8 py-6 shadow-md hover:bg-[#E6B747]/10 transition-colors"
+                style={{ borderColor: '#E6B747', color: '#000' }}
                 asChild
                 data-testid="button-view-pricing"
               >
-                <a href="/subscription">View Pricing</a>
+                <a href="/commverse-pricing">View Pricing</a>
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 py-6 shadow-md hover:bg-[#E6B747]/10 transition-colors"
+                style={{ borderColor: '#E6B747', color: '#000' }}
+                asChild
+                data-testid="button-try-demo"
+              >
+                <a href="/send-app">Try Live Demo</a>
               </Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Callout */}
+      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="inline-flex items-center gap-4 mb-4">
+              <div className="text-4xl font-bold" style={{ color: '#E6B747' }}>$35/mo</div>
+              <span className="text-white text-xl">standalone</span>
+              <span className="text-gray-400 text-2xl">|</span>
+              <div className="text-4xl font-bold text-white">$75/mo</div>
+              <span className="text-white text-xl">for all 3 Commverse apps</span>
+            </div>
+            <p className="text-gray-300 text-sm">
+              /send + /livechat + /inbox = Complete communication ecosystem
+            </p>
           </div>
         </div>
       </section>
@@ -190,11 +219,11 @@ export default function SendLanding() {
                   <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#E6B747' }}>
                     <Check className="w-4 h-4 text-black" />
                   </div>
-                  Built for the businessblueprint.io Ecosystem
+                  Works Autonomously & Together
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Unlike standalone marketing tools, /send is natively integrated with your Digital Blueprint, 
-                  AI Coach, and client portal. Your marketing insights inform your growth strategy automatically.
+                  /send functions powerfully on its own for email and SMS campaigns. But when integrated with /livechat and /inbox as part of the Commverse ecosystem, 
+                  it shares customer insights and analytics to create smarter, more effective marketing automation.
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
@@ -204,7 +233,7 @@ export default function SendLanding() {
                   No Hidden Costs, No Surprises
                 </h3>
                 <p className="text-gray-600">
-                  Included in all 6 subscription tiers starting at $250/mo. No per-message fees, no contact limits, 
+                  Standalone at $35/mo or bundled with /livechat + /inbox for $75/mo. No per-message fees, no contact limits, 
                   no "premium features" upsells. What you see is what you get.
                 </p>
               </div>

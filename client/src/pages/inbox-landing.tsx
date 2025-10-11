@@ -30,7 +30,8 @@ export default function InboxLanding() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
-                className="bg-yellow-600 hover:bg-yellow-700 text-lg px-8 py-6 shadow-lg"
+                className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white"
+                style={{ backgroundColor: '#0080FF' }}
                 asChild
                 data-testid="button-get-started"
               >
@@ -39,13 +40,42 @@ export default function InboxLanding() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 py-6 border-gray-300 shadow-md"
+                className="text-lg px-8 py-6 shadow-md hover:bg-[#FC6ACD]/10 transition-colors"
+                style={{ borderColor: '#FC6ACD', color: '#FC6ACD' }}
                 asChild
                 data-testid="button-view-pricing"
               >
-                <a href="/subscription">View Pricing</a>
+                <a href="/commverse-pricing">View Pricing</a>
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 py-6 shadow-md hover:bg-[#0080FF]/10 transition-colors"
+                style={{ borderColor: '#0080FF', color: '#0080FF' }}
+                asChild
+                data-testid="button-try-demo"
+              >
+                <a href="/inbox-app">Try Live Demo</a>
               </Button>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Callout */}
+      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="inline-flex items-center gap-4 mb-4">
+              <div className="text-4xl font-bold" style={{ color: '#0080FF' }}>$35/mo</div>
+              <span className="text-white text-xl">standalone</span>
+              <span className="text-gray-400 text-2xl">|</span>
+              <div className="text-4xl font-bold" style={{ color: '#FC6ACD' }}>$75/mo</div>
+              <span className="text-white text-xl">for all 3 Commverse apps</span>
+            </div>
+            <p className="text-gray-300 text-sm">
+              /send + /livechat + /inbox = Complete communication ecosystem
+            </p>
           </div>
         </div>
       </section>
@@ -65,56 +95,56 @@ export default function InboxLanding() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Mail className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <Mail className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#0080FF' }} />
                 <h3 className="font-bold text-gray-900" data-testid="text-channel-email">Email</h3>
               </CardContent>
             </Card>
 
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <MessageSquare className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <MessageSquare className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#FC6ACD' }} />
                 <h3 className="font-bold text-gray-900" data-testid="text-channel-livechat">Live Chat</h3>
               </CardContent>
             </Card>
 
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Phone className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <Phone className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#0080FF' }} />
                 <h3 className="font-bold text-gray-900" data-testid="text-channel-sms">SMS</h3>
               </CardContent>
             </Card>
 
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <SiWhatsapp className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <SiWhatsapp className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#FC6ACD' }} />
                 <h3 className="font-bold text-gray-900" data-testid="text-channel-whatsapp">WhatsApp</h3>
               </CardContent>
             </Card>
 
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Facebook className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <Facebook className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#0080FF' }} />
                 <h3 className="font-bold text-gray-900" data-testid="text-channel-facebook">Facebook</h3>
               </CardContent>
             </Card>
 
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Instagram className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <Instagram className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#FC6ACD' }} />
                 <h3 className="font-bold text-gray-900" data-testid="text-channel-instagram">Instagram</h3>
               </CardContent>
             </Card>
 
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Twitter className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <Twitter className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#0080FF' }} />
                 <h3 className="font-bold text-gray-900" data-testid="text-channel-x">X (Twitter)</h3>
               </CardContent>
             </Card>
 
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <SiTiktok className="w-12 h-12 text-yellow-600 mx-auto mb-3 drop-shadow" />
+                <SiTiktok className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#FC6ACD' }} />
                 <h3 className="font-bold text-gray-900" data-testid="text-channel-tiktok">TikTok</h3>
               </CardContent>
             </Card>
@@ -132,8 +162,8 @@ export default function InboxLanding() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="bg-yellow-100 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <Zap className="w-6 h-6 text-yellow-600" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0080FF' }}>
+                  <Zap className="w-6 h-6 text-white" />
                 </div>
               </div>
               <div>
@@ -146,8 +176,8 @@ export default function InboxLanding() {
 
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="bg-yellow-100 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <MessageCircle className="w-6 h-6 text-yellow-600" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#FC6ACD' }}>
+                  <MessageCircle className="w-6 h-6 text-white" />
                 </div>
               </div>
               <div>
@@ -160,8 +190,8 @@ export default function InboxLanding() {
 
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="bg-yellow-100 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <Check className="w-6 h-6 text-yellow-600" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0080FF' }}>
+                  <Check className="w-6 h-6 text-white" />
                 </div>
               </div>
               <div>
@@ -174,8 +204,8 @@ export default function InboxLanding() {
 
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="bg-yellow-100 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <Check className="w-6 h-6 text-yellow-600" />
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#FC6ACD' }}>
+                  <Check className="w-6 h-6 text-white" />
                 </div>
               </div>
               <div>
@@ -192,7 +222,7 @@ export default function InboxLanding() {
       {/* The Point of Difference */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-yellow-600 to-amber-700 rounded-2xl p-8 md:p-12 text-white">
+          <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #0080FF, #FC6ACD)' }}>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               Why /inbox Changes Everything
             </h2>
@@ -202,18 +232,18 @@ export default function InboxLanding() {
                   <Check className="w-6 h-6" />
                   Stop the App Switching Madness
                 </h3>
-                <p className="text-yellow-50 mb-6">
+                <p className="text-blue-50 mb-6">
                   Your team wastes hours every day switching between Facebook, Instagram, email, WhatsApp, and more. 
                   /inbox gives you one interface for everything. Faster responses. Happier customers.
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                   <Check className="w-6 h-6" />
-                  Native Integration with Your Ecosystem
+                  Works Autonomously & Together
                 </h3>
-                <p className="text-yellow-50">
-                  Unlike standalone inbox tools, /inbox knows about your Digital Blueprint, customer insights, 
-                  and marketing campaigns. Context-aware communication that drives better outcomes.
+                <p className="text-blue-50">
+                  /inbox works powerfully on its own, but when integrated with /send and /livechat, it becomes a Commverse ecosystem—
+                  sharing analytics across apps to deliver context-aware communication that drives better outcomes.
                 </p>
               </div>
 
@@ -222,7 +252,7 @@ export default function InboxLanding() {
                   <Check className="w-6 h-6" />
                   Built for Local Business Realities
                 </h3>
-                <p className="text-yellow-50 mb-6">
+                <p className="text-blue-50 mb-6">
                   Enterprise tools are too complex. Basic tools miss features you need. /inbox is built specifically 
                   for local businesses managing customer relationships across multiple channels.
                 </p>
@@ -231,8 +261,8 @@ export default function InboxLanding() {
                   <Check className="w-6 h-6" />
                   No Per-Seat Pricing Games
                 </h3>
-                <p className="text-yellow-50">
-                  Included in all 6 subscription tiers starting at $250/mo. Unlimited team members, unlimited messages, 
+                <p className="text-blue-50">
+                  Standalone at $35/mo or bundled with /send + /livechat for $75/mo. Unlimited team members, unlimited messages, 
                   all channels included. No surprises, no upsells.
                 </p>
               </div>
