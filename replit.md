@@ -1,89 +1,9 @@
 # businessblueprint.io - Digital Intelligence Platform
 
-## Recent Updates
-**Last Updated:** October 11, 2025
-
-### Latest Changes
-- **Synup API Migration:** Transitioning from Vendasta to Synup for business listings and reputation management
-  - Synup offers 80+ platform integrations (Google, Yelp, Facebook, Yellow Pages, etc.)
-  - AI-powered review responses and sentiment analysis
-  - White-label support with custom branding and domain integration
-  - Usage-based transparent pricing with better margins at scale
-  - Listing Management API: Bulk updates, NAP audit, performance analytics
-  - Reputation Management API: Real-time review monitoring, AI responses, review generation campaigns
-  - NOTE: No public API documentation - requires partner/reseller access for detailed specs
-  - Webhook availability to be confirmed with Synup partnership team
-- **Commverse Ecosystem Complete:** Unified communication platform consisting of 3 integrated apps
-  - Navigation: "Commverse" menu item with dropdown showing /send, /livechat, /inbox
-  - Landing pages updated with correct CTAs and color schemes:
-    - /send: "Get Started with /send", "View Pricing", "Try Live Demo" + #E6B747 gold theme
-    - /livechat: "Get Started with /livechat", "View Pricing", "Try Live Demo" + #8000FF purple theme
-    - /inbox: "Launch /inbox", "View Pricing", "Try Live Demo" + #0080FF blue + #FC6ACD pink theme
-  - All landing pages include pricing callouts: "$35/mo standalone | $75/mo for all 3 Commverse apps"
-  - Content messaging: "Works autonomously but stronger together" throughout all pages
-  - New /commverse landing page: Explains ecosystem approach and app integration benefits
-  - New /commverse-pricing page: 4-color pricing cards with comparison table
-    - Individual apps: $35/month each
-    - Complete bundle: $75/month (save $30)
-    - Bundle features: Cross-app analytics, unified customer profiles, conversation continuity
-  - Full e2e test coverage: All pages, CTAs, colors, and pricing verified
-  - Commverse is a mini ecosystem within Blue Link (businessblueprint.io, webhosted.io, airswiped.com)
-- **À La Carte Marketplace Complete:** New /marketplace page for individual app and addon purchases
-  - Navigation updated: "Pricing" menu now links to /pricing (animated) and /marketplace (à la carte)
-  - Product categories organized by purpose:
-    - **Commverse Apps:** Bundle ($75/mo saves $30) + individual apps (/send, /livechat, /inbox at $35 each)
-    - **Coaching & Growth:** AI Coach Essential ($99 for Starter), AI Coach Pro ($59.99 for higher tiers), Captain Your Journey ($249)
-    - **Business Expansion:** Additional 10 Locations ($49), Additional 50 Locations ($199)
-    - **Support & Services:** Priority Support Upgrade ($99)
-  - Shopping cart functionality: Add/remove items, quantity control, real-time total calculation
-  - Desktop sticky sidebar cart + mobile floating cart button with modal
-  - Cart persists via localStorage for seamless checkout flow
-  - **airswiped.com Branded Checkout:** /marketplace/checkout page with full white-label branding
-    - Prominent airswiped.com header with red gradient (brand colors: #FF0040 red, #84D71A green)
-    - Integration with existing NMI payment service via Collect.js tokenization
-    - Trust elements: 256-bit SSL badges, PCI compliance indicators, fraud protection messaging
-    - Order summary with itemized cart, tax calculation (8%), monthly total
-    - Secure payment form with customer information collection
-    - Post-purchase: Clear cart from localStorage, redirect to dashboard
-  - Smart AI Coach pricing: Both tiers displayed with clear badges (Starter Plan vs Higher Tiers)
-- **Animated Pricing Table Complete:** New /pricing page with smooth Framer Motion animations:
-  - Pathway toggle: DIY (2 plans) ↔ MSP (4 plans) with card entrance/exit animations
-  - Billing cycle toggle: Monthly, Quarterly (5% off), Annual (15% off)
-  - Animated price updates when switching cycles
-  - Recommended plan badges (GROWTH for DIY, EXPANSION Pro for MSP)
-  - Responsive grid layouts and hover effects
-  - Full test coverage with 22 automated test steps
-- **Landing Pages Design System Complete:** All app landing pages now use unified gray-on-white design:
-  - /send: Gold #E6B747 icons, customer data ownership messaging (NO Synup references)
-  - /inbox: Yellow icons, 8-channel unified communications
-  - /livechat: Teal icons, instant engagement features
-  - All cards use border-gray-200 shadow-md hover:shadow-lg
-  - Colored icons provide visual interest on neutral base
-- **Navigation Menu Finalized:** Reverted to clean "Pathways" and "Pricing" headers
-  - Updated Pathways content: DIY from $250, MSP from $399 with tier breakdowns
-  - Updated Pricing content: 6-Tier Structure, What's Included, À La Carte Marketplace
-- **Pricing System Locked:** 6-tier structure with $250 Essential/Pro differences:
-  - DIY: STARTER ($250), GROWTH ($316)
-  - MSP: EXPANSION Essential ($399), EXPANSION Pro ($649), LEADERSHIP Essential ($999), LEADERSHIP Pro ($1,249)
-- **35% Markup Applied:** All pricing based on 35% markup over base costs (~$185 base = $250 STARTER)
-- **Whitelabel Complete:** All vendor references removed, pure businessblueprint.io branding
-- **Platform Apps Standardized:** /send, /inbox, /livechat naming with "/" prefix throughout
-
-### Why /send Was Built (Customer Data Focus)
-- Customer data ownership and control (NOT vendor limitations)
-- No access restrictions or lock-in
-- Privacy-first design principles
-- Complete control over customer relationships
-- Unified multi-channel platform integration
-
-### In Progress
-- Assessment recommendation engine updates ($250 minimum subscription requirement)
-- "How to Get Started" purchase pathways landing page
-
 ## Overview
-businessblueprint.io is an AI-powered digital intelligence platform designed to help local businesses enhance their online presence, attract customers, and grow. It offers AI-driven analysis of online presence, generates personalized Digital Blueprints, and provides both Do It Yourself (DIY) and Managed Service Provider (MSP) pathways for business growth. The platform aims for mass market automation, leveraging Google Business Intelligence to minimize manual intervention and maximize results.
+businessblueprint.io is an AI-powered digital intelligence platform designed to help local businesses enhance their online presence, attract customers, and grow. It offers AI-driven analysis of online presence, generates personalized Digital Blueprints, and provides both Do It Yourself (DIY) and Managed Service Provider (MSP) pathways for business growth. The platform aims for mass market automation, leveraging Google Business Intelligence to minimize manual intervention and maximize results. It functions as a "Digital Intelligence Incubator," nurturing businesses from digital obscurity to digital maturity through systematic, data-driven growth programs.
 
-**Brand Positioning:** Digital Intelligence Incubator - nurturing businesses from digital obscurity to digital maturity through systematic, data-driven growth programs.
+**Brand Positioning:** Digital Intelligence Incubator
 **Customer-Facing Message:** Helping Local Businesses Succeed Online
 **Value Proposition:** Get Found, Get Customers, Get Business
 
@@ -159,57 +79,40 @@ The application utilizes a full-stack monorepo architecture.
 - **Language:** TypeScript with ES modules
 - **Database:** PostgreSQL with Drizzle ORM on Neon (serverless)
 - **Session Management:** Connect-pg-simple
-- **Email Service:** Nodemailer
 
-**Core Features & Components:**
+**Core Architectural Decisions & Features:**
 - **AI Coach:** Leverages OpenAI GPT-4o for personalized guidance.
-- **Client Portal:** A comprehensive dashboard for business listings, review management, campaign tracking, and task management, integrated with Vendasta and mobile-responsive.
-- **Vendasta Integration:** API integration for customer synchronization, dashboard data retrieval, and authentication.
-- **Data Flow:** Involves assessment creation, background processing of Google Business data and AI analysis, automated report delivery, and pathway selection.
-- **UI/UX Decisions:** Emphasizes consistent branding, custom color schemes, multi-tab interfaces, visual progress indicators, and priority-based action items.
-- **/send Platform:** An Email + SMS marketing platform with unified campaigns, compliance, contact management, and a production-ready RESTful API.
-- **Unified Inbox:** A multi-channel communications hub aggregating email, live chat, SMS, WhatsApp, Facebook Messenger, Instagram DMs, X (Twitter), and TikTok messages into a single interface. Features real-time WebSocket messaging, conversation threading, and agent assignment.
-- **Subscription & Billing:** Simplified DIY ($99/mo) and MSP ($299/mo) pricing, with AI Business Coach and Captain Your Journey addons. Automated purchase flows and NMI payment integration.
-
-**Three Distinct Purchasing Flows:**
-The platform features three separate purchasing scenarios, each with different UI presentation and user journey:
-
-1.  **General Subscription Page (`/subscription`):** Direct subscription purchase with pathway selection, prominent plan display, and detailed feature lists.
-2.  **Assessment/Diagnosis-Driven Recommendations (`/assessment-checkout`):** Post-diagnosis recommendations leading to purchase, integrating pathway preference and AI-recommended bundles.
-3.  **A La Carte Individual App Ordering (`/apps-marketplace`):** Direct purchase of individual apps with app cards, "Add to Cart" functionality, and optional bundle suggestions.
-
-**Critical Design Requirements for Flows:**
--   Each flow requires a distinct UI layout.
--   Plans appear differently based on the flow context.
--   Order summary behavior adapts to the flow.
--   User context informs the presentation.
-
-**Impersonation System (All Platforms):**
-- **Purpose:** Secure admin support access for troubleshooting client issues.
-- **Security Model:** Dual-Token JWT, immutable audit logging, user consent, session limits, granular access control (read-only by default).
-- **Workflow:** Admin request, user consent, limited admin access with visual indicator, logged actions, session expiry.
-
-**OpenSRS Domain Management (webhosted.io):**
-- **Purpose:** Comprehensive domain and DNS management for client websites.
-- **Capabilities:** Domain Registration, Transfers, DNS Management (A, AAAA, CNAME, MX, TXT, SPF, DKIM), Nameservers, Security features (WHOIS privacy, domain locking, auto-renewal).
-- **Authentication:** API key + IP authorization.
+- **Client Portal:** Comprehensive dashboard for business listings, review management, campaign tracking, and task management, with Vendasta integration and mobile responsiveness.
+- **Commverse Ecosystem:** A unified communication platform including `/send` (Email/SMS marketing), `/livechat`, and `/inbox` (multi-channel aggregator for email, live chat, SMS, WhatsApp, Facebook, Instagram, X, TikTok). Features real-time WebSocket messaging, conversation threading, and agent assignment.
+- **À La Carte Marketplace:** A `/marketplace` page for purchasing individual apps and addons, featuring shopping cart functionality, localStorage persistence, and branded checkout via airswiped.com.
+- **Pricing System:** A 6-tier structure (DIY: STARTER, GROWTH; MSP: EXPANSION Essential/Pro, LEADERSHIP Essential/Pro) with animated pricing tables (`/pricing`), pathway toggles, and billing cycle options. All pricing includes a 35% markup.
+- **Landing Pages Design System:** Unified gray-on-white design with colored icons and consistent branding for all app landing pages.
+- **Three Distinct Purchasing Flows:**
+    1.  **General Subscription Page (`/subscription`):** Direct purchase.
+    2.  **Assessment/Diagnosis-Driven Recommendations (`/assessment-checkout`):** Post-diagnosis recommendations.
+    3.  **A La Carte Individual App Ordering (`/apps-marketplace`):** Individual app purchases with cart.
+    Each flow has distinct UI layouts, plan presentations, and order summary behaviors.
+- **Impersonation System:** Secure dual-token JWT based admin support access with immutable audit logging, user consent, and granular access control for troubleshooting across all platforms.
+- **OpenSRS Domain Management (webhosted.io):** Comprehensive domain and DNS management (Registration, Transfers, DNS records, Nameservers, Security) for client websites.
+- **Whitelabeling:** All platform components are branded as businessblueprint.io, removing vendor references.
 
 ## External Dependencies
 
--   **Google Places API:** For retrieving business data and presence analysis.
--   **OpenAI API:** For AI-powered analysis, recommendations, and AI Coach.
--   **SMTP Credentials:** For sending automated emails.
+-   **Google Places API:** Business data and presence analysis.
+-   **OpenAI API:** AI-powered analysis, recommendations, and AI Coach.
+-   **SMTP Credentials:** Sending automated emails (via Nodemailer).
 -   **Neon PostgreSQL:** Serverless database solution.
--   **Drizzle ORM:** For type-safe database interactions.
+-   **Drizzle ORM:** Type-safe database interactions.
 -   **Shadcn/ui:** Component library.
 -   **Tailwind CSS:** Utility-first CSS framework.
--   **Vendasta API:** For bi-directional client data synchronization and dashboard access.
--   **Telnyx:** For SMS messaging in the /send platform and Unified Inbox.
+-   **Vendasta API:** Bi-directional client data synchronization and dashboard access.
+-   **Synup API:** Business listings and reputation management (replacing Vendasta for these features).
+-   **Telnyx:** SMS messaging for /send and Unified Inbox.
 -   **NMI (Network Merchants Inc.):** Payment gateway integration for subscription billing.
--   **OpenSRS:** Domain registration, transfer, and DNS management API for webhosted.io.
--   **Socket.IO:** For real-time WebSocket communication in the Unified Inbox.
--   **Facebook Graph API:** For Messenger integration.
--   **Instagram Messenger Platform:** For Instagram DM integration.
--   **WhatsApp Business Cloud API:** For WhatsApp messaging.
--   **X/Twitter Account Activity API:** For X (Twitter) DM integration.
--   **TikTok Business Messaging API:** For TikTok message integration.
+-   **OpenSRS:** Domain registration, transfer, and DNS management for webhosted.io.
+-   **Socket.IO:** Real-time WebSocket communication in the Unified Inbox.
+-   **Facebook Graph API:** Messenger integration.
+-   **Instagram Messenger Platform:** Instagram DM integration.
+-   **WhatsApp Business Cloud API:** WhatsApp messaging integration.
+-   **X/Twitter Account Activity API:** X (Twitter) DM integration.
+-   **TikTok Business Messaging API:** TikTok message integration.
