@@ -318,6 +318,82 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
+                    {/* Commverse - Communication Apps */}
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-commverse">
+                        <MessageSquare className="w-4 h-4" />
+                        <span>Commverse</span>
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <div className="grid gap-4 p-6 w-[500px]">
+                          <div className="mb-2">
+                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Communication Ecosystem</h3>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                              Three powerful apps that work autonomously but shine together
+                            </p>
+                          </div>
+                          <div className="grid gap-3">
+                            {/* /send */}
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-center space-x-3 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-[#E6B747] hover:shadow-md hover:bg-gradient-to-r hover:from-[#E6B747]/5 hover:to-transparent"
+                                href="/send"
+                                data-testid="link-commverse-send"
+                              >
+                                <img src={sendIcon} alt="/send" className="h-10 w-10 object-contain flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="text-sm font-semibold text-gray-900 dark:text-white">/send</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Email & SMS Marketing Platform</p>
+                                </div>
+                                <span className="text-xs font-semibold text-[#E6B747] opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* /livechat */}
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-center space-x-3 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-[#8000FF] hover:shadow-md hover:bg-gradient-to-r hover:from-[#8000FF]/5 hover:to-transparent"
+                                href="/livechat"
+                                data-testid="link-commverse-livechat"
+                              >
+                                <img src={livechatIcon} alt="/livechat" className="h-10 w-10 object-contain flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="text-sm font-semibold text-gray-900 dark:text-white">/livechat</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Website Live Chat Widget</p>
+                                </div>
+                                <span className="text-xs font-semibold text-[#8000FF] opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* /inbox */}
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-center space-x-3 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-[#0080FF] hover:shadow-md hover:bg-gradient-to-r hover:from-[#0080FF]/5 hover:to-transparent"
+                                href="/inbox"
+                                data-testid="link-commverse-inbox"
+                              >
+                                <img src={inboxIcon} alt="/inbox" className="h-10 w-10 object-contain flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="text-sm font-semibold text-gray-900 dark:text-white">/inbox</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Unified Communications Hub</p>
+                                </div>
+                                <span className="text-xs font-semibold text-[#0080FF] opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                              </a>
+                            </NavigationMenuLink>
+                          </div>
+                          <NavigationMenuLink asChild>
+                            <a
+                              className="block text-center text-sm text-blue-600 hover:text-blue-800 hover:underline mt-2"
+                              href="/commverse"
+                              data-testid="link-commverse-about"
+                            >
+                              About Commverse Ecosystem →
+                            </a>
+                          </NavigationMenuLink>
+                        </div>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+
                     {/* Pricing */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pricing">
