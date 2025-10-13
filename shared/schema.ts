@@ -134,6 +134,62 @@ export const clientAssessments = pgTable("client_assessments", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Synup Locations - Business locations managed through Synup
+export const synupLocations = pgTable("synup_locations", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  synupLocationId: text("synup_location_id").unique().notNull(), // Synup's location ID
+  name: text("name").notNull(),
+  address: text("address").notNull(),
+  city: text("city").notNull(),
+  state: text("state").notNull(),
+  country: text("country").notNull().default('US'),
+  postalCode: text("postal_code").notNull(),
+  phone: text("phone").notNull(),
+  website: text("website"),
+  email: text("email"),
+  category: text("category"),
+  status: text("status").default('active'), // active, inactive, pending
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Synup Listings - Directory listing status across 200+ platforms
+export const synupListings = pgTable("synup_listings", {
+  id: serial("id").primaryKey(),
+  locationId: integer("location_id").references(() => synupLocations.id),
+  synupListingId: text("synup_listing_id").unique(),
+  platform: text("platform").notNull(), // Google, Yelp, Facebook, Bing, etc.
+  status: text("status").notNull(), // published, pending, claimed, unclaimed, error
+  url: text("url"),
+  lastSynced: timestamp("last_synced"),
+  syncStatus: text("sync_status"), // success, failed, in_progress
+  visibility: boolean("visibility").default(true),
+  errorMessage: text("error_message"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Synup Reviews - Review management across 80+ platforms
+export const synupReviews = pgTable("synup_reviews", {
+  id: serial("id").primaryKey(),
+  locationId: integer("location_id").references(() => synupLocations.id),
+  synupReviewId: text("synup_review_id").unique(),
+  platform: text("platform").notNull(), // Google, Yelp, Facebook, TripAdvisor, etc.
+  rating: integer("rating").notNull(), // 1-5 stars
+  reviewText: text("review_text"),
+  reviewerName: text("reviewer_name"),
+  reviewerAvatar: text("reviewer_avatar"),
+  reviewDate: timestamp("review_date").notNull(),
+  response: text("response"),
+  responseDate: timestamp("response_date"),
+  sentiment: text("sentiment"), // positive, negative, neutral
+  status: text("status").default('new'), // new, responded, flagged, archived
+  isAIGenerated: boolean("is_ai_generated").default(false), // Was response AI-generated
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertAssessmentSchema = createInsertSchema(assessments).pick({
   businessName: true,
@@ -186,6 +242,51 @@ export const insertCampaignSchema = createInsertSchema(campaigns).pick({
   content: true,
   scheduledFor: true,
   metrics: true,
+});
+
+// Synup insert schemas
+export const insertSynupLocationSchema = createInsertSchema(synupLocations).pick({
+  clientId: true,
+  synupLocationId: true,
+  name: true,
+  address: true,
+  city: true,
+  state: true,
+  country: true,
+  postalCode: true,
+  phone: true,
+  website: true,
+  email: true,
+  category: true,
+  status: true,
+});
+
+export const insertSynupListingSchema = createInsertSchema(synupListings).pick({
+  locationId: true,
+  synupListingId: true,
+  platform: true,
+  status: true,
+  url: true,
+  lastSynced: true,
+  syncStatus: true,
+  visibility: true,
+  errorMessage: true,
+});
+
+export const insertSynupReviewSchema = createInsertSchema(synupReviews).pick({
+  locationId: true,
+  synupReviewId: true,
+  platform: true,
+  rating: true,
+  reviewText: true,
+  reviewerName: true,
+  reviewerAvatar: true,
+  reviewDate: true,
+  response: true,
+  responseDate: true,
+  sentiment: true,
+  status: true,
+  isAIGenerated: true,
 });
 
 // Subscription plans table
@@ -421,6 +522,12 @@ export type InboxMessage = typeof inboxMessages.$inferSelect;
 export type InsertInboxMessage = z.infer<typeof insertInboxMessageSchema>;
 export type Campaign = typeof campaigns.$inferSelect;
 export type InsertCampaign = z.infer<typeof insertCampaignSchema>;
+export type SynupLocation = typeof synupLocations.$inferSelect;
+export type InsertSynupLocation = z.infer<typeof insertSynupLocationSchema>;
+export type SynupListing = typeof synupListings.$inferSelect;
+export type InsertSynupListing = z.infer<typeof insertSynupListingSchema>;
+export type SynupReview = typeof synupReviews.$inferSelect;
+export type InsertSynupReview = z.infer<typeof insertSynupReviewSchema>;
 
 // Subscription types
 export type SubscriptionPlan = typeof subscriptionPlans.$inferSelect;
