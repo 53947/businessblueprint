@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 
 export interface JWTPayload {
   clientId: number;
-  vendastaId?: string;
+  externalId?: string;
   permissions: string[];
   iat?: number;
   exp?: number;
@@ -66,20 +66,20 @@ export class JWTService {
   /**
    * Create a secure dashboard access token for a client
    */
-  async createDashboardToken(clientId: number, vendastaId?: string): Promise<string> {
+  async createDashboardToken(clientId: number, externalId?: string): Promise<string> {
     const payload: JWTPayload = {
       clientId,
-      vendastaId,
+      externalId,
       permissions: ['dashboard:read', 'dashboard:write', 'campaigns:read', 'messages:read'],
-      iss: 'cloudpleaser.io',
-      aud: 'vendasta-integration'
+      iss: 'businessblueprint.io',
+      aud: 'client-portal'
     };
 
     const options: jwt.SignOptions = {
       algorithm: this.algorithm,
       expiresIn: '24h', // 24 hour token expiration
-      issuer: 'cloudpleaser.io',
-      audience: 'vendasta-integration'
+      issuer: 'businessblueprint.io',
+      audience: 'client-portal'
     };
 
     const token = jwt.sign(payload, this.keyPair.privateKey, options);
@@ -88,7 +88,7 @@ export class JWTService {
     await db.insert(dashboardAccess).values({
       clientId,
       accessToken: token,
-      vendastaDashboardUrl: vendastaId ? `https://business-app.vendasta.com/dashboard?token=${token}` : null,
+      dashboardUrl: `/portal?token=${token}`,
       isActive: true
     });
 
@@ -102,8 +102,8 @@ export class JWTService {
     try {
       const decoded = jwt.verify(token, this.keyPair.publicKey, {
         algorithms: [this.algorithm],
-        issuer: 'cloudpleaser.io',
-        audience: 'vendasta-integration'
+        issuer: 'businessblueprint.io',
+        audience: 'client-portal'
       }) as JWTPayload;
 
       return decoded;
@@ -120,7 +120,7 @@ export class JWTService {
       const decoded = this.verifyToken(oldToken);
       
       // Create new token with same payload but fresh expiration
-      const newToken = await this.createDashboardToken(decoded.clientId, decoded.vendastaId);
+      const newToken = await this.createDashboardToken(decoded.clientId, decoded.externalId);
       
       // Deactivate old token
       await this.revokeToken(oldToken);
@@ -175,41 +175,6 @@ export class JWTService {
     };
   }
 
-  /**
-   * Create token for Vendasta dashboard access with specific claims
-   */
-  async createVendastaDashboardToken(
-    clientId: number, 
-    vendastaId: string,
-    dashboardUrl: string
-  ): Promise<string> {
-    const payload: JWTPayload = {
-      clientId,
-      vendastaId,
-      permissions: ['vendasta:dashboard', 'vendasta:read'],
-      iss: 'cloudpleaser.io',
-      aud: 'vendasta-dashboard'
-    };
-
-    const options: jwt.SignOptions = {
-      algorithm: this.algorithm,
-      expiresIn: '1h', // Shorter expiration for dashboard access
-      issuer: 'cloudpleaser.io',
-      audience: 'vendasta-dashboard'
-    };
-
-    const token = jwt.sign(payload, this.keyPair.privateKey, options);
-
-    // Store with specific dashboard URL
-    await db.insert(dashboardAccess).values({
-      clientId,
-      accessToken: token,
-      vendastaDashboardUrl: dashboardUrl,
-      isActive: true
-    });
-
-    return token;
-  }
 }
 
 export const jwtService = new JWTService();

@@ -30,14 +30,14 @@ import {
 export default function ClientPortal() {
   const [, setLocation] = useLocation();
   const [clientId, setClientId] = useState<string | null>(null);
-  const [vendastaId, setVendastaId] = useState<string | null>(null);
+  const [externalId, setExternalId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
   const { toast } = useToast();
 
   useEffect(() => {
     // Get client ID from session storage
     const storedClientId = sessionStorage.getItem("clientId");
-    const storedVendastaId = sessionStorage.getItem("vendastaId");
+    const storedExternalId = sessionStorage.getItem("externalId");
     
     if (!storedClientId) {
       // Redirect to login if no client ID
@@ -46,7 +46,7 @@ export default function ClientPortal() {
     }
     
     setClientId(storedClientId);
-    setVendastaId(storedVendastaId);
+    setExternalId(storedExternalId);
   }, [setLocation]);
 
   // Fetch client dashboard data
@@ -57,7 +57,7 @@ export default function ClientPortal() {
 
   const handleSignOut = () => {
     sessionStorage.removeItem("clientId");
-    sessionStorage.removeItem("vendastaId");
+    sessionStorage.removeItem("externalId");
     setLocation("/portal/login");
   };
 
@@ -223,7 +223,7 @@ export default function ClientPortal() {
                   <div className="text-5xl font-bold mb-2">{clientData.digitalScore}</div>
                   <div className="text-2xl font-semibold">{clientData.grade}</div>
                   <p className="text-sm text-blue-100 mt-1">Updated {new Date(clientData.lastUpdated).toLocaleDateString()}</p>
-                  <p className="text-xs text-blue-200">Vendasta ID: {vendastaId}</p>
+                  <p className="text-xs text-blue-200">Customer ID: {externalId}</p>
                 </div>
               </div>
             </CardContent>
@@ -488,7 +488,7 @@ export default function ClientPortal() {
                 </div>
                 <div className="text-center py-8 text-gray-500">
                   <p>Campaign management interface coming soon...</p>
-                  <p className="text-sm mt-2">Your campaigns are currently managed through Vendasta.</p>
+                  <p className="text-sm mt-2">Your campaigns will be managed through this dashboard.</p>
                 </div>
               </CardContent>
             </Card>

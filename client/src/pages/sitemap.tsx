@@ -149,7 +149,7 @@ export default function Sitemap() {
               title: "Portal Login",
               path: "/portal/login",
               icon: LogIn,
-              description: "Vendasta Account Group ID authentication"
+              description: "Client portal authentication"
             },
             {
               title: "Client Dashboard",
@@ -164,10 +164,10 @@ export default function Sitemap() {
           title: "Admin/Development",
           children: [
             {
-              title: "Vendasta Integration",
-              path: "/vendasta",
+              title: "System Settings",
+              path: "/settings",
               icon: Settings,
-              description: "API connection testing"
+              description: "Platform configuration"
             },
             {
               title: "Logo Preview",
