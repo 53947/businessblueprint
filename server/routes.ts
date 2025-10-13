@@ -1231,29 +1231,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // SECURITY NOTE: In white-label mode with shared API key, we cannot automatically verify
-      // that this Synup location belongs to the authenticated client. Production deployments should:
-      // 1. Use per-client Synup API keys, OR
-      // 2. Require admin pre-approval/mapping of locations to clients, OR  
-      // 3. Match business data (name, address) to verify ownership
+      // SECURITY: White-label mode with shared API key requires strict verification to prevent
+      // cross-tenant abuse. Current implementation uses multi-layered safeguards:
       // 
-      // Current safeguards: 
-      // - Prevent duplicate assignments across clients (checked above)
-      // - Business name matching verification (implemented below with logging)
+      // 1. Cross-tenant prevention: Blocks duplicate Synup location assignments across clients
+      // 2. Business name verification (STRICT MODE): Enforces name matching before location sync
+      //    - Requires client.companyName to be set (400 error if missing)
+      //    - Verifies Synup location name contains client company name or vice versa
+      //    - Returns 403 Forbidden if names don't match
+      // 
+      // Production recommendations for enhanced security:
+      // - Use per-client Synup API keys to eliminate shared-key limitations
+      // - Implement admin pre-approval workflow for new location assignments
+      // - Add address/contact verification for additional ownership proof
       const client = await storage.getClient(clientId);
-      if (client && client.companyName) {
-        const nameMatch = synupLocation.name.toLowerCase().includes(client.companyName.toLowerCase()) ||
-                         client.companyName.toLowerCase().includes(synupLocation.name.toLowerCase());
-        
-        if (!nameMatch) {
-          console.warn(`⚠️ Location name mismatch: Client "${client.companyName}" attempting to sync location "${synupLocation.name}"`);
-          // In strict mode, this should return 403. For now, we log and continue.
-          // return res.status(403).json({
-          //   success: false,
-          //   message: "Location business name does not match your account"
-          // });
-        }
+      
+      // Enforce business name verification (strict mode)
+      if (!client || !client.companyName) {
+        console.error(`❌ Cannot verify location ownership: Client ${clientId} has no company name set`);
+        return res.status(400).json({
+          success: false,
+          message: "Your account must have a company name set before syncing locations. Please update your profile."
+        });
       }
+      
+      const nameMatch = synupLocation.name.toLowerCase().includes(client.companyName.toLowerCase()) ||
+                       client.companyName.toLowerCase().includes(synupLocation.name.toLowerCase());
+      
+      if (!nameMatch) {
+        console.error(`❌ Security: Location name mismatch - Client "${client.companyName}" attempted to sync location "${synupLocation.name}"`);
+        return res.status(403).json({
+          success: false,
+          message: "Location business name does not match your account. If this is your business, please contact support."
+        });
+      }
+      
+      console.log(`✅ Business name verified: "${client.companyName}" matches "${synupLocation.name}"`);
 
       // Create location in our database with validated data
       const locationData = insertSynupLocationSchema.parse({
