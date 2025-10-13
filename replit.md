@@ -109,6 +109,33 @@ The application utilizes a full-stack monorepo architecture.
     - Authorization checks on all listing/review operations
   - White-Label Security Model: Shared API key with strict business name matching to prevent cross-tenant abuse
   - Production Recommendations: Per-client API keys, admin pre-approval workflows, or enhanced address/contact verification
+- **AI-Powered Reputation Management:** Automated review response system using OpenAI GPT-4o:
+  - Service Layer (`server/services/reviewAI.ts`): GPT-4o integration with intelligent tone adaptation
+  - Sentiment-Based Tone: Enthusiastic (4-5 stars), Empathetic (1-2 stars), Professional (3 stars)
+  - Context-Aware Responses: Uses review text, business name, category, platform, and reviewer name
+  - Fallback Templates: Manual response templates when AI generation fails
+  - Bulk Processing: Batch generation support with rate limiting (5 reviews at a time)
+  - Review Analytics Endpoints:
+    - GET /api/synup/locations/:locationId/analytics: Comprehensive metrics (totals, averages, sentiment breakdown, platform distribution, response rates)
+    - GET /api/synup/locations/:locationId/review-trends: Time-series trends with daily review counts and ratings (configurable period)
+  - Integration: Seamlessly integrated with review response workflow, supporting both AI and manual responses
+- **Automated Review Monitoring & Alerts:** Real-time notification system for new reviews:
+  - Monitoring Service (`server/services/reviewMonitoring.ts`): Automatic alert dispatch on review creation
+  - Multi-Channel Alerts:
+    - Email: Professional HTML templates with sentiment-based urgency (⚠️ URGENT for negative reviews), color-coded ratings, and call-to-action buttons
+    - WebSocket: Real-time browser notifications via Socket.IO to client-specific rooms
+  - Configurable Preferences (GET/PUT /api/review-notifications/preferences):
+    - Email/WebSocket alert toggles
+    - Notification triggers: all reviews, negative only (rating ≤ threshold), positive only (rating ≥ 4)
+    - Minimum rating threshold (default: 2)
+    - Auto-respond toggles for future automation
+  - Intelligent Alert Logic:
+    - Auto-creates default preferences if none exist
+    - Evaluates reviews against client-specific criteria
+    - Preference-driven filtering (respects notification settings)
+    - Async processing (non-blocking)
+  - Alert Trigger: Automatically fires when new reviews are synced from Synup
+  - WebSocket Integration: Proper initialization order ensures real-time alerts work on first request
 
 ### External Dependencies
 

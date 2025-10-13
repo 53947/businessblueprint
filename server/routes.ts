@@ -26,6 +26,7 @@ import { PricingEngine } from "./services/pricing";
 import { NMIService } from "./services/nmi";
 import { productRecommendationService } from "./services/productRecommendations";
 import { SynupService } from "./services/synup";
+import { ReviewMonitoringService } from "./services/reviewMonitoring";
 import { reviewAI } from "./services/reviewAI";
 import { dashboardAccess } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
@@ -1527,6 +1528,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         } else {
           const created = await storage.createSynupReview(reviewData);
           updatedReviews.push(created);
+          
+          // Trigger review monitoring alert for new reviews
+          const io = (global as any).io;
+          const reviewMonitoring = new ReviewMonitoringService(io);
+          reviewMonitoring.processNewReview(created).catch(err => 
+            console.error('Error processing review alert:', err)
+          );
         }
       }
 
@@ -1816,6 +1824,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         message: "Failed to fetch review trends" 
+      });
+    }
+  });
+
+  // Get review notification preferences
+  app.get("/api/review-notifications/preferences", requireAuth, async (req: AuthenticatedRequest, res) => {
+    try {
+      const clientId = req.clientId!;
+      
+      let preferences = await storage.getReviewNotificationPreferences(clientId);
+      
+      // Create default preferences if none exist
+      if (!preferences) {
+        preferences = await storage.createReviewNotificationPreferences({
+          clientId,
+          enableEmailAlerts: true,
+          enableWebSocketAlerts: true,
+          notifyOnNegativeReviews: true,
+          minimumRatingThreshold: 2,
+        });
+      }
+
+      res.json({
+        success: true,
+        preferences
+      });
+    } catch (error) {
+      console.error("Error fetching review notification preferences:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch notification preferences" 
+      });
+    }
+  });
+
+  // Update review notification preferences
+  app.put("/api/review-notifications/preferences", requireAuth, async (req: AuthenticatedRequest, res) => {
+    try {
+      const clientId = req.clientId!;
+      const validatedData = insertReviewNotificationPreferencesSchema.partial().parse(req.body);
+      
+      // Get or create preferences
+      let preferences = await storage.getReviewNotificationPreferences(clientId);
+      if (!preferences) {
+        preferences = await storage.createReviewNotificationPreferences({
+          clientId,
+          ...validatedData,
+        });
+      } else {
+        preferences = await storage.updateReviewNotificationPreferences(clientId, validatedData);
+      }
+
+      res.json({
+        success: true,
+        preferences,
+        message: "Notification preferences updated successfully"
+      });
+    } catch (error) {
+      console.error("Error updating review notification preferences:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({
+          success: false,
+          message: "Validation failed",
+          errors: error.errors
+        });
+      }
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to update notification preferences" 
       });
     }
   });

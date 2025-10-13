@@ -190,6 +190,23 @@ export const synupReviews = pgTable("synup_reviews", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Review Notification Preferences - Configure alerts for reviews
+export const reviewNotificationPreferences = pgTable("review_notification_preferences", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull().unique(),
+  enableEmailAlerts: boolean("enable_email_alerts").default(true),
+  enableWebSocketAlerts: boolean("enable_websocket_alerts").default(true),
+  alertEmail: text("alert_email"), // Email to send alerts to (defaults to client email)
+  notifyOnAllReviews: boolean("notify_on_all_reviews").default(false),
+  notifyOnNegativeReviews: boolean("notify_on_negative_reviews").default(true), // Rating <= 2
+  notifyOnPositiveReviews: boolean("notify_on_positive_reviews").default(false), // Rating >= 4
+  minimumRatingThreshold: integer("minimum_rating_threshold").default(2), // Alert if rating <= threshold
+  autoRespondPositive: boolean("auto_respond_positive").default(false), // Auto-generate AI responses for positive
+  autoRespondNegative: boolean("auto_respond_negative").default(false), // Auto-generate AI responses for negative
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertAssessmentSchema = createInsertSchema(assessments).pick({
   businessName: true,
@@ -288,6 +305,23 @@ export const insertSynupReviewSchema = createInsertSchema(synupReviews).pick({
   status: true,
   isAIGenerated: true,
 });
+
+export const insertReviewNotificationPreferencesSchema = createInsertSchema(reviewNotificationPreferences).pick({
+  clientId: true,
+  enableEmailAlerts: true,
+  enableWebSocketAlerts: true,
+  alertEmail: true,
+  notifyOnAllReviews: true,
+  notifyOnNegativeReviews: true,
+  notifyOnPositiveReviews: true,
+  minimumRatingThreshold: true,
+  autoRespondPositive: true,
+  autoRespondNegative: true,
+});
+
+// Type exports
+export type ReviewNotificationPreferences = typeof reviewNotificationPreferences.$inferSelect;
+export type InsertReviewNotificationPreferences = z.infer<typeof insertReviewNotificationPreferencesSchema>;
 
 // Subscription plans table
 export const subscriptionPlans = pgTable("subscription_plans", {
