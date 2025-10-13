@@ -1,18 +1,13 @@
 # businessblueprint.io - Digital Intelligence Platform
 
-## Recently Completed
-- **Mobile Navigation Menu Fix (Oct 2025)**: Complete rebuild of mobile menu with full parity to desktop - includes all 6 apps (businessblueprint.io, webhosted.io, airswiped.com, /send, /inbox, /livechat), organized sections for Apps, Pathways, Commverse, and Resources, plus proper Marketplace integration
-- **NMI Payment Form Enhancements (Oct 2025)**: Added field readiness tracking, timeout handling, improved error messaging, and proper CollectJS initialization checks to prevent payment tokenization errors
-- **Marketplace Implementation (Oct 2025)**: Built à la carte marketplace with shopping cart, localStorage persistence, airswiped.com branded checkout, server-side order validation, and proper error handling
-
-## Overview
+### Overview
 businessblueprint.io is an AI-powered digital intelligence platform designed to help local businesses enhance their online presence, attract customers, and grow. It offers AI-driven analysis of online presence, generates personalized Digital Blueprints, and provides both Do It Yourself (DIY) and Managed Service Provider (MSP) pathways for business growth. The platform aims for mass market automation, leveraging Google Business Intelligence to minimize manual intervention and maximize results. It functions as a "Digital Intelligence Incubator," nurturing businesses from digital obscurity to digital maturity through systematic, data-driven growth programs.
 
 **Brand Positioning:** Digital Intelligence Incubator
 **Customer-Facing Message:** Helping Local Businesses Succeed Online
 **Value Proposition:** Get Found, Get Customers, Get Business
 
-## User Preferences
+### User Preferences
 Preferred communication style: Simple, everyday language.
 
 **Logo Design Process:**
@@ -67,7 +62,7 @@ Preferred communication style: Simple, everyday language.
 - Consistent terminology: Always use "Do It Yourself (DIY)" and "Managed Services Provided (MSP)" in all titles, headings, categories, groups, and menus
 - Icons accompany pathway names wherever they appear (client/src/components/pathway-icons.tsx)
 
-## System Architecture
+### System Architecture
 
 The application utilizes a full-stack monorepo architecture.
 
@@ -87,7 +82,7 @@ The application utilizes a full-stack monorepo architecture.
 
 **Core Architectural Decisions & Features:**
 - **AI Coach:** Leverages OpenAI GPT-4o for personalized guidance.
-- **Client Portal:** Comprehensive dashboard for business listings, review management, campaign tracking, and task management, with Vendasta integration and mobile responsiveness.
+- **Client Portal:** Comprehensive dashboard for business listings, review management, campaign tracking, and task management with mobile responsiveness.
 - **Commverse Ecosystem:** A unified communication platform including `/send` (Email/SMS marketing), `/livechat`, and `/inbox` (multi-channel aggregator for email, live chat, SMS, WhatsApp, Facebook, Instagram, X, TikTok). Features real-time WebSocket messaging, conversation threading, and agent assignment.
 - **À La Carte Marketplace:** A `/marketplace` page for purchasing individual apps and addons, featuring shopping cart functionality, localStorage persistence, and branded checkout via airswiped.com.
 - **Pricing System:** A 6-tier structure (DIY: STARTER, GROWTH; MSP: EXPANSION Essential/Pro, LEADERSHIP Essential/Pro) with animated pricing tables (`/pricing`), pathway toggles, and billing cycle options. All pricing includes a 35% markup.
@@ -100,8 +95,10 @@ The application utilizes a full-stack monorepo architecture.
 - **Impersonation System:** Secure dual-token JWT based admin support access with immutable audit logging, user consent, and granular access control for troubleshooting across all platforms.
 - **OpenSRS Domain Management (webhosted.io):** Comprehensive domain and DNS management (Registration, Transfers, DNS records, Nameservers, Security) for client websites.
 - **Whitelabeling:** All platform components are branded as businessblueprint.io, removing vendor references.
+- **Three-Platform Ecosystem:** businessblueprint.io (digital marketing), webhosted.io (website hosting), and airswiped.com (payment gateway) are distinct yet integrated platforms.
+- **Unified Client Portal (Future):** Planned single sign-on, master dashboard, consolidated billing, cross-platform analytics, and unified support across all three platforms.
 
-## External Dependencies
+### External Dependencies
 
 -   **Google Places API:** Business data and presence analysis.
 -   **OpenAI API:** AI-powered analysis, recommendations, and AI Coach.
@@ -110,11 +107,10 @@ The application utilizes a full-stack monorepo architecture.
 -   **Drizzle ORM:** Type-safe database interactions.
 -   **Shadcn/ui:** Component library.
 -   **Tailwind CSS:** Utility-first CSS framework.
--   **Vendasta API:** Bi-directional client data synchronization and dashboard access.
--   **Synup API:** Business listings and reputation management (replacing Vendasta for these features).
+-   **Synup API:** Business listings and reputation management (200+ directories, AI-powered review responses, white-label).
 -   **Telnyx:** SMS messaging for /send and Unified Inbox.
 -   **NMI (Network Merchants Inc.):** Payment gateway integration for subscription billing.
--   **OpenSRS:** Domain registration, transfer, and DNS management for webhosted.io.
+-   **OpenSRS:** Domain registration, transfer, DNS management, and email automation for webhosted.io.
 -   **Socket.IO:** Real-time WebSocket communication in the Unified Inbox.
 -   **Facebook Graph API:** Messenger integration.
 -   **Instagram Messenger Platform:** Instagram DM integration.
