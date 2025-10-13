@@ -564,20 +564,96 @@ export function Header({ showNavigation = true }: HeaderProps) {
         {/* Mobile Menu */}
         {isMobileMenuOpen && showNavigation && (
           <div className="lg:hidden border-t border-gray-200 py-4">
-            <nav className="space-y-1">
-              <a href="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                Apps
-              </a>
-              <a href="/subscription" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                Pathways
-              </a>
-              <a href="/pricing" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" data-testid="link-mobile-pricing">
+            <nav className="space-y-2 px-3">
+              {/* Apps Section */}
+              <div className="border-b border-gray-100 pb-2">
+                <div className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <Layers className="w-4 h-4" />
+                  <span>Apps</span>
+                </div>
+                <div className="space-y-1 ml-6">
+                  <a href="/" className="block py-1.5 text-sm text-gray-700 hover:text-blue-600">
+                    businessblueprint.io
+                  </a>
+                  <a href="#webhosted" className="block py-1.5 text-sm text-gray-700 hover:text-purple-600">
+                    webhosted.io - Website Hosting
+                  </a>
+                  <a href="#airswiped" className="block py-1.5 text-sm text-gray-700 hover:text-red-600">
+                    airswiped.com - Payment Gateway
+                  </a>
+                  <a href="/send" className="block py-1.5 text-sm text-gray-700 hover:text-green-600">
+                    /send - Email & SMS
+                  </a>
+                  <a href="/inbox" className="block py-1.5 text-sm text-gray-700 hover:text-yellow-600">
+                    /inbox - Unified Communications
+                  </a>
+                  <a href="/livechat" className="block py-1.5 text-sm text-gray-700 hover:text-teal-600">
+                    /livechat - Live Chat Widget
+                  </a>
+                </div>
+              </div>
+
+              {/* Pathways Section */}
+              <div className="border-b border-gray-100 pb-2">
+                <div className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <Compass className="w-4 h-4" />
+                  <span>Pathways</span>
+                </div>
+                <div className="space-y-1 ml-6">
+                  <a href="/assessment" className="block py-1.5 text-sm text-gray-700 hover:text-blue-600">
+                    Start Free Assessment
+                  </a>
+                  <a href="/pricing" className="block py-1.5 text-sm text-gray-700 hover:text-blue-600">
+                    View Pricing Plans
+                  </a>
+                  <a href="/marketplace" className="block py-1.5 text-sm text-gray-700 hover:text-blue-600">
+                    À La Carte Marketplace
+                  </a>
+                </div>
+              </div>
+
+              {/* Commverse Section */}
+              <div className="border-b border-gray-100 pb-2">
+                <div className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Commverse</span>
+                </div>
+                <div className="space-y-1 ml-6">
+                  <a href="/commverse" className="block py-1.5 text-sm text-gray-700 hover:text-purple-600">
+                    About Commverse
+                  </a>
+                  <a href="/commverse-pricing" className="block py-1.5 text-sm text-gray-700 hover:text-purple-600">
+                    Commverse Pricing
+                  </a>
+                </div>
+              </div>
+
+              {/* Direct Links */}
+              <a href="/pricing" className="block py-2 font-medium text-gray-900 hover:text-blue-600" data-testid="link-mobile-pricing">
                 Pricing
               </a>
-              <a href="/journey" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-                Resources
-              </a>
-              <div className="flex space-x-2 px-3 pt-4 border-t border-gray-200 mt-4">
+
+              {/* Resources Section */}
+              <div className="border-b border-gray-100 pb-2">
+                <div className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  <span>Resources</span>
+                </div>
+                <div className="space-y-1 ml-6">
+                  <a href="/about" className="block py-1.5 text-sm text-gray-700 hover:text-blue-600">
+                    About Us
+                  </a>
+                  <a href="/contact" className="block py-1.5 text-sm text-gray-700 hover:text-blue-600">
+                    Contact
+                  </a>
+                  <a href="/journey" className="block py-1.5 text-sm text-gray-700 hover:text-blue-600">
+                    Digital Blueprint Guide
+                  </a>
+                </div>
+              </div>
+
+              {/* Login/Signup */}
+              <div className="flex space-x-2 pt-4 border-t border-gray-200 mt-4">
                 <Button variant="outline" size="sm" className="flex-1" asChild>
                   <a href="/portal">Login</a>
                 </Button>

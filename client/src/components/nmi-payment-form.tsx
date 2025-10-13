@@ -55,6 +55,7 @@ export function NMIPaymentForm({
   });
   
   const [isCollectJSLoaded, setIsCollectJSLoaded] = useState(false);
+  const [areFieldsReady, setAreFieldsReady] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
@@ -157,16 +158,25 @@ export function NMIPaymentForm({
           onPaymentToken(response.payment_token, formData);
         } else {
           setIsProcessing(false);
-          onError(response.error || 'Payment processing failed');
+          const errorMsg = response.error || response.errorMessage || 'Payment processing failed';
+          console.error('Payment tokenization failed:', response);
+          onError(errorMsg);
         }
       },
       fieldsAvailableCallback: () => {
-        console.log('Payment fields are ready');
+        console.log('✅ Payment fields are ready');
+        setAreFieldsReady(true);
       },
       validationCallback: (field: string, status: boolean, message: string) => {
         if (!status && message) {
           console.warn(`Validation error for ${field}: ${message}`);
         }
+      },
+      timeoutDuration: 30000,
+      timeoutCallback: () => {
+        console.error('Payment tokenization timeout');
+        setIsProcessing(false);
+        onError('Payment processing timed out. Please try again.');
       }
     });
     
@@ -199,12 +209,24 @@ export function NMIPaymentForm({
       onError('Payment system not ready. Please try again.');
       return;
     }
+
+    if (!areFieldsReady) {
+      onError('Payment fields are still loading. Please wait a moment and try again.');
+      return;
+    }
     
     setIsProcessing(true);
     setValidationErrors([]);
     
-    // Trigger Collect.js tokenization
-    window.CollectJS.startPaymentRequest();
+    try {
+      // Trigger Collect.js tokenization
+      console.log('🔐 Starting payment tokenization...');
+      window.CollectJS.startPaymentRequest();
+    } catch (error) {
+      console.error('Error starting payment request:', error);
+      setIsProcessing(false);
+      onError('Failed to process payment. Please refresh and try again.');
+    }
   };
   
   const handleInputChange = (field: keyof PaymentFormData, value: string) => {
@@ -347,7 +369,7 @@ export function NMIPaymentForm({
           <Button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700"
-            disabled={!isCollectJSLoaded || isProcessing || loading || disabled}
+            disabled={!isCollectJSLoaded || !areFieldsReady || isProcessing || loading || disabled}
             data-testid="button-submit-payment"
           >
             {isProcessing || loading ? (
@@ -363,9 +385,9 @@ export function NMIPaymentForm({
             )}
           </Button>
           
-          {!isCollectJSLoaded && (
+          {(!isCollectJSLoaded || !areFieldsReady) && (
             <div className="text-center text-sm text-gray-500">
-              Loading secure payment form...
+              {!isCollectJSLoaded ? 'Loading secure payment form...' : 'Initializing payment fields...'}
             </div>
           )}
         </form>
