@@ -92,6 +92,7 @@ export interface IStorage {
   createSynupLocation(location: InsertSynupLocation): Promise<SynupLocation>;
   getSynupLocationsByClient(clientId: number): Promise<SynupLocation[]>;
   getSynupLocation(id: number): Promise<SynupLocation | undefined>;
+  getSynupLocationBySynupId(synupLocationId: string): Promise<SynupLocation | undefined>;
   updateSynupLocation(id: number, data: Partial<SynupLocation>): Promise<SynupLocation>;
   
   createSynupListing(listing: InsertSynupListing): Promise<SynupListing>;
@@ -99,6 +100,7 @@ export interface IStorage {
   updateSynupListing(id: number, data: Partial<SynupListing>): Promise<SynupListing>;
   
   createSynupReview(review: InsertSynupReview): Promise<SynupReview>;
+  getSynupReview(id: number): Promise<SynupReview | undefined>;
   getSynupReviewsByLocation(locationId: number): Promise<SynupReview[]>;
   updateSynupReview(id: number, data: Partial<SynupReview>): Promise<SynupReview>;
 }
@@ -402,6 +404,14 @@ export class DatabaseStorage implements IStorage {
     return location;
   }
 
+  async getSynupLocationBySynupId(synupLocationId: string): Promise<SynupLocation | undefined> {
+    const [location] = await db
+      .select()
+      .from(synupLocations)
+      .where(eq(synupLocations.synupLocationId, synupLocationId));
+    return location;
+  }
+
   async updateSynupLocation(id: number, data: Partial<SynupLocation>): Promise<SynupLocation> {
     const [location] = await db
       .update(synupLocations)
@@ -443,6 +453,14 @@ export class DatabaseStorage implements IStorage {
       .insert(synupReviews)
       .values(reviewData)
       .returning();
+    return review;
+  }
+
+  async getSynupReview(id: number): Promise<SynupReview | undefined> {
+    const [review] = await db
+      .select()
+      .from(synupReviews)
+      .where(eq(synupReviews.id, id));
     return review;
   }
 
