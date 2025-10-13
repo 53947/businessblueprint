@@ -26,6 +26,7 @@ import { PricingEngine } from "./services/pricing";
 import { NMIService } from "./services/nmi";
 import { productRecommendationService } from "./services/productRecommendations";
 import { SynupService } from "./services/synup";
+import { reviewAI } from "./services/reviewAI";
 import { dashboardAccess } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 import { db } from "./db";
@@ -1600,6 +1601,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let finalResponse = response;
       let isAIGenerated = useAI || false;
 
+      // Generate AI response if requested
+      if (useAI && !response) {
+        // Get location details for context
+        const location = await storage.getSynupLocation(review.locationId);
+        const client = location ? await storage.getClient(location.clientId) : null;
+
+        // Generate AI-powered response
+        try {
+          if (!review.reviewText) {
+            return res.status(400).json({
+              success: false,
+              message: "Review text is required to generate AI response"
+            });
+          }
+
+          finalResponse = await reviewAI.generateReviewResponse({
+            reviewText: review.reviewText,
+            rating: review.rating,
+            platform: review.platform,
+            businessName: client?.companyName || location?.name || 'our business',
+            businessCategory: location?.category || undefined,
+            reviewerName: review.reviewerName || undefined
+          }, {
+            tone: review.rating >= 4 ? 'enthusiastic' : review.rating <= 2 ? 'empathetic' : 'professional',
+            maxLength: 200,
+            includeCallToAction: true
+          });
+          
+          console.log(`✅ AI-generated response for review ${reviewId}: ${finalResponse.substring(0, 50)}...`);
+        } catch (error) {
+          console.error(`Error generating AI response for review ${reviewId}:`, error);
+          return res.status(500).json({
+            success: false,
+            message: "Failed to generate AI response. Please try again or provide a manual response."
+          });
+        }
+      }
+
       // Submit response to Synup (with or without AI)
       await synupService.respondToReview(review.synupReviewId!, finalResponse || '', isAIGenerated);
 
@@ -1628,6 +1667,155 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         message: error instanceof Error ? error.message : "Failed to respond to review" 
+      });
+    }
+  });
+
+  // Get review analytics for a location
+  app.get("/api/synup/locations/:locationId/analytics", requireAuth, async (req: AuthenticatedRequest, res) => {
+    try {
+      const locationId = parseInt(req.params.locationId);
+      
+      if (isNaN(locationId)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid location ID"
+        });
+      }
+
+      // Verify location belongs to authenticated client
+      const location = await storage.getSynupLocation(locationId);
+      if (!location || location.clientId !== req.clientId!) {
+        return res.status(403).json({ 
+          success: false, 
+          message: "Access denied" 
+        });
+      }
+
+      // Get all reviews for this location
+      const reviews = await storage.getSynupReviewsByLocation(locationId);
+
+      // Calculate analytics
+      const totalReviews = reviews.length;
+      const averageRating = reviews.length > 0 
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length 
+        : 0;
+
+      // Sentiment breakdown
+      const positiveCount = reviews.filter(r => r.sentiment === 'positive' || r.rating >= 4).length;
+      const negativeCount = reviews.filter(r => r.sentiment === 'negative' || r.rating <= 2).length;
+      const neutralCount = reviews.filter(r => r.sentiment === 'neutral' || (r.rating === 3)).length;
+
+      // Platform breakdown
+      const platformBreakdown: Record<string, number> = {};
+      reviews.forEach(r => {
+        platformBreakdown[r.platform] = (platformBreakdown[r.platform] || 0) + 1;
+      });
+
+      // Response metrics
+      const respondedCount = reviews.filter(r => r.status === 'responded').length;
+      const responseRate = totalReviews > 0 ? (respondedCount / totalReviews) * 100 : 0;
+      const aiResponseCount = reviews.filter(r => r.isAIGenerated).length;
+
+      // Recent reviews (last 30 days)
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const recentReviews = reviews.filter(r => new Date(r.reviewDate) >= thirtyDaysAgo);
+
+      res.json({
+        success: true,
+        analytics: {
+          totalReviews,
+          averageRating: Math.round(averageRating * 10) / 10,
+          sentiment: {
+            positive: positiveCount,
+            negative: negativeCount,
+            neutral: neutralCount
+          },
+          platformBreakdown,
+          responseMetrics: {
+            totalResponded: respondedCount,
+            responseRate: Math.round(responseRate * 10) / 10,
+            aiGeneratedResponses: aiResponseCount
+          },
+          recentActivity: {
+            last30Days: recentReviews.length,
+            averageRatingLast30Days: recentReviews.length > 0 
+              ? Math.round((recentReviews.reduce((sum, r) => sum + r.rating, 0) / recentReviews.length) * 10) / 10
+              : 0
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching review analytics:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch review analytics" 
+      });
+    }
+  });
+
+  // Get review trends over time
+  app.get("/api/synup/locations/:locationId/review-trends", requireAuth, async (req: AuthenticatedRequest, res) => {
+    try {
+      const locationId = parseInt(req.params.locationId);
+      const { period = '30' } = req.query; // days
+      
+      if (isNaN(locationId)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid location ID"
+        });
+      }
+
+      // Verify location belongs to authenticated client
+      const location = await storage.getSynupLocation(locationId);
+      if (!location || location.clientId !== req.clientId!) {
+        return res.status(403).json({ 
+          success: false, 
+          message: "Access denied" 
+        });
+      }
+
+      const reviews = await storage.getSynupReviewsByLocation(locationId);
+      const days = parseInt(period as string);
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - days);
+
+      // Filter reviews within period
+      const periodReviews = reviews.filter(r => new Date(r.reviewDate) >= startDate);
+
+      // Group by date
+      const trends: Record<string, { count: number; averageRating: number; ratings: number[] }> = {};
+      
+      periodReviews.forEach(review => {
+        const date = new Date(review.reviewDate).toISOString().split('T')[0];
+        if (!trends[date]) {
+          trends[date] = { count: 0, averageRating: 0, ratings: [] };
+        }
+        trends[date].count++;
+        trends[date].ratings.push(review.rating);
+      });
+
+      // Calculate averages
+      Object.keys(trends).forEach(date => {
+        const ratings = trends[date].ratings;
+        trends[date].averageRating = ratings.reduce((sum, r) => sum + r, 0) / ratings.length;
+      });
+
+      res.json({
+        success: true,
+        trends: Object.entries(trends).map(([date, data]) => ({
+          date,
+          count: data.count,
+          averageRating: Math.round(data.averageRating * 10) / 10
+        })).sort((a, b) => a.date.localeCompare(b.date))
+      });
+    } catch (error) {
+      console.error("Error fetching review trends:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch review trends" 
       });
     }
   });
