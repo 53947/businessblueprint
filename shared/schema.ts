@@ -137,7 +137,7 @@ export const clientAssessments = pgTable("client_assessments", {
 // Synup Locations - Business locations managed through Synup
 export const synupLocations = pgTable("synup_locations", {
   id: serial("id").primaryKey(),
-  clientId: integer("client_id").references(() => clients.id),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
   synupLocationId: text("synup_location_id").unique().notNull(), // Synup's location ID
   name: text("name").notNull(),
   address: text("address").notNull(),
@@ -157,7 +157,7 @@ export const synupLocations = pgTable("synup_locations", {
 // Synup Listings - Directory listing status across 200+ platforms
 export const synupListings = pgTable("synup_listings", {
   id: serial("id").primaryKey(),
-  locationId: integer("location_id").references(() => synupLocations.id),
+  locationId: integer("location_id").references(() => synupLocations.id).notNull(),
   synupListingId: text("synup_listing_id").unique(),
   platform: text("platform").notNull(), // Google, Yelp, Facebook, Bing, etc.
   status: text("status").notNull(), // published, pending, claimed, unclaimed, error
@@ -173,7 +173,7 @@ export const synupListings = pgTable("synup_listings", {
 // Synup Reviews - Review management across 80+ platforms
 export const synupReviews = pgTable("synup_reviews", {
   id: serial("id").primaryKey(),
-  locationId: integer("location_id").references(() => synupLocations.id),
+  locationId: integer("location_id").references(() => synupLocations.id).notNull(),
   synupReviewId: text("synup_review_id").unique(),
   platform: text("platform").notNull(), // Google, Yelp, Facebook, TripAdvisor, etc.
   rating: integer("rating").notNull(), // 1-5 stars
