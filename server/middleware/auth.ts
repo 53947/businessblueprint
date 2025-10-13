@@ -3,7 +3,7 @@ import { jwtService } from "../services/jwt";
 
 export interface AuthenticatedRequest extends Request {
   clientId?: number;
-  vendastaId?: string;
+  externalId?: string;
   permissions?: string[];
 }
 
@@ -42,7 +42,7 @@ export async function requireAuth(
 
     // Attach client info to request
     req.clientId = payload.clientId;
-    req.vendastaId = payload.vendastaId;
+    req.externalId = payload.externalId;
     req.permissions = payload.permissions;
 
     next();

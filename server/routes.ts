@@ -17,14 +17,13 @@ import {
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
 import { EmailService } from "./services/email";
-import { vendastaService } from "./services/vendasta";
 import { inboxEmailService } from "./services/inbox-email";
 import { aiCoachService } from "./services/aiCoach";
 import { PricingEngine } from "./services/pricing";
 import { NMIService } from "./services/nmi";
 import { productRecommendationService } from "./services/productRecommendations";
 import { dashboardAccess } from "@shared/schema";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { db } from "./db";
 import { z } from "zod";
 import { requireAuth, type AuthenticatedRequest } from "./middleware/auth";
@@ -42,24 +41,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create assessment with pending status
       const assessment = await storage.createAssessment(validatedData);
 
-      // HYBRID APPROACH: Also create Vendasta customer record (non-blocking)
-      try {
-        console.log('🔄 Starting Vendasta integration for assessment...');
-        const vendastaResult = await vendastaService.createCustomerFromAssessment(assessment);
-        
-        if (vendastaResult.success && vendastaResult.clientId) {
-          // Link the assessment to the client record
-          await vendastaService.linkAssessmentToClient(vendastaResult.clientId, assessment.id);
-          console.log(`✅ Assessment ${assessment.id} linked to Vendasta client ${vendastaResult.clientId}`);
-        } else {
-          console.log('⚠️ Vendasta integration failed, but continuing with Google assessment');
-        }
-      } catch (vendastaError) {
-        // Log error but don't fail the main process
-        console.error('⚠️ Vendasta integration error (non-blocking):', vendastaError);
-      }
-
-      // Start background analysis (original Google assessment flow)
+      // Start background analysis
       processAssessmentAsync(assessment.id, googleService, aiService, emailService, storage);
 
       res.json({ 
@@ -134,26 +116,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // List available Vendasta customers for debugging
-  app.get("/api/vendasta/customers", async (req, res) => {
-    try {
-      const customers = await vendastaService.listAvailableCustomers();
-      res.json({
-        success: true,
-        customers: customers,
-        totalFound: customers.length,
-        message: "These are the customer accounts accessible through your API credentials"
-      });
-    } catch (error) {
-      console.error("Error listing Vendasta customers:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to list customers",
-        error: (error as Error).message
-      });
-    }
-  });
-
   // Get client dashboard data
   app.get("/api/clients/:id/dashboard", async (req, res) => {
     try {
@@ -220,117 +182,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Sync client data from Vendasta
-  app.post("/api/clients/sync-vendasta", async (req, res) => {
-    try {
-      const { customerIdentifier } = req.body;
-      
-      if (!customerIdentifier || !customerIdentifier.startsWith("AG-")) {
-        return res.status(400).json({ 
-          message: "Invalid Account Group ID format. Must start with AG-" 
-        });
-      }
-
-      // Check if client already exists
-      let client = await storage.getClientByVendastaId(customerIdentifier);
-      
-      if (!client) {
-        // Try to get customer data from Vendasta
-        try {
-          const customers = await vendastaService.listAvailableCustomers();
-          const vendastaCustomer = customers.find(c => c.accountGroupId === customerIdentifier);
-          
-          if (vendastaCustomer) {
-            // Create new client from Vendasta data
-            const clientData = {
-              vendastaId: customerIdentifier,
-              companyName: vendastaCustomer.companyName,
-              email: vendastaCustomer.primaryContact?.email || 'unknown@example.com',
-              phone: vendastaCustomer.primaryContact?.phone || '',
-              address: vendastaCustomer.address || '',
-              website: vendastaCustomer.website || '',
-              businessCategory: vendastaCustomer.businessCategory || 'General',
-              subscriptionTier: 'basic' as const,
-              enabledFeatures: 'listings,reviews,social',
-            };
-            
-            client = await storage.createClient(clientData);
-          } else {
-            // Create a basic client even if we can't find detailed Vendasta data
-            const clientData = {
-              vendastaId: customerIdentifier,
-              companyName: 'Cloud Pleaser', // Default name for the test case
-              email: 'hello@businessblueprint.io',
-              phone: '(555) 123-4567',
-              address: '123 Business St, City, State',
-              website: 'https://cloudpleaser.io',
-              businessCategory: 'Digital Marketing',
-              subscriptionTier: 'professional' as const,
-              enabledFeatures: 'listings,reviews,social,campaigns',
-            };
-            
-            client = await storage.createClient(clientData);
-          }
-        } catch (vendastaError) {
-          console.error("Error fetching from Vendasta:", vendastaError);
-          
-          // Create a basic client for testing purposes
-          const clientData = {
-            vendastaId: customerIdentifier,
-            companyName: 'Cloud Pleaser',
-            email: 'hello@businessblueprint.io', 
-            phone: '(555) 123-4567',
-            address: '123 Business St, City, State',
-            website: 'https://cloudpleaser.io',
-            businessCategory: 'Digital Marketing',
-            subscriptionTier: 'professional' as const,
-            enabledFeatures: 'listings,reviews,social,campaigns',
-          };
-          
-          client = await storage.createClient(clientData);
-        }
-      }
-
-      res.json({ 
-        success: true, 
-        client: client,
-        message: "Client synced successfully" 
-      });
-    } catch (error) {
-      console.error("Error syncing client from Vendasta:", error);
-      res.status(500).json({ 
-        success: false,
-        message: "Failed to sync client data",
-        error: (error as Error).message
-      });
-    }
-  });
-
-  // Vendasta webhook endpoint
-  app.post("/api/webhooks/vendasta", async (req, res) => {
-    try {
-      const signature = req.headers['x-vendasta-hmac'] as string;
-      const payload = JSON.stringify(req.body);
-      
-      // Verify webhook signature
-      if (!vendastaService.verifyWebhookSignature(payload, signature)) {
-        return res.status(401).json({ message: "Invalid signature" });
-      }
-
-      // Process webhook
-      const success = await vendastaService.handleWebhook(req.body);
-      
-      if (success) {
-        res.json({ success: true, message: "Webhook processed successfully" });
-      } else {
-        res.status(500).json({ message: "Failed to process webhook" });
-      }
-    } catch (error) {
-      console.error("Error processing Vendasta webhook:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-
   // Client data endpoints for Campaign Pro
   app.get("/api/clients/:id", async (req, res) => {
     try {
@@ -352,11 +203,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/clients/:id/campaign-data", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
-      const campaignData = await vendastaService.getClientCampaignData(clientId);
       
-      if (!campaignData) {
+      // Get client data directly from storage
+      const client = await storage.getClient(clientId);
+      if (!client) {
         return res.status(404).json({ message: "Client not found" });
       }
+      
+      // Get campaigns and messages
+      const campaigns = await storage.getCampaignsByClient(clientId);
+      const messages = await storage.getMessagesByClient(clientId);
+      
+      const campaignData = {
+        client,
+        campaigns,
+        messages,
+        stats: {
+          totalCampaigns: campaigns.length,
+          activeCampaigns: campaigns.filter(c => c.status === 'active').length,
+          totalMessages: messages.length,
+          unreadMessages: messages.filter(m => !m.isRead).length
+        }
+      };
       
       res.json(campaignData);
     } catch (error) {
@@ -405,61 +273,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Sync client from Vendasta
-  app.post("/api/clients/sync-vendasta", async (req, res) => {
-    try {
-      const { customerIdentifier } = req.body;
-      
-      if (!customerIdentifier) {
-        return res.status(400).json({ 
-          message: "Customer identifier is required",
-          example: "Try using your actual Vendasta customer ID"
-        });
-      }
-
-      console.log(`🔄 Attempting to sync Vendasta customer: ${customerIdentifier}`);
-
-      // Fetch client data from Vendasta
-      const vendastaClient = await vendastaService.fetchClientData(customerIdentifier);
-      
-      if (!vendastaClient) {
-        return res.status(404).json({ 
-          message: "Customer not found in Vendasta",
-          customerIdentifier,
-          details: "This customer ID doesn't exist in your Vendasta account",
-          suggestion: "Check your Vendasta Business Center for the correct customer identifier",
-          connectionStatus: "API connection is working - customer ID issue"
-        });
-      }
-
-      // Sync to our database
-      const clientId = await vendastaService.syncClientData(vendastaClient);
-      
-      if (clientId) {
-        const client = await storage.getClient(clientId);
-        console.log(`✅ Successfully synced customer: ${customerIdentifier}`);
-        res.json({
-          success: true,
-          message: "Client synced successfully",
-          client
-        });
-      } else {
-        res.status(500).json({ 
-          message: "Failed to sync client data to database",
-          vendastaData: "Retrieved successfully",
-          databaseSync: "Failed"
-        });
-      }
-    } catch (error) {
-      console.error("Error syncing Vendasta client:", error);
-      res.status(500).json({ 
-        message: "Failed to sync client",
-        error: error instanceof Error ? error.message : String(error),
-        suggestion: "Check server logs for detailed error information"
-      });
-    }
-  });
-
   // Dashboard access endpoint with JWT verification
   app.get("/api/dashboard/:token", async (req, res) => {
     try {
@@ -488,9 +301,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ 
         message: "Dashboard access verified", 
         clientId: payload.clientId,
-        vendastaId: payload.vendastaId,
         permissions: payload.permissions,
-        redirectUrl: dashboardRecord.vendastaDashboardUrl || `https://business-app.vendasta.com/dashboard?token=${token}`
+        redirectUrl: `/portal?token=${token}`
       });
     } catch (error) {
       console.error("Error accessing dashboard:", error);
@@ -521,18 +333,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/clients/:id/dashboard-token", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
-      const { vendastaId, dashboardUrl } = req.body;
+      const { jwtService } = await import('./services/jwt');
       
       const client = await storage.getClient(clientId);
       if (!client) {
         return res.status(404).json({ message: "Client not found" });
       }
       
-      const token = await vendastaService.createDashboardAccess(
-        clientId, 
-        dashboardUrl || `https://business-app.vendasta.com/dashboard?client=${clientId}`,
-        vendastaId || client.vendastaId || undefined
-      );
+      const token = await jwtService.createDashboardToken(clientId);
       
       if (token) {
         res.json({ 
@@ -594,7 +402,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Client not found" });
       }
 
-      // Real data will come from Vendasta APIs
+      // Real data will come from Synup APIs
       const listings = {
         total: 45,
         verified: 38,
@@ -611,59 +419,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Client listings error:", error);
       res.status(500).json({ error: "Failed to load listings data" });
-    }
-  });
-
-  // Vendasta Integration Test Endpoint
-  app.get("/api/vendasta/test", async (req, res) => {
-    try {
-      const testResults = {
-        apiConnection: false,
-        webhookSetup: true, // Webhook endpoint is ready
-        databaseSchema: true, // All tables created
-        services: {
-          vendastaService: !!vendastaService,
-          clientSync: true,
-          campaignIntegration: true
-        }
-      };
-
-      // Test API connection if credentials are available
-      try {
-        // Check if all required credentials are present
-        const hasApiKey = !!process.env.VENDASTA_API_KEY;
-        const hasClientId = !!process.env.VENDASTA_CLIENT_ID;
-        const hasClientSecret = !!process.env.VENDASTA_CLIENT_SECRET;
-        
-        if (hasApiKey && hasClientId) {
-          const testClient = await vendastaService.fetchClientData("test");
-          // Consider auth error as connection success since endpoint exists
-          testResults.apiConnection = testClient !== null;
-        } else {
-          testResults.apiConnection = false;
-        }
-      } catch (error) {
-        console.error('API test error:', error);
-        testResults.apiConnection = false;
-      }
-
-      res.json({
-        status: "Vendasta Integration Status",
-        ready: testResults.apiConnection && testResults.databaseSchema,
-        details: testResults,
-        nextSteps: [
-          testResults.apiConnection ? "✅ Vendasta API Connection Established" : "🔐 API Endpoint Found - Authentication Configuration Needed",
-          "✅ Database Schema Ready",
-          "✅ Webhook Endpoints Ready", 
-          "✅ Client Sync Service Ready",
-          "✅ Campaign Pro Integration Ready",
-          "✅ RS256 JWT Security System",
-          "✅ Correct API Base URL: business-center-api.vendasta.com"
-        ]
-      });
-    } catch (error) {
-      console.error("Vendasta test error:", error);
-      res.status(500).json({ error: "Failed to test Vendasta integration" });
     }
   });
 

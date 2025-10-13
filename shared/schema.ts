@@ -69,10 +69,10 @@ export const recommendations = pgTable("recommendations", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// Client data from Vendasta CRM
+// Client data
 export const clients = pgTable("clients", {
   id: serial("id").primaryKey(),
-  vendastaId: text("vendasta_id").unique(), // External reference
+  externalId: text("external_id").unique(), // External reference (Synup, etc.)
   companyName: text("company_name").notNull(),
   email: text("email").notNull(),
   phone: text("phone"),
@@ -120,7 +120,7 @@ export const dashboardAccess = pgTable("dashboard_access", {
   id: serial("id").primaryKey(),
   clientId: integer("client_id").references(() => clients.id),
   accessToken: text("access_token").unique(),
-  vendastaDashboardUrl: text("vendasta_dashboard_url"),
+  dashboardUrl: text("dashboard_url"),
   lastAccessed: timestamp("last_accessed"),
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
@@ -156,7 +156,7 @@ export const insertRecommendationSchema = createInsertSchema(recommendations).pi
 });
 
 export const insertClientSchema = createInsertSchema(clients).pick({
-  vendastaId: true,
+  externalId: true,
   companyName: true,
   email: true,
   phone: true,
