@@ -1,5 +1,10 @@
 # businessblueprint.io - Digital Intelligence Platform
 
+## Recently Completed
+- **Mobile Navigation Menu Fix (Oct 2025)**: Complete rebuild of mobile menu with full parity to desktop - includes all 6 apps (businessblueprint.io, webhosted.io, airswiped.com, /send, /inbox, /livechat), organized sections for Apps, Pathways, Commverse, and Resources, plus proper Marketplace integration
+- **NMI Payment Form Enhancements (Oct 2025)**: Added field readiness tracking, timeout handling, improved error messaging, and proper CollectJS initialization checks to prevent payment tokenization errors
+- **Marketplace Implementation (Oct 2025)**: Built à la carte marketplace with shopping cart, localStorage persistence, airswiped.com branded checkout, server-side order validation, and proper error handling
+
 ## Overview
 businessblueprint.io is an AI-powered digital intelligence platform designed to help local businesses enhance their online presence, attract customers, and grow. It offers AI-driven analysis of online presence, generates personalized Digital Blueprints, and provides both Do It Yourself (DIY) and Managed Service Provider (MSP) pathways for business growth. The platform aims for mass market automation, leveraging Google Business Intelligence to minimize manual intervention and maximize results. It functions as a "Digital Intelligence Incubator," nurturing businesses from digital obscurity to digital maturity through systematic, data-driven growth programs.
 
