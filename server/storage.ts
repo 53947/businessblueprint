@@ -11,6 +11,7 @@ import {
   synupLocations,
   synupListings,
   synupReviews,
+  reviewNotificationPreferences,
   type Assessment,
   type InsertAssessment,
   type Recommendation,
@@ -31,6 +32,8 @@ import {
   type InsertSynupListing,
   type SynupReview,
   type InsertSynupReview,
+  type ReviewNotificationPreferences,
+  type InsertReviewNotificationPreferences,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -103,6 +106,11 @@ export interface IStorage {
   getSynupReview(id: number): Promise<SynupReview | undefined>;
   getSynupReviewsByLocation(locationId: number): Promise<SynupReview[]>;
   updateSynupReview(id: number, data: Partial<SynupReview>): Promise<SynupReview>;
+  
+  // Review notification preferences
+  createReviewNotificationPreferences(preferences: InsertReviewNotificationPreferences): Promise<ReviewNotificationPreferences>;
+  getReviewNotificationPreferences(clientId: number): Promise<ReviewNotificationPreferences | undefined>;
+  updateReviewNotificationPreferences(clientId: number, data: Partial<ReviewNotificationPreferences>): Promise<ReviewNotificationPreferences>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -479,6 +487,32 @@ export class DatabaseStorage implements IStorage {
       .where(eq(synupReviews.id, id))
       .returning();
     return review;
+  }
+
+  // Review notification preferences operations
+  async createReviewNotificationPreferences(preferencesData: InsertReviewNotificationPreferences): Promise<ReviewNotificationPreferences> {
+    const [preferences] = await db
+      .insert(reviewNotificationPreferences)
+      .values(preferencesData)
+      .returning();
+    return preferences;
+  }
+
+  async getReviewNotificationPreferences(clientId: number): Promise<ReviewNotificationPreferences | undefined> {
+    const [preferences] = await db
+      .select()
+      .from(reviewNotificationPreferences)
+      .where(eq(reviewNotificationPreferences.clientId, clientId));
+    return preferences;
+  }
+
+  async updateReviewNotificationPreferences(clientId: number, data: Partial<ReviewNotificationPreferences>): Promise<ReviewNotificationPreferences> {
+    const [preferences] = await db
+      .update(reviewNotificationPreferences)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(reviewNotificationPreferences.clientId, clientId))
+      .returning();
+    return preferences;
   }
 }
 

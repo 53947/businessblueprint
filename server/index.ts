@@ -43,8 +43,11 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  // Setup WebSocket server
-  setupWebSocket(server);
+  // Setup WebSocket server immediately after routes
+  const io = setupWebSocket(server);
+  
+  // Export io for use in routes (via global) - available before server starts listening
+  (global as any).io = io;
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
