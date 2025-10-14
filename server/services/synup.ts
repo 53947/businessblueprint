@@ -60,7 +60,7 @@ interface SynupApiResponse<T> {
 
 export class SynupService {
   private apiKey: string;
-  private baseUrl = 'https://api.synup.com/v1'; // Base API URL
+  private baseUrl = 'https://api.synup.com/api/v4'; // Actual Synup API v4 base URL
   
   constructor() {
     this.apiKey = process.env.SYNUP_API_KEY || '';
@@ -68,7 +68,7 @@ export class SynupService {
     if (!this.apiKey) {
       console.warn('⚠️ SYNUP_API_KEY not configured - Synup integration will fail');
     } else {
-      console.log('✅ Synup API Service initialized');
+      console.log('✅ Synup API Service initialized with API v4');
     }
   }
 
@@ -79,6 +79,20 @@ export class SynupService {
     if (!this.apiKey) {
       throw new Error('SYNUP_API_KEY environment variable is required');
     }
+  }
+
+  /**
+   * Encode location ID to Base64 as required by Synup API
+   */
+  private encodeLocationId(locationId: string): string {
+    return Buffer.from(locationId).toString('base64');
+  }
+
+  /**
+   * Decode Base64 location ID from Synup API
+   */
+  private decodeLocationId(encodedId: string): string {
+    return Buffer.from(encodedId, 'base64').toString('utf-8');
   }
 
   /**
@@ -125,11 +139,16 @@ export class SynupService {
 
   /**
    * Get all locations for the account
+   * Endpoint: GET /locations
+   * Note: Returns locations with normal (non-encoded) IDs
    */
   async getAllLocations(): Promise<SynupLocation[]> {
     try {
-      const response = await this.makeRequest<{ locations: SynupLocation[] }>('/locations');
-      return response.locations || [];
+      const response = await this.makeRequest<any>('/locations');
+      const locations = response.data?.locations || response.locations || [];
+      
+      // Return locations as-is, Synup provides normal IDs in list responses
+      return locations;
     } catch (error) {
       console.error('Error fetching Synup locations:', error);
       return [];
@@ -138,11 +157,21 @@ export class SynupService {
 
   /**
    * Get a specific location by ID
+   * Endpoint: GET /locations/{locationId}
+   * @param locationId - Raw location ID (will be Base64 encoded for API call)
    */
   async getLocation(locationId: string): Promise<SynupLocation | null> {
     try {
-      const response = await this.makeRequest<{ location: SynupLocation }>(`/locations/${locationId}`);
-      return response.location || null;
+      const encodedLocationId = this.encodeLocationId(locationId);
+      const response = await this.makeRequest<any>(`/locations/${encodedLocationId}`);
+      const location = response.data?.location || response.location || null;
+      
+      if (location) {
+        // Ensure we return the raw location ID, not the Base64 encoded one
+        location.id = locationId;
+      }
+      
+      return location;
     } catch (error) {
       console.error(`Error fetching Synup location ${locationId}:`, error);
       return null;
@@ -179,13 +208,20 @@ export class SynupService {
 
   /**
    * Get all listings for a location across all platforms
+   * Endpoint: GET /locations/{locationId}/listings
    */
   async getLocationListings(locationId: string): Promise<SynupListing[]> {
     try {
-      const response = await this.makeRequest<{ listings: SynupListing[] }>(
-        `/locations/${locationId}/listings`
+      const encodedLocationId = this.encodeLocationId(locationId);
+      const response = await this.makeRequest<any>(
+        `/locations/${encodedLocationId}/listings`
       );
-      return response.listings || [];
+      const listings = response.data?.listings || response.listings || [];
+      
+      return listings.map((listing: any) => ({
+        ...listing,
+        locationId: locationId // Use original location ID
+      }));
     } catch (error) {
       console.error(`Error fetching listings for location ${locationId}:`, error);
       return [];
@@ -194,10 +230,12 @@ export class SynupService {
 
   /**
    * Sync/update a location's listings across all platforms
+   * Endpoint: POST /locations/{locationId}/sync
    */
   async syncLocationListings(locationId: string): Promise<boolean> {
     try {
-      await this.makeRequest(`/locations/${locationId}/sync`, 'POST');
+      const encodedLocationId = this.encodeLocationId(locationId);
+      await this.makeRequest(`/locations/${encodedLocationId}/sync`, 'POST');
       return true;
     } catch (error) {
       console.error(`Error syncing listings for location ${locationId}:`, error);
@@ -206,22 +244,51 @@ export class SynupService {
   }
 
   /**
-   * Get all reviews for a location
+   * Get all reviews (interactions) for a location
+   * Note: Synup API v4 uses "interactions" terminology
    */
   async getLocationReviews(locationId: string, options?: {
     platform?: string;
     rating?: number;
     limit?: number;
+    startDate?: string;
+    endDate?: string;
   }): Promise<SynupReview[]> {
     try {
+      const encodedLocationId = this.encodeLocationId(locationId);
       const queryParams = new URLSearchParams();
-      if (options?.platform) queryParams.append('platform', options.platform);
-      if (options?.rating) queryParams.append('rating', options.rating.toString());
-      if (options?.limit) queryParams.append('limit', options.limit.toString());
       
-      const endpoint = `/locations/${locationId}/reviews${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
-      const response = await this.makeRequest<{ reviews: SynupReview[] }>(endpoint);
-      return response.reviews || [];
+      // Synup API uses siteUrls for platform filtering
+      if (options?.platform) queryParams.append('siteUrls', options.platform);
+      
+      // Rating filters - Synup supports array of ratings
+      if (options?.rating) queryParams.append('ratingFilters', options.rating.toString());
+      
+      // Date range filters (YYYY-MM-DD format)
+      if (options?.startDate) queryParams.append('startDate', options.startDate);
+      if (options?.endDate) queryParams.append('endDate', options.endDate);
+      
+      // Category filter - REVIEW for reviews
+      queryParams.append('category', 'REVIEW');
+      
+      const endpoint = `/locations/${encodedLocationId}/reviews${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+      const response = await this.makeRequest<any>(endpoint);
+      
+      // Map Synup interaction response to our review format
+      const interactions = response.data?.interactions || response.interactions || [];
+      return interactions.map((interaction: any) => ({
+        id: interaction.id || interaction.interactionId,
+        locationId: locationId,
+        platform: interaction.siteName || interaction.platform || 'unknown',
+        rating: interaction.rating || 0,
+        reviewText: interaction.text || interaction.reviewText || '',
+        reviewerName: interaction.reviewerName || interaction.author || 'Anonymous',
+        reviewDate: interaction.createdAt || interaction.reviewDate || new Date().toISOString(),
+        response: interaction.response?.text || interaction.response,
+        responseDate: interaction.response?.createdAt || interaction.responseDate,
+        sentiment: this.calculateSentiment(interaction.rating),
+        status: interaction.response ? 'responded' : 'new',
+      }));
     } catch (error) {
       console.error(`Error fetching reviews for location ${locationId}:`, error);
       return [];
@@ -229,24 +296,37 @@ export class SynupService {
   }
 
   /**
-   * Respond to a review using Synup's AI-powered response system
+   * Calculate sentiment based on rating
+   */
+  private calculateSentiment(rating: number): 'positive' | 'negative' | 'neutral' {
+    if (rating >= 4) return 'positive';
+    if (rating <= 2) return 'negative';
+    return 'neutral';
+  }
+
+  /**
+   * Respond to an interaction (review) using Synup API
+   * Endpoint: POST /interactions/{interactionId}/response
    */
   async respondToReview(reviewId: string, responseText: string, useAI: boolean = false): Promise<boolean> {
     try {
-      const payload = useAI 
-        ? { aiGenerated: true }
-        : { response: responseText };
+      const payload = {
+        response: responseText,
+        // Synup API may support AI flag - include for future compatibility
+        ...(useAI && { aiGenerated: true })
+      };
         
-      await this.makeRequest(`/reviews/${reviewId}/respond`, 'POST', payload);
+      await this.makeRequest(`/interactions/${reviewId}/response`, 'POST', payload);
       return true;
     } catch (error) {
-      console.error(`Error responding to review ${reviewId}:`, error);
+      console.error(`Error responding to interaction ${reviewId}:`, error);
       return false;
     }
   }
 
   /**
-   * Get review analytics and sentiment analysis
+   * Get interaction (review) analytics
+   * Endpoint: GET /locations/{locationId}/interactions/analytics
    */
   async getReviewAnalytics(locationId: string): Promise<{
     averageRating: number;
@@ -257,14 +337,16 @@ export class SynupService {
     platformBreakdown: Record<string, number>;
   }> {
     try {
-      const response = await this.makeRequest<any>(`/locations/${locationId}/reviews/analytics`);
+      const encodedLocationId = this.encodeLocationId(locationId);
+      const response = await this.makeRequest<any>(`/locations/${encodedLocationId}/interactions/analytics`);
+      
       return {
-        averageRating: response.averageRating || 0,
-        totalReviews: response.totalReviews || 0,
-        positiveCount: response.sentiment?.positive || 0,
-        negativeCount: response.sentiment?.negative || 0,
-        neutralCount: response.sentiment?.neutral || 0,
-        platformBreakdown: response.platformBreakdown || {},
+        averageRating: response.data?.averageRating || response.averageRating || 0,
+        totalReviews: response.data?.totalInteractions || response.totalReviews || 0,
+        positiveCount: response.data?.sentiment?.positive || response.sentiment?.positive || 0,
+        negativeCount: response.data?.sentiment?.negative || response.sentiment?.negative || 0,
+        neutralCount: response.data?.sentiment?.neutral || response.sentiment?.neutral || 0,
+        platformBreakdown: response.data?.platformBreakdown || response.platformBreakdown || {},
       };
     } catch (error) {
       console.error(`Error fetching review analytics for location ${locationId}:`, error);
@@ -312,6 +394,7 @@ export class SynupService {
 
   /**
    * Bulk update location information across all listings
+   * Endpoint: PUT /locations/{locationId}
    */
   async bulkUpdateLocation(locationId: string, updates: {
     phone?: string;
@@ -321,7 +404,8 @@ export class SynupService {
     description?: string;
   }): Promise<boolean> {
     try {
-      await this.makeRequest(`/locations/${locationId}`, 'PUT', updates);
+      const encodedLocationId = this.encodeLocationId(locationId);
+      await this.makeRequest(`/locations/${encodedLocationId}`, 'PUT', updates);
       return true;
     } catch (error) {
       console.error(`Error bulk updating location ${locationId}:`, error);
