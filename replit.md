@@ -97,8 +97,12 @@ The application utilizes a full-stack monorepo architecture.
 - **Whitelabeling:** All platform components are branded as businessblueprint.io, removing vendor references.
 - **Three-Platform Ecosystem:** businessblueprint.io (digital marketing), webhosted.io (website hosting), and airswiped.com (payment gateway) are distinct yet integrated platforms.
 - **Unified Client Portal (Future):** Planned single sign-on, master dashboard, consolidated billing, cross-platform analytics, and unified support across all three platforms.
-- **Synup Integration:** Complete listings and reputation management system with strict security:
-  - Service Layer (`server/services/synup.ts`): Authenticated API client with centralized error handling
+- **Synup Integration (API v4):** Complete listings and reputation management system with strict security:
+  - Service Layer (`server/services/synup.ts`): 
+    - Base URL: https://api.synup.com/api/v4
+    - Base64 location ID encoding for API calls
+    - "Interactions" terminology for reviews (Synup API standard)
+    - Authenticated API client with centralized error handling
   - Database Schema (`shared/schema.ts`): synupLocations, synupListings, synupReviews tables with Zod validation
   - Storage Layer (`server/storage.ts`): Full CRUD operations with proper timestamp handling
   - API Routes (`server/routes.ts`): Secure endpoints with multi-layered protection:
@@ -107,6 +111,13 @@ The application utilizes a full-stack monorepo architecture.
     - Strict business name verification (enforced 400/403 errors)
     - Zod payload validation using insertSynup* schemas
     - Authorization checks on all listing/review operations
+  - Verified Endpoints:
+    - GET /locations - List all locations
+    - GET /locations/{base64LocationId} - Get location details
+    - GET /locations/{base64LocationId}/listings - Get listings
+    - GET /locations/{base64LocationId}/reviews?category=REVIEW - Get reviews (interactions)
+    - POST /interactions/{interactionId}/response - Respond to review
+    - GET /locations/{base64LocationId}/interactions/analytics - Get analytics
   - White-Label Security Model: Shared API key with strict business name matching to prevent cross-tenant abuse
   - Production Recommendations: Per-client API keys, admin pre-approval workflows, or enhanced address/contact verification
 - **AI-Powered Reputation Management:** Automated review response system using OpenAI GPT-4o:
