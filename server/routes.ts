@@ -2712,4 +2712,55 @@ async function registerInboxRoutes(app: Express) {
       res.status(500).json({ error: "Failed to send message" });
     }
   });
+
+  // BIIF: Create Business Location (TODO: Add auth when client system is ready)
+  app.post("/api/biif/create-location", async (req, res) => {
+    try {
+      const locationData = z.object({
+        name: z.string(),
+        address: z.string(),
+        city: z.string(),
+        state: z.string(),
+        postalCode: z.string(),
+        country: z.string().default("US"),
+        phone: z.string(),
+        website: z.string().optional(),
+        email: z.string().optional(),
+        category: z.string(),
+        description: z.string().optional(),
+      }).parse(req.body);
+
+      // Create location in Synup
+      const synupLocation = await synupService.createLocation(locationData);
+      
+      if (!synupLocation) {
+        return res.status(500).json({ error: "Failed to create location in Synup" });
+      }
+
+      // Store in our database (using clientId = 1 for now, until client auth is implemented)
+      const location = await storage.createSynupLocation({
+        clientId: 1,
+        synupLocationId: synupLocation.id,
+        name: locationData.name,
+        address: locationData.address,
+        city: locationData.city,
+        state: locationData.state,
+        country: locationData.country,
+        postalCode: locationData.postalCode,
+        phone: locationData.phone,
+        website: locationData.website || null,
+        email: locationData.email || null,
+        category: locationData.category,
+      });
+
+      res.json({ 
+        success: true,
+        location,
+        message: "Location created and syncing to 200+ directories"
+      });
+    } catch (error) {
+      console.error("Error creating location:", error);
+      res.status(500).json({ error: "Failed to create location" });
+    }
+  });
 }

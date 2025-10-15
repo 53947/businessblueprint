@@ -27,6 +27,7 @@ import CommversePricing from "@/pages/commverse-pricing";
 import PricingPage from "@/pages/pricing";
 import MarketplacePage from "@/pages/marketplace";
 import MarketplaceCheckoutPage from "@/pages/marketplace-checkout";
+import BIIF from "@/pages/biif";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -56,6 +57,7 @@ function Router() {
       <Route path="/livechat-demo" component={LiveChatDemo} />
       <Route path="/commverse" component={CommverseLanding} />
       <Route path="/commverse-pricing" component={CommversePricing} />
+      <Route path="/biif" component={BIIF} />
       <Route component={NotFound} />
     </Switch>
   );
