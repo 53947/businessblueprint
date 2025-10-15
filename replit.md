@@ -1,8 +1,15 @@
-# businessblueprint.io - Digital Intelligence Platform
+# Triad Blue Ecosystem - Digital Business Solutions
 
 ### Overview
-businessblueprint.io is an AI-powered digital intelligence platform designed to help local businesses enhance their online presence, attract customers, and grow. It offers AI-driven analysis of online presence, generates personalized Digital Blueprints, and provides both Do It Yourself (DIY) and Managed Service Provider (MSP) pathways for business growth. The platform aims for mass market automation, leveraging Google Business Intelligence to minimize manual intervention and maximize results. It functions as a "Digital Intelligence Incubator," nurturing businesses from digital obscurity to digital maturity through systematic, data-driven growth programs.
+**Triad Blue (triadblue.com)** is the parent company operating three specialized subsidiary platforms:
 
+1. **Business Blueprint (businessblueprint.io)** - AI-powered digital intelligence platform for local businesses. Offers AI-driven online presence analysis, personalized Digital Blueprints, and both Do It Yourself (DIY) and Managed Service Provider (MSP) pathways for business growth. Features Synup-powered listings/reputation management across 200+ directories and the "Commverse" communication ecosystem (/send, /livechat, /inbox).
+
+2. **Hosts Blue (hostsblue.com)** - Comprehensive web services platform providing website hosting, building, email services, trust services, domain registration (via OpenSRS), site maintenance, and WordPress management.
+
+3. **Swipes Blue (swipesblue.com)** - Payment gateway and financial services platform offering cart, checkout, and payment processing via NMI (Network Merchants Inc.).
+
+**Markets:** US and Canada only
 **Brand Positioning:** Digital Intelligence Incubator
 **Customer-Facing Message:** Helping Local Businesses Succeed Online
 **Value Proposition:** Get Found, Get Customers, Get Business
@@ -14,15 +21,14 @@ Preferred communication style: Simple, everyday language.
 - DO NOT change any logo elements unless specifically instructed
 - Only modify exactly what is requested - no additional "improvements"
 - Keep compass design consistent across iterations unless told otherwise
-- businessblueprint.io logo concept: Compass + Pencil = "AI" using actual blueprint tools
+- Business Blueprint logo concept: Compass + Pencil = "AI" using actual blueprint tools
 
 **Business Context:**
-- businessblueprint.io: Digital marketing platform - OFFICIAL BRAND (never mention Vendasta or cloudpleaser.io)
-- webhosted.io: Website hosting platform (never mention WPMUDev)
-- airswiped.com: Payment gateway platform (never mention NMI Network)
 - Focus on mass market automation to minimize manual intervention
 - Two primary pathways: DIY (self-service) and MSP (managed services)
-- AI-powered Google Business Intelligence drives assessment recommendations
+- AI-powered intelligence drives assessment recommendations
+- Critical data flow: Client input → POST to Synup → Synup distributes to 200+ directories → GET results displayed in platform
+- White-label partners: OpenSRS (domains, email, trust), NMI (payment processing)
 
 **Online Images (Email Signatures) - Trigger: "online images":**
 - Email signature images: attached_assets/BB Signature for DLL_1759682563632.png
@@ -36,8 +42,8 @@ Preferred communication style: Simple, everyday language.
 - Digital IQ Assessment preserves Brain icon (per specific requirement)
 - **Master Color Key**:
   - businessblueprint.io: black "business" + blueprint blue #0080FF + fluorescent green ".io"
-  - webhosted.io: black "web" + webhosted purple #660099 + fluorescent green ".io"
-  - airswiped.com: black "air" + airswiped red #CB0505 + fluorescent green ".com"
+  - hostsblue.com: black "hosts" + webhosted purple #660099 + fluorescent green ".com"
+  - swipesblue.com: black "swipes" + airswiped red #CB0505 + fluorescent green ".com"
   - Common colors: Black #000000, White #FFFFFF
   - Fluorescent green TLD: #AAFF00 (used for all .io/.com extensions)
 - Purple reserved for portal pages across all platforms
