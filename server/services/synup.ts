@@ -131,9 +131,27 @@ export class SynupService {
       const response = await fetch(url, options);
       
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
+        const errorText = await response.text();
+        let errorData: any = {};
+        
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { raw: errorText };
+        }
+        
+        console.error(`🔴 Synup API error details:`, {
+          status: response.status,
+          statusText: response.statusText,
+          endpoint,
+          method,
+          requestBody: body,
+          responseBody: errorData,
+          responseBodyJSON: JSON.stringify(errorData, null, 2) // Expand nested objects
+        });
+        
         throw new Error(
-          `Synup API error (${response.status}): ${errorData.message || response.statusText}`
+          `Synup API error (${response.status}): ${errorData.message || errorData.error || response.statusText}`
         );
       }
 
@@ -227,7 +245,7 @@ export class SynupService {
       const formattedPhone = formatPhoneNumber(locationData.phone);
 
       // Transform to Synup API v4 format
-      const synupPayload = {
+      const synupPayload: any = {
         name: locationData.name,
         street: locationData.address, // Synup uses 'street' not 'address'
         city: locationData.city,
@@ -235,10 +253,13 @@ export class SynupService {
         country_id: countryId, // Numeric country ID
         postal_code: locationData.postalCode, // Synup uses underscore
         phone: formattedPhone,
-        biz_url: locationData.website || undefined, // Synup uses 'biz_url' not 'website'
         sub_category_id: subCategoryId, // Numeric category ID
-        description: undefined, // Will add if needed
       };
+
+      // Add optional fields only if they have values
+      if (locationData.website) {
+        synupPayload.biz_url = locationData.website;
+      }
 
       console.log('🔵 Synup API: Creating location with mapped data:', {
         name: synupPayload.name,
@@ -249,10 +270,17 @@ export class SynupService {
         sub_category_id: synupPayload.sub_category_id
       });
 
+      // Synup API v4 uses GraphQL - wrap payload in variables.input
+      const graphQLPayload = {
+        variables: {
+          input: synupPayload
+        }
+      };
+
       const response = await this.makeRequest<{ location: SynupLocation }>(
         '/locations',
         'POST',
-        synupPayload
+        graphQLPayload
       );
 
       console.log('🟢 Synup API: Location created successfully:', response);
