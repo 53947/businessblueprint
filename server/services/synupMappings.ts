@@ -141,10 +141,23 @@ export function getCountryId(country: string): string | null {
 }
 
 /**
- * Get Synup category ID from category name
+ * Get Synup category ID from category name (case-insensitive)
  */
 export function getCategoryId(category: string): string | null {
-  return BUSINESS_CATEGORIES[category.trim()] || null;
+  const normalized = category.trim();
+  
+  // Try exact match first
+  if (BUSINESS_CATEGORIES[normalized]) {
+    return BUSINESS_CATEGORIES[normalized];
+  }
+  
+  // Try case-insensitive match
+  const lowerCategory = normalized.toLowerCase();
+  const matchingKey = Object.keys(BUSINESS_CATEGORIES).find(
+    key => key.toLowerCase() === lowerCategory
+  );
+  
+  return matchingKey ? BUSINESS_CATEGORIES[matchingKey] : null;
 }
 
 /**
