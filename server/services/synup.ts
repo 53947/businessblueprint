@@ -9,6 +9,7 @@
  * API Documentation: https://developer.synup.com/docs/
  */
 
+import synupSDK from '@mx-inventor/synup';
 import { 
   getStateId, 
   getCountryId, 
@@ -204,8 +205,8 @@ export class SynupService {
   }
 
   /**
-   * Create a new location in Synup
-   * Transforms user-friendly data into Synup API v4 format with numeric IDs
+   * Create a new location in Synup using the official SDK
+   * The SDK handles GraphQL formatting automatically
    */
   async createLocation(locationData: {
     name: string;
@@ -220,80 +221,84 @@ export class SynupService {
     category?: string;
   }): Promise<SynupLocation | null> {
     try {
-      // Map state to Synup state_id
-      const stateId = getStateId(locationData.state, locationData.country);
-      if (!stateId) {
-        throw new Error(`Invalid state: ${locationData.state} for country: ${locationData.country}`);
-      }
-
-      // Map country to Synup country_id
-      const countryId = getCountryId(locationData.country);
-      if (!countryId) {
-        throw new Error(`Invalid country: ${locationData.country}`);
-      }
-
       // Map category to Synup sub_category_id (optional, use default if not provided)
-      let subCategoryId = "999"; // Default: Other
+      let subCategoryId: number | undefined;
       if (locationData.category) {
         const mappedCategoryId = getCategoryId(locationData.category);
         if (mappedCategoryId) {
-          subCategoryId = mappedCategoryId;
+          subCategoryId = parseInt(mappedCategoryId);
         }
       }
 
       // Format phone number (remove all non-digits)
       const formattedPhone = formatPhoneNumber(locationData.phone);
 
-      // Transform to Synup API v4 format
-      const synupPayload: any = {
-        name: locationData.name,
-        street: locationData.address, // Synup uses 'street' not 'address'
-        city: locationData.city,
-        state_id: stateId, // Numeric state ID
-        country_id: countryId, // Numeric country ID
-        postal_code: locationData.postalCode, // Synup uses underscore
-        phone: formattedPhone,
-        sub_category_id: subCategoryId, // Numeric category ID
-      };
-
-      // Add optional fields only if they have values
-      if (locationData.website) {
-        synupPayload.biz_url = locationData.website;
-      }
-
-      console.log('🔵 Synup API: Creating location with mapped data:', {
-        name: synupPayload.name,
-        street: synupPayload.street,
-        city: synupPayload.city,
-        state_id: synupPayload.state_id,
-        country_id: synupPayload.country_id,
-        sub_category_id: synupPayload.sub_category_id
-      });
-
-      // Synup API v4 uses GraphQL - wrap payload in variables.input
-      const graphQLPayload = {
-        variables: {
-          input: synupPayload
-        }
-      };
-
-      const response = await this.makeRequest<{ location: SynupLocation }>(
-        '/locations',
-        'POST',
-        graphQLPayload
-      );
-
-      console.log('🟢 Synup API: Location created successfully:', response);
+      // Get state ISO code (e.g., "NY" for New York)
+      const stateIso = this.getStateIso(locationData.state);
       
-      return response.location || null;
+      // Get country ISO code (e.g., "US" for United States)
+      const countryIso = locationData.country === 'United States' ? 'US' : 
+                         locationData.country === 'Canada' ? 'CA' : 
+                         locationData.country;
+
+      // Transform to Synup SDK format
+      const synupPayload = {
+        name: locationData.name,
+        street: locationData.address,
+        city: locationData.city,
+        stateIso,
+        countryIso,
+        postalCode: locationData.postalCode,
+        phone: formattedPhone,
+        subCategoryId,
+        bizUrl: locationData.website || undefined,
+        ownerEmail: locationData.email || undefined,
+      };
+
+      console.log('🔵 Synup SDK: Creating location with payload:', synupPayload);
+
+      // Use official Synup SDK
+      const synup = synupSDK(this.apiKey);
+      const response = await synup.Locations.create(synupPayload);
+
+      console.log('🟢 Synup SDK: Location created successfully:', response);
+      
+      return response as any;
     } catch (error: any) {
-      console.error('🔴 Synup API: Error creating location:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
+      console.error('🔴 Synup SDK: Error creating location:', {
+        message: error?.message || 'Unknown error',
+        response: error?.response?.data,
+        status: error?.response?.status,
+        stack: error?.stack,
+        fullError: error
       });
-      return null;
+      throw error; // Re-throw so the route handler can provide proper error message to user
     }
+  }
+
+  /**
+   * Convert state name to ISO code
+   */
+  private getStateIso(stateName: string): string {
+    const stateMap: Record<string, string> = {
+      'Alabama': 'AL', 'Alaska': 'AK', 'Arizona': 'AZ', 'Arkansas': 'AR', 'California': 'CA',
+      'Colorado': 'CO', 'Connecticut': 'CT', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA',
+      'Hawaii': 'HI', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Iowa': 'IA',
+      'Kansas': 'KS', 'Kentucky': 'KY', 'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD',
+      'Massachusetts': 'MA', 'Michigan': 'MI', 'Minnesota': 'MN', 'Mississippi': 'MS', 'Missouri': 'MO',
+      'Montana': 'MT', 'Nebraska': 'NE', 'Nevada': 'NV', 'New Hampshire': 'NH', 'New Jersey': 'NJ',
+      'New Mexico': 'NM', 'New York': 'NY', 'North Carolina': 'NC', 'North Dakota': 'ND', 'Ohio': 'OH',
+      'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC',
+      'South Dakota': 'SD', 'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT', 'Vermont': 'VT',
+      'Virginia': 'VA', 'Washington': 'WA', 'West Virginia': 'WV', 'Wisconsin': 'WI', 'Wyoming': 'WY',
+      // Canadian provinces
+      'Alberta': 'AB', 'British Columbia': 'BC', 'Manitoba': 'MB', 'New Brunswick': 'NB',
+      'Newfoundland and Labrador': 'NL', 'Northwest Territories': 'NT', 'Nova Scotia': 'NS',
+      'Nunavut': 'NU', 'Ontario': 'ON', 'Prince Edward Island': 'PE', 'Quebec': 'QC',
+      'Saskatchewan': 'SK', 'Yukon': 'YT'
+    };
+    
+    return stateMap[stateName] || stateName;
   }
 
   /**
