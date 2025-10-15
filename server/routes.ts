@@ -2716,6 +2716,8 @@ async function registerInboxRoutes(app: Express) {
   // BIIF: Create Business Location (TODO: Add auth when client system is ready)
   app.post("/api/biif/create-location", async (req, res) => {
     try {
+      console.log("📍 BIIF: Received location creation request:", req.body);
+      
       const locationData = z.object({
         name: z.string(),
         address: z.string(),
@@ -2730,12 +2732,23 @@ async function registerInboxRoutes(app: Express) {
         description: z.string().optional(),
       }).parse(req.body);
 
+      console.log("📍 BIIF: Creating location in Synup...", locationData.name);
+
+      // Create Synup service instance
+      const biifSynupService = new SynupService();
+      
       // Create location in Synup
-      const synupLocation = await synupService.createLocation(locationData);
+      const synupLocation = await biifSynupService.createLocation(locationData);
       
       if (!synupLocation) {
-        return res.status(500).json({ error: "Failed to create location in Synup" });
+        console.error("❌ BIIF: Synup API returned null - location creation failed");
+        return res.status(500).json({ 
+          success: false,
+          error: "Unable to create location. Please verify your Synup API credentials are configured correctly." 
+        });
       }
+
+      console.log("✅ BIIF: Location created in Synup:", synupLocation.id);
 
       // Store in our database (using clientId = 1 for now, until client auth is implemented)
       const location = await storage.createSynupLocation({
@@ -2753,14 +2766,19 @@ async function registerInboxRoutes(app: Express) {
         category: locationData.category,
       });
 
+      console.log("✅ BIIF: Location stored in database:", location.id);
+
       res.json({ 
         success: true,
         location,
         message: "Location created and syncing to 200+ directories"
       });
-    } catch (error) {
-      console.error("Error creating location:", error);
-      res.status(500).json({ error: "Failed to create location" });
+    } catch (error: any) {
+      console.error("❌ BIIF: Error creating location:", error);
+      res.status(500).json({ 
+        success: false,
+        error: error.message || "Failed to create location" 
+      });
     }
   });
 }

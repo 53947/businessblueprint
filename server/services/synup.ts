@@ -194,14 +194,29 @@ export class SynupService {
     category?: string;
   }): Promise<SynupLocation | null> {
     try {
+      console.log('🔵 Synup API: Creating location with data:', {
+        name: locationData.name,
+        address: locationData.address,
+        city: locationData.city,
+        state: locationData.state,
+        country: locationData.country
+      });
+
       const response = await this.makeRequest<{ location: SynupLocation }>(
         '/locations',
         'POST',
         locationData
       );
+
+      console.log('🟢 Synup API: Location created successfully:', response);
+      
       return response.location || null;
-    } catch (error) {
-      console.error('Error creating Synup location:', error);
+    } catch (error: any) {
+      console.error('🔴 Synup API: Error creating location:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
       return null;
     }
   }
