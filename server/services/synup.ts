@@ -9,6 +9,13 @@
  * API Documentation: https://developer.synup.com/docs/
  */
 
+import { 
+  getStateId, 
+  getCountryId, 
+  getCategoryId, 
+  formatPhoneNumber 
+} from './synupMappings';
+
 interface SynupLocation {
   id: string;
   name: string;
@@ -180,6 +187,7 @@ export class SynupService {
 
   /**
    * Create a new location in Synup
+   * Transforms user-friendly data into Synup API v4 format with numeric IDs
    */
   async createLocation(locationData: {
     name: string;
@@ -194,18 +202,57 @@ export class SynupService {
     category?: string;
   }): Promise<SynupLocation | null> {
     try {
-      console.log('🔵 Synup API: Creating location with data:', {
+      // Map state to Synup state_id
+      const stateId = getStateId(locationData.state, locationData.country);
+      if (!stateId) {
+        throw new Error(`Invalid state: ${locationData.state} for country: ${locationData.country}`);
+      }
+
+      // Map country to Synup country_id
+      const countryId = getCountryId(locationData.country);
+      if (!countryId) {
+        throw new Error(`Invalid country: ${locationData.country}`);
+      }
+
+      // Map category to Synup sub_category_id (optional, use default if not provided)
+      let subCategoryId = "999"; // Default: Other
+      if (locationData.category) {
+        const mappedCategoryId = getCategoryId(locationData.category);
+        if (mappedCategoryId) {
+          subCategoryId = mappedCategoryId;
+        }
+      }
+
+      // Format phone number (remove all non-digits)
+      const formattedPhone = formatPhoneNumber(locationData.phone);
+
+      // Transform to Synup API v4 format
+      const synupPayload = {
         name: locationData.name,
-        address: locationData.address,
+        street: locationData.address, // Synup uses 'street' not 'address'
         city: locationData.city,
-        state: locationData.state,
-        country: locationData.country
+        state_id: stateId, // Numeric state ID
+        country_id: countryId, // Numeric country ID
+        postal_code: locationData.postalCode, // Synup uses underscore
+        phone: formattedPhone,
+        biz_url: locationData.website || undefined, // Synup uses 'biz_url' not 'website'
+        sub_category_id: subCategoryId, // Numeric category ID
+        description: undefined, // Will add if needed
+      };
+
+      console.log('🔵 Synup API: Creating location with mapped data:', {
+        name: synupPayload.name,
+        street: synupPayload.street,
+        city: synupPayload.city,
+        state_id: synupPayload.state_id,
+        country_id: synupPayload.country_id,
+        sub_category_id: synupPayload.sub_category_id
       });
 
       const response = await this.makeRequest<{ location: SynupLocation }>(
         '/locations',
         'POST',
-        locationData
+        synupPayload
       );
 
       console.log('🟢 Synup API: Location created successfully:', response);
