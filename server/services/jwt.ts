@@ -56,9 +56,7 @@ export class JWTService {
     });
 
     console.log('Generated new RSA key pair for JWT signing');
-    console.log('Consider storing these keys in environment variables:');
-    console.log('JWT_PRIVATE_KEY:', privateKey.replace(/\n/g, '\\n'));
-    console.log('JWT_PUBLIC_KEY:', publicKey.replace(/\n/g, '\\n'));
+    console.log('⚠️ WARNING: Using ephemeral keys. Set JWT_PRIVATE_KEY and JWT_PUBLIC_KEY environment variables for production.');
 
     return { publicKey, privateKey };
   }
