@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { useLocation } from 'wouter';
 import { io, Socket } from 'socket.io-client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,7 +20,8 @@ import {
   Check,
   CheckCheck,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  Home
 } from 'lucide-react';
 import { SiWhatsapp, SiTiktok } from 'react-icons/si';
 import { apiRequest, queryClient } from '@/lib/queryClient';
@@ -72,6 +74,7 @@ const CHANNEL_COLORS: Record<string, string> = {
 };
 
 export default function InboxPage() {
+  const [, setLocation] = useLocation();
   const [selectedConversation, setSelectedConversation] = useState<number | null>(null);
   const [messageInput, setMessageInput] = useState('');
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -243,7 +246,17 @@ export default function InboxPage() {
       {/* Conversations List */}
       <div className="w-80 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
         <CardHeader className="border-b border-gray-200 dark:border-gray-800">
-          <CardTitle className="text-xl" data-testid="title-inbox">Inbox</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-xl" data-testid="title-inbox">Inbox</CardTitle>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setLocation("/")}
+              data-testid="button-home-inbox"
+            >
+              <Home className="h-4 w-4" />
+            </Button>
+          </div>
         </CardHeader>
         <ScrollArea className="h-[calc(100vh-80px)]">
           {conversationsLoading ? (

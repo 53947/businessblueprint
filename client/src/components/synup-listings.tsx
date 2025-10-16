@@ -1,11 +1,16 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CheckCircle, AlertCircle, Clock, MapPin, ExternalLink, RefreshCw } from "lucide-react";
-import { authenticatedRequest } from "@/lib/queryClient";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { CheckCircle, AlertCircle, Clock, MapPin, ExternalLink, RefreshCw, Edit } from "lucide-react";
+import { authenticatedRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface SynupLocation {
   id: number;
@@ -21,6 +26,18 @@ interface SynupLocation {
 }
 
 export function SynupListings() {
+  const { toast } = useToast();
+  const [editingLocation, setEditingLocation] = useState<SynupLocation | null>(null);
+  const [editForm, setEditForm] = useState({
+    name: '',
+    address: '',
+    city: '',
+    state: '',
+    country: '',
+    phone: '',
+    website: '',
+  });
+  
   // Fetch Synup locations
   const { data: locationsData, isLoading, error, refetch } = useQuery<{ success: boolean; locations: SynupLocation[] }>({
     queryKey: ['/api/synup/locations'],
@@ -42,6 +59,39 @@ export function SynupListings() {
       refetch();
     } catch (error) {
       console.error('Failed to sync listings:', error);
+    }
+  };
+
+  const handleEditClick = (location: SynupLocation) => {
+    setEditingLocation(location);
+    setEditForm({
+      name: location.name,
+      address: location.address,
+      city: location.city,
+      state: location.state,
+      country: location.country,
+      phone: location.phone || '',
+      website: location.website || '',
+    });
+  };
+
+  const handleSaveLocation = async () => {
+    if (!editingLocation) return;
+    
+    try {
+      await authenticatedRequest('PUT', `/api/synup/locations/${editingLocation.id}`, editForm);
+      queryClient.invalidateQueries({ queryKey: ['/api/synup/locations'] });
+      toast({
+        title: "Location Updated",
+        description: "Your business information has been updated successfully.",
+      });
+      setEditingLocation(null);
+    } catch (error) {
+      toast({
+        title: "Update Failed",
+        description: "Failed to update location information. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -139,6 +189,104 @@ export function SynupListings() {
             </div>
 
             <div className="flex gap-3">
+              <Dialog open={editingLocation?.id === location.id} onOpenChange={(open) => !open && setEditingLocation(null)}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleEditClick(location)}
+                    data-testid={`button-edit-location-${location.id}`}
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Information
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Edit Business Information</DialogTitle>
+                    <DialogDescription>
+                      Update your business details. Changes will be synced across all directories.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="name" className="text-right">Business Name</Label>
+                      <Input
+                        id="name"
+                        value={editForm.name}
+                        onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                        className="col-span-3"
+                        data-testid="input-edit-name"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="address" className="text-right">Address</Label>
+                      <Input
+                        id="address"
+                        value={editForm.address}
+                        onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
+                        className="col-span-3"
+                        data-testid="input-edit-address"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="city" className="text-right">City</Label>
+                      <Input
+                        id="city"
+                        value={editForm.city}
+                        onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
+                        className="col-span-3"
+                        data-testid="input-edit-city"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="state" className="text-right">State</Label>
+                      <Input
+                        id="state"
+                        value={editForm.state}
+                        onChange={(e) => setEditForm({ ...editForm, state: e.target.value })}
+                        className="col-span-3"
+                        data-testid="input-edit-state"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="country" className="text-right">Country</Label>
+                      <Input
+                        id="country"
+                        value={editForm.country}
+                        onChange={(e) => setEditForm({ ...editForm, country: e.target.value })}
+                        className="col-span-3"
+                        data-testid="input-edit-country"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="phone" className="text-right">Phone</Label>
+                      <Input
+                        id="phone"
+                        value={editForm.phone}
+                        onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                        className="col-span-3"
+                        data-testid="input-edit-phone"
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="website" className="text-right">Website</Label>
+                      <Input
+                        id="website"
+                        value={editForm.website}
+                        onChange={(e) => setEditForm({ ...editForm, website: e.target.value })}
+                        className="col-span-3"
+                        data-testid="input-edit-website"
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setEditingLocation(null)}>Cancel</Button>
+                    <Button onClick={handleSaveLocation} data-testid="button-save-location">Save Changes</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              
               <Button
                 variant="outline"
                 size="sm"
@@ -148,20 +296,11 @@ export function SynupListings() {
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Sync Listings
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => window.open('https://business.synup.com', '_blank')}
-                data-testid={`button-manage-synup-${location.id}`}
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Manage on Synup
-              </Button>
             </div>
 
             <div className="mt-4 p-4 bg-blue-50 rounded-lg">
               <p className="text-sm text-blue-800">
-                📊 Your business is being distributed across <strong>200+ directories</strong> including Google, Yelp, Facebook, and more through Synup.
+                📊 Your business is being distributed across <strong>200+ directories</strong> including Google, Yelp, Facebook, and more.
               </p>
             </div>
           </CardContent>

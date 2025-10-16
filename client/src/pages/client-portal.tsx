@@ -26,7 +26,8 @@ import {
   AlertCircle,
   Clock,
   LogOut,
-  Brain
+  Brain,
+  Home
 } from "lucide-react";
 
 export default function ClientPortal() {
@@ -198,6 +199,16 @@ export default function ClientPortal() {
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center space-x-4">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setLocation("/")}
+                  data-testid="button-home"
+                  className="flex items-center gap-2"
+                >
+                  <Home className="h-4 w-4" />
+                  Home
+                </Button>
                 <h1 className="text-xl font-semibold text-gray-900">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
                 <Badge variant="outline" className="text-xs">
                   Client Dashboard
