@@ -1384,6 +1384,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update location information
+  app.put("/api/synup/locations/:locationId", requireAuth, async (req: AuthenticatedRequest, res) => {
+    try {
+      const locationId = parseInt(req.params.locationId);
+      
+      if (isNaN(locationId)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid location ID"
+        });
+      }
+
+      // Verify location belongs to authenticated client
+      const location = await storage.getSynupLocation(locationId);
+      if (!location || location.clientId !== req.clientId!) {
+        return res.status(403).json({ 
+          success: false, 
+          message: "Access denied" 
+        });
+      }
+
+      // Update location
+      const updateData = {
+        name: req.body.name,
+        address: req.body.address,
+        city: req.body.city,
+        state: req.body.state,
+        country: req.body.country,
+        phone: req.body.phone,
+        website: req.body.website,
+      };
+
+      const updatedLocation = await storage.updateSynupLocation(locationId, updateData);
+      
+      res.json({ 
+        success: true, 
+        location: updatedLocation,
+        message: "Location updated successfully"
+      });
+    } catch (error) {
+      console.error("Error updating location:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to update location" 
+      });
+    }
+  });
+
   // Get listings for a specific location
   app.get("/api/synup/locations/:locationId/listings", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
