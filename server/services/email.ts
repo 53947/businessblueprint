@@ -34,6 +34,48 @@ export class EmailService {
     });
   }
 
+  generateVerificationCode(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
+  async sendVerificationEmail(email: string, companyName: string, verificationCode: string): Promise<boolean> {
+    try {
+      const htmlContent = this.generateVerificationEmailHTML(companyName, verificationCode);
+      
+      const mailOptions = {
+        from: process.env.FROM_EMAIL || 'le847@icloud.com',
+        to: email,
+        subject: `Verify Your Email - ${verificationCode}`,
+        html: htmlContent,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error('Error sending verification email:', error);
+      return false;
+    }
+  }
+
+  async sendEmailChangeNotification(oldEmail: string, newEmail: string, companyName: string): Promise<boolean> {
+    try {
+      const htmlContent = this.generateEmailChangeNotificationHTML(companyName, newEmail);
+      
+      const mailOptions = {
+        from: process.env.FROM_EMAIL || 'le847@icloud.com',
+        to: oldEmail,
+        subject: `Email Address Changed - Action May Be Required`,
+        html: htmlContent,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error('Error sending email change notification:', error);
+      return false;
+    }
+  }
+
   async sendAssessmentReport(email: string, data: EmailReportData): Promise<boolean> {
     try {
       const htmlContent = this.generateReportHTML(data);
@@ -149,6 +191,116 @@ export class EmailService {
         <p>This assessment was powered by Google Business Intelligence and AI analysis.</p>
         <p>Questions? Reply to this email or visit our support center.</p>
         <p><small>© 2024 businessblueprint.io</small></p>
+    </div>
+</body>
+</html>`;
+  }
+
+  private generateVerificationEmailHTML(companyName: string, verificationCode: string): string {
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #8B5CF6, #0057FF); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .code-box { background: #f8f9fa; border: 2px dashed #8B5CF6; padding: 30px; text-align: center; border-radius: 8px; margin: 30px 0; }
+        .code { font-size: 36px; font-weight: bold; color: #8B5CF6; letter-spacing: 8px; font-family: 'Courier New', monospace; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .warning { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 15px; margin: 20px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📧 Verify Your Email</h1>
+            <p>${companyName}</p>
+        </div>
+        
+        <div class="content">
+            <p>Hello,</p>
+            <p>Please use the verification code below to confirm your email address and activate your account:</p>
+            
+            <div class="code-box">
+                <div class="code">${verificationCode}</div>
+            </div>
+            
+            <p>Enter this code on the verification page to complete your email confirmation.</p>
+            
+            <div class="warning">
+                <p style="margin: 0;"><strong>Security Note:</strong> This code expires in 15 minutes. Never share this code with anyone.</p>
+            </div>
+            
+            <p>If you didn't request this verification, you can safely ignore this email.</p>
+        </div>
+        
+        <div class="footer">
+            <p>Need help? Contact our support team.</p>
+            <p><small>© 2024 businessblueprint.io</small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
+
+  private generateEmailChangeNotificationHTML(companyName: string, newEmail: string): string {
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Address Changed</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #F59E0B, #DC2626); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .alert-box { background: #FEF2F2; border: 2px solid #DC2626; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .cta-button { display: inline-block; background: #DC2626; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚠️ Email Address Changed</h1>
+            <p>${companyName}</p>
+        </div>
+        
+        <div class="content">
+            <p>This is an important security notification.</p>
+            
+            <div class="alert-box">
+                <p style="margin: 0;"><strong>Your account email has been changed to:</strong></p>
+                <p style="font-size: 18px; margin: 10px 0; font-weight: bold;">${newEmail}</p>
+            </div>
+            
+            <p>If you made this change, you can safely ignore this email. Your account is secure.</p>
+            
+            <p><strong>Did not make this change?</strong></p>
+            <p>If you did not authorize this email change, please take immediate action:</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/contact" class="cta-button">
+                    Contact Support Immediately
+                </a>
+            </div>
+            
+            <p style="font-size: 14px; color: #666;">
+                This notification was sent to your previous email address as a security measure.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>For security questions, contact our support team immediately.</p>
+            <p><small>© 2024 businessblueprint.io</small></p>
+        </div>
     </div>
 </body>
 </html>`;
