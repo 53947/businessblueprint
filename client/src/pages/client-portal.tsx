@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { SideNav } from "@/components/side-nav";
 import { SynupListings } from "@/components/synup-listings";
+import { SynupReviews } from "@/components/synup-reviews";
 import { 
   BarChart3, 
   Star, 
@@ -414,17 +415,7 @@ export default function ClientPortal() {
 
           {/* Reviews Tab */}
           <TabsContent value="reviews">
-            <Card>
-              <CardHeader>
-                <CardTitle>Review Management</CardTitle>
-                <CardDescription>Monitor and respond to customer feedback</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8 text-gray-500">
-                  Review management interface coming soon...
-                </div>
-              </CardContent>
-            </Card>
+            <SynupReviews />
           </TabsContent>
 
           {/* Campaigns Tab */}
