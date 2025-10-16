@@ -31,6 +31,7 @@ import { SiWhatsapp, SiTiktok } from 'react-icons/si';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
+import { BRAND_HEX } from '@/lib/brand-colors';
 
 interface Conversation {
   id: number;
@@ -67,14 +68,14 @@ const CHANNEL_ICONS: Record<string, any> = {
 };
 
 const CHANNEL_COLORS: Record<string, string> = {
-  email: 'bg-blue-500',
-  livechat: 'bg-green-500',
-  sms: 'bg-purple-500',
-  whatsapp: 'bg-emerald-500',
-  facebook: 'bg-blue-600',
-  instagram: 'bg-pink-500',
-  twitter: 'bg-sky-500',
-  tiktok: 'bg-black',
+  email: 'bg-[#0080FF]', // Blueprint blue
+  livechat: 'bg-[#AAFF00]', // Fluorescent green
+  sms: 'bg-[#660099]', // Purple
+  whatsapp: 'bg-[#AAFF00]', // Fluorescent green
+  facebook: 'bg-[#0080FF]', // Blueprint blue
+  instagram: 'bg-[#660099]', // Purple
+  twitter: 'bg-[#0080FF]', // Blueprint blue
+  tiktok: 'bg-black', // Black
 };
 
 export default function InboxPage() {
