@@ -29,6 +29,7 @@ import { productRecommendationService } from "./services/productRecommendations"
 import { SynupService } from "./services/synup";
 import { ReviewMonitoringService } from "./services/reviewMonitoring";
 import { reviewAI } from "./services/reviewAI";
+import { jwtService } from "./services/jwt";
 import { dashboardAccess } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 import { db } from "./db";
@@ -362,6 +363,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error creating dashboard token:", error);
       res.status(500).json({ message: "Failed to create dashboard token" });
+    }
+  });
+
+  // Client Portal Login - Generate JWT token for client access
+  app.post("/api/clients/login", async (req, res) => {
+    try {
+      const { identifier } = req.body;
+
+      if (!identifier) {
+        return res.status(400).json({
+          success: false,
+          message: "Customer identifier is required"
+        });
+      }
+
+      // Find client by external ID first, then fallback to email
+      let client = await storage.getClientByExternalId(identifier);
+      
+      if (!client) {
+        // Try finding by email as fallback
+        client = await storage.getClientByEmail(identifier);
+      }
+
+      if (!client) {
+        return res.status(404).json({
+          success: false,
+          message: "Client not found. Please check your customer ID or email."
+        });
+      }
+
+      // Generate JWT token
+      const token = await jwtService.createDashboardToken(client.id, identifier);
+
+      res.json({
+        success: true,
+        client: {
+          id: client.id,
+          name: client.name,
+          companyName: client.companyName,
+          email: client.email
+        },
+        token,
+        message: "Login successful"
+      });
+    } catch (error) {
+      console.error("Client login error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Login failed. Please try again."
+      });
     }
   });
 

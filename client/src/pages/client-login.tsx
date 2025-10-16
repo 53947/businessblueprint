@@ -38,9 +38,11 @@ export default function ClientLogin() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Store client ID in sessionStorage for the portal
+        // Store client data and JWT token in sessionStorage
         sessionStorage.setItem("clientId", data.client.id.toString());
         sessionStorage.setItem("externalId", customerIdentifier);
+        sessionStorage.setItem("authToken", data.token); // Store JWT token for API calls
+        sessionStorage.setItem("clientName", data.client.name || data.client.companyName || "");
         setLocation("/portal");
       } else {
         setError(data.message || "Unable to access your dashboard. Please check your customer ID.");
