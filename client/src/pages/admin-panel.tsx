@@ -23,7 +23,8 @@ import {
   Mail,
   Phone,
   Globe,
-  Check
+  Check,
+  Palette
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
@@ -90,18 +91,28 @@ export default function AdminPanel() {
       <main className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
-              <Shield className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                <Shield className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="title-admin-panel">
+                  Admin Panel
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Manage all client accounts and access client portals
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="title-admin-panel">
-                Admin Panel
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400">
-                Manage all client accounts and access client portals
-              </p>
-            </div>
+            <Button 
+              onClick={() => setLocation('/brand-studio')}
+              className="bg-purple-600 hover:bg-purple-700"
+              data-testid="button-brand-studio"
+            >
+              <Palette className="w-4 h-4 mr-2" />
+              Brand Studio
+            </Button>
           </div>
         </div>
 

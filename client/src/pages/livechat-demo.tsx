@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { LiveChatWidget } from "@/components/livechat-widget";
@@ -10,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function LiveChatDemo() {
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState('demo');
 
   return (
@@ -29,8 +31,7 @@ export default function LiveChatDemo() {
             icon: Code, 
             active: activeTab === 'installation',
             onClick: () => {
-              setActiveTab('installation');
-              toast({ title: 'Installation', description: 'Installation guide coming soon' });
+              setLocation('/livechat-install');
             },
             testId: 'tab-installation'
           },
