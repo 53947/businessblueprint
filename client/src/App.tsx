@@ -29,6 +29,7 @@ import PricingPage from "@/pages/pricing";
 import MarketplacePage from "@/pages/marketplace";
 import MarketplaceCheckoutPage from "@/pages/marketplace-checkout";
 import BIIF from "@/pages/biif";
+import AdminPanel from "@/pages/admin-panel";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -59,6 +60,7 @@ function Router() {
       <Route path="/commverse" component={CommverseLanding} />
       <Route path="/commverse-pricing" component={CommversePricing} />
       <Route path="/biif" component={BIIF} />
+      <Route path="/admin" component={AdminPanel} />
       <Route component={NotFound} />
     </Switch>
   );
