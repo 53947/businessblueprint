@@ -49,7 +49,7 @@ export default function ClientLogin() {
         const redirectParam = urlParams.get("redirect");
         
         // Whitelist of allowed internal routes
-        const allowedRoutes = ["/portal", "/inbox", "/send", "/livechat"];
+        const allowedRoutes = ["/portal", "/inbox-app", "/send-app", "/livechat-demo"];
         
         // Validate redirect is a safe same-origin path
         let redirectUrl = "/portal"; // Default fallback
