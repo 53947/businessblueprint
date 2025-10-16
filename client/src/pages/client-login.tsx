@@ -5,12 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLocation } from "wouter";
-import { LogIn, Building, AlertCircle } from "lucide-react";
+import { LogIn, Mail, AlertCircle } from "lucide-react";
 import { getBrandClasses } from "@/lib/brand-colors";
 import { BrandLogo } from "@/components/brand-logo";
 
 export default function ClientLogin() {
-  const [customerIdentifier, setCustomerIdentifier] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [, setLocation] = useLocation();
@@ -21,9 +21,9 @@ export default function ClientLogin() {
     setError("");
 
     try {
-      // Validate customer identifier format
-      if (!customerIdentifier) {
-        setError("Please enter your Account ID or email address");
+      // Validate email
+      if (!email) {
+        setError("Please enter your email address");
         setLoading(false);
         return;
       }
@@ -32,7 +32,7 @@ export default function ClientLogin() {
       const response = await fetch("/api/clients/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier: customerIdentifier })
+        body: JSON.stringify({ email: email.trim().toLowerCase() })
       });
 
       const data = await response.json();
@@ -40,9 +40,10 @@ export default function ClientLogin() {
       if (response.ok && data.success) {
         // Store client data and JWT token in sessionStorage
         sessionStorage.setItem("clientId", data.client.id.toString());
-        sessionStorage.setItem("externalId", customerIdentifier);
-        sessionStorage.setItem("authToken", data.token); // Store JWT token for API calls
-        sessionStorage.setItem("clientName", data.client.name || data.client.companyName || "");
+        sessionStorage.setItem("externalId", data.client.email);
+        sessionStorage.setItem("authToken", data.token);
+        sessionStorage.setItem("clientName", data.client.companyName || "");
+        sessionStorage.setItem("isEmailVerified", data.client.isEmailVerified?.toString() || "false");
         
         // Check for redirect URL parameter and validate it's a safe internal route
         const urlParams = new URLSearchParams(window.location.search);
@@ -68,7 +69,7 @@ export default function ClientLogin() {
         
         setLocation(redirectUrl);
       } else {
-        setError(data.message || "Unable to access your dashboard. Please check your Account ID or email.");
+        setError(data.message || "Unable to access your dashboard. Please check your email address.");
       }
     } catch (err) {
       setError("Connection error. Please try again.");
@@ -101,23 +102,23 @@ export default function ClientLogin() {
           
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="customerIdentifier">Account ID or Email</Label>
+              <Label htmlFor="email">Email Address</Label>
               <div className="relative">
-                <Building className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  id="customerIdentifier"
-                  type="text"
-                  placeholder="Enter your Account ID or email address"
-                  value={customerIdentifier}
-                  onChange={(e) => setCustomerIdentifier(e.target.value)}
+                  id="email"
+                  type="email"
+                  placeholder="your.email@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
                   required
                   disabled={loading}
-                  data-testid="input-account-identifier"
+                  data-testid="input-email"
                 />
               </div>
               <p className="text-xs text-gray-500">
-                Use your Account ID (e.g., admin-test-001) or registered email address
+                Enter the email address associated with your account
               </p>
             </div>
 
@@ -133,7 +134,7 @@ export default function ClientLogin() {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600 mb-4">
-              Don't have your Account ID? Check your welcome email or contact support.
+              Don't have an account? <a href="/contact" className="text-purple-600 hover:underline">Contact us</a> to get started.
             </p>
             <div className="border-t pt-4">
               <p className="text-xs text-gray-500">
