@@ -37,18 +37,29 @@ Preferred communication style: Simple, everyday language.
 - Email HTML must use public URL: https://businessblueprint.io/assets/signature/[filename]
 - Email clients require publicly hosted URLs (cannot access local/Replit files)
 
-**Brand Identity:**
+**Brand Identity & Official Color Palette:**
 - Official Brand Assets: cloudpleaser logo, webhosted logo, airswiped logo, AI Coach logo, Digital Blueprint icon
 - Digital IQ Assessment preserves Brain icon (per specific requirement)
-- **Master Color Key**:
-  - businessblueprint.io: black "business" + blueprint blue #0080FF + fluorescent green ".io"
-  - hostsblue.com: black "hosts" + webhosted purple #660099 + fluorescent green ".com"
-  - swipesblue.com: black "swipes" + airswiped red #CB0505 + fluorescent green ".com"
-  - Common colors: Black #000000, White #FFFFFF
-  - Fluorescent green TLD: #AAFF00 (used for all .io/.com extensions)
-- Purple reserved for portal pages across all platforms
-- Page-specific pleaser colors: Yellow (contact), Orange (about), Blue (pricing), avoiding platform colors
-- Format: black-[signature-color]-fluorescent-green across all platforms
+- **Official Color Palette**:
+  - **Core Black:** #09080E (NOT #000000)
+  - **Triad Blue:** #0000FF and #0057FF
+  - **Business Blueprint:** #FFA500 (orange)
+  - **Hosts Blue:** #660099 (purple)
+  - **Swipes Blue:** #FF0040 (red)
+  - **TLD Green (3rd rank accent):** #84D71A
+  - **App Colors:**
+    - /send: #E6B747
+    - /inbox: #0080FF and #FF96DD
+    - /livechat: #8000FF
+  - **UI Element Colors:**
+    - Button Primary: #0057FF
+    - Button Secondary: #F79248
+    - Header: #0000FF, #F79248, #09080E
+    - Content/Font: #09080E and #5B5B5B
+  - **Pathway Colors:**
+    - AI Business Coach: #09080E and #FF0040
+    - DIY: #0057FF
+    - MSP: #F79248
 - Dark background adaptations: Brand logos use brightness-0 invert for white appearance on dark backgrounds
 
 **Official 5-Step Journey Icons & Sizing Standards:**

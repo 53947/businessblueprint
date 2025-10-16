@@ -1,8 +1,6 @@
 /**
  * Official Triad Blue Brand Colors
  * DO NOT modify without brand approval
- * 
- * Master Color Key Pattern: black-[signature-color]-fluorescent-green
  */
 
 // Brand Icons
@@ -14,47 +12,75 @@ export const brandIcons = {
 
 // Official Brand Color Hex Values
 export const BRAND_HEX = {
-  // Core Colors (shared across all platforms)
-  black: '#000000',
+  // Core Colors
+  black: '#09080E', // Primary black (NOT #000000)
   white: '#FFFFFF',
-  fluorescentGreen: '#AAFF00', // TLD extension color (.io, .com)
+  
+  // Triad Blue
+  triadBlue: '#0000FF',
+  triadBlueAlt: '#0057FF',
   
   // Platform Signature Colors
-  blueprintBlue: '#0080FF', // businessblueprint.io
-  webhostPurple: '#660099', // hostsblue.com (webhosted.io)
-  airswipeRed: '#CB0505', // swipesblue.com (airswiped.com)
+  businessBlueprint: '#FFA500', // Orange
+  hostsBlue: '#660099', // Purple
+  swipesBlue: '#FF0040', // Red
   
-  // Functional Colors
-  portalPurple: '#660099', // Reserved for all portal pages
+  // TLD & Accent
+  tldGreen: '#84D71A', // 3rd rank accent color
+  
+  // App-Specific Colors
+  send: '#E6B747',
+  inbox: '#0080FF',
+  inboxAlt: '#FF96DD',
+  livechat: '#8000FF',
+  
+  // UI Element Colors
+  buttonPrimary: '#0057FF',
+  buttonSecondary: '#F79248',
+  
+  // Header Colors
+  headerBlue: '#0000FF',
+  headerOrange: '#F79248',
+  headerBlack: '#09080E',
+  
+  // Content/Font Colors
+  contentBlack: '#09080E',
+  contentGray: '#5B5B5B',
+  
+  // Pathway Colors
+  aiCoachBlack: '#09080E',
+  aiCoachRed: '#FF0040',
+  diy: '#0057FF',
+  msp: '#F79248',
 } as const;
 
-// Tailwind Classes - Master Color Key Pattern
+// Tailwind Classes - Platform Branding
 export const brandColors = {
-  // businessblueprint.io - black + blueprint blue + fluorescent green
+  // businessblueprint.io
   businessblueprint: {
-    home: { business: "text-black dark:text-white", blueprint: "text-[#0080FF]", io: "text-[#AAFF00]" },
-    contact: { business: "text-black dark:text-white", blueprint: "text-[#0080FF]", io: "text-[#AAFF00]" },
-    about: { business: "text-black dark:text-white", blueprint: "text-[#0080FF]", io: "text-[#AAFF00]" },
-    pricing: { business: "text-black dark:text-white", blueprint: "text-[#0080FF]", io: "text-[#AAFF00]" },
-    portal: { business: "text-black dark:text-white", blueprint: "text-[#660099]", io: "text-[#AAFF00]" } // Purple for portal
+    home: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFA500]", io: "text-[#84D71A]" },
+    contact: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFA500]", io: "text-[#84D71A]" },
+    about: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFA500]", io: "text-[#84D71A]" },
+    pricing: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFA500]", io: "text-[#84D71A]" },
+    portal: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFA500]", io: "text-[#84D71A]" }
   },
   
-  // hostsblue.com (webhosted.io) - black + purple + fluorescent green
+  // hostsblue.com (webhosted.io)
   webhosted: {
-    home: { web: "text-black dark:text-white", hosted: "text-[#660099]", io: "text-[#AAFF00]" },
-    contact: { web: "text-black dark:text-white", hosted: "text-[#660099]", io: "text-[#AAFF00]" },
-    about: { web: "text-black dark:text-white", hosted: "text-[#660099]", io: "text-[#AAFF00]" },
-    pricing: { web: "text-black dark:text-white", hosted: "text-[#660099]", io: "text-[#AAFF00]" },
-    portal: { web: "text-black dark:text-white", hosted: "text-[#660099]", io: "text-[#AAFF00]" }
+    home: { web: "text-[#09080E] dark:text-white", hosted: "text-[#660099]", io: "text-[#84D71A]" },
+    contact: { web: "text-[#09080E] dark:text-white", hosted: "text-[#660099]", io: "text-[#84D71A]" },
+    about: { web: "text-[#09080E] dark:text-white", hosted: "text-[#660099]", io: "text-[#84D71A]" },
+    pricing: { web: "text-[#09080E] dark:text-white", hosted: "text-[#660099]", io: "text-[#84D71A]" },
+    portal: { web: "text-[#09080E] dark:text-white", hosted: "text-[#660099]", io: "text-[#84D71A]" }
   },
   
-  // swipesblue.com (airswiped.com) - black + red + fluorescent green
+  // swipesblue.com (airswiped.com)
   airswiped: {
-    home: { air: "text-black dark:text-white", swiped: "text-[#CB0505]", com: "text-[#AAFF00]" },
-    contact: { air: "text-black dark:text-white", swiped: "text-[#CB0505]", com: "text-[#AAFF00]" },
-    about: { air: "text-black dark:text-white", swiped: "text-[#CB0505]", com: "text-[#AAFF00]" },
-    pricing: { air: "text-black dark:text-white", swiped: "text-[#CB0505]", com: "text-[#AAFF00]" },
-    portal: { air: "text-black dark:text-white", swiped: "text-[#CB0505]", com: "text-[#AAFF00]" }
+    home: { air: "text-[#09080E] dark:text-white", swiped: "text-[#FF0040]", com: "text-[#84D71A]" },
+    contact: { air: "text-[#09080E] dark:text-white", swiped: "text-[#FF0040]", com: "text-[#84D71A]" },
+    about: { air: "text-[#09080E] dark:text-white", swiped: "text-[#FF0040]", com: "text-[#84D71A]" },
+    pricing: { air: "text-[#09080E] dark:text-white", swiped: "text-[#FF0040]", com: "text-[#84D71A]" },
+    portal: { air: "text-[#09080E] dark:text-white", swiped: "text-[#FF0040]", com: "text-[#84D71A]" }
   }
 };
 

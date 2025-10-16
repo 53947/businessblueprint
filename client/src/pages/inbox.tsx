@@ -68,14 +68,14 @@ const CHANNEL_ICONS: Record<string, any> = {
 };
 
 const CHANNEL_COLORS: Record<string, string> = {
-  email: 'bg-[#0080FF]', // Blueprint blue
-  livechat: 'bg-[#AAFF00]', // Fluorescent green
-  sms: 'bg-[#660099]', // Purple
-  whatsapp: 'bg-[#AAFF00]', // Fluorescent green
-  facebook: 'bg-[#0080FF]', // Blueprint blue
-  instagram: 'bg-[#660099]', // Purple
-  twitter: 'bg-[#0080FF]', // Blueprint blue
-  tiktok: 'bg-black', // Black
+  email: 'bg-[#0080FF]', // Inbox blue
+  livechat: 'bg-[#8000FF]', // Livechat purple
+  sms: 'bg-[#FF96DD]', // Inbox alt pink
+  whatsapp: 'bg-[#84D71A]', // TLD green
+  facebook: 'bg-[#0057FF]', // Triad blue
+  instagram: 'bg-[#FF96DD]', // Inbox alt pink
+  twitter: 'bg-[#0080FF]', // Inbox blue
+  tiktok: 'bg-[#09080E]', // Black
 };
 
 export default function InboxPage() {
@@ -401,8 +401,8 @@ export default function InboxPage() {
                       <div
                         className={`max-w-[70%] rounded-lg p-3 ${
                           message.direction === 'outbound'
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100'
+                            ? 'bg-[#0080FF] text-white'
+                            : 'bg-white dark:bg-gray-800 text-[#09080E] dark:text-gray-100'
                         }`}
                       >
                         <p className="text-sm font-medium mb-1" data-testid={`text-sender-${message.id}`}>
