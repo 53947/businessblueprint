@@ -366,43 +366,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Client Portal Login - Generate JWT token for client access
+  // Client Portal Login - Email-only authentication
   app.post("/api/clients/login", async (req, res) => {
     try {
-      const { identifier } = req.body;
+      const { email } = req.body;
 
-      if (!identifier) {
+      if (!email) {
         return res.status(400).json({
           success: false,
-          message: "Customer identifier is required"
+          message: "Email address is required"
         });
       }
 
-      // Find client by external ID first, then fallback to email
-      let client = await storage.getClientByExternalId(identifier);
-      
-      if (!client) {
-        // Try finding by email as fallback
-        client = await storage.getClientByEmail(identifier);
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          success: false,
+          message: "Please enter a valid email address"
+        });
       }
+
+      // Find client by email (case-insensitive, trimmed)
+      const client = await storage.getClientByEmail(email.toLowerCase().trim());
 
       if (!client) {
         return res.status(404).json({
           success: false,
-          message: "Client not found. Please check your customer ID or email."
+          message: "No account found with this email address. Please check your email or contact support."
         });
       }
 
-      // Generate JWT token
-      const token = await jwtService.createDashboardToken(client.id, identifier);
+      // Update login tracking
+      await storage.updateClient(client.id, {
+        lastLoginTime: new Date(),
+        loginCount: (client.loginCount || 0) + 1
+      });
+
+      // Generate JWT token with email
+      const token = await jwtService.createDashboardToken(client.id, client.email);
 
       res.json({
         success: true,
         client: {
           id: client.id,
-          name: client.name,
           companyName: client.companyName,
-          email: client.email
+          email: client.email,
+          isEmailVerified: client.isEmailVerified || false
         },
         token,
         message: "Login successful"

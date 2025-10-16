@@ -74,13 +74,22 @@ export const clients = pgTable("clients", {
   id: serial("id").primaryKey(),
   externalId: text("external_id").unique(), // External reference (Synup, etc.)
   companyName: text("company_name").notNull(),
-  email: text("email").notNull(),
+  email: text("email").notNull().unique(), // Primary login identifier
   phone: text("phone"),
   website: text("website"),
   address: text("address"),
   businessCategory: text("business_category"),
   enabledFeatures: text("enabled_features"), // CO,VI,SP,RE,SO,RI
+  
+  // Email verification
+  isEmailVerified: boolean("is_email_verified").default(false),
+  verificationCode: text("verification_code"),
+  verificationExpiry: timestamp("verification_expiry"),
+  
+  // Login tracking
   lastLoginTime: timestamp("last_login_time"),
+  loginCount: integer("login_count").default(0),
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -113,6 +122,19 @@ export const campaigns = pgTable("campaigns", {
   metrics: jsonb("metrics"), // open rates, clicks, etc
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Email change audit trail
+export const emailChangeHistory = pgTable("email_change_history", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  oldEmail: text("old_email").notNull(),
+  newEmail: text("new_email").notNull(),
+  verificationCode: text("verification_code"),
+  verified: boolean("verified").default(false),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 // Dashboard access tracking
@@ -237,7 +259,21 @@ export const insertClientSchema = createInsertSchema(clients).pick({
   address: true,
   businessCategory: true,
   enabledFeatures: true,
+  isEmailVerified: true,
+  verificationCode: true,
+  verificationExpiry: true,
   lastLoginTime: true,
+  loginCount: true,
+});
+
+export const insertEmailChangeHistorySchema = createInsertSchema(emailChangeHistory).pick({
+  clientId: true,
+  oldEmail: true,
+  newEmail: true,
+  verificationCode: true,
+  verified: true,
+  ipAddress: true,
+  userAgent: true,
 });
 
 export const insertInboxMessageSchema = createInsertSchema(inboxMessages).pick({
@@ -552,6 +588,8 @@ export type Recommendation = typeof recommendations.$inferSelect;
 export type InsertRecommendation = z.infer<typeof insertRecommendationSchema>;
 export type Client = typeof clients.$inferSelect;
 export type InsertClient = z.infer<typeof insertClientSchema>;
+export type EmailChangeHistory = typeof emailChangeHistory.$inferSelect;
+export type InsertEmailChangeHistory = z.infer<typeof insertEmailChangeHistorySchema>;
 export type InboxMessage = typeof inboxMessages.$inferSelect;
 export type InsertInboxMessage = z.infer<typeof insertInboxMessageSchema>;
 export type Campaign = typeof campaigns.$inferSelect;
