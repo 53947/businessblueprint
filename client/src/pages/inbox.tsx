@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { SectionHeader } from '@/components/section-header';
 import { 
   Send, 
   Mail, 
@@ -22,7 +23,9 @@ import {
   Loader2,
   AlertCircle,
   Home,
-  Settings
+  Settings,
+  Filter,
+  Archive
 } from 'lucide-react';
 import { SiWhatsapp, SiTiktok } from 'react-icons/si';
 import { apiRequest, queryClient } from '@/lib/queryClient';
@@ -80,6 +83,7 @@ export default function InboxPage() {
   const [messageInput, setMessageInput] = useState('');
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isTyping, setIsTyping] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>('all');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
   const { toast } = useToast();
@@ -242,36 +246,54 @@ export default function InboxPage() {
 
   const selectedConv = conversations.find(c => c.id === selectedConversation);
 
+  const inboxTabs = [
+    {
+      label: 'All',
+      icon: MessageCircle,
+      active: activeTab === 'all',
+      onClick: () => setActiveTab('all'),
+      testId: 'tab-all-messages'
+    },
+    {
+      label: 'Unread',
+      active: activeTab === 'unread',
+      onClick: () => setActiveTab('unread'),
+      testId: 'tab-unread-messages'
+    },
+    {
+      label: 'Archive',
+      icon: Archive,
+      active: activeTab === 'archive',
+      onClick: () => setActiveTab('archive'),
+      testId: 'tab-archive'
+    },
+  ];
+
   return (
-    <div className="h-screen flex bg-gray-50 dark:bg-gray-900">
-      {/* Conversations List */}
-      <div className="w-80 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-        <CardHeader className="border-b border-gray-200 dark:border-gray-800">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-xl" data-testid="title-inbox">Inbox</CardTitle>
-            <div className="flex items-center gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                data-testid="button-inbox-settings"
-                onClick={() => toast({ 
-                  title: "Inbox Settings", 
-                  description: "Configure email accounts (Gmail, Outlook), SMS, and social media messaging channels here." 
-                })}
-              >
-                <Settings className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setLocation("/portal")}
-                data-testid="button-portal-inbox"
-              >
-                <Home className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
+    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+      {/* Section Header - Inbox Navigation */}
+      <SectionHeader 
+        title="Inbox" 
+        tabs={inboxTabs}
+        actions={
+          <Button 
+            variant="outline" 
+            size="sm" 
+            data-testid="button-inbox-settings"
+            onClick={() => toast({ 
+              title: "Inbox Settings", 
+              description: "Configure email accounts (Gmail, Outlook), SMS, and social media messaging channels here." 
+            })}
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+        }
+      />
+
+      {/* Main Content */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Conversations List */}
+        <div className="w-80 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
         <ScrollArea className="h-[calc(100vh-80px)]">
           {conversationsLoading ? (
             <div className="flex items-center justify-center p-8">
@@ -452,6 +474,7 @@ export default function InboxPage() {
             Select a conversation to start messaging
           </div>
         )}
+      </div>
       </div>
     </div>
   );
