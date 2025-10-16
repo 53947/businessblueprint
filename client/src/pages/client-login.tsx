@@ -43,7 +43,30 @@ export default function ClientLogin() {
         sessionStorage.setItem("externalId", customerIdentifier);
         sessionStorage.setItem("authToken", data.token); // Store JWT token for API calls
         sessionStorage.setItem("clientName", data.client.name || data.client.companyName || "");
-        setLocation("/portal");
+        
+        // Check for redirect URL parameter and validate it's a safe internal route
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectParam = urlParams.get("redirect");
+        
+        // Whitelist of allowed internal routes
+        const allowedRoutes = ["/portal", "/inbox", "/send", "/livechat"];
+        
+        // Validate redirect is a safe same-origin path
+        let redirectUrl = "/portal"; // Default fallback
+        if (redirectParam) {
+          // Must start with "/" and not be a protocol-relative URL
+          if (redirectParam.startsWith("/") && !redirectParam.startsWith("//")) {
+            // Check if it's in the whitelist or starts with an allowed path
+            const isAllowed = allowedRoutes.some(route => 
+              redirectParam === route || redirectParam.startsWith(route + "/") || redirectParam.startsWith(route + "?")
+            );
+            if (isAllowed) {
+              redirectUrl = redirectParam;
+            }
+          }
+        }
+        
+        setLocation(redirectUrl);
       } else {
         setError(data.message || "Unable to access your dashboard. Please check your customer ID.");
       }
