@@ -529,7 +529,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="hidden md:flex items-center space-x-2 border-yellow-500 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700"
+                  className="hidden md:flex items-center space-x-2 bg-[#0080FF] border-[#0080FF] hover:bg-[#0057FF]"
+                  style={{ color: '#FF96DD' }}
                   asChild
                   data-testid="button-quick-inbox"
                 >
