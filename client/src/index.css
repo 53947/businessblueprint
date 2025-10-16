@@ -2,9 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Typography System - Professional Fonts */
+/* Aptos Display (Fallback: System UI fonts) */
+@font-face {
+  font-family: 'Aptos Display';
+  src: local('Aptos Display'), local('Segoe UI'), local('system-ui');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aptos Display';
+  src: local('Aptos Display'), local('Segoe UI Semibold'), local('system-ui');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aptos Display';
+  src: local('Aptos Display'), local('Segoe UI Bold'), local('system-ui');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* TT Commons Pro alternative (Fallback: Inter, SF Pro) */
+@font-face {
+  font-family: 'TT Commons Pro';
+  src: local('Inter'), local('SF Pro Display'), local('system-ui');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Commons Pro';
+  src: local('Inter Medium'), local('SF Pro Display Medium'), local('system-ui');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TT Commons Pro';
+  src: local('Inter Semibold'), local('SF Pro Display Semibold'), local('system-ui');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(20, 14.3%, 4.1%);
+  
+  /* Typography variables */
+  --font-display: 'Aptos Display', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'TT Commons Pro', 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
   --muted: hsl(60, 4.8%, 95.9%);
   --muted-foreground: hsl(25, 5.3%, 44.7%);
   --popover: hsl(0, 0%, 100%);
@@ -54,7 +110,17 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply antialiased bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+  
+  code, pre, kbd, samp {
+    font-family: var(--font-mono);
   }
 }
 

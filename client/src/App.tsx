@@ -23,6 +23,7 @@ import InboxLanding from "@/pages/inbox-landing";
 import InboxPage from "@/pages/inbox";
 import LivechatLanding from "@/pages/livechat-landing";
 import LiveChatDemo from "@/pages/livechat-demo";
+import LiveChatInstall from "@/pages/livechat-install";
 import CommverseLanding from "@/pages/commverse-landing";
 import CommversePricing from "@/pages/commverse-pricing";
 import PricingPage from "@/pages/pricing";
@@ -30,6 +31,7 @@ import MarketplacePage from "@/pages/marketplace";
 import MarketplaceCheckoutPage from "@/pages/marketplace-checkout";
 import BIIF from "@/pages/biif";
 import AdminPanel from "@/pages/admin-panel";
+import BrandStudio from "@/pages/brand-studio";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -57,10 +59,12 @@ function Router() {
       <Route path="/inbox-app" component={InboxPage} />
       <Route path="/livechat" component={LivechatLanding} />
       <Route path="/livechat-demo" component={LiveChatDemo} />
+      <Route path="/livechat-install" component={LiveChatInstall} />
       <Route path="/commverse" component={CommverseLanding} />
       <Route path="/commverse-pricing" component={CommversePricing} />
       <Route path="/biif" component={BIIF} />
       <Route path="/admin" component={AdminPanel} />
+      <Route path="/brand-studio" component={BrandStudio} />
       <Route component={NotFound} />
     </Switch>
   );
