@@ -10,7 +10,9 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  User
+  User,
+  MessageSquare,
+  Share2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.png";
@@ -28,6 +30,8 @@ interface NavItem {
   label: string;
   icon: React.ReactNode;
   badge?: number;
+  external?: boolean;
+  href?: string;
 }
 
 export function SideNav({ activeTab = "overview", onTabChange, onSignOut, className, ...props }: SideNavProps) {
@@ -38,12 +42,17 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
     { id: "listings", label: "Listings", icon: <MapPin className="w-5 h-5" /> },
     { id: "reviews", label: "Reviews", icon: <Star className="w-5 h-5" /> },
     { id: "campaigns", label: "Campaigns", icon: <Megaphone className="w-5 h-5" /> },
+    { id: "inbox", label: "Inbox", icon: <MessageSquare className="w-5 h-5" />, external: true, href: "/inbox" },
+    { id: "social", label: "Social Media", icon: <Share2 className="w-5 h-5" />, badge: 0 },
     { id: "tasks", label: "Tasks", icon: <CheckSquare className="w-5 h-5" /> },
   ];
 
-  const handleNavClick = (tabId: string) => {
-    if (onTabChange) {
-      onTabChange(tabId);
+  const handleNavClick = (item: NavItem) => {
+    if (item.external && item.href) {
+      // Navigate to external page
+      window.location.href = item.href;
+    } else if (onTabChange) {
+      onTabChange(item.id);
     }
   };
 
@@ -82,7 +91,7 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
         {navItems.map((item) => (
           <button
             key={item.id}
-            onClick={() => handleNavClick(item.id)}
+            onClick={() => handleNavClick(item)}
             className={cn(
               "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left",
               activeTab === item.id 
