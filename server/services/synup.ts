@@ -175,8 +175,7 @@ export class SynupService {
    */
   async getAllLocations(): Promise<SynupLocation[]> {
     if (!this.sdk) {
-      console.warn('⚠️ Synup SDK not initialized - returning empty locations');
-      return [];
+      throw new Error('Synup SDK not initialized - SYNUP_API_KEY may be missing');
     }
 
     try {
@@ -208,7 +207,8 @@ export class SynupService {
       return locations;
     } catch (error) {
       console.error('Error fetching Synup locations:', error);
-      return [];
+      // Throw error to surface integration issues instead of silently returning empty
+      throw new Error(`Failed to fetch locations from Synup: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 

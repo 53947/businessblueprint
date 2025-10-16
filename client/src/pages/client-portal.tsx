@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { SideNav } from "@/components/side-nav";
+import { SynupListings } from "@/components/synup-listings";
 import { 
   BarChart3, 
   Star, 
@@ -56,8 +57,11 @@ export default function ClientPortal() {
   });
 
   const handleSignOut = () => {
+    // Clear all session data including JWT token
     sessionStorage.removeItem("clientId");
     sessionStorage.removeItem("externalId");
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("clientName");
     setLocation("/portal/login");
   };
 
@@ -405,48 +409,7 @@ export default function ClientPortal() {
 
           {/* Listings Tab */}
           <TabsContent value="listings">
-            <Card>
-              <CardHeader>
-                <CardTitle>Business Listings Management</CardTitle>
-                <CardDescription>Manage your presence across all platforms</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="mb-4">
-                  <div className="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                      <div className="text-2xl font-bold text-green-600">{clientData.listings.verified}</div>
-                      <p className="text-sm text-gray-600">Verified</p>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-orange-600">{clientData.listings.pending}</div>
-                      <p className="text-sm text-gray-600">Pending</p>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-blue-600">{clientData.listings.total}</div>
-                      <p className="text-sm text-gray-600">Total</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {clientData.listings.platforms.map((platform: string, index: number) => (
-                    <div key={index} className="p-4 border rounded-lg flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                        <span className="font-medium">{platform}</span>
-                      </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => handleManageListing(platform)}
-                      >
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        Manage
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <SynupListings />
           </TabsContent>
 
           {/* Reviews Tab */}
