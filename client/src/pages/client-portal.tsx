@@ -28,7 +28,8 @@ import {
   LogOut,
   Brain,
   Home,
-  Share2
+  Share2,
+  CheckSquare
 } from "lucide-react";
 
 export default function ClientPortal() {
@@ -36,6 +37,8 @@ export default function ClientPortal() {
   const [clientId, setClientId] = useState<string | null>(null);
   const [externalId, setExternalId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
+  const [showTaskDialog, setShowTaskDialog] = useState(false);
+  const [taskFilter, setTaskFilter] = useState("all");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -464,16 +467,130 @@ export default function ClientPortal() {
           {/* Social Media Tab */}
           <TabsContent value="social">
             <Card>
-              <CardHeader>
-                <CardTitle>Social Media Management</CardTitle>
-                <CardDescription>Manage your social presence across all platforms</CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Social Media Accounts</CardTitle>
+                  <CardDescription>Connect and manage your social media platforms</CardDescription>
+                </div>
+                <Button 
+                  data-testid="button-add-social-account"
+                  onClick={() => toast({ title: "Add Social Account", description: "Choose from available platforms below to connect your accounts." })}
+                >
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Connect Account
+                </Button>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-12">
-                  <Share2 className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-                  <p className="text-gray-600 font-medium mb-2">Social Media Platform Coming Soon</p>
-                  <p className="text-sm text-gray-500 max-w-md mx-auto">
-                    Connect and manage all your social media accounts in one place. Schedule posts, track engagement, and monitor conversations across Facebook, Instagram, Twitter, LinkedIn, and more.
+                <div className="space-y-4">
+                  {/* Facebook */}
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div className="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center">
+                        <span className="text-2xl">📘</span>
+                      </div>
+                      <div>
+                        <p className="font-medium">Facebook</p>
+                        <p className="text-sm text-gray-500">Not connected</p>
+                      </div>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      data-testid="button-connect-facebook"
+                      onClick={() => toast({ title: "Connect Facebook", description: "OAuth integration will open. Requires Facebook API setup." })}
+                    >
+                      Connect
+                    </Button>
+                  </div>
+
+                  {/* Instagram */}
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div className="h-12 w-12 rounded-lg bg-pink-100 flex items-center justify-center">
+                        <span className="text-2xl">📷</span>
+                      </div>
+                      <div>
+                        <p className="font-medium">Instagram</p>
+                        <p className="text-sm text-gray-500">Not connected</p>
+                      </div>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      data-testid="button-connect-instagram"
+                      onClick={() => toast({ title: "Connect Instagram", description: "OAuth integration will open. Requires Instagram API setup." })}
+                    >
+                      Connect
+                    </Button>
+                  </div>
+
+                  {/* Twitter/X */}
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div className="h-12 w-12 rounded-lg bg-sky-100 flex items-center justify-center">
+                        <span className="text-2xl">𝕏</span>
+                      </div>
+                      <div>
+                        <p className="font-medium">X (Twitter)</p>
+                        <p className="text-sm text-gray-500">Not connected</p>
+                      </div>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      data-testid="button-connect-twitter"
+                      onClick={() => toast({ title: "Connect X (Twitter)", description: "OAuth integration will open. Requires X API setup." })}
+                    >
+                      Connect
+                    </Button>
+                  </div>
+
+                  {/* LinkedIn */}
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div className="h-12 w-12 rounded-lg bg-blue-200 flex items-center justify-center">
+                        <span className="text-2xl">💼</span>
+                      </div>
+                      <div>
+                        <p className="font-medium">LinkedIn</p>
+                        <p className="text-sm text-gray-500">Not connected</p>
+                      </div>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      data-testid="button-connect-linkedin"
+                      onClick={() => toast({ title: "Connect LinkedIn", description: "OAuth integration will open. Requires LinkedIn API setup." })}
+                    >
+                      Connect
+                    </Button>
+                  </div>
+
+                  {/* TikTok */}
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div className="h-12 w-12 rounded-lg bg-gray-900 flex items-center justify-center">
+                        <span className="text-2xl">🎵</span>
+                      </div>
+                      <div>
+                        <p className="font-medium">TikTok</p>
+                        <p className="text-sm text-gray-500">Not connected</p>
+                      </div>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      data-testid="button-connect-tiktok"
+                      onClick={() => toast({ title: "Connect TikTok", description: "OAuth integration will open. Requires TikTok API setup." })}
+                    >
+                      Connect
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                  <p className="text-sm text-blue-900">
+                    <strong>Note:</strong> Connect your social media accounts to manage all your posts, comments, and messages in one unified dashboard.
                   </p>
                 </div>
               </CardContent>
@@ -483,13 +600,168 @@ export default function ClientPortal() {
           {/* Tasks Tab */}
           <TabsContent value="tasks">
             <Card>
-              <CardHeader>
-                <CardTitle>Task Management</CardTitle>
-                <CardDescription>Track your progress and next steps</CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Task Management</CardTitle>
+                  <CardDescription>Track and manage your business tasks</CardDescription>
+                </div>
+                <Button 
+                  data-testid="button-create-task"
+                  onClick={() => {
+                    toast({
+                      title: "Create Task",
+                      description: "Task creation dialog will open here. Connect to backend API to save tasks to database.",
+                    });
+                  }}
+                >
+                  <CheckSquare className="h-4 w-4 mr-2" />
+                  Create Task
+                </Button>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-gray-500">
-                  Advanced task management coming soon...
+                <div className="space-y-4">
+                  {/* Task Filters */}
+                  <div className="flex gap-2 flex-wrap">
+                    <Button 
+                      variant={taskFilter === "all" ? "default" : "outline"} 
+                      size="sm" 
+                      data-testid="filter-all-tasks"
+                      onClick={() => setTaskFilter("all")}
+                    >
+                      All Tasks
+                    </Button>
+                    <Button 
+                      variant={taskFilter === "active" ? "default" : "outline"} 
+                      size="sm" 
+                      data-testid="filter-active-tasks"
+                      onClick={() => setTaskFilter("active")}
+                    >
+                      Active
+                    </Button>
+                    <Button 
+                      variant={taskFilter === "completed" ? "default" : "outline"} 
+                      size="sm" 
+                      data-testid="filter-completed-tasks"
+                      onClick={() => setTaskFilter("completed")}
+                    >
+                      Completed
+                    </Button>
+                    <Button 
+                      variant={taskFilter === "overdue" ? "default" : "outline"} 
+                      size="sm" 
+                      data-testid="filter-overdue-tasks"
+                      onClick={() => setTaskFilter("overdue")}
+                    >
+                      Overdue
+                    </Button>
+                  </div>
+
+                  {/* Task List */}
+                  <div className="space-y-3">
+                    {/* High Priority Task */}
+                    <div className="flex items-center justify-between p-4 border-l-4 border-red-500 bg-red-50 rounded-lg">
+                      <div className="flex items-center gap-4 flex-1">
+                        <input type="checkbox" className="h-5 w-5" data-testid="checkbox-task-1" />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium">Respond to urgent customer reviews</p>
+                            <Badge variant="destructive" data-testid="badge-priority-high">High</Badge>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1">3 negative reviews need immediate attention</p>
+                          <div className="flex items-center gap-4 mt-2">
+                            <span className="text-xs text-gray-500">Due: Today</span>
+                            <span className="text-xs text-gray-500">Reviews</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          data-testid="button-edit-task-1"
+                          onClick={() => toast({ title: "Edit Task", description: "Edit dialog will open. Backend API integration needed." })}
+                        >
+                          Edit
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          data-testid="button-delete-task-1"
+                          onClick={() => toast({ title: "Delete Task", description: "Task deleted. Backend API integration needed for persistence." })}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Medium Priority Task */}
+                    <div className="flex items-center justify-between p-4 border-l-4 border-yellow-500 bg-yellow-50 rounded-lg">
+                      <div className="flex items-center gap-4 flex-1">
+                        <input type="checkbox" className="h-5 w-5" data-testid="checkbox-task-2" />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium">Update business hours on all listings</p>
+                            <Badge variant="secondary" data-testid="badge-priority-medium">Medium</Badge>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1">Sync holiday hours across 50+ directories</p>
+                          <div className="flex items-center gap-4 mt-2">
+                            <span className="text-xs text-gray-500">Due: This Week</span>
+                            <span className="text-xs text-gray-500">Listings</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" data-testid="button-edit-task-2">Edit</Button>
+                        <Button variant="ghost" size="sm" data-testid="button-delete-task-2">Delete</Button>
+                      </div>
+                    </div>
+
+                    {/* Low Priority Task */}
+                    <div className="flex items-center justify-between p-4 border-l-4 border-blue-500 bg-blue-50 rounded-lg">
+                      <div className="flex items-center gap-4 flex-1">
+                        <input type="checkbox" className="h-5 w-5" data-testid="checkbox-task-3" />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium">Review analytics and performance metrics</p>
+                            <Badge variant="outline" data-testid="badge-priority-low">Low</Badge>
+                          </div>
+                          <p className="text-sm text-gray-600 mt-1">Monthly performance review</p>
+                          <div className="flex items-center gap-4 mt-2">
+                            <span className="text-xs text-gray-500">Due: Next Week</span>
+                            <span className="text-xs text-gray-500">Analytics</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" data-testid="button-edit-task-3">Edit</Button>
+                        <Button variant="ghost" size="sm" data-testid="button-delete-task-3">Delete</Button>
+                      </div>
+                    </div>
+
+                    {/* Completed Task */}
+                    <div className="flex items-center justify-between p-4 border rounded-lg bg-gray-50 opacity-60">
+                      <div className="flex items-center gap-4 flex-1">
+                        <input type="checkbox" className="h-5 w-5" checked disabled data-testid="checkbox-task-4" />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium line-through">Set up email integration</p>
+                            <Badge variant="outline" data-testid="badge-status-completed">Completed</Badge>
+                          </div>
+                          <p className="text-sm text-gray-500 mt-1">Connected Gmail and Outlook accounts</p>
+                          <div className="flex items-center gap-4 mt-2">
+                            <span className="text-xs text-gray-500">Completed: Yesterday</span>
+                            <span className="text-xs text-gray-500">Setup</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                    <p className="text-sm text-blue-900">
+                      <strong>Task Categories:</strong> Reviews, Listings, Campaigns, Setup, Analytics, Social Media, Messages
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>

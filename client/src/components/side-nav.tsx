@@ -12,7 +12,8 @@ import {
   ChevronRight,
   User,
   MessageSquare,
-  Share2
+  Share2,
+  MessageCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.png";
@@ -38,13 +39,14 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const navItems: NavItem[] = [
-    { id: "inbox", label: "Inbox", icon: <MessageSquare className="w-5 h-5" />, external: true, href: "/inbox" },
+    { id: "inbox", label: "Inbox", icon: <MessageSquare className="w-5 h-5" />, external: true, href: "/inbox-app" },
     { id: "tasks", label: "Tasks", icon: <CheckSquare className="w-5 h-5" /> },
     { id: "overview", label: "Overview", icon: <LayoutDashboard className="w-5 h-5" /> },
     { id: "listings", label: "Listings", icon: <MapPin className="w-5 h-5" /> },
     { id: "reviews", label: "Reviews", icon: <Star className="w-5 h-5" /> },
     { id: "campaigns", label: "Campaigns", icon: <Megaphone className="w-5 h-5" /> },
-    { id: "social", label: "Social Media", icon: <Share2 className="w-5 h-5" />, badge: 0 },
+    { id: "social", label: "Social Media", icon: <Share2 className="w-5 h-5" /> },
+    { id: "livechat", label: "Live Chat", icon: <MessageCircle className="w-5 h-5" />, external: true, href: "/livechat-demo" },
   ];
 
   const handleNavClick = (item: NavItem) => {

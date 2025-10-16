@@ -194,12 +194,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-yellow-500 hover:shadow-xl hover:from-yellow-50 hover:to-yellow-100 dark:hover:from-yellow-950 dark:hover:to-yellow-900 hover:scale-[1.02]"
-                                href={sessionStorage.getItem("authToken") ? "/inbox" : "/client-login?redirect=/inbox"}
+                                href={sessionStorage.getItem("authToken") ? "/inbox-app" : "/client-login?redirect=/inbox-app"}
                                 data-testid="link-app-inbox"
                                 onClick={(e) => {
                                   e.preventDefault();
                                   const isLoggedIn = sessionStorage.getItem("authToken");
-                                  window.location.href = isLoggedIn ? "/inbox" : "/client-login?redirect=/inbox";
+                                  window.location.href = isLoggedIn ? "/inbox-app" : "/client-login?redirect=/inbox-app";
                                 }}
                               >
                                 <div className="flex items-center justify-between mb-3">

@@ -248,14 +248,27 @@ export default function InboxPage() {
         <CardHeader className="border-b border-gray-200 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <CardTitle className="text-xl" data-testid="title-inbox">Inbox</CardTitle>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => setLocation("/portal")}
-              data-testid="button-portal-inbox"
-            >
-              <Home className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                data-testid="button-inbox-settings"
+                onClick={() => toast({ 
+                  title: "Inbox Settings", 
+                  description: "Configure email accounts (Gmail, Outlook), SMS, and social media messaging channels here." 
+                })}
+              >
+                Settings
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setLocation("/portal")}
+                data-testid="button-portal-inbox"
+              >
+                <Home className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <ScrollArea className="h-[calc(100vh-80px)]">
