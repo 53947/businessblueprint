@@ -38,13 +38,13 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const navItems: NavItem[] = [
+    { id: "inbox", label: "Inbox", icon: <MessageSquare className="w-5 h-5" />, external: true, href: "/inbox" },
+    { id: "tasks", label: "Tasks", icon: <CheckSquare className="w-5 h-5" /> },
     { id: "overview", label: "Overview", icon: <LayoutDashboard className="w-5 h-5" /> },
     { id: "listings", label: "Listings", icon: <MapPin className="w-5 h-5" /> },
     { id: "reviews", label: "Reviews", icon: <Star className="w-5 h-5" /> },
     { id: "campaigns", label: "Campaigns", icon: <Megaphone className="w-5 h-5" /> },
-    { id: "inbox", label: "Inbox", icon: <MessageSquare className="w-5 h-5" />, external: true, href: "/inbox" },
     { id: "social", label: "Social Media", icon: <Share2 className="w-5 h-5" />, badge: 0 },
-    { id: "tasks", label: "Tasks", icon: <CheckSquare className="w-5 h-5" /> },
   ];
 
   const handleNavClick = (item: NavItem) => {
@@ -88,28 +88,31 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
 
       {/* Navigation Items */}
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto" data-testid="nav-items">
-        {navItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => handleNavClick(item)}
-            className={cn(
-              "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left",
-              activeTab === item.id 
-                ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" 
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-            )}
-            data-testid={`nav-item-${item.id}`}
-          >
-            {item.icon}
-            {!isCollapsed && (
-              <span className="flex-1" data-testid={`text-nav-${item.id}`}>{item.label}</span>
-            )}
-            {!isCollapsed && item.badge && (
-              <span className="bg-red-500 text-white text-xs rounded-full px-2 py-0.5" data-testid={`badge-${item.id}`}>
-                {item.badge}
-              </span>
-            )}
-          </button>
+        {navItems.map((item, index) => (
+          <div key={item.id}>
+            <button
+              onClick={() => handleNavClick(item)}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left",
+                activeTab === item.id 
+                  ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" 
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+              )}
+              data-testid={`nav-item-${item.id}`}
+            >
+              {item.icon}
+              {!isCollapsed && (
+                <span className="flex-1" data-testid={`text-nav-${item.id}`}>{item.label}</span>
+              )}
+              {!isCollapsed && item.badge && (
+                <span className="bg-red-500 text-white text-xs rounded-full px-2 py-0.5" data-testid={`badge-${item.id}`}>
+                  {item.badge}
+                </span>
+              )}
+            </button>
+            {/* Add double spacing after Tasks (index 1) */}
+            {item.id === "tasks" && <div className="h-4"></div>}
+          </div>
         ))}
       </nav>
 
