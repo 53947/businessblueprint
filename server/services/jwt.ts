@@ -75,9 +75,7 @@ export class JWTService {
 
     const options: jwt.SignOptions = {
       algorithm: this.algorithm,
-      expiresIn: '24h', // 24 hour token expiration
-      issuer: 'businessblueprint.io',
-      audience: 'client-portal'
+      expiresIn: '24h' // 24 hour token expiration
     };
 
     const token = jwt.sign(payload, this.keyPair.privateKey, options);

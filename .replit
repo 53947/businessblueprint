@@ -68,11 +68,11 @@ localPort = 42537
 externalPort = 6000
 
 [[ports]]
-localPort = 44367
-externalPort = 8000
-
-[[ports]]
 localPort = 45071
 externalPort = 3000
+
+[[ports]]
+localPort = 45845
+externalPort = 8008
 
 [agent]
