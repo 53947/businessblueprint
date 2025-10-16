@@ -1,23 +1,76 @@
+import { useState } from "react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { LiveChatWidget } from "@/components/livechat-widget";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SectionHeader } from "@/components/section-header";
+import { Button } from "@/components/ui/button";
+import { MessageCircle, Settings, Code, BarChart3, Users } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function LiveChatDemo() {
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState('demo');
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header />
+      <SectionHeader 
+        title="/livechat - Website Chat Widget"
+        tabs={[
+          { 
+            label: 'Demo', 
+            icon: MessageCircle, 
+            active: activeTab === 'demo',
+            onClick: () => setActiveTab('demo'),
+            testId: 'tab-demo'
+          },
+          { 
+            label: 'Installation', 
+            icon: Code, 
+            active: activeTab === 'installation',
+            onClick: () => {
+              setActiveTab('installation');
+              toast({ title: 'Installation', description: 'Installation guide coming soon' });
+            },
+            testId: 'tab-installation'
+          },
+          { 
+            label: 'Conversations', 
+            icon: Users, 
+            active: activeTab === 'conversations',
+            onClick: () => {
+              setActiveTab('conversations');
+              toast({ title: 'Conversations', description: 'Conversation history coming soon' });
+            },
+            testId: 'tab-conversations'
+          },
+          { 
+            label: 'Analytics', 
+            icon: BarChart3, 
+            active: activeTab === 'analytics',
+            onClick: () => {
+              setActiveTab('analytics');
+              toast({ title: 'Analytics', description: 'Chat analytics coming soon' });
+            },
+            testId: 'tab-analytics'
+          }
+        ]}
+        actions={
+          <Button 
+            onClick={() => toast({ title: 'Settings', description: 'Widget settings coming soon' })} 
+            variant="ghost" 
+            size="sm"
+            data-testid="button-settings"
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+        }
+        showHomeButton={true}
+        homeRoute="/portal"
+      />
       
-      <main className="container mx-auto px-4 py-16">
+      <main className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Live Chat Widget Demo
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
-              Test the real-time messaging widget for your website
-            </p>
-          </div>
 
           <Card className="mb-8">
             <CardHeader>
