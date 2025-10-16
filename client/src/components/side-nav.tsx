@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { 
   LayoutDashboard, 
@@ -37,6 +38,7 @@ interface NavItem {
 
 export function SideNav({ activeTab = "overview", onTabChange, onSignOut, className, ...props }: SideNavProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [, setLocation] = useLocation();
 
   const navItems: NavItem[] = [
     { id: "inbox", label: "Inbox", icon: <MessageSquare className="w-5 h-5" />, external: true, href: "/inbox-app" },
@@ -51,8 +53,8 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
 
   const handleNavClick = (item: NavItem) => {
     if (item.external && item.href) {
-      // Navigate to external page
-      window.location.href = item.href;
+      // Navigate to external page using Wouter
+      setLocation(item.href);
     } else if (onTabChange) {
       onTabChange(item.id);
     }
