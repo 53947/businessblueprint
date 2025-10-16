@@ -23,7 +23,7 @@ export default function ClientLogin() {
     try {
       // Validate customer identifier format
       if (!customerIdentifier) {
-        setError("Please enter your customer identifier");
+        setError("Please enter your Account ID or email address");
         setLoading(false);
         return;
       }
@@ -68,7 +68,7 @@ export default function ClientLogin() {
         
         setLocation(redirectUrl);
       } else {
-        setError(data.message || "Unable to access your dashboard. Please check your customer ID.");
+        setError(data.message || "Unable to access your dashboard. Please check your Account ID or email.");
       }
     } catch (err) {
       setError("Connection error. Please try again.");
@@ -101,22 +101,23 @@ export default function ClientLogin() {
           
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="customerIdentifier">Customer ID</Label>
+              <Label htmlFor="customerIdentifier">Account ID or Email</Label>
               <div className="relative">
                 <Building className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="customerIdentifier"
                   type="text"
-                  placeholder="Enter your customer ID"
+                  placeholder="Enter your Account ID or email address"
                   value={customerIdentifier}
                   onChange={(e) => setCustomerIdentifier(e.target.value)}
                   className="pl-10"
                   required
                   disabled={loading}
+                  data-testid="input-account-identifier"
                 />
               </div>
               <p className="text-xs text-gray-500">
-                Enter your customer identifier (provided in your welcome email)
+                Use your Account ID (e.g., admin-test-001) or registered email address
               </p>
             </div>
 
@@ -132,7 +133,7 @@ export default function ClientLogin() {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600 mb-4">
-              Don't have your customer ID? Check your welcome email or contact support.
+              Don't have your Account ID? Check your welcome email or contact support.
             </p>
             <div className="border-t pt-4">
               <p className="text-xs text-gray-500">
