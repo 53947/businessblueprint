@@ -18,7 +18,10 @@ import {
   Map,
   MapPin,
   Palette,
-  ChevronRight
+  ChevronRight,
+  MessageSquare,
+  ShoppingCart,
+  Building2
 } from "lucide-react";
 import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
 
@@ -27,153 +30,137 @@ export default function Sitemap() {
     root: {
       title: "businessblueprint.io",
       path: "/",
-      description: "Digital Intelligence Platform",
+      description: "Your Digital Intelligence Partner",
       children: [
         {
-          title: "Public Pages",
+          title: "Get Started",
           children: [
             {
               title: "Home",
               path: "/",
               icon: Home,
-              description: "Landing page with value proposition"
+              description: "Discover how we help local businesses succeed online"
             },
             {
-              title: "About",
+              title: "About Us",
               path: "/about",
               icon: Info,
-              description: "Mission and company information"
+              description: "Learn about our mission to empower local businesses"
             },
             {
               title: "Contact",
               path: "/contact",
               icon: Mail,
-              description: "Get in touch"
+              description: "Questions? We're here to help"
             },
             {
               title: "Site Map",
               path: "/sitemap",
               icon: Compass,
-              description: "Visual navigation tree (current page)",
+              description: "Navigate our complete platform (you are here)",
               current: true
             }
           ]
         },
         {
-          title: "Core Features",
+          title: "Your Journey to Success",
+          badge: "Free to Start",
           children: [
             {
-              title: "Digital Assessment",
+              title: "Digital IQ Assessment",
               path: "/assessment",
               icon: BarChart3,
-              description: "Free AI-powered Digital IQ analysis",
+              description: "See how your business performs online - get your personalized score",
               badge: "Free"
             },
             {
-              title: "Digital Blueprint",
+              title: "Your Custom Blueprint",
               path: "/dashboard/:id",
               icon: Map,
-              description: "Personalized recommendations dashboard",
+              description: "Get your personalized roadmap to digital success",
               dynamic: true
             },
             {
               title: "AI Business Coach",
               path: "/ai-coach",
               icon: Brain,
-              description: "AI guidance for digital growth",
-              badge: "Add-on"
+              description: "24/7 expert guidance tailored to your business goals",
+              badge: "Premium"
             },
             {
-              title: "Journey",
+              title: "Success Pathway",
               path: "/journey",
               icon: MapPin,
-              description: "5-step journey visualization"
+              description: "Follow our proven 5-step process to grow your business"
             }
           ]
         },
         {
-          title: "Purchase Pathways",
-          badge: "3 Options",
+          title: "Choose Your Plan",
+          badge: "Flexible Options",
           children: [
             {
-              title: "General Subscription",
+              title: "View All Plans",
               path: "/subscription",
               icon: CreditCard,
-              description: "Direct subscription with DIY/MSP pathway selection"
+              description: "Choose between Do It Yourself or Managed Services - we handle the rest"
             },
             {
-              title: "Assessment Checkout",
+              title: "Recommended Bundle",
               path: "/assessment-checkout",
               icon: BarChart3,
-              description: "AI-recommended bundles based on assessment results"
+              description: "Get AI-recommended solutions based on your assessment results"
             },
             {
-              title: "Apps Marketplace",
+              title: "Browse Apps & Tools",
               path: "/apps-marketplace",
-              icon: Users,
-              description: "À la carte individual app ordering",
+              icon: ShoppingCart,
+              description: "Pick exactly what you need from our marketplace",
               badge: "Coming Soon"
             }
           ]
         },
         {
-          title: "Platform Apps",
-          badge: "Included",
+          title: "Business Tools Included",
+          badge: "All Plans",
           children: [
             {
-              title: "/send - Email & SMS Marketing",
+              title: "Email & SMS Campaigns",
               path: "/send",
               icon: Mail,
-              description: "Unified campaigns, compliance, contact management"
+              description: "Reach your customers directly with professional marketing tools"
             },
             {
-              title: "Inbox - Unified Communications",
+              title: "Unified Inbox",
               path: "/inbox",
-              icon: Mail,
-              description: "Multi-channel messaging hub (email, chat, SMS, social)",
+              icon: MessageSquare,
+              description: "Manage all customer messages in one place - email, chat, social media",
               badge: "New"
             },
             {
-              title: "Live Chat Widget Demo",
+              title: "Live Chat for Your Website",
               path: "/livechat-demo",
               icon: Users,
-              description: "Real-time customer chat widget demonstration"
+              description: "Connect with website visitors instantly and convert more customers"
             }
           ]
         },
         {
-          title: "Client Portal",
-          badge: "Secure",
+          title: "Your Business Dashboard",
+          badge: "Members Only",
           children: [
             {
-              title: "Portal Login",
+              title: "Sign In",
               path: "/portal/login",
               icon: LogIn,
-              description: "Client portal authentication"
+              description: "Access your business command center"
             },
             {
-              title: "Client Dashboard",
+              title: "Dashboard",
               path: "/portal",
-              icon: Users,
-              description: "Listings, reviews, campaigns, tasks",
+              icon: Building2,
+              description: "Manage listings, reviews, campaigns, and track your growth",
               requiresAuth: true
-            }
-          ]
-        },
-        {
-          title: "Admin/Development",
-          children: [
-            {
-              title: "System Settings",
-              path: "/settings",
-              icon: Settings,
-              description: "Platform configuration"
-            },
-            {
-              title: "Logo Preview",
-              path: "/logo-preview",
-              icon: Palette,
-              description: "Brand asset preview"
             }
           ]
         }
@@ -214,19 +201,8 @@ export default function Sitemap() {
                               {node.badge}
                             </Badge>
                           )}
-                          {node.requiresAuth && (
-                            <Badge variant="outline" className="text-xs border-orange-300 text-orange-700">
-                              Requires Auth
-                            </Badge>
-                          )}
-                          {node.dynamic && (
-                            <Badge variant="outline" className="text-xs border-purple-300 text-purple-700">
-                              Dynamic
-                            </Badge>
-                          )}
                         </div>
                         <p className="text-sm text-gray-600">{node.description}</p>
-                        <code className="text-xs text-blue-600 mt-1 block">{node.path}</code>
                       </div>
                     </div>
                   </div>
@@ -289,9 +265,9 @@ export default function Sitemap() {
           <div className="flex justify-center mb-4">
             <Compass className="w-16 h-16 text-blue-600" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Site Map</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Explore Our Platform</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Complete visual navigation tree of businessblueprint.io platform
+            Everything you need to build, grow, and manage your digital presence - all in one place
           </p>
         </div>
 
@@ -306,26 +282,26 @@ export default function Sitemap() {
         <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-3xl font-bold text-blue-600">18</div>
-              <div className="text-sm text-gray-600">Total Pages</div>
+              <div className="text-3xl font-bold text-blue-600">4</div>
+              <div className="text-sm text-gray-600">Success Steps</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-3xl font-bold text-green-600">3</div>
-              <div className="text-sm text-gray-600">Purchase Pathways</div>
+              <div className="text-sm text-gray-600">Flexible Plans</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-3xl font-bold text-purple-600">3</div>
-              <div className="text-sm text-gray-600">Platform Apps</div>
+              <div className="text-sm text-gray-600">Business Tools</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-3xl font-bold text-orange-600">4</div>
-              <div className="text-sm text-gray-600">Core Features</div>
+              <div className="text-3xl font-bold text-orange-600">100%</div>
+              <div className="text-sm text-gray-600">Digital Growth</div>
             </CardContent>
           </Card>
         </div>
@@ -333,21 +309,20 @@ export default function Sitemap() {
         {/* Quick Actions */}
         <div className="mt-8 text-center">
           <p className="text-gray-600 mb-4">
-            Can't find what you're looking for? Visit our{" "}
+            Ready to get started? Take our free assessment or{" "}
             <Link href="/contact" className="text-blue-600 hover:text-blue-800 underline font-medium">
-              contact page
-            </Link>{" "}
-            for assistance.
+              talk to our team
+            </Link>
           </p>
           <div className="flex justify-center gap-3">
             <Link href="/assessment">
-              <Button className="bg-blue-600 hover:bg-blue-700">
+              <Button className="bg-blue-600 hover:bg-blue-700" data-testid="button-start-assessment">
                 <BarChart3 className="w-4 h-4 mr-2" />
-                Start Free Assessment
+                Get Your Free Digital IQ Score
               </Button>
             </Link>
             <Link href="/">
-              <Button variant="outline">
+              <Button variant="outline" data-testid="button-return-home">
                 <Home className="w-4 h-4 mr-2" />
                 Return Home
               </Button>
