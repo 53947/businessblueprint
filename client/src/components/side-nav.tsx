@@ -41,14 +41,14 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
   const [, setLocation] = useLocation();
 
   const navItems: NavItem[] = [
-    { id: "inbox", label: "Inbox", icon: <MessageSquare className="w-5 h-5" />, external: true, href: "/inbox-app" },
-    { id: "tasks", label: "Tasks", icon: <CheckSquare className="w-5 h-5" /> },
     { id: "overview", label: "Overview", icon: <LayoutDashboard className="w-5 h-5" /> },
-    { id: "listings", label: "Listings", icon: <MapPin className="w-5 h-5" /> },
-    { id: "reviews", label: "Reviews", icon: <Star className="w-5 h-5" /> },
     { id: "campaigns", label: "Campaigns", icon: <Megaphone className="w-5 h-5" /> },
+    { id: "listings", label: "Listings", icon: <MapPin className="w-5 h-5" /> },
     { id: "social", label: "Social Media", icon: <Share2 className="w-5 h-5" /> },
+    { id: "reviews", label: "Reviews", icon: <Star className="w-5 h-5" /> },
+    { id: "inbox", label: "Inbox", icon: <MessageSquare className="w-5 h-5" />, external: true, href: "/inbox-app" },
     { id: "livechat", label: "Live Chat", icon: <MessageCircle className="w-5 h-5" />, external: true, href: "/livechat-demo" },
+    { id: "tasks", label: "Tasks", icon: <CheckSquare className="w-5 h-5" /> },
   ];
 
   const handleNavClick = (item: NavItem) => {
@@ -122,7 +122,14 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
 
       {/* Bottom Section */}
       <div className="p-3 border-t border-gray-200 dark:border-gray-700 space-y-1">
-        {/* Settings button removed until Settings tab content is implemented */}
+        <button
+          onClick={() => setLocation('/brand-studio')}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+          data-testid="button-brand-studio"
+        >
+          <Settings className="w-5 h-5" />
+          {!isCollapsed && <span data-testid="text-brand-studio">Brand Studio</span>}
+        </button>
         
         {onSignOut && (
           <button

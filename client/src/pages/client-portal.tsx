@@ -29,7 +29,9 @@ import {
   Brain,
   Home,
   Share2,
-  CheckSquare
+  CheckSquare,
+  MessageCircle,
+  Bell
 } from "lucide-react";
 
 export default function ClientPortal() {
@@ -285,16 +287,51 @@ export default function ClientPortal() {
           </Card>
         </div>
 
+        {/* Quick Action Shortcuts */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <Button 
+            variant="outline" 
+            className="h-auto py-4 flex flex-col items-center gap-2 hover:bg-purple-50 hover:border-purple-400"
+            onClick={() => setLocation("/livechat-demo")}
+            data-testid="button-install-livechat"
+          >
+            <MessageCircle className="h-6 w-6 text-purple-600" />
+            <span className="font-medium">Install Live Chat Widget</span>
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            className="h-auto py-4 flex flex-col items-center gap-2 hover:bg-blue-50 hover:border-blue-400"
+            onClick={() => setActiveTab("social")}
+            data-testid="button-add-social"
+          >
+            <Share2 className="h-6 w-6 text-blue-600" />
+            <span className="font-medium">Add Social Profiles</span>
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            className="h-auto py-4 flex flex-col items-center gap-2 hover:bg-green-50 hover:border-green-400"
+            onClick={() => setActiveTab("campaigns")}
+            data-testid="button-schedule-campaign"
+          >
+            <Calendar className="h-6 w-6 text-green-600" />
+            <span className="font-medium">Schedule Campaign</span>
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            className="h-auto py-4 flex flex-col items-center gap-2 hover:bg-red-50 hover:border-red-400"
+            onClick={() => setLocation('/livechat-demo')}
+            data-testid="button-live-alert"
+          >
+            <Bell className="h-6 w-6 text-red-600 animate-pulse" />
+            <span className="font-medium">🔴 Live Chat Status</span>
+          </Button>
+        </div>
+
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="listings">Listings</TabsTrigger>
-            <TabsTrigger value="reviews">Reviews</TabsTrigger>
-            <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
-            <TabsTrigger value="social" data-testid="tab-trigger-social">Social Media</TabsTrigger>
-            <TabsTrigger value="tasks">Tasks</TabsTrigger>
-          </TabsList>
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
