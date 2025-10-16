@@ -1,12 +1,13 @@
 /**
  * Synup API Service
  * 
- * Integrates with Synup's Listings Management and Reputation Management APIs
+ * Integrates with Synup's Listings Management and Reputation Management APIs using official SDK
  * - 200+ directory listings synchronization
  * - Review management across 80+ platforms
  * - White-label API capabilities
  * 
  * API Documentation: https://developer.synup.com/docs/
+ * SDK: @mx-inventor/synup v1.1.2
  */
 
 import synupSDK from '@mx-inventor/synup';
@@ -68,15 +69,19 @@ interface SynupApiResponse<T> {
 
 export class SynupService {
   private apiKey: string;
-  private baseUrl = 'https://api.synup.com/api/v4'; // Actual Synup API v4 base URL
+  private sdk: any; // Synup SDK instance
+  private baseUrl = 'https://api.synup.com/api/v4'; // For raw API calls when SDK doesn't cover it
   
   constructor() {
     this.apiKey = process.env.SYNUP_API_KEY || '';
     
     if (!this.apiKey) {
       console.warn('⚠️ SYNUP_API_KEY not configured - Synup integration will fail');
+      this.sdk = null;
     } else {
-      console.log('✅ Synup API Service initialized with API v4');
+      // Initialize Synup SDK with API key
+      this.sdk = synupSDK(this.apiKey);
+      console.log('✅ Synup SDK initialized with API key');
     }
   }
 
@@ -164,16 +169,42 @@ export class SynupService {
   }
 
   /**
-   * Get all locations for the account
-   * Endpoint: GET /locations
-   * Note: Returns locations with normal (non-encoded) IDs
+   * Get all locations for the account using Synup SDK
+   * SDK Method: Locations.list()
+   * Returns: GraphQL response with edges[] structure
    */
   async getAllLocations(): Promise<SynupLocation[]> {
+    if (!this.sdk) {
+      console.warn('⚠️ Synup SDK not initialized - returning empty locations');
+      return [];
+    }
+
     try {
-      const response = await this.makeRequest<any>('/locations');
-      const locations = response.data?.locations || response.locations || [];
+      const response = await this.sdk.Locations.list();
       
-      // Return locations as-is, Synup provides normal IDs in list responses
+      // GraphQL response has edges[] structure
+      const edges = response.edges || [];
+      const locations = edges.map((edge: any) => {
+        const node = edge.node;
+        return {
+          id: node.accountId?.toString() || node.uid,
+          name: node.name || node.businessName || '',
+          address: `${node.street || ''}${node.street1 ? ' ' + node.street1 : ''}`.trim(),
+          city: node.city || '',
+          state: node.stateIso || node.stateName || '',
+          country: node.countryIso || '',
+          postalCode: node.postalCode || node.zipcode || '',
+          phone: node.phone || node.primaryPhone || '',
+          website: node.bizUrl || node.website || '',
+          email: node.email || '',
+          category: node.subCategoryName || node.categoryName || '',
+          status: node.approved || 'PENDING',
+          createdAt: node.createdDate || new Date().toISOString(),
+          updatedAt: node.updatedAt || new Date().toISOString(),
+        };
+      });
+      
+      console.log(`✅ Fetched ${locations.length} locations from Synup`);
       return locations;
     } catch (error) {
       console.error('Error fetching Synup locations:', error);
