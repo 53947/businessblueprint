@@ -102,6 +102,13 @@ The application utilizes a full-stack monorepo architecture.
 - **OpenSRS Domain Management (webhosted.io):** Comprehensive domain and DNS management (Registration, Transfers, DNS records, Nameservers, Security) for client websites.
 - **Whitelabeling:** All platform components are branded as businessblueprint.io, removing vendor references.
 - **Three-Platform Ecosystem:** businessblueprint.io (digital marketing), webhosted.io (website hosting), and airswiped.com (payment gateway) are distinct yet integrated platforms.
+- **Multi-Platform Navigation Architecture:**
+  - Client Portal serves as the central hub for businessblueprint.io features
+  - Sidebar navigation includes: Overview, Listings, Reviews, Campaigns, Inbox (external link), Social Media (coming soon), Tasks
+  - Seamless cross-app navigation maintains login state via sessionStorage (clientId, authToken, externalId)
+  - External apps (Inbox, future Social Media) accessible from portal sidebar
+  - Navigation flow: Portal Dashboard ↔ Inbox ↔ Other Apps (all maintain session)
+  - Future: swipesblue.com and hostsblue.com will be separate platforms with seamless linking
 - **Unified Client Portal (Future):** Planned single sign-on, master dashboard, consolidated billing, cross-platform analytics, and unified support across all three platforms.
 - **Synup Integration (API v4):** Complete listings and reputation management system with strict security:
   - Service Layer (`server/services/synup.ts`): 

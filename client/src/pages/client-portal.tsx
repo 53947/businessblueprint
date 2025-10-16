@@ -27,7 +27,8 @@ import {
   Clock,
   LogOut,
   Brain,
-  Home
+  Home,
+  Share2
 } from "lucide-react";
 
 export default function ClientPortal() {
@@ -202,12 +203,12 @@ export default function ClientPortal() {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  onClick={() => setLocation("/")}
-                  data-testid="button-home"
+                  onClick={() => setActiveTab("overview")}
+                  data-testid="button-dashboard"
                   className="flex items-center gap-2"
                 >
                   <Home className="h-4 w-4" />
-                  Home
+                  Dashboard
                 </Button>
                 <h1 className="text-xl font-semibold text-gray-900">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
                 <Badge variant="outline" className="text-xs">
@@ -283,11 +284,12 @@ export default function ClientPortal() {
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="listings">Listings</TabsTrigger>
             <TabsTrigger value="reviews">Reviews</TabsTrigger>
             <TabsTrigger value="campaigns">Campaigns</TabsTrigger>
+            <TabsTrigger value="social" data-testid="tab-trigger-social">Social Media</TabsTrigger>
             <TabsTrigger value="tasks">Tasks</TabsTrigger>
           </TabsList>
 
@@ -454,6 +456,25 @@ export default function ClientPortal() {
                 <div className="text-center py-8 text-gray-500">
                   <p>Campaign management interface coming soon...</p>
                   <p className="text-sm mt-2">Your campaigns will be managed through this dashboard.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Social Media Tab */}
+          <TabsContent value="social">
+            <Card>
+              <CardHeader>
+                <CardTitle>Social Media Management</CardTitle>
+                <CardDescription>Manage your social presence across all platforms</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <Share2 className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                  <p className="text-gray-600 font-medium mb-2">Social Media Platform Coming Soon</p>
+                  <p className="text-sm text-gray-500 max-w-md mx-auto">
+                    Connect and manage all your social media accounts in one place. Schedule posts, track engagement, and monitor conversations across Facebook, Instagram, Twitter, LinkedIn, and more.
+                  </p>
                 </div>
               </CardContent>
             </Card>
