@@ -15,7 +15,8 @@ import {
   inboxMessages2,
   insertSynupLocationSchema,
   insertSynupListingSchema,
-  insertSynupReviewSchema
+  insertSynupReviewSchema,
+  insertReviewNotificationPreferencesSchema
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";

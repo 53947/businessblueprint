@@ -355,19 +355,48 @@ export class SynupService {
 
   /**
    * Get all listings for a location across all platforms
-   * Endpoint: GET /locations/{locationId}/listings
+   * Uses SDK Listings methods
    */
   async getLocationListings(locationId: string): Promise<SynupListing[]> {
+    if (!this.sdk) {
+      console.warn('⚠️ Synup SDK not initialized');
+      return [];
+    }
+
     try {
-      const encodedLocationId = this.encodeLocationId(locationId);
-      const response = await this.makeRequest<any>(
-        `/locations/${encodedLocationId}/listings`
-      );
-      const listings = response.data?.listings || response.listings || [];
+      console.log(`📋 Fetching listings for location ${locationId}...`);
       
+      // Try SDK Listings methods (may not work for all account types)
+      let listings: any[] = [];
+      
+      try {
+        const premiumListings = await this.sdk.Listings.getPremium(parseInt(locationId));
+        if (premiumListings && premiumListings.length > 0) {
+          listings = [...listings, ...premiumListings];
+        }
+      } catch (e) {
+        console.log('Premium listings not available for this account');
+      }
+      
+      try {
+        const additionalListings = await this.sdk.Listings.getAdittional(parseInt(locationId));
+        if (additionalListings && additionalListings.length > 0) {
+          listings = [...listings, ...additionalListings];
+        }
+      } catch (e) {
+        console.log('Additional listings not available for this account');
+      }
+      
+      // Map to our format
       return listings.map((listing: any) => ({
-        ...listing,
-        locationId: locationId // Use original location ID
+        id: listing.id || listing.listingId,
+        locationId: locationId,
+        platform: listing.siteName || listing.platform || 'unknown',
+        status: listing.status || 'pending',
+        url: listing.url || listing.listingUrl,
+        lastSynced: listing.lastSynced || new Date().toISOString(),
+        syncStatus: listing.syncStatus || 'pending',
+        visibility: listing.visibility !== false
       }));
     } catch (error) {
       console.error(`Error fetching listings for location ${locationId}:`, error);
@@ -392,7 +421,7 @@ export class SynupService {
 
   /**
    * Get all reviews (interactions) for a location
-   * Note: Synup API v4 uses "interactions" terminology
+   * Uses SDK Interactions methods
    */
   async getLocationReviews(locationId: string, options?: {
     platform?: string;
@@ -401,39 +430,41 @@ export class SynupService {
     startDate?: string;
     endDate?: string;
   }): Promise<SynupReview[]> {
+    if (!this.sdk) {
+      console.warn('⚠️ Synup SDK not initialized');
+      return [];
+    }
+
     try {
-      const encodedLocationId = this.encodeLocationId(locationId);
-      const queryParams = new URLSearchParams();
+      console.log(`⭐ Fetching reviews for location ${locationId}...`);
       
-      // Synup API uses siteUrls for platform filtering
-      if (options?.platform) queryParams.append('siteUrls', options.platform);
+      // Use SDK Interactions method
+      const response = await this.sdk.Interactions.getByLocationId(parseInt(locationId));
       
-      // Rating filters - Synup supports array of ratings
-      if (options?.rating) queryParams.append('ratingFilters', options.rating.toString());
+      // Handle different response formats
+      const interactions = response?.edges?.map((edge: any) => edge.node) || 
+                          response?.data?.interactions || 
+                          response?.interactions || 
+                          response || 
+                          [];
       
-      // Date range filters (YYYY-MM-DD format)
-      if (options?.startDate) queryParams.append('startDate', options.startDate);
-      if (options?.endDate) queryParams.append('endDate', options.endDate);
+      if (!Array.isArray(interactions)) {
+        console.log('No reviews found or unexpected format:', typeof interactions);
+        return [];
+      }
       
-      // Category filter - REVIEW for reviews
-      queryParams.append('category', 'REVIEW');
-      
-      const endpoint = `/locations/${encodedLocationId}/reviews${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
-      const response = await this.makeRequest<any>(endpoint);
-      
-      // Map Synup interaction response to our review format
-      const interactions = response.data?.interactions || response.interactions || [];
+      // Map to our review format
       return interactions.map((interaction: any) => ({
         id: interaction.id || interaction.interactionId,
         locationId: locationId,
-        platform: interaction.siteName || interaction.platform || 'unknown',
-        rating: interaction.rating || 0,
-        reviewText: interaction.text || interaction.reviewText || '',
-        reviewerName: interaction.reviewerName || interaction.author || 'Anonymous',
-        reviewDate: interaction.createdAt || interaction.reviewDate || new Date().toISOString(),
-        response: interaction.response?.text || interaction.response,
+        platform: interaction.siteName || interaction.platform || interaction.source || 'unknown',
+        rating: interaction.rating || interaction.stars || 0,
+        reviewText: interaction.text || interaction.reviewText || interaction.content || '',
+        reviewerName: interaction.reviewerName || interaction.author || interaction.name || 'Anonymous',
+        reviewDate: interaction.createdAt || interaction.reviewDate || interaction.date || new Date().toISOString(),
+        response: interaction.response?.text || interaction.responseText || interaction.response,
         responseDate: interaction.response?.createdAt || interaction.responseDate,
-        sentiment: this.calculateSentiment(interaction.rating),
+        sentiment: this.calculateSentiment(interaction.rating || interaction.stars || 0),
         status: interaction.response ? 'responded' : 'new',
       }));
     } catch (error) {
