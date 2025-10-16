@@ -21,7 +21,8 @@ import {
   CheckCheck,
   Loader2,
   AlertCircle,
-  Home
+  Home,
+  Settings
 } from 'lucide-react';
 import { SiWhatsapp, SiTiktok } from 'react-icons/si';
 import { apiRequest, queryClient } from '@/lib/queryClient';
@@ -258,7 +259,7 @@ export default function InboxPage() {
                   description: "Configure email accounts (Gmail, Outlook), SMS, and social media messaging channels here." 
                 })}
               >
-                Settings
+                <Settings className="h-4 w-4" />
               </Button>
               <Button 
                 variant="ghost" 
