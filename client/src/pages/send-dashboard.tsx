@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -13,11 +14,15 @@ import {
   Send, 
   FileText,
   CheckCircle2,
-  Activity
+  Activity,
+  BarChart3,
+  Settings
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLocation } from "wouter";
 import { BrandLogo } from "@/components/brand-logo";
+import { SectionHeader } from "@/components/section-header";
+import { useToast } from "@/hooks/use-toast";
 
 interface DashboardMetrics {
   totalContacts: number;
@@ -45,6 +50,8 @@ interface ActivityItem {
 
 export default function SendDashboard() {
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState('overview');
 
   // Fetch dashboard metrics
   const { data: metrics, isLoading: metricsLoading } = useQuery<DashboardMetrics>({
@@ -84,28 +91,73 @@ export default function SendDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
-      <Header showNavigation={true} />
+      <SectionHeader 
+        title="/send - Email + SMS Marketing"
+        tabs={[
+          { 
+            label: 'Overview', 
+            icon: BarChart3, 
+            active: activeTab === 'overview',
+            onClick: () => setActiveTab('overview'),
+            testId: 'tab-overview'
+          },
+          { 
+            label: 'Campaigns', 
+            icon: Mail, 
+            active: activeTab === 'campaigns',
+            onClick: () => {
+              setActiveTab('campaigns');
+              toast({ title: 'Campaigns', description: 'Campaign management coming soon' });
+            },
+            testId: 'tab-campaigns'
+          },
+          { 
+            label: 'Contacts', 
+            icon: Users, 
+            active: activeTab === 'contacts',
+            onClick: () => {
+              setActiveTab('contacts');
+              toast({ title: 'Contacts', description: 'Contact management coming soon' });
+            },
+            testId: 'tab-contacts'
+          },
+          { 
+            label: 'Analytics', 
+            icon: TrendingUp, 
+            active: activeTab === 'analytics',
+            onClick: () => {
+              setActiveTab('analytics');
+              toast({ title: 'Analytics', description: 'Analytics dashboard coming soon' });
+            },
+            testId: 'tab-analytics'
+          }
+        ]}
+        actions={
+          <>
+            <Button 
+              onClick={() => toast({ title: 'Settings', description: 'Settings panel coming soon' })} 
+              variant="ghost" 
+              size="sm"
+              data-testid="button-settings"
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
+            <Button 
+              onClick={() => toast({ title: 'New Campaign', description: 'Campaign creation coming soon' })} 
+              size="sm"
+              className="bg-[#E6B747] hover:bg-[#d1a440] text-white"
+              data-testid="button-new-campaign"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              New Campaign
+            </Button>
+          </>
+        }
+        showHomeButton={true}
+        homeRoute="/portal"
+      />
 
       <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        {/* Header with Brand */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <BrandLogo brand="send" size="lg" className="mb-2" />
-              <p className="text-gray-600 dark:text-gray-400">Email + SMS Marketing Platform</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Button variant="outline" onClick={() => setLocation('/send/contacts')} data-testid="button-manage-contacts">
-                <Users className="w-4 h-4 mr-2" />
-                Manage Contacts
-              </Button>
-              <Button onClick={() => setLocation('/send/campaigns/new')} data-testid="button-new-campaign" className="bg-[#E5A100] hover:bg-[#c98e00] text-white">
-                <Plus className="w-4 h-4 mr-2" />
-                New Campaign
-              </Button>
-            </div>
-          </div>
-        </div>
 
         {/* Key Metrics */}
         {metricsLoading ? (
