@@ -2549,6 +2549,167 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ============================================================================
+  // Brand Studio API Routes - Asset Management
+  // ============================================================================
+
+  // Configure multer for file uploads (store in memory)
+  const multer = await import("multer");
+  const upload = multer.default({ storage: multer.default.memoryStorage() });
+
+  // Upload brand asset
+  app.post("/api/brand-assets", upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: "No file uploaded"
+        });
+      }
+
+      const { name, type } = req.body;
+
+      if (!name || !type) {
+        return res.status(400).json({
+          success: false,
+          message: "Name and type are required"
+        });
+      }
+
+      // Convert file to base64
+      const base64Data = req.file.buffer.toString('base64');
+
+      const assetData = {
+        name,
+        type,
+        fileName: req.file.originalname,
+        mimeType: req.file.mimetype,
+        size: req.file.size,
+        data: base64Data
+      };
+
+      const asset = await storage.createBrandAsset(assetData);
+
+      res.json({
+        success: true,
+        asset: {
+          id: asset.id,
+          name: asset.name,
+          type: asset.type,
+          fileName: asset.fileName,
+          size: asset.size,
+          createdAt: asset.createdAt
+        }
+      });
+    } catch (error) {
+      console.error("Error uploading brand asset:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to upload asset"
+      });
+    }
+  });
+
+  // Get all brand assets (optionally filter by type)
+  app.get("/api/brand-assets", async (req, res) => {
+    try {
+      const { type } = req.query;
+
+      const assets = type && typeof type === 'string'
+        ? await storage.getBrandAssetsByType(type)
+        : await storage.getAllBrandAssets();
+
+      res.json({
+        success: true,
+        assets: assets.map(asset => ({
+          id: asset.id,
+          name: asset.name,
+          type: asset.type,
+          fileName: asset.fileName,
+          size: asset.size,
+          createdAt: asset.createdAt
+        }))
+      });
+    } catch (error) {
+      console.error("Error fetching brand assets:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch assets"
+      });
+    }
+  });
+
+  // Get single brand asset with data
+  app.get("/api/brand-assets/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+
+      if (isNaN(id)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid asset ID"
+        });
+      }
+
+      const asset = await storage.getBrandAsset(id);
+
+      if (!asset) {
+        return res.status(404).json({
+          success: false,
+          message: "Asset not found"
+        });
+      }
+
+      // Return full asset with base64 data
+      res.json({
+        success: true,
+        asset: {
+          id: asset.id,
+          name: asset.name,
+          type: asset.type,
+          fileName: asset.fileName,
+          mimeType: asset.mimeType,
+          size: asset.size,
+          data: asset.data,
+          createdAt: asset.createdAt
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching brand asset:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch asset"
+      });
+    }
+  });
+
+  // Delete brand asset
+  app.delete("/api/brand-assets/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+
+      if (isNaN(id)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid asset ID"
+        });
+      }
+
+      await storage.deleteBrandAsset(id);
+
+      res.json({
+        success: true,
+        message: "Asset deleted successfully"
+      });
+    } catch (error) {
+      console.error("Error deleting brand asset:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to delete asset"
+      });
+    }
+  });
+
   // Register inbox routes
   await registerInboxRoutes(app);
 
