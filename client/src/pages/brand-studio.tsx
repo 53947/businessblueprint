@@ -185,18 +185,36 @@ export default function BrandStudio() {
                       Upload and manage your brand logos and icons
                     </CardDescription>
                   </div>
-                  <Button onClick={() => handleFileUpload('logo')} data-testid="button-upload-logo">
-                    <Upload className="w-4 h-4 mr-2" />
-                    Upload Logo
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button onClick={() => handleFileUpload('logo')} data-testid="button-upload-logo">
+                      <Upload className="w-4 h-4 mr-2" />
+                      Upload Logo
+                    </Button>
+                    <Button onClick={() => handleFileUpload('icon')} variant="outline" data-testid="button-upload-icon">
+                      <Upload className="w-4 h-4 mr-2" />
+                      Upload Icon
+                    </Button>
+                    <Button onClick={() => handleFileUpload('image')} variant="outline" data-testid="button-upload-image">
+                      <Upload className="w-4 h-4 mr-2" />
+                      Upload Image
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {logos.map((asset) => (
                     <div key={asset.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4" data-testid={`asset-${asset.id}`}>
-                      <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-40 flex items-center justify-center mb-4">
-                        <ImageIcon className="w-16 h-16 text-gray-400" />
+                      <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-40 flex items-center justify-center mb-4 overflow-hidden p-2">
+                        {asset.url.startsWith('blob:') || asset.url.startsWith('http') ? (
+                          <img 
+                            src={asset.url} 
+                            alt={asset.name}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        ) : (
+                          <ImageIcon className="w-16 h-16 text-gray-400" />
+                        )}
                       </div>
                       <h3 className="font-semibold mb-2" data-testid={`asset-name-${asset.id}`}>{asset.name}</h3>
                       <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-4">
