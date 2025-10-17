@@ -6,6 +6,13 @@ Triad Blue operates three interconnected platforms: Business Blueprint (AI-power
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
+**Development Workflow - CRITICAL:**
+- **DO NOT make changes to existing features without explicit user approval**
+- When user points out something or asks a question, **DISCUSS FIRST** - do not automatically fix
+- Only implement changes when user **explicitly requests** them (e.g., "fix this", "change that", "update this")
+- Reliability and consistency are critical - the user needs to rely on the system as-is
+- Changes only happen when discussed and approved by the user
+
 **Logo Design Process:**
 - DO NOT change any logo elements unless specifically instructed
 - Only modify exactly what is requested - no additional "improvements"
