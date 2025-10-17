@@ -1576,6 +1576,19 @@ export const livechatSessions = pgTable("livechat_sessions", {
   index("idx_livechat_visitor").on(table.visitorId),
 ]);
 
+// Brand Studio - Uploaded brand assets
+export const brandAssets = pgTable("brand_assets", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  type: text("type").notNull(), // logo, icon, additional
+  fileName: text("file_name").notNull(),
+  mimeType: text("mime_type").notNull(),
+  size: integer("size").notNull(), // in bytes
+  data: text("data").notNull(), // base64 encoded file data
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Insert schemas for unified inbox
 export const insertChannelConnectionSchema = createInsertSchema(inboxChannelConnections).pick({
   clientId: true,
@@ -1657,6 +1670,13 @@ export const insertLivechatSessionSchema = createInsertSchema(livechatSessions).
   assignedToId: true,
 });
 
+// Insert schema for brand assets
+export const insertBrandAssetSchema = createInsertSchema(brandAssets).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types for unified inbox
 export type ChannelConnection = typeof inboxChannelConnections.$inferSelect;
 export type InsertChannelConnection = z.infer<typeof insertChannelConnectionSchema>;
@@ -1669,3 +1689,7 @@ export type QuickReply = typeof inboxQuickReplies.$inferSelect;
 export type InsertQuickReply = z.infer<typeof insertQuickReplySchema>;
 export type LivechatSession = typeof livechatSessions.$inferSelect;
 export type InsertLivechatSession = z.infer<typeof insertLivechatSessionSchema>;
+
+// Types for brand assets
+export type BrandAsset = typeof brandAssets.$inferSelect;
+export type InsertBrandAsset = z.infer<typeof insertBrandAssetSchema>;

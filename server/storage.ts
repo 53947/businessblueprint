@@ -12,6 +12,7 @@ import {
   synupListings,
   synupReviews,
   reviewNotificationPreferences,
+  brandAssets,
   type Assessment,
   type InsertAssessment,
   type Recommendation,
@@ -34,6 +35,8 @@ import {
   type InsertSynupReview,
   type ReviewNotificationPreferences,
   type InsertReviewNotificationPreferences,
+  type BrandAsset,
+  type InsertBrandAsset,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -112,6 +115,13 @@ export interface IStorage {
   createReviewNotificationPreferences(preferences: InsertReviewNotificationPreferences): Promise<ReviewNotificationPreferences>;
   getReviewNotificationPreferences(clientId: number): Promise<ReviewNotificationPreferences | undefined>;
   updateReviewNotificationPreferences(clientId: number, data: Partial<ReviewNotificationPreferences>): Promise<ReviewNotificationPreferences>;
+  
+  // Brand assets operations
+  createBrandAsset(asset: InsertBrandAsset): Promise<BrandAsset>;
+  getAllBrandAssets(): Promise<BrandAsset[]>;
+  getBrandAssetsByType(type: string): Promise<BrandAsset[]>;
+  getBrandAsset(id: number): Promise<BrandAsset | undefined>;
+  deleteBrandAsset(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -522,6 +532,44 @@ export class DatabaseStorage implements IStorage {
       .where(eq(reviewNotificationPreferences.clientId, clientId))
       .returning();
     return preferences;
+  }
+
+  // Brand asset operations
+  async createBrandAsset(assetData: InsertBrandAsset): Promise<BrandAsset> {
+    const [asset] = await db
+      .insert(brandAssets)
+      .values(assetData)
+      .returning();
+    return asset;
+  }
+
+  async getAllBrandAssets(): Promise<BrandAsset[]> {
+    return await db
+      .select()
+      .from(brandAssets)
+      .orderBy(desc(brandAssets.createdAt));
+  }
+
+  async getBrandAssetsByType(type: string): Promise<BrandAsset[]> {
+    return await db
+      .select()
+      .from(brandAssets)
+      .where(eq(brandAssets.type, type))
+      .orderBy(desc(brandAssets.createdAt));
+  }
+
+  async getBrandAsset(id: number): Promise<BrandAsset | undefined> {
+    const [asset] = await db
+      .select()
+      .from(brandAssets)
+      .where(eq(brandAssets.id, id));
+    return asset;
+  }
+
+  async deleteBrandAsset(id: number): Promise<void> {
+    await db
+      .delete(brandAssets)
+      .where(eq(brandAssets.id, id));
   }
 }
 

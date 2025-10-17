@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Header } from "@/components/header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,26 +19,175 @@ import {
   Save
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 
 interface Asset {
   id: number;
   name: string;
-  type: 'logo' | 'icon' | 'image';
-  url: string;
-  size: string;
-  uploadedAt: string;
+  type: 'logo' | 'icon' | 'additional';
+  fileName: string;
+  size: number;
+  url?: string;
+  createdAt: string;
 }
 
 export default function BrandStudio() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('logos');
   const [previewAsset, setPreviewAsset] = useState<Asset | null>(null);
-  
-  // Mock assets - will be replaced with real data
-  const [logos, setLogos] = useState<Asset[]>([
-    { id: 1, name: 'Business Blueprint Logo', type: 'logo', url: '/assets/bb-logo.png', size: '45 KB', uploadedAt: '2024-01-15' },
-    { id: 2, name: 'Business Blueprint Icon', type: 'icon', url: '/assets/bb-icon.png', size: '12 KB', uploadedAt: '2024-01-15' },
-  ]);
+  const [assetUrls, setAssetUrls] = useState<Record<number, string>>({});
+  const createdUrlsRef = useRef<Set<string>>(new Set());
+
+  // Fetch all brand assets
+  const { data: assetsData, isLoading } = useQuery<{ success: boolean; assets: Asset[] }>({
+    queryKey: ['/api/brand-assets'],
+  });
+
+  const assets = assetsData?.assets || [];
+
+  // Convert base64 to blob URLs when assets change
+  useEffect(() => {
+    const fetchAssetData = async () => {
+      // Get current asset IDs
+      const currentAssetIds = new Set(assets.map(a => a.id));
+      
+      // Remove URLs for assets that no longer exist
+      const urlsToRemove: number[] = [];
+      Object.keys(assetUrls).forEach(idStr => {
+        const id = parseInt(idStr);
+        if (!currentAssetIds.has(id)) {
+          // Asset was deleted, revoke its URL
+          const url = assetUrls[id];
+          URL.revokeObjectURL(url);
+          createdUrlsRef.current.delete(url);
+          urlsToRemove.push(id);
+        }
+      });
+      
+      if (urlsToRemove.length > 0) {
+        setAssetUrls(prev => {
+          const newUrls = { ...prev };
+          urlsToRemove.forEach(id => delete newUrls[id]);
+          return newUrls;
+        });
+      }
+      
+      // Fetch URLs for new assets
+      const urls: Record<number, string> = {};
+      
+      for (const asset of assets) {
+        if (!assetUrls[asset.id]) {
+          try {
+            const response = await fetch(`/api/brand-assets/${asset.id}`);
+            const data = await response.json();
+            
+            if (data.success && data.asset.data) {
+              // Convert base64 to blob URL
+              const byteCharacters = atob(data.asset.data);
+              const byteNumbers = new Array(byteCharacters.length);
+              for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+              }
+              const byteArray = new Uint8Array(byteNumbers);
+              const blob = new Blob([byteArray], { type: data.asset.mimeType });
+              const url = URL.createObjectURL(blob);
+              urls[asset.id] = url;
+              createdUrlsRef.current.add(url);
+            }
+          } catch (error) {
+            console.error('Error fetching asset data:', error);
+          }
+        }
+      }
+      
+      if (Object.keys(urls).length > 0) {
+        setAssetUrls(prev => ({ ...prev, ...urls }));
+      }
+    };
+
+    fetchAssetData();
+  }, [assets]);
+
+  // Cleanup all blob URLs on unmount only
+  useEffect(() => {
+    return () => {
+      createdUrlsRef.current.forEach(url => URL.revokeObjectURL(url));
+      createdUrlsRef.current.clear();
+    };
+  }, []);
+
+  // Upload mutation
+  const uploadMutation = useMutation({
+    mutationFn: async ({ file, name, type }: { file: File; name: string; type: string }) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('name', name);
+      formData.append('type', type);
+
+      const response = await fetch('/api/brand-assets', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/brand-assets'] });
+      toast({
+        title: 'Upload successful',
+        description: 'Your asset has been uploaded and saved',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Upload failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await fetch(`/api/brand-assets/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Delete failed');
+      }
+
+      return response.json();
+    },
+    onSuccess: (_, id) => {
+      // Revoke blob URL and remove from tracking
+      if (assetUrls[id]) {
+        URL.revokeObjectURL(assetUrls[id]);
+        createdUrlsRef.current.delete(assetUrls[id]);
+        setAssetUrls(prev => {
+          const { [id]: _, ...rest } = prev;
+          return rest;
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: ['/api/brand-assets'] });
+      toast({
+        title: 'Asset deleted',
+        description: 'The asset has been removed',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Delete failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
 
   // Brand colors
   const [brandColors, setBrandColors] = useState([
@@ -51,58 +201,39 @@ export default function BrandStudio() {
 
   const [newColor, setNewColor] = useState({ name: '', hex: '#000000', usage: '' });
 
-  const handleFileUpload = (type: 'logo' | 'icon' | 'image') => {
+  const handleFileUpload = (type: 'logo' | 'icon' | 'additional') => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
     input.onchange = (e: any) => {
       const file = e.target.files[0];
       if (file) {
-        // Create object URL for preview
-        const url = URL.createObjectURL(file);
-        const sizeInKB = Math.round(file.size / 1024);
-        const today = new Date().toISOString().split('T')[0];
-        
-        // Create new asset object
-        const newAsset: Asset = {
-          id: Date.now(),
-          name: file.name.replace(/\.[^/.]+$/, ''), // Remove file extension
-          type: type,
-          url: url,
-          size: `${sizeInKB} KB`,
-          uploadedAt: today
-        };
-        
-        // Add to state
-        setLogos([...logos, newAsset]);
-        
-        toast({
-          title: 'Upload successful',
-          description: `${file.name} has been uploaded`,
-        });
+        const name = file.name.replace(/\.[^/.]+$/, ''); // Remove file extension
+        uploadMutation.mutate({ file, name, type });
       }
     };
     input.click();
   };
 
   const deleteAsset = (id: number) => {
-    const asset = logos.find(l => l.id === id);
-    if (asset && asset.url.startsWith('blob:')) {
-      // Revoke object URL to free memory
-      URL.revokeObjectURL(asset.url);
-    }
-    setLogos(logos.filter(logo => logo.id !== id));
-    toast({
-      title: 'Asset deleted',
-      description: 'The asset has been removed',
-    });
+    deleteMutation.mutate(id);
   };
 
   const downloadAsset = (asset: Asset) => {
+    const url = assetUrls[asset.id];
+    if (!url) {
+      toast({
+        title: 'Error',
+        description: 'Asset data not loaded yet',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     // Create a temporary link and trigger download
     const link = document.createElement('a');
-    link.href = asset.url;
-    link.download = `${asset.name}.png`;
+    link.href = url;
+    link.download = asset.fileName;
     link.click();
     toast({
       title: 'Download started',
@@ -196,19 +327,19 @@ export default function BrandStudio() {
                 </div>
               </CardHeader>
               <CardContent>
-                {logos.filter(a => a.type === 'logo').length > 0 ? (
+                {assets.filter(a => a.type === 'logo').length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {logos.filter(a => a.type === 'logo').map((asset) => (
+                    {assets.filter(a => a.type === 'logo').map((asset) => (
                       <div key={asset.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                         <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-32 flex items-center justify-center mb-3 p-2">
-                          {asset.url.startsWith('blob:') || asset.url.startsWith('http') ? (
-                            <img src={asset.url} alt={asset.name} className="max-w-full max-h-full object-contain" />
+                          {assetUrls[asset.id] ? (
+                            <img src={assetUrls[asset.id]} alt={asset.name} className="max-w-full max-h-full object-contain" />
                           ) : (
                             <ImageIcon className="w-12 h-12 text-gray-400" />
                           )}
                         </div>
                         <h4 className="font-medium text-sm mb-2">{asset.name}</h4>
-                        <p className="text-xs text-gray-500 mb-3">{asset.size}</p>
+                        <p className="text-xs text-gray-500 mb-3">{Math.round(asset.size / 1024)} KB</p>
                         <div className="flex gap-2">
                           <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewAsset(asset)}>
                             <Eye className="w-3 h-3 mr-1" />Preview
@@ -253,19 +384,19 @@ export default function BrandStudio() {
                 </div>
               </CardHeader>
               <CardContent>
-                {logos.filter(a => a.type === 'icon').length > 0 ? (
+                {assets.filter(a => a.type === 'icon').length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    {logos.filter(a => a.type === 'icon').map((asset) => (
+                    {assets.filter(a => a.type === 'icon').map((asset) => (
                       <div key={asset.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                         <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-24 flex items-center justify-center mb-3 p-2">
-                          {asset.url.startsWith('blob:') || asset.url.startsWith('http') ? (
-                            <img src={asset.url} alt={asset.name} className="max-w-full max-h-full object-contain" />
+                          {assetUrls[asset.id] ? (
+                            <img src={assetUrls[asset.id]} alt={asset.name} className="max-w-full max-h-full object-contain" />
                           ) : (
                             <Shield className="w-12 h-12 text-gray-400" />
                           )}
                         </div>
                         <h4 className="font-medium text-sm mb-2">{asset.name}</h4>
-                        <p className="text-xs text-gray-500 mb-3">{asset.size}</p>
+                        <p className="text-xs text-gray-500 mb-3">{Math.round(asset.size / 1024)} KB</p>
                         <div className="flex gap-2">
                           <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewAsset(asset)}>
                             <Eye className="w-3 h-3 mr-1" />Preview
@@ -303,26 +434,26 @@ export default function BrandStudio() {
                       Marketing images, hero graphics, and other visual assets
                     </CardDescription>
                   </div>
-                  <Button onClick={() => handleFileUpload('image')} variant="outline" data-testid="button-upload-image">
+                  <Button onClick={() => handleFileUpload('additional')} variant="outline" data-testid="button-upload-image">
                     <Upload className="w-4 h-4 mr-2" />
                     Upload Image
                   </Button>
                 </div>
               </CardHeader>
               <CardContent>
-                {logos.filter(a => a.type === 'image').length > 0 ? (
+                {assets.filter(a => a.type === 'additional').length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {logos.filter(a => a.type === 'image').map((asset) => (
+                    {assets.filter(a => a.type === 'additional').map((asset) => (
                       <div key={asset.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                         <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-40 flex items-center justify-center mb-3 p-2">
-                          {asset.url.startsWith('blob:') || asset.url.startsWith('http') ? (
-                            <img src={asset.url} alt={asset.name} className="max-w-full max-h-full object-contain" />
+                          {assetUrls[asset.id] ? (
+                            <img src={assetUrls[asset.id]} alt={asset.name} className="max-w-full max-h-full object-contain" />
                           ) : (
                             <ImageIcon className="w-12 h-12 text-gray-400" />
                           )}
                         </div>
                         <h4 className="font-medium text-sm mb-2">{asset.name}</h4>
-                        <p className="text-xs text-gray-500 mb-3">{asset.size}</p>
+                        <p className="text-xs text-gray-500 mb-3">{Math.round(asset.size / 1024)} KB</p>
                         <div className="flex gap-2">
                           <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewAsset(asset)}>
                             <Eye className="w-3 h-3 mr-1" />Preview
@@ -339,7 +470,7 @@ export default function BrandStudio() {
                   </div>
                 ) : (
                   <button 
-                    onClick={() => handleFileUpload('image')}
+                    onClick={() => handleFileUpload('additional')}
                     className="w-full border-2 border-dashed border-green-300 dark:border-green-700 rounded-lg p-8 flex flex-col items-center justify-center hover:border-green-500 hover:bg-green-50 dark:hover:bg-green-950 transition-colors"
                   >
                     <ImageIcon className="w-16 h-16 text-green-400 mb-3" />
@@ -498,7 +629,7 @@ export default function BrandStudio() {
                       All uploaded images and media files
                     </CardDescription>
                   </div>
-                  <Button onClick={() => handleFileUpload('image')} data-testid="button-upload-asset">
+                  <Button onClick={() => handleFileUpload('additional')} data-testid="button-upload-asset">
                     <Upload className="w-4 h-4 mr-2" />
                     Upload Asset
                   </Button>
@@ -508,7 +639,7 @@ export default function BrandStudio() {
                 <div className="text-center py-12">
                   <ImageIcon className="w-16 h-16 mx-auto text-gray-400 mb-4" />
                   <p className="text-gray-600 dark:text-gray-400 mb-4">No assets uploaded yet</p>
-                  <Button onClick={() => handleFileUpload('image')} data-testid="button-upload-first-asset">
+                  <Button onClick={() => handleFileUpload('additional')} data-testid="button-upload-first-asset">
                     <Upload className="w-4 h-4 mr-2" />
                     Upload Your First Asset
                   </Button>
@@ -556,8 +687,8 @@ export default function BrandStudio() {
           </div>
           <div className="flex items-center justify-between pt-4 border-t">
             <div className="text-sm text-gray-600 dark:text-gray-400">
-              <p>Size: {previewAsset?.size}</p>
-              <p>Uploaded: {previewAsset?.uploadedAt}</p>
+              <p>Size: {previewAsset ? `${Math.round(previewAsset.size / 1024)} KB` : ''}</p>
+              <p>Uploaded: {previewAsset?.createdAt ? new Date(previewAsset.createdAt).toLocaleDateString() : ''}</p>
             </div>
             <Button onClick={() => previewAsset && downloadAsset(previewAsset)} data-testid="button-download-from-preview">
               <Download className="w-4 h-4 mr-2" />
