@@ -71,12 +71,12 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
     >
       {/* Logo Header */}
       <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-        <a href="/" className="flex items-center gap-3">
+        <div className="flex items-center gap-3 cursor-pointer" onClick={() => setLocation('/portal')}>
           <img src={bbIcon} alt="businessblueprint.io" className="h-10 w-10 object-contain" data-testid="logo-icon" />
           {!isCollapsed && (
             <img src={bbLogo} alt="businessblueprint.io" className="h-7 object-contain" data-testid="logo-text" />
           )}
-        </a>
+        </div>
         <Button
           variant="ghost"
           size="sm"

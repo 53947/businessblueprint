@@ -176,96 +176,177 @@ export default function BrandStudio() {
 
           {/* Logos & Icons Tab */}
           <TabsContent value="logos" className="space-y-6">
+            {/* Primary Logo Section */}
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle>Logos & Icons</CardTitle>
+                    <CardTitle className="flex items-center gap-2">
+                      <ImageIcon className="w-5 h-5 text-blue-600" />
+                      Primary Logo
+                    </CardTitle>
                     <CardDescription>
-                      Upload and manage your brand logos and icons
+                      Main logo displayed in header, email signatures, and marketing materials
                     </CardDescription>
                   </div>
-                  <div className="flex gap-2">
-                    <Button onClick={() => handleFileUpload('logo')} data-testid="button-upload-logo">
-                      <Upload className="w-4 h-4 mr-2" />
-                      Upload Logo
-                    </Button>
-                    <Button onClick={() => handleFileUpload('icon')} variant="outline" data-testid="button-upload-icon">
-                      <Upload className="w-4 h-4 mr-2" />
-                      Upload Icon
-                    </Button>
-                    <Button onClick={() => handleFileUpload('image')} variant="outline" data-testid="button-upload-image">
-                      <Upload className="w-4 h-4 mr-2" />
-                      Upload Image
-                    </Button>
-                  </div>
+                  <Button onClick={() => handleFileUpload('logo')} data-testid="button-upload-logo">
+                    <Upload className="w-4 h-4 mr-2" />
+                    Upload Logo
+                  </Button>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {logos.map((asset) => (
-                    <div key={asset.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4" data-testid={`asset-${asset.id}`}>
-                      <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-40 flex items-center justify-center mb-4 overflow-hidden p-2">
-                        {asset.url.startsWith('blob:') || asset.url.startsWith('http') ? (
-                          <img 
-                            src={asset.url} 
-                            alt={asset.name}
-                            className="max-w-full max-h-full object-contain"
-                          />
-                        ) : (
-                          <ImageIcon className="w-16 h-16 text-gray-400" />
-                        )}
+                {logos.filter(a => a.type === 'logo').length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {logos.filter(a => a.type === 'logo').map((asset) => (
+                      <div key={asset.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-32 flex items-center justify-center mb-3 p-2">
+                          {asset.url.startsWith('blob:') || asset.url.startsWith('http') ? (
+                            <img src={asset.url} alt={asset.name} className="max-w-full max-h-full object-contain" />
+                          ) : (
+                            <ImageIcon className="w-12 h-12 text-gray-400" />
+                          )}
+                        </div>
+                        <h4 className="font-medium text-sm mb-2">{asset.name}</h4>
+                        <p className="text-xs text-gray-500 mb-3">{asset.size}</p>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewAsset(asset)}>
+                            <Eye className="w-3 h-3 mr-1" />Preview
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => deleteAsset(asset.id)} className="text-red-600">
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
                       </div>
-                      <h3 className="font-semibold mb-2" data-testid={`asset-name-${asset.id}`}>{asset.name}</h3>
-                      <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-4">
-                        <span>{asset.size}</span>
-                        <span>{asset.uploadedAt}</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="flex-1" 
-                          onClick={() => setPreviewAsset(asset)}
-                          data-testid={`button-preview-${asset.id}`}
-                        >
-                          <Eye className="w-4 h-4 mr-1" />
-                          Preview
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="flex-1"
-                          onClick={() => downloadAsset(asset)}
-                          data-testid={`button-download-${asset.id}`}
-                        >
-                          <Download className="w-4 h-4 mr-1" />
-                          Download
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          onClick={() => deleteAsset(asset.id)}
-                          className="text-red-600 hover:text-red-700"
-                          data-testid={`button-delete-${asset.id}`}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-
-                  {/* Upload Card */}
+                    ))}
+                  </div>
+                ) : (
                   <button 
                     onClick={() => handleFileUpload('logo')}
-                    className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-4 h-full min-h-[300px] flex flex-col items-center justify-center hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950 transition-colors"
-                    data-testid="button-upload-new-asset"
+                    className="w-full border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-lg p-8 flex flex-col items-center justify-center hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors"
                   >
-                    <Upload className="w-12 h-12 text-gray-400 mb-4" />
-                    <p className="text-gray-600 dark:text-gray-400 font-medium">Upload New Asset</p>
-                    <p className="text-sm text-gray-500 mt-1">PNG, JPG, SVG up to 10MB</p>
+                    <ImageIcon className="w-16 h-16 text-blue-400 mb-3" />
+                    <p className="text-blue-600 dark:text-blue-400 font-semibold mb-1">Upload Primary Logo</p>
+                    <p className="text-sm text-gray-500">PNG, JPG, SVG • Recommended: 300x80px</p>
                   </button>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Icon/Favicon Section */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Shield className="w-5 h-5 text-purple-600" />
+                      Icon / Favicon
+                    </CardTitle>
+                    <CardDescription>
+                      Square icon for browser tabs, mobile apps, and social media profiles
+                    </CardDescription>
+                  </div>
+                  <Button onClick={() => handleFileUpload('icon')} variant="outline" data-testid="button-upload-icon">
+                    <Upload className="w-4 h-4 mr-2" />
+                    Upload Icon
+                  </Button>
                 </div>
+              </CardHeader>
+              <CardContent>
+                {logos.filter(a => a.type === 'icon').length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    {logos.filter(a => a.type === 'icon').map((asset) => (
+                      <div key={asset.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-24 flex items-center justify-center mb-3 p-2">
+                          {asset.url.startsWith('blob:') || asset.url.startsWith('http') ? (
+                            <img src={asset.url} alt={asset.name} className="max-w-full max-h-full object-contain" />
+                          ) : (
+                            <Shield className="w-12 h-12 text-gray-400" />
+                          )}
+                        </div>
+                        <h4 className="font-medium text-sm mb-2">{asset.name}</h4>
+                        <p className="text-xs text-gray-500 mb-3">{asset.size}</p>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewAsset(asset)}>
+                            <Eye className="w-3 h-3 mr-1" />Preview
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => deleteAsset(asset.id)} className="text-red-600">
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <button 
+                    onClick={() => handleFileUpload('icon')}
+                    className="w-full border-2 border-dashed border-purple-300 dark:border-purple-700 rounded-lg p-8 flex flex-col items-center justify-center hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950 transition-colors"
+                  >
+                    <Shield className="w-16 h-16 text-purple-400 mb-3" />
+                    <p className="text-purple-600 dark:text-purple-400 font-semibold mb-1">Upload Icon / Favicon</p>
+                    <p className="text-sm text-gray-500">PNG, ICO • Recommended: 512x512px square</p>
+                  </button>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Additional Images Section */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <ImageIcon className="w-5 h-5 text-green-600" />
+                      Additional Brand Images
+                    </CardTitle>
+                    <CardDescription>
+                      Marketing images, hero graphics, and other visual assets
+                    </CardDescription>
+                  </div>
+                  <Button onClick={() => handleFileUpload('image')} variant="outline" data-testid="button-upload-image">
+                    <Upload className="w-4 h-4 mr-2" />
+                    Upload Image
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {logos.filter(a => a.type === 'image').length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {logos.filter(a => a.type === 'image').map((asset) => (
+                      <div key={asset.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-40 flex items-center justify-center mb-3 p-2">
+                          {asset.url.startsWith('blob:') || asset.url.startsWith('http') ? (
+                            <img src={asset.url} alt={asset.name} className="max-w-full max-h-full object-contain" />
+                          ) : (
+                            <ImageIcon className="w-12 h-12 text-gray-400" />
+                          )}
+                        </div>
+                        <h4 className="font-medium text-sm mb-2">{asset.name}</h4>
+                        <p className="text-xs text-gray-500 mb-3">{asset.size}</p>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewAsset(asset)}>
+                            <Eye className="w-3 h-3 mr-1" />Preview
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => downloadAsset(asset)}>
+                            <Download className="w-3 h-3" />
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => deleteAsset(asset.id)} className="text-red-600">
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <button 
+                    onClick={() => handleFileUpload('image')}
+                    className="w-full border-2 border-dashed border-green-300 dark:border-green-700 rounded-lg p-8 flex flex-col items-center justify-center hover:border-green-500 hover:bg-green-50 dark:hover:bg-green-950 transition-colors"
+                  >
+                    <ImageIcon className="w-16 h-16 text-green-400 mb-3" />
+                    <p className="text-green-600 dark:text-green-400 font-semibold mb-1">Upload Additional Images</p>
+                    <p className="text-sm text-gray-500">PNG, JPG, SVG up to 10MB</p>
+                  </button>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

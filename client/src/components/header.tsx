@@ -32,6 +32,7 @@ import {
 import { BrandLogo } from "@/components/brand-logo";
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
 import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.png";
+import commverseIcon from "@assets/Commverse Bundle_1760662442941.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import airswipedLogo from "@assets/airswipedcom icon light version_1760075718468.png";
@@ -535,8 +536,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   data-testid="button-quick-inbox"
                 >
                   <a href="/inbox">
-                    <MessageSquare className="w-4 h-4" />
-                    <span>Inbox</span>
+                    <img src={commverseIcon} alt="/inbox" className="w-5 h-5" />
+                    <span className="font-bold">Inbox</span>
                   </a>
                 </Button>
                 <Button 
