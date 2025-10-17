@@ -13,6 +13,12 @@ Preferred communication style: Simple, everyday language.
 - Reliability and consistency are critical - the user needs to rely on the system as-is
 - Changes only happen when discussed and approved by the user
 
+**GitHub Documentation Schedule:**
+- Update STATUS_REPORT.md and relevant documentation **twice daily** at 11:59 AM and 11:59 PM
+- On days with no work, add entry: "No updates - [date]"
+- Always document completed features, bug fixes, and configuration changes
+- Keep GitHub issues synchronized with actual progress
+
 **Logo Design Process:**
 - DO NOT change any logo elements unless specifically instructed
 - Only modify exactly what is requested - no additional "improvements"
