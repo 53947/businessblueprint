@@ -3,7 +3,6 @@ import nodemailer from 'nodemailer';
 interface EmailReportData {
   businessName: string;
   digitalScore: number;
-  grade: string;
   summary: string;
   recommendations: any[];
   assessmentId: number;
@@ -83,7 +82,7 @@ export class EmailService {
       const mailOptions = {
         from: process.env.FROM_EMAIL || 'le847@icloud.com',
         to: email,
-        subject: `Your Digital Presence Assessment Results - Grade: ${data.grade}`,
+        subject: `Your Digital Presence Assessment Results - Score: ${data.digitalScore}`,
         html: htmlContent,
       };
 
@@ -129,9 +128,9 @@ export class EmailService {
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; }
         .header { background: linear-gradient(135deg, #FF6B35, #8B5CF6); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-        .score-circle { display: inline-block; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin: 20px 0; }
+        .score-circle { display: inline-block; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin: 20px 0; }
         .content { background: white; padding: 30px; border: 1px solid #e0e0e0; }
-        .grade { font-size: 48px; font-weight: bold; color: #FF6B35; }
+        .score-value { font-size: 48px; font-weight: bold; color: #fff; }
         .section { margin: 30px 0; }
         .recommendation { background: #f8f9fa; padding: 20px; margin: 15px 0; border-left: 4px solid #FF6B35; border-radius: 4px; }
         .cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 5px; }
@@ -145,8 +144,8 @@ export class EmailService {
         <h2>${data.businessName}</h2>
         <div class="score-circle">
             <div>
-                <div class="grade">${data.grade}</div>
-                <div>${data.digitalScore}/100</div>
+                <div class="score-value">${data.digitalScore}</div>
+                <div style="font-size: 14px;">out of 140</div>
             </div>
         </div>
     </div>

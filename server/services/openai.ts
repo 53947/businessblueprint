@@ -27,7 +27,6 @@ interface BusinessAnalysisInput {
 
 interface AnalysisResult {
   digitalScore: number;
-  grade: string;
   summary: string;
   strengths: string[];
   weaknesses: string[];
@@ -129,7 +128,6 @@ Focus on actionable recommendations that clearly differentiate between DIY appro
     // Ensure all required fields exist with fallbacks
     return {
       digitalScore: result.digitalScore || baseScore,
-      grade: result.grade || this.calculateGrade(result.digitalScore || baseScore),
       summary: result.summary || "Your business has potential for digital growth.",
       strengths: Array.isArray(result.strengths) ? result.strengths : [],
       weaknesses: Array.isArray(result.weaknesses) ? result.weaknesses : [],
@@ -152,17 +150,5 @@ Focus on actionable recommendations that clearly differentiate between DIY appro
       diyInstructions: rec.diyInstructions || "Follow best practices guides",
       mspBenefits: rec.mspBenefits || "Professional implementation with ongoing support"
     };
-  }
-
-  private calculateGrade(score: number): string {
-    if (score >= 95) return "A+";
-    if (score >= 90) return "A";
-    if (score >= 85) return "B+";
-    if (score >= 80) return "B";
-    if (score >= 75) return "C+";
-    if (score >= 70) return "C";
-    if (score >= 65) return "D+";
-    if (score >= 60) return "D";
-    return "F";
   }
 }
