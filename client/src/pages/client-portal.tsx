@@ -243,7 +243,6 @@ export default function ClientPortal() {
                 </div>
                 <div className="text-center">
                   <div className="text-5xl font-bold mb-2">{clientData.digitalScore}</div>
-                  <div className="text-2xl font-semibold">{clientData.grade}</div>
                   <p className="text-sm text-blue-100 mt-1">Updated {new Date(clientData.lastUpdated).toLocaleDateString()}</p>
                   <p className="text-xs text-blue-200">Customer ID: {externalId}</p>
                 </div>

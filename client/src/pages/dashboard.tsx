@@ -133,7 +133,6 @@ export default function Dashboard() {
   if (assessment.status === "failed") {
     assessment.digitalScore = 65;
     assessment.analysisResults = {
-      grade: "C+",
       summary: "Your business has a solid foundation but significant opportunities for digital growth. Follow your step-by-step blueprint."
     };
     // Add sample recommendations for demonstration

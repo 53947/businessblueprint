@@ -150,7 +150,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const dashboardData = {
         client,
         digitalScore: 75, // Could be calculated from various factors
-        grade: "B+",
         lastUpdated: client.updatedAt,
         listings: {
           total: client.enabledFeatures ? client.enabledFeatures.split(',').length : 0,
@@ -442,12 +441,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const latestAssessment = assessments[0];
       const digitalScore = latestAssessment?.digitalScore || 0;
-      const grade = latestAssessment?.grade || 'N/A';
 
       const dashboardData = {
         client,
         digitalScore,
-        grade,
         assessments: assessments.length,
         campaigns: campaigns.length,
         activeCampaigns: campaigns.filter(c => c.status === 'active').length,
@@ -2786,7 +2783,6 @@ async function processAssessmentAsync(
       googleBusinessData: googleData,
       analysisResults: analysisResult,
       digitalScore: analysisResult.digitalScore,
-      grade: analysisResult.grade,
       status: "completed"
     });
 
@@ -2807,7 +2803,6 @@ async function processAssessmentAsync(
     const emailSent = await emailService.sendAssessmentReport(assessment.email, {
       businessName: assessment.businessName,
       digitalScore: analysisResult.digitalScore,
-      grade: analysisResult.grade,
       summary: analysisResult.summary,
       recommendations: analysisResult.recommendations,
       assessmentId

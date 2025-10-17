@@ -134,7 +134,7 @@ export class GoogleBusinessService {
     if (data.types && data.types.length > 0) score += 15;
     if (data.photos && data.photos.length > 0) score += 20;
     if (data.openingHours) score += 15;
-    return Math.min(score, 100);
+    return Math.min(score, 140);
   }
 
   private calculateReviewScore(data: GoogleBusinessData): number {
@@ -152,7 +152,7 @@ export class GoogleBusinessService {
 
     if (data.reviews && data.reviews.length > 0) score += 30;
 
-    return Math.min(score, 100);
+    return Math.min(score, 140);
   }
 
   private calculateCompletenessScore(data: GoogleBusinessData): number {
@@ -163,7 +163,7 @@ export class GoogleBusinessService {
     if (data.website) score += 20;
     if (data.openingHours) score += 15;
     if (data.photos && data.photos.length >= 3) score += 20;
-    return Math.min(score, 100);
+    return Math.min(score, 140);
   }
 
   private calculateEngagementScore(data: GoogleBusinessData): number {
@@ -179,7 +179,7 @@ export class GoogleBusinessService {
 
     if (data.photos && data.photos.length >= 5) score += 30;
 
-    return Math.min(score, 100);
+    return Math.min(score, 140);
   }
 
   private generateInsights(data: GoogleBusinessData, scores: any): string[] {
