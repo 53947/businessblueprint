@@ -60,6 +60,7 @@ The application uses a full-stack monorepo architecture with React 18, TypeScrip
 - **Synup Integration (API v4):** Complete listings and reputation management system with a service layer, database schema, storage layer, and secure API routes. Features a white-label security model and verified endpoints for location, listings, reviews, and analytics.
 - **AI-Powered Reputation Management:** Automated review response system using OpenAI GPT-4o with sentiment-based tone adaptation and context-aware responses, supporting bulk processing.
 - **Automated Review Monitoring & Alerts:** Real-time notification system for new reviews via multi-channel alerts (Email, WebSocket) with configurable preferences and intelligent alert logic.
+- **Brand Studio:** Admin-only asset management system with database persistence. Uploads stored as base64 in PostgreSQL (brand_assets table), converted to blob URLs for display with comprehensive memory leak prevention. Features upload, delete, preview, and categorization (logos, icons, additional assets) with proper cleanup on component unmount and remote deletions.
 
 ## External Dependencies
 
