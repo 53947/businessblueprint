@@ -23,7 +23,7 @@ import {
   ShoppingCart,
   Building2
 } from "lucide-react";
-import aiCoachLogo from "@assets/AI Coach_1758744493179.png";
+import aiCoachLogo from "@assets/AI Business Coach Blue_1760813312010.png";
 
 export default function Sitemap() {
   const siteStructure = {
