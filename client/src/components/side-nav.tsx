@@ -292,7 +292,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       >
         {/* Desktop Logo Header */}
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <div className="p-4 flex items-end gap-1 cursor-pointer" onClick={() => { setLocation('/'); }} data-testid="sidebar-logo">
+          <div className="px-4 py-3 flex items-end gap-1 cursor-pointer" onClick={() => { setLocation('/'); }} data-testid="sidebar-logo">
             <img src={bbIcon} alt="businessblueprint.io" style={{ width: '36px', height: '36px' }} className="object-contain flex-shrink-0" data-testid="logo-icon" />
             {!isCollapsed && (
               <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600 }} data-testid="logo-text">
@@ -304,7 +304,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
           </div>
           
           {/* Collapse/Expand Toggle Button */}
-          <div className={cn("px-4 pb-3", isCollapsed && "px-2")}>
+          <div className={cn("px-4 pb-2", isCollapsed && "px-2")}>
             <Button
               variant="ghost"
               size="sm"
