@@ -31,7 +31,7 @@ import { ReviewMonitoringService } from "./services/reviewMonitoring";
 import { reviewAI } from "./services/reviewAI";
 import { jwtService } from "./services/jwt";
 import { dashboardAccess } from "@shared/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 import { db } from "./db";
 import { z } from "zod";
 import { requireAuth, type AuthenticatedRequest } from "./middleware/auth";
@@ -2821,7 +2821,7 @@ async function processAssessmentAsync(
 // ========================================
 
 async function registerInboxRoutes(app: Express) {
-  // Create livechat session
+  // Create livechat session (public - for customer-facing chat widget)
   app.post("/api/inbox/livechat/session", async (req, res) => {
     try {
       const validatedData = insertLivechatSessionSchema.parse(req.body);
@@ -2856,10 +2856,10 @@ async function registerInboxRoutes(app: Express) {
     }
   });
 
-  // Get all conversations for inbox
-  app.get("/api/inbox/conversations", async (req, res) => {
+  // Get all conversations for inbox (REQUIRES AUTHENTICATION)
+  app.get("/api/inbox/conversations", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
-      const clientId = req.query.clientId ? parseInt(req.query.clientId as string) : 1; // TODO: Get from session
+      const clientId = req.clientId!; // Get from authenticated JWT token
       
       const conversations = await db.select()
         .from(inboxConversations)
@@ -2897,10 +2897,24 @@ async function registerInboxRoutes(app: Express) {
     }
   });
 
-  // Get messages for a conversation
-  app.get("/api/inbox/conversations/:conversationId/messages", async (req, res) => {
+  // Get messages for a conversation (REQUIRES AUTHENTICATION)
+  app.get("/api/inbox/conversations/:conversationId/messages", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
+      const clientId = req.clientId!;
       const conversationId = parseInt(req.params.conversationId);
+      
+      // Verify the conversation belongs to the authenticated client
+      const [conversation] = await db.select()
+        .from(inboxConversations)
+        .where(and(
+          eq(inboxConversations.id, conversationId),
+          eq(inboxConversations.clientId, clientId)
+        ))
+        .limit(1);
+      
+      if (!conversation) {
+        return res.status(404).json({ error: "Conversation not found or access denied" });
+      }
       
       const messages = await db.select()
         .from(inboxMessages2)
@@ -2914,27 +2928,31 @@ async function registerInboxRoutes(app: Express) {
     }
   });
 
-  // Send a message
-  app.post("/api/inbox/send-message", async (req, res) => {
+  // Send a message (REQUIRES AUTHENTICATION)
+  app.post("/api/inbox/send-message", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
+      const clientId = req.clientId!;
       const { conversationId, message } = req.body;
       
       if (!conversationId || !message) {
         return res.status(400).json({ error: "Missing required fields" });
       }
 
-      // Get conversation to determine channel type
+      // Get conversation and verify it belongs to the authenticated client
       const [conversation] = await db.select()
         .from(inboxConversations)
-        .where(eq(inboxConversations.id, conversationId))
+        .where(and(
+          eq(inboxConversations.id, conversationId),
+          eq(inboxConversations.clientId, clientId)
+        ))
         .limit(1);
 
       if (!conversation) {
-        return res.status(404).json({ error: "Conversation not found" });
+        return res.status(404).json({ error: "Conversation not found or access denied" });
       }
 
-      const agentName = 'Agent'; // TODO: Get from session
-      const agentEmail = 'agent@businessblueprint.io'; // TODO: Get from session
+      const agentName = 'Agent'; // TODO: Get from client profile
+      const agentEmail = 'agent@businessblueprint.io'; // TODO: Get from client profile
 
       // Send via appropriate channel
       let deliveryStatus = 'sent';
