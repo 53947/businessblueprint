@@ -40,16 +40,19 @@ Preferred communication style: Simple, everyday language.
 - **Text Shadow:** REMOVED (no shadow applied)
 
 **Business Blueprint Logo (businessblueprint.io):**
+- Icon: attached_assets/Blueprint Icon_1760810447789.png
 - "business" = #FFA500 (orange) - Archivo Semi Expanded
 - "blueprint" = #0000FF (blue) - Archivo
 - ".io" = #84D71A (green) - Archivo
 
 **Swipes Blue Logo (swipesblue.com):**
+- Icon: attached_assets/swipesblue icon_1760810511865.png
 - "swipes" = #FF0040 (red) - Archivo Semi Expanded
 - "blue" = #0000FF (blue) - Archivo
 - ".com" = #84D71A (green) - Archivo
 
 **Hosts Blue Logo (hostsblue.com):**
+- Icon: attached_assets/Hosts Blue Icon New_1760810493739.png
 - "hosts" = #660099 (purple) - Archivo Semi Expanded
 - "blue" = #0000FF (blue) - Archivo
 - ".com" = #84D71A (green) - Archivo

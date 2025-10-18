@@ -1,15 +1,17 @@
 // Reusable brand logo components using new universal logos (work for light/dark)
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
-import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.png";
+import bbIcon from "@assets/Blueprint Icon_1760810447789.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
-import airswipedLogo from "@assets/airswipedcom icon light version_1760075718468.png";
+import airswipedLogo from "@assets/swipesblue icon_1760810511865.png";
 import sendLogo from "@assets/send logo_1760075605263.png";
 import sendIcon from "@assets/send icon_1760074368870.png";
 import inboxLogo from "@assets/inbox logo_1760075605262.png";
 import inboxIcon from "@assets/Unified mailbox_1760074368869.png";
 import livechatLogo from "@assets/livechat logo_1760075605262.png";
 import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
+import hostsBlueIcon from "@assets/Hosts Blue Icon New_1760810493739.png";
+import swipesBlueIcon from "@assets/swipesblue icon_1760810511865.png";
 
 interface BrandLogoProps {
   brand: 'businessblueprint' | 'webhosted' | 'airswiped' | 'send' | 'inbox' | 'livechat';
@@ -180,8 +182,8 @@ export function BrandIcon({
   
   const iconMap = {
     businessblueprint: bbIcon,
-    webhosted: webhostedIcon,
-    airswiped: airswipedLogo,
+    webhosted: hostsBlueIcon,
+    airswiped: swipesBlueIcon,
     send: sendIcon,
     inbox: inboxIcon,
     livechat: livechatIcon

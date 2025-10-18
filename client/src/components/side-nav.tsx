@@ -11,7 +11,7 @@ import {
   Menu
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.png";
+import bbIcon from "@assets/Blueprint Icon_1760810447789.png";
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
 import inboxLogo from "@assets/inbox logo blue_1760788242628.png";
 import inboxIcon from "@assets/inbox icon_1760788273855.png";
@@ -23,8 +23,8 @@ import sendIcon from "@assets/send1_1760785706637.png";
 import socialMediaIcon from "@assets/Social Media Mgmt_1760786453964.png";
 import reputationIcon from "@assets/Reputation Management Icon_1760786977607.png";
 import settingsIcon from "@assets/settings_1760788009769.png";
-import hostsBlueIcon from "@assets/Hosts Blue Icon New_1760790557779.png";
-import swipesBlueIcon from "@assets/swipesblue icon_1760790602032.png";
+import hostsBlueIcon from "@assets/Hosts Blue Icon New_1760810493739.png";
+import swipesBlueIcon from "@assets/swipesblue icon_1760810511865.png";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;
