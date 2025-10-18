@@ -36,24 +36,26 @@ export function BrandLogo({
   className = '' 
 }: BrandLogoProps) {
   const isDark = variant === 'dark';
-  const { icon: iconSize, logo: logoSize } = sizeConfig[size];
+  const { icon: iconSize, logo: logoSize, text: textSize } = sizeConfig[size];
   
-  // For brands with image logos
-  if (brand === 'businessblueprint' && !textOnly) {
+  // Business Blueprint text-based logo matching Brand Logo Key
+  if (brand === 'businessblueprint') {
+    const textShadow = '0px 0px 5px rgba(0, 255, 64, 0.5)';
+    
     return (
       <div className={`flex items-center gap-3 ${className}`}>
-        {showIcon && (
+        {showIcon && !textOnly && (
           <img 
             src={bbIcon} 
             alt="businessblueprint.io icon" 
             className={`${iconSize} object-contain`}
           />
         )}
-        <img 
-          src={bbLogo} 
-          alt="businessblueprint.io" 
-          className={`${logoSize} object-contain`}
-        />
+        <div className={`font-archivo font-bold ${textSize} leading-none`} style={{ textShadow }}>
+          <span style={{ color: '#FFA500', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>business</span>
+          <span style={{ color: '#0000FF', fontWeight: 600 }}>blueprint</span>
+          <span style={{ color: '#84D71A', fontWeight: 600 }}>.io</span>
+        </div>
       </div>
     );
   }

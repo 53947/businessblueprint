@@ -33,6 +33,27 @@ Preferred communication style: Simple, everyday language.
 - Keep compass design consistent across iterations unless told otherwise
 - Business Blueprint logo concept: Compass + Pencil = "AI" using actual blueprint tools
 
+**OFFICIAL BRAND LOGO KEY (BIBLE) - Oct 18, 2025:**
+- **Source:** attached_assets/All Brand Logo Key_1760807746522.png
+- **CRITICAL:** ALL branding uses FONTS (Archivo), NEVER images of text
+- **Typography:** First word = Archivo Semi Expanded, subsequent words = Archivo
+- **Text Shadow (ALL logos):** Color #00FF40, 325° angle, 15px distance, 5px blur opacity
+
+**Business Blueprint Logo (businessblueprint.io):**
+- "business" = #FFA500 (orange) - Archivo Semi Expanded
+- "blueprint" = #0000FF (blue) - Archivo
+- ".io" = #84D71A (green) - Archivo
+
+**Swipes Blue Logo (swipesblue.com):**
+- "swipes" = #FF0040 (red) - Archivo Semi Expanded
+- "blue" = #0000FF (blue) - Archivo
+- ".com" = #84D71A (green) - Archivo
+
+**Hosts Blue Logo (hostsblue.com):**
+- "hosts" = #660099 (purple) - Archivo Semi Expanded
+- "blue" = #0000FF (blue) - Archivo
+- ".com" = #84D71A (green) - Archivo
+
 **Brand Identity & Official Color Palette:**
 - **Core Black:** #09080E
 - **Triad Blue:** #0000FF and #0057FF
