@@ -290,7 +290,7 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
       >
         {/* Desktop Logo Header */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setLocation('/')} data-testid="sidebar-logo">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setLocation('/'); }} data-testid="sidebar-logo">
             <img src={bbIcon} alt="businessblueprint.io" className="h-12 w-12 object-contain" data-testid="logo-icon" />
             {!isCollapsed && (
               <div className="text-lg leading-none" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="logo-text">
