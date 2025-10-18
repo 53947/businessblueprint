@@ -6,6 +6,24 @@
 
 ## 📅 Recent Updates
 
+### October 18, 2025 - 8:18 PM
+- 🎨 **Logo Standardization System Finalized:**
+  - Horizontal logo: 36px icon + 24px text (sidebar, headers)
+  - Vertical logo: 48px icon + 18px text (stacked for compact spaces)
+  - All navigation icons standardized to w-7 h-7 (28px)
+  - Typography: First word = Archivo Semi Expanded, subsequent words = Archivo (BOTH SAME SIZE)
+  - All branding uses FONTS, never images of text
+  - Brand Logo Key (attached_assets/All Brand Logo Key_1760807746552.png) is the BIBLE
+- 🔧 **Sidebar Optimization:**
+  - Removed logo text (icon only: 28px matching all nav icons)
+  - Collapse button moved next to logo (same row)
+  - Removed separate collapse section - saves vertical space for menu items
+  - Prevents menu items from disappearing in sliding menu
+- 📝 **Documentation Updates:**
+  - Updated replit.md with official logo sizing standards
+  - Documented vertical logo implementation for dashboard use
+  - Added explicit pixel sizing standards (no Tailwind classes for critical sizes)
+
 ### October 18, 2025 - 11:59 PM
 - 🏗️ **MAJOR ARCHITECTURAL DECISION:** Three platforms will be STANDALONE apps (separate deployments)
   - Business Blueprint (businessblueprint.io) - Digital intelligence platform
