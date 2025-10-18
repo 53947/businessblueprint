@@ -288,41 +288,6 @@ export default function ClientPortal() {
           </Card>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardContent className="p-6 text-center">
-              <Globe className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900">{clientData.listings.verified}</div>
-              <p className="text-sm text-gray-600">Active Listings</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6 text-center">
-              <Star className="h-8 w-8 text-yellow-500 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900">{clientData.reviews.average}</div>
-              <p className="text-sm text-gray-600">Review Rating</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6 text-center">
-              <BarChart3 className="h-8 w-8 text-green-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900">{clientData.campaigns.active}</div>
-              <p className="text-sm text-gray-600">Active Campaigns</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6 text-center">
-              <TrendingUp className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold text-gray-900">{clientData.campaigns.performance.reach}</div>
-              <p className="text-sm text-gray-600">Monthly Reach</p>
-            </CardContent>
-          </Card>
-        </div>
-
         {/* 5 Service Boxes - Official Order */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
           {/* 1. Local SEO Management */}
