@@ -46,24 +46,18 @@ interface NavItem {
   hasSpaceBefore?: boolean;
 }
 
-export function SideNav({ activeTab = "overview", onTabChange, onSignOut, className, ...props }: SideNavProps) {
+export function SideNav({ activeTab = "listings", onTabChange, onSignOut, className, ...props }: SideNavProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [, setLocation] = useLocation();
 
   const navItems: NavItem[] = [
     { 
-      id: "overview", 
-      label: "Overview", 
-      icon: <LayoutDashboard className="w-7 h-7" /> 
-    },
-    { 
       id: "inbox", 
       label: "inbox",
       icon: <img src={inboxIcon} alt="/inbox" className="w-7 h-7 object-contain" />,
       external: true, 
-      href: "/inbox",
-      hasSpaceBefore: true
+      href: "/inbox"
     },
     { 
       id: "livechat", 
