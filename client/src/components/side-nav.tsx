@@ -206,11 +206,11 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
           {/* Mobile Header */}
           <SheetHeader className="p-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-end gap-1">
-              <img src={bbIcon} alt="businessblueprint.io" className="h-12 w-12 object-contain" data-testid="logo-icon-mobile" />
-              <div className="text-lg leading-none pb-0.5" style={{ fontWeight: 600 }} data-testid="logo-text-mobile">
-                <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif', fontSize: 'inherit' }}>business</span>
-                <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif', fontSize: 'inherit' }}>blueprint</span>
-                <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif', fontSize: 'inherit' }}>.io</span>
+              <img src={bbIcon} alt="businessblueprint.io" style={{ width: '36px', height: '36px' }} className="object-contain" data-testid="logo-icon-mobile" />
+              <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600 }} data-testid="logo-text-mobile">
+                <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
+                <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blueprint</span>
+                <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.io</span>
               </div>
             </div>
           </SheetHeader>
@@ -293,12 +293,12 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
         {/* Desktop Logo Header */}
         <div className="border-b border-gray-200 dark:border-gray-700">
           <div className="p-4 flex items-end gap-1 cursor-pointer" onClick={() => { setLocation('/'); }} data-testid="sidebar-logo">
-            <img src={bbIcon} alt="businessblueprint.io" className="h-12 w-12 object-contain flex-shrink-0" data-testid="logo-icon" />
+            <img src={bbIcon} alt="businessblueprint.io" style={{ width: '36px', height: '36px' }} className="object-contain flex-shrink-0" data-testid="logo-icon" />
             {!isCollapsed && (
-              <div className="text-lg leading-none pb-0.5" style={{ fontWeight: 600 }} data-testid="logo-text">
-                <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif', fontSize: 'inherit' }}>business</span>
-                <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif', fontSize: 'inherit' }}>blueprint</span>
-                <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif', fontSize: 'inherit' }}>.io</span>
+              <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600 }} data-testid="logo-text">
+                <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
+                <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blueprint</span>
+                <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.io</span>
               </div>
             )}
           </div>

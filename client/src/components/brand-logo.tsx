@@ -48,13 +48,14 @@ export function BrandLogo({
           <img 
             src={bbIcon} 
             alt="businessblueprint.io icon" 
-            className={`${iconSize} object-contain`}
+            style={{ width: '36px', height: '36px' }}
+            className="object-contain"
           />
         )}
-        <div className={`${textSize} leading-none pb-0.5`} style={{ fontWeight: 600 }}>
-          <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif', fontSize: 'inherit' }}>business</span>
-          <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif', fontSize: 'inherit' }}>blueprint</span>
-          <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif', fontSize: 'inherit' }}>.io</span>
+        <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600 }}>
+          <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
+          <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blueprint</span>
+          <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.io</span>
         </div>
       </div>
     );
