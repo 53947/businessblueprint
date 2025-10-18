@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { SideNav } from "@/components/side-nav";
 import { SynupListings } from "@/components/synup-listings";
 import { SynupReviews } from "@/components/synup-reviews";
+import { BrandLogo } from "@/components/brand-logo";
 import { 
   BarChart3, 
   Star, 
@@ -148,9 +149,7 @@ export default function ClientPortal() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center space-x-4">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  business<span className="text-blue-600">blueprint</span><span style={{color: '#84D71A'}}>.io</span>
-                </h1>
+                <BrandLogo brand="businessblueprint" layout="vertical" />
                 <Badge variant="outline" className="text-sm">
                   Client Dashboard
                 </Badge>
