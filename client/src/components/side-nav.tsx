@@ -55,16 +55,16 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
     },
     { 
       id: "inbox", 
-      label: "/inbox", 
-      icon: <img src={inboxIcon} alt="/inbox" className="w-5 h-5 object-contain" />, 
+      label: "", 
+      icon: <img src={inboxLogo} alt="/inbox" className="h-5 object-contain" />, 
       external: true, 
       href: "/inbox",
       hasSpaceBefore: true
     },
     { 
       id: "livechat", 
-      label: "/livechat", 
-      icon: <img src={livechatIcon} alt="/livechat" className="w-5 h-5 object-contain" />, 
+      label: "", 
+      icon: <img src={livechatLogo} alt="/livechat" className="h-5 object-contain" />, 
       external: true, 
       href: "/livechat" 
     },
@@ -86,8 +86,8 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
     },
     { 
       id: "send", 
-      label: "/send", 
-      icon: <img src={sendIcon} alt="/send" className="w-5 h-5 object-contain" />,
+      label: "", 
+      icon: <img src={sendLogo} alt="/send" className="h-5 object-contain" />,
       external: true,
       href: "/send"
     },
