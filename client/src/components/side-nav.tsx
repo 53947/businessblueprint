@@ -4,24 +4,25 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { 
   LayoutDashboard, 
-  MapPin, 
-  Star, 
-  Megaphone, 
   CheckSquare,
-  Settings,
   LogOut,
   ChevronLeft,
   ChevronRight,
-  User,
-  MessageSquare,
-  Share2,
-  MessageCircle,
-  Menu,
-  X
+  Menu
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.png";
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
+import inboxLogo from "@assets/inbox logo blue_1760788242628.png";
+import inboxIcon from "@assets/inbox icon_1760788273855.png";
+import livechatLogo from "@assets/livechat logo blue_1760788395985.png";
+import livechatIcon from "@assets/livechat icon_1760788412068.png";
+import localSeoIcon from "@assets/LOCAL SEO_1760785581174.png";
+import sendLogo from "@assets/send logo blue_1760785667220.png";
+import sendIcon from "@assets/send1_1760785706637.png";
+import socialMediaIcon from "@assets/Social Media Mgmt_1760786453964.png";
+import reputationIcon from "@assets/Reputation Management Icon_1760786977607.png";
+import settingsIcon from "@assets/settings_1760788009769.png";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;
@@ -37,6 +38,8 @@ interface NavItem {
   badge?: number;
   external?: boolean;
   href?: string;
+  isDivider?: boolean;
+  hasSpaceBefore?: boolean;
 }
 
 export function SideNav({ activeTab = "overview", onTabChange, onSignOut, className, ...props }: SideNavProps) {
@@ -45,18 +48,70 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
   const [, setLocation] = useLocation();
 
   const navItems: NavItem[] = [
-    { id: "overview", label: "Overview", icon: <LayoutDashboard className="w-5 h-5" /> },
-    { id: "campaigns", label: "Campaigns", icon: <Megaphone className="w-5 h-5" /> },
-    { id: "listings", label: "Listings", icon: <MapPin className="w-5 h-5" /> },
-    { id: "social", label: "Social Media", icon: <Share2 className="w-5 h-5" /> },
-    { id: "reviews", label: "Reviews", icon: <Star className="w-5 h-5" /> },
-    { id: "inbox", label: "Inbox", icon: <MessageSquare className="w-5 h-5" />, external: true, href: "/inbox-app" },
-    { id: "livechat", label: "Live Chat", icon: <MessageCircle className="w-5 h-5" />, external: true, href: "/livechat-demo" },
-    { id: "tasks", label: "Tasks", icon: <CheckSquare className="w-5 h-5" /> },
-  ];
-
-  const settingsItems: NavItem[] = [
-    { id: "settings", label: "Settings", icon: <Settings className="w-5 h-5" /> },
+    { 
+      id: "overview", 
+      label: "Overview", 
+      icon: <LayoutDashboard className="w-5 h-5" /> 
+    },
+    { 
+      id: "inbox", 
+      label: "/inbox", 
+      icon: <img src={inboxIcon} alt="/inbox" className="w-5 h-5 object-contain" />, 
+      external: true, 
+      href: "/inbox",
+      hasSpaceBefore: true
+    },
+    { 
+      id: "livechat", 
+      label: "/livechat", 
+      icon: <img src={livechatIcon} alt="/livechat" className="w-5 h-5 object-contain" />, 
+      external: true, 
+      href: "/livechat" 
+    },
+    { 
+      id: "tasks", 
+      label: "Tasks", 
+      icon: <CheckSquare className="w-5 h-5" /> 
+    },
+    { 
+      id: "divider-1", 
+      label: "", 
+      icon: null, 
+      isDivider: true 
+    },
+    { 
+      id: "listings", 
+      label: "Local SEO Mgmt", 
+      icon: <img src={localSeoIcon} alt="Local SEO" className="w-5 h-5 object-contain" /> 
+    },
+    { 
+      id: "send", 
+      label: "/send", 
+      icon: <img src={sendIcon} alt="/send" className="w-5 h-5 object-contain" />,
+      external: true,
+      href: "/send"
+    },
+    { 
+      id: "social", 
+      label: "Social Media Mgmt", 
+      icon: <img src={socialMediaIcon} alt="Social Media" className="w-5 h-5 object-contain" /> 
+    },
+    { 
+      id: "reputation", 
+      label: "Reputation Mgmt", 
+      icon: <img src={reputationIcon} alt="Reputation" className="w-5 h-5 object-contain" /> 
+    },
+    { 
+      id: "divider-2", 
+      label: "", 
+      icon: null, 
+      isDivider: true 
+    },
+    { 
+      id: "settings", 
+      label: "Settings", 
+      icon: <img src={settingsIcon} alt="Settings" className="w-5 h-5 object-contain" /> 
+    },
   ];
 
   const handleNavClick = (item: NavItem, closeMobile: boolean = false) => {
@@ -73,37 +128,50 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
 
   const renderNavItems = (items: NavItem[], collapsed: boolean, isMobile: boolean = false) => (
     <>
-      {items.map((item) => (
-        <button
-          key={item.id}
-          onClick={() => handleNavClick(item, isMobile)}
-          className={cn(
-            "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-left group",
-            activeTab === item.id 
-              ? "bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-600 dark:text-blue-400 font-semibold shadow-sm" 
-              : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-sm",
-            isMobile ? "py-4" : ""
-          )}
-          data-testid={`nav-item-${item.id}`}
-        >
-          <span className={cn(
-            "transition-transform duration-200",
-            activeTab === item.id ? "scale-110" : "group-hover:scale-105"
-          )}>
-            {item.icon}
-          </span>
-          {!collapsed && (
-            <span className="flex-1 text-base" data-testid={`text-nav-${item.id}`}>
-              {item.label}
+      {items.map((item) => {
+        // Render divider
+        if (item.isDivider) {
+          return (
+            <div key={item.id} className="py-4">
+              <div className="border-t border-gray-200 dark:border-gray-700"></div>
+            </div>
+          );
+        }
+        
+        // Render regular nav item
+        return (
+          <button
+            key={item.id}
+            onClick={() => handleNavClick(item, isMobile)}
+            className={cn(
+              "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-left group",
+              activeTab === item.id 
+                ? "bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-600 dark:text-blue-400 font-semibold shadow-sm" 
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-sm",
+              isMobile ? "py-4" : "",
+              item.hasSpaceBefore ? "mt-4" : ""
+            )}
+            data-testid={`nav-item-${item.id}`}
+          >
+            <span className={cn(
+              "transition-transform duration-200",
+              activeTab === item.id ? "scale-110" : "group-hover:scale-105"
+            )}>
+              {item.icon}
             </span>
-          )}
-          {!collapsed && item.badge && (
-            <span className="bg-red-500 text-white text-xs font-semibold rounded-full px-2.5 py-1 shadow-sm" data-testid={`badge-${item.id}`}>
-              {item.badge}
-            </span>
-          )}
-        </button>
-      ))}
+            {!collapsed && (
+              <span className="flex-1 text-base" data-testid={`text-nav-${item.id}`}>
+                {item.label}
+              </span>
+            )}
+            {!collapsed && item.badge && (
+              <span className="bg-red-500 text-white text-xs font-semibold rounded-full px-2.5 py-1 shadow-sm" data-testid={`badge-${item.id}`}>
+                {item.badge}
+              </span>
+            )}
+          </button>
+        );
+      })}
     </>
   );
 
@@ -134,14 +202,6 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
           {/* Mobile Navigation Items */}
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto" data-testid="nav-items-mobile">
             {renderNavItems(navItems, false, true)}
-            
-            {/* Divider */}
-            <div className="py-2">
-              <div className="border-t border-gray-200 dark:border-gray-700"></div>
-            </div>
-            
-            {/* Settings Section */}
-            {renderNavItems(settingsItems, false, true)}
           </nav>
 
           {/* Mobile Bottom Section */}
@@ -203,14 +263,6 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
         {/* Desktop Navigation Items */}
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto" data-testid="nav-items">
           {renderNavItems(navItems, isCollapsed)}
-          
-          {/* Divider */}
-          <div className="py-2">
-            <div className="border-t border-gray-200 dark:border-gray-700"></div>
-          </div>
-          
-          {/* Settings Section */}
-          {renderNavItems(settingsItems, isCollapsed)}
         </nav>
 
         {/* Desktop Bottom Section */}
