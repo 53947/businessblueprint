@@ -56,18 +56,16 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
     },
     { 
       id: "inbox", 
-      label: "/inbox",
+      label: "inbox",
       icon: <img src={inboxIcon} alt="/inbox" className="w-5 h-5 object-contain" />,
-      logo: inboxLogo,
       external: true, 
       href: "/inbox",
       hasSpaceBefore: true
     },
     { 
       id: "livechat", 
-      label: "/livechat",
+      label: "livechat",
       icon: <img src={livechatIcon} alt="/livechat" className="w-5 h-5 object-contain" />,
-      logo: livechatLogo,
       external: true, 
       href: "/livechat" 
     },
@@ -89,9 +87,8 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
     },
     { 
       id: "send", 
-      label: "/send",
+      label: "send",
       icon: <img src={sendIcon} alt="/send" className="w-5 h-5 object-contain" />,
-      logo: sendLogo,
       external: true,
       href: "/send"
     },
@@ -164,8 +161,11 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
               {item.icon}
             </span>
             {!collapsed && (
-              item.logo ? (
-                <img src={item.logo} alt={item.label} className="h-5 object-contain flex-1" data-testid={`logo-nav-${item.id}`} />
+              (item.id === "inbox" || item.id === "livechat" || item.id === "send") ? (
+                <span className="flex-1 text-lg font-['Archivo']" style={{ fontWeight: 600 }} data-testid={`text-nav-${item.id}`}>
+                  <span style={{ color: '#84D71A' }}>/</span>
+                  <span style={{ color: '#0057FF' }}>{item.label}</span>
+                </span>
               ) : (
                 <span className="flex-1 text-base" data-testid={`text-nav-${item.id}`}>
                   {item.label}
