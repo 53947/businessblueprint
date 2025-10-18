@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import {
@@ -52,6 +52,13 @@ interface HeaderProps {
 
 export function Header({ showNavigation = true }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check if user is logged in
+  useEffect(() => {
+    const clientId = sessionStorage.getItem("clientId");
+    setIsLoggedIn(!!clientId);
+  }, []);
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -727,7 +734,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 <Button variant="outline" size="lg" className="w-full justify-start gap-3" asChild>
                   <a href="/portal">
                     <LogIn className="w-5 h-5" />
-                    <span className="font-semibold">Client Login</span>
+                    <span className="font-semibold">{isLoggedIn ? "Re-enter Portal" : "Client Login"}</span>
                   </a>
                 </Button>
                 <Button size="lg" className="w-full justify-start gap-3 bg-blue-600 hover:bg-blue-700 text-white" asChild>
