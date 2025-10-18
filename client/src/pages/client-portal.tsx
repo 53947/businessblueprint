@@ -463,7 +463,7 @@ export default function ClientPortal() {
           </Card>
 
           {/* 5. Live Chat */}
-          <Card className="hover:shadow-lg transition-shadow border-2 border-purple-200" data-testid="card-livechat">
+          <Card className="hover:shadow-lg transition-shadow" data-testid="card-livechat">
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
