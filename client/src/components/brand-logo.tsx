@@ -51,10 +51,10 @@ export function BrandLogo({
             className={`${iconSize} object-contain`}
           />
         )}
-        <div className={`${textSize} leading-none pb-0.5`} style={{ fontFamily: 'Archivo', fontWeight: 600 }}>
-          <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
-          <span style={{ color: '#0000FF' }}>blueprint</span>
-          <span style={{ color: '#84D71A' }}>.io</span>
+        <div className={`${textSize} leading-none pb-0.5`} style={{ fontWeight: 600 }}>
+          <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif', fontSize: 'inherit' }}>business</span>
+          <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif', fontSize: 'inherit' }}>blueprint</span>
+          <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif', fontSize: 'inherit' }}>.io</span>
         </div>
       </div>
     );
