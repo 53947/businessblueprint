@@ -31,7 +31,8 @@ import {
   Share2,
   CheckSquare,
   MessageCircle,
-  Bell
+  Bell,
+  Lock
 } from "lucide-react";
 
 export default function ClientPortal() {
@@ -228,24 +229,60 @@ export default function ClientPortal() {
         </header>
 
       <div className="px-4 sm:px-6 lg:px-8 py-8">
-        {/* Digital Score Overview */}
-        <div className="mb-8">
+        {/* Digital IQ + Business Info Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Digital IQ - Half Size */}
           <Card className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-2xl font-bold mb-2">Digital IQ</h2>
-                  <p className="text-blue-100">Your comprehensive online presence rating</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Brain className="h-5 w-5" />
-                    <span className="text-sm">Powered by businessblueprint AI</span>
-                  </div>
+            <CardContent className="p-4">
+              <div className="text-center">
+                <h2 className="text-lg font-bold mb-1">Digital IQ</h2>
+                <div className="text-4xl font-bold mb-1">{clientData.digitalScore}</div>
+                <p className="text-xs text-blue-100">Updated {new Date(clientData.lastUpdated).toLocaleDateString()}</p>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                  <Brain className="h-4 w-4" />
+                  <span className="text-xs">Powered by businessblueprint AI</span>
                 </div>
-                <div className="text-center">
-                  <div className="text-5xl font-bold mb-2">{clientData.digitalScore}</div>
-                  <p className="text-sm text-blue-100 mt-1">Updated {new Date(clientData.lastUpdated).toLocaleDateString()}</p>
-                  <p className="text-xs text-blue-200">Customer ID: {externalId}</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Business Information - Upper Right */}
+          <Card className="border-2 border-blue-200">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <MapPin className="h-4 w-4" />
+                Business Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Mail className="h-3.5 w-3.5 text-gray-500" />
+                <span className="text-sm">{clientData.client.email}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="h-3.5 w-3.5 text-gray-500" />
+                <span className="text-sm">{clientData.client.phone}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-3.5 w-3.5 text-gray-500" />
+                <span className="text-sm">{clientData.client.address}</span>
+              </div>
+              {clientData.client.website && (
+                <div className="flex items-center gap-2">
+                  <Globe className="h-3.5 w-3.5 text-gray-500" />
+                  <a href={clientData.client.website} target="_blank" rel="noopener noreferrer" 
+                     className="text-sm text-blue-600 hover:text-blue-800 break-all">
+                    {clientData.client.website}
+                  </a>
                 </div>
+              )}
+              <div className="mt-3 pt-3 border-t border-gray-200">
+                <Alert className="bg-amber-50 border-amber-200">
+                  <Lock className="h-4 w-4 text-amber-600" />
+                  <AlertDescription className="text-xs text-amber-800">
+                    <strong>Protected:</strong> This information is used for Local SEO listings and citations. Changes require verification.
+                  </AlertDescription>
+                </Alert>
               </div>
             </CardContent>
           </Card>
@@ -286,47 +323,88 @@ export default function ClientPortal() {
           </Card>
         </div>
 
-        {/* Quick Action Shortcuts */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Button 
-            variant="outline" 
-            className="h-auto py-4 flex flex-col items-center gap-2 hover:bg-purple-50 hover:border-purple-400"
-            onClick={() => setLocation("/livechat-demo")}
-            data-testid="button-install-livechat"
-          >
-            <MessageCircle className="h-6 w-6 text-purple-600" />
-            <span className="font-medium">Install Live Chat Widget</span>
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            className="h-auto py-4 flex flex-col items-center gap-2 hover:bg-blue-50 hover:border-blue-400"
-            onClick={() => setActiveTab("social")}
-            data-testid="button-add-social"
-          >
-            <Share2 className="h-6 w-6 text-blue-600" />
-            <span className="font-medium">Add Social Profiles</span>
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            className="h-auto py-4 flex flex-col items-center gap-2 hover:bg-green-50 hover:border-green-400"
-            onClick={() => setActiveTab("campaigns")}
-            data-testid="button-schedule-campaign"
-          >
-            <Calendar className="h-6 w-6 text-green-600" />
-            <span className="font-medium">Schedule Campaign</span>
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            className="h-auto py-4 flex flex-col items-center gap-2 hover:bg-red-50 hover:border-red-400"
-            onClick={() => setLocation('/livechat-demo')}
-            data-testid="button-live-alert"
-          >
-            <Bell className="h-6 w-6 text-red-600 animate-pulse" />
-            <span className="font-medium">🔴 Live Chat Status</span>
-          </Button>
+        {/* 5 Service Boxes - Official Order */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+          {/* 1. Local SEO Management */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActiveTab("listings")} data-testid="card-local-seo">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <img src="/attached_assets/LOCAL SEO_1760785581174.png" alt="Local SEO" className="w-16 h-16" />
+              </div>
+              <h3 className="font-semibold text-sm mb-2">Local SEO Mgmt</h3>
+              <p className="text-xs text-gray-600 mb-3">Manage listings & citations</p>
+              <Button size="sm" variant="outline" className="w-full" onClick={() => setActiveTab("listings")} data-testid="button-manage-local-seo">
+                Manage
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* 2. /send */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActiveTab("campaigns")} data-testid="card-send">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <img src="/attached_assets/send1_1760785706637.png" alt="/send" className="w-16 h-16" />
+              </div>
+              <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
+                <span style={{ color: '#84D71A' }}>/</span>
+                <span style={{ color: '#0057FF' }}>send</span>
+              </h3>
+              <p className="text-xs text-gray-600 mb-3">Email & SMS campaigns</p>
+              <Button size="sm" variant="outline" className="w-full" onClick={() => setActiveTab("campaigns")} data-testid="button-schedule-campaign">
+                Schedule
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* 3. Social Media Management */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActiveTab("social")} data-testid="card-social-media">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <img src="/attached_assets/Social Media Mgmt_1760786453964.png" alt="Social Media" className="w-16 h-16" />
+              </div>
+              <h3 className="font-semibold text-sm mb-2">Social Media Mgmt</h3>
+              <p className="text-xs text-gray-600 mb-3">Connect social profiles</p>
+              <Button size="sm" variant="outline" className="w-full" onClick={() => setActiveTab("social")} data-testid="button-add-social">
+                Add Profiles
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* 4. Reputation Management */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActiveTab("reviews")} data-testid="card-reputation">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <img src="/attached_assets/Reputation Management Icon_1760786977607.png" alt="Reputation" className="w-16 h-16" />
+              </div>
+              <h3 className="font-semibold text-sm mb-2">Reputation Mgmt</h3>
+              <p className="text-xs text-gray-600 mb-3">Monitor & respond to reviews</p>
+              <Button size="sm" variant="outline" className="w-full" onClick={() => setActiveTab("reviews")} data-testid="button-manage-reviews">
+                Manage
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* 5. Live Chat */}
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 border-purple-200" onClick={() => setLocation("/livechat-demo")} data-testid="card-livechat">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <img src="/attached_assets/livechat icon_1760788412068.png" alt="/livechat" className="w-16 h-16" />
+              </div>
+              <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
+                <span style={{ color: '#84D71A' }}>/</span>
+                <span style={{ color: '#0057FF' }}>livechat</span>
+              </h3>
+              <p className="text-xs text-gray-600 mb-3">
+                <span className="inline-flex items-center gap-1">
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                  Active chat participation
+                </span>
+              </p>
+              <Button size="sm" variant="outline" className="w-full" onClick={() => setLocation("/livechat-demo")} data-testid="button-setup-livechat">
+                Setup Widget
+              </Button>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Main Content Tabs */}
@@ -335,44 +413,6 @@ export default function ClientPortal() {
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Business Information */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5" />
-                    Business Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Mail className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm">{clientData.client.email}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Phone className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm">{clientData.client.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <MapPin className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm">{clientData.client.address}</span>
-                  </div>
-                  {clientData.client.website && (
-                    <div className="flex items-center gap-3">
-                      <Globe className="h-4 w-4 text-gray-500" />
-                      <a href={clientData.client.website} target="_blank" rel="noopener noreferrer" 
-                         className="text-sm text-blue-600 hover:text-blue-800">
-                        {clientData.client.website}
-                      </a>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-3">
-                    <Badge variant="outline" className="text-xs">
-                      {clientData.client.businessCategory}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Recent Activity */}
               <Card>
                 <CardHeader>

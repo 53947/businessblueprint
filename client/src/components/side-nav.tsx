@@ -23,6 +23,8 @@ import sendIcon from "@assets/send1_1760785706637.png";
 import socialMediaIcon from "@assets/Social Media Mgmt_1760786453964.png";
 import reputationIcon from "@assets/Reputation Management Icon_1760786977607.png";
 import settingsIcon from "@assets/settings_1760788009769.png";
+import hostsBlueIcon from "@assets/Hosts Blue Icon New_1760790557779.png";
+import swipesBlueIcon from "@assets/swipesblue icon_1760790602032.png";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;
@@ -214,6 +216,39 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
 
           {/* Mobile Bottom Section */}
           <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2 bg-gray-50 dark:bg-gray-800/50">
+            {/* Platform Links */}
+            <div className="space-y-2 pb-3 border-b border-gray-200 dark:border-gray-700">
+              <a
+                href="https://hostsblue.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsMobileOpen(false)}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-left hover:bg-purple-50 dark:hover:bg-purple-900/20"
+                data-testid="link-hostsblue-mobile"
+              >
+                <img src={hostsBlueIcon} alt="Hosts Blue" className="w-5 h-5 object-contain" />
+                <span className="text-sm font-['Archivo']" style={{ fontWeight: 600 }} data-testid="text-hostsblue-mobile">
+                  <span style={{ color: '#660099' }}>hostsblue</span>
+                  <span style={{ color: '#84D71A' }}>.com</span>
+                </span>
+              </a>
+              <a
+                href="https://swipesblue.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsMobileOpen(false)}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-left hover:bg-red-50 dark:hover:bg-red-900/20"
+                data-testid="link-swipesblue-mobile"
+              >
+                <img src={swipesBlueIcon} alt="Swipes Blue" className="w-5 h-5 object-contain" />
+                <span className="text-sm font-['Archivo']" style={{ fontWeight: 600 }} data-testid="text-swipesblue-mobile">
+                  <span style={{ color: '#FF0040' }}>swipesblue</span>
+                  <span style={{ color: '#84D71A' }}>.com</span>
+                </span>
+              </a>
+            </div>
+
+            {/* Sign Out */}
             {onSignOut && (
               <button
                 onClick={() => {
@@ -274,7 +309,42 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
         </nav>
 
         {/* Desktop Bottom Section */}
-        <div className="p-3 border-t border-gray-200 dark:border-gray-700 space-y-1">
+        <div className="p-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
+          {/* Platform Links */}
+          <div className="space-y-1 pb-2 border-b border-gray-200 dark:border-gray-700">
+            <a
+              href="https://hostsblue.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left hover:bg-purple-50 dark:hover:bg-purple-900/20"
+              data-testid="link-hostsblue"
+            >
+              <img src={hostsBlueIcon} alt="Hosts Blue" className="w-5 h-5 object-contain" />
+              {!isCollapsed && (
+                <span className="text-sm font-['Archivo']" style={{ fontWeight: 600 }} data-testid="text-hostsblue">
+                  <span style={{ color: '#660099' }}>hostsblue</span>
+                  <span style={{ color: '#84D71A' }}>.com</span>
+                </span>
+              )}
+            </a>
+            <a
+              href="https://swipesblue.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left hover:bg-red-50 dark:hover:bg-red-900/20"
+              data-testid="link-swipesblue"
+            >
+              <img src={swipesBlueIcon} alt="Swipes Blue" className="w-5 h-5 object-contain" />
+              {!isCollapsed && (
+                <span className="text-sm font-['Archivo']" style={{ fontWeight: 600 }} data-testid="text-swipesblue">
+                  <span style={{ color: '#FF0040' }}>swipesblue</span>
+                  <span style={{ color: '#84D71A' }}>.com</span>
+                </span>
+              )}
+            </a>
+          </div>
+
+          {/* Sign Out */}
           {onSignOut && (
             <button
               onClick={onSignOut}
