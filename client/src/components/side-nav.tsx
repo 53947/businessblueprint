@@ -289,9 +289,9 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
         {...props}
       >
         {/* Desktop Logo Header */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setLocation('/'); }} data-testid="sidebar-logo">
-            <img src={bbIcon} alt="businessblueprint.io" className="h-12 w-12 object-contain" data-testid="logo-icon" />
+        <div className="border-b border-gray-200 dark:border-gray-700">
+          <div className="p-4 flex items-center gap-3 cursor-pointer" onClick={() => { setLocation('/'); }} data-testid="sidebar-logo">
+            <img src={bbIcon} alt="businessblueprint.io" className="h-12 w-12 object-contain flex-shrink-0" data-testid="logo-icon" />
             {!isCollapsed && (
               <div className="text-lg leading-none" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="logo-text">
                 <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
@@ -300,19 +300,31 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
               </div>
             )}
           </div>
-          {!isCollapsed && (
+          
+          {/* Collapse/Expand Toggle Button */}
+          <div className={cn("px-4 pb-3", isCollapsed && "px-2")}>
             <Button
               variant="ghost"
               size="sm"
               onClick={(e) => { e.stopPropagation(); setIsCollapsed(!isCollapsed); }}
-              className="ml-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className={cn(
+                "w-full hover:bg-gray-100 dark:hover:bg-gray-800",
+                isCollapsed && "px-2"
+              )}
               data-testid="button-toggle-nav"
-              aria-label="Collapse navigation"
+              aria-label={isCollapsed ? "Expand navigation" : "Collapse navigation"}
               aria-expanded={!isCollapsed}
             >
-              <ChevronLeft className="w-4 h-4" />
+              {isCollapsed ? (
+                <ChevronRight className="w-4 h-4" />
+              ) : (
+                <>
+                  <ChevronLeft className="w-4 h-4 mr-2" />
+                  <span className="text-sm">Collapse</span>
+                </>
+              )}
             </Button>
-          )}
+          </div>
         </div>
 
         {/* Desktop Navigation Items */}
