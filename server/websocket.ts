@@ -7,6 +7,7 @@ import {
   livechatSessions 
 } from '@shared/schema';
 import { eq, and, desc } from 'drizzle-orm';
+import { jwtService } from './services/jwt';
 
 interface SocketData {
   userId?: number;
@@ -27,18 +28,52 @@ export function setupWebSocket(server: HTTPServer) {
   });
 
   // Middleware for authentication
-  io.use((socket: Socket, next: (err?: Error) => void) => {
+  io.use(async (socket: Socket, next: (err?: Error) => void) => {
     const token = socket.handshake.auth.token;
     const sessionId = socket.handshake.auth.sessionId;
+    const role = socket.handshake.auth.role;
     
-    // For now, allow all connections
-    // TODO: Implement JWT verification
-    socket.data = {
-      sessionId,
-      role: socket.handshake.auth.role || 'customer'
-    } as SocketData;
+    // Customer role (live chat widget) - doesn't require JWT, uses sessionId
+    if (role === 'customer' && sessionId) {
+      socket.data = {
+        sessionId,
+        role: 'customer'
+      } as SocketData;
+      return next();
+    }
     
-    next();
+    // Agent role (inbox app) - requires JWT authentication
+    if (role === 'agent' || token) {
+      if (!token) {
+        return next(new Error('Authentication required: No token provided'));
+      }
+      
+      try {
+        // Verify JWT token
+        const payload = jwtService.verifyToken(token);
+        
+        // Check if token is still active
+        const isActive = await jwtService.isTokenActive(token);
+        if (!isActive) {
+          return next(new Error('Authentication failed: Token has been revoked'));
+        }
+        
+        // Attach authenticated user data
+        socket.data = {
+          userId: payload.clientId,
+          clientId: payload.clientId,
+          role: 'agent'
+        } as SocketData;
+        
+        next();
+      } catch (error) {
+        console.error('WebSocket authentication error:', error);
+        return next(new Error('Authentication failed: Invalid or expired token'));
+      }
+    } else {
+      // No valid authentication method provided
+      return next(new Error('Authentication required: Provide either token (agent) or sessionId (customer)'));
+    }
   });
 
   io.on('connection', (socket: Socket) => {
