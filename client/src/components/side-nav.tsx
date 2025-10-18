@@ -227,9 +227,10 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
                 data-testid="link-hostsblue-mobile"
               >
                 <img src={hostsBlueIcon} alt="Hosts Blue" className="w-5 h-5 object-contain" />
-                <span className="text-sm font-['Archivo']" style={{ fontWeight: 600 }} data-testid="text-hostsblue-mobile">
-                  <span style={{ color: '#660099' }}>hostsblue</span>
-                  <span style={{ color: '#84D71A' }}>.com</span>
+                <span className="text-sm font-['Archivo']" data-testid="text-hostsblue-mobile">
+                  <span style={{ color: '#660099', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>hosts</span>
+                  <span style={{ color: '#0000FF', fontWeight: 600 }}>blue</span>
+                  <span style={{ color: '#84D71A', fontWeight: 600 }}>.com</span>
                 </span>
               </a>
               <a
@@ -241,9 +242,10 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
                 data-testid="link-swipesblue-mobile"
               >
                 <img src={swipesBlueIcon} alt="Swipes Blue" className="w-5 h-5 object-contain" />
-                <span className="text-sm font-['Archivo']" style={{ fontWeight: 600 }} data-testid="text-swipesblue-mobile">
-                  <span style={{ color: '#FF0040' }}>swipesblue</span>
-                  <span style={{ color: '#84D71A' }}>.com</span>
+                <span className="text-sm font-['Archivo']" data-testid="text-swipesblue-mobile">
+                  <span style={{ color: '#FF0040', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>swipes</span>
+                  <span style={{ color: '#0000FF', fontWeight: 600 }}>blue</span>
+                  <span style={{ color: '#84D71A', fontWeight: 600 }}>.com</span>
                 </span>
               </a>
             </div>
@@ -321,9 +323,10 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
             >
               <img src={hostsBlueIcon} alt="Hosts Blue" className="w-5 h-5 object-contain" />
               {!isCollapsed && (
-                <span className="text-sm font-['Archivo']" style={{ fontWeight: 600 }} data-testid="text-hostsblue">
-                  <span style={{ color: '#660099' }}>hostsblue</span>
-                  <span style={{ color: '#84D71A' }}>.com</span>
+                <span className="text-sm font-['Archivo']" data-testid="text-hostsblue">
+                  <span style={{ color: '#660099', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>hosts</span>
+                  <span style={{ color: '#0000FF', fontWeight: 600 }}>blue</span>
+                  <span style={{ color: '#84D71A', fontWeight: 600 }}>.com</span>
                 </span>
               )}
             </a>
@@ -336,9 +339,10 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
             >
               <img src={swipesBlueIcon} alt="Swipes Blue" className="w-5 h-5 object-contain" />
               {!isCollapsed && (
-                <span className="text-sm font-['Archivo']" style={{ fontWeight: 600 }} data-testid="text-swipesblue">
-                  <span style={{ color: '#FF0040' }}>swipesblue</span>
-                  <span style={{ color: '#84D71A' }}>.com</span>
+                <span className="text-sm font-['Archivo']" data-testid="text-swipesblue">
+                  <span style={{ color: '#FF0040', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>swipes</span>
+                  <span style={{ color: '#0000FF', fontWeight: 600 }}>blue</span>
+                  <span style={{ color: '#84D71A', fontWeight: 600 }}>.com</span>
                 </span>
               )}
             </a>
