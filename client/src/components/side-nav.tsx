@@ -292,37 +292,27 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       >
         {/* Desktop Logo Header */}
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <div className="px-4 py-2 flex items-center gap-2 cursor-pointer" onClick={() => { setLocation('/'); }} data-testid="sidebar-logo">
-            <img src={bbIcon} alt="businessblueprint.io" style={{ width: '48px', height: '48px' }} className="object-contain flex-shrink-0" data-testid="logo-icon" />
-            {!isCollapsed && (
-              <div className="leading-none" style={{ fontSize: '18px', fontWeight: 600 }} data-testid="logo-text">
-                <div style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif', lineHeight: '1.2' }}>business</div>
-                <div style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif', lineHeight: '1.2' }}>blueprint</div>
-              </div>
-            )}
-          </div>
-          
-          {/* Collapse/Expand Toggle Button */}
-          <div className={cn("px-4 pb-2", isCollapsed && "px-2")}>
+          <div className="px-4 py-3 flex items-center justify-between" data-testid="sidebar-logo">
+            <img 
+              src={bbIcon} 
+              alt="businessblueprint.io" 
+              className="w-7 h-7 object-contain cursor-pointer" 
+              onClick={() => { setLocation('/'); }}
+              data-testid="logo-icon" 
+            />
             <Button
               variant="ghost"
               size="sm"
               onClick={(e) => { e.stopPropagation(); setIsCollapsed(!isCollapsed); }}
-              className={cn(
-                "w-full hover:bg-gray-100 dark:hover:bg-gray-800",
-                isCollapsed && "px-2"
-              )}
+              className="p-1 h-auto text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
               data-testid="button-toggle-nav"
               aria-label={isCollapsed ? "Expand navigation" : "Collapse navigation"}
               aria-expanded={!isCollapsed}
             >
               {isCollapsed ? (
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="h-4 w-4" />
               ) : (
-                <>
-                  <ChevronLeft className="w-4 h-4 mr-2" />
-                  <span className="text-sm">Collapse</span>
-                </>
+                <ChevronLeft className="h-4 w-4" />
               )}
             </Button>
           </div>
