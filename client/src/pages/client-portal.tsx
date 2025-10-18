@@ -326,82 +326,186 @@ export default function ClientPortal() {
         {/* 5 Service Boxes - Official Order */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
           {/* 1. Local SEO Management */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActiveTab("listings")} data-testid="card-local-seo">
-            <CardContent className="p-6 text-center">
-              <div className="flex justify-center mb-3">
-                <img src="/attached_assets/LOCAL SEO_1760785581174.png" alt="Local SEO" className="w-16 h-16" />
+          <Card className="hover:shadow-lg transition-shadow" data-testid="card-local-seo">
+            <CardContent className="p-6">
+              {/* Results Section (TOP) */}
+              <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
+                <img src="/attached_assets/LOCAL SEO_1760785581174.png" alt="Local SEO" className="w-8 h-8" />
+                <div className="text-center">
+                  <div className="flex gap-3">
+                    <div>
+                      <div className="text-2xl font-bold text-gray-900">{clientData.listings.verified || 5}</div>
+                      <p className="text-[10px] text-gray-600">Listings</p>
+                    </div>
+                    <div className="border-l border-gray-300"></div>
+                    <div>
+                      <div className="text-2xl font-bold text-gray-900">{clientData.listings.citations || 12}</div>
+                      <p className="text-[10px] text-gray-600">Citations</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3 className="font-semibold text-sm mb-2">Local SEO Mgmt</h3>
-              <p className="text-xs text-gray-600 mb-3">Manage listings & citations</p>
-              <Button size="sm" variant="outline" className="w-full" onClick={() => setActiveTab("listings")} data-testid="button-manage-local-seo">
-                Manage
+              
+              {/* Icon & Content (MIDDLE) */}
+              <div className="text-center mb-4">
+                <div className="flex justify-center mb-3">
+                  <img src="/attached_assets/LOCAL SEO_1760785581174.png" alt="Local SEO" className="w-16 h-16" />
+                </div>
+                <h3 className="font-semibold text-sm mb-2">Local SEO Mgmt</h3>
+                <p className="text-xs text-gray-600">Manage listings & citations</p>
+              </div>
+              
+              {/* Action Button (BOTTOM) */}
+              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("listings")} data-testid="button-manage-local-seo">
+                <img src="/attached_assets/LOCAL SEO_1760785581174.png" alt="" className="w-4 h-4" />
+                <span>Manage</span>
               </Button>
             </CardContent>
           </Card>
 
           {/* 2. /send */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActiveTab("campaigns")} data-testid="card-send">
-            <CardContent className="p-6 text-center">
-              <div className="flex justify-center mb-3">
-                <img src="/attached_assets/send1_1760785706637.png" alt="/send" className="w-16 h-16" />
+          <Card className="hover:shadow-lg transition-shadow" data-testid="card-send">
+            <CardContent className="p-6">
+              {/* Results Section (TOP) */}
+              <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
+                <img src="/attached_assets/send1_1760785706637.png" alt="/send" className="w-8 h-8" />
+                <div className="text-center">
+                  <div className="text-xl font-bold text-gray-900">Latest Campaign</div>
+                  <p className="text-[10px] text-gray-600">Status: Active</p>
+                </div>
               </div>
-              <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
-                <span style={{ color: '#84D71A' }}>/</span>
-                <span style={{ color: '#0057FF' }}>send</span>
-              </h3>
-              <p className="text-xs text-gray-600 mb-3">Email & SMS campaigns</p>
-              <Button size="sm" variant="outline" className="w-full" onClick={() => setActiveTab("campaigns")} data-testid="button-schedule-campaign">
-                Schedule
+              
+              {/* Icon & Content (MIDDLE) */}
+              <div className="text-center mb-4">
+                <div className="flex justify-center mb-3">
+                  <img src="/attached_assets/send1_1760785706637.png" alt="/send" className="w-16 h-16" />
+                </div>
+                <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
+                  <span style={{ color: '#84D71A' }}>/</span>
+                  <span style={{ color: '#0057FF' }}>send</span>
+                </h3>
+                <p className="text-xs text-gray-600">Email & SMS campaigns</p>
+              </div>
+              
+              {/* Action Button (BOTTOM) */}
+              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("campaigns")} data-testid="button-schedule-campaign">
+                <img src="/attached_assets/send1_1760785706637.png" alt="" className="w-4 h-4" />
+                <span>Schedule</span>
               </Button>
             </CardContent>
           </Card>
 
           {/* 3. Social Media Management */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActiveTab("social")} data-testid="card-social-media">
-            <CardContent className="p-6 text-center">
-              <div className="flex justify-center mb-3">
-                <img src="/attached_assets/Social Media Mgmt_1760786453964.png" alt="Social Media" className="w-16 h-16" />
+          <Card className="hover:shadow-lg transition-shadow" data-testid="card-social-media">
+            <CardContent className="p-6">
+              {/* Results Section (TOP) */}
+              <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
+                <img src="/attached_assets/Social Media Mgmt_1760786453964.png" alt="Social Media" className="w-8 h-8" />
+                <div className="text-center">
+                  <div className="grid grid-cols-3 gap-2 text-xs">
+                    <div>
+                      <div className="text-lg font-bold text-gray-900">24</div>
+                      <p className="text-[9px] text-gray-600">Likes</p>
+                    </div>
+                    <div>
+                      <div className="text-lg font-bold text-gray-900">8</div>
+                      <p className="text-[9px] text-gray-600">Comments</p>
+                    </div>
+                    <div>
+                      <div className="text-lg font-bold text-gray-900">5</div>
+                      <p className="text-[9px] text-gray-600">Messages</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3 className="font-semibold text-sm mb-2">Social Media Mgmt</h3>
-              <p className="text-xs text-gray-600 mb-3">Connect social profiles</p>
-              <Button size="sm" variant="outline" className="w-full" onClick={() => setActiveTab("social")} data-testid="button-add-social">
-                Add Profiles
+              
+              {/* Icon & Content (MIDDLE) */}
+              <div className="text-center mb-4">
+                <div className="flex justify-center mb-3">
+                  <img src="/attached_assets/Social Media Mgmt_1760786453964.png" alt="Social Media" className="w-16 h-16" />
+                </div>
+                <h3 className="font-semibold text-sm mb-2">Social Media Mgmt</h3>
+                <p className="text-xs text-gray-600">Connect social profiles</p>
+              </div>
+              
+              {/* Action Button (BOTTOM) - Conditional */}
+              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("social")} data-testid="button-social-action">
+                <img src="/attached_assets/Social Media Mgmt_1760786453964.png" alt="" className="w-4 h-4" />
+                <span>Setup</span>
               </Button>
             </CardContent>
           </Card>
 
           {/* 4. Reputation Management */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActiveTab("reviews")} data-testid="card-reputation">
-            <CardContent className="p-6 text-center">
-              <div className="flex justify-center mb-3">
-                <img src="/attached_assets/Reputation Management Icon_1760786977607.png" alt="Reputation" className="w-16 h-16" />
+          <Card className="hover:shadow-lg transition-shadow" data-testid="card-reputation">
+            <CardContent className="p-6">
+              {/* Results Section (TOP) */}
+              <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
+                <img src="/attached_assets/Reputation Management Icon_1760786977607.png" alt="Reputation" className="w-8 h-8" />
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gray-900">{clientData.reviews.average}</div>
+                  <p className="text-[10px] text-gray-600">Review Ratings</p>
+                </div>
               </div>
-              <h3 className="font-semibold text-sm mb-2">Reputation Mgmt</h3>
-              <p className="text-xs text-gray-600 mb-3">Monitor & respond to reviews</p>
-              <Button size="sm" variant="outline" className="w-full" onClick={() => setActiveTab("reviews")} data-testid="button-manage-reviews">
-                Manage
+              
+              {/* Icon & Content (MIDDLE) */}
+              <div className="text-center mb-4">
+                <div className="flex justify-center mb-3">
+                  <img src="/attached_assets/Reputation Management Icon_1760786977607.png" alt="Reputation" className="w-16 h-16" />
+                </div>
+                <h3 className="font-semibold text-sm mb-2">Reputation Mgmt</h3>
+                <p className="text-xs text-gray-600">Monitor and respond to ratings and reviews</p>
+              </div>
+              
+              {/* Action Button (BOTTOM) */}
+              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("reviews")} data-testid="button-respond-reviews">
+                <img src="/attached_assets/Reputation Management Icon_1760786977607.png" alt="" className="w-4 h-4" />
+                <span>Respond</span>
               </Button>
             </CardContent>
           </Card>
 
           {/* 5. Live Chat */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-2 border-purple-200" onClick={() => setLocation("/livechat-demo")} data-testid="card-livechat">
-            <CardContent className="p-6 text-center">
-              <div className="flex justify-center mb-3">
-                <img src="/attached_assets/livechat icon_1760788412068.png" alt="/livechat" className="w-16 h-16" />
+          <Card className="hover:shadow-lg transition-shadow border-2 border-purple-200" data-testid="card-livechat">
+            <CardContent className="p-6">
+              {/* Results Section (TOP) */}
+              <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
+                <img src="/attached_assets/livechat icon_1760788412068.png" alt="/livechat" className="w-8 h-8" />
+                <div className="text-center">
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <div className="text-lg font-bold text-gray-900">4.8</div>
+                      <p className="text-[9px] text-gray-600">Rating</p>
+                    </div>
+                    <div>
+                      <div className="text-lg font-bold text-gray-900">2</div>
+                      <p className="text-[9px] text-gray-600">In Queue</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
-                <span style={{ color: '#84D71A' }}>/</span>
-                <span style={{ color: '#0057FF' }}>livechat</span>
-              </h3>
-              <p className="text-xs text-gray-600 mb-3">
-                <span className="inline-flex items-center gap-1">
-                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                  Active chat participation
-                </span>
-              </p>
-              <Button size="sm" variant="outline" className="w-full" onClick={() => setLocation("/livechat-demo")} data-testid="button-setup-livechat">
-                Setup Widget
+              
+              {/* Icon & Content (MIDDLE) */}
+              <div className="text-center mb-4">
+                <div className="flex justify-center mb-3">
+                  <img src="/attached_assets/livechat icon_1760788412068.png" alt="/livechat" className="w-16 h-16" />
+                </div>
+                <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
+                  <span style={{ color: '#84D71A' }}>/</span>
+                  <span style={{ color: '#0057FF' }}>livechat</span>
+                </h3>
+                <p className="text-xs text-gray-600">
+                  <span className="inline-flex items-center gap-1">
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    Active chat participation
+                  </span>
+                </p>
+              </div>
+              
+              {/* Action Button (BOTTOM) - Conditional */}
+              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/livechat-demo")} data-testid="button-livechat-action">
+                <img src="/attached_assets/livechat icon_1760788412068.png" alt="" className="w-4 h-4" />
+                <span>Setup Widget</span>
               </Button>
             </CardContent>
           </Card>
