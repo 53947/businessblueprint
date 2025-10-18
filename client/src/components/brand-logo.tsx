@@ -20,6 +20,7 @@ interface BrandLogoProps {
   showIcon?: boolean;
   className?: string;
   textOnly?: boolean; // For text-only logos
+  layout?: 'horizontal' | 'vertical'; // Layout direction
 }
 
 const sizeConfig = {
@@ -35,6 +36,7 @@ export function BrandLogo({
   size = 'md',
   showIcon = true,
   textOnly = false,
+  layout = 'horizontal',
   className = '' 
 }: BrandLogoProps) {
   const isDark = variant === 'dark';
@@ -42,6 +44,27 @@ export function BrandLogo({
   
   // Business Blueprint text-based logo matching Brand Logo Key
   if (brand === 'businessblueprint') {
+    // Vertical layout for dashboard
+    if (layout === 'vertical') {
+      return (
+        <div className={`flex flex-col items-center gap-2 ${className}`}>
+          {showIcon && !textOnly && (
+            <img 
+              src={bbIcon} 
+              alt="businessblueprint.io icon" 
+              style={{ height: '48px', width: 'auto' }}
+              className="object-contain"
+            />
+          )}
+          <div className="text-center leading-tight" style={{ fontSize: '18px', fontWeight: 600 }}>
+            <div style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</div>
+            <div style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blueprint</div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Horizontal layout (default)
     return (
       <div className={`flex items-end gap-1 ${className}`}>
         {showIcon && !textOnly && (
