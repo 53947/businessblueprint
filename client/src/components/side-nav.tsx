@@ -230,8 +230,8 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-left hover:bg-purple-50 dark:hover:bg-purple-900/20"
                 data-testid="link-hostsblue-mobile"
               >
-                <img src={hostsBlueIcon} alt="Hosts Blue" className="w-5 h-5 object-contain" />
-                <span className="text-sm" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-hostsblue-mobile">
+                <img src={hostsBlueIcon} alt="Hosts Blue" className="w-7 h-7 object-contain" />
+                <span className="text-base" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-hostsblue-mobile">
                   <span style={{ color: '#660099', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
                   <span style={{ color: '#0000FF' }}>blue</span>
                   <span style={{ color: '#84D71A' }}>.com</span>
@@ -245,8 +245,8 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-left hover:bg-red-50 dark:hover:bg-red-900/20"
                 data-testid="link-swipesblue-mobile"
               >
-                <img src={swipesBlueIcon} alt="Swipes Blue" className="w-5 h-5 object-contain" />
-                <span className="text-sm" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-swipesblue-mobile">
+                <img src={swipesBlueIcon} alt="Swipes Blue" className="w-7 h-7 object-contain" />
+                <span className="text-base" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-swipesblue-mobile">
                   <span style={{ color: '#FF0040', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
                   <span style={{ color: '#0000FF' }}>blue</span>
                   <span style={{ color: '#84D71A' }}>.com</span>
@@ -291,9 +291,9 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
         {/* Desktop Logo Header */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => setLocation('/')} data-testid="sidebar-logo">
-            <img src={bbIcon} alt="businessblueprint.io" className="h-10 w-10 object-contain" data-testid="logo-icon" />
+            <img src={bbIcon} alt="businessblueprint.io" className="h-12 w-12 object-contain" data-testid="logo-icon" />
             {!isCollapsed && (
-              <div className="text-base leading-none" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="logo-text">
+              <div className="text-lg leading-none" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="logo-text">
                 <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
                 <span style={{ color: '#0000FF' }}>blueprint</span>
                 <span style={{ color: '#84D71A' }}>.io</span>
@@ -328,12 +328,12 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
               href="https://hostsblue.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left hover:bg-purple-50 dark:hover:bg-purple-900/20"
+              className="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-left hover:bg-purple-50 dark:hover:bg-purple-900/20"
               data-testid="link-hostsblue"
             >
-              <img src={hostsBlueIcon} alt="Hosts Blue" className="w-5 h-5 object-contain" />
+              <img src={hostsBlueIcon} alt="Hosts Blue" className="w-7 h-7 object-contain" />
               {!isCollapsed && (
-                <span className="text-sm" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-hostsblue">
+                <span className="text-base" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-hostsblue">
                   <span style={{ color: '#660099', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
                   <span style={{ color: '#0000FF' }}>blue</span>
                   <span style={{ color: '#84D71A' }}>.com</span>
@@ -344,12 +344,12 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
               href="https://swipesblue.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left hover:bg-red-50 dark:hover:bg-red-900/20"
+              className="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-left hover:bg-red-50 dark:hover:bg-red-900/20"
               data-testid="link-swipesblue"
             >
-              <img src={swipesBlueIcon} alt="Swipes Blue" className="w-5 h-5 object-contain" />
+              <img src={swipesBlueIcon} alt="Swipes Blue" className="w-7 h-7 object-contain" />
               {!isCollapsed && (
-                <span className="text-sm" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-swipesblue">
+                <span className="text-base" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-swipesblue">
                   <span style={{ color: '#FF0040', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
                   <span style={{ color: '#0000FF' }}>blue</span>
                   <span style={{ color: '#84D71A' }}>.com</span>
