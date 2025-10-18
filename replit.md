@@ -1,7 +1,15 @@
 # Triad Blue Ecosystem - Digital Business Solutions
 
 ## Overview
-Triad Blue operates three interconnected platforms: Business Blueprint (AI-powered digital intelligence for local businesses), Hosts Blue (web services), and Swipes Blue (payment gateway). The ecosystem focuses on helping local businesses in the US and Canada succeed online through AI-driven online presence analysis, personalized Digital Blueprints, and both DIY and Managed Service Provider (MSP) pathways. The core value proposition is "Get Found, Get Customers, Get Business," positioning Triad Blue as a Digital Intelligence Incubator.
+Triad Blue operates three **STANDALONE** platforms that can be marketed and sold independently:
+
+1. **Business Blueprint (businessblueprint.io)** - AI-powered digital intelligence for local businesses
+2. **Hosts Blue (hostsblue.com)** - Web hosting & domain services (WPMUDev + OpenSRS white-label)
+3. **Swipes Blue (swipesblue.com)** - Payment gateway (NMI white-label, processes payments for ALL platforms)
+
+The ecosystem focuses on helping local businesses in the US and Canada succeed online through AI-driven online presence analysis, personalized Digital Blueprints, and both DIY and Managed Service Provider (MSP) pathways. The core value proposition is "Get Found, Get Customers, Get Business," positioning Triad Blue as a Digital Intelligence Incubator.
+
+**CRITICAL ARCHITECTURAL DECISION (Oct 18, 2025):** All three platforms are separate deployments. Swipes Blue is the payment backbone for the entire ecosystem.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
@@ -94,3 +102,88 @@ The application uses a full-stack monorepo architecture with React 18, TypeScrip
 -   **WhatsApp Business Cloud API:** WhatsApp messaging integration.
 -   **X/Twitter Account Activity API:** X (Twitter) DM integration.
 -   **TikTok Business Messaging API:** TikTok message integration.
+-   **WPMUDev:** White-label WordPress hosting and management (Hosts Blue).
+-   **OpenSRS:** Domain registration, transfer, DNS, and email automation (Hosts Blue).
+
+## GitHub Documentation - Source of Truth
+
+**IMPORTANT:** For complete roadmap, issue tracking, and development status, always refer to GitHub documentation:
+
+### Primary Documentation Files
+1. **GITHUB_ISSUES_TO_CREATE.md** - Complete issue specifications for all 28 features
+   - Phase 0 MVP (8 issues): Hosts Blue + Swipes Blue quick launch
+   - Business Blueprint (10 issues): Admin Dashboard, My Domains, Synup Scan, AI Coach, etc.
+   - Hosts Blue (9 issues): AI Website Builder, WPMUDev/OpenSRS integration, WordPress management
+   - Swipes Blue (6 issues): Shopping cart, NMI integration, recurring billing, analytics
+   - Cross-Platform (3 issues): SSO, Master Dashboard, Consolidated Billing
+
+2. **STATUS_REPORT.md** - Updated twice daily (11:59 AM & 11:59 PM)
+   - Recent updates and completed work
+   - Platform-by-platform progress
+   - Development metrics (28 issues, priorities, timelines)
+   - Next steps and focus recommendations
+
+3. **ROADMAP.md** - Strategic development plan
+   - Phase 0: MVP Launch (6-8 weeks) - Current focus
+   - Phase 1: Core Platform Enhancement (8-10 weeks)
+   - Phase 2: Advanced Features & Integration (6-8 weeks)
+   - Phase 3: Polish & Enhancements (4-6 weeks)
+   - Timeline: 24-32 weeks for complete ecosystem
+
+4. **ARCHITECTURE.md** - Technical architecture documentation (coming soon)
+   - Three-platform ecosystem design
+   - SSO integration strategy
+   - Admin vs Client interface architecture
+   - Deployment strategy for standalone apps
+
+### GitHub Repository
+- **URL:** https://github.com/53947/The_Blue_Link
+- **Issues:** https://github.com/53947/The_Blue_Link/issues
+- **Project Board:** Visual Kanban tracking
+
+### Architecture Decisions (Oct 18, 2025)
+
+1. **Three Standalone Apps**
+   - Business Blueprint: Already ~65% complete, production ready
+   - Hosts Blue: Build from scratch (Phase 0 MVP)
+   - Swipes Blue: Build from scratch (Phase 0 MVP)
+
+2. **Swipes Blue as Payment Processor**
+   - ALL platforms use Swipes Blue (NMI) for payments
+   - Hosts Blue → Swipes Blue checkout flow
+   - Business Blueprint → Swipes Blue (future integration)
+
+3. **Admin vs Client Interface**
+   - Role-based routing (not separate accounts)
+   - Admin sees Admin Dashboard with all clients
+   - Clients see Client Portal with their data only
+   - Impersonation system for admin support
+
+4. **My Domains Management**
+   - Central source of truth for all client domains
+   - Feeds Synup locations, Google Business, Hosts Blue services
+   - Located in Client Portal → Settings → My Domains
+
+5. **White-Label Integrations Research Completed**
+   - NMI: Full capabilities documented (fraud detection, webhooks, multi-MID, batch, Apple/Google Pay)
+   - WPMUDev: Complete features (Hub Client, Branda Pro, CI/CD, New Relic, hosting API)
+   - OpenSRS: Domain + email automation (SSL, transfers, monitoring, email hosting)
+
+6. **Synup Subdomains**
+   - `scan.businessblueprint.io` - Lead capture tool (CNAME → scan.synup.com)
+   - `dashboard.businessblueprint.io` - Partner dashboard (not using, have our own)
+   - `*.dashboard.businessblueprint.io` - White-label client dashboards (not needed yet)
+
+### When to Check GitHub
+- **Before starting work:** Check ROADMAP.md for current phase and priorities
+- **For issue details:** See GITHUB_ISSUES_TO_CREATE.md for complete specifications
+- **For progress updates:** Check STATUS_REPORT.md (updated twice daily)
+- **For architecture questions:** See ARCHITECTURE.md and this replit.md
+
+### Development Workflow
+- Update STATUS_REPORT.md twice daily at 11:59 AM and 11:59 PM
+- On inactive days, add entry: "No updates - [date]"
+- Always document completed features, bug fixes, and configuration changes
+- Keep GitHub issues synchronized with actual progress
+
+**Note:** This replit.md provides system architecture and technical details. GitHub documentation provides roadmap, issues, and status tracking.
