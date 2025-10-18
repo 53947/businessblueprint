@@ -211,9 +211,9 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
         <div className="h-full flex flex-col">
           {/* Mobile Header */}
           <SheetHeader className="p-6 border-b border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-3">
+            <div className="flex items-end gap-2">
               <img src={bbIcon} alt="businessblueprint.io" className="h-12 w-12 object-contain" data-testid="logo-icon-mobile" />
-              <div className="text-lg leading-none" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="logo-text-mobile">
+              <div className="text-lg leading-none pb-0.5" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="logo-text-mobile">
                 <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
                 <span style={{ color: '#0000FF' }}>blueprint</span>
                 <span style={{ color: '#84D71A' }}>.io</span>
@@ -298,10 +298,10 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
       >
         {/* Desktop Logo Header */}
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <div className="p-4 flex items-center gap-3 cursor-pointer" onClick={() => { setLocation('/'); }} data-testid="sidebar-logo">
+          <div className="p-4 flex items-end gap-2 cursor-pointer" onClick={() => { setLocation('/'); }} data-testid="sidebar-logo">
             <img src={bbIcon} alt="businessblueprint.io" className="h-12 w-12 object-contain flex-shrink-0" data-testid="logo-icon" />
             {!isCollapsed && (
-              <div className="text-lg leading-none" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="logo-text">
+              <div className="text-lg leading-none pb-0.5" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="logo-text">
                 <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
                 <span style={{ color: '#0000FF' }}>blueprint</span>
                 <span style={{ color: '#84D71A' }}>.io</span>
@@ -348,7 +348,7 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
               href="https://hostsblue.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-left hover:bg-purple-50 dark:hover:bg-purple-900/20"
+              className="w-full flex items-center gap-2 px-3 py-3 rounded-lg transition-colors text-left hover:bg-purple-50 dark:hover:bg-purple-900/20"
               data-testid="link-hostsblue"
             >
               <img src={hostsBlueIcon} alt="Hosts Blue" className="w-7 h-7 object-contain" />
@@ -364,7 +364,7 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
               href="https://swipesblue.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-colors text-left hover:bg-red-50 dark:hover:bg-red-900/20"
+              className="w-full flex items-center gap-2 px-3 py-3 rounded-lg transition-colors text-left hover:bg-red-50 dark:hover:bg-red-900/20"
               data-testid="link-swipesblue"
             >
               <img src={swipesBlueIcon} alt="Swipes Blue" className="w-7 h-7 object-contain" />
