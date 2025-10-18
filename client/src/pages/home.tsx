@@ -8,7 +8,7 @@ import { ServicePathways } from "@/components/service-pathways";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
-import bbIcon from "@assets/businessblueprintio icon all version_1759854019511.png";
+import bbIcon from "@assets/Blueprint Icon_1760810447789.png";
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
