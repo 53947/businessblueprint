@@ -162,7 +162,7 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
             </span>
             {!collapsed && (
               (item.id === "inbox" || item.id === "livechat" || item.id === "send") ? (
-                <span className="flex-1 text-lg font-['Archivo']" style={{ fontWeight: 600 }} data-testid={`text-nav-${item.id}`}>
+                <span className="flex-1 text-base font-['Archivo']" style={{ fontWeight: 600 }} data-testid={`text-nav-${item.id}`}>
                   <span style={{ color: '#84D71A' }}>/</span>
                   <span style={{ color: '#0057FF' }}>{item.label}</span>
                 </span>
