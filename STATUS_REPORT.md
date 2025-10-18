@@ -48,6 +48,149 @@
   - AI Website Builder (simple, non-technical for middle-aged users)
   - Shopping Cart for Swipes Blue MVP (added to Phase 0)
 
+### October 18, 2025 - EVENING - CRITICAL INCIDENT & SYNUP INTEGRATION ANALYSIS
+- 🚨 **CRITICAL INCIDENT:** Master Synup account (53947@businessblueprint.io) was completely deleted from database
+  - Original client ID unknown (recreated as ID 14)
+  - All Synup subscription credits lost
+  - No audit trail found in system logs
+  - Likely caused by automated sync process without safeguards
+- 🛡️ **PROTECTION MEASURES IMPLEMENTED:**
+  - Added `isProtected` boolean field to clients table
+  - Set `is_protected = true` for 53947@businessblueprint.io (ID 14)
+  - This master account now protected from ALL automated deletions
+  - Database schema updated: `shared/schema.ts` line 87
+- 📊 **COMPREHENSIVE SYNUP INTEGRATION ANALYSIS COMPLETED:**
+  - Documented current state vs required state
+  - Identified missing database tables for subscriptions/credits
+  - Identified missing bi-directional sync infrastructure
+  - Identified missing payment/billing integration for Synup costs
+  - Created implementation plan awaiting approval
+
+---
+
+## 🔧 SYNUP INTEGRATION - COMPREHENSIVE PLAN (AWAITING APPROVAL)
+
+### CURRENT STATE ANALYSIS
+
+**✅ COMPLETED:**
+- Synup SDK integration (@mx-inventor/synup)
+- Pull data FROM Synup (locations, listings, reviews via API)
+- Database tables: synupLocations, synupListings, synupReviews
+- Security: Business name verification, cross-tenant protection
+- Review monitoring with alerts
+- AI-powered review responses
+
+**❌ MISSING CRITICAL COMPONENTS:**
+
+#### 1. SYNUP SUBSCRIPTION TRACKING
+Missing database tables:
+- `synup_subscriptions` - Track Synup subscription data per client
+  - Fields: synup_subscription_id, client_id, plan_name, plan_type, credits_total, credits_used, credits_remaining, status, start_date, end_date, auto_renew, monthly_cost, billing_cycle
+- `synup_credits_transactions` - Track credit usage/additions
+  - Fields: subscription_id, transaction_type (purchase/usage/refund), credits_amount, balance_before, balance_after, description, synup_transaction_id
+- `synup_plans` - Available Synup plans catalog
+  - Fields: synup_plan_id, name, description, credits_included, monthly_price, features (jsonb), is_active
+
+#### 2. BI-DIRECTIONAL SYNC SYSTEM
+Current: One-way pull only (Replit ← Synup)
+Required: Two-way sync (Replit ↔ Synup)
+
+**Missing components:**
+- Webhook endpoints to receive real-time updates FROM Synup:
+  - `/api/webhooks/synup/location-updated`
+  - `/api/webhooks/synup/listing-updated`
+  - `/api/webhooks/synup/review-created`
+  - `/api/webhooks/synup/subscription-updated`
+- Push service to send changes TO Synup when user edits in Business Blueprint
+- Conflict resolution logic (last-write-wins with timestamp tracking)
+- Sync audit log table to track all sync operations
+- Account protection checks in sync service (respect `isProtected` flag)
+
+#### 3. PAYMENT GATEWAY INTEGRATION
+Current: NMI integration exists for Business Blueprint subscriptions only
+Required: Track and bill for Synup subscription costs
+
+**Missing components:**
+- Synup cost calculation engine (base plan + credit overages + API usage)
+- `synup_invoices` table for monthly Synup service billing
+- Integration with Business Blueprint billing (consolidated vs separate)
+- Invoice generation for Synup services
+- Payment processing via NMI/Swipes Blue for Synup charges
+
+### IMPLEMENTATION PRIORITY
+
+**CRITICAL (Must Have):**
+1. Synup subscription tables (track credits and costs)
+2. Bi-directional sync webhook endpoints
+3. Sync service updates (two-way logic + protection checks)
+4. Cost calculation & billing integration
+
+**HIGH (Should Have):**
+5. Audit logging and monitoring
+6. Invoice generation
+7. Credit management interface
+
+**MEDIUM (Nice to Have):**
+8. Usage analytics dashboard
+9. Credit purchase flow for clients
+10. Automated credit alerts
+
+### SYSTEM SAFEGUARDS REQUIRED
+
+**Account Protection Rules:**
+- Check `isProtected` flag before ANY delete operation
+- Log all attempts to modify protected accounts
+- Admin override required for protected account changes
+- NEVER delete data during sync, only update/create
+
+**Sync Safeguards:**
+- Transaction rollback on sync errors
+- Conflict detection and flagging for manual review
+- Backup before major sync operations
+- Rate limiting on webhook processing
+
+**Data Integrity:**
+- Foreign key constraints on all new tables
+- Audit trail for all Synup-related operations
+- Timestamp tracking for conflict resolution
+
+### OPEN QUESTIONS (AWAITING USER APPROVAL)
+
+**1. Synup Subscription Model:**
+- Do you have documentation on Synup's exact subscription structure?
+- What are the pricing tiers and credit costs?
+- How does Synup's credit system work?
+
+**2. Webhook Configuration:**
+- Do you have access to configure webhooks in your Synup account?
+- What authentication method does Synup use for webhooks?
+- What webhook URLs do we need to provide to Synup?
+
+**3. Billing Flow:**
+- Should Synup charges be billed separately through Swipes Blue?
+- Or bundled with Business Blueprint subscriptions?
+- Who receives the Synup invoices?
+
+**4. Credit Management:**
+- Who manages Synup credit purchases - admin or clients?
+- Can clients purchase credits through the portal?
+- Or is this admin-only functionality?
+
+**5. Master Account Usage:**
+- Is 53947@businessblueprint.io the ONLY Synup account?
+- Or will each client have their own Synup sub-accounts?
+- How does the multi-tenant model work with Synup?
+
+### NEXT STEPS
+1. User provides answers to open questions above
+2. User approves implementation plan
+3. Execute Phase 1: Create Synup subscription tables
+4. Execute Phase 2: Implement bi-directional sync
+5. Execute Phase 3: Integrate billing system
+6. Execute Phase 4: Add monitoring and safeguards
+
+**Status:** 🔴 BLOCKED - Awaiting user approval and clarification on business model
+
 ### October 17, 2025
 - ✅ **Brand Studio Access Control:** Removed from main navigation, now admin-only via /brand-studio URL
 - ✅ **Scoring System Overhaul:** Changed perfect score from 100 to 140 (IQ-style scoring)
