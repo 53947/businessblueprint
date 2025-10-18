@@ -40,9 +40,6 @@ export function BrandLogo({
   
   // Business Blueprint text-based logo matching Brand Logo Key
   if (brand === 'businessblueprint') {
-    // 325° angle, 15px distance, 5px blur = 12px -9px 5px
-    const textShadow = '12px -9px 5px #00FF40';
-    
     return (
       <div className={`flex items-center gap-3 ${className}`}>
         {showIcon && !textOnly && (
@@ -52,10 +49,10 @@ export function BrandLogo({
             className={`${iconSize} object-contain`}
           />
         )}
-        <div className={`font-archivo font-bold ${textSize} leading-none`} style={{ textShadow }}>
-          <span style={{ color: '#FFA500', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>business</span>
-          <span style={{ color: '#0000FF', fontWeight: 600 }}>blueprint</span>
-          <span style={{ color: '#84D71A', fontWeight: 600 }}>.io</span>
+        <div className={`${textSize} leading-none`} style={{ fontFamily: 'Archivo', fontWeight: 600 }}>
+          <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
+          <span style={{ color: '#0000FF' }}>blueprint</span>
+          <span style={{ color: '#84D71A' }}>.io</span>
         </div>
       </div>
     );

@@ -37,7 +37,7 @@ Preferred communication style: Simple, everyday language.
 - **Source:** attached_assets/All Brand Logo Key_1760807746522.png
 - **CRITICAL:** ALL branding uses FONTS (Archivo), NEVER images of text
 - **Typography:** First word = Archivo Semi Expanded, subsequent words = Archivo
-- **Text Shadow (ALL logos):** Color #00FF40, 325° angle, 15px distance, 5px blur opacity
+- **Text Shadow:** REMOVED (no shadow applied)
 
 **Business Blueprint Logo (businessblueprint.io):**
 - "business" = #FFA500 (orange) - Archivo Semi Expanded
