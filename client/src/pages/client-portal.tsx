@@ -369,9 +369,28 @@ export default function ClientPortal() {
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
                 <img src="/attached_assets/send1_1760785706637.png" alt="/send" className="w-8 h-8" />
-                <div className="text-center">
-                  <div className="text-xl font-bold text-gray-900">Latest Campaign</div>
-                  <p className="text-[10px] text-gray-600">Status: Active</p>
+                <div className="text-center w-full">
+                  {clientData.campaigns.latest ? (
+                    <>
+                      <div className="text-sm font-bold text-gray-900 mb-1">{clientData.campaigns.latest.name}</div>
+                      <div className="grid grid-cols-3 gap-1 text-xs">
+                        <div>
+                          <div className="text-base font-bold text-gray-900">{clientData.campaigns.latest.clickThroughs}</div>
+                          <p className="text-[9px] text-gray-600">Clicks</p>
+                        </div>
+                        <div>
+                          <div className="text-base font-bold text-gray-900">{clientData.campaigns.latest.purchases}</div>
+                          <p className="text-[9px] text-gray-600">Sales</p>
+                        </div>
+                        <div>
+                          <div className="text-base font-bold text-gray-900">{clientData.campaigns.latest.unsubscribes}</div>
+                          <p className="text-[9px] text-gray-600">Unsubs</p>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-sm text-gray-500">No campaigns yet</div>
+                  )}
                 </div>
               </div>
               
@@ -404,15 +423,15 @@ export default function ClientPortal() {
                 <div className="text-center">
                   <div className="grid grid-cols-3 gap-2 text-xs">
                     <div>
-                      <div className="text-lg font-bold text-gray-900">24</div>
+                      <div className="text-lg font-bold text-gray-900">{clientData.socialMedia?.newLikes || 0}</div>
                       <p className="text-[9px] text-gray-600">Likes</p>
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-gray-900">8</div>
+                      <div className="text-lg font-bold text-gray-900">{clientData.socialMedia?.newComments || 0}</div>
                       <p className="text-[9px] text-gray-600">Comments</p>
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-gray-900">5</div>
+                      <div className="text-lg font-bold text-gray-900">{clientData.socialMedia?.newMessages || 0}</div>
                       <p className="text-[9px] text-gray-600">Messages</p>
                     </div>
                   </div>
@@ -429,10 +448,23 @@ export default function ClientPortal() {
               </div>
               
               {/* Action Button (BOTTOM) - Conditional */}
-              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("social")} data-testid="button-social-action">
-                <img src="/attached_assets/Social Media Mgmt_1760786453964.png" alt="" className="w-4 h-4" />
-                <span>Setup</span>
-              </Button>
+              {clientData.socialMedia?.isSetup ? (
+                <div className="grid grid-cols-2 gap-2">
+                  <Button size="sm" variant="outline" className="flex items-center justify-center gap-1" onClick={() => setActiveTab("social")} data-testid="button-schedule-social">
+                    <img src="/attached_assets/Social Media Mgmt_1760786453964.png" alt="" className="w-4 h-4" />
+                    <span className="text-xs">Schedule</span>
+                  </Button>
+                  <Button size="sm" variant="outline" className="flex items-center justify-center gap-1" onClick={() => setActiveTab("social")} data-testid="button-respond-social">
+                    <img src="/attached_assets/Social Media Mgmt_1760786453964.png" alt="" className="w-4 h-4" />
+                    <span className="text-xs">Respond</span>
+                  </Button>
+                </div>
+              ) : (
+                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("social")} data-testid="button-setup-social">
+                  <img src="/attached_assets/Social Media Mgmt_1760786453964.png" alt="" className="w-4 h-4" />
+                  <span>Setup</span>
+                </Button>
+              )}
             </CardContent>
           </Card>
 
@@ -474,11 +506,11 @@ export default function ClientPortal() {
                 <div className="text-center">
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <div className="text-lg font-bold text-gray-900">4.8</div>
+                      <div className="text-lg font-bold text-gray-900">{clientData.livechat?.participationRating || 0}</div>
                       <p className="text-[9px] text-gray-600">Rating</p>
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-gray-900">2</div>
+                      <div className="text-lg font-bold text-gray-900">{clientData.livechat?.inQueue || 0}</div>
                       <p className="text-[9px] text-gray-600">In Queue</p>
                     </div>
                   </div>
@@ -503,10 +535,17 @@ export default function ClientPortal() {
               </div>
               
               {/* Action Button (BOTTOM) - Conditional */}
-              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/livechat-demo")} data-testid="button-livechat-action">
-                <img src="/attached_assets/livechat icon_1760788412068.png" alt="" className="w-4 h-4" />
-                <span>Setup Widget</span>
-              </Button>
+              {clientData.livechat?.isSetup ? (
+                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/livechat-demo")} data-testid="button-engage-livechat">
+                  <img src="/attached_assets/livechat icon_1760788412068.png" alt="" className="w-4 h-4" />
+                  <span>Engage</span>
+                </Button>
+              ) : (
+                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/livechat-demo")} data-testid="button-setup-livechat">
+                  <img src="/attached_assets/livechat icon_1760788412068.png" alt="" className="w-4 h-4" />
+                  <span>Setup Widget</span>
+                </Button>
+              )}
             </CardContent>
           </Card>
         </div>
