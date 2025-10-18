@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -58,9 +59,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <a href="/" className="hover:opacity-80 transition-opacity">
+            <Link href="/" className="hover:opacity-80 transition-opacity cursor-pointer" data-testid="header-logo">
               <BrandLogo brand="businessblueprint" size="sm" showIcon={true} />
-            </a>
+            </Link>
             
             {showNavigation && (
               <>

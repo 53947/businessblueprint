@@ -290,7 +290,7 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
       >
         {/* Desktop Logo Header */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setLocation('/portal')}>
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setLocation('/')} data-testid="sidebar-logo">
             <img src={bbIcon} alt="businessblueprint.io" className="h-10 w-10 object-contain" data-testid="logo-icon" />
             {!isCollapsed && (
               <div className="text-base leading-none" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="logo-text">
@@ -300,17 +300,19 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
               </div>
             )}
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="ml-auto hover:bg-gray-100 dark:hover:bg-gray-800"
-            data-testid="button-toggle-nav"
-            aria-label={isCollapsed ? "Expand navigation" : "Collapse navigation"}
-            aria-expanded={!isCollapsed}
-          >
-            {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-          </Button>
+          {!isCollapsed && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => { e.stopPropagation(); setIsCollapsed(!isCollapsed); }}
+              className="ml-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+              data-testid="button-toggle-nav"
+              aria-label="Collapse navigation"
+              aria-expanded={!isCollapsed}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+          )}
         </div>
 
         {/* Desktop Navigation Items */}
