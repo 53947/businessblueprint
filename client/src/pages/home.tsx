@@ -463,10 +463,10 @@ Your personalized blueprint will show you which steps to take first!
                 <div className="flex justify-center items-center mb-6 h-20">
                   <div className="flex items-center gap-3">
                     <img src={bbIcon} alt="businessblueprint.io" className="h-14 w-14 object-contain" />
-                    <div className="font-archivo text-xl leading-none" style={{ textShadow: '12px -9px 5px #00FF40' }}>
-                      <span style={{ color: '#FFA500', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>business</span>
-                      <span style={{ color: '#0000FF', fontWeight: 600 }}>blueprint</span>
-                      <span style={{ color: '#84D71A', fontWeight: 600 }}>.io</span>
+                    <div className="text-xl leading-none" style={{ fontFamily: 'Archivo', fontWeight: 600 }}>
+                      <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
+                      <span style={{ color: '#0000FF' }}>blueprint</span>
+                      <span style={{ color: '#84D71A' }}>.io</span>
                     </div>
                   </div>
                 </div>

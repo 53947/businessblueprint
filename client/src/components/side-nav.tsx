@@ -205,10 +205,10 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
           <SheetHeader className="p-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3">
               <img src={bbIcon} alt="businessblueprint.io" className="h-12 w-12 object-contain" data-testid="logo-icon-mobile" />
-              <div className="font-archivo text-lg leading-none" style={{ textShadow: '12px -9px 5px #00FF40' }} data-testid="logo-text-mobile">
-                <span style={{ color: '#FFA500', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>business</span>
-                <span style={{ color: '#0000FF', fontWeight: 600 }}>blueprint</span>
-                <span style={{ color: '#84D71A', fontWeight: 600 }}>.io</span>
+              <div className="text-lg leading-none" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="logo-text-mobile">
+                <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
+                <span style={{ color: '#0000FF' }}>blueprint</span>
+                <span style={{ color: '#84D71A' }}>.io</span>
               </div>
             </div>
           </SheetHeader>
@@ -231,10 +231,10 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
                 data-testid="link-hostsblue-mobile"
               >
                 <img src={hostsBlueIcon} alt="Hosts Blue" className="w-5 h-5 object-contain" />
-                <span className="text-sm font-['Archivo']" data-testid="text-hostsblue-mobile">
-                  <span style={{ color: '#660099', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>hosts</span>
-                  <span style={{ color: '#0000FF', fontWeight: 600 }}>blue</span>
-                  <span style={{ color: '#84D71A', fontWeight: 600 }}>.com</span>
+                <span className="text-sm" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-hostsblue-mobile">
+                  <span style={{ color: '#660099', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
+                  <span style={{ color: '#0000FF' }}>blue</span>
+                  <span style={{ color: '#84D71A' }}>.com</span>
                 </span>
               </a>
               <a
@@ -246,10 +246,10 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
                 data-testid="link-swipesblue-mobile"
               >
                 <img src={swipesBlueIcon} alt="Swipes Blue" className="w-5 h-5 object-contain" />
-                <span className="text-sm font-['Archivo']" data-testid="text-swipesblue-mobile">
-                  <span style={{ color: '#FF0040', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>swipes</span>
-                  <span style={{ color: '#0000FF', fontWeight: 600 }}>blue</span>
-                  <span style={{ color: '#84D71A', fontWeight: 600 }}>.com</span>
+                <span className="text-sm" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-swipesblue-mobile">
+                  <span style={{ color: '#FF0040', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
+                  <span style={{ color: '#0000FF' }}>blue</span>
+                  <span style={{ color: '#84D71A' }}>.com</span>
                 </span>
               </a>
             </div>
@@ -293,10 +293,10 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => setLocation('/portal')}>
             <img src={bbIcon} alt="businessblueprint.io" className="h-10 w-10 object-contain" data-testid="logo-icon" />
             {!isCollapsed && (
-              <div className="font-archivo text-base leading-none" style={{ textShadow: '12px -9px 5px #00FF40' }} data-testid="logo-text">
-                <span style={{ color: '#FFA500', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>business</span>
-                <span style={{ color: '#0000FF', fontWeight: 600 }}>blueprint</span>
-                <span style={{ color: '#84D71A', fontWeight: 600 }}>.io</span>
+              <div className="text-base leading-none" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="logo-text">
+                <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
+                <span style={{ color: '#0000FF' }}>blueprint</span>
+                <span style={{ color: '#84D71A' }}>.io</span>
               </div>
             )}
           </div>
@@ -331,10 +331,10 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
             >
               <img src={hostsBlueIcon} alt="Hosts Blue" className="w-5 h-5 object-contain" />
               {!isCollapsed && (
-                <span className="text-sm font-['Archivo']" data-testid="text-hostsblue">
-                  <span style={{ color: '#660099', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>hosts</span>
-                  <span style={{ color: '#0000FF', fontWeight: 600 }}>blue</span>
-                  <span style={{ color: '#84D71A', fontWeight: 600 }}>.com</span>
+                <span className="text-sm" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-hostsblue">
+                  <span style={{ color: '#660099', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
+                  <span style={{ color: '#0000FF' }}>blue</span>
+                  <span style={{ color: '#84D71A' }}>.com</span>
                 </span>
               )}
             </a>
@@ -347,10 +347,10 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
             >
               <img src={swipesBlueIcon} alt="Swipes Blue" className="w-5 h-5 object-contain" />
               {!isCollapsed && (
-                <span className="text-sm font-['Archivo']" data-testid="text-swipesblue">
-                  <span style={{ color: '#FF0040', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>swipes</span>
-                  <span style={{ color: '#0000FF', fontWeight: 600 }}>blue</span>
-                  <span style={{ color: '#84D71A', fontWeight: 600 }}>.com</span>
+                <span className="text-sm" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-swipesblue">
+                  <span style={{ color: '#FF0040', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
+                  <span style={{ color: '#0000FF' }}>blue</span>
+                  <span style={{ color: '#84D71A' }}>.com</span>
                 </span>
               )}
             </a>
