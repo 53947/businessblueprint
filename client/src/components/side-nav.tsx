@@ -23,6 +23,7 @@ import sendIcon from "@assets/send1_1760785706637.png";
 import socialMediaIcon from "@assets/Social Media Mgmt_1760786453964.png";
 import reputationIcon from "@assets/Reputation Management Icon_1760786977607.png";
 import settingsIcon from "@assets/settings_1760788009769.png";
+import aiCoachIcon from "@assets/AI Business Coach Blue_1760813312010.png";
 import hostsBlueIcon from "@assets/Hosts Blue Icon New_1760810493739.png";
 import swipesBlueIcon from "@assets/swipesblue icon_1760810511865.png";
 
@@ -111,9 +112,16 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
       isDivider: true 
     },
     { 
+      id: "ai-coach", 
+      label: "AI Business Coach",
+      icon: <img src={aiCoachIcon} alt="AI Business Coach" className="w-7 h-7 object-contain" />,
+      external: true,
+      href: "/ai-coach"
+    },
+    { 
       id: "settings", 
       label: "Settings", 
-      icon: <img src={settingsIcon} alt="Settings" className="w-5 h-5 object-contain" /> 
+      icon: <img src={settingsIcon} alt="Settings" className="w-7 h-7 object-contain" /> 
     },
   ];
 
