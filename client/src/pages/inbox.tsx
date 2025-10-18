@@ -80,6 +80,8 @@ const CHANNEL_COLORS: Record<string, string> = {
 
 export default function InboxPage() {
   const [, setLocation] = useLocation();
+  const [clientId, setClientId] = useState<string | null>(null);
+  const [authToken, setAuthToken] = useState<string | null>(null);
   const [selectedConversation, setSelectedConversation] = useState<number | null>(null);
   const [messageInput, setMessageInput] = useState('');
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -89,15 +91,36 @@ export default function InboxPage() {
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
   const { toast } = useToast();
 
-  // Fetch conversations
+  // Check authentication
+  useEffect(() => {
+    const storedClientId = sessionStorage.getItem("clientId");
+    const storedAuthToken = sessionStorage.getItem("authToken");
+    
+    if (!storedClientId || !storedAuthToken) {
+      // Redirect to login if not authenticated
+      toast({
+        variant: 'destructive',
+        title: 'Authentication Required',
+        description: 'Please log in to access the inbox.',
+      });
+      setLocation("/portal/login");
+      return;
+    }
+    
+    setClientId(storedClientId);
+    setAuthToken(storedAuthToken);
+  }, [setLocation, toast]);
+
+  // Fetch conversations (only when authenticated)
   const { data: conversations = [], isLoading: conversationsLoading } = useQuery<Conversation[]>({
     queryKey: ['/api/inbox/conversations'],
+    enabled: !!authToken && !!clientId,
   });
 
-  // Fetch messages for selected conversation
+  // Fetch messages for selected conversation (only when authenticated)
   const { data: messages = [], isLoading: messagesLoading } = useQuery<Message[]>({
     queryKey: ['/api/inbox/conversations', selectedConversation, 'messages'],
-    enabled: !!selectedConversation,
+    enabled: !!selectedConversation && !!authToken && !!clientId,
   });
 
   // Send message mutation
@@ -133,11 +156,17 @@ export default function InboxPage() {
     },
   });
 
-  // WebSocket setup
+  // WebSocket setup (only when authenticated)
   useEffect(() => {
+    if (!authToken || !clientId) {
+      // Don't connect to WebSocket if not authenticated
+      return;
+    }
+    
     const socketInstance = io({
       auth: {
         role: 'agent',
+        token: authToken, // Pass JWT token for authentication
       },
       transports: ['websocket', 'polling'],
     });
@@ -182,7 +211,7 @@ export default function InboxPage() {
     return () => {
       socketInstance.disconnect();
     };
-  }, [conversations, selectedConversation, toast]);
+  }, [conversations, selectedConversation, toast, authToken, clientId]);
 
   // Join conversation room when selection changes
   useEffect(() => {

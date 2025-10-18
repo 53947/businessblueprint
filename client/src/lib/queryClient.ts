@@ -53,8 +53,13 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
+    // Include JWT token from sessionStorage if available
+    const token = sessionStorage.getItem("authToken");
+    const headers: Record<string, string> = token ? { "Authorization": `Bearer ${token}` } : {};
+    
     const res = await fetch(queryKey[0] as string, {
       credentials: "include",
+      headers,
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
