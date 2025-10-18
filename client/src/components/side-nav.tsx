@@ -293,13 +293,19 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
         {/* Desktop Logo Header */}
         <div className="border-b border-gray-200 dark:border-gray-700">
           <div className="px-4 py-3 flex items-center justify-between" data-testid="sidebar-logo">
-            <img 
-              src={bbIcon} 
-              alt="businessblueprint.io" 
-              className="w-7 h-7 object-contain cursor-pointer" 
-              onClick={() => { setLocation('/'); }}
-              data-testid="logo-icon" 
-            />
+            <div className="flex flex-col items-center gap-2 cursor-pointer" onClick={() => { setLocation('/'); }}>
+              <img 
+                src={bbIcon} 
+                alt="businessblueprint.io" 
+                style={{ height: '48px', width: 'auto' }}
+                className="object-contain" 
+                data-testid="logo-icon" 
+              />
+              <div className="text-center leading-tight" style={{ fontSize: '18px', fontWeight: 600 }} data-testid="logo-text">
+                <div style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif', lineHeight: '1.2' }}>business</div>
+                <div style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif', lineHeight: '1.2' }}>blueprint</div>
+              </div>
+            </div>
             <Button
               variant="ghost"
               size="sm"
