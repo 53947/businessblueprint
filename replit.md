@@ -61,6 +61,22 @@ Preferred communication style: Simple, everyday language.
 - All icons displayed at 90% size coverage using flex containers with maxWidth/maxHeight
 - Consistent terminology: Always use "Do It Yourself (DIY)" and "Managed Services Provided (MSP)" in all titles, headings, categories, groups, and menus
 
+**Official Client Portal Sidebar Menu Order (NEVER CHANGE WITHOUT AUTHORIZATION):**
+1. Overview (LayoutDashboard icon)
+2. [Double Space - hasSpaceBefore: true]
+3. /inbox (inbox icon from attached_assets/inbox icon_1760788273855.png)
+4. /livechat (livechat icon from attached_assets/livechat icon_1760788412068.png)
+5. Tasks (CheckSquare icon)
+6. -----[Divider with Double Space]-----
+7. Local SEO Mgmt (Local SEO icon from attached_assets/LOCAL SEO_1760785581174.png)
+8. /send (send icon from attached_assets/send1_1760785706637.png)
+9. Social Media Mgmt (Social Media icon from attached_assets/Social Media Mgmt_1760786453964.png)
+10. Reputation Mgmt (Reputation icon from attached_assets/Reputation Management Icon_1760786977607.png)
+11. -----[Divider with Double Space]-----
+12. Settings (settings icon from attached_assets/settings_1760788009769.png)
+
+**CRITICAL:** This menu order and icon set were finalized on Oct 18, 2025. DO NOT modify without explicit user authorization. Both desktop and mobile navigation must use the same navItems array in client/src/components/side-nav.tsx.
+
 ## System Architecture
 
 The application uses a full-stack monorepo architecture with React 18, TypeScript, Wouter, Tailwind CSS, Shadcn/ui, TanStack Query, React Hook Form, and Zod on the frontend. The backend is built with Node.js, Express.js, TypeScript, PostgreSQL with Drizzle ORM on Neon, and Connect-pg-simple for session management.
