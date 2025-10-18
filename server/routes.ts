@@ -146,6 +146,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get recent inbox messages
       const messages = await storage.getMessagesByClient(clientId);
       
+      // Get latest campaign for /send card
+      const latestCampaign = campaigns.length > 0 ? campaigns[0] : null;
+      
       // Calculate basic metrics
       const dashboardData = {
         client,
@@ -155,6 +158,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           total: client.enabledFeatures ? client.enabledFeatures.split(',').length : 0,
           verified: client.enabledFeatures ? client.enabledFeatures.split(',').length - 1 : 0,
           pending: 1,
+          citations: 12, // Placeholder for citations count
           platforms: ["Google Business", "Yelp", "Facebook", "Apple Maps"]
         },
         reviews: {
@@ -171,7 +175,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
             reach: 2340,
             clicks: 89,
             conversions: 12
-          }
+          },
+          latest: latestCampaign ? {
+            name: latestCampaign.name || 'Recent Campaign',
+            status: latestCampaign.status || 'active',
+            unsubscribes: 3, // Placeholder - will be from analytics
+            clickThroughs: 47, // Placeholder
+            purchases: 8, // Placeholder
+            sent: 250 // Placeholder - will be from campaign analytics
+          } : null
+        },
+        socialMedia: {
+          isSetup: false, // Placeholder - check if profiles connected
+          newLikes: 24,
+          newComments: 8,
+          newMessages: 5,
+          connectedProfiles: 0
+        },
+        livechat: {
+          isSetup: false, // Placeholder - check if widget installed
+          participationRating: 4.8,
+          inQueue: 2,
+          totalChats: 145,
+          avgResponseTime: '2.3 min'
         },
         messages: {
           unread: messages.filter((m: any) => !m.isRead).length,
