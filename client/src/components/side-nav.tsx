@@ -292,12 +292,12 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       >
         {/* Desktop Logo Header */}
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <div className="px-4 py-3 flex flex-col items-center gap-2 cursor-pointer" onClick={() => { setLocation('/'); }} data-testid="sidebar-logo">
-            <img src={bbIcon} alt="businessblueprint.io" style={{ height: '48px', width: 'auto' }} className="object-contain flex-shrink-0" data-testid="logo-icon" />
+          <div className="px-4 py-2 flex items-center gap-2 cursor-pointer" onClick={() => { setLocation('/'); }} data-testid="sidebar-logo">
+            <img src={bbIcon} alt="businessblueprint.io" style={{ width: '48px', height: '48px' }} className="object-contain flex-shrink-0" data-testid="logo-icon" />
             {!isCollapsed && (
-              <div className="text-center leading-tight" style={{ fontSize: '18px', fontWeight: 600 }} data-testid="logo-text">
-                <div style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</div>
-                <div style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blueprint</div>
+              <div className="leading-none" style={{ fontSize: '18px', fontWeight: 600 }} data-testid="logo-text">
+                <div style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif', lineHeight: '1.2' }}>business</div>
+                <div style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif', lineHeight: '1.2' }}>blueprint</div>
               </div>
             )}
           </div>
