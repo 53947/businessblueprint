@@ -55,12 +55,12 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
     { 
       id: "overview", 
       label: "Overview", 
-      icon: <LayoutDashboard className="w-5 h-5" /> 
+      icon: <LayoutDashboard className="w-7 h-7" /> 
     },
     { 
       id: "inbox", 
       label: "inbox",
-      icon: <img src={inboxIcon} alt="/inbox" className="w-5 h-5 object-contain" />,
+      icon: <img src={inboxIcon} alt="/inbox" className="w-7 h-7 object-contain" />,
       external: true, 
       href: "/inbox",
       hasSpaceBefore: true
@@ -68,14 +68,14 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
     { 
       id: "livechat", 
       label: "livechat",
-      icon: <img src={livechatIcon} alt="/livechat" className="w-5 h-5 object-contain" />,
+      icon: <img src={livechatIcon} alt="/livechat" className="w-7 h-7 object-contain" />,
       external: true, 
       href: "/livechat" 
     },
     { 
       id: "tasks", 
       label: "Tasks", 
-      icon: <CheckSquare className="w-5 h-5" /> 
+      icon: <CheckSquare className="w-7 h-7" /> 
     },
     { 
       id: "divider-1", 
@@ -86,24 +86,24 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
     { 
       id: "listings", 
       label: "Local SEO Mgmt", 
-      icon: <img src={localSeoIcon} alt="Local SEO" className="w-5 h-5 object-contain" /> 
+      icon: <img src={localSeoIcon} alt="Local SEO" className="w-7 h-7 object-contain" /> 
     },
     { 
       id: "send", 
       label: "send",
-      icon: <img src={sendIcon} alt="/send" className="w-5 h-5 object-contain" />,
+      icon: <img src={sendIcon} alt="/send" className="w-7 h-7 object-contain" />,
       external: true,
       href: "/send"
     },
     { 
       id: "social", 
       label: "Social Media Mgmt", 
-      icon: <img src={socialMediaIcon} alt="Social Media" className="w-5 h-5 object-contain" /> 
+      icon: <img src={socialMediaIcon} alt="Social Media" className="w-7 h-7 object-contain" /> 
     },
     { 
       id: "reputation", 
       label: "Reputation Mgmt", 
-      icon: <img src={reputationIcon} alt="Reputation" className="w-5 h-5 object-contain" /> 
+      icon: <img src={reputationIcon} alt="Reputation" className="w-7 h-7 object-contain" /> 
     },
     { 
       id: "divider-2", 
