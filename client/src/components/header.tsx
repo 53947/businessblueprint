@@ -54,11 +54,19 @@ export function Header({ showNavigation = true }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Check if user is logged in
+  // Check if user is logged in - re-check on every render
   useEffect(() => {
-    const clientId = sessionStorage.getItem("clientId");
-    setIsLoggedIn(!!clientId);
-  }, []);
+    const checkLoginStatus = () => {
+      const clientId = sessionStorage.getItem("clientId");
+      setIsLoggedIn(!!clientId);
+    };
+    
+    checkLoginStatus();
+    
+    // Also check periodically in case session changes
+    const interval = setInterval(checkLoginStatus, 1000);
+    return () => clearInterval(interval);
+  });
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">

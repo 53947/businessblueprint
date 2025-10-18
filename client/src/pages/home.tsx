@@ -461,12 +461,12 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow p-6">
               <CardContent className="flex flex-col">
                 <div className="flex justify-center items-center mb-6 h-20">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-end gap-1">
                     <img src={bbIcon} alt="businessblueprint.io" className="h-14 w-14 object-contain" />
-                    <div className="text-xl leading-none" style={{ fontFamily: 'Archivo', fontWeight: 600 }}>
-                      <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
-                      <span style={{ color: '#0000FF' }}>blueprint</span>
-                      <span style={{ color: '#84D71A' }}>.io</span>
+                    <div className="text-xl leading-none pb-0.5" style={{ fontWeight: 600 }}>
+                      <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif', fontSize: 'inherit' }}>business</span>
+                      <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif', fontSize: 'inherit' }}>blueprint</span>
+                      <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif', fontSize: 'inherit' }}>.io</span>
                     </div>
                   </div>
                 </div>
