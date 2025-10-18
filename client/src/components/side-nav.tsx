@@ -205,7 +205,11 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
           <SheetHeader className="p-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3">
               <img src={bbIcon} alt="businessblueprint.io" className="h-12 w-12 object-contain" data-testid="logo-icon-mobile" />
-              <img src={bbLogo} alt="businessblueprint.io" className="h-8 object-contain" data-testid="logo-text-mobile" />
+              <div className="font-archivo text-lg leading-none" style={{ textShadow: '12px -9px 5px #00FF40' }} data-testid="logo-text-mobile">
+                <span style={{ color: '#FFA500', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>business</span>
+                <span style={{ color: '#0000FF', fontWeight: 600 }}>blueprint</span>
+                <span style={{ color: '#84D71A', fontWeight: 600 }}>.io</span>
+              </div>
             </div>
           </SheetHeader>
 
@@ -289,7 +293,11 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => setLocation('/portal')}>
             <img src={bbIcon} alt="businessblueprint.io" className="h-10 w-10 object-contain" data-testid="logo-icon" />
             {!isCollapsed && (
-              <img src={bbLogo} alt="businessblueprint.io" className="h-7 object-contain" data-testid="logo-text" />
+              <div className="font-archivo text-base leading-none" style={{ textShadow: '12px -9px 5px #00FF40' }} data-testid="logo-text">
+                <span style={{ color: '#FFA500', fontFamily: 'Archivo Semi Expanded', fontWeight: 600 }}>business</span>
+                <span style={{ color: '#0000FF', fontWeight: 600 }}>blueprint</span>
+                <span style={{ color: '#84D71A', fontWeight: 600 }}>.io</span>
+              </div>
             )}
           </div>
           <Button

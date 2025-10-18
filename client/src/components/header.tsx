@@ -56,9 +56,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <a href="/" className="hover:opacity-80 transition-opacity flex items-center gap-3">
-              <img src={bbIcon} alt="businessblueprint.io" className="h-10 w-10 object-contain" />
-              <img src={bbLogo} alt="businessblueprint.io" className="h-8 object-contain" />
+            <a href="/" className="hover:opacity-80 transition-opacity">
+              <BrandLogo brand="businessblueprint" size="sm" showIcon={true} />
             </a>
             
             {showNavigation && (
@@ -83,10 +82,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 data-testid="link-app-businessblueprint"
                               >
                                 <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center gap-2">
-                                    <img src={bbIcon} alt="businessblueprint.io" className="h-10 w-10 object-contain" />
-                                    <img src={bbLogo} alt="businessblueprint.io" className="h-8 object-contain" />
-                                  </div>
+                                  <BrandLogo brand="businessblueprint" size="sm" showIcon={true} />
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">Visit Platform →</span>
                                   </div>
