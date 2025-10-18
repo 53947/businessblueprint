@@ -35,6 +35,7 @@ interface NavItem {
   id: string;
   label: string;
   icon: React.ReactNode;
+  logo?: string; // For branded app logos
   badge?: number;
   external?: boolean;
   href?: string;
@@ -55,16 +56,18 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
     },
     { 
       id: "inbox", 
-      label: "", 
-      icon: <img src={inboxLogo} alt="/inbox" className="h-5 object-contain" />, 
+      label: "/inbox",
+      icon: <img src={inboxIcon} alt="/inbox" className="w-5 h-5 object-contain" />,
+      logo: inboxLogo,
       external: true, 
       href: "/inbox",
       hasSpaceBefore: true
     },
     { 
       id: "livechat", 
-      label: "", 
-      icon: <img src={livechatLogo} alt="/livechat" className="h-5 object-contain" />, 
+      label: "/livechat",
+      icon: <img src={livechatIcon} alt="/livechat" className="w-5 h-5 object-contain" />,
+      logo: livechatLogo,
       external: true, 
       href: "/livechat" 
     },
@@ -86,8 +89,9 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
     },
     { 
       id: "send", 
-      label: "", 
-      icon: <img src={sendLogo} alt="/send" className="h-5 object-contain" />,
+      label: "/send",
+      icon: <img src={sendIcon} alt="/send" className="w-5 h-5 object-contain" />,
+      logo: sendLogo,
       external: true,
       href: "/send"
     },
@@ -160,9 +164,13 @@ export function SideNav({ activeTab = "overview", onTabChange, onSignOut, classN
               {item.icon}
             </span>
             {!collapsed && (
-              <span className="flex-1 text-base" data-testid={`text-nav-${item.id}`}>
-                {item.label}
-              </span>
+              item.logo ? (
+                <img src={item.logo} alt={item.label} className="h-5 object-contain flex-1" data-testid={`logo-nav-${item.id}`} />
+              ) : (
+                <span className="flex-1 text-base" data-testid={`text-nav-${item.id}`}>
+                  {item.label}
+                </span>
+              )
             )}
             {!collapsed && item.badge && (
               <span className="bg-red-500 text-white text-xs font-semibold rounded-full px-2.5 py-1 shadow-sm" data-testid={`badge-${item.id}`}>
