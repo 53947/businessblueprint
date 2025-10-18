@@ -80,6 +80,9 @@ export const clients = pgTable("clients", {
   businessCategory: text("business_category"),
   enabledFeatures: text("enabled_features"), // CO,VI,SP,RE,SO,RI
   
+  // System protection - prevents automated deletion
+  isProtected: boolean("is_protected").default(false),
+  
   // Email verification
   isEmailVerified: boolean("is_email_verified").default(false),
   verificationCode: text("verification_code"),
