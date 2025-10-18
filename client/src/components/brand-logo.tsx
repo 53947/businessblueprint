@@ -40,7 +40,8 @@ export function BrandLogo({
   
   // Business Blueprint text-based logo matching Brand Logo Key
   if (brand === 'businessblueprint') {
-    const textShadow = '0px 0px 5px rgba(0, 255, 64, 0.5)';
+    // 325° angle, 15px distance, 5px blur = 12px -9px 5px
+    const textShadow = '12px -9px 5px #00FF40';
     
     return (
       <div className={`flex items-center gap-3 ${className}`}>
