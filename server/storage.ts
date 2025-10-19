@@ -13,6 +13,7 @@ import {
   synupReviews,
   reviewNotificationPreferences,
   brandAssets,
+  users,
   type Assessment,
   type InsertAssessment,
   type Recommendation,
@@ -37,11 +38,17 @@ import {
   type InsertReviewNotificationPreferences,
   type BrandAsset,
   type InsertBrandAsset,
+  type User,
+  type UpsertUser,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
 
 export interface IStorage {
+  // User operations - Replit Auth
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
+
   // Assessment operations
   createAssessment(assessment: InsertAssessment): Promise<Assessment>;
   getAssessment(id: number): Promise<Assessment | undefined>;
@@ -125,6 +132,26 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return user;
+  }
+
   async createAssessment(assessmentData: InsertAssessment): Promise<Assessment> {
     const [assessment] = await db
       .insert(assessments)
