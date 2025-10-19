@@ -88,3 +88,4 @@ localPort = 45845
 externalPort = 8008
 
 [agent]
+integrations = ["javascript_log_in_with_replit:1.0.0"]
