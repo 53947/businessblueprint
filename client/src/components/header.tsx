@@ -479,6 +479,17 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           <NavigationMenuLink asChild>
                             <a
                               className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
+                              href="/send-api-docs"
+                            >
+                              <div className="text-sm font-medium leading-none">/send API Documentation</div>
+                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                Integration guide for developers
+                              </p>
+                            </a>
+                          </NavigationMenuLink>
+                          <NavigationMenuLink asChild>
+                            <a
+                              className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
                               href="/contact"
                             >
                               <div className="text-sm font-medium leading-none">Help Center</div>
@@ -721,6 +732,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   <a href="/journey" className="flex items-center gap-3 p-2 rounded-lg hover:bg-white transition-colors" data-testid="link-mobile-journey">
                     <Compass className="w-5 h-5 text-blue-600" />
                     <span className="text-sm text-gray-700">Getting Started Guide</span>
+                  </a>
+                  <a href="/send-api-docs" className="flex items-center gap-3 p-2 rounded-lg hover:bg-white transition-colors" data-testid="link-mobile-api-docs">
+                    <Server className="w-5 h-5 text-purple-600" />
+                    <span className="text-sm text-gray-700">/send API Documentation</span>
                   </a>
                   <a href="/about" className="flex items-center gap-3 p-2 rounded-lg hover:bg-white transition-colors" data-testid="link-mobile-about">
                     <User className="w-5 h-5 text-gray-600" />
