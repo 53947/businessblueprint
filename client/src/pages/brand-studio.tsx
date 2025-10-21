@@ -16,7 +16,8 @@ import {
   Plus,
   Shield,
   Eye,
-  Save
+  Save,
+  Edit2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -37,6 +38,8 @@ export default function BrandStudio() {
   const [previewAsset, setPreviewAsset] = useState<Asset | null>(null);
   const [assetUrls, setAssetUrls] = useState<Record<number, string>>({});
   const createdUrlsRef = useRef<Set<string>>(new Set());
+  const [renamingAsset, setRenamingAsset] = useState<{ id: number; currentName: string } | null>(null);
+  const [newFileName, setNewFileName] = useState('');
 
   // Fetch all brand assets
   const { data: assetsData, isLoading } = useQuery<{ success: boolean; assets: Asset[] }>({
@@ -252,6 +255,18 @@ export default function BrandStudio() {
     deleteMutation.mutate(id);
   };
 
+  const startRename = (asset: Asset) => {
+    setRenamingAsset({ id: asset.id, currentName: asset.fileName });
+    setNewFileName(asset.fileName);
+  };
+
+  const handleRename = () => {
+    if (!renamingAsset || !newFileName) return;
+    renameMutation.mutate({ id: renamingAsset.id, newFileName });
+    setRenamingAsset(null);
+    setNewFileName('');
+  };
+
   const downloadAsset = (asset: Asset) => {
     const url = assetUrls[asset.id];
     if (!url) {
@@ -438,6 +453,9 @@ export default function BrandStudio() {
                         <p className="text-sm font-medium text-green-800 dark:text-green-200">✓ Uploaded</p>
                         <p className="text-xs text-green-600 dark:text-green-400">Available at /assets/Blueprint_Avatar.png</p>
                       </div>
+                      <Button variant="outline" size="sm" onClick={() => startRename(assets.find(a => a.fileName === 'Blueprint_Avatar.png')!)}>
+                        <Edit2 className="w-3 h-3" />
+                      </Button>
                       <Button variant="outline" size="sm" onClick={() => deleteAsset(assets.find(a => a.fileName === 'Blueprint_Avatar.png')!.id)} className="text-red-600">
                         <Trash2 className="w-3 h-3" />
                       </Button>
@@ -832,6 +850,38 @@ export default function BrandStudio() {
             <Button onClick={() => previewAsset && downloadAsset(previewAsset)} data-testid="button-download-from-preview">
               <Download className="w-4 h-4 mr-2" />
               Download
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Rename Dialog */}
+      <Dialog open={!!renamingAsset} onOpenChange={() => setRenamingAsset(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Rename Asset</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="newFileName">New Filename</Label>
+              <Input
+                id="newFileName"
+                value={newFileName}
+                onChange={(e) => setNewFileName(e.target.value)}
+                placeholder="e.g., Blueprint_Favicon.png"
+              />
+              <p className="text-xs text-gray-500">
+                Current: {renamingAsset?.currentName}
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setRenamingAsset(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleRename} disabled={!newFileName}>
+              <Save className="w-4 h-4 mr-2" />
+              Save
             </Button>
           </div>
         </DialogContent>
