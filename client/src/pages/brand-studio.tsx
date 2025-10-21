@@ -392,6 +392,9 @@ export default function BrandStudio() {
                           <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewAsset(asset)}>
                             <Eye className="w-3 h-3 mr-1" />Preview
                           </Button>
+                          <Button variant="outline" size="sm" onClick={() => startRename(asset)}>
+                            <Edit2 className="w-3 h-3" />
+                          </Button>
                           <Button variant="outline" size="sm" onClick={() => deleteAsset(asset.id)} className="text-red-600">
                             <Trash2 className="w-3 h-3" />
                           </Button>
@@ -566,6 +569,9 @@ export default function BrandStudio() {
                             <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewAsset(asset)}>
                               <Eye className="w-3 h-3 mr-1" />Preview
                             </Button>
+                            <Button variant="outline" size="sm" onClick={() => startRename(asset)}>
+                              <Edit2 className="w-3 h-3" />
+                            </Button>
                             <Button variant="outline" size="sm" onClick={() => deleteAsset(asset.id)} className="text-red-600">
                               <Trash2 className="w-3 h-3" />
                             </Button>
@@ -617,6 +623,9 @@ export default function BrandStudio() {
                           </Button>
                           <Button variant="outline" size="sm" onClick={() => downloadAsset(asset)}>
                             <Download className="w-3 h-3" />
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => startRename(asset)}>
+                            <Edit2 className="w-3 h-3" />
                           </Button>
                           <Button variant="outline" size="sm" onClick={() => deleteAsset(asset.id)} className="text-red-600">
                             <Trash2 className="w-3 h-3" />
