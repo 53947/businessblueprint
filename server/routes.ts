@@ -2599,6 +2599,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/assets/:filename", async (req, res) => {
     try {
       const { filename } = req.params;
+      
+      console.log(`Requesting asset: ${filename}`);
 
       // Query for the asset by filename
       const [asset] = await db
@@ -2608,8 +2610,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .limit(1);
 
       if (!asset) {
+        console.log(`Asset not found: ${filename}`);
+        // Log all available assets for debugging
+        const allAssets = await db.select({ fileName: brandAssets.fileName }).from(brandAssets);
+        console.log('Available assets:', allAssets.map(a => a.fileName).join(', '));
         return res.status(404).send("Asset not found");
       }
+      
+      console.log(`Serving asset: ${filename}, type: ${asset.mimeType}`);
 
       // Set appropriate content type
       const contentType = asset.mimeType || 'application/octet-stream';
