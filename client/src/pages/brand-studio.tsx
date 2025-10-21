@@ -496,6 +496,9 @@ export default function BrandStudio() {
                         <p className="text-sm font-medium text-green-800 dark:text-green-200">✓ Uploaded</p>
                         <p className="text-xs text-green-600 dark:text-green-400">Available at /assets/Blueprint_Favicon.png</p>
                       </div>
+                      <Button variant="outline" size="sm" onClick={() => startRename(assets.find(a => a.fileName === 'Blueprint_Favicon.png')!)}>
+                        <Edit2 className="w-3 h-3" />
+                      </Button>
                       <Button variant="outline" size="sm" onClick={() => deleteAsset(assets.find(a => a.fileName === 'Blueprint_Favicon.png')!.id)} className="text-red-600">
                         <Trash2 className="w-3 h-3" />
                       </Button>
@@ -531,6 +534,9 @@ export default function BrandStudio() {
                         <p className="text-sm font-medium text-green-800 dark:text-green-200">✓ Uploaded</p>
                         <p className="text-xs text-green-600 dark:text-green-400">Available at /assets/Blueprint_Favicon.ico</p>
                       </div>
+                      <Button variant="outline" size="sm" onClick={() => startRename(assets.find(a => a.fileName === 'Blueprint_Favicon.ico')!)}>
+                        <Edit2 className="w-3 h-3" />
+                      </Button>
                       <Button variant="outline" size="sm" onClick={() => deleteAsset(assets.find(a => a.fileName === 'Blueprint_Favicon.ico')!.id)} className="text-red-600">
                         <Trash2 className="w-3 h-3" />
                       </Button>
