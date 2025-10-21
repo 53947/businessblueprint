@@ -371,52 +371,158 @@ export default function BrandStudio() {
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <Shield className="w-5 h-5 text-purple-600" />
-                      Icon / Favicon
+                      Favicon & App Icons
                     </CardTitle>
                     <CardDescription>
-                      Square icon for browser tabs, mobile apps, and social media profiles
+                      Upload favicon files with exact filenames for automatic website integration
                     </CardDescription>
                   </div>
-                  <Button onClick={() => handleFileUpload('icon')} variant="outline" data-testid="button-upload-icon">
-                    <Upload className="w-4 h-4 mr-2" />
-                    Upload Icon
-                  </Button>
                 </div>
               </CardHeader>
-              <CardContent>
-                {assets.filter(a => a.type === 'icon').length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    {assets.filter(a => a.type === 'icon').map((asset) => (
-                      <div key={asset.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-24 flex items-center justify-center mb-3 p-2">
-                          {assetUrls[asset.id] ? (
-                            <img src={assetUrls[asset.id]} alt={asset.name} className="max-w-full max-h-full object-contain" />
-                          ) : (
-                            <Shield className="w-12 h-12 text-gray-400" />
-                          )}
-                        </div>
-                        <h4 className="font-medium text-sm mb-2">{asset.name}</h4>
-                        <p className="text-xs text-gray-500 mb-3">{Math.round(asset.size / 1024)} KB</p>
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewAsset(asset)}>
-                            <Eye className="w-3 h-3 mr-1" />Preview
-                          </Button>
-                          <Button variant="outline" size="sm" onClick={() => deleteAsset(asset.id)} className="text-red-600">
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
+              <CardContent className="space-y-6">
+                {/* Blueprint_Avatar.png - 512x512 */}
+                <div className="border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                  <div className="flex items-start gap-4 mb-3">
+                    <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded">
+                      <Shield className="w-6 h-6 text-purple-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-sm mb-1">Avatar / App Icon (512×512)</h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                        Must be named: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-purple-600">Blueprint_Avatar.png</code>
+                      </p>
+                      <p className="text-xs text-gray-500">Used for: Apple Touch Icon, profile images, app icons</p>
+                    </div>
                   </div>
-                ) : (
-                  <button 
-                    onClick={() => handleFileUpload('icon')}
-                    className="w-full border-2 border-dashed border-purple-300 dark:border-purple-700 rounded-lg p-8 flex flex-col items-center justify-center hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950 transition-colors"
-                  >
-                    <Shield className="w-16 h-16 text-purple-400 mb-3" />
-                    <p className="text-purple-600 dark:text-purple-400 font-semibold mb-1">Upload Icon / Favicon</p>
-                    <p className="text-sm text-gray-500">PNG, ICO • Recommended: 512x512px square</p>
-                  </button>
+                  {assets.find(a => a.fileName === 'Blueprint_Avatar.png') ? (
+                    <div className="flex items-center gap-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded p-3">
+                      <img 
+                        src={assetUrls[assets.find(a => a.fileName === 'Blueprint_Avatar.png')!.id]} 
+                        alt="Avatar" 
+                        className="w-16 h-16 rounded object-contain bg-white"
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-green-800 dark:text-green-200">✓ Uploaded</p>
+                        <p className="text-xs text-green-600 dark:text-green-400">Available at /assets/Blueprint_Avatar.png</p>
+                      </div>
+                      <Button variant="outline" size="sm" onClick={() => deleteAsset(assets.find(a => a.fileName === 'Blueprint_Avatar.png')!.id)} className="text-red-600">
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button onClick={() => handleFileUpload('icon')} variant="outline" className="w-full">
+                      <Upload className="w-4 h-4 mr-2" />
+                      Upload Blueprint_Avatar.png
+                    </Button>
+                  )}
+                </div>
+
+                {/* Blueprint_Favicon.png - 64x64 */}
+                <div className="border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                  <div className="flex items-start gap-4 mb-3">
+                    <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded">
+                      <Shield className="w-6 h-6 text-purple-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-sm mb-1">Favicon PNG (64×64)</h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                        Must be named: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-purple-600">Blueprint_Favicon.png</code>
+                      </p>
+                      <p className="text-xs text-gray-500">Used for: Browser tabs (PNG format)</p>
+                    </div>
+                  </div>
+                  {assets.find(a => a.fileName === 'Blueprint_Favicon.png') ? (
+                    <div className="flex items-center gap-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded p-3">
+                      <img 
+                        src={assetUrls[assets.find(a => a.fileName === 'Blueprint_Favicon.png')!.id]} 
+                        alt="Favicon PNG" 
+                        className="w-16 h-16 rounded object-contain bg-white"
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-green-800 dark:text-green-200">✓ Uploaded</p>
+                        <p className="text-xs text-green-600 dark:text-green-400">Available at /assets/Blueprint_Favicon.png</p>
+                      </div>
+                      <Button variant="outline" size="sm" onClick={() => deleteAsset(assets.find(a => a.fileName === 'Blueprint_Favicon.png')!.id)} className="text-red-600">
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button onClick={() => handleFileUpload('icon')} variant="outline" className="w-full">
+                      <Upload className="w-4 h-4 mr-2" />
+                      Upload Blueprint_Favicon.png
+                    </Button>
+                  )}
+                </div>
+
+                {/* Blueprint_Favicon.ico - Multi-resolution */}
+                <div className="border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                  <div className="flex items-start gap-4 mb-3">
+                    <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded">
+                      <Shield className="w-6 h-6 text-purple-600" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-sm mb-1">Favicon ICO (Multi-resolution)</h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                        Must be named: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-purple-600">Blueprint_Favicon.ico</code>
+                      </p>
+                      <p className="text-xs text-gray-500">Used for: Browser tabs (legacy ICO format, 16/32/64px)</p>
+                    </div>
+                  </div>
+                  {assets.find(a => a.fileName === 'Blueprint_Favicon.ico') ? (
+                    <div className="flex items-center gap-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded p-3">
+                      <div className="w-16 h-16 flex items-center justify-center bg-white rounded">
+                        <Shield className="w-8 h-8 text-purple-600" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-green-800 dark:text-green-200">✓ Uploaded</p>
+                        <p className="text-xs text-green-600 dark:text-green-400">Available at /assets/Blueprint_Favicon.ico</p>
+                      </div>
+                      <Button variant="outline" size="sm" onClick={() => deleteAsset(assets.find(a => a.fileName === 'Blueprint_Favicon.ico')!.id)} className="text-red-600">
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button onClick={() => handleFileUpload('icon')} variant="outline" className="w-full">
+                      <Upload className="w-4 h-4 mr-2" />
+                      Upload Blueprint_Favicon.ico
+                    </Button>
+                  )}
+                </div>
+
+                {/* All Other Icons */}
+                {assets.filter(a => 
+                  a.type === 'icon' && 
+                  !['Blueprint_Avatar.png', 'Blueprint_Favicon.png', 'Blueprint_Favicon.ico'].includes(a.fileName)
+                ).length > 0 && (
+                  <div className="border-t pt-6">
+                    <h4 className="font-semibold text-sm mb-4">Other Icons</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {assets.filter(a => 
+                        a.type === 'icon' && 
+                        !['Blueprint_Avatar.png', 'Blueprint_Favicon.png', 'Blueprint_Favicon.ico'].includes(a.fileName)
+                      ).map((asset) => (
+                        <div key={asset.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                          <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-24 flex items-center justify-center mb-3 p-2">
+                            {assetUrls[asset.id] ? (
+                              <img src={assetUrls[asset.id]} alt={asset.name} className="max-w-full max-h-full object-contain" />
+                            ) : (
+                              <Shield className="w-12 h-12 text-gray-400" />
+                            )}
+                          </div>
+                          <h4 className="font-medium text-sm mb-2">{asset.name}</h4>
+                          <p className="text-xs text-gray-500 mb-3">{Math.round(asset.size / 1024)} KB</p>
+                          <div className="flex gap-2">
+                            <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewAsset(asset)}>
+                              <Eye className="w-3 h-3 mr-1" />Preview
+                            </Button>
+                            <Button variant="outline" size="sm" onClick={() => deleteAsset(asset.id)} className="text-red-600">
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </CardContent>
             </Card>
