@@ -16,7 +16,8 @@ import {
   Plus,
   Shield,
   Eye,
-  Save
+  Save,
+  Edit2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -37,6 +38,8 @@ export default function BrandStudio() {
   const [previewAsset, setPreviewAsset] = useState<Asset | null>(null);
   const [assetUrls, setAssetUrls] = useState<Record<number, string>>({});
   const createdUrlsRef = useRef<Set<string>>(new Set());
+  const [renamingAsset, setRenamingAsset] = useState<{ id: number; currentName: string } | null>(null);
+  const [newFileName, setNewFileName] = useState('');
 
   // Fetch all brand assets
   const { data: assetsData, isLoading } = useQuery<{ success: boolean; assets: Asset[] }>({
@@ -151,6 +154,39 @@ export default function BrandStudio() {
     },
   });
 
+  // Rename mutation
+  const renameMutation = useMutation({
+    mutationFn: async ({ id, newFileName }: { id: number; newFileName: string }) => {
+      const response = await fetch(`/api/brand-assets/${id}/rename`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fileName: newFileName }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Rename failed');
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/brand-assets'] });
+      toast({
+        title: 'Rename successful',
+        description: 'Asset filename has been updated',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Rename failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -217,6 +253,18 @@ export default function BrandStudio() {
 
   const deleteAsset = (id: number) => {
     deleteMutation.mutate(id);
+  };
+
+  const startRename = (asset: Asset) => {
+    setRenamingAsset({ id: asset.id, currentName: asset.fileName });
+    setNewFileName(asset.fileName);
+  };
+
+  const handleRename = () => {
+    if (!renamingAsset || !newFileName) return;
+    renameMutation.mutate({ id: renamingAsset.id, newFileName });
+    setRenamingAsset(null);
+    setNewFileName('');
   };
 
   const downloadAsset = (asset: Asset) => {
@@ -314,7 +362,7 @@ export default function BrandStudio() {
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <ImageIcon className="w-5 h-5 text-blue-600" />
-                      Primary Logo
+                      Primary Logo (Wordmark .png)
                     </CardTitle>
                     <CardDescription>
                       Main logo displayed in header, email signatures, and marketing materials
@@ -343,6 +391,9 @@ export default function BrandStudio() {
                         <div className="flex gap-2">
                           <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewAsset(asset)}>
                             <Eye className="w-3 h-3 mr-1" />Preview
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => startRename(asset)}>
+                            <Edit2 className="w-3 h-3" />
                           </Button>
                           <Button variant="outline" size="sm" onClick={() => deleteAsset(asset.id)} className="text-red-600">
                             <Trash2 className="w-3 h-3" />
@@ -387,7 +438,7 @@ export default function BrandStudio() {
                       <Shield className="w-6 h-6 text-purple-600" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-sm mb-1">Avatar / App Icon (512×512)</h4>
+                      <h4 className="font-semibold text-sm mb-1">Avatar Icon (.png 512×512)</h4>
                       <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                         Must be named: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-purple-600">Blueprint_Avatar.png</code>
                       </p>
@@ -405,6 +456,9 @@ export default function BrandStudio() {
                         <p className="text-sm font-medium text-green-800 dark:text-green-200">✓ Uploaded</p>
                         <p className="text-xs text-green-600 dark:text-green-400">Available at /assets/Blueprint_Avatar.png</p>
                       </div>
+                      <Button variant="outline" size="sm" onClick={() => startRename(assets.find(a => a.fileName === 'Blueprint_Avatar.png')!)}>
+                        <Edit2 className="w-3 h-3" />
+                      </Button>
                       <Button variant="outline" size="sm" onClick={() => deleteAsset(assets.find(a => a.fileName === 'Blueprint_Avatar.png')!.id)} className="text-red-600">
                         <Trash2 className="w-3 h-3" />
                       </Button>
@@ -424,7 +478,7 @@ export default function BrandStudio() {
                       <Shield className="w-6 h-6 text-purple-600" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-sm mb-1">Favicon PNG (64×64)</h4>
+                      <h4 className="font-semibold text-sm mb-1">App Icon (.png 64×64)</h4>
                       <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                         Must be named: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-purple-600">Blueprint_Favicon.png</code>
                       </p>
@@ -461,7 +515,7 @@ export default function BrandStudio() {
                       <Shield className="w-6 h-6 text-purple-600" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-sm mb-1">Favicon ICO (Multi-resolution)</h4>
+                      <h4 className="font-semibold text-sm mb-1">Favicon (.ico Multi-resolution)</h4>
                       <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                         Must be named: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-purple-600">Blueprint_Favicon.ico</code>
                       </p>
@@ -515,6 +569,9 @@ export default function BrandStudio() {
                             <Button variant="outline" size="sm" className="flex-1" onClick={() => setPreviewAsset(asset)}>
                               <Eye className="w-3 h-3 mr-1" />Preview
                             </Button>
+                            <Button variant="outline" size="sm" onClick={() => startRename(asset)}>
+                              <Edit2 className="w-3 h-3" />
+                            </Button>
                             <Button variant="outline" size="sm" onClick={() => deleteAsset(asset.id)} className="text-red-600">
                               <Trash2 className="w-3 h-3" />
                             </Button>
@@ -566,6 +623,9 @@ export default function BrandStudio() {
                           </Button>
                           <Button variant="outline" size="sm" onClick={() => downloadAsset(asset)}>
                             <Download className="w-3 h-3" />
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => startRename(asset)}>
+                            <Edit2 className="w-3 h-3" />
                           </Button>
                           <Button variant="outline" size="sm" onClick={() => deleteAsset(asset.id)} className="text-red-600">
                             <Trash2 className="w-3 h-3" />
@@ -799,6 +859,38 @@ export default function BrandStudio() {
             <Button onClick={() => previewAsset && downloadAsset(previewAsset)} data-testid="button-download-from-preview">
               <Download className="w-4 h-4 mr-2" />
               Download
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Rename Dialog */}
+      <Dialog open={!!renamingAsset} onOpenChange={() => setRenamingAsset(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Rename Asset</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="newFileName">New Filename</Label>
+              <Input
+                id="newFileName"
+                value={newFileName}
+                onChange={(e) => setNewFileName(e.target.value)}
+                placeholder="e.g., Blueprint_Favicon.png"
+              />
+              <p className="text-xs text-gray-500">
+                Current: {renamingAsset?.currentName}
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setRenamingAsset(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleRename} disabled={!newFileName}>
+              <Save className="w-4 h-4 mr-2" />
+              Save
             </Button>
           </div>
         </DialogContent>

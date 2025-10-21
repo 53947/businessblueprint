@@ -593,6 +593,15 @@ export class DatabaseStorage implements IStorage {
     return asset;
   }
 
+  async updateBrandAsset(id: number, data: Partial<BrandAsset>): Promise<BrandAsset> {
+    const [asset] = await db
+      .update(brandAssets)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(brandAssets.id, id))
+      .returning();
+    return asset;
+  }
+
   async deleteBrandAsset(id: number): Promise<void> {
     await db
       .delete(brandAssets)

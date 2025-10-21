@@ -2599,6 +2599,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/assets/:filename", async (req, res) => {
     try {
       const { filename } = req.params;
+      
+      console.log(`Requesting asset: ${filename}`);
 
       // Query for the asset by filename
       const [asset] = await db
@@ -2608,8 +2610,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .limit(1);
 
       if (!asset) {
+        console.log(`Asset not found: ${filename}`);
+        // Log all available assets for debugging
+        const allAssets = await db.select({ fileName: brandAssets.fileName }).from(brandAssets);
+        console.log('Available assets:', allAssets.map(a => a.fileName).join(', '));
         return res.status(404).send("Asset not found");
       }
+      
+      console.log(`Serving asset: ${filename}, type: ${asset.mimeType}`);
 
       // Set appropriate content type
       const contentType = asset.mimeType || 'application/octet-stream';
@@ -2745,6 +2753,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({
         success: false,
         message: "Failed to fetch asset"
+      });
+    }
+  });
+
+  // Rename brand asset
+  app.patch("/api/brand-assets/:id/rename", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { fileName } = req.body;
+
+      if (isNaN(id)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid asset ID"
+        });
+      }
+
+      if (!fileName) {
+        return res.status(400).json({
+          success: false,
+          message: "New filename is required"
+        });
+      }
+
+      const asset = await storage.getBrandAsset(id);
+      if (!asset) {
+        return res.status(404).json({
+          success: false,
+          message: "Asset not found"
+        });
+      }
+
+      await storage.updateBrandAsset(id, { fileName });
+
+      res.json({
+        success: true,
+        message: "Asset renamed successfully"
+      });
+    } catch (error) {
+      console.error("Error renaming brand asset:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to rename asset"
       });
     }
   });
