@@ -2747,6 +2747,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Serve brand assets by filename (for favicons)
+  app.get("/assets/:filename", async (req, res) => {
+    try {
+      const { filename } = req.params;
+      
+      // Get all assets and find by filename
+      const allAssets = await storage.getAllBrandAssets();
+      const asset = allAssets.find(a => a.fileName === filename);
+
+      if (!asset) {
+        return res.status(404).json({
+          success: false,
+          message: "Asset not found"
+        });
+      }
+
+      // Convert base64 to buffer
+      const buffer = Buffer.from(asset.data, 'base64');
+
+      // Set appropriate headers
+      res.setHeader('Content-Type', asset.mimeType);
+      res.setHeader('Content-Length', buffer.length);
+      res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+
+      res.send(buffer);
+    } catch (error) {
+      console.error("Error serving asset:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to serve asset"
+      });
+    }
+  });
+
   // Register inbox routes
   await registerInboxRoutes(app);
 
