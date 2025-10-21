@@ -2757,6 +2757,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Rename brand asset
+  app.patch("/api/brand-assets/:id/rename", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { fileName } = req.body;
+
+      if (isNaN(id)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid asset ID"
+        });
+      }
+
+      if (!fileName) {
+        return res.status(400).json({
+          success: false,
+          message: "New filename is required"
+        });
+      }
+
+      const asset = await storage.getBrandAsset(id);
+      if (!asset) {
+        return res.status(404).json({
+          success: false,
+          message: "Asset not found"
+        });
+      }
+
+      await storage.updateBrandAsset(id, { fileName });
+
+      res.json({
+        success: true,
+        message: "Asset renamed successfully"
+      });
+    } catch (error) {
+      console.error("Error renaming brand asset:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to rename asset"
+      });
+    }
+  });
+
   // Delete brand asset
   app.delete("/api/brand-assets/:id", async (req, res) => {
     try {

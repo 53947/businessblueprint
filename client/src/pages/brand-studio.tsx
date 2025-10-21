@@ -151,6 +151,39 @@ export default function BrandStudio() {
     },
   });
 
+  // Rename mutation
+  const renameMutation = useMutation({
+    mutationFn: async ({ id, newFileName }: { id: number; newFileName: string }) => {
+      const response = await fetch(`/api/brand-assets/${id}/rename`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fileName: newFileName }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Rename failed');
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/brand-assets'] });
+      toast({
+        title: 'Rename successful',
+        description: 'Asset filename has been updated',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Rename failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
