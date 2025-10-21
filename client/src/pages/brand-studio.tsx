@@ -362,7 +362,7 @@ export default function BrandStudio() {
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <ImageIcon className="w-5 h-5 text-blue-600" />
-                      Primary Logo
+                      Primary Logo (Wordmark .png)
                     </CardTitle>
                     <CardDescription>
                       Main logo displayed in header, email signatures, and marketing materials
@@ -435,7 +435,7 @@ export default function BrandStudio() {
                       <Shield className="w-6 h-6 text-purple-600" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-sm mb-1">Avatar / App Icon (512×512)</h4>
+                      <h4 className="font-semibold text-sm mb-1">Avatar Icon (.png 512×512)</h4>
                       <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                         Must be named: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-purple-600">Blueprint_Avatar.png</code>
                       </p>
@@ -475,7 +475,7 @@ export default function BrandStudio() {
                       <Shield className="w-6 h-6 text-purple-600" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-sm mb-1">Favicon PNG (64×64)</h4>
+                      <h4 className="font-semibold text-sm mb-1">App Icon (.png 64×64)</h4>
                       <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                         Must be named: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-purple-600">Blueprint_Favicon.png</code>
                       </p>
@@ -512,7 +512,7 @@ export default function BrandStudio() {
                       <Shield className="w-6 h-6 text-purple-600" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-sm mb-1">Favicon ICO (Multi-resolution)</h4>
+                      <h4 className="font-semibold text-sm mb-1">Favicon (.ico Multi-resolution)</h4>
                       <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                         Must be named: <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-purple-600">Blueprint_Favicon.ico</code>
                       </p>
