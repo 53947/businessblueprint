@@ -16,7 +16,8 @@ import {
   insertSynupLocationSchema,
   insertSynupListingSchema,
   insertSynupReviewSchema,
-  insertReviewNotificationPreferencesSchema
+  insertReviewNotificationPreferencesSchema,
+  brandAssets // Import brandAssets schema
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
@@ -60,7 +61,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/assessments", async (req, res) => {
     try {
       const validatedData = insertAssessmentSchema.parse(req.body);
-      
+
       // Create assessment with pending status
       const assessment = await storage.createAssessment(validatedData);
 
@@ -86,13 +87,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const assessment = await storage.getAssessment(id);
-      
+
       if (!assessment) {
         return res.status(404).json({ message: "Assessment not found" });
       }
 
       const recommendations = await storage.getRecommendationsByAssessmentId(id);
-      
+
       res.json({
         assessment,
         recommendations
@@ -114,7 +115,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       await storage.updateAssessment(id, { selectedPathway: pathway });
-      
+
       res.json({ success: true, message: "Pathway updated successfully" });
     } catch (error) {
       console.error("Error updating pathway:", error);
@@ -126,7 +127,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/assessments", async (req, res) => {
     try {
       const { email } = req.query;
-      
+
       if (!email || typeof email !== 'string') {
         return res.status(400).json({ message: "Email parameter is required" });
       }
@@ -143,7 +144,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/clients/:id/dashboard", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
-      
+
       if (isNaN(clientId)) {
         return res.status(400).json({ message: "Invalid client ID" });
       }
@@ -156,13 +157,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Get recent campaigns
       const campaigns = await storage.getCampaignsByClient(clientId);
-      
+
       // Get recent inbox messages
       const messages = await storage.getMessagesByClient(clientId);
-      
+
       // Get latest campaign for /send card
       const latestCampaign = campaigns.length > 0 ? campaigns[0] : null;
-      
+
       // Calculate basic metrics
       const dashboardData = {
         client,
@@ -235,11 +236,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = parseInt(req.params.id);
       const client = await storage.getClient(clientId);
-      
+
       if (!client) {
         return res.status(404).json({ message: "Client not found" });
       }
-      
+
       res.json(client);
     } catch (error) {
       console.error("Error fetching client:", error);
@@ -251,17 +252,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/clients/:id/campaign-data", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
-      
+
       // Get client data directly from storage
       const client = await storage.getClient(clientId);
       if (!client) {
         return res.status(404).json({ message: "Client not found" });
       }
-      
+
       // Get campaigns and messages
       const campaigns = await storage.getCampaignsByClient(clientId);
       const messages = await storage.getMessagesByClient(clientId);
-      
+
       const campaignData = {
         client,
         campaigns,
@@ -273,7 +274,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           unreadMessages: messages.filter(m => !m.isRead).length
         }
       };
-      
+
       res.json(campaignData);
     } catch (error) {
       console.error("Error fetching campaign data:", error);
@@ -286,7 +287,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = parseInt(req.params.id);
       const limit = parseInt(req.query.limit as string) || 50;
-      
+
       const messages = await storage.getClientMessages(clientId, limit);
       res.json(messages);
     } catch (error) {
@@ -312,7 +313,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = parseInt(req.params.id);
       const campaignData = { ...req.body, clientId };
-      
+
       const campaign = await storage.createCampaign(campaignData);
       res.json(campaign);
     } catch (error) {
@@ -326,26 +327,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { token } = req.params;
       const { jwtService } = await import('./services/jwt');
-      
+
       // Verify JWT token
       const payload = jwtService.verifyToken(token);
-      
+
       // Check if token is still active in database
       const isActive = await jwtService.isTokenActive(token);
       if (!isActive) {
         return res.status(401).json({ message: "Token has been revoked" });
       }
-      
+
       // Get dashboard URL from database
       const [dashboardRecord] = await db
         .select()
         .from(dashboardAccess)
         .where(eq(dashboardAccess.accessToken, token));
-      
+
       if (!dashboardRecord) {
         return res.status(404).json({ message: "Dashboard access not found" });
       }
-      
+
       res.json({ 
         message: "Dashboard access verified", 
         clientId: payload.clientId,
@@ -367,7 +368,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { jwtService } = await import('./services/jwt');
       const jwk = jwtService.getJWK();
-      
+
       res.json({
         keys: [jwk]
       });
@@ -382,14 +383,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = parseInt(req.params.id);
       const { jwtService } = await import('./services/jwt');
-      
+
       const client = await storage.getClient(clientId);
       if (!client) {
         return res.status(404).json({ message: "Client not found" });
       }
-      
+
       const token = await jwtService.createDashboardToken(clientId);
-      
+
       if (token) {
         res.json({ 
           token,
@@ -470,7 +471,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = parseInt(req.params.clientId);
       const client = await storage.getClient(clientId);
-      
+
       if (!client) {
         return res.status(404).json({ error: "Client not found" });
       }
@@ -503,7 +504,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = parseInt(req.params.clientId);
       const client = await storage.getClient(clientId);
-      
+
       if (!client) {
         return res.status(404).json({ error: "Client not found" });
       }
@@ -561,13 +562,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Subscription Management endpoints
-  
+
   // Get available subscription plans
   app.get("/api/subscription-plans", async (req, res) => {
     try {
       const plans = await db.select().from(subscriptionPlans)
         .where(eq(subscriptionPlans.isActive, true));
-      
+
       res.json({ 
         success: true, 
         plans: plans.map(plan => ({
@@ -591,7 +592,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const addons = await db.select().from(subscriptionAddons)
         .where(eq(subscriptionAddons.isActive, true));
-      
+
       // Map icons for frontend based on category
       const categoryIconMap: Record<string, string> = {
         'seo': 'Globe',
@@ -611,7 +612,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         icon: categoryIconMap[addon.category as string] || 'Sparkles',
         billingType: addon.billingCycle === 'one_time' ? 'one_time' : 'monthly'
       }));
-      
+
       res.json({ 
         success: true, 
         addons: addonsWithIcons 
@@ -733,7 +734,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/pricing/calculate", async (req, res) => {
     try {
       const { planId, addons: selectedAddons = [], billingCycle = 'monthly' } = req.body;
-      
+
       if (!planId) {
         return res.status(400).json({ 
           success: false, 
@@ -745,7 +746,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const plan = await db.select().from(subscriptionPlans)
         .where(eq(subscriptionPlans.planId, planId))
         .limit(1);
-      
+
       if (plan.length === 0) {
         return res.status(404).json({ 
           success: false, 
@@ -782,7 +783,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/pricing/calculate-bundle", async (req, res) => {
     try {
       const { assessmentId, pathway, productIds = [], billingCycle = 'monthly' } = req.body;
-      
+
       if (!assessmentId || !pathway) {
         return res.status(400).json({ 
           success: false, 
@@ -801,7 +802,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const [plan] = await db.select().from(subscriptionPlans)
         .where(eq(subscriptionPlans.planId, planStringId))
         .limit(1);
-      
+
       if (!plan) {
         return res.status(404).json({ 
           success: false, 
@@ -812,14 +813,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get selected products with pricing
       const { products: productsTable } = await import("@shared/schema");
       const { inArray } = await import("drizzle-orm");
-      
+
       let selectedProducts: any[] = [];
       let productsTotal = 0;
-      
+
       if (productIds.length > 0) {
         selectedProducts = await db.select().from(productsTable)
           .where(inArray(productsTable.id, productIds));
-        
+
         // Calculate total based on pathway
         productsTotal = selectedProducts.reduce((sum, product) => {
           const price = pathway === 'diy' 
@@ -832,11 +833,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Calculate pricing based on billing cycle
       const basePriceMonthly = parseFloat(plan.basePrice);
       const productsMonthly = productsTotal;
-      
+
       // Multiply by billing cycle months
       const cycleMonths = billingCycle === 'quarterly' ? 3 : billingCycle === 'annual' ? 12 : 1;
       const subtotal = (basePriceMonthly + productsMonthly) * cycleMonths;
-      
+
       // Apply discount for longer billing cycles
       let discount = 0;
       if (billingCycle === 'quarterly') {
@@ -844,7 +845,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else if (billingCycle === 'annual') {
         discount = subtotal * 0.15; // 15% discount
       }
-      
+
       const total = subtotal - discount;
 
       // Transform to frontend-expected format
@@ -884,7 +885,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/subscriptions/create-from-assessment", async (req, res) => {
     try {
       const { assessmentId, pathway, productIds = [], billingCycle = 'monthly' } = req.body;
-      
+
       if (!assessmentId || !pathway) {
         return res.status(400).json({ 
           success: false, 
@@ -912,7 +913,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const [plan] = await db.select().from(subscriptionPlans)
         .where(eq(subscriptionPlans.planId, planStringId))
         .limit(1);
-      
+
       if (!plan) {
         return res.status(404).json({ 
           success: false, 
@@ -923,14 +924,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get selected products for pricing
       const { products: productsTable } = await import("@shared/schema");
       const { inArray } = await import("drizzle-orm");
-      
+
       let selectedProducts: any[] = [];
       let productsTotal = 0;
-      
+
       if (productIds.length > 0) {
         selectedProducts = await db.select().from(productsTable)
           .where(inArray(productsTable.id, productIds));
-        
+
         productsTotal = selectedProducts.reduce((sum, product) => {
           const price = pathway === 'diy' 
             ? parseFloat(product.diyPrice || '0') 
@@ -942,11 +943,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Calculate pricing based on billing cycle
       const basePriceMonthly = parseFloat(plan.basePrice);
       const productsMonthly = productsTotal;
-      
+
       // Multiply by billing cycle months
       const cycleMonths = billingCycle === 'quarterly' ? 3 : billingCycle === 'annual' ? 12 : 1;
       const subtotal = (basePriceMonthly + productsMonthly) * cycleMonths;
-      
+
       // Apply discount for longer billing cycles
       let discount = 0;
       if (billingCycle === 'quarterly') {
@@ -954,7 +955,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else if (billingCycle === 'annual') {
         discount = subtotal * 0.15;
       }
-      
+
       const total = subtotal - discount;
 
       // Prepare subscription data with all required fields
@@ -991,11 +992,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/subscriptions/:id/trial-status", async (req, res) => {
     try {
       const { id } = req.params;
-      
+
       const [subscription] = await db.select()
         .from(subscriptions)
         .where(eq(subscriptions.id, parseInt(id)));
-      
+
       if (!subscription) {
         return res.status(404).json({ 
           success: false, 
@@ -1071,7 +1072,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const plan = await db.select().from(subscriptionPlans)
         .where(eq(subscriptionPlans.planId, planId))
         .limit(1);
-      
+
       if (plan.length === 0) {
         return res.status(404).json({ 
           success: false, 
@@ -1192,7 +1193,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const assessmentId = parseInt(req.params.id);
       const recs = await productRecommendationService.getRecommendations(assessmentId);
-      
+
       // Flatten the nested product structure for frontend
       const recommendations = recs.map(rec => ({
         productId: rec.product.id,
@@ -1206,7 +1207,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         projectedScore: rec.projectedScore,
         scoreImprovement: rec.scoreImprovement
       }));
-      
+
       res.json({ 
         success: true, 
         recommendations 
@@ -1225,23 +1226,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const deliveryMethod = req.query.deliveryMethod as string | undefined;
       const category = req.query.category as string | undefined;
-      
+
       const { products } = await import("@shared/schema");
       const { eq, and } = await import("drizzle-orm");
-      
+
       // Build where conditions
       const conditions = [eq(products.isActive, true)];
       if (category) {
         conditions.push(eq(products.category, category));
       }
-      
+
       const allProducts = await db.select().from(products).where(and(...conditions));
-      
+
       // Filter by delivery method if specified
       const filteredProducts = deliveryMethod 
         ? allProducts.filter(p => p.deliveryMethod?.includes(deliveryMethod))
         : allProducts;
-      
+
       res.json({ 
         success: true, 
         products: filteredProducts 
@@ -1261,16 +1262,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const productId = parseInt(req.params.id);
       const { products } = await import("@shared/schema");
       const { eq } = await import("drizzle-orm");
-      
+
       const [product] = await db.select().from(products).where(eq(products.id, productId));
-      
+
       if (!product) {
         return res.status(404).json({ 
           success: false, 
           message: "Product not found" 
         });
       }
-      
+
       res.json({ 
         success: true, 
         product 
@@ -1293,7 +1294,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/synup/locations", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
       const clientId = req.clientId!;
-      
+
       // Validate request body
       if (!req.body.synupLocationId) {
         return res.status(400).json({
@@ -1306,7 +1307,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Check if location already exists in database (prevent cross-tenant access)
       const existingLocation = await storage.getSynupLocationBySynupId(synupLocationId);
-      
+
       if (existingLocation) {
         if (existingLocation.clientId !== clientId) {
           return res.status(403).json({
@@ -1346,7 +1347,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // - Implement admin pre-approval workflow for new location assignments
       // - Add address/contact verification for additional ownership proof
       const client = await storage.getClient(clientId);
-      
+
       // Enforce business name verification (strict mode)
       if (!client || !client.companyName) {
         console.error(`❌ Cannot verify location ownership: Client ${clientId} has no company name set`);
@@ -1355,10 +1356,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Your account must have a company name set before syncing locations. Please update your profile."
         });
       }
-      
+
       const nameMatch = synupLocation.name.toLowerCase().includes(client.companyName.toLowerCase()) ||
                        client.companyName.toLowerCase().includes(synupLocation.name.toLowerCase());
-      
+
       if (!nameMatch) {
         console.error(`❌ Security: Location name mismatch - Client "${client.companyName}" attempted to sync location "${synupLocation.name}"`);
         return res.status(403).json({
@@ -1366,7 +1367,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Location business name does not match your account. If this is your business, please contact support."
         });
       }
-      
+
       console.log(`✅ Business name verified: "${client.companyName}" matches "${synupLocation.name}"`);
 
       // Create location in our database with validated data
@@ -1417,7 +1418,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = req.clientId!;
       const locations = await storage.getSynupLocationsByClient(clientId);
-      
+
       res.json({ 
         success: true, 
         locations 
@@ -1435,7 +1436,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/synup/locations/:locationId", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
       const locationId = parseInt(req.params.locationId);
-      
+
       if (isNaN(locationId)) {
         return res.status(400).json({
           success: false,
@@ -1464,7 +1465,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       const updatedLocation = await storage.updateSynupLocation(locationId, updateData);
-      
+
       res.json({ 
         success: true, 
         location: updatedLocation,
@@ -1483,7 +1484,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/synup/locations/:locationId/listings", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
       const locationId = parseInt(req.params.locationId);
-      
+
       // Verify location belongs to authenticated client
       const location = await storage.getSynupLocation(locationId);
       if (!location || location.clientId !== req.clientId!) {
@@ -1494,7 +1495,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const listings = await storage.getSynupListingsByLocation(locationId);
-      
+
       res.json({ 
         success: true, 
         listings 
@@ -1512,14 +1513,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/synup/locations/:locationId/sync-listings", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
       const locationId = parseInt(req.params.locationId);
-      
+
       if (isNaN(locationId)) {
         return res.status(400).json({
           success: false,
           message: "Invalid location ID"
         });
       }
-      
+
       // Verify location belongs to authenticated client (CRITICAL SECURITY CHECK)
       const location = await storage.getSynupLocation(locationId);
       if (!location) {
@@ -1528,7 +1529,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Location not found" 
         });
       }
-      
+
       if (location.clientId !== req.clientId!) {
         return res.status(403).json({ 
           success: false, 
@@ -1591,7 +1592,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/synup/locations/:locationId/reviews", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
       const locationId = parseInt(req.params.locationId);
-      
+
       // Verify location belongs to authenticated client
       const location = await storage.getSynupLocation(locationId);
       if (!location || location.clientId !== req.clientId!) {
@@ -1602,7 +1603,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const reviews = await storage.getSynupReviewsByLocation(locationId);
-      
+
       res.json({ 
         success: true, 
         reviews 
@@ -1620,14 +1621,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/synup/locations/:locationId/sync-reviews", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
       const locationId = parseInt(req.params.locationId);
-      
+
       if (isNaN(locationId)) {
         return res.status(400).json({
           success: false,
           message: "Invalid location ID"
         });
       }
-      
+
       // Verify location belongs to authenticated client (CRITICAL SECURITY CHECK)
       const location = await storage.getSynupLocation(locationId);
       if (!location) {
@@ -1636,7 +1637,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Location not found" 
         });
       }
-      
+
       if (location.clientId !== req.clientId!) {
         return res.status(403).json({ 
           success: false, 
@@ -1675,7 +1676,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         } else {
           const created = await storage.createSynupReview(reviewData);
           updatedReviews.push(created);
-          
+
           // Trigger review monitoring alert for new reviews
           const io = (global as any).io;
           const reviewMonitoring = new ReviewMonitoringService(io);
@@ -1710,7 +1711,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/synup/reviews/:reviewId/respond", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
       const reviewId = parseInt(req.params.reviewId);
-      
+
       if (isNaN(reviewId)) {
         return res.status(400).json({
           success: false,
@@ -1720,7 +1721,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Validate request body
       const { response, useAI } = req.body;
-      
+
       if (!useAI && !response) {
         return res.status(400).json({
           success: false,
@@ -1730,7 +1731,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Get review and verify access (CRITICAL SECURITY CHECK)
       const review = await storage.getSynupReview(reviewId);
-      
+
       if (!review) {
         return res.status(404).json({ 
           success: false, 
@@ -1745,7 +1746,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Location not found" 
         });
       }
-      
+
       if (location.clientId !== req.clientId!) {
         return res.status(403).json({ 
           success: false, 
@@ -1783,7 +1784,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             maxLength: 200,
             includeCallToAction: true
           });
-          
+
           console.log(`✅ AI-generated response for review ${reviewId}: ${finalResponse.substring(0, 50)}...`);
         } catch (error) {
           console.error(`Error generating AI response for review ${reviewId}:`, error);
@@ -1830,7 +1831,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/synup/locations/:locationId/analytics", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
       const locationId = parseInt(req.params.locationId);
-      
+
       if (isNaN(locationId)) {
         return res.status(400).json({
           success: false,
@@ -1915,7 +1916,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const locationId = parseInt(req.params.locationId);
       const { period = '30' } = req.query; // days
-      
+
       if (isNaN(locationId)) {
         return res.status(400).json({
           success: false,
@@ -1942,7 +1943,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Group by date
       const trends: Record<string, { count: number; averageRating: number; ratings: number[] }> = {};
-      
+
       periodReviews.forEach(review => {
         const date = new Date(review.reviewDate).toISOString().split('T')[0];
         if (!trends[date]) {
@@ -1979,9 +1980,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/review-notifications/preferences", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
       const clientId = req.clientId!;
-      
+
       let preferences = await storage.getReviewNotificationPreferences(clientId);
-      
+
       // Create default preferences if none exist
       if (!preferences) {
         preferences = await storage.createReviewNotificationPreferences({
@@ -2011,7 +2012,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = req.clientId!;
       const validatedData = insertReviewNotificationPreferencesSchema.partial().parse(req.body);
-      
+
       // Get or create preferences
       let preferences = await storage.getReviewNotificationPreferences(clientId);
       if (!preferences) {
@@ -2054,7 +2055,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = req.clientId!;
       const validatedData = insertSendContactSchema.parse(req.body);
-      
+
       // GDPR/CAN-SPAM Compliance Validation
       if (!validatedData.email && !validatedData.phone) {
         return res.status(400).json({ 
@@ -2086,7 +2087,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         emailConsentDate: validatedData.emailConsent ? new Date() : null,
         smsConsentDate: validatedData.smsConsent ? new Date() : null
       };
-      
+
       const contact = await storage.createSendContact(contactData);
       res.json({ success: true, contact });
     } catch (error) {
@@ -2104,12 +2105,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const clientId = req.clientId!;
       const limit = Math.min(parseInt(req.query.limit as string) || 100, 1000); // Max 1000
       const offset = parseInt(req.query.offset as string) || 0;
-      
+
       const contacts = await storage.getSendContactsByClient(clientId);
-      
+
       // Apply pagination
       const paginatedContacts = contacts.slice(offset, offset + limit);
-      
+
       res.json({ 
         success: true, 
         contacts: paginatedContacts,
@@ -2134,16 +2135,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = req.clientId!;
       const id = parseInt(req.params.id);
-      
+
       if (isNaN(id)) {
         return res.status(400).json({ 
           success: false,
           message: "Invalid contact ID" 
         });
       }
-      
+
       const contact = await storage.getSendContact(id);
-      
+
       if (!contact) {
         return res.status(404).json({ 
           success: false,
@@ -2158,7 +2159,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Access denied: Contact belongs to another client" 
         });
       }
-      
+
       res.json({ success: true, contact });
     } catch (error) {
       console.error("Error fetching contact:", error);
@@ -2174,7 +2175,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = req.clientId!;
       const id = parseInt(req.params.id);
-      
+
       if (isNaN(id)) {
         return res.status(400).json({ 
           success: false,
@@ -2197,14 +2198,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Access denied: Contact belongs to another client" 
         });
       }
-      
+
       const updateData = insertSendContactSchema.partial().parse(req.body);
 
       // Prevent clientId tampering
       if ('clientId' in updateData) {
         delete (updateData as any).clientId;
       }
-      
+
       const contact = await storage.updateSendContact(id, updateData);
       res.json({ success: true, contact });
     } catch (error) {
@@ -2221,7 +2222,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = req.clientId!;
       const id = parseInt(req.params.id);
-      
+
       if (isNaN(id)) {
         return res.status(400).json({ 
           success: false,
@@ -2261,13 +2262,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = req.clientId!;
       const validatedData = insertSendListSchema.parse(req.body);
-      
+
       // Force clientId to match authenticated user
       const listData = {
         ...validatedData,
         clientId
       };
-      
+
       const list = await storage.createSendList(listData);
       res.json({ success: true, list });
     } catch (error) {
@@ -2285,12 +2286,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const clientId = req.clientId!;
       const limit = Math.min(parseInt(req.query.limit as string) || 100, 1000); // Max 1000
       const offset = parseInt(req.query.offset as string) || 0;
-      
+
       const lists = await storage.getSendListsByClient(clientId);
-      
+
       // Apply pagination
       const paginatedLists = lists.slice(offset, offset + limit);
-      
+
       res.json({ 
         success: true, 
         lists: paginatedLists,
@@ -2315,16 +2316,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = req.clientId!;
       const id = parseInt(req.params.id);
-      
+
       if (isNaN(id)) {
         return res.status(400).json({ 
           success: false,
           message: "Invalid list ID" 
         });
       }
-      
+
       const list = await storage.getSendList(id);
-      
+
       if (!list) {
         return res.status(404).json({ 
           success: false,
@@ -2339,7 +2340,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Access denied: List belongs to another client" 
         });
       }
-      
+
       res.json({ success: true, list });
     } catch (error) {
       console.error("Error fetching list:", error);
@@ -2355,7 +2356,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = req.clientId!;
       const id = parseInt(req.params.id);
-      
+
       if (isNaN(id)) {
         return res.status(400).json({ 
           success: false,
@@ -2378,14 +2379,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Access denied: List belongs to another client" 
         });
       }
-      
+
       const updateData = insertSendListSchema.partial().parse(req.body);
 
       // Prevent clientId tampering
       if ('clientId' in updateData) {
         delete (updateData as any).clientId;
       }
-      
+
       const list = await storage.updateSendList(id, updateData);
       res.json({ success: true, list });
     } catch (error) {
@@ -2402,7 +2403,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const clientId = req.clientId!;
       const id = parseInt(req.params.id);
-      
+
       if (isNaN(id)) {
         return res.status(400).json({ 
           success: false,
@@ -2443,7 +2444,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const clientId = req.clientId!;
       const listId = parseInt(req.params.listId);
       const contactId = parseInt(req.params.contactId);
-      
+
       if (isNaN(listId) || isNaN(contactId)) {
         return res.status(400).json({ 
           success: false,
@@ -2478,7 +2479,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Access denied: Resources belong to another client" 
         });
       }
-      
+
       await storage.addContactToList(listId, contactId);
       res.json({ success: true, message: "Contact added to list successfully" });
     } catch (error) {
@@ -2496,7 +2497,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const clientId = req.clientId!;
       const listId = parseInt(req.params.listId);
       const contactId = parseInt(req.params.contactId);
-      
+
       if (isNaN(listId) || isNaN(contactId)) {
         return res.status(400).json({ 
           success: false,
@@ -2519,7 +2520,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Access denied: List belongs to another client" 
         });
       }
-      
+
       await storage.removeContactFromList(listId, contactId);
       res.json({ success: true, message: "Contact removed from list successfully" });
     } catch (error) {
@@ -2538,7 +2539,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const listId = parseInt(req.params.listId);
       const limit = Math.min(parseInt(req.query.limit as string) || 100, 1000); // Max 1000
       const offset = parseInt(req.query.offset as string) || 0;
-      
+
       if (isNaN(listId)) {
         return res.status(400).json({ 
           success: false,
@@ -2563,10 +2564,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const contacts = await storage.getListContacts(listId);
-      
+
       // Apply pagination
       const paginatedContacts = contacts.slice(offset, offset + limit);
-      
+
       res.json({ 
         success: true, 
         contacts: paginatedContacts,
@@ -2593,6 +2594,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Configure multer for file uploads (store in memory)
   const multer = await import("multer");
   const upload = multer.default({ storage: multer.default.memoryStorage() });
+
+  // Serve brand assets (favicon, logo, etc.)
+  app.get("/assets/:filename", async (req, res) => {
+    try {
+      const { filename } = req.params;
+
+      // Query for the asset by filename
+      const [asset] = await db
+        .select()
+        .from(brandAssets)
+        .where(eq(brandAssets.fileName, filename))
+        .limit(1);
+
+      if (!asset) {
+        return res.status(404).send("Asset not found");
+      }
+
+      // Set appropriate content type
+      const contentType = asset.mimeType || 'application/octet-stream';
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+
+      res.send(asset.data);
+    } catch (error) {
+      console.error("Error serving brand asset:", error);
+      res.status(500).json({ error: "Failed to serve asset" });
+    }
+  });
 
   // Upload brand asset
   app.post("/api/brand-assets", upload.single('file'), async (req, res) => {
@@ -2751,7 +2780,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/assets/:filename", async (req, res) => {
     try {
       const { filename } = req.params;
-      
+
       // Get all assets and find by filename
       const allAssets = await storage.getAllBrandAssets();
       const asset = allAssets.find(a => a.fileName === filename);
@@ -2899,12 +2928,12 @@ async function registerInboxRoutes(app: Express) {
   app.post("/api/inbox/livechat/session", async (req, res) => {
     try {
       const validatedData = insertLivechatSessionSchema.parse(req.body);
-      
+
       const [session] = await db.insert(livechatSessions).values({
         ...validatedData,
         status: 'active',
       }).returning();
-      
+
       res.json({ 
         success: true, 
         session: {
@@ -2934,7 +2963,7 @@ async function registerInboxRoutes(app: Express) {
   app.get("/api/inbox/conversations", requireAuth, async (req: AuthenticatedRequest, res) => {
     try {
       const clientId = req.clientId!; // Get from authenticated JWT token
-      
+
       const conversations = await db.select()
         .from(inboxConversations)
         .where(eq(inboxConversations.clientId, clientId))
@@ -2976,7 +3005,7 @@ async function registerInboxRoutes(app: Express) {
     try {
       const clientId = req.clientId!;
       const conversationId = parseInt(req.params.conversationId);
-      
+
       // Verify the conversation belongs to the authenticated client
       const [conversation] = await db.select()
         .from(inboxConversations)
@@ -2985,11 +3014,11 @@ async function registerInboxRoutes(app: Express) {
           eq(inboxConversations.clientId, clientId)
         ))
         .limit(1);
-      
+
       if (!conversation) {
         return res.status(404).json({ error: "Conversation not found or access denied" });
       }
-      
+
       const messages = await db.select()
         .from(inboxMessages2)
         .where(eq(inboxMessages2.conversationId, conversationId))
@@ -3007,7 +3036,7 @@ async function registerInboxRoutes(app: Express) {
     try {
       const clientId = req.clientId!;
       const { conversationId, message } = req.body;
-      
+
       if (!conversationId || !message) {
         return res.status(400).json({ error: "Missing required fields" });
       }
@@ -3031,7 +3060,7 @@ async function registerInboxRoutes(app: Express) {
       // Send via appropriate channel
       let deliveryStatus = 'sent';
       let errorMessage: string | null = null;
-      
+
       if (conversation.primaryChannelType === 'email') {
         try {
           await inboxEmailService.sendMessage(conversationId, message, agentName);
@@ -3075,7 +3104,7 @@ async function registerInboxRoutes(app: Express) {
   app.post("/api/biif/create-location", async (req, res) => {
     try {
       console.log("📍 BIIF: Received location creation request:", req.body);
-      
+
       const locationData = z.object({
         name: z.string(),
         address: z.string(),
@@ -3094,10 +3123,10 @@ async function registerInboxRoutes(app: Express) {
 
       // Create Synup service instance
       const biifSynupService = new SynupService();
-      
+
       // Create location in Synup
       const synupLocation = await biifSynupService.createLocation(locationData);
-      
+
       if (!synupLocation) {
         console.error("❌ BIIF: Synup API returned null - location creation failed");
         return res.status(500).json({ 
