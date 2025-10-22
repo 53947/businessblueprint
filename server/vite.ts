@@ -68,35 +68,42 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(process.cwd(), "dist/public");
+  // Use import.meta.dirname for consistent path resolution
+  const distPath = path.resolve(import.meta.dirname, "..", "dist", "public");
+  const indexPath = path.join(distPath, "index.html");
 
-  console.log(`🔍 Checking for static files at: ${distPath}`);
-  console.log(`📁 Directory exists: ${fs.existsSync(distPath)}`);
+  log(`Checking for static files at: ${distPath}`, "static");
 
+  // Verify build directory exists
   if (!fs.existsSync(distPath)) {
-    console.error(`❌ Could not find frontend build directory at ${distPath}`);
-    throw new Error(
-      `Could not find frontend build directory at ${distPath}, make sure to run 'npm run build' first`
-    );
+    const errorMsg = `Build directory not found at ${distPath}. Run 'npm run build' first.`;
+    log(`❌ ${errorMsg}`, "static");
+    throw new Error(errorMsg);
   }
 
-  // Log directory contents
-  const files = fs.readdirSync(distPath);
-  console.log(`📄 Files in dist/public:`, files);
+  // Verify index.html exists
+  if (!fs.existsSync(indexPath)) {
+    const errorMsg = `index.html not found at ${indexPath}`;
+    log(`❌ ${errorMsg}`, "static");
+    throw new Error(errorMsg);
+  }
 
-  // Serve static files with proper caching
+  // Log what we're serving
+  const files = fs.readdirSync(distPath);
+  log(`Found ${files.length} files in dist/public`, "static");
+
+  // Serve static files with caching
   app.use(express.static(distPath, {
-    maxAge: '1d',
+    maxAge: '1y',
     etag: true,
-    lastModified: true
+    index: false // Don't auto-serve index.html, we'll handle that
   }));
 
-  // SPA fallback - serve index.html for all other routes
-  app.get("*", (_req, res) => {
-    const indexPath = path.join(distPath, "index.html");
-    console.log(`📄 Serving index.html from: ${indexPath}`);
+  // SPA fallback - use app.use instead of app.get to catch ALL methods
+  app.use("*", (_req, res) => {
+    log(`Serving index.html for SPA route`, "static");
     res.sendFile(indexPath);
   });
 
-  log(`✅ Serving static files from ${distPath}`);
+  log(`✅ Serving static files from ${distPath}`, "static");
 }
