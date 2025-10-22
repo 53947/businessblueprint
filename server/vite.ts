@@ -69,6 +69,10 @@ export async function setupVite(app: Express, server: Server) {
 
 export function serveStatic(app: Express) {
   const distPath = path.resolve(import.meta.dirname, "public");
+  
+  console.log('[PRODUCTION] import.meta.dirname:', import.meta.dirname);
+  console.log('[PRODUCTION] Looking for static files at:', distPath);
+  console.log('[PRODUCTION] Directory exists:', fs.existsSync(distPath));
 
   if (!fs.existsSync(distPath)) {
     throw new Error(
