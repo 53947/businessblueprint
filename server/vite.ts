@@ -92,17 +92,28 @@ export function serveStatic(app: Express) {
   const files = fs.readdirSync(distPath);
   log(`Found ${files.length} files in dist/public`, "static");
 
-  // Serve static files with caching
+  // Serve static files with caching - this MUST come before the catch-all route
   app.use(express.static(distPath, {
     maxAge: '1y',
     etag: true,
-    index: false // Don't auto-serve index.html, we'll handle that
+    index: false, // Don't auto-serve index.html, we'll handle that
+    setHeaders: (res, path) => {
+      // Log what files are being served for debugging
+      log(`Serving static file: ${path}`, "static");
+    }
   }));
 
-  // SPA fallback - use app.use instead of app.get to catch ALL methods
-  app.use("*", (_req, res) => {
-    log(`Serving index.html for SPA route`, "static");
-    res.sendFile(indexPath);
+  // SPA fallback - this catches everything that wasn't a static file
+  // IMPORTANT: This must be registered LAST
+  app.use("*", (req, res) => {
+    // Only serve index.html if it's not a static asset request
+    if (!req.originalUrl.startsWith('/assets/')) {
+      log(`Serving index.html for SPA route: ${req.originalUrl}`, "static");
+      res.sendFile(indexPath);
+    } else {
+      log(`Static asset not found: ${req.originalUrl}`, "static");
+      res.status(404).send('Asset not found');
+    }
   });
 
   log(`✅ Serving static files from ${distPath}`, "static");
