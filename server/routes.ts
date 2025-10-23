@@ -2827,8 +2827,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Serve brand assets by filename (for favicons)
-  app.get("/assets/:filename", async (req, res) => {
+  // Serve brand assets by filename (for favicons) - use /brand-assets/ to avoid conflict
+  app.get("/brand-assets/:filename", async (req, res) => {
     try {
       const { filename } = req.params;
 
