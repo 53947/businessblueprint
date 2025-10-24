@@ -6490,25 +6490,25 @@ async function registerRoutes(app2) {
   });
   const multer = await import("multer");
   const upload = multer.default({ storage: multer.default.memoryStorage() });
-  app2.get("/assets/:filename", async (req, res) => {
+  app2.get("/brand-assets/:filename", async (req, res) => {
     try {
       const { filename } = req.params;
-      console.log(`Requesting asset: ${filename}`);
+      console.log(`Requesting brand asset: ${filename}`);
       const [asset] = await db.select().from(brandAssets).where(eq5(brandAssets.fileName, filename)).limit(1);
       if (!asset) {
-        console.log(`Asset not found: ${filename}`);
+        console.log(`Brand asset not found: ${filename}`);
         const allAssets = await db.select({ fileName: brandAssets.fileName }).from(brandAssets);
-        console.log("Available assets:", allAssets.map((a) => a.fileName).join(", "));
-        return res.status(404).send("Asset not found");
+        console.log("Available brand assets:", allAssets.map((a) => a.fileName).join(", "));
+        return res.status(404).send("Brand asset not found");
       }
-      console.log(`Serving asset: ${filename}, type: ${asset.mimeType}`);
+      console.log(`Serving brand asset: ${filename}, type: ${asset.mimeType}`);
       const contentType = asset.mimeType || "application/octet-stream";
       res.setHeader("Content-Type", contentType);
       res.setHeader("Cache-Control", "public, max-age=31536000");
       res.send(asset.data);
     } catch (error) {
       console.error("Error serving brand asset:", error);
-      res.status(500).json({ error: "Failed to serve asset" });
+      res.status(500).json({ error: "Failed to serve brand asset" });
     }
   });
   app2.post("/api/brand-assets", upload.single("file"), async (req, res) => {

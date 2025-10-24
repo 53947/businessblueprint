@@ -2596,11 +2596,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const upload = multer.default({ storage: multer.default.memoryStorage() });
 
   // Serve brand assets (favicon, logo, etc.)
-  app.get("/assets/:filename", async (req, res) => {
+  app.get("/brand-assets/:filename", async (req, res) => {
     try {
       const { filename } = req.params;
       
-      console.log(`Requesting asset: ${filename}`);
+      console.log(`Requesting brand asset: ${filename}`);
 
       // Query for the asset by filename
       const [asset] = await db
@@ -2610,14 +2610,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .limit(1);
 
       if (!asset) {
-        console.log(`Asset not found: ${filename}`);
+        console.log(`Brand asset not found: ${filename}`);
         // Log all available assets for debugging
         const allAssets = await db.select({ fileName: brandAssets.fileName }).from(brandAssets);
-        console.log('Available assets:', allAssets.map(a => a.fileName).join(', '));
-        return res.status(404).send("Asset not found");
+        console.log('Available brand assets:', allAssets.map(a => a.fileName).join(', '));
+        return res.status(404).send("Brand asset not found");
       }
       
-      console.log(`Serving asset: ${filename}, type: ${asset.mimeType}`);
+      console.log(`Serving brand asset: ${filename}, type: ${asset.mimeType}`);
 
       // Set appropriate content type
       const contentType = asset.mimeType || 'application/octet-stream';
@@ -2627,7 +2627,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.send(asset.data);
     } catch (error) {
       console.error("Error serving brand asset:", error);
-      res.status(500).json({ error: "Failed to serve asset" });
+      res.status(500).json({ error: "Failed to serve brand asset" });
     }
   });
 
