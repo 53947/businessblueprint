@@ -317,7 +317,7 @@ export default function BrandStudio() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header showNavigation={true} brand="businessblueprint" />
+      <Header showNavigation={true} />
       
       <main className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
