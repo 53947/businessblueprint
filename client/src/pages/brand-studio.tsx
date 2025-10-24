@@ -454,7 +454,7 @@ export default function BrandStudio() {
                       />
                       <div className="flex-1">
                         <p className="text-sm font-medium text-green-800 dark:text-green-200">✓ Uploaded</p>
-                        <p className="text-xs text-green-600 dark:text-green-400">Available at /assets/Blueprint_Avatar.png</p>
+                        <p className="text-xs text-green-600 dark:text-green-400">Available at /brand-assets/Blueprint_Avatar.png</p>
                       </div>
                       <Button variant="outline" size="sm" onClick={() => startRename(assets.find(a => a.fileName === 'Blueprint_Avatar.png')!)}>
                         <Edit2 className="w-3 h-3" />
@@ -494,7 +494,7 @@ export default function BrandStudio() {
                       />
                       <div className="flex-1">
                         <p className="text-sm font-medium text-green-800 dark:text-green-200">✓ Uploaded</p>
-                        <p className="text-xs text-green-600 dark:text-green-400">Available at /assets/Blueprint_Favicon.png</p>
+                        <p className="text-xs text-green-600 dark:text-green-400">Available at /brand-assets/Blueprint_Favicon.png</p>
                       </div>
                       <Button variant="outline" size="sm" onClick={() => startRename(assets.find(a => a.fileName === 'Blueprint_Favicon.png')!)}>
                         <Edit2 className="w-3 h-3" />
@@ -532,7 +532,7 @@ export default function BrandStudio() {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-medium text-green-800 dark:text-green-200">✓ Uploaded</p>
-                        <p className="text-xs text-green-600 dark:text-green-400">Available at /assets/Blueprint_Favicon.ico</p>
+                        <p className="text-xs text-green-600 dark:text-green-400">Available at /brand-assets/Blueprint_Favicon.ico</p>
                       </div>
                       <Button variant="outline" size="sm" onClick={() => startRename(assets.find(a => a.fileName === 'Blueprint_Favicon.ico')!)}>
                         <Edit2 className="w-3 h-3" />
