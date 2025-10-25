@@ -149,27 +149,71 @@ font-family: 'Archivo', sans-serif;
 2. **Subsequent words** = Archivo (Triad Blue #0000FF)
 3. **TLD (.io, .com)** = Archivo (Fluorescent Green #84D71A)
 4. **BOTH fonts SAME SIZE** - No size variation between words
-5. **NO text shadows** - Removed from all branding
+5. **Text shadows on ALL wordmark text** - 5pt blur, 315° angle, 5-10pt distance
+
+**Text Shadow Implementation:**
+```css
+/* All wordmark text uses this shadow */
+text-shadow: 5pt 5pt 5pt rgba(0, 0, 0, 0.3);
+/* 315° angle = positive X, positive Y offset */
+/* Blur: 5pt, Distance: 5-10pt */
+```
 
 **Example - Business Blueprint:**
 ```jsx
-<span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
-<span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blueprint</span>
-<span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.io</span>
+<span style={{ 
+  color: '#FFA500', 
+  fontFamily: '"Archivo Semi Expanded", sans-serif',
+  textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
+}}>business</span>
+<span style={{ 
+  color: '#0000FF', 
+  fontFamily: 'Archivo, sans-serif',
+  textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
+}}>blueprint</span>
+<span style={{ 
+  color: '#84D71A', 
+  fontFamily: 'Archivo, sans-serif',
+  textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
+}}>.io</span>
 ```
 
 **Example - Hosts Blue:**
 ```jsx
-<span style={{ color: '#A855F7', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
-<span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blue</span>
-<span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.com</span>
+<span style={{ 
+  color: '#A855F7', 
+  fontFamily: '"Archivo Semi Expanded", sans-serif',
+  textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
+}}>hosts</span>
+<span style={{ 
+  color: '#0000FF', 
+  fontFamily: 'Archivo, sans-serif',
+  textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
+}}>blue</span>
+<span style={{ 
+  color: '#84D71A', 
+  fontFamily: 'Archivo, sans-serif',
+  textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
+}}>.com</span>
 ```
 
 **Example - Swipes Blue:**
 ```jsx
-<span style={{ color: '#EF4444', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
-<span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blue</span>
-<span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.com</span>
+<span style={{ 
+  color: '#EF4444', 
+  fontFamily: '"Archivo Semi Expanded", sans-serif',
+  textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
+}}>swipes</span>
+<span style={{ 
+  color: '#0000FF', 
+  fontFamily: 'Archivo, sans-serif',
+  textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
+}}>blue</span>
+<span style={{ 
+  color: '#84D71A', 
+  fontFamily: 'Archivo, sans-serif',
+  textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
+}}>.com</span>
 ```
 
 ### Logo Sizing Standards
