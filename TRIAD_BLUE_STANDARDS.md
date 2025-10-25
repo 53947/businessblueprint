@@ -58,7 +58,7 @@ All three platforms appear in every platform's "Apps" menu:
 
 2. **Hosts Blue (hostsblue.com / webhosted.io)**
    - Icon: Hosts Blue Icon (36x36px)  
-   - Color: Purple (#A855F7) for hover/active
+   - Color: Purple (#8000FF) for hover/active
    - Subtitle: "Website Hosting & Builder"
    - Features list: WordPress Hosting, Plugin Suite, Expert Support
 
@@ -124,7 +124,7 @@ All three platforms appear in every platform's "Apps" menu:
 --bb-primary: #FFA500;        /* Orange */
 
 /* Hosts Blue */
---hosts-primary: #A855F7;     /* Purple */
+--hosts-primary: #8000FF;     /* Purple */
 
 /* Swipes Blue */
 --swipes-primary: #EF4444;    /* Red */
