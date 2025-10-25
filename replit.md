@@ -3,6 +3,8 @@
 ## Overview
 Triad Blue offers three independent digital platforms: Business Blueprint (AI digital intelligence), Hosts Blue (web hosting & domains), and Swipes Blue (payment gateway). The ecosystem's purpose is to empower local businesses in the US and Canada with AI-driven online presence analysis, personalized Digital Blueprints, and both DIY and Managed Service Provider (MSP) pathways. Triad Blue aims to be a Digital Intelligence Incubator, helping businesses "Get Found, Get Customers, Get Business." Swipes Blue serves as the central payment processor for all platforms.
 
+**📘 CROSS-PLATFORM STANDARDS:** See `TRIAD_BLUE_STANDARDS.md` for comprehensive development standards that MUST be followed across all three platforms (navigation, typography, colors, technical architecture, features to copy vs rebuild).
+
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
