@@ -234,6 +234,135 @@ text-shadow: 5pt 5pt 5pt rgba(0, 0, 0, 0.3);
 
 ---
 
+## 🦶 FOOTER STANDARDS (MUST MATCH)
+
+### Footer Structure
+
+**5-Column Grid Layout:**
+```
+[Brand + Sister Platforms] | [Services] | [Solutions] | [Company] | [Support]
+```
+
+**Background & Typography:**
+- Background: `bg-gray-900` (dark gray)
+- Text color: `text-white` (headings), `text-gray-400` (links)
+- Heading font: text-lg, font-semibold
+- Link font: text-sm
+- Hover effect: `hover:text-white transition-colors`
+
+### Column 1: Brand Section
+
+**Primary Platform Logo:**
+```jsx
+<BrandLogo brand="[platform-name]" variant="dark" size="sm" />
+```
+
+**Tagline:**
+- Font: text-sm, text-gray-400
+- Content: "Helping local businesses succeed online. Get found, get customers, get business."
+
+**Sister Platform Icons:**
+Display compact logos for the other two platforms:
+```jsx
+<div className="flex flex-col space-y-2">
+  <BrandLogoCompact brand="[platform-2]" variant="dark" />
+  <BrandLogoCompact brand="[platform-3]" variant="dark" />
+</div>
+```
+
+**Example for Business Blueprint footer:**
+- Shows: Business Blueprint logo (main)
+- Shows: Hosts Blue icon + Swipes Blue icon (compact)
+
+**Example for Hosts Blue footer:**
+- Shows: Hosts Blue logo (main)
+- Shows: Business Blueprint icon + Swipes Blue icon (compact)
+
+**Example for Swipes Blue footer:**
+- Shows: Swipes Blue logo (main)
+- Shows: Business Blueprint icon + Hosts Blue icon (compact)
+
+### Column 2: Services
+
+**Heading:** "Services"
+
+**Links (platform-specific):**
+Each platform lists its core services. Example structure:
+```jsx
+<ul className="space-y-2 text-sm text-gray-400">
+  <li><a href="/[route]" className="hover:text-white transition-colors">[Service Name]</a></li>
+  {/* 6 services total */}
+</ul>
+```
+
+### Column 3: Solutions
+
+**Heading:** "Solutions"
+
+**Links (platform-specific):**
+Lists solution types or packages. Same structure as Services column.
+
+### Column 4: Company
+
+**Heading:** "Company"
+
+**Links (SHARED across all platforms):**
+- About Us
+- Contact
+- Site Map
+- Careers
+- Press
+- Partners
+
+### Column 5: Support
+
+**Heading:** "Support"
+
+**Links (SHARED across all platforms):**
+- Help Center
+- Documentation
+- Contact Support
+- Live Chat
+- Training Videos
+- Community Forum
+
+### Bottom Bar
+
+**Layout:**
+```jsx
+<div className="border-t border-gray-800 pt-8 mt-8">
+  <div className="flex flex-col md:flex-row justify-between items-center">
+    <div className="text-sm text-gray-400 mb-4 md:mb-0">
+      © {currentYear} [platform-domain]. All rights reserved.
+    </div>
+    <div className="flex items-center space-x-6 text-sm text-gray-400">
+      <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+      <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+      <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
+    </div>
+  </div>
+</div>
+```
+
+**Copyright Text:**
+- Business Blueprint: "© 2025 businessblueprint.io. All rights reserved."
+- Hosts Blue: "© 2025 hostsblue.com. All rights reserved."
+- Swipes Blue: "© 2025 swipesblue.com. All rights reserved."
+
+### Footer Component File
+
+**Location:** `client/src/components/footer.tsx`
+
+**Copy from Business Blueprint:**
+1. Copy entire `footer.tsx` component
+2. Update brand name in BrandLogo component
+3. Update sister platform compact logos (show the other two)
+4. Update Services & Solutions links (platform-specific)
+5. Keep Company & Support links identical
+6. Update copyright domain name
+
+---
+
 ## 🛠️ TECHNICAL ARCHITECTURE (MUST MATCH)
 
 ### Route Hierarchy for Production

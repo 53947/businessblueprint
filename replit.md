@@ -29,7 +29,7 @@ Preferred communication style: Simple, everyday language.
 **OFFICIAL BRAND LOGO KEY:**
 - ALL branding uses FONTS (Archivo), NEVER images of text
 - **Typography:** First word = Archivo Semi Expanded, subsequent words = Archivo (BOTH MUST BE SAME FONT SIZE)
-- **Text Shadow:** REMOVED (no shadow applied)
+- **Text Shadow:** 5pt blur, 315° angle, 5-10pt distance (applies to ALL wordmark text)
 
 **CRITICAL:** The client portal sidebar menu order and icon set were finalized. DO NOT modify without explicit user authorization. Both desktop and mobile navigation must use the same navItems array in `client/src/components/side-nav.tsx`.
 
