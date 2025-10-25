@@ -31,6 +31,26 @@ Preferred communication style: Simple, everyday language.
 
 **CRITICAL:** The client portal sidebar menu order and icon set were finalized. DO NOT modify without explicit user authorization. Both desktop and mobile navigation must use the same navItems array in `client/src/components/side-nav.tsx`.
 
+## Critical Production Issues & Lessons Learned
+
+**IMPORTANT FOR ALL ASSISTANTS:**
+- **DO NOT assume agent-built features are buggy or need refactoring without investigating first**
+- **DO NOT rename routes, move files, or restructure code without explicit user approval**
+- **ALWAYS investigate root causes thoroughly before making changes**
+
+**Production Deployment Issue - October 24, 2025 (RESOLVED):**
+- **Symptom:** Blank white screen on businessblueprint.io despite working dev environment
+- **Root Cause:** A `/assets/:filename` route was added to serve brand assets from database (favicon, logo). This route intercepted Vite's JavaScript/CSS bundle requests (`/assets/index-*.js`, `/assets/index-*.css`) in production, causing 404 errors and blank screen. In development, Vite middleware served bundles before this route ran, hiding the bug.
+- **Solution:** Renamed route from `/assets/:filename` to `/brand-assets/:filename` in `server/routes.ts`. Updated `client/index.html` and `client/src/pages/brand-studio.tsx` to use `/brand-assets/` for favicons/logos. This allows Vite bundles to load from `/assets/` via static file serving.
+- **Files Modified:** `server/routes.ts` (line 2602), `client/index.html` (lines 6-8), `client/src/pages/brand-studio.tsx` (display text)
+- **Additional Fixes:** Removed `dist` from `.gitignore` to ensure build artifacts are included in deployments.
+
+**Route Hierarchy for Production:**
+1. `/brand-assets/:filename` - Database-stored brand assets (favicons, logos, icons)
+2. `/attached_assets/*` - Static files from `attached_assets` directory
+3. `/assets/*` - Vite build artifacts (JS, CSS bundles) served from `dist/public/assets/`
+4. All other routes - SPA fallback serving `index.html`
+
 ## System Architecture
 
 The application uses a full-stack monorepo architecture. The frontend is built with React 18, TypeScript, Wouter, Tailwind CSS, Shadcn/ui, TanStack Query, React Hook Form, and Zod. The backend utilizes Node.js, Express.js, TypeScript, PostgreSQL with Drizzle ORM on Neon, and Connect-pg-simple for session management.
