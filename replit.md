@@ -40,6 +40,17 @@ Preferred communication style: Simple, everyday language.
 - **DO NOT rename routes, move files, or restructure code without explicit user approval**
 - **ALWAYS investigate root causes thoroughly before making changes**
 
+**Development Environment Issue - October 26, 2025 (RESOLVED):**
+- **Symptom:** Application crashes on startup with "Cannot find package 'vite'" error. Development server (`npm run dev`) fails to start. LSP shows errors for missing packages.
+- **Root Cause:** NODE_ENV was set as a SECRET in the Replit Secrets pane with value "production". When NODE_ENV=production, npm automatically skips installing all devDependencies (including vite, typescript, @vitejs/plugin-react, etc.) during `npm install`. This is standard npm behavior to reduce production bundle sizes.
+- **Solution:** Delete the NODE_ENV secret from the Secrets pane. The application's package.json scripts already handle NODE_ENV correctly:
+  - `"dev": "NODE_ENV=development tsx server/index.ts"` ✅
+  - `"start": "NODE_ENV=production node dist/index.js"` ✅
+  - The .replit deployment config also sets it: `run = ["sh", "-c", "NODE_ENV=production node dist/index.js"]`
+- **Important:** NODE_ENV should NEVER be added to Secrets. Let the package.json scripts handle it. Confirmed working on swipesblue.com which has no NODE_ENV secret.
+- **Files Affected:** None - this was purely an environment configuration issue, not a code issue.
+- **Verification:** After deleting the secret, run `npm install` via packager_tool to install all packages including devDependencies, then restart the "Start application" workflow.
+
 **Production Deployment Issue - October 24, 2025 (RESOLVED):**
 - **Symptom:** Blank white screen on businessblueprint.io despite working dev environment
 - **Root Cause:** A `/assets/:filename` route was added to serve brand assets from database (favicon, logo). This route intercepted Vite's JavaScript/CSS bundle requests (`/assets/index-*.js`, `/assets/index-*.css`) in production, causing 404 errors and blank screen. In development, Vite middleware served bundles before this route ran, hiding the bug.
