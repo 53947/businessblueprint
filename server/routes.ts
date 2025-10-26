@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import contentRoutes from "./routes/content";
 import { 
   insertAssessmentSchema, 
   subscriptionPlans, 
@@ -2827,6 +2828,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Register inbox routes
   await registerInboxRoutes(app);
+
+  // Content Management Routes
+  app.use('/api/content', contentRoutes);
 
   const httpServer = createServer(app);
   return httpServer;
