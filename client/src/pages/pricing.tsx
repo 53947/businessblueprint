@@ -1,614 +1,363 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { AnimatedPricingTable } from "@/components/animated-pricing-table";
 import { useLocation } from "wouter";
-import { Sparkles, Shield, Zap, Check } from "lucide-react";
+import { ArrowRight, Compass, Wrench, Lightbulb, Zap, Ship, Brain, Building2, CreditCard, Server } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export default function PricingPage() {
   const [, setLocation] = useLocation();
 
-  const handleSelectPlan = (planId: string) => {
-    setLocation(`/subscription?plan=${planId}`);
-  };
-
-  const handleAddOnSelect = (addonId: string) => {
-    setLocation(`/subscription?addon=${addonId}`);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-white border-b border-gray-200 py-20">
+      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-            Choose Your Path to Digital Success
+          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold mb-6">
+            <Compass className="w-4 h-4" />
+            Choose Your Pathway
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            Two Paths to Digital Success
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Select from our 6-tier pricing structure designed to grow with your business. 
-            Whether you prefer to do it yourself or want managed services, we have the perfect plan for you.
+          <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto">
+            Whether you prefer hands-on control or expert guidance, we've built the perfect pathway for your business growth.
           </p>
-          
-          {/* Value Props */}
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto mt-12">
-            <div className="flex flex-col items-center">
-              <div className="bg-blue-100 p-3 rounded-full mb-3">
-                <Sparkles className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="font-bold text-gray-900 mb-1">AI-Powered</h3>
-              <p className="text-sm text-gray-600">Intelligent recommendations based on your business needs</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-green-100 p-3 rounded-full mb-3">
-                <Shield className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="font-bold text-gray-900 mb-1">Transparent Pricing</h3>
-              <p className="text-sm text-gray-600">No hidden fees, clear value at every tier</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-purple-100 p-3 rounded-full mb-3">
-                <Zap className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="font-bold text-gray-900 mb-1">Flexible Terms</h3>
-              <p className="text-sm text-gray-600">Monthly, quarterly, or annual billing - you choose</p>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* Main Subscription Tiers */}
-      <section className="py-20">
+      {/* Pathways Comparison */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Core Plans</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Subscription Tiers</h2>
-          </div>
-          <AnimatedPricingTable onSelectPlan={handleSelectPlan} />
-        </div>
-      </section>
-
-      {/* DIY Add-Ons Section */}
-      <section className="py-16 bg-white border-y border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">DIY Add-Ons</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Self-Service Modules</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Enhance your subscription with powerful add-ons you manage yourself
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Listings */}
-            <Card className="border border-gray-200 hover:shadow-lg transition-all">
-              <CardContent className="p-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 border border-blue-200 text-blue-700 font-bold text-sm mb-4">
-                  📍 Listings
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* DIY Pathway */}
+            <Card className="border-2 border-blue-200 hover:border-blue-400 transition-all hover:shadow-xl">
+              <CardContent className="p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Lightbulb className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">Do It Yourself</h2>
+                    <p className="text-sm text-blue-600 font-semibold">Self-Service Platform</p>
+                  </div>
                 </div>
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-                    $44
-                  </span>
-                  <span className="text-gray-600">/mo</span>
-                </div>
-                <p className="text-gray-600 mb-4">
-                  Accurate profiles across directories, maps, and search engines.
+                
+                <p className="text-gray-700 mb-6 text-lg leading-relaxed">
+                  Perfect for hands-on business owners who want full control. Access powerful tools, automation, and AI assistance—all at your fingertips.
                 </p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
+
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-sm text-gray-700">Profile sync (NAP, hours, site)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
+                    <div>
+                      <h3 className="font-semibold text-gray-900">You're In Control</h3>
+                      <p className="text-sm text-gray-600">Manage campaigns, content, and strategies yourself with intuitive tools</p>
                     </div>
-                    <span className="text-sm text-gray-700">Major directories + long-tail</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-sm text-gray-700">Duplicate suppression</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
+                    <div>
+                      <h3 className="font-semibold text-gray-900">AI-Powered Assistance</h3>
+                      <p className="text-sm text-gray-600">Coach Blue guides you with smart recommendations and automated workflows</p>
                     </div>
-                    <span className="text-sm text-gray-700">Holiday hours, logos, photos</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-sm text-gray-700">Change monitoring + health report</span>
-                  </li>
-                </ul>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Scale at Your Pace</h3>
+                      <p className="text-sm text-gray-600">Start small, add features as you grow, pay only for what you use</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-blue-50 rounded-lg p-4 mb-6">
+                  <p className="text-sm font-semibold text-gray-900 mb-2">Pricing starts at:</p>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-blue-600">$99</span>
+                    <span className="text-gray-600">/month</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">Save 20% with annual billing</p>
+                </div>
+
                 <Button 
-                  onClick={() => handleAddOnSelect('listings')}
-                  variant="outline"
-                  className="w-full border-blue-600 text-blue-600 hover:bg-blue-50"
-                  data-testid="button-addon-listings"
-                >
-                  Add to Plan
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Reviews Pro */}
-            <Card className="border border-gray-200 hover:shadow-lg transition-all">
-              <CardContent className="p-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 border border-purple-200 text-purple-700 font-bold text-sm mb-4">
-                  ⭐ Reviews (Pro)
-                </div>
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-4xl font-extrabold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
-                    $25
-                  </span>
-                  <span className="text-gray-600">/mo</span>
-                </div>
-                <p className="text-gray-600 mb-4">
-                  Generate more reviews & respond faster.
-                </p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">SMS/email requests + QR</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Unified inbox (Google, FB, Yelp…)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">AI reply drafts + alerts</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Widgets + trend reports</span>
-                  </li>
-                </ul>
-                <Button 
-                  onClick={() => handleAddOnSelect('reviews-pro')}
-                  variant="outline"
-                  className="w-full border-purple-600 text-purple-600 hover:bg-purple-50"
-                  data-testid="button-addon-reviews-pro"
-                >
-                  Add to Plan
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Reviews Gold */}
-            <Card className="border border-gray-200 hover:shadow-lg transition-all">
-              <CardContent className="p-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 border border-red-200 text-red-700 font-bold text-sm mb-4">
-                  ⭐ Reviews (Gold)
-                </div>
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-4xl font-extrabold bg-gradient-to-r from-red-600 to-red-400 bg-clip-text text-transparent">
-                    $63
-                  </span>
-                  <span className="text-gray-600">/mo</span>
-                </div>
-                <p className="text-gray-600 mb-4">
-                  Advanced insights and automation.
-                </p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-red-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Smart routing + win-back</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-red-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Response templates + guardrails</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-red-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Competitor benchmarking</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-red-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Multi-location roll-ups + compliance</span>
-                  </li>
-                </ul>
-                <Button 
-                  onClick={() => handleAddOnSelect('reviews-gold')}
-                  variant="outline"
-                  className="w-full border-red-600 text-red-600 hover:bg-red-50"
-                  data-testid="button-addon-reviews-gold"
-                >
-                  Add to Plan
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Social */}
-            <Card className="border border-gray-200 hover:shadow-lg transition-all">
-              <CardContent className="p-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 border border-orange-200 text-orange-700 font-bold text-sm mb-4">
-                  📣 Social
-                </div>
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-4xl font-extrabold bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">
-                    $8
-                  </span>
-                  <span className="text-gray-600">/mo</span>
-                </div>
-                <p className="text-gray-600 mb-4">
-                  Plan, publish, and track performance.
-                </p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-orange-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">FB/IG/X/LinkedIn scheduling</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-orange-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Calendar + drag & drop</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-orange-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">AI captions + hashtag help</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-orange-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Analytics + link-in-bio page</span>
-                  </li>
-                </ul>
-                <Button 
-                  onClick={() => handleAddOnSelect('social')}
-                  variant="outline"
-                  className="w-full border-orange-600 text-orange-600 hover:bg-orange-50"
-                  data-testid="button-addon-social"
-                >
-                  Add to Plan
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Local SEO */}
-            <Card className="border border-gray-200 hover:shadow-lg transition-all">
-              <CardContent className="p-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full" style={{ backgroundColor: 'rgba(0, 255, 64, 0.1)', borderColor: 'rgba(0, 255, 64, 0.3)', color: '#00AA2A' }}>
-                  <span className="font-bold text-sm">🔎 Local SEO</span>
-                </div>
-                <div className="flex items-baseline gap-2 mb-2 mt-4">
-                  <span className="text-4xl font-extrabold" style={{ 
-                    background: 'linear-gradient(90deg, #00FF40, #7DFFB2)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text'
-                  }}>
-                    $6
-                  </span>
-                  <span className="text-gray-600">/mo</span>
-                </div>
-                <p className="text-gray-600 mb-4">
-                  Climb (and stay) in the local 3-pack.
-                </p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#00FF40' }}>
-                      <Check className="w-3 h-3 text-black font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Local keyword + map pack tracking</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#00FF40' }}>
-                      <Check className="w-3 h-3 text-black font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Competitor comparison</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#00FF40' }}>
-                      <Check className="w-3 h-3 text-black font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">On-page checks + GBP tips</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#00FF40' }}>
-                      <Check className="w-3 h-3 text-black font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Monthly scorecard + quick wins</span>
-                  </li>
-                </ul>
-                <Button 
-                  onClick={() => handleAddOnSelect('local-seo')}
-                  variant="outline"
-                  className="w-full hover:bg-green-50"
-                  style={{ borderColor: '#00FF40', color: '#00AA2A' }}
-                  data-testid="button-addon-local-seo"
-                >
-                  Add to Plan
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* MSP Add-Ons Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">MSP Add-Ons</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Managed by Our Team</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Let our experts handle the heavy lifting while you focus on your business
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {/* Reputation Management */}
-            <Card className="border border-gray-200 hover:shadow-lg transition-all">
-              <CardContent className="p-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 border border-red-200 text-red-700 font-bold text-sm mb-4">
-                  ⭐ Reputation Management
-                </div>
-                <div className="flex items-baseline gap-2 mb-1">
-                  <span className="text-4xl font-extrabold bg-gradient-to-r from-red-600 to-red-400 bg-clip-text text-transparent">
-                    $15
-                  </span>
-                  <span className="text-gray-600">/location</span>
-                </div>
-                <p className="text-xs text-gray-500 mb-3">Includes 50 responses/mo • +$2 each additional</p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-red-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Monitor & respond across platforms</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-red-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">AI-assisted responses (tone controls)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-red-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Alerts, tagging, monthly reporting</span>
-                  </li>
-                </ul>
-                <Button 
-                  onClick={() => handleAddOnSelect('reputation-management')}
-                  variant="outline"
-                  className="w-full border-red-600 text-red-600 hover:bg-red-50"
-                  data-testid="button-addon-reputation"
-                >
-                  Add to Plan
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Social Media Posting */}
-            <Card className="border border-gray-200 hover:shadow-lg transition-all">
-              <CardContent className="p-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 border border-orange-200 text-orange-700 font-bold text-sm mb-4">
-                  📣 Social Media Posting
-                </div>
-                <div className="flex items-baseline gap-2 mb-1">
-                  <span className="text-4xl font-extrabold bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">
-                    $25
-                  </span>
-                  <span className="text-gray-600">/location/mo</span>
-                </div>
-                <p className="text-xs text-gray-500 mb-3">+$3 per extra post</p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-orange-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Branded content publishing</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-orange-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Consistent cross-channel cadence</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-orange-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Calendar, approvals, basic analytics</span>
-                  </li>
-                </ul>
-                <Button 
-                  onClick={() => handleAddOnSelect('social-posting')}
-                  variant="outline"
-                  className="w-full border-orange-600 text-orange-600 hover:bg-orange-50"
-                  data-testid="button-addon-social-posting"
-                >
-                  Add to Plan
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* MSP Packages Section */}
-      <section className="py-16 bg-white border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">MSP Packages</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Managed Service Tiers</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Comprehensive managed service packages with dedicated support teams
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            {/* Standard MSP */}
-            <Card className="border-2 border-blue-200 hover:shadow-xl transition-all">
-              <CardContent className="p-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 border border-blue-200 text-blue-700 font-bold text-sm mb-4">
-                  🛠️ Standard MSP
-                </div>
-                <div className="flex items-baseline gap-2 mb-1">
-                  <span className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
-                    $313
-                  </span>
-                  <span className="text-gray-600">/mo</span>
-                </div>
-                <p className="text-xs text-gray-500 mb-4">10 managed hours • $69/hr additional</p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Initial response: P1 90m • P2 120m • P3 180m</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Service hours: 24×5</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Channels: Email + Phone</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Dedicated CSM + Knowledge Base</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Monthly analytics + quarterly audits</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">GMB Support Assist (tickets, fixes, pins)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Listings/profile edits (SLA ~12h)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Apple Business Connect updates</span>
-                  </li>
-                </ul>
-                <Button 
-                  onClick={() => handleAddOnSelect('msp-standard')}
+                  onClick={() => setLocation('/marketplace')}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                  data-testid="button-addon-msp-standard"
-                >
-                  Select Standard MSP
+                  data-testid="button-explore-diy">
+                  Explore DIY Plans
                 </Button>
               </CardContent>
             </Card>
 
-            {/* Premium MSP */}
-            <Card className="border-2 border-purple-300 hover:shadow-xl transition-all bg-gradient-to-br from-purple-50 to-white">
+            {/* MSP Pathway */}
+            <Card className="border-2 border-orange-200 hover:border-orange-400 transition-all hover:shadow-xl">
+              <CardContent className="p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <Wrench className="w-6 h-6 text-orange-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">Managed Services</h2>
+                    <p className="text-sm text-orange-600 font-semibold">We Do It For You</p>
+                  </div>
+                </div>
+                
+                <p className="text-gray-700 mb-6 text-lg leading-relaxed">
+                  For busy owners who want results without the work. Our expert team handles execution, optimization, and reporting—you focus on running your business.
+                </p>
+
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Expert Team at Your Service</h3>
+                      <p className="text-sm text-gray-600">Dedicated specialists manage your digital presence end-to-end</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Done-For-You Execution</h3>
+                      <p className="text-sm text-gray-600">Content creation, review responses, social posting—all handled professionally</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Strategic Guidance</h3>
+                      <p className="text-sm text-gray-600">Monthly reviews, proactive recommendations, continuous optimization</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-orange-50 rounded-lg p-4 mb-6">
+                  <p className="text-sm font-semibold text-gray-900 mb-2">Managed services from:</p>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-orange-600">$15</span>
+                    <span className="text-gray-600">/location</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">Add-on services • Support packages available</p>
+                </div>
+
+                <Button 
+                  onClick={() => setLocation('/marketplace')}
+                  className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                  data-testid="button-explore-msp">
+                  Explore MSP Services
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Ecosystem Overview */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              The Triad Blue Ecosystem
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Three powerful platforms working together to power your digital success
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Business Blueprint */}
+            <Card className="border border-gray-200 hover:shadow-xl transition-all">
               <CardContent className="p-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-100 border border-purple-200 text-purple-700 font-bold text-sm mb-4">
-                  🧷 Premium MSP
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                  <Building2 className="w-6 h-6 text-blue-600" />
                 </div>
-                <div className="flex items-baseline gap-2 mb-1">
-                  <span className="text-4xl font-extrabold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
-                    $625
-                  </span>
-                  <span className="text-gray-600">/mo</span>
-                </div>
-                <p className="text-xs text-gray-500 mb-4">20 managed hours • $56/hr additional</p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Initial response: P1 30m • P2 60m • P3 90m</span>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Business Blueprint</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  AI-powered digital intelligence platform with assessment, coaching, and growth strategies
+                </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+                    Digital IQ Assessment
                   </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Service hours: 24×5 + dedicated support 12×5</span>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+                    Personalized Blueprint
                   </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Channels: Email + Chat + Phone</span>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+                    Client Portal & Dashboard
                   </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Dedicated Slack channel + CSM</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Priority reporting + faster resolution queue</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">All Standard features + proactive monitoring</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <div className="w-5 h-5 rounded bg-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-white font-bold" />
-                    </div>
-                    <span className="text-sm text-gray-700">Priority QA</span>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+                    Listings & Reputation Management
                   </li>
                 </ul>
-                <Button 
-                  onClick={() => handleAddOnSelect('msp-premium')}
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-                  data-testid="button-addon-msp-premium"
-                >
-                  Select Premium MSP
-                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Hosts Blue */}
+            <Card className="border border-gray-200 hover:shadow-xl transition-all">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                  <Server className="w-6 h-6 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Hosts Blue</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Managed WordPress hosting, domains, and premium website services
+                </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-purple-600 rounded-full"></div>
+                    WordPress Hosting
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-purple-600 rounded-full"></div>
+                    Domain Registration
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-purple-600 rounded-full"></div>
+                    Site Builder & Themes
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-purple-600 rounded-full"></div>
+                    24/7 Expert Support
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Swipes Blue */}
+            <Card className="border border-gray-200 hover:shadow-xl transition-all">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                  <CreditCard className="w-6 h-6 text-red-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Swipes Blue</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Secure payment gateway for accepting online payments across all platforms
+                </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
+                    Credit Card Processing
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
+                    Subscription Billing
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
+                    Fraud Protection
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
+                    Multi-Platform Integration
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Growth Partners */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Your Growth Partners
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Expert guidance available on both pathways
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Coach Blue */}
+            <Card className="border-2 border-blue-200 hover:shadow-xl transition-all">
+              <CardContent className="p-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                    <Brain className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">Coach Blue</h3>
+                    <p className="text-sm text-blue-600 font-semibold">AI Business Coach</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 mb-4">
+                  Your 24/7 AI business advisor. Get personalized strategies, automated insights, and smart recommendations based on your business data.
+                </p>
+                <ul className="space-y-2 text-sm text-gray-700 mb-6">
+                  <li className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-blue-600" />
+                    Real-time business intelligence
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-blue-600" />
+                    Automated task suggestions
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-blue-600" />
+                    Progress tracking & insights
+                  </li>
+                </ul>
+                <div className="bg-blue-50 rounded-lg p-3 text-sm">
+                  <span className="font-semibold text-gray-900">Available:</span> Included in Advanced & Scale plans, add-on for Start
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Captain Your Journey */}
+            <Card className="border-2 border-orange-200 hover:shadow-xl transition-all">
+              <CardContent className="p-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                    <Ship className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">Captain Your Journey</h3>
+                    <p className="text-sm text-orange-600 font-semibold">Personal Business Coach</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 mb-4">
+                  One-on-one coaching with a dedicated business strategist. Weekly sessions, custom action plans, and accountability support.
+                </p>
+                <ul className="space-y-2 text-sm text-gray-700 mb-6">
+                  <li className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-orange-600" />
+                    Weekly 1-on-1 sessions
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-orange-600" />
+                    Custom growth strategies
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-orange-600" />
+                    Accountability & support
+                  </li>
+                </ul>
+                <div className="bg-orange-50 rounded-lg p-3 text-sm">
+                  <span className="font-semibold text-gray-900">Premium add-on:</span> $249/month for personalized coaching
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -616,22 +365,30 @@ export default function PricingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-white border-t border-gray-200">
+      <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Not Sure Which Plan Is Right for You?
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Ready to Start Your Journey?
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Take our free Digital IQ Assessment to receive personalized recommendations 
-            based on your business goals and current digital presence.
+          <p className="text-xl text-gray-300 mb-8">
+            Explore our complete marketplace to build your perfect digital strategy
           </p>
-          <a 
-            href="/assessment" 
-            className="inline-flex items-center justify-center px-8 py-3 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors"
-            data-testid="button-start-assessment"
-          >
-            Start Free Assessment
-          </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button 
+              onClick={() => setLocation('/marketplace')}
+              className="bg-white text-gray-900 hover:bg-gray-100 text-lg px-8 py-6"
+              data-testid="button-view-marketplace">
+              View Complete Marketplace
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+            <Button 
+              onClick={() => setLocation('/assessment')}
+              variant="outline"
+              className="border-white text-white hover:bg-white/10 text-lg px-8 py-6"
+              data-testid="button-start-assessment">
+              Start Free Assessment
+            </Button>
+          </div>
         </div>
       </section>
 

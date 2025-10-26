@@ -2,24 +2,23 @@ import { useState, useEffect } from "react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { 
   ShoppingCart, 
-  Package, 
-  Brain, 
-  Ship, 
-  MapPin, 
-  Building, 
-  Headphones,
-  Mail,
-  MessageSquare,
-  Inbox as InboxIcon,
   X,
   Plus,
   Minus,
-  Check
+  Check,
+  Lightbulb,
+  Settings,
+  Rocket,
+  MapPin,
+  Star,
+  MessageSquare,
+  Search,
+  Wrench,
+  Paperclip
 } from "lucide-react";
 import { useLocation } from "wouter";
 
@@ -28,19 +27,38 @@ interface CartItem {
   name: string;
   price: number;
   quantity: number;
-  type: 'app' | 'addon';
+  type: 'plan' | 'addon';
+  billingCycle?: 'monthly' | 'annual';
 }
 
-interface Product {
+interface PlanFeature {
+  text: string;
+  included: boolean;
+}
+
+interface Plan {
   id: string;
   name: string;
-  description: string;
-  price: number;
   icon: any;
-  color: string;
-  type: 'app' | 'addon' | 'bundle';
-  category: string;
-  badge?: string;
+  price: number;
+  priceMonthly: number;
+  tagline: string;
+  description: string;
+  features: PlanFeature[];
+  accentColor: string;
+  emoji: string;
+}
+
+interface Addon {
+  id: string;
+  name: string;
+  icon: any;
+  price: number;
+  description: string;
+  features: string[];
+  accentColor: string;
+  emoji: string;
+  priceNote?: string;
 }
 
 export default function MarketplacePage() {
@@ -70,146 +88,256 @@ export default function MarketplacePage() {
     }
   }, [cart]);
 
-  // Product catalog
-  const products: Product[] = [
-    // Commverse Bundle
+  // DIY Plans
+  const diyPlans: Plan[] = [
     {
-      id: 'commverse-bundle',
-      name: 'Commverse Complete Bundle',
-      description: 'All three communication apps: /send, /livechat, and /inbox with cross-app analytics',
-      price: 75,
-      icon: Package,
-      color: 'purple',
-      type: 'bundle',
-      category: 'commverse',
-      badge: 'Save $30'
-    },
-    // Commverse Individual Apps
-    {
-      id: 'send-app',
-      name: '/send',
-      description: 'Email & SMS marketing platform with unified campaigns',
-      price: 35,
-      icon: Mail,
-      color: 'yellow',
-      type: 'app',
-      category: 'commverse'
-    },
-    {
-      id: 'livechat-app',
-      name: '/livechat',
-      description: 'Website live chat widget for real-time customer engagement',
-      price: 35,
-      icon: MessageSquare,
-      color: 'purple',
-      type: 'app',
-      category: 'commverse'
-    },
-    {
-      id: 'inbox-app',
-      name: '/inbox',
-      description: 'Unified inbox for 8 channels including email, SMS, and social media',
-      price: 35,
-      icon: InboxIcon,
-      color: 'blue',
-      type: 'app',
-      category: 'commverse'
-    },
-    // Coaching & Growth
-    {
-      id: 'ai-coach-essential',
-      name: 'AI Business Coach - Essential',
-      description: 'Smart AI guidance with automated task suggestions and basic progress tracking',
+      id: 'start-plan',
+      name: 'Start',
+      icon: Lightbulb,
+      emoji: '💡',
       price: 99,
-      icon: Brain,
-      color: 'blue',
-      type: 'addon',
-      category: 'coaching',
-      badge: 'Starter Plan'
+      priceMonthly: 124,
+      tagline: 'Get Found',
+      description: 'Free Digital IQ + Blueprint. Build a reliable foundation for attracting customers.',
+      accentColor: 'blue',
+      features: [
+        { text: 'Up to 5 team members', included: true },
+        { text: 'Up to 25 client accounts', included: true },
+        { text: 'Listings Management across Google, Apple Maps, Bing, Yelp, FB', included: true },
+        { text: 'Reviews Management to monitor + respond', included: true },
+        { text: 'Social Media Tools for scheduling + tracking', included: true },
+        { text: 'Local SEO for map pack visibility + rank tracking', included: true },
+        { text: 'Digital IQ Assessment + Blueprint', included: true },
+        { text: 'AI Business Coach available as add-on', included: false }
+      ]
     },
     {
-      id: 'ai-coach-pro',
-      name: 'AI Business Coach - Pro',
-      description: 'Unlimited personalized AI guidance with advanced strategies and 24/7 availability',
-      price: 59.99,
-      icon: Brain,
-      color: 'purple',
-      type: 'addon',
-      category: 'coaching',
-      badge: 'Higher Tiers'
+      id: 'advanced-plan',
+      name: 'Advanced',
+      icon: Settings,
+      emoji: '⚙️',
+      price: 248,
+      priceMonthly: 310,
+      tagline: 'Get Customers',
+      description: 'Automation + AI Coach included to convert attention into revenue.',
+      accentColor: 'purple',
+      features: [
+        { text: 'Up to 10 team members', included: true },
+        { text: 'Up to 100 client accounts', included: true },
+        { text: 'Listings sync across 70+ directories', included: true },
+        { text: 'Reviews AI reply drafts + sentiment tagging', included: true },
+        { text: 'Social Automation smart calendar + insights', included: true },
+        { text: 'Local SEO Tools keywords, competitors, on-page', included: true },
+        { text: 'Digital IQ + Expanded Blueprint', included: true },
+        { text: 'AI Business Coach included', included: true }
+      ]
     },
     {
-      id: 'captain-journey',
-      name: 'Captain Your Journey',
-      description: 'Personal business coach with weekly 1-on-1 sessions, custom strategies, and accountability',
-      price: 249,
-      icon: Ship,
-      color: 'orange',
-      type: 'addon',
-      category: 'coaching'
-    },
-    // Business Expansion
-    {
-      id: 'locations-10',
-      name: 'Additional 10 Locations',
-      description: 'Expand your listings management to 10 more business locations',
-      price: 49,
-      icon: MapPin,
-      color: 'green',
-      type: 'addon',
-      category: 'expansion'
-    },
-    {
-      id: 'locations-50',
-      name: 'Additional 50 Locations',
-      description: 'Expand your listings management to 50 more business locations',
-      price: 199,
-      icon: Building,
-      color: 'green',
-      type: 'addon',
-      category: 'expansion'
-    },
-    // Support
-    {
-      id: 'priority-support',
-      name: 'Priority Support Upgrade',
-      description: 'Upgrade to 1-hour response time support with dedicated phone line',
-      price: 99,
-      icon: Headphones,
-      color: 'red',
-      type: 'addon',
-      category: 'support'
+      id: 'scale-plan',
+      name: 'Scale',
+      icon: Rocket,
+      emoji: '🚀',
+      price: 999,
+      priceMonthly: 1249,
+      tagline: 'Get Business',
+      description: 'Unify marketing, sales, payments, and retention on one intelligent system.',
+      accentColor: 'green',
+      features: [
+        { text: 'Up to 50 team members', included: true },
+        { text: 'Up to 500 client accounts', included: true },
+        { text: 'Listings enterprise sync + reporting', included: true },
+        { text: 'Reviews advanced automation + templates', included: true },
+        { text: 'Social Suite collaboration + AI content planning', included: true },
+        { text: 'Local SEO Suite national tracking + analytics', included: true },
+        { text: 'Digital IQ + Blueprint integrated with CRM/automation', included: true },
+        { text: 'Full AI Business Coach access', included: true }
+      ]
     }
   ];
 
-  const addToCart = (product: Product) => {
-    const existingItem = cart.find(item => item.id === product.id);
+  // DIY Add-Ons
+  const diyAddons: Addon[] = [
+    {
+      id: 'listings-addon',
+      name: 'Listings',
+      icon: MapPin,
+      emoji: '📍',
+      price: 44,
+      description: 'Accurate profiles across directories, maps, and search engines.',
+      accentColor: 'blue',
+      features: [
+        'Profile sync (NAP, hours, site)',
+        'Major directories + long-tail',
+        'Duplicate suppression',
+        'Holiday hours, logos, photos',
+        'Change monitoring + health report'
+      ]
+    },
+    {
+      id: 'reviews-pro-addon',
+      name: 'Reviews (Pro)',
+      icon: Star,
+      emoji: '⭐',
+      price: 25,
+      description: 'Generate more reviews & respond faster.',
+      accentColor: 'purple',
+      features: [
+        'SMS/email requests + QR',
+        'Unified inbox (Google, FB, Yelp…)',
+        'AI reply drafts + alerts',
+        'Widgets + trend reports'
+      ]
+    },
+    {
+      id: 'reviews-gold-addon',
+      name: 'Reviews (Gold)',
+      icon: Star,
+      emoji: '⭐',
+      price: 63,
+      description: 'Advanced insights and automation.',
+      accentColor: 'red',
+      features: [
+        'Smart routing + win-back',
+        'Response templates + guardrails',
+        'Competitor benchmarking',
+        'Multi-location roll-ups + compliance'
+      ]
+    },
+    {
+      id: 'social-addon',
+      name: 'Social',
+      icon: MessageSquare,
+      emoji: '📣',
+      price: 8,
+      description: 'Plan, publish, and track performance.',
+      accentColor: 'orange',
+      features: [
+        'FB/IG/X/LinkedIn scheduling',
+        'Calendar + drag & drop',
+        'AI captions + hashtag help',
+        'Analytics + link-in-bio page'
+      ]
+    },
+    {
+      id: 'local-seo-addon',
+      name: 'Local SEO',
+      icon: Search,
+      emoji: '🔎',
+      price: 6,
+      description: 'Climb (and stay) in the local 3-pack.',
+      accentColor: 'green',
+      features: [
+        'Local keyword + map pack tracking',
+        'Competitor comparison',
+        'On-page checks + GBP tips',
+        'Monthly scorecard + quick wins'
+      ]
+    }
+  ];
+
+  // MSP Add-Ons
+  const mspAddons: Addon[] = [
+    {
+      id: 'reputation-management',
+      name: 'Reputation Management',
+      icon: Star,
+      emoji: '⭐',
+      price: 15,
+      priceNote: 'per location',
+      description: 'Includes 50 responses/mo • +$2 each additional',
+      accentColor: 'red',
+      features: [
+        'Monitor & respond across platforms',
+        'AI-assisted responses (tone controls)',
+        'Alerts, tagging, monthly reporting'
+      ]
+    },
+    {
+      id: 'social-media-posting',
+      name: 'Social Media Posting',
+      icon: MessageSquare,
+      emoji: '📣',
+      price: 25,
+      priceNote: 'per location/mo',
+      description: '+$3 per extra post',
+      accentColor: 'orange',
+      features: [
+        'Branded content publishing',
+        'Consistent cross-channel cadence',
+        'Calendar, approvals, basic analytics'
+      ]
+    }
+  ];
+
+  // MSP Packages
+  const mspPackages: Addon[] = [
+    {
+      id: 'standard-msp',
+      name: 'Standard MSP',
+      icon: Wrench,
+      emoji: '🛠️',
+      price: 313,
+      description: '10 managed hours • $69/hr additional',
+      accentColor: 'blue',
+      features: [
+        'Initial response: P1 90m • P2 120m • P3 180m',
+        'Service hours: 24×5',
+        'Channels: Email + Phone',
+        'Dedicated CSM + Knowledge Base',
+        'Monthly analytics + quarterly audits',
+        'GMB Support Assist (tickets, located-in fixes, pins)',
+        'Listings/profile edits (SLA ~12h), posts 24h, suggest-edit rejection 48h',
+        'Apple Business Connect updates'
+      ]
+    },
+    {
+      id: 'premium-msp',
+      name: 'Premium MSP',
+      icon: Paperclip,
+      emoji: '🧷',
+      price: 625,
+      description: '20 managed hours • $56/hr additional',
+      accentColor: 'purple',
+      features: [
+        'Initial response: P1 30m • P2 60m • P3 90m',
+        'Service hours: 24×5 + dedicated service support 12×5',
+        'Channels: Email + Chat + Phone',
+        'Dedicated Slack channel + CSM',
+        'Priority reporting + faster resolution queue',
+        'All Standard features + proactive monitoring & priority QA'
+      ]
+    }
+  ];
+
+  const addToCart = (item: Plan | Addon, type: 'plan' | 'addon', billingCycle?: 'monthly' | 'annual') => {
+    const existingItem = cart.find(cartItem => cartItem.id === item.id);
     
     if (existingItem) {
-      setCart(cart.map(item => 
-        item.id === product.id 
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
+      setCart(cart.map(cartItem => 
+        cartItem.id === item.id 
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
       ));
     } else {
       setCart([...cart, {
-        id: product.id,
-        name: product.name,
-        price: product.price,
+        id: item.id,
+        name: item.name,
+        price: item.price,
         quantity: 1,
-        type: product.type === 'bundle' ? 'app' : product.type
+        type,
+        billingCycle
       }]);
     }
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (productId: string) => {
-    setCart(cart.filter(item => item.id !== productId));
+  const removeFromCart = (itemId: string) => {
+    setCart(cart.filter(item => item.id !== itemId));
   };
 
-  const updateQuantity = (productId: string, change: number) => {
+  const updateQuantity = (itemId: string, change: number) => {
     setCart(cart.map(item => {
-      if (item.id === productId) {
+      if (item.id === itemId) {
         const newQuantity = item.quantity + change;
         return newQuantity > 0 ? { ...item, quantity: newQuantity } : item;
       }
@@ -221,476 +349,413 @@ export default function MarketplacePage() {
   const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const handleCheckout = () => {
-    // Save cart to localStorage
     localStorage.setItem('marketplace_cart', JSON.stringify(cart));
-    // Navigate to checkout
     setLocation('/marketplace/checkout');
   };
 
-  const getCategoryProducts = (category: string) => 
-    products.filter(p => p.category === category);
-
-  const getColorClasses = (color: string) => {
-    const colors: Record<string, { bg: string; text: string; border: string }> = {
-      yellow: { bg: 'bg-yellow-50', text: 'text-yellow-600', border: 'border-yellow-200' },
-      purple: { bg: 'bg-purple-50', text: 'text-purple-600', border: 'border-purple-200' },
-      blue: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200' },
-      orange: { bg: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-200' },
-      green: { bg: 'bg-green-50', text: 'text-green-600', border: 'border-green-200' },
-      red: { bg: 'bg-red-50', text: 'text-red-600', border: 'border-red-200' }
+  const getAccentColorClasses = (color: string) => {
+    const colorMap: Record<string, { gradient: string; checkBg: string; text: string }> = {
+      blue: { 
+        gradient: 'from-[#0000FF] to-[#4D5CFF]', 
+        checkBg: 'bg-[#0000FF]',
+        text: 'text-[#0000FF]'
+      },
+      purple: { 
+        gradient: 'from-[#8000FF] to-[#B566FF]', 
+        checkBg: 'bg-[#8000FF]',
+        text: 'text-[#8000FF]'
+      },
+      green: { 
+        gradient: 'from-[#00FF40] to-[#7DFFB2]', 
+        checkBg: 'bg-[#00FF40]',
+        text: 'text-[#00FF40]'
+      },
+      red: { 
+        gradient: 'from-[#FF0040] to-[#FF6A85]', 
+        checkBg: 'bg-[#FF0040]',
+        text: 'text-[#FF0040]'
+      },
+      orange: { 
+        gradient: 'from-[#F79248] to-[#FFB67A]', 
+        checkBg: 'bg-[#F79248]',
+        text: 'text-[#F79248]'
+      }
     };
-    return colors[color] || colors.blue;
+    return colorMap[color] || colorMap.blue;
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-[#0B0E17] via-[#0E1117] to-[#0B0E17]" 
+         style={{
+           background: `radial-gradient(1200px 600px at 20% -10%, rgba(128,0,255,.15), transparent 60%), radial-gradient(1200px 600px at 120% 10%, rgba(0,0,255,.15), transparent 60%), #0B0E17`
+         }}>
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-white border-b border-gray-200 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4" data-testid="text-marketplace-title">
-              À La Carte Marketplace
+      <section className="py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-2">
+            <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-4" data-testid="text-marketplace-kicker">
+              Unified Marketplace
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" data-testid="text-marketplace-title">
+              Choose Your Path to Growth
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto" data-testid="text-marketplace-description">
-              Build your perfect digital toolkit. Choose individual apps and services or save with bundles.
+            <p className="text-xl text-[#A9B0C5] max-w-3xl mx-auto" data-testid="text-marketplace-description">
+              Self-service DIY tools or fully managed services. Build your perfect digital strategy.
             </p>
           </div>
         </div>
       </section>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex gap-8">
-          {/* Products */}
-          <div className="flex-1">
-            {/* Commverse Section */}
-            <div className="mb-16" data-testid="section-commverse">
-              <div className="mb-6">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Commverse Communication Apps</h2>
-                <p className="text-gray-600">
-                  Three powerful apps that work autonomously but are stronger together
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {getCategoryProducts('commverse').map((product) => {
-                  const colorClasses = getColorClasses(product.color);
-                  const ProductIcon = product.icon;
-                  const isInCart = cart.some(item => item.id === product.id);
-
-                  return (
-                    <Card key={product.id} className="relative" data-testid={`card-product-${product.id}`}>
-                      {product.badge && (
-                        <Badge className="absolute top-4 right-4" variant="secondary">
-                          {product.badge}
-                        </Badge>
-                      )}
-                      <CardHeader>
-                        <div className={`w-12 h-12 rounded-lg ${colorClasses.bg} flex items-center justify-center mb-3`}>
-                          <ProductIcon className={`w-6 h-6 ${colorClasses.text}`} />
-                        </div>
-                        <CardTitle className="text-xl" data-testid={`text-product-name-${product.id}`}>
-                          {product.name}
-                        </CardTitle>
-                        <CardDescription data-testid={`text-product-description-${product.id}`}>
-                          {product.description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex items-center justify-between">
-                          <div className="text-2xl font-bold text-gray-900" data-testid={`text-product-price-${product.id}`}>
-                            ${product.price}
-                            <span className="text-sm font-normal text-gray-600">/month</span>
-                          </div>
-                          <Button 
-                            onClick={() => addToCart(product)}
-                            className={isInCart ? 'bg-green-600 hover:bg-green-700' : ''}
-                            data-testid={`button-add-to-cart-${product.id}`}
-                          >
-                            {isInCart ? (
-                              <>
-                                <Check className="w-4 h-4 mr-2" />
-                                Added
-                              </>
-                            ) : (
-                              <>
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add to Cart
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Coaching & Growth Section */}
-            <div className="mb-16" data-testid="section-coaching">
-              <div className="mb-6">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Coaching & Growth</h2>
-                <p className="text-gray-600">
-                  Expert guidance to accelerate your business success
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {getCategoryProducts('coaching').map((product) => {
-                  const colorClasses = getColorClasses(product.color);
-                  const ProductIcon = product.icon;
-                  const isInCart = cart.some(item => item.id === product.id);
-
-                  return (
-                    <Card key={product.id} className="relative" data-testid={`card-product-${product.id}`}>
-                      {product.badge && (
-                        <Badge className="absolute top-4 right-4" variant="secondary">
-                          {product.badge}
-                        </Badge>
-                      )}
-                      <CardHeader>
-                        <div className={`w-12 h-12 rounded-lg ${colorClasses.bg} flex items-center justify-center mb-3`}>
-                          <ProductIcon className={`w-6 h-6 ${colorClasses.text}`} />
-                        </div>
-                        <CardTitle className="text-lg" data-testid={`text-product-name-${product.id}`}>
-                          {product.name}
-                        </CardTitle>
-                        <CardDescription data-testid={`text-product-description-${product.id}`}>
-                          {product.description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex flex-col gap-3">
-                          <div className="text-2xl font-bold text-gray-900" data-testid={`text-product-price-${product.id}`}>
-                            ${product.price}
-                            <span className="text-sm font-normal text-gray-600">/month</span>
-                          </div>
-                          <Button 
-                            onClick={() => addToCart(product)}
-                            className={`w-full ${isInCart ? 'bg-green-600 hover:bg-green-700' : ''}`}
-                            data-testid={`button-add-to-cart-${product.id}`}
-                          >
-                            {isInCart ? (
-                              <>
-                                <Check className="w-4 h-4 mr-2" />
-                                Added
-                              </>
-                            ) : (
-                              <>
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add to Cart
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Business Expansion Section */}
-            <div className="mb-16" data-testid="section-expansion">
-              <div className="mb-6">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Business Expansion</h2>
-                <p className="text-gray-600">
-                  Scale your presence across multiple locations
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {getCategoryProducts('expansion').map((product) => {
-                  const colorClasses = getColorClasses(product.color);
-                  const ProductIcon = product.icon;
-                  const isInCart = cart.some(item => item.id === product.id);
-
-                  return (
-                    <Card key={product.id} data-testid={`card-product-${product.id}`}>
-                      <CardHeader>
-                        <div className={`w-12 h-12 rounded-lg ${colorClasses.bg} flex items-center justify-center mb-3`}>
-                          <ProductIcon className={`w-6 h-6 ${colorClasses.text}`} />
-                        </div>
-                        <CardTitle className="text-xl" data-testid={`text-product-name-${product.id}`}>
-                          {product.name}
-                        </CardTitle>
-                        <CardDescription data-testid={`text-product-description-${product.id}`}>
-                          {product.description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex items-center justify-between">
-                          <div className="text-2xl font-bold text-gray-900" data-testid={`text-product-price-${product.id}`}>
-                            ${product.price}
-                            <span className="text-sm font-normal text-gray-600">/month</span>
-                          </div>
-                          <Button 
-                            onClick={() => addToCart(product)}
-                            className={isInCart ? 'bg-green-600 hover:bg-green-700' : ''}
-                            data-testid={`button-add-to-cart-${product.id}`}
-                          >
-                            {isInCart ? (
-                              <>
-                                <Check className="w-4 h-4 mr-2" />
-                                Added
-                              </>
-                            ) : (
-                              <>
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add to Cart
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Support Section */}
-            <div className="mb-16" data-testid="section-support">
-              <div className="mb-6">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Support & Services</h2>
-                <p className="text-gray-600">
-                  Premium support for your peace of mind
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {getCategoryProducts('support').map((product) => {
-                  const colorClasses = getColorClasses(product.color);
-                  const ProductIcon = product.icon;
-                  const isInCart = cart.some(item => item.id === product.id);
-
-                  return (
-                    <Card key={product.id} data-testid={`card-product-${product.id}`}>
-                      <CardHeader>
-                        <div className={`w-12 h-12 rounded-lg ${colorClasses.bg} flex items-center justify-center mb-3`}>
-                          <ProductIcon className={`w-6 h-6 ${colorClasses.text}`} />
-                        </div>
-                        <CardTitle className="text-xl" data-testid={`text-product-name-${product.id}`}>
-                          {product.name}
-                        </CardTitle>
-                        <CardDescription data-testid={`text-product-description-${product.id}`}>
-                          {product.description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex items-center justify-between">
-                          <div className="text-2xl font-bold text-gray-900" data-testid={`text-product-price-${product.id}`}>
-                            ${product.price}
-                            <span className="text-sm font-normal text-gray-600">/month</span>
-                          </div>
-                          <Button 
-                            onClick={() => addToCart(product)}
-                            className={isInCart ? 'bg-green-600 hover:bg-green-700' : ''}
-                            data-testid={`button-add-to-cart-${product.id}`}
-                          >
-                            {isInCart ? (
-                              <>
-                                <Check className="w-4 h-4 mr-2" />
-                                Added
-                              </>
-                            ) : (
-                              <>
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add to Cart
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* Cart Sidebar (Desktop) */}
-          <div className="hidden lg:block w-96">
-            <div className="sticky top-20">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <span className="flex items-center gap-2">
-                      <ShoppingCart className="w-5 h-5" />
-                      Shopping Cart
+      <div className="max-w-7xl mx-auto px-4 pb-20">
+        {/* DIY Plans */}
+        <div className="mb-16" data-testid="section-diy-plans">
+          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">DIY Plans</div>
+          <h2 className="text-3xl font-bold text-white mb-6">Start • Advanced • Scale</h2>
+          
+          <div className="grid md:grid-cols-3 gap-5">
+            {diyPlans.map((plan) => {
+              const colors = getAccentColorClasses(plan.accentColor);
+              const isInCart = cart.some(item => item.id === plan.id);
+              
+              return (
+                <Card key={plan.id} 
+                      className="bg-gradient-to-b from-white/[0.04] to-white/[0.02] border border-white/[0.09] rounded-2xl p-5 relative overflow-hidden backdrop-blur-sm"
+                      data-testid={`card-plan-${plan.id}`}>
+                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/[0.08] border border-white/[0.14] mb-4">
+                    <span>{plan.emoji}</span>
+                    <span className={`bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
+                      {plan.name}
                     </span>
-                    {cartItemCount > 0 && (
-                      <Badge variant="secondary" data-testid="badge-cart-count">
-                        {cartItemCount} {cartItemCount === 1 ? 'item' : 'items'}
-                      </Badge>
+                  </div>
+                  
+                  <div className={`text-4xl font-extrabold mb-1 bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`} 
+                       data-testid={`text-plan-price-${plan.id}`}>
+                    ${plan.price}/mo
+                  </div>
+                  <div className="text-xs text-[#A9B0C5] mb-4">
+                    or ${plan.priceMonthly} billed monthly • Save 20% annually
+                  </div>
+                  
+                  <p className="text-[#A9B0C5] text-sm mb-4">{plan.description}</p>
+                  
+                  <ul className="space-y-2.5 mb-6">
+                    {plan.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5 text-[#E9ECFF] text-sm">
+                        <span className={`h-5 w-5 rounded flex items-center justify-center text-xs font-black text-black flex-shrink-0 ${feature.included ? colors.checkBg : 'bg-red-500'}`}>
+                          {feature.included ? '✓' : '•'}
+                        </span>
+                        <span>{feature.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <Button 
+                    onClick={() => addToCart(plan, 'plan', 'annual')}
+                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                    data-testid={`button-add-${plan.id}`}>
+                    {isInCart ? (
+                      <>
+                        <Check className="w-4 h-4 mr-2" />
+                        Added to Cart
+                      </>
+                    ) : (
+                      'Book a Demo'
                     )}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {cart.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500" data-testid="text-cart-empty">
-                      Your cart is empty
-                    </div>
-                  ) : (
-                    <>
-                      <div className="space-y-4 mb-6">
-                        {cart.map((item) => (
-                          <div key={item.id} className="flex items-start gap-3 pb-4 border-b" data-testid={`cart-item-${item.id}`}>
-                            <div className="flex-1">
-                              <div className="font-medium text-sm" data-testid={`cart-item-name-${item.id}`}>
-                                {item.name}
-                              </div>
-                              <div className="text-sm text-gray-600" data-testid={`cart-item-price-${item.id}`}>
-                                ${item.price}/month
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="h-7 w-7 p-0"
-                                onClick={() => updateQuantity(item.id, -1)}
-                                data-testid={`button-decrease-${item.id}`}
-                              >
-                                <Minus className="w-3 h-3" />
-                              </Button>
-                              <span className="w-8 text-center" data-testid={`cart-item-quantity-${item.id}`}>
-                                {item.quantity}
-                              </span>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="h-7 w-7 p-0"
-                                onClick={() => updateQuantity(item.id, 1)}
-                                data-testid={`button-increase-${item.id}`}
-                              >
-                                <Plus className="w-3 h-3" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                                onClick={() => removeFromCart(item.id)}
-                                data-testid={`button-remove-${item.id}`}
-                              >
-                                <X className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      <Separator className="my-4" />
-
-                      <div className="space-y-2 mb-6">
-                        <div className="flex justify-between text-lg font-bold">
-                          <span>Total per month:</span>
-                          <span data-testid="text-cart-total">${cartTotal.toFixed(2)}</span>
-                        </div>
-                      </div>
-
-                      <Button 
-                        className="w-full bg-blue-600 hover:bg-blue-700" 
-                        size="lg"
-                        onClick={handleCheckout}
-                        data-testid="button-checkout"
-                      >
-                        Proceed to Checkout
-                      </Button>
-                    </>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+                  </Button>
+                </Card>
+              );
+            })}
           </div>
         </div>
 
-        {/* Mobile Cart Button */}
-        {cart.length > 0 && (
-          <div className="lg:hidden fixed bottom-4 right-4 z-40">
-            <Button
-              size="lg"
-              className="rounded-full shadow-lg bg-blue-600 hover:bg-blue-700"
-              onClick={() => setIsCartOpen(true)}
-              data-testid="button-mobile-cart"
-            >
-              <ShoppingCart className="w-5 h-5 mr-2" />
-              {cartItemCount} {cartItemCount === 1 ? 'item' : 'items'} - ${cartTotal.toFixed(2)}
-            </Button>
-          </div>
-        )}
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-12"></div>
 
-        {/* Mobile Cart Modal */}
-        {isCartOpen && (
-          <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setIsCartOpen(false)}>
-            <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-              <div className="sticky top-0 bg-white border-b p-4 flex items-center justify-between">
-                <h3 className="text-lg font-bold">Shopping Cart</h3>
-                <Button variant="ghost" size="sm" onClick={() => setIsCartOpen(false)}>
-                  <X className="w-5 h-5" />
-                </Button>
-              </div>
+        {/* DIY Add-Ons */}
+        <div className="mb-16" data-testid="section-diy-addons">
+          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">DIY Add-Ons</div>
+          <h2 className="text-3xl font-bold text-white mb-6">Self-Service Modules</h2>
+          
+          <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-5">
+            {diyAddons.map((addon) => {
+              const colors = getAccentColorClasses(addon.accentColor);
+              const isInCart = cart.some(item => item.id === addon.id);
               
-              <div className="p-4">
-                <div className="space-y-4 mb-6">
-                  {cart.map((item) => (
-                    <div key={item.id} className="flex items-start gap-3 pb-4 border-b">
-                      <div className="flex-1">
-                        <div className="font-medium text-sm">{item.name}</div>
-                        <div className="text-sm text-gray-600">${item.price}/month</div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-7 w-7 p-0"
-                          onClick={() => updateQuantity(item.id, -1)}
-                        >
-                          <Minus className="w-3 h-3" />
-                        </Button>
-                        <span className="w-8 text-center">{item.quantity}</span>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-7 w-7 p-0"
-                          onClick={() => updateQuantity(item.id, 1)}
-                        >
-                          <Plus className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-7 w-7 p-0 text-red-600"
-                          onClick={() => removeFromCart(item.id)}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="space-y-2 mb-6">
-                  <div className="flex justify-between text-lg font-bold">
-                    <span>Total per month:</span>
-                    <span>${cartTotal.toFixed(2)}</span>
+              return (
+                <Card key={addon.id}
+                      className="bg-gradient-to-b from-white/[0.04] to-white/[0.02] border border-white/[0.09] rounded-2xl p-5 relative overflow-hidden backdrop-blur-sm"
+                      data-testid={`card-addon-${addon.id}`}>
+                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/[0.08] border border-white/[0.14] mb-4">
+                    <span>{addon.emoji}</span>
+                    <span className={`bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
+                      {addon.name}
+                    </span>
                   </div>
-                </div>
+                  
+                  <div className={`text-3xl font-extrabold mb-2 bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}
+                       data-testid={`text-addon-price-${addon.id}`}>
+                    ${addon.price}/mo
+                  </div>
+                  
+                  <p className="text-[#A9B0C5] text-sm mb-4">{addon.description}</p>
+                  
+                  <ul className="space-y-2.5 mb-6">
+                    {addon.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5 text-[#E9ECFF] text-sm">
+                        <span className={`h-5 w-5 rounded flex items-center justify-center text-xs font-black text-black flex-shrink-0 ${colors.checkBg}`}>
+                          ✓
+                        </span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <Button 
+                    onClick={() => addToCart(addon, 'addon')}
+                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg text-sm ${isInCart ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                    data-testid={`button-add-${addon.id}`}>
+                    {isInCart ? (
+                      <>
+                        <Check className="w-3 h-3 mr-1" />
+                        Added
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-3 h-3 mr-1" />
+                        Add to Cart
+                      </>
+                    )}
+                  </Button>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
 
-                <Button 
-                  className="w-full bg-blue-600 hover:bg-blue-700" 
-                  size="lg"
-                  onClick={handleCheckout}
-                >
-                  Proceed to Checkout
-                </Button>
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-12"></div>
+
+        {/* MSP Add-Ons */}
+        <div className="mb-16" data-testid="section-msp-addons">
+          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">MSP Add-Ons</div>
+          <h2 className="text-3xl font-bold text-white mb-6">Managed by Our Team</h2>
+          
+          <div className="grid md:grid-cols-2 gap-5">
+            {mspAddons.map((addon) => {
+              const colors = getAccentColorClasses(addon.accentColor);
+              const isInCart = cart.some(item => item.id === addon.id);
+              
+              return (
+                <Card key={addon.id}
+                      className="bg-gradient-to-b from-white/[0.04] to-white/[0.02] border border-white/[0.09] rounded-2xl p-5 relative overflow-hidden backdrop-blur-sm"
+                      data-testid={`card-msp-addon-${addon.id}`}>
+                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/[0.08] border border-white/[0.14] mb-4">
+                    <span>{addon.emoji}</span>
+                    <span className={`bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
+                      {addon.name}
+                    </span>
+                  </div>
+                  
+                  <div className={`text-3xl font-extrabold mb-1 bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}
+                       data-testid={`text-msp-addon-price-${addon.id}`}>
+                    ${addon.price}/{addon.priceNote || 'mo'}
+                  </div>
+                  <div className="text-xs text-[#A9B0C5] mb-4">{addon.description}</div>
+                  
+                  <ul className="space-y-2.5 mb-6">
+                    {addon.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5 text-[#E9ECFF] text-sm">
+                        <span className={`h-5 w-5 rounded flex items-center justify-center text-xs font-black text-black flex-shrink-0 ${colors.checkBg}`}>
+                          ✓
+                        </span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <Button 
+                    onClick={() => addToCart(addon, 'addon')}
+                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                    data-testid={`button-add-${addon.id}`}>
+                    {isInCart ? (
+                      <>
+                        <Check className="w-4 h-4 mr-2" />
+                        Added
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add to Cart
+                      </>
+                    )}
+                  </Button>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-12"></div>
+
+        {/* MSP Packages */}
+        <div className="mb-16" data-testid="section-msp-packages">
+          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">MSP Packages</div>
+          <h2 className="text-3xl font-bold text-white mb-6">Managed Service Tiers (+25% applied)</h2>
+          
+          <div className="grid md:grid-cols-2 gap-5">
+            {mspPackages.map((pkg) => {
+              const colors = getAccentColorClasses(pkg.accentColor);
+              const isInCart = cart.some(item => item.id === pkg.id);
+              
+              return (
+                <Card key={pkg.id}
+                      className="bg-gradient-to-b from-white/[0.04] to-white/[0.02] border border-white/[0.09] rounded-2xl p-5 relative overflow-hidden backdrop-blur-sm"
+                      data-testid={`card-msp-package-${pkg.id}`}>
+                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/[0.08] border border-white/[0.14] mb-4">
+                    <span>{pkg.emoji}</span>
+                    <span className={`bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
+                      {pkg.name}
+                    </span>
+                  </div>
+                  
+                  <div className={`text-3xl font-extrabold mb-1 bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}
+                       data-testid={`text-msp-package-price-${pkg.id}`}>
+                    ${pkg.price}/mo
+                  </div>
+                  <div className="text-xs text-[#A9B0C5] mb-4">{pkg.description}</div>
+                  
+                  <ul className="space-y-2.5 mb-6">
+                    {pkg.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5 text-[#E9ECFF] text-sm">
+                        <span className={`h-5 w-5 rounded flex items-center justify-center text-xs font-black text-black flex-shrink-0 ${colors.checkBg}`}>
+                          ✓
+                        </span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <Button 
+                    onClick={() => addToCart(pkg, 'addon')}
+                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                    data-testid={`button-add-${pkg.id}`}>
+                    {isInCart ? (
+                      <>
+                        <Check className="w-4 h-4 mr-2" />
+                        Added
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add to Cart
+                      </>
+                    )}
+                  </Button>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Floating Cart Button (Mobile) */}
+      {cartItemCount > 0 && (
+        <button
+          onClick={() => setIsCartOpen(true)}
+          className="lg:hidden fixed bottom-6 right-6 bg-blue-600 text-white rounded-full p-4 shadow-2xl z-40 flex items-center gap-2"
+          data-testid="button-cart-mobile">
+          <ShoppingCart className="w-6 h-6" />
+          <Badge className="bg-white text-blue-600">{cartItemCount}</Badge>
+        </button>
+      )}
+
+      {/* Cart Sidebar */}
+      <div className={`fixed top-0 right-0 h-full w-full lg:w-96 bg-white shadow-2xl z-50 transform transition-transform ${isCartOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex flex-col h-full">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ShoppingCart className="w-5 h-5" />
+                <h2 className="text-xl font-bold">Cart</h2>
+                {cartItemCount > 0 && (
+                  <Badge variant="secondary">{cartItemCount}</Badge>
+                )}
               </div>
+              <button onClick={() => setIsCartOpen(false)} data-testid="button-close-cart">
+                <X className="w-5 h-5" />
+              </button>
             </div>
           </div>
-        )}
+
+          <div className="flex-1 overflow-y-auto p-6">
+            {cart.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                Your cart is empty
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {cart.map((item) => (
+                  <div key={item.id} className="flex items-start gap-3 pb-4 border-b" data-testid={`cart-item-${item.id}`}>
+                    <div className="flex-1">
+                      <div className="font-medium">{item.name}</div>
+                      <div className="text-sm text-gray-600">
+                        ${item.price}/{item.billingCycle === 'annual' ? 'mo (annual)' : 'mo'}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 w-7 p-0"
+                        onClick={() => updateQuantity(item.id, -1)}
+                        data-testid={`button-decrease-${item.id}`}>
+                        <Minus className="w-3 h-3" />
+                      </Button>
+                      <span className="w-8 text-center">{item.quantity}</span>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 w-7 p-0"
+                        onClick={() => updateQuantity(item.id, 1)}
+                        data-testid={`button-increase-${item.id}`}>
+                        <Plus className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-7 w-7 p-0 text-red-600"
+                        onClick={() => removeFromCart(item.id)}
+                        data-testid={`button-remove-${item.id}`}>
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {cart.length > 0 && (
+            <div className="p-6 border-t border-gray-200 bg-gray-50">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-lg font-semibold">Total</span>
+                <span className="text-2xl font-bold" data-testid="text-cart-total">
+                  ${cartTotal.toFixed(2)}/mo
+                </span>
+              </div>
+              <Button 
+                onClick={handleCheckout}
+                className="w-full bg-blue-600 hover:bg-blue-700"
+                data-testid="button-checkout">
+                Proceed to Checkout
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
 
       <Footer />
