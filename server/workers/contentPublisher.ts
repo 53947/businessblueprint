@@ -1,15 +1,9 @@
 import { Worker, Job } from 'bullmq';
 import { redisConnection, PublishPostJob, SynupSyncJob } from '../services/queue';
 import { db } from '../db';
-import { contentPosts, externalSync } from '@shared/schema';
-import { eq } from 'drizzle-orm';
-
-// Import platform adapters (will be created in next task)
-// import * as facebookAdapter from '../services/platforms/facebook';
-// import * as instagramAdapter from '../services/platforms/instagram';
-// import * as linkedinAdapter from '../services/platforms/linkedin';
-// import * as xAdapter from '../services/platforms/x';
-// import * as googleBusinessAdapter from '../services/platforms/googleBusiness';
+import { contentPosts, externalSync, socialMediaAccounts } from '@shared/schema';
+import { eq, and } from 'drizzle-orm';
+import { PlatformFactory, SupportedPlatform } from '../services/platforms/platformFactory';
 
 // Content Publishing Worker
 export const contentPublishWorker = new Worker<PublishPostJob>(
@@ -47,40 +41,107 @@ export const contentPublishWorker = new Worker<PublishPostJob>(
             status: 'publishing',
           });
           
-          // TODO: Implement actual platform publishing
-          // For now, just simulate success
           console.log(`[ContentPublisher] Publishing to ${platform} - Post ${postId}`);
           
-          // Placeholder: Replace with actual platform adapters
-          publishResults[platform] = {
-            postId: `${platform}_${Date.now()}`,
-            url: `https://${platform}.com/post/${postId}`,
-            status: 'published',
-            publishedAt: new Date().toISOString(),
+          // Get platform account credentials
+          const [account] = await db
+            .select()
+            .from(socialMediaAccounts)
+            .where(
+              and(
+                eq(socialMediaAccounts.clientId, clientId),
+                eq(socialMediaAccounts.platform, platform),
+                eq(socialMediaAccounts.status, 'active')
+              )
+            );
+          
+          if (!account) {
+            throw new Error(`No active ${platform} account found for client ${clientId}`);
+          }
+          
+          // Check if credentials need refresh
+          let credentials = {
+            accessToken: account.accessToken,
+            refreshToken: account.refreshToken || undefined,
+            expiresAt: account.tokenExpiresAt || undefined,
+            accountId: String(account.id),
+            platformAccountId: account.platformAccountId || undefined,
           };
           
-          /*
-          // Real implementation (uncomment when adapters are ready):
-          switch (platform) {
-            case 'facebook':
-              publishResults[platform] = await facebookAdapter.publishPost(post, clientId);
-              break;
-            case 'instagram':
-              publishResults[platform] = await instagramAdapter.publishPost(post, clientId);
-              break;
-            case 'linkedin':
-              publishResults[platform] = await linkedinAdapter.publishPost(post, clientId);
-              break;
-            case 'x':
-              publishResults[platform] = await xAdapter.publishPost(post, clientId);
-              break;
-            case 'google_business':
-              publishResults[platform] = await googleBusinessAdapter.publishPost(post, clientId);
-              break;
-            default:
-              throw new Error(`Unsupported platform: ${platform}`);
+          const needsRefresh = account.tokenExpiresAt && new Date() > account.tokenExpiresAt;
+          const canRefresh = account.refreshToken && ['linkedin', 'x', 'google_business'].includes(platform);
+          
+          if (needsRefresh && canRefresh) {
+            console.log(`[ContentPublisher] Access token expired for ${platform}, refreshing...`);
+            
+            try {
+              const tempAdapter = PlatformFactory.createAdapter(platform as SupportedPlatform, credentials);
+              const refreshedCreds = await tempAdapter.refreshAccessToken();
+              
+              await db
+                .update(socialMediaAccounts)
+                .set({
+                  accessToken: refreshedCreds.accessToken,
+                  refreshToken: refreshedCreds.refreshToken || account.refreshToken,
+                  tokenExpiresAt: refreshedCreds.expiresAt || null,
+                })
+                .where(eq(socialMediaAccounts.id, account.id));
+              
+              credentials = {
+                ...credentials,
+                accessToken: refreshedCreds.accessToken,
+                refreshToken: refreshedCreds.refreshToken || credentials.refreshToken,
+                expiresAt: refreshedCreds.expiresAt,
+              };
+              
+              console.log(`[ContentPublisher] Token refreshed for ${platform}`);
+            } catch (refreshError: any) {
+              console.error(`[ContentPublisher] Failed to refresh token for ${platform}:`, refreshError);
+              throw new Error(`Token expired and refresh failed: ${refreshError.message}`);
+            }
+          } else if (needsRefresh && !canRefresh) {
+            console.warn(`[ContentPublisher] ${platform} token appears expired but uses long-lived tokens. Attempting publish anyway.`);
           }
-          */
+          
+          // Create platform adapter
+          const adapter = PlatformFactory.createAdapter(platform as SupportedPlatform, credentials);
+          
+          // Check platform capabilities
+          const capabilities = adapter.getCapabilities();
+          
+          const hasVideo = post.mediaUrls?.some(url => url.includes('.mp4') || url.includes('video')) || false;
+          if (hasVideo && !capabilities.supportsVideo) {
+            throw new Error(`${platform} does not support video posts`);
+          }
+          
+          const mediaCount = post.mediaUrls?.length || 0;
+          if (mediaCount > capabilities.maxMediaCount) {
+            throw new Error(`${platform} supports maximum ${capabilities.maxMediaCount} media items, but ${mediaCount} were provided`);
+          }
+          
+          let scheduledTime = post.scheduledFor || undefined;
+          if (post.scheduledFor && !capabilities.supportsScheduling) {
+            console.warn(`[ContentPublisher] ${platform} does not support scheduling. Publishing immediately instead.`);
+            scheduledTime = undefined;
+          }
+          
+          // Publish the post
+          const result = await adapter.publish({
+            text: post.content,
+            mediaUrls: post.mediaUrls || undefined,
+            scheduledTime,
+            hashtags: post.aiHashtags || undefined,
+          });
+          
+          if (result.success) {
+            publishResults[platform] = {
+              platformPostId: result.platformPostId,
+              url: result.platformUrl,
+              publishedAt: result.publishedAt?.toISOString() || new Date().toISOString(),
+            };
+          } else {
+            throw new Error(result.error || 'Unknown error');
+          }
           
         } catch (error: any) {
           console.error(`[ContentPublisher] Failed to publish to ${platform}:`, error);
