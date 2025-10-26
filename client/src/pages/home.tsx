@@ -491,7 +491,7 @@ Your personalized blueprint will show you which steps to take first!
                 <div className="flex justify-center items-center mb-6 h-20">
                   <BrandLogo brand="hostsblue" size="md" showIcon={true} />
                 </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">Website Hosting Platform</p>
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">Web Services Platform</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
                   <li>• High-performance hosting</li>
                   <li>• Domain management</li>
