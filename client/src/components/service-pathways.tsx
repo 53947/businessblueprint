@@ -116,7 +116,7 @@ export function ServicePathways() {
             <div className="p-4 flex items-center">
               <AICoachIcon className="w-10 h-10 mr-3 flex-shrink-0" />
               <div>
-                <div className="font-medium text-gray-900">AI Business Coach</div>
+                <div className="font-medium text-gray-900">Coach Blue</div>
                 <div className="text-sm text-gray-500 mt-1">Personalized AI guidance</div>
               </div>
             </div>
