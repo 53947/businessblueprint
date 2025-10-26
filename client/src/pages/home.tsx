@@ -495,7 +495,7 @@ Your personalized blueprint will show you which steps to take first!
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
                   <li>• High-performance hosting</li>
                   <li>• Domain management</li>
-                  <li>• Technical optimization</li>
+                  <li>• Website Builder</li>
                 </ul>
                 <Button className="w-full bg-[#660099] hover:bg-[#5a0088] mt-auto">
                   Get Hosting
