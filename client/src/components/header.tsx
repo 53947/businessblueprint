@@ -420,24 +420,24 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           <NavigationMenuLink asChild>
                             <a
                               className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/pricing"
-                              data-testid="link-pricing-tiers"
+                              href="/pathways"
+                              data-testid="link-pathways-tiers"
                             >
-                              <div className="text-sm font-medium leading-none">6-Tier Structure</div>
+                              <div className="text-sm font-medium leading-none">DIY vs MSP Pathways</div>
                               <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                STARTER ($250) to LEADERSHIP Pro ($1,249) with Essential/Pro tiers
+                                Choose your path: Self-service DIY or done-for-you managed services
                               </p>
                             </a>
                           </NavigationMenuLink>
                           <NavigationMenuLink asChild>
                             <a
                               className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/pricing"
-                              data-testid="link-pricing-included"
+                              href="/marketplace"
+                              data-testid="link-marketplace-catalog"
                             >
-                              <div className="text-sm font-medium leading-none">What's Included</div>
+                              <div className="text-sm font-medium leading-none">Complete Marketplace</div>
                               <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                All tiers include /send, /inbox, /livechat, and digital presence management
+                                Browse all DIY plans, add-ons, and MSP services with transparent pricing
                               </p>
                             </a>
                           </NavigationMenuLink>
@@ -690,12 +690,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     </div>
                   </a>
                   
-                  <a href="/pricing" className="block p-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-pricing">
+                  <a href="/pathways" className="block p-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-pathways">
                     <div className="flex items-center gap-3">
-                      <DollarSign className="w-8 h-8 text-green-600" />
+                      <Compass className="w-8 h-8 text-blue-600" />
                       <div className="flex-1">
-                        <div className="font-semibold text-gray-900">6-Tier Pricing Plans</div>
-                        <div className="text-xs text-gray-600">From $49/mo - Full ecosystem access</div>
+                        <div className="font-semibold text-gray-900">Choose Your Pathway</div>
+                        <div className="text-xs text-gray-600">DIY or MSP - Find your perfect fit</div>
                       </div>
                     </div>
                   </a>
