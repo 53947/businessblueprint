@@ -512,7 +512,7 @@ Your personalized blueprint will show you which steps to take first!
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
                   <li>• Secure payment processing</li>
                   <li>• Transaction management</li>
-                  <li>• Financial analytics</li>
+                  <li>• Shopping cart and Checkout</li>
                 </ul>
                 <Button className="w-full bg-[#FF0040] hover:bg-[#cc0033] mt-auto">
                   Setup Payments
