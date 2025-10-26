@@ -96,7 +96,7 @@ All three platforms appear in every platform's "Apps" menu:
 ```jsx
 // Special formatting for /inbox, /livechat, /send
 <span className="flex-1 text-base font-['Archivo']" style={{ fontWeight: 600 }}>
-  <span style={{ color: '#84D71A' }}>/</span>
+  <span style={{ color: '#00FF40' }}>/</span>
   <span style={{ color: '#0057FF' }}>{item.label}</span>
 </span>
 ```
@@ -115,7 +115,7 @@ All three platforms appear in every platform's "Apps" menu:
 **Triad Blue Core:**
 ```css
 --triad-blue: #0000FF;        /* Core brand blue */
---triad-green: #84D71A;       /* Fluorescent green (TLD accent) */
+--triad-green: #00FF40;       /* Fluorescent green (TLD accent) */
 ```
 
 **Platform-Specific Colors:**
@@ -147,7 +147,7 @@ font-family: 'Archivo', sans-serif;
 **Logo Typography Rules (CRITICAL):**
 1. **First word** = Archivo Semi Expanded (platform color)
 2. **Subsequent words** = Archivo (Triad Blue #0000FF)
-3. **TLD (.io, .com)** = Archivo (Fluorescent Green #84D71A)
+3. **TLD (.io, .com)** = Archivo (Fluorescent Green #00FF40)
 4. **BOTH fonts SAME SIZE** - No size variation between words
 5. **Text shadows on ALL wordmark text** - 5pt blur, 315° angle, 5-10pt distance
 
@@ -172,7 +172,7 @@ text-shadow: 5pt 5pt 5pt rgba(0, 0, 0, 0.3);
   textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
 }}>blueprint</span>
 <span style={{ 
-  color: '#84D71A', 
+  color: '#00FF40', 
   fontFamily: 'Archivo, sans-serif',
   textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
 }}>.io</span>
@@ -191,7 +191,7 @@ text-shadow: 5pt 5pt 5pt rgba(0, 0, 0, 0.3);
   textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
 }}>blue</span>
 <span style={{ 
-  color: '#84D71A', 
+  color: '#00FF40', 
   fontFamily: 'Archivo, sans-serif',
   textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
 }}>.com</span>
@@ -210,7 +210,7 @@ text-shadow: 5pt 5pt 5pt rgba(0, 0, 0, 0.3);
   textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
 }}>blue</span>
 <span style={{ 
-  color: '#84D71A', 
+  color: '#00FF40', 
   fontFamily: 'Archivo, sans-serif',
   textShadow: '5pt 5pt 5pt rgba(0, 0, 0, 0.3)'
 }}>.com</span>
@@ -588,7 +588,7 @@ When copying features from Business Blueprint to other platforms:
 
 **Keep unchanged:**
 - Triad Blue: `#0000FF`
-- Fluorescent Green: `#84D71A`
+- Fluorescent Green: `#00FF40`
 - All gray/neutral colors
 - Dark mode colors
 
