@@ -48,8 +48,8 @@ const individualProducts = [
   },
   {
     productId: "social-media-management",
-    name: "Social Media Management",
-    description: "Schedule posts, create content with AI, and manage multiple social profiles",
+    name: "Content Management Platform",
+    description: "/content - Create, schedule, and publish social media content with AI assistance across multiple platforms",
     category: "core",
     improvesCategory: ["engagement", "visibility"],
     diyPrice: "49.99",
@@ -57,11 +57,15 @@ const individualProducts = [
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
-      "Multi-platform posting (Facebook, Instagram, LinkedIn, X)",
-      "AI content generation (3 posts/day)",
-      "Post scheduling up to 14 days",
-      "Social media analytics",
-      "Content calendar"
+      "DIY: 3 platforms (FB, IG, LinkedIn, X, Google Business) - pick your favorites",
+      "MSP: All 7 platforms including TikTok & Snapchat",
+      "AI caption generator with tone control",
+      "Smart hashtag suggestions",
+      "Visual content calendar with drag-drop scheduling",
+      "Media library with cloud storage",
+      "Post analytics & performance tracking",
+      "Template library for quick posting",
+      "MSP: Two-way Synup sync + team collaboration"
     ]),
     deliveryMethod: ["diy", "msp"],
     estimatedImpact: "+15-20 points",

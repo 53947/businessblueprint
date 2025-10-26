@@ -283,8 +283,8 @@ const addons = [
   },
   {
     addonId: "social",
-    name: "Social",
-    description: "Plan, publish, and track performance. FB/IG/X/LinkedIn scheduling, calendar + drag & drop, AI captions + hashtag help, analytics + link-in-bio page",
+    name: "Content Management (DIY)",
+    description: "/content platform: Choose 3 social platforms (FB, IG, LinkedIn, X, Google Business). AI captions + hashtags, scheduling calendar with drag & drop, media library, analytics dashboard. Full AI Coach included!",
     category: "synup-diy",
     icon: "Share2",
     price: "8.00",
@@ -318,8 +318,8 @@ const addons = [
   },
   {
     addonId: "social-posting",
-    name: "Social Media Posting",
-    description: "Branded content publishing. Consistent cross-channel cadence, calendar, approvals, basic analytics. +$3 per extra post",
+    name: "Content Management (MSP)",
+    description: "/content platform: All 7 platforms (FB, IG, LinkedIn, X, Google Business, TikTok, Snapchat). AI captions + hashtags, scheduling, media library, analytics, team collaboration, two-way Synup sync. Managed by our team.",
     category: "synup-msp",
     icon: "Send",
     price: "25.00",
