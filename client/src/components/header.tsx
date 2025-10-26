@@ -120,7 +120,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </p>
                                 <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-businessblueprint-features">
                                   <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Digital IQ Assessment</li>
-                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Coach Blue</li>
+                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> AI Business Coach</li>
                                   <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Client Portal & Dashboard</li>
                                 </ul>
                               </a>
@@ -389,7 +389,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </p>
                               <ul className="space-y-1 text-xs text-white mb-3">
                                 <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Self-managed campaigns</li>
-                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Coach Blue included</li>
+                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> AI Business Coach included</li>
                                 <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Pay only for what you use</li>
                               </ul>
                               <div className="text-xs font-semibold text-white">
