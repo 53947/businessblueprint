@@ -461,14 +461,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow p-6">
               <CardContent className="flex flex-col">
                 <div className="flex justify-center items-center mb-6 h-20">
-                  <div className="flex items-end gap-1">
-                    <img src="/@fs/home/runner/workspace/attached_assets/Blueprint_Avatar.png" alt="businessblueprint.io" style={{ width: '36px', height: '36px' }} className="object-contain" />
-                    <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600 }}>
-                      <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
-                      <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blueprint</span>
-                      <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.io</span>
-                    </div>
-                  </div>
+                  <BrandLogo brand="businessblueprint" size="md" showIcon={true} />
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">Digital Intelligence Platform</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
