@@ -57,11 +57,11 @@ export function BrandLogo({
             <img 
               src={bbAvatar} 
               alt="businessblueprint.io icon" 
-              className={`${iconSize} object-contain`}
-              style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+              style={{ height: '48px', width: 'auto', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+              className="object-contain"
             />
           )}
-          <div className="text-center leading-tight" style={{ fontSize: textFontSize, fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
+          <div className="text-center leading-tight" style={{ fontSize: '18px', fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
             <div style={{ color: textColor1, fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</div>
             <div style={{ color: textColor2, fontFamily: 'Archivo, sans-serif' }}>blueprint</div>
           </div>
@@ -76,11 +76,11 @@ export function BrandLogo({
           <img 
             src={bbAvatar} 
             alt="businessblueprint.io icon" 
-            className={`${iconSize} object-contain`}
-            style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+            style={{ width: '36px', height: '36px', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+            className="object-contain"
           />
         )}
-        <div className="leading-none pb-0.5" style={{ fontSize: textFontSize, fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
+        <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
           <span style={{ color: textColor1, fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
           <span style={{ color: textColor2, fontFamily: 'Archivo, sans-serif' }}>blueprint</span>
           <span style={{ color: textColor3, fontFamily: 'Archivo, sans-serif' }}>.io</span>
