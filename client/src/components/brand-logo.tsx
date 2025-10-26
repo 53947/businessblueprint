@@ -1,6 +1,7 @@
 // Reusable brand logo components using new universal logos (work for light/dark)
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
 import bbIcon from "@assets/Blueprint Icon_1760810447789.png";
+import bbAvatar from "@assets/Blueprint_Avatar.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import airswipedLogo from "@assets/swipesblue icon_1760810511865.png";
@@ -69,7 +70,7 @@ export function BrandLogo({
       <div className={`flex items-end gap-1 ${className}`}>
         {showIcon && !textOnly && (
           <img 
-            src={bbIcon} 
+            src={bbAvatar} 
             alt="businessblueprint.io icon" 
             style={{ width: '36px', height: '36px', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
             className="object-contain"
