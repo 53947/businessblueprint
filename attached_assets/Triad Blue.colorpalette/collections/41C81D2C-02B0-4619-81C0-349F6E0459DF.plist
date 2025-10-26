@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>created-at-base-version</key>
+	<integer>442</integer>
+	<key>id</key>
+	<string>41C81D2C-02B0-4619-81C0-349F6E0459DF</string>
+	<key>name</key>
+	<string>Triad Blue</string>
+	<key>options</key>
+	<integer>2</integer>
+	<key>presets-list</key>
+	<array>
+		<string>A77D89A6-DC10-4AB3-89A5-42EBE72EF35D</string>
+		<string>1BADF200-1F72-4D40-8755-1A5358CAFC34</string>
+		<string>385BB6F9-21F8-49EE-A8A9-C4236954F98A</string>
+		<string>6D69017B-1E32-4AD1-B5DB-CCFE9476F4A3</string>
+		<string>0C7C2F9E-1F39-4416-A566-F78DF79EF8F4</string>
+		<string>774C28FC-A434-4D11-B2CF-D706119142F6</string>
+		<string>CAB42D17-6366-493D-B044-6EF7AABFF171</string>
+		<string>A76CB649-A7CF-4D62-872A-A9457671A0FF</string>
+		<string>2A3BEB5A-DA8C-41CE-8898-6EA9A7149B95</string>
+		<string>D78D1FAF-54C3-483C-A081-01D5334B3B8B</string>
+		<string>D9C85E3B-7009-440D-A6C6-BD270C7AFA4D</string>
+		<string>4D3FFFBD-F983-4107-8A6B-616F1DD26B6E</string>
+		<string>66A6D8F8-7B43-4FBD-9646-BE95604C8A41</string>
+		<string>B4BB41B9-0BC0-49D1-9713-BE1D5A53576E</string>
+		<string>25022666-71ED-4931-8BF6-FC151FAF4097</string>
+		<string>73AE1F4A-59D8-4A1A-8633-98517FB56105</string>
+		<string>6E583F89-0968-4632-87D8-1FB6DA2DC4B2</string>
+	</array>
+</dict>
+</plist>
