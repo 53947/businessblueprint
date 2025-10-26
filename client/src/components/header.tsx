@@ -39,7 +39,7 @@ import {
   Video,
   Users
 } from "lucide-react";
-import { BrandLogo } from "@/components/brand-logo";
+import { BrandLogo, BrandIcon } from "@/components/brand-logo";
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
 import bbIcon from "@assets/Blueprint Icon_1760810447789.png";
 import commverseIcon from "@assets/Commverse Bundle_1760662442941.png";
@@ -130,14 +130,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-purple-500 hover:shadow-xl hover:from-purple-50 hover:to-purple-100 dark:hover:from-purple-950 dark:hover:to-purple-900 hover:scale-[1.02]"
-                                href="#webhosted"
-                                data-testid="link-app-webhosted"
+                                href="#hostsblue"
+                                data-testid="link-app-hostsblue"
                               >
                                 <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center gap-3">
-                                    <img src={webhostedIcon} alt="hostsblue.com" className="h-10 w-10 object-contain" />
-                                    <img src={webhostedLogo} alt="hostsblue.com" className="h-7 object-contain" />
-                                  </div>
+                                  <BrandLogo brand="hostsblue" size="sm" showIcon={true} />
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-purple-600 dark:text-purple-400">Visit Platform →</span>
                                   </div>
@@ -158,18 +155,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-red-500 hover:shadow-xl hover:from-red-50 hover:to-red-100 dark:hover:from-red-950 dark:hover:to-red-900 hover:scale-[1.02]"
-                                href="#airswiped"
-                                data-testid="link-app-airswiped"
+                                href="#swipesblue"
+                                data-testid="link-app-swipesblue"
                               >
                                 <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center gap-3">
-                                    <img src={airswipedLogo} alt="swipesblue.com" className="h-10 w-10 object-contain" />
-                                    <div className="font-archivo font-bold text-base leading-none">
-                                      <span className="text-[#09080E] dark:text-white">air</span>
-                                      <span className="text-[#FF0040]">swiped</span>
-                                      <span className="text-[#84D71A]">.com</span>
-                                    </div>
-                                  </div>
+                                  <BrandLogo brand="swipesblue" size="sm" showIcon={true} />
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-red-600 dark:text-red-400">Visit Platform →</span>
                                   </div>
@@ -725,9 +715,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   </a>
                   
                   {/* hostsblue.com */}
-                  <a href="#webhosted" className="block p-3 bg-white rounded-lg border-l-4 border-purple-500 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-webhosted">
+                  <a href="#hostsblue" className="block p-3 bg-white rounded-lg border-l-4 border-purple-500 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-hostsblue">
                     <div className="flex items-center gap-3">
-                      <img src={webhostedIcon} alt="" className="h-10 w-10 object-contain" />
+                      <BrandIcon brand="hostsblue" size="sm" variant="light" />
                       <div className="flex-1">
                         <div className="font-semibold text-gray-900">hostsblue.com</div>
                         <div className="text-xs text-gray-600">Website Hosting & Builder</div>
@@ -736,9 +726,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   </a>
                   
                   {/* swipesblue.com */}
-                  <a href="#airswiped" className="block p-3 bg-white rounded-lg border-l-4 border-red-500 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-airswiped">
+                  <a href="#swipesblue" className="block p-3 bg-white rounded-lg border-l-4 border-red-500 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-swipesblue">
                     <div className="flex items-center gap-3">
-                      <img src={airswipedLogo} alt="" className="h-10 w-10 object-contain" />
+                      <BrandIcon brand="swipesblue" size="sm" variant="light" />
                       <div className="flex-1">
                         <div className="font-semibold text-gray-900">swipesblue.com</div>
                         <div className="text-xs text-gray-600">Payment Gateway</div>

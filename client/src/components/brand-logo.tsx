@@ -24,10 +24,10 @@ interface BrandLogoProps {
 }
 
 const sizeConfig = {
-  sm: { icon: 'w-6 h-6', text: 'text-lg', logo: 'h-6' },
-  md: { icon: 'w-10 h-10', text: 'text-2xl', logo: 'h-10' },
-  lg: { icon: 'w-16 h-16', text: 'text-4xl', logo: 'h-16' },
-  xl: { icon: 'w-20 h-20', text: 'text-5xl', logo: 'h-20' }
+  sm: { icon: 'w-6 h-6', text: 'text-lg', logo: 'h-6', fontSize: '18px' },
+  md: { icon: 'w-10 h-10', text: 'text-2xl', logo: 'h-10', fontSize: '24px' },
+  lg: { icon: 'w-16 h-16', text: 'text-4xl', logo: 'h-16', fontSize: '36px' },
+  xl: { icon: 'w-20 h-20', text: 'text-5xl', logo: 'h-20', fontSize: '48px' }
 };
 
 export function BrandLogo({ 
@@ -40,7 +40,7 @@ export function BrandLogo({
   className = '' 
 }: BrandLogoProps) {
   const isDark = variant === 'dark';
-  const { icon: iconSize, logo: logoSize, text: textSize } = sizeConfig[size];
+  const { icon: iconSize, logo: logoSize, text: textSize, fontSize: textFontSize } = sizeConfig[size];
   
   // Business Blueprint text-based logo matching Brand Logo Key
   if (brand === 'businessblueprint') {
@@ -71,11 +71,11 @@ export function BrandLogo({
           <img 
             src={bbIcon} 
             alt="businessblueprint.io icon" 
-            style={{ width: '36px', height: '36px' }}
+            style={{ width: '36px', height: '36px', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
             className="object-contain"
           />
         )}
-        <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600 }}>
+        <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
           <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
           <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blueprint</span>
           <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.io</span>
@@ -85,20 +85,34 @@ export function BrandLogo({
   }
 
   if (brand === 'hostsblue') {
+    const textColor1 = '#8000FF'; // purple
+    const textColor2 = isDark ? '#4D94FF' : '#0000FF'; // blue - lighter for dark bg
+    const textColor3 = isDark ? '#9FE85C' : '#84D71A'; // green - lighter for dark bg
+    
     return (
       <div className={`flex items-center gap-3 ${className}`}>
-        {showIcon && (
+        {showIcon && !textOnly && (
           <img 
             src={hostsBlueIcon} 
             alt="hostsblue.com icon" 
             className={`${iconSize} object-contain`}
+            style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
           />
         )}
-        <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600 }}>
-          <span style={{ color: '#009FBD', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
-          <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blue</span>
-          <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.com</span>
-        </div>
+        {!textOnly && (
+          <div className="leading-none pb-0.5" style={{ fontSize: textFontSize, fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
+            <span style={{ color: textColor1, fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
+            <span style={{ color: textColor2, fontFamily: 'Archivo, sans-serif' }}>blue</span>
+            <span style={{ color: textColor3, fontFamily: 'Archivo, sans-serif' }}>.com</span>
+          </div>
+        )}
+        {textOnly && (
+          <span className="leading-none" style={{ fontSize: textFontSize, fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
+            <span style={{ color: textColor1, fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
+            <span style={{ color: textColor2, fontFamily: 'Archivo, sans-serif' }}>blue</span>
+            <span style={{ color: textColor3, fontFamily: 'Archivo, sans-serif' }}>.com</span>
+          </span>
+        )}
       </div>
     );
   }
@@ -124,20 +138,34 @@ export function BrandLogo({
 
   // swipesblue uses new lightning bolt icon
   if (brand === 'swipesblue') {
+    const textColor1 = isDark ? '#FF4D7A' : '#FF0040'; // red - lighter for dark bg
+    const textColor2 = isDark ? '#4D94FF' : '#0000FF'; // blue - lighter for dark bg
+    const textColor3 = isDark ? '#9FE85C' : '#84D71A'; // green - lighter for dark bg
+    
     return (
       <div className={`flex items-center gap-3 ${className}`}>
-        {showIcon && (
+        {showIcon && !textOnly && (
           <img 
             src={swipesBlueIcon} 
             alt="swipesblue.com icon" 
             className={`${iconSize} object-contain`}
+            style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
           />
         )}
-        <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600 }}>
-          <span style={{ color: '#FF0040', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
-          <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blue</span>
-          <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.com</span>
-        </div>
+        {!textOnly && (
+          <div className="leading-none pb-0.5" style={{ fontSize: textFontSize, fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
+            <span style={{ color: textColor1, fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
+            <span style={{ color: textColor2, fontFamily: 'Archivo, sans-serif' }}>blue</span>
+            <span style={{ color: textColor3, fontFamily: 'Archivo, sans-serif' }}>.com</span>
+          </div>
+        )}
+        {textOnly && (
+          <span className="leading-none" style={{ fontSize: textFontSize, fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
+            <span style={{ color: textColor1, fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
+            <span style={{ color: textColor2, fontFamily: 'Archivo, sans-serif' }}>blue</span>
+            <span style={{ color: textColor3, fontFamily: 'Archivo, sans-serif' }}>.com</span>
+          </span>
+        )}
       </div>
     );
   }

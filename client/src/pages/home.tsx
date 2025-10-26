@@ -489,10 +489,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow p-6">
               <CardContent className="flex flex-col">
                 <div className="flex justify-center items-center mb-6 h-20">
-                  <div className="flex items-center gap-3">
-                    <img src={webhostedIcon} alt="webhosted.io" className="h-14 w-14 object-contain" />
-                    <img src={webhostedLogo} alt="webhosted.io" className="h-10 object-contain" />
-                  </div>
+                  <BrandLogo brand="hostsblue" size="md" showIcon={true} />
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">Website Hosting Platform</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
@@ -509,14 +506,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
               <CardContent className="flex flex-col">
                 <div className="flex justify-center items-center mb-6 h-20">
-                  <div className="flex items-center gap-3">
-                    <img src={airswipedLogo} alt="airswiped.com" className="h-14 w-14 object-contain" />
-                    <div className="font-archivo font-bold text-base leading-none">
-                      <span className="text-[#09080E]">air</span>
-                      <span className="text-[#FF0040]">swiped</span>
-                      <span className="text-[#84D71A]">.com</span>
-                    </div>
-                  </div>
+                  <BrandLogo brand="swipesblue" size="md" showIcon={true} />
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">Payment Gateway Platform</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
