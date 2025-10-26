@@ -10,6 +10,7 @@ import { NMIPaymentForm, PaymentFormData } from "@/components/nmi-payment-form";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { ShoppingCart, Shield, Lock, CreditCard } from "lucide-react";
+import { BrandLogo, BrandIcon } from "@/components/brand-logo";
 import airswipedLogo from "@assets/airswipedcom icon light version_1760075718468.png";
 
 interface CartItem {
@@ -131,13 +132,8 @@ export default function MarketplaceCheckoutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src={airswipedLogo} alt="swipesblue.com" className="h-12 w-12 object-contain" />
+              <BrandLogo brand="swipesblue" size="md" variant="dark" showIcon={true} />
               <div>
-                <div className="font-archivo font-bold text-2xl leading-none mb-1">
-                  <span className="text-white">air</span>
-                  <span className="text-[#FF0040]">swiped</span>
-                  <span className="text-[#84D71A]">.com</span>
-                </div>
                 <p className="text-red-100 text-sm">Secure Payment Gateway</p>
               </div>
             </div>
@@ -267,14 +263,8 @@ export default function MarketplaceCheckoutPage() {
             {/* swipesblue.com Trust Badge */}
             <div className="mt-6 text-center">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm">
-                <img src={airswipedLogo} alt="swipesblue.com" className="h-6 w-6 object-contain" />
                 <span className="text-sm text-gray-600">
-                  Secured by{' '}
-                  <span className="font-archivo font-bold">
-                    <span className="text-[#09080E]">air</span>
-                    <span className="text-[#FF0040]">swiped</span>
-                    <span className="text-[#84D71A]">.com</span>
-                  </span>
+                  Secured by <BrandLogo brand="swipesblue" size="sm" variant="light" textOnly={true} />
                 </span>
               </div>
             </div>
