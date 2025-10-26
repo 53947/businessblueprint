@@ -1,7 +1,10 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { useLocation } from "wouter";
-import { ArrowRight, Compass, Wrench, Lightbulb, Zap, Ship, Brain, Building2, CreditCard, Server } from "lucide-react";
+import { ArrowRight, Compass, Wrench, Lightbulb, Zap, Ship, Brain, Building2, CreditCard, Server, Mail, Inbox, MessageSquare } from "lucide-react";
+import sendIcon from "@assets/send icon_1760074368870.png";
+import inboxIcon from "@assets/Unified mailbox_1760074368869.png";
+import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -163,6 +166,116 @@ export default function PathwaysPage() {
                   data-testid="button-explore-msp">
                   Explore MSP Services
                 </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Communication Apps - Included in Both Pathways */}
+      <section className="py-20 bg-white border-y border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+              <MessageSquare className="w-4 h-4" />
+              Included in All Plans
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Commverse Communication Apps
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Three proprietary apps that work together to streamline all your customer communications
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* /send */}
+            <Card className="border-2 border-yellow-200 hover:border-yellow-400 hover:shadow-xl transition-all">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center mb-4">
+                  <img src={sendIcon} alt="/send" className="h-16 w-16 object-contain" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">
+                  <span style={{ color: '#00FF40' }}>/</span>
+                  <span style={{ color: '#0000FF' }}>send</span>
+                </h3>
+                <p className="text-sm text-gray-600 mb-4 text-center">
+                  Email & SMS Marketing Platform
+                </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-yellow-600 rounded-full"></div>
+                    Unified campaigns
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-yellow-600 rounded-full"></div>
+                    Contact management
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-yellow-600 rounded-full"></div>
+                    GDPR/CAN-SPAM compliant
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* /inbox */}
+            <Card className="border-2 border-blue-200 hover:border-blue-400 hover:shadow-xl transition-all">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center mb-4">
+                  <img src={inboxIcon} alt="/inbox" className="h-16 w-16 object-contain" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">
+                  <span style={{ color: '#00FF40' }}>/</span>
+                  <span style={{ color: '#0000FF' }}>inbox</span>
+                </h3>
+                <p className="text-sm text-gray-600 mb-4 text-center">
+                  Unified Communications Hub
+                </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+                    Multi-channel messaging
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+                    Real-time notifications
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+                    Team collaboration
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* /livechat */}
+            <Card className="border-2 border-purple-200 hover:border-purple-400 hover:shadow-xl transition-all">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center mb-4">
+                  <img src={livechatIcon} alt="/livechat" className="h-16 w-16 object-contain" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">
+                  <span style={{ color: '#00FF40' }}>/</span>
+                  <span style={{ color: '#0000FF' }}>livechat</span>
+                </h3>
+                <p className="text-sm text-gray-600 mb-4 text-center">
+                  Website Live Chat Widget
+                </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-purple-600 rounded-full"></div>
+                    Real-time chat
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-purple-600 rounded-full"></div>
+                    Session persistence
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-purple-600 rounded-full"></div>
+                    Conversation history
+                  </li>
+                </ul>
               </CardContent>
             </Card>
           </div>
