@@ -126,7 +126,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </a>
                             </NavigationMenuLink>
 
-                            {/* webhosted.io */}
+                            {/* hostsblue.com */}
                             <NavigationMenuLink asChild>
                               <a
                                 className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-purple-500 hover:shadow-xl hover:from-purple-50 hover:to-purple-100 dark:hover:from-purple-950 dark:hover:to-purple-900 hover:scale-[1.02]"
@@ -135,8 +135,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               >
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-3">
-                                    <img src={webhostedIcon} alt="webhosted.io" className="h-10 w-10 object-contain" />
-                                    <img src={webhostedLogo} alt="webhosted.io" className="h-7 object-contain" />
+                                    <img src={webhostedIcon} alt="hostsblue.com" className="h-10 w-10 object-contain" />
+                                    <img src={webhostedLogo} alt="hostsblue.com" className="h-7 object-contain" />
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-purple-600 dark:text-purple-400">Visit Platform →</span>
@@ -154,7 +154,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </a>
                             </NavigationMenuLink>
 
-                            {/* airswiped.com */}
+                            {/* swipesblue.com */}
                             <NavigationMenuLink asChild>
                               <a
                                 className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-red-500 hover:shadow-xl hover:from-red-50 hover:to-red-100 dark:hover:from-red-950 dark:hover:to-red-900 hover:scale-[1.02]"
@@ -163,7 +163,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               >
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-3">
-                                    <img src={airswipedLogo} alt="airswiped.com" className="h-10 w-10 object-contain" />
+                                    <img src={airswipedLogo} alt="swipesblue.com" className="h-10 w-10 object-contain" />
                                     <div className="font-archivo font-bold text-base leading-none">
                                       <span className="text-[#09080E] dark:text-white">air</span>
                                       <span className="text-[#FF0040]">swiped</span>
@@ -724,23 +724,23 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     </div>
                   </a>
                   
-                  {/* webhosted.io */}
+                  {/* hostsblue.com */}
                   <a href="#webhosted" className="block p-3 bg-white rounded-lg border-l-4 border-purple-500 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-webhosted">
                     <div className="flex items-center gap-3">
                       <img src={webhostedIcon} alt="" className="h-10 w-10 object-contain" />
                       <div className="flex-1">
-                        <div className="font-semibold text-gray-900">webhosted.io</div>
+                        <div className="font-semibold text-gray-900">hostsblue.com</div>
                         <div className="text-xs text-gray-600">Website Hosting & Builder</div>
                       </div>
                     </div>
                   </a>
                   
-                  {/* airswiped.com */}
+                  {/* swipesblue.com */}
                   <a href="#airswiped" className="block p-3 bg-white rounded-lg border-l-4 border-red-500 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-airswiped">
                     <div className="flex items-center gap-3">
                       <img src={airswipedLogo} alt="" className="h-10 w-10 object-contain" />
                       <div className="flex-1">
-                        <div className="font-semibold text-gray-900">airswiped.com</div>
+                        <div className="font-semibold text-gray-900">swipesblue.com</div>
                         <div className="text-xs text-gray-600">Payment Gateway</div>
                       </div>
                     </div>

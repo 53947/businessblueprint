@@ -239,7 +239,7 @@ export default function CommverseLanding() {
                   Built for Blue Link Ecosystem
                 </h3>
                 <p className="text-blue-50">
-                  Commverse is a mini-ecosystem within Blue Link—seamlessly integrating with businessblueprint.io, webhosted.io, and airswiped.com.
+                  Commverse is a mini-ecosystem within Blue Link—seamlessly integrating with businessblueprint.io, hostsblue.com, and swipesblue.com.
                 </p>
               </div>
 
