@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TriadBlue • Pricing Presentation</title>
+<style>
+  :root{
+    --blue:#0000FF;
+    --purple:#8000FF;
+    --red:#FF0040;
+    --orange:#F79248;
+    --green:#00FF66; /* update if your brand green differs */
+    --ink:#0B1020;
+    --bg:#0E1117;
+    --muted:#A9B0C5;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, system-ui, sans-serif;
+    color:var(--white);
+    background: radial-gradient(1200px 600px at 20% -10%, rgba(128,0,255,.15), transparent 60%),
+               radial-gradient(1200px 600px at 120% 10%, rgba(0,0,255,.15), transparent 60%),
+               #0B0E17;
+    padding:48px 20px 80px;
+  }
+  .wrap{max-width:1200px;margin:0 auto}
+  .kicker{letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#D5D9FF;font-size:12px}
+  h1{margin:.25rem 0 1.25rem;font-size:34px;line-height:1.15}
+  h2{margin:28px 0 14px;font-size:26px}
+  p{color:var(--muted);margin-top:6px}
+  .grid{display:grid;gap:18px}
+  .grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media (max-width:980px){.grid.cols-3{grid-template-columns:1fr} .grid.cols-2{grid-template-columns:1fr}}
+  .card{
+    background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:18px;
+    padding:22px 20px 20px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card .tag{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:13px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}
+  .price{font-size:32px;font-weight:800;margin:6px 0 2px}
+  .period{font-size:12px;color:var(--muted)}
+  ul{list-style:none;margin:14px 0 0;padding:0}
+  li{display:flex;gap:10px;align-items:flex-start;margin:10px 0;color:#E9ECFF}
+  .check{height:20px;width:20px;border-radius:5px;display:inline-grid;place-items:center;font-size:13px;font-weight:900;color:#000}
+  .cta{
+    margin-top:16px;
+    display:inline-block;
+    padding:10px 14px;
+    border-radius:10px;
+    font-weight:700;
+    text-decoration:none;
+    color:#000;
+    background:#fff;
+  }
+  .accent-blue .price, .accent-blue .tag{background:linear-gradient(90deg,var(--blue),#4D5CFF);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .accent-purple .price, .accent-purple .tag{background:linear-gradient(90deg,var(--purple),#B566FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .accent-green .price, .accent-green .tag{background:linear-gradient(90deg,var(--green),#7DFFB2);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .accent-red .price, .accent-red .tag{background:linear-gradient(90deg,var(--red),#FF6A85);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .accent-orange .price, .accent-orange .tag{background:linear-gradient(90deg,var(--orange),#FFB67A);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .blue  {background:var(--blue);}
+  .purple{background:var(--purple);}
+  .green {background:var(--green);}
+  .red   {background:var(--red);}
+  .orange{background:var(--orange);}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);margin:36px 0}
+  .note{font-size:12px;color:#BFC6E9;margin-top:6px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="kicker">DIY Plans</div>
+    <h1>Start • Advanced • Scale</h1>
+    <div class="grid cols-3">
+      <div class="card accent-blue">
+        <span class="tag">💡 Start</span>
+        <div class="price">$99/mo</div>
+        <div class="period">or $124 billed monthly • Save 20% annually</div>
+        <p>Get Found. Free Digital IQ + Blueprint. Build a reliable foundation for attracting customers.</p>
+        <ul>
+          <li><span class="check blue">✓</span>Up to <b>5 team members</b></li>
+          <li><span class="check blue">✓</span>Up to <b>25 client accounts</b></li>
+          <li><span class="check blue">✓</span><b>Listings Management</b> across Google, Apple Maps, Bing, Yelp, FB</li>
+          <li><span class="check blue">✓</span><b>Reviews Management</b> to monitor + respond</li>
+          <li><span class="check blue">✓</span><b>Social Media Tools</b> for scheduling + tracking</li>
+          <li><span class="check blue">✓</span><b>Local SEO</b> for map pack visibility + rank tracking</li>
+          <li><span class="check blue">✓</span><b>Digital IQ Assessment</b> + <b>Blueprint</b></li>
+          <li><span class="check red">•</span><b>AI Business Coach</b> available as add-on</li>
+        </ul>
+        <a class="cta" href="#">Book a Demo</a>
+      </div>
+
+      <div class="card accent-purple">
+        <span class="tag">⚙️ Advanced</span>
+        <div class="price">$248/mo</div>
+        <div class="period">or $310 billed monthly • Save 20% annually</div>
+        <p>Get Customers. Automation + AI Coach included to convert attention into revenue.</p>
+        <ul>
+          <li><span class="check purple">✓</span>Up to <b>10 team members</b></li>
+          <li><span class="check purple">✓</span>Up to <b>100 client accounts</b></li>
+          <li><span class="check purple">✓</span><b>Listings</b> sync across 70+ directories</li>
+          <li><span class="check purple">✓</span><b>Reviews</b> AI reply drafts + sentiment tagging</li>
+          <li><span class="check purple">✓</span><b>Social Automation</b> smart calendar + insights</li>
+          <li><span class="check purple">✓</span><b>Local SEO Tools</b> keywords, competitors, on-page</li>
+          <li><span class="check purple">✓</span><b>Digital IQ + Expanded Blueprint</b></li>
+          <li><span class="check green">✓</span><b>AI Business Coach</b> included</li>
+        </ul>
+        <a class="cta" href="#">Book a Demo</a>
+      </div>
+
+      <div class="card accent-green">
+        <span class="tag">🚀 Scale</span>
+        <div class="price">$999/mo</div>
+        <div class="period">or $1,249 billed monthly • Save 20% annually</div>
+        <p>Get Business. Unify marketing, sales, payments, and retention on one intelligent system.</p>
+        <ul>
+          <li><span class="check green">✓</span>Up to <b>50 team members</b></li>
+          <li><span class="check green">✓</span>Up to <b>500 client accounts</b></li>
+          <li><span class="check green">✓</span><b>Listings</b> enterprise sync + reporting</li>
+          <li><span class="check green">✓</span><b>Reviews</b> advanced automation + templates</li>
+          <li><span class="check green">✓</span><b>Social Suite</b> collaboration + AI content planning</li>
+          <li><span class="check green">✓</span><b>Local SEO Suite</b> national tracking + analytics</li>
+          <li><span class="check green">✓</span><b>Digital IQ + Blueprint</b> integrated with CRM/automation</li>
+          <li><span class="check green">✓</span><b>Full AI Business Coach</b> access</li>
+        </ul>
+        <a class="cta" href="#">Book a Demo</a>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="kicker">DIY Add‑Ons</div>
+    <h2>Self‑Service Modules</h2>
+    <div class="grid cols-3">
+      <div class="card accent-blue">
+        <span class="tag">📍 Listings</span>
+        <div class="price">$44/mo</div>
+        <p>Accurate profiles across directories, maps, and search engines.</p>
+        <ul>
+          <li><span class="check blue">✓</span>Profile sync (NAP, hours, site)</li>
+          <li><span class="check blue">✓</span>Major directories + long‑tail</li>
+          <li><span class="check blue">✓</span>Duplicate suppression</li>
+          <li><span class="check blue">✓</span>Holiday hours, logos, photos</li>
+          <li><span class="check blue">✓</span>Change monitoring + health report</li>
+        </ul>
+      </div>
+      <div class="card accent-purple">
+        <span class="tag">⭐ Reviews (Pro)</span>
+        <div class="price">$25/mo</div>
+        <p>Generate more reviews & respond faster.</p>
+        <ul>
+          <li><span class="check purple">✓</span>SMS/email requests + QR</li>
+          <li><span class="check purple">✓</span>Unified inbox (Google, FB, Yelp…)</li>
+          <li><span class="check purple">✓</span>AI reply drafts + alerts</li>
+          <li><span class="check purple">✓</span>Widgets + trend reports</li>
+        </ul>
+      </div>
+      <div class="card accent-red">
+        <span class="tag">⭐ Reviews (Gold)</span>
+        <div class="price">$63/mo</div>
+        <p>Advanced insights and automation.</p>
+        <ul>
+          <li><span class="check red">✓</span>Smart routing + win‑back</li>
+          <li><span class="check red">✓</span>Response templates + guardrails</li>
+          <li><span class="check red">✓</span>Competitor benchmarking</li>
+          <li><span class="check red">✓</span>Multi‑location roll‑ups + compliance</li>
+        </ul>
+      </div>
+      <div class="card accent-orange">
+        <span class="tag">📣 Social</span>
+        <div class="price">$8/mo</div>
+        <p>Plan, publish, and track performance.</p>
+        <ul>
+          <li><span class="check orange">✓</span>FB/IG/X/LinkedIn scheduling</li>
+          <li><span class="check orange">✓</span>Calendar + drag & drop</li>
+          <li><span class="check orange">✓</span>AI captions + hashtag help</li>
+          <li><span class="check orange">✓</span>Analytics + link‑in‑bio page</li>
+        </ul>
+      </div>
+      <div class="card accent-green">
+        <span class="tag">🔎 Local SEO</span>
+        <div class="price">$6/mo</div>
+        <p>Climb (and stay) in the local 3‑pack.</p>
+        <ul>
+          <li><span class="check green">✓</span>Local keyword + map pack tracking</li>
+          <li><span class="check green">✓</span>Competitor comparison</li>
+          <li><span class="check green">✓</span>On‑page checks + GBP tips</li>
+          <li><span class="check green">✓</span>Monthly scorecard + quick wins</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="kicker">MSP Add‑Ons</div>
+    <h2>Managed by Our Team</h2>
+    <div class="grid cols-2">
+      <div class="card accent-red">
+        <span class="tag">⭐ Reputation Management</span>
+        <div class="price">$15/location</div>
+        <div class="period">Includes 50 responses/mo • +$2 each additional</div>
+        <ul>
+          <li><span class="check red">✓</span>Monitor & respond across platforms</li>
+          <li><span class="check red">✓</span>AI‑assisted responses (tone controls)</li>
+          <li><span class="check red">✓</span>Alerts, tagging, monthly reporting</li>
+        </ul>
+      </div>
+      <div class="card accent-orange">
+        <span class="tag">📣 Social Media Posting</span>
+        <div class="price">$25/location/mo</div>
+        <div class="period">+$3 per extra post</div>
+        <ul>
+          <li><span class="check orange">✓</span>Branded content publishing</li>
+          <li><span class="check orange">✓</span>Consistent cross‑channel cadence</li>
+          <li><span class="check orange">✓</span>Calendar, approvals, basic analytics</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="kicker">MSP Packages</div>
+    <h2>Managed Service Tiers (+25% applied)</h2>
+    <div class="grid cols-2">
+      <div class="card accent-blue">
+        <span class="tag">🛠️ Standard MSP</span>
+        <div class="price">$313/mo</div>
+        <div class="period">10 managed hours • $69/hr additional</div>
+        <ul>
+          <li><span class="check blue">✓</span>Initial response: P1 90m • P2 120m • P3 180m</li>
+          <li><span class="check blue">✓</span>Service hours: 24×5</li>
+          <li><span class="check blue">✓</span>Channels: Email + Phone</li>
+          <li><span class="check blue">✓</span>Dedicated CSM + Knowledge Base</li>
+          <li><span class="check blue">✓</span>Monthly analytics + quarterly audits</li>
+          <li><span class="check blue">✓</span>GMB Support Assist (tickets, located‑in fixes, pins)</li>
+          <li><span class="check blue">✓</span>Listings/profile edits (SLA ~12h), posts 24h, suggest‑edit rejection 48h</li>
+          <li><span class="check blue">✓</span>Apple Business Connect updates</li>
+        </ul>
+      </div>
+      <div class="card accent-purple">
+        <span class="tag">🧷 Premium MSP</span>
+        <div class="price">$625/mo</div>
+        <div class="period">20 managed hours • $56/hr additional</div>
+        <ul>
+          <li><span class="check purple">✓</span>Initial response: P1 30m • P2 60m • P3 90m</li>
+          <li><span class="check purple">✓</span>Service hours: 24×5 + dedicated service support 12×5</li>
+          <li><span class="check purple">✓</span>Channels: Email + Chat + Phone</li>
+          <li><span class="check purple">✓</span>Dedicated Slack channel + CSM</li>
+          <li><span class="check purple">✓</span>Priority reporting + faster resolution queue</li>
+          <li><span class="check purple">✓</span>All Standard features + proactive monitoring & priority QA</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="note">If your official brand green is different, swap the <code>--green</code> variable in the &lt;style&gt;.</p>
+  </div>
+</body>
+</html>
