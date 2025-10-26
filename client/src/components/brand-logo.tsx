@@ -11,7 +11,7 @@ import inboxLogo from "@assets/inbox logo_1760075605262.png";
 import inboxIcon from "@assets/Unified mailbox_1760074368869.png";
 import livechatLogo from "@assets/livechat logo_1760075605262.png";
 import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
-import hostsBlueIcon from "@assets/Hosts Blue Icon New_1760810493739.png";
+import hostsBlueIcon from "@assets/Hosts Blue Brandmark.png";
 import swipesBlueIcon from "@assets/swipesblue icon_1760810511865.png";
 
 interface BrandLogoProps {
@@ -45,10 +45,6 @@ export function BrandLogo({
   
   // Business Blueprint text-based logo matching Brand Logo Key
   if (brand === 'businessblueprint') {
-    const textColor1 = '#FFA500'; // orange
-    const textColor2 = '#0000FF'; // blue
-    const textColor3 = '#84D71A'; // green
-    
     // Vertical layout for dashboard
     if (layout === 'vertical') {
       return (
@@ -62,8 +58,8 @@ export function BrandLogo({
             />
           )}
           <div className="text-center leading-tight" style={{ fontSize: '18px' }}>
-            <div style={{ color: textColor1, fontFamily: 'Archivo Semi Expanded, sans-serif', fontWeight: 700, textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>business</div>
-            <div style={{ color: textColor2, fontFamily: 'Archivo, sans-serif', fontWeight: 700, textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>blueprint</div>
+            <div className="text-[#FFA500] font-bold" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif', textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>business</div>
+            <div className="text-[#0000FF] font-bold" style={{ fontFamily: 'Archivo, sans-serif', textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>blueprint</div>
           </div>
         </div>
       );
@@ -81,9 +77,9 @@ export function BrandLogo({
           />
         )}
         <div className="leading-none pb-0.5" style={{ fontSize: '24px' }}>
-          <span style={{ color: textColor1, fontFamily: 'Archivo Semi Expanded, sans-serif', fontWeight: 700, textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>business</span>
-          <span style={{ color: textColor2, fontFamily: 'Archivo, sans-serif', fontWeight: 700, textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>blueprint</span>
-          <span style={{ color: textColor3, fontFamily: 'Archivo, sans-serif', fontWeight: 700, textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>.io</span>
+          <span className="text-[#FFA500] font-bold" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif', textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>business</span>
+          <span className="text-[#0000FF] font-bold" style={{ fontFamily: 'Archivo, sans-serif', textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>blueprint</span>
+          <span className="text-[#84D71A] font-bold" style={{ fontFamily: 'Archivo, sans-serif', textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>.io</span>
         </div>
       </div>
     );
