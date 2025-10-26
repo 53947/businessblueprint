@@ -36,66 +36,66 @@ export default function PathwaysPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12">
             {/* DIY Pathway */}
-            <Card className="border-2 border-blue-200 hover:border-blue-400 transition-all hover:shadow-xl">
+            <Card className="border-2 border-blue-400 hover:border-blue-500 transition-all hover:shadow-xl" style={{ backgroundColor: '#0000FF' }}>
               <CardContent className="p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Lightbulb className="w-6 h-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
+                    <Lightbulb className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Do It Yourself (DIY)</h2>
-                    <p className="text-sm text-blue-600 font-semibold">You're in control</p>
+                    <h2 className="text-2xl font-bold text-white">Do It Yourself (DIY)</h2>
+                    <p className="text-sm text-white/90 font-semibold">You're in control</p>
                   </div>
                 </div>
                 
-                <p className="text-gray-700 mb-6 text-lg leading-relaxed">
+                <p className="text-white/90 mb-6 text-lg leading-relaxed">
                   Perfect for hands-on business owners who want full control. Access powerful tools, automation, and AI assistance—all at your fingertips.
                 </p>
 
                 <div className="space-y-4 mb-8">
                   <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-white" />
+                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-blue-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">You're In Control</h3>
-                      <p className="text-sm text-gray-600">Manage campaigns, content, and strategies yourself with intuitive tools</p>
+                      <h3 className="font-semibold text-white">You're In Control</h3>
+                      <p className="text-sm text-white/80">Manage campaigns, content, and strategies yourself with intuitive tools</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-white" />
+                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-blue-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">AI-Powered Assistance</h3>
-                      <p className="text-sm text-gray-600">Coach Blue guides you with smart recommendations and automated workflows</p>
+                      <h3 className="font-semibold text-white">AI-Powered Assistance</h3>
+                      <p className="text-sm text-white/80">Coach Blue guides you with smart recommendations and automated workflows</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-white" />
+                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-blue-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Scale at Your Pace</h3>
-                      <p className="text-sm text-gray-600">Start small, add features as you grow, pay only for what you use</p>
+                      <h3 className="font-semibold text-white">Scale at Your Pace</h3>
+                      <p className="text-sm text-white/80">Start small, add features as you grow, pay only for what you use</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-blue-50 rounded-lg p-4 mb-6">
-                  <p className="text-sm font-semibold text-gray-900 mb-2">Pricing starts at:</p>
+                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 mb-6">
+                  <p className="text-sm font-semibold text-white mb-2">Pricing starts at:</p>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-blue-600">$99</span>
-                    <span className="text-gray-600">/month</span>
+                    <span className="text-3xl font-bold text-white">$99</span>
+                    <span className="text-white/80">/month</span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Save 20% with annual billing</p>
+                  <p className="text-xs text-white/70 mt-1">Save 20% with annual billing</p>
                 </div>
 
                 <Button 
                   onClick={() => setLocation('/marketplace')}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                  className="w-full bg-white hover:bg-white/90 text-blue-600 font-semibold"
                   data-testid="button-explore-diy">
                   Explore DIY Plans
                 </Button>
@@ -103,66 +103,66 @@ export default function PathwaysPage() {
             </Card>
 
             {/* MSP Pathway */}
-            <Card className="border-2 border-orange-200 hover:border-orange-400 transition-all hover:shadow-xl">
+            <Card className="border-2 border-orange-400 hover:border-orange-500 transition-all hover:shadow-xl" style={{ backgroundColor: '#FFA500' }}>
               <CardContent className="p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <Wrench className="w-6 h-6 text-orange-600" />
+                  <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
+                    <Wrench className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Managed Services Provided (MSP)</h2>
-                    <p className="text-sm text-orange-600 font-semibold">Expert execution</p>
+                    <h2 className="text-2xl font-bold text-white">Managed Services Provided (MSP)</h2>
+                    <p className="text-sm text-white/90 font-semibold">Expert execution</p>
                   </div>
                 </div>
                 
-                <p className="text-gray-700 mb-6 text-lg leading-relaxed">
+                <p className="text-white/90 mb-6 text-lg leading-relaxed">
                   For busy owners who want results without the work. Our expert team handles execution, optimization, and reporting—you focus on running your business.
                 </p>
 
                 <div className="space-y-4 mb-8">
                   <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-white" />
+                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-orange-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Expert Team at Your Service</h3>
-                      <p className="text-sm text-gray-600">Dedicated specialists manage your digital presence end-to-end</p>
+                      <h3 className="font-semibold text-white">Expert Team at Your Service</h3>
+                      <p className="text-sm text-white/80">Dedicated specialists manage your digital presence end-to-end</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-white" />
+                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-orange-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Done-For-You Execution</h3>
-                      <p className="text-sm text-gray-600">Content creation, review responses, social posting—all handled professionally</p>
+                      <h3 className="font-semibold text-white">Done-For-You Execution</h3>
+                      <p className="text-sm text-white/80">Content creation, review responses, social posting—all handled professionally</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-white" />
+                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-orange-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Strategic Guidance</h3>
-                      <p className="text-sm text-gray-600">Monthly reviews, proactive recommendations, continuous optimization</p>
+                      <h3 className="font-semibold text-white">Strategic Guidance</h3>
+                      <p className="text-sm text-white/80">Monthly reviews, proactive recommendations, continuous optimization</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-orange-50 rounded-lg p-4 mb-6">
-                  <p className="text-sm font-semibold text-gray-900 mb-2">Managed services from:</p>
+                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 mb-6">
+                  <p className="text-sm font-semibold text-white mb-2">Managed services from:</p>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-orange-600">$15</span>
-                    <span className="text-gray-600">/location</span>
+                    <span className="text-3xl font-bold text-white">$15</span>
+                    <span className="text-white/80">/location</span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Add-on services • Support packages available</p>
+                  <p className="text-xs text-white/70 mt-1">Add-on services • Support packages available</p>
                 </div>
 
                 <Button 
                   onClick={() => setLocation('/marketplace')}
-                  className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                  className="w-full bg-white hover:bg-white/90 text-orange-600 font-semibold"
                   data-testid="button-explore-msp">
                   Explore MSP Services
                 </Button>
