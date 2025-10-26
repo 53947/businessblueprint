@@ -1,7 +1,11 @@
 // Reusable brand logo components using new universal logos (work for light/dark)
+// Database-served brand assets (uploaded via Brand Studio)
+const bbAvatar = "/brand-assets/Blueprint_Avatar.png";
+const bbFavicon = "/brand-assets/Blueprint_Favicon.png";
+
+// Static imports from attached_assets
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
 import bbIcon from "@assets/Blueprint Icon_1760810447789.png";
-import bbAvatar from "@assets/Blueprint_Avatar.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import airswipedLogo from "@assets/swipesblue icon_1760810511865.png";
