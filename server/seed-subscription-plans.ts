@@ -245,6 +245,111 @@ const addons = [
     billingCycle: "monthly",
     compatiblePathways: ["diy"],
     isActive: true
+  },
+
+  // DIY Add-Ons - Synup-Based Services
+  {
+    addonId: "listings",
+    name: "Listings",
+    description: "Accurate profiles across directories, maps, and search engines. Profile sync (NAP, hours, site), major directories + long-tail, duplicate suppression",
+    category: "synup-diy",
+    icon: "MapPin",
+    price: "44.00",
+    billingCycle: "monthly",
+    compatiblePathways: ["diy"],
+    isActive: true
+  },
+  {
+    addonId: "reviews-pro",
+    name: "Reviews (Pro)",
+    description: "Generate more reviews & respond faster. SMS/email requests + QR, unified inbox (Google, FB, Yelp), AI reply drafts + alerts, widgets + trend reports",
+    category: "synup-diy",
+    icon: "Star",
+    price: "25.00",
+    billingCycle: "monthly",
+    compatiblePathways: ["diy"],
+    isActive: true
+  },
+  {
+    addonId: "reviews-gold",
+    name: "Reviews (Gold)",
+    description: "Advanced insights and automation. Smart routing + win-back, response templates + guardrails, competitor benchmarking, multi-location roll-ups + compliance",
+    category: "synup-diy",
+    icon: "Award",
+    price: "63.00",
+    billingCycle: "monthly",
+    compatiblePathways: ["diy"],
+    isActive: true
+  },
+  {
+    addonId: "social",
+    name: "Social",
+    description: "Plan, publish, and track performance. FB/IG/X/LinkedIn scheduling, calendar + drag & drop, AI captions + hashtag help, analytics + link-in-bio page",
+    category: "synup-diy",
+    icon: "Share2",
+    price: "8.00",
+    billingCycle: "monthly",
+    compatiblePathways: ["diy"],
+    isActive: true
+  },
+  {
+    addonId: "local-seo",
+    name: "Local SEO",
+    description: "Climb (and stay) in the local 3-pack. Local keyword + map pack tracking, competitor comparison, on-page checks + GBP tips, monthly scorecard + quick wins",
+    category: "synup-diy",
+    icon: "TrendingUp",
+    price: "6.00",
+    billingCycle: "monthly",
+    compatiblePathways: ["diy"],
+    isActive: true
+  },
+
+  // MSP Add-Ons - Managed Services
+  {
+    addonId: "reputation-management",
+    name: "Reputation Management",
+    description: "Monitor & respond across platforms. AI-assisted responses (tone controls), alerts, tagging, monthly reporting. Includes 50 responses/mo, +$2 each additional",
+    category: "synup-msp",
+    icon: "Shield",
+    price: "15.00",
+    billingCycle: "monthly",
+    compatiblePathways: ["msp"],
+    isActive: true
+  },
+  {
+    addonId: "social-posting",
+    name: "Social Media Posting",
+    description: "Branded content publishing. Consistent cross-channel cadence, calendar, approvals, basic analytics. +$3 per extra post",
+    category: "synup-msp",
+    icon: "Send",
+    price: "25.00",
+    billingCycle: "monthly",
+    compatiblePathways: ["msp"],
+    isActive: true
+  },
+
+  // MSP Packages - Full Service Tiers
+  {
+    addonId: "msp-standard",
+    name: "Standard MSP",
+    description: "10 managed hours ($69/hr additional). Initial response: P1 90m, P2 120m, P3 180m. Service hours: 24×5. Channels: Email + Phone. Dedicated CSM + Knowledge Base",
+    category: "msp-package",
+    icon: "Wrench",
+    price: "313.00",
+    billingCycle: "monthly",
+    compatiblePathways: ["msp"],
+    isActive: true
+  },
+  {
+    addonId: "msp-premium",
+    name: "Premium MSP",
+    description: "20 managed hours ($56/hr additional). Initial response: P1 30m, P2 60m, P3 90m. Service hours: 24×5 + dedicated support 12×5. Channels: Email + Chat + Phone. Dedicated Slack channel + CSM",
+    category: "msp-package",
+    icon: "Crown",
+    price: "625.00",
+    billingCycle: "monthly",
+    compatiblePathways: ["msp"],
+    isActive: true
   }
 ];
 
