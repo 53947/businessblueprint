@@ -48,6 +48,19 @@ app.use((req, res, next) => {
   
   // Export io for use in routes (via global) - available before server starts listening
   (global as any).io = io;
+  
+  // Start BullMQ workers for Content Management (only if Redis is configured)
+  const redisUrl = process.env.UPSTASH_REDIS_URL || process.env.REDIS_URL;
+  if (redisUrl) {
+    try {
+      await import('./workers/contentPublisher');
+      log('[BullMQ] Content publisher and sync workers started');
+    } catch (error) {
+      console.error('[BullMQ] Failed to start workers:', error);
+    }
+  } else {
+    log('[BullMQ] Skipping worker initialization - UPSTASH_REDIS_URL not configured');
+  }
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
