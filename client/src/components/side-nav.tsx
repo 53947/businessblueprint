@@ -107,8 +107,8 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
     },
     { 
       id: "ai-coach", 
-      label: "Coach Blue",
-      icon: <img src={aiCoachIcon} alt="Coach Blue" className="w-7 h-7 object-contain" />,
+      label: "AI Business Coach",
+      icon: <img src={aiCoachIcon} alt="AI Business Coach" className="w-7 h-7 object-contain" />,
       external: true,
       href: "/ai-coach"
     },

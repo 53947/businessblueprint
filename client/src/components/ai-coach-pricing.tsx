@@ -92,7 +92,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
           <div className="flex justify-center mb-3">
             <img src={aiCoachLogo} alt="AI Coach" className="h-18 w-18" />
           </div>
-          <CardTitle className="text-2xl">Unlock Coach Blue</CardTitle>
+          <CardTitle className="text-2xl">Unlock AI Business Coach</CardTitle>
           <CardDescription>
             Supercharge your {currentPlan.toUpperCase()} plan with intelligent guidance
           </CardDescription>
@@ -144,7 +144,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
             <img src={aiCoachLogo} alt="AI Coach" className="h-24 w-24" />
           </div>
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Coach Blue Add-On
+            AI Business Coach Add-On
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
             Enhance any plan with intelligent guidance that adapts to your business needs and experience level
