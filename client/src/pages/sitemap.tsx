@@ -81,7 +81,7 @@ export default function Sitemap() {
               dynamic: true
             },
             {
-              title: "AI Business Coach",
+              title: "Coach Blue",
               path: "/ai-coach",
               icon: Brain,
               description: "24/7 expert guidance tailored to your business goals",
