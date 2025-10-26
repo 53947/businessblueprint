@@ -429,26 +429,26 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* DIY Pathway */}
                           <NavigationMenuLink asChild>
                             <a
-                              className="group block select-none space-y-2 rounded-lg border-2 border-blue-200 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-950 dark:border-blue-800 p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-xl hover:scale-[1.02]"
+                              className="group block select-none space-y-2 rounded-lg border-2 border-blue-600 bg-blue-600 p-4 leading-none no-underline outline-none transition-all hover:bg-blue-700 hover:border-blue-700 hover:shadow-xl hover:scale-[1.02]"
                               href="/pathways"
                               data-testid="link-pathways-diy"
                             >
                               <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
-                                  <Lightbulb className="w-5 h-5 text-blue-600" />
-                                  <span className="text-base font-bold text-gray-900 dark:text-white">Do It Yourself (DIY)</span>
+                                  <Lightbulb className="w-5 h-5 text-white" />
+                                  <span className="text-base font-bold text-white">Do It Yourself (DIY)</span>
                                 </div>
-                                <Badge className="bg-blue-600 text-white">From $99/mo</Badge>
+                                <Badge className="bg-white text-blue-600">From $99/mo</Badge>
                               </div>
-                              <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3">
+                              <p className="text-xs leading-relaxed text-white/90 mb-3">
                                 Full control of your digital presence with AI-powered tools and automation
                               </p>
-                              <ul className="space-y-1 text-xs text-gray-700 dark:text-gray-300 mb-3">
-                                <li className="flex items-center"><span className="text-blue-500 mr-1.5">✓</span> Self-managed campaigns</li>
-                                <li className="flex items-center"><span className="text-blue-500 mr-1.5">✓</span> AI Business Coach included</li>
-                                <li className="flex items-center"><span className="text-blue-500 mr-1.5">✓</span> Pay only for what you use</li>
+                              <ul className="space-y-1 text-xs text-white mb-3">
+                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Self-managed campaigns</li>
+                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> AI Business Coach included</li>
+                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Pay only for what you use</li>
                               </ul>
-                              <div className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                              <div className="text-xs font-semibold text-white">
                                 Explore DIY Plans →
                               </div>
                             </a>
@@ -457,26 +457,26 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* MSP Pathway */}
                           <NavigationMenuLink asChild>
                             <a
-                              className="group block select-none space-y-2 rounded-lg border-2 border-orange-200 bg-gradient-to-br from-white to-orange-50 dark:from-gray-900 dark:to-orange-950 dark:border-orange-800 p-4 leading-none no-underline outline-none transition-all hover:border-orange-500 hover:shadow-xl hover:scale-[1.02]"
+                              className="group block select-none space-y-2 rounded-lg border-2 border-orange-600 bg-orange-600 p-4 leading-none no-underline outline-none transition-all hover:bg-orange-700 hover:border-orange-700 hover:shadow-xl hover:scale-[1.02]"
                               href="/pathways"
                               data-testid="link-pathways-msp"
                             >
                               <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
-                                  <Wrench className="w-5 h-5 text-orange-600" />
-                                  <span className="text-base font-bold text-gray-900 dark:text-white">Managed Services Provided (MSP)</span>
+                                  <Wrench className="w-5 h-5 text-white" />
+                                  <span className="text-base font-bold text-white">Managed Services Provided (MSP)</span>
                                 </div>
-                                <Badge className="bg-orange-600 text-white">From $15/loc</Badge>
+                                <Badge className="bg-white text-orange-600">From $15/loc</Badge>
                               </div>
-                              <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3">
+                              <p className="text-xs leading-relaxed text-white/90 mb-3">
                                 Expert team handles everything while you focus on running your business
                               </p>
-                              <ul className="space-y-1 text-xs text-gray-700 dark:text-gray-300 mb-3">
-                                <li className="flex items-center"><span className="text-orange-500 mr-1.5">✓</span> Done-for-you execution</li>
-                                <li className="flex items-center"><span className="text-orange-500 mr-1.5">✓</span> Dedicated specialists</li>
-                                <li className="flex items-center"><span className="text-orange-500 mr-1.5">✓</span> Monthly strategy reviews</li>
+                              <ul className="space-y-1 text-xs text-white mb-3">
+                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Done-for-you execution</li>
+                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Dedicated specialists</li>
+                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Monthly strategy reviews</li>
                               </ul>
-                              <div className="text-xs font-semibold text-orange-600 dark:text-orange-400">
+                              <div className="text-xs font-semibold text-white">
                                 Explore MSP Services →
                               </div>
                             </a>
@@ -493,8 +493,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-center gap-3">
                                   <Wallet className="w-6 h-6 text-blue-600" />
                                   <div>
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white">Complete Marketplace</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400">Browse all plans, add-ons & services with transparent pricing</p>
+                                    <div className="text-sm font-bold text-gray-900">Marketplace</div>
+                                    <p className="text-xs text-gray-600">Browse all plans, add-ons & services with transparent pricing</p>
                                   </div>
                                 </div>
                                 <span className="text-xs font-semibold text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
