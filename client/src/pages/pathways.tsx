@@ -40,8 +40,8 @@ export default function PricingPage() {
                     <Lightbulb className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Do It Yourself</h2>
-                    <p className="text-sm text-blue-600 font-semibold">Self-Service Platform</p>
+                    <h2 className="text-2xl font-bold text-gray-900">Do It Yourself (DIY)</h2>
+                    <p className="text-sm text-blue-600 font-semibold">You're in control</p>
                   </div>
                 </div>
                 
@@ -107,8 +107,8 @@ export default function PricingPage() {
                     <Wrench className="w-6 h-6 text-orange-600" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Managed Services</h2>
-                    <p className="text-sm text-orange-600 font-semibold">We Do It For You</p>
+                    <h2 className="text-2xl font-bold text-gray-900">Managed Services Provided (MSP)</h2>
+                    <p className="text-sm text-orange-600 font-semibold">Expert execution</p>
                   </div>
                 </div>
                 
