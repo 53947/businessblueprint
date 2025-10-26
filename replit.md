@@ -64,6 +64,15 @@ Preferred communication style: Simple, everyday language.
 3. `/assets/*` - Vite build artifacts (JS, CSS bundles) served from `dist/public/assets/`
 4. All other routes - SPA fallback serving `index.html`
 
+## Replit Platform Configuration
+
+**Viewing Custom Domains:**
+- Custom domains (like businessblueprint.io) are managed in the **Deployments tab**, NOT in a general account domains section
+- To view/manage domains: Navigate to Deployments tab → Settings tab → Domain management
+- If domains were purchased through Replit: They appear in the Domains tab within the Publishing section
+- DNS configuration: Add A and TXT records at your domain registrar, allow up to 48 hours for propagation
+- Common issues: Multiple A records, A+AAAA records together, or Cloudflare proxied records can interfere with SSL certificate renewals
+
 ## System Architecture
 
 The application uses a full-stack monorepo architecture. The frontend is built with React 18, TypeScript, Wouter, Tailwind CSS, Shadcn/ui, TanStack Query, React Hook Form, and Zod. The backend utilizes Node.js, Express.js, TypeScript, PostgreSQL with Drizzle ORM on Neon, and Connect-pg-simple for session management.
