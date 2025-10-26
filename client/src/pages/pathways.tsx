@@ -5,7 +5,7 @@ import { ArrowRight, Compass, Wrench, Lightbulb, Zap, Ship, Brain, Building2, Cr
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-export default function PricingPage() {
+export default function PathwaysPage() {
   const [, setLocation] = useLocation();
 
   return (

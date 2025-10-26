@@ -274,74 +274,6 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Pathways - How to Work With Us */}
-                    <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pathways">
-                        <Compass className="w-4 h-4" />
-                        <span>Pathways</span>
-                      </NavigationMenuTrigger>
-                      <NavigationMenuContent>
-                        <div className="grid gap-4 p-6 w-[500px] lg:w-[600px]">
-                          <div className="grid grid-cols-2 gap-4">
-                            {/* DIY Pathway */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-md"
-                                href="/subscription?pathway=diy"
-                                data-testid="link-pathway-diy"
-                              >
-                                <div className="text-lg font-semibold text-blue-600" data-testid="text-pathway-diy-price">From $250/mo</div>
-                                <div className="text-sm font-medium" data-testid="text-pathway-diy-title">Do It Yourself (DIY)</div>
-                                <p className="text-xs leading-relaxed text-muted-foreground" data-testid="text-pathway-diy-description">
-                                  Self-service platform access with full automation suite. Includes all proprietary apps: /send, /inbox, /livechat, plus digital presence management.
-                                </p>
-                                <div className="mt-3 pt-3 border-t border-gray-200">
-                                  <div className="text-xs font-medium text-gray-700 mb-2">Starting Tiers:</div>
-                                  <div className="space-y-1 text-xs text-muted-foreground" data-testid="list-pathway-diy-addons">
-                                    <div>• STARTER ($250/mo)</div>
-                                    <div>• GROWTH ($316/mo)</div>
-                                  </div>
-                                </div>
-                              </a>
-                            </NavigationMenuLink>
-
-                            {/* MSP Pathway */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white p-4 leading-none no-underline outline-none transition-all hover:border-orange-500 hover:shadow-md"
-                                href="/subscription?pathway=msp"
-                                data-testid="link-pathway-msp"
-                              >
-                                <div className="text-lg font-semibold text-orange-600" data-testid="text-pathway-msp-price">From $399/mo</div>
-                                <div className="text-sm font-medium" data-testid="text-pathway-msp-title">Managed Services Provided (MSP)</div>
-                                <p className="text-xs leading-relaxed text-muted-foreground" data-testid="text-pathway-msp-description">
-                                  Full platform access plus dedicated expert support team. We handle the execution while you focus on running your business.
-                                </p>
-                                <div className="mt-3 pt-3 border-t border-gray-200">
-                                  <div className="text-xs font-medium text-gray-700 mb-2">Starting Tiers:</div>
-                                  <div className="space-y-1 text-xs text-muted-foreground" data-testid="list-pathway-msp-addons">
-                                    <div>• EXPANSION Essential ($399/mo)</div>
-                                    <div>• EXPANSION Pro ($649/mo)</div>
-                                    <div>• LEADERSHIP Essential ($999/mo)</div>
-                                    <div>• LEADERSHIP Pro ($1,249/mo)</div>
-                                  </div>
-                                </div>
-                              </a>
-                            </NavigationMenuLink>
-                          </div>
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="block text-center text-sm text-blue-600 hover:text-blue-800 hover:underline"
-                              href="/subscription"
-                              data-testid="link-compare-pathways"
-                            >
-                              Compare Pathways →
-                            </a>
-                          </NavigationMenuLink>
-                        </div>
-                      </NavigationMenuContent>
-                    </NavigationMenuItem>
-
                     {/* Commverse - Communication Apps */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-commverse">
@@ -429,7 +361,19 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* DIY Pathway */}
                           <NavigationMenuLink asChild>
                             <a
-                              className="group block select-none space-y-2 rounded-lg border-2 border-blue-600 bg-blue-600 p-4 leading-none no-underline outline-none transition-all hover:bg-blue-700 hover:border-blue-700 hover:shadow-xl hover:scale-[1.02]"
+                              className="group block select-none space-y-2 rounded-lg border-2 p-4 leading-none no-underline outline-none transition-all hover:shadow-xl hover:scale-[1.02]"
+                              style={{ 
+                                borderColor: '#0000FF',
+                                backgroundColor: '#0000FF'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = '#0000CC';
+                                e.currentTarget.style.borderColor = '#0000CC';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = '#0000FF';
+                                e.currentTarget.style.borderColor = '#0000FF';
+                              }}
                               href="/pathways"
                               data-testid="link-pathways-diy"
                             >
@@ -438,14 +382,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <Lightbulb className="w-5 h-5 text-white" />
                                   <span className="text-base font-bold text-white">Do It Yourself (DIY)</span>
                                 </div>
-                                <Badge className="bg-white text-blue-600">From $99/mo</Badge>
+                                <Badge className="bg-white" style={{ color: '#0000FF' }}>From $99/mo</Badge>
                               </div>
                               <p className="text-xs leading-relaxed text-white/90 mb-3">
                                 Full control of your digital presence with AI-powered tools and automation
                               </p>
                               <ul className="space-y-1 text-xs text-white mb-3">
                                 <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Self-managed campaigns</li>
-                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> AI Business Coach included</li>
+                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Coach Blue included</li>
                                 <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Pay only for what you use</li>
                               </ul>
                               <div className="text-xs font-semibold text-white">
@@ -457,7 +401,19 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* MSP Pathway */}
                           <NavigationMenuLink asChild>
                             <a
-                              className="group block select-none space-y-2 rounded-lg border-2 border-orange-600 bg-orange-600 p-4 leading-none no-underline outline-none transition-all hover:bg-orange-700 hover:border-orange-700 hover:shadow-xl hover:scale-[1.02]"
+                              className="group block select-none space-y-2 rounded-lg border-2 p-4 leading-none no-underline outline-none transition-all hover:shadow-xl hover:scale-[1.02]"
+                              style={{ 
+                                borderColor: '#FFA500',
+                                backgroundColor: '#FFA500'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = '#FF8C00';
+                                e.currentTarget.style.borderColor = '#FF8C00';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = '#FFA500';
+                                e.currentTarget.style.borderColor = '#FFA500';
+                              }}
                               href="/pathways"
                               data-testid="link-pathways-msp"
                             >
@@ -466,7 +422,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <Wrench className="w-5 h-5 text-white" />
                                   <span className="text-base font-bold text-white">Managed Services Provided (MSP)</span>
                                 </div>
-                                <Badge className="bg-white text-orange-600">From $15/loc</Badge>
+                                <Badge className="bg-white" style={{ color: '#FFA500' }}>From $15/loc</Badge>
                               </div>
                               <p className="text-xs leading-relaxed text-white/90 mb-3">
                                 Expert team handles everything while you focus on running your business
