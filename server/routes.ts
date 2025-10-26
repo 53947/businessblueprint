@@ -2595,42 +2595,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const multer = await import("multer");
   const upload = multer.default({ storage: multer.default.memoryStorage() });
 
-  // Serve brand assets (favicon, logo, etc.)
-  app.get("/brand-assets/:filename", async (req, res) => {
-    try {
-      const { filename } = req.params;
-      
-      console.log(`Requesting brand asset: ${filename}`);
-
-      // Query for the asset by filename
-      const [asset] = await db
-        .select()
-        .from(brandAssets)
-        .where(eq(brandAssets.fileName, filename))
-        .limit(1);
-
-      if (!asset) {
-        console.log(`Brand asset not found: ${filename}`);
-        // Log all available assets for debugging
-        const allAssets = await db.select({ fileName: brandAssets.fileName }).from(brandAssets);
-        console.log('Available brand assets:', allAssets.map(a => a.fileName).join(', '));
-        return res.status(404).send("Brand asset not found");
-      }
-      
-      console.log(`Serving brand asset: ${filename}, type: ${asset.mimeType}`);
-
-      // Set appropriate content type
-      const contentType = asset.mimeType || 'application/octet-stream';
-      res.setHeader('Content-Type', contentType);
-      res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
-
-      res.send(asset.data);
-    } catch (error) {
-      console.error("Error serving brand asset:", error);
-      res.status(500).json({ error: "Failed to serve brand asset" });
-    }
-  });
-
   // Upload brand asset
   app.post("/api/brand-assets", upload.single('file'), async (req, res) => {
     try {
