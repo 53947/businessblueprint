@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>created-at-base-version</key>
+	<integer>468</integer>
+	<key>id</key>
+	<string>1BADF200-1F72-4D40-8755-1A5358CAFC34</string>
+	<key>name</key>
+	<string>Color</string>
+	<key>options</key>
+	<integer>2</integer>
+	<key>properties</key>
+	<array>
+		<dict>
+			<key>key</key>
+			<string>ColorDataKey</string>
+			<key>value</key>
+			<data>
+			WzEseyJtIjoyLCJjIjpbMC40MzE5MDI4OTQzLDAuNjUyMjc2NTkz
+			OSwwLjk5OTY1NTMzMDksMV0sImN0eCI6WzEseyJjcyI6WzEseyJt
+			YXAiOnt9fV19XX1d
+			</data>
+		</dict>
+	</array>
+</dict>
+</plist>

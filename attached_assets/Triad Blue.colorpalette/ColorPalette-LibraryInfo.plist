@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>collections-list</key>
+	<array>
+		<string>41C81D2C-02B0-4619-81C0-349F6E0459DF</string>
+	</array>
+	<key>contentBaseVersion</key>
+	<integer>468</integer>
+	<key>contentEditCount</key>
+	<integer>0</integer>
+	<key>contentStructureVersion</key>
+	<integer>1</integer>
+	<key>identifier</key>
+	<string>9F843567-9058-4BF5-A964-7872D8DFD246</string>
+	<key>libraryStructureVersion</key>
+	<integer>2</integer>
+	<key>resources</key>
+	<dict/>
+</dict>
+</plist>
