@@ -61,9 +61,9 @@ export function BrandLogo({
               className="object-contain"
             />
           )}
-          <div className="text-center leading-tight" style={{ fontSize: '18px', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
-            <div style={{ color: textColor1, fontFamily: 'Archivo Semi Expanded, sans-serif', fontWeight: 700 }}>business</div>
-            <div style={{ color: textColor2, fontFamily: 'Archivo, sans-serif', fontWeight: 700 }}>blueprint</div>
+          <div className="text-center leading-tight" style={{ fontSize: '18px' }}>
+            <div style={{ color: textColor1, fontFamily: 'Archivo Semi Expanded, sans-serif', fontWeight: 700, textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>business</div>
+            <div style={{ color: textColor2, fontFamily: 'Archivo, sans-serif', fontWeight: 700, textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>blueprint</div>
           </div>
         </div>
       );
@@ -80,10 +80,10 @@ export function BrandLogo({
             className="object-contain"
           />
         )}
-        <div className="leading-none pb-0.5" style={{ fontSize: '24px', filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
-          <span style={{ color: textColor1, fontFamily: 'Archivo Semi Expanded, sans-serif', fontWeight: 700 }}>business</span>
-          <span style={{ color: textColor2, fontFamily: 'Archivo, sans-serif', fontWeight: 700 }}>blueprint</span>
-          <span style={{ color: textColor3, fontFamily: 'Archivo, sans-serif', fontWeight: 700 }}>.io</span>
+        <div className="leading-none pb-0.5" style={{ fontSize: '24px' }}>
+          <span style={{ color: textColor1, fontFamily: 'Archivo Semi Expanded, sans-serif', fontWeight: 700, textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>business</span>
+          <span style={{ color: textColor2, fontFamily: 'Archivo, sans-serif', fontWeight: 700, textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>blueprint</span>
+          <span style={{ color: textColor3, fontFamily: 'Archivo, sans-serif', fontWeight: 700, textShadow: '0 1px 2px rgba(0,0,0,0.15)' }}>.io</span>
         </div>
       </div>
     );
