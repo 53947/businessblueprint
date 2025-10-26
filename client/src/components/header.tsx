@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -28,7 +29,15 @@ import {
   Wallet,
   MessageSquare,
   MessageCircle,
-  Inbox
+  Inbox,
+  Lightbulb,
+  Wrench,
+  GraduationCap,
+  Code,
+  HelpCircle,
+  FileText,
+  Video,
+  Users
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
@@ -412,47 +421,96 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     {/* Pricing */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pricing">
-                        <CreditCard className="w-4 h-4" />
+                        <DollarSign className="w-4 h-4" />
                         <span>Pricing</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid gap-3 p-6 w-[400px]">
+                        <div className="grid grid-cols-2 gap-4 p-6 w-[700px]">
+                          {/* DIY Pathway */}
                           <NavigationMenuLink asChild>
                             <a
-                              className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
+                              className="group block select-none space-y-2 rounded-lg border-2 border-blue-200 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-950 dark:border-blue-800 p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-xl hover:scale-[1.02]"
                               href="/pathways"
-                              data-testid="link-pathways-tiers"
+                              data-testid="link-pathways-diy"
                             >
-                              <div className="text-sm font-medium leading-none">DIY vs MSP Pathways</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                Choose your path: Self-service DIY or done-for-you managed services
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <Lightbulb className="w-5 h-5 text-blue-600" />
+                                  <span className="text-base font-bold text-gray-900 dark:text-white">Do It Yourself (DIY)</span>
+                                </div>
+                                <Badge className="bg-blue-600 text-white">From $99/mo</Badge>
+                              </div>
+                              <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3">
+                                Full control of your digital presence with AI-powered tools and automation
                               </p>
+                              <ul className="space-y-1 text-xs text-gray-700 dark:text-gray-300 mb-3">
+                                <li className="flex items-center"><span className="text-blue-500 mr-1.5">✓</span> Self-managed campaigns</li>
+                                <li className="flex items-center"><span className="text-blue-500 mr-1.5">✓</span> AI Business Coach included</li>
+                                <li className="flex items-center"><span className="text-blue-500 mr-1.5">✓</span> Pay only for what you use</li>
+                              </ul>
+                              <div className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                                Explore DIY Plans →
+                              </div>
                             </a>
                           </NavigationMenuLink>
+
+                          {/* MSP Pathway */}
                           <NavigationMenuLink asChild>
                             <a
-                              className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/marketplace"
-                              data-testid="link-marketplace-catalog"
+                              className="group block select-none space-y-2 rounded-lg border-2 border-orange-200 bg-gradient-to-br from-white to-orange-50 dark:from-gray-900 dark:to-orange-950 dark:border-orange-800 p-4 leading-none no-underline outline-none transition-all hover:border-orange-500 hover:shadow-xl hover:scale-[1.02]"
+                              href="/pathways"
+                              data-testid="link-pathways-msp"
                             >
-                              <div className="text-sm font-medium leading-none">Complete Marketplace</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                Browse all DIY plans, add-ons, and MSP services with transparent pricing
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <Wrench className="w-5 h-5 text-orange-600" />
+                                  <span className="text-base font-bold text-gray-900 dark:text-white">Managed Services Provided (MSP)</span>
+                                </div>
+                                <Badge className="bg-orange-600 text-white">From $15/loc</Badge>
+                              </div>
+                              <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3">
+                                Expert team handles everything while you focus on running your business
                               </p>
+                              <ul className="space-y-1 text-xs text-gray-700 dark:text-gray-300 mb-3">
+                                <li className="flex items-center"><span className="text-orange-500 mr-1.5">✓</span> Done-for-you execution</li>
+                                <li className="flex items-center"><span className="text-orange-500 mr-1.5">✓</span> Dedicated specialists</li>
+                                <li className="flex items-center"><span className="text-orange-500 mr-1.5">✓</span> Monthly strategy reviews</li>
+                              </ul>
+                              <div className="text-xs font-semibold text-orange-600 dark:text-orange-400">
+                                Explore MSP Services →
+                              </div>
                             </a>
                           </NavigationMenuLink>
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/marketplace"
-                              data-testid="link-marketplace"
-                            >
-                              <div className="text-sm font-medium leading-none">À La Carte Marketplace</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                Order individual apps and services separately
-                              </p>
-                            </a>
-                          </NavigationMenuLink>
+
+                          {/* Marketplace Full Width */}
+                          <div className="col-span-2">
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-center justify-between rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-md"
+                                href="/marketplace"
+                                data-testid="link-marketplace"
+                              >
+                                <div className="flex items-center gap-3">
+                                  <Wallet className="w-6 h-6 text-blue-600" />
+                                  <div>
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white">Complete Marketplace</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">Browse all plans, add-ons & services with transparent pricing</p>
+                                  </div>
+                                </div>
+                                <span className="text-xs font-semibold text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                              </a>
+                            </NavigationMenuLink>
+                          </div>
+
+                          {/* CTA Section */}
+                          <div className="col-span-2 border-t border-gray-200 pt-3 mt-1">
+                            <div className="flex items-center justify-between">
+                              <p className="text-xs text-gray-600">Not sure which path is right for you?</p>
+                              <a href="/assessment" className="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline">
+                                Take Free Assessment →
+                              </a>
+                            </div>
+                          </div>
                         </div>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
@@ -464,62 +522,162 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Resources</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid gap-3 p-6 w-[400px]">
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/journey"
-                            >
-                              <div className="text-sm font-medium leading-none">Getting Started Guide</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                Your digital growth journey explained
-                              </p>
-                            </a>
-                          </NavigationMenuLink>
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/send-api-docs"
-                            >
-                              <div className="text-sm font-medium leading-none">/send API Documentation</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                Integration guide for developers
-                              </p>
-                            </a>
-                          </NavigationMenuLink>
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/contact"
-                            >
-                              <div className="text-sm font-medium leading-none">Help Center</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                Get support and answers
-                              </p>
-                            </a>
-                          </NavigationMenuLink>
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/about"
-                            >
-                              <div className="text-sm font-medium leading-none">Success Stories</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                Real results from real businesses
-                              </p>
-                            </a>
-                          </NavigationMenuLink>
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
-                              href="/sitemap"
-                            >
-                              <div className="text-sm font-medium leading-none">Site Map</div>
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                Complete navigation guide
-                              </p>
-                            </a>
-                          </NavigationMenuLink>
+                        <div className="grid grid-cols-3 gap-4 p-6 w-[700px]">
+                          {/* Learning Column */}
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2 mb-2">
+                              <GraduationCap className="w-4 h-4 text-blue-600" />
+                              <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Learn</h4>
+                            </div>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/journey"
+                                data-testid="link-resources-journey"
+                              >
+                                <Compass className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Getting Started Guide</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">5-step digital growth journey</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/about"
+                                data-testid="link-resources-success"
+                              >
+                                <TrendingUp className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Success Stories</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Real results from businesses</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/biif"
+                                data-testid="link-resources-biif"
+                              >
+                                <Video className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Video Tutorials</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Step-by-step walkthroughs</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                          </div>
+
+                          {/* Developer Column */}
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Code className="w-4 h-4 text-purple-600" />
+                              <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Developers</h4>
+                            </div>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/send-api-docs"
+                                data-testid="link-resources-api"
+                              >
+                                <FileText className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/send API Docs</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Email & SMS API reference</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/livechat-install"
+                                data-testid="link-resources-livechat-install"
+                              >
+                                <Code className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">LiveChat Installation</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Widget integration guide</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/sitemap"
+                                data-testid="link-resources-sitemap"
+                              >
+                                <Globe className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Site Map</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Complete navigation</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                          </div>
+
+                          {/* Support Column */}
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2 mb-2">
+                              <HelpCircle className="w-4 h-4 text-green-600" />
+                              <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Support</h4>
+                            </div>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/contact"
+                                data-testid="link-resources-help"
+                              >
+                                <Mail className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Help Center</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Get answers & support</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/livechat-demo"
+                                data-testid="link-resources-demo"
+                              >
+                                <MessageCircle className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Live Demo</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Try our live chat</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/portal"
+                                data-testid="link-resources-portal"
+                              >
+                                <Users className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Client Portal</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Manage your account</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                          </div>
+
+                          {/* Featured CTA - Full Width */}
+                          <div className="col-span-3 border-t border-gray-200 pt-3 mt-1">
+                            <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-lg p-3 border border-blue-200 dark:border-blue-800">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <div className="text-sm font-bold text-gray-900 dark:text-white">Need personalized guidance?</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Talk to our digital growth experts</p>
+                                </div>
+                                <a href="/contact" className="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-md hover:bg-blue-700 transition-colors">
+                                  Contact Us
+                                </a>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
