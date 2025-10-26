@@ -11,6 +11,8 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.917.0",
+    "@aws-sdk/lib-storage": "^3.917.0",
     "@hookform/resolvers": "^3.10.0",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@mx-inventor/synup": "^1.1.2",
@@ -49,6 +51,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/socket.io": "^3.0.1",
     "adm-zip": "^0.5.16",
+    "bullmq": "^5.61.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -61,6 +64,7 @@
     "express-session": "^1.18.1",
     "framer-motion": "^11.13.1",
     "input-otp": "^1.4.2",
+    "ioredis": "^5.8.2",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.453.0",
     "memoizee": "^0.4.17",
@@ -81,6 +85,7 @@
     "react-resizable-panels": "^2.1.7",
     "recharts": "^2.15.2",
     "rollup": "^4.52.5",
+    "sharp": "^0.34.4",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "tailwind-merge": "^2.6.0",

@@ -1709,3 +1709,303 @@ export type InsertLivechatSession = z.infer<typeof insertLivechatSessionSchema>;
 // Types for brand assets
 export type BrandAsset = typeof brandAssets.$inferSelect;
 export type InsertBrandAsset = z.infer<typeof insertBrandAssetSchema>;
+
+// ============================================================================
+// /CONTENT - Social Media Content Management Platform
+// ============================================================================
+
+// Connected social media accounts (OAuth credentials)
+export const socialMediaAccounts = pgTable("social_media_accounts", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  
+  // Platform details
+  platform: varchar("platform", { length: 50 }).notNull(), // facebook, instagram, linkedin, x, google_business, tiktok, snapchat
+  platformAccountId: varchar("platform_account_id", { length: 255 }).notNull(), // Platform's user/page ID
+  platformAccountName: varchar("platform_account_name", { length: 255 }).notNull(), // Display name
+  platformAccountHandle: varchar("platform_account_handle", { length: 255 }), // @username
+  platformAccountAvatar: text("platform_account_avatar"),
+  
+  // OAuth credentials
+  accessToken: text("access_token").notNull(),
+  refreshToken: text("refresh_token"),
+  tokenExpiresAt: timestamp("token_expires_at"),
+  
+  // Account metadata
+  accountType: varchar("account_type", { length: 50 }), // personal, business, page, etc
+  permissions: text("permissions").array(), // Granted OAuth scopes
+  metadata: jsonb("metadata"), // Platform-specific data
+  
+  // Status
+  isActive: boolean("is_active").default(true),
+  lastSyncedAt: timestamp("last_synced_at"),
+  syncError: text("sync_error"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  unique().on(table.clientId, table.platform, table.platformAccountId),
+]);
+
+// Media library for content management
+export const contentMedia = pgTable("content_media", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  
+  // File details
+  fileName: varchar("file_name", { length: 255 }).notNull(),
+  fileSize: integer("file_size").notNull(), // bytes
+  mimeType: varchar("mime_type", { length: 100 }).notNull(),
+  fileType: varchar("file_type", { length: 20 }).notNull(), // image, video, gif
+  
+  // Storage location (Cloudflare R2 / S3)
+  storageKey: text("storage_key").notNull(), // S3 key / R2 path
+  storageUrl: text("storage_url").notNull(), // Public URL
+  thumbnailUrl: text("thumbnail_url"), // For videos
+  
+  // Media metadata
+  width: integer("width"),
+  height: integer("height"),
+  duration: integer("duration"), // For videos (seconds)
+  altText: text("alt_text"), // Accessibility
+  
+  // Organization
+  folder: varchar("folder", { length: 255 }).default("Uploads"), // For organizing media
+  tags: text("tags").array(),
+  
+  // Usage tracking
+  usageCount: integer("usage_count").default(0), // How many posts use this
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Social media posts
+export const contentPosts = pgTable("content_posts", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  
+  // Post content
+  caption: text("caption").notNull(), // Main text
+  hashtags: text("hashtags").array(), // Extracted hashtags
+  mediaIds: integer("media_ids").array(), // References to contentMedia
+  
+  // Platform targeting
+  platforms: text("platforms").array().notNull(), // Which platforms to publish to
+  
+  // Platform-specific customization
+  platformCustomizations: jsonb("platform_customizations"), // {facebook: {caption: "..."}, instagram: {...}}
+  
+  // Scheduling
+  scheduledFor: timestamp("scheduled_for"), // When to publish (null = draft)
+  timezone: varchar("timezone", { length: 50 }).default("America/New_York"),
+  
+  // Status tracking
+  status: varchar("status", { length: 20 }).default("draft"), // draft, scheduled, publishing, published, failed, cancelled
+  publishedAt: timestamp("published_at"),
+  
+  // AI assistance metadata
+  isAIGenerated: boolean("is_ai_generated").default(false), // Was caption AI-generated
+  aiPrompt: text("ai_prompt"), // Original prompt for AI
+  contentScore: integer("content_score"), // AI content quality score (0-100)
+  
+  // Publishing results (per platform)
+  publishResults: jsonb("publish_results"), // {facebook: {postId: "123", url: "...", status: "published"}}
+  publishErrors: jsonb("publish_errors"), // {instagram: {error: "Token expired"}}
+  
+  // Template
+  templateId: integer("template_id").references(() => contentTemplates.id),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Post analytics (aggregated from platform APIs)
+export const contentAnalytics = pgTable("content_analytics", {
+  id: serial("id").primaryKey(),
+  postId: integer("post_id").references(() => contentPosts.id).notNull(),
+  platform: varchar("platform", { length: 50 }).notNull(),
+  
+  // Platform post ID
+  platformPostId: varchar("platform_post_id", { length: 255 }).notNull(),
+  platformPostUrl: text("platform_post_url"),
+  
+  // Engagement metrics
+  impressions: integer("impressions").default(0),
+  reach: integer("reach").default(0),
+  likes: integer("likes").default(0),
+  comments: integer("comments").default(0),
+  shares: integer("shares").default(0),
+  clicks: integer("clicks").default(0),
+  saves: integer("saves").default(0), // Instagram/Pinterest
+  
+  // Video metrics (if applicable)
+  videoViews: integer("video_views").default(0),
+  videoWatchTime: integer("video_watch_time").default(0), // seconds
+  
+  // Engagement rate (calculated)
+  engagementRate: decimal("engagement_rate", { precision: 5, scale: 2 }), // percentage
+  
+  // Last synced from platform
+  lastSyncedAt: timestamp("last_synced_at").defaultNow(),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  unique().on(table.postId, table.platform),
+]);
+
+// Reusable content templates
+export const contentTemplates = pgTable("content_templates", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 100 }), // promotional, educational, announcement, etc
+  
+  // Template content
+  captionTemplate: text("caption_template").notNull(), // Can include variables like {business_name}
+  hashtagsTemplate: text("hashtags_template").array(),
+  defaultMediaIds: integer("default_media_ids").array(),
+  
+  // Platform recommendations
+  recommendedPlatforms: text("recommended_platforms").array(),
+  
+  // System templates (provided by platform) vs user-created
+  isSystem: boolean("is_system").default(false),
+  
+  // Usage tracking
+  useCount: integer("use_count").default(0),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// External system sync (Synup integration)
+export const externalSync = pgTable("external_sync", {
+  id: serial("id").primaryKey(),
+  
+  systemName: varchar("system_name", { length: 50 }).notNull(), // "synup"
+  entityType: varchar("entity_type", { length: 50 }).notNull(), // "post"
+  entityId: integer("entity_id").notNull(), // Local ID (contentPosts.id)
+  externalId: varchar("external_id", { length: 255 }), // Synup's ID for this entity
+  
+  // Sync status
+  lastPushedAt: timestamp("last_pushed_at"),
+  lastPulledAt: timestamp("last_pulled_at"),
+  checksum: varchar("checksum", { length: 64 }), // Hash to detect changes
+  syncStatus: varchar("sync_status", { length: 20 }).default("idle"), // idle, pending, synced, error
+  syncError: text("sync_error"),
+  
+  // Metadata
+  metadata: jsonb("metadata"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  unique().on(table.systemName, table.entityType, table.entityId),
+]);
+
+// Sync operation logs (audit trail)
+export const syncLogs = pgTable("sync_logs", {
+  id: serial("id").primaryKey(),
+  
+  systemName: varchar("system_name", { length: 50 }).notNull(), // "synup"
+  direction: varchar("direction", { length: 10 }).notNull(), // "outbound" | "inbound"
+  entityType: varchar("entity_type", { length: 50 }).notNull(), // "post"
+  entityId: integer("entity_id").notNull(),
+  
+  // Operation details
+  action: varchar("action", { length: 50 }).notNull(), // upsert, delete, status_update
+  payload: jsonb("payload"), // Data sent/received
+  status: varchar("status", { length: 20 }).notNull(), // success, error
+  errorMessage: text("error_message"),
+  
+  // Performance
+  duration: integer("duration"), // milliseconds
+  
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Content Management Insert Schemas
+export const insertSocialMediaAccountSchema = createInsertSchema(socialMediaAccounts).pick({
+  clientId: true,
+  platform: true,
+  platformAccountId: true,
+  platformAccountName: true,
+  platformAccountHandle: true,
+  platformAccountAvatar: true,
+  accessToken: true,
+  refreshToken: true,
+  tokenExpiresAt: true,
+  accountType: true,
+  permissions: true,
+  metadata: true,
+});
+
+export const insertContentMediaSchema = createInsertSchema(contentMedia).pick({
+  clientId: true,
+  fileName: true,
+  fileSize: true,
+  mimeType: true,
+  fileType: true,
+  storageKey: true,
+  storageUrl: true,
+  thumbnailUrl: true,
+  width: true,
+  height: true,
+  duration: true,
+  altText: true,
+  folder: true,
+  tags: true,
+});
+
+export const insertContentPostSchema = createInsertSchema(contentPosts).pick({
+  clientId: true,
+  caption: true,
+  hashtags: true,
+  mediaIds: true,
+  platforms: true,
+  platformCustomizations: true,
+  scheduledFor: true,
+  timezone: true,
+  status: true,
+  isAIGenerated: true,
+  aiPrompt: true,
+  templateId: true,
+});
+
+export const insertContentTemplateSchema = createInsertSchema(contentTemplates).pick({
+  clientId: true,
+  name: true,
+  description: true,
+  category: true,
+  captionTemplate: true,
+  hashtagsTemplate: true,
+  defaultMediaIds: true,
+  recommendedPlatforms: true,
+});
+
+export const insertExternalSyncSchema = createInsertSchema(externalSync).pick({
+  systemName: true,
+  entityType: true,
+  entityId: true,
+  externalId: true,
+  checksum: true,
+  metadata: true,
+});
+
+// Content Management Types
+export type SocialMediaAccount = typeof socialMediaAccounts.$inferSelect;
+export type InsertSocialMediaAccount = z.infer<typeof insertSocialMediaAccountSchema>;
+export type ContentMedia = typeof contentMedia.$inferSelect;
+export type InsertContentMedia = z.infer<typeof insertContentMediaSchema>;
+export type ContentPost = typeof contentPosts.$inferSelect;
+export type InsertContentPost = z.infer<typeof insertContentPostSchema>;
+export type ContentAnalytics = typeof contentAnalytics.$inferSelect;
+export type ContentTemplate = typeof contentTemplates.$inferSelect;
+export type InsertContentTemplate = z.infer<typeof insertContentTemplateSchema>;
+export type ExternalSync = typeof externalSync.$inferSelect;
+export type InsertExternalSync = z.infer<typeof insertExternalSyncSchema>;
+export type SyncLog = typeof syncLogs.$inferSelect;
