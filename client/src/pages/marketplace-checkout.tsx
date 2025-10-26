@@ -126,12 +126,12 @@ export default function MarketplaceCheckoutPage() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      {/* airswiped.com Branded Header */}
+      {/* swipesblue.com Branded Header */}
       <div className="bg-gradient-to-br from-red-600 to-red-700 py-8 border-b border-red-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src={airswipedLogo} alt="airswiped.com" className="h-12 w-12 object-contain" />
+              <img src={airswipedLogo} alt="swipesblue.com" className="h-12 w-12 object-contain" />
               <div>
                 <div className="font-archivo font-bold text-2xl leading-none mb-1">
                   <span className="text-white">air</span>
@@ -208,7 +208,7 @@ export default function MarketplaceCheckoutPage() {
                     <div className="flex items-start gap-2">
                       <Shield className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
                       <p className="text-xs text-blue-800">
-                        Your payment is secured by airswiped.com with enterprise-grade encryption and fraud protection.
+                        Your payment is secured by swipesblue.com with enterprise-grade encryption and fraud protection.
                       </p>
                     </div>
                   </div>
@@ -233,7 +233,7 @@ export default function MarketplaceCheckoutPage() {
                     <div>
                       <div className="font-medium text-sm text-gray-900">Secure Checkout</div>
                       <div className="text-xs text-gray-600">
-                        Powered by airswiped.com - Your card information is never stored on our servers
+                        Powered by swipesblue.com - Your card information is never stored on our servers
                       </div>
                     </div>
                   </div>
@@ -264,10 +264,10 @@ export default function MarketplaceCheckoutPage() {
               </CardContent>
             </Card>
 
-            {/* airswiped.com Trust Badge */}
+            {/* swipesblue.com Trust Badge */}
             <div className="mt-6 text-center">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm">
-                <img src={airswipedLogo} alt="airswiped.com" className="h-6 w-6 object-contain" />
+                <img src={airswipedLogo} alt="swipesblue.com" className="h-6 w-6 object-contain" />
                 <span className="text-sm text-gray-600">
                   Secured by{' '}
                   <span className="font-archivo font-bold">

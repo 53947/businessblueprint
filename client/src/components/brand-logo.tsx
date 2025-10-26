@@ -14,7 +14,7 @@ import hostsBlueIcon from "@assets/Hosts Blue Icon New_1760810493739.png";
 import swipesBlueIcon from "@assets/swipesblue icon_1760810511865.png";
 
 interface BrandLogoProps {
-  brand: 'businessblueprint' | 'webhosted' | 'airswiped' | 'send' | 'inbox' | 'livechat';
+  brand: 'businessblueprint' | 'hostsblue' | 'swipesblue' | 'send' | 'inbox' | 'livechat';
   variant?: 'light' | 'dark';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showIcon?: boolean;
@@ -84,21 +84,21 @@ export function BrandLogo({
     );
   }
 
-  if (brand === 'webhosted') {
+  if (brand === 'hostsblue') {
     return (
       <div className={`flex items-center gap-3 ${className}`}>
         {showIcon && (
           <img 
-            src={webhostedIcon} 
-            alt="webhosted.io icon" 
+            src={hostsBlueIcon} 
+            alt="hostsblue.com icon" 
             className={`${iconSize} object-contain`}
           />
         )}
-        <img 
-          src={webhostedLogo} 
-          alt="webhosted.io" 
-          className={`${logoSize} object-contain`}
-        />
+        <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600 }}>
+          <span style={{ color: '#009FBD', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
+          <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blue</span>
+          <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.com</span>
+        </div>
       </div>
     );
   }
@@ -122,21 +122,21 @@ export function BrandLogo({
     );
   }
 
-  // airswiped uses new lightning bolt icon
-  if (brand === 'airswiped') {
+  // swipesblue uses new lightning bolt icon
+  if (brand === 'swipesblue') {
     return (
       <div className={`flex items-center gap-3 ${className}`}>
         {showIcon && (
           <img 
-            src={airswipedLogo} 
-            alt="airswiped.com icon" 
+            src={swipesBlueIcon} 
+            alt="swipesblue.com icon" 
             className={`${iconSize} object-contain`}
           />
         )}
-        <div className={`font-archivo font-bold text-2xl leading-none`}>
-          <span className={isDark ? 'text-white' : 'text-[#09080E]'}>air</span>
-          <span className="text-[#FF0040]">swiped</span>
-          <span className="text-[#84D71A]">.com</span>
+        <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600 }}>
+          <span style={{ color: '#FF0040', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
+          <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blue</span>
+          <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.com</span>
         </div>
       </div>
     );
@@ -206,8 +206,8 @@ export function BrandIcon({
   
   const iconMap = {
     businessblueprint: bbIcon,
-    webhosted: hostsBlueIcon,
-    airswiped: swipesBlueIcon,
+    hostsblue: hostsBlueIcon,
+    swipesblue: swipesBlueIcon,
     send: sendIcon,
     inbox: inboxIcon,
     livechat: livechatIcon

@@ -65,16 +65,16 @@ export default function LogoPreview() {
           </div>
         </div>
 
-        {/* webhosted.io Assets */}
+        {/* hostsblue.com Assets */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700">webhosted.io</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700">hostsblue.com</h2>
           
           <div className="grid md:grid-cols-2 gap-8 mb-6">
             {/* Light Environment */}
             <div className="border-2 border-gray-200 rounded-lg p-6 bg-white">
               <div className="text-sm font-semibold text-gray-500 mb-4 text-center">LIGHT ENVIRONMENT</div>
               <div className="bg-white p-6 rounded flex flex-col items-center justify-center min-h-[200px]">
-                <BrandLogo brand="webhosted" variant="light" size="lg" />
+                <BrandLogo brand="hostsblue" variant="light" size="lg" />
               </div>
               <p className="text-xs text-gray-500 mt-4 text-center">Use on: White backgrounds, light colored pages</p>
               <p className="text-xs text-blue-600 mt-2 text-center font-medium">✓ Icon + Archivo font text</p>
@@ -84,7 +84,7 @@ export default function LogoPreview() {
             <div className="border-2 border-gray-600 rounded-lg p-6 bg-gray-900">
               <div className="text-sm font-semibold text-gray-300 mb-4 text-center">DARK ENVIRONMENT</div>
               <div className="bg-gray-900 p-6 rounded flex flex-col items-center justify-center min-h-[200px]">
-                <BrandLogo brand="webhosted" variant="dark" size="lg" />
+                <BrandLogo brand="hostsblue" variant="dark" size="lg" />
               </div>
               <p className="text-xs text-gray-400 mt-4 text-center">Use on: Dark backgrounds, night mode, dark sections</p>
               <p className="text-xs text-blue-400 mt-2 text-center font-medium">✓ Icon + Archivo font text</p>
@@ -101,16 +101,16 @@ export default function LogoPreview() {
           </div>
         </div>
 
-        {/* airswiped.com Assets */}
+        {/* swipesblue.com Assets */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-semibold mb-6 text-gray-700">airswiped.com</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700">swipesblue.com</h2>
           
           <div className="grid md:grid-cols-2 gap-8 mb-6">
             {/* Light Environment */}
             <div className="border-2 border-gray-200 rounded-lg p-6 bg-white">
               <div className="text-sm font-semibold text-gray-500 mb-4 text-center">LIGHT ENVIRONMENT</div>
               <div className="bg-white p-6 rounded flex flex-col items-center justify-center min-h-[200px]">
-                <BrandLogo brand="airswiped" variant="light" size="lg" />
+                <BrandLogo brand="swipesblue" variant="light" size="lg" />
               </div>
               <p className="text-xs text-gray-500 mt-4 text-center">Use on: White backgrounds, light colored pages</p>
               <p className="text-xs text-blue-600 mt-2 text-center font-medium">✓ Icon + Archivo font text</p>
@@ -120,7 +120,7 @@ export default function LogoPreview() {
             <div className="border-2 border-gray-600 rounded-lg p-6 bg-gray-900">
               <div className="text-sm font-semibold text-gray-300 mb-4 text-center">DARK ENVIRONMENT</div>
               <div className="bg-gray-900 p-6 rounded flex flex-col items-center justify-center min-h-[200px]">
-                <BrandLogo brand="airswiped" variant="dark" size="lg" />
+                <BrandLogo brand="swipesblue" variant="dark" size="lg" />
               </div>
               <p className="text-xs text-gray-400 mt-4 text-center">Use on: Dark backgrounds, night mode, dark sections</p>
               <p className="text-xs text-blue-400 mt-2 text-center font-medium">✓ Icon + Archivo font text</p>
@@ -196,10 +196,10 @@ export default function LogoPreview() {
 <BrandLogo brand="businessblueprint" variant="light" size="lg" />
 
 // Dark version with icon  
-<BrandLogo brand="webhosted" variant="dark" size="md" />
+<BrandLogo brand="hostsblue" variant="dark" size="md" />
 
 // Small version
-<BrandLogo brand="airswiped" variant="light" size="sm" />`}
+<BrandLogo brand="swipesblue" variant="light" size="sm" />`}
             </code>
           </div>
 
