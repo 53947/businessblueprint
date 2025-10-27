@@ -282,12 +282,12 @@ const addons = [
     isActive: true
   },
   {
-    addonId: "social",
+    addonId: "content-management",
     name: "Content Management (DIY)",
     description: "/content platform: Choose 3 social platforms (FB, IG, LinkedIn, X, Google Business). AI captions + hashtags, scheduling calendar with drag & drop, media library, analytics dashboard. Full AI Coach included!",
     category: "synup-diy",
     icon: "Share2",
-    price: "8.00",
+    price: "50.00",
     billingCycle: "monthly",
     compatiblePathways: ["diy"],
     isActive: true
@@ -317,12 +317,12 @@ const addons = [
     isActive: true
   },
   {
-    addonId: "social-posting",
+    addonId: "content-management-msp",
     name: "Content Management (MSP)",
     description: "/content platform: All 7 platforms (FB, IG, LinkedIn, X, Google Business, TikTok, Snapchat). AI captions + hashtags, scheduling, media library, analytics, team collaboration, two-way Synup sync. Managed by our team.",
     category: "synup-msp",
     icon: "Send",
-    price: "25.00",
+    price: "80.00",
     billingCycle: "monthly",
     compatiblePathways: ["msp"],
     isActive: true

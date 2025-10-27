@@ -205,18 +205,20 @@ export default function MarketplacePage() {
       ]
     },
     {
-      id: 'social-addon',
-      name: 'Social',
+      id: 'content-management',
+      name: 'Content Management',
       icon: MessageSquare,
-      emoji: '📣',
-      price: 8,
-      description: 'Plan, publish, and track performance.',
-      accentColor: 'orange',
+      emoji: '📱',
+      price: 50,
+      description: 'Create, schedule & publish social content with AI assistance.',
+      accentColor: 'indigo',
       features: [
-        'FB/IG/X/LinkedIn scheduling',
-        'Calendar + drag & drop',
-        'AI captions + hashtag help',
-        'Analytics + link-in-bio page'
+        '3 platforms (FB/IG/LinkedIn/X/Google) - pick favorites',
+        'Visual calendar + drag-drop scheduling',
+        'AI caption generator with tone control',
+        'Media library with cloud storage (R2)',
+        'Post analytics & performance tracking',
+        'AI Coach integration'
       ]
     },
     {
@@ -254,18 +256,21 @@ export default function MarketplacePage() {
       ]
     },
     {
-      id: 'social-media-posting',
-      name: 'Social Media Posting',
+      id: 'content-management-msp',
+      name: 'Content Management (MSP)',
       icon: MessageSquare,
-      emoji: '📣',
-      price: 25,
+      emoji: '📱',
+      price: 80,
       priceNote: 'per location/mo',
-      description: '+$3 per extra post',
-      accentColor: 'orange',
+      description: 'Full-service content creation & publishing',
+      accentColor: 'indigo',
       features: [
-        'Branded content publishing',
-        'Consistent cross-channel cadence',
-        'Calendar, approvals, basic analytics'
+        'All 7 platforms (FB/IG/LinkedIn/X/Google/TikTok/Snapchat)',
+        'Two-way Synup sync for listings integration',
+        'Team collaboration & approval workflows',
+        'Advanced analytics & reporting',
+        'Priority AI Coach access',
+        'Branded content library'
       ]
     }
   ];
@@ -468,23 +473,20 @@ export default function MarketplacePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0B0E17] via-[#0E1117] to-[#0B0E17]" 
-         style={{
-           background: `radial-gradient(1200px 600px at 20% -10%, rgba(128,0,255,.15), transparent 60%), radial-gradient(1200px 600px at 120% 10%, rgba(0,0,255,.15), transparent 60%), #0B0E17`
-         }}>
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
       
       {/* Hero Section */}
-      <section className="py-12 px-4">
+      <section className="py-12 px-4 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-2">
-            <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-4" data-testid="text-marketplace-kicker">
+            <div className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-[0.18em] uppercase mb-4" data-testid="text-marketplace-kicker">
               Unified Marketplace
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" data-testid="text-marketplace-title">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4" data-testid="text-marketplace-title">
               Choose Your Path to Growth
             </h1>
-            <p className="text-xl text-[#A9B0C5] max-w-3xl mx-auto mb-8" data-testid="text-marketplace-description">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8" data-testid="text-marketplace-description">
               Self-service DIY tools or fully managed services. Build your perfect digital strategy.
             </p>
           </div>
@@ -564,8 +566,11 @@ export default function MarketplacePage() {
       <div className="max-w-7xl mx-auto px-4 pb-20">
         {/* DIY Plans */}
         <div className="mb-16" data-testid="section-diy-plans">
-          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">DIY Plans</div>
-          <h2 className="text-3xl font-bold text-white mb-6">Start • Advanced • Scale</h2>
+          <div className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-[0.18em] uppercase mb-2">DIY Base Plans (Required)</div>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Start • Advanced • Scale</h2>
+          <p className="text-gray-600 dark:text-gray-300 text-lg mb-6 max-w-4xl">
+            Choose your foundation plan first. All DIY add-ons below require one of these base subscriptions.
+          </p>
           
           <div className="grid md:grid-cols-3 gap-5">
             {diyPlans.map((plan) => {
@@ -574,29 +579,29 @@ export default function MarketplacePage() {
               
               return (
                 <Card key={plan.id} 
-                      className="bg-gradient-to-b from-white/[0.04] to-white/[0.02] border border-white/[0.09] rounded-2xl p-5 relative overflow-hidden backdrop-blur-sm"
+                      className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg`}
                       data-testid={`card-plan-${plan.id}`}>
-                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/[0.08] border border-white/[0.14] mb-4">
+                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
                     <span>{plan.emoji}</span>
-                    <span className={`bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
+                    <span className="text-white">
                       {plan.name}
                     </span>
                   </div>
                   
-                  <div className={`text-4xl font-extrabold mb-1 bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`} 
+                  <div className="text-4xl font-extrabold mb-1 text-white" 
                        data-testid={`text-plan-price-${plan.id}`}>
                     ${plan.price}/mo
                   </div>
-                  <div className="text-xs text-[#A9B0C5] mb-4">
+                  <div className="text-xs text-white/80 mb-4">
                     or ${plan.priceMonthly} billed monthly • Save 20% annually
                   </div>
                   
-                  <p className="text-[#A9B0C5] text-sm mb-4">{plan.description}</p>
+                  <p className="text-white/90 text-sm mb-4">{plan.description}</p>
                   
                   <ul className="space-y-2.5 mb-6">
                     {plan.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-[#E9ECFF] text-sm">
-                        <span className={`h-5 w-5 rounded flex items-center justify-center text-xs font-black text-black flex-shrink-0 ${feature.included ? colors.checkBg : 'bg-red-500'}`}>
+                      <li key={idx} className="flex items-start gap-2.5 text-white text-sm">
+                        <span className={`h-5 w-5 rounded flex items-center justify-center text-xs font-black flex-shrink-0 ${feature.included ? 'bg-white text-black' : 'bg-red-500 text-white'}`}>
                           {feature.included ? '✓' : '•'}
                         </span>
                         <span>{feature.text}</span>
@@ -606,7 +611,7 @@ export default function MarketplacePage() {
                   
                   <Button 
                     onClick={() => addToCart(plan, 'plan', 'annual')}
-                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
                     data-testid={`button-add-${plan.id}`}>
                     {isInCart ? (
                       <>
@@ -628,8 +633,13 @@ export default function MarketplacePage() {
 
         {/* DIY Add-Ons */}
         <div className="mb-16" data-testid="section-diy-addons">
-          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">DIY Add-Ons</div>
-          <h2 className="text-3xl font-bold text-white mb-6">Self-Service Modules</h2>
+          <div className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-[0.18em] uppercase mb-2">DIY Add-Ons</div>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Self-Service Modules</h2>
+          <div className="bg-blue-500/10 border border-blue-400/30 rounded-lg p-4 mb-6">
+            <p className="text-blue-200 text-sm">
+              ⚠️ <strong>Note:</strong> Add-ons require an active DIY base plan (Start, Advanced, or Scale) subscription.
+            </p>
+          </div>
           
           <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-5">
             {diyAddons.map((addon) => {
@@ -638,26 +648,26 @@ export default function MarketplacePage() {
               
               return (
                 <Card key={addon.id}
-                      className="bg-gradient-to-b from-white/[0.04] to-white/[0.02] border border-white/[0.09] rounded-2xl p-5 relative overflow-hidden backdrop-blur-sm"
+                      className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg`}
                       data-testid={`card-addon-${addon.id}`}>
-                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/[0.08] border border-white/[0.14] mb-4">
+                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
                     <span>{addon.emoji}</span>
-                    <span className={`bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
+                    <span className="text-white">
                       {addon.name}
                     </span>
                   </div>
                   
-                  <div className={`text-3xl font-extrabold mb-2 bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}
+                  <div className="text-3xl font-extrabold mb-2 text-white"
                        data-testid={`text-addon-price-${addon.id}`}>
                     ${addon.price}/mo
                   </div>
                   
-                  <p className="text-[#A9B0C5] text-sm mb-4">{addon.description}</p>
+                  <p className="text-white/90 text-sm mb-4">{addon.description}</p>
                   
                   <ul className="space-y-2.5 mb-6">
                     {addon.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-[#E9ECFF] text-sm">
-                        <span className={`h-5 w-5 rounded flex items-center justify-center text-xs font-black text-black flex-shrink-0 ${colors.checkBg}`}>
+                      <li key={idx} className="flex items-start gap-2.5 text-white text-sm">
+                        <span className="h-5 w-5 rounded flex items-center justify-center text-xs font-black bg-white text-black flex-shrink-0">
                           ✓
                         </span>
                         <span>{feature}</span>
@@ -667,7 +677,7 @@ export default function MarketplacePage() {
                   
                   <Button 
                     onClick={() => addToCart(addon, 'addon')}
-                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg text-sm ${isInCart ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg text-sm ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
                     data-testid={`button-add-${addon.id}`}>
                     {isInCart ? (
                       <>
@@ -692,8 +702,8 @@ export default function MarketplacePage() {
 
         {/* MSP Add-Ons */}
         <div className="mb-16" data-testid="section-msp-addons">
-          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">MSP Add-Ons</div>
-          <h2 className="text-3xl font-bold text-white mb-6">Managed by Our Team</h2>
+          <div className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-[0.18em] uppercase mb-2">MSP Add-Ons</div>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Managed by Our Team</h2>
           
           <div className="grid md:grid-cols-2 gap-5">
             {mspAddons.map((addon) => {
@@ -702,25 +712,25 @@ export default function MarketplacePage() {
               
               return (
                 <Card key={addon.id}
-                      className="bg-gradient-to-b from-white/[0.04] to-white/[0.02] border border-white/[0.09] rounded-2xl p-5 relative overflow-hidden backdrop-blur-sm"
+                      className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg`}
                       data-testid={`card-msp-addon-${addon.id}`}>
-                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/[0.08] border border-white/[0.14] mb-4">
+                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
                     <span>{addon.emoji}</span>
-                    <span className={`bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
+                    <span className="text-white">
                       {addon.name}
                     </span>
                   </div>
                   
-                  <div className={`text-3xl font-extrabold mb-1 bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}
+                  <div className="text-3xl font-extrabold mb-1 text-white"
                        data-testid={`text-msp-addon-price-${addon.id}`}>
                     ${addon.price}/{addon.priceNote || 'mo'}
                   </div>
-                  <div className="text-xs text-[#A9B0C5] mb-4">{addon.description}</div>
+                  <div className="text-xs text-white/80 mb-4">{addon.description}</div>
                   
                   <ul className="space-y-2.5 mb-6">
                     {addon.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-[#E9ECFF] text-sm">
-                        <span className={`h-5 w-5 rounded flex items-center justify-center text-xs font-black text-black flex-shrink-0 ${colors.checkBg}`}>
+                      <li key={idx} className="flex items-start gap-2.5 text-white text-sm">
+                        <span className="h-5 w-5 rounded flex items-center justify-center text-xs font-black bg-white text-black flex-shrink-0">
                           ✓
                         </span>
                         <span>{feature}</span>
@@ -730,7 +740,7 @@ export default function MarketplacePage() {
                   
                   <Button 
                     onClick={() => addToCart(addon, 'addon')}
-                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
                     data-testid={`button-add-${addon.id}`}>
                     {isInCart ? (
                       <>
@@ -755,8 +765,13 @@ export default function MarketplacePage() {
 
         {/* AI Coach Add-Ons */}
         <div className="mb-16" data-testid="section-ai-coach">
-          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">AI Business Coach</div>
-          <h2 className="text-3xl font-bold text-white mb-6">Intelligent Guidance • Pay As You Use</h2>
+          <div className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-[0.18em] uppercase mb-2">AI Business Coach</div>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Intelligent Guidance • Pay As You Use</h2>
+          <div className="bg-blue-500/10 border border-blue-400/30 rounded-lg p-4 mb-6">
+            <p className="text-blue-200 text-sm">
+              ℹ️ Add to any DIY base plan for AI-powered guidance on your digital marketing journey.
+            </p>
+          </div>
           
           <div className="grid md:grid-cols-3 gap-5">
             {aiCoachAddons.map((addon) => {
@@ -765,25 +780,25 @@ export default function MarketplacePage() {
               
               return (
                 <Card key={addon.id}
-                      className="bg-gradient-to-b from-white/[0.04] to-white/[0.02] border border-white/[0.09] rounded-2xl p-5 relative overflow-hidden backdrop-blur-sm"
+                      className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg`}
                       data-testid={`card-ai-coach-${addon.id}`}>
-                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/[0.08] border border-white/[0.14] mb-4">
+                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
                     <span>{addon.emoji}</span>
-                    <span className={`bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
+                    <span className="text-white">
                       {addon.name}
                     </span>
                   </div>
                   
-                  <div className={`text-3xl font-extrabold mb-1 bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}
+                  <div className="text-3xl font-extrabold mb-1 text-white"
                        data-testid={`text-ai-coach-price-${addon.id}`}>
                     ${addon.price}/{addon.priceNote || 'mo'}
                   </div>
-                  <div className="text-xs text-[#A9B0C5] mb-4">{addon.description}</div>
+                  <div className="text-xs text-white/80 mb-4">{addon.description}</div>
                   
                   <ul className="space-y-2.5 mb-6">
                     {addon.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-[#E9ECFF] text-sm">
-                        <span className={`h-5 w-5 rounded flex items-center justify-center text-xs font-black text-black flex-shrink-0 ${colors.checkBg}`}>
+                      <li key={idx} className="flex items-start gap-2.5 text-white text-sm">
+                        <span className="h-5 w-5 rounded flex items-center justify-center text-xs font-black bg-white text-black flex-shrink-0">
                           ✓
                         </span>
                         <span>{feature}</span>
@@ -793,7 +808,7 @@ export default function MarketplacePage() {
                   
                   <Button 
                     onClick={() => addToCart(addon, 'addon')}
-                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg text-sm ${isInCart ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg text-sm ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
                     data-testid={`button-add-${addon.id}`}>
                     {isInCart ? (
                       <>
@@ -818,8 +833,8 @@ export default function MarketplacePage() {
 
         {/* Captaining Service */}
         <div className="mb-16" data-testid="section-captaining">
-          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">Premium Service</div>
-          <h2 className="text-3xl font-bold text-white mb-6">Captaining • Strategic Account Management</h2>
+          <div className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-[0.18em] uppercase mb-2">Premium Service</div>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Captaining • Strategic Account Management</h2>
           
           <div className="max-w-2xl mx-auto">
             {captainingService.map((service) => {
@@ -828,25 +843,25 @@ export default function MarketplacePage() {
               
               return (
                 <Card key={service.id}
-                      className="bg-gradient-to-b from-white/[0.04] to-white/[0.02] border-2 border-white/[0.14] rounded-2xl p-6 relative overflow-hidden backdrop-blur-sm"
+                      className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-6 relative overflow-hidden shadow-lg`}
                       data-testid={`card-captaining-${service.id}`}>
-                  <div className="inline-flex items-center gap-2 text-lg font-bold px-4 py-2 rounded-full bg-white/[0.08] border border-white/[0.14] mb-4">
+                  <div className="inline-flex items-center gap-2 text-lg font-bold px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
                     <span className="text-2xl">{service.emoji}</span>
-                    <span className={`bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
+                    <span className="text-white">
                       {service.name}
                     </span>
                   </div>
                   
-                  <div className={`text-4xl font-extrabold mb-1 bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}
+                  <div className="text-4xl font-extrabold mb-1 text-white"
                        data-testid={`text-captaining-price-${service.id}`}>
                     ${service.price}/{service.priceNote || 'mo'}
                   </div>
-                  <div className="text-sm text-[#A9B0C5] mb-6">{service.description}</div>
+                  <div className="text-sm text-white/80 mb-6">{service.description}</div>
                   
                   <ul className="space-y-3 mb-6">
                     {service.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-[#E9ECFF] text-sm">
-                        <span className={`h-6 w-6 rounded flex items-center justify-center text-sm font-black text-black flex-shrink-0 ${colors.checkBg}`}>
+                      <li key={idx} className="flex items-start gap-3 text-white text-sm">
+                        <span className="h-6 w-6 rounded flex items-center justify-center text-sm font-black bg-white text-black flex-shrink-0">
                           ✓
                         </span>
                         <span>{feature}</span>
@@ -856,7 +871,7 @@ export default function MarketplacePage() {
                   
                   <Button 
                     onClick={() => addToCart(service, 'addon')}
-                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
                     data-testid={`button-add-${service.id}`}>
                     {isInCart ? (
                       <>
@@ -881,8 +896,8 @@ export default function MarketplacePage() {
 
         {/* MSP Packages */}
         <div className="mb-16" data-testid="section-msp-packages">
-          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">MSP Packages</div>
-          <h2 className="text-3xl font-bold text-white mb-6">Managed Service Tiers (+25% applied)</h2>
+          <div className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-[0.18em] uppercase mb-2">MSP Packages</div>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Managed Service Tiers (+25% applied)</h2>
           
           <div className="grid md:grid-cols-2 gap-5">
             {mspPackages.map((pkg) => {
@@ -891,25 +906,25 @@ export default function MarketplacePage() {
               
               return (
                 <Card key={pkg.id}
-                      className="bg-gradient-to-b from-white/[0.04] to-white/[0.02] border border-white/[0.09] rounded-2xl p-5 relative overflow-hidden backdrop-blur-sm"
+                      className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg`}
                       data-testid={`card-msp-package-${pkg.id}`}>
-                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/[0.08] border border-white/[0.14] mb-4">
+                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
                     <span>{pkg.emoji}</span>
-                    <span className={`bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
+                    <span className="text-white">
                       {pkg.name}
                     </span>
                   </div>
                   
-                  <div className={`text-3xl font-extrabold mb-1 bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}
+                  <div className="text-3xl font-extrabold mb-1 text-white"
                        data-testid={`text-msp-package-price-${pkg.id}`}>
                     ${pkg.price}/mo
                   </div>
-                  <div className="text-xs text-[#A9B0C5] mb-4">{pkg.description}</div>
+                  <div className="text-xs text-white/80 mb-4">{pkg.description}</div>
                   
                   <ul className="space-y-2.5 mb-6">
                     {pkg.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-[#E9ECFF] text-sm">
-                        <span className={`h-5 w-5 rounded flex items-center justify-center text-xs font-black text-black flex-shrink-0 ${colors.checkBg}`}>
+                      <li key={idx} className="flex items-start gap-2.5 text-white text-sm">
+                        <span className="h-5 w-5 rounded flex items-center justify-center text-xs font-black bg-white text-black flex-shrink-0">
                           ✓
                         </span>
                         <span>{feature}</span>
@@ -919,7 +934,7 @@ export default function MarketplacePage() {
                   
                   <Button 
                     onClick={() => addToCart(pkg, 'addon')}
-                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
                     data-testid={`button-add-${pkg.id}`}>
                     {isInCart ? (
                       <>
