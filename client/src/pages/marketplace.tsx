@@ -270,6 +270,88 @@ export default function MarketplacePage() {
     }
   ];
 
+  // AI Coach Add-Ons
+  const aiCoachAddons: Addon[] = [
+    {
+      id: 'ai-coach-essential',
+      name: 'AI Coach Essential',
+      icon: Lightbulb,
+      emoji: '🤖',
+      price: 99,
+      description: 'Pay-as-you-go AI guidance • For DIY customers',
+      accentColor: 'blue',
+      features: [
+        'Core AI business guidance',
+        'Automated task suggestions',
+        'Basic progress tracking',
+        'Standard response time',
+        'Essential coaching features',
+        'Pay only for what you use'
+      ],
+      priceNote: 'DIY pricing'
+    },
+    {
+      id: 'ai-coach-essential-msp',
+      name: 'AI Coach Essential',
+      icon: Lightbulb,
+      emoji: '🤖',
+      price: 59,
+      description: 'Pay-as-you-go AI guidance • For MSP customers',
+      accentColor: 'blue',
+      features: [
+        'Core AI business guidance',
+        'Automated task suggestions',
+        'Basic progress tracking',
+        'Standard response time',
+        'Essential coaching features',
+        'Pay only for what you use'
+      ],
+      priceNote: 'MSP pricing'
+    },
+    {
+      id: 'ai-coach-pro',
+      name: 'AI Coach Pro',
+      icon: Rocket,
+      emoji: '🚀',
+      price: 99,
+      description: 'Unlimited AI support • Advanced strategies',
+      accentColor: 'purple',
+      features: [
+        'Unlimited personalized guidance',
+        'Advanced step-by-step instructions',
+        'Real-time progress analysis',
+        'Priority AI responses',
+        '24/7 availability',
+        'Premium coaching algorithms',
+        'Custom business strategies'
+      ],
+      priceNote: 'DIY only'
+    }
+  ];
+
+  // Captaining Service
+  const captainingService: Addon[] = [
+    {
+      id: 'captaining',
+      name: 'Captaining',
+      icon: Star,
+      emoji: '⚓',
+      price: 499,
+      description: 'Expert strategic guidance & account management',
+      accentColor: 'orange',
+      features: [
+        'Dedicated account strategist',
+        'Monthly strategy sessions',
+        'Quarterly business reviews',
+        'Custom growth roadmap',
+        'Priority support access',
+        'Cross-platform optimization',
+        'Performance analytics & reporting'
+      ],
+      priceNote: 'per month'
+    }
+  ];
+
   // MSP Packages
   const mspPackages: Addon[] = [
     {
@@ -654,6 +736,132 @@ export default function MarketplacePage() {
                       <>
                         <Check className="w-4 h-4 mr-2" />
                         Added
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add to Cart
+                      </>
+                    )}
+                  </Button>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-12"></div>
+
+        {/* AI Coach Add-Ons */}
+        <div className="mb-16" data-testid="section-ai-coach">
+          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">AI Business Coach</div>
+          <h2 className="text-3xl font-bold text-white mb-6">Intelligent Guidance • Pay As You Use</h2>
+          
+          <div className="grid md:grid-cols-3 gap-5">
+            {aiCoachAddons.map((addon) => {
+              const colors = getAccentColorClasses(addon.accentColor);
+              const isInCart = cart.some(item => item.id === addon.id);
+              
+              return (
+                <Card key={addon.id}
+                      className="bg-gradient-to-b from-white/[0.04] to-white/[0.02] border border-white/[0.09] rounded-2xl p-5 relative overflow-hidden backdrop-blur-sm"
+                      data-testid={`card-ai-coach-${addon.id}`}>
+                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/[0.08] border border-white/[0.14] mb-4">
+                    <span>{addon.emoji}</span>
+                    <span className={`bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
+                      {addon.name}
+                    </span>
+                  </div>
+                  
+                  <div className={`text-3xl font-extrabold mb-1 bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}
+                       data-testid={`text-ai-coach-price-${addon.id}`}>
+                    ${addon.price}/{addon.priceNote || 'mo'}
+                  </div>
+                  <div className="text-xs text-[#A9B0C5] mb-4">{addon.description}</div>
+                  
+                  <ul className="space-y-2.5 mb-6">
+                    {addon.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5 text-[#E9ECFF] text-sm">
+                        <span className={`h-5 w-5 rounded flex items-center justify-center text-xs font-black text-black flex-shrink-0 ${colors.checkBg}`}>
+                          ✓
+                        </span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <Button 
+                    onClick={() => addToCart(addon, 'addon')}
+                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg text-sm ${isInCart ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                    data-testid={`button-add-${addon.id}`}>
+                    {isInCart ? (
+                      <>
+                        <Check className="w-3 h-3 mr-1" />
+                        Added
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-3 h-3 mr-1" />
+                        Add to Cart
+                      </>
+                    )}
+                  </Button>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-12"></div>
+
+        {/* Captaining Service */}
+        <div className="mb-16" data-testid="section-captaining">
+          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">Premium Service</div>
+          <h2 className="text-3xl font-bold text-white mb-6">Captaining • Strategic Account Management</h2>
+          
+          <div className="max-w-2xl mx-auto">
+            {captainingService.map((service) => {
+              const colors = getAccentColorClasses(service.accentColor);
+              const isInCart = cart.some(item => item.id === service.id);
+              
+              return (
+                <Card key={service.id}
+                      className="bg-gradient-to-b from-white/[0.04] to-white/[0.02] border-2 border-white/[0.14] rounded-2xl p-6 relative overflow-hidden backdrop-blur-sm"
+                      data-testid={`card-captaining-${service.id}`}>
+                  <div className="inline-flex items-center gap-2 text-lg font-bold px-4 py-2 rounded-full bg-white/[0.08] border border-white/[0.14] mb-4">
+                    <span className="text-2xl">{service.emoji}</span>
+                    <span className={`bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>
+                      {service.name}
+                    </span>
+                  </div>
+                  
+                  <div className={`text-4xl font-extrabold mb-1 bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}
+                       data-testid={`text-captaining-price-${service.id}`}>
+                    ${service.price}/{service.priceNote || 'mo'}
+                  </div>
+                  <div className="text-sm text-[#A9B0C5] mb-6">{service.description}</div>
+                  
+                  <ul className="space-y-3 mb-6">
+                    {service.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-3 text-[#E9ECFF] text-sm">
+                        <span className={`h-6 w-6 rounded flex items-center justify-center text-sm font-black text-black flex-shrink-0 ${colors.checkBg}`}>
+                          ✓
+                        </span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <Button 
+                    onClick={() => addToCart(service, 'addon')}
+                    className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600' : ''}`}
+                    data-testid={`button-add-${service.id}`}>
+                    {isInCart ? (
+                      <>
+                        <Check className="w-4 h-4 mr-2" />
+                        Added to Cart
                       </>
                     ) : (
                       <>
