@@ -23,6 +23,7 @@ import {
 import { eq, and, desc, sql } from 'drizzle-orm';
 import { contentPublishQueue } from '../services/queue';
 import { MediaStorageService } from '../services/mediaStorage';
+import { synupSyncService } from '../services/content/synupSync';
 import { PlatformFactory } from '../services/platforms/platformFactory';
 
 const router = Router();
@@ -192,6 +193,11 @@ router.post('/:clientId/posts', requireContentAccess, async (req: Request, res: 
       })
       .returning();
 
+    // Trigger outbound sync to Synup for MSP clients
+    synupSyncService.pushPostToSynup(post.id).catch(err => {
+      console.error('[Content] Sync to Synup failed (post creation):', err);
+    });
+
     res.status(201).json(post);
   } catch (error) {
     console.error('[Content] Error creating post:', error);
@@ -242,6 +248,11 @@ router.put('/:clientId/posts/:postId', requireContentAccess, async (req: Request
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
+
+    // Trigger outbound sync to Synup for MSP clients
+    synupSyncService.pushPostToSynup(post.id).catch(err => {
+      console.error('[Content] Sync to Synup failed (post update):', err);
+    });
 
     res.json(post);
   } catch (error) {
@@ -328,6 +339,11 @@ router.post('/:clientId/posts/:postId/publish', requireContentAccess, async (req
         .update(contentPosts)
         .set({ status: 'scheduled' })
         .where(eq(contentPosts.id, postId));
+
+      // Trigger outbound sync to Synup for MSP clients
+      synupSyncService.pushPostToSynup(postId).catch(err => {
+        console.error('[Content] Sync to Synup failed (post scheduled):', err);
+      });
 
       res.json({ 
         message: 'Post scheduled successfully',
@@ -765,6 +781,57 @@ router.get('/:clientId/analytics', requireContentAccess, async (req: Request, re
   } catch (error) {
     console.error('[Content] Error fetching analytics:', error);
     res.status(500).json({ message: 'Failed to fetch analytics' });
+  }
+});
+
+// ===== SYNUP SYNC ROUTES =====
+
+/**
+ * POST /api/content/:clientId/sync/synup/push/:postId
+ * Manually push a post to Synup (admin/support)
+ */
+router.post('/:clientId/sync/synup/push/:postId', requireContentAccess, async (req: Request, res: Response) => {
+  try {
+    const postId = parseInt(req.params.postId);
+    const result = await synupSyncService.pushPostToSynup(postId);
+
+    if (result) {
+      res.json({ success: true, message: 'Post synced to Synup successfully' });
+    } else {
+      res.status(500).json({ success: false, message: 'Failed to sync post to Synup' });
+    }
+  } catch (error) {
+    console.error('[Content] Error pushing to Synup:', error);
+    res.status(500).json({ success: false, message: 'Failed to sync post' });
+  }
+});
+
+/**
+ * POST /api/content/sync/synup/webhook
+ * Webhook endpoint to receive updates from Synup
+ */
+router.post('/sync/synup/webhook', async (req: Request, res: Response) => {
+  try {
+    const signature = req.headers['x-synup-signature'] as string;
+    const rawBody = JSON.stringify(req.body);
+
+    // Verify signature
+    if (!signature || !synupSyncService.verifyWebhookSignature(rawBody, signature)) {
+      console.error('[Content] Invalid Synup webhook signature');
+      return res.status(401).json({ error: 'Invalid signature' });
+    }
+
+    // Apply update
+    const result = await synupSyncService.applySynupUpdate(req.body);
+
+    if (result) {
+      res.json({ success: true });
+    } else {
+      res.status(500).json({ success: false, message: 'Failed to apply update' });
+    }
+  } catch (error) {
+    console.error('[Content] Error processing Synup webhook:', error);
+    res.status(500).json({ success: false, message: 'Internal error' });
   }
 });
 

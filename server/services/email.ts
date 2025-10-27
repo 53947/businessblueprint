@@ -25,10 +25,10 @@ export class EmailService {
     this.transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false,
+      secure: false, // Use TLS (STARTTLS) on port 587
       auth: {
-        user: process.env.SMTP_USER || process.env.EMAIL_USER,
-        pass: process.env.SMTP_PASS || process.env.EMAIL_PASS,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
   }
@@ -42,7 +42,7 @@ export class EmailService {
       const htmlContent = this.generateVerificationEmailHTML(companyName, verificationCode);
       
       const mailOptions = {
-        from: process.env.FROM_EMAIL || 'le847@icloud.com',
+        from: process.env.FROM_EMAIL,
         to: email,
         subject: `Verify Your Email - ${verificationCode}`,
         html: htmlContent,
@@ -61,7 +61,7 @@ export class EmailService {
       const htmlContent = this.generateEmailChangeNotificationHTML(companyName, newEmail);
       
       const mailOptions = {
-        from: process.env.FROM_EMAIL || 'le847@icloud.com',
+        from: process.env.FROM_EMAIL,
         to: oldEmail,
         subject: `Email Address Changed - Action May Be Required`,
         html: htmlContent,
@@ -80,7 +80,7 @@ export class EmailService {
       const htmlContent = this.generateReportHTML(data);
       
       const mailOptions = {
-        from: process.env.FROM_EMAIL || 'le847@icloud.com',
+        from: process.env.FROM_EMAIL,
         to: email,
         subject: `Your Digital Presence Assessment Results - Score: ${data.digitalScore}`,
         html: htmlContent,
@@ -101,7 +101,7 @@ export class EmailService {
       const urgency = data.rating <= 2 ? '⚠️ URGENT' : '';
       
       const mailOptions = {
-        from: process.env.FROM_EMAIL || 'le847@icloud.com',
+        from: process.env.FROM_EMAIL,
         to: email,
         subject: `${urgency} New ${sentiment} Review on ${data.platform} - ${data.rating} ${data.rating === 1 ? 'Star' : 'Stars'}`,
         html: htmlContent,
