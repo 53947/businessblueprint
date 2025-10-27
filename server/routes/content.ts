@@ -21,9 +21,9 @@ import {
   insertSocialMediaAccountSchema,
 } from '@shared/schema';
 import { eq, and, desc, sql } from 'drizzle-orm';
-import { contentPublishQueue } from '../services/queue';
 import { MediaStorageService } from '../services/mediaStorage';
 import { synupSyncService } from '../services/content/synupSync';
+import { publishPost } from '../workers/contentPublisher';
 import { PlatformFactory } from '../services/platforms/platformFactory';
 
 const router = Router();
@@ -320,21 +320,7 @@ router.post('/:clientId/posts/:postId/publish', requireContentAccess, async (req
     const isScheduled = post.scheduledFor && new Date(post.scheduledFor) > new Date();
 
     if (isScheduled) {
-      const delay = new Date(post.scheduledFor!).getTime() - Date.now();
-      
-      await contentPublishQueue.add(
-        'publish-post',
-        {
-          postId,
-          clientId,
-          platforms: post.platforms,
-        },
-        {
-          delay,
-          jobId: `post-${postId}`,
-        }
-      );
-
+      // Database scheduler will automatically pick up scheduled posts
       await db
         .update(contentPosts)
         .set({ status: 'scheduled' })
@@ -350,22 +336,27 @@ router.post('/:clientId/posts/:postId/publish', requireContentAccess, async (req
         scheduledFor: post.scheduledFor,
       });
     } else {
-      await contentPublishQueue.add(
-        'publish-post',
-        {
-          postId,
-          clientId,
-          platforms: post.platforms,
-        },
-        {
-          jobId: `post-${postId}-immediate`,
-        }
-      );
-
-      await db
+      // Publish immediately using publishPost function
+      const [updatedPost] = await db
         .update(contentPosts)
-        .set({ status: 'publishing' })
-        .where(eq(contentPosts.id, postId));
+        .set({ status: 'publishing', attempts: 0 })
+        .where(eq(contentPosts.id, postId))
+        .returning();
+
+      // Publish in background - don't await to return quickly to user
+      publishPost(updatedPost).catch(async (err) => {
+        console.error('[Content] Background publish failed:', err);
+        // Update post with error details so user can see what went wrong
+        await db
+          .update(contentPosts)
+          .set({
+            status: 'failed',
+            lastError: err.message || 'Unknown error during publishing',
+            attempts: 1,
+            lockedAt: null, // Release lock
+          })
+          .where(eq(contentPosts.id, postId));
+      });
 
       res.json({ message: 'Post is being published' });
     }
@@ -430,35 +421,16 @@ router.put('/:clientId/schedule/:postId', requireContentAccess, async (req: Requ
       return res.status(404).json({ message: 'Post not found' });
     }
 
-    const delay = newScheduleDate.getTime() - Date.now();
-      
-    try {
-      const existingJob = await contentPublishQueue.getJob(`post-${postId}`);
-      if (existingJob) {
-        await existingJob.remove();
-      }
-    } catch (err) {
-      console.log('[Content] No existing job to remove for post', postId);
-    }
-      
-    await contentPublishQueue.add(
-      'publish-post',
-      {
-        postId,
-        clientId,
-        platforms: existingPost.platforms,
-      },
-      {
-        delay,
-        jobId: `post-${postId}`,
-      }
-    );
-
+    // Database scheduler will automatically pick up the new schedule time
     const [post] = await db
       .update(contentPosts)
       .set({ 
         scheduledFor: newScheduleDate,
         status: 'scheduled',
+        // Reset scheduler state to allow rescheduling
+        lockedAt: null,
+        attempts: 0,
+        nextRetryAt: null,
       })
       .where(and(
         eq(contentPosts.id, postId),
@@ -501,21 +473,17 @@ router.delete('/:clientId/schedule/:postId', requireContentAccess, async (req: R
       return res.status(404).json({ message: 'Scheduled post not found' });
     }
 
-    try {
-      const existingJob = await contentPublishQueue.getJob(`post-${postId}`);
-      if (existingJob) {
-        await existingJob.remove();
-      }
-    } catch (err) {
-      console.error('[Content] Failed to remove job:', err);
-      return res.status(500).json({ message: 'Failed to cancel schedule in queue' });
-    }
-
+    // Cancel schedule by setting status to draft and clearing scheduledFor
+    // Database scheduler will ignore posts without scheduledFor or with draft status
     const [post] = await db
       .update(contentPosts)
       .set({ 
         status: 'draft',
         scheduledFor: null,
+        // Reset scheduler state
+        lockedAt: null,
+        attempts: 0,
+        nextRetryAt: null,
       })
       .where(and(
         eq(contentPosts.id, postId),

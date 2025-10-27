@@ -1804,6 +1804,12 @@ export const contentPosts = pgTable("content_posts", {
   status: varchar("status", { length: 20 }).default("draft"), // draft, scheduled, publishing, published, failed, cancelled
   publishedAt: timestamp("published_at"),
   
+  // Database-backed scheduler fields
+  lockedAt: timestamp("locked_at"), // Job lock timestamp for atomic processing
+  attempts: integer("attempts").default(0), // Retry count
+  nextRetryAt: timestamp("next_retry_at"), // When to retry failed jobs
+  lastError: text("last_error"), // Error message from last publishing attempt
+  
   // AI assistance metadata
   isAIGenerated: boolean("is_ai_generated").default(false), // Was caption AI-generated
   aiPrompt: text("ai_prompt"), // Original prompt for AI
