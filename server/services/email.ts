@@ -141,6 +141,54 @@ export class EmailService {
     }
   }
 
+  async sendPathwayReminderEmail(email: string, data: {
+    businessName: string;
+    digitalScore: number;
+    assessmentId: number;
+  }): Promise<boolean> {
+    try {
+      const htmlContent = this.generatePathwayReminderHTML(data);
+      
+      const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: email,
+        subject: `Still deciding? Your Digital Growth Plan is ready, ${data.businessName}`,
+        html: htmlContent,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error('Error sending pathway reminder email:', error);
+      return false;
+    }
+  }
+
+  async sendCheckoutAbandonmentEmail(email: string, data: {
+    businessName: string;
+    pathway: string;
+    planName: string;
+    monthlyPrice: number;
+    assessmentId: number;
+  }): Promise<boolean> {
+    try {
+      const htmlContent = this.generateCheckoutAbandonmentHTML(data);
+      
+      const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: email,
+        subject: `Complete your enrollment - ${data.planName} is waiting for you!`,
+        html: htmlContent,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error('Error sending checkout abandonment email:', error);
+      return false;
+    }
+  }
+
   private generateReportHTML(data: EmailReportData): string {
     const highPriorityRecs = data.recommendations.filter(r => r.priority === 'high').slice(0, 3);
     
@@ -412,6 +460,153 @@ export class EmailService {
         <div class="footer">
             <p>Thank you for choosing Business Blueprint!</p>
             <p>We're excited to help you grow your digital presence.</p>
+            <p><small>© 2024 businessblueprint.io</small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
+
+  private generatePathwayReminderHTML(data: {
+    businessName: string;
+    digitalScore: number;
+    assessmentId: number;
+  }): string {
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Digital Growth Plan is Ready</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #FF6B35, #8B5CF6); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .score-badge { background: rgba(255,255,255,0.2); display: inline-block; padding: 10px 20px; border-radius: 20px; font-size: 24px; font-weight: bold; margin: 10px 0; }
+        .cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 10px; }
+        .secondary-button { background: #8B5CF6; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .highlight-box { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 15px; margin: 20px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Your Digital Growth Plan is Ready!</h1>
+            <p style="font-size: 18px; margin-top: 10px;">${data.businessName}</p>
+            <div class="score-badge">Digital IQ Score: ${data.digitalScore}</div>
+        </div>
+        
+        <div class="content">
+            <p>Hi there,</p>
+            
+            <p>We noticed you completed your Digital Presence Assessment but haven't selected a pathway yet. Your personalized growth plan is ready and waiting!</p>
+            
+            <div class="highlight-box">
+                <p style="margin: 0;"><strong>🎯 Quick Reminder:</strong> Businesses that implement their Digital Growth Plan within 30 days see 3x faster results than those who wait.</p>
+            </div>
+            
+            <h3>Choose Your Path:</h3>
+            
+            <p><strong>Option 1: DIY Platform</strong> - $49/month<br>
+            Perfect if you want hands-on control and prefer to manage everything yourself.</p>
+            
+            <p><strong>Option 2: Managed Services</strong> - Starting at $299/month<br>
+            Let our experts handle everything while you focus on running your business.</p>
+            
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/assessment-checkout?id=${data.assessmentId}" class="cta-button">
+                    Choose Your Pathway
+                </a>
+                
+                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}" class="cta-button secondary-button">
+                    Review My Assessment
+                </a>
+            </div>
+            
+            <p style="margin-top: 30px;">Have questions? Just reply to this email - we're here to help!</p>
+        </div>
+        
+        <div class="footer">
+            <p>Ready to transform your digital presence?</p>
+            <p><small>© 2024 businessblueprint.io</small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
+
+  private generateCheckoutAbandonmentHTML(data: {
+    businessName: string;
+    pathway: string;
+    planName: string;
+    monthlyPrice: number;
+    assessmentId: number;
+  }): string {
+    const pathwayColor = data.pathway === 'msp' ? '#8B5CF6' : '#FF6B35';
+    
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Enrollment</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, ${pathwayColor}, #0057FF); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .plan-box { background: #f8f9fa; border: 2px solid ${pathwayColor}; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
+        .cta-button { display: inline-block; background: ${pathwayColor}; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .benefit-list { list-style: none; padding: 0; margin: 20px 0; }
+        .benefit-list li { padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
+        .benefit-list li:before { content: "✓ "; color: ${pathwayColor}; font-weight: bold; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⏰ You're Almost There!</h1>
+            <p style="font-size: 18px; margin-top: 10px;">${data.businessName}</p>
+        </div>
+        
+        <div class="content">
+            <p>Hi,</p>
+            
+            <p>We noticed you started enrolling in <strong>${data.planName}</strong> but didn't complete the process. No worries - we saved your spot!</p>
+            
+            <div class="plan-box">
+                <h2 style="color: ${pathwayColor}; margin-top: 0;">${data.planName}</h2>
+                <p style="font-size: 32px; font-weight: bold; margin: 10px 0;">
+                    $${data.monthlyPrice.toFixed(2)}<span style="font-size: 16px; font-weight: normal;">/month</span>
+                </p>
+            </div>
+            
+            <h3>Why complete your enrollment today:</h3>
+            <ul class="benefit-list">
+                <li>Start seeing results within the first week</li>
+                <li>Get expert guidance from day one</li>
+                <li>Lock in your current pricing</li>
+                <li>Cancel anytime - no long-term commitment</li>
+            </ul>
+            
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/assessment-checkout?id=${data.assessmentId}" class="cta-button">
+                    Complete My Enrollment
+                </a>
+            </div>
+            
+            <p style="margin-top: 30px; text-align: center; color: #666;">
+                Need help or have questions? Just reply to this email.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>Your digital growth journey is just one click away!</p>
             <p><small>© 2024 businessblueprint.io</small></p>
         </div>
     </div>

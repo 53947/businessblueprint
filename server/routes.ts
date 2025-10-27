@@ -124,6 +124,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Send pathway reminder email (can be triggered manually or scheduled)
+  app.post("/api/assessments/:id/send-pathway-reminder", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const assessment = await storage.getAssessment(id);
+
+      if (!assessment) {
+        return res.status(404).json({ message: "Assessment not found" });
+      }
+
+      // Only send if pathway hasn't been selected
+      if (assessment.selectedPathway && assessment.selectedPathway !== 'none') {
+        return res.status(400).json({ message: "Pathway already selected" });
+      }
+
+      const emailSent = await emailService.sendPathwayReminderEmail(assessment.email, {
+        businessName: assessment.businessName,
+        digitalScore: assessment.digitalScore || 0,
+        assessmentId: id
+      });
+
+      if (emailSent) {
+        res.json({ success: true, message: "Pathway reminder sent" });
+      } else {
+        res.status(500).json({ message: "Failed to send reminder email" });
+      }
+    } catch (error) {
+      console.error("Error sending pathway reminder:", error);
+      res.status(500).json({ message: "Failed to send pathway reminder" });
+    }
+  });
+
+  // Send checkout abandonment email
+  app.post("/api/assessments/:id/send-checkout-reminder", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const assessment = await storage.getAssessment(id);
+
+      if (!assessment) {
+        return res.status(404).json({ message: "Assessment not found" });
+      }
+
+      if (!assessment.selectedPathway || assessment.selectedPathway === 'none') {
+        return res.status(400).json({ message: "No pathway selected yet" });
+      }
+
+      // Check if subscription exists
+      const subscriptions = await db.select()
+        .from(subscriptions as any)
+        .where(eq((subscriptions as any).assessmentId, id));
+
+      if (subscriptions.length > 0) {
+        return res.status(400).json({ message: "Subscription already exists" });
+      }
+
+      const pathwayNames: Record<string, string> = {
+        'diy': 'DIY Platform',
+        'msp': 'Managed Services Starter',
+        'combination': 'Combination Plan'
+      };
+
+      const monthlyPrices: Record<string, number> = {
+        'diy': 49,
+        'msp': 299,
+        'combination': 199
+      };
+
+      const emailSent = await emailService.sendCheckoutAbandonmentEmail(assessment.email, {
+        businessName: assessment.businessName,
+        pathway: assessment.selectedPathway,
+        planName: pathwayNames[assessment.selectedPathway],
+        monthlyPrice: monthlyPrices[assessment.selectedPathway],
+        assessmentId: id
+      });
+
+      if (emailSent) {
+        res.json({ success: true, message: "Checkout reminder sent" });
+      } else {
+        res.status(500).json({ message: "Failed to send reminder email" });
+      }
+    } catch (error) {
+      console.error("Error sending checkout reminder:", error);
+      res.status(500).json({ message: "Failed to send checkout reminder" });
+    }
+  });
+
   // Get assessments by email
   app.get("/api/assessments", async (req, res) => {
     try {
