@@ -211,7 +211,7 @@ export default function MarketplacePage() {
       emoji: '📱',
       price: 50,
       description: 'Create, schedule & publish social content with AI assistance.',
-      accentColor: 'indigo',
+      accentColor: 'pink',
       features: [
         '3 platforms (FB/IG/LinkedIn/X/Google) - pick favorites',
         'Visual calendar + drag-drop scheduling',
@@ -263,7 +263,7 @@ export default function MarketplacePage() {
       price: 80,
       priceNote: 'per location/mo',
       description: 'Full-service content creation & publishing',
-      accentColor: 'indigo',
+      accentColor: 'pink',
       features: [
         'All 7 platforms (FB/IG/LinkedIn/X/Google/TikTok/Snapchat)',
         'Two-way Synup sync for listings integration',
