@@ -1,12 +1,12 @@
 import { Worker, Job } from 'bullmq';
-import { redisConnection, PublishPostJob, SynupSyncJob } from '../services/queue';
+import { redisConnection, redisAvailable, PublishPostJob, SynupSyncJob } from '../services/queue';
 import { db } from '../db';
 import { contentPosts, externalSync, socialMediaAccounts } from '@shared/schema';
 import { eq, and } from 'drizzle-orm';
 import { PlatformFactory, SupportedPlatform } from '../services/platforms/platformFactory';
 
-// Content Publishing Worker
-export const contentPublishWorker = new Worker<PublishPostJob>(
+// Content Publishing Worker (only if Redis is available)
+export const contentPublishWorker = redisConnection ? new Worker<PublishPostJob>(
   'content-publish',
   async (job: Job<PublishPostJob>) => {
     const { postId, clientId, platforms } = job.data;
@@ -202,13 +202,13 @@ export const contentPublishWorker = new Worker<PublishPostJob>(
     }
   },
   {
-    connection: redisConnection,
+    connection: redisConnection!,
     concurrency: 5, // Process up to 5 posts simultaneously
   }
-);
+) : null as any;
 
-// Synup Sync Worker
-export const synupSyncWorker = new Worker<SynupSyncJob>(
+// Synup Sync Worker (only if Redis is available)
+export const synupSyncWorker = redisConnection ? new Worker<SynupSyncJob>(
   'synup-sync',
   async (job: Job<SynupSyncJob>) => {
     const { direction, entityType, entityId, action } = job.data;
@@ -234,34 +234,46 @@ export const synupSyncWorker = new Worker<SynupSyncJob>(
     }
   },
   {
-    connection: redisConnection,
+    connection: redisConnection!,
     concurrency: 3,
   }
-);
+) : null as any;
 
-// Worker event handlers
-contentPublishWorker.on('completed', (job) => {
-  console.log(`[ContentPublisher] Job ${job.id} completed successfully`);
-});
+// Worker event handlers (only if Redis available)
+if (redisConnection && contentPublishWorker) {
+  contentPublishWorker.on('completed', (job) => {
+    console.log(`[ContentPublisher] Job ${job.id} completed successfully`);
+  });
 
-contentPublishWorker.on('failed', (job, err) => {
-  console.error(`[ContentPublisher] Job ${job?.id} failed:`, err.message);
-});
+  contentPublishWorker.on('failed', (job, err) => {
+    console.error(`[ContentPublisher] Job ${job?.id} failed:`, err.message);
+  });
+}
 
-synupSyncWorker.on('completed', (job) => {
-  console.log(`[SynupSync] Job ${job.id} completed successfully`);
-});
+if (redisConnection && synupSyncWorker) {
+  synupSyncWorker.on('completed', (job) => {
+    console.log(`[SynupSync] Job ${job.id} completed successfully`);
+  });
 
-synupSyncWorker.on('failed', (job, err) => {
-  console.error(`[SynupSync] Job ${job?.id} failed:`, err.message);
-});
+  synupSyncWorker.on('failed', (job, err) => {
+    console.error(`[SynupSync] Job ${job?.id} failed:`, err.message);
+  });
+}
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('[Workers] Shutting down gracefully...');
-  await contentPublishWorker.close();
-  await synupSyncWorker.close();
+  if (contentPublishWorker) {
+    await contentPublishWorker.close();
+  }
+  if (synupSyncWorker) {
+    await synupSyncWorker.close();
+  }
   process.exit(0);
 });
 
-console.log('[Workers] Content Publisher and Synup Sync workers started');
+if (redisConnection) {
+  console.log('[Workers] Content Publisher and Synup Sync workers started');
+} else {
+  console.log('[Workers] Skipped (Redis not available)');
+}
