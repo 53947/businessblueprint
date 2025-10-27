@@ -2,11 +2,11 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import contentRoutes from "./routes/content";
-import { 
-  insertAssessmentSchema, 
-  subscriptionPlans, 
-  subscriptionAddons, 
-  subscriptions, 
+import {
+  insertAssessmentSchema,
+  subscriptionPlans,
+  subscriptionAddons,
+  subscriptions,
   insertSubscriptionSchema,
   insertSendContactSchema,
   insertSendListSchema,
@@ -69,16 +69,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Start background analysis
       processAssessmentAsync(assessment.id, googleService, aiService, emailService, storage);
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         assessmentId: assessment.id,
         message: "Assessment started. You'll receive results via email within 2-3 minutes."
       });
     } catch (error) {
       console.error("Error creating assessment:", error as Error);
-      res.status(400).json({ 
-        success: false, 
-        message: "Invalid assessment data provided" 
+      res.status(400).json({
+        success: false,
+        message: "Invalid assessment data provided"
       });
     }
   });
@@ -225,7 +225,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, data: dashboardData });
     } catch (error) {
       console.error("Error fetching client dashboard:", error);
-      res.status(500).json({ 
+      res.status(500).json({
         message: "Failed to fetch dashboard data",
         error: (error as Error).message
       });
@@ -348,8 +348,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Dashboard access not found" });
       }
 
-      res.json({ 
-        message: "Dashboard access verified", 
+      res.json({
+        message: "Dashboard access verified",
         clientId: payload.clientId,
         permissions: payload.permissions,
         redirectUrl: `/portal?token=${token}`
@@ -393,7 +393,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const token = await jwtService.createDashboardToken(clientId);
 
       if (token) {
-        res.json({ 
+        res.json({
           token,
           dashboardUrl: `/api/dashboard/${token}`,
           expiresIn: '24h'
@@ -570,8 +570,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const plans = await db.select().from(subscriptionPlans)
         .where(eq(subscriptionPlans.isActive, true));
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         plans: plans.map(plan => ({
           ...plan,
           features: Array.isArray(plan.features) ? plan.features : [],
@@ -581,9 +581,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error fetching subscription plans:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch subscription plans" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch subscription plans"
       });
     }
   });
@@ -614,15 +614,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         billingType: addon.billingCycle === 'one_time' ? 'one_time' : 'monthly'
       }));
 
-      res.json({ 
-        success: true, 
-        addons: addonsWithIcons 
+      res.json({
+        success: true,
+        addons: addonsWithIcons
       });
     } catch (error) {
       console.error("Error fetching subscription addons:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch subscription addons" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch subscription addons"
       });
     }
   });
@@ -659,8 +659,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const validation = orderSchema.safeParse(req.body);
       if (!validation.success) {
-        return res.status(400).json({ 
-          success: false, 
+        return res.status(400).json({
+          success: false,
           message: "Invalid order data",
           errors: validation.error.errors
         });
@@ -675,9 +675,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Verify client-provided totals match server calculations (within 1 cent for rounding)
       if (Math.abs(calculatedTotal - totals.total) > 0.01) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "Order total mismatch. Please refresh and try again." 
+        return res.status(400).json({
+          success: false,
+          message: "Order total mismatch. Please refresh and try again."
         });
       }
 
@@ -702,9 +702,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const nmiResult = await NMIService.createSubscription(nmiRequest);
 
       if (nmiResult.response !== '1') {
-        return res.status(400).json({ 
-          success: false, 
-          message: nmiResult.responsetext || 'Payment processing failed' 
+        return res.status(400).json({
+          success: false,
+          message: nmiResult.responsetext || 'Payment processing failed'
         });
       }
 
@@ -716,17 +716,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         total: calculatedTotal
       });
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         message: "Order processed successfully",
         subscriptionId: nmiResult.subscription_id,
         items: items.map(item => item.name)
       });
     } catch (error) {
       console.error("Error processing marketplace order:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to process order. Please try again." 
+      res.status(500).json({
+        success: false,
+        message: "Failed to process order. Please try again."
       });
     }
   });
@@ -737,9 +737,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { planId, addons: selectedAddons = [], billingCycle = 'monthly' } = req.body;
 
       if (!planId) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "Plan ID is required" 
+        return res.status(400).json({
+          success: false,
+          message: "Plan ID is required"
         });
       }
 
@@ -749,9 +749,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .limit(1);
 
       if (plan.length === 0) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Plan not found" 
+        return res.status(404).json({
+          success: false,
+          message: "Plan not found"
         });
       }
 
@@ -767,28 +767,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
         billingCycle
       );
 
-      res.json({ 
-        success: true, 
-        pricing 
+      res.json({
+        success: true,
+        pricing
       });
     } catch (error) {
       console.error("Error calculating pricing:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to calculate pricing" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to calculate pricing"
       });
     }
   });
 
-  // Calculate bundle pricing from assessment recommendations  
+  // Calculate bundle pricing from assessment recommendations
   app.post("/api/pricing/calculate-bundle", async (req, res) => {
     try {
       const { assessmentId, pathway, productIds = [], billingCycle = 'monthly' } = req.body;
 
       if (!assessmentId || !pathway) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "Assessment ID and pathway are required" 
+        return res.status(400).json({
+          success: false,
+          message: "Assessment ID and pathway are required"
         });
       }
 
@@ -805,9 +805,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .limit(1);
 
       if (!plan) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Plan not found for pathway" 
+        return res.status(404).json({
+          success: false,
+          message: "Plan not found for pathway"
         });
       }
 
@@ -824,8 +824,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         // Calculate total based on pathway
         productsTotal = selectedProducts.reduce((sum, product) => {
-          const price = pathway === 'diy' 
-            ? parseFloat(product.diyPrice || '0') 
+          const price = pathway === 'diy'
+            ? parseFloat(product.diyPrice || '0')
             : parseFloat(product.mspPrice || '0');
           return sum + price;
         }, 0);
@@ -854,8 +854,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         planName: plan.name,
         planPrice: basePriceMonthly * cycleMonths,
         selectedAddons: selectedProducts.map(product => {
-          const monthlyPrice = pathway === 'diy' 
-            ? parseFloat(product.diyPrice || '0') 
+          const monthlyPrice = pathway === 'diy'
+            ? parseFloat(product.diyPrice || '0')
             : parseFloat(product.mspPrice || '0');
           return {
             name: product.name,
@@ -869,15 +869,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         savings: discount
       };
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         pricing
       });
     } catch (error) {
       console.error("Error calculating bundle pricing:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to calculate bundle pricing" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to calculate bundle pricing"
       });
     }
   });
@@ -888,18 +888,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { assessmentId, pathway, productIds = [], billingCycle = 'monthly' } = req.body;
 
       if (!assessmentId || !pathway) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "Assessment ID and pathway are required" 
+        return res.status(400).json({
+          success: false,
+          message: "Assessment ID and pathway are required"
         });
       }
 
       // Get assessment details
       const assessment = await storage.getAssessment(assessmentId);
       if (!assessment) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Assessment not found" 
+        return res.status(404).json({
+          success: false,
+          message: "Assessment not found"
         });
       }
 
@@ -916,9 +916,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .limit(1);
 
       if (!plan) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Plan not found" 
+        return res.status(404).json({
+          success: false,
+          message: "Plan not found"
         });
       }
 
@@ -934,8 +934,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .where(inArray(productsTable.id, productIds));
 
         productsTotal = selectedProducts.reduce((sum, product) => {
-          const price = pathway === 'diy' 
-            ? parseFloat(product.diyPrice || '0') 
+          const price = pathway === 'diy'
+            ? parseFloat(product.diyPrice || '0')
             : parseFloat(product.mspPrice || '0');
           return sum + price;
         }, 0);
@@ -975,16 +975,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .values(subscriptionData)
         .returning();
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         subscription: subscription[0],
-        message: "Subscription created successfully" 
+        message: "Subscription created successfully"
       });
     } catch (error) {
       console.error("Error creating subscription from assessment:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to create subscription" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to create subscription"
       });
     }
   });
@@ -999,15 +999,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .where(eq(subscriptions.id, parseInt(id)));
 
       if (!subscription) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Subscription not found" 
+        return res.status(404).json({
+          success: false,
+          message: "Subscription not found"
         });
       }
 
       const now = new Date();
-      const isTrialActive = subscription.isTrialActive && 
-        subscription.trialPeriodEnd && 
+      const isTrialActive = subscription.isTrialActive &&
+        subscription.trialPeriodEnd &&
         now < subscription.trialPeriodEnd;
 
       res.json({
@@ -1015,15 +1015,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         trialStatus: {
           isTrialActive,
           trialPeriodEnd: subscription.trialPeriodEnd,
-          daysRemaining: isTrialActive && subscription.trialPeriodEnd ? 
+          daysRemaining: isTrialActive && subscription.trialPeriodEnd ?
             Math.ceil((subscription.trialPeriodEnd.getTime() - now.getTime()) / (24 * 60 * 60 * 1000)) : 0
         }
       });
     } catch (error) {
       console.error("Error checking trial status:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to check trial status" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to check trial status"
       });
     }
   });
@@ -1054,19 +1054,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const validation = subscriptionSchema.safeParse(req.body);
       if (!validation.success) {
-        return res.status(400).json({ 
-          success: false, 
+        return res.status(400).json({
+          success: false,
           message: "Invalid subscription data",
           errors: validation.error.errors
         });
       }
 
-      const { 
-        planId, 
-        addons: selectedAddons, 
-        billingCycle, 
-        paymentToken, 
-        customerInfo 
+      const {
+        planId,
+        addons: selectedAddons,
+        billingCycle,
+        paymentToken,
+        customerInfo
       } = validation.data;
 
       // Get plan details
@@ -1075,9 +1075,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .limit(1);
 
       if (plan.length === 0) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Plan not found" 
+        return res.status(404).json({
+          success: false,
+          message: "Plan not found"
         });
       }
 
@@ -1103,15 +1103,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         );
 
         if (setupTransactionResult.response !== '1') {
-          return res.status(400).json({ 
-            success: false, 
-            message: setupTransactionResult.responsetext || 'Setup fee payment failed' 
+          return res.status(400).json({
+            success: false,
+            message: setupTransactionResult.responsetext || 'Setup fee payment failed'
           });
         }
       }
 
       // Check if AI Coach addon is selected for trial eligibility
-      const hasAiCoachAddon = selectedAddons.some(addon => 
+      const hasAiCoachAddon = selectedAddons.some(addon =>
         addons.find(a => a.addonId === addon.addonId)?.category === 'ai-coach'
       );
 
@@ -1142,9 +1142,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const nmiResult = await NMIService.createSubscription(nmiRequest);
 
       if (nmiResult.response !== '1') {
-        return res.status(400).json({ 
-          success: false, 
-          message: nmiResult.responsetext || 'Subscription creation failed' 
+        return res.status(400).json({
+          success: false,
+          message: nmiResult.responsetext || 'Subscription creation failed'
         });
       }
 
@@ -1173,18 +1173,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .values(subscriptionData)
         .returning();
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         subscription: newSubscription,
         nmiSubscriptionId: nmiResult.subscription_id,
-        message: "Subscription created successfully" 
+        message: "Subscription created successfully"
       });
 
     } catch (error) {
       console.error("Error creating subscription:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to create subscription" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to create subscription"
       });
     }
   });
@@ -1209,15 +1209,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         scoreImprovement: rec.scoreImprovement
       }));
 
-      res.json({ 
-        success: true, 
-        recommendations 
+      res.json({
+        success: true,
+        recommendations
       });
     } catch (error) {
       console.error("Error fetching product recommendations:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch product recommendations" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch product recommendations"
       });
     }
   });
@@ -1240,19 +1240,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const allProducts = await db.select().from(products).where(and(...conditions));
 
       // Filter by delivery method if specified
-      const filteredProducts = deliveryMethod 
+      const filteredProducts = deliveryMethod
         ? allProducts.filter(p => p.deliveryMethod?.includes(deliveryMethod))
         : allProducts;
 
-      res.json({ 
-        success: true, 
-        products: filteredProducts 
+      res.json({
+        success: true,
+        products: filteredProducts
       });
     } catch (error) {
       console.error("Error fetching products:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch products" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch products"
       });
     }
   });
@@ -1267,21 +1267,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const [product] = await db.select().from(products).where(eq(products.id, productId));
 
       if (!product) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Product not found" 
+        return res.status(404).json({
+          success: false,
+          message: "Product not found"
         });
       }
 
-      res.json({ 
-        success: true, 
-        product 
+      res.json({
+        success: true,
+        product
       });
     } catch (error) {
       console.error("Error fetching product:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch product" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch product"
       });
     }
   });
@@ -1336,13 +1336,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // SECURITY: White-label mode with shared API key requires strict verification to prevent
       // cross-tenant abuse. Current implementation uses multi-layered safeguards:
-      // 
+      //
       // 1. Cross-tenant prevention: Blocks duplicate Synup location assignments across clients
       // 2. Business name verification (STRICT MODE): Enforces name matching before location sync
       //    - Requires client.companyName to be set (400 error if missing)
       //    - Verifies Synup location name contains client company name or vice versa
       //    - Returns 403 Forbidden if names don't match
-      // 
+      //
       // Production recommendations for enhanced security:
       // - Use per-client Synup API keys to eliminate shared-key limitations
       // - Implement admin pre-approval workflow for new location assignments
@@ -1393,10 +1393,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Trigger listings sync
       await synupService.syncLocationListings(synupLocationId);
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         location,
-        message: "Location synced successfully. Listings sync initiated." 
+        message: "Location synced successfully. Listings sync initiated."
       });
     } catch (error) {
       console.error("Error creating Synup location:", error);
@@ -1407,9 +1407,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errors: error.errors
         });
       }
-      res.status(500).json({ 
-        success: false, 
-        message: error instanceof Error ? error.message : "Failed to create location" 
+      res.status(500).json({
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to create location"
       });
     }
   });
@@ -1420,15 +1420,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const clientId = req.clientId!;
       const locations = await storage.getSynupLocationsByClient(clientId);
 
-      res.json({ 
-        success: true, 
-        locations 
+      res.json({
+        success: true,
+        locations
       });
     } catch (error) {
       console.error("Error fetching Synup locations:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch locations" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch locations"
       });
     }
   });
@@ -1448,9 +1448,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Verify location belongs to authenticated client
       const location = await storage.getSynupLocation(locationId);
       if (!location || location.clientId !== req.clientId!) {
-        return res.status(403).json({ 
-          success: false, 
-          message: "Access denied" 
+        return res.status(403).json({
+          success: false,
+          message: "Access denied"
         });
       }
 
@@ -1467,16 +1467,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const updatedLocation = await storage.updateSynupLocation(locationId, updateData);
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         location: updatedLocation,
         message: "Location updated successfully"
       });
     } catch (error) {
       console.error("Error updating location:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to update location" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to update location"
       });
     }
   });
@@ -1489,23 +1489,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Verify location belongs to authenticated client
       const location = await storage.getSynupLocation(locationId);
       if (!location || location.clientId !== req.clientId!) {
-        return res.status(403).json({ 
-          success: false, 
-          message: "Access denied" 
+        return res.status(403).json({
+          success: false,
+          message: "Access denied"
         });
       }
 
       const listings = await storage.getSynupListingsByLocation(locationId);
 
-      res.json({ 
-        success: true, 
-        listings 
+      res.json({
+        success: true,
+        listings
       });
     } catch (error) {
       console.error("Error fetching listings:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch listings" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch listings"
       });
     }
   });
@@ -1525,16 +1525,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Verify location belongs to authenticated client (CRITICAL SECURITY CHECK)
       const location = await storage.getSynupLocation(locationId);
       if (!location) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Location not found" 
+        return res.status(404).json({
+          success: false,
+          message: "Location not found"
         });
       }
 
       if (location.clientId !== req.clientId!) {
-        return res.status(403).json({ 
-          success: false, 
-          message: "Access denied: This location does not belong to your account" 
+        return res.status(403).json({
+          success: false,
+          message: "Access denied: This location does not belong to your account"
         });
       }
 
@@ -1568,10 +1568,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         listings: updatedListings,
-        message: `Synced ${updatedListings.length} listings successfully` 
+        message: `Synced ${updatedListings.length} listings successfully`
       });
     } catch (error) {
       console.error("Error syncing listings:", error);
@@ -1582,9 +1582,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errors: error.errors
         });
       }
-      res.status(500).json({ 
-        success: false, 
-        message: error instanceof Error ? error.message : "Failed to sync listings" 
+      res.status(500).json({
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to sync listings"
       });
     }
   });
@@ -1597,23 +1597,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Verify location belongs to authenticated client
       const location = await storage.getSynupLocation(locationId);
       if (!location || location.clientId !== req.clientId!) {
-        return res.status(403).json({ 
-          success: false, 
-          message: "Access denied" 
+        return res.status(403).json({
+          success: false,
+          message: "Access denied"
         });
       }
 
       const reviews = await storage.getSynupReviewsByLocation(locationId);
 
-      res.json({ 
-        success: true, 
-        reviews 
+      res.json({
+        success: true,
+        reviews
       });
     } catch (error) {
       console.error("Error fetching reviews:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch reviews" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch reviews"
       });
     }
   });
@@ -1633,16 +1633,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Verify location belongs to authenticated client (CRITICAL SECURITY CHECK)
       const location = await storage.getSynupLocation(locationId);
       if (!location) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Location not found" 
+        return res.status(404).json({
+          success: false,
+          message: "Location not found"
         });
       }
 
       if (location.clientId !== req.clientId!) {
-        return res.status(403).json({ 
-          success: false, 
-          message: "Access denied: This location does not belong to your account" 
+        return res.status(403).json({
+          success: false,
+          message: "Access denied: This location does not belong to your account"
         });
       }
 
@@ -1681,16 +1681,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Trigger review monitoring alert for new reviews
           const io = (global as any).io;
           const reviewMonitoring = new ReviewMonitoringService(io);
-          reviewMonitoring.processNewReview(created).catch(err => 
+          reviewMonitoring.processNewReview(created).catch(err =>
             console.error('Error processing review alert:', err)
           );
         }
       }
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         reviews: updatedReviews,
-        message: `Synced ${updatedReviews.length} reviews successfully` 
+        message: `Synced ${updatedReviews.length} reviews successfully`
       });
     } catch (error) {
       console.error("Error syncing reviews:", error);
@@ -1701,9 +1701,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errors: error.errors
         });
       }
-      res.status(500).json({ 
-        success: false, 
-        message: error instanceof Error ? error.message : "Failed to sync reviews" 
+      res.status(500).json({
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to sync reviews"
       });
     }
   });
@@ -1734,24 +1734,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const review = await storage.getSynupReview(reviewId);
 
       if (!review) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Review not found" 
+        return res.status(404).json({
+          success: false,
+          message: "Review not found"
         });
       }
 
       const location = await storage.getSynupLocation(review.locationId);
       if (!location) {
-        return res.status(404).json({ 
-          success: false, 
-          message: "Location not found" 
+        return res.status(404).json({
+          success: false,
+          message: "Location not found"
         });
       }
 
       if (location.clientId !== req.clientId!) {
-        return res.status(403).json({ 
-          success: false, 
-          message: "Access denied: This review does not belong to your account" 
+        return res.status(403).json({
+          success: false,
+          message: "Access denied: This review does not belong to your account"
         });
       }
 
@@ -1807,10 +1807,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         isAIGenerated
       });
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         review: updatedReview,
-        message: "Response submitted successfully" 
+        message: "Response submitted successfully"
       });
     } catch (error) {
       console.error("Error responding to review:", error);
@@ -1821,9 +1821,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errors: error.errors
         });
       }
-      res.status(500).json({ 
-        success: false, 
-        message: error instanceof Error ? error.message : "Failed to respond to review" 
+      res.status(500).json({
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to respond to review"
       });
     }
   });
@@ -1843,9 +1843,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Verify location belongs to authenticated client
       const location = await storage.getSynupLocation(locationId);
       if (!location || location.clientId !== req.clientId!) {
-        return res.status(403).json({ 
-          success: false, 
-          message: "Access denied" 
+        return res.status(403).json({
+          success: false,
+          message: "Access denied"
         });
       }
 
@@ -1854,8 +1854,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Calculate analytics
       const totalReviews = reviews.length;
-      const averageRating = reviews.length > 0 
-        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length 
+      const averageRating = reviews.length > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
         : 0;
 
       // Sentiment breakdown
@@ -1897,7 +1897,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           },
           recentActivity: {
             last30Days: recentReviews.length,
-            averageRatingLast30Days: recentReviews.length > 0 
+            averageRatingLast30Days: recentReviews.length > 0
               ? Math.round((recentReviews.reduce((sum, r) => sum + r.rating, 0) / recentReviews.length) * 10) / 10
               : 0
           }
@@ -1905,9 +1905,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error fetching review analytics:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch review analytics" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch review analytics"
       });
     }
   });
@@ -1928,9 +1928,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Verify location belongs to authenticated client
       const location = await storage.getSynupLocation(locationId);
       if (!location || location.clientId !== req.clientId!) {
-        return res.status(403).json({ 
-          success: false, 
-          message: "Access denied" 
+        return res.status(403).json({
+          success: false,
+          message: "Access denied"
         });
       }
 
@@ -1970,9 +1970,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error fetching review trends:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch review trends" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch review trends"
       });
     }
   });
@@ -2001,9 +2001,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error fetching review notification preferences:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch notification preferences" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch notification preferences"
       });
     }
   });
@@ -2039,9 +2039,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errors: error.errors
         });
       }
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to update notification preferences" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to update notification preferences"
       });
     }
   });
@@ -2059,25 +2059,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // GDPR/CAN-SPAM Compliance Validation
       if (!validatedData.email && !validatedData.phone) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
-          message: "At least one contact method (email or phone) is required" 
+          message: "At least one contact method (email or phone) is required"
         });
       }
 
       // Ensure email consent is provided if email is present
       if (validatedData.email && !validatedData.emailConsent) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
-          message: "Email consent is required when providing an email address (GDPR/CAN-SPAM compliance)" 
+          message: "Email consent is required when providing an email address (GDPR/CAN-SPAM compliance)"
         });
       }
 
       // Ensure SMS consent is provided if phone is present
       if (validatedData.phone && !validatedData.smsConsent) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
-          message: "SMS consent is required when providing a phone number (TCPA compliance)" 
+          message: "SMS consent is required when providing a phone number (TCPA compliance)"
         });
       }
 
@@ -2093,9 +2093,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, contact });
     } catch (error) {
       console.error("Error creating contact:", error);
-      res.status(400).json({ 
-        success: false, 
-        message: error instanceof Error ? error.message : "Failed to create contact" 
+      res.status(400).json({
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to create contact"
       });
     }
   });
@@ -2112,8 +2112,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Apply pagination
       const paginatedContacts = contacts.slice(offset, offset + limit);
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         contacts: paginatedContacts,
         pagination: {
           total: contacts.length,
@@ -2124,9 +2124,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error fetching contacts:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch contacts" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch contacts"
       });
     }
   });
@@ -2138,35 +2138,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
 
       if (isNaN(id)) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
-          message: "Invalid contact ID" 
+          message: "Invalid contact ID"
         });
       }
 
       const contact = await storage.getSendContact(id);
 
       if (!contact) {
-        return res.status(404).json({ 
+        return res.status(404).json({
           success: false,
-          message: "Contact not found" 
+          message: "Contact not found"
         });
       }
 
       // Verify client ownership
       if (contact.clientId !== clientId) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           success: false,
-          message: "Access denied: Contact belongs to another client" 
+          message: "Access denied: Contact belongs to another client"
         });
       }
 
       res.json({ success: true, contact });
     } catch (error) {
       console.error("Error fetching contact:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch contact" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch contact"
       });
     }
   });
@@ -2178,25 +2178,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
 
       if (isNaN(id)) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
-          message: "Invalid contact ID" 
+          message: "Invalid contact ID"
         });
       }
 
       // Verify contact exists and belongs to client
       const existingContact = await storage.getSendContact(id);
       if (!existingContact) {
-        return res.status(404).json({ 
+        return res.status(404).json({
           success: false,
-          message: "Contact not found" 
+          message: "Contact not found"
         });
       }
 
       if (existingContact.clientId !== clientId) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           success: false,
-          message: "Access denied: Contact belongs to another client" 
+          message: "Access denied: Contact belongs to another client"
         });
       }
 
@@ -2211,9 +2211,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, contact });
     } catch (error) {
       console.error("Error updating contact:", error);
-      res.status(400).json({ 
-        success: false, 
-        message: error instanceof Error ? error.message : "Failed to update contact" 
+      res.status(400).json({
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to update contact"
       });
     }
   });
@@ -2225,25 +2225,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
 
       if (isNaN(id)) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
-          message: "Invalid contact ID" 
+          message: "Invalid contact ID"
         });
       }
 
       // Verify contact exists and belongs to client
       const existingContact = await storage.getSendContact(id);
       if (!existingContact) {
-        return res.status(404).json({ 
+        return res.status(404).json({
           success: false,
-          message: "Contact not found" 
+          message: "Contact not found"
         });
       }
 
       if (existingContact.clientId !== clientId) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           success: false,
-          message: "Access denied: Contact belongs to another client" 
+          message: "Access denied: Contact belongs to another client"
         });
       }
 
@@ -2251,9 +2251,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, message: "Contact deleted successfully" });
     } catch (error) {
       console.error("Error deleting contact:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to delete contact" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to delete contact"
       });
     }
   });
@@ -2274,9 +2274,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, list });
     } catch (error) {
       console.error("Error creating list:", error);
-      res.status(400).json({ 
-        success: false, 
-        message: error instanceof Error ? error.message : "Failed to create list" 
+      res.status(400).json({
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to create list"
       });
     }
   });
@@ -2293,8 +2293,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Apply pagination
       const paginatedLists = lists.slice(offset, offset + limit);
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         lists: paginatedLists,
         pagination: {
           total: lists.length,
@@ -2305,9 +2305,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error fetching lists:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch lists" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch lists"
       });
     }
   });
@@ -2319,35 +2319,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
 
       if (isNaN(id)) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
-          message: "Invalid list ID" 
+          message: "Invalid list ID"
         });
       }
 
       const list = await storage.getSendList(id);
 
       if (!list) {
-        return res.status(404).json({ 
+        return res.status(404).json({
           success: false,
-          message: "List not found" 
+          message: "List not found"
         });
       }
 
       // Verify client ownership
       if (list.clientId !== clientId) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           success: false,
-          message: "Access denied: List belongs to another client" 
+          message: "Access denied: List belongs to another client"
         });
       }
 
       res.json({ success: true, list });
     } catch (error) {
       console.error("Error fetching list:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch list" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch list"
       });
     }
   });
@@ -2359,25 +2359,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
 
       if (isNaN(id)) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
-          message: "Invalid list ID" 
+          message: "Invalid list ID"
         });
       }
 
       // Verify list exists and belongs to client
       const existingList = await storage.getSendList(id);
       if (!existingList) {
-        return res.status(404).json({ 
+        return res.status(404).json({
           success: false,
-          message: "List not found" 
+          message: "List not found"
         });
       }
 
       if (existingList.clientId !== clientId) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           success: false,
-          message: "Access denied: List belongs to another client" 
+          message: "Access denied: List belongs to another client"
         });
       }
 
@@ -2392,9 +2392,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, list });
     } catch (error) {
       console.error("Error updating list:", error);
-      res.status(400).json({ 
-        success: false, 
-        message: error instanceof Error ? error.message : "Failed to update list" 
+      res.status(400).json({
+        success: false,
+        message: error instanceof Error ? error.message : "Failed to update list"
       });
     }
   });
@@ -2406,25 +2406,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
 
       if (isNaN(id)) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
-          message: "Invalid list ID" 
+          message: "Invalid list ID"
         });
       }
 
       // Verify list exists and belongs to client
       const existingList = await storage.getSendList(id);
       if (!existingList) {
-        return res.status(404).json({ 
+        return res.status(404).json({
           success: false,
-          message: "List not found" 
+          message: "List not found"
         });
       }
 
       if (existingList.clientId !== clientId) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           success: false,
-          message: "Access denied: List belongs to another client" 
+          message: "Access denied: List belongs to another client"
         });
       }
 
@@ -2432,9 +2432,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, message: "List deleted successfully" });
     } catch (error) {
       console.error("Error deleting list:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to delete list" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to delete list"
       });
     }
   });
@@ -2447,9 +2447,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const contactId = parseInt(req.params.contactId);
 
       if (isNaN(listId) || isNaN(contactId)) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
-          message: "Invalid list or contact ID" 
+          message: "Invalid list or contact ID"
         });
       }
 
@@ -2460,24 +2460,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       ]);
 
       if (!list) {
-        return res.status(404).json({ 
+        return res.status(404).json({
           success: false,
-          message: "List not found" 
+          message: "List not found"
         });
       }
 
       if (!contact) {
-        return res.status(404).json({ 
+        return res.status(404).json({
           success: false,
-          message: "Contact not found" 
+          message: "Contact not found"
         });
       }
 
       // Verify both belong to the same client
       if (list.clientId !== clientId || contact.clientId !== clientId) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           success: false,
-          message: "Access denied: Resources belong to another client" 
+          message: "Access denied: Resources belong to another client"
         });
       }
 
@@ -2485,9 +2485,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, message: "Contact added to list successfully" });
     } catch (error) {
       console.error("Error adding contact to list:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to add contact to list" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to add contact to list"
       });
     }
   });
@@ -2500,25 +2500,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const contactId = parseInt(req.params.contactId);
 
       if (isNaN(listId) || isNaN(contactId)) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
-          message: "Invalid list or contact ID" 
+          message: "Invalid list or contact ID"
         });
       }
 
       // Verify list belongs to client
       const list = await storage.getSendList(listId);
       if (!list) {
-        return res.status(404).json({ 
+        return res.status(404).json({
           success: false,
-          message: "List not found" 
+          message: "List not found"
         });
       }
 
       if (list.clientId !== clientId) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           success: false,
-          message: "Access denied: List belongs to another client" 
+          message: "Access denied: List belongs to another client"
         });
       }
 
@@ -2526,9 +2526,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, message: "Contact removed from list successfully" });
     } catch (error) {
       console.error("Error removing contact from list:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to remove contact from list" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to remove contact from list"
       });
     }
   });
@@ -2542,25 +2542,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const offset = parseInt(req.query.offset as string) || 0;
 
       if (isNaN(listId)) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           success: false,
-          message: "Invalid list ID" 
+          message: "Invalid list ID"
         });
       }
 
       // Verify list belongs to client
       const list = await storage.getSendList(listId);
       if (!list) {
-        return res.status(404).json({ 
+        return res.status(404).json({
           success: false,
-          message: "List not found" 
+          message: "List not found"
         });
       }
 
       if (list.clientId !== clientId) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           success: false,
-          message: "Access denied: List belongs to another client" 
+          message: "Access denied: List belongs to another client"
         });
       }
 
@@ -2569,8 +2569,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Apply pagination
       const paginatedContacts = contacts.slice(offset, offset + limit);
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         contacts: paginatedContacts,
         pagination: {
           total: contacts.length,
@@ -2581,9 +2581,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error fetching list contacts:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch list contacts" 
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch list contacts"
       });
     }
   });
@@ -2953,8 +2953,8 @@ async function registerInboxRoutes(app: Express) {
         status: 'active',
       }).returning();
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         session: {
           id: session.id,
           sessionId: session.sessionId,
@@ -2964,16 +2964,16 @@ async function registerInboxRoutes(app: Express) {
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ 
-          success: false, 
+        return res.status(400).json({
+          success: false,
           error: "Invalid session data",
-          details: error.errors 
+          details: error.errors
         });
       }
       console.error("Error creating livechat session:", error);
-      res.status(500).json({ 
-        success: false, 
-        error: "Failed to create session" 
+      res.status(500).json({
+        success: false,
+        error: "Failed to create session"
       });
     }
   });
@@ -3087,7 +3087,7 @@ async function registerInboxRoutes(app: Express) {
         } catch (emailError: any) {
           errorMessage = emailError.message;
           console.error('Email send error:', errorMessage);
-          return res.status(500).json({ 
+          return res.status(500).json({
             error: "Failed to send email",
             details: errorMessage
           });
@@ -3148,9 +3148,9 @@ async function registerInboxRoutes(app: Express) {
 
       if (!synupLocation) {
         console.error("❌ BIIF: Synup API returned null - location creation failed");
-        return res.status(500).json({ 
+        return res.status(500).json({
           success: false,
-          error: "Unable to create location. Please verify your Synup API credentials are configured correctly." 
+          error: "Unable to create location. Please verify your Synup API credentials are configured correctly."
         });
       }
 
@@ -3174,16 +3174,16 @@ async function registerInboxRoutes(app: Express) {
 
       console.log("✅ BIIF: Location stored in database:", location.id);
 
-      res.json({ 
+      res.json({
         success: true,
         location,
         message: "Location created and syncing to 200+ directories"
       });
     } catch (error: any) {
       console.error("❌ BIIF: Error creating location:", error);
-      res.status(500).json({ 
+      res.status(500).json({
         success: false,
-        error: error.message || "Failed to create location" 
+        error: error.message || "Failed to create location"
       });
     }
   });

@@ -84,12 +84,26 @@ export class SynupSyncService {
   /**
    * Map internal post to Synup format
    */
-  private mapPostToSynup(post: any): SynupPost {
+  private async mapPostToSynup(post: any): Promise<SynupPost> {
+    // Load media URLs from mediaIds
+    let mediaUrls: string[] = [];
+    if (post.mediaIds && post.mediaIds.length > 0) {
+      const { contentMedia } = await import('@shared/schema');
+      const media = await db
+        .select()
+        .from(contentMedia)
+        .where(eq(contentMedia.clientId, post.clientId));
+      
+      // Filter to only the media IDs in this post
+      const postMedia = media.filter(m => post.mediaIds.includes(m.id));
+      mediaUrls = postMedia.map(m => m.storageUrl).filter(Boolean) as string[];
+    }
+
     return {
       local_id: post.id,
       title: (post.caption || '').slice(0, 80),
       content: post.caption || '',
-      media_urls: post.mediaUrls || [],
+      media_urls: mediaUrls,
       platforms: post.platforms || [],
       status: this.mapStatusToSynup(post.status),
       scheduled_for: post.scheduledFor?.toISOString(),
@@ -128,12 +142,27 @@ export class SynupSyncService {
 
   /**
    * Calculate checksum for change detection
+   * Includes all mutable fields that should trigger a sync
    */
-  private calculateChecksum(post: any): string {
+  private async calculateChecksum(post: any): Promise<string> {
+    // Load media URLs for accurate checksumming
+    let mediaUrls: string[] = [];
+    if (post.mediaIds && post.mediaIds.length > 0) {
+      const { contentMedia } = await import('@shared/schema');
+      const media = await db
+        .select()
+        .from(contentMedia)
+        .where(eq(contentMedia.clientId, post.clientId));
+      const postMedia = media.filter(m => post.mediaIds.includes(m.id));
+      mediaUrls = postMedia.map(m => m.storageUrl).filter(Boolean) as string[];
+    }
+
     const data = JSON.stringify({
       caption: post.caption,
+      hashtags: post.hashtags || [],
       platforms: post.platforms,
-      mediaUrls: post.mediaUrls,
+      mediaUrls: mediaUrls,
+      platformCustomizations: post.platformCustomizations || {},
       status: post.status,
       scheduledFor: post.scheduledFor?.toISOString(),
     });
@@ -178,7 +207,7 @@ export class SynupSyncService {
           eq(externalSync.entityId, postId)
         ));
 
-      const newChecksum = this.calculateChecksum(post);
+      const newChecksum = await this.calculateChecksum(post);
 
       // Skip if no changes
       if (existingSync && existingSync.checksum === newChecksum) {
@@ -187,7 +216,7 @@ export class SynupSyncService {
       }
 
       // Prepare payload
-      const payload = this.mapPostToSynup(post);
+      const payload = await this.mapPostToSynup(post);
 
       // Make API request
       const method = existingSync?.externalId ? 'PUT' : 'POST';
@@ -331,18 +360,40 @@ export class SynupSyncService {
           .where(eq(contentPosts.id, local_id));
       }
 
-      // Update sync record
-      await db
-        .update(externalSync)
-        .set({
-          lastPulledAt: new Date(),
-          syncStatus: 'synced',
-          metadata: notes ? { notes } as any : undefined,
-        })
+      // Upsert sync record (ensure it exists even for inbound-only updates)
+      const [existingSync] = await db
+        .select()
+        .from(externalSync)
         .where(and(
           eq(externalSync.systemName, this.systemName),
+          eq(externalSync.entityType, 'post'),
           eq(externalSync.entityId, local_id)
         ));
+
+      if (existingSync) {
+        await db
+          .update(externalSync)
+          .set({
+            externalId: external_id || existingSync.externalId,
+            lastPulledAt: new Date(),
+            syncStatus: 'synced',
+            metadata: notes ? { notes } as any : undefined,
+          })
+          .where(eq(externalSync.id, existingSync.id));
+      } else if (external_id) {
+        // Create sync record for inbound-only posts
+        await db
+          .insert(externalSync)
+          .values({
+            systemName: this.systemName,
+            entityType: 'post',
+            entityId: local_id,
+            externalId: external_id,
+            lastPulledAt: new Date(),
+            syncStatus: 'synced',
+            metadata: notes ? { notes } as any : undefined,
+          });
+      }
 
       // Log update
       await db.insert(syncLogs).values({
