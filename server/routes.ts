@@ -1060,11 +1060,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const subscription = await db.insert(subscriptions)
         .values(subscriptionData)
         .returning();
-
-      // Get assessment for business name and email
-      const assessment = await storage.getAssessment(assessmentId);
       
-      // Send enrollment confirmation email
+      // Send enrollment confirmation email (assessment already fetched above)
       if (assessment) {
         const pathwayName = pathway === 'msp' ? 'Managed Services' : 'DIY Platform';
         const planName = `${plan.name} (${pathwayName})`;

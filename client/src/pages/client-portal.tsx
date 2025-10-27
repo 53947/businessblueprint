@@ -12,6 +12,7 @@ import { SideNav } from "@/components/side-nav";
 import { SynupListings } from "@/components/synup-listings";
 import { SynupReviews } from "@/components/synup-reviews";
 import { BrandLogo } from "@/components/brand-logo";
+import ContentManagement from "@/pages/content-management";
 import { 
   BarChart3, 
   Star, 
@@ -647,137 +648,9 @@ export default function ClientPortal() {
             </Card>
           </TabsContent>
 
-          {/* Social Media Tab */}
-          <TabsContent value="social">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle>Social Media Accounts</CardTitle>
-                  <CardDescription>Connect and manage your social media platforms</CardDescription>
-                </div>
-                <Button 
-                  data-testid="button-add-social-account"
-                  onClick={() => toast({ title: "Add Social Account", description: "Choose from available platforms below to connect your accounts." })}
-                >
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Connect Account
-                </Button>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {/* Facebook */}
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                        <span className="text-2xl">📘</span>
-                      </div>
-                      <div>
-                        <p className="font-medium">Facebook</p>
-                        <p className="text-sm text-gray-500">Not connected</p>
-                      </div>
-                    </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      data-testid="button-connect-facebook"
-                      onClick={() => toast({ title: "Connect Facebook", description: "OAuth integration will open. Requires Facebook API setup." })}
-                    >
-                      Connect
-                    </Button>
-                  </div>
-
-                  {/* Instagram */}
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-lg bg-pink-100 flex items-center justify-center">
-                        <span className="text-2xl">📷</span>
-                      </div>
-                      <div>
-                        <p className="font-medium">Instagram</p>
-                        <p className="text-sm text-gray-500">Not connected</p>
-                      </div>
-                    </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      data-testid="button-connect-instagram"
-                      onClick={() => toast({ title: "Connect Instagram", description: "OAuth integration will open. Requires Instagram API setup." })}
-                    >
-                      Connect
-                    </Button>
-                  </div>
-
-                  {/* Twitter/X */}
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-lg bg-sky-100 flex items-center justify-center">
-                        <span className="text-2xl">𝕏</span>
-                      </div>
-                      <div>
-                        <p className="font-medium">X (Twitter)</p>
-                        <p className="text-sm text-gray-500">Not connected</p>
-                      </div>
-                    </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      data-testid="button-connect-twitter"
-                      onClick={() => toast({ title: "Connect X (Twitter)", description: "OAuth integration will open. Requires X API setup." })}
-                    >
-                      Connect
-                    </Button>
-                  </div>
-
-                  {/* LinkedIn */}
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-lg bg-blue-200 flex items-center justify-center">
-                        <span className="text-2xl">💼</span>
-                      </div>
-                      <div>
-                        <p className="font-medium">LinkedIn</p>
-                        <p className="text-sm text-gray-500">Not connected</p>
-                      </div>
-                    </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      data-testid="button-connect-linkedin"
-                      onClick={() => toast({ title: "Connect LinkedIn", description: "OAuth integration will open. Requires LinkedIn API setup." })}
-                    >
-                      Connect
-                    </Button>
-                  </div>
-
-                  {/* TikTok */}
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-lg bg-gray-900 flex items-center justify-center">
-                        <span className="text-2xl">🎵</span>
-                      </div>
-                      <div>
-                        <p className="font-medium">TikTok</p>
-                        <p className="text-sm text-gray-500">Not connected</p>
-                      </div>
-                    </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      data-testid="button-connect-tiktok"
-                      onClick={() => toast({ title: "Connect TikTok", description: "OAuth integration will open. Requires TikTok API setup." })}
-                    >
-                      Connect
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-blue-900">
-                    <strong>Note:</strong> Connect your social media accounts to manage all your posts, comments, and messages in one unified dashboard.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+          {/* Content Management Tab */}
+          <TabsContent value="content">
+            <ContentManagement />
           </TabsContent>
 
           {/* Tasks Tab */}
