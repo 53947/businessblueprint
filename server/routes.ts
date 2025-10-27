@@ -975,6 +975,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .values(subscriptionData)
         .returning();
 
+      // Get assessment for business name and email
+      const assessment = await storage.getAssessment(assessmentId);
+      
+      // Send enrollment confirmation email
+      if (assessment) {
+        const pathwayName = pathway === 'msp' ? 'Managed Services' : 'DIY Platform';
+        const planName = `${plan.name} (${pathwayName})`;
+        
+        // Get selected product names for features list
+        const featuresPromises = selectedProducts.map(async (prod) => {
+          const product = selectedProducts.find(p => p.id === prod.id);
+          return product?.name || '';
+        });
+        const productNames = await Promise.all(featuresPromises);
+        
+        // Build features list
+        const baseFeatures = Array.isArray(plan.features) ? plan.features : [];
+        const allFeatures = [...baseFeatures, ...productNames.filter(Boolean)];
+        
+        await emailService.sendEnrollmentConfirmation(assessment.email, {
+          businessName: assessment.businessName,
+          pathway,
+          planName,
+          monthlyPrice: parseFloat(total.toFixed(2)),
+          nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          features: allFeatures
+        });
+      }
+
       res.json({
         success: true,
         subscription: subscription[0],
