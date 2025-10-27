@@ -144,7 +144,7 @@ export class SynupSyncService {
    * Push a post to Synup (outbound sync)
    */
   async pushPostToSynup(postId: number): Promise<boolean> {
-    if (!this.apiKey || !this.systemId) {
+    if (!this.apiKey) {
       console.log('[SynupSync] Sync not configured, skipping push');
       return false;
     }
