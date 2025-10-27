@@ -467,6 +467,11 @@ export default function MarketplacePage() {
         gradient: 'from-[#F79248] to-[#FFB67A]', 
         checkBg: 'bg-[#F79248]',
         text: 'text-[#F79248]'
+      },
+      pink: { 
+        gradient: 'from-[#E91E8C] to-[#FF66CC]', 
+        checkBg: 'bg-[#E91E8C]',
+        text: 'text-[#E91E8C]'
       }
     };
     return colorMap[color] || colorMap.blue;
