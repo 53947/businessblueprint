@@ -3047,6 +3047,12 @@ async function processAssessmentAsync(
 
     await storage.updateAssessment(assessmentId, { emailSent });
 
+    // Send thank you and introduction email
+    await emailService.sendThankYouIntroduction(assessment.email, {
+      businessName: assessment.businessName,
+      assessmentId
+    });
+
   } catch (error) {
     console.error("Error processing assessment:", error);
     await storage.updateAssessment(assessmentId, { status: "failed" });

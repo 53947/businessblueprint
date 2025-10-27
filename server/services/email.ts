@@ -189,6 +189,28 @@ export class EmailService {
     }
   }
 
+  async sendThankYouIntroduction(email: string, data: {
+    businessName: string;
+    assessmentId: number;
+  }): Promise<boolean> {
+    try {
+      const htmlContent = this.generateThankYouIntroductionHTML(data);
+      
+      const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: email,
+        subject: `Welcome to Business Blueprint - Your Digital Growth Partner`,
+        html: htmlContent,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error('Error sending thank you introduction email:', error);
+      return false;
+    }
+  }
+
   private generateReportHTML(data: EmailReportData): string {
     const highPriorityRecs = data.recommendations.filter(r => r.priority === 'high').slice(0, 3);
     
@@ -607,6 +629,121 @@ export class EmailService {
         
         <div class="footer">
             <p>Your digital growth journey is just one click away!</p>
+            <p><small>© 2024 businessblueprint.io</small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
+
+  private generateThankYouIntroductionHTML(data: {
+    businessName: string;
+    assessmentId: number;
+  }): string {
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Business Blueprint</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #FF6B35, #0057FF); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .solution-box { background: #f8f9fa; border-left: 4px solid #FF6B35; padding: 20px; margin: 15px 0; border-radius: 4px; }
+        .solution-box h3 { color: #FF6B35; margin-top: 0; }
+        .cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .highlight { background: #FFF4E6; border: 1px solid #FFB84D; padding: 15px; border-radius: 4px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👋 Thank You, ${data.businessName}!</h1>
+            <p style="font-size: 18px; margin-top: 10px;">We're excited to be your digital growth partner</p>
+        </div>
+        
+        <div class="content">
+            <p>Hi there,</p>
+            
+            <p>Thank you for completing your Digital Presence Assessment with Business Blueprint! We're thrilled to help you strengthen your online presence and grow your business.</p>
+            
+            <p><strong>Who We Are:</strong> Business Blueprint is your all-in-one digital growth platform, designed specifically for local businesses like yours. We combine powerful AI-driven insights with hands-on marketing tools to help you get found, get customers, and get business.</p>
+            
+            <div class="highlight">
+                <p style="margin: 0;"><strong>💡 Beyond Your Prescription:</strong> While your personalized assessment provides targeted recommendations, we offer a complete suite of solutions that work together to grow your business:</p>
+            </div>
+            
+            <h3>Our Complete Solution Suite:</h3>
+            
+            <div class="solution-box">
+                <h3>🗺️ Local SEO Management</h3>
+                <p>Manage your business listings across 200+ directories including Google, Yelp, Facebook, and Apple Maps. Keep your NAP (Name, Address, Phone) consistent everywhere your customers search.</p>
+            </div>
+            
+            <div class="solution-box">
+                <h3>⭐ Reputation Management</h3>
+                <p>Monitor and respond to reviews across all platforms from one dashboard. Our AI-powered response generator helps you craft perfect replies that build trust and turn negative experiences into opportunities.</p>
+            </div>
+            
+            <div class="solution-box">
+                <h3>📱 Social Media Management</h3>
+                <p>Schedule posts, engage with followers, and grow your social presence across Facebook, Instagram, LinkedIn, and X (Twitter). One platform, all your social channels.</p>
+            </div>
+            
+            <div class="solution-box">
+                <h3>📧 Email & SMS Marketing (/send)</h3>
+                <p>Build relationships with powerful email campaigns and text message marketing. Create beautiful emails, segment your audience, and track results - all GDPR and CAN-SPAM compliant.</p>
+            </div>
+            
+            <div class="solution-box">
+                <h3>💬 Unified Inbox & Live Chat</h3>
+                <p>Never miss a customer message again. Manage emails, social messages, SMS, and live chat conversations from one powerful inbox. Add our live chat widget to your website to capture leads 24/7.</p>
+            </div>
+            
+            <div class="solution-box">
+                <h3>🤖 AI Business Coach</h3>
+                <p>Your personal marketing advisor available anytime. Get step-by-step guidance, learn new strategies, and receive personalized recommendations based on your business goals and progress.</p>
+            </div>
+            
+            <div class="solution-box">
+                <h3>📊 Content Calendar & Publishing</h3>
+                <p>Plan your entire content strategy with our visual calendar. Schedule posts across all platforms, collaborate with your team, and maintain a consistent brand voice.</p>
+            </div>
+            
+            <h3>Two Pathways to Success:</h3>
+            
+            <p><strong>DIY Platform ($49/month):</strong> Perfect if you want hands-on control. Access all our tools, get AI guidance, and manage everything yourself at your own pace.</p>
+            
+            <p><strong>Managed Services (Starting at $299/month):</strong> Let our experts handle it all. We'll implement your strategy, manage your campaigns, respond to reviews, and provide monthly reporting while you focus on running your business.</p>
+            
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}" class="cta-button">
+                    View Your Full Assessment
+                </a>
+            </div>
+            
+            <p><strong>What's Next?</strong></p>
+            <ul>
+                <li>Review your personalized assessment results (sent in a separate email)</li>
+                <li>Explore our complete solution suite at businessblueprint.io</li>
+                <li>Choose the pathway that fits your business best</li>
+                <li>Schedule a free consultation to discuss your specific needs</li>
+            </ul>
+            
+            <p style="margin-top: 30px;">Have questions? Just reply to this email - we're here to help you succeed!</p>
+            
+            <p>Warmly,<br>
+            <strong>The Business Blueprint Team</strong><br>
+            Your Partners in Digital Growth</p>
+        </div>
+        
+        <div class="footer">
+            <p>Business Blueprint - Helping Local Businesses Succeed Online</p>
+            <p>Get Found • Get Customers • Get Business</p>
             <p><small>© 2024 businessblueprint.io</small></p>
         </div>
     </div>
