@@ -32,6 +32,7 @@ import MarketplaceCheckoutPage from "@/pages/marketplace-checkout";
 import BIIF from "@/pages/biif";
 import AdminPanel from "@/pages/admin-panel";
 import BrandStudio from "@/pages/brand-studio";
+import ContentManagement from "@/pages/content-management";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -65,6 +66,7 @@ function Router() {
       <Route path="/biif" component={BIIF} />
       <Route path="/admin" component={AdminPanel} />
       <Route path="/brand-studio" component={BrandStudio} />
+      <Route path="/content" component={ContentManagement} />
       <Route component={NotFound} />
     </Switch>
   );
