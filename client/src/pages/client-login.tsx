@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,7 @@ export default function ClientLogin() {
   const [, setLocation] = useLocation();
 
   // Auto-login if valid session exists
-  React.useEffect(() => {
+  useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     const lastLogin = localStorage.getItem("lastLogin");
     
