@@ -115,6 +115,32 @@ export class EmailService {
     }
   }
 
+  async sendEnrollmentConfirmation(email: string, data: {
+    businessName: string;
+    pathway: string;
+    planName: string;
+    monthlyPrice: number;
+    nextBillingDate: Date;
+    features: string[];
+  }): Promise<boolean> {
+    try {
+      const htmlContent = this.generateEnrollmentConfirmationHTML(data);
+      
+      const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: email,
+        subject: `Welcome to ${data.planName} - Your Digital Growth Journey Begins!`,
+        html: htmlContent,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error('Error sending enrollment confirmation email:', error);
+      return false;
+    }
+  }
+
   private generateReportHTML(data: EmailReportData): string {
     const highPriorityRecs = data.recommendations.filter(r => r.priority === 'high').slice(0, 3);
     
@@ -298,6 +324,94 @@ export class EmailService {
         
         <div class="footer">
             <p>For security questions, contact our support team immediately.</p>
+            <p><small>© 2024 businessblueprint.io</small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
+
+  private generateEnrollmentConfirmationHTML(data: {
+    businessName: string;
+    pathway: string;
+    planName: string;
+    monthlyPrice: number;
+    nextBillingDate: Date;
+    features: string[];
+  }): string {
+    const pathwayColor = data.pathway === 'msp' ? '#8B5CF6' : '#FF6B35';
+    const pathwayName = data.pathway === 'msp' ? 'Managed Services' : 'DIY Platform';
+    
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Business Blueprint</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, ${pathwayColor}, #0057FF); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .plan-box { background: #f8f9fa; border: 2px solid ${pathwayColor}; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .feature-list { list-style: none; padding: 0; margin: 20px 0; }
+        .feature-list li { padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
+        .feature-list li:before { content: "✓ "; color: ${pathwayColor}; font-weight: bold; margin-right: 10px; }
+        .cta-button { display: inline-block; background: ${pathwayColor}; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .next-steps { background: #E0F2FE; border-left: 4px solid #0284C7; padding: 15px; margin: 20px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Welcome to Business Blueprint!</h1>
+            <p style="font-size: 18px; margin-top: 10px;">${data.businessName}</p>
+        </div>
+        
+        <div class="content">
+            <p>Congratulations! You've taken the first step toward transforming your digital presence.</p>
+            
+            <div class="plan-box">
+                <h2 style="color: ${pathwayColor}; margin-top: 0;">${data.planName}</h2>
+                <p style="font-size: 14px; color: #666; margin-bottom: 15px;">${pathwayName} Pathway</p>
+                <p style="font-size: 32px; font-weight: bold; color: #333; margin: 10px 0;">
+                    $${data.monthlyPrice.toFixed(2)}<span style="font-size: 16px; font-weight: normal;">/month</span>
+                </p>
+                <p style="font-size: 14px; color: #666;">Next billing date: ${data.nextBillingDate.toLocaleDateString()}</p>
+            </div>
+            
+            <h3>What's Included:</h3>
+            <ul class="feature-list">
+                ${data.features.map(feature => `<li>${feature}</li>`).join('')}
+            </ul>
+            
+            <div class="next-steps">
+                <h4 style="color: #0284C7; margin-top: 0;">🚀 Next Steps:</h4>
+                <ol style="margin: 10px 0; padding-left: 20px;">
+                    <li>Check your email for login credentials</li>
+                    <li>Access your client portal dashboard</li>
+                    <li>Complete your business profile setup</li>
+                    ${data.pathway === 'msp' ? '<li>Your dedicated account manager will contact you within 24 hours</li>' : '<li>Start using the platform tools immediately</li>'}
+                </ol>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/client-login" class="cta-button">
+                    Access Your Dashboard
+                </a>
+            </div>
+            
+            <div style="background: #FEF3C7; border: 1px solid #F59E0B; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                <p style="margin: 0;"><strong>📞 Need Help?</strong> Our support team is here for you:</p>
+                <p style="margin: 5px 0 0 0;">Email: support@businessblueprint.io | Live Chat available in your dashboard</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Thank you for choosing Business Blueprint!</p>
+            <p>We're excited to help you grow your digital presence.</p>
             <p><small>© 2024 businessblueprint.io</small></p>
         </div>
     </div>
