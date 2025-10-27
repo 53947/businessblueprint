@@ -355,6 +355,148 @@ router.post('/:clientId/posts/:postId/publish', requireContentAccess, async (req
   }
 });
 
+// ===== SCHEDULING ROUTES =====
+
+/**
+ * GET /api/content/:clientId/schedule
+ * Get all scheduled posts
+ */
+router.get('/:clientId/schedule', requireContentAccess, async (req: Request, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+
+    const scheduledPosts = await db
+      .select()
+      .from(contentPosts)
+      .where(and(
+        eq(contentPosts.clientId, clientId),
+        eq(contentPosts.status, 'scheduled')
+      ))
+      .orderBy(contentPosts.scheduledFor);
+
+    res.json(scheduledPosts);
+  } catch (error) {
+    console.error('[Content] Error fetching scheduled posts:', error);
+    res.status(500).json({ message: 'Failed to fetch scheduled posts' });
+  }
+});
+
+/**
+ * PUT /api/content/:clientId/schedule/:postId
+ * Update schedule time for a post
+ */
+router.put('/:clientId/schedule/:postId', requireContentAccess, async (req: Request, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const postId = parseInt(req.params.postId);
+
+    const { scheduledFor } = req.body;
+
+    if (!scheduledFor) {
+      return res.status(400).json({ message: 'scheduledFor is required' });
+    }
+
+    const newScheduleDate = new Date(scheduledFor);
+
+    if (newScheduleDate <= new Date()) {
+      return res.status(400).json({ message: 'Schedule time must be in the future' });
+    }
+
+    const [post] = await db
+      .update(contentPosts)
+      .set({ 
+        scheduledFor: newScheduleDate,
+        status: 'scheduled',
+      })
+      .where(and(
+        eq(contentPosts.id, postId),
+        eq(contentPosts.clientId, clientId)
+      ))
+      .returning();
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    const delay = newScheduleDate.getTime() - Date.now();
+      
+    try {
+      const existingJob = await contentPublishQueue.getJob(`post-${postId}`);
+      if (existingJob) {
+        await existingJob.remove();
+      }
+    } catch (err) {
+      console.log('[Content] No existing job to remove for post', postId);
+    }
+      
+    await contentPublishQueue.add(
+      'publish-post',
+      {
+        postId,
+        clientId,
+        platforms: post.platforms,
+      },
+      {
+        delay,
+        jobId: `post-${postId}`,
+      }
+    );
+
+    res.json({ 
+      message: 'Schedule updated successfully',
+      post,
+    });
+  } catch (error) {
+    console.error('[Content] Error updating schedule:', error);
+    res.status(500).json({ message: 'Failed to update schedule' });
+  }
+});
+
+/**
+ * DELETE /api/content/:clientId/schedule/:postId
+ * Cancel a scheduled post
+ */
+router.delete('/:clientId/schedule/:postId', requireContentAccess, async (req: Request, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const postId = parseInt(req.params.postId);
+
+    const [post] = await db
+      .update(contentPosts)
+      .set({ 
+        status: 'draft',
+        scheduledFor: null,
+      })
+      .where(and(
+        eq(contentPosts.id, postId),
+        eq(contentPosts.clientId, clientId),
+        eq(contentPosts.status, 'scheduled')
+      ))
+      .returning();
+
+    if (!post) {
+      return res.status(404).json({ message: 'Scheduled post not found' });
+    }
+
+    try {
+      const existingJob = await contentPublishQueue.getJob(`post-${postId}`);
+      if (existingJob) {
+        await existingJob.remove();
+      }
+    } catch (err) {
+      console.log('[Content] No existing job to remove for post', postId);
+    }
+
+    res.json({ 
+      message: 'Schedule cancelled successfully',
+      post,
+    });
+  } catch (error) {
+    console.error('[Content] Error cancelling schedule:', error);
+    res.status(500).json({ message: 'Failed to cancel schedule' });
+  }
+});
+
 // ===== MEDIA ROUTES =====
 
 /**
