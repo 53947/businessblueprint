@@ -50,8 +50,7 @@ export const contentPublishWorker = redisConnection ? new Worker<PublishPostJob>
             .where(
               and(
                 eq(socialMediaAccounts.clientId, clientId),
-                eq(socialMediaAccounts.platform, platform),
-                eq(socialMediaAccounts.status, 'active')
+                eq(socialMediaAccounts.platform, platform)
               )
             );
           
@@ -109,12 +108,23 @@ export const contentPublishWorker = redisConnection ? new Worker<PublishPostJob>
           // Check platform capabilities
           const capabilities = adapter.getCapabilities();
           
-          const hasVideo = post.mediaUrls?.some(url => url.includes('.mp4') || url.includes('video')) || false;
+          // Get media URLs from media IDs
+          let mediaUrls: string[] = [];
+          if (post.mediaIds && post.mediaIds.length > 0) {
+            const { contentMedia } = await import('@shared/schema');
+            const media = await db
+              .select()
+              .from(contentMedia)
+              .where(eq(contentMedia.id, post.mediaIds[0])); // TODO: Handle multiple media
+            mediaUrls = media.map(m => m.storageUrl).filter(Boolean) as string[];
+          }
+          
+          const hasVideo = mediaUrls.some(url => url.includes('.mp4') || url.includes('video'));
           if (hasVideo && !capabilities.supportsVideo) {
             throw new Error(`${platform} does not support video posts`);
           }
           
-          const mediaCount = post.mediaUrls?.length || 0;
+          const mediaCount = mediaUrls.length;
           if (mediaCount > capabilities.maxMediaCount) {
             throw new Error(`${platform} supports maximum ${capabilities.maxMediaCount} media items, but ${mediaCount} were provided`);
           }
@@ -127,10 +137,10 @@ export const contentPublishWorker = redisConnection ? new Worker<PublishPostJob>
           
           // Publish the post
           const result = await adapter.publish({
-            text: post.content,
-            mediaUrls: post.mediaUrls || undefined,
+            text: post.caption,
+            mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
             scheduledTime,
-            hashtags: post.aiHashtags || undefined,
+            hashtags: post.hashtags || undefined,
           });
           
           if (result.success) {
@@ -241,21 +251,21 @@ export const synupSyncWorker = redisConnection ? new Worker<SynupSyncJob>(
 
 // Worker event handlers (only if Redis available)
 if (redisConnection && contentPublishWorker) {
-  contentPublishWorker.on('completed', (job) => {
+  contentPublishWorker.on('completed', (job: Job) => {
     console.log(`[ContentPublisher] Job ${job.id} completed successfully`);
   });
 
-  contentPublishWorker.on('failed', (job, err) => {
+  contentPublishWorker.on('failed', (job: Job | undefined, err: Error) => {
     console.error(`[ContentPublisher] Job ${job?.id} failed:`, err.message);
   });
 }
 
 if (redisConnection && synupSyncWorker) {
-  synupSyncWorker.on('completed', (job) => {
+  synupSyncWorker.on('completed', (job: Job) => {
     console.log(`[SynupSync] Job ${job.id} completed successfully`);
   });
 
-  synupSyncWorker.on('failed', (job, err) => {
+  synupSyncWorker.on('failed', (job: Job | undefined, err: Error) => {
     console.error(`[SynupSync] Job ${job?.id} failed:`, err.message);
   });
 }
