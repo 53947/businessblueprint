@@ -15,6 +15,37 @@ export default function ClientLogin() {
   const [error, setError] = useState("");
   const [, setLocation] = useLocation();
 
+  // Auto-login if valid session exists
+  React.useEffect(() => {
+    const authToken = localStorage.getItem("authToken");
+    const lastLogin = localStorage.getItem("lastLogin");
+    
+    // Auto-login if logged in within last 7 days
+    if (authToken && lastLogin) {
+      const daysSinceLogin = (Date.now() - parseInt(lastLogin)) / (1000 * 60 * 60 * 24);
+      if (daysSinceLogin < 7) {
+        // Verify token is still valid
+        fetch("/api/dashboard/" + authToken)
+          .then(res => res.json())
+          .then(data => {
+            if (data.redirectUrl) {
+              // Copy to session storage
+              Object.keys(localStorage).forEach(key => {
+                if (key !== 'authToken') return;
+                sessionStorage.setItem(key, localStorage.getItem(key) || "");
+              });
+              window.location.href = "/portal";
+            }
+          })
+          .catch(() => {
+            // Token expired, clear storage
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("lastLogin");
+          });
+      }
+    }
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -38,12 +69,20 @@ export default function ClientLogin() {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Store client data and JWT token in sessionStorage
-        sessionStorage.setItem("clientId", data.client.id.toString());
-        sessionStorage.setItem("externalId", data.client.email);
-        sessionStorage.setItem("authToken", data.token);
-        sessionStorage.setItem("clientName", data.client.companyName || "");
-        sessionStorage.setItem("isEmailVerified", data.client.isEmailVerified?.toString() || "false");
+        // Store client data and JWT token in sessionStorage AND localStorage for persistence
+        const clientData = {
+          clientId: data.client.id.toString(),
+          externalId: data.client.email,
+          authToken: data.token,
+          clientName: data.client.companyName || "",
+          isEmailVerified: data.client.isEmailVerified?.toString() || "false",
+          lastLogin: Date.now().toString()
+        };
+        
+        Object.entries(clientData).forEach(([key, value]) => {
+          sessionStorage.setItem(key, value);
+          localStorage.setItem(key, value); // Persist for quick re-login
+        });
         
         // Check for redirect URL parameter and validate it's a safe internal route
         const urlParams = new URLSearchParams(window.location.search);
@@ -67,7 +106,8 @@ export default function ClientLogin() {
           }
         }
         
-        setLocation(redirectUrl);
+        // Immediate redirect - no delay
+        window.location.href = redirectUrl;
       } else {
         setError(data.message || "Unable to access your dashboard. Please check your email address.");
       }
