@@ -108,7 +108,7 @@ export default function MarketplacePage() {
         { text: 'Social Media Tools for scheduling + tracking', included: true },
         { text: 'Local SEO for map pack visibility + rank tracking', included: true },
         { text: 'Digital IQ Assessment + Blueprint', included: true },
-        { text: 'AI Business Coach available as add-on', included: false }
+        { text: 'AI Business Coach (pay as you use)', included: true }
       ]
     },
     {
@@ -129,7 +129,7 @@ export default function MarketplacePage() {
         { text: 'Social Automation smart calendar + insights', included: true },
         { text: 'Local SEO Tools keywords, competitors, on-page', included: true },
         { text: 'Digital IQ + Expanded Blueprint', included: true },
-        { text: 'AI Business Coach included', included: true }
+        { text: 'AI Business Coach (pay as you use)', included: true }
       ]
     },
     {
@@ -150,7 +150,7 @@ export default function MarketplacePage() {
         { text: 'Social Suite collaboration + AI content planning', included: true },
         { text: 'Local SEO Suite national tracking + analytics', included: true },
         { text: 'Digital IQ + Blueprint integrated with CRM/automation', included: true },
-        { text: 'Full AI Business Coach access', included: true }
+        { text: 'AI Business Coach (pay as you use)', included: true }
       ]
     }
   ];
