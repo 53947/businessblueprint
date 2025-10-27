@@ -199,7 +199,7 @@ export class EmailService {
       const mailOptions = {
         from: process.env.FROM_EMAIL,
         to: email,
-        subject: `Welcome to Business Blueprint - Your Digital Growth Partner`,
+        subject: `Meet Coach Blue 🤖 - Your AI Guide to Digital Success`,
         html: htmlContent,
       };
 
@@ -646,99 +646,149 @@ export class EmailService {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Business Blueprint</title>
+    <title>Meet Coach Blue - Your AI Digital Growth Guide</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
         .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #FF6B35, #0057FF); color: white; padding: 40px; text-align: center; }
+        .header { background: linear-gradient(135deg, #0057FF, #8000FF); color: white; padding: 40px; text-align: center; }
+        .coach-intro { background: linear-gradient(135deg, #E0F2FE, #F0E7FF); padding: 30px; text-align: center; margin: 20px 0; border-radius: 8px; }
         .content { padding: 40px; }
-        .solution-box { background: #f8f9fa; border-left: 4px solid #FF6B35; padding: 20px; margin: 15px 0; border-radius: 4px; }
-        .solution-box h3 { color: #FF6B35; margin-top: 0; }
-        .cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
+        .step-box { background: #f8f9fa; border-left: 4px solid #0057FF; padding: 20px; margin: 15px 0; border-radius: 4px; position: relative; }
+        .step-number { position: absolute; top: -10px; left: -10px; background: #0057FF; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .step-box h3 { color: #0057FF; margin-top: 0; }
+        .pricing-tag { display: inline-block; background: #00FF40; color: #000; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 14px; }
+        .cta-button { display: inline-block; background: #0057FF; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
+        .secondary-button { background: #8000FF; }
         .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
         .highlight { background: #FFF4E6; border: 1px solid #FFB84D; padding: 15px; border-radius: 4px; margin: 20px 0; }
+        .why-box { background: #E0F2FE; padding: 15px; border-radius: 4px; margin: 10px 0; font-size: 14px; color: #0369A1; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>👋 Thank You, ${data.businessName}!</h1>
-            <p style="font-size: 18px; margin-top: 10px;">We're excited to be your digital growth partner</p>
+            <h1>🤖 Meet Coach Blue!</h1>
+            <p style="font-size: 18px; margin-top: 10px;">Your AI Guide to Digital Success</p>
         </div>
         
         <div class="content">
-            <p>Hi there,</p>
+            <p>Hi ${data.businessName} team,</p>
             
-            <p>Thank you for completing your Digital Presence Assessment with Business Blueprint! We're thrilled to help you strengthen your online presence and grow your business.</p>
+            <p>Congratulations on completing your Digital Presence Assessment! You've taken the first step toward transforming your online visibility.</p>
             
-            <p><strong>Who We Are:</strong> Business Blueprint is your all-in-one digital growth platform, designed specifically for local businesses like yours. We combine powerful AI-driven insights with hands-on marketing tools to help you get found, get customers, and get business.</p>
+            <div class="coach-intro">
+                <h2 style="color: #0057FF; margin-top: 0;">👋 I'm Coach Blue</h2>
+                <p style="font-size: 16px; margin: 15px 0;"><strong>Your AI-powered digital marketing advisor, here to guide you every step of the way.</strong></p>
+                <p style="color: #666;">I've analyzed thousands of successful local businesses and I'm ready to create your personalized growth path based on your assessment results.</p>
+            </div>
+            
+            <h3 style="color: #0057FF;">📍 Your Recommended Growth Path</h3>
+            <p>Based on research and proven success patterns, here's the journey I recommend for most businesses like yours:</p>
             
             <div class="highlight">
-                <p style="margin: 0;"><strong>💡 Beyond Your Prescription:</strong> While your personalized assessment provides targeted recommendations, we offer a complete suite of solutions that work together to grow your business:</p>
+                <p style="margin: 0;"><strong>💡 Smart Strategy:</strong> Start small, build momentum, then scale. Most successful businesses follow this exact sequence!</p>
             </div>
             
-            <h3>Our Complete Solution Suite:</h3>
+            <h3 style="color: #0057FF; margin-top: 30px;">Phase 1: Foundation (Weeks 1-4)</h3>
             
-            <div class="solution-box">
-                <h3>🗺️ Local SEO Management</h3>
-                <p>Manage your business listings across 200+ directories including Google, Yelp, Facebook, and Apple Maps. Keep your NAP (Name, Address, Phone) consistent everywhere your customers search.</p>
+            <div class="step-box">
+                <div class="step-number">1</div>
+                <h3>🗺️ Listings Management <span class="pricing-tag">$44/mo</span></h3>
+                <p><strong>Why start here:</strong> Get found by customers searching for you right now. Sync your business across 200+ directories including Google, Yelp, Facebook, and Apple Maps.</p>
+                <div class="why-box">
+                    ✅ <strong>Most Critical:</strong> 93% of customers check online listings before visiting. This is your foundation.
+                </div>
             </div>
             
-            <div class="solution-box">
-                <h3>⭐ Reputation Management</h3>
-                <p>Monitor and respond to reviews across all platforms from one dashboard. Our AI-powered response generator helps you craft perfect replies that build trust and turn negative experiences into opportunities.</p>
+            <div class="step-box">
+                <div class="step-number">2</div>
+                <h3>⭐ Reviews (Pro) <span class="pricing-tag">$25/mo</span></h3>
+                <p><strong>Why add this next:</strong> Build trust fast. Monitor reviews, get AI-powered response suggestions, and turn feedback into customers.</p>
+                <div class="why-box">
+                    ✅ <strong>High Impact:</strong> 88% of customers trust reviews as much as personal recommendations. Start collecting them now.
+                </div>
             </div>
             
-            <div class="solution-box">
-                <h3>📱 Social Media Management</h3>
-                <p>Schedule posts, engage with followers, and grow your social presence across Facebook, Instagram, LinkedIn, and X (Twitter). One platform, all your social channels.</p>
+            <div class="step-box">
+                <div class="step-number">3</div>
+                <h3>🤖 AI Coach Essential <span class="pricing-tag">$59/mo</span></h3>
+                <p><strong>Why I recommend this:</strong> Let me guide you through implementation with step-by-step tasks, automated suggestions, and progress tracking.</p>
+                <div class="why-box">
+                    ✅ <strong>Your Secret Weapon:</strong> I'll help you maximize every tool and avoid common mistakes. Think of me as your 24/7 marketing team.
+                </div>
             </div>
             
-            <div class="solution-box">
-                <h3>📧 Email & SMS Marketing (/send)</h3>
-                <p>Build relationships with powerful email campaigns and text message marketing. Create beautiful emails, segment your audience, and track results - all GDPR and CAN-SPAM compliant.</p>
+            <h3 style="color: #0057FF; margin-top: 30px;">Phase 2: Engagement (Months 2-3)</h3>
+            
+            <div class="step-box">
+                <div class="step-number">4</div>
+                <h3>📱 Social Media <span class="pricing-tag">$8/mo</span></h3>
+                <p><strong>Once you're visible:</strong> Stay top-of-mind with consistent social posts. Schedule across Facebook, Instagram, LinkedIn, and X from one dashboard.</p>
+                <div class="why-box">
+                    ✅ <strong>Low Cost, High Impact:</strong> Regular posting builds community and drives repeat business.
+                </div>
             </div>
             
-            <div class="solution-box">
-                <h3>💬 Unified Inbox & Live Chat</h3>
-                <p>Never miss a customer message again. Manage emails, social messages, SMS, and live chat conversations from one powerful inbox. Add our live chat widget to your website to capture leads 24/7.</p>
+            <div class="step-box">
+                <div class="step-number">5</div>
+                <h3>🚀 Upgrade to AI Coach Pro <span class="pricing-tag">$99/mo</span></h3>
+                <p><strong>Ready to level up:</strong> Unlimited guidance, advanced strategies, and priority AI responses when you need expert help.</p>
             </div>
             
-            <div class="solution-box">
-                <h3>🤖 AI Business Coach</h3>
-                <p>Your personal marketing advisor available anytime. Get step-by-step guidance, learn new strategies, and receive personalized recommendations based on your business goals and progress.</p>
+            <h3 style="color: #0057FF; margin-top: 30px;">Phase 3: Growth (Months 4-6)</h3>
+            
+            <div class="step-box">
+                <div class="step-number">6</div>
+                <h3>🔍 Local SEO <span class="pricing-tag">$6/mo</span></h3>
+                <p><strong>Sustain your rankings:</strong> Track keywords, monitor competitors, and maintain your Google Map Pack position.</p>
             </div>
             
-            <div class="solution-box">
-                <h3>📊 Content Calendar & Publishing</h3>
-                <p>Plan your entire content strategy with our visual calendar. Schedule posts across all platforms, collaborate with your team, and maintain a consistent brand voice.</p>
+            <div class="step-box">
+                <div class="step-number">7</div>
+                <h3>⚙️ Consider Advanced Plan <span class="pricing-tag">$248/mo</span></h3>
+                <p><strong>Bundle savings kick in:</strong> When you're using multiple tools, upgrading to Advanced gives you everything plus automation and better pricing.</p>
             </div>
             
-            <h3>Two Pathways to Success:</h3>
-            
-            <p><strong>DIY Platform ($49/month):</strong> Perfect if you want hands-on control. Access all our tools, get AI guidance, and manage everything yourself at your own pace.</p>
-            
-            <p><strong>Managed Services (Starting at $299/month):</strong> Let our experts handle it all. We'll implement your strategy, manage your campaigns, respond to reviews, and provide monthly reporting while you focus on running your business.</p>
+            <div style="background: #FEF3C7; border: 1px solid #F59E0B; padding: 20px; border-radius: 8px; margin: 30px 0;">
+                <h3 style="color: #92400E; margin-top: 0;">🤔 Prefer Full Service?</h3>
+                <p style="margin: 10px 0;"><strong>Not everyone wants to DIY.</strong> If you'd rather have experts handle everything, consider:</p>
+                <p style="margin: 10px 0;"><strong>Standard MSP Package:</strong> <span class="pricing-tag">$313/mo</span></p>
+                <ul style="margin: 10px 0;">
+                    <li>We manage everything for you</li>
+                    <li>10 hours of expert work monthly</li>
+                    <li>Add Reputation Management for $15/location</li>
+                </ul>
+            </div>
             
             <div style="text-align: center; margin: 40px 0;">
-                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}" class="cta-button">
-                    View Your Full Assessment
+                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/marketplace" class="cta-button">
+                    🛍️ Explore Marketplace
+                </a>
+                <br>
+                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}" class="cta-button secondary-button">
+                    📊 View Your Assessment
                 </a>
             </div>
             
-            <p><strong>What's Next?</strong></p>
-            <ul>
-                <li>Review your personalized assessment results (sent in a separate email)</li>
-                <li>Explore our complete solution suite at businessblueprint.io</li>
-                <li>Choose the pathway that fits your business best</li>
-                <li>Schedule a free consultation to discuss your specific needs</li>
-            </ul>
+            <h3 style="color: #0057FF;">🎯 Ready to Get Started?</h3>
+            <p><strong>Here's what happens next:</strong></p>
+            <ol>
+                <li>Review your detailed assessment results (separate email)</li>
+                <li>Choose your starting point from the marketplace</li>
+                <li>Activate Coach Blue (me!) to guide your implementation</li>
+                <li>Start seeing results within the first week</li>
+            </ol>
             
-            <p style="margin-top: 30px;">Have questions? Just reply to this email - we're here to help you succeed!</p>
+            <div class="highlight">
+                <p style="margin: 0;"><strong>💬 Questions? I'm here to help!</strong></p>
+                <p style="margin: 10px 0 0 0;">Just reply to this email or click to schedule a free 15-minute consultation. I'll create a custom plan based on your specific goals and budget.</p>
+            </div>
             
-            <p>Warmly,<br>
-            <strong>The Business Blueprint Team</strong><br>
-            Your Partners in Digital Growth</p>
+            <p style="margin-top: 30px;">Let's grow your business together!</p>
+            
+            <p><strong>Coach Blue 🤖</strong><br>
+            Your AI Digital Growth Guide<br>
+            <em>Business Blueprint</em></p>
         </div>
         
         <div class="footer">
