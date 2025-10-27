@@ -4,6 +4,7 @@ import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 import { 
   ShoppingCart, 
   X,
@@ -401,9 +402,78 @@ export default function MarketplacePage() {
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4" data-testid="text-marketplace-title">
               Choose Your Path to Growth
             </h1>
-            <p className="text-xl text-[#A9B0C5] max-w-3xl mx-auto" data-testid="text-marketplace-description">
+            <p className="text-xl text-[#A9B0C5] max-w-3xl mx-auto mb-8" data-testid="text-marketplace-description">
               Self-service DIY tools or fully managed services. Build your perfect digital strategy.
             </p>
+          </div>
+
+          {/* Animated Journey Flow */}
+          <div className="relative h-64 mb-8 overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center">
+              {/* Foundation Card */}
+              <motion.div
+                initial={{ x: -400, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 1, delay: 0.2 }}
+                className="absolute left-8 bg-gradient-to-br from-blue-500/20 to-blue-600/20 backdrop-blur-sm border border-blue-400/30 rounded-xl p-4 w-48"
+              >
+                <div className="text-blue-300 text-xs font-bold mb-2">STEP 1</div>
+                <div className="text-white font-bold mb-1">Foundation</div>
+                <div className="text-blue-200 text-xs">Start Plan + Listings</div>
+              </motion.div>
+
+              {/* Connecting Line 1 */}
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="absolute left-60 w-20 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 origin-left"
+              />
+
+              {/* Growth Card */}
+              <motion.div
+                initial={{ y: -200, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 1, delay: 1.4 }}
+                className="absolute left-80 bg-gradient-to-br from-purple-500/20 to-purple-600/20 backdrop-blur-sm border border-purple-400/30 rounded-xl p-4 w-48"
+              >
+                <div className="text-purple-300 text-xs font-bold mb-2">STEP 2</div>
+                <div className="text-white font-bold mb-1">Growth</div>
+                <div className="text-purple-200 text-xs">+ Reviews + Social</div>
+              </motion.div>
+
+              {/* Connecting Line 2 */}
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.8, delay: 2.4 }}
+                className="absolute left-[32rem] w-20 h-0.5 bg-gradient-to-r from-purple-400 to-green-400 origin-left"
+              />
+
+              {/* Scale Card */}
+              <motion.div
+                initial={{ x: 400, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 1, delay: 2.6 }}
+                className="absolute right-8 bg-gradient-to-br from-green-500/20 to-green-600/20 backdrop-blur-sm border border-green-400/30 rounded-xl p-4 w-48"
+              >
+                <div className="text-green-300 text-xs font-bold mb-2">STEP 3</div>
+                <div className="text-white font-bold mb-1">Scale</div>
+                <div className="text-green-200 text-xs">+ Local SEO + AI Coach</div>
+              </motion.div>
+
+              {/* Or Choose MSP Overlay */}
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 3.6 }}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-orange-500/30 to-red-500/30 backdrop-blur-md border-2 border-orange-400/50 rounded-2xl p-6 w-64 shadow-2xl"
+              >
+                <div className="text-orange-300 text-xs font-bold mb-2 text-center">OR SKIP THE STEPS</div>
+                <div className="text-white font-bold text-lg mb-2 text-center">MSP Managed</div>
+                <div className="text-orange-200 text-xs text-center">We handle everything for you</div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
