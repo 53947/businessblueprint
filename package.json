@@ -50,6 +50,7 @@
     "@types/multer": "^2.0.0",
     "@types/nodemailer": "^6.4.17",
     "@types/socket.io": "^3.0.1",
+    "@upstash/redis": "^1.35.6",
     "adm-zip": "^0.5.16",
     "bullmq": "^5.61.2",
     "class-variance-authority": "^0.7.1",
