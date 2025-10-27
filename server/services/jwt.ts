@@ -21,10 +21,12 @@ export interface KeyPair {
 
 export class JWTService {
   private keyPair: KeyPair;
-  private algorithm: 'RS256' = 'RS256';
+  private algorithm: 'RS256' | 'HS256'; // Allow HS256 as well
 
   constructor() {
     this.keyPair = this.generateKeyPair();
+    // Determine algorithm based on key availability
+    this.algorithm = this.keyPair.privateKey && this.keyPair.publicKey ? 'RS256' : 'HS256';
   }
 
   /**
@@ -42,7 +44,10 @@ export class JWTService {
       };
     }
 
-    // Generate new RSA key pair
+    // If RSA keys are not configured, we won't generate them here.
+    // The HS256 algorithm will be used with JWT_SECRET or a fallback.
+    // However, if we were to generate keys, this is how it would be done:
+    /*
     const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
       modulusLength: 2048,
       publicKeyEncoding: {
@@ -59,6 +64,10 @@ export class JWTService {
     console.log('⚠️ WARNING: Using ephemeral keys. Set JWT_PRIVATE_KEY and JWT_PUBLIC_KEY environment variables for production.');
 
     return { publicKey, privateKey };
+    */
+
+    // Return empty keys if not found, indicating HS256 will be used
+    return { publicKey: '', privateKey: '' };
   }
 
   /**
@@ -78,7 +87,10 @@ export class JWTService {
       expiresIn: '24h' // 24 hour token expiration
     };
 
-    const token = jwt.sign(payload, this.keyPair.privateKey, options);
+    // Use appropriate key or secret for signing
+    const signingKey = this.algorithm === 'RS256' ? this.keyPair.privateKey : process.env.JWT_SECRET || 'fallback-secret-key';
+
+    const token = jwt.sign(payload, signingKey, options);
 
     // Store token in database for tracking
     await db.insert(dashboardAccess).values({
@@ -96,11 +108,16 @@ export class JWTService {
    */
   verifyToken(token: string): JWTPayload {
     try {
-      const decoded = jwt.verify(token, this.keyPair.publicKey, {
+      const options: jwt.VerifyOptions = {
         algorithms: [this.algorithm],
         issuer: 'businessblueprint.io',
         audience: 'client-portal'
-      }) as JWTPayload;
+      };
+
+      // Use appropriate key or secret for verification
+      const verificationKey = this.algorithm === 'RS256' ? this.keyPair.publicKey : process.env.JWT_SECRET || 'fallback-secret-key';
+
+      const decoded = jwt.verify(token, verificationKey, options) as JWTPayload;
 
       return decoded;
     } catch (error) {
@@ -114,13 +131,13 @@ export class JWTService {
   async refreshToken(oldToken: string): Promise<string> {
     try {
       const decoded = this.verifyToken(oldToken);
-      
+
       // Create new token with same payload but fresh expiration
       const newToken = await this.createDashboardToken(decoded.clientId, decoded.externalId);
-      
+
       // Deactivate old token
       await this.revokeToken(oldToken);
-      
+
       return newToken;
     } catch (error) {
       throw new Error(`Cannot refresh token: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -153,22 +170,27 @@ export class JWTService {
    * Get public key for external verification
    */
   getPublicKey(): string {
-    return this.keyPair.publicKey;
+    // Return public key if available, otherwise null or an indicator for HS256
+    return this.keyPair.publicKey || '';
   }
 
   /**
    * Get JWK (JSON Web Key) for public key distribution
    */
-  getJWK(): object {
-    const publicKey = crypto.createPublicKey(this.keyPair.publicKey);
-    const jwk = publicKey.export({ format: 'jwk' });
-    
-    return {
-      ...jwk,
-      alg: this.algorithm,
-      use: 'sig',
-      kid: crypto.createHash('sha256').update(this.keyPair.publicKey).digest('hex').substring(0, 16)
-    };
+  getJWK(): object | null {
+    if (this.algorithm === 'RS256' && this.keyPair.publicKey) {
+      const publicKey = crypto.createPublicKey(this.keyPair.publicKey);
+      const jwk = publicKey.export({ format: 'jwk' });
+
+      return {
+        ...jwk,
+        alg: this.algorithm,
+        use: 'sig',
+        kid: crypto.createHash('sha256').update(this.keyPair.publicKey).digest('hex').substring(0, 16)
+      };
+    }
+    // Return null or an empty object if not using RS256 or keys are not available
+    return null;
   }
 
 }
