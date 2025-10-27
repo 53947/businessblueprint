@@ -205,18 +205,20 @@ export default function MarketplacePage() {
       ]
     },
     {
-      id: 'social-addon',
-      name: 'Social',
+      id: 'content-management',
+      name: 'Content Management',
       icon: MessageSquare,
-      emoji: '📣',
-      price: 8,
-      description: 'Plan, publish, and track performance.',
-      accentColor: 'orange',
+      emoji: '📱',
+      price: 50,
+      description: 'Create, schedule & publish social content with AI assistance.',
+      accentColor: 'indigo',
       features: [
-        'FB/IG/X/LinkedIn scheduling',
-        'Calendar + drag & drop',
-        'AI captions + hashtag help',
-        'Analytics + link-in-bio page'
+        '3 platforms (FB/IG/LinkedIn/X/Google) - pick favorites',
+        'Visual calendar + drag-drop scheduling',
+        'AI caption generator with tone control',
+        'Media library with cloud storage (R2)',
+        'Post analytics & performance tracking',
+        'AI Coach integration'
       ]
     },
     {
@@ -254,18 +256,21 @@ export default function MarketplacePage() {
       ]
     },
     {
-      id: 'social-media-posting',
-      name: 'Social Media Posting',
+      id: 'content-management-msp',
+      name: 'Content Management (MSP)',
       icon: MessageSquare,
-      emoji: '📣',
-      price: 25,
+      emoji: '📱',
+      price: 80,
       priceNote: 'per location/mo',
-      description: '+$3 per extra post',
-      accentColor: 'orange',
+      description: 'Full-service content creation & publishing',
+      accentColor: 'indigo',
       features: [
-        'Branded content publishing',
-        'Consistent cross-channel cadence',
-        'Calendar, approvals, basic analytics'
+        'All 7 platforms (FB/IG/LinkedIn/X/Google/TikTok/Snapchat)',
+        'Two-way Synup sync for listings integration',
+        'Team collaboration & approval workflows',
+        'Advanced analytics & reporting',
+        'Priority AI Coach access',
+        'Branded content library'
       ]
     }
   ];
