@@ -564,8 +564,11 @@ export default function MarketplacePage() {
       <div className="max-w-7xl mx-auto px-4 pb-20">
         {/* DIY Plans */}
         <div className="mb-16" data-testid="section-diy-plans">
-          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">DIY Plans</div>
+          <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">DIY Base Plans (Required)</div>
           <h2 className="text-3xl font-bold text-white mb-6">Start • Advanced • Scale</h2>
+          <p className="text-[#A9B0C5] text-lg mb-6 max-w-4xl">
+            Choose your foundation plan first. All DIY add-ons below require one of these base subscriptions.
+          </p>
           
           <div className="grid md:grid-cols-3 gap-5">
             {diyPlans.map((plan) => {
@@ -630,6 +633,11 @@ export default function MarketplacePage() {
         <div className="mb-16" data-testid="section-diy-addons">
           <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">DIY Add-Ons</div>
           <h2 className="text-3xl font-bold text-white mb-6">Self-Service Modules</h2>
+          <div className="bg-blue-500/10 border border-blue-400/30 rounded-lg p-4 mb-6">
+            <p className="text-blue-200 text-sm">
+              ⚠️ <strong>Note:</strong> Add-ons require an active DIY base plan (Start, Advanced, or Scale) subscription.
+            </p>
+          </div>
           
           <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-5">
             {diyAddons.map((addon) => {
@@ -757,6 +765,11 @@ export default function MarketplacePage() {
         <div className="mb-16" data-testid="section-ai-coach">
           <div className="text-[#D5D9FF] text-xs font-bold tracking-[0.18em] uppercase mb-2">AI Business Coach</div>
           <h2 className="text-3xl font-bold text-white mb-6">Intelligent Guidance • Pay As You Use</h2>
+          <div className="bg-blue-500/10 border border-blue-400/30 rounded-lg p-4 mb-6">
+            <p className="text-blue-200 text-sm">
+              ℹ️ Add to any DIY base plan for AI-powered guidance on your digital marketing journey.
+            </p>
+          </div>
           
           <div className="grid md:grid-cols-3 gap-5">
             {aiCoachAddons.map((addon) => {
