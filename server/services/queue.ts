@@ -6,6 +6,9 @@ const redisUrl = process.env.UPSTASH_REDIS_URL || process.env.REDIS_URL;
 let redisAvailable = false;
 let redisConnection: IORedis | null = null;
 
+// Debug logging
+console.log('[Queue] Redis URL check:', redisUrl ? `URL found (starts with: ${redisUrl.substring(0, 10)}...)` : 'No URL configured');
+
 // Only try to connect if Redis URL is configured
 if (redisUrl) {
   redisConnection = new IORedis(redisUrl, {
