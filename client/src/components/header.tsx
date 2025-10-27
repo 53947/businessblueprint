@@ -54,6 +54,7 @@ import livechatLogo from "@assets/livechat logo_1760075605262.png";
 import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
 import hostsBlueIcon from "@assets/Hosts Blue Icon New_1760810493739.png";
 import swipesBlueIcon from "@assets/swipesblue icon_1760810511865.png";
+import blueprintIcon from "@assets/blueprint-icon.svg";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -69,9 +70,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
       const clientId = sessionStorage.getItem("clientId");
       setIsLoggedIn(!!clientId);
     };
-    
+
     checkLoginStatus();
-    
+
     // Also check periodically in case session changes
     const interval = setInterval(checkLoginStatus, 1000);
     return () => clearInterval(interval);
@@ -86,12 +87,28 @@ export function Header({ showNavigation = true }: HeaderProps) {
             <Link href="/" className="hover:opacity-80 transition-opacity cursor-pointer" data-testid="header-logo">
               <BrandLogo brand="businessblueprint" size="sm" showIcon={true} />
             </Link>
-            
+
             {showNavigation && (
               <>
                 {/* Desktop Mega Menu */}
                 <NavigationMenu className="hidden lg:flex ml-8">
                   <NavigationMenuList>
+                    {/* Marketplace - Prominent Top-Level Item */}
+              <NavigationMenuItem>
+                <a
+                  href="/marketplace"
+                  className="group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-base font-bold transition-all hover:text-orange-600 focus:text-orange-600 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:text-orange-600 data-[state=open]:text-orange-600 relative"
+                  data-testid="link-marketplace-primary"
+                  style={{ fontFamily: 'Archivo' }}
+                >
+                  <span className="relative">
+                    Marketplace
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
+                  </span>
+                  <span className="ml-2 text-xs bg-gradient-to-r from-orange-500 to-blue-500 text-white px-2 py-0.5 rounded-full font-semibold animate-pulse">NEW</span>
+                </a>
+              </NavigationMenuItem>
+
                     {/* Apps - Cross-Platform Ecosystem */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-apps">
@@ -713,7 +730,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </div>
                     </div>
                   </a>
-                  
+
                   {/* hostsblue.com */}
                   <a href="#hostsblue" className="block p-3 bg-white rounded-lg border-l-4 border-purple-500 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-hostsblue">
                     <div className="flex items-center gap-3">
@@ -724,7 +741,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </div>
                     </div>
                   </a>
-                  
+
                   {/* swipesblue.com */}
                   <a href="#swipesblue" className="block p-3 bg-white rounded-lg border-l-4 border-red-500 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-swipesblue">
                     <div className="flex items-center gap-3">
@@ -754,7 +771,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </div>
                     </div>
                   </a>
-                  
+
                   <a href="/inbox" className="block p-3 bg-gradient-to-r from-blue-50 to-pink-50 rounded-lg border border-blue-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-inbox">
                     <div className="flex items-center gap-3">
                       <img src={inboxIcon} alt="" className="h-9 w-9 object-contain" />
@@ -764,7 +781,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </div>
                     </div>
                   </a>
-                  
+
                   <a href="/livechat" className="block p-3 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-livechat">
                     <div className="flex items-center gap-3">
                       <img src={livechatIcon} alt="" className="h-9 w-9 object-contain" />
@@ -793,7 +810,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </div>
                     </div>
                   </a>
-                  
+
                   <a href="/pathways" className="block p-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-pathways">
                     <div className="flex items-center gap-3">
                       <Compass className="w-8 h-8 text-blue-600" />
@@ -803,7 +820,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </div>
                     </div>
                   </a>
-                  
+
                   <a href="/marketplace" className="block p-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-marketplace">
                     <div className="flex items-center gap-3">
                       <Wallet className="w-8 h-8 text-orange-600" />
@@ -813,7 +830,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </div>
                     </div>
                   </a>
-                  
+
                   <a href="/commverse-pricing" className="block p-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-commverse-pricing">
                     <div className="flex items-center gap-3">
                       <MessageCircle className="w-8 h-8 text-purple-600" />

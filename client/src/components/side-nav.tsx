@@ -90,9 +90,9 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       href: "/send"
     },
     { 
-      id: "social", 
-      label: "Social Media Mgmt", 
-      icon: <img src={socialMediaIcon} alt="Social Media" className="w-7 h-7 object-contain" /> 
+      id: "content", 
+      label: "Content Management", 
+      icon: <img src={socialMediaIcon} alt="Content Management" className="w-7 h-7 object-contain" /> 
     },
     { 
       id: "reputation", 
