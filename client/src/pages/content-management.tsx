@@ -570,21 +570,74 @@ export default function ContentManagement() {
           </TabsContent>
 
           {/* CALENDAR TAB */}
-          <TabsContent value="calendar">
-            <Card>
-              <CardHeader>
-                <CardTitle>Content Calendar</CardTitle>
-                <CardDescription>View and manage your scheduled posts</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    Calendar view coming soon! Schedule posts from the Composer tab.
-                  </AlertDescription>
-                </Alert>
-              </CardContent>
-            </Card>
+          <TabsContent value="calendar" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Calendar View */}
+              <Card className="lg:col-span-2">
+                <CardHeader>
+                  <CardTitle>Content Calendar</CardTitle>
+                  <CardDescription>View and manage your scheduled posts</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Calendar
+                    mode="single"
+                    selected={scheduleDate}
+                    onSelect={setScheduleDate}
+                    className="rounded-md border w-full"
+                    data-testid="calendar-view"
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Scheduled Posts Sidebar */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Upcoming Posts</CardTitle>
+                  <CardDescription>Posts scheduled for the next 7 days</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {postsLoading ? (
+                    <div className="space-y-3">
+                      <Skeleton className="h-16 w-full" />
+                      <Skeleton className="h-16 w-full" />
+                    </div>
+                  ) : (() => {
+                    const scheduledPosts = (postsData?.posts ?? []).filter((p: any) => p.status === 'scheduled');
+                    return (
+                      <ScrollArea className="h-[400px]">
+                        {scheduledPosts.length === 0 ? (
+                          <Alert>
+                            <Clock className="h-4 w-4" />
+                            <AlertDescription>
+                              No scheduled posts. Create one from the Composer!
+                            </AlertDescription>
+                          </Alert>
+                        ) : (
+                          <div className="space-y-3">
+                            {scheduledPosts.map((post: any) => (
+                              <Card key={post.id} className="p-3" data-testid={`scheduled-post-${post.id}`}>
+                                <div className="space-y-2">
+                                  <p className="text-sm font-medium line-clamp-2">{post.caption}</p>
+                                  <div className="flex items-center gap-2 text-xs text-gray-600">
+                                    <Clock className="h-3 w-3" />
+                                    {post.scheduledFor ? format(new Date(post.scheduledFor), "MMM dd, h:mm a") : "Not scheduled"}
+                                  </div>
+                                  <div className="flex flex-wrap gap-1">
+                                    {(post.platforms ?? []).slice(0, 3).map((platform: string) => (
+                                      <Badge key={platform} variant="secondary" className="text-xs">{platform}</Badge>
+                                    ))}
+                                  </div>
+                                </div>
+                              </Card>
+                            ))}
+                          </div>
+                        )}
+                      </ScrollArea>
+                    );
+                  })()}
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           {/* POSTS TAB */}
@@ -642,21 +695,185 @@ export default function ContentManagement() {
           </TabsContent>
 
           {/* ANALYTICS TAB */}
-          <TabsContent value="analytics">
-            <Card>
-              <CardHeader>
-                <CardTitle>Analytics</CardTitle>
-                <CardDescription>Track your content performance</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Alert>
-                  <TrendingUp className="h-4 w-4" />
-                  <AlertDescription>
-                    Analytics dashboard coming soon! Track engagement, reach, and more.
-                  </AlertDescription>
-                </Alert>
-              </CardContent>
-            </Card>
+          <TabsContent value="analytics" className="space-y-6">
+            {(() => {
+              // Compute filtered arrays once with safe defaults
+              const allPosts = postsData?.posts ?? [];
+              const publishedPosts = allPosts.filter((p: any) => p.status === 'published');
+              const scheduledPosts = allPosts.filter((p: any) => p.status === 'scheduled');
+              
+              return (
+                <>
+                  {/* Overview Stats */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <Card>
+                      <CardHeader className="pb-3">
+                        <CardDescription>Total Posts</CardDescription>
+                        <CardTitle className="text-3xl">{allPosts.length}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-xs text-gray-600">
+                          <TrendingUp className="h-3 w-3 inline mr-1" />
+                          All time
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader className="pb-3">
+                        <CardDescription>Published</CardDescription>
+                        <CardTitle className="text-3xl text-green-600">
+                          {publishedPosts.length}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-xs text-gray-600">
+                          <CheckCircle className="h-3 w-3 inline mr-1" />
+                          Live posts
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader className="pb-3">
+                        <CardDescription>Scheduled</CardDescription>
+                        <CardTitle className="text-3xl text-blue-600">
+                          {scheduledPosts.length}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-xs text-gray-600">
+                          <Clock className="h-3 w-3 inline mr-1" />
+                          Upcoming
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader className="pb-3">
+                        <CardDescription>Platforms</CardDescription>
+                        <CardTitle className="text-3xl text-purple-600">
+                          {connectedPlatforms.length}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-xs text-gray-600">
+                          <Globe className="h-3 w-3 inline mr-1" />
+                          Connected
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Performance Metrics Placeholder */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Post Performance</CardTitle>
+                        <CardDescription>Engagement metrics across platforms</CardDescription>
+                      </CardHeader>
+                      <CardContent className="h-[300px] flex items-center justify-center">
+                        <div className="text-center text-gray-500">
+                          <BarChart3 className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                          <p className="text-sm">Performance analytics will appear here</p>
+                          <p className="text-xs mt-2">Connect your accounts and publish posts to see insights</p>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Platform Distribution</CardTitle>
+                        <CardDescription>Posts by platform</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        {connectedPlatforms.length === 0 ? (
+                          <div className="h-[300px] flex items-center justify-center text-center text-gray-500">
+                            <div>
+                              <Globe className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                              <p className="text-sm">No platforms connected</p>
+                              <p className="text-xs mt-2">Connect platforms from the Composer tab</p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-4 pt-4">
+                            {connectedPlatforms.map((platform: any) => {
+                              const platformPosts = allPosts.filter((p: any) => 
+                                (p.platforms ?? []).includes(platform.platform)
+                              );
+                              const percentage = allPosts.length > 0
+                                ? (platformPosts.length / allPosts.length) * 100
+                                : 0;
+                              
+                              return (
+                                <div key={platform.id} className="space-y-2">
+                                  <div className="flex items-center justify-between text-sm">
+                                    <div className="flex items-center gap-2">
+                                      {getPlatformIcon(platform.platform)}
+                                      <span>{platform.platform}</span>
+                                    </div>
+                                    <span className="font-medium">
+                                      {platformPosts.length} posts
+                                    </span>
+                                  </div>
+                                  <Progress 
+                                    value={percentage} 
+                                    className="h-2" 
+                                  />
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Recent Activity */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Recent Activity</CardTitle>
+                      <CardDescription>Latest posts and updates</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {postsLoading ? (
+                        <div className="space-y-3">
+                          <Skeleton className="h-12 w-full" />
+                          <Skeleton className="h-12 w-full" />
+                          <Skeleton className="h-12 w-full" />
+                        </div>
+                      ) : allPosts.length === 0 ? (
+                        <Alert>
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertDescription>
+                            No activity yet. Create your first post to get started!
+                          </AlertDescription>
+                        </Alert>
+                      ) : (
+                        <div className="space-y-3">
+                          {allPosts.slice(0, 5).map((post: any) => (
+                            <div key={post.id} className="flex items-start gap-3 p-3 border rounded-lg" data-testid={`activity-post-${post.id}`}>
+                              <div className="flex-1">
+                                <p className="text-sm font-medium line-clamp-1">{post.caption || 'No caption'}</p>
+                                <div className="flex items-center gap-2 mt-1 text-xs text-gray-600">
+                                  <Badge variant="outline" className="text-xs">{post.status}</Badge>
+                                  {post.scheduledFor && (
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="h-3 w-3" />
+                                      {format(new Date(post.scheduledFor), "MMM dd")}
+                                    </span>
+                                  )}
+                                  <span className="flex items-center gap-1">
+                                    {(post.platforms ?? []).length} platforms
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </>
+              );
+            })()}
           </TabsContent>
         </Tabs>
       </div>
