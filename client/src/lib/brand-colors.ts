@@ -33,6 +33,7 @@ export const BRAND_HEX = {
   inbox: '#0080FF',
   inboxAlt: '#FF96DD',
   livechat: '#8000FF',
+  contentManagement: '#E91E8C', // Fluorescent Fuschia
   
   // UI Element Colors
   buttonPrimary: '#0057FF',

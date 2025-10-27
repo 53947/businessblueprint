@@ -265,7 +265,7 @@ export default function ContentManagement() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid [&>button[data-state=active]]:bg-[#E91E8C] [&>button[data-state=active]]:text-white">
             <TabsTrigger value="composer" data-testid="tab-composer">
               <Pencil className="h-4 w-4 mr-2" />
               Composer
@@ -294,7 +294,7 @@ export default function ContentManagement() {
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                       <span>Create Post</span>
-                      <Badge variant="outline">{characterCount}/{maxCharacters}</Badge>
+                      <Badge variant="outline" className="border-[#E91E8C] text-[#E91E8C]">{characterCount}/{maxCharacters}</Badge>
                     </CardTitle>
                     <CardDescription>Compose your social media content</CardDescription>
                   </CardHeader>
@@ -309,7 +309,7 @@ export default function ContentManagement() {
                         className="min-h-[150px]"
                         data-testid="textarea-caption"
                       />
-                      <Progress value={(characterCount / maxCharacters) * 100} className="h-1" />
+                      <Progress value={(characterCount / maxCharacters) * 100} className="h-1 [&>div]:bg-[#E91E8C]" />
                     </div>
 
                     {/* Hashtags */}
@@ -331,7 +331,7 @@ export default function ContentManagement() {
                       {hashtags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-2">
                           {hashtags.map((tag) => (
-                            <Badge key={tag} variant="secondary" className="gap-1" data-testid={`badge-hashtag-${tag}`}>
+                            <Badge key={tag} className="gap-1 bg-[#E91E8C]/10 text-[#E91E8C] hover:bg-[#E91E8C]/20" data-testid={`badge-hashtag-${tag}`}>
                               #{tag}
                               <X className="h-3 w-3 cursor-pointer" onClick={() => handleRemoveHashtag(tag)} />
                             </Badge>
@@ -385,7 +385,7 @@ export default function ContentManagement() {
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
                       <span>Select Platforms</span>
-                      <Badge variant="outline">{selectedPlatforms.length}/{maxPlatforms}</Badge>
+                      <Badge variant="outline" className="border-[#E91E8C] text-[#E91E8C]">{selectedPlatforms.length}/{maxPlatforms}</Badge>
                     </CardTitle>
                     <CardDescription>Choose where to publish your content</CardDescription>
                   </CardHeader>
@@ -408,7 +408,7 @@ export default function ContentManagement() {
                           <Button
                             key={platform.id}
                             variant={selectedPlatforms.includes(platform.platform) ? "default" : "outline"}
-                            className="justify-start h-auto py-3"
+                            className={`justify-start h-auto py-3 ${selectedPlatforms.includes(platform.platform) ? 'bg-[#E91E8C] hover:bg-[#D1187A]' : 'border-gray-300 hover:border-[#E91E8C]'}`}
                             onClick={() => handlePlatformToggle(platform.platform)}
                             data-testid={`button-platform-${platform.platform}`}
                           >
@@ -482,7 +482,7 @@ export default function ContentManagement() {
                   <Button
                     onClick={handleCreatePost}
                     disabled={createPostMutation.isPending}
-                    className="flex-1"
+                    className="flex-1 bg-[#E91E8C] hover:bg-[#D1187A] text-white"
                     data-testid="button-create-post"
                   >
                     {createPostMutation.isPending ? (
@@ -512,7 +512,7 @@ export default function ContentManagement() {
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
                         <span className="flex items-center gap-2">
-                          <Sparkles className="h-5 w-5 text-yellow-500" />
+                          <Sparkles className="h-5 w-5 text-[#E91E8C]" />
                           AI Coach
                         </span>
                         <Button
@@ -529,7 +529,7 @@ export default function ContentManagement() {
                     <CardContent className="space-y-4">
                       <Button
                         variant="outline"
-                        className="w-full"
+                        className="w-full border-[#E91E8C] text-[#E91E8C] hover:bg-[#E91E8C] hover:text-white"
                         onClick={() => aiSuggestMutation.mutate(caption || "Generate social media post ideas")}
                         disabled={aiSuggestMutation.isPending}
                         data-testid="button-ai-suggest"
@@ -709,7 +709,7 @@ export default function ContentManagement() {
                     <Card>
                       <CardHeader className="pb-3">
                         <CardDescription>Total Posts</CardDescription>
-                        <CardTitle className="text-3xl">{allPosts.length}</CardTitle>
+                        <CardTitle className="text-3xl text-[#E91E8C]">{allPosts.length}</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="text-xs text-gray-600">
@@ -749,7 +749,7 @@ export default function ContentManagement() {
                     <Card>
                       <CardHeader className="pb-3">
                         <CardDescription>Platforms</CardDescription>
-                        <CardTitle className="text-3xl text-purple-600">
+                        <CardTitle className="text-3xl text-[#E91E8C]">
                           {connectedPlatforms.length}
                         </CardTitle>
                       </CardHeader>
@@ -815,7 +815,7 @@ export default function ContentManagement() {
                                   </div>
                                   <Progress 
                                     value={percentage} 
-                                    className="h-2" 
+                                    className="h-2 [&>div]:bg-[#E91E8C]" 
                                   />
                                 </div>
                               );
