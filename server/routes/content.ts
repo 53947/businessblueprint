@@ -170,7 +170,9 @@ router.post('/:clientId/posts', requireContentAccess, async (req: Request, res: 
       platforms: z.array(z.string()),
       hashtags: z.array(z.string()).optional(),
       mediaIds: z.array(z.number()).optional(),
-      scheduledFor: z.string().transform(str => new Date(str)).optional(),
+      scheduledFor: z.coerce.date().refine(date => !isNaN(date.getTime()) && date > new Date(), {
+        message: 'scheduledFor must be a valid future date'
+      }).optional(),
       platformCustomizations: z.any().optional(),
       timezone: z.string().optional(),
       status: z.string().optional(),
@@ -214,7 +216,9 @@ router.put('/:clientId/posts/:postId', requireContentAccess, async (req: Request
       platforms: z.array(z.string()).optional(),
       hashtags: z.array(z.string()).optional(),
       mediaIds: z.array(z.number()).optional(),
-      scheduledFor: z.string().transform(str => new Date(str)).optional(),
+      scheduledFor: z.coerce.date().refine(date => !isNaN(date.getTime()) && date > new Date(), {
+        message: 'scheduledFor must be a valid future date'
+      }).optional(),
       platformCustomizations: z.any().optional(),
       timezone: z.string().optional(),
       status: z.string().optional(),
@@ -390,31 +394,23 @@ router.put('/:clientId/schedule/:postId', requireContentAccess, async (req: Requ
     const clientId = parseInt(req.params.clientId);
     const postId = parseInt(req.params.postId);
 
-    const { scheduledFor } = req.body;
+    const scheduleSchema = z.object({
+      scheduledFor: z.coerce.date().refine(date => !isNaN(date.getTime()) && date > new Date(), {
+        message: 'scheduledFor must be a valid future date'
+      }),
+    });
 
-    if (!scheduledFor) {
-      return res.status(400).json({ message: 'scheduledFor is required' });
-    }
+    const { scheduledFor: newScheduleDate } = scheduleSchema.parse(req.body);
 
-    const newScheduleDate = new Date(scheduledFor);
-
-    if (newScheduleDate <= new Date()) {
-      return res.status(400).json({ message: 'Schedule time must be in the future' });
-    }
-
-    const [post] = await db
-      .update(contentPosts)
-      .set({ 
-        scheduledFor: newScheduleDate,
-        status: 'scheduled',
-      })
+    const [existingPost] = await db
+      .select()
+      .from(contentPosts)
       .where(and(
         eq(contentPosts.id, postId),
         eq(contentPosts.clientId, clientId)
-      ))
-      .returning();
+      ));
 
-    if (!post) {
+    if (!existingPost) {
       return res.status(404).json({ message: 'Post not found' });
     }
 
@@ -434,7 +430,7 @@ router.put('/:clientId/schedule/:postId', requireContentAccess, async (req: Requ
       {
         postId,
         clientId,
-        platforms: post.platforms,
+        platforms: existingPost.platforms,
       },
       {
         delay,
@@ -442,12 +438,27 @@ router.put('/:clientId/schedule/:postId', requireContentAccess, async (req: Requ
       }
     );
 
+    const [post] = await db
+      .update(contentPosts)
+      .set({ 
+        scheduledFor: newScheduleDate,
+        status: 'scheduled',
+      })
+      .where(and(
+        eq(contentPosts.id, postId),
+        eq(contentPosts.clientId, clientId)
+      ))
+      .returning();
+
     res.json({ 
       message: 'Schedule updated successfully',
       post,
     });
   } catch (error) {
     console.error('[Content] Error updating schedule:', error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ message: 'Validation error', errors: error.errors });
+    }
     res.status(500).json({ message: 'Failed to update schedule' });
   }
 });
@@ -461,20 +472,16 @@ router.delete('/:clientId/schedule/:postId', requireContentAccess, async (req: R
     const clientId = parseInt(req.params.clientId);
     const postId = parseInt(req.params.postId);
 
-    const [post] = await db
-      .update(contentPosts)
-      .set({ 
-        status: 'draft',
-        scheduledFor: null,
-      })
+    const [existingPost] = await db
+      .select()
+      .from(contentPosts)
       .where(and(
         eq(contentPosts.id, postId),
         eq(contentPosts.clientId, clientId),
         eq(contentPosts.status, 'scheduled')
-      ))
-      .returning();
+      ));
 
-    if (!post) {
+    if (!existingPost) {
       return res.status(404).json({ message: 'Scheduled post not found' });
     }
 
@@ -484,8 +491,21 @@ router.delete('/:clientId/schedule/:postId', requireContentAccess, async (req: R
         await existingJob.remove();
       }
     } catch (err) {
-      console.log('[Content] No existing job to remove for post', postId);
+      console.error('[Content] Failed to remove job:', err);
+      return res.status(500).json({ message: 'Failed to cancel schedule in queue' });
     }
+
+    const [post] = await db
+      .update(contentPosts)
+      .set({ 
+        status: 'draft',
+        scheduledFor: null,
+      })
+      .where(and(
+        eq(contentPosts.id, postId),
+        eq(contentPosts.clientId, clientId)
+      ))
+      .returning();
 
     res.json({ 
       message: 'Schedule cancelled successfully',
