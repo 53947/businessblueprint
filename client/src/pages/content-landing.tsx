@@ -20,8 +20,10 @@ export default function ContentLanding() {
               </div>
               <h1 className="text-5xl font-bold" style={{ color: '#FC6ACD' }}>/content</h1>
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Social Media Management<br />That Actually Works
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+              <span style={{ color: '#09080E' }}>Social Media Management</span>
+              <br />
+              <span style={{ color: '#00FF40' }}>That Actually Works</span>
             </h2>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
               Create, schedule, and publish across all your social platforms from one beautiful interface. 
