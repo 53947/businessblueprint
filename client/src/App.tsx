@@ -34,6 +34,9 @@ import BIIF from "@/pages/biif";
 import AdminPanel from "@/pages/admin-panel";
 import BrandStudio from "@/pages/brand-studio";
 import ContentManagement from "@/pages/content-management";
+import Privacy from "@/pages/privacy";
+import Terms from "@/pages/terms";
+import DataDeletion from "@/pages/data-deletion";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -69,6 +72,9 @@ function Router() {
       <Route path="/admin" component={AdminPanel} />
       <Route path="/brand-studio" component={BrandStudio} />
       <Route path="/content" component={ContentManagement} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/terms" component={Terms} />
+      <Route path="/data-deletion" component={DataDeletion} />
       <Route component={NotFound} />
     </Switch>
   );
