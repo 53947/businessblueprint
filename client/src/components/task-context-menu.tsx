@@ -18,8 +18,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { useQuery, useMutation, queryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface Task {
   id: number;
@@ -71,11 +71,8 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
   // Create task mutation
   const createTaskMutation = useMutation({
     mutationFn: async (newTask: Partial<Task>) => {
-      return apiRequest('/api/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newTask),
-      });
+      const response = await apiRequest('POST', '/api/tasks', newTask);
+      return await response.json();
     },
     onSuccess: (data: Task) => {
       queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });
@@ -112,11 +109,8 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
   // Update task mutation
   const updateTaskMutation = useMutation({
     mutationFn: async ({ id, updates }: { id: number; updates: Partial<Task> }) => {
-      return apiRequest(`/api/tasks/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates),
-      });
+      const response = await apiRequest('PATCH', `/api/tasks/${id}`, updates);
+      return await response.json();
     },
     onSuccess: (data: Task) => {
       queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });
