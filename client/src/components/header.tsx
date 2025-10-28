@@ -362,6 +362,28 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                               </a>
                             </NavigationMenuLink>
+
+                            {/* /content - Educational */}
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-pink-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-pink-50 hover:to-red-50 dark:hover:from-pink-950 dark:hover:to-red-950"
+                                href="/content-landing"
+                                data-testid="link-commverse-content"
+                              >
+                                <div className="flex items-start gap-3">
+                                  <MessageSquare className="h-12 w-12 flex-shrink-0" style={{ color: '#FC6ACD' }} />
+                                  <div className="flex-1">
+                                    <div className="text-base font-bold text-gray-900 dark:text-white mb-1">/content</div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Social media management platform</p>
+                                    <ul className="text-xs text-gray-500 space-y-1">
+                                      <li>• Multi-platform posting & scheduling</li>
+                                      <li>• Content calendar & media library</li>
+                                      <li>• AI-powered caption suggestions</li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
                           </div>
 
                           {/* Bottom CTA - Educational Focus */}
@@ -376,7 +398,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <MessageSquare className="h-8 w-8 text-blue-600 dark:text-blue-400 flex-shrink-0" />
                                   <div className="flex-1">
                                     <div className="text-sm font-bold text-gray-900 dark:text-white">About Commverse</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400">How it all works together</p>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">How all 4 apps work together</p>
                                   </div>
                                 </div>
                               </a>
@@ -413,7 +435,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* Header */}
                           <div className="mb-6">
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Do It Yourself (DIY)</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Full control of your digital presence with AI-powered tools</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Full control of your digital presence with AI-powered tools & 4 Commverse apps</p>
                           </div>
 
                           {/* Base Plans Section */}
