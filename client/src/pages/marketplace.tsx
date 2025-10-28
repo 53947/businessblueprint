@@ -22,6 +22,11 @@ import {
   Paperclip
 } from "lucide-react";
 import { useLocation } from "wouter";
+import sendIcon from "@/assets/icons/send.svg";
+import inboxIcon from "@/assets/icons/inbox.svg";
+import livechatIcon from "@/assets/icons/livechat.svg";
+import commverseIcon from "@/assets/icons/commverse.svg";
+
 
 interface CartItem {
   id: string;
@@ -399,7 +404,7 @@ export default function MarketplacePage() {
 
   const addToCart = (item: Plan | Addon, type: 'plan' | 'addon', billingCycle?: 'monthly' | 'annual') => {
     const existingItem = cart.find(cartItem => cartItem.id === item.id);
-    
+
     if (existingItem) {
       setCart(cart.map(cartItem => 
         cartItem.id === item.id 
@@ -480,7 +485,7 @@ export default function MarketplacePage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="py-12 px-4 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto">
@@ -576,12 +581,12 @@ export default function MarketplacePage() {
           <p className="text-gray-600 dark:text-gray-300 text-lg mb-6 max-w-4xl">
             Choose your foundation plan first. All DIY add-ons below require one of these base subscriptions.
           </p>
-          
+
           <div className="grid md:grid-cols-3 gap-5">
             {diyPlans.map((plan) => {
               const colors = getAccentColorClasses(plan.accentColor);
               const isInCart = cart.some(item => item.id === plan.id);
-              
+
               return (
                 <Card key={plan.id} 
                       className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg`}
@@ -592,7 +597,7 @@ export default function MarketplacePage() {
                       {plan.name}
                     </span>
                   </div>
-                  
+
                   <div className="text-4xl font-extrabold mb-1 text-white" 
                        data-testid={`text-plan-price-${plan.id}`}>
                     ${plan.price}/mo
@@ -600,9 +605,9 @@ export default function MarketplacePage() {
                   <div className="text-xs text-white/80 mb-4">
                     or ${plan.priceMonthly} billed monthly • Save 20% annually
                   </div>
-                  
+
                   <p className="text-white/90 text-sm mb-4">{plan.description}</p>
-                  
+
                   <ul className="space-y-2.5 mb-6">
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2.5 text-white text-sm">
@@ -613,7 +618,7 @@ export default function MarketplacePage() {
                       </li>
                     ))}
                   </ul>
-                  
+
                   <Button 
                     onClick={() => addToCart(plan, 'plan', 'annual')}
                     className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
@@ -645,12 +650,12 @@ export default function MarketplacePage() {
               ⚠️ <strong>Note:</strong> Add-ons require an active DIY base plan (Start, Advanced, or Scale) subscription.
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-5">
             {diyAddons.map((addon) => {
               const colors = getAccentColorClasses(addon.accentColor);
               const isInCart = cart.some(item => item.id === addon.id);
-              
+
               return (
                 <Card key={addon.id}
                       className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg`}
@@ -661,14 +666,14 @@ export default function MarketplacePage() {
                       {addon.name}
                     </span>
                   </div>
-                  
+
                   <div className="text-3xl font-extrabold mb-2 text-white"
                        data-testid={`text-addon-price-${addon.id}`}>
                     ${addon.price}/mo
                   </div>
-                  
+
                   <p className="text-white/90 text-sm mb-4">{addon.description}</p>
-                  
+
                   <ul className="space-y-2.5 mb-6">
                     {addon.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2.5 text-white text-sm">
@@ -679,7 +684,7 @@ export default function MarketplacePage() {
                       </li>
                     ))}
                   </ul>
-                  
+
                   <Button 
                     onClick={() => addToCart(addon, 'addon')}
                     className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg text-sm ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
@@ -709,12 +714,12 @@ export default function MarketplacePage() {
         <div className="mb-16" data-testid="section-msp-addons">
           <div className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-[0.18em] uppercase mb-2">MSP Add-Ons</div>
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Managed by Our Team</h2>
-          
+
           <div className="grid md:grid-cols-2 gap-5">
             {mspAddons.map((addon) => {
               const colors = getAccentColorClasses(addon.accentColor);
               const isInCart = cart.some(item => item.id === addon.id);
-              
+
               return (
                 <Card key={addon.id}
                       className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg`}
@@ -725,13 +730,13 @@ export default function MarketplacePage() {
                       {addon.name}
                     </span>
                   </div>
-                  
+
                   <div className="text-3xl font-extrabold mb-1 text-white"
                        data-testid={`text-msp-addon-price-${addon.id}`}>
                     ${addon.price}/{addon.priceNote || 'mo'}
                   </div>
                   <div className="text-xs text-white/80 mb-4">{addon.description}</div>
-                  
+
                   <ul className="space-y-2.5 mb-6">
                     {addon.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2.5 text-white text-sm">
@@ -742,7 +747,7 @@ export default function MarketplacePage() {
                       </li>
                     ))}
                   </ul>
-                  
+
                   <Button 
                     onClick={() => addToCart(addon, 'addon')}
                     className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
@@ -777,12 +782,12 @@ export default function MarketplacePage() {
               ℹ️ Add to any DIY base plan for AI-powered guidance on your digital marketing journey.
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-5">
             {aiCoachAddons.map((addon) => {
               const colors = getAccentColorClasses(addon.accentColor);
               const isInCart = cart.some(item => item.id === addon.id);
-              
+
               return (
                 <Card key={addon.id}
                       className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg`}
@@ -793,13 +798,13 @@ export default function MarketplacePage() {
                       {addon.name}
                     </span>
                   </div>
-                  
+
                   <div className="text-3xl font-extrabold mb-1 text-white"
                        data-testid={`text-ai-coach-price-${addon.id}`}>
                     ${addon.price}/{addon.priceNote || 'mo'}
                   </div>
                   <div className="text-xs text-white/80 mb-4">{addon.description}</div>
-                  
+
                   <ul className="space-y-2.5 mb-6">
                     {addon.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2.5 text-white text-sm">
@@ -810,7 +815,7 @@ export default function MarketplacePage() {
                       </li>
                     ))}
                   </ul>
-                  
+
                   <Button 
                     onClick={() => addToCart(addon, 'addon')}
                     className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg text-sm ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
@@ -840,12 +845,12 @@ export default function MarketplacePage() {
         <div className="mb-16" data-testid="section-captaining">
           <div className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-[0.18em] uppercase mb-2">Premium Service</div>
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Captaining • Strategic Account Management</h2>
-          
+
           <div className="max-w-2xl mx-auto">
             {captainingService.map((service) => {
               const colors = getAccentColorClasses(service.accentColor);
               const isInCart = cart.some(item => item.id === service.id);
-              
+
               return (
                 <Card key={service.id}
                       className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-6 relative overflow-hidden shadow-lg`}
@@ -856,13 +861,13 @@ export default function MarketplacePage() {
                       {service.name}
                     </span>
                   </div>
-                  
+
                   <div className="text-4xl font-extrabold mb-1 text-white"
                        data-testid={`text-captaining-price-${service.id}`}>
                     ${service.price}/{service.priceNote || 'mo'}
                   </div>
                   <div className="text-sm text-white/80 mb-6">{service.description}</div>
-                  
+
                   <ul className="space-y-3 mb-6">
                     {service.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-3 text-white text-sm">
@@ -873,7 +878,7 @@ export default function MarketplacePage() {
                       </li>
                     ))}
                   </ul>
-                  
+
                   <Button 
                     onClick={() => addToCart(service, 'addon')}
                     className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
@@ -903,12 +908,12 @@ export default function MarketplacePage() {
         <div className="mb-16" data-testid="section-msp-packages">
           <div className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-[0.18em] uppercase mb-2">MSP Packages</div>
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Managed Service Tiers (+25% applied)</h2>
-          
+
           <div className="grid md:grid-cols-2 gap-5">
             {mspPackages.map((pkg) => {
               const colors = getAccentColorClasses(pkg.accentColor);
               const isInCart = cart.some(item => item.id === pkg.id);
-              
+
               return (
                 <Card key={pkg.id}
                       className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg`}
@@ -919,13 +924,13 @@ export default function MarketplacePage() {
                       {pkg.name}
                     </span>
                   </div>
-                  
+
                   <div className="text-3xl font-extrabold mb-1 text-white"
                        data-testid={`text-msp-package-price-${pkg.id}`}>
                     ${pkg.price}/mo
                   </div>
                   <div className="text-xs text-white/80 mb-4">{pkg.description}</div>
-                  
+
                   <ul className="space-y-2.5 mb-6">
                     {pkg.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start gap-2.5 text-white text-sm">
@@ -936,7 +941,7 @@ export default function MarketplacePage() {
                       </li>
                     ))}
                   </ul>
-                  
+
                   <Button 
                     onClick={() => addToCart(pkg, 'addon')}
                     className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
