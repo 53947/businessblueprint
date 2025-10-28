@@ -357,122 +357,149 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Pricing */}
+                    {/* Pricing - DIY Focus */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pricing">
                         <DollarSign className="w-4 h-4" />
                         <span>Pricing</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid grid-cols-2 gap-4 p-6 w-[700px]">
-                          {/* DIY Pathway */}
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="group block select-none space-y-2 rounded-lg border-2 p-4 leading-none no-underline outline-none transition-all hover:shadow-xl hover:scale-[1.02]"
-                              style={{ 
-                                borderColor: '#0000FF',
-                                backgroundColor: '#0000FF'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor = '#0000CC';
-                                e.currentTarget.style.borderColor = '#0000CC';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor = '#0000FF';
-                                e.currentTarget.style.borderColor = '#0000FF';
-                              }}
-                              href="/pathways"
-                              data-testid="link-pathways-diy"
-                            >
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center gap-2">
-                                  <Lightbulb className="w-5 h-5 text-white" />
-                                  <span className="text-base font-bold text-white">Do It Yourself (DIY)</span>
-                                </div>
-                                <Badge className="bg-white" style={{ color: '#0000FF' }}>From $99/mo</Badge>
-                              </div>
-                              <p className="text-xs leading-relaxed text-white/90 mb-3">
-                                Full control of your digital presence with AI-powered tools and automation
-                              </p>
-                              <ul className="space-y-1 text-xs text-white mb-3">
-                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Self-managed campaigns</li>
-                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> AI Business Coach included</li>
-                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Pay only for what you use</li>
-                              </ul>
-                              <div className="text-xs font-semibold text-white">
-                                Explore DIY Plans →
-                              </div>
-                            </a>
-                          </NavigationMenuLink>
-
-                          {/* MSP Pathway */}
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="group block select-none space-y-2 rounded-lg border-2 p-4 leading-none no-underline outline-none transition-all hover:shadow-xl hover:scale-[1.02]"
-                              style={{ 
-                                borderColor: '#FFA500',
-                                backgroundColor: '#FFA500'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor = '#FF8C00';
-                                e.currentTarget.style.borderColor = '#FF8C00';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor = '#FFA500';
-                                e.currentTarget.style.borderColor = '#FFA500';
-                              }}
-                              href="/pathways"
-                              data-testid="link-pathways-msp"
-                            >
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center gap-2">
-                                  <Wrench className="w-5 h-5 text-white" />
-                                  <span className="text-base font-bold text-white">Managed Services Provided (MSP)</span>
-                                </div>
-                                <Badge className="bg-white" style={{ color: '#FFA500' }}>From $15/loc</Badge>
-                              </div>
-                              <p className="text-xs leading-relaxed text-white/90 mb-3">
-                                Expert team handles everything while you focus on running your business
-                              </p>
-                              <ul className="space-y-1 text-xs text-white mb-3">
-                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Done-for-you execution</li>
-                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Dedicated specialists</li>
-                                <li className="flex items-center"><span className="text-white mr-1.5">✓</span> Monthly strategy reviews</li>
-                              </ul>
-                              <div className="text-xs font-semibold text-white">
-                                Explore MSP Services →
-                              </div>
-                            </a>
-                          </NavigationMenuLink>
-
-                          {/* Marketplace Full Width */}
-                          <div className="col-span-2">
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group flex items-center justify-between rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-md"
-                                href="/marketplace"
-                                data-testid="link-marketplace"
-                              >
-                                <div className="flex items-center gap-3">
-                                  <Wallet className="w-6 h-6 text-blue-600" />
-                                  <div>
-                                    <div className="text-sm font-bold text-gray-900">Marketplace</div>
-                                    <p className="text-xs text-gray-600">Browse all plans, add-ons & services with transparent pricing</p>
-                                  </div>
-                                </div>
-                                <span className="text-xs font-semibold text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-                              </a>
-                            </NavigationMenuLink>
+                        <div className="p-6 w-[900px]">
+                          {/* Header */}
+                          <div className="mb-6">
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Do It Yourself (DIY)</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Full control of your digital presence with AI-powered tools</p>
                           </div>
 
-                          {/* CTA Section */}
-                          <div className="col-span-2 border-t border-gray-200 pt-3 mt-1">
-                            <div className="flex items-center justify-between">
-                              <p className="text-xs text-gray-600">Not sure which path is right for you?</p>
-                              <a href="/assessment" className="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline">
-                                Take Free Assessment →
+                          {/* Base Plans Section */}
+                          <div className="mb-6">
+                            <h4 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-3">Choose Your Base Plan (Required)</h4>
+                            <div className="grid grid-cols-3 gap-3">
+                              {/* Start Plan */}
+                              <a href="/marketplace" className="group block bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 hover:shadow-lg transition-all">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="text-xl">💡</span>
+                                  <span className="text-sm font-bold text-white">Start</span>
+                                </div>
+                                <div className="text-2xl font-bold text-white mb-1">$99<span className="text-sm font-normal">/mo</span></div>
+                                <p className="text-xs text-white/90 mb-3">Get Found. Build your foundation.</p>
+                                <ul className="space-y-1 text-xs text-white/80">
+                                  <li>• 5 team members</li>
+                                  <li>• 25 client accounts</li>
+                                  <li>• Digital IQ + Blueprint</li>
+                                </ul>
+                              </a>
+
+                              {/* Advanced Plan */}
+                              <a href="/marketplace" className="group block bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-4 hover:shadow-lg transition-all border-2 border-white">
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xl">⚙️</span>
+                                    <span className="text-sm font-bold text-white">Advanced</span>
+                                  </div>
+                                  <Badge className="bg-white text-purple-600 text-xs">Popular</Badge>
+                                </div>
+                                <div className="text-2xl font-bold text-white mb-1">$299<span className="text-sm font-normal">/mo</span></div>
+                                <p className="text-xs text-white/90 mb-3">Get Customers. Convert attention.</p>
+                                <ul className="space-y-1 text-xs text-white/80">
+                                  <li>• 10 team members</li>
+                                  <li>• 100 client accounts</li>
+                                  <li>• AI automation + insights</li>
+                                </ul>
+                              </a>
+
+                              {/* Scale Plan */}
+                              <a href="/marketplace" className="group block bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-4 hover:shadow-lg transition-all">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="text-xl">🚀</span>
+                                  <span className="text-sm font-bold text-white">Scale</span>
+                                </div>
+                                <div className="text-2xl font-bold text-white mb-1">$999<span className="text-sm font-normal">/mo</span></div>
+                                <p className="text-xs text-white/90 mb-3">Get Business. Unified system.</p>
+                                <ul className="space-y-1 text-xs text-white/80">
+                                  <li>• 50 team members</li>
+                                  <li>• 500 client accounts</li>
+                                  <li>• Enterprise features</li>
+                                </ul>
                               </a>
                             </div>
+                          </div>
+
+                          {/* Commverse Apps Section */}
+                          <div className="mb-6">
+                            <h4 className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-3">+ Add Commverse Apps (Optional)</h4>
+                            <div className="grid grid-cols-4 gap-3">
+                              {/* /send */}
+                              <a href="/marketplace" className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:border-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-950 transition-all">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <img src={sendIcon} alt="" className="w-6 h-6" />
+                                  <span className="text-xs font-bold text-gray-900 dark:text-white">/send</span>
+                                </div>
+                                <div className="text-lg font-bold text-gray-900 dark:text-white">$35<span className="text-xs font-normal">/mo</span></div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Email & SMS marketing automation</p>
+                                <div className="mt-2 text-xs text-green-600 dark:text-green-400 font-semibold">Save in bundle</div>
+                              </a>
+
+                              {/* /inbox */}
+                              <a href="/marketplace" className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <img src={inboxIcon} alt="" className="w-6 h-6" />
+                                  <span className="text-xs font-bold text-gray-900 dark:text-white">/inbox</span>
+                                </div>
+                                <div className="text-lg font-bold text-gray-900 dark:text-white">$35<span className="text-xs font-normal">/mo</span></div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Unified communications hub</p>
+                                <div className="mt-2 text-xs text-green-600 dark:text-green-400 font-semibold">Save in bundle</div>
+                              </a>
+
+                              {/* /livechat */}
+                              <a href="/marketplace" className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950 transition-all">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <img src={livechatIcon} alt="" className="w-6 h-6" />
+                                  <span className="text-xs font-bold text-gray-900 dark:text-white">/livechat</span>
+                                </div>
+                                <div className="text-lg font-bold text-gray-900 dark:text-white">$35<span className="text-xs font-normal">/mo</span></div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Website live chat widget</p>
+                                <div className="mt-2 text-xs text-green-600 dark:text-green-400 font-semibold">Save in bundle</div>
+                              </a>
+
+                              {/* /content */}
+                              <a href="/marketplace" className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:border-pink-400 hover:bg-pink-50 dark:hover:bg-pink-950 transition-all">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <MessageSquare className="w-6 h-6 text-pink-600" />
+                                  <span className="text-xs font-bold text-gray-900 dark:text-white">/content</span>
+                                </div>
+                                <div className="text-lg font-bold text-gray-900 dark:text-white">$35<span className="text-xs font-normal">/mo</span></div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Social content management</p>
+                                <div className="mt-2 text-xs text-green-600 dark:text-green-400 font-semibold">Save in bundle</div>
+                              </a>
+                            </div>
+                          </div>
+
+                          {/* Bottom CTA Row */}
+                          <div className="grid grid-cols-3 gap-3 border-t border-gray-200 dark:border-gray-700 pt-4">
+                            <a href="/pathways" className="group flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950 transition-all">
+                              <Wrench className="w-5 h-5 text-orange-600" />
+                              <div className="flex-1">
+                                <div className="text-xs font-bold text-gray-900 dark:text-white">MSP Services</div>
+                                <div className="text-xs text-gray-600 dark:text-gray-400">We do it for you</div>
+                              </div>
+                            </a>
+
+                            <a href="/marketplace" className="group flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all">
+                              <Wallet className="w-5 h-5 text-blue-600" />
+                              <div className="flex-1">
+                                <div className="text-xs font-bold text-gray-900 dark:text-white">View All Pricing</div>
+                                <div className="text-xs text-gray-600 dark:text-gray-400">Complete marketplace</div>
+                              </div>
+                            </a>
+
+                            <a href="/assessment" className="group flex items-center gap-2 p-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all">
+                              <Lightbulb className="w-5 h-5 text-white" />
+                              <div className="flex-1">
+                                <div className="text-xs font-bold text-white">Free Assessment</div>
+                                <div className="text-xs text-white/80">Find your path</div>
+                              </div>
+                            </a>
                           </div>
                         </div>
                       </NavigationMenuContent>
@@ -794,49 +821,134 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 </div>
               </div>
 
-              {/* Pricing & Plans */}
+              {/* DIY Pricing */}
               <div>
                 <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-base">
-                  <DollarSign className="w-5 h-5 text-green-600" />
-                  <span>Pricing & Plans</span>
+                  <Lightbulb className="w-5 h-5 text-blue-600" />
+                  <span>DIY Base Plans</span>
                 </h3>
                 <div className="space-y-2">
-                  <a href="/assessment" className="block p-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-md hover:shadow-lg transition-shadow text-white" data-testid="link-mobile-assessment">
+                  {/* Start Plan */}
+                  <a href="/marketplace" className="block p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">💡</span>
+                        <span className="font-bold text-white">Start</span>
+                      </div>
+                      <span className="text-white font-bold">$99/mo</span>
+                    </div>
+                    <p className="text-xs text-white/90 mb-2">Get Found. Build your foundation.</p>
+                    <div className="flex flex-wrap gap-1">
+                      <Badge className="bg-white/20 text-white text-xs">5 team members</Badge>
+                      <Badge className="bg-white/20 text-white text-xs">25 clients</Badge>
+                    </div>
+                  </a>
+
+                  {/* Advanced Plan */}
+                  <a href="/marketplace" className="block p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-white">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">⚙️</span>
+                        <span className="font-bold text-white">Advanced</span>
+                        <Badge className="bg-white text-purple-600 text-xs">Popular</Badge>
+                      </div>
+                      <span className="text-white font-bold">$299/mo</span>
+                    </div>
+                    <p className="text-xs text-white/90 mb-2">Get Customers. Convert attention.</p>
+                    <div className="flex flex-wrap gap-1">
+                      <Badge className="bg-white/20 text-white text-xs">10 team members</Badge>
+                      <Badge className="bg-white/20 text-white text-xs">100 clients</Badge>
+                    </div>
+                  </a>
+
+                  {/* Scale Plan */}
+                  <a href="/marketplace" className="block p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">🚀</span>
+                        <span className="font-bold text-white">Scale</span>
+                      </div>
+                      <span className="text-white font-bold">$999/mo</span>
+                    </div>
+                    <p className="text-xs text-white/90 mb-2">Get Business. Unified system.</p>
+                    <div className="flex flex-wrap gap-1">
+                      <Badge className="bg-white/20 text-white text-xs">50 team members</Badge>
+                      <Badge className="bg-white/20 text-white text-xs">500 clients</Badge>
+                    </div>
+                  </a>
+                </div>
+              </div>
+
+              {/* Commverse Apps Add-Ons */}
+              <div>
+                <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-base">
+                  <MessageSquare className="w-5 h-5 text-purple-600" />
+                  <span>Add Commverse Apps</span>
+                </h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <a href="/marketplace" className="p-2 bg-white rounded-lg border border-yellow-200 hover:border-yellow-400 hover:shadow-md transition-all">
+                    <img src={sendIcon} alt="" className="h-8 w-8 mb-1" />
+                    <div className="text-xs font-bold text-gray-900">/send</div>
+                    <div className="text-lg font-bold text-gray-900">$35<span className="text-xs">/mo</span></div>
+                    <div className="text-xs text-green-600">Save in bundle</div>
+                  </a>
+
+                  <a href="/marketplace" className="p-2 bg-white rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all">
+                    <img src={inboxIcon} alt="" className="h-8 w-8 mb-1" />
+                    <div className="text-xs font-bold text-gray-900">/inbox</div>
+                    <div className="text-lg font-bold text-gray-900">$35<span className="text-xs">/mo</span></div>
+                    <div className="text-xs text-green-600">Save in bundle</div>
+                  </a>
+
+                  <a href="/marketplace" className="p-2 bg-white rounded-lg border border-purple-200 hover:border-purple-400 hover:shadow-md transition-all">
+                    <img src={livechatIcon} alt="" className="h-8 w-8 mb-1" />
+                    <div className="text-xs font-bold text-gray-900">/livechat</div>
+                    <div className="text-lg font-bold text-gray-900">$35<span className="text-xs">/mo</span></div>
+                    <div className="text-xs text-green-600">Save in bundle</div>
+                  </a>
+
+                  <a href="/marketplace" className="p-2 bg-white rounded-lg border border-pink-200 hover:border-pink-400 hover:shadow-md transition-all">
+                    <MessageSquare className="h-8 w-8 mb-1 text-pink-600" />
+                    <div className="text-xs font-bold text-gray-900">/content</div>
+                    <div className="text-lg font-bold text-gray-900">$35<span className="text-xs">/mo</span></div>
+                    <div className="text-xs text-green-600">Save in bundle</div>
+                  </a>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div>
+                <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-base">
+                  <Compass className="w-5 h-5 text-orange-600" />
+                  <span>Other Options</span>
+                </h3>
+                <div className="space-y-2">
+                  <a href="/pathways" className="block p-3 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg shadow-md hover:shadow-lg transition-shadow text-white">
                     <div className="flex items-center gap-3">
-                      <TrendingUp className="w-8 h-8" />
+                      <Wrench className="w-6 h-6" />
                       <div className="flex-1">
-                        <div className="font-bold">Free Digital Assessment</div>
-                        <div className="text-xs text-blue-100">Get personalized recommendations</div>
+                        <div className="font-bold">MSP Services</div>
+                        <div className="text-xs text-orange-100">We do it for you</div>
                       </div>
                     </div>
                   </a>
 
-                  <a href="/pathways" className="block p-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-pathways">
+                  <a href="/marketplace" className="block p-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center gap-3">
-                      <Compass className="w-8 h-8 text-blue-600" />
+                      <Wallet className="w-6 h-6 text-blue-600" />
                       <div className="flex-1">
-                        <div className="font-semibold text-gray-900">Choose Your Pathway</div>
-                        <div className="text-xs text-gray-600">DIY or MSP - Find your perfect fit</div>
+                        <div className="font-semibold text-gray-900">View All Pricing</div>
+                        <div className="text-xs text-gray-600">Complete marketplace</div>
                       </div>
                     </div>
                   </a>
 
-                  <a href="/marketplace" className="block p-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-marketplace">
+                  <a href="/assessment" className="block p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-md hover:shadow-lg transition-shadow text-white">
                     <div className="flex items-center gap-3">
-                      <Wallet className="w-8 h-8 text-orange-600" />
+                      <TrendingUp className="w-6 h-6" />
                       <div className="flex-1">
-                        <div className="font-semibold text-gray-900">À La Carte Marketplace</div>
-                        <div className="text-xs text-gray-600">Buy individual apps & services</div>
-                      </div>
-                    </div>
-                  </a>
-
-                  <a href="/commverse-pricing" className="block p-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-commverse-pricing">
-                    <div className="flex items-center gap-3">
-                      <MessageCircle className="w-8 h-8 text-purple-600" />
-                      <div className="flex-1">
-                        <div className="font-semibold text-gray-900">Commverse Pricing</div>
-                        <div className="text-xs text-gray-600">Communication suite plans</div>
+                        <div className="font-bold">Free Assessment</div>
+                        <div className="text-xs text-blue-100">Find your perfect path</div>
                       </div>
                     </div>
                   </a>
