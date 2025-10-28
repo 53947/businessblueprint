@@ -501,28 +501,54 @@ export default function MarketplacePage() {
             </p>
             
             {/* Customer Journey Explanation */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-4xl mx-auto mb-8 border border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Your Journey to Success</h3>
-              <div className="grid md:grid-cols-3 gap-4 text-left">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-8 max-w-5xl mx-auto mb-8 border border-gray-200 dark:border-gray-700 shadow-lg">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">Your Journey to Success</h3>
+              
+              <div className="prose prose-sm max-w-none mb-6 text-gray-700 dark:text-gray-300">
+                <p className="text-base leading-relaxed">
+                  Think of <strong>Base Plans (DIY)</strong> as the core subscription that powers your platform account. Then if you want, <strong>ADD Commverse Apps</strong> (also known as "Native Apps") — these are the four integrated communication tools: <strong>/send</strong>, <strong>/inbox</strong>, <strong>/livechat</strong>, and <strong>/content</strong>. They live inside your base plan or MSP portal and work seamlessly together.
+                </p>
+                
+                <p className="text-base leading-relaxed mt-4">
+                  After choosing <strong>Base + Commverse Apps</strong>, you can add <strong>DIY Add-Ons</strong>: Think additional specialized tools EXCEPT Commverse apps (like Listings, Reviews, Social, Local SEO).
+                </p>
+                
+                <p className="text-base leading-relaxed mt-4">
+                  The <strong>MSP pathway</strong> is when you want expert help executing your digital strategy. You still have the Base Plan, Commverse Apps, and Add-Ons in your account — our team just manages them for you with white-glove service.
+                </p>
+                
+                <p className="text-base leading-relaxed mt-4">
+                  <strong>À La Carte</strong> means you pick individual pieces without a base plan subscription. Perfect if you only need one specific tool or want to test before committing.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-4 gap-4 text-left">
                 <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">1</div>
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold">1</div>
                   <div>
-                    <div className="font-semibold text-gray-900 dark:text-white">Choose Your Base Plan</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Start, Advanced, or Scale - required foundation</div>
+                    <div className="font-semibold text-gray-900 dark:text-white">Base Plan (Required)</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Start, Advanced, or Scale</div>
                   </div>
                 </div>
                 <div className="flex gap-3">
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold">2</div>
                   <div>
-                    <div className="font-semibold text-gray-900 dark:text-white">Add DIY Tools (Optional)</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Enhance with Listings, Reviews, Social, SEO</div>
+                    <div className="font-semibold text-gray-900 dark:text-white">Add Commverse Apps</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">/send, /inbox, /livechat, /content</div>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">3</div>
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">3</div>
                   <div>
-                    <div className="font-semibold text-gray-900 dark:text-white">Add Commverse Apps (Optional)</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Bundle /send, /inbox, /livechat, /content - Save in bundle!</div>
+                    <div className="font-semibold text-gray-900 dark:text-white">Add DIY Tools</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Listings, Reviews, Social, SEO</div>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">OR</div>
+                  <div>
+                    <div className="font-semibold text-gray-900 dark:text-white">Choose MSP or À La Carte</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">We manage it or pick individual pieces</div>
                   </div>
                 </div>
               </div>
@@ -929,7 +955,284 @@ export default function MarketplacePage() {
         {/* Divider */}
         <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-12"></div>
 
-        {/* MSP Add-Ons */}
+        {/* MSP Pathway Section */}
+        <div className="mb-16" data-testid="section-msp-pathway">
+          <div className="text-orange-600 dark:text-orange-400 text-xs font-bold tracking-[0.18em] uppercase mb-2">Managed Services Provided (MSP)</div>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">We Do It For You</h2>
+          <div className="bg-orange-500/10 border border-orange-400/30 rounded-lg p-6 mb-8">
+            <p className="text-orange-900 dark:text-orange-200 text-base leading-relaxed">
+              <strong>MSP is for busy owners who want expert execution.</strong> You get all the same tools (Base Plan + Commverse Apps + Add-Ons), 
+              but our professional team manages everything for you. Think of it as hiring a digital marketing department without the overhead.
+            </p>
+          </div>
+
+          {/* MSP Packages */}
+          <div className="mb-8">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">MSP Service Tiers</h3>
+            <div className="grid md:grid-cols-2 gap-5">
+              {mspPackages.map((pkg) => {
+                const colors = getAccentColorClasses(pkg.accentColor);
+                const isInCart = cart.some(item => item.id === pkg.id);
+
+                return (
+                  <Card key={pkg.id}
+                        className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg`}
+                        data-testid={`card-msp-package-${pkg.id}`}>
+                    <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
+                      <span>{pkg.emoji}</span>
+                      <span className="text-white">
+                        {pkg.name}
+                      </span>
+                    </div>
+
+                    <div className="text-3xl font-extrabold mb-1 text-white"
+                         data-testid={`text-msp-package-price-${pkg.id}`}>
+                      ${pkg.price}/mo
+                    </div>
+                    <div className="text-xs text-white/80 mb-4">{pkg.description}</div>
+
+                    <ul className="space-y-2.5 mb-6">
+                      {pkg.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-start gap-2.5 text-white text-sm">
+                          <span className="h-5 w-5 rounded flex items-center justify-center text-xs font-black bg-white text-black flex-shrink-0">
+                            ✓
+                          </span>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <Button 
+                      onClick={() => addToCart(pkg, 'addon')}
+                      className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
+                      data-testid={`button-add-${pkg.id}`}>
+                      {isInCart ? (
+                        <>
+                          <Check className="w-4 h-4 mr-2" />
+                          Added
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="w-4 h-4 mr-2" />
+                          Select Plan
+                        </>
+                      )}
+                    </Button>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* MSP Add-Ons */}
+          <div className="mb-8">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">MSP Managed Add-Ons</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              These are fully managed by our expert team as part of your MSP package.
+            </p>
+            <div className="grid md:grid-cols-2 gap-5">
+              {mspAddons.map((addon) => {
+                const colors = getAccentColorClasses(addon.accentColor);
+                const isInCart = cart.some(item => item.id === addon.id);
+
+                return (
+                  <Card key={addon.id}
+                        className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg`}
+                        data-testid={`card-msp-addon-${addon.id}`}>
+                    <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
+                      <span>{addon.emoji}</span>
+                      <span className="text-white">
+                        {addon.name}
+                      </span>
+                    </div>
+
+                    <div className="text-3xl font-extrabold mb-1 text-white"
+                         data-testid={`text-msp-addon-price-${addon.id}`}>
+                      ${addon.price}/{addon.priceNote || 'mo'}
+                    </div>
+                    <div className="text-xs text-white/80 mb-4">{addon.description}</div>
+
+                    <ul className="space-y-2.5 mb-6">
+                      {addon.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-start gap-2.5 text-white text-sm">
+                          <span className="h-5 w-5 rounded flex items-center justify-center text-xs font-black bg-white text-black flex-shrink-0">
+                            ✓
+                          </span>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <Button 
+                      onClick={() => addToCart(addon, 'addon')}
+                      className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
+                      data-testid={`button-add-${addon.id}`}>
+                      {isInCart ? (
+                        <>
+                          <Check className="w-4 h-4 mr-2" />
+                          Added
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add to Cart
+                        </>
+                      )}
+                    </Button>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Captaining Service */}
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Premium Captaining Service</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Strategic account management and expert guidance for businesses that want a dedicated partner.
+            </p>
+            <div className="max-w-2xl mx-auto">
+              {captainingService.map((service) => {
+                const colors = getAccentColorClasses(service.accentColor);
+                const isInCart = cart.some(item => item.id === service.id);
+
+                return (
+                  <Card key={service.id}
+                        className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-6 relative overflow-hidden shadow-lg`}
+                        data-testid={`card-captaining-${service.id}`}>
+                    <div className="inline-flex items-center gap-2 text-lg font-bold px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
+                      <span className="text-2xl">{service.emoji}</span>
+                      <span className="text-white">
+                        {service.name}
+                      </span>
+                    </div>
+
+                    <div className="text-4xl font-extrabold mb-1 text-white"
+                         data-testid={`text-captaining-price-${service.id}`}>
+                      ${service.price}/{service.priceNote || 'mo'}
+                    </div>
+                    <div className="text-sm text-white/80 mb-6">{service.description}</div>
+
+                    <ul className="space-y-3 mb-6">
+                      {service.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-start gap-3 text-white text-sm">
+                          <span className="h-6 w-6 rounded flex items-center justify-center text-sm font-black bg-white text-black flex-shrink-0">
+                            ✓
+                          </span>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <Button 
+                      onClick={() => addToCart(service, 'addon')}
+                      className={`w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg ${isInCart ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
+                      data-testid={`button-add-${service.id}`}>
+                      {isInCart ? (
+                        <>
+                          <Check className="w-4 h-4 mr-2" />
+                          Added to Cart
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add to Cart
+                        </>
+                      )}
+                    </Button>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-12"></div>
+
+        {/* À La Carte Section */}
+        <div className="mb-16" data-testid="section-a-la-carte">
+          <div className="text-green-600 dark:text-green-400 text-xs font-bold tracking-[0.18em] uppercase mb-2">À La Carte Marketplace</div>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Pick What You Need</h2>
+          <div className="bg-green-500/10 border border-green-400/30 rounded-lg p-6 mb-8">
+            <p className="text-green-900 dark:text-green-200 text-base leading-relaxed">
+              <strong>Not ready for a full subscription?</strong> No problem. Purchase individual tools and services à la carte. 
+              Perfect for testing specific features or if you only need one piece of the puzzle right now.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* Individual Commverse Apps À La Carte */}
+            <Card className="bg-gradient-to-br from-yellow-500 to-yellow-600 border-0 rounded-2xl p-5 shadow-lg">
+              <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
+                <img src={sendIcon} alt="" className="w-5 h-5" />
+                <span className="text-white">/send</span>
+              </div>
+              <div className="text-3xl font-extrabold mb-1 text-white">$35/mo</div>
+              <div className="text-xs text-white/80 mb-4">Email & SMS marketing automation</div>
+              <Button className="w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg text-sm">
+                <Plus className="w-3 h-3 mr-1" />
+                Add to Cart
+              </Button>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 rounded-2xl p-5 shadow-lg">
+              <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
+                <img src={inboxIcon} alt="" className="w-5 h-5" />
+                <span className="text-white">/inbox</span>
+              </div>
+              <div className="text-3xl font-extrabold mb-1 text-white">$35/mo</div>
+              <div className="text-xs text-white/80 mb-4">Unified communication hub</div>
+              <Button className="w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg text-sm">
+                <Plus className="w-3 h-3 mr-1" />
+                Add to Cart
+              </Button>
+            </Card>
+
+            <Card className="bg-gradient-to-br from-green-500 to-green-600 border-0 rounded-2xl p-5 shadow-lg">
+              <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
+                <img src={livechatIcon} alt="" className="w-5 h-5" />
+                <span className="text-white">/livechat</span>
+              </div>
+              <div className="text-3xl font-extrabold mb-1 text-white">$35/mo</div>
+              <div className="text-xs text-white/80 mb-4">Real-time live chat widget</div>
+              <Button className="w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg text-sm">
+                <Plus className="w-3 h-3 mr-1" />
+                Add to Cart
+              </Button>
+            </Card>
+
+            {/* Individual DIY Add-Ons À La Carte */}
+            {diyAddons.slice(0, 3).map((addon) => {
+              const colors = getAccentColorClasses(addon.accentColor);
+              
+              return (
+                <Card key={addon.id}
+                      className={`bg-gradient-to-br ${colors.gradient} border-0 rounded-2xl p-5 shadow-lg`}>
+                  <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
+                    <span>{addon.emoji}</span>
+                    <span className="text-white">{addon.name}</span>
+                  </div>
+
+                  <div className="text-3xl font-extrabold mb-1 text-white">
+                    ${addon.price}/mo
+                  </div>
+                  <div className="text-xs text-white/80 mb-4">{addon.description}</div>
+
+                  <Button className="w-full bg-white text-black hover:bg-gray-100 font-bold rounded-lg text-sm">
+                    <Plus className="w-3 h-3 mr-1" />
+                    Add to Cart
+                  </Button>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent my-12"></div>
+
+        {/* Legacy: MSP Add-Ons (keeping for backwards compatibility) */}
         <div className="mb-16" data-testid="section-msp-addons">
           <div className="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-[0.18em] uppercase mb-2">MSP Add-Ons</div>
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Managed by Our Team</h2>
