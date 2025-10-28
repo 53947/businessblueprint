@@ -288,14 +288,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Commverse</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid gap-4 p-6 w-[500px]">
+                        <div className="grid gap-4 p-6 w-[600px]">
                           <div className="mb-2">
                             <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Communication Ecosystem</h3>
                             <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                              Three powerful apps that work autonomously but shine together
+                              Four powerful apps at $35/mo each, or get all 4 for $75/mo
                             </p>
                           </div>
-                          <div className="grid gap-3">
+                          <div className="grid grid-cols-2 gap-3">
                             {/* /send */}
                             <NavigationMenuLink asChild>
                               <a
@@ -306,9 +306,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <img src={sendIcon} alt="/send" className="h-10 w-10 object-contain flex-shrink-0" />
                                 <div className="flex-1">
                                   <div className="text-sm font-semibold text-gray-900 dark:text-white">/send</div>
-                                  <p className="text-xs text-gray-600 dark:text-gray-400">Email & SMS Marketing Platform</p>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Email & SMS Marketing</p>
+                                  <p className="text-xs font-bold text-gray-900 dark:text-white mt-1">$35/mo</p>
                                 </div>
-                                <span className="text-xs font-semibold text-[#E6B747] opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                               </a>
                             </NavigationMenuLink>
 
@@ -322,9 +322,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <img src={livechatIcon} alt="/livechat" className="h-10 w-10 object-contain flex-shrink-0" />
                                 <div className="flex-1">
                                   <div className="text-sm font-semibold text-gray-900 dark:text-white">/livechat</div>
-                                  <p className="text-xs text-gray-600 dark:text-gray-400">Website Live Chat Widget</p>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Website Live Chat</p>
+                                  <p className="text-xs font-bold text-gray-900 dark:text-white mt-1">$35/mo</p>
                                 </div>
-                                <span className="text-xs font-semibold text-[#8000FF] opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                               </a>
                             </NavigationMenuLink>
 
@@ -338,21 +338,44 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <img src={inboxIcon} alt="/inbox" className="h-10 w-10 object-contain flex-shrink-0" />
                                 <div className="flex-1">
                                   <div className="text-sm font-semibold text-gray-900 dark:text-white">/inbox</div>
-                                  <p className="text-xs text-gray-600 dark:text-gray-400">Unified Communications Hub</p>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Unified Communications</p>
+                                  <p className="text-xs font-bold text-gray-900 dark:text-white mt-1">$35/mo</p>
                                 </div>
-                                <span className="text-xs font-semibold text-[#0080FF] opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* /content */}
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-center space-x-3 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-[#E91E8C] hover:shadow-md hover:bg-gradient-to-r hover:from-[#E91E8C]/5 hover:to-transparent"
+                                href="/content-management"
+                                data-testid="link-commverse-content"
+                              >
+                                <MessageSquare className="h-10 w-10 text-[#E91E8C] flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="text-sm font-semibold text-gray-900 dark:text-white">/content</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Social Media Management</p>
+                                  <p className="text-xs font-bold text-gray-900 dark:text-white mt-1">$35/mo</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* Bundle - Spans 2 columns */}
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="col-span-2 group flex items-center space-x-3 rounded-lg border-2 border-[#FC6ACD] bg-gradient-to-r from-[#FC6ACD]/10 to-transparent p-3 leading-none no-underline outline-none transition-all hover:border-[#FC6ACD] hover:shadow-lg"
+                                href="/commverse-pricing"
+                                data-testid="link-commverse-bundle"
+                              >
+                                <img src={commverseIcon} alt="Bundle" className="h-10 w-10 object-contain flex-shrink-0" />
+                                <div className="flex-1">
+                                  <div className="text-sm font-bold text-gray-900 dark:text-white">Complete Bundle</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">All 4 apps together</p>
+                                  <p className="text-xs font-bold text-[#FC6ACD] mt-1">$75/mo (Save $65!)</p>
+                                </div>
                               </a>
                             </NavigationMenuLink>
                           </div>
-                          <NavigationMenuLink asChild>
-                            <a
-                              className="block text-center text-sm text-blue-600 hover:text-blue-800 hover:underline mt-2"
-                              href="/commverse"
-                              data-testid="link-commverse-about"
-                            >
-                              About Commverse Ecosystem →
-                            </a>
-                          </NavigationMenuLink>
                         </div>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
