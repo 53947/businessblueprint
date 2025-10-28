@@ -14,8 +14,9 @@ export default function CommversePricing() {
       <section className="bg-white py-16 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Commverse Pricing
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              <span style={{ color: '#09080E' }}>Commverse </span>
+              <span style={{ color: '#00FF40' }}>Pricing</span>
             </h1>
             <p className="text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
               Choose individual apps at $35/month each, or get all four for $119/month
@@ -343,7 +344,7 @@ export default function CommversePricing() {
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#8000FF' }}>$35</td>
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#0080FF' }}>$35</td>
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#EF4444' }}>$35</td>
-                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#FC6ACD' }}>$75</td>
+                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#FC6ACD' }}>$119</td>
                 </tr>
               </tbody>
             </table>
