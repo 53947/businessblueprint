@@ -373,54 +373,63 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                           {/* Base Plans Section */}
                           <div className="mb-6">
-                            <h4 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-3">Choose Your Base Plan (Required)</h4>
+                            <h4 className="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider mb-3">Choose Your Base Plan (Required)</h4>
                             <div className="grid grid-cols-3 gap-3">
                               {/* Start Plan */}
-                              <a href="/marketplace" className="group block bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 hover:shadow-lg transition-all">
+                              <a href="/marketplace" className="group block bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-4 hover:shadow-lg transition-all">
                                 <div className="flex items-center gap-2 mb-2">
                                   <span className="text-xl">💡</span>
                                   <span className="text-sm font-bold text-white">Start</span>
                                 </div>
                                 <div className="text-2xl font-bold text-white mb-1">$99<span className="text-sm font-normal">/mo</span></div>
                                 <p className="text-xs text-white/90 mb-3">Get Found. Build your foundation.</p>
-                                <ul className="space-y-1 text-xs text-white/80">
+                                <ul className="space-y-1 text-xs text-white/80 mb-3">
                                   <li>• 5 team members</li>
                                   <li>• 25 client accounts</li>
                                   <li>• Digital IQ + Blueprint</li>
                                 </ul>
+                                <button className="w-full bg-white text-orange-600 font-bold py-2 rounded-lg text-sm hover:bg-orange-50 transition-colors">
+                                  Select
+                                </button>
                               </a>
 
                               {/* Advanced Plan */}
-                              <a href="/marketplace" className="group block bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-4 hover:shadow-lg transition-all border-2 border-white">
+                              <a href="/marketplace" className="group block bg-gradient-to-br from-orange-400 to-orange-500 rounded-xl p-4 hover:shadow-lg transition-all border-2 border-white">
                                 <div className="flex items-center justify-between mb-2">
                                   <div className="flex items-center gap-2">
                                     <span className="text-xl">⚙️</span>
                                     <span className="text-sm font-bold text-white">Advanced</span>
                                   </div>
-                                  <Badge className="bg-white text-purple-600 text-xs">Popular</Badge>
+                                  <Badge className="bg-white text-orange-600 text-xs">Popular</Badge>
                                 </div>
                                 <div className="text-2xl font-bold text-white mb-1">$299<span className="text-sm font-normal">/mo</span></div>
                                 <p className="text-xs text-white/90 mb-3">Get Customers. Convert attention.</p>
-                                <ul className="space-y-1 text-xs text-white/80">
+                                <ul className="space-y-1 text-xs text-white/80 mb-3">
                                   <li>• 10 team members</li>
                                   <li>• 100 client accounts</li>
                                   <li>• AI automation + insights</li>
                                 </ul>
+                                <button className="w-full bg-white text-orange-600 font-bold py-2 rounded-lg text-sm hover:bg-orange-50 transition-colors">
+                                  Select
+                                </button>
                               </a>
 
                               {/* Scale Plan */}
-                              <a href="/marketplace" className="group block bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-4 hover:shadow-lg transition-all">
+                              <a href="/marketplace" className="group block bg-gradient-to-br from-orange-300 to-orange-400 rounded-xl p-4 hover:shadow-lg transition-all">
                                 <div className="flex items-center gap-2 mb-2">
                                   <span className="text-xl">🚀</span>
                                   <span className="text-sm font-bold text-white">Scale</span>
                                 </div>
                                 <div className="text-2xl font-bold text-white mb-1">$999<span className="text-sm font-normal">/mo</span></div>
                                 <p className="text-xs text-white/90 mb-3">Get Business. Unified system.</p>
-                                <ul className="space-y-1 text-xs text-white/80">
+                                <ul className="space-y-1 text-xs text-white/80 mb-3">
                                   <li>• 50 team members</li>
                                   <li>• 500 client accounts</li>
                                   <li>• Enterprise features</li>
                                 </ul>
+                                <button className="w-full bg-white text-orange-600 font-bold py-2 rounded-lg text-sm hover:bg-orange-50 transition-colors">
+                                  Select
+                                </button>
                               </a>
                             </div>
                           </div>
@@ -477,23 +486,23 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                           {/* Bottom CTA Row */}
                           <div className="grid grid-cols-3 gap-3 border-t border-gray-200 dark:border-gray-700 pt-4">
-                            <a href="/pathways" className="group flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950 transition-all">
-                              <Wrench className="w-5 h-5 text-orange-600" />
+                            <a href="/pathways" className="group flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all">
+                              <Wrench className="w-5 h-5 text-blue-600" />
                               <div className="flex-1">
                                 <div className="text-xs font-bold text-gray-900 dark:text-white">MSP Services</div>
                                 <div className="text-xs text-gray-600 dark:text-gray-400">We do it for you</div>
                               </div>
                             </a>
 
-                            <a href="/marketplace" className="group flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all">
-                              <Wallet className="w-5 h-5 text-blue-600" />
+                            <a href="/marketplace" className="group flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-green-400 hover:bg-green-50 dark:hover:bg-green-950 transition-all">
+                              <Wallet className="w-5 h-5 text-green-600" />
                               <div className="flex-1">
-                                <div className="text-xs font-bold text-gray-900 dark:text-white">View All Pricing</div>
-                                <div className="text-xs text-gray-600 dark:text-gray-400">Complete marketplace</div>
+                                <div className="text-xs font-bold text-gray-900 dark:text-white">À La Carte</div>
+                                <div className="text-xs text-gray-600 dark:text-gray-400">Pick what you need</div>
                               </div>
                             </a>
 
-                            <a href="/assessment" className="group flex items-center gap-2 p-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all">
+                            <a href="/assessment" className="group flex items-center gap-2 p-3 rounded-lg bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 transition-all">
                               <Lightbulb className="w-5 h-5 text-white" />
                               <div className="flex-1">
                                 <div className="text-xs font-bold text-white">Free Assessment</div>
