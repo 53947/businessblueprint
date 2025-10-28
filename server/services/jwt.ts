@@ -25,8 +25,9 @@ export class JWTService {
 
   constructor() {
     this.keyPair = this.generateKeyPair();
-    // Determine algorithm based on key availability
-    this.algorithm = this.keyPair.privateKey && this.keyPair.publicKey ? 'RS256' : 'HS256';
+    // Determine algorithm based on key availability (check for non-empty strings)
+    this.algorithm = (this.keyPair.privateKey.length > 0 && this.keyPair.publicKey.length > 0) ? 'RS256' : 'HS256';
+    console.log(`[JWT] Using algorithm: ${this.algorithm} (privateKey length: ${this.keyPair.privateKey.length}, publicKey length: ${this.keyPair.publicKey.length})`);
   }
 
   /**
