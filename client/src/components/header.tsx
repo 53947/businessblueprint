@@ -11,8 +11,8 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import { 
-  User, 
+import {
+  User,
   Menu,
   X,
   Globe,
@@ -704,9 +704,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
             {showNavigation && (
               <>
                 {/* Quick Access Inbox */}
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   className="hidden md:flex items-center space-x-2 bg-[#0080FF] border-[#0080FF] hover:bg-[#0057FF]"
                   style={{ color: '#FF96DD' }}
                   asChild
@@ -717,9 +717,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     <span className="font-bold">Inbox</span>
                   </a>
                 </Button>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="hidden sm:flex items-center space-x-2"
                   asChild
                   data-testid="button-login"
@@ -729,8 +729,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     <span>Login</span>
                   </a>
                 </Button>
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   className="hidden sm:flex items-center space-x-2 bg-blue-600 hover:bg-blue-700"
                   asChild
                   data-testid="button-signup"
@@ -916,11 +916,17 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     <div className="text-xs text-green-600">Save in bundle</div>
                   </a>
 
-                  <a href="/marketplace" className="p-2 bg-white rounded-lg border border-pink-200 hover:border-pink-400 hover:shadow-md transition-all">
-                    <MessageSquare className="h-8 w-8 mb-1 text-pink-600" />
-                    <div className="text-xs font-bold text-gray-900">/content</div>
-                    <div className="text-lg font-bold text-gray-900">$35<span className="text-xs">/mo</span></div>
-                    <div className="text-xs text-green-600">Save in bundle</div>
+                  <a href="/marketplace" className="p-2 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg border-2 border-pink-300 hover:border-pink-500 hover:shadow-lg transition-all">
+                    <img src={commverseIcon} alt="" className="h-8 w-8 mb-1" />
+                    <div className="text-xs font-bold text-gray-900">Bundle</div>
+                    <div className="text-lg font-bold text-gray-900">$75<span className="text-xs">/mo</span></div>
+                    <div className="text-xs text-pink-600 font-semibold">Save $30</div>
+                  </a>
+
+                  <a href="/commverse" className="p-2 bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg border border-gray-300 hover:border-blue-400 hover:shadow-md transition-all col-span-2">
+                    <MessageSquare className="h-8 w-8 mb-1 text-blue-600" />
+                    <div className="text-xs font-bold text-gray-900">Learn About Commverse</div>
+                    <div className="text-xs text-gray-600">Complete communication ecosystem</div>
                   </a>
                 </div>
               </div>
