@@ -39,10 +39,15 @@ export class JWTService {
     const existingPublicKey = process.env.JWT_PUBLIC_KEY;
 
     if (existingPrivateKey && existingPublicKey) {
-      return {
-        privateKey: existingPrivateKey.replace(/\\n/g, '\n'),
-        publicKey: existingPublicKey.replace(/\\n/g, '\n')
-      };
+      // Handle both formats: literal \n strings and actual newlines
+      const privateKey = existingPrivateKey.includes('\\n') 
+        ? existingPrivateKey.replace(/\\n/g, '\n')
+        : existingPrivateKey;
+      const publicKey = existingPublicKey.includes('\\n')
+        ? existingPublicKey.replace(/\\n/g, '\n')
+        : existingPublicKey;
+      
+      return { privateKey, publicKey };
     }
 
     // If RSA keys are not configured, we won't generate them here.
