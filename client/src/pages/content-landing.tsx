@@ -14,13 +14,13 @@ export default function ContentLanding() {
       <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="w-20 h-20 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#FC6ACD' }}>
-                <Image className="w-12 h-12 text-white" />
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#FC6ACD' }}>
+                <Image className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-5xl font-bold">
+              <h1 className="text-3xl font-bold font-['Archivo']">
                 <span style={{ color: '#09080E' }}>/</span>
-                <span style={{ color: '#00FF40' }}>content</span>
+                <span style={{ color: '#FC6ACD' }}>content</span>
               </h1>
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#09080E' }}>
