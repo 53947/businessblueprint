@@ -2015,3 +2015,43 @@ export type InsertContentTemplate = z.infer<typeof insertContentTemplateSchema>;
 export type ExternalSync = typeof externalSync.$inferSelect;
 export type InsertExternalSync = z.infer<typeof insertExternalSyncSchema>;
 export type SyncLog = typeof syncLogs.$inferSelect;
+
+// ========================================
+// TASK MANAGEMENT SYSTEM
+// ========================================
+
+export const tasks = pgTable("tasks", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  
+  // Task details
+  title: text("title").notNull(),
+  description: text("description"),
+  
+  // Status and priority
+  status: varchar("status", { length: 20 }).notNull().default("todo"), // todo, in_progress, completed, cancelled
+  priority: varchar("priority", { length: 20 }).notNull().default("medium"), // low, medium, high, urgent
+  
+  // Assignment
+  assignedTo: varchar("assigned_to", { length: 50 }), // "user", "assistant", or specific name
+  assignedBy: varchar("assigned_by", { length: 50 }), // Who assigned it
+  
+  // Dates
+  dueDate: timestamp("due_date"),
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  
+  // Additional metadata
+  tags: text("tags").array(),
+  relatedTo: jsonb("related_to"), // Link to other entities (posts, assessments, etc)
+});
+
+export const insertTaskSchema = createInsertSchema(tasks).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type Task = typeof tasks.$inferSelect;
+export type InsertTask = z.infer<typeof insertTaskSchema>;
