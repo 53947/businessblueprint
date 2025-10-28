@@ -251,8 +251,8 @@ export default function MarketplacePage() {
       icon: Star,
       emoji: '⭐',
       price: 15,
-      priceNote: 'per location',
-      description: 'Includes 50 responses/mo • +$2 each additional',
+      priceNote: 'per month',
+      description: 'Per location pricing • Includes 50 responses/mo • +$2 each additional',
       accentColor: 'red',
       features: [
         'Monitor & respond across platforms',
@@ -262,12 +262,12 @@ export default function MarketplacePage() {
     },
     {
       id: 'content-management-msp',
-      name: 'Content Management (MSP)',
+      name: 'Social Media Posting',
       icon: MessageSquare,
       emoji: '📱',
       price: 80,
-      priceNote: 'per location/mo',
-      description: 'Full-service content creation & publishing',
+      priceNote: 'per month',
+      description: 'Per location pricing • Full-service content creation & publishing',
       accentColor: 'pink',
       features: [
         'All 7 platforms (FB/IG/LinkedIn/X/Google/TikTok/Snapchat)',
@@ -501,6 +501,42 @@ export default function MarketplacePage() {
             </p>
           </div>
 
+          {/* Pathway Selection Cards */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-8">
+            {/* DIY Card */}
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all cursor-pointer">
+              <div className="text-center">
+                <div className="text-4xl mb-3">💡</div>
+                <h3 className="text-2xl font-bold mb-2">DIY</h3>
+                <p className="text-blue-100 text-sm mb-4">Do It Yourself - Full control with powerful tools</p>
+                <div className="text-3xl font-bold mb-1">$99+</div>
+                <div className="text-blue-100 text-xs">per month</div>
+              </div>
+            </div>
+
+            {/* MSP Card */}
+            <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all cursor-pointer border-4 border-white">
+              <div className="text-center">
+                <div className="text-4xl mb-3">👑</div>
+                <h3 className="text-2xl font-bold mb-2">MSP</h3>
+                <p className="text-purple-100 text-sm mb-4">Managed Service Provider - We do it for you</p>
+                <div className="text-3xl font-bold mb-1">$313+</div>
+                <div className="text-purple-100 text-xs">per month</div>
+              </div>
+            </div>
+
+            {/* À La Carte Card */}
+            <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all cursor-pointer">
+              <div className="text-center">
+                <div className="text-4xl mb-3">🎯</div>
+                <h3 className="text-2xl font-bold mb-2">À La Carte</h3>
+                <p className="text-green-100 text-sm mb-4">Pick exactly what you need</p>
+                <div className="text-3xl font-bold mb-1">Custom</div>
+                <div className="text-green-100 text-xs">pricing</div>
+              </div>
+            </div>
+          </div>
+
           {/* Animated Journey Flow */}
           <div className="relative h-64 mb-8 overflow-hidden">
             <div className="absolute inset-0 flex items-center justify-center">
@@ -629,7 +665,7 @@ export default function MarketplacePage() {
                         Added to Cart
                       </>
                     ) : (
-                      'Book a Demo'
+                      'Select'
                     )}
                   </Button>
                 </Card>
