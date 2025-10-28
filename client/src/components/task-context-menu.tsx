@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { 
   ContextMenu,
   ContextMenuContent,
@@ -16,17 +16,40 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { useQuery, useMutation, queryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 interface Task {
   id: number;
   title: string;
-  description?: string;
-  status: 'pending' | 'in_progress' | 'completed';
+  description?: string | null;
+  status: 'todo' | 'in_progress' | 'completed' | 'cancelled';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  assignedTo?: string | null;
+  assignedBy?: string | null;
+  dueDate?: string | null;
+  tags?: string[] | null;
 }
 
 interface TaskContextMenuProps {
   children: React.ReactNode;
 }
+
+const PRIORITY_COLORS = {
+  low: "bg-gray-500",
+  medium: "bg-blue-500",
+  high: "bg-orange-500",
+  urgent: "bg-red-500"
+};
+
+const PRIORITY_LABELS = {
+  low: "Low",
+  medium: "Medium",
+  high: "High",
+  urgent: "Urgent"
+};
 
 export function TaskContextMenu({ children }: TaskContextMenuProps) {
   const [selectedText, setSelectedText] = useState("");
@@ -34,18 +57,85 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
   const [showAddToTaskDialog, setShowAddToTaskDialog] = useState(false);
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
+  const [taskPriority, setTaskPriority] = useState<Task['priority']>("medium");
+  const [taskAssignedTo, setTaskAssignedTo] = useState<string>("user");
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
-  const [tasks, setTasks] = useState<Task[]>([]);
   const { toast } = useToast();
 
-  useEffect(() => {
-    // Mock tasks - will be replaced with API call
-    setTasks([
-      { id: 1, title: "Setup Synup Integration", description: "Configure API keys and test", status: "in_progress" },
-      { id: 2, title: "Design Client Dashboard", description: "", status: "pending" },
-      { id: 3, title: "Implement Review Analytics", description: "Charts and metrics", status: "pending" },
-    ]);
-  }, []);
+  // Fetch tasks from API
+  const { data: tasks = [] } = useQuery<Task[]>({
+    queryKey: ['/api/tasks'],
+    enabled: true,
+  });
+
+  // Create task mutation
+  const createTaskMutation = useMutation({
+    mutationFn: async (newTask: Partial<Task>) => {
+      return apiRequest('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newTask),
+      });
+    },
+    onSuccess: (data: Task) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });
+      
+      // Show notification for assignment
+      if (data.assignedTo) {
+        toast({
+          title: "Task assigned",
+          description: `Task "${data.title}" assigned to ${data.assignedTo}`,
+        });
+      } else {
+        toast({
+          title: "Task created",
+          description: `Created task: "${data.title}"`,
+        });
+      }
+      
+      setShowNewTaskDialog(false);
+      setTaskTitle("");
+      setTaskDescription("");
+      setTaskPriority("medium");
+      setTaskAssignedTo("user");
+      setSelectedText("");
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to create task",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Update task mutation
+  const updateTaskMutation = useMutation({
+    mutationFn: async ({ id, updates }: { id: number; updates: Partial<Task> }) => {
+      return apiRequest(`/api/tasks/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+    },
+    onSuccess: (data: Task) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });
+      toast({
+        title: "Task updated",
+        description: `Updated task: "${data.title}"`,
+      });
+      setShowAddToTaskDialog(false);
+      setSelectedTaskId(null);
+      setSelectedText("");
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update task",
+        variant: "destructive",
+      });
+    },
+  });
 
   const handleContextMenu = () => {
     const selection = window.getSelection();
@@ -64,6 +154,8 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
     }
     setTaskTitle(selectedText.substring(0, 100)); // Limit title length
     setTaskDescription("");
+    setTaskPriority("medium");
+    setTaskAssignedTo("user");
     setShowNewTaskDialog(true);
   };
 
@@ -81,26 +173,18 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
   };
 
   const saveNewTask = async () => {
-    // API call to create task would go here
-    // For now, just show success toast
-    toast({
-      title: "Task created",
-      description: `Created task: "${taskTitle}"`,
-    });
-    
-    // Add to local tasks list
-    const newTask: Task = {
-      id: tasks.length + 1,
+    if (!taskTitle.trim()) return;
+
+    const newTask: Partial<Task> = {
       title: taskTitle,
       description: taskDescription + (selectedText ? `\n\nHighlighted text: "${selectedText}"` : ""),
-      status: "pending"
+      status: "todo",
+      priority: taskPriority,
+      assignedTo: taskAssignedTo,
+      assignedBy: "user", // Could be dynamic based on current user
     };
-    setTasks([...tasks, newTask]);
-    
-    setShowNewTaskDialog(false);
-    setTaskTitle("");
-    setTaskDescription("");
-    setSelectedText("");
+
+    createTaskMutation.mutate(newTask);
   };
 
   const addToExistingTask = async () => {
@@ -109,26 +193,12 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
     const task = tasks.find(t => t.id === selectedTaskId);
     if (!task) return;
 
-    // API call to update task would go here
-    toast({
-      title: "Task updated",
-      description: `Added note to "${task.title}"`,
+    const updatedDescription = (task.description || "") + `\n\nAdded: "${selectedText}"`;
+
+    updateTaskMutation.mutate({
+      id: selectedTaskId,
+      updates: { description: updatedDescription }
     });
-
-    // Update local task
-    setTasks(tasks.map(t => {
-      if (t.id === selectedTaskId) {
-        return {
-          ...t,
-          description: (t.description || "") + `\n\nAdded: "${selectedText}"`
-        };
-      }
-      return t;
-    }));
-
-    setShowAddToTaskDialog(false);
-    setSelectedTaskId(null);
-    setSelectedText("");
   };
 
   return (
@@ -164,8 +234,15 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
                         key={task.id}
                         onClick={() => handleAddToExistingTask(task.id)}
                         data-testid={`context-menu-task-${task.id}`}
+                        className="flex items-center justify-between"
                       >
-                        {task.title}
+                        <span className="truncate">{task.title}</span>
+                        <Badge 
+                          variant="outline" 
+                          className={`ml-2 ${PRIORITY_COLORS[task.priority]} text-white text-xs px-1 py-0`}
+                        >
+                          {task.priority[0].toUpperCase()}
+                        </Badge>
                       </ContextMenuItem>
                     ))
                   )}
@@ -183,7 +260,7 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
 
       {/* New Task Dialog */}
       <Dialog open={showNewTaskDialog} onOpenChange={setShowNewTaskDialog}>
-        <DialogContent data-testid="dialog-new-task">
+        <DialogContent data-testid="dialog-new-task" className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Create New Task</DialogTitle>
             <DialogDescription>
@@ -193,7 +270,7 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
           
           <div className="space-y-4">
             <div>
-              <Label htmlFor="task-title">Task Title</Label>
+              <Label htmlFor="task-title">Task Title *</Label>
               <Input
                 id="task-title"
                 value={taskTitle}
@@ -203,6 +280,57 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
               />
             </div>
             
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="task-priority">Priority</Label>
+                <Select value={taskPriority} onValueChange={(value: Task['priority']) => setTaskPriority(value)}>
+                  <SelectTrigger id="task-priority" data-testid="select-task-priority">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${PRIORITY_COLORS.low}`} />
+                        {PRIORITY_LABELS.low}
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="medium">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${PRIORITY_COLORS.medium}`} />
+                        {PRIORITY_LABELS.medium}
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="high">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${PRIORITY_COLORS.high}`} />
+                        {PRIORITY_LABELS.high}
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="urgent">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${PRIORITY_COLORS.urgent}`} />
+                        {PRIORITY_LABELS.urgent}
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="task-assigned-to">Assign To</Label>
+                <Select value={taskAssignedTo} onValueChange={setTaskAssignedTo}>
+                  <SelectTrigger id="task-assigned-to" data-testid="select-task-assigned-to">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user">You (User)</SelectItem>
+                    <SelectItem value="assistant">Assistant</SelectItem>
+                    <SelectItem value="unassigned">Unassigned</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
             <div>
               <Label htmlFor="task-description">Description</Label>
               <Textarea
@@ -210,7 +338,7 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
                 value={taskDescription}
                 onChange={(e) => setTaskDescription(e.target.value)}
                 placeholder="Additional notes (optional)"
-                rows={4}
+                rows={3}
                 data-testid="textarea-task-description"
               />
             </div>
@@ -233,10 +361,10 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
             </Button>
             <Button 
               onClick={saveNewTask}
-              disabled={!taskTitle.trim()}
+              disabled={!taskTitle.trim() || createTaskMutation.isPending}
               data-testid="button-save-new-task"
             >
-              Create Task
+              {createTaskMutation.isPending ? "Creating..." : "Create Task"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -277,9 +405,10 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
             </Button>
             <Button 
               onClick={addToExistingTask}
+              disabled={updateTaskMutation.isPending}
               data-testid="button-confirm-add-to-task"
             >
-              Add to Task
+              {updateTaskMutation.isPending ? "Adding..." : "Add to Task"}
             </Button>
           </DialogFooter>
         </DialogContent>
