@@ -19,13 +19,13 @@ import {
   MessageSquare,
   Search,
   Wrench,
-  Paperclip
+  Paperclip,
+  Send,
+  Inbox,
+  MessageCircle,
+  MessagesSquare
 } from "lucide-react";
 import { useLocation } from "wouter";
-import sendIcon from "@/assets/icons/send.svg";
-import inboxIcon from "@/assets/icons/inbox.svg";
-import livechatIcon from "@/assets/icons/livechat.svg";
-import commverseIcon from "@/assets/icons/commverse.svg";
 
 
 interface CartItem {
@@ -881,7 +881,7 @@ export default function MarketplacePage() {
           <div className="grid md:grid-cols-4 gap-5 mb-6">
             <Card className="bg-gradient-to-br from-yellow-500 to-yellow-600 border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg">
               <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
-                <img src={sendIcon} alt="" className="w-5 h-5" />
+                <Send className="w-5 h-5" />
                 <span className="text-white">/send</span>
               </div>
               <div className="text-3xl font-extrabold mb-1 text-white">$35/mo</div>
@@ -895,7 +895,7 @@ export default function MarketplacePage() {
 
             <Card className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg">
               <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
-                <img src={inboxIcon} alt="" className="w-5 h-5" />
+                <Inbox className="w-5 h-5" />
                 <span className="text-white">/inbox</span>
               </div>
               <div className="text-3xl font-extrabold mb-1 text-white">$35/mo</div>
@@ -909,7 +909,7 @@ export default function MarketplacePage() {
 
             <Card className="bg-gradient-to-br from-green-500 to-green-600 border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg">
               <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
-                <img src={livechatIcon} alt="" className="w-5 h-5" />
+                <MessageCircle className="w-5 h-5" />
                 <span className="text-white">/livechat</span>
               </div>
               <div className="text-3xl font-extrabold mb-1 text-white">$35/mo</div>
@@ -923,7 +923,7 @@ export default function MarketplacePage() {
 
             <Card className="bg-gradient-to-br from-pink-500 to-pink-600 border-0 rounded-2xl p-5 relative overflow-hidden shadow-lg">
               <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
-                <img src={commverseIcon} alt="" className="w-5 h-5" />
+                <MessagesSquare className="w-5 h-5" />
                 <span className="text-white">/content</span>
               </div>
               <div className="text-3xl font-extrabold mb-1 text-white">$35/mo</div>
@@ -1165,7 +1165,7 @@ export default function MarketplacePage() {
             {/* Individual Commverse Apps À La Carte */}
             <Card className="bg-gradient-to-br from-yellow-500 to-yellow-600 border-0 rounded-2xl p-5 shadow-lg">
               <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
-                <img src={sendIcon} alt="" className="w-5 h-5" />
+                <Send className="w-5 h-5" />
                 <span className="text-white">/send</span>
               </div>
               <div className="text-3xl font-extrabold mb-1 text-white">$35/mo</div>
@@ -1178,7 +1178,7 @@ export default function MarketplacePage() {
 
             <Card className="bg-gradient-to-br from-blue-500 to-blue-600 border-0 rounded-2xl p-5 shadow-lg">
               <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
-                <img src={inboxIcon} alt="" className="w-5 h-5" />
+                <Inbox className="w-5 h-5" />
                 <span className="text-white">/inbox</span>
               </div>
               <div className="text-3xl font-extrabold mb-1 text-white">$35/mo</div>
@@ -1191,7 +1191,7 @@ export default function MarketplacePage() {
 
             <Card className="bg-gradient-to-br from-green-500 to-green-600 border-0 rounded-2xl p-5 shadow-lg">
               <div className="inline-flex items-center gap-2 text-sm font-bold px-3 py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4">
-                <img src={livechatIcon} alt="" className="w-5 h-5" />
+                <MessageCircle className="w-5 h-5" />
                 <span className="text-white">/livechat</span>
               </div>
               <div className="text-3xl font-extrabold mb-1 text-white">$35/mo</div>
