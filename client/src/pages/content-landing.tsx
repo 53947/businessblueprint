@@ -18,12 +18,13 @@ export default function ContentLanding() {
               <div className="w-20 h-20 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#FC6ACD' }}>
                 <Image className="w-12 h-12 text-white" />
               </div>
-              <h1 className="text-5xl font-bold" style={{ color: '#FC6ACD' }}>/content</h1>
+              <h1 className="text-5xl font-bold">
+                <span style={{ color: '#09080E' }}>/</span>
+                <span style={{ color: '#00FF40' }}>content</span>
+              </h1>
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              <span style={{ color: '#09080E' }}>Social Media Management</span>
-              <br />
-              <span style={{ color: '#00FF40' }}>That Actually Works</span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#09080E' }}>
+              Social Media Management<br />That Actually Works
             </h2>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
               Create, schedule, and publish across all your social platforms from one beautiful interface. 
