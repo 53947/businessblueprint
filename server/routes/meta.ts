@@ -250,7 +250,7 @@ async function processMessagingEvent(event: MetaMessagingEvent, platform: string
         )
       );
 
-    if (!channel) {
+    if (!channel || !channel.clientId) {
       console.log(`No channel found for ${channelType} page ${recipientId}`);
       return;
     }
@@ -359,7 +359,7 @@ async function processComment(comment: any, pageId: string, platform: string) {
         )
       );
 
-    if (!channel) return;
+    if (!channel || !channel.clientId) return;
 
     // Find or create conversation for this commenter
     let [conversation] = await db.select()

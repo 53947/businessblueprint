@@ -289,27 +289,27 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Commverse</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid gap-4 p-6 w-[600px]">
+                        <div className="grid gap-3 p-4 w-[600px]">
                           {/* Header */}
-                          <div className="mb-2">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Communication Ecosystem</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Three apps that work independently or together</p>
+                          <div className="mb-1">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-0.5">Communication Ecosystem</h3>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">Three apps that work independently or together</p>
                           </div>
 
                           <div className="grid grid-cols-1 gap-3">
                             {/* /send - Educational */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-yellow-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-yellow-50 hover:to-orange-50 dark:hover:from-yellow-950 dark:hover:to-orange-950"
+                                className="group block select-none space-y-1 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-yellow-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-yellow-50 hover:to-orange-50 dark:hover:from-yellow-950 dark:hover:to-orange-950"
                                 href="/send"
                                 data-testid="link-commverse-send"
                               >
-                                <div className="flex items-start gap-3">
-                                  <img src={sendIcon} alt="/send" className="h-12 w-12 object-contain flex-shrink-0" />
+                                <div className="flex items-start gap-2">
+                                  <img src={sendIcon} alt="/send" className="h-10 w-10 object-contain flex-shrink-0" />
                                   <div className="flex-1">
-                                    <div className="text-base font-bold text-gray-900 dark:text-white mb-1">/send</div>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Email & SMS marketing with full data ownership</p>
-                                    <ul className="text-xs text-gray-500 space-y-1">
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-0.5">/send</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Email & SMS marketing with full data ownership</p>
+                                    <ul className="text-xs text-gray-500 space-y-0.5">
                                       <li>• Campaign automation & templates</li>
                                       <li>• Contact management & segmentation</li>
                                       <li>• GDPR & CAN-SPAM compliant</li>
@@ -322,16 +322,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* /livechat - Educational */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-purple-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 dark:hover:from-purple-950 dark:hover:to-indigo-950"
+                                className="group block select-none space-y-1 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-purple-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 dark:hover:from-purple-950 dark:hover:to-indigo-950"
                                 href="/livechat"
                                 data-testid="link-commverse-livechat"
                               >
-                                <div className="flex items-start gap-3">
-                                  <img src={livechatIcon} alt="/livechat" className="h-12 w-12 object-contain flex-shrink-0" />
+                                <div className="flex items-start gap-2">
+                                  <img src={livechatIcon} alt="/livechat" className="h-10 w-10 object-contain flex-shrink-0" />
                                   <div className="flex-1">
-                                    <div className="text-base font-bold text-gray-900 dark:text-white mb-1">/livechat</div>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Website chat widget with session persistence</p>
-                                    <ul className="text-xs text-gray-500 space-y-1">
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-0.5">/livechat</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Website chat widget with session persistence</p>
+                                    <ul className="text-xs text-gray-500 space-y-0.5">
                                       <li>• Real-time visitor engagement</li>
                                       <li>• Conversation history & context</li>
                                       <li>• Customizable widget design</li>
@@ -344,16 +344,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* /inbox - Educational */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-pink-50 dark:hover:from-blue-950 dark:hover:to-pink-950"
+                                className="group block select-none space-y-1 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-pink-50 dark:hover:from-blue-950 dark:hover:to-pink-950"
                                 href="/inbox"
                                 data-testid="link-commverse-inbox"
                               >
-                                <div className="flex items-start gap-3">
-                                  <img src={inboxIcon} alt="/inbox" className="h-12 w-12 object-contain flex-shrink-0" />
+                                <div className="flex items-start gap-2">
+                                  <img src={inboxIcon} alt="/inbox" className="h-10 w-10 object-contain flex-shrink-0" />
                                   <div className="flex-1">
-                                    <div className="text-base font-bold text-gray-900 dark:text-white mb-1">/inbox</div>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Unified inbox for 8 communication channels</p>
-                                    <ul className="text-xs text-gray-500 space-y-1">
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-0.5">/inbox</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Unified inbox for 8 communication channels</p>
+                                    <ul className="text-xs text-gray-500 space-y-0.5">
                                       <li>• Email, SMS, WhatsApp, social DMs</li>
                                       <li>• Real-time WebSocket messaging</li>
                                       <li>• Team collaboration & assignment</li>
@@ -366,16 +366,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* /content - Educational */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-pink-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-pink-50 hover:to-red-50 dark:hover:from-pink-950 dark:hover:to-red-950"
+                                className="group block select-none space-y-1 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-pink-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-pink-50 hover:to-red-50 dark:hover:from-pink-950 dark:hover:to-red-950"
                                 href="/content-landing"
                                 data-testid="link-commverse-content"
                               >
-                                <div className="flex items-start gap-3">
-                                  <MessageSquare className="h-12 w-12 flex-shrink-0" style={{ color: '#FC6ACD' }} />
+                                <div className="flex items-start gap-2">
+                                  <MessageSquare className="h-10 w-10 flex-shrink-0" style={{ color: '#FC6ACD' }} />
                                   <div className="flex-1">
-                                    <div className="text-base font-bold text-gray-900 dark:text-white mb-1">/content</div>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Social media management platform</p>
-                                    <ul className="text-xs text-gray-500 space-y-1">
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-0.5">/content</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Social media management platform</p>
+                                    <ul className="text-xs text-gray-500 space-y-0.5">
                                       <li>• Multi-platform posting & scheduling</li>
                                       <li>• Content calendar & media library</li>
                                       <li>• AI-powered caption suggestions</li>
@@ -387,10 +387,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           </div>
 
                           {/* Bottom CTA - Educational Focus */}
-                          <div className="grid grid-cols-2 gap-3 border-t border-gray-200 dark:border-gray-700 pt-4">
+                          <div className="grid grid-cols-2 gap-2 border-t border-gray-200 dark:border-gray-700 pt-2">
                             <NavigationMenuLink asChild>
                               <a
-                                className="group block select-none rounded-lg border-2 border-blue-300 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 p-3 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-lg"
+                                className="group block select-none rounded-lg border-2 border-blue-300 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 p-2 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-lg"
                                 href="/commverse"
                                 data-testid="link-commverse-about"
                               >
@@ -431,16 +431,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Pricing</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-6 w-[900px]">
+                        <div className="p-4 w-[900px]">
                           {/* Header */}
-                          <div className="mb-6">
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Do It Yourself (DIY)</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Full control of your digital presence with AI-powered tools & 4 Commverse apps</p>
+                          <div className="mb-4">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-0.5">Do It Yourself (DIY)</h3>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">Full control of your digital presence with AI-powered tools & 4 Commverse apps</p>
                           </div>
 
                           {/* Base Plans Section */}
-                          <div className="mb-6">
-                            <h4 className="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider mb-3">Choose Your Base Plan (Required)</h4>
+                          <div className="mb-4">
+                            <h4 className="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider mb-2">Choose Your Base Plan (Required)</h4>
                             <div className="grid grid-cols-3 gap-3">
                               {/* Start Plan */}
                               <a href="/marketplace" className="group block bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-4 hover:shadow-lg transition-all">
@@ -502,8 +502,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           </div>
 
                           {/* Commverse Apps Section */}
-                          <div className="mb-6">
-                            <h4 className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-3">+ Add Commverse Apps (Optional)</h4>
+                          <div className="mb-4">
+                            <h4 className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-2">+ Add Commverse Apps (Optional)</h4>
                             <div className="grid grid-cols-4 gap-3">
                               {/* /send */}
                               <a href="/marketplace" className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:border-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-950 transition-all">
@@ -552,7 +552,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           </div>
 
                           {/* Bottom CTA Row */}
-                          <div className="grid grid-cols-3 gap-3 border-t border-gray-200 dark:border-gray-700 pt-4">
+                          <div className="grid grid-cols-3 gap-2 border-t border-gray-200 dark:border-gray-700 pt-2">
                             <a href="/pathways" className="group flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all">
                               <Wrench className="w-5 h-5 text-blue-600" />
                               <div className="flex-1">
