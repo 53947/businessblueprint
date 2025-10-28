@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import contentRoutes from "./routes/content";
+import metaRoutes from "./routes/meta";
 import {
   insertAssessmentSchema,
   subscriptionPlans,
@@ -2943,6 +2944,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Content Management Routes
   app.use('/api/content', contentRoutes);
+
+  // Meta (Facebook/Instagram/WhatsApp) Integration Routes
+  app.use('/api/meta', metaRoutes);
 
   const httpServer = createServer(app);
   return httpServer;
