@@ -474,7 +474,7 @@ $contact = $client->createContact([
                   <CardDescription>/send + /livechat + /inbox</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-4xl font-bold mb-4">$75<span className="text-lg text-gray-600">/mo</span></div>
+                  <div className="text-4xl font-bold mb-4">$119<span className="text-lg text-gray-600">/mo</span></div>
                   <ul className="space-y-2 text-sm mb-6">
                     <li className="flex items-center gap-2">
                       <span className="text-green-500">✓</span>

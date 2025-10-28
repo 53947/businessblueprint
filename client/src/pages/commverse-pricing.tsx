@@ -18,7 +18,7 @@ export default function CommversePricing() {
               Commverse Pricing
             </h1>
             <p className="text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
-              Choose individual apps at $35/month each, or get all four for $75/month
+              Choose individual apps at $35/month each, or get all four for $119/month
             </p>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
               No hidden fees • No per-message charges • No contact limits • Cancel anytime
@@ -221,9 +221,9 @@ export default function CommversePricing() {
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900">$75</span>
+                  <span className="text-4xl font-bold text-gray-900">$119</span>
                   <span className="text-gray-600">/month</span>
-                  <p className="text-sm mt-1" style={{ color: '#FC6ACD' }}>Save $65/month</p>
+                  <p className="text-sm mt-1" style={{ color: '#FC6ACD' }}>Save $21/month</p>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
@@ -414,7 +414,7 @@ export default function CommversePricing() {
               asChild
               data-testid="button-get-bundle"
             >
-              <a href="/assessment">Get Bundle ($75/mo)</a>
+              <a href="/assessment">Get Bundle ($119/mo)</a>
             </Button>
             <Button 
               size="lg" 

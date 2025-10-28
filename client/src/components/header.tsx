@@ -983,11 +983,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     <div className="text-xs text-green-600">Save in bundle</div>
                   </a>
 
-                  <a href="/marketplace" className="p-2 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg border-2 border-pink-300 hover:border-pink-500 hover:shadow-lg transition-all">
+                  <a href="/marketplace" className="p-2 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg border-2 border-pink-300 hover:border-pink-500 hover:shadow-lg transition-all col-span-2">
                     <img src={commverseIcon} alt="" className="h-8 w-8 mb-1" />
                     <div className="text-xs font-bold text-gray-900">Bundle</div>
-                    <div className="text-lg font-bold text-gray-900">$75<span className="text-xs">/mo</span></div>
-                    <div className="text-xs text-pink-600 font-semibold">Save $30</div>
+                    <div className="text-lg font-bold text-gray-900">$119<span className="text-xs">/mo</span></div>
+                    <div className="text-xs text-pink-600 font-semibold">Save $21</div>
                   </a>
 
                   <a href="/commverse" className="p-2 bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg border border-gray-300 hover:border-blue-400 hover:shadow-md transition-all col-span-2">
