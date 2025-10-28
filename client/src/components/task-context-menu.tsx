@@ -62,10 +62,11 @@ export function TaskContextMenu({ children }: TaskContextMenuProps) {
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const { toast } = useToast();
 
-  // Fetch tasks from API
+  // Fetch tasks from API - only when we have a valid session
   const { data: tasks = [] } = useQuery<Task[]>({
     queryKey: ['/api/tasks'],
-    enabled: true,
+    enabled: false, // Disable for now until auth is properly set up
+    retry: false,
   });
 
   // Create task mutation
