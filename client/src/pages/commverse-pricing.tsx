@@ -14,11 +14,12 @@ export default function CommversePricing() {
       <section className="bg-white py-16 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Commverse Pricing
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              <span style={{ color: '#09080E' }}>Commverse </span>
+              <span style={{ color: '#00FF40' }}>Pricing</span>
             </h1>
             <p className="text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
-              Choose individual apps at $35/month each, or get all four for $75/month
+              Choose individual apps at $35/month each, or get all four for $119/month
             </p>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
               No hidden fees • No per-message charges • No contact limits • Cancel anytime
@@ -221,9 +222,9 @@ export default function CommversePricing() {
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900">$75</span>
+                  <span className="text-4xl font-bold text-gray-900">$119</span>
                   <span className="text-gray-600">/month</span>
-                  <p className="text-sm mt-1" style={{ color: '#FC6ACD' }}>Save $65/month</p>
+                  <p className="text-sm mt-1" style={{ color: '#FC6ACD' }}>Save $21/month</p>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
@@ -343,7 +344,7 @@ export default function CommversePricing() {
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#8000FF' }}>$35</td>
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#0080FF' }}>$35</td>
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#EF4444' }}>$35</td>
-                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#FC6ACD' }}>$75</td>
+                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#FC6ACD' }}>$119</td>
                 </tr>
               </tbody>
             </table>
@@ -414,7 +415,7 @@ export default function CommversePricing() {
               asChild
               data-testid="button-get-bundle"
             >
-              <a href="/assessment">Get Bundle ($75/mo)</a>
+              <a href="/assessment">Get Bundle ($119/mo)</a>
             </Button>
             <Button 
               size="lg" 

@@ -37,7 +37,8 @@ import {
   HelpCircle,
   FileText,
   Video,
-  Users
+  Users,
+  ShoppingCart
 } from "lucide-react";
 import { BrandLogo, BrandIcon } from "@/components/brand-logo";
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
@@ -289,89 +290,132 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="grid gap-4 p-6 w-[600px]">
+                          {/* Header */}
                           <div className="mb-2">
-                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Communication Ecosystem</h3>
-                            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                              Four powerful apps at $35/mo each, or get all 4 for $75/mo
-                            </p>
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Communication Ecosystem</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Three apps that work independently or together</p>
                           </div>
-                          <div className="grid grid-cols-2 gap-3">
-                            {/* /send */}
+
+                          <div className="grid grid-cols-1 gap-3">
+                            {/* /send - Educational */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group flex items-center space-x-3 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-[#E6B747] hover:shadow-md hover:bg-gradient-to-r hover:from-[#E6B747]/5 hover:to-transparent"
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-yellow-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-yellow-50 hover:to-orange-50 dark:hover:from-yellow-950 dark:hover:to-orange-950"
                                 href="/send"
                                 data-testid="link-commverse-send"
                               >
-                                <img src={sendIcon} alt="/send" className="h-10 w-10 object-contain flex-shrink-0" />
-                                <div className="flex-1">
-                                  <div className="text-sm font-semibold text-gray-900 dark:text-white">/send</div>
-                                  <p className="text-xs text-gray-600 dark:text-gray-400">Email & SMS Marketing</p>
-                                  <p className="text-xs font-bold text-gray-900 dark:text-white mt-1">$35/mo</p>
+                                <div className="flex items-start gap-3">
+                                  <img src={sendIcon} alt="/send" className="h-12 w-12 object-contain flex-shrink-0" />
+                                  <div className="flex-1">
+                                    <div className="text-base font-bold text-gray-900 dark:text-white mb-1">/send</div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Email & SMS marketing with full data ownership</p>
+                                    <ul className="text-xs text-gray-500 space-y-1">
+                                      <li>• Campaign automation & templates</li>
+                                      <li>• Contact management & segmentation</li>
+                                      <li>• GDPR & CAN-SPAM compliant</li>
+                                    </ul>
+                                  </div>
                                 </div>
                               </a>
                             </NavigationMenuLink>
 
-                            {/* /livechat */}
+                            {/* /livechat - Educational */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group flex items-center space-x-3 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-[#8000FF] hover:shadow-md hover:bg-gradient-to-r hover:from-[#8000FF]/5 hover:to-transparent"
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-purple-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 dark:hover:from-purple-950 dark:hover:to-indigo-950"
                                 href="/livechat"
                                 data-testid="link-commverse-livechat"
                               >
-                                <img src={livechatIcon} alt="/livechat" className="h-10 w-10 object-contain flex-shrink-0" />
-                                <div className="flex-1">
-                                  <div className="text-sm font-semibold text-gray-900 dark:text-white">/livechat</div>
-                                  <p className="text-xs text-gray-600 dark:text-gray-400">Website Live Chat</p>
-                                  <p className="text-xs font-bold text-gray-900 dark:text-white mt-1">$35/mo</p>
+                                <div className="flex items-start gap-3">
+                                  <img src={livechatIcon} alt="/livechat" className="h-12 w-12 object-contain flex-shrink-0" />
+                                  <div className="flex-1">
+                                    <div className="text-base font-bold text-gray-900 dark:text-white mb-1">/livechat</div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Website chat widget with session persistence</p>
+                                    <ul className="text-xs text-gray-500 space-y-1">
+                                      <li>• Real-time visitor engagement</li>
+                                      <li>• Conversation history & context</li>
+                                      <li>• Customizable widget design</li>
+                                    </ul>
+                                  </div>
                                 </div>
                               </a>
                             </NavigationMenuLink>
 
-                            {/* /inbox */}
+                            {/* /inbox - Educational */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group flex items-center space-x-3 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-[#0080FF] hover:shadow-md hover:bg-gradient-to-r hover:from-[#0080FF]/5 hover:to-transparent"
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-pink-50 dark:hover:from-blue-950 dark:hover:to-pink-950"
                                 href="/inbox"
                                 data-testid="link-commverse-inbox"
                               >
-                                <img src={inboxIcon} alt="/inbox" className="h-10 w-10 object-contain flex-shrink-0" />
-                                <div className="flex-1">
-                                  <div className="text-sm font-semibold text-gray-900 dark:text-white">/inbox</div>
-                                  <p className="text-xs text-gray-600 dark:text-gray-400">Unified Communications</p>
-                                  <p className="text-xs font-bold text-gray-900 dark:text-white mt-1">$35/mo</p>
+                                <div className="flex items-start gap-3">
+                                  <img src={inboxIcon} alt="/inbox" className="h-12 w-12 object-contain flex-shrink-0" />
+                                  <div className="flex-1">
+                                    <div className="text-base font-bold text-gray-900 dark:text-white mb-1">/inbox</div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Unified inbox for 8 communication channels</p>
+                                    <ul className="text-xs text-gray-500 space-y-1">
+                                      <li>• Email, SMS, WhatsApp, social DMs</li>
+                                      <li>• Real-time WebSocket messaging</li>
+                                      <li>• Team collaboration & assignment</li>
+                                    </ul>
+                                  </div>
                                 </div>
                               </a>
                             </NavigationMenuLink>
 
-                            {/* /content */}
+                            {/* /content - Educational */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group flex items-center space-x-3 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-[#E91E8C] hover:shadow-md hover:bg-gradient-to-r hover:from-[#E91E8C]/5 hover:to-transparent"
-                                href="/content-management"
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-pink-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-pink-50 hover:to-red-50 dark:hover:from-pink-950 dark:hover:to-red-950"
+                                href="/content-landing"
                                 data-testid="link-commverse-content"
                               >
-                                <MessageSquare className="h-10 w-10 text-[#E91E8C] flex-shrink-0" />
-                                <div className="flex-1">
-                                  <div className="text-sm font-semibold text-gray-900 dark:text-white">/content</div>
-                                  <p className="text-xs text-gray-600 dark:text-gray-400">Social Media Management</p>
-                                  <p className="text-xs font-bold text-gray-900 dark:text-white mt-1">$35/mo</p>
+                                <div className="flex items-start gap-3">
+                                  <MessageSquare className="h-12 w-12 flex-shrink-0" style={{ color: '#FC6ACD' }} />
+                                  <div className="flex-1">
+                                    <div className="text-base font-bold text-gray-900 dark:text-white mb-1">/content</div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Social media management platform</p>
+                                    <ul className="text-xs text-gray-500 space-y-1">
+                                      <li>• Multi-platform posting & scheduling</li>
+                                      <li>• Content calendar & media library</li>
+                                      <li>• AI-powered caption suggestions</li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                          </div>
+
+                          {/* Bottom CTA - Educational Focus */}
+                          <div className="grid grid-cols-2 gap-3 border-t border-gray-200 dark:border-gray-700 pt-4">
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group block select-none rounded-lg border-2 border-blue-300 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 p-3 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-lg"
+                                href="/commverse"
+                                data-testid="link-commverse-about"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <MessageSquare className="h-8 w-8 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                                  <div className="flex-1">
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white">About Commverse</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">How all 4 apps work together</p>
+                                  </div>
                                 </div>
                               </a>
                             </NavigationMenuLink>
 
-                            {/* Bundle - Spans 2 columns */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="col-span-2 group flex items-center space-x-3 rounded-lg border-2 border-[#FC6ACD] bg-gradient-to-r from-[#FC6ACD]/10 to-transparent p-3 leading-none no-underline outline-none transition-all hover:border-[#FC6ACD] hover:shadow-lg"
-                                href="/commverse-pricing"
-                                data-testid="link-commverse-bundle"
+                                className="group block select-none rounded-lg border border-gray-300 bg-white dark:bg-gray-800 p-3 leading-none no-underline outline-none transition-all hover:border-green-500 hover:shadow-lg"
+                                href="/marketplace"
+                                data-testid="link-commverse-pricing"
                               >
-                                <img src={commverseIcon} alt="Bundle" className="h-10 w-10 object-contain flex-shrink-0" />
-                                <div className="flex-1">
-                                  <div className="text-sm font-bold text-gray-900 dark:text-white">Complete Bundle</div>
-                                  <p className="text-xs text-gray-600 dark:text-gray-400">All 4 apps together</p>
-                                  <p className="text-xs font-bold text-[#FC6ACD] mt-1">$75/mo (Save $65!)</p>
+                                <div className="flex items-center gap-2">
+                                  <ShoppingCart className="h-8 w-8 text-green-600 flex-shrink-0" />
+                                  <div className="flex-1">
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white">View Pricing</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">À la carte marketplace</p>
+                                  </div>
                                 </div>
                               </a>
                             </NavigationMenuLink>
@@ -391,7 +435,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* Header */}
                           <div className="mb-6">
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Do It Yourself (DIY)</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">Full control of your digital presence with AI-powered tools</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Full control of your digital presence with AI-powered tools & 4 Commverse apps</p>
                           </div>
 
                           {/* Base Plans Section */}
@@ -939,11 +983,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     <div className="text-xs text-green-600">Save in bundle</div>
                   </a>
 
-                  <a href="/marketplace" className="p-2 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg border-2 border-pink-300 hover:border-pink-500 hover:shadow-lg transition-all">
+                  <a href="/marketplace" className="p-2 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg border-2 border-pink-300 hover:border-pink-500 hover:shadow-lg transition-all col-span-2">
                     <img src={commverseIcon} alt="" className="h-8 w-8 mb-1" />
                     <div className="text-xs font-bold text-gray-900">Bundle</div>
-                    <div className="text-lg font-bold text-gray-900">$75<span className="text-xs">/mo</span></div>
-                    <div className="text-xs text-pink-600 font-semibold">Save $30</div>
+                    <div className="text-lg font-bold text-gray-900">$119<span className="text-xs">/mo</span></div>
+                    <div className="text-xs text-pink-600 font-semibold">Save $21</div>
                   </a>
 
                   <a href="/commverse" className="p-2 bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg border border-gray-300 hover:border-blue-400 hover:shadow-md transition-all col-span-2">

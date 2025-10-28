@@ -24,6 +24,7 @@ import InboxPage from "@/pages/inbox";
 import LivechatLanding from "@/pages/livechat-landing";
 import LiveChatDemo from "@/pages/livechat-demo";
 import LiveChatInstall from "@/pages/livechat-install";
+import ContentLanding from "@/pages/content-landing";
 import CommverseLanding from "@/pages/commverse-landing";
 import CommversePricing from "@/pages/commverse-pricing";
 import PathwaysPage from "@/pages/pathways";
@@ -61,6 +62,7 @@ function Router() {
       <Route path="/livechat" component={LivechatLanding} />
       <Route path="/livechat-demo" component={LiveChatDemo} />
       <Route path="/livechat-install" component={LiveChatInstall} />
+      <Route path="/content-landing" component={ContentLanding} />
       <Route path="/commverse" component={CommverseLanding} />
       <Route path="/commverse-pricing" component={CommversePricing} />
       <Route path="/biif" component={BIIF} />
