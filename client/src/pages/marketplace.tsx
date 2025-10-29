@@ -384,7 +384,7 @@ export default function MarketplacePage() {
               <div className="text-6xl mb-4">👑</div>
               <h3 className="text-2xl font-black mb-3" style={{ color: '#09080E' }}>Managed Services (MSP)</h3>
               <p className="text-sm text-gray-600 mb-6">We do it for you - Expert team handles everything</p>
-              <div className="text-5xl font-black mb-2" style={{ color: '#F79248' }}>$313+</div>
+              <div className="text-5xl font-black mb-2" style={{ color: '#F79248' }}>$299+</div>
               <div className="text-gray-600 text-sm">per month</div>
             </Card>
 
