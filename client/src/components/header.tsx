@@ -94,22 +94,6 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 {/* Desktop Mega Menu */}
                 <NavigationMenu className="hidden lg:flex ml-8">
                   <NavigationMenuList>
-                    {/* Marketplace - Prominent Top-Level Item */}
-              <NavigationMenuItem>
-                <a
-                  href="/marketplace"
-                  className="group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-base font-bold transition-all hover:text-orange-600 focus:text-orange-600 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:text-orange-600 data-[state=open]:text-orange-600 relative"
-                  data-testid="link-marketplace-primary"
-                  style={{ fontFamily: 'Archivo' }}
-                >
-                  <span className="relative">
-                    Marketplace
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
-                  </span>
-                  <span className="ml-2 text-xs bg-gradient-to-r from-orange-500 to-blue-500 text-white px-2 py-0.5 rounded-full font-semibold animate-pulse">NEW</span>
-                </a>
-              </NavigationMenuItem>
-
                     {/* Apps - Cross-Platform Ecosystem */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-apps">
@@ -424,157 +408,31 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Pricing - DIY Focus */}
+                    {/* Pricing */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pricing">
                         <DollarSign className="w-4 h-4" />
                         <span>Pricing</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-4 w-[900px]">
-                          {/* Header */}
-                          <div className="mb-4">
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-0.5">Do It Yourself (DIY)</h3>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">Full control of your digital presence with AI-powered tools & 4 Commverse apps</p>
-                          </div>
-
-                          {/* Base Plans Section */}
-                          <div className="mb-4">
-                            <h4 className="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider mb-2">Choose Your Base Plan (Required)</h4>
-                            <div className="grid grid-cols-3 gap-3">
-                              {/* Start Plan */}
-                              <a href="/marketplace" className="group block bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-4 hover:shadow-lg transition-all">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="text-xl">💡</span>
-                                  <span className="text-sm font-bold text-white">Start</span>
-                                </div>
-                                <div className="text-2xl font-bold text-white mb-1">$99<span className="text-sm font-normal">/mo</span></div>
-                                <p className="text-xs text-white/90 mb-3">Get Found. Build your foundation.</p>
-                                <ul className="space-y-1 text-xs text-white/80 mb-3">
-                                  <li>• 5 team members</li>
-                                  <li>• 25 client accounts</li>
-                                  <li>• Digital IQ + Blueprint</li>
-                                </ul>
-                                <button className="w-full bg-white text-orange-600 font-bold py-2 rounded-lg text-sm hover:bg-orange-50 transition-colors">
-                                  Select
-                                </button>
-                              </a>
-
-                              {/* Advanced Plan */}
-                              <a href="/marketplace" className="group block bg-gradient-to-br from-orange-400 to-orange-500 rounded-xl p-4 hover:shadow-lg transition-all border-2 border-white">
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-xl">⚙️</span>
-                                    <span className="text-sm font-bold text-white">Advanced</span>
-                                  </div>
-                                  <Badge className="bg-white text-orange-600 text-xs">Popular</Badge>
-                                </div>
-                                <div className="text-2xl font-bold text-white mb-1">$299<span className="text-sm font-normal">/mo</span></div>
-                                <p className="text-xs text-white/90 mb-3">Get Customers. Convert attention.</p>
-                                <ul className="space-y-1 text-xs text-white/80 mb-3">
-                                  <li>• 10 team members</li>
-                                  <li>• 100 client accounts</li>
-                                  <li>• AI automation + insights</li>
-                                </ul>
-                                <button className="w-full bg-white text-orange-600 font-bold py-2 rounded-lg text-sm hover:bg-orange-50 transition-colors">
-                                  Select
-                                </button>
-                              </a>
-
-                              {/* Scale Plan */}
-                              <a href="/marketplace" className="group block bg-gradient-to-br from-orange-300 to-orange-400 rounded-xl p-4 hover:shadow-lg transition-all">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="text-xl">🚀</span>
-                                  <span className="text-sm font-bold text-white">Scale</span>
-                                </div>
-                                <div className="text-2xl font-bold text-white mb-1">$999<span className="text-sm font-normal">/mo</span></div>
-                                <p className="text-xs text-white/90 mb-3">Get Business. Unified system.</p>
-                                <ul className="space-y-1 text-xs text-white/80 mb-3">
-                                  <li>• 50 team members</li>
-                                  <li>• 500 client accounts</li>
-                                  <li>• Enterprise features</li>
-                                </ul>
-                                <button className="w-full bg-white text-orange-600 font-bold py-2 rounded-lg text-sm hover:bg-orange-50 transition-colors">
-                                  Select
-                                </button>
-                              </a>
-                            </div>
-                          </div>
-
-                          {/* Commverse Apps Section */}
-                          <div className="mb-4">
-                            <h4 className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider mb-2">+ Add Commverse Apps (Optional)</h4>
-                            <div className="grid grid-cols-4 gap-3">
-                              {/* /send */}
-                              <a href="/marketplace" className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:border-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-950 transition-all">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <img src={sendIcon} alt="" className="w-6 h-6" />
-                                  <span className="text-xs font-bold text-gray-900 dark:text-white">/send</span>
-                                </div>
-                                <div className="text-lg font-bold text-gray-900 dark:text-white">$35<span className="text-xs font-normal">/mo</span></div>
-                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Email & SMS marketing automation</p>
-                                <div className="mt-2 text-xs text-green-600 dark:text-green-400 font-semibold">Save in bundle</div>
-                              </a>
-
-                              {/* /inbox */}
-                              <a href="/marketplace" className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <img src={inboxIcon} alt="" className="w-6 h-6" />
-                                  <span className="text-xs font-bold text-gray-900 dark:text-white">/inbox</span>
-                                </div>
-                                <div className="text-lg font-bold text-gray-900 dark:text-white">$35<span className="text-xs font-normal">/mo</span></div>
-                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Unified communications hub</p>
-                                <div className="mt-2 text-xs text-green-600 dark:text-green-400 font-semibold">Save in bundle</div>
-                              </a>
-
-                              {/* /livechat */}
-                              <a href="/marketplace" className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950 transition-all">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <img src={livechatIcon} alt="" className="w-6 h-6" />
-                                  <span className="text-xs font-bold text-gray-900 dark:text-white">/livechat</span>
-                                </div>
-                                <div className="text-lg font-bold text-gray-900 dark:text-white">$35<span className="text-xs font-normal">/mo</span></div>
-                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Website live chat widget</p>
-                                <div className="mt-2 text-xs text-green-600 dark:text-green-400 font-semibold">Save in bundle</div>
-                              </a>
-
-                              {/* /content */}
-                              <a href="/marketplace" className="group block border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:border-pink-400 hover:bg-pink-50 dark:hover:bg-pink-950 transition-all">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <MessageSquare className="w-6 h-6 text-pink-600" />
-                                  <span className="text-xs font-bold text-gray-900 dark:text-white">/content</span>
-                                </div>
-                                <div className="text-lg font-bold text-gray-900 dark:text-white">$35<span className="text-xs font-normal">/mo</span></div>
-                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Social content management</p>
-                                <div className="mt-2 text-xs text-green-600 dark:text-green-400 font-semibold">Save in bundle</div>
-                              </a>
-                            </div>
-                          </div>
-
-                          {/* Bottom CTA Row */}
-                          <div className="grid grid-cols-3 gap-2 border-t border-gray-200 dark:border-gray-700 pt-2">
-                            <a href="/pathways" className="group flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all">
-                              <Wrench className="w-5 h-5 text-blue-600" />
-                              <div className="flex-1">
-                                <div className="text-xs font-bold text-gray-900 dark:text-white">MSP Services</div>
-                                <div className="text-xs text-gray-600 dark:text-gray-400">We do it for you</div>
+                        <div className="p-6 w-[400px]">
+                          <div className="space-y-4">
+                            {/* Pathways */}
+                            <a href="/pathways" className="group block p-4 rounded-lg border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                              <div className="flex items-center gap-3 mb-2">
+                                <Compass className="w-6 h-6 text-blue-600" />
+                                <h3 className="text-base font-bold text-gray-900">Pathways</h3>
                               </div>
+                              <p className="text-sm text-gray-600">Compare Do It Yourself (DIY) and Managed Services Provided (MSP)</p>
                             </a>
 
-                            <a href="/marketplace" className="group flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-green-400 hover:bg-green-50 dark:hover:bg-green-950 transition-all">
-                              <Wallet className="w-5 h-5 text-green-600" />
-                              <div className="flex-1">
-                                <div className="text-xs font-bold text-gray-900 dark:text-white">À La Carte</div>
-                                <div className="text-xs text-gray-600 dark:text-gray-400">Pick what you need</div>
+                            {/* Marketplace */}
+                            <a href="/marketplace" className="group block p-4 rounded-lg border border-gray-200 hover:border-green-500 hover:bg-green-50 transition-all">
+                              <div className="flex items-center gap-3 mb-2">
+                                <ShoppingCart className="w-6 h-6 text-green-600" />
+                                <h3 className="text-base font-bold text-gray-900">Marketplace</h3>
                               </div>
-                            </a>
-
-                            <a href="/assessment" className="group flex items-center gap-2 p-3 rounded-lg bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 transition-all">
-                              <Lightbulb className="w-5 h-5 text-white" />
-                              <div className="flex-1">
-                                <div className="text-xs font-bold text-white">Free Assessment</div>
-                                <div className="text-xs text-white/80">Find your path</div>
-                              </div>
+                              <p className="text-sm text-gray-600">Browse all plans, add-ons, and services with pricing</p>
                             </a>
                           </div>
                         </div>
