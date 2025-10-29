@@ -404,12 +404,12 @@ export default function MarketplacePage() {
               <div>
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#0000FF] to-[#4D5CFF] text-white flex items-center justify-center font-black text-xl mb-4">1</div>
                 <h4 className="font-black text-lg mb-2" style={{ color: '#09080E' }}>Choose Your Base Plan</h4>
-                <p className="text-sm text-gray-600">All DIY & MSP customers start with a Commverse Base Plan (Digital IQ & Blueprint). This is REQUIRED.</p>
+                <p className="text-sm text-gray-600">All DIY & MSP customers start with a Base Plan powered by Synup (Digital IQ & Blueprint). This is REQUIRED.</p>
               </div>
               <div>
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8000FF] to-[#B566FF] text-white flex items-center justify-center font-black text-xl mb-4">2</div>
                 <h4 className="font-black text-lg mb-2" style={{ color: '#09080E' }}>Add Commverse Apps</h4>
-                <p className="text-sm text-gray-600">Then add Apps - the /send, /inbox, /livechat, /content Bundle (ALL or individually). Save money by bundling!</p>
+                <p className="text-sm text-gray-600">Then add Commverse - the /send, /inbox, /livechat, /content Bundle (ALL or individually). Save money by bundling!</p>
               </div>
               <div>
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00FF40] to-[#7DFFB2] text-white flex items-center justify-center font-black text-xl mb-4">3</div>
@@ -431,10 +431,10 @@ export default function MarketplacePage() {
               Choose Your Base Plan (Required)
             </div>
             <h2 className="text-4xl font-black mb-3" style={{ color: '#09080E' }}>
-              Commverse Base Plans • Digital IQ & Blueprint
+              Base Plans • Digital IQ & Blueprint
             </h2>
             <p className="text-lg text-gray-600 max-w-4xl">
-              These are <span className="font-black" style={{ color: '#F79248' }}>REQUIRED</span> for DIY customers. Includes Digital IQ Assessment + Blueprint. Then add Apps (Bundle or Individual).
+              Powered by Synup. These are <span className="font-black" style={{ color: '#F79248' }}>REQUIRED</span> for DIY customers. Includes Digital IQ Assessment + Blueprint. Then add Commverse Apps (Bundle or Individual).
             </p>
           </div>
 
@@ -508,10 +508,10 @@ export default function MarketplacePage() {
               + Add Commverse Apps (Optional)
             </div>
             <h2 className="text-4xl font-black mb-3" style={{ color: '#09080E' }}>
-              Native Communication Apps
+              Commverse: Native Communication Apps
             </h2>
             <p className="text-lg text-gray-600 max-w-4xl">
-              Bundle all 4 apps for <span className="font-black" style={{ color: '#00FF40' }}>$119/mo and SAVE $21</span>, or purchase individually. These work with or without a base plan.
+              Bundle all 4 Commverse apps for <span className="font-black" style={{ color: '#00FF40' }}>$119/mo and SAVE $21</span>, or purchase individually. These work with or without a base plan.
             </p>
           </div>
 
@@ -524,7 +524,7 @@ export default function MarketplacePage() {
               <div className="text-center">
                 <img src={commverseBundle} alt="Commverse Bundle" className="h-24 w-auto mx-auto mb-6" />
                 <div className="inline-flex items-center gap-3 text-2xl font-black px-6 py-3 rounded-full bg-white/20 backdrop-blur-sm mb-6">
-                  <span className="text-white">All-in-One Bundle</span>
+                  <span className="text-white">Commverse Bundle</span>
                 </div>
                 <div className="text-6xl font-black mb-3 text-white">$119/mo</div>
                 <div className="text-xl text-white/90 mb-4">All 4 apps: /send + /inbox + /livechat + /content</div>
