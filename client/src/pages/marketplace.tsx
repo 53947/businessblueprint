@@ -372,19 +372,19 @@ export default function MarketplacePage() {
 
           {/* Three Pathway Cards */}
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
-            <Card className="bg-white border-2 rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all hover:scale-105" style={{ borderColor: '#0057FF' }}>
+            <Card className="bg-white border-2 rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all hover:scale-105" style={{ borderColor: '#F79248' }}>
               <div className="text-6xl mb-4">💡</div>
               <h3 className="text-2xl font-black mb-3" style={{ color: '#09080E' }}>Do It Yourself (DIY)</h3>
               <p className="text-sm text-gray-600 mb-6">Full control with AI-powered tools & 4 Commverse apps</p>
-              <div className="text-5xl font-black mb-2" style={{ color: '#0057FF' }}>$99+</div>
+              <div className="text-5xl font-black mb-2" style={{ color: '#F79248' }}>$99+</div>
               <div className="text-gray-600 text-sm">per month</div>
             </Card>
 
-            <Card className="bg-white border-2 rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all hover:scale-105" style={{ borderColor: '#F79248' }}>
+            <Card className="bg-white border-2 rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all hover:scale-105" style={{ borderColor: '#0057FF' }}>
               <div className="text-6xl mb-4">👑</div>
               <h3 className="text-2xl font-black mb-3" style={{ color: '#09080E' }}>Managed Services (MSP)</h3>
               <p className="text-sm text-gray-600 mb-6">We do it for you - Expert team handles everything</p>
-              <div className="text-5xl font-black mb-2" style={{ color: '#F79248' }}>$299+</div>
+              <div className="text-5xl font-black mb-2" style={{ color: '#0057FF' }}>$299</div>
               <div className="text-gray-600 text-sm">per month</div>
             </Card>
 
