@@ -114,7 +114,7 @@ export default function MarketplacePage() {
       priceMonthly: 310,
       tagline: 'Get Customers',
       description: 'Convert attention',
-      accentColor: 'orange',
+      accentColor: 'blue',
       features: [
         { text: '10 team members', included: true },
         { text: '100 client accounts', included: true },
@@ -130,7 +130,7 @@ export default function MarketplacePage() {
       priceMonthly: 1249,
       tagline: 'Get Business',
       description: 'Unified system',
-      accentColor: 'orange',
+      accentColor: 'green',
       features: [
         { text: '50 team members', included: true },
         { text: '500 client accounts', included: true },
