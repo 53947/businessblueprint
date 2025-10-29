@@ -114,7 +114,7 @@ export default function MarketplacePage() {
       priceMonthly: 310,
       tagline: 'Get Customers',
       description: 'Convert attention',
-      accentColor: 'orange',
+      accentColor: 'blue',
       features: [
         { text: '10 team members', included: true },
         { text: '100 client accounts', included: true },
@@ -130,7 +130,7 @@ export default function MarketplacePage() {
       priceMonthly: 1249,
       tagline: 'Get Business',
       description: 'Unified system',
-      accentColor: 'orange',
+      accentColor: 'green',
       features: [
         { text: '50 team members', included: true },
         { text: '500 client accounts', included: true },
@@ -315,36 +315,42 @@ export default function MarketplacePage() {
   };
 
   const getAccentColorClasses = (color: string) => {
-    const colorMap: Record<string, { gradient: string; border: string; text: string }> = {
+    const colorMap: Record<string, { gradient: string; border: string; text: string; bg: string }> = {
       blue: { 
-        gradient: 'from-[#0000FF] to-[#4D5CFF]', 
-        border: 'border-[#0000FF]',
-        text: 'text-[#0000FF]'
+        gradient: 'from-[#0057FF] to-[#0000FF]', 
+        border: 'border-[#0057FF]',
+        text: 'text-[#0057FF]',
+        bg: 'bg-[#0057FF]'
       },
       purple: { 
-        gradient: 'from-[#8000FF] to-[#B566FF]', 
-        border: 'border-[#8000FF]',
-        text: 'text-[#8000FF]'
+        gradient: 'from-[#660099] to-[#8000FF]', 
+        border: 'border-[#660099]',
+        text: 'text-[#660099]',
+        bg: 'bg-[#660099]'
       },
       green: { 
-        gradient: 'from-[#00FF40] to-[#7DFFB2]', 
-        border: 'border-[#00FF40]',
-        text: 'text-[#00FF40]'
+        gradient: 'from-[#84D71A] to-[#00FF40]', 
+        border: 'border-[#84D71A]',
+        text: 'text-[#84D71A]',
+        bg: 'bg-[#84D71A]'
       },
       red: { 
-        gradient: 'from-[#FF0040] to-[#FF6A85]', 
+        gradient: 'from-[#FF0040] to-[#E91E8C]', 
         border: 'border-[#FF0040]',
-        text: 'text-[#FF0040]'
+        text: 'text-[#FF0040]',
+        bg: 'bg-[#FF0040]'
       },
       orange: { 
-        gradient: 'from-[#F79248] to-[#FFB67A]', 
+        gradient: 'from-[#F79248] to-[#FFA500]', 
         border: 'border-[#F79248]',
-        text: 'text-[#F79248]'
+        text: 'text-[#F79248]',
+        bg: 'bg-[#F79248]'
       },
       pink: { 
-        gradient: 'from-[#E91E8C] to-[#FF66CC]', 
+        gradient: 'from-[#E91E8C] to-[#FF96DD]', 
         border: 'border-[#E91E8C]',
-        text: 'text-[#E91E8C]'
+        text: 'text-[#E91E8C]',
+        bg: 'bg-[#E91E8C]'
       }
     };
     return colorMap[color] || colorMap.blue;
@@ -366,28 +372,28 @@ export default function MarketplacePage() {
 
           {/* Three Pathway Cards */}
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
-            <Card className="bg-gradient-to-br from-[#0057FF] to-[#4D5CFF] border-0 rounded-3xl p-8 text-white shadow-2xl hover:shadow-3xl transition-all hover:scale-105">
+            <Card className="bg-white border-2 rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all hover:scale-105" style={{ borderColor: '#F79248' }}>
               <div className="text-6xl mb-4">💡</div>
-              <h3 className="text-2xl font-black mb-3">Do It Yourself (DIY)</h3>
-              <p className="text-sm text-white/90 mb-6">Full control with AI-powered tools & 4 Commverse apps</p>
-              <div className="text-5xl font-black mb-2">$99+</div>
-              <div className="text-white/80 text-sm">per month</div>
+              <h3 className="text-2xl font-black mb-3" style={{ color: '#09080E' }}>Do It Yourself (DIY)</h3>
+              <p className="text-sm text-gray-600 mb-6">Full control with AI-powered tools & 4 Commverse apps</p>
+              <div className="text-5xl font-black mb-2" style={{ color: '#F79248' }}>$99+</div>
+              <div className="text-gray-600 text-sm">per month</div>
             </Card>
 
-            <Card className="bg-gradient-to-br from-[#8000FF] to-[#B566FF] border-4 border-white rounded-3xl p-8 text-white shadow-2xl hover:shadow-3xl transition-all hover:scale-105">
+            <Card className="bg-white border-2 rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all hover:scale-105" style={{ borderColor: '#0057FF' }}>
               <div className="text-6xl mb-4">👑</div>
-              <h3 className="text-2xl font-black mb-3">Managed Services (MSP)</h3>
-              <p className="text-sm text-white/90 mb-6">We do it for you - Expert team handles everything</p>
-              <div className="text-5xl font-black mb-2">$313+</div>
-              <div className="text-white/80 text-sm">per month</div>
+              <h3 className="text-2xl font-black mb-3" style={{ color: '#09080E' }}>Managed Services (MSP)</h3>
+              <p className="text-sm text-gray-600 mb-6">We do it for you - Expert team handles everything</p>
+              <div className="text-5xl font-black mb-2" style={{ color: '#0057FF' }}>$299</div>
+              <div className="text-gray-600 text-sm">per month</div>
             </Card>
 
-            <Card className="bg-gradient-to-br from-[#00FF40] to-[#7DFFB2] border-0 rounded-3xl p-8 text-white shadow-2xl hover:shadow-3xl transition-all hover:scale-105">
+            <Card className="bg-white border-2 rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all hover:scale-105" style={{ borderColor: '#84D71A' }}>
               <div className="text-6xl mb-4">🎯</div>
-              <h3 className="text-2xl font-black mb-3">À La Carte</h3>
-              <p className="text-sm text-white/90 mb-6">Pick what you need - No base plan required</p>
-              <div className="text-5xl font-black mb-2">Custom</div>
-              <div className="text-white/80 text-sm">pricing</div>
+              <h3 className="text-2xl font-black mb-3" style={{ color: '#09080E' }}>À La Carte</h3>
+              <p className="text-sm text-gray-600 mb-6">Pick what you need - No base plan required</p>
+              <div className="text-5xl font-black mb-2" style={{ color: '#84D71A' }}>Custom</div>
+              <div className="text-gray-600 text-sm">pricing</div>
             </Card>
           </div>
 
