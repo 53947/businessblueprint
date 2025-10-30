@@ -265,16 +265,21 @@ All backend routes are implemented in `server/routes/content.ts`:
 ## 🔧 Testing Status
 
 ### ✅ What's Been Tested
-- Post composer UI (validated with Meta platforms)
-- Platform connection flow (Facebook & Instagram OAuth working)
-- Media upload to Cloudflare R2
+- Post composer UI (caption editor, hashtag manager, platform selector)
+- Media upload FormData handling (queryClient properly detects and transmits files)
+- Media library with data persistence (fetch, display, delete operations)
+- Platform connection UI (connection cards, OAuth buttons)
 - AI caption generation (GPT-4o integration)
 - Database schema (posts, media, platforms, analytics tables)
+- Cache invalidation on upload/delete
 
 ### ⏳ What Needs Testing (Once Credentials Added)
-- LinkedIn OAuth flow & posting
-- Twitter OAuth flow & posting
-- Google Business OAuth flow & posting
+- **End-to-end post creation flow** (compose → upload media → select platforms → publish)
+- **Media upload to Cloudflare R2** (actual file storage and retrieval)
+- Facebook & Instagram OAuth completion (waiting on business verification)
+- LinkedIn OAuth flow & posting (needs credentials)
+- Twitter OAuth flow & posting (needs credentials)
+- Google Business OAuth flow & posting (needs credentials)
 - Cross-platform posting (select multiple platforms, publish to all)
 - Scheduled post execution
 - DM webhooks → /inbox integration
