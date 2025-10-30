@@ -434,7 +434,7 @@ export default function MarketplacePage() {
               Base Plans • Digital IQ & Blueprint
             </h2>
             <p className="text-lg text-gray-600 max-w-4xl">
-              Powered by Synup. These are <span className="font-black" style={{ color: '#F79248' }}>REQUIRED</span> for DIY customers. Includes Digital IQ Assessment + Blueprint. Then add Commverse Apps (Bundle or Individual).
+              These are <span className="font-black" style={{ color: '#F79248' }}>REQUIRED</span> for DIY customers. Includes Digital IQ Assessment + Blueprint. Then add Commverse Apps (Bundle or Individual).
             </p>
           </div>
 
