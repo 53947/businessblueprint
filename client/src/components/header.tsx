@@ -94,90 +94,15 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 {/* Desktop Mega Menu */}
                 <NavigationMenu className="hidden lg:flex ml-8">
                   <NavigationMenuList>
-                    {/* Apps - Cross-Platform Ecosystem */}
+                    {/* Applications - Commverse Apps Only */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-apps">
+                      <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-applications">
                         <Layers className="w-4 h-4" />
-                        <span>Apps</span>
+                        <span>Applications</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="grid gap-4 p-6 w-[600px] lg:w-[700px]">
                           <div className="grid grid-cols-2 gap-4">
-                            {/* businessblueprint.io */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-xl hover:from-blue-50 hover:to-blue-100 dark:hover:from-blue-950 dark:hover:to-blue-900 hover:scale-[1.02]"
-                                href="/"
-                                data-testid="link-app-businessblueprint"
-                              >
-                                <div className="flex items-center justify-between mb-3">
-                                  <BrandLogo brand="businessblueprint" size="sm" showIcon={true} />
-                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">Visit Platform →</span>
-                                  </div>
-                                </div>
-                                <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-businessblueprint-title">Digital Intelligence Platform</div>
-                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-businessblueprint-description">
-                                  AI-powered assessment, business coaching, and growth strategies
-                                </p>
-                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-businessblueprint-features">
-                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Digital IQ Assessment</li>
-                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> AI Business Coach</li>
-                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Client Portal & Dashboard</li>
-                                </ul>
-                              </a>
-                            </NavigationMenuLink>
-
-                            {/* hostsblue.com */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-purple-500 hover:shadow-xl hover:from-purple-50 hover:to-purple-100 dark:hover:from-purple-950 dark:hover:to-purple-900 hover:scale-[1.02]"
-                                href="#hostsblue"
-                                data-testid="link-app-hostsblue"
-                              >
-                                <div className="flex items-center justify-between mb-3">
-                                  <BrandLogo brand="hostsblue" size="sm" showIcon={true} />
-                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-xs font-semibold text-purple-600 dark:text-purple-400">Visit Platform →</span>
-                                  </div>
-                                </div>
-                                <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-webhosted-title">Website Hosting & Builder</div>
-                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-webhosted-description">
-                                  WordPress hosting, site builder, and expert services
-                                </p>
-                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-webhosted-features">
-                                  <li className="flex items-center"><span className="text-purple-500 dark:text-purple-400 mr-1.5">✓</span> Managed WordPress Hosting</li>
-                                  <li className="flex items-center"><span className="text-purple-500 dark:text-purple-400 mr-1.5">✓</span> Premium Plugin Suite</li>
-                                  <li className="flex items-center"><span className="text-purple-500 dark:text-purple-400 mr-1.5">✓</span> 24/7 Expert Support</li>
-                                </ul>
-                              </a>
-                            </NavigationMenuLink>
-
-                            {/* swipesblue.com */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-red-500 hover:shadow-xl hover:from-red-50 hover:to-red-100 dark:hover:from-red-950 dark:hover:to-red-900 hover:scale-[1.02]"
-                                href="#swipesblue"
-                                data-testid="link-app-swipesblue"
-                              >
-                                <div className="flex items-center justify-between mb-3">
-                                  <BrandLogo brand="swipesblue" size="sm" showIcon={true} />
-                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-xs font-semibold text-red-600 dark:text-red-400">Visit Platform →</span>
-                                  </div>
-                                </div>
-                                <div className="text-sm font-bold text-gray-900 dark:text-white" data-testid="text-app-airswiped-title">Payment Gateway</div>
-                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-airswiped-description">
-                                  Accept payments online with enterprise-grade security
-                                </p>
-                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-airswiped-features">
-                                  <li className="flex items-center"><span className="text-red-500 dark:text-red-400 mr-1.5">✓</span> Credit Card Processing</li>
-                                  <li className="flex items-center"><span className="text-red-500 dark:text-red-400 mr-1.5">✓</span> Subscription Billing</li>
-                                  <li className="flex items-center"><span className="text-red-500 dark:text-red-400 mr-1.5">✓</span> Fraud Protection</li>
-                                </ul>
-                              </a>
-                            </NavigationMenuLink>
-
                             {/* /send */}
                             <NavigationMenuLink asChild>
                               <a
@@ -380,6 +305,59 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </NavigationMenuLink>
                           </div>
 
+                          {/* Platforms Column */}
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Globe className="w-4 h-4 text-orange-600" />
+                              <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Platforms</h4>
+                            </div>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/"
+                                data-testid="link-solutions-businessblueprint"
+                              >
+                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
+                                  <img src={bbIcon} alt="Business Blueprint" className="w-full h-full object-contain" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Business Blueprint</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Digital intelligence platform</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="#hostsblue"
+                                data-testid="link-solutions-hostsblue"
+                              >
+                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
+                                  <img src={hostsBlueIcon} alt="Hosts Blue" className="w-full h-full object-contain" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Hosts Blue</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Website hosting & builder</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="#swipesblue"
+                                data-testid="link-solutions-swipesblue"
+                              >
+                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
+                                  <img src={swipesBlueIcon} alt="Swipes Blue" className="w-full h-full object-contain" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Swipes Blue</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Payment gateway</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                          </div>
+
                           {/* Developer Column */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2 mb-2">
@@ -396,6 +374,32 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">/send API Docs</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Email & SMS API reference</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/inbox-api-docs"
+                                data-testid="link-resources-inbox-api"
+                              >
+                                <FileText className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/inbox API Docs</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Unified communications API</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/content-api-docs"
+                                data-testid="link-resources-content-api"
+                              >
+                                <FileText className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/content API Docs</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Social media posting API</p>
                                 </div>
                               </a>
                             </NavigationMenuLink>
