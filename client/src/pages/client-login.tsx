@@ -14,9 +14,14 @@ export default function ClientLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [, setLocation] = useLocation();
+  const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
 
   // Auto-login if valid session exists
   useEffect(() => {
+    // Prevent multiple executions
+    if (hasCheckedAuth) return;
+    setHasCheckedAuth(true);
+
     // Check if we're already logged in via sessionStorage
     const sessionClientId = sessionStorage.getItem("clientId");
     if (sessionClientId) {
@@ -52,7 +57,7 @@ export default function ClientLogin() {
           });
       }
     }
-  }, []);
+  }, [hasCheckedAuth]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
