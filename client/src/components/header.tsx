@@ -261,6 +261,34 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </ul>
                               </a>
                             </NavigationMenuLink>
+
+                            {/* /content */}
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-pink-500 hover:shadow-xl hover:from-pink-50 hover:to-pink-100 dark:hover:from-pink-950 dark:hover:to-pink-900 hover:scale-[1.02]"
+                                href="/content"
+                                data-testid="link-app-content"
+                              >
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-2">
+                                    <img src={commverseIcon} alt="/content icon" className="h-10 w-10 object-contain" />
+                                    <span className="text-base font-semibold" style={{ color: '#E91E8C' }}>/content</span>
+                                  </div>
+                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="text-xs font-semibold text-pink-600 dark:text-pink-400">Visit Platform →</span>
+                                  </div>
+                                </div>
+                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-content-title">Social Media Mgmt</div>
+                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-content-description">
+                                  Multi-platform posting & scheduling
+                                </p>
+                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-content-features">
+                                  <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> Content Calendar</li>
+                                  <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> Media Library</li>
+                                  <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> AI Caption Suggestions</li>
+                                </ul>
+                              </a>
+                            </NavigationMenuLink>
                           </div>
                         </div>
                       </NavigationMenuContent>
