@@ -65,7 +65,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Check if user is logged in - re-check on every render
+  // Check if user is logged in
   useEffect(() => {
     const checkLoginStatus = () => {
       const clientId = sessionStorage.getItem("clientId");
@@ -74,10 +74,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
     checkLoginStatus();
 
-    // Also check periodically in case session changes
-    const interval = setInterval(checkLoginStatus, 1000);
+    // Check periodically in case session changes (every 5 seconds instead of 1 second)
+    const interval = setInterval(checkLoginStatus, 5000);
     return () => clearInterval(interval);
-  });
+  }, []); // Add empty dependency array to run only once on mount
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
@@ -266,148 +266,6 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Commverse - Communication Apps */}
-                    <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-commverse">
-                        <MessageSquare className="w-4 h-4" />
-                        <span>Commverse</span>
-                      </NavigationMenuTrigger>
-                      <NavigationMenuContent>
-                        <div className="grid gap-3 p-4 w-[600px]">
-                          {/* Header */}
-                          <div className="mb-1">
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-0.5">Communication Ecosystem</h3>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">Three apps that work independently or together</p>
-                          </div>
-
-                          <div className="grid grid-cols-1 gap-3">
-                            {/* /send - Educational */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-1 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-yellow-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-yellow-50 hover:to-orange-50 dark:hover:from-yellow-950 dark:hover:to-orange-950"
-                                href="/send"
-                                data-testid="link-commverse-send"
-                              >
-                                <div className="flex items-start gap-2">
-                                  <img src={sendIcon} alt="/send" className="h-10 w-10 object-contain flex-shrink-0" />
-                                  <div className="flex-1">
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-0.5">/send</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Email & SMS marketing with full data ownership</p>
-                                    <ul className="text-xs text-gray-500 space-y-0.5">
-                                      <li>• Campaign automation & templates</li>
-                                      <li>• Contact management & segmentation</li>
-                                      <li>• GDPR & CAN-SPAM compliant</li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </a>
-                            </NavigationMenuLink>
-
-                            {/* /livechat - Educational */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-1 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-purple-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 dark:hover:from-purple-950 dark:hover:to-indigo-950"
-                                href="/livechat"
-                                data-testid="link-commverse-livechat"
-                              >
-                                <div className="flex items-start gap-2">
-                                  <img src={livechatIcon} alt="/livechat" className="h-10 w-10 object-contain flex-shrink-0" />
-                                  <div className="flex-1">
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-0.5">/livechat</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Website chat widget with session persistence</p>
-                                    <ul className="text-xs text-gray-500 space-y-0.5">
-                                      <li>• Real-time visitor engagement</li>
-                                      <li>• Conversation history & context</li>
-                                      <li>• Customizable widget design</li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </a>
-                            </NavigationMenuLink>
-
-                            {/* /inbox - Educational */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-1 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-pink-50 dark:hover:from-blue-950 dark:hover:to-pink-950"
-                                href="/inbox"
-                                data-testid="link-commverse-inbox"
-                              >
-                                <div className="flex items-start gap-2">
-                                  <img src={inboxIcon} alt="/inbox" className="h-10 w-10 object-contain flex-shrink-0" />
-                                  <div className="flex-1">
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-0.5">/inbox</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Unified inbox for 8 communication channels</p>
-                                    <ul className="text-xs text-gray-500 space-y-0.5">
-                                      <li>• Email, SMS, WhatsApp, social DMs</li>
-                                      <li>• Real-time WebSocket messaging</li>
-                                      <li>• Team collaboration & assignment</li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </a>
-                            </NavigationMenuLink>
-
-                            {/* /content - Educational */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-1 rounded-lg border border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-3 leading-none no-underline outline-none transition-all hover:border-pink-500 hover:shadow-lg hover:bg-gradient-to-r hover:from-pink-50 hover:to-red-50 dark:hover:from-pink-950 dark:hover:to-red-950"
-                                href="/content-landing"
-                                data-testid="link-commverse-content"
-                              >
-                                <div className="flex items-start gap-2">
-                                  <MessageSquare className="h-10 w-10 flex-shrink-0" style={{ color: '#FC6ACD' }} />
-                                  <div className="flex-1">
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-0.5">/content</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Social media management platform</p>
-                                    <ul className="text-xs text-gray-500 space-y-0.5">
-                                      <li>• Multi-platform posting & scheduling</li>
-                                      <li>• Content calendar & media library</li>
-                                      <li>• AI-powered caption suggestions</li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </a>
-                            </NavigationMenuLink>
-                          </div>
-
-                          {/* Bottom CTA - Educational Focus */}
-                          <div className="grid grid-cols-2 gap-2 border-t border-gray-200 dark:border-gray-700 pt-2">
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none rounded-lg border-2 border-blue-300 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 p-2 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-lg"
-                                href="/commverse"
-                                data-testid="link-commverse-about"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <MessageSquare className="h-8 w-8 text-blue-600 dark:text-blue-400 flex-shrink-0" />
-                                  <div className="flex-1">
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white">About Commverse</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400">How all 4 apps work together</p>
-                                  </div>
-                                </div>
-                              </a>
-                            </NavigationMenuLink>
-
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none rounded-lg border border-gray-300 bg-white dark:bg-gray-800 p-3 leading-none no-underline outline-none transition-all hover:border-green-500 hover:shadow-lg"
-                                href="/marketplace"
-                                data-testid="link-commverse-pricing"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <ShoppingCart className="h-8 w-8 text-green-600 flex-shrink-0" />
-                                  <div className="flex-1">
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white">View Pricing</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400">À la carte marketplace</p>
-                                  </div>
-                                </div>
-                              </a>
-                            </NavigationMenuLink>
-                          </div>
-                        </div>
-                      </NavigationMenuContent>
-                    </NavigationMenuItem>
-
                     {/* Pricing */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pricing">
@@ -439,11 +297,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Resources */}
+                    {/* Solutions */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2">
                         <BookOpen className="w-4 h-4" />
-                        <span>Resources</span>
+                        <span>Solutions</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="grid grid-cols-3 gap-4 p-6 w-[700px]">
