@@ -2,7 +2,9 @@
 
 **Purpose:** This document ensures consistency across all three Triad Blue platforms (Business Blueprint, Hosts Blue, Swipes Blue) while respecting their unique business models and branding.
 
-**Last Updated:** October 24, 2025
+**Last Updated:** October 30, 2025
+
+# AGENTS AND ASSISTANTS MUST READ THROUGHT THIS DOCUMENT TWICE, ENSURING EVERYTHING IS PICKED UP.  IF THE STANDARDS ARE DEVIATED FROM, WILL ASSUME IT WAS INTENTIONAL.
 
 ---
 
@@ -42,10 +44,16 @@ Apps | Solutions | Pricing | [Login/Dashboard]
 ```
 
 **Typography:**
-- Font: Archivo, font-weight: 600
+- Content Font: Archivo, font-weight: 600
+- First Word Company Title,  Font: Archivo Semi Expanded/Archivo, font-weight: 600, Color Hex#FFC04D
+- Second Word Company Title, Font: Archivoanded/Archivo, font-weight: 600, Color Hex#0000FF
+- Third Word Company Title, Font: ".tld" Font: Archivoanded/Archivo, font-weight: 600, Color Hex#00FF40
 - Size: text-base (16px)
 - Icon size: w-4 h-4 (16px)
-- Spacing: gap-2 between icon and text
+- Icon and Word Spacing: gap-3 between icon and text
+- Character Spacing 0
+- all lower case when written as a url
+- 1st Letter Capital when written as Title (no TLD)
 
 **Apps Mega Menu (Cross-Platform):**
 All three platforms appear in every platform's "Apps" menu:
@@ -88,7 +96,8 @@ All three platforms appear in every platform's "Apps" menu:
 **Sidebar Typography:**
 - Font: Archivo
 - Navigation items: text-base (16px), font-weight: normal
-- Commverse apps (/inbox, /livechat, /send): font-weight: 600
+- Commverse apps (/inbox, /livechat, /send, /content): font-weight: 600
+- Color: "/" BT Black Hex#09080E, Name BT Green Hex#00FF40
 - Icon size: w-7 h-7 (28px) for ALL items
 - Active state: Blue gradient background, font-semibold
 
@@ -96,8 +105,8 @@ All three platforms appear in every platform's "Apps" menu:
 ```jsx
 // Special formatting for /inbox, /livechat, /send
 <span className="flex-1 text-base font-['Archivo']" style={{ fontWeight: 600 }}>
-  <span style={{ color: '#00FF40' }}>/</span>
-  <span style={{ color: '#0057FF' }}>{item.label}</span>
+  <span style={{ color: '#09080E' }}>/</span>
+  <span style={{ color: '#00FF40' }}>{item.label}</span>
 </span>
 ```
 
@@ -127,7 +136,7 @@ All three platforms appear in every platform's "Apps" menu:
 --hosts-primary: #8000FF;     /* Purple */
 
 /* Swipes Blue */
---swipes-primary: #EF4444;    /* Red */
+--swipes-primary: #8000FF;    /* Red */
 ```
 
 ### Typography System
@@ -148,15 +157,16 @@ font-family: 'Archivo', sans-serif;
 1. **First word** = Archivo Semi Expanded (platform color)
 2. **Subsequent words** = Archivo (Triad Blue #0000FF)
 3. **TLD (.io, .com)** = Archivo (Fluorescent Green #00FF40)
-4. **BOTH fonts SAME SIZE** - No size variation between words
-5. **Text shadows on ALL wordmark text** - 5pt blur, 315° angle, 5-10pt distance
+4. **Character Spacing '%'**
+5. **Both fonts (All three words) SAME SIZE** - No size variation between words
+6. **Text shadows on ALL wordmark text** - 5pt blur, 315° angle, 7.5pt distance
 
 **Text Shadow Implementation:**
 ```css
 /* All wordmark text uses this shadow */
 text-shadow: 5pt 5pt 5pt rgba(0, 0, 0, 0.3);
 /* 315° angle = positive X, positive Y offset */
-/* Blur: 5pt, Distance: 5-10pt */
+/* Blur: 5pt, Distance: 7.5pt */
 ```
 
 **Example - Business Blueprint:**
