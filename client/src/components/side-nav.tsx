@@ -91,8 +91,8 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
     },
     { 
       id: "content", 
-      label: "content",
-      icon: <img src={socialMediaIcon} alt="/content" className="w-7 h-7 object-contain" />,
+      label: "Social Media Mgmt",
+      icon: <img src={socialMediaIcon} alt="Social Media" className="w-7 h-7 object-contain" />,
       external: true,
       href: "/content"
     },
@@ -169,8 +169,8 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
             {!collapsed && (
               (item.id === "inbox" || item.id === "livechat" || item.id === "send" || item.id === "content") ? (
                 <span className="flex-1 text-base font-['Archivo']" style={{ fontWeight: 600 }} data-testid={`text-nav-${item.id}`}>
-                  <span style={{ color: '#84D71A' }}>/</span>
-                  <span style={{ color: '#0057FF' }}>{item.label}</span>
+                  <span style={{ color: '#09080E' }}>/</span>
+                  <span style={{ color: '#00FF40' }}>{item.label}</span>
                 </span>
               ) : (
                 <span className="flex-1 text-base" data-testid={`text-nav-${item.id}`}>
