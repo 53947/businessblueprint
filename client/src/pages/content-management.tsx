@@ -265,7 +265,7 @@ export default function ContentManagement() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid [&>button[data-state=active]]:bg-[#E91E8C] [&>button[data-state=active]]:text-white">
+          <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid [&>button[data-state=active]]:bg-[#E91E8C] [&>button[data-state=active]]:text-white">
             <TabsTrigger value="composer" data-testid="tab-composer">
               <Pencil className="h-4 w-4 mr-2" />
               Composer
@@ -273,6 +273,10 @@ export default function ContentManagement() {
             <TabsTrigger value="platforms" data-testid="tab-platforms">
               <Globe className="h-4 w-4 mr-2" />
               Platforms
+            </TabsTrigger>
+            <TabsTrigger value="media" data-testid="tab-media">
+              <ImageIcon className="h-4 w-4 mr-2" />
+              Media
             </TabsTrigger>
             <TabsTrigger value="calendar" data-testid="tab-calendar">
               <CalendarIcon className="h-4 w-4 mr-2" />
@@ -887,6 +891,149 @@ export default function ContentManagement() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          {/* MEDIA LIBRARY TAB */}
+          <TabsContent value="media" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>Media Library</span>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => document.getElementById('media-library-upload')?.click()}
+                      data-testid="button-upload-media"
+                    >
+                      <ImagePlus className="h-4 w-4 mr-2" />
+                      Upload Media
+                    </Button>
+                    <input
+                      type="file"
+                      id="media-library-upload"
+                      multiple
+                      accept="image/*,video/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      data-testid="input-media-library-upload"
+                    />
+                  </div>
+                </CardTitle>
+                <CardDescription>
+                  Manage all your uploaded images and videos
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {uploadedMedia.length === 0 ? (
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+                    <ImageIcon className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">No media uploaded yet</h3>
+                    <p className="text-gray-600 mb-4">Upload images and videos to reuse across your posts</p>
+                    <Button
+                      className="bg-[#E91E8C] hover:bg-[#D1187A] text-white"
+                      onClick={() => document.getElementById('media-library-upload')?.click()}
+                      data-testid="button-upload-first-media"
+                    >
+                      <ImagePlus className="h-4 w-4 mr-2" />
+                      Upload Your First Media
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* Media Stats */}
+                    <div className="grid grid-cols-3 gap-4">
+                      <Card>
+                        <CardContent className="pt-4">
+                          <div className="text-center">
+                            <p className="text-2xl font-bold text-[#E91E8C]">{uploadedMedia.length}</p>
+                            <p className="text-sm text-gray-600">Total Files</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="pt-4">
+                          <div className="text-center">
+                            <p className="text-2xl font-bold text-blue-600">
+                              {uploadedMedia.filter(m => m.mediaType?.startsWith('image')).length}
+                            </p>
+                            <p className="text-sm text-gray-600">Images</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="pt-4">
+                          <div className="text-center">
+                            <p className="text-2xl font-bold text-purple-600">
+                              {uploadedMedia.filter(m => m.mediaType?.startsWith('video')).length}
+                            </p>
+                            <p className="text-sm text-gray-600">Videos</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+
+                    {/* Media Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                      {uploadedMedia.map((media) => (
+                        <Card key={media.id} className="group relative overflow-hidden">
+                          <div className="aspect-square relative">
+                            {media.mediaType?.startsWith('image') ? (
+                              <img
+                                src={media.storageUrl}
+                                alt={media.fileName || 'Media'}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : media.mediaType?.startsWith('video') ? (
+                              <div className="w-full h-full bg-gray-900 flex items-center justify-center">
+                                <Video className="h-12 w-12 text-white" />
+                                <span className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                                  Video
+                                </span>
+                              </div>
+                            ) : (
+                              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <FileText className="h-12 w-12 text-gray-400" />
+                              </div>
+                            )}
+                            
+                            {/* Hover Overlay */}
+                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                              <Button
+                                size="icon"
+                                variant="secondary"
+                                className="h-8 w-8"
+                                onClick={() => window.open(media.storageUrl, '_blank')}
+                                data-testid={`button-view-media-${media.id}`}
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                size="icon"
+                                variant="destructive"
+                                className="h-8 w-8"
+                                onClick={() => setUploadedMedia(uploadedMedia.filter(m => m.id !== media.id))}
+                                data-testid={`button-delete-media-${media.id}`}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                          <CardContent className="p-2">
+                            <p className="text-xs text-gray-600 truncate" title={media.fileName}>
+                              {media.fileName || 'Untitled'}
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              {media.fileSize ? `${(media.fileSize / 1024).toFixed(1)} KB` : 'Unknown size'}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* CALENDAR TAB */}
