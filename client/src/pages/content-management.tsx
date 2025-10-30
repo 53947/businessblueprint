@@ -203,7 +203,10 @@ export default function ContentManagement() {
 
       try {
         const response = await apiRequest("POST", `/api/content/${clientId}/media`, formData);
-        const mediaData = await response.json();
+        const uploadedMedia = await response.json();
+        
+        // Add newly uploaded media to selected media IDs for composer
+        setSelectedMediaIds(prev => [...prev, uploadedMedia.id]);
         
         // Invalidate media query to refetch
         queryClient.invalidateQueries({ queryKey: [`/api/content/${clientId}/media`] });
