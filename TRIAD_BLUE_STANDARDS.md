@@ -835,3 +835,267 @@ Closes #89
 5. **Features like Brand Studio, Impersonation** → COPY from Business Blueprint
 
 **Remember:** The user needs to rely on consistency. DO NOT make assumptions about what should change without discussing first.
+
+### White Label Policy
+
+**CRITICAL:** Synup is our white-label partner. At NO time is their name to be mentioned on any of our sites. All references must be to our own branding only.
+
+### When copying features from Business Blueprint to other platforms:
+
+**Business Blueprint → Hosts Blue:**
+- Replace: `#FFA500` (orange) → `#A855F7` (purple)
+- Replace: `orange-500` → `purple-500`
+- Replace: `from-orange-50 to-orange-100` → `from-purple-50 to-purple-100`
+
+**Business Blueprint → Swipes Blue:**
+- Replace: `#FFA500` (orange) → `#EF4444` (red)
+- Replace: `orange-500` → `red-500`
+- Replace: `from-orange-50 to-orange-100` → `from-red-50 to-red-100`
+
+**Keep unchanged:**
+- Triad Blue: `#0000FF`
+- Fluorescent Green: `#00FF40`
+- All gray/neutral colors
+- Dark mode colors
+
+### Domain References
+
+**Update domain references when copying code:**
+
+**Business Blueprint:**
+- businessblueprint.io
+- /business-blueprint/ paths
+
+**Hosts Blue:**
+- hostsblue.com (primary)
+- webhosted.io (alternative)
+- /hosts-blue/ paths
+
+**Swipes Blue:**
+- swipesblue.com (primary)
+- airswiped.com (alternative)
+- /swipes-blue/ paths
+
+---
+
+## 📋 QUICK REFERENCE CHECKLIST
+
+### Starting a New Feature in Hosts Blue or Swipes Blue
+
+**Before writing code:**
+- [ ] Check if this feature exists in Business Blueprint
+- [ ] If yes, COPY it (don't rebuild)
+- [ ] Update platform colors (orange → purple/red)
+- [ ] Update domain references
+- [ ] Keep navigation matching exactly
+
+**If creating new database tables:**
+- [ ] Is this table business-specific? → ASK USER FIRST
+- [ ] Is this table for shared functionality? → Safe to copy from BB
+
+**If implementing integrations:**
+- [ ] Is this a whitelabel partner integration? → ASK USER FIRST
+- [ ] Provide integration details and get approval before proceeding
+
+**Before deployment:**
+- [ ] Verify `/brand-assets/` route doesn't conflict with Vite bundles
+- [ ] Ensure `dist` folder is NOT in `.gitignore`
+- [ ] Test in development first (NODE_ENV=development)
+- [ ] Build and test production locally (NODE_ENV=production node dist/index.js)
+- [ ] Deploy to production
+
+---
+
+## 🚀 PRODUCTION DEPLOYMENT LESSONS
+
+### Critical Production Issue (October 24, 2025)
+
+**Problem:** Blank white screen in production despite working development environment
+
+**Root Cause:** A route `/assets/:filename` was created to serve brand assets from database. This route intercepted Vite's JavaScript/CSS bundle requests (`/assets/index-*.js`, `/assets/index-*.css`) in production, returning 404 errors.
+
+**Why it worked in dev:** Vite middleware served bundles before the custom route ran.
+
+**Solution:** Renamed route from `/assets/:filename` to `/brand-assets/:filename`
+
+**Lesson:** NEVER create routes that start with `/assets/` - they will break Vite bundle loading in production.
+
+**Files to update when implementing Brand Studio:**
+```javascript
+// server/routes.ts
+app.get("/brand-assets/:filename", async (req, res) => { ... });
+
+// client/index.html
+<link rel="icon" type="image/x-icon" href="/brand-assets/Blueprint_Favicon.ico" />
+```
+
+---
+
+## 📝 GITHUB DOCUMENTATION PROTOCOL (MANDATORY)
+
+All agents and assistants working on Triad Blue platforms MUST follow this documentation schedule to maintain project transparency and progress tracking.
+
+### Documentation Schedule
+
+**Twice Daily Updates:**
+- **11:59 AM** - Mid-day progress update
+- **11:59 PM** - End-of-day progress update
+
+**On days with no work:**
+- Add entry: "No updates - [date]"
+- This shows the project is being monitored even without active development
+
+### What to Document
+
+**STATUS_REPORT.md Updates:**
+Document ALL of the following:
+- ✅ **Completed features** - What was built, which files were modified
+- ✅ **Bug fixes** - What was broken, root cause, how it was fixed
+- ✅ **Configuration changes** - .gitignore, .replit, package.json, environment variables
+- ✅ **Database changes** - New tables, schema modifications, migrations
+- ✅ **Integration setups** - API keys, webhooks, third-party services
+- ✅ **Route changes** - New endpoints, modified routes, removed routes
+- ✅ **Deployment issues** - Production bugs, rollbacks, fixes
+- ✅ **Architecture decisions** - Why certain approaches were chosen
+
+**Format:**
+```markdown
+## [Date] - [Time] Update
+
+### Completed
+- Feature/fix description
+- Files modified: `path/to/file1.tsx`, `path/to/file2.ts`
+- Impact: What changed for users/functionality
+
+### In Progress
+- Current task description
+- Expected completion: [timeframe]
+
+### Blockers
+- Issue description
+- What's needed to resolve
+```
+
+### GitHub Issues Synchronization
+
+**Create issues for:**
+- New feature requests
+- Bugs discovered during development
+- Technical debt identified
+- Performance improvements needed
+- Security concerns
+
+**Update issues with:**
+- Progress comments as work proceeds
+- Code references (file paths, line numbers)
+- Screenshots of UI changes
+- Test results
+- Close issues when fully resolved (not just "mostly done")
+
+**Issue Labels:**
+Use consistent labels across all platforms:
+- `bug` - Something broken
+- `feature` - New functionality
+- `enhancement` - Improvement to existing feature
+- `documentation` - Docs updates needed
+- `security` - Security-related issue
+- `performance` - Performance optimization
+- `technical-debt` - Code cleanup/refactoring
+- `platform:business-blueprint` - BB-specific
+- `platform:hosts-blue` - Hosts Blue-specific
+- `platform:swipes-blue` - Swipes Blue-specific
+- `cross-platform` - Affects all platforms
+
+### Commit Message Standards
+
+**Format:**
+```
+[Platform] Category: Brief description
+
+- Detailed change 1
+- Detailed change 2
+- Files modified: path/to/file.tsx
+
+Closes #123
+```
+
+**Examples:**
+```
+[Business Blueprint] Feature: Add Brand Studio asset management
+
+- Implemented admin-only brand asset upload/management
+- Stores assets as base64 in PostgreSQL
+- Route: /brand-assets/:filename serves from database
+- Files modified: server/routes.ts, client/src/pages/brand-studio.tsx
+
+Closes #45
+```
+
+```
+[Hosts Blue] Bug: Fix white screen on production deployment
+
+- Root cause: /assets/:filename route intercepted Vite bundles
+- Solution: Renamed to /brand-assets/:filename
+- Updated all references in client code
+- Removed dist from .gitignore
+- Files modified: server/routes.ts, client/index.html
+
+Closes #67
+```
+
+```
+[Cross-Platform] Documentation: Add Triad Blue standards guide
+
+- Created TRIAD_BLUE_STANDARDS.md
+- Documents navigation, typography, colors
+- Specifies features to copy vs rebuild
+- Added footer standards section
+- Files modified: TRIAD_BLUE_STANDARDS.md, replit.md
+
+Closes #89
+```
+
+### Why This Matters
+
+**For the user:**
+- Clear visibility into what's being built
+- Ability to track progress across multiple platforms
+- Historical record of decisions and changes
+- Easy rollback if issues arise
+
+**For other agents:**
+- Understanding what's already been done
+- Avoiding duplicate work
+- Learning from previous solutions
+- Context for why things are built certain ways
+
+**For future maintenance:**
+- Quick reference for troubleshooting
+- Documentation of architectural decisions
+- Change history for debugging
+- Onboarding new team members
+
+### Enforcement
+
+**Before marking any task as complete:**
+1. ✅ Update STATUS_REPORT.md with what was done
+2. ✅ Update or close relevant GitHub issues
+3. ✅ Commit with proper message format
+4. ✅ Verify documentation is accurate and complete
+
+**Agents who don't follow this protocol:**
+- Their work is incomplete and should not be marked as done
+- User will request documentation updates
+- May cause confusion for future agents
+
+---
+
+## 📞 WHEN IN DOUBT
+
+**If you're unsure whether something should match across platforms or be platform-specific:**
+
+1. **Navigation, typography, core design** → MUST MATCH (ask if unclear)
+2. **Database tables for business models** → ASK USER FIRST
+3. **Whitelabel integrations** → ASK USER FIRST
+4. **Payment flows** → ASK USER FIRST
+5. **Features like Brand Studio, Impersonation** → COPY from Business Blueprint
