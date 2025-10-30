@@ -37,6 +37,7 @@ interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
 interface NavItem {
   id: string;
   label: string;
+  hoverLabel?: string; // Full industry name shown on hover for Commverse apps
   icon: React.ReactNode;
   logo?: string; // For branded app logos
   badge?: number;
@@ -55,6 +56,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
     { 
       id: "inbox", 
       label: "inbox",
+      hoverLabel: "Unified Communications",
       icon: <img src={inboxIcon} alt="/inbox" className="w-7 h-7 object-contain" />,
       external: true, 
       href: "/inbox"
@@ -62,6 +64,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
     { 
       id: "livechat", 
       label: "livechat",
+      hoverLabel: "Live Chat Widget",
       icon: <img src={livechatIcon} alt="/livechat" className="w-7 h-7 object-contain" />,
       external: true, 
       href: "/livechat" 
@@ -85,14 +88,16 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
     { 
       id: "send", 
       label: "send",
+      hoverLabel: "Email + SMS Marketing",
       icon: <img src={sendIcon} alt="/send" className="w-7 h-7 object-contain" />,
       external: true,
       href: "/send"
     },
     { 
       id: "content", 
-      label: "Social Media Mgmt",
-      icon: <img src={socialMediaIcon} alt="Social Media" className="w-7 h-7 object-contain" />,
+      label: "content",
+      hoverLabel: "Social Media Mgmt",
+      icon: <img src={socialMediaIcon} alt="/content" className="w-7 h-7 object-contain" />,
       external: true,
       href: "/content"
     },
@@ -158,6 +163,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
               isMobile ? "py-4" : "",
               item.hasSpaceBefore ? "mt-4" : ""
             )}
+            title={item.hoverLabel || undefined}
             data-testid={`nav-item-${item.id}`}
           >
             <span className={cn(
