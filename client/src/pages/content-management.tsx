@@ -265,10 +265,14 @@ export default function ContentManagement() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid [&>button[data-state=active]]:bg-[#E91E8C] [&>button[data-state=active]]:text-white">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid [&>button[data-state=active]]:bg-[#E91E8C] [&>button[data-state=active]]:text-white">
             <TabsTrigger value="composer" data-testid="tab-composer">
               <Pencil className="h-4 w-4 mr-2" />
               Composer
+            </TabsTrigger>
+            <TabsTrigger value="platforms" data-testid="tab-platforms">
+              <Globe className="h-4 w-4 mr-2" />
+              Platforms
             </TabsTrigger>
             <TabsTrigger value="calendar" data-testid="tab-calendar">
               <CalendarIcon className="h-4 w-4 mr-2" />
@@ -566,6 +570,322 @@ export default function ContentManagement() {
                   </Card>
                 </div>
               )}
+            </div>
+          </TabsContent>
+
+          {/* PLATFORMS TAB */}
+          <TabsContent value="platforms" className="space-y-6">
+            <div className="space-y-6">
+              {/* Connected Platforms */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span>Connected Platforms</span>
+                    <Badge variant="outline" className="border-[#E91E8C] text-[#E91E8C]">
+                      {connectedPlatforms.length}/{maxPlatforms} Connected
+                    </Badge>
+                  </CardTitle>
+                  <CardDescription>
+                    Manage your social media account connections
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {platformsLoading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <Skeleton className="h-32 w-full" />
+                      <Skeleton className="h-32 w-full" />
+                      <Skeleton className="h-32 w-full" />
+                    </div>
+                  ) : connectedPlatforms.length === 0 ? (
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        No platforms connected yet. Connect your first platform below to start posting!
+                      </AlertDescription>
+                    </Alert>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {connectedPlatforms.map((platform: any) => (
+                        <Card key={platform.id} className="relative overflow-hidden">
+                          <div className="absolute top-2 right-2">
+                            <Badge className="bg-green-500 text-white">Connected</Badge>
+                          </div>
+                          <CardContent className="pt-6 space-y-4">
+                            <div className="flex items-start gap-4">
+                              <div className="w-12 h-12 rounded-lg bg-[#E91E8C]/10 flex items-center justify-center">
+                                {getPlatformIcon(platform.platform)}
+                              </div>
+                              <div className="flex-1">
+                                <h3 className="font-semibold">{platform.accountName || platform.platform}</h3>
+                                <p className="text-sm text-gray-600">@{platform.accountHandle || 'N/A'}</p>
+                                {platform.tokenExpiresAt && (
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    Token expires: {format(new Date(platform.tokenExpiresAt), "MMM dd, yyyy")}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex-1"
+                                data-testid={`button-refresh-${platform.platform}`}
+                              >
+                                Refresh
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                data-testid={`button-disconnect-${platform.platform}`}
+                              >
+                                Disconnect
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Available Platforms */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Available Platforms</CardTitle>
+                  <CardDescription>
+                    Connect new platforms to expand your reach
+                    {clientData?.client?.serviceType !== 'msp' && (
+                      <span className="ml-2 text-[#E91E8C] font-medium">
+                        (Upgrade to MSP tier for TikTok & Snapchat)
+                      </span>
+                    )}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {/* Facebook */}
+                    <Card className={connectedPlatforms.some((p: any) => p.platform === 'facebook') ? 'opacity-50' : ''}>
+                      <CardContent className="pt-6 space-y-4">
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                            <Facebook className="h-6 w-6 text-blue-600" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold">Facebook</h3>
+                            <p className="text-sm text-gray-600">Post to pages & profiles</p>
+                            <Badge variant="secondary" className="mt-2 text-xs">DIY & MSP</Badge>
+                          </div>
+                        </div>
+                        <Button
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                          disabled={connectedPlatforms.some((p: any) => p.platform === 'facebook')}
+                          onClick={() => window.location.href = `/api/meta/auth/facebook?clientId=${clientId}`}
+                          data-testid="button-connect-facebook"
+                        >
+                          {connectedPlatforms.some((p: any) => p.platform === 'facebook') ? 'Connected' : 'Connect Facebook'}
+                        </Button>
+                      </CardContent>
+                    </Card>
+
+                    {/* Instagram */}
+                    <Card className={connectedPlatforms.some((p: any) => p.platform === 'instagram') ? 'opacity-50' : ''}>
+                      <CardContent className="pt-6 space-y-4">
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                            <Instagram className="h-6 w-6 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold">Instagram</h3>
+                            <p className="text-sm text-gray-600">Business accounts only</p>
+                            <Badge variant="secondary" className="mt-2 text-xs">DIY & MSP</Badge>
+                          </div>
+                        </div>
+                        <Button
+                          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+                          disabled={connectedPlatforms.some((p: any) => p.platform === 'instagram')}
+                          onClick={() => window.location.href = `/api/meta/auth/instagram?clientId=${clientId}`}
+                          data-testid="button-connect-instagram"
+                        >
+                          {connectedPlatforms.some((p: any) => p.platform === 'instagram') ? 'Connected' : 'Connect Instagram'}
+                        </Button>
+                      </CardContent>
+                    </Card>
+
+                    {/* LinkedIn */}
+                    <Card className={connectedPlatforms.some((p: any) => p.platform === 'linkedin') ? 'opacity-50' : ''}>
+                      <CardContent className="pt-6 space-y-4">
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-blue-700/10 flex items-center justify-center">
+                            <Linkedin className="h-6 w-6 text-blue-700" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold">LinkedIn</h3>
+                            <p className="text-sm text-gray-600">Professional network</p>
+                            <Badge variant="secondary" className="mt-2 text-xs">DIY & MSP</Badge>
+                          </div>
+                        </div>
+                        <Button
+                          className="w-full bg-blue-700 hover:bg-blue-800 text-white"
+                          disabled={connectedPlatforms.some((p: any) => p.platform === 'linkedin')}
+                          onClick={() => toast({ title: "Coming Soon", description: "LinkedIn integration will be available once API credentials are configured." })}
+                          data-testid="button-connect-linkedin"
+                        >
+                          {connectedPlatforms.some((p: any) => p.platform === 'linkedin') ? 'Connected' : 'Connect LinkedIn'}
+                        </Button>
+                      </CardContent>
+                    </Card>
+
+                    {/* X (Twitter) */}
+                    <Card className={connectedPlatforms.some((p: any) => p.platform === 'twitter' || p.platform === 'x') ? 'opacity-50' : ''}>
+                      <CardContent className="pt-6 space-y-4">
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-black flex items-center justify-center">
+                            <Twitter className="h-6 w-6 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold">X (Twitter)</h3>
+                            <p className="text-sm text-gray-600">Tweets & threads</p>
+                            <Badge variant="secondary" className="mt-2 text-xs">DIY & MSP</Badge>
+                          </div>
+                        </div>
+                        <Button
+                          className="w-full bg-black hover:bg-gray-900 text-white"
+                          disabled={connectedPlatforms.some((p: any) => p.platform === 'twitter' || p.platform === 'x')}
+                          onClick={() => toast({ title: "Coming Soon", description: "X (Twitter) integration will be available once API credentials are configured." })}
+                          data-testid="button-connect-twitter"
+                        >
+                          {connectedPlatforms.some((p: any) => p.platform === 'twitter' || p.platform === 'x') ? 'Connected' : 'Connect X'}
+                        </Button>
+                      </CardContent>
+                    </Card>
+
+                    {/* Google Business Profile */}
+                    <Card className={connectedPlatforms.some((p: any) => p.platform === 'google_business') ? 'opacity-50' : ''}>
+                      <CardContent className="pt-6 space-y-4">
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center">
+                            <Globe className="h-6 w-6 text-red-600" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold">Google Business</h3>
+                            <p className="text-sm text-gray-600">Local business posts</p>
+                            <Badge variant="secondary" className="mt-2 text-xs">DIY & MSP</Badge>
+                          </div>
+                        </div>
+                        <Button
+                          className="w-full bg-red-600 hover:bg-red-700 text-white"
+                          disabled={connectedPlatforms.some((p: any) => p.platform === 'google_business')}
+                          onClick={() => toast({ title: "Coming Soon", description: "Google Business integration will be available once API credentials are configured." })}
+                          data-testid="button-connect-google"
+                        >
+                          {connectedPlatforms.some((p: any) => p.platform === 'google_business') ? 'Connected' : 'Connect Google'}
+                        </Button>
+                      </CardContent>
+                    </Card>
+
+                    {/* TikTok (MSP only) */}
+                    <Card className={clientData?.client?.serviceType !== 'msp' ? 'opacity-50' : connectedPlatforms.some((p: any) => p.platform === 'tiktok') ? 'opacity-50' : ''}>
+                      <CardContent className="pt-6 space-y-4">
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-black flex items-center justify-center">
+                            <Video className="h-6 w-6 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold">TikTok</h3>
+                            <p className="text-sm text-gray-600">Short-form videos</p>
+                            <Badge variant="secondary" className="mt-2 text-xs bg-[#E91E8C] text-white">MSP Only</Badge>
+                          </div>
+                        </div>
+                        <Button
+                          className="w-full bg-black hover:bg-gray-900 text-white"
+                          disabled={clientData?.client?.serviceType !== 'msp' || connectedPlatforms.some((p: any) => p.platform === 'tiktok')}
+                          onClick={() => toast({ title: "Coming Soon", description: "TikTok integration will be available once API credentials are configured." })}
+                          data-testid="button-connect-tiktok"
+                        >
+                          {connectedPlatforms.some((p: any) => p.platform === 'tiktok') ? 'Connected' : clientData?.client?.serviceType !== 'msp' ? 'MSP Tier Required' : 'Connect TikTok'}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Platform Features Comparison */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Platform Features</CardTitle>
+                  <CardDescription>What you can do on each platform</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left py-2 px-4">Platform</th>
+                          <th className="text-center py-2 px-4">Text Posts</th>
+                          <th className="text-center py-2 px-4">Images</th>
+                          <th className="text-center py-2 px-4">Videos</th>
+                          <th className="text-center py-2 px-4">DMs → /inbox</th>
+                          <th className="text-center py-2 px-4">Character Limit</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b">
+                          <td className="py-2 px-4 font-medium">Facebook</td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center">63,206</td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="py-2 px-4 font-medium">Instagram</td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center">2,200</td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="py-2 px-4 font-medium">LinkedIn</td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><Clock className="h-4 w-4 text-orange-600 mx-auto" /></td>
+                          <td className="text-center">3,000</td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="py-2 px-4 font-medium">X (Twitter)</td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center">280</td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="py-2 px-4 font-medium">Google Business</td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><X className="h-4 w-4 text-gray-400 mx-auto" /></td>
+                          <td className="text-center"><X className="h-4 w-4 text-gray-400 mx-auto" /></td>
+                          <td className="text-center">1,500</td>
+                        </tr>
+                        <tr>
+                          <td className="py-2 px-4 font-medium">TikTok</td>
+                          <td className="text-center"><X className="h-4 w-4 text-gray-400 mx-auto" /></td>
+                          <td className="text-center"><X className="h-4 w-4 text-gray-400 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center"><CheckCircle className="h-4 w-4 text-green-600 mx-auto" /></td>
+                          <td className="text-center">2,200</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
