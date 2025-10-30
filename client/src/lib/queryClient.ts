@@ -15,15 +15,19 @@ export async function apiRequest(
   // Include JWT token from sessionStorage if available
   const token = sessionStorage.getItem("authToken");
   
+  // Check if data is FormData (for file uploads)
+  const isFormData = data instanceof FormData;
+  
   const headers: Record<string, string> = {
-    ...(data ? { "Content-Type": "application/json" } : {}),
+    // Don't set Content-Type for FormData - browser will set it with boundary
+    ...(!isFormData && data ? { "Content-Type": "application/json" } : {}),
     ...(token ? { "Authorization": `Bearer ${token}` } : {})
   };
 
   const res = await fetch(url, {
     method,
     headers,
-    body: data ? JSON.stringify(data) : undefined,
+    body: isFormData ? data : (data ? JSON.stringify(data) : undefined),
     credentials: "include",
   });
 
