@@ -17,6 +17,14 @@ export default function ClientLogin() {
 
   // Auto-login if valid session exists
   useEffect(() => {
+    // Check if we're already logged in via sessionStorage
+    const sessionClientId = sessionStorage.getItem("clientId");
+    if (sessionClientId) {
+      // Already logged in, redirect to portal
+      window.location.href = "/portal";
+      return;
+    }
+
     const authToken = localStorage.getItem("authToken");
     const lastLogin = localStorage.getItem("lastLogin");
     
@@ -24,7 +32,7 @@ export default function ClientLogin() {
     if (authToken && lastLogin) {
       const daysSinceLogin = (Date.now() - parseInt(lastLogin)) / (1000 * 60 * 60 * 24);
       if (daysSinceLogin < 7) {
-        // Verify token is still valid
+        // Verify token is still valid (ONE TIME ONLY on page load)
         fetch("/api/dashboard/" + authToken)
           .then(res => res.json())
           .then(data => {
