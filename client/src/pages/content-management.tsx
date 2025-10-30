@@ -59,7 +59,7 @@ export default function ContentManagement() {
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [scheduleDate, setScheduleDate] = useState<Date | undefined>(undefined);
   const [scheduleTime, setScheduleTime] = useState("12:00");
-  const [uploadedMedia, setUploadedMedia] = useState<any[]>([]);
+  const [selectedMediaIds, setSelectedMediaIds] = useState<number[]>([]);
   const [isScheduled, setIsScheduled] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
   const [showAiCoach, setShowAiCoach] = useState(true);
@@ -89,6 +89,12 @@ export default function ContentManagement() {
   const { data: postsData, isLoading: postsLoading } = useQuery<any>({
     queryKey: [`/api/content/${clientId}/posts`],
     enabled: !!clientId && activeTab !== "composer",
+  });
+
+  // Fetch media
+  const { data: mediaData, isLoading: mediaLoading } = useQuery<any>({
+    queryKey: [`/api/content/${clientId}/media`],
+    enabled: !!clientId,
   });
 
   // Create post mutation
@@ -125,6 +131,27 @@ export default function ContentManagement() {
     },
   });
 
+  // Delete media mutation
+  const deleteMediaMutation = useMutation({
+    mutationFn: async (mediaId: number) => {
+      return await apiRequest("DELETE", `/api/content/${clientId}/media/${mediaId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/content/${clientId}/media`] });
+      toast({
+        title: "Media Deleted",
+        description: "Media file has been removed",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Delete Failed",
+        description: error.message || "Failed to delete media",
+        variant: "destructive",
+      });
+    },
+  });
+
   const resetComposer = () => {
     setCaption("");
     setHashtags([]);
@@ -132,7 +159,7 @@ export default function ContentManagement() {
     setSelectedPlatforms([]);
     setScheduleDate(undefined);
     setScheduleTime("12:00");
-    setUploadedMedia([]);
+    setSelectedMediaIds([]);
     setIsScheduled(false);
     setAiSuggestions([]);
   };
@@ -176,7 +203,11 @@ export default function ContentManagement() {
 
       try {
         const response = await apiRequest("POST", `/api/content/${clientId}/media`, formData);
-        setUploadedMedia(prev => [...prev, response]);
+        const mediaData = await response.json();
+        
+        // Invalidate media query to refetch
+        queryClient.invalidateQueries({ queryKey: [`/api/content/${clientId}/media`] });
+        
         toast({
           title: "Media Uploaded",
           description: `${file.name} uploaded successfully`,
@@ -189,10 +220,13 @@ export default function ContentManagement() {
         });
       }
     }
+    
+    // Reset file input
+    e.target.value = '';
   };
 
   const handleCreatePost = () => {
-    if (!caption && uploadedMedia.length === 0) {
+    if (!caption && selectedMediaIds.length === 0) {
       toast({
         title: "Content Required",
         description: "Please add a caption or media to your post",
@@ -232,7 +266,7 @@ export default function ContentManagement() {
       caption,
       hashtags,
       platforms: selectedPlatforms,
-      mediaIds: uploadedMedia.map(m => m.id),
+      mediaIds: selectedMediaIds,
       status: isScheduled ? "scheduled" : "published",
       scheduledFor,
     });
@@ -366,22 +400,24 @@ export default function ContentManagement() {
                           <p className="text-sm text-gray-600">Click to upload images or videos</p>
                         </label>
                       </div>
-                      {uploadedMedia.length > 0 && (
+                      {selectedMediaIds.length > 0 && (
                         <div className="grid grid-cols-3 gap-2 mt-2">
-                          {uploadedMedia.map((media) => (
-                            <div key={media.id} className="relative group" data-testid={`media-preview-${media.id}`}>
-                              <img src={media.storageUrl} alt="" className="w-full h-24 object-cover rounded-lg" />
-                              <Button
-                                size="icon"
-                                variant="destructive"
-                                className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                                onClick={() => setUploadedMedia(uploadedMedia.filter(m => m.id !== media.id))}
-                                data-testid={`button-remove-media-${media.id}`}
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          ))}
+                          {(mediaData?.media || [])
+                            .filter((media: any) => selectedMediaIds.includes(media.id))
+                            .map((media: any) => (
+                              <div key={media.id} className="relative group" data-testid={`media-preview-${media.id}`}>
+                                <img src={media.storageUrl} alt="" className="w-full h-24 object-cover rounded-lg" />
+                                <Button
+                                  size="icon"
+                                  variant="destructive"
+                                  className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  onClick={() => setSelectedMediaIds(selectedMediaIds.filter(id => id !== media.id))}
+                                  data-testid={`button-remove-media-${media.id}`}
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            ))}
                         </div>
                       )}
                     </div>
@@ -925,7 +961,7 @@ export default function ContentManagement() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {uploadedMedia.length === 0 ? (
+                {(mediaData?.media || []).length === 0 ? (
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
                     <ImageIcon className="h-16 w-16 mx-auto text-gray-400 mb-4" />
                     <h3 className="text-lg font-semibold mb-2">No media uploaded yet</h3>
@@ -946,7 +982,7 @@ export default function ContentManagement() {
                       <Card>
                         <CardContent className="pt-4">
                           <div className="text-center">
-                            <p className="text-2xl font-bold text-[#E91E8C]">{uploadedMedia.length}</p>
+                            <p className="text-2xl font-bold text-[#E91E8C]">{(mediaData?.media || []).length}</p>
                             <p className="text-sm text-gray-600">Total Files</p>
                           </div>
                         </CardContent>
@@ -955,7 +991,7 @@ export default function ContentManagement() {
                         <CardContent className="pt-4">
                           <div className="text-center">
                             <p className="text-2xl font-bold text-blue-600">
-                              {uploadedMedia.filter(m => m.mediaType?.startsWith('image')).length}
+                              {(mediaData?.media || []).filter((m: any) => m.mediaType?.startsWith('image')).length}
                             </p>
                             <p className="text-sm text-gray-600">Images</p>
                           </div>
@@ -965,7 +1001,7 @@ export default function ContentManagement() {
                         <CardContent className="pt-4">
                           <div className="text-center">
                             <p className="text-2xl font-bold text-purple-600">
-                              {uploadedMedia.filter(m => m.mediaType?.startsWith('video')).length}
+                              {(mediaData?.media || []).filter((m: any) => m.mediaType?.startsWith('video')).length}
                             </p>
                             <p className="text-sm text-gray-600">Videos</p>
                           </div>
@@ -975,7 +1011,7 @@ export default function ContentManagement() {
 
                     {/* Media Grid */}
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                      {uploadedMedia.map((media) => (
+                      {(mediaData?.media || []).map((media: any) => (
                         <Card key={media.id} className="group relative overflow-hidden">
                           <div className="aspect-square relative">
                             {media.mediaType?.startsWith('image') ? (
@@ -1012,7 +1048,7 @@ export default function ContentManagement() {
                                 size="icon"
                                 variant="destructive"
                                 className="h-8 w-8"
-                                onClick={() => setUploadedMedia(uploadedMedia.filter(m => m.id !== media.id))}
+                                onClick={() => deleteMediaMutation.mutate(media.id)}
                                 data-testid={`button-delete-media-${media.id}`}
                               >
                                 <Trash2 className="h-4 w-4" />
