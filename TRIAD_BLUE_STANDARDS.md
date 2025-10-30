@@ -38,10 +38,29 @@
 
 ### Header Navigation (Desktop)
 
-**Top-level menu structure:**
+**⚠️ CRITICAL - DO NOT CHANGE WITHOUT EXPLICIT USER APPROVAL:**
+
+**Top-level menu structure (UNCHANGEABLE):**
 ```
-Apps | Solutions | Pricing | [Login/Dashboard]
+Applications | Solutions | Pricing | [Login/Dashboard]
 ```
+
+**Menu Content Structure:**
+
+**1. Applications Menu** (Commverse Apps Only - 4 apps):
+- /send - Email + SMS Marketing
+- /inbox - Unified Communications
+- /livechat - Live Chat Widget
+- /content - Social Media Mgmt
+
+**2. Solutions Menu** (3 columns):
+  - **Learn Column:** Getting Started Guide, Success Stories, Video Tutorials
+  - **Platforms Column:** Business Blueprint, Hosts Blue, Swipes Blue
+  - **Developers Column:** /send API Docs, /inbox API Docs, /content API Docs, LiveChat Installation, Site Map
+
+**3. Pricing Menu:**
+- Pathways (DIY vs MSP comparison)
+- Marketplace (À la carte pricing)
 
 **Typography:**
 - Content Font: Archivo, font-weight: 600
@@ -55,26 +74,10 @@ Apps | Solutions | Pricing | [Login/Dashboard]
 - all lower case when written as a url
 - 1st Letter Capital when written as Title (no TLD)
 
-**Apps Mega Menu (Cross-Platform):**
-All three platforms appear in every platform's "Apps" menu:
-
-1. **Business Blueprint (businessblueprint.io)**
-   - Icon: Blueprint Icon (36x36px)
-   - Color: Orange (#FFA500) for hover/active
-   - Subtitle: "Digital Intelligence Platform"
-   - Features list: AI Assessment, AI Coach, Client Portal
-
-2. **Hosts Blue (hostsblue.com / webhosted.io)**
-   - Icon: Hosts Blue Icon (36x36px)  
-   - Color: Purple (#8000FF) for hover/active
-   - Subtitle: "Website Hosting & Builder"
-   - Features list: WordPress Hosting, Plugin Suite, Expert Support
-
-3. **Swipes Blue (swipesblue.com / airswiped.com)**
-   - Icon: Swipes Blue Icon (36x36px)
-   - Color: Red (#EF4444) for hover/active
-   - Subtitle: "Payment Gateway"
-   - Features list: Card Processing, Subscription Billing, Fraud Protection
+**Design Philosophy:**
+- **Applications** = Day-to-day tools you actively use
+- **Solutions** = Complete platforms, packages, documentation, learning resources
+- **Pricing** = How to purchase
 
 ### Client Portal Sidebar Navigation
 

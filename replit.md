@@ -31,7 +31,12 @@ Preferred communication style: Simple, everyday language.
 - **Typography:** First word = Archivo Semi Expanded, subsequent words = Archivo (BOTH MUST BE SAME FONT SIZE)
 - **Text Shadow:** 5pt blur, 315° angle, 5-10pt distance (applies to ALL wordmark text)
 
-**CRITICAL:** The client portal sidebar menu order and icon set were finalized. DO NOT modify without explicit user authorization. Both desktop and mobile navigation must use the same navItems array in `client/src/components/side-nav.tsx`.
+**CRITICAL NAVIGATION STANDARDS (UNCHANGEABLE):**
+- **Header Menu Structure:** Applications | Solutions | Pricing | [Login/Dashboard]
+  - **Applications:** /send, /inbox, /livechat, /content (Commverse apps only)
+  - **Solutions:** 3 platforms (Business Blueprint, Hosts Blue, Swipes Blue) + API docs + learning resources
+  - **Pricing:** Pathways & Marketplace
+- **Client Portal Sidebar:** Fixed menu order and icon set. DO NOT modify without explicit user authorization. Both desktop and mobile navigation must use the same navItems array in `client/src/components/side-nav.tsx`.
 
 ## Critical Production Issues & Lessons Learned
 
