@@ -560,273 +560,133 @@ export function Header({ showNavigation = true }: HeaderProps) {
           </div>
         </div>
 
-        {/* Mobile Menu - Enhanced */}
+        {/* Mobile Menu - Matches Desktop Navigation Structure */}
         {isMobileMenuOpen && showNavigation && (
-          <div className="lg:hidden border-t border-gray-200 bg-gray-50 max-h-[calc(100vh-4rem)] overflow-y-auto">
-            <nav className="space-y-4 p-4">
-              {/* Platforms Section */}
-              <div>
-                <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-base">
-                  <Layers className="w-5 h-5 text-blue-600" />
-                  <span>Our Platforms</span>
+          <div className="lg:hidden border-t border-gray-200 bg-white max-h-[calc(100vh-4rem)] overflow-y-auto">
+            <nav className="p-4 space-y-1">
+              {/* Applications Section */}
+              <div className="border-b border-gray-200 pb-3 mb-3">
+                <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-wide px-3 mb-2 flex items-center gap-2">
+                  <Layers className="w-4 h-4" />
+                  <span>Applications</span>
                 </h3>
-                <div className="space-y-2">
-                  {/* Business Blueprint */}
-                  <a href="/" className="block p-3 bg-white rounded-lg border-l-4 border-blue-500 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-businessblueprint">
-                    <div className="flex items-center gap-3">
-                      <img src={bbIcon} alt="" className="h-10 w-10 object-contain" />
-                      <div className="flex-1">
-                        <div className="font-semibold text-gray-900">Business Blueprint</div>
-                        <div className="text-xs text-gray-600">Digital Intelligence Platform</div>
-                      </div>
+                <div className="space-y-1">
+                  <a href="/send" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-green-50 transition-colors" data-testid="link-mobile-send">
+                    <img src={sendIcon} alt="" className="h-7 w-7 object-contain" />
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-gray-900">/send</div>
+                      <div className="text-xs text-gray-600">Email & SMS Marketing</div>
                     </div>
                   </a>
-
-                  {/* hostsblue.com */}
-                  <a href="#hostsblue" className="block p-3 bg-white rounded-lg border-l-4 border-purple-500 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-hostsblue">
-                    <div className="flex items-center gap-3">
-                      <BrandIcon brand="hostsblue" size="sm" variant="light" />
-                      <div className="flex-1">
-                        <div className="font-semibold text-gray-900">hostsblue.com</div>
-                        <div className="text-xs text-gray-600">Website Hosting & Builder</div>
-                      </div>
+                  <a href="/inbox-app" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-yellow-50 transition-colors" data-testid="link-mobile-inbox">
+                    <img src={inboxIcon} alt="" className="h-7 w-7 object-contain" />
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-gray-900">/inbox</div>
+                      <div className="text-xs text-gray-600">Unified Communications</div>
                     </div>
                   </a>
-
-                  {/* swipesblue.com */}
-                  <a href="#swipesblue" className="block p-3 bg-white rounded-lg border-l-4 border-red-500 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-swipesblue">
-                    <div className="flex items-center gap-3">
-                      <BrandIcon brand="swipesblue" size="sm" variant="light" />
-                      <div className="flex-1">
-                        <div className="font-semibold text-gray-900">swipesblue.com</div>
-                        <div className="text-xs text-gray-600">Payment Gateway</div>
-                      </div>
+                  <a href="/livechat" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-teal-50 transition-colors" data-testid="link-mobile-livechat">
+                    <img src={livechatIcon} alt="" className="h-7 w-7 object-contain" />
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-gray-900">/livechat</div>
+                      <div className="text-xs text-gray-600">Live Chat Widget</div>
+                    </div>
+                  </a>
+                  <a href="/content" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-pink-50 transition-colors" data-testid="link-mobile-content">
+                    <img src={commverseIcon} alt="" className="h-7 w-7 object-contain" />
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-gray-900">/content</div>
+                      <div className="text-xs text-gray-600">Social Media Mgmt</div>
                     </div>
                   </a>
                 </div>
               </div>
 
-              {/* Commverse Apps */}
-              <div>
-                <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-base">
-                  <MessageSquare className="w-5 h-5 text-purple-600" />
-                  <span>Commverse Apps</span>
+              {/* Solutions Section */}
+              <div className="border-b border-gray-200 pb-3 mb-3">
+                <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-wide px-3 mb-2 flex items-center gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  <span>Solutions</span>
                 </h3>
-                <div className="space-y-2">
-                  <a href="/send" className="block p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-send">
-                    <div className="flex items-center gap-3">
-                      <img src={sendIcon} alt="" className="h-9 w-9 object-contain" />
-                      <div className="flex-1">
-                        <div className="font-semibold text-gray-900">/send</div>
-                        <div className="text-xs text-gray-600">Email & SMS Marketing</div>
-                      </div>
+                
+                {/* Platforms */}
+                <div className="space-y-1">
+                  <a href="/" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-orange-50 transition-colors" data-testid="link-mobile-businessblueprint">
+                    <img src={bbIcon} alt="" className="h-7 w-7 object-contain" />
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-gray-900">Business Blueprint</div>
+                      <div className="text-xs text-gray-600">Digital intelligence</div>
                     </div>
                   </a>
-
-                  <a href="/inbox" className="block p-3 bg-gradient-to-r from-blue-50 to-pink-50 rounded-lg border border-blue-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-inbox">
-                    <div className="flex items-center gap-3">
-                      <img src={inboxIcon} alt="" className="h-9 w-9 object-contain" />
-                      <div className="flex-1">
-                        <div className="font-semibold text-gray-900">/inbox</div>
-                        <div className="text-xs text-gray-600">Unified Communications Hub</div>
-                      </div>
+                  <a href="#hostsblue" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-purple-50 transition-colors" data-testid="link-mobile-hostsblue">
+                    <img src={hostsBlueIcon} alt="" className="h-7 w-7 object-contain" />
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-gray-900">Hosts Blue</div>
+                      <div className="text-xs text-gray-600">Hosting & domains</div>
                     </div>
                   </a>
-
-                  <a href="/livechat" className="block p-3 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200 shadow-sm hover:shadow-md transition-shadow" data-testid="link-mobile-livechat">
-                    <div className="flex items-center gap-3">
-                      <img src={livechatIcon} alt="" className="h-9 w-9 object-contain" />
-                      <div className="flex-1">
-                        <div className="font-semibold text-gray-900">/livechat</div>
-                        <div className="text-xs text-gray-600">Live Chat Widget</div>
-                      </div>
+                  <a href="#swipesblue" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-50 transition-colors" data-testid="link-mobile-swipesblue">
+                    <img src={swipesBlueIcon} alt="" className="h-7 w-7 object-contain" />
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-gray-900">Swipes Blue</div>
+                      <div className="text-xs text-gray-600">Payment gateway</div>
                     </div>
+                  </a>
+                </div>
+
+                {/* Learning & Developer Resources */}
+                <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
+                  <a href="/journey" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-testid="link-mobile-journey">
+                    <Compass className="w-5 h-5 text-gray-500" />
+                    <span className="text-sm text-gray-700">Getting Started</span>
+                  </a>
+                  <a href="/about" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-testid="link-mobile-about">
+                    <TrendingUp className="w-5 h-5 text-gray-500" />
+                    <span className="text-sm text-gray-700">Success Stories</span>
+                  </a>
+                  <a href="/send-api-docs" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-testid="link-mobile-api-docs">
+                    <Code className="w-5 h-5 text-gray-500" />
+                    <span className="text-sm text-gray-700">/send API Docs</span>
                   </a>
                 </div>
               </div>
 
-              {/* DIY Pricing */}
-              <div>
-                <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-base">
-                  <Lightbulb className="w-5 h-5 text-blue-600" />
-                  <span>DIY Base Plans</span>
+              {/* Pricing Section */}
+              <div className="pb-3">
+                <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-wide px-3 mb-2 flex items-center gap-2">
+                  <DollarSign className="w-4 h-4" />
+                  <span>Pricing</span>
                 </h3>
-                <div className="space-y-2">
-                  {/* Start Plan */}
-                  <a href="/marketplace" className="block p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">💡</span>
-                        <span className="font-bold text-white">Start</span>
-                      </div>
-                      <span className="text-white font-bold">$99/mo</span>
-                    </div>
-                    <p className="text-xs text-white/90 mb-2">Get Found. Build your foundation.</p>
-                    <div className="flex flex-wrap gap-1">
-                      <Badge className="bg-white/20 text-white text-xs">5 team members</Badge>
-                      <Badge className="bg-white/20 text-white text-xs">25 clients</Badge>
+                <div className="space-y-1">
+                  <a href="/pathways" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-50 transition-colors">
+                    <Compass className="w-6 h-6 text-blue-600" />
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-gray-900">Pathways</div>
+                      <div className="text-xs text-gray-600">DIY vs MSP comparison</div>
                     </div>
                   </a>
-
-                  {/* Advanced Plan */}
-                  <a href="/marketplace" className="block p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-md hover:shadow-lg transition-shadow border-2 border-white">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">⚙️</span>
-                        <span className="font-bold text-white">Advanced</span>
-                        <Badge className="bg-white text-purple-600 text-xs">Popular</Badge>
-                      </div>
-                      <span className="text-white font-bold">$299/mo</span>
+                  <a href="/marketplace" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-green-50 transition-colors">
+                    <ShoppingCart className="w-6 h-6 text-green-600" />
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-gray-900">Marketplace</div>
+                      <div className="text-xs text-gray-600">Browse all pricing</div>
                     </div>
-                    <p className="text-xs text-white/90 mb-2">Get Customers. Convert attention.</p>
-                    <div className="flex flex-wrap gap-1">
-                      <Badge className="bg-white/20 text-white text-xs">10 team members</Badge>
-                      <Badge className="bg-white/20 text-white text-xs">100 clients</Badge>
-                    </div>
-                  </a>
-
-                  {/* Scale Plan */}
-                  <a href="/marketplace" className="block p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">🚀</span>
-                        <span className="font-bold text-white">Scale</span>
-                      </div>
-                      <span className="text-white font-bold">$999/mo</span>
-                    </div>
-                    <p className="text-xs text-white/90 mb-2">Get Business. Unified system.</p>
-                    <div className="flex flex-wrap gap-1">
-                      <Badge className="bg-white/20 text-white text-xs">50 team members</Badge>
-                      <Badge className="bg-white/20 text-white text-xs">500 clients</Badge>
-                    </div>
-                  </a>
-                </div>
-              </div>
-
-              {/* Commverse Apps Add-Ons */}
-              <div>
-                <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-base">
-                  <MessageSquare className="w-5 h-5 text-purple-600" />
-                  <span>Add Commverse Apps</span>
-                </h3>
-                <div className="grid grid-cols-2 gap-2">
-                  <a href="/marketplace" className="p-2 bg-white rounded-lg border border-yellow-200 hover:border-yellow-400 hover:shadow-md transition-all">
-                    <img src={sendIcon} alt="" className="h-8 w-8 mb-1" />
-                    <div className="text-xs font-bold text-gray-900">/send</div>
-                    <div className="text-lg font-bold text-gray-900">$35<span className="text-xs">/mo</span></div>
-                    <div className="text-xs text-green-600">Save in bundle</div>
-                  </a>
-
-                  <a href="/marketplace" className="p-2 bg-white rounded-lg border border-blue-200 hover:border-blue-400 hover:shadow-md transition-all">
-                    <img src={inboxIcon} alt="" className="h-8 w-8 mb-1" />
-                    <div className="text-xs font-bold text-gray-900">/inbox</div>
-                    <div className="text-lg font-bold text-gray-900">$35<span className="text-xs">/mo</span></div>
-                    <div className="text-xs text-green-600">Save in bundle</div>
-                  </a>
-
-                  <a href="/marketplace" className="p-2 bg-white rounded-lg border border-purple-200 hover:border-purple-400 hover:shadow-md transition-all">
-                    <img src={livechatIcon} alt="" className="h-8 w-8 mb-1" />
-                    <div className="text-xs font-bold text-gray-900">/livechat</div>
-                    <div className="text-lg font-bold text-gray-900">$35<span className="text-xs">/mo</span></div>
-                    <div className="text-xs text-green-600">Save in bundle</div>
-                  </a>
-
-                  <a href="/marketplace" className="p-2 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg border-2 border-pink-300 hover:border-pink-500 hover:shadow-lg transition-all col-span-2">
-                    <img src={commverseIcon} alt="" className="h-8 w-8 mb-1" />
-                    <div className="text-xs font-bold text-gray-900">Bundle</div>
-                    <div className="text-lg font-bold text-gray-900">$119<span className="text-xs">/mo</span></div>
-                    <div className="text-xs text-pink-600 font-semibold">Save $21</div>
-                  </a>
-
-                  <a href="/commverse" className="p-2 bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg border border-gray-300 hover:border-blue-400 hover:shadow-md transition-all col-span-2">
-                    <MessageSquare className="h-8 w-8 mb-1 text-blue-600" />
-                    <div className="text-xs font-bold text-gray-900">Learn About Commverse</div>
-                    <div className="text-xs text-gray-600">Complete communication ecosystem</div>
-                  </a>
-                </div>
-              </div>
-
-              {/* Quick Actions */}
-              <div>
-                <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-base">
-                  <Compass className="w-5 h-5 text-orange-600" />
-                  <span>Other Options</span>
-                </h3>
-                <div className="space-y-2">
-                  <a href="/pathways" className="block p-3 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg shadow-md hover:shadow-lg transition-shadow text-white">
-                    <div className="flex items-center gap-3">
-                      <Wrench className="w-6 h-6" />
-                      <div className="flex-1">
-                        <div className="font-bold">MSP Services</div>
-                        <div className="text-xs text-orange-100">We do it for you</div>
-                      </div>
-                    </div>
-                  </a>
-
-                  <a href="/marketplace" className="block p-3 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-center gap-3">
-                      <Wallet className="w-6 h-6 text-blue-600" />
-                      <div className="flex-1">
-                        <div className="font-semibold text-gray-900">View All Pricing</div>
-                        <div className="text-xs text-gray-600">Complete marketplace</div>
-                      </div>
-                    </div>
-                  </a>
-
-                  <a href="/assessment" className="block p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-md hover:shadow-lg transition-shadow text-white">
-                    <div className="flex items-center gap-3">
-                      <TrendingUp className="w-6 h-6" />
-                      <div className="flex-1">
-                        <div className="font-bold">Free Assessment</div>
-                        <div className="text-xs text-blue-100">Find your perfect path</div>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-
-              {/* Resources */}
-              <div>
-                <h3 className="font-bold text-gray-900 mb-3 flex items-center gap-2 text-base">
-                  <BookOpen className="w-5 h-5 text-indigo-600" />
-                  <span>Resources</span>
-                </h3>
-                <div className="space-y-2">
-                  <a href="/journey" className="flex items-center gap-3 p-2 rounded-lg hover:bg-white transition-colors" data-testid="link-mobile-journey">
-                    <Compass className="w-5 h-5 text-blue-600" />
-                    <span className="text-sm text-gray-700">Getting Started Guide</span>
-                  </a>
-                  <a href="/send-api-docs" className="flex items-center gap-3 p-2 rounded-lg hover:bg-white transition-colors" data-testid="link-mobile-api-docs">
-                    <Server className="w-5 h-5 text-purple-600" />
-                    <span className="text-sm text-gray-700">/send API Documentation</span>
-                  </a>
-                  <a href="/about" className="flex items-center gap-3 p-2 rounded-lg hover:bg-white transition-colors" data-testid="link-mobile-about">
-                    <User className="w-5 h-5 text-gray-600" />
-                    <span className="text-sm text-gray-700">About Us</span>
-                  </a>
-                  <a href="/contact" className="flex items-center gap-3 p-2 rounded-lg hover:bg-white transition-colors" data-testid="link-mobile-contact">
-                    <Mail className="w-5 h-5 text-green-600" />
-                    <span className="text-sm text-gray-700">Contact Support</span>
-                  </a>
-                  <a href="/sitemap" className="flex items-center gap-3 p-2 rounded-lg hover:bg-white transition-colors" data-testid="link-mobile-sitemap">
-                    <Globe className="w-5 h-5 text-gray-600" />
-                    <span className="text-sm text-gray-700">Site Map</span>
                   </a>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col gap-2 pt-4 border-t border-gray-300">
+              <div className="flex flex-col gap-2 pt-4 border-t border-gray-200">
                 <Button variant="outline" size="lg" className="w-full justify-start gap-3" asChild>
                   <a href="/portal">
                     <LogIn className="w-5 h-5" />
-                    <span className="font-semibold">{isLoggedIn ? "Dashboard" : "Client Login"}</span>
+                    <span className="font-semibold">{isLoggedIn ? "Dashboard" : "Login"}</span>
                   </a>
                 </Button>
                 <Button size="lg" className="w-full justify-start gap-3 bg-blue-600 hover:bg-blue-700 text-white" asChild>
                   <a href="/assessment">
                     <UserPlus className="w-5 h-5" />
-                    <span className="font-semibold">Start Free Assessment</span>
+                    <span className="font-semibold">Free Assessment</span>
                   </a>
                 </Button>
               </div>
