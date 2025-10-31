@@ -16,8 +16,8 @@ export function Footer() {
               Helping local businesses succeed online. Get found, get customers, get business.
             </p>
             <div className="flex flex-col space-y-2">
-              <BrandLogoCompact brand="webhosted" variant="dark" />
-              <BrandLogoCompact brand="airswiped" variant="dark" />
+              <BrandLogoCompact brand="hostsblue" variant="dark" />
+              <BrandLogoCompact brand="swipesblue" variant="dark" />
             </div>
           </div>
 
