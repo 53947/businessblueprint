@@ -61,11 +61,13 @@ export default function ClientLogin() {
             setIsCheckingAuth(false);
           });
       } else {
-        // Token expired, show login form
+        // Token expired (older than 7 days), show login form
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("lastLogin");
         setIsCheckingAuth(false);
       }
     } else {
-      // No saved credentials, show login form
+      // No saved credentials, show login form immediately
       setIsCheckingAuth(false);
     }
   }, [hasCheckedAuth]);
