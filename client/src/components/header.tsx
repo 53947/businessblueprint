@@ -539,9 +539,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   asChild
                   data-testid="button-login"
                 >
-                  <a href="/portal">
+                  <a href={isLoggedIn ? "/portal" : "/client-login"}>
                     <LogIn className="w-4 h-4" />
-                    <span>Login</span>
+                    <span>{isLoggedIn ? "Dashboard" : "Login"}</span>
                   </a>
                 </Button>
                 <Button
@@ -820,7 +820,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 <Button variant="outline" size="lg" className="w-full justify-start gap-3" asChild>
                   <a href="/portal">
                     <LogIn className="w-5 h-5" />
-                    <span className="font-semibold">{isLoggedIn ? "Re-enter Portal" : "Client Login"}</span>
+                    <span className="font-semibold">{isLoggedIn ? "Dashboard" : "Client Login"}</span>
                   </a>
                 </Button>
                 <Button size="lg" className="w-full justify-start gap-3 bg-blue-600 hover:bg-blue-700 text-white" asChild>
