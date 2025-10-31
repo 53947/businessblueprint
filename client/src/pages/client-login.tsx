@@ -15,6 +15,7 @@ export default function ClientLogin() {
   const [error, setError] = useState("");
   const [, setLocation] = useLocation();
   const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   // Auto-login if valid session exists
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function ClientLogin() {
     // Check if we're already logged in via sessionStorage
     const sessionClientId = sessionStorage.getItem("clientId");
     if (sessionClientId) {
-      // Already logged in, redirect to portal
+      // Already logged in, redirect to portal (keep loading state)
       window.location.href = "/portal";
       return;
     }
@@ -48,14 +49,24 @@ export default function ClientLogin() {
                 sessionStorage.setItem(key, localStorage.getItem(key) || "");
               });
               window.location.href = "/portal";
+            } else {
+              // Token invalid, show login form
+              setIsCheckingAuth(false);
             }
           })
           .catch(() => {
-            // Token expired, clear storage
+            // Token expired, clear storage and show login form
             localStorage.removeItem("authToken");
             localStorage.removeItem("lastLogin");
+            setIsCheckingAuth(false);
           });
+      } else {
+        // Token expired, show login form
+        setIsCheckingAuth(false);
       }
+    } else {
+      // No saved credentials, show login form
+      setIsCheckingAuth(false);
     }
   }, [hasCheckedAuth]);
 
@@ -130,6 +141,22 @@ export default function ClientLogin() {
       setLoading(false);
     }
   };
+
+  // Show loading spinner while checking authentication
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center justify-center space-y-4 py-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+              <p className="text-gray-600">Checking your login status...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
