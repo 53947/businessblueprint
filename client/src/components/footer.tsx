@@ -78,7 +78,7 @@ export function Footer() {
         <div className="border-t border-gray-800 pt-8 mt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-sm text-gray-400 mb-4 md:mb-0">
-              © {currentYear} businessblueprint.io. All rights reserved.
+              © {currentYear} Triad Blue Inc. All rights reserved.
             </div>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
               <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
