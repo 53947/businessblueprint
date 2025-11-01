@@ -1,133 +1,123 @@
-# Triad Blue Ecosystem - Digital Business Solutions
+# Business Blueprint - Digital Intelligence Platform
 
 ## Overview
-Triad Blue offers three independent digital platforms: Business Blueprint (AI digital intelligence), Hosts Blue (web hosting & domains), and Swipes Blue (payment gateway). The ecosystem's purpose is to empower local businesses in the US and Canada with AI-driven online presence analysis, personalized Digital Blueprints, and both DIY and Managed Service Provider (MSP) pathways. Triad Blue aims to be a Digital Intelligence Incubator, helping businesses "Get Found, Get Customers, Get Business." Swipes Blue serves as the central payment processor for all platforms.
 
-**📘 CROSS-PLATFORM STANDARDS:** See `TRIAD_BLUE_STANDARDS.md` for comprehensive development standards that MUST be followed across all three platforms (navigation, typography, colors, technical architecture, features to copy vs rebuild).
+Business Blueprint is an AI-powered digital intelligence platform that helps small businesses improve their online presence through assessments, recommendations, and integrated marketing tools. The platform is part of the TriadBlue ecosystem, which includes three standalone applications: Business Blueprint (businessblueprint.io), Hosts Blue (hostsblue.com), and Swipes Blue (swipesblue.com).
+
+The platform provides business assessments, AI coaching, reputation management via Synup integration, and a suite of communication tools (Commverse: /send, /inbox, /livechat, /content). It operates on a tiered subscription model with DIY and MSP pathways, offering both self-service and managed service options.
 
 ## User Preferences
+
 Preferred communication style: Simple, everyday language.
 
-**Development Workflow - CRITICAL:**
-- **DO NOT make changes to existing features without explicit user approval**
-- When user points out something or asks a question, **DISCUSS FIRST** - do not automatically fix
-- Only implement changes when user **explicitly requests** them (e.g., "fix this", "change that", "update this")
-- Reliability and consistency are critical - the user needs to rely on the system as-is
-- Changes only happen when discussed and approved by the user
+**Development Workflow:**
+- DO NOT make changes to existing features without explicit user approval
+- When user points out something, DISCUSS FIRST - do not automatically fix
+- Only implement changes when user explicitly requests them
+- Reliability and consistency are critical
+- Changes only happen when discussed and approved
 
-**GitHub Documentation Schedule:**
-- Update STATUS_REPORT.md and relevant documentation **twice daily** at 11:59 AM and 11:59 PM
-- On days with no work, add entry: "No updates - [date]"
-- Always document completed features, bug fixes, and configuration changes
-- Keep GitHub issues synchronized with actual progress
+**Documentation Standards:**
+- Update STATUS_REPORT.md twice daily at 11:59 AM and 11:59 PM
+- Document all completed features, bug fixes, and configuration changes
+- Keep GitHub issues synchronized with progress
 
-**Logo Design Process:**
-- DO NOT change any logo elements unless specifically instructed
-- Only modify exactly what is requested - no additional "improvements"
-- Keep compass design consistent across iterations unless told otherwise
-
-**OFFICIAL BRAND LOGO KEY:**
-- ALL branding uses FONTS (Archivo), NEVER images of text
-- **Typography:** First word = Archivo Semi Expanded, subsequent words = Archivo (BOTH MUST BE SAME FONT SIZE)
-- **Text Shadow:** 5pt blur, 315° angle, 5-10pt distance (applies to ALL wordmark text)
-
-**CRITICAL NAVIGATION STANDARDS (UNCHANGEABLE):**
-- **Header Menu Structure:** Applications | Solutions | Pricing | [Login/Dashboard]
-  - **Applications:** /send, /inbox, /livechat, /content (Commverse apps only)
-  - **Solutions:** 3 platforms (Business Blueprint, Hosts Blue, Swipes Blue) + API docs + learning resources
-  - **Pricing:** Pathways & Marketplace
-- **Client Portal Sidebar:** Fixed menu order and icon set. DO NOT modify without explicit user authorization. Both desktop and mobile navigation must use the same navItems array in `client/src/components/side-nav.tsx`.
-
-## Critical Production Issues & Lessons Learned
-
-**IMPORTANT FOR ALL ASSISTANTS:**
-- **DO NOT assume agent-built features are buggy or need refactoring without investigating first**
-- **DO NOT rename routes, move files, or restructure code without explicit user approval**
-- **ALWAYS investigate root causes thoroughly before making changes**
-
-**Development Environment Issue - October 26, 2025 (RESOLVED):**
-- **Symptom:** Application crashes on startup with "Cannot find package 'vite'" error. Development server (`npm run dev`) fails to start. LSP shows errors for missing packages.
-- **Root Cause:** NODE_ENV was set as a SECRET in the Replit Secrets pane with value "production". When NODE_ENV=production, npm automatically skips installing all devDependencies (including vite, typescript, @vitejs/plugin-react, etc.) during `npm install`. This is standard npm behavior to reduce production bundle sizes.
-- **Solution:** Delete the NODE_ENV secret from the Secrets pane. The application's package.json scripts already handle NODE_ENV correctly:
-  - `"dev": "NODE_ENV=development tsx server/index.ts"` ✅
-  - `"start": "NODE_ENV=production node dist/index.js"` ✅
-  - The .replit deployment config also sets it: `run = ["sh", "-c", "NODE_ENV=production node dist/index.js"]`
-- **Important:** NODE_ENV should NEVER be added to Secrets. Let the package.json scripts handle it. Confirmed working on swipesblue.com which has no NODE_ENV secret.
-- **Files Affected:** None - this was purely an environment configuration issue, not a code issue.
-- **Verification:** After deleting the secret, run `npm install` via packager_tool to install all packages including devDependencies, then restart the "Start application" workflow.
-
-**Production Deployment Issue - October 24, 2025 (RESOLVED):**
-- **Symptom:** Blank white screen on businessblueprint.io despite working dev environment
-- **Root Cause:** A `/assets/:filename` route was added to serve brand assets from database (favicon, logo). This route intercepted Vite's JavaScript/CSS bundle requests (`/assets/index-*.js`, `/assets/index-*.css`) in production, causing 404 errors and blank screen. In development, Vite middleware served bundles before this route ran, hiding the bug.
-- **Solution:** Renamed route from `/assets/:filename` to `/brand-assets/:filename` in `server/routes.ts`. Updated `client/index.html` and `client/src/pages/brand-studio.tsx` to use `/brand-assets/` for favicons/logos. This allows Vite bundles to load from `/assets/` via static file serving.
-- **Files Modified:** `server/routes.ts` (line 2602), `client/index.html` (lines 6-8), `client/src/pages/brand-studio.tsx` (display text)
-- **Additional Fixes:** Removed `dist` from `.gitignore` to ensure build artifacts are included in deployments.
-
-**Route Hierarchy for Production:**
-1. `/brand-assets/:filename` - Database-stored brand assets (favicons, logos, icons)
-2. `/attached_assets/*` - Static files from `attached_assets` directory
-3. `/assets/*` - Vite build artifacts (JS, CSS bundles) served from `dist/public/assets/`
-4. All other routes - SPA fallback serving `index.html`
-
-## Replit Platform Configuration
-
-**Viewing Custom Domains:**
-- Custom domains (like businessblueprint.io) are managed in the **Deployments tab**, NOT in a general account domains section
-- To view/manage domains: Navigate to Deployments tab → Settings tab → Domain management
-- If domains were purchased through Replit: They appear in the Domains tab within the Publishing section
-- DNS configuration: Add A and TXT records at your domain registrar, allow up to 48 hours for propagation
-- Common issues: Multiple A records, A+AAAA records together, or Cloudflare proxied records can interfere with SSL certificate renewals
+**Design Standards:**
+- Follow TRIAD_BLUE_STANDARDS.md for all branding, navigation, and typography
+- Navigation structure is UNCHANGEABLE: Applications | Solutions | Pricing
+- Logo uses Archivo fonts (never images), with specific text shadow rules
+- Read standards documentation TWICE before making any UI changes
 
 ## System Architecture
 
-The application uses a full-stack monorepo architecture. The frontend is built with React 18, TypeScript, Wouter, Tailwind CSS, Shadcn/ui, TanStack Query, React Hook Form, and Zod. The backend utilizes Node.js, Express.js, TypeScript, PostgreSQL with Drizzle ORM on Neon, and Connect-pg-simple for session management.
+### Technology Stack
 
-**UI/UX Design & Branding:**
-- **Typography:** Archivo font family with specific styling for logo text (Semi Expanded for first word, regular for subsequent words). No text shadows.
-- **Logo Sizing Standards:** Defined pixel values for horizontal, vertical, and sidebar logos, and navigation icons to ensure consistency (e.g., 36px icon + 24px text for default horizontal logo).
-- **Brand Identity:** Specific color palette for core elements, each platform, TLD accent, and app-specific features (e.g., Triad Blue: #0000FF, Business Blueprint: #FFA500).
-- **Standardized Icons & Terminology:** Official 5-Step Journey icons with fixed sizes and consistent pathway icons and terminology (DIY, MSP, AI Business Coach).
-- **Client Portal Sidebar:** Fixed menu order, specific icons, and structure.
-- **Landing Pages:** Unified gray-on-white design with colored icons.
+**Frontend:**
+- React 18 with TypeScript
+- Wouter for routing (client-side)
+- TanStack Query v5 for data fetching
+- Tailwind CSS + Shadcn/ui components
+- Archivo font family for typography
+- Vite for build tooling
 
-**Technical Implementations & Feature Specifications:**
-- **AI Coach:** Leverages OpenAI GPT-4o for personalized guidance.
-- **Client Portal:** Centralized dashboard for managing business aspects, mobile-responsive.
-- **Commverse Ecosystem:** Unified communication platform (`/send` for Email/SMS, `/livechat`, and `/inbox` for multi-channel aggregation with WebSockets).
-- **À La Carte Marketplace:** For purchasing individual apps with shopping cart and branded checkout.
-- **Pricing System:** 6-tier structure with animated tables, pathway toggles, and billing options (includes 35% markup).
-- **Purchasing Flows:** Three distinct flows: general subscription, assessment-driven recommendations, and individual app ordering.
-- **Impersonation System:** Secure, dual-token JWT based admin support access with audit logging.
-- **Whitelabeling:** All platform components are branded under businessblueprint.io.
-- **Multi-Platform Ecosystem:** Business Blueprint, Hosts Blue, and Swipes Blue are distinct but integrated with shared login states and cross-app navigation.
-- **Synup Integration:** Comprehensive listings and reputation management with a white-label security model and verified API endpoints.
-- **AI-Powered Reputation Management:** GPT-4o for automated review responses, sentiment analysis, and bulk processing.
-- **Automated Review Monitoring:** Real-time multi-channel alerts for new reviews.
-- **Brand Studio:** Admin-only asset management, storing uploads as base64 in PostgreSQL, converted to blob URLs for display, with memory leak prevention.
+**Backend:**
+- Node.js with Express 5
+- PostgreSQL (Neon Serverless) via Drizzle ORM
+- Session storage with connect-pg-simple
+- Socket.IO for real-time messaging
+- RS256 JWT authentication for API access
 
-**System Design Choices:**
-- **Three Standalone Apps:** Business Blueprint, Hosts Blue, and Swipes Blue are separate deployments.
-- **Swipes Blue as Payment Processor:** Centralized payment processing for the entire ecosystem.
-- **Admin vs. Client Interface:** Role-based routing with an impersonation system for admin support.
-- **My Domains Management:** Central source of truth for client domains, feeding other services.
+**Authentication:**
+- Replit Auth (OpenID Connect) for user sessions
+- JWT tokens for client portal API access
+- Multi-layer security for Synup integration (cross-tenant prevention, business name verification)
+
+### Core Architectural Decisions
+
+**Multi-Platform Ecosystem Design:**
+The system is architected as three independent platforms that share authentication (SSO) and payment processing. Business Blueprint serves as the primary digital intelligence platform, while Swipes Blue handles all payment transactions across the ecosystem. This separation allows each platform to be marketed and deployed independently while maintaining shared services.
+
+**Database Schema Strategy:**
+Uses Drizzle ORM with a single PostgreSQL database containing tables for assessments, clients, subscriptions, social media integrations, content management, and communication channels. The schema supports multiple pathways (DIY/MSP/ALC) and tier-based feature access. Session management uses a dedicated `sessions` table for Replit Auth.
+
+**Real-Time Communication:**
+WebSocket connections via Socket.IO enable live chat (/livechat widget), unified inbox (/inbox), and real-time notifications. Authentication middleware supports both JWT tokens (for agents) and session IDs (for customers), allowing secure bi-directional messaging without requiring customer login.
+
+**AI Integration Pattern:**
+OpenAI GPT-4o powers multiple features through dedicated service classes (AICoachService, OpenAIAnalysisService, reviewAI). Each service maintains context-specific prompts and handles token management independently. AI responses are cached where appropriate to reduce API costs.
+
+**Route Organization:**
+Production route hierarchy: `/brand-assets/*` (database assets) → `/attached_assets/*` (static files) → `/assets/*` (Vite bundles) → SPA fallback. This specific order prevents route conflicts that caused production deployment issues in October 2024.
+
+**Subscription & Pricing Model:**
+Three-pathway system (DIY, MSP, ALC) with base plans (Start/Advanced/Scale) and add-ons. PricingEngine service calculates costs dynamically based on tier selections and included features. NMI integration handles payment processing via Swipes Blue with tokenized checkout flow.
+
+### Key Integration Points
+
+**Synup API (Listings & Reviews):**
+Full integration with location management, listings synchronization, and review monitoring. Service layer abstracts API v4 endpoints with Base64-encoded location IDs. Multi-layer security prevents cross-tenant data access and validates business names strictly. Review monitoring service polls for new reviews and triggers email alerts.
+
+**Meta Platforms (Facebook/Instagram/WhatsApp):**
+OAuth flows for platform connections, webhook endpoints for receiving messages, and unified inbox for managing conversations. App ID 190094768417980 with verified domain. Supports posting content, receiving DMs, and handling comments across Meta properties.
+
+**Commverse Apps Architecture:**
+Four integrated applications (/send, /inbox, /livechat, /content) operate as part of Business Blueprint but maintain separate routing and feature sets. Each app has dedicated database tables, API routes, and UI components. Access controlled by subscription tier and add-on selections.
+
+**Media Storage (Cloudflare R2):**
+Content management uses S3-compatible storage with MediaStorageService handling uploads, transformations (via Sharp), and CDN delivery. Supports image optimization, video storage, and tagging. Falls back gracefully when credentials unavailable.
 
 ## External Dependencies
 
--   **Google Places API:** Business data.
--   **OpenAI API:** AI services.
--   **SMTP Credentials:** Email sending.
--   **Neon PostgreSQL:** Serverless database.
--   **Drizzle ORM:** Database interactions.
--   **Shadcn/ui:** Component library.
--   **Tailwind CSS:** CSS framework.
--   **Synup API:** Business listings and reputation management.
--   **Telnyx:** SMS messaging.
--   **NMI (Network Merchants Inc.):** Payment gateway.
--   **OpenSRS:** Domain registration, DNS, and email automation.
--   **Socket.IO:** Real-time communication.
--   **Facebook Graph API:** Messenger integration.
--   **Instagram Messenger Platform:** Instagram DM integration.
--   **WhatsApp Business Cloud API:** WhatsApp messaging.
--   **X/Twitter Account Activity API:** X (Twitter) DM integration.
--   **TikTok Business Messaging API:** TikTok messaging.
--   **WPMUDev:** WordPress hosting and management (Hosts Blue).
+**Third-Party APIs:**
+- **OpenAI GPT-4o** - AI assistant, business coach, content generation, review responses
+- **Synup API v4** - Business listings management, reputation monitoring, review synchronization
+- **Google Places API** - Business data lookup, location verification, initial assessment data
+- **Meta Graph API** - Facebook/Instagram/WhatsApp integration for content posting and messaging
+- **Telnyx** - Voice and SMS messaging capabilities
+- **NMI (Network Merchants Inc)** - Payment gateway via Swipes Blue integration
+
+**Infrastructure Services:**
+- **Neon PostgreSQL** - Serverless database hosting
+- **Cloudflare R2** - S3-compatible object storage for media files
+- **Replit Auth** - OpenID Connect authentication provider
+- **Socket.IO** - WebSocket server for real-time features
+
+**Pending Integrations (Not Yet Configured):**
+- LinkedIn API (social posting, professional profile management)
+- X (Twitter) API v2 (OAuth 2.0 PKCE, posting, DM webhooks)
+- Google Business Profile API (posting, location management)
+- TikTok Marketing API (video upload, MSP tier only)
+- OpenSRS (domain and email automation for Hosts Blue)
+- WPMUDev (WordPress hosting tools for Hosts Blue)
+
+**Development Tools:**
+- Vite (build system - requires NODE_ENV not set to "production" in dev)
+- TypeScript 5+ with strict mode
+- ESLint/Prettier for code quality
+- Drizzle Kit for database migrations
+
+**Important Notes:**
+- Production deployments require `dist` folder in version control (was in .gitignore, caused deployment issues)
+- NODE_ENV must NOT be set in Replit Secrets to allow devDependencies installation
+- Route paths must not conflict with Vite's `/assets/*` pattern (use `/brand-assets/*` instead)
+- All social media APIs require OAuth credentials stored in environment variables before platform connections work

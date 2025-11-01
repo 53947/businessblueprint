@@ -5,6 +5,7 @@ import { ArrowRight, Compass, Wrench, Lightbulb, Zap, Ship, Brain, Building2, Cr
 import sendIcon from "@assets/send icon_1760074368870.png";
 import inboxIcon from "@assets/Unified mailbox_1760074368869.png";
 import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
+import commverseIcon from "@assets/Commverse Bundle_1760662442941.png";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -23,10 +24,10 @@ export default function PathwaysPage() {
             Choose Your Pathway
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            Two Paths to Digital Success
+            Three Pathways to Digital Success
           </h1>
           <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto">
-            Whether you prefer hands-on control or expert guidance, we've built the perfect pathway for your business growth.
+            Choose the perfect pathway for your business: DIY control, expert MSP guidance, or flexible à la carte services.
           </p>
         </div>
       </section>
@@ -34,16 +35,16 @@ export default function PathwaysPage() {
       {/* Pathways Comparison */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12">
+          <div className="grid md:grid-cols-3 gap-8">
             {/* DIY Pathway */}
-            <Card className="border-2 border-blue-400 hover:border-blue-500 transition-all hover:shadow-xl" style={{ backgroundColor: '#0000FF' }}>
+            <Card className="border-2 border-orange-400 hover:border-orange-500 transition-all hover:shadow-xl" style={{ backgroundColor: '#FFA500' }}>
               <CardContent className="p-8">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
                     <Lightbulb className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-white">Do It Yourself (DIY)</h2>
+                    <h2 className="text-xl font-bold text-white">Do It Yourself (DIY)</h2>
                     <p className="text-sm text-white/90 font-semibold">You're in control</p>
                   </div>
                 </div>
@@ -55,31 +56,31 @@ export default function PathwaysPage() {
                 <div className="space-y-4 mb-8">
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-blue-600" />
+                      <ArrowRight className="w-4 h-4 text-orange-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white">You're In Control</h3>
-                      <p className="text-sm text-white/80">Manage campaigns, content, and strategies yourself with intuitive tools</p>
+                      <h3 className="font-semibold text-white text-sm">Full Control</h3>
+                      <p className="text-xs text-white/80">Manage campaigns yourself</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-blue-600" />
+                      <ArrowRight className="w-4 h-4 text-orange-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white">AI-Powered Assistance</h3>
-                      <p className="text-sm text-white/80">Coach Blue guides you with smart recommendations and automated workflows</p>
+                      <h3 className="font-semibold text-white text-sm">AI Assistance</h3>
+                      <p className="text-xs text-white/80">Coach Blue guidance</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-blue-600" />
+                      <ArrowRight className="w-4 h-4 text-orange-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white">Scale at Your Pace</h3>
-                      <p className="text-sm text-white/80">Start small, add features as you grow, pay only for what you use</p>
+                      <h3 className="font-semibold text-white text-sm">Scale Your Way</h3>
+                      <p className="text-xs text-white/80">Pay for what you use</p>
                     </div>
                   </div>
                 </div>
@@ -95,7 +96,7 @@ export default function PathwaysPage() {
 
                 <Button 
                   onClick={() => setLocation('/marketplace')}
-                  className="w-full bg-white hover:bg-white/90 text-blue-600 font-semibold"
+                  className="w-full bg-white hover:bg-white/90 text-orange-600 font-semibold"
                   data-testid="button-explore-diy">
                   Explore DIY Plans
                 </Button>
@@ -103,14 +104,14 @@ export default function PathwaysPage() {
             </Card>
 
             {/* MSP Pathway */}
-            <Card className="border-2 border-orange-400 hover:border-orange-500 transition-all hover:shadow-xl" style={{ backgroundColor: '#FFA500' }}>
+            <Card className="border-2 border-blue-400 hover:border-blue-500 transition-all hover:shadow-xl" style={{ backgroundColor: '#0000FF' }}>
               <CardContent className="p-8">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
                     <Wrench className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-white">Managed Services Provided (MSP)</h2>
+                    <h2 className="text-xl font-bold text-white">Managed Services (MSP)</h2>
                     <p className="text-sm text-white/90 font-semibold">Expert execution</p>
                   </div>
                 </div>
@@ -122,49 +123,116 @@ export default function PathwaysPage() {
                 <div className="space-y-4 mb-8">
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-orange-600" />
+                      <ArrowRight className="w-4 h-4 text-blue-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white">Expert Team at Your Service</h3>
-                      <p className="text-sm text-white/80">Dedicated specialists manage your digital presence end-to-end</p>
+                      <h3 className="font-semibold text-white text-sm">Expert Team</h3>
+                      <p className="text-xs text-white/80">Dedicated specialists</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-orange-600" />
+                      <ArrowRight className="w-4 h-4 text-blue-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white">Done-For-You Execution</h3>
-                      <p className="text-sm text-white/80">Content creation, review responses, social posting—all handled professionally</p>
+                      <h3 className="font-semibold text-white text-sm">Done-For-You</h3>
+                      <p className="text-xs text-white/80">Full execution & content</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-orange-600" />
+                      <ArrowRight className="w-4 h-4 text-blue-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white">Strategic Guidance</h3>
-                      <p className="text-sm text-white/80">Monthly reviews, proactive recommendations, continuous optimization</p>
+                      <h3 className="font-semibold text-white text-sm">Strategic Guidance</h3>
+                      <p className="text-xs text-white/80">Monthly optimization</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 mb-6">
-                  <p className="text-sm font-semibold text-white mb-2">Managed services from:</p>
+                  <p className="text-sm font-semibold text-white mb-2">Base plan + services</p>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-white">$15</span>
-                    <span className="text-white/80">/location</span>
+                    <span className="text-2xl font-bold text-white">$313</span>
+                    <span className="text-white/80">/month</span>
                   </div>
-                  <p className="text-xs text-white/70 mt-1">Add-on services • Support packages available</p>
+                  <p className="text-xs text-white/70 mt-1">Start tier • Advanced & Scale available</p>
                 </div>
 
                 <Button 
                   onClick={() => setLocation('/marketplace')}
-                  className="w-full bg-white hover:bg-white/90 text-orange-600 font-semibold"
+                  className="w-full bg-white hover:bg-white/90 text-blue-600 font-semibold"
                   data-testid="button-explore-msp">
                   Explore MSP Services
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* ALC Pathway */}
+            <Card className="border-2 border-green-400 hover:border-green-500 transition-all hover:shadow-xl" style={{ backgroundColor: '#00FF40' }}>
+              <CardContent className="p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 bg-black/20 rounded-lg flex items-center justify-center">
+                    <Zap className="w-6 h-6 text-black" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-black">À La Carte (ALC)</h2>
+                    <p className="text-sm text-black/80 font-semibold">Pick & choose</p>
+                  </div>
+                </div>
+                
+                <p className="text-black/80 mb-6 text-base leading-relaxed">
+                  Build your own solution. Choose exactly which apps and services you need, when you need them.
+                </p>
+
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-green-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-black text-sm">Ultimate Flexibility</h3>
+                      <p className="text-xs text-black/70">Select individual apps</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-green-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-black text-sm">No Commitments</h3>
+                      <p className="text-xs text-black/70">Add or remove anytime</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <ArrowRight className="w-4 h-4 text-green-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-black text-sm">Cost Control</h3>
+                      <p className="text-xs text-black/70">Pay only for what you use</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-black/20 backdrop-blur-sm rounded-lg p-4 mb-6">
+                  <p className="text-sm font-semibold text-black mb-2">Individual apps from:</p>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-bold text-black">$35</span>
+                    <span className="text-black/70">/month</span>
+                  </div>
+                  <p className="text-xs text-black/60 mt-1">Bundle savings available</p>
+                </div>
+
+                <Button 
+                  onClick={() => setLocation('/marketplace')}
+                  className="w-full bg-black hover:bg-black/90 text-green-400 font-semibold"
+                  data-testid="button-explore-alc">
+                  Browse Marketplace
                 </Button>
               </CardContent>
             </Card>
@@ -184,20 +252,20 @@ export default function PathwaysPage() {
               Commverse Communication Apps
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Three proprietary apps that work together to streamline all your customer communications
+              Four proprietary apps that work together to streamline all your customer communications
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-4 gap-6">
             {/* /send */}
             <Card className="border-2 border-yellow-200 hover:border-yellow-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
                   <img src={sendIcon} alt="/send" className="h-16 w-16 object-contain" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">
-                  <span style={{ color: '#00FF40' }}>/</span>
-                  <span style={{ color: '#0000FF' }}>send</span>
+                <h3 className="text-xl font-bold text-gray-900 mb-2 text-center" style={{ fontWeight: 600 }}>
+                  <span style={{ color: '#09080E' }}>/</span>
+                  <span style={{ color: '#FFD700' }}>send</span>
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 text-center">
                   Email & SMS Marketing Platform
@@ -225,9 +293,9 @@ export default function PathwaysPage() {
                 <div className="flex items-center justify-center mb-4">
                   <img src={inboxIcon} alt="/inbox" className="h-16 w-16 object-contain" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">
-                  <span style={{ color: '#00FF40' }}>/</span>
-                  <span style={{ color: '#0000FF' }}>inbox</span>
+                <h3 className="text-xl font-bold text-gray-900 mb-2 text-center" style={{ fontWeight: 600 }}>
+                  <span style={{ color: '#09080E' }}>/</span>
+                  <span style={{ color: '#0080FF' }}>inbox</span>
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 text-center">
                   Unified Communications Hub
@@ -255,9 +323,9 @@ export default function PathwaysPage() {
                 <div className="flex items-center justify-center mb-4">
                   <img src={livechatIcon} alt="/livechat" className="h-16 w-16 object-contain" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2 text-center">
-                  <span style={{ color: '#00FF40' }}>/</span>
-                  <span style={{ color: '#0000FF' }}>livechat</span>
+                <h3 className="text-xl font-bold text-gray-900 mb-2 text-center" style={{ fontWeight: 600 }}>
+                  <span style={{ color: '#09080E' }}>/</span>
+                  <span style={{ color: '#8000FF' }}>livechat</span>
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 text-center">
                   Website Live Chat Widget
@@ -274,6 +342,36 @@ export default function PathwaysPage() {
                   <li className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 bg-purple-600 rounded-full"></div>
                     Conversation history
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* /content */}
+            <Card className="border-2 border-pink-200 hover:border-pink-400 hover:shadow-xl transition-all">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center mb-4">
+                  <img src={commverseIcon} alt="/content" className="h-16 w-16 object-contain" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2 text-center" style={{ fontWeight: 600 }}>
+                  <span style={{ color: '#09080E' }}>/</span>
+                  <span style={{ color: '#E91EBC' }}>content</span>
+                </h3>
+                <p className="text-sm text-gray-600 mb-4 text-center">
+                  Social Media Management
+                </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-pink-600 rounded-full"></div>
+                    Content calendar
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-pink-600 rounded-full"></div>
+                    Media library
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-pink-600 rounded-full"></div>
+                    AI caption suggestions
                   </li>
                 </ul>
               </CardContent>

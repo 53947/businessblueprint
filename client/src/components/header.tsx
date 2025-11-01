@@ -113,7 +113,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
                                     <img src={sendIcon} alt="/send icon" className="h-10 w-10 object-contain" />
-                                    <img src={sendLogo} alt="/send" className="h-8 object-contain" />
+                                    <span className="text-base font-semibold" style={{ fontWeight: 600 }}>
+                                      <span style={{ color: '#09080E' }}>/</span>
+                                      <span style={{ color: '#FFD700' }}>send</span>
+                                    </span>
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-green-600 dark:text-green-400">Visit Platform →</span>
@@ -141,7 +144,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
                                     <img src={inboxIcon} alt="/inbox icon" className="h-10 w-10 object-contain" />
-                                    <img src={inboxLogo} alt="/inbox" className="h-8 object-contain" />
+                                    <span className="text-base font-semibold" style={{ fontWeight: 600 }}>
+                                      <span style={{ color: '#09080E' }}>/</span>
+                                      <span style={{ color: '#0080FF' }}>inbox</span>
+                                    </span>
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-yellow-600 dark:text-yellow-400">Visit Platform →</span>
@@ -169,7 +175,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
                                     <img src={livechatIcon} alt="/livechat icon" className="h-10 w-10 object-contain" />
-                                    <img src={livechatLogo} alt="/livechat" className="h-8 object-contain" />
+                                    <span className="text-base font-semibold" style={{ fontWeight: 600 }}>
+                                      <span style={{ color: '#09080E' }}>/</span>
+                                      <span style={{ color: '#8000FF' }}>livechat</span>
+                                    </span>
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-teal-600 dark:text-teal-400">Visit Platform →</span>
@@ -197,7 +206,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
                                     <img src={commverseIcon} alt="/content icon" className="h-10 w-10 object-contain" />
-                                    <span className="text-base font-semibold" style={{ color: '#E91E8C' }}>/content</span>
+                                    <span className="text-base font-semibold" style={{ fontWeight: 600 }}>
+                                      <span style={{ color: '#09080E' }}>/</span>
+                                      <span style={{ color: '#E91EBC' }}>content</span>
+                                    </span>
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-pink-600 dark:text-pink-400">Visit Platform →</span>
@@ -574,28 +586,40 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   <a href="/send" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-green-50 transition-colors" data-testid="link-mobile-send">
                     <img src={sendIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">/send</div>
+                      <div className="text-sm font-semibold text-gray-900" style={{ fontWeight: 600 }}>
+                        <span style={{ color: '#09080E' }}>/</span>
+                        <span style={{ color: '#FFD700' }}>send</span>
+                      </div>
                       <div className="text-xs text-gray-600">Email & SMS Marketing</div>
                     </div>
                   </a>
                   <a href="/inbox-app" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-yellow-50 transition-colors" data-testid="link-mobile-inbox">
                     <img src={inboxIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">/inbox</div>
+                      <div className="text-sm font-semibold text-gray-900" style={{ fontWeight: 600 }}>
+                        <span style={{ color: '#09080E' }}>/</span>
+                        <span style={{ color: '#0080FF' }}>inbox</span>
+                      </div>
                       <div className="text-xs text-gray-600">Unified Communications</div>
                     </div>
                   </a>
                   <a href="/livechat" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-teal-50 transition-colors" data-testid="link-mobile-livechat">
                     <img src={livechatIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">/livechat</div>
+                      <div className="text-sm font-semibold text-gray-900" style={{ fontWeight: 600 }}>
+                        <span style={{ color: '#09080E' }}>/</span>
+                        <span style={{ color: '#8000FF' }}>livechat</span>
+                      </div>
                       <div className="text-xs text-gray-600">Live Chat Widget</div>
                     </div>
                   </a>
                   <a href="/content" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-pink-50 transition-colors" data-testid="link-mobile-content">
                     <img src={commverseIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">/content</div>
+                      <div className="text-sm font-semibold text-gray-900" style={{ fontWeight: 600 }}>
+                        <span style={{ color: '#09080E' }}>/</span>
+                        <span style={{ color: '#E91EBC' }}>content</span>
+                      </div>
                       <div className="text-xs text-gray-600">Social Media Mgmt</div>
                     </div>
                   </a>

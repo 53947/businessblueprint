@@ -1,0 +1,29 @@
+# OS
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env files (keep example committed)
+.env*
+!.env.example
+
+# Local public uploads/binaries
+server/public/
+
+# Build artifacts
+# IMPORTANT: keep dist tracked for deployment (do NOT ignore /dist)
+
+# Vite local/override configs (keep main vite.config.ts tracked)
+vite.config.local.*
+vite.config.*.local.*
+!vite.config.ts
+
+# Archives
+*.tar.gz
