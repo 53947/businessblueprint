@@ -16,20 +16,14 @@ import {
   Menu,
   X,
   Globe,
-  Compass,
-  CreditCard,
-  BookOpen,
   LogIn,
   UserPlus,
-  Layers,
   TrendingUp,
-  DollarSign,
   Mail,
   Server,
   Wallet,
   MessageSquare,
   MessageCircle,
-  Inbox,
   Lightbulb,
   Wrench,
   GraduationCap,
@@ -37,9 +31,13 @@ import {
   HelpCircle,
   FileText,
   Video,
-  Users,
-  ShoppingCart
+  Users
 } from "lucide-react";
+import layersIcon from "@assets/icons/layers.svg";
+import bookOpenIcon from "@assets/icons/book-open.svg";
+import dollarSignIcon from "@assets/icons/dollar-sign.svg";
+import compassIcon from "@assets/icons/compass.svg";
+import shoppingBasketIcon from "@assets/icons/shopping-basket.svg";
 import { BrandLogo, BrandIcon } from "@/components/brand-logo";
 import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
 import bbIcon from "@assets/Blueprint Icon_1760810447789.png";
@@ -97,7 +95,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     {/* Applications - Commverse Apps Only */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-applications">
-                        <Layers className="w-4 h-4" />
+                        <img src={layersIcon} alt="" className="w-4 h-4" />
                         <span>Applications</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
@@ -234,7 +232,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     {/* Pricing */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pricing">
-                        <DollarSign className="w-4 h-4" />
+                        <img src={dollarSignIcon} alt="" className="w-4 h-4" />
                         <span>Pricing</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
@@ -243,7 +241,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* Pathways */}
                             <a href="/pathways" className="group block p-4 rounded-lg border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all">
                               <div className="flex items-center gap-3 mb-2">
-                                <Compass className="w-6 h-6 text-blue-600" />
+                                <img src={compassIcon} alt="" className="w-6 h-6" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
                                 <h3 className="text-base font-bold text-gray-900">Pathways</h3>
                               </div>
                               <p className="text-sm text-gray-600">Compare Do It Yourself (DIY) and Managed Services Provided (MSP)</p>
@@ -252,7 +250,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* Marketplace */}
                             <a href="/marketplace" className="group block p-4 rounded-lg border border-gray-200 hover:border-green-500 hover:bg-green-50 transition-all">
                               <div className="flex items-center gap-3 mb-2">
-                                <ShoppingCart className="w-6 h-6 text-green-600" />
+                                <img src={shoppingBasketIcon} alt="" className="w-6 h-6" style={{ filter: 'invert(46%) sepia(96%) saturate(589%) hue-rotate(86deg) brightness(92%) contrast(87%)' }} />
                                 <h3 className="text-base font-bold text-gray-900">Marketplace</h3>
                               </div>
                               <p className="text-sm text-gray-600">Browse all plans, add-ons, and services with pricing</p>
@@ -265,7 +263,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     {/* Solutions */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2">
-                        <BookOpen className="w-4 h-4" />
+                        <img src={bookOpenIcon} alt="" className="w-4 h-4" />
                         <span>Solutions</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
@@ -282,7 +280,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/journey"
                                 data-testid="link-resources-journey"
                               >
-                                <Compass className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <img src={compassIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">Getting Started Guide</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">5-step digital growth journey</p>
@@ -579,7 +577,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
               {/* Applications Section */}
               <div className="border-b border-gray-200 pb-3 mb-3">
                 <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-wide px-3 mb-2 flex items-center gap-2">
-                  <Layers className="w-4 h-4" />
+                  <img src={layersIcon} alt="" className="w-4 h-4" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                   <span>Applications</span>
                 </h3>
                 <div className="space-y-1">
@@ -629,7 +627,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
               {/* Solutions Section */}
               <div className="border-b border-gray-200 pb-3 mb-3">
                 <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-wide px-3 mb-2 flex items-center gap-2">
-                  <BookOpen className="w-4 h-4" />
+                  <img src={bookOpenIcon} alt="" className="w-4 h-4" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                   <span>Solutions</span>
                 </h3>
                 
@@ -661,7 +659,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 {/* Learning & Developer Resources */}
                 <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
                   <a href="/journey" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-testid="link-mobile-journey">
-                    <Compass className="w-5 h-5 text-gray-500" />
+                    <img src={compassIcon} alt="" className="w-5 h-5" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                     <span className="text-sm text-gray-700">Getting Started</span>
                   </a>
                   <a href="/about" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-testid="link-mobile-about">
@@ -678,19 +676,19 @@ export function Header({ showNavigation = true }: HeaderProps) {
               {/* Pricing Section */}
               <div className="pb-3">
                 <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-wide px-3 mb-2 flex items-center gap-2">
-                  <DollarSign className="w-4 h-4" />
+                  <img src={dollarSignIcon} alt="" className="w-4 h-4" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                   <span>Pricing</span>
                 </h3>
                 <div className="space-y-1">
                   <a href="/pathways" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-50 transition-colors">
-                    <Compass className="w-6 h-6 text-blue-600" />
+                    <img src={compassIcon} alt="" className="w-6 h-6" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
                     <div className="flex-1">
                       <div className="text-sm font-semibold text-gray-900">Pathways</div>
                       <div className="text-xs text-gray-600">DIY vs MSP comparison</div>
                     </div>
                   </a>
                   <a href="/marketplace" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-green-50 transition-colors">
-                    <ShoppingCart className="w-6 h-6 text-green-600" />
+                    <img src={shoppingBasketIcon} alt="" className="w-6 h-6" style={{ filter: 'invert(46%) sepia(96%) saturate(589%) hue-rotate(86deg) brightness(92%) contrast(87%)' }} />
                     <div className="flex-1">
                       <div className="text-sm font-semibold text-gray-900">Marketplace</div>
                       <div className="text-xs text-gray-600">Browse all pricing</div>
