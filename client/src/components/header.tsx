@@ -547,9 +547,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   asChild
                   data-testid="button-login"
                 >
-                  <a href={isLoggedIn ? "/portal" : "/portal/login"}>
+                  <a href="/api/login">
                     <img src={logInIcon} alt="" className="w-4 h-4" />
-                    <span>{isLoggedIn ? "Dashboard" : "Login"}</span>
+                    <span>Login</span>
                   </a>
                 </Button>
                 <Button
@@ -698,9 +698,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
               {/* Action Buttons */}
               <div className="flex flex-col gap-2 pt-4 border-t border-gray-200">
                 <Button variant="outline" size="lg" className="w-full justify-start gap-3" asChild>
-                  <a href="/portal">
+                  <a href="/api/login">
                     <img src={logInIcon} alt="" className="w-5 h-5" />
-                    <span className="font-semibold">{isLoggedIn ? "Dashboard" : "Login"}</span>
+                    <span className="font-semibold">Login</span>
                   </a>
                 </Button>
                 <Button size="lg" className="w-full justify-start gap-3 bg-blue-600 hover:bg-blue-700 text-white" asChild>
