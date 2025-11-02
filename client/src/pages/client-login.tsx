@@ -14,63 +14,17 @@ export default function ClientLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [, setLocation] = useLocation();
-  const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
-  // Auto-login if valid session exists
+  // Check if already logged in
   useEffect(() => {
-    // Prevent multiple executions
-    if (hasCheckedAuth) return;
-    setHasCheckedAuth(true);
-
-    // Check if we're already logged in via sessionStorage
     const sessionClientId = sessionStorage.getItem("clientId");
     if (sessionClientId) {
-      // Already logged in, redirect to portal (keep loading state)
       window.location.href = "/portal";
       return;
     }
-
-    const authToken = localStorage.getItem("authToken");
-    const lastLogin = localStorage.getItem("lastLogin");
-    
-    // Auto-login if logged in within last 7 days
-    if (authToken && lastLogin) {
-      const daysSinceLogin = (Date.now() - parseInt(lastLogin)) / (1000 * 60 * 60 * 24);
-      if (daysSinceLogin < 7) {
-        // Verify token is still valid (ONE TIME ONLY on page load)
-        fetch("/api/dashboard/" + authToken)
-          .then(res => res.json())
-          .then(data => {
-            if (data.redirectUrl) {
-              // Copy to session storage
-              Object.keys(localStorage).forEach(key => {
-                if (key !== 'authToken') return;
-                sessionStorage.setItem(key, localStorage.getItem(key) || "");
-              });
-              window.location.href = "/portal";
-            } else {
-              // Token invalid, show login form
-              setIsCheckingAuth(false);
-            }
-          })
-          .catch(() => {
-            // Token expired, clear storage and show login form
-            localStorage.removeItem("authToken");
-            localStorage.removeItem("lastLogin");
-            setIsCheckingAuth(false);
-          });
-      } else {
-        // Token expired (older than 7 days), show login form
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("lastLogin");
-        setIsCheckingAuth(false);
-      }
-    } else {
-      // No saved credentials, show login form immediately
-      setIsCheckingAuth(false);
-    }
-  }, [hasCheckedAuth]);
+    setIsCheckingAuth(false);
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
