@@ -34,7 +34,7 @@ import messageSquareIcon from "@assets/icons/message-square.svg";
 import { BrandLogo, BrandIcon } from "@/components/brand-logo";
 import bbAvatar from "@assets/icons/blueprint-avatar.png";
 import bbIcon from "@assets/icons/blueprint-favicon.png";
-import commverseIcon from "@assets/Commverse Bundle_1760662442941.png";
+import contentIcon from "@assets/icons/social-media-mgmt.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import airswipedLogo from "@assets/swipesblue icon_1760810511865.png";
@@ -196,7 +196,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               >
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
-                                    <img src={commverseIcon} alt="/content icon" className="h-10 w-10 object-contain" />
+                                    <img src={contentIcon} alt="/content icon" className="h-10 w-10 object-contain" />
                                     <span className="text-base font-semibold" style={{ fontWeight: 600 }}>
                                       <span style={{ color: '#09080E' }}>/</span>
                                       <span style={{ color: '#E91EBC' }}>content</span>
@@ -531,7 +531,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   data-testid="button-quick-inbox"
                 >
                   <a href="/inbox">
-                    <img src={commverseIcon} alt="/inbox" className="w-5 h-5" />
+                    <img src={inboxIcon} alt="/inbox" className="w-5 h-5" />
                     <span className="font-bold">Inbox</span>
                   </a>
                 </Button>
@@ -605,7 +605,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     </div>
                   </a>
                   <a href="/content" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-pink-50 transition-colors" data-testid="link-mobile-content">
-                    <img src={commverseIcon} alt="" className="h-7 w-7 object-contain" />
+                    <img src={contentIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
                       <div className="text-sm font-semibold text-gray-900" style={{ fontWeight: 600 }}>
                         <span style={{ color: '#09080E' }}>/</span>
