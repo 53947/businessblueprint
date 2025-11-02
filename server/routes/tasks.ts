@@ -3,6 +3,7 @@ import { db } from "../db";
 import { tasks } from "@shared/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { z } from "zod";
+import { githubSync } from "../services/github-sync";
 
 export const tasksRouter = Router();
 
@@ -89,7 +90,28 @@ tasksRouter.post('/', async (req: Request, res: Response) => {
       })
       .returning();
 
-    // TODO: Send notification if task is assigned
+    // Sync to GitHub (async, don't block response)
+    if (githubSync.isEnabled()) {
+      githubSync.createIssue(githubSync.formatTaskAsIssue(newTask))
+        .then(async (issue) => {
+          if (issue) {
+            // Update task with GitHub issue info
+            await db
+              .update(tasks)
+              .set({
+                githubIssueId: `#${issue.number}`,
+                githubIssueUrl: issue.html_url,
+              })
+              .where(eq(tasks.id, newTask.id));
+            console.log(`[Tasks] Task ${newTask.id} synced to GitHub issue #${issue.number}`);
+          }
+        })
+        .catch((error) => {
+          console.error(`[Tasks] Failed to sync task ${newTask.id} to GitHub:`, error);
+        });
+    }
+
+    // Send notification if task is assigned
     if (newTask.assignedTo && newTask.assignedTo !== 'unassigned') {
       console.log(`[Tasks] Task ${newTask.id} assigned to ${newTask.assignedTo}`);
     }
@@ -154,7 +176,48 @@ tasksRouter.patch('/:id', async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Task not found' });
     }
 
-    // TODO: Send notification if assignee changed
+    // Sync to GitHub if issue exists (async, don't block response)
+    if (githubSync.isEnabled() && updatedTask.githubIssueId) {
+      const issueNumber = parseInt(updatedTask.githubIssueId.replace('#', ''));
+      
+      // Recompute full label set (don't drop required labels)
+      const labels: string[] = [];
+      if (updatedTask.assignedTo) {
+        labels.push(`assigned-to-${updatedTask.assignedTo.toLowerCase()}`);
+      }
+      if (updatedTask.priority) {
+        labels.push(`priority-${updatedTask.priority}`);
+      }
+      if (updatedTask.tags && Array.isArray(updatedTask.tags)) {
+        labels.push(...updatedTask.tags);
+      }
+      
+      // Update GitHub issue
+      githubSync.updateIssue({
+        issueNumber,
+        title: validatedData.title,
+        body: validatedData.description,
+        state: githubSync.getIssueState(updatedTask.status),
+        labels,
+      })
+        .catch((error) => {
+          console.error(`[Tasks] Failed to sync task ${updatedTask.id} to GitHub:`, error);
+        });
+
+      // Add comment if status changed to completed
+      if (validatedData.status === 'completed') {
+        const completedAt = updatedTask.completedAt || new Date();
+        githubSync.addComment(
+          issueNumber,
+          `✅ Task marked as completed in TriadBlue task management system.\n\n**Completed:** ${completedAt.toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'short' })}`
+        )
+          .catch((error) => {
+            console.error(`[Tasks] Failed to add completion comment:`, error);
+          });
+      }
+    }
+
+    // Send notification if assignee changed
     if (validatedData.assignedTo) {
       console.log(`[Tasks] Task ${updatedTask.id} reassigned to ${validatedData.assignedTo}`);
     }
