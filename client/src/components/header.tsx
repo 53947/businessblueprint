@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -54,21 +55,25 @@ interface HeaderProps {
 
 export function Header({ showNavigation = true }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const [hasClientPortalAccess, setHasClientPortalAccess] = useState(false);
 
-  // Check if user is logged in
+  // Check if user has client portal access
   useEffect(() => {
-    const checkLoginStatus = () => {
+    const checkClientPortal = () => {
       const clientId = sessionStorage.getItem("clientId");
-      setIsLoggedIn(!!clientId);
+      setHasClientPortalAccess(!!clientId);
     };
 
-    checkLoginStatus();
+    checkClientPortal();
 
-    // Check periodically in case session changes (every 5 seconds instead of 1 second)
-    const interval = setInterval(checkLoginStatus, 5000);
+    // Check periodically in case session changes (every 5 seconds)
+    const interval = setInterval(checkClientPortal, 5000);
     return () => clearInterval(interval);
-  }, []); // Add empty dependency array to run only once on mount
+  }, []);
+
+  // User is logged in if they have Replit Auth OR Client Portal access
+  const isLoggedIn = isAuthenticated || hasClientPortalAccess;
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
