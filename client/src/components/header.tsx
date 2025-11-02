@@ -547,7 +547,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   asChild
                   data-testid="button-login"
                 >
-                  <a href={isLoggedIn ? "/portal" : "/client-login"}>
+                  <a href={isLoggedIn ? "/portal" : "/portal/login"}>
                     <img src={logInIcon} alt="" className="w-4 h-4" />
                     <span>{isLoggedIn ? "Dashboard" : "Login"}</span>
                   </a>
