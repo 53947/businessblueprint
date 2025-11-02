@@ -1,6 +1,6 @@
-import diyIcon from "@assets/diy_1759873601017.png";
-import mspIcon from "@assets/msp_1759873601018.png";
-import aiCoachIcon from "@assets/AI Business Coach Blue_1760813312010.png";
+import diyIcon from "@assets/icons/diy.png";
+import mspIcon from "@assets/icons/managed-services.png";
+import aiCoachIcon from "@assets/icons/ai-business-coach.png";
 import captainingIcon from "@assets/Captaining Icon_1759648904285.png";
 import sendIcon from "@assets/send icon_1759873220203.png";
 
