@@ -124,8 +124,47 @@ Cyen interprets user data, generates insights, and speaks on behalf of the syste
 - All changes, regardless of origin, must be reflected in GitHub Issues or `STATUS_REPORT.md`.  
 - Every issue must list **who executed** (Axel, Rune, Lumen, or Cyen).  
 - No undocumented merges or commits permitted.
+- 
+## Section 4 — AI Task Routing & Internal Task Management Layer
 
----
+### 4.1 Authority & Source of Truth
+- **Canonical tasks & decisions live in GitHub Issues.**
+- **Internal Task Board** in Replit is a live workspace that mirrors/links to GitHub but never replaces it.
+
+### 4.2 Roles
+- **Axel** — Systems/Architecture, Dev tooling, Infra, CI/CD, guards & migrations.
+- **Lumen** — Product/UI/UX, copy hygiene, standards enforcement, Markdown/docs integrity.
+
+### 4.3 Daily Ritual (Session Start Checklist)
+1) Open **GitHub Issues** → filter by `assignee:Axel` or `assignee:Lumen` and label `triadblue`.
+2) Open **Internal Task Board** → `/admin/tasks` (reads `/server/data/tasks.json`).
+3) Resolve any conflicts: if a task exists internally without a **GitHub Issue ID**, create/link it before starting work.
+
+### 4.4 Task Lifecycle
+- **Open → In Progress → Review → Done** (optional **Blocked**).
+- Every Internal Task **must include** `githubIssueId` and `updatedBy`.
+- On **Done**: post closing note in GitHub Issue and add to **STATUS_REPORT.md** for that cycle.
+
+### 4.5 Status Codes (exact strings)
+- `open`, `in_progress`, `review`, `blocked`, `done`
+
+### 4.6 Required Fields (Internal Task)
+- `id`, `title`, `description`, `assignedTo` (`"Axel"` or `"Lumen"`), `status`, `priority` (`"low"|"med"|"high"`),  
+  `githubIssueId` (e.g., `#123`), `labels` (array), `updatedAt` (ISO), `updatedBy` (`"Axel"|"Lumen"|"Dean"`).
+
+### 4.7 Notifications
+- No email or external notifications. Axel/Lumen **must** check at session start (4.3).
+- The board is visible to all; changes are logged via `updatedAt`/`updatedBy`.
+
+### 4.8 Compliance & Logging
+- Each Internal Task **references a GitHub Issue**; unlinked tasks are not permitted.
+- All completions go to **STATUS_REPORT.md** (timeboxed to the next update slot).
+- No untracked work. If urgent, create a GitHub Issue first, then link it.
+
+### 4.9 Security & Permissions
+- Internal Task API is **admin-only** (server-side auth guard).
+- Data file path: `/server/data/tasks.json` (versioned; no secrets stored).
+
 
 ## 🧩 Conflict Resolution
 If two AIs disagree or attempt the same task:
