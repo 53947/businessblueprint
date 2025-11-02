@@ -1,15 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocation, Link } from "wouter";
-import { CheckCircle, Search, BarChart3, Rocket, Star, Shield, Clock, ChevronRight, Compass, MapPin, Gem } from "lucide-react";
 import { AICoachIcon } from "@/components/pathway-icons";
+import compassIcon from "@assets/icons/compass.svg";
 import { HowItWorks } from "@/components/how-it-works";
 import { ServicePathways } from "@/components/service-pathways";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
-import bbIcon from "@assets/Blueprint Icon_1760810447789.png";
-import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
+import bbIcon from "@assets/icons/blueprint-favicon.png";
+import bbLogo from "@assets/icons/blueprint-avatar.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import airswipedLogo from "@assets/airswipedcom icon light version_1760075718468.png";
@@ -32,7 +32,7 @@ export default function Home() {
             <div className="mb-8 lg:mb-0">
               <div className="flex items-center space-x-2 mb-4">
                 <div className="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm font-medium flex items-center">
-                  <Search className="w-4 h-4 mr-2" />
+                  <span className="mr-2">🔍</span>
                   Powered by Google Business Intelligence
                 </div>
               </div>
@@ -44,7 +44,7 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Button onClick={startAssessment} size="lg" className="bg-blue-500 hover:bg-blue-600">
-                  <BarChart3 className="w-5 h-5 mr-2" />
+                  <span className="mr-2">📊</span>
                   Start Free Assessment
                 </Button>
                 <Link href="/ai-coach">
@@ -56,15 +56,15 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
               </div>
               <div className="flex items-center space-x-6 text-sm text-gray-500">
                 <div className="flex items-center">
-                  <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-green-500 mr-2">✓</span>
                   No Credit Card Required
                 </div>
                 <div className="flex items-center">
-                  <Clock className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-green-500 mr-2">⏱️</span>
                   Results in 24 Hours
                 </div>
                 <div className="flex items-center">
-                  <Shield className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-green-500 mr-2">🛡️</span>
                   100% Secure
                 </div>
               </div>
@@ -104,19 +104,19 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center opacity-60">
             <div className="flex items-center justify-center space-x-2">
-              <Search className="w-8 h-8 text-gray-400" />
+              <span className="text-2xl text-gray-400">🔍</span>
               <span className="font-bold text-gray-400">Business</span>
             </div>
             <div className="flex items-center justify-center space-x-2">
-              <Star className="w-8 h-8 text-gray-400" />
+              <span className="text-2xl text-gray-400">⭐</span>
               <span className="font-bold text-gray-400">Reviews</span>
             </div>
             <div className="flex items-center justify-center space-x-2">
-              <Search className="w-8 h-8 text-gray-400" />
+              <span className="text-2xl text-gray-400">🔍</span>
               <span className="font-bold text-gray-400">SEO</span>
             </div>
             <div className="flex items-center justify-center space-x-2">
-              <BarChart3 className="w-8 h-8 text-gray-400" />
+              <span className="text-2xl text-gray-400">📊</span>
               <span className="font-bold text-gray-400">Analytics</span>
             </div>
           </div>
@@ -141,13 +141,13 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
           {/* Compass Header */}
           <div className="text-center mb-16 relative">
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-4">
-              <Compass className="w-12 h-12 text-amber-600 animate-spin" style={{animationDuration: '20s'}} />
+              <img src={compassIcon} alt="" className="w-12 h-12 animate-spin" style={{animationDuration: '20s', filter: 'invert(46%) sepia(96%) saturate(589%) hue-rotate(15deg) brightness(92%) contrast(87%)'}} />
             </div>
             <div className="pt-8">
               <div className="flex items-center justify-center mb-4">
-                <MapPin className="w-8 h-8 text-red-500 mr-3" />
+                <span className="text-3xl mr-3">📍</span>
                 <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">Your Digital Blueprint</h2>
-                <Gem className="w-8 h-8 text-blue-500 ml-3" />
+                <span className="text-3xl ml-3">💎</span>
               </div>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
 A step-by-step guide designed for complete beginners. Follow this blueprint to build confidence and watch your business grow online and offline.
@@ -421,9 +421,9 @@ A step-by-step guide designed for complete beginners. Follow this blueprint to b
             <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-8xl text-red-600 font-bold animate-bounce">×</div>
             <CardContent className="p-12 pt-16">
               <div className="flex items-center justify-center mb-6">
-                <Gem className="w-12 h-12 mr-4 animate-pulse" />
+                <span className="text-4xl mr-4 animate-pulse">💎</span>
                 <h3 className="text-4xl font-bold">Digital Success Blueprint!</h3>
-                <Gem className="w-12 h-12 ml-4 animate-pulse" />
+                <span className="text-4xl ml-4 animate-pulse">💎</span>
               </div>
               <p className="text-2xl mb-6 opacity-90">
                 You've found it! A thriving, confident online business that serves customers and grows sustainably.

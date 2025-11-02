@@ -11,36 +11,29 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import {
-  User,
-  Menu,
-  X,
-  Globe,
-  LogIn,
-  UserPlus,
-  TrendingUp,
-  Mail,
-  Server,
-  Wallet,
-  MessageSquare,
-  MessageCircle,
-  Lightbulb,
-  Wrench,
-  GraduationCap,
-  Code,
-  HelpCircle,
-  FileText,
-  Video,
-  Users
-} from "lucide-react";
 import layersIcon from "@assets/icons/layers.svg";
 import bookOpenIcon from "@assets/icons/book-open.svg";
 import dollarSignIcon from "@assets/icons/dollar-sign.svg";
 import compassIcon from "@assets/icons/compass.svg";
 import shoppingBasketIcon from "@assets/icons/shopping-basket.svg";
+import logInIcon from "@assets/icons/log-in.svg";
+import userPlusIcon from "@assets/icons/user-plus.svg";
+import userIcon from "@assets/icons/user.svg";
+import menuIcon from "@assets/icons/menu.svg";
+import xIcon from "@assets/icons/x.svg";
+import trendingUpIcon from "@assets/icons/trending-up.svg";
+import graduationCapIcon from "@assets/icons/graduation-cap.svg";
+import codeIcon from "@assets/icons/code.svg";
+import helpCircleIcon from "@assets/icons/help-circle.svg";
+import fileTextIcon from "@assets/icons/file-text.svg";
+import videoIcon from "@assets/icons/video.svg";
+import usersIcon from "@assets/icons/users.svg";
+import lightbulbIcon from "@assets/icons/lightbulb.svg";
+import wrenchIcon from "@assets/icons/wrench.svg";
+import messageSquareIcon from "@assets/icons/message-square.svg";
 import { BrandLogo, BrandIcon } from "@/components/brand-logo";
-import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
-import bbIcon from "@assets/Blueprint Icon_1760810447789.png";
+import bbAvatar from "@assets/icons/blueprint-avatar.png";
+import bbIcon from "@assets/icons/blueprint-favicon.png";
 import commverseIcon from "@assets/Commverse Bundle_1760662442941.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
@@ -271,7 +264,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* Learning Column */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2 mb-2">
-                              <GraduationCap className="w-4 h-4 text-blue-600" />
+                              <img src={graduationCapIcon} alt="" className="w-4 h-4" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
                               <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Learn</h4>
                             </div>
                             <NavigationMenuLink asChild>
@@ -293,7 +286,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/about"
                                 data-testid="link-resources-success"
                               >
-                                <TrendingUp className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <img src={trendingUpIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">Success Stories</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Real results from businesses</p>
@@ -306,7 +299,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/biif"
                                 data-testid="link-resources-biif"
                               >
-                                <Video className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <img src={videoIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">Video Tutorials</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Step-by-step walkthroughs</p>
@@ -318,7 +311,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* Platforms Column */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2 mb-2">
-                              <Globe className="w-4 h-4 text-orange-600" />
+                              <img src={compassIcon} alt="" className="w-4 h-4" style={{ filter: 'invert(55%) sepia(89%) saturate(1787%) hue-rotate(359deg) brightness(102%) contrast(101%)' }} />
                               <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Platforms</h4>
                             </div>
                             <NavigationMenuLink asChild>
@@ -371,7 +364,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* Developer Column */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2 mb-2">
-                              <Code className="w-4 h-4 text-purple-600" />
+                              <img src={codeIcon} alt="" className="w-4 h-4" style={{ filter: 'invert(35%) sepia(97%) saturate(3738%) hue-rotate(262deg) brightness(93%) contrast(95%)' }} />
                               <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Developers</h4>
                             </div>
                             <NavigationMenuLink asChild>
@@ -380,7 +373,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/send-api-docs"
                                 data-testid="link-resources-api"
                               >
-                                <FileText className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <img src={fileTextIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">/send API Docs</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Email & SMS API reference</p>
@@ -393,7 +386,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/inbox-api-docs"
                                 data-testid="link-resources-inbox-api"
                               >
-                                <FileText className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <img src={fileTextIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">/inbox API Docs</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Unified communications API</p>
@@ -406,7 +399,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/content-api-docs"
                                 data-testid="link-resources-content-api"
                               >
-                                <FileText className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <img src={fileTextIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">/content API Docs</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Social media posting API</p>
@@ -419,7 +412,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/livechat-install"
                                 data-testid="link-resources-livechat-install"
                               >
-                                <Code className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <img src={codeIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">LiveChat Installation</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Widget integration guide</p>
@@ -432,7 +425,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/sitemap"
                                 data-testid="link-resources-sitemap"
                               >
-                                <Globe className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <img src={compassIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">Site Map</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Complete navigation</p>
@@ -444,7 +437,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* Support Column */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2 mb-2">
-                              <HelpCircle className="w-4 h-4 text-green-600" />
+                              <img src={helpCircleIcon} alt="" className="w-4 h-4" style={{ filter: 'invert(46%) sepia(96%) saturate(589%) hue-rotate(86deg) brightness(92%) contrast(87%)' }} />
                               <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Support</h4>
                             </div>
                             <NavigationMenuLink asChild>
@@ -453,7 +446,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/contact"
                                 data-testid="link-resources-help"
                               >
-                                <Mail className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <img src={messageSquareIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">Help Center</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Get answers & support</p>
@@ -466,7 +459,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/livechat-demo"
                                 data-testid="link-resources-demo"
                               >
-                                <MessageCircle className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <img src={messageSquareIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">Live Demo</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Try our live chat</p>
@@ -479,7 +472,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 href="/portal"
                                 data-testid="link-resources-portal"
                               >
-                                <Users className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <img src={usersIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">Client Portal</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Manage your account</p>
@@ -515,9 +508,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   data-testid="button-mobile-menu"
                 >
                   {isMobileMenuOpen ? (
-                    <X className="w-5 h-5" />
+                    <img src={xIcon} alt="" className="w-5 h-5" />
                   ) : (
-                    <Menu className="w-5 h-5" />
+                    <img src={menuIcon} alt="" className="w-5 h-5" />
                   )}
                 </button>
               </>
@@ -550,7 +543,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   data-testid="button-login"
                 >
                   <a href={isLoggedIn ? "/portal" : "/client-login"}>
-                    <LogIn className="w-4 h-4" />
+                    <img src={logInIcon} alt="" className="w-4 h-4" />
                     <span>{isLoggedIn ? "Dashboard" : "Login"}</span>
                   </a>
                 </Button>
@@ -561,7 +554,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   data-testid="button-signup"
                 >
                   <a href="/assessment">
-                    <UserPlus className="w-4 h-4" />
+                    <img src={userPlusIcon} alt="" className="w-4 h-4" />
                     <span>Sign Up</span>
                   </a>
                 </Button>
@@ -663,11 +656,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     <span className="text-sm text-gray-700">Getting Started</span>
                   </a>
                   <a href="/about" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-testid="link-mobile-about">
-                    <TrendingUp className="w-5 h-5 text-gray-500" />
+                    <img src={trendingUpIcon} alt="" className="w-5 h-5" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                     <span className="text-sm text-gray-700">Success Stories</span>
                   </a>
                   <a href="/send-api-docs" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-testid="link-mobile-api-docs">
-                    <Code className="w-5 h-5 text-gray-500" />
+                    <img src={codeIcon} alt="" className="w-5 h-5" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                     <span className="text-sm text-gray-700">/send API Docs</span>
                   </a>
                 </div>
@@ -701,13 +694,13 @@ export function Header({ showNavigation = true }: HeaderProps) {
               <div className="flex flex-col gap-2 pt-4 border-t border-gray-200">
                 <Button variant="outline" size="lg" className="w-full justify-start gap-3" asChild>
                   <a href="/portal">
-                    <LogIn className="w-5 h-5" />
+                    <img src={logInIcon} alt="" className="w-5 h-5" />
                     <span className="font-semibold">{isLoggedIn ? "Dashboard" : "Login"}</span>
                   </a>
                 </Button>
                 <Button size="lg" className="w-full justify-start gap-3 bg-blue-600 hover:bg-blue-700 text-white" asChild>
                   <a href="/assessment">
-                    <UserPlus className="w-5 h-5" />
+                    <img src={userPlusIcon} alt="" className="w-5 h-5" />
                     <span className="font-semibold">Free Assessment</span>
                   </a>
                 </Button>
