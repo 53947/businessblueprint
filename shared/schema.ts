@@ -2045,6 +2045,10 @@ export const tasks = pgTable("tasks", {
   // Additional metadata
   tags: text("tags").array(),
   relatedTo: jsonb("related_to"), // Link to other entities (posts, assessments, etc)
+  
+  // GitHub Integration
+  githubIssueId: varchar("github_issue_id", { length: 50 }), // GitHub issue number (e.g., "#214")
+  githubIssueUrl: text("github_issue_url"), // Full URL to GitHub issue
 });
 
 export const insertTaskSchema = createInsertSchema(tasks).omit({
