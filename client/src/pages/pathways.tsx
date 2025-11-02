@@ -2,6 +2,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { useLocation } from "wouter";
 import { ArrowRight, Compass, Wrench, Lightbulb, Zap, Ship, Brain, Building2, CreditCard, Server, Mail, Inbox, MessageSquare } from "lucide-react";
+import { DIYIcon, MSPIcon, ALCIcon } from "@/components/pathway-icons";
 import sendIcon from "@assets/send icon_1760074368870.png";
 import inboxIcon from "@assets/Unified mailbox_1760074368869.png";
 import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
@@ -174,9 +175,7 @@ export default function PathwaysPage() {
             <Card className="border-2 border-green-400 hover:border-green-500 transition-all hover:shadow-xl" style={{ backgroundColor: '#00FF40' }}>
               <CardContent className="p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-black/20 rounded-lg flex items-center justify-center">
-                    <Zap className="w-6 h-6 text-black" />
-                  </div>
+                  <ALCIcon className="w-12 h-12" />
                   <div>
                     <h2 className="text-xl font-bold text-black">À La Carte (ALC)</h2>
                     <p className="text-sm text-black/80 font-semibold">Pick & choose</p>

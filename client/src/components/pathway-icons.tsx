@@ -1,6 +1,7 @@
 import diyIcon from "@assets/icons/diy.png";
 import mspIcon from "@assets/icons/managed-services.png";
 import aiCoachIcon from "@assets/icons/ai-business-coach.png";
+import alcIcon from "@assets/icons/a-la-carte.png";
 import captainingIcon from "@assets/Captaining Icon_1759648904285.png";
 import sendIcon from "@assets/send icon_1759873220203.png";
 
@@ -38,6 +39,18 @@ export function AICoachIcon({ className = "w-16 h-16" }: PathwayIconProps) {
       <img 
         src={aiCoachIcon} 
         alt="AI Business Coach" 
+        style={{ objectFit: 'contain', maxWidth: '90%', maxHeight: '90%' }}
+      />
+    </div>
+  );
+}
+
+export function ALCIcon({ className = "w-16 h-16" }: PathwayIconProps) {
+  return (
+    <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <img 
+        src={alcIcon} 
+        alt="À La Carte (ALC)" 
         style={{ objectFit: 'contain', maxWidth: '90%', maxHeight: '90%' }}
       />
     </div>
