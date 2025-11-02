@@ -41,9 +41,7 @@ export default function PathwaysPage() {
             <Card className="border-2 border-orange-400 hover:border-orange-500 transition-all hover:shadow-xl" style={{ backgroundColor: '#FFA500' }}>
               <CardContent className="p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                    <Lightbulb className="w-6 h-6 text-white" />
-                  </div>
+                  <DIYIcon className="w-12 h-12" />
                   <div>
                     <h2 className="text-xl font-bold text-white">Do It Yourself (DIY)</h2>
                     <p className="text-sm text-white/90 font-semibold">You're in control</p>
@@ -108,9 +106,7 @@ export default function PathwaysPage() {
             <Card className="border-2 border-blue-400 hover:border-blue-500 transition-all hover:shadow-xl" style={{ backgroundColor: '#0000FF' }}>
               <CardContent className="p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                    <Wrench className="w-6 h-6 text-white" />
-                  </div>
+                  <MSPIcon className="w-12 h-12" />
                   <div>
                     <h2 className="text-xl font-bold text-white">Managed Services (MSP)</h2>
                     <p className="text-sm text-white/90 font-semibold">Expert execution</p>
