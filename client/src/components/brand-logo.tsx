@@ -7,7 +7,7 @@ import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import airswipedLogo from "@assets/swipesblue icon_1760810511865.png";
 import sendLogo from "@assets/send logo_1760075605263.png";
-import sendIcon from "@assets/send icon_1760074368870.png";
+import sendIcon from "@assets/icons/send-icon-corrected.png";
 import inboxLogo from "@assets/inbox logo_1760075605262.png";
 import inboxIcon from "@assets/Unified mailbox_1760074368869.png";
 import livechatLogo from "@assets/livechat logo_1760075605262.png";
