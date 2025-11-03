@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { randomBytes } from "crypto";
 import contentRoutes from "./routes/content";
 import metaRoutes from "./routes/meta";
 import { tasksRouter } from "./routes/tasks";
@@ -518,7 +519,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Client Portal Login - Email-only authentication
+  // Client Portal Login - Magic Link authentication
   app.post("/api/clients/login", async (req, res) => {
     try {
       const { email } = req.body;
@@ -539,8 +540,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      const normalizedEmail = email.toLowerCase().trim();
+
       // Find client by email (case-insensitive, trimmed)
-      const client = await storage.getClientByEmail(email.toLowerCase().trim());
+      const client = await storage.getClientByEmail(normalizedEmail);
 
       if (!client) {
         return res.status(404).json({
@@ -549,14 +552,111 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      // Generate secure random token
+      const token = randomBytes(32).toString('hex');
+      
+      // Token expires in 15 minutes
+      const expiresAt = new Date();
+      expiresAt.setMinutes(expiresAt.getMinutes() + 15);
+
+      // Store token in database
+      await storage.createMagicLinkToken({
+        email: normalizedEmail,
+        token,
+        expiresAt
+      });
+
+      // Generate magic link URL
+      const frontendUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
+      const magicLink = `${frontendUrl}/portal/verify?token=${token}`;
+
+      // Send magic link email
+      const emailService = new EmailService();
+      const emailSent = await emailService.sendMagicLinkEmail(
+        normalizedEmail,
+        magicLink,
+        client.companyName
+      );
+
+      if (!emailSent) {
+        return res.status(500).json({
+          success: false,
+          message: "Failed to send login email. Please try again."
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Check your email! We've sent you a secure login link."
+      });
+    } catch (error) {
+      console.error("Client login error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Login failed. Please try again."
+      });
+    }
+  });
+
+  // Verify Magic Link Token and Issue JWT
+  app.get("/api/clients/verify-magic-link", async (req, res) => {
+    try {
+      const { token } = req.query;
+
+      if (!token || typeof token !== 'string') {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid verification link"
+        });
+      }
+
+      // Get token from database
+      const magicToken = await storage.getMagicLinkToken(token);
+
+      if (!magicToken) {
+        return res.status(404).json({
+          success: false,
+          message: "Invalid or expired login link. Please request a new one."
+        });
+      }
+
+      // Check if token has been used
+      if (magicToken.used) {
+        return res.status(400).json({
+          success: false,
+          message: "This login link has already been used. Please request a new one."
+        });
+      }
+
+      // Check if token has expired
+      if (new Date() > new Date(magicToken.expiresAt)) {
+        return res.status(400).json({
+          success: false,
+          message: "This login link has expired. Please request a new one."
+        });
+      }
+
+      // Find client by email
+      const client = await storage.getClientByEmail(magicToken.email);
+
+      if (!client) {
+        return res.status(404).json({
+          success: false,
+          message: "Account not found"
+        });
+      }
+
+      // Mark token as used
+      await storage.markTokenAsUsed(token);
+
       // Update login tracking
       await storage.updateClient(client.id, {
         lastLoginTime: new Date(),
         loginCount: (client.loginCount || 0) + 1
       });
 
-      // Generate JWT token with email
-      const token = await jwtService.createDashboardToken(client.id, client.email);
+      // Generate JWT token
+      const jwtToken = await jwtService.createDashboardToken(client.id, client.email);
 
       res.json({
         success: true,
@@ -566,14 +666,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           email: client.email,
           isEmailVerified: client.isEmailVerified || false
         },
-        token,
+        token: jwtToken,
         message: "Login successful"
       });
     } catch (error) {
-      console.error("Client login error:", error);
+      console.error("Magic link verification error:", error);
       res.status(500).json({
         success: false,
-        message: "Login failed. Please try again."
+        message: "Verification failed. Please try again."
       });
     }
   });
