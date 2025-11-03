@@ -176,7 +176,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
               (item.id === "inbox" || item.id === "livechat" || item.id === "send" || item.id === "content") ? (
                 <span className="flex-1 text-base font-['Archivo']" style={{ fontWeight: 600 }} data-testid={`text-nav-${item.id}`}>
                   <span style={{ color: '#09080E' }}>/</span>
-                  <span style={{ color: '#00FF40' }}>{item.label}</span>
+                  <span style={{ color: item.id === 'send' ? '#FFD700' : item.id === 'inbox' ? '#0080FF' : item.id === 'content' ? '#E91EBC' : '#8000FF' }}>{item.label}</span>
                 </span>
               ) : (
                 <span className="flex-1 text-base" data-testid={`text-nav-${item.id}`}>
