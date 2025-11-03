@@ -52,6 +52,7 @@ export interface IStorage {
   // Assessment operations
   createAssessment(assessment: InsertAssessment): Promise<Assessment>;
   getAssessment(id: number): Promise<Assessment | undefined>;
+  getAllAssessments(): Promise<Assessment[]>;
   updateAssessment(id: number, data: Partial<Assessment>): Promise<Assessment>;
   getAssessmentsByEmail(email: string): Promise<Assessment[]>;
   
@@ -62,6 +63,7 @@ export interface IStorage {
   // Client operations
   createClient(client: InsertClient): Promise<Client>;
   getClient(id: number): Promise<Client | undefined>;
+  getAllClients(): Promise<Client[]>;
   getClientByExternalId(externalId: string): Promise<Client | undefined>;
   getClientByEmail(email: string): Promise<Client | undefined>;
   updateClient(id: number, data: Partial<Client>): Promise<Client>;
@@ -177,6 +179,13 @@ export class DatabaseStorage implements IStorage {
     return assessment;
   }
 
+  async getAllAssessments(): Promise<Assessment[]> {
+    return await db
+      .select()
+      .from(assessments)
+      .orderBy(desc(assessments.createdAt));
+  }
+
   async getAssessmentsByEmail(email: string): Promise<Assessment[]> {
     return await db
       .select()
@@ -240,6 +249,13 @@ export class DatabaseStorage implements IStorage {
       .where(eq(clients.id, id))
       .returning();
     return client;
+  }
+
+  async getAllClients(): Promise<Client[]> {
+    return await db
+      .select()
+      .from(clients)
+      .orderBy(desc(clients.createdAt));
   }
 
   async getClientsByEmail(email: string): Promise<Client[]> {
