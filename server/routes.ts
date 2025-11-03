@@ -5,6 +5,7 @@ import { randomBytes } from "crypto";
 import contentRoutes from "./routes/content";
 import metaRoutes from "./routes/meta";
 import { tasksRouter } from "./routes/tasks";
+import brandColorsRoutes from "./routes/brand-colors";
 import {
   insertAssessmentSchema,
   subscriptionPlans,
@@ -3123,6 +3124,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Task Management Routes
   app.use('/api/tasks', tasksRouter);
+
+  // Brand Colors Routes
+  app.use('/api/brand-colors', brandColorsRoutes);
 
   const httpServer = createServer(app);
   return httpServer;

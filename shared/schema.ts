@@ -2078,3 +2078,23 @@ export const insertTaskSchema = createInsertSchema(tasks).omit({
 
 export type Task = typeof tasks.$inferSelect;
 export type InsertTask = z.infer<typeof insertTaskSchema>;
+
+// ========================================
+// BRAND COLORS
+// ========================================
+
+export const brandColors = pgTable("brand_colors", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  hex: varchar("hex", { length: 7 }).notNull(), // #RRGGBB format
+  usage: text("usage"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertBrandColorSchema = createInsertSchema(brandColors).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type BrandColor = typeof brandColors.$inferSelect;
+export type InsertBrandColor = z.infer<typeof insertBrandColorSchema>;

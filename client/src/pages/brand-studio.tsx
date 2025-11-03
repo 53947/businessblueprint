@@ -225,16 +225,12 @@ export default function BrandStudio() {
     },
   });
 
-  // Brand colors
-  const [brandColors, setBrandColors] = useState([
-    { id: 1, name: 'Core Black', hex: '#09080E', usage: 'Primary text, headers' },
-    { id: 2, name: 'Triad Blue', hex: '#0000FF', usage: 'Brand primary' },
-    { id: 3, name: 'Business Blueprint', hex: '#FFA500', usage: 'Business Blueprint brand' },
-    { id: 4, name: 'Inbox Blue', hex: '#0080FF', usage: '/inbox app color' },
-    { id: 5, name: '/send Yellow', hex: '#E6B747', usage: '/send app color' },
-    { id: 6, name: '/livechat Purple', hex: '#8000FF', usage: '/livechat app color' },
-  ]);
+  // Brand colors from API
+  const { data: brandColorsData, isLoading: colorsLoading } = useQuery<{ success: boolean; colors: Array<{ id: number; name: string; hex: string; usage: string | null }> }>({
+    queryKey: ['/api/brand-colors'],
+  });
 
+  const brandColors = brandColorsData?.colors || [];
   const [newColor, setNewColor] = useState({ name: '', hex: '#000000', usage: '' });
 
   const handleFileUpload = (type: 'logo' | 'icon' | 'additional') => {
@@ -289,6 +285,49 @@ export default function BrandStudio() {
     });
   };
 
+  // Add color mutation
+  const addColorMutation = useMutation({
+    mutationFn: async (colorData: { name: string; hex: string; usage: string }) => {
+      return apiRequest('/api/brand-colors', 'POST', colorData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/brand-colors'] });
+      setNewColor({ name: '', hex: '#000000', usage: '' });
+      toast({
+        title: 'Color added',
+        description: 'Brand color has been added to your palette',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: 'Failed to add color',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Delete color mutation
+  const deleteColorMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return apiRequest(`/api/brand-colors/${id}`, 'DELETE');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/brand-colors'] });
+      toast({
+        title: 'Color removed',
+        description: 'The color has been removed from your palette',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: 'Failed to delete color',
+        variant: 'destructive',
+      });
+    },
+  });
+
   const addColor = () => {
     if (!newColor.name || !newColor.hex) {
       toast({
@@ -299,20 +338,11 @@ export default function BrandStudio() {
       return;
     }
 
-    setBrandColors([...brandColors, { ...newColor, id: Date.now() }]);
-    setNewColor({ name: '', hex: '#000000', usage: '' });
-    toast({
-      title: 'Color added',
-      description: `${newColor.name} has been added to your brand palette`,
-    });
+    addColorMutation.mutate(newColor);
   };
 
   const deleteColor = (id: number) => {
-    setBrandColors(brandColors.filter(color => color.id !== id));
-    toast({
-      title: 'Color removed',
-      description: 'The color has been removed from your palette',
-    });
+    deleteColorMutation.mutate(id);
   };
 
   return (
