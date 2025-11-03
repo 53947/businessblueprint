@@ -38,6 +38,7 @@ import ContentManagement from "@/pages/content-management";
 import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import DataDeletion from "@/pages/data-deletion";
+import PortalTestAccess from "@/pages/portal-test-access";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -50,6 +51,7 @@ function Router() {
       <Route path="/ai-coach" component={AICoachPage} />
       <Route path="/portal/login" component={ClientLogin} />
       <Route path="/portal/verify" component={VerifyMagicLink} />
+      <Route path="/portal/test" component={PortalTestAccess} />
       <Route path="/portal" component={ClientPortal} />
       <Route path="/contact" component={Contact} />
       <Route path="/about" component={About} />
