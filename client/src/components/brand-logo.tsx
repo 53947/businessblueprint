@@ -1,8 +1,8 @@
 // Reusable brand logo components using OFFICIAL Business Blueprint brandmarks
 // Static imports from attached_assets/icons/ (OFFICIAL ICONS - LOCKED IN PERMANENTLY)
-import bbAvatar from "@assets/icons/blueprint-avatar.png";
+import bbAvatar from "@assets/icons/blueprint-icon-new.png";
 import bbFavicon from "@assets/icons/blueprint-favicon.png";
-import bbIcon from "@assets/icons/blueprint-favicon.png";
+import bbIcon from "@assets/icons/blueprint-icon-new.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import airswipedLogo from "@assets/swipesblue icon_1760810511865.png";
@@ -59,8 +59,8 @@ export function BrandLogo({
             />
           )}
           <div className="text-center leading-tight" style={{ fontSize: '18px' }}>
-            <div className="text-[#FFA500] font-bold" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif', textShadow: '5pt 5pt 5pt rgba(0,0,0,0.3)' }}>business</div>
-            <div className="text-[#0000FF] font-bold" style={{ fontFamily: 'Archivo, sans-serif', textShadow: '5pt 5pt 5pt rgba(0,0,0,0.3)' }}>blueprint</div>
+            <div className="text-[#FFA500] font-bold" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif', textShadow: '-7pt -7pt 2pt rgba(0,0,0,0.3)' }}>business</div>
+            <div className="text-[#0000FF] font-bold" style={{ fontFamily: 'Archivo, sans-serif', textShadow: '-7pt -7pt 2pt rgba(0,0,0,0.3)' }}>blueprint</div>
           </div>
         </div>
       );
@@ -78,9 +78,9 @@ export function BrandLogo({
           />
         )}
         <div className="leading-none pb-0.5" style={{ fontSize: '24px' }}>
-          <span className="text-[#FFA500] font-bold" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif', textShadow: '5pt 5pt 5pt rgba(0,0,0,0.3)' }}>business</span>
-          <span className="text-[#0000FF] font-bold" style={{ fontFamily: 'Archivo, sans-serif', textShadow: '5pt 5pt 5pt rgba(0,0,0,0.3)' }}>blueprint</span>
-          <span className="text-[#84D71A] font-bold" style={{ fontFamily: 'Archivo, sans-serif', textShadow: '5pt 5pt 5pt rgba(0,0,0,0.3)' }}>.io</span>
+          <span className="text-[#FFA500] font-bold" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif', textShadow: '-7pt -7pt 2pt rgba(0,0,0,0.3)' }}>business</span>
+          <span className="text-[#0000FF] font-bold" style={{ fontFamily: 'Archivo, sans-serif', textShadow: '-7pt -7pt 2pt rgba(0,0,0,0.3)' }}>blueprint</span>
+          <span className="text-[#84D71A] font-bold" style={{ fontFamily: 'Archivo, sans-serif', textShadow: '-7pt -7pt 2pt rgba(0,0,0,0.3)' }}>.io</span>
         </div>
       </div>
     );
