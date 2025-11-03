@@ -19,7 +19,7 @@ import livechatLogo from "@assets/livechat logo blue_1760788395985.png";
 import livechatIcon from "@assets/livechat icon_1760788412068.png";
 import localSeoIcon from "@assets/LOCAL SEO_1760785581174.png";
 import sendLogo from "@assets/send logo blue_1760785667220.png";
-import sendIcon from "@assets/send1_1760785706637.png";
+import sendIcon from "@assets/icons/send-icon-corrected.png";
 import socialMediaIcon from "@assets/Social Media Mgmt_1760786453964.png";
 import reputationIcon from "@assets/Reputation Management Icon_1760786977607.png";
 import settingsIcon from "@assets/settings_1760788009769.png";

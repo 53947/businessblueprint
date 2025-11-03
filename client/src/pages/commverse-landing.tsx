@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, MessageSquare, Zap, TrendingUp, Users } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import sendIcon from "@assets/send icon_1760074368870.png";
+import sendIcon from "@assets/icons/send-icon-corrected.png";
 import inboxIcon from "@assets/Unified mailbox_1760074368869.png";
 import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
 
