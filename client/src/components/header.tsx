@@ -93,7 +93,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   <NavigationMenuList>
                     {/* Applications - Commverse Apps Only */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-applications">
+                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-applications">
                         <img src={layersIcon} alt="" className="w-4 h-4" />
                         <span>Applications</span>
                       </NavigationMenuTrigger>
@@ -230,7 +230,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                     {/* Pricing */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2" data-testid="menu-trigger-pricing">
+                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-pricing">
                         <img src={dollarSignIcon} alt="" className="w-4 h-4" />
                         <span>Pricing</span>
                       </NavigationMenuTrigger>
@@ -261,7 +261,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                     {/* Solutions */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2">
+                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100">
                         <img src={bookOpenIcon} alt="" className="w-4 h-4" />
                         <span>Solutions</span>
                       </NavigationMenuTrigger>
