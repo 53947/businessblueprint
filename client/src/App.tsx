@@ -11,6 +11,7 @@ import AssessmentCheckout from "@/pages/assessment-checkout";
 import AICoachPage from "@/pages/ai-coach";
 import ClientPortal from "@/pages/client-portal";
 import ClientLogin from "@/pages/client-login";
+import VerifyMagicLink from "@/pages/verify-magic-link";
 import Contact from "@/pages/contact";
 import About from "@/pages/about";
 import Subscription from "@/pages/subscription";
@@ -48,6 +49,7 @@ function Router() {
       <Route path="/assessment-checkout" component={AssessmentCheckout} />
       <Route path="/ai-coach" component={AICoachPage} />
       <Route path="/portal/login" component={ClientLogin} />
+      <Route path="/portal/verify" component={VerifyMagicLink} />
       <Route path="/portal" component={ClientPortal} />
       <Route path="/contact" component={Contact} />
       <Route path="/about" component={About} />

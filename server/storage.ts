@@ -45,7 +45,7 @@ import {
   type InsertMagicLinkToken,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, sql } from "drizzle-orm";
 
 export interface IStorage {
   // User operations - Replit Auth
@@ -658,12 +658,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async cleanupExpiredTokens(): Promise<void> {
+    const now = new Date();
     await db
       .delete(magicLinkTokens)
-      .where(and(
-        eq(magicLinkTokens.used, false),
-        desc(magicLinkTokens.expiresAt)
-      ));
+      .where(
+        sql`${magicLinkTokens.expiresAt} < ${now}`
+      );
   }
 }
 

@@ -344,10 +344,127 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Verify Magic Link Token and Issue JWT (must be before /api/clients/:id)
+  app.get("/api/clients/verify-magic-link", async (req, res) => {
+    try {
+      const { token } = req.query;
+
+      if (!token || typeof token !== 'string') {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid verification link"
+        });
+      }
+
+      // Get token from database
+      const magicToken = await storage.getMagicLinkToken(token);
+
+      if (!magicToken) {
+        return res.status(404).json({
+          success: false,
+          message: "Invalid or expired login link. Please request a new one."
+        });
+      }
+
+      // Check if token has been used
+      if (magicToken.used) {
+        return res.status(400).json({
+          success: false,
+          message: "This login link has already been used. Please request a new one."
+        });
+      }
+
+      // Check if token has expired
+      if (new Date() > new Date(magicToken.expiresAt)) {
+        return res.status(400).json({
+          success: false,
+          message: "This login link has expired. Please request a new one."
+        });
+      }
+
+      // Find client by email
+      const client = await storage.getClientByEmail(magicToken.email);
+
+      console.log('[Magic Link Verify] Found client:', client ? { id: client.id, email: client.email, idType: typeof client.id } : 'null');
+
+      if (!client) {
+        return res.status(404).json({
+          success: false,
+          message: "Account not found"
+        });
+      }
+
+      // Validate client ID is a valid number
+      console.log('[Magic Link Verify] Validating client.id:', {
+        id: client.id,
+        type: typeof client.id,
+        isNaN: isNaN(client.id as any),
+        isNumber: typeof client.id === 'number',
+        fullClient: JSON.stringify(client)
+      });
+
+      if (!client.id || typeof client.id !== 'number' || isNaN(client.id)) {
+        console.error('[Magic Link Verify] Invalid client ID detected:', {
+          id: client.id,
+          type: typeof client.id,
+          isNaN: isNaN(client.id as any)
+        });
+        return res.status(500).json({
+          success: false,
+          message: "Account configuration error"
+        });
+      }
+
+      console.log('[Magic Link Verify] Client ID validation passed:', client.id);
+
+      // Mark token as used
+      await storage.markTokenAsUsed(token);
+      console.log('[Magic Link Verify] Token marked as used');
+
+      // Update login tracking
+      console.log('[Magic Link Verify] Updating client login tracking for ID:', client.id);
+      await storage.updateClient(client.id, {
+        lastLoginTime: new Date(),
+        loginCount: (client.loginCount || 0) + 1
+      });
+      console.log('[Magic Link Verify] Login tracking updated');
+
+      // Generate JWT token
+      console.log('[Magic Link Verify] Creating dashboard token for client ID:', client.id);
+      const jwtToken = await jwtService.createDashboardToken(client.id, client.email);
+      console.log('[Magic Link Verify] JWT token created successfully');
+
+      res.json({
+        success: true,
+        client: {
+          id: client.id,
+          companyName: client.companyName,
+          email: client.email,
+          isEmailVerified: client.isEmailVerified || false
+        },
+        token: jwtToken,
+        message: "Login successful"
+      });
+    } catch (error) {
+      console.error("Magic link verification error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Verification failed. Please try again."
+      });
+    }
+  });
+
   // Client data endpoints for Campaign Pro
   app.get("/api/clients/:id", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
+
+      // Validate that we have a valid number
+      if (isNaN(clientId) || !isFinite(clientId)) {
+        console.error('[GET /api/clients/:id] Invalid client ID:', req.params.id);
+        return res.status(400).json({ message: "Invalid client ID format" });
+      }
+
       const client = await storage.getClient(clientId);
 
       if (!client) {
@@ -365,6 +482,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/clients/:id/campaign-data", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
+
+      // Validate that we have a valid number
+      if (isNaN(clientId) || !isFinite(clientId)) {
+        console.error('[GET /api/clients/:id/campaign-data] Invalid client ID:', req.params.id);
+        return res.status(400).json({ message: "Invalid client ID format" });
+      }
 
       // Get client data directly from storage
       const client = await storage.getClient(clientId);
@@ -570,110 +693,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const frontendUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
       const magicLink = `${frontendUrl}/portal/verify?token=${token}`;
 
-      // Send magic link email
+      // Send magic link email asynchronously (fire and forget to avoid blocking)
       const emailService = new EmailService();
-      const emailSent = await emailService.sendMagicLinkEmail(
+      emailService.sendMagicLinkEmail(
         normalizedEmail,
         magicLink,
         client.companyName
-      );
+      ).then(sent => {
+        if (sent) {
+          console.log(`✅ Magic link email sent to ${normalizedEmail}`);
+        } else {
+          console.warn(`⚠️ Failed to send email to ${normalizedEmail}. Magic link: ${magicLink}`);
+        }
+      }).catch(err => {
+        console.error(`❌ Error sending magic link email to ${normalizedEmail}:`, err.message);
+      });
 
-      if (!emailSent) {
-        return res.status(500).json({
-          success: false,
-          message: "Failed to send login email. Please try again."
-        });
-      }
-
+      // Immediately respond to user
       res.json({
         success: true,
-        message: "Check your email! We've sent you a secure login link."
+        message: "Check your email! We've sent you a secure login link.",
+        ...(process.env.NODE_ENV === 'development' && { 
+          devToken: token,
+          devLink: magicLink 
+        })
       });
     } catch (error) {
       console.error("Client login error:", error);
       res.status(500).json({
         success: false,
         message: "Login failed. Please try again."
-      });
-    }
-  });
-
-  // Verify Magic Link Token and Issue JWT
-  app.get("/api/clients/verify-magic-link", async (req, res) => {
-    try {
-      const { token } = req.query;
-
-      if (!token || typeof token !== 'string') {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid verification link"
-        });
-      }
-
-      // Get token from database
-      const magicToken = await storage.getMagicLinkToken(token);
-
-      if (!magicToken) {
-        return res.status(404).json({
-          success: false,
-          message: "Invalid or expired login link. Please request a new one."
-        });
-      }
-
-      // Check if token has been used
-      if (magicToken.used) {
-        return res.status(400).json({
-          success: false,
-          message: "This login link has already been used. Please request a new one."
-        });
-      }
-
-      // Check if token has expired
-      if (new Date() > new Date(magicToken.expiresAt)) {
-        return res.status(400).json({
-          success: false,
-          message: "This login link has expired. Please request a new one."
-        });
-      }
-
-      // Find client by email
-      const client = await storage.getClientByEmail(magicToken.email);
-
-      if (!client) {
-        return res.status(404).json({
-          success: false,
-          message: "Account not found"
-        });
-      }
-
-      // Mark token as used
-      await storage.markTokenAsUsed(token);
-
-      // Update login tracking
-      await storage.updateClient(client.id, {
-        lastLoginTime: new Date(),
-        loginCount: (client.loginCount || 0) + 1
-      });
-
-      // Generate JWT token
-      const jwtToken = await jwtService.createDashboardToken(client.id, client.email);
-
-      res.json({
-        success: true,
-        client: {
-          id: client.id,
-          companyName: client.companyName,
-          email: client.email,
-          isEmailVerified: client.isEmailVerified || false
-        },
-        token: jwtToken,
-        message: "Login successful"
-      });
-    } catch (error) {
-      console.error("Magic link verification error:", error);
-      res.status(500).json({
-        success: false,
-        message: "Verification failed. Please try again."
       });
     }
   });
