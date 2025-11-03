@@ -408,7 +408,10 @@ export default function ClientPortal() {
                 <div className="flex justify-center mb-3">
                   <img src="/attached_assets/icons/social-media-mgmt.png" alt="Social Media" className="w-16 h-16" />
                 </div>
-                <h3 className="font-semibold text-sm mb-2">Social Media Management</h3>
+                <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
+                  <span style={{ color: '#84D71A' }}>/</span>
+                  <span style={{ color: '#E91EBC' }}>content</span>
+                </h3>
                 <p className="text-xs text-gray-600">social media manager</p>
               </div>
               
