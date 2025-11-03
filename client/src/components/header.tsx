@@ -83,7 +83,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
           {/* Logo */}
           <div className="flex items-center space-x-4">
             <Link href="/" className="hover:opacity-80 transition-opacity cursor-pointer" data-testid="header-logo">
-              <BrandLogo brand="businessblueprint" size="sm" showIcon={true} />
+              <BrandLogo brand="businessblueprint" size="sm" />
             </Link>
 
             {showNavigation && (

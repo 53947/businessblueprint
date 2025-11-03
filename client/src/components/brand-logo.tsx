@@ -3,6 +3,7 @@ import bbLightbulb from "@assets/1-Master business blueprint icon avatar logo co
 const bbAvatar = bbLightbulb; // Lightbulb icon for Client Portal
 const bbFavicon = '/brand-assets/Blueprint_Favicon.png';
 const bbIcon = bbLightbulb;
+import bbLockup from "@assets/Business Blueprint Lockup URL_1762164443849.png";
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import airswipedLogo from "@assets/swipesblue icon_1760810511865.png";
@@ -44,7 +45,7 @@ export function BrandLogo({
   const isDark = variant === 'dark';
   const { icon: iconSize, logo: logoSize, text: textSize, fontSize: textFontSize } = sizeConfig[size];
   
-  // Business Blueprint text-based logo matching Brand Logo Key
+  // Business Blueprint image-based logo
   if (brand === 'businessblueprint') {
     // Vertical layout for dashboard
     if (layout === 'vertical') {
@@ -58,31 +59,24 @@ export function BrandLogo({
               className="object-contain"
             />
           )}
-          <div className="text-center leading-tight" style={{ fontSize: '18px' }}>
-            <div className="text-[#FFA500] font-bold" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif', textShadow: '7pt -7pt 2pt rgba(0,0,0,0.3)' }}>business</div>
-            <div className="text-[#0000FF] font-bold" style={{ fontFamily: 'Archivo, sans-serif', textShadow: '7pt -7pt 2pt rgba(0,0,0,0.3)' }}>blueprint</div>
-          </div>
+          <img 
+            src={bbLockup} 
+            alt="businessblueprint.io" 
+            style={{ height: '32px', width: 'auto' }}
+            className="object-contain"
+          />
         </div>
       );
     }
     
     // Horizontal layout (default)
     return (
-      <div className={`flex items-end gap-1 ${className}`}>
-        {showIcon && !textOnly && (
-          <img 
-            src={bbAvatar} 
-            alt="businessblueprint.io icon" 
-            style={{ width: '36px', height: '36px', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
-            className="object-contain"
-          />
-        )}
-        <div className="leading-none pb-0.5" style={{ fontSize: '24px' }}>
-          <span className="text-[#FFA500] font-bold" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif', textShadow: '7pt -7pt 2pt rgba(0,0,0,0.3)' }}>business</span>
-          <span className="text-[#0000FF] font-bold" style={{ fontFamily: 'Archivo, sans-serif', textShadow: '7pt -7pt 2pt rgba(0,0,0,0.3)' }}>blueprint</span>
-          <span className="text-[#84D71A] font-bold" style={{ fontFamily: 'Archivo, sans-serif', textShadow: '7pt -7pt 2pt rgba(0,0,0,0.3)' }}>.io</span>
-        </div>
-      </div>
+      <img 
+        src={bbLockup} 
+        alt="businessblueprint.io" 
+        style={{ height: size === 'sm' ? '32px' : '40px', width: 'auto' }}
+        className={`object-contain ${className}`}
+      />
     );
   }
 
