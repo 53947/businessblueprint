@@ -14,7 +14,7 @@ import inboxIcon from "@assets/Unified mailbox_1760074368869.png";
 import livechatLogo from "@assets/livechat logo_1760075605262.png";
 import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
 import hostsBlueIcon from "@assets/Hosts Blue Brandmark.png";
-import swipesBlueIcon from "@assets/swipesblue brandmark.png";
+import swipesBlueIcon from "@assets/swipesblue approved brandmark_1762165966862.png";
 
 interface BrandLogoProps {
   brand: 'businessblueprint' | 'hostsblue' | 'swipesblue' | 'send' | 'inbox' | 'livechat';
