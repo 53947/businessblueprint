@@ -48,6 +48,7 @@ import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
 import hostsBlueIcon from "@assets/Hosts Blue Icon New_1760810493739.png";
 import swipesBlueIcon from "@assets/swipesblue icon_1760810511865.png";
 import blueprintIcon from "@assets/blueprint-icon.svg";
+import commverseBundle from "@assets/Commverse Bundle_1760662442941.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
