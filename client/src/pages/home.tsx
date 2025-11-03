@@ -482,7 +482,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow p-6">
               <CardContent className="flex flex-col">
                 <div className="flex justify-center items-center mb-6 h-20">
-                  <BrandLogo brand="hostsblue" size="lg" showIcon={true} />
+                  <BrandLogo brand="hostsblue" size="md" showIcon={true} />
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">Web Services Platform</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
@@ -499,7 +499,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
               <CardContent className="flex flex-col">
                 <div className="flex justify-center items-center mb-6 h-20">
-                  <BrandLogo brand="swipesblue" size="lg" showIcon={true} />
+                  <BrandLogo brand="swipesblue" size="md" showIcon={true} />
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">Payment Gateway Platform</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
