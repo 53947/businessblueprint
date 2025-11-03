@@ -412,7 +412,7 @@ export default function ClientPortal() {
                   <span style={{ color: '#84D71A' }}>/</span>
                   <span style={{ color: '#E91EBC' }}>content</span>
                 </h3>
-                <p className="text-xs text-gray-600">social media manager</p>
+                <p className="text-xs text-gray-600">Social Media Management</p>
               </div>
               
               {/* Action Button (BOTTOM) - Conditional */}
