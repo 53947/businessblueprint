@@ -11,21 +11,18 @@ import {
   Menu
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import bbIcon from "@assets/Blueprint Icon_1760810447789.png";
-import bbLogo from "@assets/Business Blueprint Logo and-or Icon All Versions_1759854008066.png";
-import inboxLogo from "@assets/inbox logo blue_1760788242628.png";
-import inboxIcon from "@assets/inbox icon_1760788273855.png";
-import livechatLogo from "@assets/livechat logo blue_1760788395985.png";
+import bbIcon from "@assets/1-Master business blueprint icon avatar logo copy_1762162675955.png";
+import bbLogo from "@assets/1-Master business blueprint icon avatar logo copy_1762162675955.png";
+import inboxIcon from "@assets/icons/inbox-icon-corrected.png";
 import livechatIcon from "@assets/livechat icon_1760788412068.png";
 import localSeoIcon from "@assets/LOCAL SEO_1760785581174.png";
-import sendLogo from "@assets/send logo blue_1760785667220.png";
 import sendIcon from "@assets/icons/send-icon-corrected.png";
-import socialMediaIcon from "@assets/Social Media Mgmt_1760786453964.png";
+import socialMediaIcon from "@assets/icons/social-media-mgmt.png";
 import reputationIcon from "@assets/Reputation Management Icon_1760786977607.png";
 import settingsIcon from "@assets/settings_1760788009769.png";
 import aiCoachIcon from "@assets/AI Business Coach Blue_1760813312010.png";
-import hostsBlueIcon from "@assets/Hosts Blue Icon New_1760810493739.png";
-import swipesBlueIcon from "@assets/swipesblue icon_1760810511865.png";
+import hostsBlueIcon from "@assets/icons/hosts-blue-brandmark.png";
+import swipesBlueIcon from "@assets/icons/swipesblue-brandmark.png";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;
@@ -96,7 +93,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
     { 
       id: "content", 
       label: "content",
-      hoverLabel: "Social Media Mgmt",
+      hoverLabel: "Social Media Management",
       icon: <img src={socialMediaIcon} alt="/content" className="w-7 h-7 object-contain" />,
       external: true,
       href: "/content"
