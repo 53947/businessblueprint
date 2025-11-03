@@ -189,6 +189,25 @@ export class EmailService {
     }
   }
 
+  async sendMagicLinkEmail(email: string, magicLink: string, companyName?: string): Promise<boolean> {
+    try {
+      const htmlContent = this.generateMagicLinkHTML(magicLink, companyName);
+      
+      const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: email,
+        subject: 'Your Secure Login Link - Business Blueprint',
+        html: htmlContent,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error('Error sending magic link email:', error);
+      return false;
+    }
+  }
+
   async sendThankYouIntroduction(email: string, data: {
     businessName: string;
     assessmentId: number;
@@ -629,6 +648,75 @@ export class EmailService {
         
         <div class="footer">
             <p>Your digital growth journey is just one click away!</p>
+            <p><small>© 2024 businessblueprint.io</small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
+
+  private generateMagicLinkHTML(magicLink: string, companyName?: string): string {
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Secure Login Link</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #0057FF, #8B5CF6); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .info-box { background: #E0F2FE; border-left: 4px solid #0057FF; padding: 20px; margin: 20px 0; border-radius: 4px; }
+        .cta-button { display: inline-block; background: #0057FF; color: white; padding: 18px 36px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; font-size: 18px; box-shadow: 0 4px 12px rgba(0,87,255,0.3); }
+        .cta-button:hover { background: #0041CC; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .security-note { background: #FFF4E6; padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 14px; }
+        .expiry-warning { color: #FF6B35; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Secure Login Link</h1>
+            <p style="font-size: 18px; margin-top: 10px;">${companyName || 'Business Blueprint'}</p>
+        </div>
+        
+        <div class="content">
+            <p>Hello,</p>
+            
+            <p>You requested access to your Business Blueprint dashboard. Click the button below to log in securely:</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="${magicLink}" class="cta-button">
+                    Access My Dashboard
+                </a>
+            </div>
+            
+            <div class="info-box">
+                <h3 style="margin-top: 0;">Why No Password?</h3>
+                <p style="margin-bottom: 0;">We use email-based authentication for maximum security. This means:</p>
+                <ul style="margin: 10px 0;">
+                    <li>No passwords to remember or forget</li>
+                    <li>No risk of password breaches</li>
+                    <li>Access controlled by your email inbox</li>
+                    <li>Each login link is unique and time-limited</li>
+                </ul>
+            </div>
+            
+            <div class="security-note">
+                <p style="margin: 0;"><strong>⏱️ Important:</strong> This link will expire in <span class="expiry-warning">15 minutes</span> for your security.</p>
+                <p style="margin: 10px 0 0 0;">If it expires, simply return to the login page and request a new link.</p>
+            </div>
+            
+            <p style="margin-top: 30px; color: #666; font-size: 14px;">
+                <strong>Didn't request this login?</strong> You can safely ignore this email. The link will expire automatically.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>Your security is our priority.</p>
             <p><small>© 2024 businessblueprint.io</small></p>
         </div>
     </div>

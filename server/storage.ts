@@ -14,6 +14,7 @@ import {
   reviewNotificationPreferences,
   brandAssets,
   users,
+  magicLinkTokens,
   type Assessment,
   type InsertAssessment,
   type Recommendation,
@@ -40,6 +41,8 @@ import {
   type InsertBrandAsset,
   type User,
   type UpsertUser,
+  type MagicLinkToken,
+  type InsertMagicLinkToken,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and } from "drizzle-orm";
@@ -68,6 +71,12 @@ export interface IStorage {
   getClientByEmail(email: string): Promise<Client | undefined>;
   updateClient(id: number, data: Partial<Client>): Promise<Client>;
   getClientsByEmail(email: string): Promise<Client[]>;
+
+  // Magic link token operations
+  createMagicLinkToken(token: InsertMagicLinkToken): Promise<MagicLinkToken>;
+  getMagicLinkToken(token: string): Promise<MagicLinkToken | undefined>;
+  markTokenAsUsed(token: string): Promise<void>;
+  cleanupExpiredTokens(): Promise<void>;
 
   // Inbox operations for Campaign Pro
   createInboxMessage(message: InsertInboxMessage): Promise<InboxMessage>;
@@ -622,6 +631,39 @@ export class DatabaseStorage implements IStorage {
     await db
       .delete(brandAssets)
       .where(eq(brandAssets.id, id));
+  }
+
+  // Magic link token operations
+  async createMagicLinkToken(tokenData: InsertMagicLinkToken): Promise<MagicLinkToken> {
+    const [token] = await db
+      .insert(magicLinkTokens)
+      .values(tokenData)
+      .returning();
+    return token;
+  }
+
+  async getMagicLinkToken(token: string): Promise<MagicLinkToken | undefined> {
+    const [magicToken] = await db
+      .select()
+      .from(magicLinkTokens)
+      .where(eq(magicLinkTokens.token, token));
+    return magicToken;
+  }
+
+  async markTokenAsUsed(token: string): Promise<void> {
+    await db
+      .update(magicLinkTokens)
+      .set({ used: true, usedAt: new Date() })
+      .where(eq(magicLinkTokens.token, token));
+  }
+
+  async cleanupExpiredTokens(): Promise<void> {
+    await db
+      .delete(magicLinkTokens)
+      .where(and(
+        eq(magicLinkTokens.used, false),
+        desc(magicLinkTokens.expiresAt)
+      ));
   }
 }
 
