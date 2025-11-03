@@ -1,8 +1,8 @@
 // Reusable brand logo components using OFFICIAL Business Blueprint brandmarks
-// Using Brand Studio assets from database via API
-const bbAvatar = '/brand-assets/Blueprint_Avatar.png';
+import bbLightbulb from "@assets/1-Master business blueprint icon avatar logo copy_1762162675955.png";
+const bbAvatar = bbLightbulb; // Lightbulb icon for Client Portal
 const bbFavicon = '/brand-assets/Blueprint_Favicon.png';
-const bbIcon = '/brand-assets/Blueprint_Avatar.png';
+const bbIcon = bbLightbulb;
 import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
 import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
 import airswipedLogo from "@assets/swipesblue icon_1760810511865.png";
