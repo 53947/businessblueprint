@@ -473,7 +473,7 @@ Your personalized blueprint will show you which steps to take first!
                     <span>Email + SMS Marketing</span>
                   </li>
                 </ul>
-                <Button className="w-full bg-[#FFA500] hover:bg-[#FF9500] text-white mt-auto">
+                <Button className="w-full bg-[#FFD700] hover:bg-[#FFC700] text-white mt-auto">
                   Start Assessment
                 </Button>
               </CardContent>
