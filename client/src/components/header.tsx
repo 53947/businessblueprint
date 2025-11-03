@@ -212,9 +212,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <span className="text-xs font-semibold text-pink-600 dark:text-pink-400">Visit Platform →</span>
                                   </div>
                                 </div>
-                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-content-title">Social Media Mgmt</div>
+                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-content-title">Social Media Management</div>
                                 <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-content-description">
-                                  Multi-platform posting & scheduling
+                                  Social media manager
                                 </p>
                                 <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-content-features">
                                   <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> Content Calendar</li>
