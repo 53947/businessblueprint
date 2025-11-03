@@ -366,7 +366,7 @@ export default function ClientPortal() {
                 </div>
                 <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
                   <span style={{ color: '#84D71A' }}>/</span>
-                  <span style={{ color: '#0057FF' }}>send</span>
+                  <span style={{ color: '#FFD700' }}>send</span>
                 </h3>
                 <p className="text-xs text-gray-600">Email & SMS campaigns</p>
               </div>
