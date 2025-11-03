@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Table,
   TableBody,
@@ -24,10 +25,14 @@ import {
   Phone,
   Globe,
   Check,
-  Palette
+  Palette,
+  FileText,
+  Calendar,
+  TrendingUp
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
+import { format } from "date-fns";
 
 interface Client {
   id: number;
@@ -43,20 +48,41 @@ interface Client {
   createdAt: string;
 }
 
+interface Assessment {
+  id: number;
+  businessName: string;
+  email: string;
+  phone: string;
+  website?: string;
+  industry: string;
+  status: string;
+  digitalScore?: number;
+  selectedPathway?: string;
+  createdAt: string;
+}
+
 export default function AdminPanel() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [assessmentSearchQuery, setAssessmentSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const { toast } = useToast();
   const [, setLocation] = useLocation();
 
-  // Fetch all clients
+  // Fetch all clients (admin-only endpoint)
   const { data: clients, isLoading } = useQuery<Client[]>({
-    queryKey: ['/api/clients'],
+    queryKey: ['/api/admin/clients'],
+  });
+
+  // Fetch all assessments (admin-only endpoint)
+  const { data: assessments, isLoading: assessmentsLoading } = useQuery<Assessment[]>({
+    queryKey: ['/api/admin/assessments'],
   });
 
   // Compute stats safely
   const totalClients = clients?.length ?? 0;
   const activeAccounts = clients?.filter(c => c.lastLoginTime)?.length ?? 0;
+  const totalAssessments = assessments?.length ?? 0;
+  const completedAssessments = assessments?.filter(a => a.status === 'completed')?.length ?? 0;
 
   // Filter clients based on search
   const filteredClients = clients?.filter((client) => {
@@ -66,6 +92,17 @@ export default function AdminPanel() {
       client.companyName?.toLowerCase().includes(query) ||
       client.email?.toLowerCase().includes(query) ||
       client.externalId?.toLowerCase().includes(query)
+    );
+  }) || [];
+
+  // Filter assessments based on search
+  const filteredAssessments = assessments?.filter((assessment) => {
+    const query = assessmentSearchQuery.toLowerCase();
+    return (
+      assessment.id.toString().includes(query) ||
+      assessment.businessName?.toLowerCase().includes(query) ||
+      assessment.email?.toLowerCase().includes(query) ||
+      assessment.industry?.toLowerCase().includes(query)
     );
   }) || [];
 
@@ -101,7 +138,7 @@ export default function AdminPanel() {
                   Admin Panel
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400">
-                  Manage all client accounts and access client portals
+                  Manage client accounts and view submitted assessments
                 </p>
               </div>
             </div>
@@ -115,6 +152,22 @@ export default function AdminPanel() {
             </Button>
           </div>
         </div>
+
+        {/* Tabs for Clients and Assessments */}
+        <Tabs defaultValue="clients" className="w-full">
+          <TabsList className="grid w-full max-w-md grid-cols-2 mb-8">
+            <TabsTrigger value="clients" data-testid="tab-clients">
+              <Users className="w-4 h-4 mr-2" />
+              Clients ({totalClients})
+            </TabsTrigger>
+            <TabsTrigger value="assessments" data-testid="tab-assessments">
+              <FileText className="w-4 h-4 mr-2" />
+              Assessments ({totalAssessments})
+            </TabsTrigger>
+          </TabsList>
+
+          {/* CLIENTS TAB */}
+          <TabsContent value="clients"  className="mt-0">
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -314,6 +367,195 @@ export default function AdminPanel() {
             </div>
           </CardContent>
         </Card>
+          </TabsContent>
+
+          {/* ASSESSMENTS TAB */}
+          <TabsContent value="assessments" className="mt-0">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>Total Assessments</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-3">
+                    <FileText className="w-5 h-5 text-blue-600" />
+                    <span className="text-3xl font-bold" data-testid="stat-total-assessments">
+                      {totalAssessments}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>Completed</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-3">
+                    <Check className="w-5 h-5 text-green-600" />
+                    <span className="text-3xl font-bold" data-testid="stat-completed-assessments">
+                      {completedAssessments}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>Search Results</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-3">
+                    <Search className="w-5 h-5 text-purple-600" />
+                    <span className="text-3xl font-bold" data-testid="stat-search-results-assessments">
+                      {filteredAssessments.length}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Search Bar */}
+            <Card className="mb-6">
+              <CardContent className="pt-6">
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <Input
+                    placeholder="Search by ID, Business Name, Email, or Industry..."
+                    value={assessmentSearchQuery}
+                    onChange={(e) => setAssessmentSearchQuery(e.target.value)}
+                    className="pl-10 h-12 text-base"
+                    data-testid="input-search-assessments"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Assessments Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Submitted Assessments ({filteredAssessments.length})</CardTitle>
+                <CardDescription>
+                  View all submitted business assessments and their status.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {assessmentsLoading ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    ))}
+                  </div>
+                ) : filteredAssessments.length === 0 ? (
+                  <div className="text-center py-12" data-testid="empty-state-assessments">
+                    <FileText className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {assessmentSearchQuery ? "No assessments found matching your search" : "No assessments submitted yet"}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-20">ID</TableHead>
+                          <TableHead>Business</TableHead>
+                          <TableHead>Contact</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Score</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredAssessments.map((assessment) => (
+                          <TableRow key={assessment.id} data-testid={`row-assessment-${assessment.id}`}>
+                            <TableCell className="font-mono font-medium" data-testid={`text-assessment-id-${assessment.id}`}>
+                              {assessment.id}
+                            </TableCell>
+                            
+                            <TableCell>
+                              <div className="space-y-1">
+                                <div className="font-medium" data-testid={`text-business-${assessment.id}`}>
+                                  {assessment.businessName}
+                                </div>
+                                <div className="text-xs text-gray-500" data-testid={`text-industry-${assessment.id}`}>
+                                  {assessment.industry}
+                                </div>
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell>
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-2 text-sm">
+                                  <Mail className="h-3 w-3 text-gray-400" />
+                                  <span data-testid={`text-email-${assessment.id}`}>
+                                    {assessment.email}
+                                  </span>
+                                </div>
+                                {assessment.phone && (
+                                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                                    <Phone className="h-3 w-3 text-gray-400" />
+                                    <span>{assessment.phone}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell>
+                              <Badge 
+                                variant={assessment.status === 'completed' ? 'default' : 'secondary'}
+                                className={assessment.status === 'completed' ? 'bg-green-100 text-green-700 hover:bg-green-100' : ''}
+                                data-testid={`badge-status-${assessment.id}`}
+                              >
+                                {assessment.status}
+                              </Badge>
+                            </TableCell>
+
+                            <TableCell>
+                              {assessment.digitalScore ? (
+                                <div className="flex items-center gap-2">
+                                  <TrendingUp className="h-4 w-4 text-blue-500" />
+                                  <span className="font-bold text-blue-600" data-testid={`text-score-${assessment.id}`}>
+                                    {assessment.digitalScore}/100
+                                  </span>
+                                </div>
+                              ) : (
+                                <span className="text-gray-400 text-sm">N/A</span>
+                              )}
+                            </TableCell>
+
+                            <TableCell>
+                              <div className="flex items-center gap-2 text-sm text-gray-600">
+                                <Calendar className="h-3 w-3" />
+                                <span data-testid={`text-date-${assessment.id}`}>
+                                  {format(new Date(assessment.createdAt), 'MMM d, yyyy')}
+                                </span>
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell className="text-right">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setLocation(`/dashboard/${assessment.id}`)}
+                                data-testid={`button-view-assessment-${assessment.id}`}
+                              >
+                                <ExternalLink className="h-4 w-4 mr-2" />
+                                View Details
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );

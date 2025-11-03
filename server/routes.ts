@@ -85,6 +85,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get assessments by email (public - requires email parameter)
+  app.get("/api/assessments", async (req, res) => {
+    try {
+      const { email } = req.query;
+
+      if (!email || typeof email !== 'string') {
+        return res.status(400).json({ message: "Email parameter is required" });
+      }
+
+      const assessments = await storage.getAssessmentsByEmail(email);
+      res.json(assessments);
+    } catch (error) {
+      console.error("Error fetching assessments:", error);
+      res.status(500).json({ message: "Failed to fetch assessments" });
+    }
+  });
+
+  // Get all assessments (admin only - protected by Replit Auth)
+  app.get("/api/admin/assessments", isAuthenticated, async (req, res) => {
+    try {
+      const assessments = await storage.getAllAssessments();
+      res.json(assessments);
+    } catch (error) {
+      console.error("Error fetching all assessments:", error);
+      res.status(500).json({ message: "Failed to fetch assessments" });
+    }
+  });
+
   // Get assessment by ID
   app.get("/api/assessments/:id", async (req, res) => {
     try {
@@ -212,22 +240,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get assessments by email
-  app.get("/api/assessments", async (req, res) => {
-    try {
-      const { email } = req.query;
-
-      if (!email || typeof email !== 'string') {
-        return res.status(400).json({ message: "Email parameter is required" });
-      }
-
-      const assessments = await storage.getAssessmentsByEmail(email);
-      res.json(assessments);
-    } catch (error) {
-      console.error("Error fetching assessments:", error);
-      res.status(500).json({ message: "Failed to fetch assessments" });
-    }
-  });
 
   // Get client dashboard data
   app.get("/api/clients/:id/dashboard", async (req, res) => {
@@ -317,6 +329,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Failed to fetch dashboard data",
         error: (error as Error).message
       });
+    }
+  });
+
+  // Get all clients (admin only - protected by Replit Auth)
+  app.get("/api/admin/clients", isAuthenticated, async (req, res) => {
+    try {
+      const clients = await storage.getAllClients();
+      res.json(clients);
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+      res.status(500).json({ message: "Failed to fetch clients" });
     }
   });
 
