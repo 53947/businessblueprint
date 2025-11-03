@@ -482,7 +482,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow p-6">
               <CardContent className="flex flex-col">
                 <div className="flex justify-center items-center mb-6 h-20">
-                  <div style={{ transform: 'scale(0.75)', transformOrigin: 'center' }}>
+                  <div style={{ transform: 'scale(0.85)', transformOrigin: 'center' }}>
                     <BrandLogo brand="hostsblue" size="md" showIcon={true} />
                   </div>
                 </div>
@@ -501,7 +501,7 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
               <CardContent className="flex flex-col">
                 <div className="flex justify-center items-center mb-6 h-20">
-                  <div style={{ transform: 'scale(0.75)', transformOrigin: 'center' }}>
+                  <div style={{ transform: 'scale(0.85)', transformOrigin: 'center' }}>
                     <BrandLogo brand="swipesblue" size="md" showIcon={true} />
                   </div>
                 </div>
