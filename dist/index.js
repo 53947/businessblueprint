@@ -18,11 +18,16 @@ __export(schema_exports, {
   campaigns: () => campaigns,
   clientAssessments: () => clientAssessments,
   clients: () => clients,
+  contentAnalytics: () => contentAnalytics,
+  contentMedia: () => contentMedia,
+  contentPosts: () => contentPosts,
+  contentTemplates: () => contentTemplates,
   dashboardAccess: () => dashboardAccess,
   dnsRecords: () => dnsRecords,
   domainTransfers: () => domainTransfers,
   domains: () => domains,
   emailChangeHistory: () => emailChangeHistory,
+  externalSync: () => externalSync,
   impersonationAuditLog: () => impersonationAuditLog,
   impersonationSessions: () => impersonationSessions,
   inboxAttachments: () => inboxAttachments,
@@ -39,16 +44,21 @@ __export(schema_exports, {
   insertCampaignSchema: () => insertCampaignSchema,
   insertChannelConnectionSchema: () => insertChannelConnectionSchema,
   insertClientSchema: () => insertClientSchema,
+  insertContentMediaSchema: () => insertContentMediaSchema,
+  insertContentPostSchema: () => insertContentPostSchema,
+  insertContentTemplateSchema: () => insertContentTemplateSchema,
   insertConversationSchema: () => insertConversationSchema,
   insertDnsRecordSchema: () => insertDnsRecordSchema,
   insertDomainSchema: () => insertDomainSchema,
   insertDomainTransferSchema: () => insertDomainTransferSchema,
   insertEmailChangeHistorySchema: () => insertEmailChangeHistorySchema,
+  insertExternalSyncSchema: () => insertExternalSyncSchema,
   insertImpersonationAuditSchema: () => insertImpersonationAuditSchema,
   insertImpersonationSessionSchema: () => insertImpersonationSessionSchema,
   insertInboxMessage2Schema: () => insertInboxMessage2Schema,
   insertInboxMessageSchema: () => insertInboxMessageSchema,
   insertLivechatSessionSchema: () => insertLivechatSessionSchema,
+  insertMagicLinkTokenSchema: () => insertMagicLinkTokenSchema,
   insertProductSchema: () => insertProductSchema,
   insertQuickReplySchema: () => insertQuickReplySchema,
   insertRecommendationSchema: () => insertRecommendationSchema,
@@ -58,13 +68,16 @@ __export(schema_exports, {
   insertSendContactSchema: () => insertSendContactSchema,
   insertSendListSchema: () => insertSendListSchema,
   insertSendTemplateSchema: () => insertSendTemplateSchema,
+  insertSocialMediaAccountSchema: () => insertSocialMediaAccountSchema,
   insertSubscriptionAddonSchema: () => insertSubscriptionAddonSchema,
   insertSubscriptionPlanSchema: () => insertSubscriptionPlanSchema,
   insertSubscriptionSchema: () => insertSubscriptionSchema,
   insertSynupListingSchema: () => insertSynupListingSchema,
   insertSynupLocationSchema: () => insertSynupLocationSchema,
   insertSynupReviewSchema: () => insertSynupReviewSchema,
+  insertTaskSchema: () => insertTaskSchema,
   livechatSessions: () => livechatSessions,
+  magicLinkTokens: () => magicLinkTokens,
   nameserverHistory: () => nameserverHistory,
   products: () => products,
   recommendations: () => recommendations,
@@ -82,13 +95,16 @@ __export(schema_exports, {
   sendTemplates: () => sendTemplates,
   sendUnsubscribeRecords: () => sendUnsubscribeRecords,
   sessions: () => sessions,
+  socialMediaAccounts: () => socialMediaAccounts,
   subscriptionAddonSelections: () => subscriptionAddonSelections,
   subscriptionAddons: () => subscriptionAddons,
   subscriptionPlans: () => subscriptionPlans,
   subscriptions: () => subscriptions,
+  syncLogs: () => syncLogs,
   synupListings: () => synupListings,
   synupLocations: () => synupLocations,
   synupReviews: () => synupReviews,
+  tasks: () => tasks,
   users: () => users
 });
 import {
@@ -106,7 +122,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
-var sessions, users, assessments, recommendations, clients, inboxMessages, campaigns, emailChangeHistory, dashboardAccess, clientAssessments, synupLocations, synupListings, synupReviews, reviewNotificationPreferences, insertAssessmentSchema, insertRecommendationSchema, insertClientSchema, insertEmailChangeHistorySchema, insertInboxMessageSchema, insertCampaignSchema, insertSynupLocationSchema, insertSynupListingSchema, insertSynupReviewSchema, insertReviewNotificationPreferencesSchema, subscriptionPlans, subscriptionAddons, subscriptions, subscriptionAddonSelections, products, assessmentProductRecommendations, billingHistory, insertSubscriptionPlanSchema, insertSubscriptionAddonSchema, insertSubscriptionSchema, insertBillingHistorySchema, insertProductSchema, insertAssessmentProductRecommendationSchema, sendContacts, sendLists, sendListContacts, sendTemplates, sendCampaigns, sendCampaignSends, sendAutomations, sendConsentRecords, sendSuppressionList, sendBounceLog, sendPreferenceCenter, sendUnsubscribeRecords, insertSendContactSchema, insertSendListSchema, insertSendTemplateSchema, insertSendCampaignSchema, insertSendAutomationSchema, domains, dnsRecords, domainTransfers, nameserverHistory, impersonationSessions, impersonationAuditLog, insertDomainSchema, insertDnsRecordSchema, insertDomainTransferSchema, insertImpersonationSessionSchema, insertImpersonationAuditSchema, inboxChannelConnections, inboxConversations, inboxMessages2, inboxAttachments, inboxQuickReplies, inboxParticipants, livechatSessions, brandAssets, insertChannelConnectionSchema, insertConversationSchema, insertInboxMessage2Schema, insertQuickReplySchema, insertLivechatSessionSchema, insertBrandAssetSchema;
+var sessions, users, assessments, recommendations, clients, magicLinkTokens, inboxMessages, campaigns, emailChangeHistory, dashboardAccess, clientAssessments, synupLocations, synupListings, synupReviews, reviewNotificationPreferences, insertAssessmentSchema, insertRecommendationSchema, insertClientSchema, insertMagicLinkTokenSchema, insertEmailChangeHistorySchema, insertInboxMessageSchema, insertCampaignSchema, insertSynupLocationSchema, insertSynupListingSchema, insertSynupReviewSchema, insertReviewNotificationPreferencesSchema, subscriptionPlans, subscriptionAddons, subscriptions, subscriptionAddonSelections, products, assessmentProductRecommendations, billingHistory, insertSubscriptionPlanSchema, insertSubscriptionAddonSchema, insertSubscriptionSchema, insertBillingHistorySchema, insertProductSchema, insertAssessmentProductRecommendationSchema, sendContacts, sendLists, sendListContacts, sendTemplates, sendCampaigns, sendCampaignSends, sendAutomations, sendConsentRecords, sendSuppressionList, sendBounceLog, sendPreferenceCenter, sendUnsubscribeRecords, insertSendContactSchema, insertSendListSchema, insertSendTemplateSchema, insertSendCampaignSchema, insertSendAutomationSchema, domains, dnsRecords, domainTransfers, nameserverHistory, impersonationSessions, impersonationAuditLog, insertDomainSchema, insertDnsRecordSchema, insertDomainTransferSchema, insertImpersonationSessionSchema, insertImpersonationAuditSchema, inboxChannelConnections, inboxConversations, inboxMessages2, inboxAttachments, inboxQuickReplies, inboxParticipants, livechatSessions, brandAssets, insertChannelConnectionSchema, insertConversationSchema, insertInboxMessage2Schema, insertQuickReplySchema, insertLivechatSessionSchema, insertBrandAssetSchema, socialMediaAccounts, contentMedia, contentPosts, contentAnalytics, contentTemplates, externalSync, syncLogs, insertSocialMediaAccountSchema, insertContentMediaSchema, insertContentPostSchema, insertContentTemplateSchema, insertExternalSyncSchema, tasks, insertTaskSchema;
 var init_schema = __esm({
   "shared/schema.ts"() {
     "use strict";
@@ -189,6 +205,15 @@ var init_schema = __esm({
       loginCount: integer("login_count").default(0),
       createdAt: timestamp("created_at").defaultNow(),
       updatedAt: timestamp("updated_at").defaultNow()
+    });
+    magicLinkTokens = pgTable("magic_link_tokens", {
+      id: serial("id").primaryKey(),
+      email: text("email").notNull(),
+      token: text("token").notNull().unique(),
+      expiresAt: timestamp("expires_at").notNull(),
+      used: boolean("used").default(false),
+      usedAt: timestamp("used_at"),
+      createdAt: timestamp("created_at").defaultNow()
     });
     inboxMessages = pgTable("inbox_messages", {
       id: serial("id").primaryKey(),
@@ -361,6 +386,11 @@ var init_schema = __esm({
       verificationExpiry: true,
       lastLoginTime: true,
       loginCount: true
+    });
+    insertMagicLinkTokenSchema = createInsertSchema(magicLinkTokens).pick({
+      email: true,
+      token: true,
+      expiresAt: true
     });
     insertEmailChangeHistorySchema = createInsertSchema(emailChangeHistory).pick({
       clientId: true,
@@ -1556,6 +1586,319 @@ var init_schema = __esm({
       createdAt: true,
       updatedAt: true
     });
+    socialMediaAccounts = pgTable("social_media_accounts", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id).notNull(),
+      // Platform details
+      platform: varchar("platform", { length: 50 }).notNull(),
+      // facebook, instagram, linkedin, x, google_business, tiktok, snapchat
+      platformAccountId: varchar("platform_account_id", { length: 255 }).notNull(),
+      // Platform's user/page ID
+      platformAccountName: varchar("platform_account_name", { length: 255 }).notNull(),
+      // Display name
+      platformAccountHandle: varchar("platform_account_handle", { length: 255 }),
+      // @username
+      platformAccountAvatar: text("platform_account_avatar"),
+      // OAuth credentials
+      accessToken: text("access_token").notNull(),
+      refreshToken: text("refresh_token"),
+      tokenExpiresAt: timestamp("token_expires_at"),
+      // Account metadata
+      accountType: varchar("account_type", { length: 50 }),
+      // personal, business, page, etc
+      permissions: text("permissions").array(),
+      // Granted OAuth scopes
+      metadata: jsonb("metadata"),
+      // Platform-specific data
+      // Status
+      isActive: boolean("is_active").default(true),
+      lastSyncedAt: timestamp("last_synced_at"),
+      syncError: text("sync_error"),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      unique().on(table.clientId, table.platform, table.platformAccountId)
+    ]);
+    contentMedia = pgTable("content_media", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id).notNull(),
+      // File details
+      fileName: varchar("file_name", { length: 255 }).notNull(),
+      fileSize: integer("file_size").notNull(),
+      // bytes
+      mimeType: varchar("mime_type", { length: 100 }).notNull(),
+      fileType: varchar("file_type", { length: 20 }).notNull(),
+      // image, video, gif
+      // Storage location (Cloudflare R2 / S3)
+      storageKey: text("storage_key").notNull(),
+      // S3 key / R2 path
+      storageUrl: text("storage_url").notNull(),
+      // Public URL
+      thumbnailUrl: text("thumbnail_url"),
+      // For videos
+      // Media metadata
+      width: integer("width"),
+      height: integer("height"),
+      duration: integer("duration"),
+      // For videos (seconds)
+      altText: text("alt_text"),
+      // Accessibility
+      // Organization
+      folder: varchar("folder", { length: 255 }).default("Uploads"),
+      // For organizing media
+      tags: text("tags").array(),
+      // Usage tracking
+      usageCount: integer("usage_count").default(0),
+      // How many posts use this
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    });
+    contentPosts = pgTable("content_posts", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id).notNull(),
+      // Post content
+      caption: text("caption").notNull(),
+      // Main text
+      hashtags: text("hashtags").array(),
+      // Extracted hashtags
+      mediaIds: integer("media_ids").array(),
+      // References to contentMedia
+      // Platform targeting
+      platforms: text("platforms").array().notNull(),
+      // Which platforms to publish to
+      // Platform-specific customization
+      platformCustomizations: jsonb("platform_customizations"),
+      // {facebook: {caption: "..."}, instagram: {...}}
+      // Scheduling
+      scheduledFor: timestamp("scheduled_for"),
+      // When to publish (null = draft)
+      timezone: varchar("timezone", { length: 50 }).default("America/New_York"),
+      // Status tracking
+      status: varchar("status", { length: 20 }).default("draft"),
+      // draft, scheduled, publishing, published, failed, cancelled
+      publishedAt: timestamp("published_at"),
+      // Database-backed scheduler fields
+      lockedAt: timestamp("locked_at"),
+      // Job lock timestamp for atomic processing
+      attempts: integer("attempts").default(0),
+      // Retry count
+      nextRetryAt: timestamp("next_retry_at"),
+      // When to retry failed jobs
+      lastError: text("last_error"),
+      // Error message from last publishing attempt
+      // AI assistance metadata
+      isAIGenerated: boolean("is_ai_generated").default(false),
+      // Was caption AI-generated
+      aiPrompt: text("ai_prompt"),
+      // Original prompt for AI
+      contentScore: integer("content_score"),
+      // AI content quality score (0-100)
+      // Publishing results (per platform)
+      publishResults: jsonb("publish_results"),
+      // {facebook: {postId: "123", url: "...", status: "published"}}
+      publishErrors: jsonb("publish_errors"),
+      // {instagram: {error: "Token expired"}}
+      // Template
+      templateId: integer("template_id").references(() => contentTemplates.id),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    });
+    contentAnalytics = pgTable("content_analytics", {
+      id: serial("id").primaryKey(),
+      postId: integer("post_id").references(() => contentPosts.id).notNull(),
+      platform: varchar("platform", { length: 50 }).notNull(),
+      // Platform post ID
+      platformPostId: varchar("platform_post_id", { length: 255 }).notNull(),
+      platformPostUrl: text("platform_post_url"),
+      // Engagement metrics
+      impressions: integer("impressions").default(0),
+      reach: integer("reach").default(0),
+      likes: integer("likes").default(0),
+      comments: integer("comments").default(0),
+      shares: integer("shares").default(0),
+      clicks: integer("clicks").default(0),
+      saves: integer("saves").default(0),
+      // Instagram/Pinterest
+      // Video metrics (if applicable)
+      videoViews: integer("video_views").default(0),
+      videoWatchTime: integer("video_watch_time").default(0),
+      // seconds
+      // Engagement rate (calculated)
+      engagementRate: decimal("engagement_rate", { precision: 5, scale: 2 }),
+      // percentage
+      // Last synced from platform
+      lastSyncedAt: timestamp("last_synced_at").defaultNow(),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      unique().on(table.postId, table.platform)
+    ]);
+    contentTemplates = pgTable("content_templates", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id).notNull(),
+      name: varchar("name", { length: 255 }).notNull(),
+      description: text("description"),
+      category: varchar("category", { length: 100 }),
+      // promotional, educational, announcement, etc
+      // Template content
+      captionTemplate: text("caption_template").notNull(),
+      // Can include variables like {business_name}
+      hashtagsTemplate: text("hashtags_template").array(),
+      defaultMediaIds: integer("default_media_ids").array(),
+      // Platform recommendations
+      recommendedPlatforms: text("recommended_platforms").array(),
+      // System templates (provided by platform) vs user-created
+      isSystem: boolean("is_system").default(false),
+      // Usage tracking
+      useCount: integer("use_count").default(0),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    });
+    externalSync = pgTable("external_sync", {
+      id: serial("id").primaryKey(),
+      systemName: varchar("system_name", { length: 50 }).notNull(),
+      // "synup"
+      entityType: varchar("entity_type", { length: 50 }).notNull(),
+      // "post"
+      entityId: integer("entity_id").notNull(),
+      // Local ID (contentPosts.id)
+      externalId: varchar("external_id", { length: 255 }),
+      // Synup's ID for this entity
+      // Sync status
+      lastPushedAt: timestamp("last_pushed_at"),
+      lastPulledAt: timestamp("last_pulled_at"),
+      checksum: varchar("checksum", { length: 64 }),
+      // Hash to detect changes
+      syncStatus: varchar("sync_status", { length: 20 }).default("idle"),
+      // idle, pending, synced, error
+      syncError: text("sync_error"),
+      // Metadata
+      metadata: jsonb("metadata"),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      unique().on(table.systemName, table.entityType, table.entityId)
+    ]);
+    syncLogs = pgTable("sync_logs", {
+      id: serial("id").primaryKey(),
+      systemName: varchar("system_name", { length: 50 }).notNull(),
+      // "synup"
+      direction: varchar("direction", { length: 10 }).notNull(),
+      // "outbound" | "inbound"
+      entityType: varchar("entity_type", { length: 50 }).notNull(),
+      // "post"
+      entityId: integer("entity_id").notNull(),
+      // Operation details
+      action: varchar("action", { length: 50 }).notNull(),
+      // upsert, delete, status_update
+      payload: jsonb("payload"),
+      // Data sent/received
+      status: varchar("status", { length: 20 }).notNull(),
+      // success, error
+      errorMessage: text("error_message"),
+      // Performance
+      duration: integer("duration"),
+      // milliseconds
+      createdAt: timestamp("created_at").defaultNow()
+    });
+    insertSocialMediaAccountSchema = createInsertSchema(socialMediaAccounts).pick({
+      clientId: true,
+      platform: true,
+      platformAccountId: true,
+      platformAccountName: true,
+      platformAccountHandle: true,
+      platformAccountAvatar: true,
+      accessToken: true,
+      refreshToken: true,
+      tokenExpiresAt: true,
+      accountType: true,
+      permissions: true,
+      metadata: true
+    });
+    insertContentMediaSchema = createInsertSchema(contentMedia).pick({
+      clientId: true,
+      fileName: true,
+      fileSize: true,
+      mimeType: true,
+      fileType: true,
+      storageKey: true,
+      storageUrl: true,
+      thumbnailUrl: true,
+      width: true,
+      height: true,
+      duration: true,
+      altText: true,
+      folder: true,
+      tags: true
+    });
+    insertContentPostSchema = createInsertSchema(contentPosts).pick({
+      clientId: true,
+      caption: true,
+      hashtags: true,
+      mediaIds: true,
+      platforms: true,
+      platformCustomizations: true,
+      scheduledFor: true,
+      timezone: true,
+      status: true,
+      isAIGenerated: true,
+      aiPrompt: true,
+      templateId: true
+    });
+    insertContentTemplateSchema = createInsertSchema(contentTemplates).pick({
+      clientId: true,
+      name: true,
+      description: true,
+      category: true,
+      captionTemplate: true,
+      hashtagsTemplate: true,
+      defaultMediaIds: true,
+      recommendedPlatforms: true
+    });
+    insertExternalSyncSchema = createInsertSchema(externalSync).pick({
+      systemName: true,
+      entityType: true,
+      entityId: true,
+      externalId: true,
+      checksum: true,
+      metadata: true
+    });
+    tasks = pgTable("tasks", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      // Task details
+      title: text("title").notNull(),
+      description: text("description"),
+      // Status and priority
+      status: varchar("status", { length: 20 }).notNull().default("todo"),
+      // todo, in_progress, completed, cancelled
+      priority: varchar("priority", { length: 20 }).notNull().default("medium"),
+      // low, medium, high, urgent
+      // Assignment
+      assignedTo: varchar("assigned_to", { length: 50 }),
+      // "user", "assistant", or specific name
+      assignedBy: varchar("assigned_by", { length: 50 }),
+      // Who assigned it
+      // Dates
+      dueDate: timestamp("due_date"),
+      completedAt: timestamp("completed_at"),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow(),
+      // Additional metadata
+      tags: text("tags").array(),
+      relatedTo: jsonb("related_to"),
+      // Link to other entities (posts, assessments, etc)
+      // GitHub Integration
+      githubIssueId: varchar("github_issue_id", { length: 50 }),
+      // GitHub issue number (e.g., "#214")
+      githubIssueUrl: text("github_issue_url")
+      // Full URL to GitHub issue
+    });
+    insertTaskSchema = createInsertSchema(tasks).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
   }
 });
 
@@ -1579,6 +1922,1059 @@ var init_db = __esm({
   }
 });
 
+// server/services/platforms/basePlatformAdapter.ts
+var BasePlatformAdapter;
+var init_basePlatformAdapter = __esm({
+  "server/services/platforms/basePlatformAdapter.ts"() {
+    "use strict";
+    BasePlatformAdapter = class {
+      platform;
+      credentials;
+      constructor(platform, credentials) {
+        this.platform = platform;
+        this.credentials = credentials;
+      }
+      /**
+       * Refresh access token if needed
+       */
+      async refreshAccessToken() {
+        throw new Error(`${this.platform} does not support token refresh`);
+      }
+      /**
+       * Delete a post from the platform
+       */
+      async deletePost(platformPostId) {
+        throw new Error(`${this.platform} does not support post deletion`);
+      }
+      /**
+       * Update a post on the platform (if supported)
+       */
+      async updatePost(platformPostId, post) {
+        throw new Error(`${this.platform} does not support post updates`);
+      }
+    };
+  }
+});
+
+// server/services/platforms/facebookAdapter.ts
+var FacebookAdapter, InstagramAdapter;
+var init_facebookAdapter = __esm({
+  "server/services/platforms/facebookAdapter.ts"() {
+    "use strict";
+    init_basePlatformAdapter();
+    FacebookAdapter = class extends BasePlatformAdapter {
+      API_VERSION = "v18.0";
+      BASE_URL = `https://graph.facebook.com/${this.API_VERSION}`;
+      constructor(credentials) {
+        super("facebook", credentials);
+      }
+      async publish(post) {
+        try {
+          const pageId = this.credentials.platformAccountId;
+          if (!pageId) {
+            return { success: false, error: "Facebook Page ID not configured" };
+          }
+          const postData = {
+            message: post.text,
+            link: post.link,
+            published: !post.scheduledTime
+          };
+          if (post.scheduledTime) {
+            postData.scheduled_publish_time = Math.floor(post.scheduledTime.getTime() / 1e3);
+          }
+          if (post.mediaUrls && post.mediaUrls.length > 0) {
+            const mediaIds = await this.uploadMedia(post.mediaUrls);
+            postData.attached_media = mediaIds.map((id) => ({ media_fbid: id }));
+          }
+          const url = `${this.BASE_URL}/${pageId}/feed`;
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              ...postData,
+              access_token: this.credentials.accessToken
+            })
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            return {
+              success: false,
+              error: data.error?.message || "Failed to publish to Facebook"
+            };
+          }
+          return {
+            success: true,
+            platformPostId: data.id,
+            platformUrl: `https://facebook.com/${data.id}`,
+            publishedAt: post.scheduledTime || /* @__PURE__ */ new Date()
+          };
+        } catch (error) {
+          return {
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error"
+          };
+        }
+      }
+      async getAnalytics(platformPostId) {
+        try {
+          const url = `${this.BASE_URL}/${platformPostId}?fields=insights.metric(post_impressions,post_engaged_users,post_clicks,post_reactions_like_total)&access_token=${this.credentials.accessToken}`;
+          const response = await fetch(url);
+          const data = await response.json();
+          const insights = data.insights?.data || [];
+          const metricsMap = new Map(insights.map((i) => [i.name, i.values[0]?.value || 0]));
+          return {
+            impressions: metricsMap.get("post_impressions") || 0,
+            engagement: metricsMap.get("post_engaged_users") || 0,
+            clicks: metricsMap.get("post_clicks") || 0,
+            likes: metricsMap.get("post_reactions_like_total") || 0
+          };
+        } catch (error) {
+          console.error("[FacebookAdapter] Failed to fetch analytics:", error);
+          return {};
+        }
+      }
+      async validateCredentials() {
+        try {
+          const url = `${this.BASE_URL}/me?access_token=${this.credentials.accessToken}`;
+          const response = await fetch(url);
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+      async refreshAccessToken() {
+        throw new Error("Facebook uses long-lived tokens. Implement OAuth flow for refresh.");
+      }
+      getCapabilities() {
+        return {
+          maxTextLength: 63206,
+          maxMediaCount: 10,
+          supportsVideo: true,
+          supportsMultipleImages: true,
+          supportsScheduling: true,
+          supportsHashtags: true,
+          supportsLinks: true
+        };
+      }
+      async deletePost(platformPostId) {
+        try {
+          const url = `${this.BASE_URL}/${platformPostId}?access_token=${this.credentials.accessToken}`;
+          const response = await fetch(url, { method: "DELETE" });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+      async uploadMedia(mediaUrls) {
+        const pageId = this.credentials.platformAccountId;
+        const mediaIds = [];
+        const uploadErrors = [];
+        for (const mediaUrl of mediaUrls) {
+          try {
+            const isVideo = this.isVideoUrl(mediaUrl);
+            const endpoint = isVideo ? "videos" : "photos";
+            const url = `${this.BASE_URL}/${pageId}/${endpoint}`;
+            const response = await fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                [isVideo ? "file_url" : "url"]: mediaUrl,
+                published: false,
+                access_token: this.credentials.accessToken
+              })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+              const errorMsg = `Failed to upload ${endpoint}: ${data.error?.message || JSON.stringify(data)}`;
+              console.error(`[FacebookAdapter] ${errorMsg}`);
+              uploadErrors.push(errorMsg);
+              continue;
+            }
+            if (data.id) {
+              mediaIds.push(data.id);
+            }
+          } catch (error) {
+            const errorMsg = `Upload exception: ${error instanceof Error ? error.message : "Unknown error"}`;
+            console.error("[FacebookAdapter]", errorMsg);
+            uploadErrors.push(errorMsg);
+          }
+        }
+        if (uploadErrors.length > 0 && mediaIds.length === 0) {
+          throw new Error(`All media uploads failed: ${uploadErrors.join("; ")}`);
+        }
+        if (uploadErrors.length > 0) {
+          console.warn(`[FacebookAdapter] Some media uploads failed (${uploadErrors.length}/${mediaUrls.length}): ${uploadErrors.join("; ")}`);
+        }
+        return mediaIds;
+      }
+      isVideoUrl(url) {
+        const videoExtensions = [".mp4", ".mov", ".avi", ".wmv", ".flv", ".webm"];
+        const lowerUrl = url.toLowerCase();
+        return videoExtensions.some((ext) => lowerUrl.includes(ext)) || lowerUrl.includes("video");
+      }
+    };
+    InstagramAdapter = class extends BasePlatformAdapter {
+      API_VERSION = "v18.0";
+      BASE_URL = `https://graph.facebook.com/${this.API_VERSION}`;
+      constructor(credentials) {
+        super("instagram", credentials);
+      }
+      async publish(post) {
+        try {
+          const igAccountId = this.credentials.platformAccountId;
+          if (!igAccountId) {
+            return { success: false, error: "Instagram Business Account ID not configured" };
+          }
+          const mediaObject = {
+            caption: [post.text, ...post.hashtags || []].filter(Boolean).join(" ")
+          };
+          if (post.mediaUrls && post.mediaUrls.length > 0) {
+            if (post.mediaUrls.length === 1) {
+              const isVideo = post.mediaUrls[0].includes(".mp4") || post.mediaUrls[0].includes("video");
+              mediaObject.media_type = isVideo ? "VIDEO" : "IMAGE";
+              if (isVideo) {
+                mediaObject.video_url = post.mediaUrls[0];
+              } else {
+                mediaObject.image_url = post.mediaUrls[0];
+              }
+            } else {
+              mediaObject.media_type = "CAROUSEL_ALBUM";
+            }
+          }
+          const containerUrl = `${this.BASE_URL}/${igAccountId}/media`;
+          const containerResponse = await fetch(containerUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ...mediaObject,
+              access_token: this.credentials.accessToken
+            })
+          });
+          const containerData = await containerResponse.json();
+          if (!containerResponse.ok) {
+            return {
+              success: false,
+              error: containerData.error?.message || "Failed to create Instagram media container"
+            };
+          }
+          const publishUrl = `${this.BASE_URL}/${igAccountId}/media_publish`;
+          const publishResponse = await fetch(publishUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              creation_id: containerData.id,
+              access_token: this.credentials.accessToken
+            })
+          });
+          const publishData = await publishResponse.json();
+          if (!publishResponse.ok) {
+            return {
+              success: false,
+              error: publishData.error?.message || "Failed to publish to Instagram"
+            };
+          }
+          return {
+            success: true,
+            platformPostId: publishData.id,
+            platformUrl: `https://instagram.com/p/${publishData.id}`,
+            publishedAt: /* @__PURE__ */ new Date()
+          };
+        } catch (error) {
+          return {
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error"
+          };
+        }
+      }
+      async getAnalytics(platformPostId) {
+        try {
+          const url = `${this.BASE_URL}/${platformPostId}/insights?metric=impressions,engagement,reach,saved,likes,comments&access_token=${this.credentials.accessToken}`;
+          const response = await fetch(url);
+          const data = await response.json();
+          const metrics = data.data || [];
+          const metricsMap = new Map(metrics.map((m) => [m.name, m.values[0]?.value || 0]));
+          return {
+            impressions: metricsMap.get("impressions") || 0,
+            engagement: metricsMap.get("engagement") || 0,
+            likes: metricsMap.get("likes") || 0,
+            comments: metricsMap.get("comments") || 0,
+            saves: metricsMap.get("saved") || 0
+          };
+        } catch (error) {
+          console.error("[InstagramAdapter] Failed to fetch analytics:", error);
+          return {};
+        }
+      }
+      async validateCredentials() {
+        try {
+          const url = `${this.BASE_URL}/${this.credentials.platformAccountId}?fields=id&access_token=${this.credentials.accessToken}`;
+          const response = await fetch(url);
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+      getCapabilities() {
+        return {
+          maxTextLength: 2200,
+          maxMediaCount: 10,
+          supportsVideo: true,
+          supportsMultipleImages: true,
+          supportsScheduling: false,
+          supportsHashtags: true,
+          supportsLinks: false
+        };
+      }
+      async deletePost(platformPostId) {
+        try {
+          const url = `${this.BASE_URL}/${platformPostId}?access_token=${this.credentials.accessToken}`;
+          const response = await fetch(url, { method: "DELETE" });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+    };
+  }
+});
+
+// server/services/platforms/linkedinAdapter.ts
+var LinkedInAdapter;
+var init_linkedinAdapter = __esm({
+  "server/services/platforms/linkedinAdapter.ts"() {
+    "use strict";
+    init_basePlatformAdapter();
+    LinkedInAdapter = class extends BasePlatformAdapter {
+      BASE_URL = "https://api.linkedin.com/v2";
+      constructor(credentials) {
+        super("linkedin", credentials);
+      }
+      async publish(post) {
+        try {
+          const personUrn = this.credentials.platformAccountId || `urn:li:person:${this.credentials.accountId}`;
+          const shareRequest = {
+            author: personUrn,
+            lifecycleState: "PUBLISHED",
+            specificContent: {
+              "com.linkedin.ugc.ShareContent": {
+                shareCommentary: {
+                  text: [post.text, ...post.hashtags || []].filter(Boolean).join(" ")
+                },
+                shareMediaCategory: "NONE"
+              }
+            },
+            visibility: {
+              "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+            }
+          };
+          if (post.mediaUrls && post.mediaUrls.length > 0) {
+            shareRequest.specificContent["com.linkedin.ugc.ShareContent"].shareMediaCategory = "IMAGE";
+            const mediaUrns = await this.uploadMedia(post.mediaUrls, personUrn);
+            shareRequest.specificContent["com.linkedin.ugc.ShareContent"].media = mediaUrns.map((urn) => ({
+              status: "READY",
+              media: urn
+            }));
+          } else if (post.link) {
+            shareRequest.specificContent["com.linkedin.ugc.ShareContent"].shareMediaCategory = "ARTICLE";
+          }
+          const url = `${this.BASE_URL}/ugcPosts`;
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${this.credentials.accessToken}`,
+              "Content-Type": "application/json",
+              "X-Restli-Protocol-Version": "2.0.0"
+            },
+            body: JSON.stringify(shareRequest)
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            return {
+              success: false,
+              error: data.message || "Failed to publish to LinkedIn"
+            };
+          }
+          const postId = data.id;
+          return {
+            success: true,
+            platformPostId: postId,
+            platformUrl: `https://www.linkedin.com/feed/update/${postId}`,
+            publishedAt: /* @__PURE__ */ new Date()
+          };
+        } catch (error) {
+          return {
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error"
+          };
+        }
+      }
+      async getAnalytics(platformPostId) {
+        try {
+          const url = `${this.BASE_URL}/socialActions/${platformPostId}/statistics`;
+          const response = await fetch(url, {
+            headers: {
+              "Authorization": `Bearer ${this.credentials.accessToken}`,
+              "X-Restli-Protocol-Version": "2.0.0"
+            }
+          });
+          const data = await response.json();
+          return {
+            impressions: data.impressionCount || 0,
+            engagement: data.engagementCount || 0,
+            clicks: data.clickCount || 0,
+            likes: data.likeCount || 0,
+            comments: data.commentCount || 0,
+            shares: data.shareCount || 0
+          };
+        } catch (error) {
+          console.error("[LinkedInAdapter] Failed to fetch analytics:", error);
+          return {};
+        }
+      }
+      async validateCredentials() {
+        try {
+          const url = `${this.BASE_URL}/me`;
+          const response = await fetch(url, {
+            headers: {
+              "Authorization": `Bearer ${this.credentials.accessToken}`
+            }
+          });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+      async refreshAccessToken() {
+        if (!this.credentials.refreshToken) {
+          throw new Error("No refresh token available");
+        }
+        try {
+          const url = "https://www.linkedin.com/oauth/v2/accessToken";
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+              grant_type: "refresh_token",
+              refresh_token: this.credentials.refreshToken,
+              client_id: process.env.LINKEDIN_CLIENT_ID || "",
+              client_secret: process.env.LINKEDIN_CLIENT_SECRET || ""
+            })
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error_description || "Failed to refresh token");
+          }
+          return {
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token || this.credentials.refreshToken,
+            expiresAt: new Date(Date.now() + data.expires_in * 1e3)
+          };
+        } catch (error) {
+          throw error;
+        }
+      }
+      getCapabilities() {
+        return {
+          maxTextLength: 3e3,
+          maxMediaCount: 9,
+          supportsVideo: true,
+          supportsMultipleImages: true,
+          supportsScheduling: false,
+          supportsHashtags: true,
+          supportsLinks: true
+        };
+      }
+      async deletePost(platformPostId) {
+        try {
+          const url = `${this.BASE_URL}/ugcPosts/${platformPostId}`;
+          const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Authorization": `Bearer ${this.credentials.accessToken}`
+            }
+          });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+      async uploadMedia(mediaUrls, personUrn) {
+        const mediaUrns = [];
+        for (const mediaUrl of mediaUrls) {
+          try {
+            const registerUrl = `${this.BASE_URL}/assets?action=registerUpload`;
+            const registerResponse = await fetch(registerUrl, {
+              method: "POST",
+              headers: {
+                "Authorization": `Bearer ${this.credentials.accessToken}`,
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                registerUploadRequest: {
+                  recipes: ["urn:li:digitalmediaRecipe:feedshare-image"],
+                  owner: personUrn,
+                  serviceRelationships: [
+                    {
+                      relationshipType: "OWNER",
+                      identifier: "urn:li:userGeneratedContent"
+                    }
+                  ]
+                }
+              })
+            });
+            const registerData = await registerResponse.json();
+            const uploadUrl = registerData.value.uploadMechanism["com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"].uploadUrl;
+            const asset = registerData.value.asset;
+            const mediaResponse = await fetch(mediaUrl);
+            const mediaBuffer = await mediaResponse.arrayBuffer();
+            await fetch(uploadUrl, {
+              method: "POST",
+              headers: {
+                "Authorization": `Bearer ${this.credentials.accessToken}`
+              },
+              body: mediaBuffer
+            });
+            mediaUrns.push(asset);
+          } catch (error) {
+            console.error("[LinkedInAdapter] Failed to upload media:", error);
+          }
+        }
+        return mediaUrns;
+      }
+    };
+  }
+});
+
+// server/services/platforms/xAdapter.ts
+var XAdapter;
+var init_xAdapter = __esm({
+  "server/services/platforms/xAdapter.ts"() {
+    "use strict";
+    init_basePlatformAdapter();
+    XAdapter = class extends BasePlatformAdapter {
+      BASE_URL = "https://api.twitter.com/2";
+      constructor(credentials) {
+        super("x", credentials);
+      }
+      async publish(post) {
+        try {
+          let tweetText = post.text || "";
+          if (post.hashtags && post.hashtags.length > 0) {
+            tweetText += " " + post.hashtags.join(" ");
+          }
+          if (post.link && !tweetText.includes(post.link)) {
+            tweetText += " " + post.link;
+          }
+          const tweetRequest = {
+            text: tweetText.trim().substring(0, 280)
+          };
+          if (post.mediaUrls && post.mediaUrls.length > 0) {
+            const mediaIds = await this.uploadMedia(post.mediaUrls);
+            if (mediaIds.length > 0) {
+              tweetRequest.media = {
+                media_ids: mediaIds
+              };
+            }
+          }
+          const url = `${this.BASE_URL}/tweets`;
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${this.credentials.accessToken}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(tweetRequest)
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            return {
+              success: false,
+              error: data.detail || data.title || "Failed to publish to X"
+            };
+          }
+          return {
+            success: true,
+            platformPostId: data.data.id,
+            platformUrl: `https://twitter.com/i/web/status/${data.data.id}`,
+            publishedAt: /* @__PURE__ */ new Date()
+          };
+        } catch (error) {
+          return {
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error"
+          };
+        }
+      }
+      async getAnalytics(platformPostId) {
+        try {
+          const url = `${this.BASE_URL}/tweets/${platformPostId}?tweet.fields=public_metrics`;
+          const response = await fetch(url, {
+            headers: {
+              "Authorization": `Bearer ${this.credentials.accessToken}`
+            }
+          });
+          const data = await response.json();
+          const metrics = data.data?.public_metrics || {};
+          return {
+            impressions: metrics.impression_count || 0,
+            likes: metrics.like_count || 0,
+            comments: metrics.reply_count || 0,
+            shares: metrics.retweet_count || 0,
+            engagement: (metrics.like_count || 0) + (metrics.reply_count || 0) + (metrics.retweet_count || 0)
+          };
+        } catch (error) {
+          console.error("[XAdapter] Failed to fetch analytics:", error);
+          return {};
+        }
+      }
+      async validateCredentials() {
+        try {
+          const url = `${this.BASE_URL}/users/me`;
+          const response = await fetch(url, {
+            headers: {
+              "Authorization": `Bearer ${this.credentials.accessToken}`
+            }
+          });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+      getCapabilities() {
+        return {
+          maxTextLength: 280,
+          maxMediaCount: 4,
+          supportsVideo: true,
+          supportsMultipleImages: true,
+          supportsScheduling: false,
+          supportsHashtags: true,
+          supportsLinks: true
+        };
+      }
+      async deletePost(platformPostId) {
+        try {
+          const url = `${this.BASE_URL}/tweets/${platformPostId}`;
+          const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Authorization": `Bearer ${this.credentials.accessToken}`
+            }
+          });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+      async uploadMedia(mediaUrls) {
+        const UPLOAD_URL = "https://upload.twitter.com/1.1/media/upload.json";
+        const mediaIds = [];
+        for (const mediaUrl of mediaUrls.slice(0, 4)) {
+          try {
+            const mediaResponse = await fetch(mediaUrl);
+            const mediaBuffer = await mediaResponse.arrayBuffer();
+            const mediaBase64 = Buffer.from(mediaBuffer).toString("base64");
+            const formData = new URLSearchParams();
+            formData.append("media_data", mediaBase64);
+            const uploadResponse = await fetch(UPLOAD_URL, {
+              method: "POST",
+              headers: {
+                "Authorization": `Bearer ${this.credentials.accessToken}`,
+                "Content-Type": "application/x-www-form-urlencoded"
+              },
+              body: formData
+            });
+            const uploadData = await uploadResponse.json();
+            if (uploadData.media_id_string) {
+              mediaIds.push(uploadData.media_id_string);
+            }
+          } catch (error) {
+            console.error("[XAdapter] Failed to upload media:", error);
+          }
+        }
+        return mediaIds;
+      }
+    };
+  }
+});
+
+// server/services/platforms/googleBusinessAdapter.ts
+var GoogleBusinessAdapter;
+var init_googleBusinessAdapter = __esm({
+  "server/services/platforms/googleBusinessAdapter.ts"() {
+    "use strict";
+    init_basePlatformAdapter();
+    GoogleBusinessAdapter = class extends BasePlatformAdapter {
+      BASE_URL = "https://mybusiness.googleapis.com/v4";
+      constructor(credentials) {
+        super("google_business", credentials);
+      }
+      async publish(post) {
+        try {
+          const locationId = this.credentials.platformAccountId;
+          if (!locationId) {
+            return { success: false, error: "Google Business Location ID not configured" };
+          }
+          const localPost = {
+            languageCode: "en",
+            summary: (post.text || "").substring(0, 1500),
+            topicType: "STANDARD"
+          };
+          if (post.link) {
+            localPost.callToAction = {
+              actionType: "LEARN_MORE",
+              url: post.link
+            };
+          }
+          if (post.mediaUrls && post.mediaUrls.length > 0) {
+            localPost.media = post.mediaUrls.slice(0, 10).map((url2) => ({
+              mediaFormat: url2.includes(".mp4") || url2.includes("video") ? "VIDEO" : "PHOTO",
+              sourceUrl: url2
+            }));
+          }
+          const url = `${this.BASE_URL}/${locationId}/localPosts`;
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${this.credentials.accessToken}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(localPost)
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            return {
+              success: false,
+              error: data.error?.message || "Failed to publish to Google Business Profile"
+            };
+          }
+          return {
+            success: true,
+            platformPostId: data.name,
+            platformUrl: `https://business.google.com/posts/l/${locationId}`,
+            publishedAt: /* @__PURE__ */ new Date()
+          };
+        } catch (error) {
+          return {
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error"
+          };
+        }
+      }
+      async getAnalytics(platformPostId) {
+        try {
+          const url = `${this.BASE_URL}/${platformPostId}/insights`;
+          const response = await fetch(url, {
+            headers: {
+              "Authorization": `Bearer ${this.credentials.accessToken}`
+            }
+          });
+          const data = await response.json();
+          return {
+            impressions: data.searchesViewedOnMaps || 0,
+            clicks: data.actionsPerformed?.WEBSITE || 0
+          };
+        } catch (error) {
+          console.error("[GoogleBusinessAdapter] Failed to fetch analytics:", error);
+          return {};
+        }
+      }
+      async validateCredentials() {
+        try {
+          const url = `${this.BASE_URL}/accounts`;
+          const response = await fetch(url, {
+            headers: {
+              "Authorization": `Bearer ${this.credentials.accessToken}`
+            }
+          });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+      async refreshAccessToken() {
+        if (!this.credentials.refreshToken) {
+          throw new Error("No refresh token available");
+        }
+        try {
+          const url = "https://oauth2.googleapis.com/token";
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+              grant_type: "refresh_token",
+              refresh_token: this.credentials.refreshToken,
+              client_id: process.env.GOOGLE_CLIENT_ID || "",
+              client_secret: process.env.GOOGLE_CLIENT_SECRET || ""
+            })
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error_description || "Failed to refresh token");
+          }
+          return {
+            accessToken: data.access_token,
+            refreshToken: this.credentials.refreshToken,
+            expiresAt: new Date(Date.now() + data.expires_in * 1e3)
+          };
+        } catch (error) {
+          throw error;
+        }
+      }
+      getCapabilities() {
+        return {
+          maxTextLength: 1500,
+          maxMediaCount: 10,
+          supportsVideo: true,
+          supportsMultipleImages: true,
+          supportsScheduling: false,
+          supportsHashtags: false,
+          supportsLinks: true
+        };
+      }
+      async deletePost(platformPostId) {
+        try {
+          const url = `${this.BASE_URL}/${platformPostId}`;
+          const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Authorization": `Bearer ${this.credentials.accessToken}`
+            }
+          });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+    };
+  }
+});
+
+// server/services/platforms/platformFactory.ts
+var PlatformFactory;
+var init_platformFactory = __esm({
+  "server/services/platforms/platformFactory.ts"() {
+    "use strict";
+    init_facebookAdapter();
+    init_linkedinAdapter();
+    init_xAdapter();
+    init_googleBusinessAdapter();
+    PlatformFactory = class _PlatformFactory {
+      /**
+       * Create a platform adapter instance
+       */
+      static createAdapter(platform, credentials) {
+        switch (platform) {
+          case "facebook":
+            return new FacebookAdapter(credentials);
+          case "instagram":
+            return new InstagramAdapter(credentials);
+          case "linkedin":
+            return new LinkedInAdapter(credentials);
+          case "x":
+            return new XAdapter(credentials);
+          case "google_business":
+            return new GoogleBusinessAdapter(credentials);
+          case "tiktok":
+          case "snapchat":
+            throw new Error(`${platform} integration coming in Phase 2`);
+          default:
+            throw new Error(`Unsupported platform: ${platform}`);
+        }
+      }
+      /**
+       * Get list of supported platforms for a subscription tier
+       */
+      static getSupportedPlatforms(tier) {
+        const phase1Platforms = [
+          "facebook",
+          "instagram",
+          "linkedin",
+          "x",
+          "google_business"
+        ];
+        const maxPlatforms = tier === "diy" ? 3 : 7;
+        return phase1Platforms.slice(0, maxPlatforms);
+      }
+      /**
+       * Validate platform credentials
+       */
+      static async validateCredentials(platform, credentials) {
+        try {
+          const adapter = _PlatformFactory.createAdapter(platform, credentials);
+          return await adapter.validateCredentials();
+        } catch (error) {
+          console.error(`[PlatformFactory] Failed to validate ${platform} credentials:`, error);
+          return false;
+        }
+      }
+      /**
+       * Check if a platform is available (Phase 1 vs Phase 2)
+       */
+      static isPlatformAvailable(platform) {
+        const phase1Platforms = [
+          "facebook",
+          "instagram",
+          "linkedin",
+          "x",
+          "google_business"
+        ];
+        return phase1Platforms.includes(platform);
+      }
+      /**
+       * Get platform display name
+       */
+      static getPlatformDisplayName(platform) {
+        const displayNames = {
+          facebook: "Facebook",
+          instagram: "Instagram",
+          linkedin: "LinkedIn",
+          x: "X (Twitter)",
+          google_business: "Google Business Profile",
+          tiktok: "TikTok",
+          snapchat: "Snapchat"
+        };
+        return displayNames[platform] || platform;
+      }
+    };
+  }
+});
+
+// server/workers/contentPublisher.ts
+var contentPublisher_exports = {};
+__export(contentPublisher_exports, {
+  publishPost: () => publishPost
+});
+import { eq as eq4, and as and4 } from "drizzle-orm";
+async function publishPost(post) {
+  const { id: postId, clientId, platforms } = post;
+  if (!platforms || platforms.length === 0) {
+    throw new Error("No platforms specified for publishing");
+  }
+  console.log(`[ContentPublisher] Publishing post ${postId} for client ${clientId}`);
+  const publishResults = {};
+  const publishErrors = {};
+  for (const platform of platforms) {
+    try {
+      console.log(`[ContentPublisher] Publishing to ${platform} - Post ${postId}`);
+      const [account] = await db.select().from(socialMediaAccounts).where(
+        and4(
+          eq4(socialMediaAccounts.clientId, clientId),
+          eq4(socialMediaAccounts.platform, platform)
+        )
+      );
+      if (!account) {
+        throw new Error(`No active ${platform} account found for client ${clientId}`);
+      }
+      let credentials = {
+        accessToken: account.accessToken,
+        refreshToken: account.refreshToken || void 0,
+        expiresAt: account.tokenExpiresAt || void 0,
+        accountId: String(account.id),
+        platformAccountId: account.platformAccountId || void 0
+      };
+      const needsRefresh = account.tokenExpiresAt && /* @__PURE__ */ new Date() > account.tokenExpiresAt;
+      const canRefresh = account.refreshToken && ["linkedin", "x", "google_business"].includes(platform);
+      if (needsRefresh && canRefresh) {
+        console.log(`[ContentPublisher] Access token expired for ${platform}, refreshing...`);
+        try {
+          const tempAdapter = PlatformFactory.createAdapter(platform, credentials);
+          const refreshedCreds = await tempAdapter.refreshAccessToken();
+          await db.update(socialMediaAccounts).set({
+            accessToken: refreshedCreds.accessToken,
+            refreshToken: refreshedCreds.refreshToken || account.refreshToken,
+            tokenExpiresAt: refreshedCreds.expiresAt || null
+          }).where(eq4(socialMediaAccounts.id, account.id));
+          credentials = {
+            ...credentials,
+            accessToken: refreshedCreds.accessToken,
+            refreshToken: refreshedCreds.refreshToken || credentials.refreshToken,
+            expiresAt: refreshedCreds.expiresAt
+          };
+          console.log(`[ContentPublisher] Token refreshed for ${platform}`);
+        } catch (refreshError) {
+          console.error(`[ContentPublisher] Failed to refresh token for ${platform}:`, refreshError);
+          throw new Error(`Token expired and refresh failed: ${refreshError.message}`);
+        }
+      } else if (needsRefresh && !canRefresh) {
+        console.warn(`[ContentPublisher] ${platform} token appears expired but uses long-lived tokens. Attempting publish anyway.`);
+      }
+      const adapter = PlatformFactory.createAdapter(platform, credentials);
+      const capabilities = adapter.getCapabilities();
+      let mediaUrls = [];
+      if (post.mediaIds && post.mediaIds.length > 0) {
+        const { contentMedia: contentMedia2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+        const media = await db.select().from(contentMedia2).where(eq4(contentMedia2.id, post.mediaIds[0]));
+        mediaUrls = media.map((m) => m.storageUrl).filter(Boolean);
+      }
+      const hasVideo = mediaUrls.some((url) => url.includes(".mp4") || url.includes("video"));
+      if (hasVideo && !capabilities.supportsVideo) {
+        throw new Error(`${platform} does not support video posts`);
+      }
+      const mediaCount = mediaUrls.length;
+      if (mediaCount > capabilities.maxMediaCount) {
+        throw new Error(`${platform} supports maximum ${capabilities.maxMediaCount} media items, but ${mediaCount} were provided`);
+      }
+      let scheduledTime = post.scheduledFor || void 0;
+      if (post.scheduledFor && !capabilities.supportsScheduling) {
+        console.warn(`[ContentPublisher] ${platform} does not support scheduling. Publishing immediately instead.`);
+        scheduledTime = void 0;
+      }
+      const result = await adapter.publish({
+        text: post.caption,
+        mediaUrls: mediaUrls.length > 0 ? mediaUrls : void 0,
+        scheduledTime,
+        hashtags: post.hashtags || void 0
+      });
+      if (result.success) {
+        publishResults[platform] = {
+          platformPostId: result.platformPostId,
+          url: result.platformUrl,
+          publishedAt: result.publishedAt?.toISOString() || (/* @__PURE__ */ new Date()).toISOString()
+        };
+      } else {
+        throw new Error(result.error || "Unknown error");
+      }
+    } catch (error) {
+      console.error(`[ContentPublisher] Failed to publish to ${platform}:`, error);
+      publishErrors[platform] = {
+        error: error.message,
+        code: error.code,
+        timestamp: (/* @__PURE__ */ new Date()).toISOString()
+      };
+    }
+  }
+  const hasErrors = Object.keys(publishErrors).length > 0;
+  const allFailed = Object.keys(publishResults).length === 0;
+  if (allFailed) {
+    throw new Error(`Publishing failed on all platforms: ${JSON.stringify(publishErrors)}`);
+  }
+  console.log(`[ContentPublisher] Post ${postId} publishing complete. Results:`, {
+    published: Object.keys(publishResults),
+    failed: Object.keys(publishErrors)
+  });
+  await db.update(contentPosts).set({
+    publishResults,
+    publishErrors: hasErrors ? publishErrors : null
+  }).where(eq4(contentPosts.id, postId));
+  return {
+    postId,
+    success: !allFailed,
+    publishedTo: Object.keys(publishResults),
+    failedOn: Object.keys(publishErrors)
+  };
+}
+var init_contentPublisher = __esm({
+  "server/workers/contentPublisher.ts"() {
+    "use strict";
+    init_db();
+    init_schema();
+    init_platformFactory();
+    console.log("[ContentPublisher] Database-backed publisher initialized");
+  }
+});
+
 // server/services/jwt.ts
 var jwt_exports = {};
 __export(jwt_exports, {
@@ -1586,8 +2982,8 @@ __export(jwt_exports, {
   jwtService: () => jwtService
 });
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
-import { eq as eq4 } from "drizzle-orm";
+import crypto3 from "crypto";
+import { eq as eq10 } from "drizzle-orm";
 var JWTService, jwtService;
 var init_jwt = __esm({
   "server/services/jwt.ts"() {
@@ -1596,9 +2992,11 @@ var init_jwt = __esm({
     init_schema();
     JWTService = class {
       keyPair;
-      algorithm = "RS256";
+      algorithm;
+      // Allow HS256 as well
       constructor() {
         this.keyPair = this.generateKeyPair();
+        this.algorithm = this.keyPair.privateKey.length > 0 && this.keyPair.publicKey.length > 0 ? "RS256" : "HS256";
       }
       /**
        * Generate RSA key pair for JWT signing
@@ -1607,25 +3005,11 @@ var init_jwt = __esm({
         const existingPrivateKey = process.env.JWT_PRIVATE_KEY;
         const existingPublicKey = process.env.JWT_PUBLIC_KEY;
         if (existingPrivateKey && existingPublicKey) {
-          return {
-            privateKey: existingPrivateKey.replace(/\\n/g, "\n"),
-            publicKey: existingPublicKey.replace(/\\n/g, "\n")
-          };
+          const privateKey = existingPrivateKey.includes("\\n") ? existingPrivateKey.replace(/\\n/g, "\n") : existingPrivateKey;
+          const publicKey = existingPublicKey.includes("\\n") ? existingPublicKey.replace(/\\n/g, "\n") : existingPublicKey;
+          return { privateKey, publicKey };
         }
-        const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
-          modulusLength: 2048,
-          publicKeyEncoding: {
-            type: "spki",
-            format: "pem"
-          },
-          privateKeyEncoding: {
-            type: "pkcs8",
-            format: "pem"
-          }
-        });
-        console.log("Generated new RSA key pair for JWT signing");
-        console.log("\u26A0\uFE0F WARNING: Using ephemeral keys. Set JWT_PRIVATE_KEY and JWT_PUBLIC_KEY environment variables for production.");
-        return { publicKey, privateKey };
+        return { publicKey: "", privateKey: "" };
       }
       /**
        * Create a secure dashboard access token for a client
@@ -1643,7 +3027,8 @@ var init_jwt = __esm({
           expiresIn: "24h"
           // 24 hour token expiration
         };
-        const token = jwt.sign(payload, this.keyPair.privateKey, options);
+        const signingKey = this.algorithm === "RS256" ? this.keyPair.privateKey : process.env.JWT_SECRET || "fallback-secret-key";
+        const token = jwt.sign(payload, signingKey, options);
         await db.insert(dashboardAccess).values({
           clientId,
           accessToken: token,
@@ -1657,11 +3042,13 @@ var init_jwt = __esm({
        */
       verifyToken(token) {
         try {
-          const decoded = jwt.verify(token, this.keyPair.publicKey, {
+          const options = {
             algorithms: [this.algorithm],
             issuer: "businessblueprint.io",
             audience: "client-portal"
-          });
+          };
+          const verificationKey = this.algorithm === "RS256" ? this.keyPair.publicKey : process.env.JWT_SECRET || "fallback-secret-key";
+          const decoded = jwt.verify(token, verificationKey, options);
           return decoded;
         } catch (error) {
           throw new Error(`Invalid token: ${error instanceof Error ? error.message : "Unknown error"}`);
@@ -1684,36 +3071,188 @@ var init_jwt = __esm({
        * Revoke a token (mark as inactive in database)
        */
       async revokeToken(token) {
-        await db.update(dashboardAccess).set({ isActive: false }).where(eq4(dashboardAccess.accessToken, token));
+        await db.update(dashboardAccess).set({ isActive: false }).where(eq10(dashboardAccess.accessToken, token));
       }
       /**
        * Check if token is active in database
        */
       async isTokenActive(token) {
-        const [record] = await db.select().from(dashboardAccess).where(eq4(dashboardAccess.accessToken, token));
+        const [record] = await db.select().from(dashboardAccess).where(eq10(dashboardAccess.accessToken, token));
         return record?.isActive || false;
       }
       /**
        * Get public key for external verification
        */
       getPublicKey() {
-        return this.keyPair.publicKey;
+        return this.keyPair.publicKey || "";
       }
       /**
        * Get JWK (JSON Web Key) for public key distribution
        */
       getJWK() {
-        const publicKey = crypto.createPublicKey(this.keyPair.publicKey);
-        const jwk = publicKey.export({ format: "jwk" });
-        return {
-          ...jwk,
-          alg: this.algorithm,
-          use: "sig",
-          kid: crypto.createHash("sha256").update(this.keyPair.publicKey).digest("hex").substring(0, 16)
-        };
+        if (this.algorithm === "RS256" && this.keyPair.publicKey) {
+          const publicKey = crypto3.createPublicKey(this.keyPair.publicKey);
+          const jwk = publicKey.export({ format: "jwk" });
+          return {
+            ...jwk,
+            alg: this.algorithm,
+            use: "sig",
+            kid: crypto3.createHash("sha256").update(this.keyPair.publicKey).digest("hex").substring(0, 16)
+          };
+        }
+        return null;
       }
     };
     jwtService = new JWTService();
+  }
+});
+
+// server/services/scheduler.ts
+var scheduler_exports = {};
+__export(scheduler_exports, {
+  getSchedulerStatus: () => getSchedulerStatus,
+  startScheduler: () => startScheduler,
+  stopScheduler: () => stopScheduler
+});
+import { eq as eq13, and as and12, lte, isNull, or } from "drizzle-orm";
+import { sql as sql5 } from "drizzle-orm";
+function startScheduler() {
+  if (isRunning) {
+    console.log("[Scheduler] Already running");
+    return;
+  }
+  console.log("[Scheduler] Starting database-backed post scheduler");
+  isRunning = true;
+  processScheduledPosts().catch((err) => {
+    console.error("[Scheduler] Initial processing error:", err);
+  });
+  schedulerInterval = setInterval(() => {
+    processScheduledPosts().catch((err) => {
+      console.error("[Scheduler] Processing error:", err);
+    });
+  }, POLL_INTERVAL_MS);
+  console.log("\u2705 Post scheduler started");
+}
+function stopScheduler() {
+  if (!isRunning) {
+    return;
+  }
+  console.log("[Scheduler] Stopping scheduler");
+  if (schedulerInterval) {
+    clearInterval(schedulerInterval);
+    schedulerInterval = null;
+  }
+  isRunning = false;
+}
+async function processScheduledPosts() {
+  try {
+    const duePosts = await db.select().from(contentPosts).where(
+      and12(
+        eq13(contentPosts.status, "scheduled"),
+        lte(contentPosts.scheduledFor, sql5`NOW()`),
+        or(
+          isNull(contentPosts.lockedAt),
+          lte(contentPosts.lockedAt, sql5`NOW() - INTERVAL '5 minutes'`)
+        ),
+        or(
+          isNull(contentPosts.nextRetryAt),
+          lte(contentPosts.nextRetryAt, sql5`NOW()`)
+        )
+      )
+    ).limit(10);
+    if (duePosts.length === 0) {
+      return;
+    }
+    console.log(`[Scheduler] Found ${duePosts.length} posts due for publishing`);
+    for (const post of duePosts) {
+      await processPost(post.id);
+    }
+  } catch (error) {
+    console.error("[Scheduler] Error in processScheduledPosts:", error);
+  }
+}
+async function processPost(postId) {
+  try {
+    const claimed = await db.update(contentPosts).set({
+      lockedAt: sql5`NOW()`,
+      status: "publishing"
+    }).where(
+      and12(
+        eq13(contentPosts.id, postId),
+        eq13(contentPosts.status, "scheduled"),
+        or(
+          isNull(contentPosts.lockedAt),
+          lte(contentPosts.lockedAt, sql5`NOW() - INTERVAL '5 minutes'`)
+        )
+      )
+    ).returning();
+    if (claimed.length === 0) {
+      return;
+    }
+    const post = claimed[0];
+    console.log(`[Scheduler] Processing post ${post.id} for client ${post.clientId}`);
+    const { publishPost: publishPost2 } = await Promise.resolve().then(() => (init_contentPublisher(), contentPublisher_exports));
+    try {
+      await publishPost2(post);
+      await db.update(contentPosts).set({
+        status: "published",
+        publishedAt: sql5`NOW()`,
+        lockedAt: null,
+        lastError: null,
+        updatedAt: sql5`NOW()`
+      }).where(eq13(contentPosts.id, postId));
+      console.log(`[Scheduler] \u2705 Successfully published post ${postId}`);
+    } catch (publishError) {
+      const attempts = (post.attempts || 0) + 1;
+      const maxReached = attempts >= MAX_ATTEMPTS;
+      const nextRetryAt = maxReached ? null : new Date(Date.now() + (RETRY_DELAYS[Math.min(attempts - 1, RETRY_DELAYS.length - 1)] || 9e5));
+      await db.update(contentPosts).set({
+        status: maxReached ? "failed" : "scheduled",
+        attempts,
+        nextRetryAt: maxReached ? null : nextRetryAt,
+        lastError: publishError.message || "Unknown error",
+        lockedAt: null,
+        updatedAt: sql5`NOW()`
+      }).where(eq13(contentPosts.id, postId));
+      if (maxReached) {
+        console.error(`[Scheduler] \u274C Post ${postId} failed after ${attempts} attempts:`, publishError.message);
+      } else {
+        console.warn(`[Scheduler] \u26A0\uFE0F  Post ${postId} failed (attempt ${attempts}/${MAX_ATTEMPTS}), retrying at ${nextRetryAt?.toISOString()}`);
+      }
+    }
+  } catch (error) {
+    console.error(`[Scheduler] Error processing post ${postId}:`, error);
+    try {
+      await db.update(contentPosts).set({
+        status: "scheduled",
+        lockedAt: null,
+        lastError: error.message || "Scheduler error",
+        updatedAt: sql5`NOW()`
+      }).where(eq13(contentPosts.id, postId));
+    } catch (releaseError) {
+      console.error(`[Scheduler] Failed to release lock for post ${postId}:`, releaseError);
+    }
+  }
+}
+function getSchedulerStatus() {
+  return {
+    isRunning,
+    pollInterval: POLL_INTERVAL_MS,
+    maxAttempts: MAX_ATTEMPTS,
+    retryDelays: RETRY_DELAYS
+  };
+}
+var POLL_INTERVAL_MS, MAX_ATTEMPTS, RETRY_DELAYS, schedulerInterval, isRunning;
+var init_scheduler = __esm({
+  "server/services/scheduler.ts"() {
+    "use strict";
+    init_db();
+    init_schema();
+    POLL_INTERVAL_MS = 1e4;
+    MAX_ATTEMPTS = 3;
+    RETRY_DELAYS = [6e4, 3e5, 9e5];
+    schedulerInterval = null;
+    isRunning = false;
   }
 });
 
@@ -1726,7 +3265,7 @@ import { createServer } from "http";
 // server/storage.ts
 init_schema();
 init_db();
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, sql as sql2 } from "drizzle-orm";
 var DatabaseStorage = class {
   async getUser(id) {
     const [user] = await db.select().from(users).where(eq(users.id, id));
@@ -1753,6 +3292,9 @@ var DatabaseStorage = class {
   async updateAssessment(id, data) {
     const [assessment] = await db.update(assessments).set({ ...data, updatedAt: /* @__PURE__ */ new Date() }).where(eq(assessments.id, id)).returning();
     return assessment;
+  }
+  async getAllAssessments() {
+    return await db.select().from(assessments).orderBy(desc(assessments.createdAt));
   }
   async getAssessmentsByEmail(email) {
     return await db.select().from(assessments).where(eq(assessments.email, email)).orderBy(desc(assessments.createdAt));
@@ -1784,6 +3326,9 @@ var DatabaseStorage = class {
   async updateClient(id, data) {
     const [client2] = await db.update(clients).set(data).where(eq(clients.id, id)).returning();
     return client2;
+  }
+  async getAllClients() {
+    return await db.select().from(clients).orderBy(desc(clients.createdAt));
   }
   async getClientsByEmail(email) {
     return await db.select().from(clients).where(eq(clients.email, email));
@@ -1963,8 +3508,1686 @@ var DatabaseStorage = class {
   async deleteBrandAsset(id) {
     await db.delete(brandAssets).where(eq(brandAssets.id, id));
   }
+  // Magic link token operations
+  async createMagicLinkToken(tokenData) {
+    const [token] = await db.insert(magicLinkTokens).values(tokenData).returning();
+    return token;
+  }
+  async getMagicLinkToken(token) {
+    const [magicToken] = await db.select().from(magicLinkTokens).where(eq(magicLinkTokens.token, token));
+    return magicToken;
+  }
+  async markTokenAsUsed(token) {
+    await db.update(magicLinkTokens).set({ used: true, usedAt: /* @__PURE__ */ new Date() }).where(eq(magicLinkTokens.token, token));
+  }
+  async cleanupExpiredTokens() {
+    const now = /* @__PURE__ */ new Date();
+    await db.delete(magicLinkTokens).where(
+      sql2`${magicLinkTokens.expiresAt} < ${now}`
+    );
+  }
 };
 var storage = new DatabaseStorage();
+
+// server/routes.ts
+import { randomBytes } from "crypto";
+
+// server/routes/content.ts
+init_db();
+init_schema();
+import { Router } from "express";
+import { z } from "zod";
+import { eq as eq5, and as and5, desc as desc2, sql as sql4 } from "drizzle-orm";
+
+// server/services/mediaStorage.ts
+init_db();
+init_schema();
+import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
+import { nanoid } from "nanoid";
+import sharp from "sharp";
+import { eq as eq2, and as and2, sql as sql3 } from "drizzle-orm";
+var validateStorageConfig = () => {
+  const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
+  const bucket = process.env.CLOUDFLARE_R2_BUCKET || process.env.S3_BUCKET;
+  if (!accessKeyId || !secretAccessKey) {
+    console.warn("[MediaStorage] WARNING: S3/R2 credentials not configured. Media uploads will fail. Set CLOUDFLARE_R2_ACCESS_KEY_ID and CLOUDFLARE_R2_SECRET_ACCESS_KEY.");
+    return false;
+  }
+  if (!bucket) {
+    console.warn("[MediaStorage] WARNING: S3/R2 bucket not configured. Set CLOUDFLARE_R2_BUCKET.");
+    return false;
+  }
+  return true;
+};
+var isConfigured = validateStorageConfig();
+var s3Client = new S3Client({
+  region: process.env.CLOUDFLARE_R2_REGION || "auto",
+  endpoint: process.env.CLOUDFLARE_R2_ENDPOINT || process.env.S3_ENDPOINT,
+  credentials: {
+    accessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY || ""
+  }
+});
+var BUCKET_NAME = process.env.CLOUDFLARE_R2_BUCKET || process.env.S3_BUCKET || "business-blueprint-content";
+var CDN_URL = process.env.CLOUDFLARE_R2_CDN_URL || process.env.CDN_URL;
+var MediaStorageService = class {
+  /**
+   * Upload media to R2/S3 and save metadata to database
+   */
+  async uploadMedia(options) {
+    if (!isConfigured) {
+      throw new Error("Media storage is not configured. Please set CLOUDFLARE_R2_ACCESS_KEY_ID, CLOUDFLARE_R2_SECRET_ACCESS_KEY, and CLOUDFLARE_R2_BUCKET environment variables.");
+    }
+    const { clientId, file, fileName, mimeType, folder = "Uploads", altText, tags } = options;
+    const ext = fileName.split(".").pop() || "";
+    const storageKey = `content/${clientId}/${folder}/${nanoid()}.${ext}`;
+    const fileType = this.determineFileType(mimeType);
+    const metadata = await this.getMediaMetadata(file, mimeType, fileType);
+    let thumbnailUrl = null;
+    if (fileType === "video") {
+      thumbnailUrl = await this.generateVideoThumbnail(file, storageKey);
+    }
+    const upload = new Upload({
+      client: s3Client,
+      params: {
+        Bucket: BUCKET_NAME,
+        Key: storageKey,
+        Body: file,
+        ContentType: mimeType,
+        CacheControl: "public, max-age=31536000"
+        // 1 year cache
+      }
+    });
+    await upload.done();
+    const storageUrl = CDN_URL ? `${CDN_URL}/${storageKey}` : `https://${BUCKET_NAME}.s3.amazonaws.com/${storageKey}`;
+    const [mediaRecord] = await db.insert(contentMedia).values({
+      clientId,
+      fileName,
+      fileSize: metadata.fileSize,
+      mimeType,
+      fileType,
+      storageKey,
+      storageUrl,
+      thumbnailUrl,
+      width: metadata.width,
+      height: metadata.height,
+      duration: metadata.duration,
+      altText,
+      folder,
+      tags: tags || []
+    }).returning();
+    return mediaRecord;
+  }
+  /**
+   * Delete media from R2/S3 and database
+   */
+  async deleteMedia(mediaId, clientId) {
+    const [media] = await db.select().from(contentMedia).where(and2(
+      eq2(contentMedia.id, mediaId),
+      eq2(contentMedia.clientId, clientId)
+    ));
+    if (!media) {
+      throw new Error("Media not found or unauthorized");
+    }
+    await s3Client.send(new DeleteObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: media.storageKey
+    }));
+    if (media.thumbnailUrl) {
+      const thumbnailKey = media.thumbnailUrl.split("/").slice(-3).join("/");
+      await s3Client.send(new DeleteObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: thumbnailKey
+      }));
+    }
+    await db.delete(contentMedia).where(and2(
+      eq2(contentMedia.id, mediaId),
+      eq2(contentMedia.clientId, clientId)
+    ));
+    return { success: true };
+  }
+  /**
+   * Get all media for a client
+   */
+  async getClientMedia(clientId, folder) {
+    const query = folder ? and2(eq2(contentMedia.clientId, clientId), eq2(contentMedia.folder, folder)) : eq2(contentMedia.clientId, clientId);
+    return await db.select().from(contentMedia).where(query).orderBy(contentMedia.createdAt);
+  }
+  /**
+   * Get media by ID
+   */
+  async getMediaById(mediaId, clientId) {
+    const [media] = await db.select().from(contentMedia).where(and2(
+      eq2(contentMedia.id, mediaId),
+      eq2(contentMedia.clientId, clientId)
+    ));
+    return media;
+  }
+  /**
+   * Update media metadata (alt text, tags, folder)
+   */
+  async updateMediaMetadata(mediaId, clientId, updates) {
+    const [updated] = await db.update(contentMedia).set(updates).where(and2(
+      eq2(contentMedia.id, mediaId),
+      eq2(contentMedia.clientId, clientId)
+    )).returning();
+    return updated;
+  }
+  /**
+   * Increment usage count when media is used in a post
+   */
+  async incrementUsageCount(mediaId) {
+    await db.update(contentMedia).set({ usageCount: sql3`${contentMedia.usageCount} + 1` }).where(eq2(contentMedia.id, mediaId));
+  }
+  /**
+   * Determine file type from MIME type
+   */
+  determineFileType(mimeType) {
+    if (mimeType.startsWith("video/")) return "video";
+    if (mimeType === "image/gif") return "gif";
+    if (mimeType.startsWith("image/")) return "image";
+    throw new Error(`Unsupported file type: ${mimeType}`);
+  }
+  /**
+   * Get media metadata (dimensions, size)
+   */
+  async getMediaMetadata(file, mimeType, fileType) {
+    const fileSize = file.length;
+    if (fileType === "image" || fileType === "gif") {
+      try {
+        const image = sharp(file);
+        const metadata = await image.metadata();
+        return {
+          width: metadata.width,
+          height: metadata.height,
+          fileSize,
+          fileType
+        };
+      } catch (error) {
+        console.error("Error getting image metadata:", error);
+        return { fileSize, fileType };
+      }
+    }
+    if (fileType === "video") {
+      return {
+        fileSize,
+        fileType: "video",
+        duration: void 0
+        // Would need ffmpeg
+      };
+    }
+    return { fileSize, fileType: "image" };
+  }
+  /**
+   * Generate thumbnail for video
+   */
+  async generateVideoThumbnail(file, storageKey) {
+    console.log("[MediaStorage] Video thumbnail generation not yet implemented");
+    return null;
+  }
+};
+var mediaStorageService = new MediaStorageService();
+
+// server/services/content/synupSync.ts
+init_db();
+init_schema();
+import { eq as eq3, and as and3 } from "drizzle-orm";
+import crypto from "crypto";
+var SynupSyncService = class {
+  baseUrl;
+  apiKey;
+  systemName = "synup";
+  constructor() {
+    this.baseUrl = process.env.SYNUP_BASE_URL || "https://api.synup.com/api/v4";
+    this.apiKey = process.env.SYNUP_API_KEY || "";
+    if (!this.apiKey) {
+      console.warn("[SynupSync] SYNUP_API_KEY not configured - sync disabled");
+    }
+  }
+  /**
+   * Initialize sync system
+   */
+  initialize() {
+    if (!this.apiKey) return;
+    console.log("[SynupSync] Initialized");
+  }
+  /**
+   * Check if sync is enabled for a client
+   */
+  async isSyncEnabled(clientId) {
+    try {
+      const locations = await db.select().from(synupLocations).where(eq3(synupLocations.clientId, clientId)).limit(1);
+      return locations.length > 0;
+    } catch (error) {
+      console.error("[SynupSync] Error checking sync enabled:", error);
+      return false;
+    }
+  }
+  /**
+   * Map internal post to Synup format
+   */
+  async mapPostToSynup(post) {
+    let mediaUrls = [];
+    if (post.mediaIds && post.mediaIds.length > 0) {
+      const { contentMedia: contentMedia2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+      const media = await db.select().from(contentMedia2).where(eq3(contentMedia2.clientId, post.clientId));
+      const postMedia = media.filter((m) => post.mediaIds.includes(m.id));
+      mediaUrls = postMedia.map((m) => m.storageUrl).filter(Boolean);
+    }
+    return {
+      local_id: post.id,
+      title: (post.caption || "").slice(0, 80),
+      content: post.caption || "",
+      media_urls: mediaUrls,
+      platforms: post.platforms || [],
+      status: this.mapStatusToSynup(post.status),
+      scheduled_for: post.scheduledFor?.toISOString(),
+      published_at: post.publishedAt?.toISOString(),
+      client_id: post.clientId
+    };
+  }
+  /**
+   * Map internal status to Synup status
+   */
+  mapStatusToSynup(status) {
+    const statusMap = {
+      "draft": "DRAFT",
+      "scheduled": "QUEUED",
+      "publishing": "PUBLISHING",
+      "published": "PUBLISHED",
+      "failed": "FAILED"
+    };
+    return statusMap[status] || "DRAFT";
+  }
+  /**
+   * Map Synup status to internal status
+   */
+  mapStatusFromSynup(synupStatus) {
+    const statusMap = {
+      "DRAFT": "draft",
+      "QUEUED": "scheduled",
+      "PUBLISHING": "publishing",
+      "PUBLISHED": "published",
+      "FAILED": "failed"
+    };
+    return statusMap[synupStatus] || "draft";
+  }
+  /**
+   * Calculate checksum for change detection
+   * Includes all mutable fields that should trigger a sync
+   */
+  async calculateChecksum(post) {
+    let mediaUrls = [];
+    if (post.mediaIds && post.mediaIds.length > 0) {
+      const { contentMedia: contentMedia2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+      const media = await db.select().from(contentMedia2).where(eq3(contentMedia2.clientId, post.clientId));
+      const postMedia = media.filter((m) => post.mediaIds.includes(m.id));
+      mediaUrls = postMedia.map((m) => m.storageUrl).filter(Boolean);
+    }
+    const data = JSON.stringify({
+      caption: post.caption,
+      hashtags: post.hashtags || [],
+      platforms: post.platforms,
+      mediaUrls,
+      platformCustomizations: post.platformCustomizations || {},
+      status: post.status,
+      scheduledFor: post.scheduledFor?.toISOString()
+    });
+    return crypto.createHash("sha256").update(data).digest("hex");
+  }
+  /**
+   * Push a post to Synup (outbound sync)
+   */
+  async pushPostToSynup(postId) {
+    if (!this.apiKey) {
+      console.log("[SynupSync] Sync not configured, skipping push");
+      return false;
+    }
+    try {
+      const [post] = await db.select().from(contentPosts).where(eq3(contentPosts.id, postId));
+      if (!post) {
+        console.error("[SynupSync] Post not found:", postId);
+        return false;
+      }
+      const enabled = await this.isSyncEnabled(post.clientId);
+      if (!enabled) {
+        console.log("[SynupSync] Sync not enabled for client:", post.clientId);
+        return false;
+      }
+      const [existingSync] = await db.select().from(externalSync).where(and3(
+        eq3(externalSync.systemName, this.systemName),
+        eq3(externalSync.entityType, "post"),
+        eq3(externalSync.entityId, postId)
+      ));
+      const newChecksum = await this.calculateChecksum(post);
+      if (existingSync && existingSync.checksum === newChecksum) {
+        console.log("[SynupSync] No changes detected, skipping push");
+        return true;
+      }
+      const payload = await this.mapPostToSynup(post);
+      const method = existingSync?.externalId ? "PUT" : "POST";
+      const endpoint = existingSync?.externalId ? `${this.baseUrl}/posts/${existingSync.externalId}` : `${this.baseUrl}/posts`;
+      const response = await fetch(endpoint, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${this.apiKey}`
+        },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        throw new Error(`Synup API error: ${response.status} ${response.statusText}`);
+      }
+      const result = await response.json();
+      const externalId = result.id || result.data?.id;
+      if (existingSync) {
+        await db.update(externalSync).set({
+          externalId: externalId || existingSync.externalId,
+          lastPushedAt: /* @__PURE__ */ new Date(),
+          checksum: newChecksum,
+          syncStatus: "synced"
+        }).where(eq3(externalSync.id, existingSync.id));
+      } else {
+        await db.insert(externalSync).values({
+          systemName: this.systemName,
+          entityType: "post",
+          entityId: postId,
+          externalId,
+          lastPushedAt: /* @__PURE__ */ new Date(),
+          checksum: newChecksum,
+          syncStatus: "synced"
+        });
+      }
+      await db.insert(syncLogs).values({
+        systemName: this.systemName,
+        direction: "outbound",
+        entityType: "post",
+        entityId: postId,
+        action: method === "POST" ? "create" : "update",
+        payload,
+        status: "success"
+      });
+      console.log("[SynupSync] Successfully pushed post:", postId);
+      return true;
+    } catch (error) {
+      console.error("[SynupSync] Failed to push post:", error);
+      await db.insert(syncLogs).values({
+        systemName: this.systemName,
+        direction: "outbound",
+        entityType: "post",
+        entityId: postId,
+        action: "create",
+        payload: {},
+        status: "error",
+        errorMessage: error instanceof Error ? error.message : "Unknown error"
+      });
+      return false;
+    }
+  }
+  /**
+   * Handle inbound update from Synup
+   * Applies conflict resolution policy
+   */
+  async applySynupUpdate(payload) {
+    if (!this.apiKey) {
+      console.log("[SynupSync] Sync not configured");
+      return false;
+    }
+    try {
+      const { local_id, external_id, status, notes, published_at, error_message } = payload;
+      const [post] = await db.select().from(contentPosts).where(eq3(contentPosts.id, local_id));
+      if (!post) {
+        console.error("[SynupSync] Post not found for update:", local_id);
+        return false;
+      }
+      const updates = {};
+      let shouldUpdate = false;
+      if (status) {
+        const newStatus = this.mapStatusFromSynup(status);
+        if (status === "PUBLISHED" || status === "FAILED") {
+          updates.status = newStatus;
+          shouldUpdate = true;
+          if (status === "PUBLISHED" && published_at) {
+            updates.publishedAt = new Date(published_at);
+          }
+          if (status === "FAILED" && error_message) {
+            updates.lastError = error_message;
+          }
+        } else if (post.status !== "published" && post.status !== "failed") {
+          updates.status = newStatus;
+          shouldUpdate = true;
+        }
+      }
+      if (shouldUpdate) {
+        await db.update(contentPosts).set(updates).where(eq3(contentPosts.id, local_id));
+      }
+      const [existingSync] = await db.select().from(externalSync).where(and3(
+        eq3(externalSync.systemName, this.systemName),
+        eq3(externalSync.entityType, "post"),
+        eq3(externalSync.entityId, local_id)
+      ));
+      if (existingSync) {
+        await db.update(externalSync).set({
+          externalId: external_id || existingSync.externalId,
+          lastPulledAt: /* @__PURE__ */ new Date(),
+          syncStatus: "synced",
+          metadata: notes ? { notes } : void 0
+        }).where(eq3(externalSync.id, existingSync.id));
+      } else if (external_id) {
+        await db.insert(externalSync).values({
+          systemName: this.systemName,
+          entityType: "post",
+          entityId: local_id,
+          externalId: external_id,
+          lastPulledAt: /* @__PURE__ */ new Date(),
+          syncStatus: "synced",
+          metadata: notes ? { notes } : void 0
+        });
+      }
+      await db.insert(syncLogs).values({
+        systemName: this.systemName,
+        direction: "inbound",
+        entityType: "post",
+        entityId: local_id,
+        action: "status_update",
+        payload,
+        status: "success"
+      });
+      console.log("[SynupSync] Successfully applied update:", local_id);
+      return true;
+    } catch (error) {
+      console.error("[SynupSync] Failed to apply update:", error);
+      await db.insert(syncLogs).values({
+        systemName: this.systemName,
+        direction: "inbound",
+        entityType: "post",
+        entityId: payload.local_id || 0,
+        action: "status_update",
+        payload,
+        status: "error",
+        errorMessage: error instanceof Error ? error.message : "Unknown error"
+      });
+      return false;
+    }
+  }
+  /**
+   * Verify webhook signature
+   */
+  verifyWebhookSignature(payload, signature) {
+    const secret = process.env.SYNUP_WEBHOOK_SECRET || "";
+    if (!secret) {
+      console.warn("[SynupSync] SYNUP_WEBHOOK_SECRET not configured");
+      return false;
+    }
+    const expectedSignature = crypto.createHmac("sha256", secret).update(payload).digest("hex");
+    return crypto.timingSafeEqual(
+      Buffer.from(signature),
+      Buffer.from(expectedSignature)
+    );
+  }
+};
+var synupSyncService = new SynupSyncService();
+
+// server/routes/content.ts
+init_contentPublisher();
+init_platformFactory();
+var router = Router();
+var mediaStorage = new MediaStorageService();
+async function requireContentAccess(req, res, next) {
+  const clientId = parseInt(req.params.clientId || req.body.clientId);
+  if (!clientId) {
+    return res.status(400).json({ message: "Client ID is required" });
+  }
+  try {
+    const hasAccess = await db.select({ id: subscriptionAddonSelections.id }).from(subscriptionAddonSelections).innerJoin(
+      subscriptions,
+      eq5(subscriptionAddonSelections.subscriptionId, subscriptions.id)
+    ).innerJoin(
+      subscriptionAddons,
+      eq5(subscriptionAddonSelections.addonId, subscriptionAddons.id)
+    ).where(
+      and5(
+        eq5(subscriptions.clientId, clientId),
+        sql4`${subscriptionAddons.name} LIKE '%Content Management%'`
+      )
+    ).limit(1);
+    if (hasAccess.length === 0) {
+      return res.status(403).json({
+        message: "Content Management not available. Please upgrade your subscription."
+      });
+    }
+    next();
+  } catch (error) {
+    console.error("[ContentAccess] Error checking access:", error);
+    return res.status(500).json({ message: "Failed to verify access" });
+  }
+}
+async function getPlatformLimits(clientId) {
+  const [subscription] = await db.select({ addonName: subscriptionAddons.name }).from(subscriptionAddonSelections).innerJoin(subscriptions, eq5(subscriptionAddonSelections.subscriptionId, subscriptions.id)).innerJoin(subscriptionAddons, eq5(subscriptionAddonSelections.addonId, subscriptionAddons.id)).where(
+    and5(
+      eq5(subscriptions.clientId, clientId),
+      sql4`${subscriptionAddons.name} LIKE '%Content Management%'`
+    )
+  ).limit(1);
+  const isMSP = subscription?.addonName?.includes("MSP") || false;
+  return {
+    maxPlatforms: isMSP ? 7 : 3,
+    tier: isMSP ? "msp" : "diy"
+  };
+}
+router.get("/:clientId/posts", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const status = req.query.status;
+    const posts = status ? await db.select().from(contentPosts).where(and5(
+      eq5(contentPosts.clientId, clientId),
+      eq5(contentPosts.status, status)
+    )).orderBy(desc2(contentPosts.createdAt)) : await db.select().from(contentPosts).where(eq5(contentPosts.clientId, clientId)).orderBy(desc2(contentPosts.createdAt));
+    res.json(posts);
+  } catch (error) {
+    console.error("[Content] Error fetching posts:", error);
+    res.status(500).json({ message: "Failed to fetch posts" });
+  }
+});
+router.get("/:clientId/posts/:postId", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const postId = parseInt(req.params.postId);
+    const [post] = await db.select().from(contentPosts).where(and5(
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
+    ));
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    res.json(post);
+  } catch (error) {
+    console.error("[Content] Error fetching post:", error);
+    res.status(500).json({ message: "Failed to fetch post" });
+  }
+});
+router.post("/:clientId/posts", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const postSchema = z.object({
+      caption: z.string(),
+      platforms: z.array(z.string()),
+      hashtags: z.array(z.string()).optional(),
+      mediaIds: z.array(z.number()).optional(),
+      scheduledFor: z.coerce.date().refine((date) => !isNaN(date.getTime()) && date > /* @__PURE__ */ new Date(), {
+        message: "scheduledFor must be a valid future date"
+      }).optional(),
+      platformCustomizations: z.any().optional(),
+      timezone: z.string().optional(),
+      status: z.string().optional(),
+      isAIGenerated: z.boolean().optional(),
+      aiPrompt: z.string().optional(),
+      contentScore: z.number().optional(),
+      templateId: z.number().optional()
+    });
+    const validatedBody = postSchema.parse(req.body);
+    const [post] = await db.insert(contentPosts).values({
+      ...validatedBody,
+      clientId
+    }).returning();
+    synupSyncService.pushPostToSynup(post.id).catch((err) => {
+      console.error("[Content] Sync to Synup failed (post creation):", err);
+    });
+    res.status(201).json(post);
+  } catch (error) {
+    console.error("[Content] Error creating post:", error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ message: "Validation error", errors: error.errors });
+    }
+    res.status(500).json({ message: "Failed to create post" });
+  }
+});
+router.put("/:clientId/posts/:postId", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const postId = parseInt(req.params.postId);
+    const updateSchema = z.object({
+      caption: z.string().optional(),
+      platforms: z.array(z.string()).optional(),
+      hashtags: z.array(z.string()).optional(),
+      mediaIds: z.array(z.number()).optional(),
+      scheduledFor: z.coerce.date().refine((date) => !isNaN(date.getTime()) && date > /* @__PURE__ */ new Date(), {
+        message: "scheduledFor must be a valid future date"
+      }).optional(),
+      platformCustomizations: z.any().optional(),
+      timezone: z.string().optional(),
+      status: z.string().optional(),
+      isAIGenerated: z.boolean().optional(),
+      aiPrompt: z.string().optional(),
+      contentScore: z.number().optional(),
+      templateId: z.number().optional()
+    });
+    const data = updateSchema.parse(req.body);
+    const [post] = await db.update(contentPosts).set(data).where(and5(
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
+    )).returning();
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    synupSyncService.pushPostToSynup(post.id).catch((err) => {
+      console.error("[Content] Sync to Synup failed (post update):", err);
+    });
+    res.json(post);
+  } catch (error) {
+    console.error("[Content] Error updating post:", error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ message: "Validation error", errors: error.errors });
+    }
+    res.status(500).json({ message: "Failed to update post" });
+  }
+});
+router.delete("/:clientId/posts/:postId", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const postId = parseInt(req.params.postId);
+    const [deleted] = await db.delete(contentPosts).where(and5(
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
+    )).returning();
+    if (!deleted) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    res.json({ message: "Post deleted successfully" });
+  } catch (error) {
+    console.error("[Content] Error deleting post:", error);
+    res.status(500).json({ message: "Failed to delete post" });
+  }
+});
+router.post("/:clientId/posts/:postId/publish", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const postId = parseInt(req.params.postId);
+    const [post] = await db.select().from(contentPosts).where(and5(
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
+    ));
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    if (post.status === "published") {
+      return res.status(400).json({ message: "Post is already published" });
+    }
+    const isScheduled = post.scheduledFor && new Date(post.scheduledFor) > /* @__PURE__ */ new Date();
+    if (isScheduled) {
+      await db.update(contentPosts).set({ status: "scheduled" }).where(eq5(contentPosts.id, postId));
+      synupSyncService.pushPostToSynup(postId).catch((err) => {
+        console.error("[Content] Sync to Synup failed (post scheduled):", err);
+      });
+      res.json({
+        message: "Post scheduled successfully",
+        scheduledFor: post.scheduledFor
+      });
+    } else {
+      const [updatedPost] = await db.update(contentPosts).set({ status: "publishing", attempts: 0 }).where(eq5(contentPosts.id, postId)).returning();
+      publishPost(updatedPost).catch(async (err) => {
+        console.error("[Content] Background publish failed:", err);
+        await db.update(contentPosts).set({
+          status: "failed",
+          lastError: err.message || "Unknown error during publishing",
+          attempts: 1,
+          lockedAt: null
+          // Release lock
+        }).where(eq5(contentPosts.id, postId));
+      });
+      res.json({ message: "Post is being published" });
+    }
+  } catch (error) {
+    console.error("[Content] Error publishing post:", error);
+    res.status(500).json({ message: "Failed to publish post" });
+  }
+});
+router.get("/:clientId/schedule", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const scheduledPosts = await db.select().from(contentPosts).where(and5(
+      eq5(contentPosts.clientId, clientId),
+      eq5(contentPosts.status, "scheduled")
+    )).orderBy(contentPosts.scheduledFor);
+    res.json(scheduledPosts);
+  } catch (error) {
+    console.error("[Content] Error fetching scheduled posts:", error);
+    res.status(500).json({ message: "Failed to fetch scheduled posts" });
+  }
+});
+router.put("/:clientId/schedule/:postId", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const postId = parseInt(req.params.postId);
+    const scheduleSchema = z.object({
+      scheduledFor: z.coerce.date().refine((date) => !isNaN(date.getTime()) && date > /* @__PURE__ */ new Date(), {
+        message: "scheduledFor must be a valid future date"
+      })
+    });
+    const { scheduledFor: newScheduleDate } = scheduleSchema.parse(req.body);
+    const [existingPost] = await db.select().from(contentPosts).where(and5(
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
+    ));
+    if (!existingPost) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    const [post] = await db.update(contentPosts).set({
+      scheduledFor: newScheduleDate,
+      status: "scheduled",
+      // Reset scheduler state to allow rescheduling
+      lockedAt: null,
+      attempts: 0,
+      nextRetryAt: null
+    }).where(and5(
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
+    )).returning();
+    res.json({
+      message: "Schedule updated successfully",
+      post
+    });
+  } catch (error) {
+    console.error("[Content] Error updating schedule:", error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ message: "Validation error", errors: error.errors });
+    }
+    res.status(500).json({ message: "Failed to update schedule" });
+  }
+});
+router.delete("/:clientId/schedule/:postId", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const postId = parseInt(req.params.postId);
+    const [existingPost] = await db.select().from(contentPosts).where(and5(
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId),
+      eq5(contentPosts.status, "scheduled")
+    ));
+    if (!existingPost) {
+      return res.status(404).json({ message: "Scheduled post not found" });
+    }
+    const [post] = await db.update(contentPosts).set({
+      status: "draft",
+      scheduledFor: null,
+      // Reset scheduler state
+      lockedAt: null,
+      attempts: 0,
+      nextRetryAt: null
+    }).where(and5(
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
+    )).returning();
+    res.json({
+      message: "Schedule cancelled successfully",
+      post
+    });
+  } catch (error) {
+    console.error("[Content] Error cancelling schedule:", error);
+    res.status(500).json({ message: "Failed to cancel schedule" });
+  }
+});
+router.get("/:clientId/media", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const folder = req.query.folder;
+    const media = folder ? await db.select().from(contentMedia).where(and5(
+      eq5(contentMedia.clientId, clientId),
+      eq5(contentMedia.folder, folder)
+    )).orderBy(desc2(contentMedia.createdAt)) : await db.select().from(contentMedia).where(eq5(contentMedia.clientId, clientId)).orderBy(desc2(contentMedia.createdAt));
+    res.json(media);
+  } catch (error) {
+    console.error("[Content] Error fetching media:", error);
+    res.status(500).json({ message: "Failed to fetch media" });
+  }
+});
+router.post("/:clientId/media", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const { fileData, fileName, mimeType, folder, altText, tags } = req.body;
+    if (!fileData || !fileName || !mimeType) {
+      return res.status(400).json({ message: "fileData, fileName, and mimeType are required" });
+    }
+    const fileBuffer = Buffer.from(fileData, "base64");
+    const media = await mediaStorage.uploadMedia({
+      clientId,
+      file: fileBuffer,
+      fileName,
+      mimeType,
+      folder,
+      altText,
+      tags
+    });
+    res.status(201).json(media);
+  } catch (error) {
+    console.error("[Content] Error uploading media:", error);
+    res.status(500).json({ message: error instanceof Error ? error.message : "Failed to upload media" });
+  }
+});
+router.delete("/:clientId/media/:mediaId", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const mediaId = parseInt(req.params.mediaId);
+    const success = await mediaStorage.deleteMedia(mediaId, clientId);
+    if (!success) {
+      return res.status(404).json({ message: "Media not found" });
+    }
+    res.json({ message: "Media deleted successfully" });
+  } catch (error) {
+    console.error("[Content] Error deleting media:", error);
+    res.status(500).json({ message: "Failed to delete media" });
+  }
+});
+router.get("/:clientId/platforms", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const accounts = await db.select().from(socialMediaAccounts).where(eq5(socialMediaAccounts.clientId, clientId)).orderBy(socialMediaAccounts.platform);
+    const limits = await getPlatformLimits(clientId);
+    res.json({
+      accounts,
+      limits,
+      available: limits.maxPlatforms - accounts.length
+    });
+  } catch (error) {
+    console.error("[Content] Error fetching platforms:", error);
+    res.status(500).json({ message: "Failed to fetch platforms" });
+  }
+});
+router.post("/:clientId/platforms", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const limits = await getPlatformLimits(clientId);
+    const currentAccounts = await db.select().from(socialMediaAccounts).where(eq5(socialMediaAccounts.clientId, clientId));
+    if (currentAccounts.length >= limits.maxPlatforms) {
+      return res.status(400).json({
+        message: `Platform limit reached. Your ${limits.tier.toUpperCase()} tier supports ${limits.maxPlatforms} platforms.`
+      });
+    }
+    const accountSchema = z.object({
+      platform: z.string(),
+      platformAccountId: z.string(),
+      accessToken: z.string(),
+      refreshToken: z.string().optional(),
+      tokenExpiresAt: z.string().transform((str) => new Date(str)).optional(),
+      platformAccountName: z.string().optional(),
+      platformAccountHandle: z.string().optional(),
+      platformAccountAvatar: z.string().optional(),
+      accountType: z.string().optional(),
+      permissions: z.array(z.string()).optional(),
+      metadata: z.any().optional(),
+      isActive: z.boolean().optional()
+    });
+    const validatedBody = accountSchema.parse(req.body);
+    const isValid = await PlatformFactory.validateCredentials(validatedBody.platform, {
+      accessToken: validatedBody.accessToken,
+      refreshToken: validatedBody.refreshToken,
+      expiresAt: validatedBody.tokenExpiresAt,
+      platformAccountId: validatedBody.platformAccountId
+    });
+    if (!isValid) {
+      return res.status(400).json({ message: "Invalid platform credentials" });
+    }
+    const [account] = await db.insert(socialMediaAccounts).values({
+      ...validatedBody,
+      clientId
+    }).returning();
+    res.status(201).json(account);
+  } catch (error) {
+    console.error("[Content] Error connecting platform:", error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ message: "Validation error", errors: error.errors });
+    }
+    res.status(500).json({ message: "Failed to connect platform" });
+  }
+});
+router.delete("/:clientId/platforms/:accountId", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const accountId = parseInt(req.params.accountId);
+    const [deleted] = await db.delete(socialMediaAccounts).where(and5(
+      eq5(socialMediaAccounts.id, accountId),
+      eq5(socialMediaAccounts.clientId, clientId)
+    )).returning();
+    if (!deleted) {
+      return res.status(404).json({ message: "Platform account not found" });
+    }
+    res.json({ message: "Platform disconnected successfully" });
+  } catch (error) {
+    console.error("[Content] Error disconnecting platform:", error);
+    res.status(500).json({ message: "Failed to disconnect platform" });
+  }
+});
+router.get("/:clientId/analytics", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const posts = await db.select().from(contentPosts).where(eq5(contentPosts.clientId, clientId));
+    const postIds = posts.map((p) => p.id);
+    const analytics = postIds.length > 0 ? await db.select().from(contentAnalytics).where(sql4`${contentAnalytics.postId} IN (${sql4.join(postIds.map((id) => sql4`${id}`), sql4`, `)})`).orderBy(desc2(contentAnalytics.lastSyncedAt)) : [];
+    const summary = {
+      totalPosts: posts.length,
+      publishedPosts: posts.filter((p) => p.status === "published").length,
+      scheduledPosts: posts.filter((p) => p.status === "scheduled").length,
+      draftPosts: posts.filter((p) => p.status === "draft").length,
+      analytics
+    };
+    res.json(summary);
+  } catch (error) {
+    console.error("[Content] Error fetching analytics:", error);
+    res.status(500).json({ message: "Failed to fetch analytics" });
+  }
+});
+router.post("/:clientId/sync/synup/push/:postId", requireContentAccess, async (req, res) => {
+  try {
+    const postId = parseInt(req.params.postId);
+    const result = await synupSyncService.pushPostToSynup(postId);
+    if (result) {
+      res.json({ success: true, message: "Post synced to Synup successfully" });
+    } else {
+      res.status(500).json({ success: false, message: "Failed to sync post to Synup" });
+    }
+  } catch (error) {
+    console.error("[Content] Error pushing to Synup:", error);
+    res.status(500).json({ success: false, message: "Failed to sync post" });
+  }
+});
+router.post("/sync/synup/webhook", async (req, res) => {
+  try {
+    const signature = req.headers["x-synup-signature"];
+    const rawBody = JSON.stringify(req.body);
+    if (!signature || !synupSyncService.verifyWebhookSignature(rawBody, signature)) {
+      console.error("[Content] Invalid Synup webhook signature");
+      return res.status(401).json({ error: "Invalid signature" });
+    }
+    const result = await synupSyncService.applySynupUpdate(req.body);
+    if (result) {
+      res.json({ success: true });
+    } else {
+      res.status(500).json({ success: false, message: "Failed to apply update" });
+    }
+  } catch (error) {
+    console.error("[Content] Error processing Synup webhook:", error);
+    res.status(500).json({ success: false, message: "Internal error" });
+  }
+});
+router.post("/:clientId/ai/caption", requireContentAccess, async (req, res) => {
+  try {
+    const { topic, tone, length } = req.body;
+    if (!topic) {
+      return res.status(400).json({ message: "Topic is required" });
+    }
+    res.json({
+      caption: `AI-generated caption about ${topic} (${tone || "professional"} tone, ${length || "medium"} length)`,
+      hashtags: ["#business", "#marketing", "#social"]
+    });
+  } catch (error) {
+    console.error("[Content] Error generating caption:", error);
+    res.status(500).json({ message: "Failed to generate caption" });
+  }
+});
+router.post("/:clientId/ai/hashtags", requireContentAccess, async (req, res) => {
+  try {
+    const { content, platform } = req.body;
+    if (!content) {
+      return res.status(400).json({ message: "Content is required" });
+    }
+    res.json({
+      hashtags: ["#business", "#marketing", "#socialmedia", "#contentcreation"]
+    });
+  } catch (error) {
+    console.error("[Content] Error generating hashtags:", error);
+    res.status(500).json({ message: "Failed to generate hashtags" });
+  }
+});
+var content_default = router;
+
+// server/routes/meta.ts
+init_db();
+init_schema();
+import { Router as Router2 } from "express";
+import { eq as eq6, and as and6 } from "drizzle-orm";
+import crypto2 from "crypto";
+var router2 = Router2();
+var META_APP_ID = process.env.META_APP_ID;
+var META_APP_SECRET = process.env.META_APP_SECRET;
+var META_WEBHOOK_VERIFY_TOKEN = process.env.META_WEBHOOK_VERIFY_TOKEN || "businessblueprint_meta_verify_2025";
+router2.get("/webhooks/meta", (req, res) => {
+  const mode = req.query["hub.mode"];
+  const token = req.query["hub.verify_token"];
+  const challenge = req.query["hub.challenge"];
+  if (mode === "subscribe" && token === META_WEBHOOK_VERIFY_TOKEN) {
+    console.log("\u2705 Meta webhook verified");
+    res.status(200).send(challenge);
+  } else {
+    console.error("\u274C Meta webhook verification failed");
+    res.sendStatus(403);
+  }
+});
+router2.post("/webhooks/meta", async (req, res) => {
+  try {
+    const signature = req.headers["x-hub-signature-256"];
+    if (!verifyWebhookSignature(req.body, signature)) {
+      console.error("\u274C Invalid webhook signature");
+      return res.sendStatus(403);
+    }
+    const body = req.body;
+    res.status(200).send("EVENT_RECEIVED");
+    if (body.object === "page" || body.object === "instagram") {
+      for (const entry of body.entry) {
+        await processWebhookEntry(entry, body.object);
+      }
+    }
+  } catch (error) {
+    console.error("Error processing Meta webhook:", error);
+    res.status(200).send("EVENT_RECEIVED");
+  }
+});
+router2.get("/oauth/callback", async (req, res) => {
+  try {
+    const code = req.query.code;
+    const state = req.query.state;
+    if (!code) {
+      return res.status(400).json({ error: "No authorization code provided" });
+    }
+    const tokenResponse = await fetch(
+      `https://graph.facebook.com/v21.0/oauth/access_token?client_id=${META_APP_ID}&client_secret=${META_APP_SECRET}&code=${code}&redirect_uri=${encodeURIComponent(getRedirectUri(req))}`
+    );
+    const tokenData = await tokenResponse.json();
+    if (!tokenData.access_token) {
+      throw new Error("Failed to get access token");
+    }
+    const pageTokenResponse = await fetch(
+      `https://graph.facebook.com/v21.0/me/accounts?access_token=${tokenData.access_token}`
+    );
+    const pageData = await pageTokenResponse.json();
+    const clientId = parseInt(state);
+    if (pageData.data && pageData.data.length > 0) {
+      for (const page of pageData.data) {
+        const existing = await db.select().from(inboxChannelConnections).where(
+          and6(
+            eq6(inboxChannelConnections.clientId, clientId),
+            eq6(inboxChannelConnections.channelType, "facebook"),
+            eq6(inboxChannelConnections.channelIdentifier, page.id)
+          )
+        );
+        const credentials = {
+          pageAccessToken: page.access_token,
+          pageId: page.id,
+          pageName: page.name,
+          category: page.category
+        };
+        if (existing.length > 0) {
+          await db.update(inboxChannelConnections).set({
+            credentials,
+            channelName: page.name,
+            status: "active",
+            lastSyncedAt: /* @__PURE__ */ new Date(),
+            updatedAt: /* @__PURE__ */ new Date()
+          }).where(eq6(inboxChannelConnections.id, existing[0].id));
+        } else {
+          await db.insert(inboxChannelConnections).values({
+            clientId,
+            channelType: "facebook",
+            channelIdentifier: page.id,
+            channelName: page.name,
+            credentials,
+            status: "active",
+            lastSyncedAt: /* @__PURE__ */ new Date()
+          });
+        }
+      }
+    }
+    res.redirect("/inbox?tab=settings&oauth=success");
+  } catch (error) {
+    console.error("OAuth callback error:", error);
+    res.redirect("/inbox?tab=settings&oauth=error");
+  }
+});
+function verifyWebhookSignature(body, signature) {
+  if (!signature || !META_APP_SECRET) return false;
+  const elements = signature.split("=");
+  const signatureHash = elements[1];
+  const expectedHash = crypto2.createHmac("sha256", META_APP_SECRET).update(JSON.stringify(body)).digest("hex");
+  return signatureHash === expectedHash;
+}
+async function processWebhookEntry(entry, objectType) {
+  try {
+    if (entry.messaging) {
+      for (const event of entry.messaging) {
+        await processMessagingEvent(event, objectType);
+      }
+    }
+    if (entry.changes) {
+      for (const change of entry.changes) {
+        await processChange(change, entry.id, objectType);
+      }
+    }
+  } catch (error) {
+    console.error("Error processing webhook entry:", error);
+  }
+}
+async function processMessagingEvent(event, platform) {
+  try {
+    if (!event.message) return;
+    const senderId = event.sender.id;
+    const recipientId = event.recipient.id;
+    const messageText = event.message.text || "";
+    const messageId = event.message.mid;
+    const channelType = platform === "instagram" ? "instagram" : "facebook";
+    const [channel] = await db.select().from(inboxChannelConnections).where(
+      and6(
+        eq6(inboxChannelConnections.channelType, channelType),
+        eq6(inboxChannelConnections.channelIdentifier, recipientId)
+      )
+    );
+    if (!channel || !channel.clientId) {
+      console.log(`No channel found for ${channelType} page ${recipientId}`);
+      return;
+    }
+    let [conversation] = await db.select().from(inboxConversations).where(
+      and6(
+        eq6(inboxConversations.clientId, channel.clientId),
+        eq6(inboxConversations.contactIdentifier, senderId),
+        eq6(inboxConversations.primaryChannelType, channelType)
+      )
+    );
+    if (!conversation) {
+      [conversation] = await db.insert(inboxConversations).values({
+        clientId: channel.clientId,
+        contactName: `${channelType === "instagram" ? "IG" : "FB"} User ${senderId.slice(-6)}`,
+        contactIdentifier: senderId,
+        primaryChannelType: channelType,
+        primaryChannelId: channel.id,
+        status: "open",
+        priority: "normal",
+        lastMessageAt: /* @__PURE__ */ new Date(),
+        lastMessagePreview: messageText.substring(0, 100),
+        unreadCount: 1
+      }).returning();
+    } else {
+      await db.update(inboxConversations).set({
+        lastMessageAt: /* @__PURE__ */ new Date(),
+        lastMessagePreview: messageText.substring(0, 100),
+        unreadCount: (conversation.unreadCount || 0) + 1,
+        updatedAt: /* @__PURE__ */ new Date()
+      }).where(eq6(inboxConversations.id, conversation.id));
+    }
+    await db.insert(inboxMessages2).values({
+      conversationId: conversation.id,
+      channelType,
+      channelId: channel.id,
+      messageType: "incoming",
+      direction: "inbound",
+      content: messageText,
+      contentType: event.message.attachments ? "image" : "text",
+      fromIdentifier: senderId,
+      fromName: conversation.contactName,
+      toIdentifier: recipientId,
+      toName: channel.channelName || "",
+      externalMessageId: messageId,
+      hasAttachments: !!event.message.attachments,
+      attachments: event.message.attachments,
+      status: "delivered",
+      deliveredAt: new Date(event.timestamp),
+      metadata: { platform: channelType, event }
+    });
+    console.log(`\u2705 Processed ${channelType} message from ${senderId}`);
+  } catch (error) {
+    console.error("Error processing messaging event:", error);
+  }
+}
+async function processChange(change, pageId, platform) {
+  try {
+    if (change.field === "feed" && change.value.item === "comment") {
+      const comment = change.value;
+      await processComment(comment, pageId, platform);
+    }
+  } catch (error) {
+    console.error("Error processing change event:", error);
+  }
+}
+async function processComment(comment, pageId, platform) {
+  try {
+    const commentId = comment.comment_id;
+    const postId = comment.post_id;
+    const senderId = comment.from?.id;
+    const senderName = comment.from?.name;
+    const commentText = comment.message;
+    if (!senderId || !commentText) return;
+    const channelType = platform === "instagram" ? "instagram" : "facebook";
+    const [channel] = await db.select().from(inboxChannelConnections).where(
+      and6(
+        eq6(inboxChannelConnections.channelType, channelType),
+        eq6(inboxChannelConnections.channelIdentifier, pageId)
+      )
+    );
+    if (!channel || !channel.clientId) return;
+    let [conversation] = await db.select().from(inboxConversations).where(
+      and6(
+        eq6(inboxConversations.clientId, channel.clientId),
+        eq6(inboxConversations.contactIdentifier, senderId),
+        eq6(inboxConversations.primaryChannelType, channelType)
+      )
+    );
+    if (!conversation) {
+      [conversation] = await db.insert(inboxConversations).values({
+        clientId: channel.clientId,
+        contactName: senderName || `${channelType === "instagram" ? "IG" : "FB"} User`,
+        contactIdentifier: senderId,
+        primaryChannelType: channelType,
+        primaryChannelId: channel.id,
+        status: "open",
+        priority: "normal",
+        lastMessageAt: /* @__PURE__ */ new Date(),
+        lastMessagePreview: `Comment: ${commentText.substring(0, 100)}`,
+        unreadCount: 1,
+        tags: ["comment"]
+      }).returning();
+    }
+    await db.insert(inboxMessages2).values({
+      conversationId: conversation.id,
+      channelType,
+      channelId: channel.id,
+      messageType: "incoming",
+      direction: "inbound",
+      content: commentText,
+      contentType: "text",
+      fromIdentifier: senderId,
+      fromName: senderName || "",
+      toIdentifier: pageId,
+      toName: channel.channelName || "",
+      externalMessageId: commentId,
+      threadId: postId,
+      hasAttachments: false,
+      status: "delivered",
+      metadata: {
+        platform: channelType,
+        messageSubtype: "comment",
+        postId,
+        commentId
+      }
+    });
+    console.log(`\u2705 Processed ${channelType} comment from ${senderName}`);
+  } catch (error) {
+    console.error("Error processing comment:", error);
+  }
+}
+function getRedirectUri(req) {
+  const protocol = req.protocol;
+  const host = req.get("host");
+  return `${protocol}://${host}/api/meta/oauth/callback`;
+}
+var meta_default = router2;
+
+// server/routes/tasks.ts
+init_db();
+init_schema();
+import { Router as Router3 } from "express";
+import { eq as eq7, and as and7, desc as desc3 } from "drizzle-orm";
+import { z as z2 } from "zod";
+
+// server/services/github-sync.ts
+var GitHubSyncService = class {
+  token;
+  repo;
+  owner;
+  baseUrl = "https://api.github.com";
+  constructor() {
+    this.token = process.env.GITHUB_TOKEN || "";
+    const repoPath = "53947/The_Blue_Link";
+    const [owner, repo] = repoPath.split("/");
+    this.owner = owner;
+    this.repo = repo;
+    if (!this.token) {
+      console.warn("[GitHubSync] GITHUB_TOKEN not found - GitHub sync disabled");
+    }
+  }
+  /**
+   * Check if GitHub sync is enabled
+   */
+  isEnabled() {
+    return !!this.token;
+  }
+  /**
+   * Create a new GitHub issue
+   */
+  async createIssue(options) {
+    if (!this.isEnabled()) {
+      console.warn("[GitHubSync] Skipping issue creation - not configured");
+      return null;
+    }
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/repos/${this.owner}/${this.repo}/issues`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `token ${this.token}`,
+            "Accept": "application/vnd.github.v3+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            title: options.title,
+            body: options.body,
+            labels: options.labels || [],
+            assignees: options.assignees || []
+          })
+        }
+      );
+      if (!response.ok) {
+        const error = await response.text();
+        console.error("[GitHubSync] Failed to create issue:", error);
+        return null;
+      }
+      const issue = await response.json();
+      console.log(`[GitHubSync] Created issue #${issue.number}: ${options.title}`);
+      return issue;
+    } catch (error) {
+      console.error("[GitHubSync] Error creating issue:", error);
+      return null;
+    }
+  }
+  /**
+   * Update an existing GitHub issue
+   */
+  async updateIssue(options) {
+    if (!this.isEnabled()) {
+      console.warn("[GitHubSync] Skipping issue update - not configured");
+      return null;
+    }
+    try {
+      const updateData = {};
+      if (options.title) updateData.title = options.title;
+      if (options.body) updateData.body = options.body;
+      if (options.state) updateData.state = options.state;
+      if (options.labels) updateData.labels = options.labels;
+      const response = await fetch(
+        `${this.baseUrl}/repos/${this.owner}/${this.repo}/issues/${options.issueNumber}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Authorization": `token ${this.token}`,
+            "Accept": "application/vnd.github.v3+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(updateData)
+        }
+      );
+      if (!response.ok) {
+        const error = await response.text();
+        console.error("[GitHubSync] Failed to update issue:", error);
+        return null;
+      }
+      const issue = await response.json();
+      console.log(`[GitHubSync] Updated issue #${issue.number}`);
+      return issue;
+    } catch (error) {
+      console.error("[GitHubSync] Error updating issue:", error);
+      return null;
+    }
+  }
+  /**
+   * Add a comment to an existing GitHub issue
+   */
+  async addComment(issueNumber, body) {
+    if (!this.isEnabled()) {
+      return false;
+    }
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/repos/${this.owner}/${this.repo}/issues/${issueNumber}/comments`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `token ${this.token}`,
+            "Accept": "application/vnd.github.v3+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ body })
+        }
+      );
+      if (!response.ok) {
+        const error = await response.text();
+        console.error("[GitHubSync] Failed to add comment:", error);
+        return false;
+      }
+      console.log(`[GitHubSync] Added comment to issue #${issueNumber}`);
+      return true;
+    } catch (error) {
+      console.error("[GitHubSync] Error adding comment:", error);
+      return false;
+    }
+  }
+  /**
+   * Format task data into GitHub issue format
+   */
+  formatTaskAsIssue(task) {
+    const labels = [];
+    if (task.assignedTo) {
+      labels.push(`assigned-to-${task.assignedTo.toLowerCase()}`);
+    }
+    if (task.priority) {
+      labels.push(`priority-${task.priority}`);
+    }
+    if (task.tags && Array.isArray(task.tags)) {
+      labels.push(...task.tags);
+    }
+    const bodyParts = [];
+    if (task.description) {
+      bodyParts.push(task.description);
+      bodyParts.push("");
+    }
+    bodyParts.push("---");
+    bodyParts.push("**Task Details:**");
+    bodyParts.push(`- **Assigned To:** ${task.assignedTo || "Unassigned"}`);
+    bodyParts.push(`- **Assigned By:** ${task.assignedBy || "Unknown"}`);
+    bodyParts.push(`- **Priority:** ${task.priority || "medium"}`);
+    bodyParts.push(`- **Status:** ${task.status || "todo"}`);
+    if (task.dueDate) {
+      bodyParts.push(`- **Due Date:** ${new Date(task.dueDate).toLocaleDateString()}`);
+    }
+    bodyParts.push("");
+    bodyParts.push(`*This issue was automatically created from the TriadBlue task management system (Task ID: ${task.id})*`);
+    return {
+      title: task.title,
+      body: bodyParts.join("\n"),
+      labels
+    };
+  }
+  /**
+   * Sync task status to GitHub issue state
+   */
+  getIssueState(taskStatus) {
+    return taskStatus === "completed" || taskStatus === "cancelled" ? "closed" : "open";
+  }
+};
+var githubSync = new GitHubSyncService();
+
+// server/routes/tasks.ts
+var tasksRouter = Router3();
+tasksRouter.get("/", async (req, res) => {
+  try {
+    const clientId = req.user?.id;
+    if (!clientId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const allTasks = await db.select().from(tasks).where(eq7(tasks.clientId, clientId)).orderBy(desc3(tasks.createdAt));
+    res.json(allTasks);
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ message: "Failed to fetch tasks" });
+  }
+});
+tasksRouter.get("/:id", async (req, res) => {
+  try {
+    const clientId = req.user?.id;
+    const taskId = parseInt(req.params.id);
+    if (!clientId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const [task] = await db.select().from(tasks).where(and7(
+      eq7(tasks.id, taskId),
+      eq7(tasks.clientId, clientId)
+    ));
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    res.json(task);
+  } catch (error) {
+    console.error("Error fetching task:", error);
+    res.status(500).json({ message: "Failed to fetch task" });
+  }
+});
+tasksRouter.post("/", async (req, res) => {
+  try {
+    const clientId = req.user?.id;
+    if (!clientId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const taskSchema = z2.object({
+      title: z2.string().min(1),
+      description: z2.string().optional(),
+      status: z2.enum(["todo", "in_progress", "completed", "cancelled"]).default("todo"),
+      priority: z2.enum(["low", "medium", "high", "urgent"]).default("medium"),
+      assignedTo: z2.string().optional(),
+      assignedBy: z2.string().optional(),
+      dueDate: z2.string().optional(),
+      tags: z2.array(z2.string()).optional(),
+      relatedTo: z2.any().optional()
+    });
+    const validatedData = taskSchema.parse(req.body);
+    const [newTask] = await db.insert(tasks).values({
+      ...validatedData,
+      clientId,
+      dueDate: validatedData.dueDate ? new Date(validatedData.dueDate) : null
+    }).returning();
+    if (githubSync.isEnabled()) {
+      githubSync.createIssue(githubSync.formatTaskAsIssue(newTask)).then(async (issue) => {
+        if (issue) {
+          await db.update(tasks).set({
+            githubIssueId: `#${issue.number}`,
+            githubIssueUrl: issue.html_url
+          }).where(eq7(tasks.id, newTask.id));
+          console.log(`[Tasks] Task ${newTask.id} synced to GitHub issue #${issue.number}`);
+        }
+      }).catch((error) => {
+        console.error(`[Tasks] Failed to sync task ${newTask.id} to GitHub:`, error);
+      });
+    }
+    if (newTask.assignedTo && newTask.assignedTo !== "unassigned") {
+      console.log(`[Tasks] Task ${newTask.id} assigned to ${newTask.assignedTo}`);
+    }
+    res.status(201).json(newTask);
+  } catch (error) {
+    console.error("Error creating task:", error);
+    if (error instanceof z2.ZodError) {
+      return res.status(400).json({ message: "Validation error", errors: error.errors });
+    }
+    res.status(500).json({ message: "Failed to create task" });
+  }
+});
+tasksRouter.patch("/:id", async (req, res) => {
+  try {
+    const clientId = req.user?.id;
+    const taskId = parseInt(req.params.id);
+    if (!clientId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const updateSchema = z2.object({
+      title: z2.string().min(1).optional(),
+      description: z2.string().optional(),
+      status: z2.enum(["todo", "in_progress", "completed", "cancelled"]).optional(),
+      priority: z2.enum(["low", "medium", "high", "urgent"]).optional(),
+      assignedTo: z2.string().optional(),
+      assignedBy: z2.string().optional(),
+      dueDate: z2.string().optional(),
+      tags: z2.array(z2.string()).optional(),
+      relatedTo: z2.any().optional()
+    });
+    const validatedData = updateSchema.parse(req.body);
+    const updateData = {
+      ...validatedData,
+      updatedAt: /* @__PURE__ */ new Date()
+    };
+    if (validatedData.dueDate !== void 0) {
+      updateData.dueDate = validatedData.dueDate ? new Date(validatedData.dueDate) : null;
+    }
+    if (validatedData.status === "completed") {
+      updateData.completedAt = /* @__PURE__ */ new Date();
+    }
+    const [updatedTask] = await db.update(tasks).set(updateData).where(and7(
+      eq7(tasks.id, taskId),
+      eq7(tasks.clientId, clientId)
+    )).returning();
+    if (!updatedTask) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    if (githubSync.isEnabled() && updatedTask.githubIssueId) {
+      const issueNumber = parseInt(updatedTask.githubIssueId.replace("#", ""));
+      const labels = [];
+      if (updatedTask.assignedTo) {
+        labels.push(`assigned-to-${updatedTask.assignedTo.toLowerCase()}`);
+      }
+      if (updatedTask.priority) {
+        labels.push(`priority-${updatedTask.priority}`);
+      }
+      if (updatedTask.tags && Array.isArray(updatedTask.tags)) {
+        labels.push(...updatedTask.tags);
+      }
+      githubSync.updateIssue({
+        issueNumber,
+        title: validatedData.title,
+        body: validatedData.description,
+        state: githubSync.getIssueState(updatedTask.status),
+        labels
+      }).catch((error) => {
+        console.error(`[Tasks] Failed to sync task ${updatedTask.id} to GitHub:`, error);
+      });
+      if (validatedData.status === "completed") {
+        const completedAt = updatedTask.completedAt || /* @__PURE__ */ new Date();
+        githubSync.addComment(
+          issueNumber,
+          `\u2705 Task marked as completed in TriadBlue task management system.
+
+**Completed:** ${completedAt.toLocaleString("en-US", { dateStyle: "full", timeStyle: "short" })}`
+        ).catch((error) => {
+          console.error(`[Tasks] Failed to add completion comment:`, error);
+        });
+      }
+    }
+    if (validatedData.assignedTo) {
+      console.log(`[Tasks] Task ${updatedTask.id} reassigned to ${validatedData.assignedTo}`);
+    }
+    res.json(updatedTask);
+  } catch (error) {
+    console.error("Error updating task:", error);
+    if (error instanceof z2.ZodError) {
+      return res.status(400).json({ message: "Validation error", errors: error.errors });
+    }
+    res.status(500).json({ message: "Failed to update task" });
+  }
+});
+tasksRouter.delete("/:id", async (req, res) => {
+  try {
+    const clientId = req.user?.id;
+    const taskId = parseInt(req.params.id);
+    if (!clientId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const [deletedTask] = await db.delete(tasks).where(and7(
+      eq7(tasks.id, taskId),
+      eq7(tasks.clientId, clientId)
+    )).returning();
+    if (!deletedTask) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    res.json({ message: "Task deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    res.status(500).json({ message: "Failed to delete task" });
+  }
+});
 
 // server/routes.ts
 init_schema();
@@ -2231,9 +5454,10 @@ var EmailService = class {
       host: process.env.SMTP_HOST || "smtp.gmail.com",
       port: parseInt(process.env.SMTP_PORT || "587"),
       secure: false,
+      // Use TLS (STARTTLS) on port 587
       auth: {
-        user: process.env.SMTP_USER || process.env.EMAIL_USER,
-        pass: process.env.SMTP_PASS || process.env.EMAIL_PASS
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
       }
     });
   }
@@ -2244,7 +5468,7 @@ var EmailService = class {
     try {
       const htmlContent = this.generateVerificationEmailHTML(companyName, verificationCode);
       const mailOptions = {
-        from: process.env.FROM_EMAIL || "le847@icloud.com",
+        from: process.env.FROM_EMAIL,
         to: email,
         subject: `Verify Your Email - ${verificationCode}`,
         html: htmlContent
@@ -2260,7 +5484,7 @@ var EmailService = class {
     try {
       const htmlContent = this.generateEmailChangeNotificationHTML(companyName, newEmail);
       const mailOptions = {
-        from: process.env.FROM_EMAIL || "le847@icloud.com",
+        from: process.env.FROM_EMAIL,
         to: oldEmail,
         subject: `Email Address Changed - Action May Be Required`,
         html: htmlContent
@@ -2276,7 +5500,7 @@ var EmailService = class {
     try {
       const htmlContent = this.generateReportHTML(data);
       const mailOptions = {
-        from: process.env.FROM_EMAIL || "le847@icloud.com",
+        from: process.env.FROM_EMAIL,
         to: email,
         subject: `Your Digital Presence Assessment Results - Score: ${data.digitalScore}`,
         html: htmlContent
@@ -2294,7 +5518,7 @@ var EmailService = class {
       const sentiment = data.rating <= 2 ? "Negative" : data.rating >= 4 ? "Positive" : "Neutral";
       const urgency = data.rating <= 2 ? "\u26A0\uFE0F URGENT" : "";
       const mailOptions = {
-        from: process.env.FROM_EMAIL || "le847@icloud.com",
+        from: process.env.FROM_EMAIL,
         to: email,
         subject: `${urgency} New ${sentiment} Review on ${data.platform} - ${data.rating} ${data.rating === 1 ? "Star" : "Stars"}`,
         html: htmlContent
@@ -2303,6 +5527,86 @@ var EmailService = class {
       return true;
     } catch (error) {
       console.error("Error sending review alert email:", error);
+      return false;
+    }
+  }
+  async sendEnrollmentConfirmation(email, data) {
+    try {
+      const htmlContent = this.generateEnrollmentConfirmationHTML(data);
+      const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: email,
+        subject: `Welcome to ${data.planName} - Your Digital Growth Journey Begins!`,
+        html: htmlContent
+      };
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error("Error sending enrollment confirmation email:", error);
+      return false;
+    }
+  }
+  async sendPathwayReminderEmail(email, data) {
+    try {
+      const htmlContent = this.generatePathwayReminderHTML(data);
+      const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: email,
+        subject: `Still deciding? Your Digital Growth Plan is ready, ${data.businessName}`,
+        html: htmlContent
+      };
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error("Error sending pathway reminder email:", error);
+      return false;
+    }
+  }
+  async sendCheckoutAbandonmentEmail(email, data) {
+    try {
+      const htmlContent = this.generateCheckoutAbandonmentHTML(data);
+      const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: email,
+        subject: `Complete your enrollment - ${data.planName} is waiting for you!`,
+        html: htmlContent
+      };
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error("Error sending checkout abandonment email:", error);
+      return false;
+    }
+  }
+  async sendMagicLinkEmail(email, magicLink, companyName) {
+    try {
+      const htmlContent = this.generateMagicLinkHTML(magicLink, companyName);
+      const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: email,
+        subject: "Your Secure Login Link - Business Blueprint",
+        html: htmlContent
+      };
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error("Error sending magic link email:", error);
+      return false;
+    }
+  }
+  async sendThankYouIntroduction(email, data) {
+    try {
+      const htmlContent = this.generateThankYouIntroductionHTML(data);
+      const mailOptions = {
+        from: process.env.FROM_EMAIL,
+        to: email,
+        subject: `Meet Coach Blue \u{1F916} - Your AI Guide to Digital Success`,
+        html: htmlContent
+      };
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error("Error sending thank you introduction email:", error);
       return false;
     }
   }
@@ -2492,6 +5796,392 @@ var EmailService = class {
 </body>
 </html>`;
   }
+  generateEnrollmentConfirmationHTML(data) {
+    const pathwayColor = data.pathway === "msp" ? "#8B5CF6" : "#FF6B35";
+    const pathwayName = data.pathway === "msp" ? "Managed Services" : "DIY Platform";
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Business Blueprint</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, ${pathwayColor}, #0057FF); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .plan-box { background: #f8f9fa; border: 2px solid ${pathwayColor}; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .feature-list { list-style: none; padding: 0; margin: 20px 0; }
+        .feature-list li { padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
+        .feature-list li:before { content: "\u2713 "; color: ${pathwayColor}; font-weight: bold; margin-right: 10px; }
+        .cta-button { display: inline-block; background: ${pathwayColor}; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .next-steps { background: #E0F2FE; border-left: 4px solid #0284C7; padding: 15px; margin: 20px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>\u{1F389} Welcome to Business Blueprint!</h1>
+            <p style="font-size: 18px; margin-top: 10px;">${data.businessName}</p>
+        </div>
+        
+        <div class="content">
+            <p>Congratulations! You've taken the first step toward transforming your digital presence.</p>
+            
+            <div class="plan-box">
+                <h2 style="color: ${pathwayColor}; margin-top: 0;">${data.planName}</h2>
+                <p style="font-size: 14px; color: #666; margin-bottom: 15px;">${pathwayName} Pathway</p>
+                <p style="font-size: 32px; font-weight: bold; color: #333; margin: 10px 0;">
+                    $${data.monthlyPrice.toFixed(2)}<span style="font-size: 16px; font-weight: normal;">/month</span>
+                </p>
+                <p style="font-size: 14px; color: #666;">Next billing date: ${data.nextBillingDate.toLocaleDateString()}</p>
+            </div>
+            
+            <h3>What's Included:</h3>
+            <ul class="feature-list">
+                ${data.features.map((feature) => `<li>${feature}</li>`).join("")}
+            </ul>
+            
+            <div class="next-steps">
+                <h4 style="color: #0284C7; margin-top: 0;">\u{1F680} Next Steps:</h4>
+                <ol style="margin: 10px 0; padding-left: 20px;">
+                    <li>Check your email for login credentials</li>
+                    <li>Access your client portal dashboard</li>
+                    <li>Complete your business profile setup</li>
+                    ${data.pathway === "msp" ? "<li>Your dedicated account manager will contact you within 24 hours</li>" : "<li>Start using the platform tools immediately</li>"}
+                </ol>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/client-login" class="cta-button">
+                    Access Your Dashboard
+                </a>
+            </div>
+            
+            <div style="background: #FEF3C7; border: 1px solid #F59E0B; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                <p style="margin: 0;"><strong>\u{1F4DE} Need Help?</strong> Our support team is here for you:</p>
+                <p style="margin: 5px 0 0 0;">Email: support@businessblueprint.io | Live Chat available in your dashboard</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Thank you for choosing Business Blueprint!</p>
+            <p>We're excited to help you grow your digital presence.</p>
+            <p><small>\xA9 2024 businessblueprint.io</small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
+  generatePathwayReminderHTML(data) {
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Digital Growth Plan is Ready</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #FF6B35, #8B5CF6); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .score-badge { background: rgba(255,255,255,0.2); display: inline-block; padding: 10px 20px; border-radius: 20px; font-size: 24px; font-weight: bold; margin: 10px 0; }
+        .cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 10px; }
+        .secondary-button { background: #8B5CF6; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .highlight-box { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 15px; margin: 20px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>\u{1F4CA} Your Digital Growth Plan is Ready!</h1>
+            <p style="font-size: 18px; margin-top: 10px;">${data.businessName}</p>
+            <div class="score-badge">Digital IQ Score: ${data.digitalScore}</div>
+        </div>
+        
+        <div class="content">
+            <p>Hi there,</p>
+            
+            <p>We noticed you completed your Digital Presence Assessment but haven't selected a pathway yet. Your personalized growth plan is ready and waiting!</p>
+            
+            <div class="highlight-box">
+                <p style="margin: 0;"><strong>\u{1F3AF} Quick Reminder:</strong> Businesses that implement their Digital Growth Plan within 30 days see 3x faster results than those who wait.</p>
+            </div>
+            
+            <h3>Choose Your Path:</h3>
+            
+            <p><strong>Option 1: DIY Platform</strong> - $49/month<br>
+            Perfect if you want hands-on control and prefer to manage everything yourself.</p>
+            
+            <p><strong>Option 2: Managed Services</strong> - Starting at $299/month<br>
+            Let our experts handle everything while you focus on running your business.</p>
+            
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/assessment-checkout?id=${data.assessmentId}" class="cta-button">
+                    Choose Your Pathway
+                </a>
+                
+                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/dashboard/${data.assessmentId}" class="cta-button secondary-button">
+                    Review My Assessment
+                </a>
+            </div>
+            
+            <p style="margin-top: 30px;">Have questions? Just reply to this email - we're here to help!</p>
+        </div>
+        
+        <div class="footer">
+            <p>Ready to transform your digital presence?</p>
+            <p><small>\xA9 2024 businessblueprint.io</small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
+  generateCheckoutAbandonmentHTML(data) {
+    const pathwayColor = data.pathway === "msp" ? "#8B5CF6" : "#FF6B35";
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Enrollment</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, ${pathwayColor}, #0057FF); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .plan-box { background: #f8f9fa; border: 2px solid ${pathwayColor}; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
+        .cta-button { display: inline-block; background: ${pathwayColor}; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .benefit-list { list-style: none; padding: 0; margin: 20px 0; }
+        .benefit-list li { padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
+        .benefit-list li:before { content: "\u2713 "; color: ${pathwayColor}; font-weight: bold; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>\u23F0 You're Almost There!</h1>
+            <p style="font-size: 18px; margin-top: 10px;">${data.businessName}</p>
+        </div>
+        
+        <div class="content">
+            <p>Hi,</p>
+            
+            <p>We noticed you started enrolling in <strong>${data.planName}</strong> but didn't complete the process. No worries - we saved your spot!</p>
+            
+            <div class="plan-box">
+                <h2 style="color: ${pathwayColor}; margin-top: 0;">${data.planName}</h2>
+                <p style="font-size: 32px; font-weight: bold; margin: 10px 0;">
+                    $${data.monthlyPrice.toFixed(2)}<span style="font-size: 16px; font-weight: normal;">/month</span>
+                </p>
+            </div>
+            
+            <h3>Why complete your enrollment today:</h3>
+            <ul class="benefit-list">
+                <li>Start seeing results within the first week</li>
+                <li>Get expert guidance from day one</li>
+                <li>Lock in your current pricing</li>
+                <li>Cancel anytime - no long-term commitment</li>
+            </ul>
+            
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/assessment-checkout?id=${data.assessmentId}" class="cta-button">
+                    Complete My Enrollment
+                </a>
+            </div>
+            
+            <p style="margin-top: 30px; text-align: center; color: #666;">
+                Need help or have questions? Just reply to this email.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>Your digital growth journey is just one click away!</p>
+            <p><small>\xA9 2024 businessblueprint.io</small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
+  generateMagicLinkHTML(magicLink, companyName) {
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Secure Login Link</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #0057FF, #8B5CF6); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .info-box { background: #E0F2FE; border-left: 4px solid #0057FF; padding: 20px; margin: 20px 0; border-radius: 4px; }
+        .cta-button { display: inline-block; background: #0057FF; color: white; padding: 18px 36px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; font-size: 18px; box-shadow: 0 4px 12px rgba(0,87,255,0.3); }
+        .cta-button:hover { background: #0041CC; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .security-note { background: #FFF4E6; padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 14px; }
+        .expiry-warning { color: #FF6B35; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>\u{1F510} Secure Login Link</h1>
+            <p style="font-size: 18px; margin-top: 10px;">${companyName || "Business Blueprint"}</p>
+        </div>
+        
+        <div class="content">
+            <p>Hello,</p>
+            
+            <p>You requested access to your Business Blueprint dashboard. Click the button below to log in securely:</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="${magicLink}" class="cta-button">
+                    Access My Dashboard
+                </a>
+            </div>
+            
+            <div class="info-box">
+                <h3 style="margin-top: 0;">Why No Password?</h3>
+                <p style="margin-bottom: 0;">We use email-based authentication for maximum security. This means:</p>
+                <ul style="margin: 10px 0;">
+                    <li>No passwords to remember or forget</li>
+                    <li>No risk of password breaches</li>
+                    <li>Access controlled by your email inbox</li>
+                    <li>Each login link is unique and time-limited</li>
+                </ul>
+            </div>
+            
+            <div class="security-note">
+                <p style="margin: 0;"><strong>\u23F1\uFE0F Important:</strong> This link will expire in <span class="expiry-warning">15 minutes</span> for your security.</p>
+                <p style="margin: 10px 0 0 0;">If it expires, simply return to the login page and request a new link.</p>
+            </div>
+            
+            <p style="margin-top: 30px; color: #666; font-size: 14px;">
+                <strong>Didn't request this login?</strong> You can safely ignore this email. The link will expire automatically.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>Your security is our priority.</p>
+            <p><small>\xA9 2024 businessblueprint.io</small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
+  generateThankYouIntroductionHTML(data) {
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Digital Success Blueprint is Ready</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #0057FF, #FFA500); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .urgency-box { background: #FFF4E6; border-left: 4px solid #FFA500; padding: 20px; margin: 20px 0; border-radius: 4px; }
+        .cta-button { display: inline-block; background: #FFA500; color: white; padding: 18px 36px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 15px 0; font-size: 18px; box-shadow: 0 4px 12px rgba(255,165,0,0.3); }
+        .cta-button:hover { background: #FF8C00; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .benefit-box { background: #E0F2FE; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .stat-highlight { font-size: 24px; font-weight: bold; color: #0057FF; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>\u{1F3AF} ${data.businessName}</h1>
+            <p style="font-size: 20px; margin-top: 10px;">Your Digital Success Blueprint is Ready</p>
+        </div>
+        
+        <div class="content">
+            <p><strong>Here's the truth:</strong></p>
+            
+            <p>Right now, potential customers are searching for businesses like yours. They're reading reviews, checking social media, and deciding who to call.</p>
+            
+            <p><span class="stat-highlight">93%</span> won't even consider you if they can't verify your business online.</p>
+            
+            <div class="urgency-box">
+                <p style="margin: 0;"><strong>\u26A1 The window is closing.</strong></p>
+                <p style="margin: 10px 0 0 0;">Every day you wait, your competitors are capturing customers who should be yours. The businesses that act within 7 days see results 3x faster than those who delay.</p>
+            </div>
+            
+            <h2 style="color: #0057FF;">What You Need Right Now</h2>
+            
+            <p>Based on your assessment, here's exactly what will move the needle for ${data.businessName}:</p>
+            
+            <div class="benefit-box">
+                <h3 style="margin-top: 0; color: #0057FF;">\u{1F5FA}\uFE0F Step 1: Get Found (Week 1)</h3>
+                <p><strong>Listings Management ($44/mo)</strong> - Your business information synced across 200+ directories. When someone searches, you show up. Consistently. Everywhere.</p>
+                <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Without this, you're invisible to 68% of local searchers.</p>
+            </div>
+            
+            <div class="benefit-box">
+                <h3 style="margin-top: 0; color: #0057FF;">\u2B50 Step 2: Build Trust (Week 2)</h3>
+                <p><strong>Reviews Management ($25/mo)</strong> - Monitor every review, respond instantly with AI assistance, turn feedback into 5-star ratings.</p>
+                <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">88% of customers trust online reviews as much as personal recommendations.</p>
+            </div>
+            
+            <div class="benefit-box">
+                <h3 style="margin-top: 0; color: #0057FF;">\u{1F916} Step 3: Stay Consistent (Week 3)</h3>
+                <p><strong>AI Business Coach (pay as you use)</strong> - Your 24/7 marketing strategist. Get personalized guidance, automate repetitive tasks, avoid costly mistakes.</p>
+                <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;"><em>Everyone gets the same expert-level guidance regardless of what they spend. You pay only for what you use.</em></p>
+            </div>
+            
+            <h2 style="color: #0057FF; margin-top: 40px;">Two Paths Forward</h2>
+            
+            <p><strong>DIY Path:</strong> Start with Listings ($44) + Reviews ($25) = $69/mo. Add AI Coach when you need guidance. Perfect if you want hands-on control.</p>
+            
+            <p><strong>Done-For-You:</strong> Standard MSP ($313/mo) - We handle everything. 10 hours of expert work monthly. You focus on running your business while we build your digital presence.</p>
+            
+            <div style="text-align: center; margin: 40px 0;">
+                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/marketplace" class="cta-button">
+                    \u{1F680} Start Building Your Presence Now
+                </a>
+            </div>
+            
+            <div class="urgency-box">
+                <h3 style="color: #FFA500; margin-top: 0;">\u23F0 Limited Time: First Month Analysis Included</h3>
+                <p style="margin: 0;">Subscribe in the next 48 hours and we'll include a comprehensive competitor analysis ($299 value) showing exactly where you stand and how to overtake them.</p>
+            </div>
+            
+            <h3 style="color: #0057FF;">What Happens After You Subscribe:</h3>
+            <ol>
+                <li><strong>Instant Access:</strong> Your dashboard activates immediately</li>
+                <li><strong>Quick Wins:</strong> We identify 3 changes you can make today for immediate impact</li>
+                <li><strong>Week 1 Results:</strong> You'll see your first reviews come in and rankings improve</li>
+                <li><strong>30-Day Guarantee:</strong> Not seeing results? Full refund, no questions asked</li>
+            </ol>
+            
+            <p style="margin-top: 30px;"><strong>Questions? Text me directly:</strong> Just reply to this email and I'll personally respond within 2 hours.</p>
+            
+            <p>Your competitors aren't waiting. Don't let them win customers that should be yours.</p>
+            
+            <p><strong>Coach Blue \u{1F916}</strong><br>
+            Business Blueprint AI<br>
+            <em>P.S. - Check your inbox for your detailed assessment report. It shows exactly where you're losing customers right now.</em></p>
+        </div>
+        
+        <div class="footer">
+            <p>Business Blueprint - Turning Assessments Into Action</p>
+            <p>Get Found \u2022 Get Customers \u2022 Get Business</p>
+            <p><small>\xA9 2024 businessblueprint.io</small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
   generateReviewAlertHTML(data) {
     const ratingColor = data.rating <= 2 ? "#DC2626" : data.rating >= 4 ? "#16A34A" : "#F59E0B";
     const sentiment = data.rating <= 2 ? "Negative" : data.rating >= 4 ? "Positive" : "Neutral";
@@ -2567,7 +6257,7 @@ var EmailService = class {
 init_db();
 init_schema();
 import nodemailer2 from "nodemailer";
-import { eq as eq2, and as and2 } from "drizzle-orm";
+import { eq as eq8, and as and8 } from "drizzle-orm";
 var InboxEmailService = class {
   transporter;
   constructor() {
@@ -2588,17 +6278,17 @@ var InboxEmailService = class {
    * @throws Error with details about the failure
    */
   async sendMessage(conversationId, content, fromName) {
-    const [conversation] = await db.select().from(inboxConversations).where(eq2(inboxConversations.id, conversationId)).limit(1);
+    const [conversation] = await db.select().from(inboxConversations).where(eq8(inboxConversations.id, conversationId)).limit(1);
     if (!conversation) {
       throw new Error("Conversation not found");
     }
     if (conversation.primaryChannelType !== "email") {
       throw new Error("Conversation is not an email thread");
     }
-    const [channelConnection] = await db.select().from(inboxChannelConnections).where(and2(
-      eq2(inboxChannelConnections.clientId, conversation.clientId),
-      eq2(inboxChannelConnections.channelType, "email"),
-      eq2(inboxChannelConnections.status, "active")
+    const [channelConnection] = await db.select().from(inboxChannelConnections).where(and8(
+      eq8(inboxChannelConnections.clientId, conversation.clientId),
+      eq8(inboxChannelConnections.channelType, "email"),
+      eq8(inboxChannelConnections.status, "active")
     )).limit(1);
     const fromEmail = channelConnection?.channelIdentifier || process.env.FROM_EMAIL || "inbox@businessblueprint.io";
     const toEmail = conversation.contactIdentifier;
@@ -2670,10 +6360,10 @@ var InboxEmailService = class {
    */
   async handleIncomingEmail(data) {
     try {
-      let conversation = await db.select().from(inboxConversations).where(and2(
-        eq2(inboxConversations.clientId, data.clientId),
-        eq2(inboxConversations.contactIdentifier, data.from),
-        eq2(inboxConversations.primaryChannelType, "email")
+      let conversation = await db.select().from(inboxConversations).where(and8(
+        eq8(inboxConversations.clientId, data.clientId),
+        eq8(inboxConversations.contactIdentifier, data.from),
+        eq8(inboxConversations.primaryChannelType, "email")
       )).limit(1);
       let conversationId;
       if (conversation.length === 0) {
@@ -2692,7 +6382,7 @@ var InboxEmailService = class {
         await db.update(inboxConversations).set({
           subject: data.subject,
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq2(inboxConversations.id, conversationId));
+        }).where(eq8(inboxConversations.id, conversationId));
       }
       const [message] = await db.insert(inboxMessages2).values({
         conversationId,
@@ -3169,7 +6859,7 @@ var PricingEngine = class {
 };
 
 // server/services/nmi.ts
-import { URLSearchParams } from "url";
+import { URLSearchParams as URLSearchParams2 } from "url";
 var NMIService = class {
   static BASE_URL = "https://secure.nmi.com/api/transact.php";
   static API_KEY = process.env.NMI_API_KEY;
@@ -3197,7 +6887,7 @@ var NMIService = class {
   static async createSubscription(request) {
     this.validateConfig();
     const monthFrequency = this.getMonthlyFrequency(request.billingCycle);
-    const subscriptionData = new URLSearchParams({
+    const subscriptionData = new URLSearchParams2({
       security_key: this.API_KEY,
       recurring: "add_subscription",
       payment_token: request.paymentToken,
@@ -3241,7 +6931,7 @@ var NMIService = class {
    */
   static async updateSubscription(subscriptionId, updates) {
     this.validateConfig();
-    const updateData = new URLSearchParams({
+    const updateData = new URLSearchParams2({
       security_key: this.API_KEY,
       recurring: "update_subscription",
       subscription_id: subscriptionId,
@@ -3267,7 +6957,7 @@ var NMIService = class {
    */
   static async cancelSubscription(subscriptionId) {
     this.validateConfig();
-    const cancelData = new URLSearchParams({
+    const cancelData = new URLSearchParams2({
       security_key: this.API_KEY,
       recurring: "delete_subscription",
       subscription_id: subscriptionId
@@ -3292,7 +6982,7 @@ var NMIService = class {
    */
   static async processTransaction(paymentToken, amount, orderDescription) {
     this.validateConfig();
-    const transactionData = new URLSearchParams({
+    const transactionData = new URLSearchParams2({
       security_key: this.API_KEY,
       type: "sale",
       payment_token: paymentToken,
@@ -3333,7 +7023,7 @@ var NMIService = class {
    * Parse NMI response string into object
    */
   static parseNMIResponse(responseText) {
-    const params = new URLSearchParams(responseText);
+    const params = new URLSearchParams2(responseText);
     const result = {};
     params.forEach((value, key) => {
       result[key] = value;
@@ -3363,7 +7053,7 @@ var NMIService = class {
 // server/services/productRecommendations.ts
 init_db();
 init_schema();
-import { eq as eq3 } from "drizzle-orm";
+import { eq as eq9 } from "drizzle-orm";
 var ProductRecommendationService = class {
   /**
    * Generate product recommendations based on assessment scores
@@ -3402,7 +7092,7 @@ var ProductRecommendationService = class {
     if (weakCategories.length === 0) {
       return [];
     }
-    const allProducts = await db.select().from(products).where(eq3(products.isActive, true));
+    const allProducts = await db.select().from(products).where(eq9(products.isActive, true));
     for (const weakCat of weakCategories) {
       const matchingProducts = allProducts.filter(
         (product) => product.improvesCategory?.includes(weakCat.category)
@@ -3491,7 +7181,7 @@ var ProductRecommendationService = class {
       categoryAffected: assessmentProductRecommendations.categoryAffected,
       isAccepted: assessmentProductRecommendations.isAccepted,
       isPurchased: assessmentProductRecommendations.isPurchased
-    }).from(assessmentProductRecommendations).innerJoin(products, eq3(assessmentProductRecommendations.productId, products.id)).where(eq3(assessmentProductRecommendations.assessmentId, assessmentId));
+    }).from(assessmentProductRecommendations).innerJoin(products, eq9(assessmentProductRecommendations.productId, products.id)).where(eq9(assessmentProductRecommendations.assessmentId, assessmentId));
     return recs;
   }
 };
@@ -4314,8 +8004,8 @@ var reviewAI = new ReviewAIService();
 init_jwt();
 init_schema();
 init_db();
-import { eq as eq5, desc as desc2, and as and4 } from "drizzle-orm";
-import { z } from "zod";
+import { eq as eq11, desc as desc4, and as and10 } from "drizzle-orm";
+import { z as z3 } from "zod";
 
 // server/middleware/auth.ts
 init_jwt();
@@ -4517,6 +8207,28 @@ async function registerRoutes(app2) {
       });
     }
   });
+  app2.get("/api/assessments", async (req, res) => {
+    try {
+      const { email } = req.query;
+      if (!email || typeof email !== "string") {
+        return res.status(400).json({ message: "Email parameter is required" });
+      }
+      const assessments3 = await storage.getAssessmentsByEmail(email);
+      res.json(assessments3);
+    } catch (error) {
+      console.error("Error fetching assessments:", error);
+      res.status(500).json({ message: "Failed to fetch assessments" });
+    }
+  });
+  app2.get("/api/admin/assessments", isAuthenticated, async (req, res) => {
+    try {
+      const assessments3 = await storage.getAllAssessments();
+      res.json(assessments3);
+    } catch (error) {
+      console.error("Error fetching all assessments:", error);
+      res.status(500).json({ message: "Failed to fetch assessments" });
+    }
+  });
   app2.get("/api/assessments/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -4548,17 +8260,70 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Failed to update pathway" });
     }
   });
-  app2.get("/api/assessments", async (req, res) => {
+  app2.post("/api/assessments/:id/send-pathway-reminder", async (req, res) => {
     try {
-      const { email } = req.query;
-      if (!email || typeof email !== "string") {
-        return res.status(400).json({ message: "Email parameter is required" });
+      const id = parseInt(req.params.id);
+      const assessment = await storage.getAssessment(id);
+      if (!assessment) {
+        return res.status(404).json({ message: "Assessment not found" });
       }
-      const assessments3 = await storage.getAssessmentsByEmail(email);
-      res.json(assessments3);
+      if (assessment.selectedPathway && assessment.selectedPathway !== "none") {
+        return res.status(400).json({ message: "Pathway already selected" });
+      }
+      const emailSent = await emailService.sendPathwayReminderEmail(assessment.email, {
+        businessName: assessment.businessName,
+        digitalScore: assessment.digitalScore || 0,
+        assessmentId: id
+      });
+      if (emailSent) {
+        res.json({ success: true, message: "Pathway reminder sent" });
+      } else {
+        res.status(500).json({ message: "Failed to send reminder email" });
+      }
     } catch (error) {
-      console.error("Error fetching assessments:", error);
-      res.status(500).json({ message: "Failed to fetch assessments" });
+      console.error("Error sending pathway reminder:", error);
+      res.status(500).json({ message: "Failed to send pathway reminder" });
+    }
+  });
+  app2.post("/api/assessments/:id/send-checkout-reminder", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const assessment = await storage.getAssessment(id);
+      if (!assessment) {
+        return res.status(404).json({ message: "Assessment not found" });
+      }
+      if (!assessment.selectedPathway || assessment.selectedPathway === "none") {
+        return res.status(400).json({ message: "No pathway selected yet" });
+      }
+      const subscriptions2 = await db.select().from(subscriptions2).where(eq11(subscriptions2.assessmentId, id));
+      if (subscriptions2.length > 0) {
+        return res.status(400).json({ message: "Subscription already exists" });
+      }
+      const pathwayNames = {
+        "diy": "DIY Platform",
+        "msp": "Managed Services Starter",
+        "combination": "Combination Plan"
+      };
+      const monthlyPrices = {
+        "diy": 49,
+        "msp": 299,
+        "combination": 199
+      };
+      const emailSent = await emailService.sendCheckoutAbandonmentEmail(assessment.email, {
+        businessName: assessment.businessName,
+        pathway: assessment.selectedPathway,
+        planName: pathwayNames[assessment.selectedPathway],
+        monthlyPrice: monthlyPrices[assessment.selectedPathway],
+        assessmentId: id
+      });
+      if (emailSent) {
+        res.json({ success: true, message: "Checkout reminder sent" });
+      } else {
+        res.status(500).json({ message: "Failed to send reminder email" });
+      }
+    } catch (error) {
+      console.error("Error sending checkout reminder:", error);
+      res.status(500).json({ message: "Failed to send checkout reminder" });
     }
   });
   app2.get("/api/clients/:id/dashboard", async (req, res) => {
@@ -4646,9 +8411,107 @@ async function registerRoutes(app2) {
       });
     }
   });
+  app2.get("/api/admin/clients", isAuthenticated, async (req, res) => {
+    try {
+      const clients3 = await storage.getAllClients();
+      res.json(clients3);
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+      res.status(500).json({ message: "Failed to fetch clients" });
+    }
+  });
+  app2.get("/api/clients/verify-magic-link", async (req, res) => {
+    try {
+      const { token } = req.query;
+      if (!token || typeof token !== "string") {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid verification link"
+        });
+      }
+      const magicToken = await storage.getMagicLinkToken(token);
+      if (!magicToken) {
+        return res.status(404).json({
+          success: false,
+          message: "Invalid or expired login link. Please request a new one."
+        });
+      }
+      if (magicToken.used) {
+        return res.status(400).json({
+          success: false,
+          message: "This login link has already been used. Please request a new one."
+        });
+      }
+      if (/* @__PURE__ */ new Date() > new Date(magicToken.expiresAt)) {
+        return res.status(400).json({
+          success: false,
+          message: "This login link has expired. Please request a new one."
+        });
+      }
+      const client2 = await storage.getClientByEmail(magicToken.email);
+      console.log("[Magic Link Verify] Found client:", client2 ? { id: client2.id, email: client2.email, idType: typeof client2.id } : "null");
+      if (!client2) {
+        return res.status(404).json({
+          success: false,
+          message: "Account not found"
+        });
+      }
+      console.log("[Magic Link Verify] Validating client.id:", {
+        id: client2.id,
+        type: typeof client2.id,
+        isNaN: isNaN(client2.id),
+        isNumber: typeof client2.id === "number",
+        fullClient: JSON.stringify(client2)
+      });
+      if (!client2.id || typeof client2.id !== "number" || isNaN(client2.id)) {
+        console.error("[Magic Link Verify] Invalid client ID detected:", {
+          id: client2.id,
+          type: typeof client2.id,
+          isNaN: isNaN(client2.id)
+        });
+        return res.status(500).json({
+          success: false,
+          message: "Account configuration error"
+        });
+      }
+      console.log("[Magic Link Verify] Client ID validation passed:", client2.id);
+      await storage.markTokenAsUsed(token);
+      console.log("[Magic Link Verify] Token marked as used");
+      console.log("[Magic Link Verify] Updating client login tracking for ID:", client2.id);
+      await storage.updateClient(client2.id, {
+        lastLoginTime: /* @__PURE__ */ new Date(),
+        loginCount: (client2.loginCount || 0) + 1
+      });
+      console.log("[Magic Link Verify] Login tracking updated");
+      console.log("[Magic Link Verify] Creating dashboard token for client ID:", client2.id);
+      const jwtToken = await jwtService.createDashboardToken(client2.id, client2.email);
+      console.log("[Magic Link Verify] JWT token created successfully");
+      res.json({
+        success: true,
+        client: {
+          id: client2.id,
+          companyName: client2.companyName,
+          email: client2.email,
+          isEmailVerified: client2.isEmailVerified || false
+        },
+        token: jwtToken,
+        message: "Login successful"
+      });
+    } catch (error) {
+      console.error("Magic link verification error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Verification failed. Please try again."
+      });
+    }
+  });
   app2.get("/api/clients/:id", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
+      if (isNaN(clientId) || !isFinite(clientId)) {
+        console.error("[GET /api/clients/:id] Invalid client ID:", req.params.id);
+        return res.status(400).json({ message: "Invalid client ID format" });
+      }
       const client2 = await storage.getClient(clientId);
       if (!client2) {
         return res.status(404).json({ message: "Client not found" });
@@ -4662,6 +8525,10 @@ async function registerRoutes(app2) {
   app2.get("/api/clients/:id/campaign-data", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
+      if (isNaN(clientId) || !isFinite(clientId)) {
+        console.error("[GET /api/clients/:id/campaign-data] Invalid client ID:", req.params.id);
+        return res.status(400).json({ message: "Invalid client ID format" });
+      }
       const client2 = await storage.getClient(clientId);
       if (!client2) {
         return res.status(404).json({ message: "Client not found" });
@@ -4726,7 +8593,7 @@ async function registerRoutes(app2) {
       if (!isActive) {
         return res.status(401).json({ message: "Token has been revoked" });
       }
-      const [dashboardRecord] = await db.select().from(dashboardAccess).where(eq5(dashboardAccess.accessToken, token));
+      const [dashboardRecord] = await db.select().from(dashboardAccess).where(eq11(dashboardAccess.accessToken, token));
       if (!dashboardRecord) {
         return res.status(404).json({ message: "Dashboard access not found" });
       }
@@ -4796,28 +8663,45 @@ async function registerRoutes(app2) {
           message: "Please enter a valid email address"
         });
       }
-      const client2 = await storage.getClientByEmail(email.toLowerCase().trim());
+      const normalizedEmail = email.toLowerCase().trim();
+      const client2 = await storage.getClientByEmail(normalizedEmail);
       if (!client2) {
         return res.status(404).json({
           success: false,
           message: "No account found with this email address. Please check your email or contact support."
         });
       }
-      await storage.updateClient(client2.id, {
-        lastLoginTime: /* @__PURE__ */ new Date(),
-        loginCount: (client2.loginCount || 0) + 1
+      const token = randomBytes(32).toString("hex");
+      const expiresAt = /* @__PURE__ */ new Date();
+      expiresAt.setMinutes(expiresAt.getMinutes() + 15);
+      await storage.createMagicLinkToken({
+        email: normalizedEmail,
+        token,
+        expiresAt
       });
-      const token = await jwtService.createDashboardToken(client2.id, client2.email);
+      const frontendUrl = process.env.FRONTEND_URL || "https://businessblueprint.io";
+      const magicLink = `${frontendUrl}/portal/verify?token=${token}`;
+      const emailService2 = new EmailService();
+      emailService2.sendMagicLinkEmail(
+        normalizedEmail,
+        magicLink,
+        client2.companyName
+      ).then((sent) => {
+        if (sent) {
+          console.log(`\u2705 Magic link email sent to ${normalizedEmail}`);
+        } else {
+          console.warn(`\u26A0\uFE0F Failed to send email to ${normalizedEmail}. Magic link: ${magicLink}`);
+        }
+      }).catch((err) => {
+        console.error(`\u274C Error sending magic link email to ${normalizedEmail}:`, err.message);
+      });
       res.json({
         success: true,
-        client: {
-          id: client2.id,
-          companyName: client2.companyName,
-          email: client2.email,
-          isEmailVerified: client2.isEmailVerified || false
-        },
-        token,
-        message: "Login successful"
+        message: "Check your email! We've sent you a secure login link.",
+        ...process.env.NODE_ENV === "development" && {
+          devToken: token,
+          devLink: magicLink
+        }
       });
     } catch (error) {
       console.error("Client login error:", error);
@@ -4908,7 +8792,7 @@ async function registerRoutes(app2) {
   });
   app2.get("/api/subscription-plans", async (req, res) => {
     try {
-      const plans = await db.select().from(subscriptionPlans).where(eq5(subscriptionPlans.isActive, true));
+      const plans = await db.select().from(subscriptionPlans).where(eq11(subscriptionPlans.isActive, true));
       res.json({
         success: true,
         plans: plans.map((plan) => ({
@@ -4928,7 +8812,7 @@ async function registerRoutes(app2) {
   });
   app2.get("/api/subscription-addons", async (req, res) => {
     try {
-      const addons = await db.select().from(subscriptionAddons).where(eq5(subscriptionAddons.isActive, true));
+      const addons = await db.select().from(subscriptionAddons).where(eq11(subscriptionAddons.isActive, true));
       const categoryIconMap = {
         "seo": "Globe",
         "social": "Users",
@@ -4960,29 +8844,29 @@ async function registerRoutes(app2) {
   });
   app2.post("/api/marketplace/orders", async (req, res) => {
     try {
-      const orderSchema = z.object({
-        items: z.array(z.object({
-          id: z.string(),
-          name: z.string(),
-          price: z.number(),
-          quantity: z.number(),
-          type: z.enum(["app", "addon"])
+      const orderSchema = z3.object({
+        items: z3.array(z3.object({
+          id: z3.string(),
+          name: z3.string(),
+          price: z3.number(),
+          quantity: z3.number(),
+          type: z3.enum(["app", "addon"])
         })),
-        paymentToken: z.string().min(16, "Valid payment token required"),
-        customerInfo: z.object({
-          firstName: z.string().min(1, "First name is required"),
-          lastName: z.string().min(1, "Last name is required"),
-          email: z.string().email("Valid email required"),
-          phone: z.string().optional(),
-          address: z.string().optional(),
-          city: z.string().optional(),
-          state: z.string().optional(),
-          zip: z.string().optional()
+        paymentToken: z3.string().min(16, "Valid payment token required"),
+        customerInfo: z3.object({
+          firstName: z3.string().min(1, "First name is required"),
+          lastName: z3.string().min(1, "Last name is required"),
+          email: z3.string().email("Valid email required"),
+          phone: z3.string().optional(),
+          address: z3.string().optional(),
+          city: z3.string().optional(),
+          state: z3.string().optional(),
+          zip: z3.string().optional()
         }),
-        totals: z.object({
-          subtotal: z.number(),
-          tax: z.number(),
-          total: z.number()
+        totals: z3.object({
+          subtotal: z3.number(),
+          tax: z3.number(),
+          total: z3.number()
         })
       });
       const validation = orderSchema.safeParse(req.body);
@@ -5056,14 +8940,14 @@ async function registerRoutes(app2) {
           message: "Plan ID is required"
         });
       }
-      const plan = await db.select().from(subscriptionPlans).where(eq5(subscriptionPlans.planId, planId)).limit(1);
+      const plan = await db.select().from(subscriptionPlans).where(eq11(subscriptionPlans.planId, planId)).limit(1);
       if (plan.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Plan not found"
         });
       }
-      const addons = await db.select().from(subscriptionAddons).where(eq5(subscriptionAddons.isActive, true));
+      const addons = await db.select().from(subscriptionAddons).where(eq11(subscriptionAddons.isActive, true));
       const pricing = PricingEngine.calculateSubscriptionPrice(
         plan[0],
         addons,
@@ -5097,7 +8981,7 @@ async function registerRoutes(app2) {
         "combination": "msp-starter"
       };
       const planStringId = planIdMap[pathway];
-      const [plan] = await db.select().from(subscriptionPlans).where(eq5(subscriptionPlans.planId, planStringId)).limit(1);
+      const [plan] = await db.select().from(subscriptionPlans).where(eq11(subscriptionPlans.planId, planStringId)).limit(1);
       if (!plan) {
         return res.status(404).json({
           success: false,
@@ -5176,7 +9060,7 @@ async function registerRoutes(app2) {
         "combination": "msp-starter"
       };
       const planStringId = planIdMap[pathway];
-      const [plan] = await db.select().from(subscriptionPlans).where(eq5(subscriptionPlans.planId, planStringId)).limit(1);
+      const [plan] = await db.select().from(subscriptionPlans).where(eq11(subscriptionPlans.planId, planStringId)).limit(1);
       if (!plan) {
         return res.status(404).json({
           success: false,
@@ -5215,6 +9099,25 @@ async function registerRoutes(app2) {
         billingCycle
       };
       const subscription = await db.insert(subscriptions).values(subscriptionData).returning();
+      if (assessment) {
+        const pathwayName = pathway === "msp" ? "Managed Services" : "DIY Platform";
+        const planName = `${plan.name} (${pathwayName})`;
+        const featuresPromises = selectedProducts.map(async (prod) => {
+          const product = selectedProducts.find((p) => p.id === prod.id);
+          return product?.name || "";
+        });
+        const productNames = await Promise.all(featuresPromises);
+        const baseFeatures = Array.isArray(plan.features) ? plan.features : [];
+        const allFeatures = [...baseFeatures, ...productNames.filter(Boolean)];
+        await emailService.sendEnrollmentConfirmation(assessment.email, {
+          businessName: assessment.businessName,
+          pathway,
+          planName,
+          monthlyPrice: parseFloat(total.toFixed(2)),
+          nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1e3),
+          features: allFeatures
+        });
+      }
       res.json({
         success: true,
         subscription: subscription[0],
@@ -5231,7 +9134,7 @@ async function registerRoutes(app2) {
   app2.get("/api/subscriptions/:id/trial-status", async (req, res) => {
     try {
       const { id } = req.params;
-      const [subscription] = await db.select().from(subscriptions).where(eq5(subscriptions.id, parseInt(id)));
+      const [subscription] = await db.select().from(subscriptions).where(eq11(subscriptions.id, parseInt(id)));
       if (!subscription) {
         return res.status(404).json({
           success: false,
@@ -5258,23 +9161,23 @@ async function registerRoutes(app2) {
   });
   app2.post("/api/subscriptions", async (req, res) => {
     try {
-      const subscriptionSchema = z.object({
-        planId: z.string().min(1, "Plan ID is required"),
-        addons: z.array(z.object({
-          addonId: z.string(),
-          quantity: z.number().optional()
+      const subscriptionSchema = z3.object({
+        planId: z3.string().min(1, "Plan ID is required"),
+        addons: z3.array(z3.object({
+          addonId: z3.string(),
+          quantity: z3.number().optional()
         })).default([]),
-        billingCycle: z.enum(["monthly", "quarterly", "annual"]),
-        paymentToken: z.string().min(16, "Valid payment token required"),
-        customerInfo: z.object({
-          firstName: z.string().min(1, "First name is required"),
-          lastName: z.string().min(1, "Last name is required"),
-          email: z.string().email("Valid email required"),
-          phone: z.string().optional(),
-          address: z.string().optional(),
-          city: z.string().optional(),
-          state: z.string().optional(),
-          zip: z.string().optional()
+        billingCycle: z3.enum(["monthly", "quarterly", "annual"]),
+        paymentToken: z3.string().min(16, "Valid payment token required"),
+        customerInfo: z3.object({
+          firstName: z3.string().min(1, "First name is required"),
+          lastName: z3.string().min(1, "Last name is required"),
+          email: z3.string().email("Valid email required"),
+          phone: z3.string().optional(),
+          address: z3.string().optional(),
+          city: z3.string().optional(),
+          state: z3.string().optional(),
+          zip: z3.string().optional()
         })
       });
       const validation = subscriptionSchema.safeParse(req.body);
@@ -5292,14 +9195,14 @@ async function registerRoutes(app2) {
         paymentToken,
         customerInfo
       } = validation.data;
-      const plan = await db.select().from(subscriptionPlans).where(eq5(subscriptionPlans.planId, planId)).limit(1);
+      const plan = await db.select().from(subscriptionPlans).where(eq11(subscriptionPlans.planId, planId)).limit(1);
       if (plan.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Plan not found"
         });
       }
-      const addons = await db.select().from(subscriptionAddons).where(eq5(subscriptionAddons.isActive, true));
+      const addons = await db.select().from(subscriptionAddons).where(eq11(subscriptionAddons.isActive, true));
       const pricing = PricingEngine.calculateSubscriptionPrice(
         plan[0],
         addons,
@@ -5420,12 +9323,12 @@ async function registerRoutes(app2) {
       const deliveryMethod = req.query.deliveryMethod;
       const category = req.query.category;
       const { products: products2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-      const { eq: eq7, and: and6 } = await import("drizzle-orm");
-      const conditions = [eq7(products2.isActive, true)];
+      const { eq: eq14, and: and13 } = await import("drizzle-orm");
+      const conditions = [eq14(products2.isActive, true)];
       if (category) {
-        conditions.push(eq7(products2.category, category));
+        conditions.push(eq14(products2.category, category));
       }
-      const allProducts = await db.select().from(products2).where(and6(...conditions));
+      const allProducts = await db.select().from(products2).where(and13(...conditions));
       const filteredProducts = deliveryMethod ? allProducts.filter((p) => p.deliveryMethod?.includes(deliveryMethod)) : allProducts;
       res.json({
         success: true,
@@ -5443,8 +9346,8 @@ async function registerRoutes(app2) {
     try {
       const productId = parseInt(req.params.id);
       const { products: products2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-      const { eq: eq7 } = await import("drizzle-orm");
-      const [product] = await db.select().from(products2).where(eq7(products2.id, productId));
+      const { eq: eq14 } = await import("drizzle-orm");
+      const [product] = await db.select().from(products2).where(eq14(products2.id, productId));
       if (!product) {
         return res.status(404).json({
           success: false,
@@ -5535,7 +9438,7 @@ async function registerRoutes(app2) {
       });
     } catch (error) {
       console.error("Error creating Synup location:", error);
-      if (error instanceof z.ZodError) {
+      if (error instanceof z3.ZodError) {
         return res.status(400).json({
           success: false,
           message: "Validation failed",
@@ -5678,7 +9581,7 @@ async function registerRoutes(app2) {
       });
     } catch (error) {
       console.error("Error syncing listings:", error);
-      if (error instanceof z.ZodError) {
+      if (error instanceof z3.ZodError) {
         return res.status(400).json({
           success: false,
           message: "Validation failed",
@@ -5776,7 +9679,7 @@ async function registerRoutes(app2) {
       });
     } catch (error) {
       console.error("Error syncing reviews:", error);
-      if (error instanceof z.ZodError) {
+      if (error instanceof z3.ZodError) {
         return res.status(400).json({
           success: false,
           message: "Validation failed",
@@ -5872,7 +9775,7 @@ async function registerRoutes(app2) {
       });
     } catch (error) {
       console.error("Error responding to review:", error);
-      if (error instanceof z.ZodError) {
+      if (error instanceof z3.ZodError) {
         return res.status(400).json({
           success: false,
           message: "Validation failed",
@@ -6043,7 +9946,7 @@ async function registerRoutes(app2) {
       });
     } catch (error) {
       console.error("Error updating review notification preferences:", error);
-      if (error instanceof z.ZodError) {
+      if (error instanceof z3.ZodError) {
         return res.status(400).json({
           success: false,
           message: "Validation failed",
@@ -6490,27 +10393,6 @@ async function registerRoutes(app2) {
   });
   const multer = await import("multer");
   const upload = multer.default({ storage: multer.default.memoryStorage() });
-  app2.get("/brand-assets/:filename", async (req, res) => {
-    try {
-      const { filename } = req.params;
-      console.log(`Requesting brand asset: ${filename}`);
-      const [asset] = await db.select().from(brandAssets).where(eq5(brandAssets.fileName, filename)).limit(1);
-      if (!asset) {
-        console.log(`Brand asset not found: ${filename}`);
-        const allAssets = await db.select({ fileName: brandAssets.fileName }).from(brandAssets);
-        console.log("Available brand assets:", allAssets.map((a) => a.fileName).join(", "));
-        return res.status(404).send("Brand asset not found");
-      }
-      console.log(`Serving brand asset: ${filename}, type: ${asset.mimeType}`);
-      const contentType = asset.mimeType || "application/octet-stream";
-      res.setHeader("Content-Type", contentType);
-      res.setHeader("Cache-Control", "public, max-age=31536000");
-      res.send(asset.data);
-    } catch (error) {
-      console.error("Error serving brand asset:", error);
-      res.status(500).json({ error: "Failed to serve brand asset" });
-    }
-  });
   app2.post("/api/brand-assets", upload.single("file"), async (req, res) => {
     try {
       if (!req.file) {
@@ -6698,6 +10580,9 @@ async function registerRoutes(app2) {
     }
   });
   await registerInboxRoutes(app2);
+  app2.use("/api/content", content_default);
+  app2.use("/api/meta", meta_default);
+  app2.use("/api/tasks", tasksRouter);
   const httpServer = createServer(app2);
   return httpServer;
 }
@@ -6770,6 +10655,10 @@ async function processAssessmentAsync(assessmentId, googleService, aiService, em
       assessmentId
     });
     await storage2.updateAssessment(assessmentId, { emailSent });
+    await emailService.sendThankYouIntroduction(assessment.email, {
+      businessName: assessment.businessName,
+      assessmentId
+    });
   } catch (error) {
     console.error("Error processing assessment:", error);
     await storage2.updateAssessment(assessmentId, { status: "failed" });
@@ -6793,7 +10682,7 @@ async function registerInboxRoutes(app2) {
         }
       });
     } catch (error) {
-      if (error instanceof z.ZodError) {
+      if (error instanceof z3.ZodError) {
         return res.status(400).json({
           success: false,
           error: "Invalid session data",
@@ -6810,10 +10699,10 @@ async function registerInboxRoutes(app2) {
   app2.get("/api/inbox/conversations", requireAuth, async (req, res) => {
     try {
       const clientId = req.clientId;
-      const conversations = await db.select().from(inboxConversations).where(eq5(inboxConversations.clientId, clientId)).orderBy(desc2(inboxConversations.updatedAt));
+      const conversations = await db.select().from(inboxConversations).where(eq11(inboxConversations.clientId, clientId)).orderBy(desc4(inboxConversations.updatedAt));
       const conversationsWithMessages = await Promise.all(
         conversations.map(async (conv) => {
-          const lastMessage = await db.select().from(inboxMessages2).where(eq5(inboxMessages2.conversationId, conv.id)).orderBy(desc2(inboxMessages2.createdAt)).limit(1);
+          const lastMessage = await db.select().from(inboxMessages2).where(eq11(inboxMessages2.conversationId, conv.id)).orderBy(desc4(inboxMessages2.createdAt)).limit(1);
           return {
             id: conv.id,
             contactName: conv.contactName,
@@ -6838,14 +10727,14 @@ async function registerInboxRoutes(app2) {
     try {
       const clientId = req.clientId;
       const conversationId = parseInt(req.params.conversationId);
-      const [conversation] = await db.select().from(inboxConversations).where(and4(
-        eq5(inboxConversations.id, conversationId),
-        eq5(inboxConversations.clientId, clientId)
+      const [conversation] = await db.select().from(inboxConversations).where(and10(
+        eq11(inboxConversations.id, conversationId),
+        eq11(inboxConversations.clientId, clientId)
       )).limit(1);
       if (!conversation) {
         return res.status(404).json({ error: "Conversation not found or access denied" });
       }
-      const messages = await db.select().from(inboxMessages2).where(eq5(inboxMessages2.conversationId, conversationId)).orderBy(inboxMessages2.createdAt);
+      const messages = await db.select().from(inboxMessages2).where(eq11(inboxMessages2.conversationId, conversationId)).orderBy(inboxMessages2.createdAt);
       res.json(messages);
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -6859,9 +10748,9 @@ async function registerInboxRoutes(app2) {
       if (!conversationId || !message) {
         return res.status(400).json({ error: "Missing required fields" });
       }
-      const [conversation] = await db.select().from(inboxConversations).where(and4(
-        eq5(inboxConversations.id, conversationId),
-        eq5(inboxConversations.clientId, clientId)
+      const [conversation] = await db.select().from(inboxConversations).where(and10(
+        eq11(inboxConversations.id, conversationId),
+        eq11(inboxConversations.clientId, clientId)
       )).limit(1);
       if (!conversation) {
         return res.status(404).json({ error: "Conversation not found or access denied" });
@@ -6895,7 +10784,7 @@ async function registerInboxRoutes(app2) {
         toName: conversation.contactName || void 0,
         status: deliveryStatus
       }).returning();
-      await db.update(inboxConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq5(inboxConversations.id, conversationId));
+      await db.update(inboxConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq11(inboxConversations.id, conversationId));
       res.json(newMessage);
     } catch (error) {
       console.error("Error sending message:", error);
@@ -6905,18 +10794,18 @@ async function registerInboxRoutes(app2) {
   app2.post("/api/biif/create-location", async (req, res) => {
     try {
       console.log("\u{1F4CD} BIIF: Received location creation request:", req.body);
-      const locationData = z.object({
-        name: z.string(),
-        address: z.string(),
-        city: z.string(),
-        state: z.string(),
-        postalCode: z.string(),
-        country: z.string().default("US"),
-        phone: z.string(),
-        website: z.string().optional(),
-        email: z.string().optional(),
-        category: z.string(),
-        description: z.string().optional()
+      const locationData = z3.object({
+        name: z3.string(),
+        address: z3.string(),
+        city: z3.string(),
+        state: z3.string(),
+        postalCode: z3.string(),
+        country: z3.string().default("US"),
+        phone: z3.string(),
+        website: z3.string().optional(),
+        email: z3.string().optional(),
+        category: z3.string(),
+        description: z3.string().optional()
       }).parse(req.body);
       console.log("\u{1F4CD} BIIF: Creating location in Synup...", locationData.name);
       const biifSynupService = new SynupService();
@@ -7001,7 +10890,7 @@ var vite_config_default = defineConfig({
 });
 
 // server/vite.ts
-import { nanoid } from "nanoid";
+import { nanoid as nanoid2 } from "nanoid";
 var viteLogger = createLogger();
 function log(message, source = "express") {
   const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
@@ -7044,7 +10933,7 @@ async function setupVite(app2, server) {
       let template = await fs.promises.readFile(clientTemplate, "utf-8");
       template = template.replace(
         `src="/src/main.tsx"`,
-        `src="/src/main.tsx?v=${nanoid()}"`
+        `src="/src/main.tsx?v=${nanoid2()}"`
       );
       const page = await vite.transformIndexHtml(url, template);
       res.status(200).set({ "Content-Type": "text/html" }).end(page);
@@ -7086,7 +10975,7 @@ init_db();
 init_schema();
 init_jwt();
 import { Server } from "socket.io";
-import { eq as eq6, and as and5 } from "drizzle-orm";
+import { eq as eq12, and as and11 } from "drizzle-orm";
 function setupWebSocket(server) {
   const io = new Server(server, {
     cors: {
@@ -7155,7 +11044,7 @@ function setupWebSocket(server) {
             lastMessagePreview: data.message.substring(0, 100)
           }).returning();
           conversationId = conversation.id;
-          await db.update(livechatSessions).set({ conversationId }).where(eq6(livechatSessions.sessionId, data.sessionId));
+          await db.update(livechatSessions).set({ conversationId }).where(eq12(livechatSessions.sessionId, data.sessionId));
         }
         const [message] = await db.insert(inboxMessages2).values({
           conversationId,
@@ -7173,9 +11062,9 @@ function setupWebSocket(server) {
         await db.update(inboxConversations).set({
           lastMessageAt: /* @__PURE__ */ new Date(),
           lastMessagePreview: data.message.substring(0, 100),
-          unreadCount: db.$count(inboxMessages2, eq6(inboxMessages2.conversationId, conversationId)),
+          unreadCount: db.$count(inboxMessages2, eq12(inboxMessages2.conversationId, conversationId)),
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq6(inboxConversations.id, conversationId));
+        }).where(eq12(inboxConversations.id, conversationId));
         io.to(`conversation:${conversationId}`).emit("message:new", {
           ...message,
           conversationId
@@ -7197,7 +11086,7 @@ function setupWebSocket(server) {
     });
     socket.on("agent:message", async (data) => {
       try {
-        const [conversation] = await db.select().from(inboxConversations).where(eq6(inboxConversations.id, data.conversationId)).limit(1);
+        const [conversation] = await db.select().from(inboxConversations).where(eq12(inboxConversations.id, data.conversationId)).limit(1);
         if (!conversation) {
           socket.emit("message:error", { error: "Conversation not found" });
           return;
@@ -7220,7 +11109,7 @@ function setupWebSocket(server) {
           lastMessageAt: /* @__PURE__ */ new Date(),
           lastMessagePreview: data.message.substring(0, 100),
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq6(inboxConversations.id, data.conversationId));
+        }).where(eq12(inboxConversations.id, data.conversationId));
         io.to(`conversation:${data.conversationId}`).emit("message:new", {
           ...message,
           conversationId: data.conversationId
@@ -7259,12 +11148,12 @@ function setupWebSocket(server) {
           status: "read",
           readAt: /* @__PURE__ */ new Date()
         }).where(
-          and5(
-            eq6(inboxMessages2.conversationId, data.conversationId),
-            eq6(inboxMessages2.direction, "inbound")
+          and11(
+            eq12(inboxMessages2.conversationId, data.conversationId),
+            eq12(inboxMessages2.direction, "inbound")
           )
         );
-        await db.update(inboxConversations).set({ unreadCount: 0 }).where(eq6(inboxConversations.id, data.conversationId));
+        await db.update(inboxConversations).set({ unreadCount: 0 }).where(eq12(inboxConversations.id, data.conversationId));
         io.to(`conversation:${data.conversationId}`).emit("messages:read", {
           conversationId: data.conversationId
         });
@@ -7277,9 +11166,9 @@ function setupWebSocket(server) {
       socket.join(`session:${sessionId}`);
       console.log(`Customer ${socket.id} joined session: ${sessionId}`);
       try {
-        const [session2] = await db.select().from(livechatSessions).where(eq6(livechatSessions.sessionId, sessionId)).limit(1);
+        const [session2] = await db.select().from(livechatSessions).where(eq12(livechatSessions.sessionId, sessionId)).limit(1);
         if (session2 && session2.conversationId) {
-          const messages = await db.select().from(inboxMessages2).where(eq6(inboxMessages2.conversationId, session2.conversationId)).orderBy(inboxMessages2.createdAt);
+          const messages = await db.select().from(inboxMessages2).where(eq12(inboxMessages2.conversationId, session2.conversationId)).orderBy(inboxMessages2.createdAt);
           socket.emit("message:history", { messages });
         }
       } catch (error) {
@@ -7327,6 +11216,12 @@ app.use((req, res, next) => {
   const server = await registerRoutes(app);
   const io = setupWebSocket(server);
   global.io = io;
+  try {
+    const { startScheduler: startScheduler2 } = await Promise.resolve().then(() => (init_scheduler(), scheduler_exports));
+    startScheduler2();
+  } catch (error) {
+    console.error("[Scheduler] Failed to start scheduler:", error);
+  }
   app.use((err, _req, res, _next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
