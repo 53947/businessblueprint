@@ -82,8 +82,8 @@ export function BrandLogo({
 
   if (brand === 'hostsblue') {
     const textColor1 = '#8000FF'; // purple
-    const textColor2 = isDark ? '#4D94FF' : '#0000FF'; // blue - lighter for dark bg
-    const textColor3 = isDark ? '#9FE85C' : '#84D71A'; // green - lighter for dark bg
+    const textColor2 = '#0000FF'; // blue - same as businessblueprint
+    const textColor3 = '#84D71A'; // green
     
     return (
       <div className={`flex items-center gap-3 ${className}`}>
@@ -134,9 +134,9 @@ export function BrandLogo({
 
   // swipesblue uses new lightning bolt icon
   if (brand === 'swipesblue') {
-    const textColor1 = isDark ? '#FF4D7A' : '#FF0040'; // red - lighter for dark bg
-    const textColor2 = isDark ? '#4D94FF' : '#0000FF'; // blue - lighter for dark bg
-    const textColor3 = isDark ? '#9FE85C' : '#84D71A'; // green - lighter for dark bg
+    const textColor1 = '#FF0040'; // red
+    const textColor2 = '#0000FF'; // blue - same as businessblueprint
+    const textColor3 = '#84D71A'; // green
     
     return (
       <div className={`flex items-center gap-3 ${className}`}>
