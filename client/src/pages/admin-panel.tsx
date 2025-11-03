@@ -117,8 +117,13 @@ export default function AdminPanel() {
   };
 
   const accessClientPortal = (clientId: number) => {
-    // Navigate to client login with pre-filled ID
-    setLocation(`/client-login?clientId=${clientId}`);
+    // Set session and navigate directly to portal
+    sessionStorage.setItem("clientId", clientId.toString());
+    const client = clients?.find(c => c.id === clientId);
+    if (client) {
+      sessionStorage.setItem("externalId", client.externalId);
+    }
+    setLocation('/portal');
   };
 
   return (
