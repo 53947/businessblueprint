@@ -4,13 +4,13 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-900 text-white mt-auto">
+    <footer className="bg-gray-700 text-white mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid md:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div className="col-span-1">
             <div className="mb-4">
-              <BrandLogo brand="businessblueprint" variant="dark" size="sm" />
+              <BrandLogo brand="businessblueprint" variant="dark" size="md" />
             </div>
             <p className="text-gray-400 text-sm mb-4">
               Helping local businesses succeed online. Get found, get customers, get business.
@@ -75,7 +75,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 pt-8 mt-8">
+        <div className="border-t border-gray-600 pt-8 mt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-sm text-gray-400 mb-4 md:mb-0">
               © {currentYear} Triad Blue Inc. All rights reserved.
