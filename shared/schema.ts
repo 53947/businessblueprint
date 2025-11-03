@@ -110,6 +110,17 @@ export const clients = pgTable("clients", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Magic link tokens for passwordless client login
+export const magicLinkTokens = pgTable("magic_link_tokens", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull(),
+  token: text("token").notNull().unique(),
+  expiresAt: timestamp("expires_at").notNull(),
+  used: boolean("used").default(false),
+  usedAt: timestamp("used_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Inbox/communication data for Campaign Pro
 export const inboxMessages = pgTable("inbox_messages", {
   id: serial("id").primaryKey(),
@@ -280,6 +291,12 @@ export const insertClientSchema = createInsertSchema(clients).pick({
   verificationExpiry: true,
   lastLoginTime: true,
   loginCount: true,
+});
+
+export const insertMagicLinkTokenSchema = createInsertSchema(magicLinkTokens).pick({
+  email: true,
+  token: true,
+  expiresAt: true,
 });
 
 export const insertEmailChangeHistorySchema = createInsertSchema(emailChangeHistory).pick({
@@ -604,6 +621,8 @@ export type Recommendation = typeof recommendations.$inferSelect;
 export type InsertRecommendation = z.infer<typeof insertRecommendationSchema>;
 export type Client = typeof clients.$inferSelect;
 export type InsertClient = z.infer<typeof insertClientSchema>;
+export type MagicLinkToken = typeof magicLinkTokens.$inferSelect;
+export type InsertMagicLinkToken = z.infer<typeof insertMagicLinkTokenSchema>;
 export type EmailChangeHistory = typeof emailChangeHistory.$inferSelect;
 export type InsertEmailChangeHistory = z.infer<typeof insertEmailChangeHistorySchema>;
 export type InboxMessage = typeof inboxMessages.$inferSelect;
