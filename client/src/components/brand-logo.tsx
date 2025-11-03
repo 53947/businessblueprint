@@ -74,7 +74,7 @@ export function BrandLogo({
       <img 
         src={bbLockup} 
         alt="businessblueprint.io" 
-        style={{ height: size === 'sm' ? '32px' : '40px', width: 'auto' }}
+        style={{ height: size === 'sm' ? '48px' : size === 'md' ? '56px' : '64px', width: 'auto' }}
         className={`object-contain ${className}`}
       />
     );
