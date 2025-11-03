@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import bbIcon from "@assets/1-Master business blueprint icon avatar logo copy_1762162675955.png";
-import bbLogo from "@assets/1-Master business blueprint icon avatar logo copy_1762162675955.png";
+import bbLockup from "@assets/Business Blueprint Lockup URL_1762164443849.png";
 import inboxIcon from "@assets/icons/inbox-icon-corrected.png";
 import livechatIcon from "@assets/livechat icon_1760788412068.png";
 import localSeoIcon from "@assets/LOCAL SEO_1760785581174.png";
@@ -210,14 +210,13 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
         <div className="h-full flex flex-col">
           {/* Mobile Header */}
           <SheetHeader className="p-6 border-b border-gray-200 dark:border-gray-700">
-            <div className="flex items-end gap-1">
-              <img src={bbIcon} alt="businessblueprint.io" style={{ width: '36px', height: '36px' }} className="object-contain" data-testid="logo-icon-mobile" />
-              <div className="leading-none pb-0.5" style={{ fontSize: '24px', fontWeight: 600 }} data-testid="logo-text-mobile">
-                <span style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>business</span>
-                <span style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif' }}>blueprint</span>
-                <span style={{ color: '#84D71A', fontFamily: 'Archivo, sans-serif' }}>.io</span>
-              </div>
-            </div>
+            <img 
+              src={bbLockup} 
+              alt="businessblueprint.io" 
+              style={{ height: '32px', width: 'auto' }}
+              className="object-contain" 
+              data-testid="logo-mobile" 
+            />
           </SheetHeader>
 
           {/* Mobile Navigation Items */}
@@ -298,18 +297,24 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
         {/* Desktop Logo Header */}
         <div className="border-b border-gray-200 dark:border-gray-700">
           <div className="px-4 py-3 flex items-center justify-between" data-testid="sidebar-logo">
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setLocation('/'); }}>
-              <img 
-                src={bbIcon} 
-                alt="businessblueprint.io" 
-                style={{ height: '48px', width: 'auto' }}
-                className="object-contain" 
-                data-testid="logo-icon" 
-              />
-              <div className="leading-tight" style={{ fontSize: '18px', fontWeight: 600 }} data-testid="logo-text">
-                <div style={{ color: '#FFA500', fontFamily: '"Archivo Semi Expanded", sans-serif', lineHeight: '1.2' }}>business</div>
-                <div style={{ color: '#0000FF', fontFamily: 'Archivo, sans-serif', lineHeight: '1.2' }}>blueprint</div>
-              </div>
+            <div className="cursor-pointer" onClick={() => { setLocation('/'); }}>
+              {!isCollapsed ? (
+                <img 
+                  src={bbLockup} 
+                  alt="businessblueprint.io" 
+                  style={{ height: '36px', width: 'auto' }}
+                  className="object-contain" 
+                  data-testid="logo-desktop" 
+                />
+              ) : (
+                <img 
+                  src={bbIcon} 
+                  alt="businessblueprint.io" 
+                  style={{ height: '36px', width: 'auto' }}
+                  className="object-contain" 
+                  data-testid="logo-icon" 
+                />
+              )}
             </div>
             <Button
               variant="ghost"
