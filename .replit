@@ -107,3 +107,12 @@ externalPort = 3000
 [[ports]]
 localPort = 45845
 externalPort = 8008
+
+[rules]
+
+[rules.formatter]
+
+[rules.formatter.fileExtensions]
+
+[rules.formatter.fileExtensions.".html"]
+id = "module:nodejs-20/formatter:prettier"
