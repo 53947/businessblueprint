@@ -45,15 +45,15 @@ export default function About() {
             </p>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-orange-500" />
+                <CheckCircle className="h-5 w-5 text-[#FFD700]" />
                 <span>AI-powered business intelligence</span>
               </div>
               <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-orange-500" />
+                <CheckCircle className="h-5 w-5 text-[#FFD700]" />
                 <span>Personalized digital strategies</span>
               </div>
               <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-orange-500" />
+                <CheckCircle className="h-5 w-5 text-[#FFD700]" />
                 <span>Complete ecosystem integration</span>
               </div>
             </div>
@@ -99,6 +99,9 @@ export default function About() {
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">Digital Intelligence Platform</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-1 mb-6">
+                  <li>• AI-powered business analysis</li>
+                  <li>• Personalized coaching</li>
+                  <li>• Client portal dashboard</li>
                   <li>• /send - Email & SMS Marketing</li>
                   <li>• /inbox - Unified Communications</li>
                   <li>• /livechat - Live Chat Widget</li>
@@ -146,7 +149,7 @@ export default function About() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-orange-500" />
+                <Users className="h-5 w-5 text-blue-500" />
                 Our Team
               </CardTitle>
             </CardHeader>
@@ -157,37 +160,37 @@ export default function About() {
               </p>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <Target className="h-4 w-4 text-orange-500" />
+                  <Target className="h-4 w-4 text-blue-500" />
                   <span className="text-sm">Customer-first approach</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Brain className="h-4 w-4 text-orange-500" />
+                  <Brain className="h-4 w-4 text-blue-500" />
                   <span className="text-sm">Innovation through AI</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Globe className="h-4 w-4 text-orange-500" />
+                  <Globe className="h-4 w-4 text-blue-500" />
                   <span className="text-sm">Global perspective</span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-orange-50 border-orange-200">
+          <Card className="bg-yellow-50 border-yellow-200">
             <CardHeader>
-              <CardTitle className="text-orange-900">Ready to Get Started?</CardTitle>
-              <CardDescription className="text-orange-700">
+              <CardTitle className="text-yellow-900">Ready to Get Started?</CardTitle>
+              <CardDescription className="text-yellow-700">
                 Join thousands of businesses already empowering their digital presence
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <Link href="/assessment">
-                <Button className="w-full bg-orange-500 hover:bg-orange-600">
+                <Button className="w-full bg-[#FFD700] hover:bg-[#FFC700]">
                   Start Free Assessment
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button variant="outline" className="w-full border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white">
+                <Button variant="outline" className="w-full border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-white">
                   Contact Our Team
                 </Button>
               </Link>

@@ -124,7 +124,7 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
       </section>
 
       {/* Digital Blueprint */}
-      <section id="digital-blueprint" className="bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 py-20 relative overflow-hidden">
+      <section id="digital-blueprint" className="bg-gradient-to-br from-amber-50 via-yellow-50 to-yellow-100 py-20 relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -346,8 +346,8 @@ A step-by-step guide designed for complete beginners. Follow this blueprint to b
             </Card>
 
             {/* Step 9: Nurture Customer Relationships */}
-            <Card className="border-4 border-dashed border-orange-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 -left-4 bg-orange-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">9</div>
+            <Card className="border-4 border-dashed border-yellow-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
+              <div className="absolute -top-4 -left-4 bg-[#FFD700] text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">9</div>
               <CardContent className="p-6 pt-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
                   📧 Nurture Customer Relationships
@@ -355,14 +355,14 @@ A step-by-step guide designed for complete beginners. Follow this blueprint to b
                 <p className="text-gray-600 mb-4">
                   <strong>What you'll discover:</strong> How to stay in touch with customers and provide ongoing value.
                 </p>
-                <div className="bg-orange-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-orange-800"><strong>🔍 Look for:</strong> Simple email systems, helpful content ideas, and ways to stay top-of-mind without being pushy. Regular, valuable communication keeps customers coming back.</p>
+                <div className="bg-yellow-50 p-4 rounded-lg mb-4">
+                  <p className="text-sm text-yellow-800"><strong>🔍 Look for:</strong> Simple email systems, helpful content ideas, and ways to stay top-of-mind without being pushy. Regular, valuable communication keeps customers coming back.</p>
                 </div>
-                <div className="bg-orange-50 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-orange-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
+                <div className="bg-yellow-50 p-4 rounded-lg mt-4">
+                  <p className="text-xs text-yellow-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
                   <div className="flex flex-wrap gap-1">
-                    <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">EMAIL MARKETING</span>
-                    <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">CONTENT & EXPERIENCE</span>
+                    <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">EMAIL MARKETING</span>
+                    <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">CONTENT & EXPERIENCE</span>
                   </div>
                 </div>
               </CardContent>
@@ -467,6 +467,9 @@ Your personalized blueprint will show you which steps to take first!
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">Digital Intelligence Platform</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-1 mb-6">
+                  <li>• AI-powered business analysis</li>
+                  <li>• Personalized coaching</li>
+                  <li>• Client portal dashboard</li>
                   <li>• /send - Email & SMS Marketing</li>
                   <li>• /inbox - Unified Communications</li>
                   <li>• /livechat - Live Chat Widget</li>
