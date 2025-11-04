@@ -47,7 +47,7 @@ export function ServicePathways() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-1">Do It Yourself (DIY)</h3>
               <p className="text-sm text-gray-600 mb-3">Self-service automation</p>
-              <div className="text-3xl font-bold mb-2" style={{ color: '#FFD700' }}>$250<span className="text-lg text-gray-500">/mo</span></div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">$250<span className="text-lg text-gray-500">/mo</span></div>
               <p className="text-xs text-gray-500">STARTER tier</p>
             </div>
             <div className="p-6 border-l border-gray-200 text-center bg-secondary/5 relative pt-8">
@@ -121,7 +121,7 @@ export function ServicePathways() {
               </div>
             </div>
             <div className="p-4 border-l border-gray-100 flex items-center justify-center">
-              <span className="text-lg font-bold" style={{ color: '#FFD700' }}>+$99/mo</span>
+              <span className="text-lg font-bold text-blue-600">+$99/mo</span>
             </div>
             <div className="p-4 border-l border-gray-100 flex items-center justify-center bg-secondary/5">
               <span className="text-lg font-bold text-secondary">+$59/mo</span>
@@ -149,15 +149,15 @@ export function ServicePathways() {
             <div className="p-6"></div>
             <div className="p-6 border-l border-gray-200">
               <Link href="/subscription?pathway=diy">
-                <Button className="w-full bg-[#FFD700] hover:bg-[#FFC700] text-gray-900" size="lg" data-testid="button-choose-diy">
-                  DIY
+                <Button className="w-full bg-primary hover:bg-primary/90" size="lg" data-testid="button-choose-diy">
+                  Choose Do It Yourself (DIY)
                 </Button>
               </Link>
             </div>
             <div className="p-6 border-l border-gray-200 bg-secondary/5">
               <Link href="/subscription?pathway=msp">
                 <Button className="w-full bg-secondary hover:bg-secondary/90" size="lg" data-testid="button-choose-msp">
-                  MSP
+                  Choose Managed Services Provided (MSP)
                 </Button>
               </Link>
             </div>
