@@ -16,7 +16,7 @@ import bbLockup from "@assets/businesblueprint assets/Business Blueprint All Loc
 import inboxIcon from "@assets/icons/inbox-icon-corrected.png";
 import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
 import localSeoIcon from "@assets/native icons and favicons/LOCAL SEO_1762239599463.png";
-import sendIcon from "@assets/icons/send-icon-corrected.png";
+import sendIcon from "@assets/native icons and favicons/: send app icon.png";
 import socialMediaIcon from "@assets/icons/social-media-mgmt.png";
 import reputationIcon from "@assets/native icons and favicons/Reputation Management Icon.png";
 import settingsIcon from "@assets/native icons and favicons/settings.png";
