@@ -461,7 +461,9 @@ Your personalized blueprint will show you which steps to take first!
             <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow p-6">
               <CardContent className="flex flex-col">
                 <div className="flex justify-center items-center mb-6 h-20">
-                  <BrandLogo brand="businessblueprint" size="lg" showIcon={true} />
+                  <div style={{ transform: 'scale(1.2)', transformOrigin: 'center' }}>
+                    <BrandLogo brand="businessblueprint" size="lg" showIcon={true} />
+                  </div>
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">Digital Intelligence Platform</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
