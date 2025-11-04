@@ -90,18 +90,15 @@ export default function About() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex justify-center mb-4">
-                  <BrandLogo brand="businessblueprint" variant="light" size="md" className="justify-center" />
+            <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow p-6">
+              <CardContent className="flex flex-col">
+                <div className="flex justify-center items-center mb-6 h-20">
+                  <div style={{ transform: 'scale(1.2)', transformOrigin: 'center' }}>
+                    <BrandLogo brand="businessblueprint" size="lg" showIcon={true} />
+                  </div>
                 </div>
-                <CardDescription>Digital Intelligence Platform</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  AI-powered business assessment, coaching, and complete communication suite
-                </p>
-                <ul className="text-sm text-gray-500 space-y-1">
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">Digital Intelligence Platform</p>
+                <ul className="text-xs sm:text-sm text-gray-500 space-y-1 mb-6">
                   <li>• /send - Email & SMS Marketing</li>
                   <li>• /inbox - Unified Communications</li>
                   <li>• /livechat - Live Chat Widget</li>
@@ -110,40 +107,34 @@ export default function About() {
               </CardContent>
             </Card>
 
-            <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex justify-center mb-4">
-                  <BrandLogo brand="hostsblue" variant="light" size="md" className="justify-center" />
+            <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow p-6">
+              <CardContent className="flex flex-col">
+                <div className="flex justify-center items-center mb-6 h-20">
+                  <div style={{ transform: 'scale(0.85)', transformOrigin: 'center' }}>
+                    <BrandLogo brand="hostsblue" size="md" showIcon={true} />
+                  </div>
                 </div>
-                <CardDescription>Website Hosting Platform</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Professional website hosting with optimization tools
-                </p>
-                <ul className="text-sm text-gray-500 space-y-1">
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">Web Services Platform</p>
+                <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
                   <li>• High-performance hosting</li>
                   <li>• Domain management</li>
-                  <li>• Technical optimization</li>
+                  <li>• Website Builder</li>
                 </ul>
               </CardContent>
             </Card>
 
-            <Card className="text-center border-red-200 hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex justify-center mb-4">
-                  <BrandLogo brand="swipesblue" variant="light" size="md" className="justify-center" />
+            <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
+              <CardContent className="flex flex-col">
+                <div className="flex justify-center items-center mb-6 h-20">
+                  <div style={{ transform: 'scale(0.85)', transformOrigin: 'center' }}>
+                    <BrandLogo brand="swipesblue" size="md" showIcon={true} />
+                  </div>
                 </div>
-                <CardDescription>Payment Gateway Platform</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  Secure payment processing and financial tools
-                </p>
-                <ul className="text-sm text-gray-500 space-y-1">
-                  <li>• Payment gateway services</li>
-                  <li>• Transaction processing</li>
-                  <li>• Financial analytics</li>
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">Payment Gateway Platform</p>
+                <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
+                  <li>• Secure payment processing</li>
+                  <li>• Transaction management</li>
+                  <li>• Shopping cart and Checkout</li>
                 </ul>
               </CardContent>
             </Card>

@@ -466,14 +466,11 @@ Your personalized blueprint will show you which steps to take first!
                   </div>
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">Digital Intelligence Platform</p>
-                <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
-                  <li>• AI-powered business analysis</li>
-                  <li>• Personalized coaching</li>
-                  <li>• Client portal & dashboard</li>
-                  <li className="flex items-center justify-center gap-2">
-                    <strong className="text-green-600">└→ /send:</strong> 
-                    <span>Email + SMS Marketing</span>
-                  </li>
+                <ul className="text-xs sm:text-sm text-gray-500 space-y-1 mb-6">
+                  <li>• /send - Email & SMS Marketing</li>
+                  <li>• /inbox - Unified Communications</li>
+                  <li>• /livechat - Live Chat Widget</li>
+                  <li>• /content - Social Media Mgmt</li>
                 </ul>
                 <Button className="w-full bg-[#FFD700] hover:bg-[#FFC700] text-white mt-auto">
                   Start Assessment
