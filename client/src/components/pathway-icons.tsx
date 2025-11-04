@@ -1,7 +1,7 @@
-import diyIcon from "@assets/icons/diy.png";
-import mspIcon from "@assets/icons/managed-services.png";
-import aiCoachIcon from "@assets/icons/ai-business-coach.png";
-import alcIcon from "@assets/icons/a-la-carte.png";
+import diyIcon from "@assets/native icons and favicons/diy.png";
+import mspIcon from "@assets/native icons and favicons/managed-services.png";
+import aiCoachIcon from "@assets/native icons and favicons/AI Business Coach Blue icon.png";
+import alcIcon from "@assets/native icons and favicons/A LA CARTE.png";
 import captainingIcon from "@assets/native icons and favicons/Captaining Icon.png";
 import sendIcon from "@assets/native icons and favicons/: send app icon.png";
 

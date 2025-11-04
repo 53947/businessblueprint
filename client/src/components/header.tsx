@@ -33,10 +33,11 @@ import lightbulbIcon from "@assets/icons/lightbulb.svg";
 import wrenchIcon from "@assets/icons/wrench.svg";
 import messageSquareIcon from "@assets/icons/message-square.svg";
 import { BrandLogo, BrandIcon } from "@/components/brand-logo";
-import bbAvatar from "@assets/icons/blueprint-avatar.png";
-import bbIcon from "@assets/icons/blueprint-favicon.png";
-import contentIcon from "@assets/icons/social-media-mgmt.png";
-import inboxIcon from "@assets/icons/inbox-icon-new.png";
+import bbAvatar from "@assets/businesblueprint assets/Blueprint_Avatar.png";
+import bbIcon from "@assets/businesblueprint assets/Blueprint_Favicon.png";
+import contentIcon from "@assets/native icons and favicons/: content app icon.png";
+import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
+import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
 import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
 import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
@@ -110,10 +111,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
                                     <img src={sendIcon} alt="/send icon" className="h-10 w-10 object-contain" />
-                                    <span className="text-base font-semibold" style={{ fontWeight: 600 }}>
-                                      <span style={{ color: '#09080E' }}>/</span>
-                                      <span style={{ color: '#FFD700' }}>send</span>
-                                    </span>
+                                    <img src={sendLogo} alt="/send" className="h-8 object-contain" />
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-green-600 dark:text-green-400">Visit Platform →</span>
@@ -141,10 +139,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
                                     <img src={inboxIcon} alt="/inbox icon" className="h-10 w-10 object-contain" />
-                                    <span className="text-base font-semibold" style={{ fontWeight: 600 }}>
-                                      <span style={{ color: '#09080E' }}>/</span>
-                                      <span style={{ color: '#0080FF' }}>inbox</span>
-                                    </span>
+                                    <img src={inboxLogo} alt="/inbox" className="h-8 object-contain" />
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-yellow-600 dark:text-yellow-400">Visit Platform →</span>
@@ -172,10 +167,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
                                     <img src={livechatIcon} alt="/livechat icon" className="h-10 w-10 object-contain" />
-                                    <span className="text-base font-semibold" style={{ fontWeight: 600 }}>
-                                      <span style={{ color: '#09080E' }}>/</span>
-                                      <span style={{ color: '#8000FF' }}>livechat</span>
-                                    </span>
+                                    <img src={livechatLogo} alt="/livechat" className="h-8 object-contain" />
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-teal-600 dark:text-teal-400">Visit Platform →</span>
@@ -203,10 +195,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
                                     <img src={contentIcon} alt="/content icon" className="h-10 w-10 object-contain" />
-                                    <span className="text-base font-semibold" style={{ fontWeight: 600 }}>
-                                      <span style={{ color: '#09080E' }}>/</span>
-                                      <span style={{ color: '#E91EBC' }}>content</span>
-                                    </span>
+                                    <img src={contentLogo} alt="/content" className="h-8 object-contain" />
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span className="text-xs font-semibold text-pink-600 dark:text-pink-400">Visit Platform →</span>
@@ -583,40 +572,28 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   <a href="/send" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-green-50 transition-colors" data-testid="link-mobile-send">
                     <img src={sendIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900" style={{ fontWeight: 600 }}>
-                        <span style={{ color: '#09080E' }}>/</span>
-                        <span style={{ color: '#FFD700' }}>send</span>
-                      </div>
+                      <img src={sendLogo} alt="/send" className="h-5 mb-1" />
                       <div className="text-xs text-gray-600">Email & SMS Marketing</div>
                     </div>
                   </a>
                   <a href="/inbox-app" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-yellow-50 transition-colors" data-testid="link-mobile-inbox">
                     <img src={inboxIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900" style={{ fontWeight: 600 }}>
-                        <span style={{ color: '#09080E' }}>/</span>
-                        <span style={{ color: '#0080FF' }}>inbox</span>
-                      </div>
+                      <img src={inboxLogo} alt="/inbox" className="h-5 mb-1" />
                       <div className="text-xs text-gray-600">Unified Communications</div>
                     </div>
                   </a>
                   <a href="/livechat" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-teal-50 transition-colors" data-testid="link-mobile-livechat">
                     <img src={livechatIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900" style={{ fontWeight: 600 }}>
-                        <span style={{ color: '#09080E' }}>/</span>
-                        <span style={{ color: '#8000FF' }}>livechat</span>
-                      </div>
+                      <img src={livechatLogo} alt="/livechat" className="h-5 mb-1" />
                       <div className="text-xs text-gray-600">Live Chat Widget</div>
                     </div>
                   </a>
                   <a href="/content" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-pink-50 transition-colors" data-testid="link-mobile-content">
                     <img src={contentIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900" style={{ fontWeight: 600 }}>
-                        <span style={{ color: '#09080E' }}>/</span>
-                        <span style={{ color: '#E91EBC' }}>content</span>
-                      </div>
+                      <img src={contentLogo} alt="/content" className="h-5 mb-1" />
                       <div className="text-xs text-gray-600">Social Media Mgmt</div>
                     </div>
                   </a>

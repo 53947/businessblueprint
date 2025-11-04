@@ -364,10 +364,9 @@ export default function ClientPortal() {
                 <div className="flex justify-center mb-3">
                   <img src="/attached_assets/native icons and favicons/: send app icon.png" alt="/send" className="w-16 h-16" />
                 </div>
-                <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
-                  <span style={{ color: '#84D71A' }}>/</span>
-                  <span style={{ color: '#FFD700' }}>send</span>
-                </h3>
+                <div className="flex justify-center">
+                  <img src="/attached_assets/logos and wordmarks/: send app logo.png" alt="/send" className="h-6" />
+                </div>
                 <p className="text-xs text-gray-600">Email & SMS campaigns</p>
               </div>
               
@@ -384,7 +383,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/icons/social-media-mgmt.png" alt="Social Media" className="w-8 h-8" />
+                <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="Social Media" className="w-8 h-8" />
                 <div className="text-center">
                   <div className="grid grid-cols-3 gap-2 text-xs">
                     <div>
@@ -406,12 +405,11 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/icons/social-media-mgmt.png" alt="Social Media" className="w-16 h-16" />
+                  <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="Social Media" className="w-16 h-16" />
                 </div>
-                <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
-                  <span style={{ color: '#84D71A' }}>/</span>
-                  <span style={{ color: '#E91EBC' }}>content</span>
-                </h3>
+                <div className="flex justify-center">
+                  <img src="/attached_assets/logos and wordmarks/: content app logo.png" alt="/content" className="h-6" />
+                </div>
                 <p className="text-xs text-gray-600">Social Media Management</p>
               </div>
               
@@ -419,17 +417,17 @@ export default function ClientPortal() {
               {clientData.socialMedia?.isSetup ? (
                 <div className="grid grid-cols-2 gap-2">
                   <Button size="sm" variant="outline" className="flex items-center justify-center gap-1" onClick={() => setActiveTab("social")} data-testid="button-schedule-social">
-                    <img src="/attached_assets/icons/social-media-mgmt.png" alt="" className="w-4 h-4" />
+                    <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="" className="w-4 h-4" />
                     <span className="text-xs">Schedule</span>
                   </Button>
                   <Button size="sm" variant="outline" className="flex items-center justify-center gap-1" onClick={() => setActiveTab("social")} data-testid="button-respond-social">
-                    <img src="/attached_assets/icons/social-media-mgmt.png" alt="" className="w-4 h-4" />
+                    <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="" className="w-4 h-4" />
                     <span className="text-xs">Respond</span>
                   </Button>
                 </div>
               ) : (
                 <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("social")} data-testid="button-setup-social">
-                  <img src="/attached_assets/icons/social-media-mgmt.png" alt="" className="w-4 h-4" />
+                  <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="" className="w-4 h-4" />
                   <span>Setup</span>
                 </Button>
               )}
@@ -490,10 +488,9 @@ export default function ClientPortal() {
                 <div className="flex justify-center mb-3">
                   <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="/livechat" className="w-16 h-16" />
                 </div>
-                <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
-                  <span style={{ color: '#84D71A' }}>/</span>
-                  <span style={{ color: '#0057FF' }}>livechat</span>
-                </h3>
+                <div className="flex justify-center">
+                  <img src="/attached_assets/logos and wordmarks/: livechat app logo.png" alt="/livechat" className="h-6" />
+                </div>
                 <p className="text-xs text-gray-600">
                   <span className="inline-flex items-center gap-1">
                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
