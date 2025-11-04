@@ -5,20 +5,22 @@ export function Footer() {
 
   return (
     <footer className="bg-gray-400 text-white mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Brand Header */}
-        <div className="mb-8">
-          <BrandLogo brand="businessblueprint" variant="dark" size="xl" />
-          <p className="text-gray-800 text-sm mt-4 max-w-2xl">
+        <div className="mb-8 text-center">
+          <div className="flex justify-center mb-4">
+            <BrandLogo brand="businessblueprint" variant="dark" size="xl" />
+          </div>
+          <p className="text-gray-800 text-sm mt-4 max-w-2xl mx-auto">
             Helping local businesses succeed online. Get found, get customers, get business.
           </p>
-          <div className="flex items-center gap-4 mt-4">
+          <div className="flex items-center justify-center gap-4 mt-4">
             <BrandLogoCompact brand="hostsblue" variant="dark" />
             <BrandLogoCompact brand="swipesblue" variant="dark" />
           </div>
         </div>
 
-        <div className="grid md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-4 gap-8">
 
           {/* Services */}
           <div>
