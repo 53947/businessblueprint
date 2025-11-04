@@ -520,13 +520,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="hidden md:flex items-center space-x-2 bg-[#0080FF] border-[#0080FF] hover:bg-[#0057FF]"
-                  style={{ color: '#FF96DD' }}
+                  className="hidden md:flex items-center space-x-2 bg-white border-blue-500 hover:bg-blue-50 text-blue-600"
                   asChild
                   data-testid="button-quick-inbox"
                 >
                   <a href="/inbox">
-                    <img src={inboxIcon} alt="/inbox" className="w-5 h-5" />
+                    <img src={inboxIcon} alt="/inbox" className="w-5 h-5" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
                     <span className="font-bold">Inbox</span>
                   </a>
                 </Button>
