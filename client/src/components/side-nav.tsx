@@ -13,16 +13,20 @@ import {
 import { cn } from "@/lib/utils";
 import bbIcon from "@assets/businesblueprint assets/Blueprint_Avatar.png";
 import bbLockup from "@assets/businesblueprint assets/Business Blueprint All Lockup Wordmark.png";
-import inboxIcon from "@assets/icons/inbox-icon-corrected.png";
+import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
+import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
 import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
+import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
 import localSeoIcon from "@assets/native icons and favicons/LOCAL SEO_1762239599463.png";
 import sendIcon from "@assets/native icons and favicons/: send app icon.png";
-import socialMediaIcon from "@assets/icons/social-media-mgmt.png";
+import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
+import socialMediaIcon from "@assets/native icons and favicons/: content app icon.png";
+import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
 import reputationIcon from "@assets/native icons and favicons/Reputation Management Icon.png";
 import settingsIcon from "@assets/native icons and favicons/settings.png";
 import aiCoachIcon from "@assets/native icons and favicons/AI Business Coach Blue icon.png";
-import hostsBlueIcon from "@assets/icons/hosts-blue-brandmark.png";
-import swipesBlueIcon from "@assets/icons/swipesblue-brandmark.png";
+import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
+import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;
@@ -55,6 +59,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       label: "inbox",
       hoverLabel: "Unified Communications",
       icon: <img src={inboxIcon} alt="/inbox" className="w-7 h-7 object-contain" />,
+      logo: inboxLogo,
       external: true, 
       href: "/inbox"
     },
@@ -63,6 +68,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       label: "livechat",
       hoverLabel: "Live Chat Widget",
       icon: <img src={livechatIcon} alt="/livechat" className="w-7 h-7 object-contain" />,
+      logo: livechatLogo,
       external: true, 
       href: "/livechat" 
     },
@@ -87,6 +93,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       label: "send",
       hoverLabel: "Email + SMS Marketing",
       icon: <img src={sendIcon} alt="/send" className="w-7 h-7 object-contain" />,
+      logo: sendLogo,
       external: true,
       href: "/send"
     },
@@ -95,6 +102,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       label: "content",
       hoverLabel: "Social Media Management",
       icon: <img src={socialMediaIcon} alt="/content" className="w-7 h-7 object-contain" />,
+      logo: contentLogo,
       external: true,
       href: "/content"
     },
@@ -170,11 +178,8 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
               {item.icon}
             </span>
             {!collapsed && (
-              (item.id === "inbox" || item.id === "livechat" || item.id === "send" || item.id === "content") ? (
-                <span className="flex-1 text-base font-['Archivo']" style={{ fontWeight: 600 }} data-testid={`text-nav-${item.id}`}>
-                  <span style={{ color: '#09080E' }}>/</span>
-                  <span style={{ color: item.id === 'send' ? '#FFD700' : item.id === 'inbox' ? '#0080FF' : item.id === 'content' ? '#E91EBC' : '#8000FF' }}>{item.label}</span>
-                </span>
+              item.logo ? (
+                <img src={item.logo} alt={item.label} className="flex-1 h-5 object-contain object-left" data-testid={`logo-nav-${item.id}`} />
               ) : (
                 <span className="flex-1 text-base" data-testid={`text-nav-${item.id}`}>
                   {item.label}
