@@ -48,7 +48,7 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
                   Start Free Assessment
                 </Button>
                 <Link href="/ai-coach">
-                  <Button variant="outline" size="lg" className="border-2 w-full sm:w-auto">
+                  <Button size="lg" className="bg-[#FFD700] hover:bg-[#FFC700] text-gray-900 w-full sm:w-auto">
                     <AICoachIcon className="w-8 h-8 mr-2" />
                     AI Business Coach
                   </Button>
