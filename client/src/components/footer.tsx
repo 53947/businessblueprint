@@ -6,20 +6,19 @@ export function Footer() {
   return (
     <footer className="bg-gray-400 text-white mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-5 gap-8">
-          {/* Brand Section */}
-          <div className="col-span-1">
-            <div className="mb-4">
-              <BrandLogo brand="businessblueprint" variant="dark" size="lg" />
-            </div>
-            <p className="text-gray-700 text-sm mb-4">
-              Helping local businesses succeed online. Get found, get customers, get business.
-            </p>
-            <div className="flex flex-col space-y-2">
-              <BrandLogoCompact brand="hostsblue" variant="dark" />
-              <BrandLogoCompact brand="swipesblue" variant="dark" />
-            </div>
+        {/* Brand Header */}
+        <div className="mb-8">
+          <BrandLogo brand="businessblueprint" variant="dark" size="xl" />
+          <p className="text-gray-700 text-sm mt-4 max-w-2xl">
+            Helping local businesses succeed online. Get found, get customers, get business.
+          </p>
+          <div className="flex items-center gap-4 mt-4">
+            <BrandLogoCompact brand="hostsblue" variant="dark" />
+            <BrandLogoCompact brand="swipesblue" variant="dark" />
           </div>
+        </div>
+
+        <div className="grid md:grid-cols-4 gap-8">
 
           {/* Services */}
           <div>
