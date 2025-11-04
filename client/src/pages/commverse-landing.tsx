@@ -5,7 +5,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import sendIcon from "@assets/icons/send-icon-corrected.png";
 import inboxIcon from "@assets/Inbox_1762239599463.png";
-import livechatIcon from "@assets/livechat icon_1762239599463.png";
+import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
 
 export default function CommverseLanding() {
   return (

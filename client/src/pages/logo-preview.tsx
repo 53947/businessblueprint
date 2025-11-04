@@ -1,5 +1,6 @@
 import { Header } from "@/components/header";
 import { BrandLogo } from "@/components/brand-logo";
+import masterReference from "@assets/BluePrint Master Logos and Icons and Names_1759269072017.png";
 
 export default function LogoPreview() {
   return (
@@ -14,6 +15,19 @@ export default function LogoPreview() {
           This page displays all approved logos, icons, and naming conventions using the <span className="font-archivo font-semibold">Archivo font</span>.
           <span className="font-semibold text-red-600"> Only assets shown here may be used without express permission.</span>
         </p>
+
+        {/* Master Reference Image */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-12">
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700 text-center">Master Reference Sheet</h2>
+          <div className="flex justify-center">
+            <img 
+              src={masterReference} 
+              alt="BluePrint Master Logos and Icons Reference" 
+              className="max-w-full h-auto rounded-lg border-2 border-gray-200"
+            />
+          </div>
+          <p className="text-sm text-gray-500 text-center mt-4">Official approved assets - Light and Dark environment versions</p>
+        </div>
 
         {/* businessblueprint.io Assets */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
