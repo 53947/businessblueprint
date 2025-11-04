@@ -29,6 +29,7 @@ import ContentLanding from "@/pages/content-landing";
 import CommverseLanding from "@/pages/commverse-landing";
 import CommversePricing from "@/pages/commverse-pricing";
 import PathwaysPage from "@/pages/pathways";
+import PricingPage from "@/pages/pricing";
 import MarketplacePage from "@/pages/marketplace";
 import MarketplaceCheckoutPage from "@/pages/marketplace-checkout";
 import BIIF from "@/pages/biif";
@@ -56,6 +57,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/about" component={About} />
       <Route path="/pathways" component={PathwaysPage} />
+      <Route path="/pricing" component={PricingPage} />
       <Route path="/marketplace" component={MarketplacePage} />
       <Route path="/marketplace/checkout" component={MarketplaceCheckoutPage} />
       <Route path="/subscription" component={Subscription} />

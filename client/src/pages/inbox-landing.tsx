@@ -5,7 +5,7 @@ import { SiWhatsapp, SiTiktok } from "react-icons/si";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import inboxLogo from "@assets/inbox logo_1760075605262.png";
-import inboxIcon from "@assets/Unified mailbox_1760074368869.png";
+import inboxIcon from "@assets/Inbox_1762239599463.png";
 
 export default function InboxLanding() {
   return (

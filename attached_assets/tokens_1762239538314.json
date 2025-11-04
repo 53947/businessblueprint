@@ -1,0 +1,50 @@
+{
+  "color": {
+    "bbBlue": {
+      "value": "#0000FF"
+    },
+    "bbPurple": {
+      "value": "#8000FF"
+    },
+    "bbOrange1": {
+      "value": "#FF5F00"
+    },
+    "bbOrange2": {
+      "value": "#F79248"
+    },
+    "bbGreen": {
+      "value": "#00FF40"
+    },
+    "bbCyan": {
+      "value": "#0090FF"
+    },
+    "bbRed": {
+      "value": "#FF0040"
+    },
+    "bbInkBg": {
+      "value": "#0A0B10"
+    },
+    "bbWhite": {
+      "value": "#FFFFFF"
+    }
+  },
+  "gradient": {
+    "start": {
+      "value": "linear-gradient(315deg, #FF5F00 0%, #F79248 100%)"
+    },
+    "advanced": {
+      "value": "linear-gradient(315deg, #0000FF 0%, #8000FF 100%)"
+    },
+    "scale": {
+      "value": "linear-gradient(315deg, #00FF40 0%, #0090FF 100%)"
+    }
+  },
+  "font": {
+    "heading": {
+      "value": "Archivo Semi Expanded"
+    },
+    "body": {
+      "value": "Archivo"
+    }
+  }
+}
