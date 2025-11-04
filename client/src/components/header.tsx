@@ -37,11 +37,18 @@ import bbAvatar from "@assets/icons/blueprint-avatar.png";
 import bbIcon from "@assets/icons/blueprint-favicon.png";
 import contentIcon from "@assets/icons/social-media-mgmt.png";
 import inboxIcon from "@assets/icons/inbox-icon-new.png";
-import sendIcon from "@assets/send app_1762239599464.png";
-import livechatIcon from "@assets/livechat icon_1762239599463.png";
-import commverseBundle from "@assets/Commverse_1762239599461.png";
-import hostsBlueIcon from "@assets/Hosts Blue Brandmark.png";
-import swipesBlueIcon from "@assets/swipesblue brandmark.png";
+import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
+import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
+import airswipedLogo from "@assets/swipesblue icon_1760810511865.png";
+import sendLogo from "@assets/send logo_1760075605263.png";
+import sendIcon from "@assets/icons/send-icon-corrected.png";
+import inboxLogo from "@assets/inbox logo_1760075605262.png";
+import livechatLogo from "@assets/livechat logo_1760075605262.png";
+import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
+import hostsBlueIcon from "@assets/Hosts Blue Icon New_1760810493739.png";
+import swipesBlueIcon from "@assets/swipesblue icon_1760810511865.png";
+import blueprintIcon from "@assets/blueprint-icon.svg";
+import commverseBundle from "@assets/Commverse Bundle_1760662442941.png";
 
 interface HeaderProps {
   showNavigation?: boolean;

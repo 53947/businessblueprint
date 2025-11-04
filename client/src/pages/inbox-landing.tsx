@@ -4,6 +4,7 @@ import { Check, Mail, MessageSquare, Facebook, Instagram, Twitter, MessageCircle
 import { SiWhatsapp, SiTiktok } from "react-icons/si";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import inboxLogo from "@assets/inbox logo_1760075605262.png";
 import inboxIcon from "@assets/Inbox_1762239599463.png";
 
 export default function InboxLanding() {
@@ -15,8 +16,9 @@ export default function InboxLanding() {
       <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="flex items-center justify-center mb-8">
-              <img src={inboxIcon} alt="/inbox" className="h-20 w-20 object-contain drop-shadow-lg" />
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <img src={inboxIcon} alt="/inbox icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <img src={inboxLogo} alt="/inbox" className="h-16 object-contain drop-shadow-md" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Every Customer Message.<br />One Powerful Inbox.
