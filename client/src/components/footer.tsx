@@ -10,9 +10,9 @@ export function Footer() {
           {/* Brand Section */}
           <div className="col-span-1">
             <div className="mb-4">
-              <BrandLogo brand="businessblueprint" variant="dark" size="md" />
+              <BrandLogo brand="businessblueprint" variant="dark" size="lg" className="brightness-0" />
             </div>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-gray-700 text-sm mb-4">
               Helping local businesses succeed online. Get found, get customers, get business.
             </p>
             <div className="flex flex-col space-y-2">
