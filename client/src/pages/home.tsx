@@ -26,7 +26,7 @@ export default function Home() {
       <Header showNavigation={true} />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gray-50 via-white to-blue-50 py-12 lg:py-20">
+      <section className="bg-gradient-to-b from-blue-50 via-white to-gray-50 py-12 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
             <div className="mb-8 lg:mb-0">
@@ -36,7 +36,7 @@ export default function Home() {
                   Powered by Google Business Intelligence
                 </div>
               </div>
-              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
                 <span style={{ color: '#FFD700' }}>Get Found, Get Customers,</span> Get Business
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
