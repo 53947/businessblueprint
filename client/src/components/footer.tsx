@@ -10,7 +10,7 @@ export function Footer() {
           {/* Brand Section */}
           <div className="col-span-1">
             <div className="mb-4">
-              <BrandLogo brand="businessblueprint" variant="dark" size="lg" className="brightness-0" />
+              <BrandLogo brand="businessblueprint" variant="dark" size="lg" />
             </div>
             <p className="text-gray-700 text-sm mb-4">
               Helping local businesses succeed online. Get found, get customers, get business.
