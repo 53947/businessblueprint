@@ -132,27 +132,27 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* /inbox */}
                             <NavigationMenuLink asChild>
                               <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-yellow-500 hover:shadow-xl hover:from-yellow-50 hover:to-yellow-100 dark:hover:from-yellow-950 dark:hover:to-yellow-900 hover:scale-[1.02]"
+                                className="group block select-none space-y-2 rounded-lg border border-blue-200 bg-white dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-xl hover:bg-blue-50 dark:hover:from-blue-950 dark:hover:to-blue-900 hover:scale-[1.02]"
                                 href="/inbox-app"
                                 data-testid="link-app-inbox"
                               >
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-2">
-                                    <img src={inboxIcon} alt="/inbox icon" className="h-10 w-10 object-contain" />
-                                    <img src={inboxLogo} alt="/inbox" className="h-8 object-contain" />
+                                    <img src={inboxIcon} alt="/inbox icon" className="h-10 w-10 object-contain" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
+                                    <img src={inboxLogo} alt="/inbox" className="h-8 object-contain" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
                                   </div>
                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-xs font-semibold text-yellow-600 dark:text-yellow-400">Visit Platform →</span>
+                                    <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">Visit Platform →</span>
                                   </div>
                                 </div>
-                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-inbox-title">Unified Communications</div>
-                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-inbox-description">
+                                <div className="text-base font-bold text-blue-600 dark:text-white" data-testid="text-app-inbox-title">Unified Communications</div>
+                                <p className="text-xs leading-relaxed text-blue-600 dark:text-gray-400" data-testid="text-app-inbox-description">
                                   Multi-channel messaging hub for all customer communications
                                 </p>
-                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-inbox-features">
-                                  <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Email, Chat & Social DMs</li>
-                                  <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Real-time Messaging</li>
-                                  <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Team Collaboration</li>
+                                <ul className="mt-3 space-y-1.5 text-xs text-blue-700 dark:text-gray-300" data-testid="list-app-inbox-features">
+                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Email, Chat & Social DMs</li>
+                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Real-time Messaging</li>
+                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Team Collaboration</li>
                                 </ul>
                               </a>
                             </NavigationMenuLink>
