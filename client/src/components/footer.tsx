@@ -9,7 +9,7 @@ export function Footer() {
         {/* Brand Header */}
         <div className="mb-8">
           <BrandLogo brand="businessblueprint" variant="dark" size="xl" />
-          <p className="text-gray-700 text-sm mt-4 max-w-2xl">
+          <p className="text-gray-800 text-sm mt-4 max-w-2xl">
             Helping local businesses succeed online. Get found, get customers, get business.
           </p>
           <div className="flex items-center gap-4 mt-4">
@@ -18,12 +18,12 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid md:grid-cols-4 gap-8 max-w-5xl mx-auto">
 
           {/* Services */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Services</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
+            <h3 className="text-lg font-semibold mb-4 text-white">Services</h3>
+            <ul className="space-y-2 text-sm text-gray-800">
               <li><a href="/assessment" className="hover:text-white transition-colors">Digital Assessment</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Website Development</a></li>
               <li><a href="#" className="hover:text-white transition-colors">SEO Optimization</a></li>
@@ -35,8 +35,8 @@ export function Footer() {
 
           {/* Solutions */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Solutions</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
+            <h3 className="text-lg font-semibold mb-4 text-white">Solutions</h3>
+            <ul className="space-y-2 text-sm text-gray-800">
               <li><a href="/subscription" className="hover:text-white transition-colors">DIY Tools</a></li>
               <li><a href="/subscription" className="hover:text-white transition-colors">Managed Services</a></li>
               <li><a href="/ai-coach" className="hover:text-white transition-colors">AI Coach</a></li>
@@ -48,8 +48,8 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Company</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
+            <h3 className="text-lg font-semibold mb-4 text-white">Company</h3>
+            <ul className="space-y-2 text-sm text-gray-800">
               <li><a href="/about" className="hover:text-white transition-colors">About Us</a></li>
               <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
               <li><a href="/sitemap" className="hover:text-white transition-colors">Site Map</a></li>
@@ -61,8 +61,8 @@ export function Footer() {
 
           {/* Support */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
-            <ul className="space-y-2 text-sm text-gray-400">
+            <h3 className="text-lg font-semibold mb-4 text-white">Support</h3>
+            <ul className="space-y-2 text-sm text-gray-800">
               <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
               <li><a href="/contact" className="hover:text-white transition-colors">Contact Support</a></li>
@@ -76,10 +76,10 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-500 pt-8 mt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-sm text-gray-400 mb-4 md:mb-0">
+            <div className="text-sm text-gray-800 mb-4 md:mb-0">
               © {currentYear} Triad Blue Inc. All rights reserved.
             </div>
-            <div className="flex items-center space-x-6 text-sm text-gray-400">
+            <div className="flex items-center space-x-6 text-sm text-gray-800">
               <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
               <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
               <a href="/data-deletion" className="hover:text-white transition-colors">Data Deletion</a>
