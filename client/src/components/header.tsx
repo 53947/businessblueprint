@@ -41,7 +41,7 @@ import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
 import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
 import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
-import sendIcon from "@assets/icons/send-icon-corrected.png";
+import sendIcon from "@assets/native icons and favicons/: send app icon.png";
 import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
 import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
 import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";

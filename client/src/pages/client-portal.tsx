@@ -295,7 +295,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/LOCAL SEO_1760785581174.png" alt="Local SEO" className="w-8 h-8" />
+                <img src="/attached_assets/native icons and favicons/LOCAL SEO_1762239599463.png" alt="Local SEO" className="w-8 h-8" />
                 <div className="text-center">
                   <div className="flex gap-3">
                     <div>
@@ -314,7 +314,7 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/LOCAL SEO_1760785581174.png" alt="Local SEO" className="w-16 h-16" />
+                  <img src="/attached_assets/native icons and favicons/LOCAL SEO_1762239599463.png" alt="Local SEO" className="w-16 h-16" />
                 </div>
                 <h3 className="font-semibold text-sm mb-2">Local SEO Mgmt</h3>
                 <p className="text-xs text-gray-600">Manage listings & citations</p>
@@ -322,7 +322,7 @@ export default function ClientPortal() {
               
               {/* Action Button (BOTTOM) */}
               <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("listings")} data-testid="button-manage-local-seo">
-                <img src="/attached_assets/LOCAL SEO_1760785581174.png" alt="" className="w-4 h-4" />
+                <img src="/attached_assets/native icons and favicons/LOCAL SEO_1762239599463.png" alt="" className="w-4 h-4" />
                 <span>Manage</span>
               </Button>
             </CardContent>
@@ -333,7 +333,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/icons/send-icon-corrected.png" alt="/send" className="w-8 h-8" />
+                <img src="/attached_assets/native icons and favicons/: send app icon.png" alt="/send" className="w-8 h-8" />
                 <div className="text-center w-full">
                   {clientData.campaigns.latest ? (
                     <>
@@ -362,7 +362,7 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/icons/send-icon-corrected.png" alt="/send" className="w-16 h-16" />
+                  <img src="/attached_assets/native icons and favicons/: send app icon.png" alt="/send" className="w-16 h-16" />
                 </div>
                 <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
                   <span style={{ color: '#84D71A' }}>/</span>
@@ -373,7 +373,7 @@ export default function ClientPortal() {
               
               {/* Action Button (BOTTOM) */}
               <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("campaigns")} data-testid="button-schedule-campaign">
-                <img src="/attached_assets/icons/send-icon-corrected.png" alt="" className="w-4 h-4" />
+                <img src="/attached_assets/native icons and favicons/: send app icon.png" alt="" className="w-4 h-4" />
                 <span>Schedule</span>
               </Button>
             </CardContent>
@@ -441,7 +441,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/Reputation Management Icon_1760786977607.png" alt="Reputation" className="w-8 h-8" />
+                <img src="/attached_assets/native icons and favicons/Reputation Management Icon.png" alt="Reputation" className="w-8 h-8" />
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">{clientData.reviews.average}</div>
                   <p className="text-[10px] text-gray-600">Review Ratings</p>
@@ -451,7 +451,7 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/Reputation Management Icon_1760786977607.png" alt="Reputation" className="w-16 h-16" />
+                  <img src="/attached_assets/native icons and favicons/Reputation Management Icon.png" alt="Reputation" className="w-16 h-16" />
                 </div>
                 <h3 className="font-semibold text-sm mb-2">Reputation Mgmt</h3>
                 <p className="text-xs text-gray-600">Monitor and respond to ratings and reviews</p>
@@ -459,7 +459,7 @@ export default function ClientPortal() {
               
               {/* Action Button (BOTTOM) */}
               <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("reviews")} data-testid="button-respond-reviews">
-                <img src="/attached_assets/Reputation Management Icon_1760786977607.png" alt="" className="w-4 h-4" />
+                <img src="/attached_assets/native icons and favicons/Reputation Management Icon.png" alt="" className="w-4 h-4" />
                 <span>Respond</span>
               </Button>
             </CardContent>
@@ -470,7 +470,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/livechat icon_1760788412068.png" alt="/livechat" className="w-8 h-8" />
+                <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="/livechat" className="w-8 h-8" />
                 <div className="text-center">
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
@@ -488,7 +488,7 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/livechat icon_1760788412068.png" alt="/livechat" className="w-16 h-16" />
+                  <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="/livechat" className="w-16 h-16" />
                 </div>
                 <h3 className="font-semibold text-sm mb-2 font-['Archivo']">
                   <span style={{ color: '#84D71A' }}>/</span>
@@ -505,12 +505,12 @@ export default function ClientPortal() {
               {/* Action Button (BOTTOM) - Conditional */}
               {clientData.livechat?.isSetup ? (
                 <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/livechat-demo")} data-testid="button-engage-livechat">
-                  <img src="/attached_assets/livechat icon_1760788412068.png" alt="" className="w-4 h-4" />
+                  <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="" className="w-4 h-4" />
                   <span>Engage</span>
                 </Button>
               ) : (
                 <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/livechat-demo")} data-testid="button-setup-livechat">
-                  <img src="/attached_assets/livechat icon_1760788412068.png" alt="" className="w-4 h-4" />
+                  <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="" className="w-4 h-4" />
                   <span>Setup Widget</span>
                 </Button>
               )}
