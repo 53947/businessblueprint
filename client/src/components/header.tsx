@@ -92,14 +92,292 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 {/* Desktop Mega Menu */}
                 <NavigationMenu className="hidden lg:flex ml-8">
                   <NavigationMenuList>
-                    {/* Applications - Commverse Apps Only */}
+                    {/* How It Works (NEW) */}
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-how-it-works">
+                        <img src={compassIcon} alt="" className="w-4 h-4" />
+                        <span>How It Works</span>
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <div className="p-6 w-[600px]">
+                          <div className="mb-4">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                              Get Found, Get Customers, Get Business
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              The Digital Blueprint Process: Foundation → Framing → Build Method → Fixtures → Inspections → Handover
+                            </p>
+                          </div>
+
+                          <div className="space-y-4">
+                            <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                              <div className="flex-shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold">1</div>
+                              </div>
+                              <div>
+                                <div className="font-bold text-gray-900 dark:text-white">Digital Assessment</div>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                  AI analyzes your online presence and gives you a Digital IQ Score
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                              <div className="flex-shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">2</div>
+                              </div>
+                              <div>
+                                <div className="font-bold text-gray-900 dark:text-white">Choose Your Base Plan</div>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                  Start ($99), Advanced ($299), or Scale ($999) - pick your structural depth
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                              <div className="flex-shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold">3</div>
+                              </div>
+                              <div>
+                                <div className="font-bold text-gray-900 dark:text-white">Pick Your Build Method</div>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                  DIY (you build), MSP (we manage), or ALC (pick modules without base plan)
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                              <div className="flex-shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">4</div>
+                              </div>
+                              <div>
+                                <div className="font-bold text-gray-900 dark:text-white">Build Your Blueprint</div>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                  Add Commverse apps, coaching, and access your dashboard
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mt-6">
+                            <Link href="/assessment">
+                              <Button className="w-full" data-testid="button-start-assessment">
+                                Start Your Free Assessment →
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+
+                    {/* Pricing (ENHANCED) */}
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-pricing">
+                        <img src={dollarSignIcon} alt="" className="w-4 h-4" />
+                        <span>Pricing</span>
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <div className="p-6 w-[800px]">
+                          <div className="mb-6">
+                            <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
+                              Base Plans - Choose Your Structural Depth
+                            </h4>
+                            <div className="grid grid-cols-3 gap-4">
+                              <NavigationMenuLink asChild>
+                                <a
+                                  className="block p-4 rounded-lg border-2 border-orange-200 dark:border-orange-800 hover:border-orange-500 hover:shadow-lg transition-all"
+                                  href="/pricing?plan=start"
+                                  data-testid="link-plan-start"
+                                >
+                                  <div className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-1">$99<span className="text-sm">/mo</span></div>
+                                  <div className="font-bold text-gray-900 dark:text-white mb-2">Start</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                                    Lay the foundation: assessment, Digital IQ, ~50 listings, starter SEO
+                                  </p>
+                                </a>
+                              </NavigationMenuLink>
+
+                              <NavigationMenuLink asChild>
+                                <a
+                                  className="block p-4 rounded-lg border-2 border-blue-200 dark:border-blue-800 hover:border-blue-500 hover:shadow-lg transition-all"
+                                  href="/pricing?plan=advanced"
+                                  data-testid="link-plan-advanced"
+                                >
+                                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">$299<span className="text-sm">/mo</span></div>
+                                  <div className="font-bold text-gray-900 dark:text-white mb-2">Advanced</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                                    Build your framework: ~150 listings, automation, review flow
+                                  </p>
+                                </a>
+                              </NavigationMenuLink>
+
+                              <NavigationMenuLink asChild>
+                                <a
+                                  className="block p-4 rounded-lg border-2 border-green-200 dark:border-green-800 hover:border-green-500 hover:shadow-lg transition-all"
+                                  href="/pricing?plan=scale"
+                                  data-testid="link-plan-scale"
+                                >
+                                  <div className="text-2xl font-bold text-green-600 dark:text-green-400 mb-1">$999<span className="text-sm">/mo</span></div>
+                                  <div className="font-bold text-gray-900 dark:text-white mb-2">Scale</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                                    Full build: multi-location, advanced automation, executive dashboards
+                                  </p>
+                                  <p className="text-xs text-red-600 dark:text-red-400 mt-2">
+                                    ⚠️ Incompatible with ALC
+                                  </p>
+                                </a>
+                              </NavigationMenuLink>
+                            </div>
+                          </div>
+
+                          <div className="mb-6">
+                            <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
+                              Execution Styles - Pick Your Build Method
+                            </h4>
+                            <div className="grid grid-cols-3 gap-4">
+                              <NavigationMenuLink asChild>
+                                <a
+                                  className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-orange-500 hover:shadow-md transition-all"
+                                  href="/pricing?style=diy"
+                                  data-testid="link-execution-diy"
+                                >
+                                  <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
+                                    <span className="text-xl">🔨</span>
+                                  </div>
+                                  <div>
+                                    <div className="font-bold text-gray-900 dark:text-white">DIY</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">You install from the plan</p>
+                                  </div>
+                                </a>
+                              </NavigationMenuLink>
+
+                              <NavigationMenuLink asChild>
+                                <a
+                                  className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-purple-500 hover:shadow-md transition-all"
+                                  href="/pricing?style=msp"
+                                  data-testid="link-execution-msp"
+                                >
+                                  <img src={hostsBlueIcon} alt="MSP" className="w-10 h-10 rounded-lg" />
+                                  <div>
+                                    <div className="font-bold text-gray-900 dark:text-white">MSP</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">Our crew manages the build</p>
+                                  </div>
+                                </a>
+                              </NavigationMenuLink>
+
+                              <NavigationMenuLink asChild>
+                                <a
+                                  className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-green-500 hover:shadow-md transition-all"
+                                  href="/pricing?style=alc"
+                                  data-testid="link-execution-alc"
+                                >
+                                  <div className="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
+                                    <span className="text-xl">🎯</span>
+                                  </div>
+                                  <div>
+                                    <div className="font-bold text-gray-900 dark:text-white">ALC</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">Pick modules, no base plan</p>
+                                  </div>
+                                </a>
+                              </NavigationMenuLink>
+                            </div>
+                          </div>
+
+                          <div>
+                            <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
+                              Marketplace - Add-Ons & Coaching
+                            </h4>
+                            <div className="space-y-2">
+                              <NavigationMenuLink asChild>
+                                <a
+                                  className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 hover:shadow-md transition-all"
+                                  href="/pricing?addon=commverse"
+                                  data-testid="link-addon-commverse"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <img src={commverseBundle} alt="Commverse" className="w-10 h-10 rounded-lg" />
+                                    <div>
+                                      <div className="font-bold text-gray-900 dark:text-white">Commverse Bundle</div>
+                                      <p className="text-xs text-gray-600 dark:text-gray-400">All 4 apps - Save $40/mo</p>
+                                    </div>
+                                  </div>
+                                  <div className="text-lg font-bold text-blue-600 dark:text-blue-400">$100/mo</div>
+                                </a>
+                              </NavigationMenuLink>
+
+                              <NavigationMenuLink asChild>
+                                <a
+                                  className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-purple-500 hover:shadow-md transition-all"
+                                  href="/pricing?addon=coach-blue"
+                                  data-testid="link-addon-coach-blue"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <span className="text-2xl">🤖</span>
+                                    <div>
+                                      <div className="font-bold text-gray-900 dark:text-white">Coach Blue</div>
+                                      <p className="text-xs text-gray-600 dark:text-gray-400">AI Business Coach</p>
+                                    </div>
+                                  </div>
+                                  <div className="text-sm font-bold text-purple-600 dark:text-purple-400">$99 DIY / $59 MSP</div>
+                                </a>
+                              </NavigationMenuLink>
+
+                              <NavigationMenuLink asChild>
+                                <a
+                                  className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-yellow-500 hover:shadow-md transition-all"
+                                  href="/pricing?addon=captains-chair"
+                                  data-testid="link-addon-captains-chair"
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <span className="text-2xl">👨‍✈️</span>
+                                    <div>
+                                      <div className="font-bold text-gray-900 dark:text-white">Captain's Chair</div>
+                                      <p className="text-xs text-gray-600 dark:text-gray-400">Personal CEO Coaching (max 2 months)</p>
+                                    </div>
+                                  </div>
+                                  <div className="text-lg font-bold text-yellow-600 dark:text-yellow-400">$499/mo</div>
+                                </a>
+                              </NavigationMenuLink>
+                            </div>
+                          </div>
+                        </div>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+
+                    {/* Applications - Commverse Apps with Bundle Highlight */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-applications">
                         <img src={layersIcon} alt="" className="w-4 h-4" />
                         <span>Applications</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid gap-4 p-6 w-[600px] lg:w-[700px]">
+                        <div className="p-6 w-[700px]">
+                          <div className="mb-6 p-4 rounded-lg border-2 border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950">
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <img src={commverseBundle} alt="Commverse Bundle" className="h-12 w-12 object-contain" />
+                                <div>
+                                  <div className="text-lg font-bold text-gray-900 dark:text-white">Commverse Bundle</div>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400">All 4 Communication Apps</p>
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">$100<span className="text-sm">/mo</span></div>
+                                <p className="text-xs text-green-600 dark:text-green-400">Save $40/month</p>
+                              </div>
+                            </div>
+                            <Link href="/applications?bundle=commverse">
+                              <Button className="w-full" data-testid="button-get-commverse">
+                                Get Commverse Bundle →
+                              </Button>
+                            </Link>
+                          </div>
+
+                          <div className="mb-3">
+                            <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+                              Or choose individual apps at $35/mo each
+                            </h4>
+                          </div>
                           <div className="grid grid-cols-2 gap-4">
                             {/* /send */}
                             <NavigationMenuLink asChild>
@@ -217,42 +495,90 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Pricing */}
+                    {/* Solutions */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-pricing">
-                        <img src={dollarSignIcon} alt="" className="w-4 h-4" />
-                        <span>Pricing</span>
+                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-solutions">
+                        <img src={lightbulbIcon} alt="" className="w-4 h-4" />
+                        <span>Solutions</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-6 w-[400px]">
-                          <div className="space-y-4">
-                            {/* Pathways */}
-                            <a href="/pathways" className="group block p-4 rounded-lg border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all">
-                              <div className="flex items-center gap-3 mb-2">
-                                <img src={compassIcon} alt="" className="w-6 h-6" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
-                                <h3 className="text-base font-bold text-gray-900">Pathways</h3>
-                              </div>
-                              <p className="text-sm text-gray-600">Compare Do It Yourself (DIY) and Managed Services Provided (MSP)</p>
-                            </a>
+                        <div className="grid gap-4 p-6 w-[600px]">
+                          <div className="grid grid-cols-1 gap-4">
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-orange-500 hover:shadow-lg"
+                                href="/solutions/businessblueprint"
+                                data-testid="link-solution-businessblueprint"
+                              >
+                                <div className="flex items-center gap-3 mb-2">
+                                  <img src={blueprintIcon} alt="Business Blueprint" className="h-12 w-12 object-contain" />
+                                  <div>
+                                    <div className="text-lg font-bold text-gray-900 dark:text-white">Business Blueprint</div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">AI-Powered Digital Intelligence Platform</p>
+                                  </div>
+                                </div>
+                                <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
+                                  <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> AI-powered assessment & coaching</li>
+                                  <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> Digital IQ scoring</li>
+                                  <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> Complete communication suite</li>
+                                  <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> Dashboard & analytics</li>
+                                </ul>
+                              </a>
+                            </NavigationMenuLink>
 
-                            {/* Marketplace */}
-                            <a href="/marketplace" className="group block p-4 rounded-lg border border-gray-200 hover:border-green-500 hover:bg-green-50 transition-all">
-                              <div className="flex items-center gap-3 mb-2">
-                                <img src={shoppingBasketIcon} alt="" className="w-6 h-6" style={{ filter: 'invert(46%) sepia(96%) saturate(589%) hue-rotate(86deg) brightness(92%) contrast(87%)' }} />
-                                <h3 className="text-base font-bold text-gray-900">Marketplace</h3>
-                              </div>
-                              <p className="text-sm text-gray-600">Browse all plans, add-ons, and services with pricing</p>
-                            </a>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-purple-500 hover:shadow-lg"
+                                href="/solutions/hostsblue"
+                                data-testid="link-solution-hostsblue"
+                              >
+                                <div className="flex items-center gap-3 mb-2">
+                                  <img src={hostsBlueIcon} alt="Hosts Blue" className="h-12 w-12 object-contain" />
+                                  <div>
+                                    <div className="text-lg font-bold text-gray-900 dark:text-white">Hosts Blue</div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Web Services & MSP Partner</p>
+                                  </div>
+                                </div>
+                                <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
+                                  <li className="flex items-center"><span className="text-purple-500 mr-1.5">•</span> High-performance hosting</li>
+                                  <li className="flex items-center"><span className="text-purple-500 mr-1.5">•</span> Domain management</li>
+                                  <li className="flex items-center"><span className="text-purple-500 mr-1.5">•</span> Website builder tools</li>
+                                  <li className="flex items-center"><span className="text-purple-500 mr-1.5">•</span> Technical infrastructure</li>
+                                </ul>
+                              </a>
+                            </NavigationMenuLink>
+
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-red-500 hover:shadow-lg"
+                                href="/solutions/swipesblue"
+                                data-testid="link-solution-swipesblue"
+                              >
+                                <div className="flex items-center gap-3 mb-2">
+                                  <img src={swipesBlueIcon} alt="Swipes Blue" className="h-12 w-12 object-contain" />
+                                  <div>
+                                    <div className="text-lg font-bold text-gray-900 dark:text-white">Swipes Blue</div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Secure Payment Gateway</p>
+                                  </div>
+                                </div>
+                                <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
+                                  <li className="flex items-center"><span className="text-red-500 mr-1.5">•</span> Secure checkout integration</li>
+                                  <li className="flex items-center"><span className="text-red-500 mr-1.5">•</span> Transaction management</li>
+                                  <li className="flex items-center"><span className="text-red-500 mr-1.5">•</span> Powers all platform payments</li>
+                                  <li className="flex items-center"><span className="text-red-500 mr-1.5">•</span> Embedded payment flows</li>
+                                </ul>
+                              </a>
+                            </NavigationMenuLink>
                           </div>
                         </div>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Solutions */}
+                    {/* Resources - Keep Current */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100">
+                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-resources">
                         <img src={bookOpenIcon} alt="" className="w-4 h-4" />
-                        <span>Solutions</span>
+                        <span>Resources</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="grid grid-cols-3 gap-4 p-6 w-[700px]">
