@@ -99,12 +99,13 @@ export default function About() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-4">
-                  AI-powered business assessment, coaching, and strategic guidance
+                  AI-powered business assessment, coaching, and complete communication suite
                 </p>
                 <ul className="text-sm text-gray-500 space-y-1">
-                  <li>• Business intelligence analysis</li>
-                  <li>• AI coaching and guidance</li>
-                  <li>• Client portal and dashboard</li>
+                  <li>• /send - Email & SMS Marketing</li>
+                  <li>• /inbox - Unified Communications</li>
+                  <li>• /livechat - Live Chat Widget</li>
+                  <li>• /content - Social Media Mgmt</li>
                 </ul>
               </CardContent>
             </Card>
@@ -112,7 +113,7 @@ export default function About() {
             <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <BrandLogo brand="webhosted" variant="light" size="md" className="justify-center" />
+                  <BrandLogo brand="hostsblue" variant="light" size="md" className="justify-center" />
                 </div>
                 <CardDescription>Website Hosting Platform</CardDescription>
               </CardHeader>
@@ -131,7 +132,7 @@ export default function About() {
             <Card className="text-center border-red-200 hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <BrandLogo brand="airswiped" variant="light" size="md" className="justify-center" />
+                  <BrandLogo brand="swipesblue" variant="light" size="md" className="justify-center" />
                 </div>
                 <CardDescription>Payment Gateway Platform</CardDescription>
               </CardHeader>
