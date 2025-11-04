@@ -37,7 +37,7 @@ export default function Home() {
                 </div>
               </div>
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                <span className="text-primary">Get Found, Get Customers,</span> Get Business
+                <span style={{ color: '#FFD700' }}>Get Found, Get Customers,</span> Get Business
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
 Helping local businesses succeed online. Our AI analyzes your online presence using Google's business intelligence and creates a comprehensive Digital Blueprint in less than 24 hours. No tech experience required.
@@ -48,7 +48,7 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
                   Start Free Assessment
                 </Button>
                 <Link href="/ai-coach">
-                  <Button variant="outline" size="lg" className="border-2 w-full sm:w-auto">
+                  <Button size="lg" className="bg-[#FFD700] hover:bg-[#FFC700] text-gray-900 w-full sm:w-auto">
                     <AICoachIcon className="w-8 h-8 mr-2" />
                     AI Business Coach
                   </Button>
