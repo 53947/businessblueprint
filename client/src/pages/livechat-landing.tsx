@@ -3,8 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, MessageCircle, Clock, Users, BarChart3, Globe, Zap } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import livechatLogo from "@assets/livechat logo_1760075605262.png";
-import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
+import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
+import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
 
 export default function LivechatLanding() {
   return (

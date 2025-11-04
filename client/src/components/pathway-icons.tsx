@@ -2,7 +2,7 @@ import diyIcon from "@assets/icons/diy.png";
 import mspIcon from "@assets/icons/managed-services.png";
 import aiCoachIcon from "@assets/icons/ai-business-coach.png";
 import alcIcon from "@assets/icons/a-la-carte.png";
-import captainingIcon from "@assets/Captaining Icon_1759648904285.png";
+import captainingIcon from "@assets/native icons and favicons/Captaining Icon.png";
 import sendIcon from "@assets/icons/send-icon-corrected.png";
 
 interface PathwayIconProps {

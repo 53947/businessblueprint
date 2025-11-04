@@ -1,6 +1,6 @@
 import { Header } from "@/components/header";
 import { BrandLogo } from "@/components/brand-logo";
-import masterReference from "@assets/BluePrint Master Logos and Icons and Names_1759269072017.png";
+import masterReference from "@assets/businesblueprint assets/Business Blueprint All Lockup Wordmark.png";
 
 export default function LogoPreview() {
   return (

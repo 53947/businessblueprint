@@ -4,8 +4,8 @@ import { Check, Mail, MessageSquare, Facebook, Instagram, Twitter, MessageCircle
 import { SiWhatsapp, SiTiktok } from "react-icons/si";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import inboxLogo from "@assets/inbox logo_1760075605262.png";
-import inboxIcon from "@assets/Inbox_1762239599463.png";
+import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
+import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
 
 export default function InboxLanding() {
   return (

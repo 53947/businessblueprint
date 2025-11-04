@@ -5,20 +5,20 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Check } from 'lucide-react';
 
-import digitalAssessmentImg from '@assets/Digital Assessment_1762239599462.png';
-import digitalPathImg from '@assets/digital path_1762239599462.png';
-import localSeoImg from '@assets/LOCAL SEO_1762239599463.png';
-import sendAppImg from '@assets/send app_1762239599464.png';
-import contentImg from '@assets/content_1762239599461.png';
-import livechatImg from '@assets/livechat icon_1762239599463.png';
-import inboxImg from '@assets/Inbox_1762239599463.png';
-import commverseImg from '@assets/Commverse_1762239599461.png';
-import coachBlueImg from '@assets/AI Business Coach Blue_1762239599460.png';
-import captainImg from '@assets/Captaining Icon_1762239599461.png';
-import swipesblueImg from '@assets/swipesblue brandmark_1762239599464.png';
-import hostsblueImg from '@assets/Hosts Blue Brandmark_1762239599462.png';
-import diyImg from '@assets/DO IT YOURSELF_1762239599462.png';
-import alcImg from '@assets/A LA CARTE_1762239599460.png';
+import digitalAssessmentImg from '@assets/native icons and favicons/Digital Assessment_1762239599462.png';
+import digitalPathImg from '@assets/native icons and favicons/digital path.png';
+import localSeoImg from '@assets/native icons and favicons/LOCAL SEO_1762239599463.png';
+import sendAppImg from '@assets/native icons and favicons/: send app icon.png';
+import contentImg from '@assets/native icons and favicons/: content app icon.png';
+import livechatImg from '@assets/native icons and favicons/: livechat app icon.png';
+import inboxImg from '@assets/native icons and favicons/: inbox app icon.png';
+import commverseImg from '@assets/native icons and favicons/: commverse.png';
+import coachBlueImg from '@assets/native icons and favicons/AI Business Coach Blue icon.png';
+import captainImg from '@assets/native icons and favicons/Captaining Icon.png';
+import swipesblueImg from '@assets/swipesblue/swipesblue brandmark.png';
+import hostsblueImg from '@assets/hostsblue assets/Hosts Blue Brandmark.png';
+import diyImg from '@assets/native icons and favicons/diy.png';
+import alcImg from '@assets/native icons and favicons/A LA CARTE.png';
 
 const systemIcons = [
   { img: digitalAssessmentImg, label: 'Digital Assessment' },

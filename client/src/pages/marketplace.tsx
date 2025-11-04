@@ -22,7 +22,7 @@ import {
   Paperclip
 } from "lucide-react";
 import { useLocation } from "wouter";
-import commverseBundle from "@assets/Commverse Bundle_1760662442941.png";
+import commverseBundle from "@assets/logos and wordmarks/: commverse bundle logo.png";
 
 interface CartItem {
   id: string;

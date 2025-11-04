@@ -11,16 +11,16 @@ import {
   Menu
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import bbIcon from "@assets/1-Master business blueprint icon avatar logo copy_1762162675955.png";
-import bbLockup from "@assets/Business Blueprint Lockup URL_1762164443849.png";
+import bbIcon from "@assets/businesblueprint assets/Blueprint_Avatar.png";
+import bbLockup from "@assets/businesblueprint assets/Business Blueprint All Lockup Wordmark.png";
 import inboxIcon from "@assets/icons/inbox-icon-corrected.png";
-import livechatIcon from "@assets/livechat icon_1760788412068.png";
-import localSeoIcon from "@assets/LOCAL SEO_1760785581174.png";
+import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
+import localSeoIcon from "@assets/native icons and favicons/LOCAL SEO_1762239599463.png";
 import sendIcon from "@assets/icons/send-icon-corrected.png";
 import socialMediaIcon from "@assets/icons/social-media-mgmt.png";
-import reputationIcon from "@assets/Reputation Management Icon_1760786977607.png";
-import settingsIcon from "@assets/settings_1760788009769.png";
-import aiCoachIcon from "@assets/AI Business Coach Blue_1760813312010.png";
+import reputationIcon from "@assets/native icons and favicons/Reputation Management Icon.png";
+import settingsIcon from "@assets/native icons and favicons/settings.png";
+import aiCoachIcon from "@assets/native icons and favicons/AI Business Coach Blue icon.png";
 import hostsBlueIcon from "@assets/icons/hosts-blue-brandmark.png";
 import swipesBlueIcon from "@assets/icons/swipesblue-brandmark.png";
 
