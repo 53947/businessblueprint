@@ -21,7 +21,7 @@ export const BRAND_HEX = {
   triadBlueAlt: '#0057FF',
   
   // Platform Signature Colors
-  businessBlueprint: '#FFA500', // Orange
+  businessBlueprint: '#FFD700', // Yellow (primary brand color)
   hostsBlue: '#660099', // Purple
   swipesBlue: '#FF0040', // Red
   
@@ -51,19 +51,19 @@ export const BRAND_HEX = {
   // Pathway Colors
   aiCoachBlack: '#09080E',
   aiCoachRed: '#FF0040',
-  diy: '#0057FF',
-  msp: '#F79248',
+  diy: '#FFD700', // Yellow - DIY pathway
+  msp: '#0057FF', // Blue - MSP pathway
 } as const;
 
 // Tailwind Classes - Platform Branding
 export const brandColors = {
   // businessblueprint.io
   businessblueprint: {
-    home: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFA500]", io: "text-[#84D71A]" },
-    contact: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFA500]", io: "text-[#84D71A]" },
-    about: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFA500]", io: "text-[#84D71A]" },
-    pricing: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFA500]", io: "text-[#84D71A]" },
-    portal: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFA500]", io: "text-[#84D71A]" }
+    home: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFD700]", io: "text-[#84D71A]" },
+    contact: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFD700]", io: "text-[#84D71A]" },
+    about: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFD700]", io: "text-[#84D71A]" },
+    pricing: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFD700]", io: "text-[#84D71A]" },
+    portal: { business: "text-[#09080E] dark:text-white", blueprint: "text-[#FFD700]", io: "text-[#84D71A]" }
   },
   
   // hostsblue.com (webhosted.io)
