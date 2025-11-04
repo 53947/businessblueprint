@@ -8,21 +8,20 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Menu
+  Menu,
+  Star,
+  Settings
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import bbIcon from "@assets/1-Master business blueprint icon avatar logo copy_1762162675955.png";
-import bbLockup from "@assets/Business Blueprint Lockup URL_1762164443849.png";
-import inboxIcon from "@assets/icons/inbox-icon-corrected.png";
-import livechatIcon from "@assets/livechat icon_1760788412068.png";
-import localSeoIcon from "@assets/LOCAL SEO_1760785581174.png";
-import sendIcon from "@assets/icons/send-icon-corrected.png";
-import socialMediaIcon from "@assets/icons/social-media-mgmt.png";
-import reputationIcon from "@assets/Reputation Management Icon_1760786977607.png";
-import settingsIcon from "@assets/settings_1760788009769.png";
-import aiCoachIcon from "@assets/AI Business Coach Blue_1760813312010.png";
-import hostsBlueIcon from "@assets/icons/hosts-blue-brandmark.png";
-import swipesBlueIcon from "@assets/icons/swipesblue-brandmark.png";
+import bbIcon from "@assets/Blueprint_Avatar.png";
+import inboxIcon from "@assets/Inbox_1762239599463.png";
+import livechatIcon from "@assets/livechat icon_1762239599463.png";
+import localSeoIcon from "@assets/LOCAL SEO_1762239599463.png";
+import sendIcon from "@assets/send app_1762239599464.png";
+import socialMediaIcon from "@assets/content_1762239599461.png";
+import aiCoachIcon from "@assets/AI Business Coach Blue_1762239599460.png";
+import hostsBlueIcon from "@assets/Hosts Blue Brandmark.png";
+import swipesBlueIcon from "@assets/swipesblue brandmark.png";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;
@@ -101,7 +100,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
     { 
       id: "reputation", 
       label: "Reputation Mgmt", 
-      icon: <img src={reputationIcon} alt="Reputation" className="w-7 h-7 object-contain" /> 
+      icon: <Star className="w-7 h-7" /> 
     },
     { 
       id: "divider-2", 
@@ -119,7 +118,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
     { 
       id: "settings", 
       label: "Settings", 
-      icon: <img src={settingsIcon} alt="Settings" className="w-7 h-7 object-contain" /> 
+      icon: <Settings className="w-7 h-7" /> 
     },
   ];
 
@@ -211,7 +210,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
           {/* Mobile Header */}
           <SheetHeader className="p-6 border-b border-gray-200 dark:border-gray-700">
             <img 
-              src={bbLockup} 
+              src={bbIcon} 
               alt="businessblueprint.io" 
               style={{ height: '32px', width: 'auto' }}
               className="object-contain" 
@@ -298,23 +297,13 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
         <div className="border-b border-gray-200 dark:border-gray-700">
           <div className="px-4 py-3 flex items-center justify-between" data-testid="sidebar-logo">
             <div className="cursor-pointer" onClick={() => { setLocation('/'); }}>
-              {!isCollapsed ? (
-                <img 
-                  src={bbLockup} 
-                  alt="businessblueprint.io" 
-                  style={{ height: '36px', width: 'auto' }}
-                  className="object-contain" 
-                  data-testid="logo-desktop" 
-                />
-              ) : (
-                <img 
-                  src={bbIcon} 
-                  alt="businessblueprint.io" 
-                  style={{ height: '36px', width: 'auto' }}
-                  className="object-contain" 
-                  data-testid="logo-icon" 
-                />
-              )}
+              <img 
+                src={bbIcon} 
+                alt="businessblueprint.io" 
+                style={{ height: '36px', width: 'auto' }}
+                className="object-contain" 
+                data-testid={isCollapsed ? "logo-icon" : "logo-desktop"} 
+              />
             </div>
             <Button
               variant="ghost"

@@ -17,13 +17,11 @@ import {
   Settings,
   Compass
 } from "lucide-react";
-import aiCoachIcon from "@assets/AI Business Coach Blue_1760813312010.png";
+import aiCoachIcon from "@assets/AI Business Coach Blue_1762239599460.png";
 import { BrandLogo } from "@/components/brand-logo";
-import blueprintIcon from "@assets/BluePrint Icon_1758878797458.png";
-import digitalSuccessIcon from "@assets/digital success accellerated revenue_1758878797458.png";
-import digitalAssessmentIcon from "@assets/Digital Assessment_1758878797458.png";
-import digitalPathIcon from "@assets/digital path_1758878797458.png";
-import digitalJourneyIcon from "@assets/digital journey_1758878816963.png";
+import blueprintIcon from "@assets/Blueprint_Avatar.png";
+import digitalAssessmentIcon from "@assets/Digital Assessment_1762239599462.png";
+import digitalPathIcon from "@assets/digital path_1762239599462.png";
 
 export default function Journey() {
   const journeySteps = [
@@ -67,7 +65,7 @@ export default function Journey() {
       id: "success",
       title: "Digital Success",
       description: "Get found, get customers, get business",
-      icon: () => <img src={digitalSuccessIcon} alt="Digital Success" className="w-[74px] h-[74px]" />,
+      icon: () => <TrendingUp className="w-16 h-16" />,
       color: "emerald" as const,
       path: "/portal",
       features: ["Increased Visibility", "More Customers", "Revenue Growth", "Market Leadership"]
