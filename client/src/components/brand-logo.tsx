@@ -1,20 +1,20 @@
 // Reusable brand logo components using OFFICIAL Business Blueprint brandmarks
-import bbLightbulb from "@assets/1-Master business blueprint icon avatar logo copy_1762162675955.png";
+import bbLightbulb from "@assets/businesblueprint assets/Blueprint_Avatar.png";
 const bbAvatar = bbLightbulb; // Lightbulb icon for Client Portal
 const bbFavicon = '/brand-assets/Blueprint_Favicon.png';
 const bbIcon = bbLightbulb;
-import bbLockup from "@assets/Business Blueprint Lockup URL_1762164443849.png";
-import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
-import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
-import airswipedLogo from "@assets/swipesblue icon_1760810511865.png";
-import sendLogo from "@assets/send logo_1760075605263.png";
+import bbLockup from "@assets/businesblueprint assets/Business Blueprint All Lockup Wordmark.png";
+import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
+import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
+import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
+import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
 import sendIcon from "@assets/icons/send-icon-corrected.png";
-import inboxLogo from "@assets/inbox logo_1760075605262.png";
-import inboxIcon from "@assets/Unified mailbox_1760074368869.png";
-import livechatLogo from "@assets/livechat logo_1760075605262.png";
-import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
-import hostsBlueIcon from "@assets/Hosts Blue Brandmark.png";
-import swipesBlueIcon from "@assets/swipesblue approved brandmark_1762165966862.png";
+import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
+import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
+import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
+import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
+import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
+import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
 
 interface BrandLogoProps {
   brand: 'businessblueprint' | 'hostsblue' | 'swipesblue' | 'send' | 'inbox' | 'livechat';

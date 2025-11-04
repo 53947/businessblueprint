@@ -10,9 +10,9 @@ import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
 import bbIcon from "@assets/icons/blueprint-favicon.png";
 import bbLogo from "@assets/icons/blueprint-avatar.png";
-import webhostedIcon from "@assets/webhostedio icon all versions_1759857279422.png";
-import webhostedLogo from "@assets/Web Hosted all Version Logo_1759857389704.png";
-import airswipedLogo from "@assets/airswipedcom icon light version_1760075718468.png";
+import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
+import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
+import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
 
 export default function Home() {
   const [, setLocation] = useLocation();

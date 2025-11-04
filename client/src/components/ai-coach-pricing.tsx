@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { CheckCircle, Users, Target, TrendingUp, Zap } from "lucide-react";
-import aiCoachLogo from "@assets/AI Business Coach Blue_1760813312010.png";
+import aiCoachLogo from "@assets/native icons and favicons/AI Business Coach Blue icon.png";
 
 interface AICoachPricingProps {
   currentPlan?: "diy" | "msp";

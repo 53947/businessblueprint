@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, Mail, MessageSquare, Users, BarChart3, Shield, Zap } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import sendIcon from "@assets/send app_1762239599464.png";
+import sendIcon from "@assets/native icons and favicons/: send app icon.png";
 
 export default function SendLanding() {
   return (

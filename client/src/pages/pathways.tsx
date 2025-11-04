@@ -3,10 +3,10 @@ import { Footer } from "@/components/footer";
 import { useLocation } from "wouter";
 import { ArrowRight, Compass, Wrench, Lightbulb, Zap, Ship, Brain, Building2, CreditCard, Server, Mail, Inbox, MessageSquare } from "lucide-react";
 import { DIYIcon, MSPIcon, ALCIcon } from "@/components/pathway-icons";
-import sendIcon from "@assets/send icon_1760074368870.png";
-import inboxIcon from "@assets/Inbox_1762239599463.png";
-import livechatIcon from "@assets/LiveChat Widget_1760074368868.png";
-import commverseIcon from "@assets/Commverse Bundle_1760662442941.png";
+import sendIcon from "@assets/native icons and favicons/: send app icon.png";
+import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
+import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
+import commverseIcon from "@assets/logos and wordmarks/: commverse bundle logo.png";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
