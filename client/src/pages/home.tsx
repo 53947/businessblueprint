@@ -14,11 +14,11 @@ import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
 import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
 import digitalAssessmentIcon from "@assets/native icons and favicons/Digital Assessment_1762239599462.png";
-import step1Icon from "@assets/logos and wordmarks/complete your digital assessment.png";
-import step2Icon from "@assets/logos and wordmarks/cutom blueprint prescribed.png";
-import step3Icon from "@assets/logos and wordmarks/choose your base plan.png";
-import step4Icon from "@assets/logos and wordmarks/select your build method.png";
-import step5Icon from "@assets/logos and wordmarks/Start to Build.png";
+import step1Icon from "@assets/1-Complete your digital assessment_1762385291109.png";
+import step2Icon from "@assets/2-Your Prescribed Blueprint_1762385291110.png";
+import step3Icon from "@assets/3-Choose your base plan_1762385291110.png";
+import step4Icon from "@assets/4-Select your build method_1762385291111.png";
+import step5Icon from "@assets/5-Start to Build_1762385291111.png";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -92,27 +92,27 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
                 <h3 className="text-2xl font-bold text-gray-900 mb-6 relative z-10">Your Blueprint to Success</h3>
                 <div className="space-y-4 relative z-10">
                   <div className="flex items-center text-left border-l-4 border-orange-500 pl-3 py-2.5">
-                    <img src={step1Icon} alt="Step 1" className="w-10 h-10 rounded-lg mr-3 flex-shrink-0 shadow-md" />
+                    <img src={step1Icon} alt="Step 1" className="w-8 h-8 rounded-lg mr-3 flex-shrink-0 shadow-md" />
                     <div className="bg-orange-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">1</div>
                     <span className="text-gray-900 font-semibold text-base">Digital Assessment</span>
                   </div>
                   <div className="flex items-center text-left border-l-4 border-yellow-500 pl-3 py-2.5">
-                    <img src={step2Icon} alt="Step 2" className="w-10 h-10 rounded-lg mr-3 flex-shrink-0 shadow-md" />
+                    <img src={step2Icon} alt="Step 2" className="w-8 h-8 rounded-lg mr-3 flex-shrink-0 shadow-md" />
                     <div className="bg-yellow-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">2</div>
                     <span className="text-gray-900 font-semibold text-base">Custom Blueprint Prescribed</span>
                   </div>
                   <div className="flex items-center text-left border-l-4 border-blue-500 pl-3 py-2.5">
-                    <img src={step3Icon} alt="Step 3" className="w-10 h-10 rounded-lg mr-3 flex-shrink-0 shadow-md" />
+                    <img src={step3Icon} alt="Step 3" className="w-8 h-8 rounded-lg mr-3 flex-shrink-0 shadow-md" />
                     <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">3</div>
                     <span className="text-gray-900 font-semibold text-base">Choose Your Base Plan</span>
                   </div>
                   <div className="flex items-center text-left border-l-4 border-purple-500 pl-3 py-2.5">
-                    <img src={step4Icon} alt="Step 4" className="w-10 h-10 rounded-lg mr-3 flex-shrink-0 shadow-md" />
+                    <img src={step4Icon} alt="Step 4" className="w-8 h-8 rounded-lg mr-3 flex-shrink-0 shadow-md" />
                     <div className="bg-purple-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">4</div>
                     <span className="text-gray-900 font-semibold text-base">Pick Your Build Method</span>
                   </div>
                   <div className="flex items-center text-left border-l-4 border-green-500 pl-3 py-2.5">
-                    <img src={step5Icon} alt="Step 5" className="w-10 h-10 rounded-lg mr-3 flex-shrink-0 shadow-md" />
+                    <img src={step5Icon} alt="Step 5" className="w-8 h-8 rounded-lg mr-3 flex-shrink-0 shadow-md" />
                     <div className="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">5</div>
                     <span className="text-gray-900 font-semibold text-base">Build Your Blueprint</span>
                   </div>
