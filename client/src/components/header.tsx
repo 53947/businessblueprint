@@ -50,6 +50,8 @@ import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
 import blueprintIcon from "@assets/businesblueprint assets/Blueprint_Favicon.png";
 import commverseBundle from "@assets/logos and wordmarks/: commverse bundle logo.png";
+import coachBlueIcon from "@assets/native icons and favicons/AI Business Coach Reworked.png";
+import captainingIcon from "@assets/native icons and favicons/Captaining Icon.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -327,7 +329,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   data-testid="link-addon-coach-blue"
                                 >
                                   <div className="flex items-center gap-3">
-                                    <span className="text-2xl">🤖</span>
+                                    <img src={coachBlueIcon} alt="Coach Blue" className="w-10 h-10 rounded-lg" />
                                     <div>
                                       <div className="font-bold text-gray-900 dark:text-white">Coach Blue</div>
                                       <p className="text-xs text-gray-600 dark:text-gray-400">AI Business Coach</p>
@@ -344,7 +346,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   data-testid="link-addon-captains-chair"
                                 >
                                   <div className="flex items-center gap-3">
-                                    <span className="text-2xl">👨‍✈️</span>
+                                    <img src={captainingIcon} alt="Captain's Chair" className="w-10 h-10 rounded-lg" />
                                     <div>
                                       <div className="font-bold text-gray-900 dark:text-white">Captain's Chair</div>
                                       <p className="text-xs text-gray-600 dark:text-gray-400">Personal CEO Coaching (max 2 months)</p>
