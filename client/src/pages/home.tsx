@@ -86,25 +86,25 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
                 
                 <h3 className="text-2xl font-bold text-gray-900 mb-6 relative z-10">Your Blueprint to Success</h3>
                 <div className="space-y-4 relative z-10">
-                  <div className="flex items-center text-left border-l-4 border-orange-500 pl-3 py-2">
-                    <img src={digitalAssessmentIcon} alt="Digital Assessment" className="w-8 h-8 rounded-lg mr-4 flex-shrink-0" />
-                    <span className="text-gray-700 font-medium">Digital Assessment</span>
+                  <div className="flex items-center text-left border-l-4 border-orange-500 pl-3 py-2.5">
+                    <img src={digitalAssessmentIcon} alt="Digital Assessment" className="w-10 h-10 rounded-lg mr-4 flex-shrink-0 shadow-md" />
+                    <span className="text-gray-900 font-semibold text-base">Digital Assessment</span>
                   </div>
-                  <div className="flex items-center text-left border-l-4 border-yellow-500 pl-3 py-2">
-                    <div className="bg-yellow-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">2</div>
-                    <span className="text-gray-700 font-medium">Custom Blueprint Prescribed</span>
+                  <div className="flex items-center text-left border-l-4 border-yellow-500 pl-3 py-2.5">
+                    <div className="bg-yellow-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0 text-lg shadow-md">2</div>
+                    <span className="text-gray-900 font-semibold text-base">Custom Blueprint Prescribed</span>
                   </div>
-                  <div className="flex items-center text-left border-l-4 border-blue-500 pl-3 py-2">
-                    <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">3</div>
-                    <span className="text-gray-700 font-medium">Choose Your Base Plan</span>
+                  <div className="flex items-center text-left border-l-4 border-blue-500 pl-3 py-2.5">
+                    <div className="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0 text-lg shadow-md">3</div>
+                    <span className="text-gray-900 font-semibold text-base">Choose Your Base Plan</span>
                   </div>
-                  <div className="flex items-center text-left border-l-4 border-purple-500 pl-3 py-2">
-                    <div className="bg-purple-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">4</div>
-                    <span className="text-gray-700 font-medium">Pick Your Build Method</span>
+                  <div className="flex items-center text-left border-l-4 border-purple-500 pl-3 py-2.5">
+                    <div className="bg-purple-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0 text-lg shadow-md">4</div>
+                    <span className="text-gray-900 font-semibold text-base">Pick Your Build Method</span>
                   </div>
-                  <div className="flex items-center text-left border-l-4 border-green-500 pl-3 py-2">
-                    <div className="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">5</div>
-                    <span className="text-gray-700 font-medium">Build Your Blueprint</span>
+                  <div className="flex items-center text-left border-l-4 border-green-500 pl-3 py-2.5">
+                    <div className="bg-green-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0 text-lg shadow-md">5</div>
+                    <span className="text-gray-900 font-semibold text-base">Build Your Blueprint</span>
                   </div>
                 </div>
               </div>
