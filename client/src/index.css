@@ -117,17 +117,41 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     font-weight: 600;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 1pt 2pt rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Apply shadow to all colored text (not black) */
+  [class*="text-blue"],
+  [class*="text-orange"],
+  [class*="text-yellow"],
+  [class*="text-green"],
+  [class*="text-purple"],
+  [class*="text-red"],
+  [class*="text-pink"],
+  [class*="text-teal"],
+  [class*="bg-blue"],
+  [class*="bg-orange"],
+  [class*="bg-yellow"],
+  [class*="bg-green"],
+  [class*="bg-purple"],
+  [class*="bg-red"],
+  [class*="bg-pink"],
+  [class*="bg-teal"],
+  .font-bold:not([class*="text-gray"]):not([class*="text-black"]),
+  .font-semibold:not([class*="text-gray"]):not([class*="text-black"]) {
+    text-shadow: 0 1pt 2pt rgba(0, 0, 0, 0.3);
   }
   
   /* Stronger shadow for yellow/light colored text */
-  .text-shadow-strong {
-    text-shadow: 0 1pt 2pt rgba(0, 0, 0, 0.4);
+  .text-shadow-strong,
+  [style*="color: #FFD700"],
+  [style*="color: rgb(255, 215, 0)"] {
+    text-shadow: 0 1pt 2pt rgba(0, 0, 0, 0.4) !important;
   }
   
   /* Medium shadow for body text on light backgrounds */
   .text-shadow-md {
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    text-shadow: 0 1px 2pt rgba(0, 0, 0, 0.2);
   }
   
   code, pre, kbd, samp {
