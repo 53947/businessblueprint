@@ -91,7 +91,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
               <>
                 {/* Desktop Mega Menu - Closer spacing */}
                 <NavigationMenu className="hidden lg:flex ml-4">
-                  <NavigationMenuList className="-space-x-2">
+                  <NavigationMenuList className="-space-x-4">
                     {/* How It Works (NEW) */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid="menu-trigger-how-it-works">
