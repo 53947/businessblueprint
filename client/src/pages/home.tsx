@@ -13,6 +13,7 @@ import bbLogo from "@assets/businesblueprint assets/Blueprint_Avatar.png";
 import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
 import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
+import digitalAssessmentIcon from "@assets/native icons and favicons/Digital Assessment_1762239599462.png";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -86,7 +87,7 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
                 <h3 className="text-2xl font-bold text-gray-900 mb-6 relative z-10">Your Blueprint to Success</h3>
                 <div className="space-y-4 relative z-10">
                   <div className="flex items-center text-left border-l-4 border-orange-500 pl-3 py-2">
-                    <div className="bg-orange-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">1</div>
+                    <img src={digitalAssessmentIcon} alt="Digital Assessment" className="w-8 h-8 rounded-lg mr-4 flex-shrink-0" />
                     <span className="text-gray-700 font-medium">Digital Assessment</span>
                   </div>
                   <div className="flex items-center text-left border-l-4 border-yellow-500 pl-3 py-2">
