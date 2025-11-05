@@ -4,6 +4,7 @@ import { Check, Mail, MessageSquare, Users, BarChart3, Shield, Zap } from "lucid
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import sendIcon from "@assets/native icons and favicons/: send app icon.png";
+import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
 
 export default function SendLanding() {
   return (
@@ -14,8 +15,9 @@ export default function SendLanding() {
       <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="flex items-center justify-center mb-8">
-              <img src={sendIcon} alt="/send" className="h-20 w-20 object-contain drop-shadow-lg" />
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <img src={sendIcon} alt="/send icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <img src={sendLogo} alt="/send" className="h-16 object-contain drop-shadow-lg" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Own Your Customer Relationships

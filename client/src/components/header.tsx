@@ -373,9 +373,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           <div className="mb-6 p-4 rounded-lg border-2 border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950">
                             <div className="flex items-center justify-between mb-3">
                               <div className="flex items-center gap-3">
-                                <img src={commverseBundle} alt="Commverse Bundle" className="h-12 w-12 object-contain" />
+                                <img src={commverseIcon} alt="Commverse" className="h-12 w-12 object-contain rounded-lg" />
                                 <div>
-                                  <div className="text-lg font-bold text-gray-900 dark:text-white">Commverse Bundle</div>
+                                  <img src={commverseBundle} alt="Commverse Bundle" className="h-8 object-contain mb-1" />
                                   <p className="text-sm text-gray-600 dark:text-gray-400">All 4 Communication Apps</p>
                                 </div>
                               </div>
