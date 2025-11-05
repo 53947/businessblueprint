@@ -52,6 +52,7 @@ import blueprintIcon from "@assets/businesblueprint assets/Blueprint_Favicon.png
 import commverseBundle from "@assets/logos and wordmarks/: commverse bundle logo.png";
 import coachBlueIcon from "@assets/native icons and favicons/AI Business Coach Reworked.png";
 import captainingIcon from "@assets/native icons and favicons/Captaining Icon.png";
+import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -288,9 +289,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   href="/pricing?style=alc"
                                   data-testid="link-execution-alc"
                                 >
-                                  <div className="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-                                    <span className="text-xl">🎯</span>
-                                  </div>
+                                  <img src={alaCarteIcon} alt="A La Carte" className="w-10 h-10 rounded-lg" />
                                   <div>
                                     <div className="font-bold text-gray-900 dark:text-white">ALC</div>
                                     <p className="text-xs text-gray-600 dark:text-gray-400">Pick modules, no base plan</p>
