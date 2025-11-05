@@ -54,6 +54,7 @@ import commverseIcon from "@assets/native icons and favicons/: commverse.png";
 import coachBlueIcon from "@assets/native icons and favicons/AI Business Coach Reworked.png";
 import captainingIcon from "@assets/native icons and favicons/Captaining Icon.png";
 import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
+import digitalAssessmentIcon from "@assets/native icons and favicons/Digital Assessment_1762239599462.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -116,7 +117,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           <div className="space-y-4">
                             <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                               <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold">1</div>
+                                <img src={digitalAssessmentIcon} alt="Digital Assessment" className="w-8 h-8 rounded-lg" />
                               </div>
                               <div>
                                 <div className="font-bold text-gray-900 dark:text-white">Digital Assessment</div>
