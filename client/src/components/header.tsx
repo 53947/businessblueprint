@@ -132,31 +132,43 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <span className="text-xs bg-yellow-500 text-white px-2 py-0.5 rounded-full">THE PRESCRIPTION</span>
                                 </div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  We tell you exactly what your business needs and recommend your ideal plan
+                                  We diagnose your digital presence and prescribe the exact blueprint your business needs to grow.
                                 </p>
                               </div>
                             </div>
 
                             <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                               <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold">3</div>
+                                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">3</div>
                               </div>
                               <div>
-                                <div className="font-bold text-gray-900 dark:text-white">Choose Your Execution Style</div>
+                                <div className="font-bold text-gray-900 dark:text-white">Choose Your Base Plan</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  DIY (you build), MSP (we manage), or ALC (pick modules only)
+                                  Start ($99), Advanced ($299), or Scale ($999) - pick your structural depth
                                 </p>
                               </div>
                             </div>
 
                             <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
                               <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">4</div>
+                                <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold">4</div>
                               </div>
                               <div>
-                                <div className="font-bold text-gray-900 dark:text-white">Launch & Grow</div>
+                                <div className="font-bold text-gray-900 dark:text-white">Pick Your Build Method</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  Access your dashboard, add Commverse tools, and watch your business grow
+                                  DIY (you build), MSP (we manage), or ALC (pick modules without base plan)
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                              <div className="flex-shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">5</div>
+                              </div>
+                              <div>
+                                <div className="font-bold text-gray-900 dark:text-white">Build Your Blueprint</div>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                  Add Commverse apps, coaching, and access your dashboard
                                 </p>
                               </div>
                             </div>
