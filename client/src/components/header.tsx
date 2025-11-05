@@ -99,7 +99,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>How It Works</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-6 w-[600px]">
+                        <div className="p-6 w-[90vw] max-w-[600px]">
                           <div className="mb-4">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
                               We Assess. We Prescribe. You Grow.
@@ -192,7 +192,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Pricing</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-6 w-[800px]">
+                        <div className="p-6 w-[90vw] max-w-[800px]">
                           <div className="mb-6">
                             <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
                               Base Plans - Choose Your Structural Depth
@@ -366,7 +366,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Applications</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-6 w-[700px]">
+                        <div className="p-6 w-[90vw] max-w-[700px]">
                           <div className="mb-6 p-4 rounded-lg border-2 border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950">
                             <div className="flex items-center justify-between mb-3">
                               <div className="flex items-center gap-3">
@@ -517,7 +517,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Solutions</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid gap-4 p-6 w-[600px]">
+                        <div className="grid gap-4 p-6 w-[90vw] max-w-[600px]">
                           <div className="grid grid-cols-1 gap-4">
                             <NavigationMenuLink asChild>
                               <a
@@ -596,7 +596,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Resources</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid grid-cols-3 gap-4 p-6 w-[700px]">
+                        <div className="grid grid-cols-3 gap-4 p-6 w-[90vw] max-w-[700px]">
                           {/* Learning Column */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2 mb-2">
