@@ -70,24 +70,40 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
               </div>
             </div>
             <div className="lg:text-center">
-              <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Your Path to Success</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center text-left">
-                    <div className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">1</div>
-                    <span className="text-gray-700">AI analyzes your online presence</span>
+              <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden">
+                {/* Blueprint Paper Grid Lines */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none">
+                  <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="blueprint-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#3B82F6" strokeWidth="0.5"/>
+                      </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#blueprint-grid)" />
+                  </svg>
+                </div>
+                
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 relative z-10">Your Blueprint to Success</h3>
+                <div className="space-y-4 relative z-10">
+                  <div className="flex items-center text-left border-l-4 border-orange-500 pl-3 py-2">
+                    <div className="bg-orange-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">1</div>
+                    <span className="text-gray-700 font-medium">Digital Assessment</span>
                   </div>
-                  <div className="flex items-center text-left">
-                    <div className="bg-green-100 text-green-600 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">2</div>
-                    <span className="text-gray-700">Get your Digital Blueprint</span>
+                  <div className="flex items-center text-left border-l-4 border-yellow-500 pl-3 py-2">
+                    <div className="bg-yellow-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">2</div>
+                    <span className="text-gray-700 font-medium">Custom Blueprint Prescribed</span>
                   </div>
-                  <div className="flex items-center text-left">
-                    <div className="bg-purple-100 text-purple-600 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">3</div>
-                    <span className="text-gray-700">Choose Do It Yourself (DIY) or Managed Services Provided (MSP)</span>
+                  <div className="flex items-center text-left border-l-4 border-blue-500 pl-3 py-2">
+                    <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">3</div>
+                    <span className="text-gray-700 font-medium">Choose Your Base Plan</span>
                   </div>
-                  <div className="flex items-center text-left">
-                    <div className="bg-yellow-100 text-yellow-600 w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4">4</div>
-                    <span className="text-gray-700">Watch your business grow</span>
+                  <div className="flex items-center text-left border-l-4 border-purple-500 pl-3 py-2">
+                    <div className="bg-purple-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">4</div>
+                    <span className="text-gray-700 font-medium">Pick Your Build Method</span>
+                  </div>
+                  <div className="flex items-center text-left border-l-4 border-green-500 pl-3 py-2">
+                    <div className="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-4 flex-shrink-0">5</div>
+                    <span className="text-gray-700 font-medium">Build Your Blueprint</span>
                   </div>
                 </div>
               </div>
