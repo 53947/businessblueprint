@@ -94,7 +94,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   <NavigationMenuList className="gap-0">
                     {/* How It Works (NEW) */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-how-it-works">
+                      <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid="menu-trigger-how-it-works">
                         <img src={compassIcon} alt="" className="w-4 h-4" />
                         <span>How It Works</span>
                       </NavigationMenuTrigger>
@@ -187,7 +187,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                     {/* Pricing (ENHANCED) */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-pricing">
+                      <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid="menu-trigger-pricing">
                         <img src={dollarSignIcon} alt="" className="w-4 h-4" />
                         <span>Pricing</span>
                       </NavigationMenuTrigger>
@@ -361,7 +361,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                     {/* Applications - Commverse Apps with Bundle Highlight */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-applications">
+                      <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid="menu-trigger-applications">
                         <img src={layersIcon} alt="" className="w-4 h-4" />
                         <span>Applications</span>
                       </NavigationMenuTrigger>
@@ -512,7 +512,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                     {/* Solutions */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-solutions">
+                      <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid="menu-trigger-solutions">
                         <img src={lightbulbIcon} alt="" className="w-4 h-4" />
                         <span>Solutions</span>
                       </NavigationMenuTrigger>
@@ -591,7 +591,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                     {/* Resources - Keep Current */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-resources">
+                      <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid="menu-trigger-resources">
                         <img src={bookOpenIcon} alt="" className="w-4 h-4" />
                         <span>Resources</span>
                       </NavigationMenuTrigger>
