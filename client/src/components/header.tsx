@@ -102,10 +102,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <div className="p-6 w-[600px]">
                           <div className="mb-4">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                              Get Found, Get Customers, Get Business
+                              We Assess. We Prescribe. You Grow.
                             </h3>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                              The Digital Blueprint Process: Foundation → Framing → Build Method → Fixtures → Inspections → Handover
+                              Your custom digital growth plan based on AI analysis of your business
                             </p>
                           </div>
 
@@ -117,19 +117,22 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div>
                                 <div className="font-bold text-gray-900 dark:text-white">Digital Assessment</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  AI analyzes your online presence and gives you a Digital IQ Score
+                                  AI analyzes your online presence and scores your Digital IQ
                                 </p>
                               </div>
                             </div>
 
-                            <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <div className="flex gap-3 p-3 rounded-lg border-2 border-yellow-400 dark:border-yellow-600 bg-yellow-50 dark:bg-yellow-950 hover:bg-yellow-100 dark:hover:bg-yellow-900">
                               <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">2</div>
+                                <div className="w-8 h-8 rounded-full bg-yellow-500 text-white flex items-center justify-center font-bold">2</div>
                               </div>
                               <div>
-                                <div className="font-bold text-gray-900 dark:text-white">Choose Your Base Plan</div>
+                                <div className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                  Custom Blueprint Prescribed
+                                  <span className="text-xs bg-yellow-500 text-white px-2 py-0.5 rounded-full">THE PRESCRIPTION</span>
+                                </div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  Start ($99), Advanced ($299), or Scale ($999) - pick your structural depth
+                                  We tell you exactly what your business needs and recommend your ideal plan
                                 </p>
                               </div>
                             </div>
@@ -139,9 +142,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold">3</div>
                               </div>
                               <div>
-                                <div className="font-bold text-gray-900 dark:text-white">Pick Your Build Method</div>
+                                <div className="font-bold text-gray-900 dark:text-white">Choose Your Execution Style</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  DIY (you build), MSP (we manage), or ALC (pick modules without base plan)
+                                  DIY (you build), MSP (we manage), or ALC (pick modules only)
                                 </p>
                               </div>
                             </div>
@@ -151,9 +154,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">4</div>
                               </div>
                               <div>
-                                <div className="font-bold text-gray-900 dark:text-white">Build Your Blueprint</div>
+                                <div className="font-bold text-gray-900 dark:text-white">Launch & Grow</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  Add Commverse apps, coaching, and access your dashboard
+                                  Access your dashboard, add Commverse tools, and watch your business grow
                                 </p>
                               </div>
                             </div>
