@@ -50,6 +50,7 @@ import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
 import blueprintIcon from "@assets/businesblueprint assets/Blueprint_Favicon.png";
 import commverseBundle from "@assets/logos and wordmarks/: commverse bundle logo.png";
+import commverseIcon from "@assets/native icons and favicons/: commverse.png";
 import coachBlueIcon from "@assets/native icons and favicons/AI Business Coach Reworked.png";
 import captainingIcon from "@assets/native icons and favicons/Captaining Icon.png";
 import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
@@ -311,9 +312,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   data-testid="link-addon-commverse"
                                 >
                                   <div className="flex items-center gap-3">
-                                    <img src={commverseBundle} alt="Commverse" className="w-10 h-10 rounded-lg" />
+                                    <img src={commverseIcon} alt="Commverse" className="w-10 h-10 rounded-lg" />
                                     <div>
-                                      <div className="font-bold text-gray-900 dark:text-white">Commverse Bundle</div>
+                                      <img src={commverseBundle} alt="Commverse Bundle" className="h-6 object-contain" />
                                       <p className="text-xs text-gray-600 dark:text-gray-400">All 4 apps - Save $40/mo</p>
                                     </div>
                                   </div>
