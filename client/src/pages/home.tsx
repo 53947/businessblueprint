@@ -37,7 +37,7 @@ export default function Home() {
                 </div>
               </div>
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                <span style={{ color: '#FFD700' }}>Get Found, Get Customers,</span> Get Business
+                <span className="text-shadow-strong" style={{ color: '#FFD700' }}>Get Found, Get Customers,</span> Get Business
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
 Helping local businesses succeed online. Our AI analyzes your online presence using Google's business intelligence and creates a comprehensive Digital Blueprint in less than 24 hours. No tech experience required.

@@ -80,18 +80,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
   return (
     <header className="bg-gray-100 border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo - Takes up ~1/5 of header width */}
+          <div className="flex items-center w-1/5 min-w-fit mr-4">
             <Link href="/" className="hover:opacity-80 transition-opacity cursor-pointer" data-testid="header-logo">
-              <BrandLogo brand="businessblueprint" size="sm" />
+              <BrandLogo brand="businessblueprint" size="md" />
             </Link>
 
             {showNavigation && (
               <>
-                {/* Desktop Mega Menu */}
-                <NavigationMenu className="hidden lg:flex ml-8">
-                  <NavigationMenuList>
+                {/* Desktop Mega Menu - Closer spacing */}
+                <NavigationMenu className="hidden lg:flex ml-4">
+                  <NavigationMenuList className="gap-1">
                     {/* How It Works (NEW) */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-2 bg-gray-100" data-testid="menu-trigger-how-it-works">
