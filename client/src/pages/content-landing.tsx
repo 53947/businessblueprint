@@ -4,6 +4,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, Calendar, Image, TrendingUp, BarChart3, Zap, Users, Clock } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import contentIcon from "@assets/native icons and favicons/: content app icon.png";
+import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
 
 export default function ContentLanding() {
   return (
@@ -15,13 +17,8 @@ export default function ContentLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#FC6ACD' }}>
-                <Image className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold font-['Archivo']">
-                <span style={{ color: '#09080E' }}>/</span>
-                <span style={{ color: '#FC6ACD' }}>content</span>
-              </h1>
+              <img src={contentIcon} alt="/content icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <img src={contentLogo} alt="/content" className="h-16 object-contain drop-shadow-lg" />
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#09080E' }}>
               Social Media Management<br />That Actually Works
