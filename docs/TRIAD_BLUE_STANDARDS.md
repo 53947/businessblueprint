@@ -25,10 +25,23 @@ Base Plans: Start (Orange) / Advanced (Blue) / Scale (Green)
 ---
 
 ## 🗂️ Navigation
-**Main Header:** Applications | Solutions | Pricing | Login  
-**Client Portal Sidebar:** Fixed order, same navItems desktop/mobile.  
 
-Commverse apps = lowercase paths (`/send`, `/inbox`, `/content`, `/livechat`).  
+### Main Header (OFFICIAL STANDARD - NO CHANGES WITHOUT OWNER APPROVAL)
+**⚠️ As of November 2025, this is the UNCHANGEABLE navigation structure:**
+
+1. **How It Works** - 5-step journey with prescription highlight
+2. **Pricing** - Base Plans + Execution Styles + Marketplace  
+3. **Applications** - Commverse Bundle + individual apps
+4. **Solutions** - BusinessBlueprint, HostsBlue, SwipesBlue platforms
+5. **Resources** - Learn, Platforms, Developers columns
+
+**Plus:** Login button (far right)
+
+### Client Portal Sidebar
+Fixed order, same navItems desktop/mobile.
+
+### Commverse Apps
+Lowercase paths only: `/send`, `/inbox`, `/content`, `/livechat`  
 
 ---
 

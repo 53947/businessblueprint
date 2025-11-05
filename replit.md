@@ -75,8 +75,16 @@ Before making any UI/branding changes:
 2. Reference [`docs/_constants.md`](docs/_constants.md) for all color/font values
 3. Verify navigation structure matches standards
 
-### Navigation Structure (UNCHANGEABLE)
-**Main Header:** Applications | Solutions | Pricing | Login  
+### Navigation Structure (CRITICAL - NO CHANGES WITHOUT OWNER APPROVAL)
+**⚠️ IMPORTANT:** The navigation menu structure below is the OFFICIAL standard as of November 2025. Do NOT modify without explicit approval from Dean (Owner).
+
+**Main Header (5 Sections):**
+1. **How It Works** - 5-step journey with prescription highlight
+2. **Pricing** - Base Plans + Execution Styles + Marketplace
+3. **Applications** - Commverse Bundle + individual apps
+4. **Solutions** - BusinessBlueprint, HostsBlue, SwipesBlue platforms
+5. **Resources** - Learn, Platforms, Developers columns
+
 **Commverse apps:** `/send`, `/inbox`, `/content`, `/livechat` (all lowercase)
 
 ### Logo & Typography Rules
@@ -133,15 +141,20 @@ npm run db:push
 
 ## 📂 Documentation Reference Map
 
-| Document | Location | Purpose |
-|----------|----------|---------|
-| **README.md** | `/` (root) | Public-facing project summary |
-| **replit.md** | `/` (root) | This file — behavioral & governance rules |
-| **TRIAD_BLUE_STANDARDS.md** | `/docs/` | Design & branding standards |
-| **ARCHITECTURE.md** | `/docs/` | Technical structure & system design |
-| **_constants.md** | `/docs/` | Brand constants (colors, fonts, values) |
-| **STATUS_REPORT.md** | `/` (root) | Running operational log |
-| **GITHUB_ISSUES_TO_CREATE.md** | `/` (root) | Issue templates & backlog |
+**⚠️ ALL DOCUMENTS BELOW ARE REQUIRED READING BEFORE MAKING ANY CHANGES**
+
+| Document | Full Path | Purpose | When to Read |
+|----------|-----------|---------|--------------|
+| **README.md** | `/README.md` | Public-facing project summary | Before external communication |
+| **replit.md** | `/replit.md` | **THIS FILE** — Behavioral & governance rules | FIRST - Read before any work |
+| **TRIAD_BLUE_STANDARDS.md** | `/docs/TRIAD_BLUE_STANDARDS.md` | Design & branding standards | Before ANY UI/design changes (read TWICE) |
+| **_constants.md** | `/docs/_constants.md` | Brand constants (colors, fonts, values) | Before using any colors/fonts |
+| **ARCHITECTURE.md** | `/docs/ARCHITECTURE.md` | Technical structure & system design | Before technical/structural changes |
+| **PRESCRIPTION_SYSTEM.md** | `/docs/PRESCRIPTION_SYSTEM.md` | Prescription automation guide | Before building assessment automation |
+| **STATUS_REPORT.md** | `/STATUS_REPORT.md` | Running operational log | Update TWICE daily (11:59 AM/PM) |
+| **GITHUB_ISSUES_TO_CREATE.md** | `/GITHUB_ISSUES_TO_CREATE.md` | Issue templates & backlog | Before creating new GitHub issues |
+
+**No excuses — these paths are explicit. Read the relevant docs before proceeding.**
 
 ---
 
