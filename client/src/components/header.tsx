@@ -57,6 +57,11 @@ import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
 import digitalAssessmentIcon from "@assets/native icons and favicons/Digital Assessment_1762239599462.png";
 import diyIcon from "@assets/native icons and favicons/diy.png";
 import managedServicesIcon from "@assets/native icons and favicons/managed-services.png";
+import step1Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
+import step2Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/2-Get your prescribed blueprint.png";
+import step3Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/3-Choose your base plan.png";
+import step4Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/4-Select your build method.png";
+import step5Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/5-Start to Build.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -109,7 +114,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <div className="p-6 w-[90vw] max-w-[600px]">
                           <div className="mb-4">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                              We Assess. We Prescribe. You Grow.
+                              Your Blueprint to Getting Business
                             </h3>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
                               Your custom digital growth plan based on AI analysis of your business
@@ -117,63 +122,75 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           </div>
 
                           <div className="space-y-4">
-                            <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-orange-500 hover:bg-gray-50 dark:hover:bg-gray-800">
                               <div className="flex-shrink-0">
-                                <img src={digitalAssessmentIcon} alt="Digital Assessment" className="w-8 h-8 rounded-lg" />
+                                <img src={step1Icon} alt="Step 1" className="w-8 h-8 rounded-lg shadow-md" />
+                              </div>
+                              <div className="flex-shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold shadow-md">1</div>
                               </div>
                               <div>
-                                <div className="font-bold text-gray-900 dark:text-white">Digital Assessment</div>
+                                <div className="font-bold text-gray-900 dark:text-white">Complete your digital assessment</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                   AI analyzes your online presence and scores your Digital IQ
                                 </p>
                               </div>
                             </div>
 
-                            <div className="flex gap-3 p-3 rounded-lg border-2 border-yellow-400 dark:border-yellow-600 bg-yellow-50 dark:bg-yellow-950 hover:bg-yellow-100 dark:hover:bg-yellow-900">
+                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-yellow-500 hover:bg-gray-50 dark:hover:bg-gray-800">
                               <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-full bg-yellow-500 text-white flex items-center justify-center font-bold">2</div>
+                                <img src={step2Icon} alt="Step 2" className="w-8 h-8 rounded-lg shadow-md" />
+                              </div>
+                              <div className="flex-shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-yellow-500 text-white flex items-center justify-center font-bold shadow-md">2</div>
                               </div>
                               <div>
-                                <div className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                  Custom Blueprint Prescribed
-                                  <span className="text-xs bg-yellow-500 text-white px-2 py-0.5 rounded-full">THE PRESCRIPTION</span>
-                                </div>
+                                <div className="font-bold text-gray-900 dark:text-white">Get your prescribed blueprint</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  We diagnose your digital presence and prescribe the exact blueprint your business needs to grow.
+                                  We diagnose your digital presence and prescribe the exact blueprint your business needs to grow
                                 </p>
                               </div>
                             </div>
 
-                            <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-800">
                               <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold">3</div>
+                                <img src={step3Icon} alt="Step 3" className="w-8 h-8 rounded-lg shadow-md" />
+                              </div>
+                              <div className="flex-shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold shadow-md">3</div>
                               </div>
                               <div>
-                                <div className="font-bold text-gray-900 dark:text-white">Choose Your Base Plan</div>
+                                <div className="font-bold text-gray-900 dark:text-white">Choose your base plan</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                   Start ($99), Advanced ($299), or Scale ($999) - pick your structural depth
                                 </p>
                               </div>
                             </div>
 
-                            <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-purple-500 hover:bg-gray-50 dark:hover:bg-gray-800">
                               <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold">4</div>
+                                <img src={step4Icon} alt="Step 4" className="w-8 h-8 rounded-lg shadow-md" />
+                              </div>
+                              <div className="flex-shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold shadow-md">4</div>
                               </div>
                               <div>
-                                <div className="font-bold text-gray-900 dark:text-white">Pick Your Build Method</div>
+                                <div className="font-bold text-gray-900 dark:text-white">Select your build method</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  DIY (you build), MSP (we manage), or ALC (pick modules without base plan)
+                                  Do It Yourself, Managed Services Provided, or A La Carte (pick modules without base plan)
                                 </p>
                               </div>
                             </div>
 
-                            <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-green-500 hover:bg-gray-50 dark:hover:bg-gray-800">
                               <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold">5</div>
+                                <img src={step5Icon} alt="Step 5" className="w-8 h-8 rounded-lg shadow-md" />
+                              </div>
+                              <div className="flex-shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold shadow-md">5</div>
                               </div>
                               <div>
-                                <div className="font-bold text-gray-900 dark:text-white">Build Your Blueprint</div>
+                                <div className="font-bold text-gray-900 dark:text-white">Start to Build</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                   Add Commverse apps, coaching, and access your dashboard
                                 </p>
