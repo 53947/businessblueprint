@@ -863,27 +863,27 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 {/* Quick Access Inbox */}
                 <a
                   href="/inbox"
-                  className="hidden md:flex items-center gap-1.5 px-2.5 py-2 bg-white border border-blue-500 hover:bg-blue-50 text-blue-600 rounded-md font-medium text-sm transition-colors"
+                  className="hidden md:flex items-center gap-1.5 px-2.5 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-medium text-sm transition-colors"
                   data-testid="button-quick-inbox"
                 >
-                  <img src={inboxIcon} alt="/inbox" className="w-4 h-4" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
+                  <img src={inboxIcon} alt="/inbox" className="w-5 h-5 opacity-90" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
                   <span className="font-bold">Inbox</span>
                 </a>
                 <a
                   href="/api/login"
-                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-2 hover:bg-gray-100 text-gray-700 rounded-md text-sm transition-colors"
+                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-2 hover:bg-gray-100 text-gray-900 rounded-md text-sm transition-colors"
                   data-testid="button-login"
                 >
-                  <img src={logInIcon} alt="" className="w-4 h-4" />
+                  <img src={logInIcon} alt="" className="w-5 h-5 opacity-90" style={{ filter: 'invert(0%) sepia(0%) saturate(0%) brightness(20%)' }} />
                   <span>Login</span>
                 </a>
                 <a
                   href="/assessment"
-                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors whitespace-nowrap"
+                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md text-sm font-medium transition-colors whitespace-nowrap"
                   data-testid="button-signup"
                 >
-                  <img src={userPlusIcon} alt="" className="w-4 h-4" />
-                  <span>Sign Up</span>
+                  <img src={userPlusIcon} alt="" className="w-5 h-5 opacity-90" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
+                  <span className="font-bold">Sign Up</span>
                 </a>
               </>
             )}
