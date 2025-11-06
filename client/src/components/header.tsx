@@ -677,10 +677,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 data-testid="link-solutions-businessblueprint"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={bbIcon} alt="Business Blueprint" className="w-full h-full object-contain" />
+                                  <img src={bbIcon} alt="BusinessBlueprint" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Business Blueprint</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">BusinessBlueprint</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Digital intelligence platform</p>
                                 </div>
                               </a>
@@ -692,10 +692,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 data-testid="link-solutions-hostsblue"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={hostsBlueIcon} alt="Hosts Blue" className="w-full h-full object-contain" />
+                                  <img src={hostsBlueIcon} alt="HostsBlue" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Hosts Blue</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">HostsBlue</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Website hosting & builder</p>
                                 </div>
                               </a>
@@ -707,10 +707,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 data-testid="link-solutions-swipesblue"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={swipesBlueIcon} alt="Swipes Blue" className="w-full h-full object-contain" />
+                                  <img src={swipesBlueIcon} alt="SwipesBlue" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Swipes Blue</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">SwipesBlue</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Payment gateway</p>
                                 </div>
                               </a>
@@ -961,21 +961,21 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   <a href="/" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-orange-50 transition-colors" data-testid="link-mobile-businessblueprint">
                     <img src={bbIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">Business Blueprint</div>
+                      <div className="text-sm font-semibold text-gray-900">BusinessBlueprint</div>
                       <div className="text-xs text-gray-600">Digital intelligence</div>
                     </div>
                   </a>
                   <a href="#hostsblue" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-purple-50 transition-colors" data-testid="link-mobile-hostsblue">
                     <img src={hostsBlueIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">Hosts Blue</div>
+                      <div className="text-sm font-semibold text-gray-900">HostsBlue</div>
                       <div className="text-xs text-gray-600">Hosting & domains</div>
                     </div>
                   </a>
                   <a href="#swipesblue" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-50 transition-colors" data-testid="link-mobile-swipesblue">
                     <img src={swipesBlueIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">Swipes Blue</div>
+                      <div className="text-sm font-semibold text-gray-900">SwipesBlue</div>
                       <div className="text-xs text-gray-600">Payment gateway</div>
                     </div>
                   </a>
