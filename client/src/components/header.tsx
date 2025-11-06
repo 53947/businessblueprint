@@ -546,9 +546,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 data-testid="link-solution-businessblueprint"
                               >
                                 <div className="flex items-center gap-3 mb-2">
-                                  <img src={blueprintIcon} alt="Business Blueprint" className="h-12 w-12 object-contain" />
+                                  <img src={blueprintIcon} alt="BusinessBlueprint" className="h-12 w-12 object-contain" />
                                   <div>
-                                    <div className="text-lg font-bold text-gray-900 dark:text-white">Business Blueprint</div>
+                                    <div className="text-lg font-bold text-gray-900 dark:text-white">BusinessBlueprint</div>
                                     <p className="text-sm text-gray-600 dark:text-gray-400">AI-Powered Digital Intelligence Platform</p>
                                   </div>
                                 </div>
@@ -568,9 +568,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 data-testid="link-solution-hostsblue"
                               >
                                 <div className="flex items-center gap-3 mb-2">
-                                  <img src={hostsBlueIcon} alt="Hosts Blue" className="h-12 w-12 object-contain" />
+                                  <img src={hostsBlueIcon} alt="HostsBlue" className="h-12 w-12 object-contain" />
                                   <div>
-                                    <div className="text-lg font-bold text-gray-900 dark:text-white">Hosts Blue</div>
+                                    <div className="text-lg font-bold text-gray-900 dark:text-white">HostsBlue</div>
                                     <p className="text-sm text-gray-600 dark:text-gray-400">Web Services & MSP Partner</p>
                                   </div>
                                 </div>
@@ -590,9 +590,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 data-testid="link-solution-swipesblue"
                               >
                                 <div className="flex items-center gap-3 mb-2">
-                                  <img src={swipesBlueIcon} alt="Swipes Blue" className="h-12 w-12 object-contain" />
+                                  <img src={swipesBlueIcon} alt="SwipesBlue" className="h-12 w-12 object-contain" />
                                   <div>
-                                    <div className="text-lg font-bold text-gray-900 dark:text-white">Swipes Blue</div>
+                                    <div className="text-lg font-bold text-gray-900 dark:text-white">SwipesBlue</div>
                                     <p className="text-sm text-gray-600 dark:text-gray-400">Secure Payment Gateway</p>
                                   </div>
                                 </div>
