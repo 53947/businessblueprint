@@ -55,6 +55,8 @@ import coachBlueIcon from "@assets/native icons and favicons/AI Business Coach R
 import captainingIcon from "@assets/native icons and favicons/Captaining Icon.png";
 import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
 import digitalAssessmentIcon from "@assets/native icons and favicons/Digital Assessment_1762239599462.png";
+import diyIcon from "@assets/native icons and favicons/diy.png";
+import managedServicesIcon from "@assets/native icons and favicons/managed-services.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -261,11 +263,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   href="/pricing?style=diy"
                                   data-testid="link-execution-diy"
                                 >
-                                  <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center">
-                                    <span className="text-xl">🔨</span>
-                                  </div>
+                                  <img src={diyIcon} alt="Do It Yourself" className="w-10 h-10 rounded-lg" />
                                   <div>
-                                    <div className="font-bold text-gray-900 dark:text-white">DIY</div>
+                                    <div className="font-bold text-gray-900 dark:text-white">Do It Yourself (DIY)</div>
                                     <p className="text-xs text-gray-600 dark:text-gray-400">You install from the plan</p>
                                   </div>
                                 </a>
@@ -277,9 +277,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   href="/pricing?style=msp"
                                   data-testid="link-execution-msp"
                                 >
-                                  <img src={hostsBlueIcon} alt="MSP" className="w-10 h-10 rounded-lg" />
+                                  <img src={managedServicesIcon} alt="Managed Services Provided" className="w-10 h-10 rounded-lg" />
                                   <div>
-                                    <div className="font-bold text-gray-900 dark:text-white">MSP</div>
+                                    <div className="font-bold text-gray-900 dark:text-white">Managed Services Provided (MSP)</div>
                                     <p className="text-xs text-gray-600 dark:text-gray-400">Our crew manages the build</p>
                                   </div>
                                 </a>
@@ -293,7 +293,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 >
                                   <img src={alaCarteIcon} alt="A La Carte" className="w-10 h-10 rounded-lg" />
                                   <div>
-                                    <div className="font-bold text-gray-900 dark:text-white">ALC</div>
+                                    <div className="font-bold text-gray-900 dark:text-white">A La Carte (ALC)</div>
                                     <p className="text-xs text-gray-600 dark:text-gray-400">Pick modules, no base plan</p>
                                   </div>
                                 </a>
