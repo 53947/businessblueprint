@@ -857,45 +857,34 @@ export function Header({ showNavigation = true }: HeaderProps) {
           </div>
 
           {/* Right side - Quick Access & Login/Signup Buttons */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             {showNavigation && (
               <>
                 {/* Quick Access Inbox */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="hidden md:flex items-center space-x-2 bg-white border-blue-500 hover:bg-blue-50 text-blue-600 h-9"
-                  asChild
+                <a
+                  href="/inbox"
+                  className="hidden md:flex items-center gap-2 px-3 py-2 bg-white border border-blue-500 hover:bg-blue-50 text-blue-600 rounded-md font-medium text-sm transition-colors"
                   data-testid="button-quick-inbox"
                 >
-                  <a href="/inbox" className="flex items-center space-x-2">
-                    <img src={inboxIcon} alt="/inbox" className="w-4 h-4" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
-                    <span className="font-bold">Inbox</span>
-                  </a>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="hidden sm:flex items-center space-x-2 h-9"
-                  asChild
+                  <img src={inboxIcon} alt="/inbox" className="w-4 h-4" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
+                  <span className="font-bold">Inbox</span>
+                </a>
+                <a
+                  href="/api/login"
+                  className="hidden sm:flex items-center gap-2 px-3 py-2 hover:bg-gray-100 text-gray-700 rounded-md text-sm transition-colors"
                   data-testid="button-login"
                 >
-                  <a href="/api/login" className="flex items-center space-x-2">
-                    <img src={logInIcon} alt="" className="w-4 h-4" />
-                    <span>Login</span>
-                  </a>
-                </Button>
-                <Button
-                  size="sm"
-                  className="hidden sm:flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 h-9"
-                  asChild
+                  <img src={logInIcon} alt="" className="w-4 h-4" />
+                  <span>Login</span>
+                </a>
+                <a
+                  href="/assessment"
+                  className="hidden sm:flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors"
                   data-testid="button-signup"
                 >
-                  <a href="/assessment" className="flex items-center space-x-2">
-                    <img src={userPlusIcon} alt="" className="w-4 h-4" />
-                    <span>Sign Up</span>
-                  </a>
-                </Button>
+                  <img src={userPlusIcon} alt="" className="w-4 h-4" />
+                  <span>Sign Up</span>
+                </a>
               </>
             )}
           </div>
