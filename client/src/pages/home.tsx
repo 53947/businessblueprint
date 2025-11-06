@@ -89,7 +89,7 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
                   </svg>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 relative z-10">Your Blueprint to Success</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 relative z-10">Your Blueprint to Getting Business</h3>
                 <div className="space-y-4 relative z-10">
                   <div className="flex items-center text-left border-l-4 border-orange-500 pl-3 py-2.5">
                     <img src={step1Icon} alt="Step 1" className="w-6 h-6 rounded-lg mr-3 flex-shrink-0 shadow-md" />
