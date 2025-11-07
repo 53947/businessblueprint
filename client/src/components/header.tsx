@@ -114,7 +114,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <div className="p-6 w-[90vw] max-w-[600px]">
                           <div className="mb-4">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                              businessblueprint.io - Your Growth Plan
+                              A Blueprint to your growth
                             </h3>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
                               Custom digital growth plan based on AI analysis of your business
