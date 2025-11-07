@@ -19,6 +19,14 @@ import step2Icon from "@assets/native icons and favicons/11-05-2025 Updated or N
 import step3Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/3-Choose your base plan.png";
 import step4Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/4-Select your build method.png";
 import step5Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/5-Start to Build.png";
+import sendIcon from "@assets/native icons and favicons/: send app icon.png";
+import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
+import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
+import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
+import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
+import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
+import contentIcon from "@assets/native icons and favicons/: content app icon.png";
+import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -43,10 +51,10 @@ export default function Home() {
                 </div>
               </div>
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                <span className="text-shadow-strong" style={{ color: '#FFD700' }}>Get Found, Get Customers,</span> <span className="whitespace-nowrap text-[110%]">Get Business</span>
+                <span className="text-shadow-strong" style={{ color: '#FFD700' }}>We Assess. We Prescribe.</span> <span className="whitespace-nowrap text-[110%]">You Grow.</span>
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-Helping local businesses succeed online. Our AI analyzes your online presence using Google's business intelligence and creates a comprehensive Digital Blueprint in less than 24 hours. No tech experience required.
+                Our AI analyzes your online presence using Google Business Intelligence and prescribes your exact digital blueprint - not generic advice, but YOUR custom plan with the right apps, paths, and pricing.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Button onClick={startAssessment} size="lg" className="bg-blue-500 hover:bg-blue-600">
@@ -150,325 +158,372 @@ Helping local businesses succeed online. Our AI analyzes your online presence us
         </div>
       </section>
 
-      {/* Digital Blueprint */}
-      <section id="digital-blueprint" className="bg-gradient-to-br from-amber-50 via-yellow-50 to-yellow-100 py-20 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <pattern id="blueprint-dots" patternUnits="userSpaceOnUse" width="10" height="10">
-                <circle cx="5" cy="5" r="1" fill="currentColor"/>
-              </pattern>
-            </defs>
-            <rect width="100" height="100" fill="url(#blueprint-dots)"/>
-          </svg>
-        </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Compass Header */}
-          <div className="text-center mb-16 relative">
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-4">
-              <img src={compassIcon} alt="" className="w-12 h-12 animate-spin" style={{animationDuration: '20s', filter: 'invert(46%) sepia(96%) saturate(589%) hue-rotate(15deg) brightness(92%) contrast(87%)'}} />
+      {/* The Prescription - What You Get */}
+      <section className="bg-gradient-to-br from-blue-50 via-white to-blue-50 py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+              💊 YOUR PRESCRIPTION
             </div>
-            <div className="pt-8">
-              <div className="flex items-center justify-center mb-4">
-                <span className="text-3xl mr-3">📍</span>
-                <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">Your Digital Blueprint</h2>
-                <span className="text-3xl ml-3">💎</span>
-              </div>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-A step-by-step guide designed for complete beginners. Follow this blueprint to build confidence and watch your business grow online and offline.
-              </p>
-            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Not Generic Advice. <span className="text-shadow-strong" style={{ color: '#FFD700' }}>Your Custom Blueprint</span>.
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              After analyzing your business with Google Intelligence, we prescribe exactly what you need to succeed online.
+            </p>
           </div>
 
-          {/* The 11 Strategic Blueprint Steps */}
-          <div className="grid lg:grid-cols-2 gap-8 mb-16">
-            {/* Step 1: Business Foundation */}
-            <Card className="border-4 border-dashed border-amber-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 -left-4 bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">1</div>
-              <CardContent className="p-6 pt-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  🏗️ Business Foundation
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> The core of who you are as a business - your mission, values, and what makes you special.
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <Card className="border-2 border-blue-200 hover:shadow-xl transition-all">
+              <CardContent className="p-6">
+                <div className="bg-blue-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <span className="text-2xl">📊</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Your Digital IQ Score</h3>
+                <p className="text-gray-600 text-sm">
+                  A 0-140 assessment of your current online presence based on Google Business Profile, reviews, listings, and more.
                 </p>
-                <div className="bg-amber-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-amber-800"><strong>🔍 Look for:</strong> Clear answers to "What do I do?" and "Why should customers choose me?" This builds your confidence by giving you a clear identity online.</p>
-                </div>
-                <div className="bg-red-50 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-red-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">DOMAINS</span>
-                    <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">HOSTING</span>
-                    <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">WEBSITE</span>
-                  </div>
-                </div>
               </CardContent>
             </Card>
 
-            {/* Step 2: Know Your Current Position */}
-            <Card className="border-4 border-dashed border-green-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 -left-4 bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">2</div>
-              <CardContent className="p-6 pt-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  📍 Know Your Current Position
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> Exactly where you stand online right now - your digital presence assessment.
+            <Card className="border-2 border-yellow-200 hover:shadow-xl transition-all">
+              <CardContent className="p-6">
+                <div className="bg-yellow-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <span className="text-2xl">💰</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Recommended Base Plan</h3>
+                <p className="text-gray-600 text-sm">
+                  Start ($99), Advanced ($299), or Scale ($999) - prescribed based on your Digital IQ and business needs.
                 </p>
-                <div className="bg-green-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-green-800"><strong>🔍 Look for:</strong> Your current Google Business profile, reviews, and how customers find you. No judgment here - we're just mapping your starting point!</p>
-                </div>
-                <div className="bg-green-50 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-green-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">LOCAL SEO</span>
-                    <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">REPUTATION</span>
-                  </div>
-                </div>
               </CardContent>
             </Card>
 
-            {/* Step 3: Know Your Ideal Customers */}
-            <Card className="border-4 border-dashed border-purple-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 -left-4 bg-purple-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">3</div>
-              <CardContent className="p-6 pt-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  🎯 Know Your Ideal Customers
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> Who your perfect customers are and what they're looking for.
+            <Card className="border-2 border-purple-200 hover:shadow-xl transition-all">
+              <CardContent className="p-6">
+                <div className="bg-purple-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <span className="text-2xl">🎯</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Commverse Apps + Paths</h3>
+                <p className="text-gray-600 text-sm">
+                  Which apps you need (/send, /inbox, /livechat, /content) and SPECIFIC PATHS tailored to your business type.
                 </p>
-                <div className="bg-purple-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-purple-800"><strong>🔍 Look for:</strong> Customer demographics, problems they need solved, and where they spend time online. This helps you speak directly to the people who need you most.</p>
-                </div>
-                <div className="bg-purple-50 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-purple-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs">SOCIAL</span>
-                    <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs">CONTENT & EXPERIENCE</span>
-                  </div>
-                </div>
               </CardContent>
             </Card>
 
-            {/* Step 4: Your Brand Voice & Style */}
-            <Card className="border-4 border-dashed border-pink-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 -left-4 bg-pink-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">4</div>
-              <CardContent className="p-6 pt-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  🎨 Your Brand Voice & Style
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> How to communicate consistently and professionally across all platforms.
+            <Card className="border-2 border-green-200 hover:shadow-xl transition-all">
+              <CardContent className="p-6">
+                <div className="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <span className="text-2xl">🛠️</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Your Build Method</h3>
+                <p className="text-gray-600 text-sm">
+                  DIY (hands-on), MSP (managed for you), or ALC (pick specific tools) - recommended based on your comfort level.
                 </p>
-                <div className="bg-pink-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-pink-800"><strong>🔍 Look for:</strong> Your unique tone of voice, visual style, and key messaging that feels authentically "you". This makes you memorable and builds trust with customers.</p>
-                </div>
-                <div className="bg-pink-50 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-pink-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="px-2 py-1 bg-pink-100 text-pink-800 rounded text-xs">WEBSITE</span>
-                    <span className="px-2 py-1 bg-pink-100 text-pink-800 rounded text-xs">SOCIAL</span>
-                    <span className="px-2 py-1 bg-pink-100 text-pink-800 rounded text-xs">CONTENT & EXPERIENCE</span>
-                  </div>
-                </div>
               </CardContent>
             </Card>
 
-            {/* Step 5: Your Digital Home Base */}
-            <Card className="border-4 border-dashed border-indigo-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 -left-4 bg-indigo-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">5</div>
-              <CardContent className="p-6 pt-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  🏠 Your Digital Home Base
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> Creating a website that welcomes visitors and turns them into customers.
+            <Card className="border-2 border-orange-200 hover:shadow-xl transition-all">
+              <CardContent className="p-6">
+                <div className="bg-orange-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <span className="text-2xl">📅</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">30-Day Action Plan</h3>
+                <p className="text-gray-600 text-sm">
+                  Week-by-week priorities so you know exactly what to do first, second, third, and fourth.
                 </p>
-                <div className="bg-indigo-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-indigo-800"><strong>🔍 Look for:</strong> Clear navigation, compelling headlines, and simple ways for customers to contact you. Your website is your 24/7 salesperson - make it count!</p>
-                </div>
-                <div className="bg-indigo-50 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-indigo-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs">WEBSITE</span>
-                    <span className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs">SEO WEBSITE</span>
-                    <span className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs">HOSTING</span>
-                  </div>
-                </div>
               </CardContent>
             </Card>
 
-            {/* Step 6: Be Found Locally */}
-            <Card className="border-4 border-dashed border-yellow-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 -left-4 bg-yellow-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">6</div>
-              <CardContent className="p-6 pt-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  🗺️ Be Found Locally
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> How to show up when people in your area search for your services.
+            <Card className="border-2 border-pink-200 hover:shadow-xl transition-all">
+              <CardContent className="p-6">
+                <div className="bg-pink-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <span className="text-2xl">🤖</span>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">AI Coach Guidance</h3>
+                <p className="text-gray-600 text-sm">
+                  Coach Blue answers questions and guides you through each step of your personalized blueprint.
                 </p>
-                <div className="bg-yellow-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-yellow-800"><strong>🔍 Look for:</strong> Complete Google Business profile, accurate listings, and local keyword optimization. Most customers start their search locally - be there when they look!</p>
-                </div>
-                <div className="bg-yellow-50 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-yellow-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">LOCAL SEO</span>
-                    <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">SEO WEBSITE</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Step 7: Social Connection Strategy */}
-            <Card className="border-4 border-dashed border-cyan-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 -left-4 bg-cyan-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">7</div>
-              <CardContent className="p-6 pt-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  💬 Social Connection Strategy
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> How to use social media to build relationships, not just post randomly.
-                </p>
-                <div className="bg-cyan-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-cyan-800"><strong>🔍 Look for:</strong> Platforms where your customers spend time, content that starts conversations, and consistent posting schedules. Social media is about relationships - be helpful and authentic.</p>
-                </div>
-                <div className="bg-cyan-50 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-cyan-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="px-2 py-1 bg-cyan-100 text-cyan-800 rounded text-xs">SOCIAL</span>
-                    <span className="px-2 py-1 bg-cyan-100 text-cyan-800 rounded text-xs">SOCIAL MEDIA</span>
-                    <span className="px-2 py-1 bg-cyan-100 text-cyan-800 rounded text-xs">CONTENT & EXPERIENCE</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Step 8: Build Trust & Reputation */}
-            <Card className="border-4 border-dashed border-emerald-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 -left-4 bg-emerald-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">8</div>
-              <CardContent className="p-6 pt-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  ⭐ Build Trust & Reputation
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> How to encourage reviews and handle feedback professionally.
-                </p>
-                <div className="bg-emerald-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-emerald-800"><strong>🔍 Look for:</strong> Review request systems, professional responses to feedback, and showcasing customer success stories. Reviews are digital word-of-mouth - the most powerful marketing!</p>
-                </div>
-                <div className="bg-emerald-50 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-emerald-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="px-2 py-1 bg-emerald-100 text-emerald-800 rounded text-xs">REPUTATION</span>
-                    <span className="px-2 py-1 bg-emerald-100 text-emerald-800 rounded text-xs">CONTENT & EXPERIENCE</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Step 9: Nurture Customer Relationships */}
-            <Card className="border-4 border-dashed border-yellow-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 -left-4 bg-[#FFD700] text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">9</div>
-              <CardContent className="p-6 pt-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  📧 Nurture Customer Relationships
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> How to stay in touch with customers and provide ongoing value.
-                </p>
-                <div className="bg-yellow-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-yellow-800"><strong>🔍 Look for:</strong> Simple email systems, helpful content ideas, and ways to stay top-of-mind without being pushy. Regular, valuable communication keeps customers coming back.</p>
-                </div>
-                <div className="bg-yellow-50 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-yellow-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">EMAIL MARKETING</span>
-                    <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">CONTENT & EXPERIENCE</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Step 10: Strategic Growth Investment */}
-            <Card className="border-4 border-dashed border-red-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 -left-4 bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">10</div>
-              <CardContent className="p-6 pt-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  🚀 Strategic Growth Investment
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> When and how to invest in advertising to reach more ideal customers.
-                </p>
-                <div className="bg-red-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-red-800"><strong>🔍 Look for:</strong> Simple ad platforms, clear targeting options, and budget-friendly starting points. Start small, test what works, then scale your successful campaigns.</p>
-                </div>
-                <div className="bg-red-50 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-red-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">ADVERTISING</span>
-                    <span className="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">SOCIAL MEDIA</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Step 11: Measure & Improve */}
-            <Card className="border-4 border-dashed border-violet-300 bg-white/90 backdrop-blur hover:shadow-xl transition-all duration-300 relative">
-              <div className="absolute -top-4 -left-4 bg-violet-500 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl shadow-lg border-4 border-white">11</div>
-              <CardContent className="p-6 pt-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-3 flex items-center">
-                  📊 Measure & Improve
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  <strong>What you'll discover:</strong> Simple ways to track what's working and continuously improve your results.
-                </p>
-                <div className="bg-violet-50 p-4 rounded-lg mb-4">
-                  <p className="text-sm text-violet-800"><strong>🔍 Look for:</strong> Easy-to-understand reports, key metrics that matter, and actionable insights for growth. Data helps you make smart decisions and invest your time wisely.</p>
-                </div>
-                <div className="bg-violet-50 p-4 rounded-lg mt-4">
-                  <p className="text-xs text-violet-700 font-semibold mb-2">🛠️ Your Tools for This Step:</p>
-                  <div className="flex flex-wrap gap-1">
-                    <span className="px-2 py-1 bg-violet-100 text-violet-800 rounded text-xs">REPUTATION</span>
-                    <span className="px-2 py-1 bg-violet-100 text-violet-800 rounded text-xs">SOCIAL MEDIA</span>
-                    <span className="px-2 py-1 bg-violet-100 text-violet-800 rounded text-xs">EMAIL MARKETING</span>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* X Marks the Spot - Success Destination */}
-          <Card className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-white text-center shadow-2xl border-8 border-yellow-400 relative">
-            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-8xl text-red-600 font-bold animate-bounce">×</div>
-            <CardContent className="p-12 pt-16">
-              <div className="flex items-center justify-center mb-6">
-                <span className="text-4xl mr-4 animate-pulse">💎</span>
-                <h3 className="text-4xl font-bold">Digital Success Blueprint!</h3>
-                <span className="text-4xl ml-4 animate-pulse">💎</span>
-              </div>
-              <p className="text-2xl mb-6 opacity-90">
-                You've found it! A thriving, confident online business that serves customers and grows sustainably.
-              </p>
-              <Button 
-                onClick={startAssessment}
-                size="lg"
-                className="bg-white text-yellow-600 hover:bg-gray-100 font-bold text-xl px-8 py-4"
-              >
-📋 Start Your Blueprint
-              </Button>
-              <p className="mt-4 text-sm opacity-75">
-Your personalized blueprint will show you which steps to take first!
-              </p>
-            </CardContent>
-          </Card>
+          <div className="text-center">
+            <Button onClick={startAssessment} size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg" data-testid="button-get-prescription">
+              <span className="mr-2">📋</span>
+              Get Your Free Prescription Now
+            </Button>
+            <p className="mt-4 text-sm text-gray-500">Takes 2 minutes • No credit card required • Results in 24 hours</p>
+          </div>
         </div>
       </section>
+
+      {/* Base Plans Comparison */}
+      <section className="bg-white py-20 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+              💰 BASE PLANS
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Three Plans. <span className="text-shadow-strong" style={{ color: '#FFD700' }}>One Prescription</span>.
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Your Digital IQ determines which base plan fits your business best. Every plan includes our prescription system.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Start Plan */}
+            <Card className="border-4 border-orange-300 hover:shadow-2xl transition-all relative">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                DIGITAL IQ 0-40
+              </div>
+              <CardContent className="p-8 pt-12">
+                <div className="text-center mb-6">
+                  <h3 className="text-3xl font-bold text-gray-900 mb-2">Start</h3>
+                  <div className="flex items-center justify-center mb-4">
+                    <span className="text-5xl font-bold" style={{ color: '#FFA500' }}>$99</span>
+                    <span className="text-gray-600 ml-2">/month</span>
+                  </div>
+                  <p className="text-gray-600 text-sm">Perfect for small businesses just starting their digital journey</p>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">Digital Assessment & IQ Score</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">Custom Prescription Blueprint</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">1-2 Commverse Apps</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">AI Coach Access</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">Basic Online Presence</span>
+                  </li>
+                </ul>
+                <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white" data-testid="button-choose-start-plan">
+                  Choose Start
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Advanced Plan */}
+            <Card className="border-4 border-blue-400 hover:shadow-2xl transition-all relative transform scale-105">
+              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-8 py-3 rounded-full text-sm font-bold shadow-xl">
+                🌟 MOST POPULAR
+              </div>
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg" style={{ marginTop: '2rem' }}>
+                DIGITAL IQ 41-70
+              </div>
+              <CardContent className="p-8 pt-16">
+                <div className="text-center mb-6">
+                  <h3 className="text-3xl font-bold text-gray-900 mb-2">Advanced</h3>
+                  <div className="flex items-center justify-center mb-4">
+                    <span className="text-5xl font-bold" style={{ color: '#0000FF' }}>$299</span>
+                    <span className="text-gray-600 ml-2">/month</span>
+                  </div>
+                  <p className="text-gray-600 text-sm">For growing businesses ready to scale their digital presence</p>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">Everything in Start, plus:</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">3-4 Commverse Apps</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">Marketing Automation</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">Priority AI Coach Support</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">Enhanced Analytics</span>
+                  </li>
+                </ul>
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" data-testid="button-choose-advanced-plan">
+                  Choose Advanced
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Scale Plan */}
+            <Card className="border-4 border-green-300 hover:shadow-2xl transition-all relative">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                DIGITAL IQ 71+
+              </div>
+              <CardContent className="p-8 pt-12">
+                <div className="text-center mb-6">
+                  <h3 className="text-3xl font-bold text-gray-900 mb-2">Scale</h3>
+                  <div className="flex items-center justify-center mb-4">
+                    <span className="text-5xl font-bold" style={{ color: '#00FF40' }}>$999</span>
+                    <span className="text-gray-600 ml-2">/month</span>
+                  </div>
+                  <p className="text-gray-600 text-sm">Enterprise-level for multi-location or high-volume businesses</p>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">Everything in Advanced, plus:</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">Full Commverse Bundle (4 apps)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">Multi-location Support</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">Dedicated Account Manager</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">White-label Options</span>
+                  </li>
+                </ul>
+                <Button className="w-full bg-green-600 hover:bg-green-700 text-white" data-testid="button-choose-scale-plan">
+                  Choose Scale
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Commverse Apps Overview */}
+      <section className="bg-gradient-to-br from-gray-50 via-white to-gray-50 py-20 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-block bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+              🚀 COMMVERSE APPS
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Not Just Apps. <span className="text-shadow-strong" style={{ color: '#FFD700' }}>Prescribed Paths</span>.
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+              Your prescription includes specific apps AND the exact paths within each app tailored to your business needs.
+            </p>
+            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 max-w-2xl mx-auto">
+              <p className="text-yellow-900 font-semibold">
+                💡 Example: Not just "/send" - but "/send with Quick Campaign Launch path" for your specific business type
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* /send */}
+            <Card className="border-2 border-yellow-200 hover:shadow-xl transition-all hover:border-yellow-400">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center mb-4">
+                  <img src={sendIcon} alt="/send icon" className="h-16 w-16 object-contain mr-3" />
+                  <img src={sendLogo} alt="/send" className="h-10 object-contain" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Email & SMS Marketing</h3>
+                <p className="text-gray-600 text-sm mb-4">Send targeted campaigns to your customers via email and text messaging.</p>
+                <div className="bg-yellow-50 p-3 rounded-lg">
+                  <p className="text-xs font-semibold text-yellow-900 mb-2">Example Paths:</p>
+                  <ul className="text-xs text-yellow-800 space-y-1">
+                    <li>• Quick Campaign Launch</li>
+                    <li>• Build Your Audience First</li>
+                    <li>• Re-engagement Flow</li>
+                    <li>• Seasonal Campaign Builder</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* /inbox */}
+            <Card className="border-2 border-blue-200 hover:shadow-xl transition-all hover:border-blue-400">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center mb-4">
+                  <img src={inboxIcon} alt="/inbox icon" className="h-16 w-16 object-contain mr-3" />
+                  <img src={inboxLogo} alt="/inbox" className="h-10 object-contain" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Unified Communications</h3>
+                <p className="text-gray-600 text-sm mb-4">Manage email, chat, and social DMs from one central inbox.</p>
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <p className="text-xs font-semibold text-blue-900 mb-2">Example Paths:</p>
+                  <ul className="text-xs text-blue-800 space-y-1">
+                    <li>• Connect All Channels</li>
+                    <li>• Team Collaboration Setup</li>
+                    <li>• Customer Service Hub</li>
+                    <li>• Sales Pipeline Management</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* /livechat */}
+            <Card className="border-2 border-purple-200 hover:shadow-xl transition-all hover:border-purple-400">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center mb-4">
+                  <img src={livechatIcon} alt="/livechat icon" className="h-16 w-16 object-contain mr-3" />
+                  <img src={livechatLogo} alt="/livechat" className="h-10 object-contain" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Live Chat Widget</h3>
+                <p className="text-gray-600 text-sm mb-4">Add real-time chat to your website for instant customer support.</p>
+                <div className="bg-purple-50 p-3 rounded-lg">
+                  <p className="text-xs font-semibold text-purple-900 mb-2">Example Paths:</p>
+                  <ul className="text-xs text-purple-800 space-y-1">
+                    <li>• Install & Go Live</li>
+                    <li>• FAQ Automation Setup</li>
+                    <li>• Lead Capture Mode</li>
+                    <li>• Support Ticket Creation</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* /content */}
+            <Card className="border-2 border-pink-200 hover:shadow-xl transition-all hover:border-pink-400">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center mb-4">
+                  <img src={contentIcon} alt="/content icon" className="h-16 w-16 object-contain mr-3" />
+                  <img src={contentLogo} alt="/content" className="h-10 object-contain" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Social Media Management</h3>
+                <p className="text-gray-600 text-sm mb-4">Schedule and manage content across all your social platforms.</p>
+                <div className="bg-pink-50 p-3 rounded-lg">
+                  <p className="text-xs font-semibold text-pink-900 mb-2">Example Paths:</p>
+                  <ul className="text-xs text-pink-800 space-y-1">
+                    <li>• Content Calendar Quick Start</li>
+                    <li>• Multi-Platform Scheduler</li>
+                    <li>• AI Content Assistant</li>
+                    <li>• Brand Voice Builder</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center mt-12">
+            <p className="text-gray-600 mb-6">
+              Your prescription will tell you which apps and which paths are right for YOUR business
+            </p>
+            <Link href="/applications">
+              <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white" data-testid="button-explore-applications">
+                Explore All Applications
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
 
       {/* How It Works */}
       <HowItWorks onStartAssessment={startAssessment} />
