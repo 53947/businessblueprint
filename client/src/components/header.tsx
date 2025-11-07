@@ -114,10 +114,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <div className="p-6 w-[90vw] max-w-[600px]">
                           <div className="mb-4">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                              Your Blueprint to Getting Business
+                              businessblueprint.io - Your Growth Plan
                             </h3>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                              Your custom digital growth plan based on AI analysis of your business
+                              Custom digital growth plan based on AI analysis of your business
                             </p>
                           </div>
 
