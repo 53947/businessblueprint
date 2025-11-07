@@ -2,13 +2,14 @@
 import coachBlueIcon from "@assets/Coach Blue_1762535930955.png";
 import commverseIcon from "@assets/Commverse_1762535930956.png";
 import digitalIQIcon from "@assets/Digital IQ_1762535930956.png";
+import digitalAssessmentIconImage from "@assets/native icons and favicons/Digital Assessment_1762239599462.png";
 
 interface BrandIconProps {
   className?: string;
   size?: number;
 }
 
-// 1. Digital IQ Icon - Official brand icon (lightbulb)
+// 1. Digital IQ Icon - Official brand icon (lightbulb) - USE ONLY FOR SCORE/METRIC
 export function DigitalIQIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <img 
@@ -22,8 +23,19 @@ export function DigitalIQIcon({ className = "", size = 64 }: BrandIconProps) {
   );
 }
 
-// 2. Digital Assessment Icon - Same as Digital IQ
-export const DigitalAssessmentIcon = DigitalIQIcon;
+// 2. Digital Assessment Icon - For assessment action/CTA buttons
+export function DigitalAssessmentIcon({ className = "", size = 64 }: BrandIconProps) {
+  return (
+    <img 
+      src={digitalAssessmentIconImage} 
+      alt="Digital Assessment" 
+      width={size} 
+      height={size}
+      className={className}
+      style={{ objectFit: 'contain' }}
+    />
+  );
+}
 
 // 3. 30-Day Action Plan Icon - Calendar with progress path
 export function ActionPlanIcon({ className = "", size = 64 }: BrandIconProps) {
