@@ -24,6 +24,8 @@ import livechatIcon from "@assets/native icons and favicons/: livechat app icon.
 import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
 import contentIcon from "@assets/native icons and favicons/: content app icon.png";
 import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
+import commverseBundle from "@assets/logos and wordmarks/: commverse bundle logo.png";
+import commverseIcon from "@assets/native icons and favicons/: commverse.png";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -338,9 +340,9 @@ export default function Home() {
               
               <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-send-app">
                 <CardContent className="p-4 flex items-center gap-4">
-                  <img src={sendIcon} alt=": send" className="w-12 h-12 rounded-lg" />
+                  <img src={sendIcon} alt="/send icon" className="w-12 h-12 rounded-lg" />
                   <div className="flex-1">
-                    <h4 className="font-bold text-gray-900">: send</h4>
+                    <img src={sendLogo} alt="/send" className="h-6 mb-2" />
                     <p className="text-sm text-gray-600">Broadcast messages to customers</p>
                   </div>
                   <div className="text-right">
@@ -352,9 +354,9 @@ export default function Home() {
 
               <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-inbox-app">
                 <CardContent className="p-4 flex items-center gap-4">
-                  <img src={inboxIcon} alt=": inbox" className="w-12 h-12 rounded-lg" />
+                  <img src={inboxIcon} alt="/inbox icon" className="w-12 h-12 rounded-lg" />
                   <div className="flex-1">
-                    <h4 className="font-bold text-gray-900">: inbox</h4>
+                    <img src={inboxLogo} alt="/inbox" className="h-6 mb-2" />
                     <p className="text-sm text-gray-600">Manage customer responses</p>
                   </div>
                   <div className="text-right">
@@ -366,9 +368,9 @@ export default function Home() {
 
               <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-livechat-app">
                 <CardContent className="p-4 flex items-center gap-4">
-                  <img src={livechatIcon} alt=": livechat" className="w-12 h-12 rounded-lg" />
+                  <img src={livechatIcon} alt="/livechat icon" className="w-12 h-12 rounded-lg" />
                   <div className="flex-1">
-                    <h4 className="font-bold text-gray-900">: livechat</h4>
+                    <img src={livechatLogo} alt="/livechat" className="h-6 mb-2" />
                     <p className="text-sm text-gray-600">Real-time customer chat</p>
                   </div>
                   <div className="text-right">
@@ -380,9 +382,9 @@ export default function Home() {
 
               <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-content-app">
                 <CardContent className="p-4 flex items-center gap-4">
-                  <img src={contentIcon} alt=": content" className="w-12 h-12 rounded-lg" />
+                  <img src={contentIcon} alt="/content icon" className="w-12 h-12 rounded-lg" />
                   <div className="flex-1">
-                    <h4 className="font-bold text-gray-900">: content</h4>
+                    <img src={contentLogo} alt="/content" className="h-6 mb-2" />
                     <p className="text-sm text-gray-600">Create and publish content</p>
                   </div>
                   <div className="text-right">
@@ -407,9 +409,9 @@ export default function Home() {
                       💰 SAVE $40/MONTH
                     </div>
                     <div className="flex items-center justify-center mb-4">
-                      <CommverseIcon size={80} />
+                      <img src={commverseIcon} alt="commverse icon" className="h-20 w-20 object-contain" />
                     </div>
-                    <h3 className="text-3xl font-bold text-gray-900 mb-2">CommVerse Bundle</h3>
+                    <img src={commverseBundle} alt="commverse bundle" className="h-10 mx-auto mb-4" />
                     <p className="text-gray-600 mb-6">All 4 communication apps included</p>
                   </div>
 

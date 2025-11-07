@@ -1,33 +1,11 @@
-// Brand Icons - TriadBlue Professional System
-// Premium design with gradients, depth, and contextual metaphors
+// Brand Icons - Clean, professional designs with depth and relevance
 
 interface BrandIconProps {
   className?: string;
   size?: number;
 }
 
-// Shared gradient definitions
-const GradientDefs = () => (
-  <defs>
-    <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stopColor="#0000FF" />
-      <stop offset="100%" stopColor="#1A33FF" />
-    </linearGradient>
-    <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stopColor="#FF6B00" />
-      <stop offset="100%" stopColor="#FF8F33" />
-    </linearGradient>
-    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
-      <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.25" />
-    </filter>
-    <radialGradient id="glowGradient">
-      <stop offset="0%" stopColor="#FF6B00" stopOpacity="0.6" />
-      <stop offset="100%" stopColor="#FF6B00" stopOpacity="0" />
-    </radialGradient>
-  </defs>
-);
-
-// 1. Digital IQ Icon - Speedometer with analytics grid
+// 1. Digital IQ Icon - Gauge meter with score
 export function DigitalIQIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -38,62 +16,54 @@ export function DigitalIQIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <GradientDefs />
+      <defs>
+        <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#0000FF" />
+          <stop offset="100%" stopColor="#3366FF" />
+        </linearGradient>
+        <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF6B00" />
+          <stop offset="100%" stopColor="#FF8F33" />
+        </linearGradient>
+        <filter id="shadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.3" />
+        </filter>
+      </defs>
       
-      {/* Head silhouette base */}
-      <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41V52C15 54 16 56 18 57L32 62L46 57C48 56 49 54 49 52V41C52 37 54 32 54 26C54 14 44 4 32 4Z"
-        fill="url(#blueGradient)"
-        filter="url(#dropShadow)"
-      />
+      {/* Gauge background circle */}
+      <circle cx="32" cy="32" r="28" fill="url(#blueGrad)" filter="url(#shadow)" />
       
-      {/* Rim lighting */}
-      <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41"
-        stroke="#3366FF"
-        strokeWidth="1.5"
-        opacity="0.5"
-        fill="none"
-      />
+      {/* Inner ring */}
+      <circle cx="32" cy="32" r="22" stroke="#3366FF" strokeWidth="2" fill="none" opacity="0.5" />
       
-      {/* Analytics grid background */}
-      <line x1="18" y1="24" x2="46" y2="24" stroke="#FF6B00" strokeWidth="0.5" opacity="0.3" />
-      <line x1="18" y1="28" x2="46" y2="28" stroke="#FF6B00" strokeWidth="0.5" opacity="0.3" />
-      <line x1="18" y1="32" x2="46" y2="32" stroke="#FF6B00" strokeWidth="0.5" opacity="0.3" />
-      
-      {/* Speedometer arc */}
+      {/* Gauge arc */}
       <path 
-        d="M 18 32 A 14 14 0 0 1 46 32" 
-        stroke="url(#orangeGradient)" 
-        strokeWidth="4" 
+        d="M 12 32 A 20 20 0 1 1 52 32" 
+        stroke="url(#orangeGrad)" 
+        strokeWidth="6" 
         fill="none"
         strokeLinecap="round"
       />
       
-      {/* Gauge segments */}
-      <line x1="20" y1="32" x2="22" y2="29" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round" />
-      <line x1="26" y1="22" x2="27" y2="25" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round" />
-      <line x1="32" y1="18" x2="32" y2="21" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round" />
-      <line x1="38" y1="22" x2="37" y2="25" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round" />
-      <line x1="44" y1="32" x2="42" y2="29" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round" />
+      {/* Tick marks */}
+      <line x1="12" y1="32" x2="16" y2="32" stroke="#FF6B00" strokeWidth="2.5" />
+      <line x1="18" y1="18" x2="21" y2="21" stroke="#FF6B00" strokeWidth="2.5" />
+      <line x1="32" y1="12" x2="32" y2="16" stroke="#FF6B00" strokeWidth="2.5" />
+      <line x1="46" y1="18" x2="43" y2="21" stroke="#FF6B00" strokeWidth="2.5" />
+      <line x1="52" y1="32" x2="48" y2="32" stroke="#FF6B00" strokeWidth="2.5" />
       
-      {/* Needle pointer with glow */}
-      <circle cx="32" cy="32" r="8" fill="url(#glowGradient)" />
-      <path 
-        d="M 32 32 L 40 24" 
-        stroke="url(#orangeGradient)" 
-        strokeWidth="3" 
-        strokeLinecap="round"
-      />
-      <circle cx="32" cy="32" r="3" fill="url(#orangeGradient)" />
+      {/* Needle */}
+      <line x1="32" y1="32" x2="44" y2="22" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="32" cy="32" r="3.5" fill="#FF6B00" />
+      <circle cx="32" cy="32" r="1.5" fill="white" />
       
-      {/* Score indicator */}
-      <text x="32" y="44" textAnchor="middle" fill="#FF6B00" fontSize="10" fontWeight="bold" fontFamily="Arial">SCORE</text>
+      {/* IQ label */}
+      <text x="32" y="48" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">IQ</text>
     </svg>
   );
 }
 
-// 2. CommVerse Icon - 4 app quadrants orbiting core
+// 2. CommVerse Icon - 4 nodes in square formation
 export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -104,44 +74,61 @@ export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <GradientDefs />
+      <defs>
+        <linearGradient id="blueGradComm" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#0000FF" />
+          <stop offset="100%" stopColor="#3366FF" />
+        </linearGradient>
+        <linearGradient id="orangeGradComm" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF6B00" />
+          <stop offset="100%" stopColor="#FF8F33" />
+        </linearGradient>
+        <filter id="shadowComm">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.3" />
+        </filter>
+        <radialGradient id="glow">
+          <stop offset="0%" stopColor="#FF6B00" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#FF6B00" stopOpacity="0" />
+        </radialGradient>
+      </defs>
       
-      {/* Head silhouette base */}
-      <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41V52C15 54 16 56 18 57L32 62L46 57C48 56 49 54 49 52V41C52 37 54 32 54 26C54 14 44 4 32 4Z"
-        fill="url(#blueGradient)"
-        filter="url(#dropShadow)"
-      />
+      {/* Background circle */}
+      <circle cx="32" cy="32" r="28" fill="url(#blueGradComm)" filter="url(#shadowComm)" />
       
-      {/* Central hub with glow */}
-      <circle cx="32" cy="28" r="6" fill="url(#glowGradient)" />
-      <circle cx="32" cy="28" r="4" fill="url(#orangeGradient)" />
+      {/* Central glow */}
+      <circle cx="32" cy="32" r="12" fill="url(#glow)" />
       
-      {/* 4 app nodes in quadrants */}
-      <circle cx="22" cy="20" r="4.5" fill="url(#orangeGradient)" opacity="0.9" />
-      <circle cx="42" cy="20" r="4.5" fill="url(#orangeGradient)" opacity="0.9" />
-      <circle cx="22" cy="36" r="4.5" fill="url(#orangeGradient)" opacity="0.9" />
-      <circle cx="42" cy="36" r="4.5" fill="url(#orangeGradient)" opacity="0.9" />
+      {/* 4 app nodes in square */}
+      <circle cx="20" cy="20" r="6" fill="url(#orangeGradComm)" filter="url(#shadowComm)" />
+      <circle cx="44" cy="20" r="6" fill="url(#orangeGradComm)" filter="url(#shadowComm)" />
+      <circle cx="20" cy="44" r="6" fill="url(#orangeGradComm)" filter="url(#shadowComm)" />
+      <circle cx="44" cy="44" r="6" fill="url(#orangeGradComm)" filter="url(#shadowComm)" />
       
-      {/* Signal/connection lines flowing from center */}
-      <path d="M 32 28 L 22 20" stroke="#FF6B00" strokeWidth="2" opacity="0.6" />
-      <path d="M 32 28 L 42 20" stroke="#FF6B00" strokeWidth="2" opacity="0.6" />
-      <path d="M 32 28 L 22 36" stroke="#FF6B00" strokeWidth="2" opacity="0.6" />
-      <path d="M 32 28 L 42 36" stroke="#FF6B00" strokeWidth="2" opacity="0.6" />
+      {/* Connection lines */}
+      <line x1="20" y1="20" x2="44" y2="20" stroke="#FF6B00" strokeWidth="2" opacity="0.5" />
+      <line x1="44" y1="20" x2="44" y2="44" stroke="#FF6B00" strokeWidth="2" opacity="0.5" />
+      <line x1="44" y1="44" x2="20" y2="44" stroke="#FF6B00" strokeWidth="2" opacity="0.5" />
+      <line x1="20" y1="44" x2="20" y2="20" stroke="#FF6B00" strokeWidth="2" opacity="0.5" />
       
-      {/* Orbital ring */}
-      <circle cx="32" cy="28" r="14" stroke="#FF6B00" strokeWidth="1.5" opacity="0.3" fill="none" strokeDasharray="4 4" />
+      {/* Central hub */}
+      <circle cx="32" cy="32" r="4.5" fill="url(#orangeGradComm)" />
       
-      {/* App icons subtle indicators */}
-      <path d="M 22 20 L 23 19" stroke="white" strokeWidth="1" strokeLinecap="round" opacity="0.6" />
-      <circle cx="42" cy="20" r="1.5" fill="white" opacity="0.6" />
-      <rect x="21" y="35" width="2" height="2" fill="white" opacity="0.6" />
-      <path d="M 41 35 L 43 37" stroke="white" strokeWidth="1" strokeLinecap="round" opacity="0.6" />
+      {/* Diagonal connections to center */}
+      <line x1="20" y1="20" x2="32" y2="32" stroke="#FF6B00" strokeWidth="1.5" opacity="0.4" />
+      <line x1="44" y1="20" x2="32" y2="32" stroke="#FF6B00" strokeWidth="1.5" opacity="0.4" />
+      <line x1="20" y1="44" x2="32" y2="32" stroke="#FF6B00" strokeWidth="1.5" opacity="0.4" />
+      <line x1="44" y1="44" x2="32" y2="32" stroke="#FF6B00" strokeWidth="1.5" opacity="0.4" />
+      
+      {/* Node highlights */}
+      <circle cx="20" cy="20" r="2" fill="white" opacity="0.6" />
+      <circle cx="44" cy="20" r="2" fill="white" opacity="0.6" />
+      <circle cx="20" cy="44" r="2" fill="white" opacity="0.6" />
+      <circle cx="44" cy="44" r="2" fill="white" opacity="0.6" />
     </svg>
   );
 }
 
-// 3. AI Coach Blue Icon - Guidance constellation with compass
+// 3. AI Coach Blue Icon - Compass with chat bubble
 export function CoachBlueIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -152,50 +139,53 @@ export function CoachBlueIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <GradientDefs />
+      <defs>
+        <linearGradient id="blueGradCoach" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#0000FF" />
+          <stop offset="100%" stopColor="#3366FF" />
+        </linearGradient>
+        <linearGradient id="orangeGradCoach" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF6B00" />
+          <stop offset="100%" stopColor="#FF8F33" />
+        </linearGradient>
+        <filter id="shadowCoach">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.3" />
+        </filter>
+      </defs>
       
-      {/* Head silhouette base */}
+      {/* Chat bubble background */}
       <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41V52C15 54 16 56 18 57L32 62L46 57C48 56 49 54 49 52V41C52 37 54 32 54 26C54 14 44 4 32 4Z"
-        fill="url(#blueGradient)"
-        filter="url(#dropShadow)"
+        d="M 12 28 C 12 16 20 8 32 8 C 44 8 52 16 52 28 C 52 40 44 48 32 48 L 24 48 L 20 56 L 22 48 C 16 44 12 36 12 28 Z"
+        fill="url(#blueGradCoach)"
+        filter="url(#shadowCoach)"
       />
       
-      {/* Chat bubble outline */}
-      <path
-        d="M 20 26 C 20 20 25 16 32 16 C 39 16 44 20 44 26 C 44 32 39 36 32 36 L 28 36 L 26 40 L 27 36 C 23 34 20 30 20 26 Z"
-        stroke="url(#orangeGradient)"
-        strokeWidth="2.5"
-        fill="none"
-      />
+      {/* Compass outer ring */}
+      <circle cx="32" cy="28" r="14" stroke="url(#orangeGradCoach)" strokeWidth="3" fill="none" />
       
-      {/* Compass rose inside */}
-      <circle cx="32" cy="26" r="8" stroke="#FF6B00" strokeWidth="1.5" opacity="0.4" fill="none" />
+      {/* Compass cardinal points */}
+      <circle cx="32" cy="14" r="2.5" fill="#FF6B00" />
+      <circle cx="32" cy="42" r="2.5" fill="#FF6B00" opacity="0.5" />
+      <circle cx="46" cy="28" r="2.5" fill="#FF6B00" opacity="0.5" />
+      <circle cx="18" cy="28" r="2.5" fill="#FF6B00" opacity="0.5" />
       
-      {/* North arrow (guidance direction) */}
-      <path 
-        d="M 32 20 L 34 26 L 32 25 L 30 26 Z" 
-        fill="url(#orangeGradient)"
-      />
+      {/* Compass needle (pointing direction) */}
+      <path d="M 32 28 L 34 18 L 32 20 L 30 18 Z" fill="url(#orangeGradCoach)" />
+      <path d="M 32 28 L 34 38 L 32 36 L 30 38 Z" fill="#FF6B00" opacity="0.4" />
       
-      {/* Compass points */}
-      <circle cx="32" cy="19" r="1.5" fill="#FF6B00" opacity="0.7" />
-      <circle cx="32" cy="33" r="1.5" fill="#FF6B00" opacity="0.4" />
-      <circle cx="39" cy="26" r="1.5" fill="#FF6B00" opacity="0.4" />
-      <circle cx="25" cy="26" r="1.5" fill="#FF6B00" opacity="0.4" />
-      
-      {/* Central pivot */}
-      <circle cx="32" cy="26" r="2" fill="url(#orangeGradient)" />
+      {/* Center pivot */}
+      <circle cx="32" cy="28" r="3" fill="url(#orangeGradCoach)" />
+      <circle cx="32" cy="28" r="1.5" fill="white" />
       
       {/* Guidance stars */}
-      <path d="M 24 18 L 24.5 19.5 L 23.5 19.5 Z" fill="#FF6B00" opacity="0.8" />
-      <path d="M 40 18 L 40.5 19.5 L 39.5 19.5 Z" fill="#FF6B00" opacity="0.8" />
-      <path d="M 36 32 L 36.5 33.5 L 35.5 33.5 Z" fill="#FF6B00" opacity="0.6" />
+      <circle cx="22" cy="18" r="1.5" fill="#FF6B00" opacity="0.7" />
+      <circle cx="42" cy="18" r="1.5" fill="#FF6B00" opacity="0.7" />
+      <circle cx="38" cy="36" r="1.5" fill="#FF6B00" opacity="0.5" />
     </svg>
   );
 }
 
-// 4. Base Plan Icon - Three interlocking foundation slabs
+// 4. Base Plan Icon - 3 foundation tiers
 export function BasePlanIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -206,40 +196,38 @@ export function BasePlanIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <GradientDefs />
+      <defs>
+        <linearGradient id="orangeGradBase" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#FF8F33" />
+          <stop offset="100%" stopColor="#FF6B00" />
+        </linearGradient>
+        <filter id="shadowBase">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.3" />
+        </filter>
+      </defs>
       
-      {/* Head silhouette base */}
-      <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41V52C15 54 16 56 18 57L32 62L46 57C48 56 49 54 49 52V41C52 37 54 32 54 26C54 14 44 4 32 4Z"
-        fill="url(#blueGradient)"
-        filter="url(#dropShadow)"
-      />
+      {/* Bottom tier - largest (Scale $999) */}
+      <rect x="8" y="42" width="48" height="10" rx="2" fill="url(#orangeGradBase)" filter="url(#shadowBase)" />
+      <rect x="8" y="42" width="48" height="3" fill="#FFA555" opacity="0.6" />
+      <text x="32" y="50" textAnchor="middle" fill="white" fontSize="7" fontWeight="bold">$999</text>
       
-      {/* Foundation slabs - 3 tiers */}
-      {/* Bottom tier - largest */}
-      <rect x="18" y="36" width="28" height="7" rx="1.5" fill="url(#orangeGradient)" opacity="0.95" />
-      <rect x="18" y="36" width="28" height="2" fill="#FF8F33" opacity="0.6" />
+      {/* Middle tier (Advanced $299) */}
+      <rect x="14" y="28" width="36" height="10" rx="2" fill="url(#orangeGradBase)" filter="url(#shadowBase)" />
+      <rect x="14" y="28" width="36" height="3" fill="#FFA555" opacity="0.6" />
+      <text x="32" y="36" textAnchor="middle" fill="white" fontSize="7" fontWeight="bold">$299</text>
       
-      {/* Middle tier */}
-      <rect x="21" y="28" width="22" height="7" rx="1.5" fill="url(#orangeGradient)" opacity="0.9" />
-      <rect x="21" y="28" width="22" height="2" fill="#FF8F33" opacity="0.5" />
+      {/* Top tier - smallest (Start $99) */}
+      <rect x="20" y="14" width="24" height="10" rx="2" fill="url(#orangeGradBase)" filter="url(#shadowBase)" />
+      <rect x="20" y="14" width="24" height="3" fill="#FFA555" opacity="0.6" />
+      <text x="32" y="22" textAnchor="middle" fill="white" fontSize="7" fontWeight="bold">$99</text>
       
-      {/* Top tier */}
-      <rect x="24" y="20" width="16" height="7" rx="1.5" fill="url(#orangeGradient)" opacity="0.85" />
-      <rect x="24" y="20" width="16" height="2" fill="#FF8F33" opacity="0.4" />
-      
-      {/* Price tier indicators */}
-      <text x="32" y="41" textAnchor="middle" fill="white" fontSize="5" fontWeight="bold">$99</text>
-      <text x="32" y="33" textAnchor="middle" fill="white" fontSize="5" fontWeight="bold">$299</text>
-      <text x="32" y="25" textAnchor="middle" fill="white" fontSize="5" fontWeight="bold">$999</text>
-      
-      {/* Structural grid lines */}
-      <line x1="32" y1="20" x2="32" y2="43" stroke="#0000FF" strokeWidth="1" opacity="0.2" />
+      {/* Structure line */}
+      <line x1="32" y1="14" x2="32" y2="52" stroke="#0000FF" strokeWidth="1.5" opacity="0.2" />
     </svg>
   );
 }
 
-// 5. 30-Day Action Plan Icon - Calendar arc with progress ribbon
+// 5. 30-Day Action Plan Icon - Calendar with progress steps
 export function ActionPlanIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -250,48 +238,53 @@ export function ActionPlanIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <GradientDefs />
-      
-      {/* Head silhouette base */}
-      <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41V52C15 54 16 56 18 57L32 62L46 57C48 56 49 54 49 52V41C52 37 54 32 54 26C54 14 44 4 32 4Z"
-        fill="url(#blueGradient)"
-        filter="url(#dropShadow)"
-      />
+      <defs>
+        <linearGradient id="orangeGradAction" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF6B00" />
+          <stop offset="100%" stopColor="#FF8F33" />
+        </linearGradient>
+        <filter id="shadowAction">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.3" />
+        </filter>
+      </defs>
       
       {/* Calendar page */}
-      <rect x="20" y="18" width="24" height="24" rx="2" stroke="#FF6B00" strokeWidth="2" fill="none" opacity="0.6" />
-      <rect x="20" y="18" width="24" height="5" fill="url(#orangeGradient)" />
+      <rect x="12" y="12" width="40" height="40" rx="3" stroke="#0000FF" strokeWidth="3" fill="white" filter="url(#shadowAction)" />
+      
+      {/* Calendar header */}
+      <rect x="12" y="12" width="40" height="8" rx="3" fill="url(#orangeGradAction)" />
       
       {/* Progress ribbon climbing upward */}
       <path 
-        d="M 22 38 L 26 38 L 26 32 L 30 32 L 30 26 L 34 26 L 34 22" 
-        stroke="url(#orangeGradient)" 
-        strokeWidth="4" 
+        d="M 18 46 L 24 46 L 24 36 L 30 36 L 30 26 L 36 26 L 36 18" 
+        stroke="url(#orangeGradAction)" 
+        strokeWidth="5" 
         strokeLinecap="round"
         strokeLinejoin="round"
+        opacity="0.8"
       />
       
-      {/* Week milestone markers */}
-      <circle cx="24" cy="38" r="3" fill="url(#orangeGradient)" />
-      <circle cx="28" cy="32" r="3" fill="url(#orangeGradient)" />
-      <circle cx="32" cy="26" r="3" fill="url(#orangeGradient)" />
-      <circle cx="35" cy="22" r="3" fill="url(#orangeGradient)" />
+      {/* Week milestones */}
+      <circle cx="21" cy="46" r="4" fill="url(#orangeGradAction)" filter="url(#shadowAction)" />
+      <circle cx="27" cy="36" r="4" fill="url(#orangeGradAction)" filter="url(#shadowAction)" />
+      <circle cx="33" cy="26" r="4" fill="url(#orangeGradAction)" filter="url(#shadowAction)" />
+      <circle cx="36" cy="18" r="4" fill="url(#orangeGradAction)" filter="url(#shadowAction)" />
       
       {/* Checkmarks */}
-      <path d="M 23 38 L 24 39 L 25.5 37" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-      <path d="M 27 32 L 28 33 L 29.5 31" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-      <path d="M 31 26 L 32 27 L 33.5 25" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+      <path d="M 20 46 L 21 47 L 23 45" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d="M 26 36 L 27 37 L 29 35" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d="M 32 26 L 33 27 L 35 25" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none" />
       
-      {/* Calendar grid faint */}
-      <line x1="26" y1="23" x2="26" y2="42" stroke="#FF6B00" strokeWidth="0.5" opacity="0.2" />
-      <line x1="32" y1="23" x2="32" y2="42" stroke="#FF6B00" strokeWidth="0.5" opacity="0.2" />
-      <line x1="38" y1="23" x2="38" y2="42" stroke="#FF6B00" strokeWidth="0.5" opacity="0.2" />
+      {/* Calendar grid */}
+      <line x1="20" y1="20" x2="20" y2="52" stroke="#0000FF" strokeWidth="0.5" opacity="0.2" />
+      <line x1="28" y1="20" x2="28" y2="52" stroke="#0000FF" strokeWidth="0.5" opacity="0.2" />
+      <line x1="36" y1="20" x2="36" y2="52" stroke="#0000FF" strokeWidth="0.5" opacity="0.2" />
+      <line x1="44" y1="20" x2="44" y2="52" stroke="#0000FF" strokeWidth="0.5" opacity="0.2" />
     </svg>
   );
 }
 
-// 6. Build Method Icon - Modular toolkit triad (toggle, tools, automation)
+// 6. Build Method Icon - Tools and execution options
 export function BuildMethodIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -302,41 +295,41 @@ export function BuildMethodIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <GradientDefs />
+      <defs>
+        <linearGradient id="orangeGradBuild" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FF6B00" />
+          <stop offset="100%" stopColor="#FF8F33" />
+        </linearGradient>
+        <filter id="shadowBuild">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.3" />
+        </filter>
+      </defs>
       
-      {/* Head silhouette base */}
-      <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41V52C15 54 16 56 18 57L32 62L46 57C48 56 49 54 49 52V41C52 37 54 32 54 26C54 14 44 4 32 4Z"
-        fill="url(#blueGradient)"
-        filter="url(#dropShadow)"
-      />
+      {/* DIY - Toggle switch */}
+      <rect x="14" y="16" width="18" height="8" rx="4" stroke="url(#orangeGradBuild)" strokeWidth="2.5" fill="white" filter="url(#shadowBuild)" />
+      <circle cx="24" cy="20" r="4" fill="url(#orangeGradBuild)" />
+      <text x="23" y="14" textAnchor="middle" fill="#0000FF" fontSize="6" fontWeight="bold">DIY</text>
       
-      {/* DIY Toggle switch */}
-      <rect x="18" y="20" width="12" height="6" rx="3" stroke="url(#orangeGradient)" strokeWidth="2" fill="none" />
-      <circle cx="24" cy="23" r="2.5" fill="url(#orangeGradient)" />
+      {/* MSP - Wrench */}
+      <rect x="26" y="30" width="3.5" height="18" rx="1.75" fill="url(#orangeGradBuild)" filter="url(#shadowBuild)" />
+      <circle cx="27.75" cy="27" r="4.5" stroke="url(#orangeGradBuild)" strokeWidth="2.5" fill="white" filter="url(#shadowBuild)" />
+      <text x="18" y="44" textAnchor="middle" fill="#0000FF" fontSize="6" fontWeight="bold">MSP</text>
       
-      {/* MSP Wrench */}
-      <rect x="26" y="30" width="2.5" height="12" rx="1.25" fill="url(#orangeGradient)" />
-      <circle cx="27.25" cy="28" r="3" stroke="url(#orangeGradient)" strokeWidth="2" fill="none" />
-      
-      {/* ALC Automation gear */}
-      <circle cx="40" cy="26" r="6" stroke="url(#orangeGradient)" strokeWidth="2.5" fill="none" />
-      <circle cx="40" cy="26" r="2.5" fill="url(#orangeGradient)" />
+      {/* ALC - Automation gear */}
+      <circle cx="44" cy="32" r="10" stroke="url(#orangeGradBuild)" strokeWidth="3" fill="white" filter="url(#shadowBuild)" />
+      <circle cx="44" cy="32" r="4" fill="url(#orangeGradBuild)" />
       
       {/* Gear teeth */}
-      <rect x="38.5" y="18" width="3" height="3" fill="#FF6B00" />
-      <rect x="38.5" y="31" width="3" height="3" fill="#FF6B00" />
-      <rect x="45" y="24.5" width="3" height="3" fill="#FF6B00" />
-      <rect x="32" y="24.5" width="3" height="3" fill="#FF6B00" />
+      <rect x="42" y="20" width="4" height="4" fill="#FF6B00" />
+      <rect x="42" y="40" width="4" height="4" fill="#FF6B00" />
+      <rect x="52" y="30" width="4" height="4" fill="#FF6B00" />
+      <rect x="32" y="30" width="4" height="4" fill="#FF6B00" />
       
-      {/* Connection circuit traces */}
-      <path d="M 30 23 L 34 26" stroke="#FF6B00" strokeWidth="1.5" opacity="0.5" />
-      <path d="M 28 30 L 34 28" stroke="#FF6B00" strokeWidth="1.5" opacity="0.5" />
+      <text x="44" y="52" textAnchor="middle" fill="#0000FF" fontSize="6" fontWeight="bold">ALC</text>
       
-      {/* Module indicators */}
-      <circle cx="22" cy="23" r="1" fill="white" opacity="0.8" />
-      <circle cx="27" cy="36" r="1" fill="white" opacity="0.8" />
-      <circle cx="40" cy="26" r="1" fill="white" opacity="0.8" />
+      {/* Connection lines */}
+      <path d="M 32 20 L 38 28" stroke="#0000FF" strokeWidth="1.5" opacity="0.3" strokeDasharray="2 2" />
+      <path d="M 30 40 L 36 36" stroke="#0000FF" strokeWidth="1.5" opacity="0.3" strokeDasharray="2 2" />
     </svg>
   );
 }
