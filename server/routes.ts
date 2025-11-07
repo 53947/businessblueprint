@@ -36,6 +36,7 @@ import { SynupService } from "./services/synup";
 import { ReviewMonitoringService } from "./services/reviewMonitoring";
 import { reviewAI } from "./services/reviewAI";
 import { jwtService } from "./services/jwt";
+import { presenceScannerService } from "./services/presenceScanner";
 import { dashboardAccess } from "@shared/schema";
 import { eq, desc, and } from "drizzle-orm";
 import { db } from "./db";
@@ -3160,14 +3161,32 @@ async function processAssessmentAsync(
     const assessment = await storage.getAssessment(assessmentId);
     if (!assessment) throw new Error("Assessment not found");
 
-    // Get Google Business data
+    // Run comprehensive presence scan
+    console.log(`🔍 Running independent presence scan for ${assessment.businessName}`);
+    const presenceScan = await presenceScannerService.scanBusiness({
+      businessName: assessment.businessName,
+      website: assessment.website || undefined,
+      phone: assessment.phone,
+      address: assessment.address,
+    });
+
+    // Get Google Business data (still used for detailed GBP info)
     const googleData = await googleService.searchBusiness(
       assessment.businessName,
       assessment.address
     );
 
-    // Calculate presence score
-    const presenceScore = googleService.calculatePresenceScore(googleData);
+    // Calculate presence score using our independent scanner
+    const presenceScore = {
+      overallScore: presenceScan.overall.digitalIQScore,
+      scores: {
+        visibility: Math.round(presenceScan.directories.score * 0.7 + presenceScan.website.score * 0.3),
+        reviews: presenceScan.reviews.score,
+        completeness: presenceScan.overall.completeness,
+        engagement: presenceScan.socialMedia.score,
+      },
+      insights: presenceScan.recommendations
+    };
 
     // Generate product recommendations based on scores
     const productRecommendations = await productRecommendationService.generateRecommendations(
@@ -3184,7 +3203,7 @@ async function processAssessmentAsync(
     // Save product recommendations to database
     await productRecommendationService.saveRecommendations(assessmentId, productRecommendations);
 
-    // Get AI analysis
+    // Get AI analysis (enhanced with our scan data)
     const analysisResult = await aiService.analyzeBusinessPresence({
       businessInfo: {
         name: assessment.businessName,
@@ -3196,33 +3215,52 @@ async function processAssessmentAsync(
       presenceScore
     });
 
+    // Combine AI analysis with our independent scan data
+    const enhancedAnalysis = {
+      ...analysisResult,
+      digitalScore: presenceScan.overall.digitalIQScore, // Use our independent score
+      presenceScan: presenceScan, // Include complete scan results
+      scanDate: presenceScan.overall.lastScanned,
+      recommendations: [
+        ...analysisResult.recommendations,
+        ...presenceScan.recommendations.map(rec => ({
+          category: 'digital_presence',
+          title: rec,
+          description: rec,
+          priority: 'medium' as const,
+          estimatedImpact: 'moderate',
+          estimatedEffort: 'low'
+        }))
+      ]
+    };
+
     // Update assessment with results
     await storage.updateAssessment(assessmentId, {
       googleBusinessData: googleData,
-      analysisResults: analysisResult,
-      digitalScore: analysisResult.digitalScore,
+      analysisResults: enhancedAnalysis,
+      digitalScore: presenceScan.overall.digitalIQScore,
       status: "completed"
     });
 
     // Save recommendations
-    for (const rec of analysisResult.recommendations) {
+    for (const rec of enhancedAnalysis.recommendations) {
       await storage.createRecommendation({
         assessmentId,
         category: rec.category,
         title: rec.title,
         description: rec.description,
         priority: rec.priority,
-        estimatedImpact: rec.estimatedImpact,
-        estimatedEffort: rec.estimatedEffort
+        estimatedImpact: rec.estimatedImpact || 'moderate',
+        estimatedEffort: rec.estimatedEffort || 'low'
       });
     }
 
-    // Send email report
+    // Send email report with enhanced data
     const emailSent = await emailService.sendAssessmentReport(assessment.email, {
       businessName: assessment.businessName,
-      digitalScore: analysisResult.digitalScore,
-      summary: analysisResult.summary,
-      recommendations: analysisResult.recommendations,
+      digitalScore: presenceScan.overall.digitalIQScore,
+      summary: `Your Digital IQ Score: ${presenceScan.overall.digitalIQScore}/140. ${enhancedAnalysis.summary}`,
+      recommendations: enhancedAnalysis.recommendations,
       assessmentId
     });
 
