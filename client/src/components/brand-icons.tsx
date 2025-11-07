@@ -1,13 +1,12 @@
 // Brand Icons - TriadBlue System
-// Style: Blue (#0000FF) head silhouette + Orange (#FF6B00) accent
-// LOCKED - Do not modify without approval
+// Cohesive circular design with contextually relevant orange symbols
 
 interface BrandIconProps {
   className?: string;
   size?: number;
 }
 
-// 1. Digital IQ Icon
+// 1. Digital IQ Icon - Gauge/measurement meter
 export function DigitalIQIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -18,22 +17,41 @@ export function DigitalIQIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Head silhouette */}
-      <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41L15 52C15 54 16 56 18 57L20 58L22 59L24 60L28 61L32 62L36 61L40 60L42 59L44 58L46 57C48 56 49 54 49 52L49 41C52 37 54 32 54 26C54 14 44 4 32 4Z"
-        fill="#0000FF"
+      <circle cx="32" cy="32" r="28" fill="#0000FF" />
+      <circle cx="32" cy="32" r="24" fill="#0033AA" opacity="0.3" />
+      
+      {/* Gauge arc */}
+      <path 
+        d="M 16 32 A 16 16 0 1 1 48 32" 
+        stroke="#FF6B00" 
+        strokeWidth="3" 
+        fill="none"
+        strokeLinecap="round"
       />
-      {/* Brain gears (top) */}
-      <circle cx="24" cy="18" r="4" fill="#FF6B00" opacity="0.3" />
-      <circle cx="32" cy="16" r="5" fill="#FF6B00" opacity="0.3" />
-      <circle cx="40" cy="18" r="4" fill="#FF6B00" opacity="0.3" />
-      {/* IQ Text */}
-      <text x="32" y="42" textAnchor="middle" fill="#FF6B00" fontSize="20" fontWeight="bold" fontFamily="Arial">IQ</text>
+      
+      {/* Gauge segments */}
+      <line x1="16" y1="32" x2="19" y2="32" stroke="#FF6B00" strokeWidth="2" />
+      <line x1="22" y1="20" x2="24" y2="22" stroke="#FF6B00" strokeWidth="2" />
+      <line x1="32" y1="16" x2="32" y2="19" stroke="#FF6B00" strokeWidth="2" />
+      <line x1="42" y1="20" x2="40" y2="22" stroke="#FF6B00" strokeWidth="2" />
+      <line x1="48" y1="32" x2="45" y2="32" stroke="#FF6B00" strokeWidth="2" />
+      
+      {/* Needle pointer */}
+      <path 
+        d="M 32 32 L 42 24" 
+        stroke="#FF6B00" 
+        strokeWidth="2.5" 
+        strokeLinecap="round"
+      />
+      <circle cx="32" cy="32" r="2" fill="#FF6B00" />
+      
+      {/* Spark/intelligence indicator */}
+      <path d="M 38 42 L 40 38 L 36 38 L 38 34" fill="#FF6B00" />
     </svg>
   );
 }
 
-// 2. Commverse Bundle Icon
+// 2. CommVerse Icon - 4 balls in square formation
 export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -44,26 +62,32 @@ export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Head silhouette */}
-      <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41L15 52C15 54 16 56 18 57L20 58L22 59L24 60L28 61L32 62L36 61L40 60L42 59L44 58L46 57C48 56 49 54 49 52L49 41C52 37 54 32 54 26C54 14 44 4 32 4Z"
-        fill="#0000FF"
-      />
-      {/* 4 connected app nodes */}
-      <rect x="20" y="18" width="8" height="8" rx="2" fill="#FF6B00" />
-      <rect x="36" y="18" width="8" height="8" rx="2" fill="#FF6B00" />
-      <rect x="20" y="32" width="8" height="8" rx="2" fill="#FF6B00" />
-      <rect x="36" y="32" width="8" height="8" rx="2" fill="#FF6B00" />
-      {/* Connection lines */}
-      <line x1="28" y1="22" x2="36" y2="22" stroke="#FF6B00" strokeWidth="2" />
-      <line x1="24" y1="26" x2="24" y2="32" stroke="#FF6B00" strokeWidth="2" />
-      <line x1="40" y1="26" x2="40" y2="32" stroke="#FF6B00" strokeWidth="2" />
-      <line x1="28" y1="36" x2="36" y2="36" stroke="#FF6B00" strokeWidth="2" />
+      <circle cx="32" cy="32" r="28" fill="#0000FF" />
+      <circle cx="32" cy="32" r="24" fill="#0033AA" opacity="0.3" />
+      
+      {/* 4 balls in square formation */}
+      <circle cx="24" cy="24" r="5" fill="#FF6B00" />
+      <circle cx="40" cy="24" r="5" fill="#FF6B00" />
+      <circle cx="24" cy="40" r="5" fill="#FF6B00" />
+      <circle cx="40" cy="40" r="5" fill="#FF6B00" />
+      
+      {/* Connection arcs between balls */}
+      <path d="M 24 24 L 40 24" stroke="#FF6B00" strokeWidth="2" opacity="0.5" />
+      <path d="M 40 24 L 40 40" stroke="#FF6B00" strokeWidth="2" opacity="0.5" />
+      <path d="M 40 40 L 24 40" stroke="#FF6B00" strokeWidth="2" opacity="0.5" />
+      <path d="M 24 40 L 24 24" stroke="#FF6B00" strokeWidth="2" opacity="0.5" />
+      
+      {/* Central hub */}
+      <circle cx="32" cy="32" r="3" fill="#FF6B00" opacity="0.7" />
+      <path d="M 24 24 L 32 32" stroke="#FF6B00" strokeWidth="1.5" opacity="0.4" />
+      <path d="M 40 24 L 32 32" stroke="#FF6B00" strokeWidth="1.5" opacity="0.4" />
+      <path d="M 24 40 L 32 32" stroke="#FF6B00" strokeWidth="1.5" opacity="0.4" />
+      <path d="M 40 40 L 32 32" stroke="#FF6B00" strokeWidth="1.5" opacity="0.4" />
     </svg>
   );
 }
 
-// 3. AI Coach Blue Icon
+// 3. AI Coach Blue Icon - Baseball hat + whistle
 export function CoachBlueIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -74,22 +98,29 @@ export function CoachBlueIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Head silhouette */}
-      <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41L15 52C15 54 16 56 18 57L20 58L22 59L24 60L28 61L32 62L36 61L40 60L42 59L44 58L46 57C48 56 49 54 49 52L49 41C52 37 54 32 54 26C54 14 44 4 32 4Z"
-        fill="#0000FF"
-      />
-      {/* Compass/guidance symbol */}
-      <circle cx="32" cy="28" r="12" stroke="#FF6B00" strokeWidth="2" fill="none" />
-      <path d="M32 16 L32 22" stroke="#FF6B00" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M32 34 L32 40" stroke="#FF6B00" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M44 28 L38 28" stroke="#FF6B00" strokeWidth="2.5" strokeLinecap="round" />
-      <path d="M26 28 L20 28" stroke="#FF6B00" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="32" cy="32" r="28" fill="#0000FF" />
+      <circle cx="32" cy="32" r="24" fill="#0033AA" opacity="0.3" />
+      
+      {/* Baseball cap */}
+      <ellipse cx="32" cy="26" rx="12" ry="4" fill="#FF6B00" />
+      <path d="M 20 26 L 20 30 Q 20 34 24 34 L 40 34 Q 44 34 44 30 L 44 26" fill="#FF6B00" />
+      <ellipse cx="32" cy="22" rx="10" ry="3" fill="#FF6B00" opacity="0.6" />
+      
+      {/* Cap brim (extended front) */}
+      <ellipse cx="38" cy="26" rx="8" ry="2" fill="#FF6B00" opacity="0.8" />
+      
+      {/* Whistle */}
+      <circle cx="28" cy="44" r="4" fill="#FF6B00" stroke="#FF6B00" strokeWidth="1.5" />
+      <rect x="26" y="40" width="4" height="4" fill="#FF6B00" />
+      <line x1="28" y1="40" x2="28" y2="36" stroke="#FF6B00" strokeWidth="2" />
+      
+      {/* Whistle string */}
+      <path d="M 28 36 Q 32 38 32 34" stroke="#FF6B00" strokeWidth="1.5" fill="none" opacity="0.6" />
     </svg>
   );
 }
 
-// 4. Base Plan Icon
+// 4. Base Plan Icon - Foundation blocks/layers
 export function BasePlanIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -100,20 +131,24 @@ export function BasePlanIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Head silhouette */}
-      <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41L15 52C15 54 16 56 18 57L20 58L22 59L24 60L28 61L32 62L36 61L40 60L42 59L44 58L46 57C48 56 49 54 49 52L49 41C52 37 54 32 54 26C54 14 44 4 32 4Z"
-        fill="#0000FF"
-      />
-      {/* Stacked layers/tiers */}
-      <rect x="18" y="34" width="28" height="6" rx="1" fill="#FF6B00" />
-      <rect x="20" y="26" width="24" height="6" rx="1" fill="#FF6B00" />
-      <rect x="22" y="18" width="20" height="6" rx="1" fill="#FF6B00" />
+      <circle cx="32" cy="32" r="28" fill="#0000FF" />
+      <circle cx="32" cy="32" r="24" fill="#0033AA" opacity="0.3" />
+      
+      {/* Stacked foundation blocks - pyramid */}
+      <rect x="18" y="40" width="28" height="6" rx="1" fill="#FF6B00" />
+      <rect x="21" y="33" width="22" height="6" rx="1" fill="#FF6B00" opacity="0.9" />
+      <rect x="24" y="26" width="16" height="6" rx="1" fill="#FF6B00" opacity="0.8" />
+      <rect x="27" y="19" width="10" height="6" rx="1" fill="#FF6B00" opacity="0.7" />
+      
+      {/* Grid lines for structure */}
+      <line x1="32" y1="19" x2="32" y2="46" stroke="#0000FF" strokeWidth="1" opacity="0.3" />
+      <line x1="26" y1="26" x2="38" y2="26" stroke="#0000FF" strokeWidth="1" opacity="0.2" />
+      <line x1="24" y1="33" x2="40" y2="33" stroke="#0000FF" strokeWidth="1" opacity="0.2" />
     </svg>
   );
 }
 
-// 5. 30-Day Action Plan Icon
+// 5. 30-Day Action Plan Icon - Stepped path with milestones
 export function ActionPlanIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -124,24 +159,34 @@ export function ActionPlanIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Head silhouette */}
-      <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41L15 52C15 54 16 56 18 57L20 58L22 59L24 60L28 61L32 62L36 61L40 60L42 59L44 58L46 57C48 56 49 54 49 52L49 41C52 37 54 32 54 26C54 14 44 4 32 4Z"
-        fill="#0000FF"
+      <circle cx="32" cy="32" r="28" fill="#0000FF" />
+      <circle cx="32" cy="32" r="24" fill="#0033AA" opacity="0.3" />
+      
+      {/* Stepped path going upward */}
+      <path 
+        d="M 18 44 L 24 44 L 24 36 L 30 36 L 30 28 L 36 28 L 36 20 L 42 20" 
+        stroke="#FF6B00" 
+        strokeWidth="3" 
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
-      {/* Calendar grid */}
-      <rect x="20" y="18" width="24" height="20" rx="2" stroke="#FF6B00" strokeWidth="2" fill="none" />
-      {/* Header bar */}
-      <rect x="20" y="18" width="24" height="4" fill="#FF6B00" />
-      {/* Check marks */}
-      <path d="M24 26 L26 28 L28 24" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M32 26 L34 28 L36 24" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M24 32 L26 34 L28 30" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      
+      {/* Milestone markers (checkpoints) */}
+      <circle cx="21" cy="44" r="3" fill="#FF6B00" />
+      <circle cx="27" cy="36" r="3" fill="#FF6B00" />
+      <circle cx="33" cy="28" r="3" fill="#FF6B00" />
+      <circle cx="39" cy="20" r="3" fill="#FF6B00" />
+      
+      {/* Checkmarks at milestones */}
+      <path d="M 19 44 L 20.5 45.5 L 23 43" stroke="#0000FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M 25 36 L 26.5 37.5 L 29 35" stroke="#0000FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M 31 28 L 32.5 29.5 L 35 27" stroke="#0000FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
-// 6. Build Method Icon
+// 6. Build Method Icon - Tools and modular execution
 export function BuildMethodIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -152,16 +197,26 @@ export function BuildMethodIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Head silhouette */}
-      <path
-        d="M32 4C20 4 10 14 10 26C10 32 12 37 15 41L15 52C15 54 16 56 18 57L20 58L22 59L24 60L28 61L32 62L36 61L40 60L42 59L44 58L46 57C48 56 49 54 49 52L49 41C52 37 54 32 54 26C54 14 44 4 32 4Z"
-        fill="#0000FF"
-      />
-      {/* Wrench + Hammer crossed */}
-      <rect x="24" y="16" width="3" height="20" rx="1.5" fill="#FF6B00" transform="rotate(45 32 28)" />
-      <circle cx="26" cy="20" r="4" stroke="#FF6B00" strokeWidth="2" fill="none" />
-      <rect x="37" y="16" width="3" height="20" rx="1.5" fill="#FF6B00" transform="rotate(-45 32 28)" />
-      <rect x="36" y="18" width="6" height="4" fill="#FF6B00" transform="rotate(-45 32 28)" />
+      <circle cx="32" cy="32" r="28" fill="#0000FF" />
+      <circle cx="32" cy="32" r="24" fill="#0033AA" opacity="0.3" />
+      
+      {/* Wrench */}
+      <rect x="20" y="28" width="3" height="16" rx="1.5" fill="#FF6B00" />
+      <circle cx="21.5" cy="26" r="4" stroke="#FF6B00" strokeWidth="2" fill="none" />
+      <path d="M 19 26 L 24 26" stroke="#FF6B00" strokeWidth="1.5" />
+      
+      {/* Gear/cog */}
+      <circle cx="38" cy="30" r="7" stroke="#FF6B00" strokeWidth="2.5" fill="none" />
+      <circle cx="38" cy="30" r="3" fill="#FF6B00" />
+      <rect x="36.5" y="22" width="3" height="4" fill="#FF6B00" />
+      <rect x="36.5" y="34" width="3" height="4" fill="#FF6B00" />
+      <rect x="42" y="28.5" width="4" height="3" fill="#FF6B00" />
+      <rect x="30" y="28.5" width="4" height="3" fill="#FF6B00" />
+      
+      {/* Circuit/connection lines */}
+      <path d="M 26 36 L 32 36 L 32 40 L 38 40" stroke="#FF6B00" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="26" cy="36" r="2" fill="#FF6B00" />
+      <circle cx="38" cy="40" r="2" fill="#FF6B00" />
     </svg>
   );
 }
