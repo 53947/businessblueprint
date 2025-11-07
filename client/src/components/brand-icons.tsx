@@ -1,4 +1,4 @@
-// Brand Icons - Matching Coach Blue style (orange strokes, blue border, transparent background)
+// Brand Icons - Matching Coach Blue style (transparent background, blue outline, orange figures)
 import coachIcon from "@assets/Coach Blue_1762496061116.png";
 
 interface BrandIconProps {
@@ -17,8 +17,8 @@ export function DigitalIQIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Blue rounded border */}
-      <rect x="0" y="0" width="64" height="64" rx="12" fill="#0000FF" />
+      {/* Blue outline border (transparent background) */}
+      <rect x="2" y="2" width="60" height="60" rx="12" stroke="#0000FF" strokeWidth="4" fill="none" />
       
       {/* Gauge arc - bottom half circle */}
       <path 
@@ -56,8 +56,8 @@ export function DigitalAssessmentIcon({ className = "", size = 64 }: BrandIconPr
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Blue rounded border */}
-      <rect x="0" y="0" width="64" height="64" rx="12" fill="#0000FF" />
+      {/* Blue outline border (transparent background) */}
+      <rect x="2" y="2" width="60" height="60" rx="12" stroke="#0000FF" strokeWidth="4" fill="none" />
       
       {/* Orange clipboard outline */}
       <rect x="20" y="14" width="24" height="32" rx="2" stroke="#FF6B00" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -93,8 +93,8 @@ export function ActionPlanIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Blue rounded border */}
-      <rect x="0" y="0" width="64" height="64" rx="12" fill="#0000FF" />
+      {/* Blue outline border (transparent background) */}
+      <rect x="2" y="2" width="60" height="60" rx="12" stroke="#0000FF" strokeWidth="4" fill="none" />
       
       {/* Calendar outline */}
       <rect x="14" y="18" width="36" height="32" rx="2" stroke="#FF6B00" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -133,8 +133,8 @@ export function BasePlanIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Blue rounded border */}
-      <rect x="0" y="0" width="64" height="64" rx="12" fill="#0000FF" />
+      {/* Blue outline border (transparent background) */}
+      <rect x="2" y="2" width="60" height="60" rx="12" stroke="#0000FF" strokeWidth="4" fill="none" />
       
       {/* Three stacked bars - bottom (largest) */}
       <rect x="12" y="42" width="40" height="8" rx="2" stroke="#FF6B00" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -162,8 +162,8 @@ export function BuildMethodIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Blue rounded border */}
-      <rect x="0" y="0" width="64" height="64" rx="12" fill="#0000FF" />
+      {/* Blue outline border (transparent background) */}
+      <rect x="2" y="2" width="60" height="60" rx="12" stroke="#0000FF" strokeWidth="4" fill="none" />
       
       {/* Trunk - vertical line */}
       <line x1="32" y1="48" x2="32" y2="32" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
@@ -199,8 +199,8 @@ export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      {/* Blue rounded border */}
-      <rect x="0" y="0" width="64" height="64" rx="12" fill="#0000FF" />
+      {/* Blue outline border (transparent background) */}
+      <rect x="2" y="2" width="60" height="60" rx="12" stroke="#0000FF" strokeWidth="4" fill="none" />
       
       {/* Four circles in 2x2 grid */}
       <circle cx="22" cy="22" r="6" stroke="#FF6B00" strokeWidth="3" fill="none" />
