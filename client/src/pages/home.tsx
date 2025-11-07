@@ -9,7 +9,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
 import { ClipboardCheck, FileText, Layers, Wrench, Rocket } from "lucide-react";
-import { DigitalIQIcon, CommverseIcon, CoachBlueIcon, BasePlanIcon, ActionPlanIcon, BuildMethodIcon } from "@/components/brand-icons";
+import { DigitalAssessmentIcon, DigitalIQIcon, CommverseIcon, CoachBlueIcon, BasePlanIcon, ActionPlanIcon, BuildMethodIcon } from "@/components/brand-icons";
 import bbIcon from "@assets/businesblueprint assets/Blueprint_Favicon.png";
 import bbLogo from "@assets/businesblueprint assets/Blueprint_Avatar.png";
 import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
@@ -63,7 +63,7 @@ export default function Home() {
                   className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#FF6B00] font-semibold"
                   data-testid="button-start-assessment"
                 >
-                  <DigitalIQIcon size={32} className="mr-2" />
+                  <DigitalAssessmentIcon size={32} className="mr-2" />
                   Start Free Assessment
                 </Button>
                 <Link href="/ai-coach">

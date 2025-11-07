@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
+import { ClipboardCheck, FileText, Layers, Wrench, Rocket } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
