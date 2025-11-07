@@ -1,4 +1,4 @@
-// Brand Icons - Matching Coach Blue style (orange strokes on black, blue border)
+// Brand Icons - Matching Coach Blue style (orange strokes, blue border, transparent background)
 import coachIcon from "@assets/Coach Blue_1762496061116.png";
 
 interface BrandIconProps {
@@ -6,8 +6,8 @@ interface BrandIconProps {
   size?: number;
 }
 
-// 1. Digital Assessment Icon - Clipboard with checkmark
-export function DigitalAssessmentIcon({ className = "", size = 64 }: BrandIconProps) {
+// 1. Digital IQ Icon - Gauge/meter showing score
+export function DigitalIQIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
       width={size} 
@@ -20,8 +20,44 @@ export function DigitalAssessmentIcon({ className = "", size = 64 }: BrandIconPr
       {/* Blue rounded border */}
       <rect x="0" y="0" width="64" height="64" rx="12" fill="#0000FF" />
       
-      {/* Black background */}
-      <rect x="4" y="4" width="56" height="56" rx="8" fill="#000000" />
+      {/* Gauge arc - bottom half circle */}
+      <path 
+        d="M 12 38 A 20 20 0 0 1 52 38" 
+        stroke="#FF6B00" 
+        strokeWidth="3" 
+        fill="none"
+        strokeLinecap="round"
+      />
+      
+      {/* Tick marks */}
+      <line x1="12" y1="38" x2="15" y2="35" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
+      <line x1="20" y1="24" x2="22" y2="27" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
+      <line x1="32" y1="18" x2="32" y2="22" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
+      <line x1="44" y1="24" x2="42" y2="27" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
+      <line x1="52" y1="38" x2="49" y2="35" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
+      
+      {/* Needle pointing to high score */}
+      <line x1="32" y1="38" x2="44" y2="26" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
+      
+      {/* Center dot */}
+      <circle cx="32" cy="38" r="3" stroke="#FF6B00" strokeWidth="3" fill="none" />
+    </svg>
+  );
+}
+
+// 2. Digital Assessment Icon - Clipboard with checkmark
+export function DigitalAssessmentIcon({ className = "", size = 64 }: BrandIconProps) {
+  return (
+    <svg 
+      width={size} 
+      height={size} 
+      viewBox="0 0 64 64" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      {/* Blue rounded border */}
+      <rect x="0" y="0" width="64" height="64" rx="12" fill="#0000FF" />
       
       {/* Orange clipboard outline */}
       <rect x="20" y="14" width="24" height="32" rx="2" stroke="#FF6B00" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -46,8 +82,8 @@ export function DigitalAssessmentIcon({ className = "", size = 64 }: BrandIconPr
   );
 }
 
-// 2. Base Plans Icon - Three stacked tiers
-export function BasePlanIcon({ className = "", size = 64 }: BrandIconProps) {
+// 3. 30-Day Action Plan Icon - Calendar with progress path
+export function ActionPlanIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
       width={size} 
@@ -60,8 +96,45 @@ export function BasePlanIcon({ className = "", size = 64 }: BrandIconProps) {
       {/* Blue rounded border */}
       <rect x="0" y="0" width="64" height="64" rx="12" fill="#0000FF" />
       
-      {/* Black background */}
-      <rect x="4" y="4" width="56" height="56" rx="8" fill="#000000" />
+      {/* Calendar outline */}
+      <rect x="14" y="18" width="36" height="32" rx="2" stroke="#FF6B00" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      
+      {/* Calendar binding rings */}
+      <line x1="22" y1="14" x2="22" y2="22" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
+      <line x1="32" y1="14" x2="32" y2="22" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
+      <line x1="42" y1="14" x2="42" y2="22" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
+      
+      {/* Progress path - steps going up */}
+      <path 
+        d="M 20 44 L 26 44 L 26 36 L 32 36 L 32 28 L 38 28" 
+        stroke="#FF6B00" 
+        strokeWidth="3" 
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      
+      {/* Step markers */}
+      <circle cx="20" cy="44" r="2.5" stroke="#FF6B00" strokeWidth="3" fill="none" />
+      <circle cx="26" cy="36" r="2.5" stroke="#FF6B00" strokeWidth="3" fill="none" />
+      <circle cx="32" cy="28" r="2.5" stroke="#FF6B00" strokeWidth="3" fill="none" />
+    </svg>
+  );
+}
+
+// 4. Base Plans Icon - Three stacked tiers
+export function BasePlanIcon({ className = "", size = 64 }: BrandIconProps) {
+  return (
+    <svg 
+      width={size} 
+      height={size} 
+      viewBox="0 0 64 64" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      {/* Blue rounded border */}
+      <rect x="0" y="0" width="64" height="64" rx="12" fill="#0000FF" />
       
       {/* Three stacked bars - bottom (largest) */}
       <rect x="12" y="42" width="40" height="8" rx="2" stroke="#FF6B00" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -78,8 +151,8 @@ export function BasePlanIcon({ className = "", size = 64 }: BrandIconProps) {
   );
 }
 
-// 3. Execution Styles Icon - Y-shaped path (DIY/MSP/ALC)
-export function ExecutionStylesIcon({ className = "", size = 64 }: BrandIconProps) {
+// 5. Execution Styles/Build Method Icon - Y-shaped path (DIY/MSP/ALC)
+export function BuildMethodIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
       width={size} 
@@ -91,9 +164,6 @@ export function ExecutionStylesIcon({ className = "", size = 64 }: BrandIconProp
     >
       {/* Blue rounded border */}
       <rect x="0" y="0" width="64" height="64" rx="12" fill="#0000FF" />
-      
-      {/* Black background */}
-      <rect x="4" y="4" width="56" height="56" rx="8" fill="#000000" />
       
       {/* Trunk - vertical line */}
       <line x1="32" y1="48" x2="32" y2="32" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
@@ -115,7 +185,10 @@ export function ExecutionStylesIcon({ className = "", size = 64 }: BrandIconProp
   );
 }
 
-// 4. Commverse Bundle Icon - 4 apps connected
+// 6. Execution Styles Icon - Same as BuildMethod
+export const ExecutionStylesIcon = BuildMethodIcon;
+
+// 7. Commverse Bundle Icon - 4 apps connected
 export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -128,9 +201,6 @@ export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
     >
       {/* Blue rounded border */}
       <rect x="0" y="0" width="64" height="64" rx="12" fill="#0000FF" />
-      
-      {/* Black background */}
-      <rect x="4" y="4" width="56" height="56" rx="8" fill="#000000" />
       
       {/* Four circles in 2x2 grid */}
       <circle cx="22" cy="22" r="6" stroke="#FF6B00" strokeWidth="3" fill="none" />
@@ -150,7 +220,7 @@ export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
   );
 }
 
-// 5. AI Coach Blue Icon - Coach figure (using provided image)
+// 8. AI Coach Blue Icon - Coach figure (using provided image)
 export function CoachBlueIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <img 
@@ -163,8 +233,3 @@ export function CoachBlueIcon({ className = "", size = 64 }: BrandIconProps) {
     />
   );
 }
-
-// Legacy names for backwards compatibility
-export const DigitalIQIcon = DigitalAssessmentIcon;
-export const ActionPlanIcon = DigitalAssessmentIcon;
-export const BuildMethodIcon = ExecutionStylesIcon;
