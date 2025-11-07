@@ -8,17 +8,13 @@ import { ServicePathways } from "@/components/service-pathways";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
+import { ClipboardCheck, FileText, Layers, Wrench, Rocket } from "lucide-react";
 import bbIcon from "@assets/businesblueprint assets/Blueprint_Favicon.png";
 import bbLogo from "@assets/businesblueprint assets/Blueprint_Avatar.png";
 import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
 import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
 import digitalAssessmentIcon from "@assets/native icons and favicons/Digital Assessment_1762239599462.png";
-import step1Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
-import step2Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/2-Get your prescribed blueprint.png";
-import step3Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/3-Choose your base plan.png";
-import step4Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/4-Select your build method.png";
-import step5Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/5-Start to Build.png";
 import sendIcon from "@assets/native icons and favicons/: send app icon.png";
 import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
 import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
@@ -97,30 +93,40 @@ export default function Home() {
                   </svg>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 relative z-10">Your Blueprint to Getting Business</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 relative z-10">Your Blueprint to Growing</h3>
                 <div className="space-y-4 relative z-10">
                   <div className="flex items-center text-left border-l-4 border-orange-500 pl-3 py-2.5">
-                    <img src={step1Icon} alt="Step 1" className="w-6 h-6 rounded-lg mr-3 flex-shrink-0 shadow-md" />
+                    <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center mr-3 flex-shrink-0">
+                      <ClipboardCheck className="w-5 h-5 text-orange-600" />
+                    </div>
                     <div className="bg-orange-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">1</div>
                     <span className="text-gray-900 font-semibold text-base">Complete your digital assessment</span>
                   </div>
                   <div className="flex items-center text-left border-l-4 border-yellow-500 pl-3 py-2.5">
-                    <img src={step2Icon} alt="Step 2" className="w-6 h-6 rounded-lg mr-3 flex-shrink-0 shadow-md" />
+                    <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center mr-3 flex-shrink-0">
+                      <FileText className="w-5 h-5 text-yellow-600" />
+                    </div>
                     <div className="bg-yellow-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">2</div>
                     <span className="text-gray-900 font-semibold text-base">Get your prescribed blueprint</span>
                   </div>
                   <div className="flex items-center text-left border-l-4 border-blue-500 pl-3 py-2.5">
-                    <img src={step3Icon} alt="Step 3" className="w-6 h-6 rounded-lg mr-3 flex-shrink-0 shadow-md" />
+                    <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center mr-3 flex-shrink-0">
+                      <Layers className="w-5 h-5 text-blue-600" />
+                    </div>
                     <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">3</div>
                     <span className="text-gray-900 font-semibold text-base">Choose your base plan</span>
                   </div>
                   <div className="flex items-center text-left border-l-4 border-purple-500 pl-3 py-2.5">
-                    <img src={step4Icon} alt="Step 4" className="w-6 h-6 rounded-lg mr-3 flex-shrink-0 shadow-md" />
+                    <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center mr-3 flex-shrink-0">
+                      <Wrench className="w-5 h-5 text-purple-600" />
+                    </div>
                     <div className="bg-purple-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">4</div>
                     <span className="text-gray-900 font-semibold text-base">Select your build method</span>
                   </div>
                   <div className="flex items-center text-left border-l-4 border-green-500 pl-3 py-2.5">
-                    <img src={step5Icon} alt="Step 5" className="w-6 h-6 rounded-lg mr-3 flex-shrink-0 shadow-md" />
+                    <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center mr-3 flex-shrink-0">
+                      <Rocket className="w-5 h-5 text-green-600" />
+                    </div>
                     <div className="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">5</div>
                     <span className="text-gray-900 font-semibold text-base">Start to Build</span>
                   </div>
