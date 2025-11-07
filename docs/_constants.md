@@ -21,7 +21,7 @@
 |---|---|---|
 | **triadblue.primary** | `#0000FF` | Core ecosystem blue |
 | **triadblue.black** | `#09080E` | Standard black (text, outlines, app “/”) |
-| **bb.orange** | `#FFA500` | BusinessBlueprint primary; DIY / Start |
+| **bb.accent** | `#FF6B00` | BusinessBlueprint accent (LOCKED - vivid orange) |
 | **swipes.red** | `#FF0040` | SwipesBlue accent; payments & alerts |
 | **hosts.purple** | `#8000FF` | HostsBlue primary; secondary on BusinessBlueprint |
 | **tld.green** | `#00FF40` | Shared green for TLDs and ALC/Scale |
@@ -44,7 +44,7 @@
 
 | App | Base (slash “/”) | Accent (app name) | Notes |
 |------|------------------|------------------|-------|
-| **/send** | `#09080E` | `#FFD700` | Messaging / dispatch |
+| **/send** | `#09080E` | `#FF6B00` | Messaging / dispatch |
 | **/inbox** | `#09080E` | `#0080FF` | Communications intake |
 | **/content** | `#09080E` | `#E91EBC` | Media / creative hub |
 | **/livechat** | `#09080E` | `#8000FF` | Real-time support (HostsBlue purple) |
@@ -56,14 +56,14 @@
 ### Pathways
 | Pathway | Color | Hex |
 |----------|--------|------|
-| DIY | Orange | `#FFA500` |
+| DIY | Orange | `#FF6B00` |
 | MSP | Blue | `#0000FF` |
 | ALC (A la Carte) | Green | `#00FF40` |
 
 ### Base Plans
 | Plan | Color | Hex |
 |-------|--------|------|
-| Start | Orange | `#FFA500` |
+| Start | Orange | `#FF6B00` |
 | Advanced | Blue | `#0000FF` |
 | Scale | Green | `#00FF40` |
 

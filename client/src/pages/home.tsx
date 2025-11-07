@@ -47,7 +47,7 @@ export default function Home() {
                 </div>
               </div>
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                <span className="text-shadow-strong" style={{ color: '#FFD700' }}>We Assess. We Prescribe.</span> <span className="whitespace-nowrap text-[110%]">You Grow.</span>
+                <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>We Assess. We Prescribe.</span> <span className="whitespace-nowrap text-[110%]">You Grow.</span>
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 Our AI analyzes your online presence using Google Business Intelligence and prescribes your exact digital blueprint - not generic advice, but YOUR custom plan with the right apps, paths, and pricing.
@@ -58,7 +58,7 @@ export default function Home() {
                   Start Free Assessment
                 </Button>
                 <Link href="/ai-coach">
-                  <Button size="lg" className="bg-[#FFD700] hover:bg-[#FFC700] text-gray-900 w-full sm:w-auto">
+                  <Button size="lg" className="bg-[#FF6B00] hover:bg-[#FF5500] text-white w-full sm:w-auto">
                     <AICoachIcon className="w-8 h-8 mr-2" />
                     AI Business Coach
                   </Button>
@@ -172,7 +172,7 @@ export default function Home() {
               💊 YOUR PRESCRIPTION
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Not Generic Advice. <span className="text-shadow-strong" style={{ color: '#FFD700' }}>Your Custom Blueprint</span>.
+              Not Generic Advice. <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>Your Custom Blueprint</span>.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               After analyzing your business with Google Intelligence, we prescribe exactly what you need to succeed online.
@@ -271,10 +271,10 @@ export default function Home() {
               💰 BASE PLANS
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Three Plans. <span className="text-shadow-strong" style={{ color: '#FFD700' }}>One Prescription</span>.
+              Three Plans. <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>One Prescription</span>.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Your Digital IQ determines which base plan fits your business best. Every plan includes our prescription system.
+              Choose your base plan based on business size. Commverse apps are prescribed separately and available in our marketplace.
             </p>
           </div>
 
@@ -296,6 +296,10 @@ export default function Home() {
                 <ul className="space-y-3 mb-8">
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">✓</span>
+                    <span className="text-gray-700 text-sm">1 Business Location</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="text-green-500 mr-2 mt-1">✓</span>
                     <span className="text-gray-700 text-sm">Digital Assessment & IQ Score</span>
                   </li>
                   <li className="flex items-start">
@@ -304,15 +308,11 @@ export default function Home() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">1-2 Commverse Apps</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-green-500 mr-2 mt-1">✓</span>
                     <span className="text-gray-700 text-sm">AI Coach Access</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Basic Online Presence</span>
+                    <span className="text-gray-700 text-sm">Basic Support</span>
                   </li>
                 </ul>
                 <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white" data-testid="button-choose-start-plan">
@@ -345,7 +345,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">3-4 Commverse Apps</span>
+                    <span className="text-gray-700 text-sm">Up to 3 Business Locations</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">✓</span>
@@ -387,7 +387,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Full Commverse Bundle (4 apps)</span>
+                    <span className="text-gray-700 text-sm">Unlimited Business Locations</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">✓</span>
@@ -419,14 +419,14 @@ export default function Home() {
               🚀 COMMVERSE APPS
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Not Just Apps. <span className="text-shadow-strong" style={{ color: '#FFD700' }}>Prescribed Paths</span>.
+              Not Just Apps. <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>Prescribed Paths</span>.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Your prescription includes specific apps AND the exact paths within each app tailored to your business needs.
+              Based on your Digital IQ, we prescribe which Commverse apps you need AND the specific paths within each app. Available a la carte or as bundles in our marketplace.
             </p>
-            <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6 max-w-2xl mx-auto">
-              <p className="text-yellow-900 font-semibold">
-                💡 Example: Not just "/send" - but "/send with Quick Campaign Launch path" for your specific business type
+            <div className="bg-orange-50 border-2 border-orange-200 rounded-xl p-6 max-w-2xl mx-auto">
+              <p className="text-orange-900 font-semibold">
+                💡 Example: Not just "/send" - but "/send with Quick Campaign Launch path" prescribed specifically for your business type
               </p>
             </div>
           </div>
@@ -563,7 +563,7 @@ export default function Home() {
                   <li>• /livechat - Live Chat Widget</li>
                   <li>• /content - Social Media Mgmt</li>
                 </ul>
-                <Button className="w-full bg-[#FFD700] hover:bg-[#FFC700] text-white mt-auto">
+                <Button className="w-full bg-[#FF6B00] hover:bg-[#FF5500] text-white mt-auto">
                   Start Assessment
                 </Button>
               </CardContent>
