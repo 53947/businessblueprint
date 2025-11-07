@@ -116,3 +116,6 @@ externalPort = 8008
 
 [rules.formatter.fileExtensions.".html"]
 id = "module:nodejs-20/formatter:prettier"
+
+[agent]
+integrations = ["javascript_log_in_with_replit:1.0.0"]

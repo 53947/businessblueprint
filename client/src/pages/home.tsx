@@ -515,7 +515,7 @@ export default function Home() {
             <p className="text-gray-600 mb-6">
               Your prescription will tell you which apps and which paths are right for YOUR business
             </p>
-            <Link href="/applications">
+            <Link href="/commverse">
               <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white" data-testid="button-explore-applications">
                 Explore All Applications
               </Button>
