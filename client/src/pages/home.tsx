@@ -316,6 +316,149 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CommVerse Bundle - Featured Section */}
+      <section className="bg-gradient-to-br from-purple-50 via-blue-50 to-purple-50 py-20 border-y border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-block bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+              💬 COMPLETE COMMUNICATIONS SUITE
+            </div>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Talk to the Universe with <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>CommVerse</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Get all 4 communication apps together and save $40/month. A complete suite to connect with your customers anywhere, anytime.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8 items-center mb-12">
+            {/* Individual Apps */}
+            <div className="space-y-4">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">Individual Apps ($35/mo each)</h3>
+              
+              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-send-app">
+                <CardContent className="p-4 flex items-center gap-4">
+                  <img src={sendIcon} alt=": send" className="w-12 h-12 rounded-lg" />
+                  <div className="flex-1">
+                    <h4 className="font-bold text-gray-900">: send</h4>
+                    <p className="text-sm text-gray-600">Broadcast messages to customers</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-gray-900">$35</div>
+                    <div className="text-xs text-gray-500">/month</div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-inbox-app">
+                <CardContent className="p-4 flex items-center gap-4">
+                  <img src={inboxIcon} alt=": inbox" className="w-12 h-12 rounded-lg" />
+                  <div className="flex-1">
+                    <h4 className="font-bold text-gray-900">: inbox</h4>
+                    <p className="text-sm text-gray-600">Manage customer responses</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-gray-900">$35</div>
+                    <div className="text-xs text-gray-500">/month</div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-livechat-app">
+                <CardContent className="p-4 flex items-center gap-4">
+                  <img src={livechatIcon} alt=": livechat" className="w-12 h-12 rounded-lg" />
+                  <div className="flex-1">
+                    <h4 className="font-bold text-gray-900">: livechat</h4>
+                    <p className="text-sm text-gray-600">Real-time customer chat</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-gray-900">$35</div>
+                    <div className="text-xs text-gray-500">/month</div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-content-app">
+                <CardContent className="p-4 flex items-center gap-4">
+                  <img src={contentIcon} alt=": content" className="w-12 h-12 rounded-lg" />
+                  <div className="flex-1">
+                    <h4 className="font-bold text-gray-900">: content</h4>
+                    <p className="text-sm text-gray-600">Create and publish content</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-gray-900">$35</div>
+                    <div className="text-xs text-gray-500">/month</div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="text-right pt-4 border-t-2 border-gray-300">
+                <div className="text-sm text-gray-600">Individual Total:</div>
+                <div className="text-3xl font-bold text-gray-400 line-through">$140/month</div>
+              </div>
+            </div>
+
+            {/* Bundle Offer */}
+            <div>
+              <Card className="border-4 border-purple-500 shadow-2xl bg-gradient-to-br from-white to-purple-50" data-testid="card-commverse-bundle">
+                <CardContent className="p-8">
+                  <div className="text-center mb-6">
+                    <div className="inline-block bg-green-500 text-white px-4 py-2 rounded-full text-sm font-bold mb-4 animate-pulse">
+                      💰 SAVE $40/MONTH
+                    </div>
+                    <div className="flex items-center justify-center mb-4">
+                      <CommverseIcon size={80} />
+                    </div>
+                    <h3 className="text-3xl font-bold text-gray-900 mb-2">CommVerse Bundle</h3>
+                    <p className="text-gray-600 mb-6">All 4 communication apps included</p>
+                  </div>
+
+                  <div className="text-center mb-6">
+                    <div className="text-6xl font-bold mb-2" style={{ color: '#FF6B00' }}>$100</div>
+                    <div className="text-gray-600 text-lg">/month</div>
+                    <div className="text-sm text-green-600 font-semibold mt-2">
+                      (Instead of $140/month)
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center text-sm">
+                      <span className="text-green-500 mr-2">✓</span>
+                      <span className="text-gray-700">All 4 CommVerse apps</span>
+                    </div>
+                    <div className="flex items-center text-sm">
+                      <span className="text-green-500 mr-2">✓</span>
+                      <span className="text-gray-700">Unified dashboard</span>
+                    </div>
+                    <div className="flex items-center text-sm">
+                      <span className="text-green-500 mr-2">✓</span>
+                      <span className="text-gray-700">Seamless integration</span>
+                    </div>
+                    <div className="flex items-center text-sm">
+                      <span className="text-green-500 mr-2">✓</span>
+                      <span className="text-gray-700">Priority support</span>
+                    </div>
+                  </div>
+
+                  <Button className="w-full bg-[#FF6B00] hover:bg-[#FF5500] text-white text-lg py-6" data-testid="button-get-commverse-bundle">
+                    Get CommVerse Bundle
+                  </Button>
+                  <p className="text-center text-xs text-gray-500 mt-3">
+                    Prescribed based on your business needs
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <p className="text-lg text-gray-700 italic">
+              "A complete communications suite that lets you talk to the universe"
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Base Plans Comparison */}
       <section className="bg-white py-20 border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
