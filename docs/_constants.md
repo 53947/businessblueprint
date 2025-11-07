@@ -69,6 +69,17 @@
 
 **Color order rule:** Always **Orange → Blue → Green**
 
+### 5-Step Journey Icons (LOCKED - DO NOT CHANGE)
+| Step | Icon | Color | Hex | Action |
+|------|------|-------|-----|---------|
+| 1 | ClipboardCheck | Orange | `#F97316` | Complete your digital assessment |
+| 2 | FileText | Yellow | `#EAB308` | Get your prescribed blueprint |
+| 3 | Layers | Blue | `#3B82F6` | Choose your base plan |
+| 4 | Wrench | Purple | `#A855F7` | Select your build method |
+| 5 | Rocket | Green | `#22C55E` | Start to Build |
+
+**⚠️ CRITICAL:** These icon assignments are permanent. They cannot be changed or used for any other purpose.
+
 ---
 
 ## 6️⃣ Typography & Shadows
