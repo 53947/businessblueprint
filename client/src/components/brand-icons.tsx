@@ -1,86 +1,29 @@
-// Brand Icons - Matching Coach Blue style (transparent background, blue outline, orange figures)
-import coachIcon from "@assets/Coach Blue_1762496061116.png";
+// Brand Icons - Official brand assets
+import coachBlueIcon from "@assets/Coach Blue_1762535930955.png";
+import commverseIcon from "@assets/Commverse_1762535930956.png";
+import digitalIQIcon from "@assets/Digital IQ_1762535930956.png";
 
 interface BrandIconProps {
   className?: string;
   size?: number;
 }
 
-// 1. Digital IQ Icon - Gauge/meter showing score
+// 1. Digital IQ Icon - Official brand icon (lightbulb)
 export function DigitalIQIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
-    <svg 
+    <img 
+      src={digitalIQIcon} 
+      alt="Digital IQ" 
       width={size} 
-      height={size} 
-      viewBox="0 0 64 64" 
-      fill="none" 
-      xmlns="http://www.w3.org/2000/svg"
+      height={size}
       className={className}
-    >
-      {/* Blue outline border (transparent background) */}
-      <rect x="2" y="2" width="60" height="60" rx="12" stroke="#0000FF" strokeWidth="4" fill="none" />
-      
-      {/* Gauge arc - bottom half circle */}
-      <path 
-        d="M 12 38 A 20 20 0 0 1 52 38" 
-        stroke="#FF6B00" 
-        strokeWidth="3" 
-        fill="none"
-        strokeLinecap="round"
-      />
-      
-      {/* Tick marks */}
-      <line x1="12" y1="38" x2="15" y2="35" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
-      <line x1="20" y1="24" x2="22" y2="27" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
-      <line x1="32" y1="18" x2="32" y2="22" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
-      <line x1="44" y1="24" x2="42" y2="27" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
-      <line x1="52" y1="38" x2="49" y2="35" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
-      
-      {/* Needle pointing to high score */}
-      <line x1="32" y1="38" x2="44" y2="26" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
-      
-      {/* Center dot */}
-      <circle cx="32" cy="38" r="3" stroke="#FF6B00" strokeWidth="3" fill="none" />
-    </svg>
+      style={{ objectFit: 'contain' }}
+    />
   );
 }
 
-// 2. Digital Assessment Icon - Clipboard with checkmark
-export function DigitalAssessmentIcon({ className = "", size = 64 }: BrandIconProps) {
-  return (
-    <svg 
-      width={size} 
-      height={size} 
-      viewBox="0 0 64 64" 
-      fill="none" 
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
-      {/* Blue outline border (transparent background) */}
-      <rect x="2" y="2" width="60" height="60" rx="12" stroke="#0000FF" strokeWidth="4" fill="none" />
-      
-      {/* Orange clipboard outline */}
-      <rect x="20" y="14" width="24" height="32" rx="2" stroke="#FF6B00" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      
-      {/* Clipboard clip at top */}
-      <rect x="28" y="10" width="8" height="5" rx="1" stroke="#FF6B00" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      
-      {/* Checkmark */}
-      <path 
-        d="M 26 26 L 29 30 L 34 22" 
-        stroke="#FF6B00" 
-        strokeWidth="3" 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        fill="none"
-      />
-      
-      {/* Two list lines */}
-      <line x1="26" y1="34" x2="38" y2="34" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
-      <line x1="26" y1="40" x2="38" y2="40" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
-    </svg>
-  );
-}
+// 2. Digital Assessment Icon - Same as Digital IQ
+export const DigitalAssessmentIcon = DigitalIQIcon;
 
 // 3. 30-Day Action Plan Icon - Calendar with progress path
 export function ActionPlanIcon({ className = "", size = 64 }: BrandIconProps) {
@@ -188,43 +131,25 @@ export function BuildMethodIcon({ className = "", size = 64 }: BrandIconProps) {
 // 6. Execution Styles Icon - Same as BuildMethod
 export const ExecutionStylesIcon = BuildMethodIcon;
 
-// 7. Commverse Bundle Icon - 4 apps connected
+// 7. Commverse Bundle Icon - Official brand icon (diagonal slash)
 export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
-    <svg 
+    <img 
+      src={commverseIcon} 
+      alt="Commverse" 
       width={size} 
-      height={size} 
-      viewBox="0 0 64 64" 
-      fill="none" 
-      xmlns="http://www.w3.org/2000/svg"
+      height={size}
       className={className}
-    >
-      {/* Blue outline border (transparent background) */}
-      <rect x="2" y="2" width="60" height="60" rx="12" stroke="#0000FF" strokeWidth="4" fill="none" />
-      
-      {/* Four circles in 2x2 grid */}
-      <circle cx="22" cy="22" r="6" stroke="#FF6B00" strokeWidth="3" fill="none" />
-      <circle cx="42" cy="22" r="6" stroke="#FF6B00" strokeWidth="3" fill="none" />
-      <circle cx="22" cy="42" r="6" stroke="#FF6B00" strokeWidth="3" fill="none" />
-      <circle cx="42" cy="42" r="6" stroke="#FF6B00" strokeWidth="3" fill="none" />
-      
-      {/* Connection lines to center */}
-      <line x1="22" y1="22" x2="32" y2="32" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
-      <line x1="42" y1="22" x2="32" y2="32" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
-      <line x1="22" y1="42" x2="32" y2="32" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
-      <line x1="42" y1="42" x2="32" y2="32" stroke="#FF6B00" strokeWidth="3" strokeLinecap="round" />
-      
-      {/* Central hub */}
-      <circle cx="32" cy="32" r="3" stroke="#FF6B00" strokeWidth="3" fill="none" />
-    </svg>
+      style={{ objectFit: 'contain' }}
+    />
   );
 }
 
-// 8. AI Coach Blue Icon - Coach figure (using provided image)
+// 8. AI Coach Blue Icon - Official brand icon (coach figure)
 export function CoachBlueIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <img 
-      src={coachIcon} 
+      src={coachBlueIcon} 
       alt="AI Coach Blue" 
       width={size} 
       height={size}
