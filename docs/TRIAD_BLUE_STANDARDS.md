@@ -51,6 +51,17 @@ Lowercase paths only: `/send`, `/inbox`, `/content`, `/livechat`
 - Consistent shadow direction (315°)  
 - Approved iconography: megaphone, blueprint, swoosh, compass, cloud  
 
+### Official 5-Step Journey Icons (LOCKED - DO NOT CHANGE)
+**⚠️ These icons are permanently assigned and cannot be used for any other purpose:**
+
+1. **ClipboardCheck** (Orange #F97316) - Complete your digital assessment
+2. **FileText** (Yellow #EAB308) - Get your prescribed blueprint
+3. **Layers** (Blue #3B82F6) - Choose your base plan
+4. **Wrench** (Purple #A855F7) - Select your build method
+5. **Rocket** (Green #22C55E) - Start to Build
+
+**Implementation:** Each icon uses a light background tint (10% opacity) with the icon at 20px (w-5 h-5) inside a 32px rounded container.
+
 ---
 
 ## 🧠 Terminology
