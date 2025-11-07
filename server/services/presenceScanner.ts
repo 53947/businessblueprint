@@ -10,6 +10,9 @@
  * No third-party dependencies - all scanning done in-house
  */
 
+import { promises as dns } from 'dns';
+import { isIP } from 'net';
+
 interface ScanResult {
   overall: {
     digitalIQScore: number;
@@ -160,9 +163,55 @@ export class PresenceScannerService {
   }
 
   /**
-   * Validate URL for security (prevent SSRF)
+   * Check if an IP address is private/internal/loopback
    */
-  private isValidUrl(url: string): boolean {
+  private isPrivateIP(ip: string): boolean {
+    // Check if it's a valid IP first
+    const version = isIP(ip);
+    if (!version) return false;
+
+    if (version === 4) {
+      // IPv4 private ranges
+      const parts = ip.split('.').map(Number);
+      
+      // Loopback (127.0.0.0/8)
+      if (parts[0] === 127) return true;
+      
+      // Private (10.0.0.0/8)
+      if (parts[0] === 10) return true;
+      
+      // Private (172.16.0.0/12)
+      if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true;
+      
+      // Private (192.168.0.0/16)
+      if (parts[0] === 192 && parts[1] === 168) return true;
+      
+      // Link-local (169.254.0.0/16)
+      if (parts[0] === 169 && parts[1] === 254) return true;
+      
+      // Broadcast
+      if (parts[0] === 0 || parts[0] === 255) return true;
+    } else if (version === 6) {
+      // IPv6 private/loopback
+      const lower = ip.toLowerCase();
+      
+      // Loopback (::1)
+      if (lower === '::1' || lower === '0:0:0:0:0:0:0:1') return true;
+      
+      // Link-local (fe80::/10)
+      if (lower.startsWith('fe80:')) return true;
+      
+      // Unique local (fc00::/7)
+      if (lower.startsWith('fc') || lower.startsWith('fd')) return true;
+    }
+    
+    return false;
+  }
+
+  /**
+   * Validate URL for security (prevent SSRF by resolving DNS)
+   */
+  private async isValidUrl(url: string): Promise<boolean> {
     try {
       const parsed = new URL(url);
       
@@ -171,24 +220,36 @@ export class PresenceScannerService {
         return false;
       }
       
-      // Block internal/private IPs
       const hostname = parsed.hostname.toLowerCase();
-      const blockedHosts = [
-        'localhost',
-        '127.0.0.1',
-        '0.0.0.0',
-        '::1',
-        '169.254.', // Link-local
-        '10.', // Private
-        '172.16.', // Private
-        '192.168.', // Private
-      ];
       
-      if (blockedHosts.some(blocked => hostname.includes(blocked))) {
+      // Block obvious localhost references
+      if (hostname === 'localhost' || hostname === '0.0.0.0') {
         return false;
       }
       
-      return true;
+      // If hostname is already an IP, check it directly
+      if (isIP(hostname)) {
+        return !this.isPrivateIP(hostname);
+      }
+      
+      // Resolve DNS to get actual IPs
+      try {
+        const addresses = await dns.resolve(hostname);
+        
+        // Check if any resolved IP is private/internal
+        for (const addr of addresses) {
+          if (this.isPrivateIP(addr)) {
+            console.warn(`⚠️ Blocked private IP resolution: ${hostname} -> ${addr}`);
+            return false;
+          }
+        }
+        
+        return true;
+      } catch (dnsError) {
+        // DNS resolution failed - domain doesn't exist or network issue
+        console.warn(`⚠️ DNS resolution failed for: ${hostname}`, dnsError);
+        return false;
+      }
     } catch {
       return false;
     }
@@ -206,8 +267,9 @@ export class PresenceScannerService {
       // Ensure URL has protocol
       const url = websiteUrl.startsWith('http') ? websiteUrl : `https://${websiteUrl}`;
       
-      // Validate URL for security
-      if (!this.isValidUrl(url)) {
+      // Validate URL for security (async DNS resolution)
+      const isValid = await this.isValidUrl(url);
+      if (!isValid) {
         console.warn(`⚠️ Invalid or blocked URL: ${url}`);
         return this.getEmptyWebsiteScan();
       }
