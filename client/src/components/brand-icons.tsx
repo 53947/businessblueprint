@@ -2,7 +2,7 @@
 import coachBlueIcon from "@assets/Coach Blue_1762535930955.png";
 import commverseIcon from "@assets/Commverse_1762535930956.png";
 import digitalIQIcon from "@assets/Digital IQ_1762535930956.png";
-import digitalAssessmentIconImage from "@assets/native icons and favicons/Digital Assessment_1762239599462.png";
+import digitalAssessmentIconImage from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
 
 interface BrandIconProps {
   className?: string;
