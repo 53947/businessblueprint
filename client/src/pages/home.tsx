@@ -53,7 +53,7 @@ export default function Home() {
                 Our AI analyzes your online presence using Google Business Intelligence and prescribes your exact digital blueprint - not generic advice, but YOUR custom plan with the right apps, paths, and pricing.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button onClick={startAssessment} size="lg" className="bg-blue-500 hover:bg-blue-600">
+                <Button onClick={startAssessment} size="lg" className="bg-[#FF6B00] hover:bg-[#FF5500] text-white">
                   <span className="mr-2">📊</span>
                   Start Free Assessment
                 </Button>
@@ -93,7 +93,7 @@ export default function Home() {
                   </svg>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 relative z-10">Your Blueprint to Growing</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 relative z-10">businessblueprint.io Process</h3>
                 <div className="space-y-4 relative z-10">
                   <div className="flex items-center text-left border-l-4 border-orange-500 pl-3 py-2.5">
                     <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center mr-3 flex-shrink-0">

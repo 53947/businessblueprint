@@ -1,9 +1,10 @@
 // Reusable brand logo components using OFFICIAL Business Blueprint brandmarks
-import bbLightbulb from "@assets/businesblueprint assets/Blueprint_Avatar.png";
-const bbAvatar = bbLightbulb; // Lightbulb icon for Client Portal
+import bbHeaderLogo from "@assets/BBlueprint Main Header Logo_1762489845362.png";
+import bbFaviconPng from "@assets/Blueprint_Favicon_1762489845363.png";
+const bbAvatar = bbFaviconPng; // Lightbulb icon for Client Portal
 const bbFavicon = '/brand-assets/Blueprint_Favicon.png';
-const bbIcon = bbLightbulb;
-import bbLockup from "@assets/businesblueprint assets/Business Blueprint All Lockup Wordmark.png";
+const bbIcon = bbFaviconPng;
+import bbLockup from "@assets/BBlueprint Main Header Logo_1762489845362.png";
 import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
 import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";

@@ -10,7 +10,18 @@ No developer may deviate from these rules without explicit approval.
 ---
 
 ## 🎨 Branding
-Refer to `_constants.md` for canonical colors and typography.  
+Refer to `_constants.md` for canonical colors and typography.
+
+### Official Logo (UPDATED NOV 2025)
+- **Main Header Logo:** Image-based `BBlueprint Main Header Logo_1762489845362.png`
+  - Lightbulb icon: Orange (#FF6B00) outer ring + Blue (#0000FF) interior with grid pattern
+  - Text: "business" (orange) + "blueprint" (blue) + ".io" (green #00FF00)
+  - Used in navigation header and all main branding
+- **Favicon:** `Blueprint_Favicon_1762489845363.png` (lightbulb icon only)
+- **Location:** Stored in `attached_assets/`, imported via `@assets/` alias
+- **Implementation:** See `client/src/components/brand-logo.tsx`
+
+### Typography
 All wordmarks use Archivo family, 24 pt, 2 pt blur, 10 pt distance @ 315°.  
 
 **Gradient:** 315° (EEFBFF → 6EA6FF → 0000FF)  
