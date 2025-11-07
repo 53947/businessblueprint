@@ -122,9 +122,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           </div>
 
                           <div className="space-y-4">
-                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-orange-500 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-orange-500">
                               <div className="flex-shrink-0">
-                                <img src={step1Icon} alt="Step 1" className="w-8 h-8 rounded-lg shadow-md" />
+                                <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                                  <ClipboardCheck className="w-5 h-5 text-orange-600" />
+                                </div>
                               </div>
                               <div className="flex-shrink-0">
                                 <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold shadow-md">1</div>
@@ -137,9 +139,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
 
-                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-yellow-500 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
                               <div className="flex-shrink-0">
-                                <img src={step2Icon} alt="Step 2" className="w-8 h-8 rounded-lg shadow-md" />
+                                <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                                  <FileText className="w-5 h-5 text-yellow-600" />
+                                </div>
                               </div>
                               <div className="flex-shrink-0">
                                 <div className="w-8 h-8 rounded-full bg-yellow-500 text-white flex items-center justify-center font-bold shadow-md">2</div>
@@ -152,9 +156,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
 
-                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-blue-500">
                               <div className="flex-shrink-0">
-                                <img src={step3Icon} alt="Step 3" className="w-8 h-8 rounded-lg shadow-md" />
+                                <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                  <Layers className="w-5 h-5 text-blue-600" />
+                                </div>
                               </div>
                               <div className="flex-shrink-0">
                                 <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold shadow-md">3</div>
@@ -167,9 +173,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
 
-                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-purple-500 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-purple-500">
                               <div className="flex-shrink-0">
-                                <img src={step4Icon} alt="Step 4" className="w-8 h-8 rounded-lg shadow-md" />
+                                <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                                  <Wrench className="w-5 h-5 text-purple-600" />
+                                </div>
                               </div>
                               <div className="flex-shrink-0">
                                 <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold shadow-md">4</div>
@@ -182,9 +190,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
 
-                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-green-500 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-green-500">
                               <div className="flex-shrink-0">
-                                <img src={step5Icon} alt="Step 5" className="w-8 h-8 rounded-lg shadow-md" />
+                                <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+                                  <Rocket className="w-5 h-5 text-green-600" />
+                                </div>
                               </div>
                               <div className="flex-shrink-0">
                                 <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold shadow-md">5</div>

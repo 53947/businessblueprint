@@ -56,13 +56,24 @@ export default function Home() {
                 Our AI analyzes your online presence using Google Business Intelligence and prescribes your exact digital blueprint - not generic advice, but YOUR custom plan with the right apps, paths, and pricing.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button onClick={startAssessment} size="lg" className="bg-[#FF6B00] hover:bg-[#FF5500] text-white">
-                  <span className="mr-2">📊</span>
+                <Button 
+                  onClick={startAssessment} 
+                  size="lg" 
+                  variant="outline"
+                  className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#FF6B00] font-semibold"
+                  data-testid="button-start-assessment"
+                >
+                  <DigitalIQIcon size={32} className="mr-2" />
                   Start Free Assessment
                 </Button>
                 <Link href="/ai-coach">
-                  <Button size="lg" className="bg-[#FF6B00] hover:bg-[#FF5500] text-white w-full sm:w-auto">
-                    <AICoachIcon className="w-8 h-8 mr-2" />
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#FF6B00] font-semibold w-full sm:w-auto"
+                    data-testid="button-ai-coach"
+                  >
+                    <CoachBlueIcon size={32} className="mr-2" />
                     AI Business Coach
                   </Button>
                 </Link>
