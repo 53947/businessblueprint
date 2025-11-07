@@ -12,6 +12,9 @@
 
 import { promises as dns } from 'dns';
 import { isIP } from 'net';
+import * as ipaddr from 'ipaddr.js';
+import { googlePlacesService } from './googlePlaces';
+import { yelpApiService } from './yelpApi';
 
 interface ScanResult {
   overall: {
@@ -131,7 +134,11 @@ export class PresenceScannerService {
       this.scanWebsite(params.website),
       this.scanSocialMedia(params.businessName),
       this.scanDirectories(params),
-      this.scanReviews(params.businessName),
+      this.scanReviews({
+        businessName: params.businessName,
+        address: params.address,
+        phone: params.phone,
+      }),
     ]);
 
     const digitalIQScore = this.calculateDigitalIQ({
@@ -164,48 +171,34 @@ export class PresenceScannerService {
 
   /**
    * Check if an IP address is private/internal/loopback
+   * Uses ipaddr.js for comprehensive IPv4/IPv6 validation
    */
   private isPrivateIP(ip: string): boolean {
-    // Check if it's a valid IP first
-    const version = isIP(ip);
-    if (!version) return false;
-
-    if (version === 4) {
-      // IPv4 private ranges
-      const parts = ip.split('.').map(Number);
+    try {
+      // Parse the IP address
+      const addr = ipaddr.process(ip); // Auto-converts IPv4-mapped IPv6 to IPv4
       
-      // Loopback (127.0.0.0/8)
-      if (parts[0] === 127) return true;
+      // Get the range type
+      const range = addr.range();
       
-      // Private (10.0.0.0/8)
-      if (parts[0] === 10) return true;
+      // Private IPv4 ranges: 'private', 'loopback', 'linkLocal', 'broadcast', 'carrierGradeNat'
+      // Private IPv6 ranges: 'uniqueLocal', 'linkLocal', 'loopback', 'unspecified'
+      const privateRanges = [
+        'private',          // IPv4: 10.x, 172.16-31.x, 192.168.x
+        'loopback',         // IPv4: 127.x, IPv6: ::1
+        'linkLocal',        // IPv4: 169.254.x, IPv6: fe80::/10 (ALL link-local, not just prefix)
+        'uniqueLocal',      // IPv6: fc00::/7 (private IPv6)
+        'unspecified',      // IPv6: ::
+        'broadcast',        // IPv4: 255.255.255.255
+        'carrierGradeNat',  // IPv4: 100.64.0.0/10
+        'reserved',         // Reserved ranges
+      ];
       
-      // Private (172.16.0.0/12)
-      if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true;
-      
-      // Private (192.168.0.0/16)
-      if (parts[0] === 192 && parts[1] === 168) return true;
-      
-      // Link-local (169.254.0.0/16)
-      if (parts[0] === 169 && parts[1] === 254) return true;
-      
-      // Broadcast
-      if (parts[0] === 0 || parts[0] === 255) return true;
-    } else if (version === 6) {
-      // IPv6 private/loopback
-      const lower = ip.toLowerCase();
-      
-      // Loopback (::1)
-      if (lower === '::1' || lower === '0:0:0:0:0:0:0:1') return true;
-      
-      // Link-local (fe80::/10)
-      if (lower.startsWith('fe80:')) return true;
-      
-      // Unique local (fc00::/7)
-      if (lower.startsWith('fc') || lower.startsWith('fd')) return true;
+      return privateRanges.includes(range);
+    } catch (error) {
+      // Invalid IP address
+      return false;
     }
-    
-    return false;
   }
 
   /**
@@ -232,12 +225,33 @@ export class PresenceScannerService {
         return !this.isPrivateIP(hostname);
       }
       
-      // Resolve DNS to get actual IPs
+      // Resolve DNS to get actual IPs (both IPv4 and IPv6)
       try {
-        const addresses = await dns.resolve(hostname);
+        // Check both A (IPv4) and AAAA (IPv6) records
+        const ipv4Addresses: string[] = [];
+        const ipv6Addresses: string[] = [];
         
-        // Check if any resolved IP is private/internal
-        for (const addr of addresses) {
+        try {
+          ipv4Addresses.push(...await dns.resolve4(hostname));
+        } catch {
+          // No IPv4 records, that's okay
+        }
+        
+        try {
+          ipv6Addresses.push(...await dns.resolve6(hostname));
+        } catch {
+          // No IPv6 records, that's okay
+        }
+        
+        const allAddresses = [...ipv4Addresses, ...ipv6Addresses];
+        
+        if (allAddresses.length === 0) {
+          console.warn(`⚠️ No DNS records found for: ${hostname}`);
+          return false;
+        }
+        
+        // Check if ANY resolved IP (IPv4 or IPv6) is private/internal
+        for (const addr of allAddresses) {
           if (this.isPrivateIP(addr)) {
             console.warn(`⚠️ Blocked private IP resolution: ${hostname} -> ${addr}`);
             return false;
@@ -277,30 +291,72 @@ export class PresenceScannerService {
       // Check SSL
       const hasSSL = url.startsWith('https://');
 
-      // Fetch website HTML with timeout and size limit
+      // Fetch website HTML with manual redirect handling (SSRF protection)
       const startTime = Date.now();
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
       
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'BusinessBlueprint-Scanner/1.0',
-        },
-        redirect: 'follow',
-        signal: controller.signal,
-      });
+      let currentUrl = url;
+      let redirectCount = 0;
+      const MAX_REDIRECTS = 5;
+      let response: Response;
+      
+      // Manually handle redirects to validate each hop
+      while (redirectCount < MAX_REDIRECTS) {
+        response = await fetch(currentUrl, {
+          headers: {
+            'User-Agent': 'BusinessBlueprint-Scanner/1.0',
+          },
+          redirect: 'manual', // Don't auto-follow redirects
+          signal: controller.signal,
+        });
+        
+        // If it's a redirect, validate the destination
+        if (response.status >= 300 && response.status < 400) {
+          const location = response.headers.get('location');
+          if (!location) {
+            console.warn(`⚠️ Redirect without Location header`);
+            clearTimeout(timeout);
+            return this.getEmptyWebsiteScan();
+          }
+          
+          // Resolve relative URLs
+          const redirectUrl = new URL(location, currentUrl).toString();
+          
+          // Validate redirect destination for SSRF
+          const isRedirectValid = await this.isValidUrl(redirectUrl);
+          if (!isRedirectValid) {
+            console.warn(`⚠️ Blocked redirect to private/invalid URL: ${redirectUrl}`);
+            clearTimeout(timeout);
+            return this.getEmptyWebsiteScan();
+          }
+          
+          currentUrl = redirectUrl;
+          redirectCount++;
+          continue;
+        }
+        
+        // Not a redirect, we have the final response
+        break;
+      }
       
       clearTimeout(timeout);
       
+      // Check if we hit redirect limit
+      if (redirectCount >= MAX_REDIRECTS) {
+        console.warn(`⚠️ Too many redirects for: ${url}`);
+        return this.getEmptyWebsiteScan();
+      }
+      
       // Check content length
-      const contentLength = response.headers.get('content-length');
+      const contentLength = response!.headers.get('content-length');
       if (contentLength && parseInt(contentLength) > 5 * 1024 * 1024) { // 5MB limit
         console.warn(`⚠️ Website too large: ${url}`);
         return this.getEmptyWebsiteScan();
       }
       
       const loadTime = Date.now() - startTime;
-      const html = await response.text();
+      const html = await response!.text();
 
       // Parse HTML for SEO analysis
       const seoData = this.analyzeSEO(html);
@@ -422,63 +478,140 @@ export class PresenceScannerService {
   }
 
   /**
-   * Scan business directories
-   * NOTE: This is a placeholder implementation. Real implementation requires:
-   * - Google My Business API integration
-   * - Yelp Fusion API
-   * - Facebook Places API
-   * - Directory scraping for YellowPages, BBB, etc.
+   * Scan business directories using real APIs
    */
   private async scanDirectories(params: {
     businessName: string;
     phone?: string;
     address?: string;
   }): Promise<DirectoryScan> {
-    console.log(`ℹ️ Directory scanning not yet implemented for: ${params.businessName}`);
+    console.log(`🔍 Scanning directories for: ${params.businessName}`);
     
-    // TODO: Implement real directory discovery
-    // For now, return neutral scores to avoid misleading data
+    // Scan Google Places
+    const googleResult = await googlePlacesService.searchBusiness(
+      params.businessName,
+      params.address
+    );
+
+    // Scan Yelp
+    const yelpResult = await yelpApiService.searchBusiness(
+      params.businessName,
+      params.address,
+      params.phone
+    );
+
     const platforms = {
-      google: { exists: false, claimed: false, isConsistent: true },
-      yelp: { exists: false, claimed: false, isConsistent: true },
-      facebook: { exists: false, claimed: false, isConsistent: true },
-      yellowPages: { exists: false, claimed: false, isConsistent: true },
-      bbb: { exists: false, claimed: false, isConsistent: true },
+      google: { 
+        exists: googleResult.exists, 
+        claimed: googleResult.isClaimed || false, 
+        isConsistent: true 
+      },
+      yelp: { 
+        exists: yelpResult.exists, 
+        claimed: yelpResult.isClaimed || false, 
+        isConsistent: true 
+      },
+      facebook: { exists: false, claimed: false, isConsistent: true }, // TODO: Add Facebook API
+      yellowPages: { exists: false, claimed: false, isConsistent: true }, // TODO: Add scraping
+      bbb: { exists: false, claimed: false, isConsistent: true }, // TODO: Add scraping
     };
+
+    const totalListings = Object.values(platforms).filter(p => p.exists).length;
+    const claimedListings = Object.values(platforms).filter(p => p.claimed).length;
+    
+    // Consistency check (compare business info across platforms)
+    const consistency = 100; // TODO: Implement NAP consistency check
+    
+    // Score based on platforms we ACTUALLY check (Google + Yelp = 2)
+    // Don't penalize businesses for platforms we don't check yet
+    const SUPPORTED_PLATFORMS = 2; // Google + Yelp (we check these)
+    const listingScore = (totalListings / SUPPORTED_PLATFORMS) * 50;
+    const claimedScore = totalListings > 0 ? (claimedListings / totalListings) * 50 : 0;
+    const score = Math.min(100, listingScore + claimedScore); // Cap at 100
+
+    console.log(`📊 Directory scan: ${totalListings} listings, ${claimedListings} claimed, score: ${score}/100`);
 
     return {
       platforms,
-      totalListings: 0,
-      claimedListings: 0,
-      consistency: 100, // Assume consistent until we can check
-      score: 50, // Neutral score (not 0 to avoid penalizing unknowns)
+      totalListings,
+      claimedListings,
+      consistency,
+      score,
     };
   }
 
   /**
-   * Scan reviews across platforms
-   * NOTE: This is a placeholder implementation. Real implementation requires:
-   * - Google Places API for reviews
-   * - Yelp Fusion API for reviews
-   * - Facebook Graph API for reviews
+   * Scan reviews across platforms using real APIs
    */
-  private async scanReviews(businessName: string): Promise<ReviewScan> {
-    console.log(`ℹ️ Review scanning not yet implemented for: ${businessName}`);
+  private async scanReviews(params: {
+    businessName: string;
+    address?: string;
+    phone?: string;
+  }): Promise<ReviewScan> {
+    console.log(`🔍 Scanning reviews for: ${params.businessName}`);
     
-    // TODO: Implement real review aggregation
-    // For now, return neutral scores to avoid misleading data
+    // Get reviews from Google Places
+    const googleResult = await googlePlacesService.searchBusiness(
+      params.businessName,
+      params.address
+    );
+
+    // Get reviews from Yelp
+    const yelpResult = await yelpApiService.searchBusiness(
+      params.businessName,
+      params.address,
+      params.phone
+    );
+
     const platforms = {
-      google: { exists: false, reviewCount: 0, averageRating: 0, recentReviews: 0, responseRate: 0 },
-      yelp: { exists: false, reviewCount: 0, averageRating: 0, recentReviews: 0, responseRate: 0 },
-      facebook: { exists: false, reviewCount: 0, averageRating: 0, recentReviews: 0, responseRate: 0 },
+      google: { 
+        exists: googleResult.exists && (googleResult.reviewCount || 0) > 0,
+        reviewCount: googleResult.reviewCount || 0,
+        averageRating: googleResult.rating || 0,
+        recentReviews: (googleResult.reviews || []).length,
+        responseRate: 0, // TODO: Calculate response rate
+      },
+      yelp: { 
+        exists: yelpResult.exists && (yelpResult.reviewCount || 0) > 0,
+        reviewCount: yelpResult.reviewCount || 0,
+        averageRating: yelpResult.rating || 0,
+        recentReviews: (yelpResult.reviews || []).length,
+        responseRate: 0, // TODO: Calculate response rate
+      },
+      facebook: { 
+        exists: false, 
+        reviewCount: 0, 
+        averageRating: 0, 
+        recentReviews: 0, 
+        responseRate: 0 
+      }, // TODO: Add Facebook Graph API
     };
+
+    // Calculate totals
+    const totalReviews = platforms.google.reviewCount + platforms.yelp.reviewCount;
+    
+    const ratingsWithCounts = [
+      { rating: platforms.google.averageRating, count: platforms.google.reviewCount },
+      { rating: platforms.yelp.averageRating, count: platforms.yelp.reviewCount },
+    ].filter(p => p.count > 0);
+
+    const averageRating = ratingsWithCounts.length > 0
+      ? ratingsWithCounts.reduce((sum, p) => sum + (p.rating * p.count), 0) / totalReviews
+      : 0;
+
+    const responseRate = 0; // TODO: Calculate based on review responses
+
+    // Calculate score
+    const score = this.calculateReviewScore({ totalReviews, averageRating, responseRate });
+
+    console.log(`📊 Review scan: ${totalReviews} reviews, ${averageRating.toFixed(1)} avg rating, score: ${score}/100`);
 
     return {
       platforms,
-      totalReviews: 0,
-      averageRating: 0,
-      responseRate: 0,
-      score: 50, // Neutral score (not 0 to avoid penalizing unknowns)
+      totalReviews,
+      averageRating,
+      responseRate,
+      score,
     };
   }
 
