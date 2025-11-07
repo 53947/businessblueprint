@@ -12,6 +12,8 @@
 
 import { promises as dns } from 'dns';
 import { isIP } from 'net';
+import * as http from 'http';
+import * as https from 'https';
 import * as ipaddr from 'ipaddr.js';
 import { googlePlacesService } from './googlePlaces';
 import { yelpApiService } from './yelpApi';
@@ -118,6 +120,12 @@ interface ReviewPlatform {
   responseRate: number;
 }
 
+interface UrlValidationResult {
+  isValid: boolean;
+  resolvedIPs: string[]; // Validated, non-private IPs for this hostname
+  hostname: string;
+}
+
 export class PresenceScannerService {
   /**
    * Run complete presence scan for a business
@@ -202,27 +210,31 @@ export class PresenceScannerService {
   }
 
   /**
-   * Validate URL for security (prevent SSRF by resolving DNS)
+   * Validate URL for security and resolve IPs (prevent SSRF + DNS rebinding)
+   * Returns validated IPs that can be pinned for actual request
    */
-  private async isValidUrl(url: string): Promise<boolean> {
+  private async validateAndResolveUrl(url: string): Promise<UrlValidationResult> {
     try {
       const parsed = new URL(url);
       
       // Only allow http/https
       if (!['http:', 'https:'].includes(parsed.protocol)) {
-        return false;
+        return { isValid: false, resolvedIPs: [], hostname: '' };
       }
       
       const hostname = parsed.hostname.toLowerCase();
       
       // Block obvious localhost references
       if (hostname === 'localhost' || hostname === '0.0.0.0') {
-        return false;
+        return { isValid: false, resolvedIPs: [], hostname };
       }
       
       // If hostname is already an IP, check it directly
       if (isIP(hostname)) {
-        return !this.isPrivateIP(hostname);
+        if (this.isPrivateIP(hostname)) {
+          return { isValid: false, resolvedIPs: [], hostname };
+        }
+        return { isValid: true, resolvedIPs: [hostname], hostname };
       }
       
       // Resolve DNS to get actual IPs (both IPv4 and IPv6)
@@ -247,26 +259,107 @@ export class PresenceScannerService {
         
         if (allAddresses.length === 0) {
           console.warn(`⚠️ No DNS records found for: ${hostname}`);
-          return false;
+          return { isValid: false, resolvedIPs: [], hostname };
         }
         
         // Check if ANY resolved IP (IPv4 or IPv6) is private/internal
         for (const addr of allAddresses) {
           if (this.isPrivateIP(addr)) {
             console.warn(`⚠️ Blocked private IP resolution: ${hostname} -> ${addr}`);
-            return false;
+            return { isValid: false, resolvedIPs: [], hostname };
           }
         }
         
-        return true;
+        // Return validated IPs that can be pinned
+        return { isValid: true, resolvedIPs: allAddresses, hostname };
       } catch (dnsError) {
         // DNS resolution failed - domain doesn't exist or network issue
         console.warn(`⚠️ DNS resolution failed for: ${hostname}`, dnsError);
-        return false;
+        return { isValid: false, resolvedIPs: [], hostname };
       }
     } catch {
-      return false;
+      return { isValid: false, resolvedIPs: [], hostname: '' };
     }
+  }
+
+  /**
+   * Secure HTTP fetch with DNS rebinding protection
+   * Uses pinned IPs from validation to prevent DNS re-resolution
+   */
+  private async secureFetch(url: string, validatedIPs: string[], options: {
+    method?: string;
+    headers?: Record<string, string>;
+    timeout?: number;
+  } = {}): Promise<{ status: number; headers: http.IncomingHttpHeaders; body: string }> {
+    return new Promise((resolve, reject) => {
+      const parsed = new URL(url);
+      const isHttps = parsed.protocol === 'https:';
+      const module = isHttps ? https : http;
+      
+      // Use the first validated IP (preferring IPv4 over IPv6 for broader compatibility)
+      const ipv4 = validatedIPs.find(ip => isIP(ip) === 4);
+      const targetIP = ipv4 || validatedIPs[0];
+      
+      if (!targetIP) {
+        reject(new Error('No validated IP available'));
+        return;
+      }
+      
+      const requestOptions: http.RequestOptions & https.RequestOptions = {
+        hostname: targetIP, // Use IP directly
+        port: parsed.port || (isHttps ? 443 : 80),
+        path: parsed.pathname + parsed.search,
+        method: options.method || 'GET',
+        headers: {
+          'Host': parsed.hostname, // Set Host header to original hostname
+          'User-Agent': 'BusinessBlueprint-Scanner/1.0',
+          ...options.headers,
+        },
+        timeout: options.timeout || 10000,
+        // For HTTPS: Set SNI hostname for proper TLS certificate validation
+        servername: parsed.hostname, // TLS will validate cert against this hostname
+        // Custom lookup to prevent any DNS resolution
+        lookup: (hostname: string, opts: any, callback: any) => {
+          // Always return the pre-validated IP, blocking any DNS resolution
+          callback(null, targetIP, isIP(targetIP) || 4);
+        },
+      };
+      
+      const req = module.request(requestOptions, (res) => {
+        const chunks: Buffer[] = [];
+        let totalSize = 0;
+        const MAX_SIZE = 5 * 1024 * 1024; // 5MB limit
+        
+        res.on('data', (chunk: Buffer) => {
+          totalSize += chunk.length;
+          if (totalSize > MAX_SIZE) {
+            req.destroy();
+            reject(new Error('Response too large'));
+            return;
+          }
+          chunks.push(chunk);
+        });
+        
+        res.on('end', () => {
+          const body = Buffer.concat(chunks).toString('utf-8');
+          resolve({
+            status: res.statusCode || 0,
+            headers: res.headers,
+            body,
+          });
+        });
+        
+        res.on('error', reject);
+      });
+      
+      req.on('error', reject);
+      req.on('timeout', () => {
+        req.destroy();
+        reject(new Error('Request timeout'));
+      });
+      
+      req.end();
+    });
   }
 
   /**
@@ -281,9 +374,9 @@ export class PresenceScannerService {
       // Ensure URL has protocol
       const url = websiteUrl.startsWith('http') ? websiteUrl : `https://${websiteUrl}`;
       
-      // Validate URL for security (async DNS resolution)
-      const isValid = await this.isValidUrl(url);
-      if (!isValid) {
+      // Validate URL and resolve IPs (SSRF + DNS rebinding protection)
+      const validation = await this.validateAndResolveUrl(url);
+      if (!validation.isValid) {
         console.warn(`⚠️ Invalid or blocked URL: ${url}`);
         return this.getEmptyWebsiteScan();
       }
@@ -291,47 +384,42 @@ export class PresenceScannerService {
       // Check SSL
       const hasSSL = url.startsWith('https://');
 
-      // Fetch website HTML with manual redirect handling (SSRF protection)
+      // Fetch website HTML with manual redirect handling and pinned IPs
       const startTime = Date.now();
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-      
       let currentUrl = url;
+      let currentValidatedIPs = validation.resolvedIPs;
       let redirectCount = 0;
       const MAX_REDIRECTS = 5;
-      let response: Response;
+      let response: { status: number; headers: http.IncomingHttpHeaders; body: string };
       
       // Manually handle redirects to validate each hop
       while (redirectCount < MAX_REDIRECTS) {
-        response = await fetch(currentUrl, {
-          headers: {
-            'User-Agent': 'BusinessBlueprint-Scanner/1.0',
-          },
-          redirect: 'manual', // Don't auto-follow redirects
-          signal: controller.signal,
+        // Use secure fetch with pinned IPs (prevents DNS rebinding)
+        response = await this.secureFetch(currentUrl, currentValidatedIPs, {
+          timeout: 10000,
         });
         
         // If it's a redirect, validate the destination
         if (response.status >= 300 && response.status < 400) {
-          const location = response.headers.get('location');
+          const location = response.headers['location'];
           if (!location) {
             console.warn(`⚠️ Redirect without Location header`);
-            clearTimeout(timeout);
             return this.getEmptyWebsiteScan();
           }
           
           // Resolve relative URLs
           const redirectUrl = new URL(location, currentUrl).toString();
           
-          // Validate redirect destination for SSRF
-          const isRedirectValid = await this.isValidUrl(redirectUrl);
-          if (!isRedirectValid) {
+          // Validate redirect destination for SSRF and get new pinned IPs
+          const redirectValidation = await this.validateAndResolveUrl(redirectUrl);
+          if (!redirectValidation.isValid) {
             console.warn(`⚠️ Blocked redirect to private/invalid URL: ${redirectUrl}`);
-            clearTimeout(timeout);
             return this.getEmptyWebsiteScan();
           }
           
+          // Update URL and pinned IPs for next iteration
           currentUrl = redirectUrl;
+          currentValidatedIPs = redirectValidation.resolvedIPs;
           redirectCount++;
           continue;
         }
@@ -340,23 +428,14 @@ export class PresenceScannerService {
         break;
       }
       
-      clearTimeout(timeout);
-      
       // Check if we hit redirect limit
       if (redirectCount >= MAX_REDIRECTS) {
         console.warn(`⚠️ Too many redirects for: ${url}`);
         return this.getEmptyWebsiteScan();
       }
       
-      // Check content length
-      const contentLength = response!.headers.get('content-length');
-      if (contentLength && parseInt(contentLength) > 5 * 1024 * 1024) { // 5MB limit
-        console.warn(`⚠️ Website too large: ${url}`);
-        return this.getEmptyWebsiteScan();
-      }
-      
       const loadTime = Date.now() - startTime;
-      const html = await response!.text();
+      const html = response!.body;
 
       // Parse HTML for SEO analysis
       const seoData = this.analyzeSEO(html);
