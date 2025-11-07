@@ -1,4 +1,5 @@
 // Brand Icons - Clean, professional designs with depth and relevance
+import coachCapImage from "@assets/image_1762494642619.png";
 
 interface BrandIconProps {
   className?: string;
@@ -128,60 +129,17 @@ export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
   );
 }
 
-// 3. AI Coach Blue Icon - Compass with chat bubble
+// 3. AI Coach Blue Icon - Baseball cap
 export function CoachBlueIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
-    <svg 
+    <img 
+      src={coachCapImage} 
+      alt="AI Coach Blue" 
       width={size} 
-      height={size} 
-      viewBox="0 0 64 64" 
-      fill="none" 
-      xmlns="http://www.w3.org/2000/svg"
+      height={size}
       className={className}
-    >
-      <defs>
-        <linearGradient id="blueGradCoach" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#0000FF" />
-          <stop offset="100%" stopColor="#3366FF" />
-        </linearGradient>
-        <linearGradient id="orangeGradCoach" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FF6B00" />
-          <stop offset="100%" stopColor="#FF8F33" />
-        </linearGradient>
-        <filter id="shadowCoach">
-          <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.3" />
-        </filter>
-      </defs>
-      
-      {/* Chat bubble background */}
-      <path
-        d="M 12 28 C 12 16 20 8 32 8 C 44 8 52 16 52 28 C 52 40 44 48 32 48 L 24 48 L 20 56 L 22 48 C 16 44 12 36 12 28 Z"
-        fill="url(#blueGradCoach)"
-        filter="url(#shadowCoach)"
-      />
-      
-      {/* Compass outer ring */}
-      <circle cx="32" cy="28" r="14" stroke="url(#orangeGradCoach)" strokeWidth="3" fill="none" />
-      
-      {/* Compass cardinal points */}
-      <circle cx="32" cy="14" r="2.5" fill="#FF6B00" />
-      <circle cx="32" cy="42" r="2.5" fill="#FF6B00" opacity="0.5" />
-      <circle cx="46" cy="28" r="2.5" fill="#FF6B00" opacity="0.5" />
-      <circle cx="18" cy="28" r="2.5" fill="#FF6B00" opacity="0.5" />
-      
-      {/* Compass needle (pointing direction) */}
-      <path d="M 32 28 L 34 18 L 32 20 L 30 18 Z" fill="url(#orangeGradCoach)" />
-      <path d="M 32 28 L 34 38 L 32 36 L 30 38 Z" fill="#FF6B00" opacity="0.4" />
-      
-      {/* Center pivot */}
-      <circle cx="32" cy="28" r="3" fill="url(#orangeGradCoach)" />
-      <circle cx="32" cy="28" r="1.5" fill="white" />
-      
-      {/* Guidance stars */}
-      <circle cx="22" cy="18" r="1.5" fill="#FF6B00" opacity="0.7" />
-      <circle cx="42" cy="18" r="1.5" fill="#FF6B00" opacity="0.7" />
-      <circle cx="38" cy="36" r="1.5" fill="#FF6B00" opacity="0.5" />
-    </svg>
+      style={{ objectFit: 'contain' }}
+    />
   );
 }
 
