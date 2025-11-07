@@ -9,6 +9,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
 import { ClipboardCheck, FileText, Layers, Wrench, Rocket } from "lucide-react";
+import { DigitalIQIcon, CommverseIcon, CoachBlueIcon, BasePlanIcon, ActionPlanIcon, BuildMethodIcon } from "@/components/brand-icons";
 import bbIcon from "@assets/businesblueprint assets/Blueprint_Favicon.png";
 import bbLogo from "@assets/businesblueprint assets/Blueprint_Avatar.png";
 import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
@@ -93,42 +94,94 @@ export default function Home() {
                   </svg>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 relative z-10">businessblueprint.io Process</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">A Blueprint to your growth</h3>
+                <p className="text-sm text-gray-600 mb-6 relative z-10">
+                  Custom digital growth plan based on AI analysis of your business
+                </p>
                 <div className="space-y-4 relative z-10">
-                  <div className="flex items-center text-left border-l-4 border-orange-500 pl-3 py-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center mr-3 flex-shrink-0">
-                      <ClipboardCheck className="w-5 h-5 text-orange-600" />
+                  <div className="flex gap-3 p-3 rounded-lg border-l-4 border-orange-500">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                        <ClipboardCheck className="w-5 h-5 text-orange-600" />
+                      </div>
                     </div>
-                    <div className="bg-orange-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">1</div>
-                    <span className="text-gray-900 font-semibold text-base">Complete your digital assessment</span>
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold shadow-md">1</div>
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900">Complete your digital assessment</div>
+                      <p className="text-sm text-gray-600">
+                        AI analyzes your online presence and scores your Digital IQ
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center text-left border-l-4 border-yellow-500 pl-3 py-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center mr-3 flex-shrink-0">
-                      <FileText className="w-5 h-5 text-yellow-600" />
+                  
+                  <div className="flex gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                        <FileText className="w-5 h-5 text-yellow-600" />
+                      </div>
                     </div>
-                    <div className="bg-yellow-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">2</div>
-                    <span className="text-gray-900 font-semibold text-base">Get your prescribed blueprint</span>
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-yellow-500 text-white flex items-center justify-center font-bold shadow-md">2</div>
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900">Get your prescribed blueprint</div>
+                      <p className="text-sm text-gray-600">
+                        We diagnose your digital presence and prescribe the exact blueprint your business needs to grow
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center text-left border-l-4 border-blue-500 pl-3 py-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center mr-3 flex-shrink-0">
-                      <Layers className="w-5 h-5 text-blue-600" />
+                  
+                  <div className="flex gap-3 p-3 rounded-lg border-l-4 border-blue-500">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                        <Layers className="w-5 h-5 text-blue-600" />
+                      </div>
                     </div>
-                    <div className="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">3</div>
-                    <span className="text-gray-900 font-semibold text-base">Choose your base plan</span>
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold shadow-md">3</div>
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900">Choose your base plan</div>
+                      <p className="text-sm text-gray-600">
+                        Start ($99), Advanced ($299), or Scale ($999) - pick your structural depth
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center text-left border-l-4 border-purple-500 pl-3 py-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center mr-3 flex-shrink-0">
-                      <Wrench className="w-5 h-5 text-purple-600" />
+                  
+                  <div className="flex gap-3 p-3 rounded-lg border-l-4 border-purple-500">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                        <Wrench className="w-5 h-5 text-purple-600" />
+                      </div>
                     </div>
-                    <div className="bg-purple-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">4</div>
-                    <span className="text-gray-900 font-semibold text-base">Select your build method</span>
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold shadow-md">4</div>
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900">Select your build method</div>
+                      <p className="text-sm text-gray-600">
+                        Do It Yourself, Managed Services Provided, or A La Carte (pick modules without base plan)
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center text-left border-l-4 border-green-500 pl-3 py-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center mr-3 flex-shrink-0">
-                      <Rocket className="w-5 h-5 text-green-600" />
+                  
+                  <div className="flex gap-3 p-3 rounded-lg border-l-4 border-green-500">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+                        <Rocket className="w-5 h-5 text-green-600" />
+                      </div>
                     </div>
-                    <div className="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold mr-3 flex-shrink-0 text-sm shadow-md">5</div>
-                    <span className="text-gray-900 font-semibold text-base">Start to Build</span>
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold shadow-md">5</div>
+                    </div>
+                    <div>
+                      <div className="font-bold text-gray-900">Start to Build</div>
+                      <p className="text-sm text-gray-600">
+                        Add Commverse apps, coaching, and access your dashboard
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -180,10 +233,10 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <Card className="border-2 border-blue-200 hover:shadow-xl transition-all">
+            <Card className="border-2 border-blue-200 hover:shadow-xl transition-all" data-testid="card-digital-iq">
               <CardContent className="p-6">
-                <div className="bg-blue-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-2xl">📊</span>
+                <div className="flex items-center justify-center mb-4">
+                  <DigitalIQIcon size={64} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Your Digital IQ Score</h3>
                 <p className="text-gray-600 text-sm">
@@ -192,10 +245,10 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-yellow-200 hover:shadow-xl transition-all">
+            <Card className="border-2 border-yellow-200 hover:shadow-xl transition-all" data-testid="card-base-plan">
               <CardContent className="p-6">
-                <div className="bg-yellow-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-2xl">💰</span>
+                <div className="flex items-center justify-center mb-4">
+                  <BasePlanIcon size={64} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Recommended Base Plan</h3>
                 <p className="text-gray-600 text-sm">
@@ -204,10 +257,10 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-purple-200 hover:shadow-xl transition-all">
+            <Card className="border-2 border-purple-200 hover:shadow-xl transition-all" data-testid="card-commverse">
               <CardContent className="p-6">
-                <div className="bg-purple-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-2xl">🎯</span>
+                <div className="flex items-center justify-center mb-4">
+                  <CommverseIcon size={64} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Commverse Apps + Paths</h3>
                 <p className="text-gray-600 text-sm">
@@ -216,10 +269,10 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-green-200 hover:shadow-xl transition-all">
+            <Card className="border-2 border-green-200 hover:shadow-xl transition-all" data-testid="card-build-method">
               <CardContent className="p-6">
-                <div className="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-2xl">🛠️</span>
+                <div className="flex items-center justify-center mb-4">
+                  <BuildMethodIcon size={64} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Your Build Method</h3>
                 <p className="text-gray-600 text-sm">
@@ -228,10 +281,10 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-orange-200 hover:shadow-xl transition-all">
+            <Card className="border-2 border-orange-200 hover:shadow-xl transition-all" data-testid="card-action-plan">
               <CardContent className="p-6">
-                <div className="bg-orange-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-2xl">📅</span>
+                <div className="flex items-center justify-center mb-4">
+                  <ActionPlanIcon size={64} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">30-Day Action Plan</h3>
                 <p className="text-gray-600 text-sm">
@@ -240,10 +293,10 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-pink-200 hover:shadow-xl transition-all">
+            <Card className="border-2 border-pink-200 hover:shadow-xl transition-all" data-testid="card-ai-coach">
               <CardContent className="p-6">
-                <div className="bg-pink-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <span className="text-2xl">🤖</span>
+                <div className="flex items-center justify-center mb-4">
+                  <CoachBlueIcon size={64} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">AI Coach Guidance</h3>
                 <p className="text-gray-600 text-sm">
@@ -254,7 +307,7 @@ export default function Home() {
           </div>
 
           <div className="text-center">
-            <Button onClick={startAssessment} size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg" data-testid="button-get-prescription">
+            <Button onClick={startAssessment} size="lg" className="bg-[#FF6B00] hover:bg-[#FF5500] text-white px-8 py-6 text-lg" data-testid="button-get-prescription">
               <span className="mr-2">📋</span>
               Get Your Free Prescription Now
             </Button>
