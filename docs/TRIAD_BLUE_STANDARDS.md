@@ -62,6 +62,30 @@ Lowercase paths only: `/send`, `/inbox`, `/content`, `/livechat`
 
 **Implementation:** Each icon uses a light background tint (10% opacity) with the icon at 20px (w-5 h-5) inside a 32px rounded container.
 
+### Brand Icons (LOCKED - DO NOT CHANGE)
+**⚠️ These brand icons are the official visual identity for key products/concepts:**
+
+All brand icons follow the same style:
+- **Primary Color:** TriadBlue (#0000FF) for head silhouette
+- **Accent Color:** Vivid Orange (#FF6B00) for internal symbols
+- **File Location:** `client/src/components/brand-icons.tsx`
+
+**The 6 Official Brand Icons:**
+1. **DigitalIQIcon** - Head with "IQ" text + brain gears
+2. **CommverseIcon** - Head with 4 connected app nodes (grid pattern)
+3. **CoachBlueIcon** - Head with compass/guidance symbol
+4. **BasePlanIcon** - Head with stacked tier layers
+5. **ActionPlanIcon** - Head with calendar + checkmarks
+6. **BuildMethodIcon** - Head with crossed wrench + hammer
+
+**Usage Rules:**
+- Import from `@/components/brand-icons`
+- Default size: 64px (customizable via `size` prop)
+- Can add custom className for positioning/spacing
+- Icons are SVG React components for sharp rendering at any size
+- Do NOT modify SVG paths without owner approval
+- These replace all PNG/raster versions
+
 ---
 
 ## 🧠 Terminology
