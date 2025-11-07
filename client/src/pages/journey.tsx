@@ -21,7 +21,7 @@ import aiCoachIcon from "@assets/native icons and favicons/AI Business Coach Blu
 import { BrandLogo } from "@/components/brand-logo";
 import blueprintIcon from "@assets/businesblueprint assets/Blueprint_Avatar.png";
 import digitalSuccessIcon from "@assets/native icons and favicons/digital success accellerated revenue.png";
-import digitalAssessmentIcon from "@assets/native icons and favicons/Digital Assessment_1762239599462.png";
+import digitalAssessmentIcon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
 import digitalPathIcon from "@assets/native icons and favicons/digital path.png";
 import digitalJourneyIcon from "@assets/native icons and favicons/digital path.png";
 

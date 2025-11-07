@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Check } from 'lucide-react';
 
-import digitalAssessmentImg from '@assets/native icons and favicons/Digital Assessment_1762239599462.png';
+import digitalAssessmentImg from '@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png';
 import digitalPathImg from '@assets/native icons and favicons/digital path.png';
 import localSeoImg from '@assets/native icons and favicons/LOCAL SEO_1762239599463.png';
 import sendAppImg from '@assets/native icons and favicons/: send app icon.png';

@@ -55,7 +55,6 @@ import commverseIcon from "@assets/native icons and favicons/: commverse.png";
 import coachBlueIcon from "@assets/native icons and favicons/AI Business Coach Reworked.png";
 import captainingIcon from "@assets/native icons and favicons/Captaining Icon.png";
 import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
-import digitalAssessmentIcon from "@assets/native icons and favicons/Digital Assessment_1762239599462.png";
 import diyIcon from "@assets/native icons and favicons/diy.png";
 import managedServicesIcon from "@assets/native icons and favicons/managed-services.png";
 import step1Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
