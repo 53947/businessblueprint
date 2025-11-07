@@ -1,5 +1,4 @@
 // Brand Icons - Clean, professional designs with depth and relevance
-import coachCapImage from "@assets/image_1762494642619.png";
 
 interface BrandIconProps {
   className?: string;
@@ -129,17 +128,55 @@ export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
   );
 }
 
-// 3. AI Coach Blue Icon - Baseball cap
+// 3. AI Coach Blue Icon - Baseball cap (vector version)
 export function CoachBlueIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
-    <img 
-      src={coachCapImage} 
-      alt="AI Coach Blue" 
+    <svg 
       width={size} 
-      height={size}
+      height={size} 
+      viewBox="0 0 64 64" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
       className={className}
-      style={{ objectFit: 'contain' }}
-    />
+    >
+      <defs>
+        <linearGradient id="blueGradCoach" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#3366FF" />
+          <stop offset="100%" stopColor="#0000FF" />
+        </linearGradient>
+        <linearGradient id="orangeGradCoach" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#FF8F33" />
+          <stop offset="100%" stopColor="#FF6B00" />
+        </linearGradient>
+        <filter id="shadowCoach">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.3" />
+        </filter>
+      </defs>
+      
+      {/* Cap crown/dome */}
+      <ellipse cx="32" cy="24" rx="20" ry="12" fill="url(#blueGradCoach)" filter="url(#shadowCoach)" />
+      
+      {/* Cap panels - front sections */}
+      <path d="M 12 24 Q 12 18 22 16 L 22 24 Z" fill="#0033CC" opacity="0.3" />
+      <path d="M 42 16 Q 52 18 52 24 L 42 24 Z" fill="#0033CC" opacity="0.3" />
+      
+      {/* Button on top */}
+      <circle cx="32" cy="18" r="2.5" fill="#0033CC" />
+      <circle cx="32" cy="18" r="1.5" fill="#001199" />
+      
+      {/* Cap brim - curved forward projection */}
+      <ellipse cx="32" cy="32" rx="24" ry="6" fill="url(#blueGradCoach)" filter="url(#shadowCoach)" />
+      
+      {/* Brim underside shadow */}
+      <ellipse cx="32" cy="32" rx="22" ry="4" fill="#000033" opacity="0.4" />
+      
+      {/* Brim edge highlight */}
+      <path d="M 10 30 Q 32 28 54 30" stroke="#4477FF" strokeWidth="1" opacity="0.6" fill="none" />
+      
+      {/* Logo/accent on front of cap */}
+      <circle cx="32" cy="22" r="4" fill="url(#orangeGradCoach)" opacity="0.9" />
+      <circle cx="32" cy="22" r="2" fill="#FF6B00" />
+    </svg>
   );
 }
 
