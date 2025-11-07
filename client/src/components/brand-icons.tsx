@@ -87,7 +87,7 @@ export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
   );
 }
 
-// 3. AI Coach Blue Icon - Baseball hat + whistle
+// 3. AI Coach Blue Icon - Baseball cap + whistle
 export function CoachBlueIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <svg 
@@ -101,21 +101,36 @@ export function CoachBlueIcon({ className = "", size = 64 }: BrandIconProps) {
       <circle cx="32" cy="32" r="28" fill="#0000FF" />
       <circle cx="32" cy="32" r="24" fill="#0033AA" opacity="0.3" />
       
-      {/* Baseball cap */}
-      <ellipse cx="32" cy="26" rx="12" ry="4" fill="#FF6B00" />
-      <path d="M 20 26 L 20 30 Q 20 34 24 34 L 40 34 Q 44 34 44 30 L 44 26" fill="#FF6B00" />
-      <ellipse cx="32" cy="22" rx="10" ry="3" fill="#FF6B00" opacity="0.6" />
+      {/* Baseball cap - dome/crown */}
+      <path 
+        d="M 20 26 Q 20 18 32 18 Q 44 18 44 26 L 44 28 Q 44 30 42 30 L 22 30 Q 20 30 20 28 Z" 
+        fill="#FF6B00"
+      />
       
-      {/* Cap brim (extended front) */}
-      <ellipse cx="38" cy="26" rx="8" ry="2" fill="#FF6B00" opacity="0.8" />
+      {/* Cap brim - extending forward */}
+      <ellipse cx="35" cy="28" rx="11" ry="3.5" fill="#FF6B00" opacity="0.9" />
       
-      {/* Whistle */}
-      <circle cx="28" cy="44" r="4" fill="#FF6B00" stroke="#FF6B00" strokeWidth="1.5" />
-      <rect x="26" y="40" width="4" height="4" fill="#FF6B00" />
-      <line x1="28" y1="40" x2="28" y2="36" stroke="#FF6B00" strokeWidth="2" />
+      {/* Cap button/logo on top */}
+      <circle cx="32" cy="20" r="2" fill="#0000FF" opacity="0.5" />
       
-      {/* Whistle string */}
-      <path d="M 28 36 Q 32 38 32 34" stroke="#FF6B00" strokeWidth="1.5" fill="none" opacity="0.6" />
+      {/* Whistle body - round with hole */}
+      <ellipse cx="28" cy="42" rx="5" ry="4" fill="#FF6B00" />
+      <circle cx="28" cy="42" r="1.5" fill="#0000FF" />
+      
+      {/* Whistle mouthpiece */}
+      <rect x="23" y="41" width="3" height="2" rx="1" fill="#FF6B00" />
+      
+      {/* Whistle pea/ball inside */}
+      <circle cx="29" cy="42" r="0.8" fill="#0000FF" opacity="0.6" />
+      
+      {/* Lanyard/string */}
+      <path 
+        d="M 28 38 Q 32 36 32 32" 
+        stroke="#FF6B00" 
+        strokeWidth="1.5" 
+        fill="none"
+        strokeDasharray="2,2"
+      />
     </svg>
   );
 }
