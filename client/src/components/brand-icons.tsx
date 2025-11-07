@@ -2,7 +2,7 @@
 import coachBlueIcon from "@assets/Coach Blue_1762535930955.png";
 import commverseIcon from "@assets/Commverse_1762535930956.png";
 import digitalIQIcon from "@assets/Digital IQ_1762535930956.png";
-import digitalAssessmentIconImage from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
+import step1Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
 
 interface BrandIconProps {
   className?: string;
@@ -23,11 +23,11 @@ export function DigitalIQIcon({ className = "", size = 64 }: BrandIconProps) {
   );
 }
 
-// 2. Digital Assessment Icon - For assessment action/CTA buttons
+// 2. Digital Assessment Icon - For assessment action/CTA buttons (uses custom step1Icon)
 export function DigitalAssessmentIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <img 
-      src={digitalAssessmentIconImage} 
+      src={step1Icon} 
       alt="Digital Assessment" 
       width={size} 
       height={size}
