@@ -56,7 +56,7 @@ export function AICoach({ assessmentData }: AICoachProps) {
       name: assessmentData?.businessName || "Your Business",
       industry: assessmentData?.industry || "Service",
       location: assessmentData?.location || "Local Area",
-      digitalScore: assessmentData?.digitalScore || 65,
+      digitalScore: assessmentData?.digitalScore || 85,
       currentStage: "optimization"
     },
     userProgress: {
@@ -253,10 +253,10 @@ Track your achievements and get insights on your digital marketing progress
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>Digital Score Progress</span>
-                  <span>{coachingContext.businessInfo.digitalScore}/100</span>
+                  <span>Digital IQ Score</span>
+                  <span>{coachingContext.businessInfo.digitalScore}/140</span>
                 </div>
-                <Progress value={coachingContext.businessInfo.digitalScore} className="w-full" />
+                <Progress value={(coachingContext.businessInfo.digitalScore / 140) * 100} className="w-full" />
               </div>
 
               <Button 
