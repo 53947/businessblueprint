@@ -27,7 +27,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
     {
       icon: TrendingUp,
       title: "Progress Tracking & Analytics",
-      description: "Monitor your digital score improvements with detailed insights"
+      description: "Monitor your Digital IQ Score improvements with detailed insights"
     },
     {
       icon: Users,

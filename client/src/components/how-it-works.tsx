@@ -31,7 +31,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
               <BarChart3 className="w-8 h-8 text-secondary group-hover:text-white" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-4">2. Custom Report</h3>
-            <p className="text-gray-600">Receive a detailed email report with your digital score and specific recommendations to improve your online presence</p>
+            <p className="text-gray-600">Receive a detailed email report with your Digital IQ Score and specific recommendations to improve your online presence</p>
           </div>
 
           {/* Step 3 */}
@@ -47,13 +47,14 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
         {/* CTA Section */}
         <Card className="bg-gradient-to-r from-primary via-secondary to-blue-600 text-white text-center">
           <CardContent className="p-8">
-            <h3 className="text-2xl font-bold mb-4">Ready to See Your Digital Score?</h3>
+            <h3 className="text-2xl font-bold mb-4">Ready to See Your Digital IQ Score?</h3>
             <p className="text-lg mb-6 opacity-90">Join 10,000+ businesses who've improved their online presence</p>
             <Button 
               onClick={onStartAssessment}
               className="bg-white text-gray-900 hover:bg-gray-100 font-medium"
+              data-testid="button-get-digital-iq"
             >
-              Start Free Assessment Now
+              Get Your Digital IQ Score
             </Button>
           </CardContent>
         </Card>

@@ -45,15 +45,15 @@ export function AssessmentForm() {
     },
     onSuccess: (data) => {
       toast({
-        title: "Assessment Started!",
-        description: "We're analyzing your business. You'll receive results via email within 24 hours.",
+        title: "Digital IQ Analysis Started!",
+        description: "We're calculating your Digital IQ Score. You'll receive results via email within 2-3 minutes.",
       });
       setLocation(`/dashboard/${data.assessmentId}`);
     },
     onError: (error) => {
       toast({
         title: "Error",
-        description: "Failed to start assessment. Please try again.",
+        description: "Failed to start Digital IQ analysis. Please try again.",
         variant: "destructive",
       });
     },
@@ -106,10 +106,10 @@ export function AssessmentForm() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Start Your Free Business Assessment
+            Get Your Digital IQ Score
           </h1>
           <p className="text-xl text-gray-600">
-            Tell us about your business and we'll analyze your digital presence using Google's data
+            Tell us about your business and we'll analyze your digital presence to calculate your Digital IQ Score (70-140)
           </p>
         </div>
 
@@ -271,9 +271,9 @@ export function AssessmentForm() {
                 <div className="space-y-6">
                   <div className="text-center mb-6">
                     <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">Ready to Analyze Your Business</h3>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">Ready to Get Your Digital IQ Score</h3>
                     <p className="text-gray-600">
-                      Review your information below, then click submit to start your free assessment.
+                      Review your information below, then submit to calculate your Digital IQ Score (70-140).
                     </p>
                   </div>
 
@@ -318,10 +318,10 @@ export function AssessmentForm() {
                       <div>
                         <h4 className="font-medium text-green-900">What happens next:</h4>
                         <ul className="text-sm text-green-800 mt-2 space-y-1">
-                          <li>• AI analyzes your Google Business presence</li>
-                          <li>• Comprehensive report generated with your digital score</li>
-                          <li>• Personalized recommendations sent to your email</li>
-                          <li>• Choose between DIY or managed service options</li>
+                          <li>• AI analyzes your digital presence across Google, Yelp & more</li>
+                          <li>• Your Digital IQ Score (70-140) is calculated</li>
+                          <li>• Comprehensive report with personalized recommendations</li>
+                          <li>• Choose your path: DIY or managed services</li>
                         </ul>
                       </div>
                     </div>
@@ -345,17 +345,18 @@ export function AssessmentForm() {
                   )}
                   
                   {currentStep < steps.length - 1 ? (
-                    <Button type="button" onClick={handleNext} className="bg-primary hover:bg-primary/90">
-                      Continue Assessment
+                    <Button type="button" onClick={handleNext} className="bg-primary hover:bg-primary/90" data-testid="button-continue">
+                      Continue
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   ) : (
                     <Button 
                       type="submit" 
                       disabled={createAssessmentMutation.isPending}
-                      className="bg-primary hover:bg-primary/90"
+                      className="bg-orange-500 hover:bg-orange-600"
+                      data-testid="button-submit-digital-iq"
                     >
-                      {createAssessmentMutation.isPending ? "Analyzing..." : "Start Analysis"}
+                      {createAssessmentMutation.isPending ? "Calculating Your Digital IQ..." : "Get My Digital IQ Score"}
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   )}

@@ -122,22 +122,24 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           </div>
 
                           <div className="space-y-4">
-                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-orange-500">
-                              <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
-                                  <ClipboardCheck className="w-5 h-5 text-orange-600" />
+                            <Link href="/assessment" className="block" data-testid="link-how-it-works-step1-digital-iq">
+                              <div className="flex gap-3 p-3 rounded-lg border-l-4 border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950 transition-colors cursor-pointer">
+                                <div className="flex-shrink-0">
+                                  <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                                    <ClipboardCheck className="w-5 h-5 text-orange-600" />
+                                  </div>
+                                </div>
+                                <div className="flex-shrink-0">
+                                  <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold shadow-md">1</div>
+                                </div>
+                                <div>
+                                  <div className="font-bold text-gray-900 dark:text-white">Start Your Digital IQ</div>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    AI analyzes your online presence and scores your Digital IQ (70-140)
+                                  </p>
                                 </div>
                               </div>
-                              <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold shadow-md">1</div>
-                              </div>
-                              <div>
-                                <div className="font-bold text-gray-900 dark:text-white">Complete your digital assessment</div>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  AI analyzes your online presence and scores your Digital IQ
-                                </p>
-                              </div>
-                            </div>
+                            </Link>
 
                             <div className="flex gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
                               <div className="flex-shrink-0">
@@ -210,8 +212,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                           <div className="mt-6">
                             <Link href="/assessment">
-                              <Button className="w-full" data-testid="button-start-assessment">
-                                Start Your Free Assessment →
+                              <Button className="w-full bg-orange-500 hover:bg-orange-600" data-testid="button-start-digital-iq">
+                                Get Your Digital IQ Score →
                               </Button>
                             </Link>
                           </div>
@@ -563,8 +565,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   </div>
                                 </div>
                                 <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
+                                  <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> <Link href="/assessment" className="hover:text-orange-500 underline" data-testid="link-solutions-digital-iq">Digital IQ Scanner</Link> - Get your score (70-140)</li>
                                   <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> AI-powered assessment & coaching</li>
-                                  <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> Digital IQ scoring</li>
                                   <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> Complete communication suite</li>
                                   <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> Dashboard & analytics</li>
                                 </ul>
@@ -906,11 +908,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 </a>
                 <a
                   href="/assessment"
-                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md text-sm font-medium transition-colors whitespace-nowrap"
-                  data-testid="button-signup"
+                  className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md text-sm font-bold transition-colors whitespace-nowrap shadow-md"
+                  data-testid="button-digital-iq"
                 >
-                  <img src={userPlusIcon} alt="" className="w-5 h-5 opacity-90" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
-                  <span className="font-bold">Sign Up</span>
+                  <ClipboardCheck className="w-5 h-5" />
+                  <span>Digital IQ</span>
                 </a>
               </>
             )}

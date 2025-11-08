@@ -93,7 +93,7 @@ Help a ${userContext.userProgress.experience} level business owner complete this
 
 Business context:
 - Industry: ${userContext.businessInfo.industry}
-- Current digital score: ${userContext.businessInfo.digitalScore}/100
+- Current Digital IQ Score: ${userContext.businessInfo.digitalScore}/140
 - Time available: ${userContext.userProgress.timeAvailable}
 
 Provide detailed step-by-step instructions, practical tips, common mistakes to avoid, and how to measure success.
@@ -134,7 +134,7 @@ Provide detailed step-by-step instructions, practical tips, common mistakes to a
 Analyze the progress of this business:
 - Completed steps: ${context.userProgress.completedSteps.join(", ")}
 - Current goals: ${context.userProgress.currentGoals.join(", ")}
-- Digital score: ${context.businessInfo.digitalScore}/100
+- Digital IQ Score: ${context.businessInfo.digitalScore}/140
 - Industry: ${context.businessInfo.industry}
 
 Provide an encouraging progress analysis with specific achievements and next priorities.
@@ -176,7 +176,7 @@ Business Profile:
 - Name: ${context.businessInfo.name}
 - Industry: ${context.businessInfo.industry}
 - Location: ${context.businessInfo.location}
-- Current Digital Score: ${context.businessInfo.digitalScore}/100
+- Current Digital IQ Score: ${context.businessInfo.digitalScore}/140
 
 User Profile:
 - Experience Level: ${context.userProgress.experience}
@@ -224,7 +224,7 @@ Format as JSON with actionItems array containing task, priority, estimatedTime, 
         }
       ],
       encouragement: "You're on the right track! Every step forward improves your online presence.",
-      nextMilestone: "Achieve a 70+ digital score"
+      nextMilestone: "Achieve a 100+ Digital IQ Score"
     };
   }
 
