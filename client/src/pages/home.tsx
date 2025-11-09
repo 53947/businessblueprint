@@ -573,7 +573,7 @@ export default function Home() {
                     <span className="text-gray-700 text-sm">Enhanced Analytics</span>
                   </li>
                 </ul>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" data-testid="button-choose-advanced-plan">
+                <Button className="w-full border-2 border-blue-600 text-blue-600 bg-transparent hover:bg-blue-600 hover:text-white transition-all" data-testid="button-choose-advanced-plan">
                   Choose Advanced
                 </Button>
               </CardContent>
@@ -615,7 +615,7 @@ export default function Home() {
                     <span className="text-gray-700 text-sm">White-label Options</span>
                   </li>
                 </ul>
-                <Button className="w-full bg-green-600 hover:bg-green-700 text-white" data-testid="button-choose-scale-plan">
+                <Button className="w-full border-2 border-green-600 text-green-600 bg-transparent hover:bg-green-600 hover:text-white transition-all" data-testid="button-choose-scale-plan">
                   Choose Scale
                 </Button>
               </CardContent>
