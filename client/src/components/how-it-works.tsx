@@ -51,7 +51,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
             <p className="text-lg mb-6 opacity-90">Join 10,000+ businesses who've improved their online presence</p>
             <Button 
               onClick={onStartAssessment}
-              className="bg-white text-gray-900 hover:bg-gray-100 font-medium"
+              className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-primary transition-all font-medium"
               data-testid="button-get-digital-iq"
             >
               Get Your Digital IQ Score
