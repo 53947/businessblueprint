@@ -12,7 +12,7 @@ export function Footer() {
             <BrandLogo brand="businessblueprint" variant="dark" size="xl" />
           </div>
           <p className="text-gray-800 text-sm mt-4 max-w-2xl mx-auto">
-            Helping local businesses succeed online. Get found, get customers, get business.
+            We Assess. We Prescribe. You Grow.
           </p>
           <div className="flex items-center justify-center gap-4 mt-4">
             <BrandLogoCompact brand="hostsblue" variant="dark" />
