@@ -1,6 +1,6 @@
 // Brand Icons - Official brand assets
 import coachBlueIcon from "@assets/Coach Blue as Blue_1762721690836.png";
-import commverseIcon from "@assets/Commverse_1762535930956.png";
+import commverseIcon from "@assets/Commverse_1762731195351.png";
 import digitalIQIcon from "@assets/Digital IQ_1762535930956.png";
 import step1Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
 

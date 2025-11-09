@@ -50,8 +50,8 @@ import livechatIcon from "@assets/native icons and favicons/: livechat app icon.
 import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
 import blueprintIcon from "@assets/Blueprint_Favicon_1762489845363.png";
-import commverseBundle from "@assets/logos and wordmarks/: commverse bundle logo.png";
-import commverseIcon from "@assets/native icons and favicons/: commverse.png";
+import commverseBundle from "@assets/_ commverse bundle logo_1762731789054.png";
+import commverseIcon from "@assets/Commverse_1762731195351.png";
 import coachBlueIcon from "@assets/Coach Blue as Blue_1762721690836.png";
 import captainingIcon from "@assets/native icons and favicons/Captaining Icon.png";
 import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
@@ -203,8 +203,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                               <div>
                                 <div className="font-bold text-gray-900 dark:text-white">Start to Build</div>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  Add Commverse apps, coaching, and access your dashboard
+                                <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center flex-wrap gap-1">
+                                  Add <img src={commverseBundle} alt="commverse" className="h-4 inline-block" /> apps, coaching, and access your dashboard
                                 </p>
                               </div>
                             </div>
