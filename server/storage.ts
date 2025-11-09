@@ -8,10 +8,6 @@ import {
   sendContacts,
   sendLists,
   sendListContacts,
-  synupLocations,
-  synupListings,
-  synupReviews,
-  reviewNotificationPreferences,
   brandAssets,
   users,
   magicLinkTokens,
@@ -29,14 +25,6 @@ import {
   type InsertSendContact,
   type SendList,
   type InsertSendList,
-  type SynupLocation,
-  type InsertSynupLocation,
-  type SynupListing,
-  type InsertSynupListing,
-  type SynupReview,
-  type InsertSynupReview,
-  type ReviewNotificationPreferences,
-  type InsertReviewNotificationPreferences,
   type BrandAsset,
   type InsertBrandAsset,
   type User,
@@ -112,27 +100,6 @@ export interface IStorage {
   addContactToList(listId: number, contactId: number): Promise<void>;
   removeContactFromList(listId: number, contactId: number): Promise<void>;
   getListContacts(listId: number): Promise<SendContact[]>;
-  
-  // Synup operations
-  createSynupLocation(location: InsertSynupLocation): Promise<SynupLocation>;
-  getSynupLocationsByClient(clientId: number): Promise<SynupLocation[]>;
-  getSynupLocation(id: number): Promise<SynupLocation | undefined>;
-  getSynupLocationBySynupId(synupLocationId: string): Promise<SynupLocation | undefined>;
-  updateSynupLocation(id: number, data: Partial<SynupLocation>): Promise<SynupLocation>;
-  
-  createSynupListing(listing: InsertSynupListing): Promise<SynupListing>;
-  getSynupListingsByLocation(locationId: number): Promise<SynupListing[]>;
-  updateSynupListing(id: number, data: Partial<SynupListing>): Promise<SynupListing>;
-  
-  createSynupReview(review: InsertSynupReview): Promise<SynupReview>;
-  getSynupReview(id: number): Promise<SynupReview | undefined>;
-  getSynupReviewsByLocation(locationId: number): Promise<SynupReview[]>;
-  updateSynupReview(id: number, data: Partial<SynupReview>): Promise<SynupReview>;
-  
-  // Review notification preferences
-  createReviewNotificationPreferences(preferences: InsertReviewNotificationPreferences): Promise<ReviewNotificationPreferences>;
-  getReviewNotificationPreferences(clientId: number): Promise<ReviewNotificationPreferences | undefined>;
-  updateReviewNotificationPreferences(clientId: number, data: Partial<ReviewNotificationPreferences>): Promise<ReviewNotificationPreferences>;
   
   // Brand assets operations
   createBrandAsset(asset: InsertBrandAsset): Promise<BrandAsset>;
@@ -456,134 +423,6 @@ export class DatabaseStorage implements IStorage {
       .where(eq(sendListContacts.listId, listId));
     
     return result.map(row => row.contact);
-  }
-
-  // Synup Location operations
-  async createSynupLocation(locationData: InsertSynupLocation): Promise<SynupLocation> {
-    const [location] = await db
-      .insert(synupLocations)
-      .values(locationData)
-      .returning();
-    return location;
-  }
-
-  async getSynupLocationsByClient(clientId: number): Promise<SynupLocation[]> {
-    return await db
-      .select()
-      .from(synupLocations)
-      .where(eq(synupLocations.clientId, clientId))
-      .orderBy(desc(synupLocations.createdAt));
-  }
-
-  async getSynupLocation(id: number): Promise<SynupLocation | undefined> {
-    const [location] = await db
-      .select()
-      .from(synupLocations)
-      .where(eq(synupLocations.id, id));
-    return location;
-  }
-
-  async getSynupLocationBySynupId(synupLocationId: string): Promise<SynupLocation | undefined> {
-    const [location] = await db
-      .select()
-      .from(synupLocations)
-      .where(eq(synupLocations.synupLocationId, synupLocationId));
-    return location;
-  }
-
-  async updateSynupLocation(id: number, data: Partial<SynupLocation>): Promise<SynupLocation> {
-    const [location] = await db
-      .update(synupLocations)
-      .set({ ...data, updatedAt: new Date() })
-      .where(eq(synupLocations.id, id))
-      .returning();
-    return location;
-  }
-
-  // Synup Listing operations
-  async createSynupListing(listingData: InsertSynupListing): Promise<SynupListing> {
-    const [listing] = await db
-      .insert(synupListings)
-      .values(listingData)
-      .returning();
-    return listing;
-  }
-
-  async getSynupListingsByLocation(locationId: number): Promise<SynupListing[]> {
-    return await db
-      .select()
-      .from(synupListings)
-      .where(eq(synupListings.locationId, locationId))
-      .orderBy(desc(synupListings.updatedAt));
-  }
-
-  async updateSynupListing(id: number, data: Partial<SynupListing>): Promise<SynupListing> {
-    const [listing] = await db
-      .update(synupListings)
-      .set({ ...data, updatedAt: new Date() })
-      .where(eq(synupListings.id, id))
-      .returning();
-    return listing;
-  }
-
-  // Synup Review operations
-  async createSynupReview(reviewData: InsertSynupReview): Promise<SynupReview> {
-    const [review] = await db
-      .insert(synupReviews)
-      .values(reviewData)
-      .returning();
-    return review;
-  }
-
-  async getSynupReview(id: number): Promise<SynupReview | undefined> {
-    const [review] = await db
-      .select()
-      .from(synupReviews)
-      .where(eq(synupReviews.id, id));
-    return review;
-  }
-
-  async getSynupReviewsByLocation(locationId: number): Promise<SynupReview[]> {
-    return await db
-      .select()
-      .from(synupReviews)
-      .where(eq(synupReviews.locationId, locationId))
-      .orderBy(desc(synupReviews.reviewDate));
-  }
-
-  async updateSynupReview(id: number, data: Partial<SynupReview>): Promise<SynupReview> {
-    const [review] = await db
-      .update(synupReviews)
-      .set({ ...data, updatedAt: new Date() })
-      .where(eq(synupReviews.id, id))
-      .returning();
-    return review;
-  }
-
-  // Review notification preferences operations
-  async createReviewNotificationPreferences(preferencesData: InsertReviewNotificationPreferences): Promise<ReviewNotificationPreferences> {
-    const [preferences] = await db
-      .insert(reviewNotificationPreferences)
-      .values(preferencesData)
-      .returning();
-    return preferences;
-  }
-
-  async getReviewNotificationPreferences(clientId: number): Promise<ReviewNotificationPreferences | undefined> {
-    const [preferences] = await db
-      .select()
-      .from(reviewNotificationPreferences)
-      .where(eq(reviewNotificationPreferences.clientId, clientId));
-    return preferences;
-  }
-
-  async updateReviewNotificationPreferences(clientId: number, data: Partial<ReviewNotificationPreferences>): Promise<ReviewNotificationPreferences> {
-    const [preferences] = await db
-      .update(reviewNotificationPreferences)
-      .set({ ...data, updatedAt: new Date() })
-      .where(eq(reviewNotificationPreferences.clientId, clientId))
-      .returning();
-    return preferences;
   }
 
   // Brand asset operations
