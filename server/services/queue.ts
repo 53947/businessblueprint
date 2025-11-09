@@ -3,7 +3,6 @@
 
 // Empty export for backwards compatibility
 export const contentPublishQueue = null;
-export const synupSyncQueue = null;
 export const redisConnection = null;
 export const redisAvailable = false;
 

@@ -765,7 +765,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Client not found" });
       }
 
-      // Real data will come from Synup APIs
+      // Mock data - native listings implementation coming soon
       const listings = {
         total: 45,
         verified: 38,

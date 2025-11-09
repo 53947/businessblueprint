@@ -9,8 +9,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { SideNav } from "@/components/side-nav";
-import { SynupListings } from "@/components/synup-listings";
-import { SynupReviews } from "@/components/synup-reviews";
 import { BrandLogo } from "@/components/brand-logo";
 import ContentManagement from "@/pages/content-management";
 import { 
@@ -610,12 +608,46 @@ export default function ClientPortal() {
 
           {/* Listings Tab */}
           <TabsContent value="listings">
-            <SynupListings />
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="w-5 h-5" />
+                  Business Listings Management
+                </CardTitle>
+                <CardDescription>Manage your business presence across directories and platforms</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <Globe className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">Native Listings Management Coming Soon</h3>
+                  <p className="text-gray-600 max-w-md mx-auto">
+                    We're building a powerful, 100% autonomous listings platform. Check back soon for updates!
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Reviews Tab */}
           <TabsContent value="reviews">
-            <SynupReviews />
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="w-5 h-5" />
+                  Review & Reputation Management
+                </CardTitle>
+                <CardDescription>Monitor and respond to reviews across all platforms</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <MessageSquare className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">Native Review Management Coming Soon</h3>
+                  <p className="text-gray-600 max-w-md mx-auto">
+                    We're building a powerful, 100% autonomous review platform. Check back soon for updates!
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Campaigns Tab */}
