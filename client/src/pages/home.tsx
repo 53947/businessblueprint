@@ -279,7 +279,9 @@ export default function Home() {
                 <div className="flex items-center justify-center mb-4">
                   <CommverseIcon size={64} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Commverse Apps + Paths</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center justify-center gap-2">
+                  <img src={commverseBundle} alt="commverse" className="h-6 inline-block" /> Apps + Paths
+                </h3>
                 <p className="text-gray-600 text-sm">
                   Which apps you need (/send, /inbox, /livechat, /content) and SPECIFIC PATHS tailored to your business type.
                 </p>
@@ -340,8 +342,8 @@ export default function Home() {
             <div className="inline-block bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
               💬 COMPLETE COMMUNICATIONS SUITE
             </div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Talk to the Universe with <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>CommVerse</span>
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 flex items-center justify-center gap-3 flex-wrap">
+              Talk to the Universe with <img src={commverseBundle} alt="commverse" className="h-12 inline-block" />
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Get all 4 communication apps together and save $40/month. A complete suite to connect with your customers anywhere, anytime.
@@ -488,8 +490,8 @@ export default function Home() {
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
               Three Plans. <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>One Prescription</span>.
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Choose your base plan based on business size. Commverse apps are prescribed separately and available in our marketplace.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto flex items-center justify-center gap-2 flex-wrap">
+              Choose your base plan based on business size. <img src={commverseBundle} alt="commverse" className="h-5 inline-block" /> apps are prescribed separately and available in our marketplace.
             </p>
           </div>
 
@@ -636,8 +638,8 @@ export default function Home() {
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
               Not Just Apps. <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>Prescribed Paths</span>.
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Based on your Digital IQ, we prescribe which Commverse apps you need AND the specific paths within each app. Available a la carte or as bundles in our marketplace.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 flex items-center justify-center gap-2 flex-wrap">
+              Based on your Digital IQ, we prescribe which <img src={commverseBundle} alt="commverse" className="h-5 inline-block" /> apps you need AND the specific paths within each app. Available a la carte or as bundles in our marketplace.
             </p>
             <div className="bg-orange-50 border-2 border-orange-200 rounded-xl p-6 max-w-2xl mx-auto">
               <p className="text-orange-900 font-semibold">
