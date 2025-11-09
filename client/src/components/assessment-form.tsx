@@ -353,7 +353,7 @@ export function AssessmentForm() {
                     <Button 
                       type="submit" 
                       disabled={createAssessmentMutation.isPending}
-                      className="bg-orange-500 hover:bg-orange-600"
+                      className="border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       data-testid="button-submit-digital-iq"
                     >
                       {createAssessmentMutation.isPending ? "Calculating Your Digital IQ..." : "Get My Digital IQ Score"}

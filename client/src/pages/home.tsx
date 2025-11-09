@@ -528,7 +528,7 @@ export default function Home() {
                     <span className="text-gray-700 text-sm">Basic Support</span>
                   </li>
                 </ul>
-                <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white" data-testid="button-choose-start-plan">
+                <Button className="w-full border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white transition-all" data-testid="button-choose-start-plan">
                   Choose Start
                 </Button>
               </CardContent>
