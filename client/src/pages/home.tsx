@@ -324,7 +324,7 @@ export default function Home() {
           </div>
 
           <div className="text-center">
-            <Button onClick={startAssessment} size="lg" className="bg-[#FF6B00] hover:bg-[#FF5500] text-white px-8 py-6 text-lg" data-testid="button-get-prescription">
+            <Button onClick={startAssessment} size="lg" className="border-2 border-[#FF6B00] text-[#FF6B00] bg-transparent hover:bg-[#FF6B00] hover:text-white transition-all px-8 py-6 text-lg" data-testid="button-get-prescription">
               <span className="mr-2">📋</span>
               Get Your Free Prescription Now
             </Button>
