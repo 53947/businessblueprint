@@ -424,7 +424,7 @@ export default function Home() {
                       💰 SAVE $40/MONTH
                     </div>
                     <div className="flex items-center justify-center mb-4">
-                      <img src={commverseIcon} alt="commverse icon" className="h-20 w-20 object-contain" />
+                      <CommverseIcon size={80} />
                     </div>
                     <img src={commverseBundle} alt="commverse bundle" className="h-10 mx-auto mb-4" />
                     <p className="text-gray-600 mb-6">All 4 communication apps included</p>
@@ -457,7 +457,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <Button className="w-full bg-[#FF6B00] hover:bg-[#FF5500] text-white text-lg py-6" data-testid="button-get-commverse-bundle">
+                  <Button className="w-full border-2 border-[#FF6B00] text-[#FF6B00] bg-transparent hover:bg-[#FF6B00] hover:text-white transition-all text-lg py-6" data-testid="button-get-commverse-bundle">
                     Get CommVerse Bundle
                   </Button>
                   <p className="text-center text-xs text-gray-500 mt-3">
