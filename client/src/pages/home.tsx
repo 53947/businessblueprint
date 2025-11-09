@@ -789,7 +789,7 @@ export default function Home() {
                     <BrandLogo brand="hostsblue" size="md" showIcon={true} />
                   </div>
                 </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">Web Services Platform</p>
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">Web Services & MSP Partner</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
                   <li>• High-performance hosting</li>
                   <li>• Domain management</li>
@@ -808,7 +808,7 @@ export default function Home() {
                     <BrandLogo brand="swipesblue" size="md" showIcon={true} />
                   </div>
                 </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">Payment Gateway Platform</p>
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">Secure Payment Gateway</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
                   <li>• Secure payment processing</li>
                   <li>• Transaction management</li>
