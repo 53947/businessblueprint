@@ -11,8 +11,8 @@ import {
   Menu
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import bbIcon from "@assets/businesblueprint assets/Blueprint_Avatar.png";
-import bbLockup from "@assets/businesblueprint assets/Business Blueprint All Lockup Wordmark.png";
+import bbIcon from "@assets/Blueprint_Favicon_1762489845363.png";
+import bbLockup from "@assets/BBlueprint Main Header Logo_1762489845362.png";
 import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
 import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
 import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
