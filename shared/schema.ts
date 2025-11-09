@@ -85,7 +85,7 @@ export const recommendations = pgTable("recommendations", {
 // Client data
 export const clients = pgTable("clients", {
   id: serial("id").primaryKey(),
-  externalId: text("external_id").unique(), // External reference (Synup, etc.)
+  externalId: text("external_id").unique(), // External reference
   companyName: text("company_name").notNull(),
   email: text("email").notNull().unique(), // Primary login identifier
   phone: text("phone"),
@@ -183,79 +183,6 @@ export const clientAssessments = pgTable("client_assessments", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// Synup Locations - Business locations managed through Synup
-export const synupLocations = pgTable("synup_locations", {
-  id: serial("id").primaryKey(),
-  clientId: integer("client_id").references(() => clients.id).notNull(),
-  synupLocationId: text("synup_location_id").unique().notNull(), // Synup's location ID
-  name: text("name").notNull(),
-  address: text("address").notNull(),
-  city: text("city").notNull(),
-  state: text("state").notNull(),
-  country: text("country").notNull().default('US'),
-  postalCode: text("postal_code").notNull(),
-  phone: text("phone").notNull(),
-  website: text("website"),
-  email: text("email"),
-  category: text("category"),
-  status: text("status").default('active'), // active, inactive, pending
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-// Synup Listings - Directory listing status across 200+ platforms
-export const synupListings = pgTable("synup_listings", {
-  id: serial("id").primaryKey(),
-  locationId: integer("location_id").references(() => synupLocations.id).notNull(),
-  synupListingId: text("synup_listing_id").unique(),
-  platform: text("platform").notNull(), // Google, Yelp, Facebook, Bing, etc.
-  status: text("status").notNull(), // published, pending, claimed, unclaimed, error
-  url: text("url"),
-  lastSynced: timestamp("last_synced"),
-  syncStatus: text("sync_status"), // success, failed, in_progress
-  visibility: boolean("visibility").default(true),
-  errorMessage: text("error_message"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-// Synup Reviews - Review management across 80+ platforms
-export const synupReviews = pgTable("synup_reviews", {
-  id: serial("id").primaryKey(),
-  locationId: integer("location_id").references(() => synupLocations.id).notNull(),
-  synupReviewId: text("synup_review_id").unique(),
-  platform: text("platform").notNull(), // Google, Yelp, Facebook, TripAdvisor, etc.
-  rating: integer("rating").notNull(), // 1-5 stars
-  reviewText: text("review_text"),
-  reviewerName: text("reviewer_name"),
-  reviewerAvatar: text("reviewer_avatar"),
-  reviewDate: timestamp("review_date").notNull(),
-  response: text("response"),
-  responseDate: timestamp("response_date"),
-  sentiment: text("sentiment"), // positive, negative, neutral
-  status: text("status").default('new'), // new, responded, flagged, archived
-  isAIGenerated: boolean("is_ai_generated").default(false), // Was response AI-generated
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-// Review Notification Preferences - Configure alerts for reviews
-export const reviewNotificationPreferences = pgTable("review_notification_preferences", {
-  id: serial("id").primaryKey(),
-  clientId: integer("client_id").references(() => clients.id).notNull().unique(),
-  enableEmailAlerts: boolean("enable_email_alerts").default(true),
-  enableWebSocketAlerts: boolean("enable_websocket_alerts").default(true),
-  alertEmail: text("alert_email"), // Email to send alerts to (defaults to client email)
-  notifyOnAllReviews: boolean("notify_on_all_reviews").default(false),
-  notifyOnNegativeReviews: boolean("notify_on_negative_reviews").default(true), // Rating <= 2
-  notifyOnPositiveReviews: boolean("notify_on_positive_reviews").default(false), // Rating >= 4
-  minimumRatingThreshold: integer("minimum_rating_threshold").default(2), // Alert if rating <= threshold
-  autoRespondPositive: boolean("auto_respond_positive").default(false), // Auto-generate AI responses for positive
-  autoRespondNegative: boolean("auto_respond_negative").default(false), // Auto-generate AI responses for negative
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
 // Insert schemas
 export const insertAssessmentSchema = createInsertSchema(assessments).pick({
   businessName: true,
@@ -329,68 +256,6 @@ export const insertCampaignSchema = createInsertSchema(campaigns).pick({
   scheduledFor: true,
   metrics: true,
 });
-
-// Synup insert schemas
-export const insertSynupLocationSchema = createInsertSchema(synupLocations).pick({
-  clientId: true,
-  synupLocationId: true,
-  name: true,
-  address: true,
-  city: true,
-  state: true,
-  country: true,
-  postalCode: true,
-  phone: true,
-  website: true,
-  email: true,
-  category: true,
-  status: true,
-});
-
-export const insertSynupListingSchema = createInsertSchema(synupListings).pick({
-  locationId: true,
-  synupListingId: true,
-  platform: true,
-  status: true,
-  url: true,
-  lastSynced: true,
-  syncStatus: true,
-  visibility: true,
-  errorMessage: true,
-});
-
-export const insertSynupReviewSchema = createInsertSchema(synupReviews).pick({
-  locationId: true,
-  synupReviewId: true,
-  platform: true,
-  rating: true,
-  reviewText: true,
-  reviewerName: true,
-  reviewerAvatar: true,
-  reviewDate: true,
-  response: true,
-  responseDate: true,
-  sentiment: true,
-  status: true,
-  isAIGenerated: true,
-});
-
-export const insertReviewNotificationPreferencesSchema = createInsertSchema(reviewNotificationPreferences).pick({
-  clientId: true,
-  enableEmailAlerts: true,
-  enableWebSocketAlerts: true,
-  alertEmail: true,
-  notifyOnAllReviews: true,
-  notifyOnNegativeReviews: true,
-  notifyOnPositiveReviews: true,
-  minimumRatingThreshold: true,
-  autoRespondPositive: true,
-  autoRespondNegative: true,
-});
-
-// Type exports
-export type ReviewNotificationPreferences = typeof reviewNotificationPreferences.$inferSelect;
-export type InsertReviewNotificationPreferences = z.infer<typeof insertReviewNotificationPreferencesSchema>;
 
 // Subscription plans table
 export const subscriptionPlans = pgTable("subscription_plans", {
@@ -629,12 +494,6 @@ export type InboxMessage = typeof inboxMessages.$inferSelect;
 export type InsertInboxMessage = z.infer<typeof insertInboxMessageSchema>;
 export type Campaign = typeof campaigns.$inferSelect;
 export type InsertCampaign = z.infer<typeof insertCampaignSchema>;
-export type SynupLocation = typeof synupLocations.$inferSelect;
-export type InsertSynupLocation = z.infer<typeof insertSynupLocationSchema>;
-export type SynupListing = typeof synupListings.$inferSelect;
-export type InsertSynupListing = z.infer<typeof insertSynupListingSchema>;
-export type SynupReview = typeof synupReviews.$inferSelect;
-export type InsertSynupReview = z.infer<typeof insertSynupReviewSchema>;
 
 // Subscription types
 export type SubscriptionPlan = typeof subscriptionPlans.$inferSelect;
