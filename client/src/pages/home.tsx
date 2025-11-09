@@ -28,8 +28,8 @@ import livechatIcon from "@assets/native icons and favicons/: livechat app icon.
 import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
 import contentIcon from "@assets/native icons and favicons/: content app icon.png";
 import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
-import commverseBundle from "@assets/logos and wordmarks/: commverse bundle logo.png";
-import commverseIcon from "@assets/native icons and favicons/: commverse.png";
+import commverseBundle from "@assets/_ commverse bundle logo_1762731789054.png";
+import commverseIcon from "@assets/Commverse_1762731195351.png";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -441,7 +441,9 @@ export default function Home() {
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center text-sm">
                       <span className="text-green-500 mr-2">✓</span>
-                      <span className="text-gray-700">All 4 CommVerse apps</span>
+                      <span className="text-gray-700 flex items-center">
+                        All 4 <img src={commverseBundle} alt="commverse" className="h-5 mx-1" /> apps
+                      </span>
                     </div>
                     <div className="flex items-center text-sm">
                       <span className="text-green-500 mr-2">✓</span>
@@ -457,8 +459,8 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <Button className="w-full border-2 border-[#FF6B00] text-[#FF6B00] bg-transparent hover:bg-[#FF6B00] hover:text-white transition-all text-lg py-6" data-testid="button-get-commverse-bundle">
-                    Get CommVerse Bundle
+                  <Button className="w-full border-2 border-[#FF6B00] text-[#FF6B00] bg-transparent hover:bg-[#FF6B00] hover:text-white transition-all text-lg py-6 flex items-center justify-center gap-2" data-testid="button-get-commverse-bundle">
+                    Get <img src={commverseBundle} alt="commverse" className="h-6 inline-block" /> Bundle
                   </Button>
                   <p className="text-center text-xs text-gray-500 mt-3">
                     Prescribed based on your business needs
@@ -469,8 +471,8 @@ export default function Home() {
           </div>
 
           <div className="text-center">
-            <p className="text-lg text-gray-700 italic">
-              "A complete communications suite that lets you talk to the universe"
+            <p className="text-lg text-gray-700 italic flex items-center justify-center gap-2 flex-wrap">
+              "A complete communications suite that lets you talk to the universe with <img src={commverseBundle} alt="commverse" className="h-6 inline-block" />"
             </p>
           </div>
         </div>
