@@ -149,14 +149,14 @@ export function ServicePathways() {
             <div className="p-6"></div>
             <div className="p-6 border-l border-gray-200">
               <Link href="/subscription?pathway=diy">
-                <Button className="w-full bg-[#FFD700] hover:bg-[#FFC700] text-gray-900" size="lg" data-testid="button-choose-diy">
+                <Button className="w-full border-2 border-[#FFD700] text-[#FFD700] bg-transparent hover:bg-[#FFD700] hover:text-gray-900 transition-all" size="lg" data-testid="button-choose-diy">
                   DIY
                 </Button>
               </Link>
             </div>
             <div className="p-6 border-l border-gray-200 bg-secondary/5">
               <Link href="/subscription?pathway=msp">
-                <Button className="w-full bg-secondary hover:bg-secondary/90" size="lg" data-testid="button-choose-msp">
+                <Button className="w-full border-2 border-secondary text-secondary bg-transparent hover:bg-secondary hover:text-white transition-all" size="lg" data-testid="button-choose-msp">
                   MSP
                 </Button>
               </Link>
