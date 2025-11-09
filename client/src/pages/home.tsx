@@ -280,7 +280,7 @@ export default function Home() {
                   <CommverseIcon size={64} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center justify-center gap-2">
-                  <img src={commverseBundle} alt="commverse" className="h-6 inline-block" /> Apps + Paths
+                  <img src={commverseBundle} alt="commverse" className="h-8 inline-block" /> Apps + Paths
                 </h3>
                 <p className="text-gray-600 text-sm">
                   Which apps you need (/send, /inbox, /livechat, /content) and SPECIFIC PATHS tailored to your business type.
@@ -343,7 +343,7 @@ export default function Home() {
               💬 COMPLETE COMMUNICATIONS SUITE
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 flex items-center justify-center gap-3 flex-wrap">
-              Talk to the Universe with <img src={commverseBundle} alt="commverse" className="h-12 inline-block" />
+              Talk to the Universe with <img src={commverseBundle} alt="commverse" className="h-16 lg:h-20 inline-block" />
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Get all 4 communication apps together and save $40/month. A complete suite to connect with your customers anywhere, anytime.
@@ -444,7 +444,7 @@ export default function Home() {
                     <div className="flex items-center text-sm">
                       <span className="text-green-500 mr-2">✓</span>
                       <span className="text-gray-700 flex items-center">
-                        All 4 <img src={commverseBundle} alt="commverse" className="h-5 mx-1" /> apps
+                        All 4 <img src={commverseBundle} alt="commverse" className="h-6 mx-1" /> apps
                       </span>
                     </div>
                     <div className="flex items-center text-sm">
@@ -462,7 +462,7 @@ export default function Home() {
                   </div>
 
                   <Button className="w-full border-2 border-[#FF6B00] text-[#FF6B00] bg-transparent hover:bg-[#FF6B00] hover:text-white transition-all text-lg py-6 flex items-center justify-center gap-2" data-testid="button-get-commverse-bundle">
-                    Get <img src={commverseBundle} alt="commverse" className="h-6 inline-block" /> Bundle
+                    Get <img src={commverseBundle} alt="commverse" className="h-8 inline-block" /> Bundle
                   </Button>
                   <p className="text-center text-xs text-gray-500 mt-3">
                     Prescribed based on your business needs
@@ -474,7 +474,7 @@ export default function Home() {
 
           <div className="text-center">
             <p className="text-lg text-gray-700 italic flex items-center justify-center gap-2 flex-wrap">
-              "A complete communications suite that lets you talk to the universe with <img src={commverseBundle} alt="commverse" className="h-6 inline-block" />"
+              "A complete communications suite that lets you talk to the universe with <img src={commverseBundle} alt="commverse" className="h-8 inline-block" />"
             </p>
           </div>
         </div>
@@ -491,7 +491,7 @@ export default function Home() {
               Three Plans. <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>One Prescription</span>.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto flex items-center justify-center gap-2 flex-wrap">
-              Choose your base plan based on business size. <img src={commverseBundle} alt="commverse" className="h-5 inline-block" /> apps are prescribed separately and available in our marketplace.
+              Choose your base plan based on business size. <img src={commverseBundle} alt="commverse" className="h-7 inline-block" /> apps are prescribed separately and available in our marketplace.
             </p>
           </div>
 
@@ -639,7 +639,7 @@ export default function Home() {
               Not Just Apps. <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>Prescribed Paths</span>.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 flex items-center justify-center gap-2 flex-wrap">
-              Based on your Digital IQ, we prescribe which <img src={commverseBundle} alt="commverse" className="h-5 inline-block" /> apps you need AND the specific paths within each app. Available a la carte or as bundles in our marketplace.
+              Based on your Digital IQ, we prescribe which <img src={commverseBundle} alt="commverse" className="h-7 inline-block" /> apps you need AND the specific paths within each app. Available a la carte or as bundles in our marketplace.
             </p>
             <div className="bg-orange-50 border-2 border-orange-200 rounded-xl p-6 max-w-2xl mx-auto">
               <p className="text-orange-900 font-semibold">
