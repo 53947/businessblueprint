@@ -735,7 +735,7 @@ export default function Home() {
               Your prescription will tell you which apps and which paths are right for YOUR business
             </p>
             <Link href="/commverse">
-              <Button size="lg" className="bg-purple-600 hover:bg-purple-700 text-white" data-testid="button-explore-applications">
+              <Button size="lg" className="border-2 border-purple-600 text-purple-600 bg-transparent hover:bg-purple-600 hover:text-white transition-all" data-testid="button-explore-applications">
                 Explore All Applications
               </Button>
             </Link>
@@ -776,7 +776,7 @@ export default function Home() {
                   <li>• /livechat - Live Chat Widget</li>
                   <li>• /content - Social Media Mgmt</li>
                 </ul>
-                <Button className="w-full bg-[#FF6B00] hover:bg-[#FF5500] text-white mt-auto">
+                <Button className="w-full border-2 border-[#FF6B00] text-[#FF6B00] bg-transparent hover:bg-[#FF6B00] hover:text-white transition-all mt-auto">
                   Start Assessment
                 </Button>
               </CardContent>
@@ -795,7 +795,7 @@ export default function Home() {
                   <li>• Domain management</li>
                   <li>• Website Builder</li>
                 </ul>
-                <Button className="w-full bg-[#660099] hover:bg-[#5a0088] mt-auto">
+                <Button className="w-full border-2 border-[#660099] text-[#660099] bg-transparent hover:bg-[#660099] hover:text-white transition-all mt-auto">
                   Get Hosting
                 </Button>
               </CardContent>
@@ -814,7 +814,7 @@ export default function Home() {
                   <li>• Transaction management</li>
                   <li>• Shopping cart and Checkout</li>
                 </ul>
-                <Button className="w-full bg-[#FF0040] hover:bg-[#cc0033] mt-auto">
+                <Button className="w-full border-2 border-[#FF0040] text-[#FF0040] bg-transparent hover:bg-[#FF0040] hover:text-white transition-all mt-auto">
                   Setup Payments
                 </Button>
               </CardContent>
