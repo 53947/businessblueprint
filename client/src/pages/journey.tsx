@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import aiCoachIcon from "@assets/native icons and favicons/AI Business Coach Blue icon.png";
 import { BrandLogo } from "@/components/brand-logo";
-import blueprintIcon from "@assets/businesblueprint assets/Blueprint_Avatar.png";
+import blueprintIcon from "@assets/Blueprint_Favicon_1762489845363.png";
 import digitalSuccessIcon from "@assets/native icons and favicons/digital success accellerated revenue.png";
 import digitalAssessmentIcon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
 import digitalPathIcon from "@assets/native icons and favicons/digital path.png";
