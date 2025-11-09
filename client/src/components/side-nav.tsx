@@ -24,7 +24,7 @@ import socialMediaIcon from "@assets/native icons and favicons/: content app ico
 import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
 import reputationIcon from "@assets/native icons and favicons/Reputation Management Icon.png";
 import settingsIcon from "@assets/native icons and favicons/settings.png";
-import aiCoachIcon from "@assets/native icons and favicons/AI Business Coach Blue icon.png";
+import aiCoachIcon from "@assets/Coach Blue as Blue_1762721690836.png";
 import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
 

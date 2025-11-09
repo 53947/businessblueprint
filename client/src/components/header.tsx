@@ -52,7 +52,7 @@ import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
 import blueprintIcon from "@assets/Blueprint_Favicon_1762489845363.png";
 import commverseBundle from "@assets/logos and wordmarks/: commverse bundle logo.png";
 import commverseIcon from "@assets/native icons and favicons/: commverse.png";
-import coachBlueIcon from "@assets/native icons and favicons/AI Business Coach Reworked.png";
+import coachBlueIcon from "@assets/Coach Blue as Blue_1762721690836.png";
 import captainingIcon from "@assets/native icons and favicons/Captaining Icon.png";
 import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
 import diyIcon from "@assets/native icons and favicons/diy.png";
