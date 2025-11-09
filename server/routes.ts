@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import path from "path";
 import { storage } from "./storage";
 import { randomBytes } from "crypto";
 import contentRoutes from "./routes/content";
@@ -40,6 +41,11 @@ import { setupAuth, isAuthenticated } from "./replitAuth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
+
+  // Serve favicon.ico from attached_assets
+  app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.resolve(process.cwd(), 'attached_assets/Blueprint_Favicon_1762489845363.ico'));
+  });
 
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
@@ -197,11 +203,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check if subscription exists
-      const subscriptions = await db.select()
+      const existingSubscriptions = await db.select()
         .from(subscriptions as any)
         .where(eq((subscriptions as any).assessmentId, id));
 
-      if (subscriptions.length > 0) {
+      if (existingSubscriptions.length > 0) {
         return res.status(400).json({ message: "Subscription already exists" });
       }
 
