@@ -65,7 +65,7 @@ const individualProducts = [
       "Media library with cloud storage",
       "Post analytics & performance tracking",
       "Template library for quick posting",
-      "MSP: Two-way Synup sync + team collaboration"
+      "MSP: Dedicated strategist + team collaboration"
     ]),
     deliveryMethod: ["diy", "msp"],
     estimatedImpact: "+15-20 points",

@@ -1766,52 +1766,6 @@ export const contentTemplates = pgTable("content_templates", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// External system sync (Synup integration)
-export const externalSync = pgTable("external_sync", {
-  id: serial("id").primaryKey(),
-  
-  systemName: varchar("system_name", { length: 50 }).notNull(), // "synup"
-  entityType: varchar("entity_type", { length: 50 }).notNull(), // "post"
-  entityId: integer("entity_id").notNull(), // Local ID (contentPosts.id)
-  externalId: varchar("external_id", { length: 255 }), // Synup's ID for this entity
-  
-  // Sync status
-  lastPushedAt: timestamp("last_pushed_at"),
-  lastPulledAt: timestamp("last_pulled_at"),
-  checksum: varchar("checksum", { length: 64 }), // Hash to detect changes
-  syncStatus: varchar("sync_status", { length: 20 }).default("idle"), // idle, pending, synced, error
-  syncError: text("sync_error"),
-  
-  // Metadata
-  metadata: jsonb("metadata"),
-  
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-}, (table) => [
-  unique().on(table.systemName, table.entityType, table.entityId),
-]);
-
-// Sync operation logs (audit trail)
-export const syncLogs = pgTable("sync_logs", {
-  id: serial("id").primaryKey(),
-  
-  systemName: varchar("system_name", { length: 50 }).notNull(), // "synup"
-  direction: varchar("direction", { length: 10 }).notNull(), // "outbound" | "inbound"
-  entityType: varchar("entity_type", { length: 50 }).notNull(), // "post"
-  entityId: integer("entity_id").notNull(),
-  
-  // Operation details
-  action: varchar("action", { length: 50 }).notNull(), // upsert, delete, status_update
-  payload: jsonb("payload"), // Data sent/received
-  status: varchar("status", { length: 20 }).notNull(), // success, error
-  errorMessage: text("error_message"),
-  
-  // Performance
-  duration: integer("duration"), // milliseconds
-  
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
 // Content Management Insert Schemas
 export const insertSocialMediaAccountSchema = createInsertSchema(socialMediaAccounts).pick({
   clientId: true,
@@ -1871,15 +1825,6 @@ export const insertContentTemplateSchema = createInsertSchema(contentTemplates).
   recommendedPlatforms: true,
 });
 
-export const insertExternalSyncSchema = createInsertSchema(externalSync).pick({
-  systemName: true,
-  entityType: true,
-  entityId: true,
-  externalId: true,
-  checksum: true,
-  metadata: true,
-});
-
 // Content Management Types
 export type SocialMediaAccount = typeof socialMediaAccounts.$inferSelect;
 export type InsertSocialMediaAccount = z.infer<typeof insertSocialMediaAccountSchema>;
@@ -1890,9 +1835,6 @@ export type InsertContentPost = z.infer<typeof insertContentPostSchema>;
 export type ContentAnalytics = typeof contentAnalytics.$inferSelect;
 export type ContentTemplate = typeof contentTemplates.$inferSelect;
 export type InsertContentTemplate = z.infer<typeof insertContentTemplateSchema>;
-export type ExternalSync = typeof externalSync.$inferSelect;
-export type InsertExternalSync = z.infer<typeof insertExternalSyncSchema>;
-export type SyncLog = typeof syncLogs.$inferSelect;
 
 // ========================================
 // TASK MANAGEMENT SYSTEM
