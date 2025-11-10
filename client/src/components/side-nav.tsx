@@ -22,7 +22,10 @@ import sendIcon from "@assets/native icons and favicons/: send app icon.png";
 import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
 import socialMediaIcon from "@assets/native icons and favicons/: content app icon.png";
 import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
-import reputationIcon from "@assets/native icons and favicons/: reputation app icon.png";
+import listingsIcon from "@assets/listings app_1762804610311.png";
+import listingsLogo from "@assets/: listings color triad black and FF0040_1762806224294.png";
+import reputationIcon from "@assets/reputation app triad blue and repoutation gold_1762804622669.png";
+import reputationLogo from "@assets/: reputation color triad black and D59600_1762806224295.png";
 import settingsIcon from "@assets/native icons and favicons/settings.png";
 import aiCoachIcon from "@assets/Coach Blue as Blue_1762721690836.png";
 import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
@@ -84,13 +87,6 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       isDivider: true 
     },
     { 
-      id: "listings", 
-      label: "Local SEO Mgmt", 
-      icon: <img src={localSeoIcon} alt="Local SEO" className="w-7 h-7 object-contain" />,
-      external: true,
-      href: "/listings"
-    },
-    { 
       id: "send", 
       label: "send",
       hoverLabel: "Email + SMS Marketing",
@@ -109,22 +105,46 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       href: "/content"
     },
     { 
-      id: "reputation", 
-      label: "Reputation Mgmt", 
-      icon: <img src={reputationIcon} alt="Reputation" className="w-7 h-7 object-contain" />,
-      external: true,
-      href: "/reputation"
-    },
-    { 
       id: "divider-2", 
       label: "", 
       icon: null, 
       isDivider: true 
     },
     { 
+      id: "local-seo", 
+      label: "Local SEO Mgmt", 
+      icon: <img src={localSeoIcon} alt="Local SEO" className="w-7 h-7 object-contain" />,
+      external: true,
+      href: "/listings"
+    },
+    { 
+      id: "listings", 
+      label: "listings",
+      hoverLabel: "Directory Sync & Consistency",
+      icon: <img src={listingsIcon} alt="/listings" className="w-7 h-7 object-contain" />,
+      logo: listingsLogo,
+      external: true,
+      href: "/listings"
+    },
+    { 
+      id: "reputation", 
+      label: "reputation",
+      hoverLabel: "Review Response & Reputation Management",
+      icon: <img src={reputationIcon} alt="/reputation" className="w-7 h-7 object-contain" />,
+      logo: reputationLogo,
+      external: true,
+      href: "/reputation"
+    },
+    { 
+      id: "divider-3", 
+      label: "", 
+      icon: null, 
+      isDivider: true 
+    },
+    { 
       id: "ai-coach", 
-      label: "AI Business Coach",
-      icon: <img src={aiCoachIcon} alt="AI Business Coach" className="w-7 h-7 object-contain" />,
+      label: "AI Coach Blue",
+      icon: <img src={aiCoachIcon} alt="AI Coach Blue" className="w-7 h-7 object-contain" />,
       external: true,
       href: "/ai-coach"
     },
