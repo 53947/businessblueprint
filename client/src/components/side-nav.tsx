@@ -48,6 +48,7 @@ interface NavItem {
   external?: boolean;
   href?: string;
   isDivider?: boolean;
+  isHeading?: boolean; // Non-clickable section heading
   hasSpaceBefore?: boolean;
 }
 
@@ -111,11 +112,10 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       isDivider: true 
     },
     { 
-      id: "local-seo", 
+      id: "local-seo-heading", 
       label: "Local SEO Mgmt", 
-      icon: <img src={localSeoIcon} alt="Local SEO" className="w-7 h-7 object-contain" />,
-      external: true,
-      href: "/listings"
+      icon: null,
+      isHeading: true
     },
     { 
       id: "listings", 
@@ -153,6 +153,26 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       label: "Settings", 
       icon: <img src={settingsIcon} alt="Settings" className="w-7 h-7 object-contain" /> 
     },
+    { 
+      id: "divider-4", 
+      label: "", 
+      icon: null, 
+      isDivider: true 
+    },
+    { 
+      id: "hostsblue", 
+      label: "hostsblue.com",
+      icon: <img src={hostsBlueIcon} alt="Hosts Blue" className="w-7 h-7 object-contain" />,
+      external: true,
+      href: "https://hostsblue.com"
+    },
+    { 
+      id: "swipesblue", 
+      label: "swipesblue.com",
+      icon: <img src={swipesBlueIcon} alt="Swipes Blue" className="w-7 h-7 object-contain" />,
+      external: true,
+      href: "https://swipesblue.com"
+    },
   ];
 
   const handleNavClick = (item: NavItem, closeMobile: boolean = false) => {
@@ -161,7 +181,13 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
     }
     
     if (item.external && item.href) {
-      setLocation(item.href);
+      // Check if it's an absolute URL (external site)
+      if (item.href.startsWith('http://') || item.href.startsWith('https://')) {
+        window.open(item.href, '_blank', 'noopener,noreferrer');
+      } else {
+        // Internal route
+        setLocation(item.href);
+      }
     } else if (onTabChange) {
       onTabChange(item.id);
     }
@@ -175,6 +201,19 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
           return (
             <div key={item.id} className="py-4">
               <div className="border-t border-gray-200 dark:border-gray-700"></div>
+            </div>
+          );
+        }
+        
+        // Render heading (non-clickable section label)
+        if (item.isHeading) {
+          return (
+            <div key={item.id} className="px-4 py-2 mt-2">
+              {!collapsed && (
+                <span className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide" data-testid={`heading-${item.id}`}>
+                  {item.label}
+                </span>
+              )}
             </div>
           );
         }
@@ -254,41 +293,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
           </nav>
 
           {/* Mobile Bottom Section */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2 bg-gray-50 dark:bg-gray-800/50">
-            {/* Platform Links */}
-            <div className="space-y-2 pb-3 border-b border-gray-200 dark:border-gray-700">
-              <a
-                href="https://hostsblue.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsMobileOpen(false)}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-left hover:bg-purple-50 dark:hover:bg-purple-900/20"
-                data-testid="link-hostsblue-mobile"
-              >
-                <img src={hostsBlueIcon} alt="Hosts Blue" className="w-7 h-7 object-contain" />
-                <span className="text-base" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-hostsblue-mobile">
-                  <span style={{ color: '#660099', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
-                  <span style={{ color: '#0000FF' }}>blue</span>
-                  <span style={{ color: '#84D71A' }}>.com</span>
-                </span>
-              </a>
-              <a
-                href="https://swipesblue.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsMobileOpen(false)}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-left hover:bg-red-50 dark:hover:bg-red-900/20"
-                data-testid="link-swipesblue-mobile"
-              >
-                <img src={swipesBlueIcon} alt="Swipes Blue" className="w-7 h-7 object-contain" />
-                <span className="text-base" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-swipesblue-mobile">
-                  <span style={{ color: '#FF0040', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
-                  <span style={{ color: '#0000FF' }}>blue</span>
-                  <span style={{ color: '#84D71A' }}>.com</span>
-                </span>
-              </a>
-            </div>
-
+          <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
             {/* Sign Out */}
             {onSignOut && (
               <button
@@ -369,43 +374,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
         </nav>
 
         {/* Desktop Bottom Section */}
-        <div className="p-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
-          {/* Platform Links */}
-          <div className="space-y-1 pb-2 border-b border-gray-200 dark:border-gray-700">
-            <a
-              href="https://hostsblue.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center gap-1 px-3 py-3 rounded-lg transition-colors text-left hover:bg-purple-50 dark:hover:bg-purple-900/20"
-              data-testid="link-hostsblue"
-            >
-              <img src={hostsBlueIcon} alt="Hosts Blue" className="w-7 h-7 object-contain" />
-              {!isCollapsed && (
-                <span className="text-base" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-hostsblue">
-                  <span style={{ color: '#660099', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
-                  <span style={{ color: '#0000FF' }}>blue</span>
-                  <span style={{ color: '#84D71A' }}>.com</span>
-                </span>
-              )}
-            </a>
-            <a
-              href="https://swipesblue.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center gap-1 px-3 py-3 rounded-lg transition-colors text-left hover:bg-red-50 dark:hover:bg-red-900/20"
-              data-testid="link-swipesblue"
-            >
-              <img src={swipesBlueIcon} alt="Swipes Blue" className="w-7 h-7 object-contain" />
-              {!isCollapsed && (
-                <span className="text-base" style={{ fontFamily: 'Archivo', fontWeight: 600 }} data-testid="text-swipesblue">
-                  <span style={{ color: '#FF0040', fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
-                  <span style={{ color: '#0000FF' }}>blue</span>
-                  <span style={{ color: '#84D71A' }}>.com</span>
-                </span>
-              )}
-            </a>
-          </div>
-
+        <div className="p-3 border-t border-gray-200 dark:border-gray-700">
           {/* Sign Out */}
           {onSignOut && (
             <button
