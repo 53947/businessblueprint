@@ -57,6 +57,9 @@ import captainingIcon from "@assets/native icons and favicons/Captaining Icon.pn
 import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
 import diyIcon from "@assets/native icons and favicons/diy.png";
 import managedServicesIcon from "@assets/native icons and favicons/managed-services.png";
+import reputationIcon from "@assets/generated_images/Reputation_management_app_icon_9efbc906.png";
+import listingsIcon from "@assets/generated_images/Listings_management_app_icon_3c875fd8.png";
+import localBlueBundle from "@assets/generated_images/LocalBlue_bundle_logo_-_all_blue_47d0626b.png";
 import step1Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
 import step2Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/2-Get your prescribed blueprint.png";
 import step3Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/3-Choose your base plan.png";
@@ -537,6 +540,93 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </ul>
                               </a>
                             </NavigationMenuLink>
+                          </div>
+
+                          {/* LocalBlue Bundle Section */}
+                          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <div className="mb-6 p-4 rounded-lg border-2 border-blue-600 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950">
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-3">
+                                  <img src={reputationIcon} alt="LocalBlue" className="h-12 w-12 object-contain rounded-lg" />
+                                  <div>
+                                    <img src={localBlueBundle} alt="/localblue Bundle" className="h-8 object-contain mb-1" />
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Local Presence Management</p>
+                                  </div>
+                                </div>
+                                <div>
+                                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">$75<span className="text-sm">/mo</span></div>
+                                  <p className="text-xs text-green-600 dark:text-green-400">Save $10/month</p>
+                                </div>
+                              </div>
+                              <Link href="/applications?bundle=localblue">
+                                <Button className="w-full bg-blue-600 hover:bg-blue-700" data-testid="button-get-localblue">
+                                  Get /localblue Bundle →
+                                </Button>
+                              </Link>
+                            </div>
+
+                            <div className="mb-3">
+                              <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+                                Or choose individual apps at $40/mo each
+                              </h4>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                              {/* /reputation */}
+                              <NavigationMenuLink asChild>
+                                <a
+                                  className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-xl hover:from-blue-50 hover:to-blue-100 dark:hover:from-blue-950 dark:hover:to-blue-900 hover:scale-[1.02]"
+                                  href="/reputation"
+                                  data-testid="link-app-reputation"
+                                >
+                                  <div className="flex items-center justify-between mb-3">
+                                    <div className="flex items-center gap-2">
+                                      <img src={reputationIcon} alt="/reputation icon" className="h-10 w-10 object-contain" />
+                                      <span className="font-bold text-blue-600 dark:text-blue-400">/reputation</span>
+                                    </div>
+                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">Visit Platform →</span>
+                                    </div>
+                                  </div>
+                                  <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-reputation-title">Review Management</div>
+                                  <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-reputation-description">
+                                    Monitor and respond to customer reviews across all platforms
+                                  </p>
+                                  <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-reputation-features">
+                                    <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Multi-Platform Reviews</li>
+                                    <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> AI-Powered Responses</li>
+                                    <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Sentiment Analysis</li>
+                                  </ul>
+                                </a>
+                              </NavigationMenuLink>
+
+                              {/* /listings */}
+                              <NavigationMenuLink asChild>
+                                <a
+                                  className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-indigo-500 hover:shadow-xl hover:from-indigo-50 hover:to-indigo-100 dark:hover:from-indigo-950 dark:hover:to-indigo-900 hover:scale-[1.02]"
+                                  href="/listings"
+                                  data-testid="link-app-listings"
+                                >
+                                  <div className="flex items-center justify-between mb-3">
+                                    <div className="flex items-center gap-2">
+                                      <img src={listingsIcon} alt="/listings icon" className="h-10 w-10 object-contain" />
+                                      <span className="font-bold text-indigo-600 dark:text-indigo-400">/listings</span>
+                                    </div>
+                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">Visit Platform →</span>
+                                    </div>
+                                  </div>
+                                  <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-listings-title">Business Listings</div>
+                                  <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-listings-description">
+                                    Manage business information across directories
+                                  </p>
+                                  <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-listings-features">
+                                    <li className="flex items-center"><span className="text-indigo-500 dark:text-indigo-400 mr-1.5">✓</span> Directory Sync</li>
+                                    <li className="flex items-center"><span className="text-indigo-500 dark:text-indigo-400 mr-1.5">✓</span> Multi-Platform Management</li>
+                                    <li className="flex items-center"><span className="text-indigo-500 dark:text-indigo-400 mr-1.5">✓</span> Performance Analytics</li>
+                                  </ul>
+                                </a>
+                              </NavigationMenuLink>
+                            </div>
                           </div>
                         </div>
                       </NavigationMenuContent>
