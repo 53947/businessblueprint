@@ -22,7 +22,7 @@ import sendIcon from "@assets/native icons and favicons/: send app icon.png";
 import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
 import socialMediaIcon from "@assets/native icons and favicons/: content app icon.png";
 import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
-import reputationIcon from "@assets/generated_images/Reputation_management_app_icon_9efbc906.png";
+import reputationIcon from "@assets/native icons and favicons/: reputation app icon.png";
 import settingsIcon from "@assets/native icons and favicons/settings.png";
 import aiCoachIcon from "@assets/Coach Blue as Blue_1762721690836.png";
 import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
