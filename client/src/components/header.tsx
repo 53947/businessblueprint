@@ -37,15 +37,15 @@ import { BrandLogo, BrandIcon } from "@/components/brand-logo";
 import bbAvatar from "@assets/Blueprint_Favicon_1762489845363.png";
 import bbIcon from "@assets/Blueprint_Favicon_1762489845363.png";
 import contentIcon from "@assets/native icons and favicons/: content app icon.png";
-import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
+import contentLogo from "@assets/content_1762814014661.png";
 import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
 import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
 import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
-import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
+import sendLogo from "@assets/send_1762814014662.png";
 import sendIcon from "@assets/native icons and favicons/: send app icon.png";
-import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
-import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
+import inboxLogo from "@assets/inbox_1762814014662.png";
+import livechatLogo from "@assets/livechat_1762814014662.png";
 import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
 import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import hostsBlueWordmark from "@assets/hostsblue assets/hostsblue Brand and Wordmark.png";
@@ -60,11 +60,11 @@ import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
 import diyIcon from "@assets/native icons and favicons/diy.png";
 import managedServicesIcon from "@assets/native icons and favicons/managed-services.png";
 import reputationIcon from "@assets/reputation app triad blue and repoutation gold_1762804622669.png";
-import reputationLogo from "@assets/: reputation color triad black and D59600_1762806224295.png";
+import reputationLogo from "@assets/reputation_1762814014662.png";
 import listingsIcon from "@assets/listings app_1762804610311.png";
-import listingsLogo from "@assets/: listings color triad black and FF0040_1762806224294.png";
+import listingsLogo from "@assets/listings_1762814014662.png";
 import localBlueIcon from "@assets/Local Blue App Icon_1762804584510.png";
-import localBlueLogo from "@assets/: localblue color triad black and triad blue_1762806224295.png";
+import localBlueLogo from "@assets/localblue_1762814014662.png";
 import step1Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
 import step2Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/2-Get your prescribed blueprint.png";
 import step3Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/3-Choose your base plan.png";
@@ -439,116 +439,100 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                               <div className="grid grid-cols-2 gap-3">
                             {/* /send */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-green-500 hover:shadow-xl hover:from-green-50 hover:to-green-100 dark:hover:from-green-950 dark:hover:to-green-900 hover:scale-[1.02]"
-                                href="/send"
-                                data-testid="link-app-send"
-                              >
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center gap-2">
-                                    <img src={sendIcon} alt="/send icon" className="h-10 w-10 object-contain" />
-                                    <img src={sendLogo} alt="/send" className="h-8 object-contain" />
-                                  </div>
-                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-xs font-semibold text-green-600 dark:text-green-400">Visit Platform →</span>
-                                  </div>
+                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 transition-all hover:border-green-500 hover:shadow-xl hover:from-green-50 hover:to-green-100 dark:hover:from-green-950 dark:hover:to-green-900 hover:scale-[1.02]" data-testid="card-app-send">
+                              <div className="flex items-center gap-2 mb-3">
+                                <img src={sendIcon} alt="/send icon" className="h-10 w-10 object-contain flex-shrink-0" />
+                                <div className="h-8 flex items-center">
+                                  <img src={sendLogo} alt="/send" className="h-8 w-32 object-contain" />
                                 </div>
-                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-send-title">Email + SMS Marketing</div>
-                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-send-description">
-                                  Unified marketing campaigns with full compliance
-                                </p>
-                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-send-features">
-                                  <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> Email & SMS Campaigns</li>
-                                  <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> Contact Management</li>
-                                  <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> GDPR/CAN-SPAM Compliant</li>
-                                </ul>
-                              </a>
-                            </NavigationMenuLink>
+                              </div>
+                              <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-send-title">Email + SMS Marketing</div>
+                              <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3" data-testid="text-app-send-description">
+                                Unified marketing campaigns with full compliance
+                              </p>
+                              <ul className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300 mb-4" data-testid="list-app-send-features">
+                                <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> Email & SMS Campaigns</li>
+                                <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> Contact Management</li>
+                                <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> GDPR/CAN-SPAM Compliant</li>
+                              </ul>
+                              <Button size="sm" className="w-full bg-green-600 hover:bg-green-700 mt-auto" asChild>
+                                <Link href="/send" data-testid="button-select-send">
+                                  Select →
+                                </Link>
+                              </Button>
+                            </div>
 
                             {/* /inbox */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-yellow-500 hover:shadow-xl hover:from-yellow-50 hover:to-yellow-100 dark:hover:from-yellow-950 dark:hover:to-yellow-900 hover:scale-[1.02]"
-                                href="/inbox-app"
-                                data-testid="link-app-inbox"
-                              >
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center gap-2">
-                                    <img src={inboxIcon} alt="/inbox icon" className="h-10 w-10 object-contain" />
-                                    <img src={inboxLogo} alt="/inbox" className="h-8 object-contain" />
-                                  </div>
-                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-xs font-semibold text-yellow-600 dark:text-yellow-400">Visit Platform →</span>
-                                  </div>
+                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 transition-all hover:border-yellow-500 hover:shadow-xl hover:from-yellow-50 hover:to-yellow-100 dark:hover:from-yellow-950 dark:hover:to-yellow-900 hover:scale-[1.02]" data-testid="card-app-inbox">
+                              <div className="flex items-center gap-2 mb-3">
+                                <img src={inboxIcon} alt="/inbox icon" className="h-10 w-10 object-contain flex-shrink-0" />
+                                <div className="h-8 flex items-center">
+                                  <img src={inboxLogo} alt="/inbox" className="h-8 w-32 object-contain" />
                                 </div>
-                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-inbox-title">Unified Communications</div>
-                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-inbox-description">
-                                  Multi-channel messaging hub for all customer communications
-                                </p>
-                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-inbox-features">
-                                  <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Email, Chat & Social DMs</li>
-                                  <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Real-time Messaging</li>
-                                  <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Team Collaboration</li>
-                                </ul>
-                              </a>
-                            </NavigationMenuLink>
+                              </div>
+                              <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-inbox-title">Unified Communications</div>
+                              <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3" data-testid="text-app-inbox-description">
+                                Multi-channel messaging hub for all customer communications
+                              </p>
+                              <ul className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300 mb-4" data-testid="list-app-inbox-features">
+                                <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Email, Chat & Social DMs</li>
+                                <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Real-time Messaging</li>
+                                <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Team Collaboration</li>
+                              </ul>
+                              <Button size="sm" className="w-full bg-yellow-600 hover:bg-yellow-700 mt-auto" asChild>
+                                <Link href="/inbox-app" data-testid="button-select-inbox">
+                                  Select →
+                                </Link>
+                              </Button>
+                            </div>
 
                             {/* /livechat */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-teal-500 hover:shadow-xl hover:from-teal-50 hover:to-teal-100 dark:hover:from-teal-950 dark:hover:to-teal-900 hover:scale-[1.02]"
-                                href="/livechat"
-                                data-testid="link-app-livechat"
-                              >
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center gap-2">
-                                    <img src={livechatIcon} alt="/livechat icon" className="h-10 w-10 object-contain" />
-                                    <img src={livechatLogo} alt="/livechat" className="h-8 object-contain" />
-                                  </div>
-                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-xs font-semibold text-teal-600 dark:text-teal-400">Visit Platform →</span>
-                                  </div>
+                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 transition-all hover:border-teal-500 hover:shadow-xl hover:from-teal-50 hover:to-teal-100 dark:hover:from-teal-950 dark:hover:to-teal-900 hover:scale-[1.02]" data-testid="card-app-livechat">
+                              <div className="flex items-center gap-2 mb-3">
+                                <img src={livechatIcon} alt="/livechat icon" className="h-10 w-10 object-contain flex-shrink-0" />
+                                <div className="h-8 flex items-center">
+                                  <img src={livechatLogo} alt="/livechat" className="h-8 w-32 object-contain" />
                                 </div>
-                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-livechat-title">Live Chat Widget</div>
-                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-livechat-description">
-                                  Real-time customer chat for your website
-                                </p>
-                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-livechat-features">
-                                  <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1.5">✓</span> Website Live Chat</li>
-                                  <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1.5">✓</span> Session Persistence</li>
-                                  <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1.5">✓</span> Conversation History</li>
-                                </ul>
-                              </a>
-                            </NavigationMenuLink>
+                              </div>
+                              <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-livechat-title">Live Chat Widget</div>
+                              <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3" data-testid="text-app-livechat-description">
+                                Real-time customer chat for your website
+                              </p>
+                              <ul className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300 mb-4" data-testid="list-app-livechat-features">
+                                <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1.5">✓</span> Website Live Chat</li>
+                                <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1.5">✓</span> Session Persistence</li>
+                                <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1.5">✓</span> Conversation History</li>
+                              </ul>
+                              <Button size="sm" className="w-full bg-teal-600 hover:bg-teal-700 mt-auto" asChild>
+                                <Link href="/livechat" data-testid="button-select-livechat">
+                                  Select →
+                                </Link>
+                              </Button>
+                            </div>
 
                             {/* /content */}
-                            <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-pink-500 hover:shadow-xl hover:from-pink-50 hover:to-pink-100 dark:hover:from-pink-950 dark:hover:to-pink-900 hover:scale-[1.02]"
-                                href="/content"
-                                data-testid="link-app-content"
-                              >
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center gap-2">
-                                    <img src={contentIcon} alt="/content icon" className="h-10 w-10 object-contain" />
-                                    <img src={contentLogo} alt="/content" className="h-8 object-contain" />
-                                  </div>
-                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="text-xs font-semibold text-pink-600 dark:text-pink-400">Visit Platform →</span>
-                                  </div>
+                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 transition-all hover:border-pink-500 hover:shadow-xl hover:from-pink-50 hover:to-pink-100 dark:hover:from-pink-950 dark:hover:to-pink-900 hover:scale-[1.02]" data-testid="card-app-content">
+                              <div className="flex items-center gap-2 mb-3">
+                                <img src={contentIcon} alt="/content icon" className="h-10 w-10 object-contain flex-shrink-0" />
+                                <div className="h-8 flex items-center">
+                                  <img src={contentLogo} alt="/content" className="h-8 w-32 object-contain" />
                                 </div>
-                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-content-title">Social Media Management</div>
-                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-content-description">
-                                  Social media manager
-                                </p>
-                                <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-content-features">
-                                  <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> Content Calendar</li>
-                                  <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> Media Library</li>
-                                  <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> AI Caption Suggestions</li>
-                                </ul>
-                              </a>
-                            </NavigationMenuLink>
+                              </div>
+                              <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-content-title">Social Media Management</div>
+                              <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3" data-testid="text-app-content-description">
+                                Social media manager
+                              </p>
+                              <ul className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300 mb-4" data-testid="list-app-content-features">
+                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> Content Calendar</li>
+                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> Media Library</li>
+                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> AI Caption Suggestions</li>
+                              </ul>
+                              <Button size="sm" className="w-full bg-pink-600 hover:bg-pink-700 mt-auto" asChild>
+                                <Link href="/content" data-testid="button-select-content">
+                                  Select →
+                                </Link>
+                              </Button>
+                            </div>
                               </div>
                             </div>
 
@@ -582,60 +566,52 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                               {/* /reputation */}
-                              <NavigationMenuLink asChild>
-                                <a
-                                  className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-blue-500 hover:shadow-xl hover:from-blue-50 hover:to-blue-100 dark:hover:from-blue-950 dark:hover:to-blue-900 hover:scale-[1.02]"
-                                  href="/reputation"
-                                  data-testid="link-app-reputation"
-                                >
-                                  <div className="flex items-center justify-between mb-3">
-                                    <div className="flex items-center gap-2">
-                                      <img src={reputationIcon} alt="/reputation icon" className="h-10 w-10 object-contain" />
-                                      <img src={reputationLogo} alt="/reputation" className="h-6 object-contain" />
-                                    </div>
-                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                      <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">Visit Platform →</span>
-                                    </div>
+                              <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 transition-all hover:border-blue-500 hover:shadow-xl hover:from-blue-50 hover:to-blue-100 dark:hover:from-blue-950 dark:hover:to-blue-900 hover:scale-[1.02]" data-testid="card-app-reputation">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <img src={reputationIcon} alt="/reputation icon" className="h-10 w-10 object-contain flex-shrink-0" />
+                                  <div className="h-8 flex items-center">
+                                    <img src={reputationLogo} alt="/reputation" className="h-8 w-32 object-contain" />
                                   </div>
-                                  <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-reputation-title">Review Management</div>
-                                  <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-reputation-description">
-                                    Monitor and respond to customer reviews across all platforms
-                                  </p>
-                                  <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-reputation-features">
-                                    <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Multi-Platform Reviews</li>
-                                    <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> AI-Powered Responses</li>
-                                    <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Sentiment Analysis</li>
-                                  </ul>
-                                </a>
-                              </NavigationMenuLink>
+                                </div>
+                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-reputation-title">Review Management</div>
+                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3" data-testid="text-app-reputation-description">
+                                  Monitor and respond to customer reviews across all platforms
+                                </p>
+                                <ul className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300 mb-4" data-testid="list-app-reputation-features">
+                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Multi-Platform Reviews</li>
+                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> AI-Powered Responses</li>
+                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Sentiment Analysis</li>
+                                </ul>
+                                <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 mt-auto" asChild>
+                                  <Link href="/reputation" data-testid="button-select-reputation">
+                                    Select →
+                                  </Link>
+                                </Button>
+                              </div>
 
                               {/* /listings */}
-                              <NavigationMenuLink asChild>
-                                <a
-                                  className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-indigo-500 hover:shadow-xl hover:from-indigo-50 hover:to-indigo-100 dark:hover:from-indigo-950 dark:hover:to-indigo-900 hover:scale-[1.02]"
-                                  href="/listings"
-                                  data-testid="link-app-listings"
-                                >
-                                  <div className="flex items-center justify-between mb-3">
-                                    <div className="flex items-center gap-2">
-                                      <img src={listingsIcon} alt="/listings icon" className="h-10 w-10 object-contain" />
-                                      <img src={listingsLogo} alt="/listings" className="h-6 object-contain" />
-                                    </div>
-                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                                      <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">Visit Platform →</span>
-                                    </div>
+                              <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 transition-all hover:border-indigo-500 hover:shadow-xl hover:from-indigo-50 hover:to-indigo-100 dark:hover:from-indigo-950 dark:hover:to-indigo-900 hover:scale-[1.02]" data-testid="card-app-listings">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <img src={listingsIcon} alt="/listings icon" className="h-10 w-10 object-contain flex-shrink-0" />
+                                  <div className="h-8 flex items-center">
+                                    <img src={listingsLogo} alt="/listings" className="h-8 w-32 object-contain" />
                                   </div>
-                                  <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-listings-title">Business Listings</div>
-                                  <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400" data-testid="text-app-listings-description">
-                                    Manage business information across directories
-                                  </p>
-                                  <ul className="mt-3 space-y-1.5 text-xs text-gray-700 dark:text-gray-300" data-testid="list-app-listings-features">
-                                    <li className="flex items-center"><span className="text-indigo-500 dark:text-indigo-400 mr-1.5">✓</span> Directory Sync</li>
-                                    <li className="flex items-center"><span className="text-indigo-500 dark:text-indigo-400 mr-1.5">✓</span> Multi-Platform Management</li>
-                                    <li className="flex items-center"><span className="text-indigo-500 dark:text-indigo-400 mr-1.5">✓</span> Performance Analytics</li>
-                                  </ul>
-                                </a>
-                              </NavigationMenuLink>
+                                </div>
+                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-listings-title">Business Listings</div>
+                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3" data-testid="text-app-listings-description">
+                                  Manage business information across directories
+                                </p>
+                                <ul className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300 mb-4" data-testid="list-app-listings-features">
+                                  <li className="flex items-center"><span className="text-indigo-500 dark:text-indigo-400 mr-1.5">✓</span> Directory Sync</li>
+                                  <li className="flex items-center"><span className="text-indigo-500 dark:text-indigo-400 mr-1.5">✓</span> Multi-Platform Management</li>
+                                  <li className="flex items-center"><span className="text-indigo-500 dark:text-indigo-400 mr-1.5">✓</span> Performance Analytics</li>
+                                </ul>
+                                <Button size="sm" className="w-full bg-indigo-600 hover:bg-indigo-700 mt-auto" asChild>
+                                  <Link href="/listings" data-testid="button-select-listings">
+                                    Select →
+                                  </Link>
+                                </Button>
+                              </div>
                               </div> {/* Close LocalBlue apps grid */}
                             </div> {/* Close RIGHT column */}
                           </div> {/* Close main grid wrapper */}
