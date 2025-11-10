@@ -48,7 +48,9 @@ import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
 import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
 import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
 import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
+import hostsBlueWordmark from "@assets/hostsblue assets/hostsblue Brand and Wordmark.png";
 import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
+import swipesBlueWordmark from "@assets/swipesblue/swipesblue Brand and Wordmark.png";
 import blueprintIcon from "@assets/Blueprint_Favicon_1762489845363.png";
 import commverseBundle from "@assets/_ commverse bundle logo_1762731789054.png";
 import commverseIcon from "@assets/Commverse_1762731195351.png";
@@ -1057,6 +1059,25 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       <div className="text-xs text-gray-600">Social Media Mgmt</div>
                     </div>
                   </a>
+                  
+                  {/* LocalBlue Apps */}
+                  <div className="pt-2 mt-2 border-t border-gray-100">
+                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide px-3 mb-2">Local SEO Mgmt</div>
+                    <a href="/listings" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-50 transition-colors" data-testid="link-mobile-listings">
+                      <img src={listingsIcon} alt="" className="h-7 w-7 object-contain" />
+                      <div className="flex-1">
+                        <img src={listingsLogo} alt="/listings" className="h-5 mb-1" />
+                        <div className="text-xs text-gray-600">Directory Sync & Consistency</div>
+                      </div>
+                    </a>
+                    <a href="/reputation" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-yellow-50 transition-colors" data-testid="link-mobile-reputation">
+                      <img src={reputationIcon} alt="" className="h-7 w-7 object-contain" />
+                      <div className="flex-1">
+                        <img src={reputationLogo} alt="/reputation" className="h-5 mb-1" />
+                        <div className="text-xs text-gray-600">Review Response & Reputation Mgmt</div>
+                      </div>
+                    </a>
+                  </div>
                 </div>
               </div>
 
@@ -1076,17 +1097,17 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       <div className="text-xs text-gray-600">Digital intelligence</div>
                     </div>
                   </a>
-                  <a href="#hostsblue" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-purple-50 transition-colors" data-testid="link-mobile-hostsblue">
+                  <a href="https://hostsblue.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-purple-50 transition-colors" data-testid="link-mobile-hostsblue">
                     <img src={hostsBlueIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">HostsBlue</div>
+                      <img src={hostsBlueWordmark} alt="HostsBlue" className="h-5 mb-1" />
                       <div className="text-xs text-gray-600">Hosting & domains</div>
                     </div>
                   </a>
-                  <a href="#swipesblue" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-50 transition-colors" data-testid="link-mobile-swipesblue">
+                  <a href="https://swipesblue.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-50 transition-colors" data-testid="link-mobile-swipesblue">
                     <img src={swipesBlueIcon} alt="" className="h-7 w-7 object-contain" />
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">SwipesBlue</div>
+                      <img src={swipesBlueWordmark} alt="SwipesBlue" className="h-5 mb-1" />
                       <div className="text-xs text-gray-600">Payment gateway</div>
                     </div>
                   </a>
