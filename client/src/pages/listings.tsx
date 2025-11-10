@@ -198,7 +198,8 @@ export default function ListingsManagement() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <SectionHeader 
-        title="/listings - Business Listings Management"
+        title="/listings - Directory Sync & Consistency"
+        subtitle="Keep your business information accurate and identical across 50+ directories and platforms"
         tabs={[
           { 
             label: 'Overview', 

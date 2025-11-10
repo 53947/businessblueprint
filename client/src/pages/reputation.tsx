@@ -219,7 +219,8 @@ export default function ReputationManagement() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <SectionHeader 
-        title="/reputation - Review Management"
+        title="/reputation - Review Response & Reputation"
+        subtitle="Respond to reviews instantly (AI-powered or manual), monitor ratings, and manage your online reputation"
         tabs={[
           { 
             label: 'Overview', 

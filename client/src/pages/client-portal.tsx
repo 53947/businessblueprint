@@ -449,8 +449,8 @@ export default function ClientPortal() {
                 <div className="flex justify-center mb-3">
                   <img src="/attached_assets/native icons and favicons/Reputation Management Icon.png" alt="Reputation" className="w-16 h-16" />
                 </div>
-                <h3 className="font-semibold text-sm mb-2">Reputation Mgmt</h3>
-                <p className="text-xs text-gray-600">Monitor and respond to ratings and reviews</p>
+                <h3 className="font-semibold text-sm mb-2">Review Response</h3>
+                <p className="text-xs text-gray-600">Respond to reviews with AI assist, monitor ratings & reputation</p>
               </div>
               
               {/* Action Button (BOTTOM) */}
