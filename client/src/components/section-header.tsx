@@ -12,6 +12,7 @@ export interface SectionHeaderTab {
 
 interface SectionHeaderProps {
   title: string;
+  subtitle?: string;
   tabs?: SectionHeaderTab[];
   actions?: React.ReactNode;
   showHomeButton?: boolean;
@@ -20,6 +21,7 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ 
   title, 
+  subtitle,
   tabs = [], 
   actions, 
   showHomeButton = true,
@@ -31,9 +33,16 @@ export function SectionHeader({
     <div className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#09080E]">
       <div className="px-6 py-3">
         <div className="flex items-center justify-between mb-3">
-          <h1 className="text-xl font-semibold text-[#09080E] dark:text-white" data-testid={`section-header-${title.toLowerCase().replace(/\s+/g, '-')}`}>
-            {title}
-          </h1>
+          <div>
+            <h1 className="text-xl font-semibold text-[#09080E] dark:text-white" data-testid={`section-header-${title.toLowerCase().replace(/\s+/g, '-')}`}>
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1" data-testid="section-header-subtitle">
+                {subtitle}
+              </p>
+            )}
+          </div>
           <div className="flex items-center gap-2">
             {actions}
             {showHomeButton && (
