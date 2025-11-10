@@ -224,33 +224,33 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
             key={item.id}
             onClick={() => handleNavClick(item, isMobile)}
             className={cn(
-              "w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 text-left group",
+              "w-full flex items-center gap-3 px-4 rounded-lg transition-all duration-200 text-left group",
+              isMobile ? "h-14" : "h-11",
               activeTab === item.id 
                 ? "bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-600 dark:text-blue-400 font-semibold shadow-sm" 
                 : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-sm",
-              isMobile ? "py-4" : "",
               item.hasSpaceBefore ? "mt-4" : ""
             )}
             title={item.hoverLabel || undefined}
             data-testid={`nav-item-${item.id}`}
           >
             <span className={cn(
-              "transition-transform duration-200",
+              "flex-shrink-0 transition-transform duration-200",
               activeTab === item.id ? "scale-110" : "group-hover:scale-105"
             )}>
               {item.icon}
             </span>
             {!collapsed && (
               item.logo ? (
-                <img src={item.logo} alt={item.label} className="flex-1 h-5 object-contain object-left" data-testid={`logo-nav-${item.id}`} />
+                <img src={item.logo} alt={item.label} className="flex-1 h-7 object-contain object-left" data-testid={`logo-nav-${item.id}`} />
               ) : (
-                <span className="flex-1 text-base" data-testid={`text-nav-${item.id}`}>
+                <span className="flex-1 text-base leading-7" data-testid={`text-nav-${item.id}`}>
                   {item.label}
                 </span>
               )
             )}
             {!collapsed && item.badge && (
-              <span className="bg-red-500 text-white text-xs font-semibold rounded-full px-2.5 py-1 shadow-sm" data-testid={`badge-${item.id}`}>
+              <span className="flex-shrink-0 bg-red-500 text-white text-xs font-semibold rounded-full px-2.5 py-1 shadow-sm" data-testid={`badge-${item.id}`}>
                 {item.badge}
               </span>
             )}
