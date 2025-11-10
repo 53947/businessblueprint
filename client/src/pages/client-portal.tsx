@@ -315,7 +315,7 @@ export default function ClientPortal() {
                   <img src="/attached_assets/listings app_1762804610311.png" alt="/listings" className="w-16 h-16" />
                 </div>
                 <div className="flex justify-center mb-2">
-                  <img src="/attached_assets/: listings color triad black and FF0040_1762804610310.png" alt="/listings" className="h-5" />
+                  <img src="/attached_assets/: listings color triad black and FF0040_1762806224294.png" alt="/listings" className="h-5" />
                 </div>
                 <p className="text-xs text-gray-600">Directory sync & consistency</p>
               </div>
@@ -452,7 +452,7 @@ export default function ClientPortal() {
                   <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/reputation" className="w-16 h-16" />
                 </div>
                 <div className="flex justify-center mb-2">
-                  <img src="/attached_assets/: reputation color triad black and D59600_1762804622668.png" alt="/reputation" className="h-5" />
+                  <img src="/attached_assets/: reputation color triad black and D59600_1762806224295.png" alt="/reputation" className="h-5" />
                 </div>
                 <p className="text-xs text-gray-600">Review response & reputation management</p>
               </div>
