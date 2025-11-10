@@ -791,6 +791,243 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all business listings for a client
+  app.get("/api/clients/:id/listings", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+
+      if (isNaN(clientId)) {
+        return res.status(400).json({ error: "Invalid client ID" });
+      }
+
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+
+      // Mock listings data - will be replaced with real data from Synup/Google Business
+      const listings = [
+        {
+          id: 1,
+          platform: "Google Business",
+          status: "active",
+          name: client.companyName || "Business Name",
+          address: client.address || "123 Main St, City, ST 12345",
+          phone: client.phone || "(555) 123-4567",
+          website: client.website || "https://example.com",
+          hours: "Mon-Fri 9AM-5PM",
+          lastUpdated: new Date().toISOString(),
+          url: "https://g.page/example"
+        },
+        {
+          id: 2,
+          platform: "Yelp",
+          status: "active",
+          name: client.companyName || "Business Name",
+          address: client.address || "123 Main St, City, ST 12345",
+          phone: client.phone || "(555) 123-4567",
+          website: client.website || "https://example.com",
+          hours: "Mon-Fri 9AM-5PM",
+          lastUpdated: new Date(Date.now() - 86400000).toISOString(),
+          url: "https://yelp.com/biz/example"
+        }
+      ];
+
+      res.json(listings);
+    } catch (error) {
+      console.error("Error fetching client listings:", error);
+      res.status(500).json({ error: "Failed to fetch listings" });
+    }
+  });
+
+  // Get listing metrics for a client
+  app.get("/api/clients/:id/listings/metrics", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+
+      if (isNaN(clientId)) {
+        return res.status(400).json({ error: "Invalid client ID" });
+      }
+
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+
+      // Mock metrics - will be replaced with real data
+      const metrics = {
+        totalListings: 12,
+        activeListings: 10,
+        pendingListings: 1,
+        errorListings: 1,
+        totalViews: 4523,
+        totalClicks: 892,
+        avgRating: 4.6
+      };
+
+      res.json(metrics);
+    } catch (error) {
+      console.error("Error fetching listing metrics:", error);
+      res.status(500).json({ error: "Failed to fetch listing metrics" });
+    }
+  });
+
+  // Get all reviews for a client
+  app.get("/api/clients/:id/reviews", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+
+      if (isNaN(clientId)) {
+        return res.status(400).json({ error: "Invalid client ID" });
+      }
+
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+
+      // Mock reviews data - will be replaced with real data from Synup/review services
+      const reviews = [
+        {
+          id: 1,
+          platform: "Google",
+          rating: 5,
+          reviewText: "Excellent service! The team was professional and delivered beyond expectations.",
+          reviewerName: "Sarah J.",
+          reviewDate: new Date().toISOString(),
+          sentiment: "positive"
+        },
+        {
+          id: 2,
+          platform: "Yelp",
+          rating: 2,
+          reviewText: "Service was slow and the staff seemed uninterested. Not what I expected.",
+          reviewerName: "Mike T.",
+          reviewDate: new Date(Date.now() - 86400000).toISOString(),
+          sentiment: "negative"
+        },
+        {
+          id: 3,
+          platform: "Facebook",
+          rating: 4,
+          reviewText: "Good experience overall. A few minor issues but nothing major.",
+          reviewerName: "Jennifer L.",
+          reviewDate: new Date(Date.now() - 172800000).toISOString(),
+          response: "Thank you for your feedback! We appreciate your business.",
+          responseDate: new Date(Date.now() - 86400000).toISOString(),
+          sentiment: "positive"
+        }
+      ];
+
+      res.json(reviews);
+    } catch (error) {
+      console.error("Error fetching client reviews:", error);
+      res.status(500).json({ error: "Failed to fetch reviews" });
+    }
+  });
+
+  // Get review analytics for a client
+  app.get("/api/clients/:id/reviews/analytics", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+
+      if (isNaN(clientId)) {
+        return res.status(400).json({ error: "Invalid client ID" });
+      }
+
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+
+      // Mock analytics - will be replaced with real data
+      const analytics = {
+        averageRating: 4.6,
+        totalReviews: 347,
+        positiveCount: 289,
+        negativeCount: 23,
+        neutralCount: 35,
+        responseRate: 87.5,
+        platformBreakdown: {
+          google: 198,
+          yelp: 124,
+          facebook: 25
+        }
+      };
+
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching review analytics:", error);
+      res.status(500).json({ error: "Failed to fetch review analytics" });
+    }
+  });
+
+  // Respond to a review
+  app.post("/api/clients/:id/reviews/:reviewId/respond", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const reviewId = parseInt(req.params.reviewId);
+      const { response, useAI } = req.body;
+
+      if (isNaN(clientId) || isNaN(reviewId)) {
+        return res.status(400).json({ error: "Invalid client ID or review ID" });
+      }
+
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+
+      let reviewResponse = response;
+
+      // If AI response requested, generate using ReviewAI service
+      if (useAI && !response) {
+        // This would call the ReviewAI service to generate a response
+        // For now, return success with mock response
+        reviewResponse = "Thank you for your feedback! We truly appreciate your business and are committed to providing excellent service.";
+      }
+
+      // In production, this would post the response to the review platform
+      // For now, just return success
+      res.json({
+        success: true,
+        response: reviewResponse,
+        postedAt: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error responding to review:", error);
+      res.status(500).json({ error: "Failed to post review response" });
+    }
+  });
+
+  // Update a business listing
+  app.patch("/api/clients/:id/listings/:listingId", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const listingId = parseInt(req.params.listingId);
+
+      if (isNaN(clientId) || isNaN(listingId)) {
+        return res.status(400).json({ error: "Invalid client ID or listing ID" });
+      }
+
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+
+      // In production, this would update the listing via Synup/Google Business API
+      // For now, just return success
+      res.json({
+        success: true,
+        message: "Listing updated successfully",
+        updatedAt: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error updating listing:", error);
+      res.status(500).json({ error: "Failed to update listing" });
+    }
+  });
+
   // AI Coach endpoints
   app.post("/api/ai-coach/guidance", async (req, res) => {
     try {
