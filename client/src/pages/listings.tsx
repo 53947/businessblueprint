@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import listingsIcon from "@assets/generated_images/Listings_management_app_icon_3c875fd8.png";
+import listingsIcon from "@assets/logos and wordmarks/: listings app logo.png";
 
 interface BusinessListing {
   id: number;

@@ -25,7 +25,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { format } from "date-fns";
-import reputationIcon from "@assets/generated_images/Reputation_management_app_icon_9efbc906.png";
+import reputationIcon from "@assets/logos and wordmarks/: reputation app logo.png";
 
 interface Review {
   id: number;

@@ -57,9 +57,9 @@ import captainingIcon from "@assets/native icons and favicons/Captaining Icon.pn
 import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
 import diyIcon from "@assets/native icons and favicons/diy.png";
 import managedServicesIcon from "@assets/native icons and favicons/managed-services.png";
-import reputationIcon from "@assets/generated_images/Reputation_management_app_icon_9efbc906.png";
-import listingsIcon from "@assets/generated_images/Listings_management_app_icon_3c875fd8.png";
-import localBlueBundle from "@assets/generated_images/LocalBlue_bundle_logo_-_all_blue_47d0626b.png";
+import reputationIcon from "@assets/native icons and favicons/: reputation app icon.png";
+import listingsIcon from "@assets/native icons and favicons/: listings app icon.png";
+import localBlueBundle from "@assets/localblue/LocalBlue Brand and Wordmark.png";
 import step1Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
 import step2Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/2-Get your prescribed blueprint.png";
 import step3Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/3-Choose your base plan.png";
