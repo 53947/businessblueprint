@@ -57,9 +57,12 @@ import captainingIcon from "@assets/native icons and favicons/Captaining Icon.pn
 import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
 import diyIcon from "@assets/native icons and favicons/diy.png";
 import managedServicesIcon from "@assets/native icons and favicons/managed-services.png";
-import reputationIcon from "@assets/native icons and favicons/: reputation app icon.png";
-import listingsIcon from "@assets/native icons and favicons/: listings app icon.png";
-import localBlueBundle from "@assets/localblue/LocalBlue Brand and Wordmark.png";
+import reputationIcon from "@assets/reputation app triad blue and repoutation gold_1762804622669.png";
+import reputationLogo from "@assets/: reputation color triad black and D59600_1762804622668.png";
+import listingsIcon from "@assets/listings app_1762804610311.png";
+import listingsLogo from "@assets/: listings color triad black and FF0040_1762804610310.png";
+import localBlueIcon from "@assets/Local Blue App Icon_1762804584510.png";
+import localBlueLogo from "@assets/: localblue color triad black and triad blue_1762804584510.png";
 import step1Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
 import step2Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/2-Get your prescribed blueprint.png";
 import step3Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/3-Choose your base plan.png";
@@ -552,9 +555,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <div className="mb-6 p-4 rounded-lg border-2 border-blue-600 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950">
                               <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-3">
-                                  <img src={reputationIcon} alt="LocalBlue" className="h-12 w-12 object-contain rounded-lg" />
+                                  <img src={localBlueIcon} alt="LocalBlue" className="h-12 w-12 object-contain rounded-lg" />
                                   <div>
-                                    <img src={localBlueBundle} alt="/localblue Bundle" className="h-8 object-contain mb-1" />
+                                    <img src={localBlueLogo} alt="/localblue Bundle" className="h-8 object-contain mb-1" />
                                     <p className="text-sm text-gray-600 dark:text-gray-400">Local Presence Management</p>
                                   </div>
                                 </div>
@@ -586,7 +589,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <div className="flex items-center justify-between mb-3">
                                     <div className="flex items-center gap-2">
                                       <img src={reputationIcon} alt="/reputation icon" className="h-10 w-10 object-contain" />
-                                      <span className="font-bold text-blue-600 dark:text-blue-400">/reputation</span>
+                                      <img src={reputationLogo} alt="/reputation" className="h-6 object-contain" />
                                     </div>
                                     <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                       <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">Visit Platform →</span>
@@ -614,7 +617,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <div className="flex items-center justify-between mb-3">
                                     <div className="flex items-center gap-2">
                                       <img src={listingsIcon} alt="/listings icon" className="h-10 w-10 object-contain" />
-                                      <span className="font-bold text-indigo-600 dark:text-indigo-400">/listings</span>
+                                      <img src={listingsLogo} alt="/listings" className="h-6 object-contain" />
                                     </div>
                                     <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                                       <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">Visit Platform →</span>
