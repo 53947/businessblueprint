@@ -401,34 +401,38 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Applications</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-6 w-[90vw] max-w-[700px]">
-                          <div className="mb-6 p-4 rounded-lg border-2 border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950">
-                            <div className="flex items-center justify-between mb-3">
-                              <div className="flex items-center gap-3">
-                                <img src={commverseIcon} alt="Commverse" className="h-12 w-12 object-contain rounded-lg" />
-                                <div>
-                                  <img src={commverseBundle} alt="Commverse Bundle" className="h-8 object-contain mb-1" />
-                                  <p className="text-sm text-gray-600 dark:text-gray-400">All 4 Communication Apps</p>
+                        <div className="p-6 w-[90vw] max-w-[1000px]">
+                          {/* Two-column layout: Commverse (left) | LocalBlue (right) */}
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {/* LEFT COLUMN: Commverse Bundle */}
+                            <div className="space-y-4">
+                              <div className="p-4 rounded-lg border-2 border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950">
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-2">
+                                    <img src={commverseIcon} alt="Commverse" className="h-10 w-10 object-contain rounded-lg" />
+                                    <div>
+                                      <img src={commverseBundle} alt="Commverse Bundle" className="h-6 object-contain mb-1" />
+                                      <p className="text-xs text-gray-600 dark:text-gray-400">All 4 Communication Apps</p>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <div className="text-xl font-bold text-blue-600 dark:text-blue-400">$100<span className="text-xs">/mo</span></div>
+                                    <p className="text-[10px] text-green-600 dark:text-green-400">Save $40/month</p>
+                                  </div>
                                 </div>
+                                <Link href="/applications?bundle=commverse">
+                                  <Button size="sm" className="w-full" data-testid="button-get-commverse">
+                                    Get Commverse Bundle →
+                                  </Button>
+                                </Link>
                               </div>
-                              <div>
-                                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">$100<span className="text-sm">/mo</span></div>
-                                <p className="text-xs text-green-600 dark:text-green-400">Save $40/month</p>
-                              </div>
-                            </div>
-                            <Link href="/applications?bundle=commverse">
-                              <Button className="w-full" data-testid="button-get-commverse">
-                                Get Commverse Bundle →
-                              </Button>
-                            </Link>
-                          </div>
 
-                          <div className="mb-3">
-                            <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
-                              Or choose individual apps at $35/mo each
-                            </h4>
-                          </div>
-                          <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <h4 className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-2">
+                                  Or individual apps at $35/mo each
+                                </h4>
+                              </div>
+                              <div className="grid grid-cols-2 gap-3">
                             {/* /send */}
                             <NavigationMenuLink asChild>
                               <a
@@ -540,10 +544,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </ul>
                               </a>
                             </NavigationMenuLink>
-                          </div>
+                              </div>
+                            </div>
 
-                          {/* LocalBlue Bundle Section */}
-                          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                            {/* RIGHT COLUMN: LocalBlue Bundle */}
+                            <div className="space-y-4">
                             <div className="mb-6 p-4 rounded-lg border-2 border-blue-600 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950">
                               <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center gap-3">
@@ -626,9 +631,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   </ul>
                                 </a>
                               </NavigationMenuLink>
-                            </div>
-                          </div>
-                        </div>
+                              </div> {/* Close LocalBlue apps grid */}
+                            </div> {/* Close RIGHT column */}
+                          </div> {/* Close main grid wrapper */}
+                        </div> {/* Close Applications content container */}
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
