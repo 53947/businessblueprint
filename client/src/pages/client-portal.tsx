@@ -288,12 +288,12 @@ export default function ClientPortal() {
 
         {/* 5 Service Boxes - Official Order */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-          {/* 1. Local SEO Management */}
+          {/* 1. Local SEO Management - /listings */}
           <Card className="hover:shadow-lg transition-shadow" data-testid="card-local-seo">
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/native icons and favicons/LOCAL SEO_1762239599463.png" alt="Local SEO" className="w-8 h-8" />
+                <img src="/attached_assets/listings app_1762804610311.png" alt="/listings" className="w-8 h-8" />
                 <div className="text-center">
                   <div className="flex gap-3">
                     <div>
@@ -312,15 +312,17 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/native icons and favicons/LOCAL SEO_1762239599463.png" alt="Local SEO" className="w-16 h-16" />
+                  <img src="/attached_assets/listings app_1762804610311.png" alt="/listings" className="w-16 h-16" />
                 </div>
-                <h3 className="font-semibold text-sm mb-2">Local SEO Mgmt</h3>
-                <p className="text-xs text-gray-600">Manage listings & citations</p>
+                <div className="flex justify-center mb-2">
+                  <img src="/attached_assets/: listings color triad black and FF0040_1762804610310.png" alt="/listings" className="h-5" />
+                </div>
+                <p className="text-xs text-gray-600">Directory sync & consistency</p>
               </div>
               
               {/* Action Button (BOTTOM) */}
               <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("listings")} data-testid="button-manage-local-seo">
-                <img src="/attached_assets/native icons and favicons/LOCAL SEO_1762239599463.png" alt="" className="w-4 h-4" />
+                <img src="/attached_assets/listings app_1762804610311.png" alt="" className="w-4 h-4" />
                 <span>Manage</span>
               </Button>
             </CardContent>
@@ -432,12 +434,12 @@ export default function ClientPortal() {
             </CardContent>
           </Card>
 
-          {/* 4. Reputation Management */}
+          {/* 4. Reputation Management - /reputation */}
           <Card className="hover:shadow-lg transition-shadow" data-testid="card-reputation">
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/native icons and favicons/Reputation Management Icon.png" alt="Reputation" className="w-8 h-8" />
+                <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/reputation" className="w-8 h-8" />
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">{clientData.reviews.average}</div>
                   <p className="text-[10px] text-gray-600">Review Ratings</p>
@@ -447,15 +449,17 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/native icons and favicons/Reputation Management Icon.png" alt="Reputation" className="w-16 h-16" />
+                  <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/reputation" className="w-16 h-16" />
                 </div>
-                <h3 className="font-semibold text-sm mb-2">Review Response</h3>
-                <p className="text-xs text-gray-600">Respond to reviews with AI assist, monitor ratings & reputation</p>
+                <div className="flex justify-center mb-2">
+                  <img src="/attached_assets/: reputation color triad black and D59600_1762804622668.png" alt="/reputation" className="h-5" />
+                </div>
+                <p className="text-xs text-gray-600">Review response & reputation management</p>
               </div>
               
               {/* Action Button (BOTTOM) */}
               <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("reviews")} data-testid="button-respond-reviews">
-                <img src="/attached_assets/native icons and favicons/Reputation Management Icon.png" alt="" className="w-4 h-4" />
+                <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="" className="w-4 h-4" />
                 <span>Respond</span>
               </Button>
             </CardContent>
