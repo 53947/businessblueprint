@@ -29,7 +29,9 @@ import reputationLogo from "@assets/: reputation color triad black and D59600_17
 import settingsIcon from "@assets/native icons and favicons/settings.png";
 import aiCoachIcon from "@assets/Coach Blue as Blue_1762721690836.png";
 import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
+import hostsBlueWordmark from "@assets/hostsblue assets/hostsblue Brand and Wordmark.png";
 import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
+import swipesBlueWordmark from "@assets/swipesblue/swipesblue Brand and Wordmark.png";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;
@@ -161,15 +163,17 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
     },
     { 
       id: "hostsblue", 
-      label: "hostsblue.com",
-      icon: <img src={hostsBlueIcon} alt="Hosts Blue" className="w-7 h-7 object-contain" />,
+      label: "hostsblue",
+      icon: <img src={hostsBlueIcon} alt="HostsBlue" className="w-7 h-7 object-contain" />,
+      logo: hostsBlueWordmark,
       external: true,
       href: "https://hostsblue.com"
     },
     { 
       id: "swipesblue", 
-      label: "swipesblue.com",
-      icon: <img src={swipesBlueIcon} alt="Swipes Blue" className="w-7 h-7 object-contain" />,
+      label: "swipesblue",
+      icon: <img src={swipesBlueIcon} alt="SwipesBlue" className="w-7 h-7 object-contain" />,
+      logo: swipesBlueWordmark,
       external: true,
       href: "https://swipesblue.com"
     },
