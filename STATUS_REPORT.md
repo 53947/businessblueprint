@@ -6,6 +6,23 @@
 
 ## 📅 Recent Updates
 
+### November 10, 2025 - 2:00 PM - HOSTSBLUE & SWIPESBLUE OFFICIAL WORDMARKS
+
+- 🎨 **OFFICIAL WORDMARK IMAGES:**
+  - Changed HostsBlue from typed "hostsblue.com" to official wordmark image
+  - Changed SwipesBlue from typed "swipesblue.com" to official wordmark image
+  - Now consistent with all other apps (using official brand assets, not typed text)
+  
+- 🖼️ **WORDMARK ASSETS:**
+  - HostsBlue: `hostsblue Brand and Wordmark.png` (purple branding)
+  - SwipesBlue: `swipesblue Brand and Wordmark.png` (red branding)
+  - Both at 28px height matching all other nav logos
+  
+- ✅ **FILES MODIFIED:**
+  - `client/src/components/side-nav.tsx`: Added wordmark imports and updated navItems
+  
+- ✅ **STATUS:** COMPLETE - All platform wordmarks now use official brand assets
+
 ### November 10, 2025 - 1:00 PM - SIDEBAR NAVIGATION SIZING STANDARDIZED
 
 - 🎨 **CONSISTENT NAV ITEM HEIGHTS:**
