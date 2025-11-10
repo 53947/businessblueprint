@@ -87,6 +87,13 @@ Before making any UI/branding changes:
 
 **Commverse apps:** `/send`, `/inbox`, `/content`, `/livechat` (all lowercase)
 
+**LocalBlue apps (PERMANENT - DO NOT CHANGE):**
+- **/localblue** - LocalBlue bundle (local business presence) - TriadBlack & TriadBlue (#0000FF)
+- **/listings** - Directory sync & consistency - TriadBlack & #FF0040 (pink/red)
+- **/reputation** - Review response & reputation management - TriadBlack & #D59600 (gold)
+
+**⚠️ CRITICAL NAMING RULE:** Always use **`/localblue`**, **`/listings`**, **`/reputation`** (lowercase with "/" prefix). NEVER spell out letters. These are official apps with official branding.
+
 ### Logo & Typography Rules
 - Logo uses **Archivo fonts** (never images)
 - Text shadow: 2pt blur, 10pt distance @ 315°
