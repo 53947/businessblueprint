@@ -51,6 +51,23 @@
 
 ---
 
+## 4️⃣.1 LocalBlue App Colors (PERMANENT - DO NOT CHANGE)
+
+> **PERMANENT NAMING RULE:** Use **`/localblue`**, **`/listings`**, **`/reputation`** (lowercase, with "/" prefix). Never spell out letters. These are official apps.
+
+| App | Base (slash "/") | Accent (app name) | Notes |
+|------|------------------|------------------|-------|
+| **/localblue** | `#09080E` | `#0000FF` | LocalBlue bundle - local business presence |
+| **/listings** | `#09080E` | `#FF0040` | Directory sync & consistency |
+| **/reputation** | `#09080E` | `#D59600` | Review response & reputation management (gold) |
+
+**Official Branding Assets:**
+- `/localblue`: Blue wordmark + blue star icon (TriadBlack & TriadBlue)
+- `/listings`: Pink/red wordmark + house/magnifying glass icon (TriadBlack & #FF0040)
+- `/reputation`: Gold wordmark + shield/thumbs-up icon (TriadBlue & #D59600/gold)
+
+---
+
 ## 5️⃣ Pathways & Base Plan Mapping
 
 ### Pathways
