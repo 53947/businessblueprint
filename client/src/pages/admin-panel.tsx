@@ -1,11 +1,19 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Header } from "@/components/header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { 
   Table,
   TableBody,
@@ -189,6 +197,33 @@ export default function AdminPanel() {
       sessionStorage.setItem("externalId", client.externalId);
     }
     setLocation('/portal');
+  };
+
+  // Mutation to update client account status
+  const updateAccountStatusMutation = useMutation({
+    mutationFn: async ({ clientId, status, reason }: { clientId: number; status: string; reason?: string }) => {
+      return await apiRequest('PATCH', `/api/admin/clients/${clientId}/status`, { status, reason });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/subscriptions'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/clients'] });
+      toast({
+        title: "Account Status Updated",
+        description: "The client's account status has been successfully updated.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Update Failed",
+        description: error.message || "Failed to update account status. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleStatusChange = (clientId: number, newStatus: string, clientName: string) => {
+    const reason = newStatus === 'suspended' ? 'Admin action' : undefined;
+    updateAccountStatusMutation.mutate({ clientId, status: newStatus, reason });
   };
 
   return (
@@ -820,7 +855,66 @@ export default function AdminPanel() {
                           {expandedSubscription === sub.subscription.id && (
                             <TableRow key={`${sub.subscription.id}-history`} data-testid={`row-billing-history-${sub.subscription.id}`}>
                               <TableCell colSpan={7} className="bg-gray-50 dark:bg-gray-900 p-6">
-                                <div className="space-y-4">
+                                <div className="space-y-6">
+                                  {/* Account Management Controls */}
+                                  <div className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <div className="flex items-center justify-between">
+                                      <div>
+                                        <h5 className="font-semibold mb-1">Account Management</h5>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                          Manage {sub.client.companyName}'s account status
+                                        </p>
+                                      </div>
+                                      <div className="flex items-center gap-4">
+                                        <div>
+                                          <label className="text-sm font-medium mb-2 block">Account Status</label>
+                                          <Select
+                                            value={sub.client.accountStatus || 'active'}
+                                            onValueChange={(value) => handleStatusChange(sub.client.id, value, sub.client.companyName)}
+                                            disabled={updateAccountStatusMutation.isPending}
+                                          >
+                                            <SelectTrigger className="w-[180px]" data-testid={`select-account-status-${sub.subscription.id}`}>
+                                              <SelectValue placeholder="Select status" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="active" data-testid="option-active">
+                                                <div className="flex items-center gap-2">
+                                                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                                                  Active
+                                                </div>
+                                              </SelectItem>
+                                              <SelectItem value="suspended" data-testid="option-suspended">
+                                                <div className="flex items-center gap-2">
+                                                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                                                  Suspended
+                                                </div>
+                                              </SelectItem>
+                                              <SelectItem value="inactive" data-testid="option-inactive">
+                                                <div className="flex items-center gap-2">
+                                                  <div className="w-2 h-2 rounded-full bg-gray-500"></div>
+                                                  Inactive
+                                                </div>
+                                              </SelectItem>
+                                              <SelectItem value="pending" data-testid="option-pending">
+                                                <div className="flex items-center gap-2">
+                                                  <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                                                  Pending
+                                                </div>
+                                              </SelectItem>
+                                              <SelectItem value="banned" data-testid="option-banned">
+                                                <div className="flex items-center gap-2">
+                                                  <div className="w-2 h-2 rounded-full bg-black"></div>
+                                                  Banned
+                                                </div>
+                                              </SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Billing History */}
                                   <div className="flex items-center justify-between mb-4">
                                     <h4 className="font-semibold text-lg">Billing History</h4>
                                     <Badge variant="outline">
