@@ -7,6 +7,7 @@ import contentRoutes from "./routes/content";
 import metaRoutes from "./routes/meta";
 import { tasksRouter } from "./routes/tasks";
 import brandColorsRoutes from "./routes/brand-colors";
+import { registerBillingAdminRoutes } from "./routes/billing-admin";
 import {
   insertAssessmentSchema,
   subscriptionPlans,
@@ -2604,6 +2605,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Brand Colors Routes
   app.use('/api/brand-colors', brandColorsRoutes);
+
+  // Billing & Account Management Routes
+  registerBillingAdminRoutes(app);
 
   const httpServer = createServer(app);
   return httpServer;

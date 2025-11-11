@@ -106,6 +106,12 @@ export const clients = pgTable("clients", {
   lastLoginTime: timestamp("last_login_time"),
   loginCount: integer("login_count").default(0),
   
+  // Account status management
+  accountStatus: varchar("account_status", { length: 20 }).default("active"), // active, suspended, inactive, pending, banned
+  suspensionReason: text("suspension_reason"), // Reason if suspended
+  statusChangedAt: timestamp("status_changed_at"),
+  statusChangedBy: integer("status_changed_by"), // Admin ID who changed status
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -183,6 +189,19 @@ export const clientAssessments = pgTable("client_assessments", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Account status history for audit trail
+export const accountStatusHistory = pgTable("account_status_history", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  previousStatus: varchar("previous_status", { length: 20 }),
+  newStatus: varchar("new_status", { length: 20 }).notNull(),
+  reason: text("reason"),
+  changedBy: integer("changed_by"), // Admin ID who made the change
+  ipAddress: varchar("ip_address", { length: 45 }),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Insert schemas
 export const insertAssessmentSchema = createInsertSchema(assessments).pick({
   businessName: true,
@@ -218,6 +237,20 @@ export const insertClientSchema = createInsertSchema(clients).pick({
   verificationExpiry: true,
   lastLoginTime: true,
   loginCount: true,
+  accountStatus: true,
+  suspensionReason: true,
+  statusChangedAt: true,
+  statusChangedBy: true,
+});
+
+export const insertAccountStatusHistorySchema = createInsertSchema(accountStatusHistory).pick({
+  clientId: true,
+  previousStatus: true,
+  newStatus: true,
+  reason: true,
+  changedBy: true,
+  ipAddress: true,
+  userAgent: true,
 });
 
 export const insertMagicLinkTokenSchema = createInsertSchema(magicLinkTokens).pick({
@@ -494,6 +527,8 @@ export type InboxMessage = typeof inboxMessages.$inferSelect;
 export type InsertInboxMessage = z.infer<typeof insertInboxMessageSchema>;
 export type Campaign = typeof campaigns.$inferSelect;
 export type InsertCampaign = z.infer<typeof insertCampaignSchema>;
+export type AccountStatusHistory = typeof accountStatusHistory.$inferSelect;
+export type InsertAccountStatusHistory = z.infer<typeof insertAccountStatusHistorySchema>;
 
 // Subscription types
 export type SubscriptionPlan = typeof subscriptionPlans.$inferSelect;
