@@ -28,11 +28,17 @@ import {
   Palette,
   FileText,
   Calendar,
-  TrendingUp
+  TrendingUp,
+  DollarSign,
+  CreditCard,
+  AlertCircle,
+  ChevronDown,
+  ChevronRight
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { format } from "date-fns";
+import React from "react";
 
 interface Client {
   id: number;
@@ -61,9 +67,45 @@ interface Assessment {
   createdAt: string;
 }
 
+interface SubscriptionWithDetails {
+  subscription: {
+    id: number;
+    clientId: number;
+    planId: number;
+    status: string;
+    billingCycle: string;
+    totalAmount: string;
+    nextBillingDate: string;
+  };
+  client: {
+    id: number;
+    companyName: string;
+    email: string;
+    accountStatus?: string;
+  };
+  plan: {
+    id: number;
+    name: string;
+    basePrice: string;
+  };
+  addons: Array<{
+    id: number;
+    name: string;
+    price: string;
+  }>;
+  billingHistory: Array<{
+    id: number;
+    amount: string;
+    status: string;
+    billingDate: string;
+  }>;
+}
+
 export default function AdminPanel() {
   const [searchQuery, setSearchQuery] = useState("");
   const [assessmentSearchQuery, setAssessmentSearchQuery] = useState("");
+  const [billingSearchQuery, setBillingSearchQuery] = useState("");
+  const [expandedSubscription, setExpandedSubscription] = useState<number | null>(null);
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const { toast } = useToast();
   const [, setLocation] = useLocation();
@@ -76,6 +118,18 @@ export default function AdminPanel() {
   // Fetch all assessments (admin-only endpoint)
   const { data: assessments, isLoading: assessmentsLoading } = useQuery<Assessment[]>({
     queryKey: ['/api/admin/assessments'],
+  });
+
+  // Fetch all subscriptions with billing data (admin-only endpoint)
+  const { data: subscriptionsData, isLoading: subscriptionsLoading } = useQuery<{
+    subscriptions: SubscriptionWithDetails[];
+    stats: {
+      totalSubscriptions: number;
+      activeSubscriptions: number;
+      monthlyRecurringRevenue: number;
+    };
+  }>({
+    queryKey: ['/api/admin/subscriptions'],
   });
 
   // Compute stats safely
@@ -103,6 +157,17 @@ export default function AdminPanel() {
       assessment.businessName?.toLowerCase().includes(query) ||
       assessment.email?.toLowerCase().includes(query) ||
       assessment.industry?.toLowerCase().includes(query)
+    );
+  }) || [];
+
+  // Filter subscriptions based on search
+  const filteredSubscriptions = subscriptionsData?.subscriptions?.filter((sub) => {
+    const query = billingSearchQuery.toLowerCase();
+    return (
+      sub.subscription.id.toString().includes(query) ||
+      sub.client.companyName?.toLowerCase().includes(query) ||
+      sub.client.email?.toLowerCase().includes(query) ||
+      sub.plan.name?.toLowerCase().includes(query)
     );
   }) || [];
 
@@ -158,9 +223,9 @@ export default function AdminPanel() {
           </div>
         </div>
 
-        {/* Tabs for Clients and Assessments */}
+        {/* Tabs for Clients, Assessments, and Billing */}
         <Tabs defaultValue="clients" className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-2 mb-8">
+          <TabsList className="grid w-full max-w-2xl grid-cols-3 mb-8">
             <TabsTrigger value="clients" data-testid="tab-clients">
               <Users className="w-4 h-4 mr-2" />
               Clients ({totalClients})
@@ -168,6 +233,10 @@ export default function AdminPanel() {
             <TabsTrigger value="assessments" data-testid="tab-assessments">
               <FileText className="w-4 h-4 mr-2" />
               Assessments ({totalAssessments})
+            </TabsTrigger>
+            <TabsTrigger value="billing" data-testid="tab-billing">
+              <CreditCard className="w-4 h-4 mr-2" />
+              Billing ({subscriptionsData?.stats?.totalSubscriptions ?? 0})
             </TabsTrigger>
           </TabsList>
 
@@ -557,6 +626,291 @@ export default function AdminPanel() {
                     </Table>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* BILLING TAB */}
+          <TabsContent value="billing" className="mt-0">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>Total Subscriptions</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="w-5 h-5 text-blue-600" />
+                    <span className="text-3xl font-bold" data-testid="stat-total-subscriptions">
+                      {subscriptionsData?.stats?.totalSubscriptions ?? 0}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>Active Subscriptions</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-3">
+                    <Check className="w-5 h-5 text-green-600" />
+                    <span className="text-3xl font-bold" data-testid="stat-active-subscriptions">
+                      {subscriptionsData?.stats?.activeSubscriptions ?? 0}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardDescription>Monthly Recurring Revenue</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-3">
+                    <DollarSign className="w-5 h-5 text-green-600" />
+                    <span className="text-3xl font-bold" data-testid="stat-mrr">
+                      ${subscriptionsData?.stats?.monthlyRecurringRevenue?.toFixed(2) ?? '0.00'}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Search Bar */}
+            <Card className="mb-6">
+              <CardContent className="pt-6">
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                  <Input
+                    placeholder="Search by Subscription ID, Company, Email, or Plan..."
+                    value={billingSearchQuery}
+                    onChange={(e) => setBillingSearchQuery(e.target.value)}
+                    className="pl-10 h-12 text-base"
+                    data-testid="input-search-billing"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Subscriptions Table */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Client Subscriptions ({filteredSubscriptions.length})</CardTitle>
+                <CardDescription>
+                  View all client subscriptions, billing details, and account status.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {subscriptionsLoading ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    ))}
+                  </div>
+                ) : filteredSubscriptions.length === 0 ? (
+                  <div className="text-center py-12" data-testid="empty-state-billing">
+                    <CreditCard className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {billingSearchQuery ? "No subscriptions found matching your search" : "No active subscriptions yet"}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-20">Sub ID</TableHead>
+                          <TableHead>Client</TableHead>
+                          <TableHead>Plan</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Amount</TableHead>
+                          <TableHead>Next Billing</TableHead>
+                          <TableHead className="text-right">Account Status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredSubscriptions.map((sub) => (
+                          <React.Fragment key={sub.subscription.id}>
+                            <TableRow 
+                              data-testid={`row-subscription-${sub.subscription.id}`}
+                              className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+                              onClick={() => setExpandedSubscription(
+                                expandedSubscription === sub.subscription.id ? null : sub.subscription.id
+                              )}
+                            >
+                              <TableCell className="font-mono font-medium" data-testid={`text-subscription-id-${sub.subscription.id}`}>
+                                <div className="flex items-center gap-2">
+                                  {expandedSubscription === sub.subscription.id ? (
+                                    <ChevronDown className="h-4 w-4 text-gray-400" />
+                                  ) : (
+                                    <ChevronRight className="h-4 w-4 text-gray-400" />
+                                  )}
+                                  {sub.subscription.id}
+                                </div>
+                              </TableCell>
+                            
+                            <TableCell>
+                              <div className="space-y-1">
+                                <div className="font-medium" data-testid={`text-client-name-${sub.subscription.id}`}>
+                                  {sub.client.companyName}
+                                </div>
+                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                  <Mail className="h-3 w-3" />
+                                  <span data-testid={`text-client-email-${sub.subscription.id}`}>
+                                    {sub.client.email}
+                                  </span>
+                                </div>
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell>
+                              <div className="space-y-1">
+                                <div className="font-medium" data-testid={`text-plan-${sub.subscription.id}`}>
+                                  {sub.plan.name}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {sub.subscription.billingCycle}
+                                  {sub.addons.length > 0 && (
+                                    <span className="ml-1">+ {sub.addons.length} addon{sub.addons.length > 1 ? 's' : ''}</span>
+                                  )}
+                                </div>
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell>
+                              <Badge 
+                                variant={sub.subscription.status === 'active' ? 'default' : 'secondary'}
+                                className={sub.subscription.status === 'active' ? 'bg-green-100 text-green-700 hover:bg-green-100' : ''}
+                                data-testid={`badge-subscription-status-${sub.subscription.id}`}
+                              >
+                                {sub.subscription.status}
+                              </Badge>
+                            </TableCell>
+
+                            <TableCell>
+                              <div className="flex items-center gap-2 font-semibold" data-testid={`text-amount-${sub.subscription.id}`}>
+                                <DollarSign className="h-4 w-4 text-gray-400" />
+                                {parseFloat(sub.subscription.totalAmount).toFixed(2)}
+                              </div>
+                            </TableCell>
+
+                            <TableCell>
+                              <div className="flex items-center gap-2 text-sm" data-testid={`text-next-billing-${sub.subscription.id}`}>
+                                <Calendar className="h-3 w-3 text-gray-400" />
+                                {format(new Date(sub.subscription.nextBillingDate), 'MMM d, yyyy')}
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell className="text-right">
+                              <Badge
+                                variant={
+                                  sub.client.accountStatus === 'active' ? 'default' :
+                                  sub.client.accountStatus === 'suspended' ? 'destructive' :
+                                  'secondary'
+                                }
+                                data-testid={`badge-account-status-${sub.subscription.id}`}
+                              >
+                                {sub.client.accountStatus || 'active'}
+                              </Badge>
+                            </TableCell>
+                          </TableRow>
+                          
+                          {/* Expanded Billing History Row */}
+                          {expandedSubscription === sub.subscription.id && (
+                            <TableRow key={`${sub.subscription.id}-history`} data-testid={`row-billing-history-${sub.subscription.id}`}>
+                              <TableCell colSpan={7} className="bg-gray-50 dark:bg-gray-900 p-6">
+                                <div className="space-y-4">
+                                  <div className="flex items-center justify-between mb-4">
+                                    <h4 className="font-semibold text-lg">Billing History</h4>
+                                    <Badge variant="outline">
+                                      {sub.billingHistory.length} transaction{sub.billingHistory.length !== 1 ? 's' : ''}
+                                    </Badge>
+                                  </div>
+                                  
+                                  {sub.billingHistory.length === 0 ? (
+                                    <div className="text-center py-8 text-gray-500">
+                                      <FileText className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                                      <p>No billing history available</p>
+                                    </div>
+                                  ) : (
+                                    <div className="space-y-2">
+                                      {sub.billingHistory.map((transaction) => (
+                                        <div 
+                                          key={transaction.id} 
+                                          className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                                          data-testid={`transaction-${transaction.id}`}
+                                        >
+                                          <div className="flex items-center gap-4">
+                                            <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded">
+                                              <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                            </div>
+                                            <div>
+                                              <div className="font-medium">
+                                                ${parseFloat(transaction.amount).toFixed(2)}
+                                              </div>
+                                              <div className="text-sm text-gray-500 flex items-center gap-2">
+                                                <Calendar className="h-3 w-3" />
+                                                {format(new Date(transaction.billingDate), 'MMM d, yyyy')}
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <Badge
+                                            variant={transaction.status === 'paid' ? 'default' : transaction.status === 'failed' ? 'destructive' : 'secondary'}
+                                            className={transaction.status === 'paid' ? 'bg-green-100 text-green-700 hover:bg-green-100' : ''}
+                                          >
+                                            {transaction.status}
+                                          </Badge>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                  
+                                  {sub.addons.length > 0 && (
+                                    <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                      <h5 className="font-semibold mb-3">Active Add-ons</h5>
+                                      <div className="grid grid-cols-2 gap-3">
+                                        {sub.addons.map((addon) => (
+                                          <div 
+                                            key={addon.id}
+                                            className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700"
+                                          >
+                                            <span className="text-sm font-medium">{addon.name}</span>
+                                            <span className="text-sm text-gray-600 dark:text-gray-400">
+                                              +${parseFloat(addon.price).toFixed(2)}
+                                            </span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                          </React.Fragment>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Info Card */}
+            <Card className="mt-6 bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                    <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold mb-1 text-blue-900 dark:text-blue-100">Billing Management</h3>
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                      View all client subscriptions, billing history, and manage account status. Click on a client to view their full billing details.
+                    </p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
