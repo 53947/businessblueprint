@@ -97,6 +97,9 @@ export const clients = pgTable("clients", {
   // System protection - prevents automated deletion
   isProtected: boolean("is_protected").default(false),
   
+  // Admin access control
+  isAdmin: boolean("is_admin").default(false),
+  
   // Email verification
   isEmailVerified: boolean("is_email_verified").default(false),
   verificationCode: text("verification_code"),
