@@ -2,12 +2,35 @@ import { Router } from 'express';
 import { storage } from '../storage';
 import { z } from 'zod';
 import { isAuthenticated } from '../replitAuth';
+import { db } from '../db';
+import { clients } from '@shared/schema';
+import { eq } from 'drizzle-orm';
 
 // Admin middleware - checks if user is authenticated AND is an admin
-const requireAdmin = [isAuthenticated, (req: any, res: any, next: any) => {
-  // TODO: Add proper admin role check from user claims or database
-  // For now, only allow authenticated users
-  next();
+const requireAdmin = [isAuthenticated, async (req: any, res: any, next: any) => {
+  try {
+    // Get user ID from authenticated session
+    const userId = req.user?.claims?.sub;
+    
+    if (!userId) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+    
+    // Check if user is an admin in the database
+    const user = await db.query.clients.findFirst({
+      where: eq(clients.id, parseInt(userId))
+    });
+    
+    if (!user || !user.isAdmin) {
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+    
+    // User is admin, allow access
+    next();
+  } catch (error) {
+    console.error('Admin check error:', error);
+    return res.status(500).json({ error: 'Authorization check failed' });
+  }
 }];
 
 export function registerBillingAdminRoutes(router: Router) {
