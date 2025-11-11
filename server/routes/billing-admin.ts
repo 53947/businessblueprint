@@ -8,7 +8,7 @@ import { eq } from 'drizzle-orm';
 import { requireClientPortalAccess } from '../middleware/clientPortalAuth';
 
 // Admin middleware - checks if user is authenticated AND is an admin
-const requireAdmin = [isAuthenticated, async (req: any, res: any, next: any) => {
+const requireAdmin = [isAuthenticated, async (req: any, res: any, next: any): Promise<void> => {
   try {
     // Get user ID from authenticated session
     const userId = req.user?.claims?.sub;
@@ -41,7 +41,7 @@ export function registerBillingAdminRoutes(router: Router) {
   // ========================================
   
   // GET /api/admin/subscriptions - Get all subscriptions with full details
-  router.get('/api/admin/subscriptions', requireAdmin, async (req, res) => {
+  router.get('/api/admin/subscriptions', requireAdmin, async (req: any, res: any) => {
     try {
       const subscriptions = await storage.getAllSubscriptions();
       
@@ -62,7 +62,7 @@ export function registerBillingAdminRoutes(router: Router) {
   });
   
   // GET /api/admin/clients/:id/billing - Get specific client's billing details
-  router.get('/api/admin/clients/:id/billing', requireAdmin, async (req, res) => {
+  router.get('/api/admin/clients/:id/billing', requireAdmin, async (req: any, res: any) => {
     try {
       const clientId = parseInt(req.params.id);
       
@@ -94,7 +94,7 @@ export function registerBillingAdminRoutes(router: Router) {
   });
   
   // PATCH /api/admin/clients/:id/status - Update account status
-  router.patch('/api/admin/clients/:id/status', requireAdmin, async (req, res) => {
+  router.patch('/api/admin/clients/:id/status', requireAdmin, async (req: any, res: any) => {
     try {
       const clientId = parseInt(req.params.id);
       

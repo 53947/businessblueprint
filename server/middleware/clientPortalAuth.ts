@@ -68,10 +68,12 @@ export async function requireClientPortalAccess(req: any, res: Response, next: N
         pending: 'Your account setup is still being processed. Please check back later or contact support.'
       };
       
+      const accountStatus = client.accountStatus || 'inactive';
+      
       return res.status(403).json({ 
         error: 'Account access restricted',
-        message: statusMessages[client.accountStatus] || 'Your account status prevents portal access',
-        accountStatus: client.accountStatus
+        message: statusMessages[accountStatus] || 'Your account status prevents portal access',
+        accountStatus: accountStatus
       });
     }
     
