@@ -11,6 +11,12 @@ import {
   brandAssets,
   users,
   magicLinkTokens,
+  subscriptions,
+  subscriptionPlans,
+  subscriptionAddons,
+  subscriptionAddonSelections,
+  billingHistory,
+  accountStatusHistory,
   type Assessment,
   type InsertAssessment,
   type Recommendation,
@@ -31,9 +37,44 @@ import {
   type UpsertUser,
   type MagicLinkToken,
   type InsertMagicLinkToken,
+  type Subscription,
+  type SubscriptionPlan,
+  type SubscriptionAddon,
+  type SubscriptionAddonSelection,
+  type BillingHistory,
+  type AccountStatusHistory,
+  type InsertAccountStatusHistory,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, sql } from "drizzle-orm";
+
+// Typed responses for joined subscription data
+export interface SubscriptionWithDetails {
+  subscription: Subscription;
+  client: Client;
+  plan: SubscriptionPlan;
+  addons: Array<{
+    addon: SubscriptionAddon;
+    selection: SubscriptionAddonSelection;
+  }>;
+  billingHistory?: BillingHistory[];
+}
+
+export interface ClientSubscriptionView {
+  subscription: Subscription;
+  plan: SubscriptionPlan;
+  addons: Array<{
+    addon: SubscriptionAddon;
+    quantity: number;
+    unitPrice: string;
+    totalPrice: string;
+  }>;
+  nextBillingDate: Date | null;
+  lastPaymentDate: Date | null;
+}
+
+// Valid account status values
+export type AccountStatus = 'active' | 'suspended' | 'inactive' | 'pending' | 'banned';
 
 export interface IStorage {
   // User operations - Replit Auth
@@ -107,6 +148,18 @@ export interface IStorage {
   getBrandAssetsByType(type: string): Promise<BrandAsset[]>;
   getBrandAsset(id: number): Promise<BrandAsset | undefined>;
   deleteBrandAsset(id: number): Promise<void>;
+
+  // Subscription & Billing operations
+  getAllSubscriptions(): Promise<SubscriptionWithDetails[]>; // Returns all subscriptions with client & plan info
+  getClientSubscription(clientId: number): Promise<ClientSubscriptionView | undefined>; // Returns client's subscription with plan & addons
+  getClientBillingHistory(clientId: number, limit?: number): Promise<BillingHistory[]>;
+  getAllSubscriptionPlans(): Promise<SubscriptionPlan[]>;
+  getAllSubscriptionAddons(): Promise<SubscriptionAddon[]>;
+  
+  // Account status management
+  updateClientAccountStatus(clientId: number, newStatus: AccountStatus, reason?: string | null, changedBy?: number | null): Promise<Client>;
+  recordAccountStatusChange(record: InsertAccountStatusHistory): Promise<AccountStatusHistory>;
+  getClientAccountStatusHistory(clientId: number): Promise<AccountStatusHistory[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -503,6 +556,202 @@ export class DatabaseStorage implements IStorage {
       .where(
         sql`${magicLinkTokens.expiresAt} < ${now}`
       );
+  }
+
+  // Subscription & Billing operations
+  async getAllSubscriptions(): Promise<SubscriptionWithDetails[]> {
+    const allSubscriptions = await db
+      .select()
+      .from(subscriptions)
+      .orderBy(desc(subscriptions.createdAt));
+
+    const result: SubscriptionWithDetails[] = [];
+
+    for (const subscription of allSubscriptions) {
+      // Get client
+      const [client] = await db
+        .select()
+        .from(clients)
+        .where(eq(clients.id, subscription.clientId!));
+
+      // Get plan
+      const [plan] = await db
+        .select()
+        .from(subscriptionPlans)
+        .where(eq(subscriptionPlans.id, subscription.planId!));
+
+      // Get addon selections
+      const addonSelections = await db
+        .select()
+        .from(subscriptionAddonSelections)
+        .where(eq(subscriptionAddonSelections.subscriptionId, subscription.id));
+
+      // Get addon details
+      const addons = [];
+      for (const selection of addonSelections) {
+        const [addon] = await db
+          .select()
+          .from(subscriptionAddons)
+          .where(eq(subscriptionAddons.id, selection.addonId!));
+        if (addon) {
+          addons.push({ addon, selection });
+        }
+      }
+
+      // Get billing history (last 6 invoices)
+      const billing = await db
+        .select()
+        .from(billingHistory)
+        .where(eq(billingHistory.subscriptionId, subscription.id))
+        .orderBy(desc(billingHistory.billingDate))
+        .limit(6);
+
+      if (client && plan) {
+        result.push({
+          subscription,
+          client,
+          plan,
+          addons,
+          billingHistory: billing,
+        });
+      }
+    }
+
+    return result;
+  }
+
+  async getClientSubscription(clientId: number): Promise<ClientSubscriptionView | undefined> {
+    // Get client's active subscription
+    const [subscription] = await db
+      .select()
+      .from(subscriptions)
+      .where(
+        and(
+          eq(subscriptions.clientId, clientId),
+          eq(subscriptions.status, 'active')
+        )
+      )
+      .limit(1);
+
+    if (!subscription) {
+      return undefined;
+    }
+
+    // Get plan
+    const [plan] = await db
+      .select()
+      .from(subscriptionPlans)
+      .where(eq(subscriptionPlans.id, subscription.planId!));
+
+    if (!plan) {
+      return undefined;
+    }
+
+    // Get addon selections
+    const addonSelections = await db
+      .select()
+      .from(subscriptionAddonSelections)
+      .where(eq(subscriptionAddonSelections.subscriptionId, subscription.id));
+
+    // Get addon details
+    const addons = [];
+    for (const selection of addonSelections) {
+      const [addon] = await db
+        .select()
+        .from(subscriptionAddons)
+        .where(eq(subscriptionAddons.id, selection.addonId!));
+      if (addon) {
+        addons.push({
+          addon,
+          quantity: selection.quantity ?? 1,
+          unitPrice: selection.unitPrice ?? '0.00',
+          totalPrice: selection.totalPrice ?? '0.00',
+        });
+      }
+    }
+
+    return {
+      subscription,
+      plan,
+      addons,
+      nextBillingDate: subscription.nextPaymentDate,
+      lastPaymentDate: subscription.lastPaymentDate,
+    };
+  }
+
+  async getClientBillingHistory(clientId: number, limit: number = 12): Promise<BillingHistory[]> {
+    // Get client's subscription
+    const [subscription] = await db
+      .select()
+      .from(subscriptions)
+      .where(eq(subscriptions.clientId, clientId))
+      .limit(1);
+
+    if (!subscription) {
+      return [];
+    }
+
+    return await db
+      .select()
+      .from(billingHistory)
+      .where(eq(billingHistory.subscriptionId, subscription.id))
+      .orderBy(desc(billingHistory.billingDate))
+      .limit(limit);
+  }
+
+  async getAllSubscriptionPlans(): Promise<SubscriptionPlan[]> {
+    return await db
+      .select()
+      .from(subscriptionPlans)
+      .where(eq(subscriptionPlans.isActive, true))
+      .orderBy(subscriptionPlans.pathway, subscriptionPlans.tierLevel);
+  }
+
+  async getAllSubscriptionAddons(): Promise<SubscriptionAddon[]> {
+    return await db
+      .select()
+      .from(subscriptionAddons)
+      .where(eq(subscriptionAddons.isActive, true))
+      .orderBy(subscriptionAddons.category, subscriptionAddons.name);
+  }
+
+  // Account status management
+  async updateClientAccountStatus(
+    clientId: number,
+    newStatus: AccountStatus,
+    reason?: string | null,
+    changedBy?: number | null
+  ): Promise<Client> {
+    const [client] = await db
+      .update(clients)
+      .set({
+        accountStatus: newStatus,
+        suspensionReason: reason ?? null,
+        statusChangedAt: new Date(),
+        statusChangedBy: changedBy ?? null,
+        updatedAt: new Date(),
+      })
+      .where(eq(clients.id, clientId))
+      .returning();
+
+    return client;
+  }
+
+  async recordAccountStatusChange(record: InsertAccountStatusHistory): Promise<AccountStatusHistory> {
+    const [history] = await db
+      .insert(accountStatusHistory)
+      .values(record)
+      .returning();
+
+    return history;
+  }
+
+  async getClientAccountStatusHistory(clientId: number): Promise<AccountStatusHistory[]> {
+    return await db
+      .select()
+      .from(accountStatusHistory)
+      .where(eq(accountStatusHistory.clientId, clientId))
+      .orderBy(desc(accountStatusHistory.createdAt));
   }
 }
 
