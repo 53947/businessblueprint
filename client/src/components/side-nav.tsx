@@ -8,7 +8,8 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Menu
+  Menu,
+  CreditCard
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import bbIcon from "@assets/Blueprint_Favicon_1762489845363.png";
@@ -82,6 +83,11 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       id: "tasks", 
       label: "Tasks", 
       icon: <CheckSquare className="w-7 h-7" /> 
+    },
+    { 
+      id: "billing", 
+      label: "Billing", 
+      icon: <CreditCard className="w-7 h-7" /> 
     },
     { 
       id: "divider-1", 

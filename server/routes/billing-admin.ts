@@ -5,6 +5,7 @@ import { isAuthenticated } from '../replitAuth';
 import { db } from '../db';
 import { clients } from '@shared/schema';
 import { eq } from 'drizzle-orm';
+import { requireClientPortalAccess } from '../middleware/clientPortalAuth';
 
 // Admin middleware - checks if user is authenticated AND is an admin
 const requireAdmin = [isAuthenticated, async (req: any, res: any, next: any) => {
@@ -146,13 +147,9 @@ export function registerBillingAdminRoutes(router: Router) {
   // ========================================
   
   // GET /api/portal/subscription - Get client's subscription details
-  router.get('/api/portal/subscription', async (req, res) => {
+  router.get('/api/portal/subscription', requireClientPortalAccess, async (req: any, res) => {
     try {
-      // Get clientId from session
-      const clientId = parseInt((req.session as any).clientId || '0');
-      if (!clientId) {
-        return res.status(401).json({ error: 'Not authenticated' });
-      }
+      const clientId = req.clientId; // Set by middleware
       
       const subscription = await storage.getClientSubscription(clientId);
       
@@ -168,13 +165,9 @@ export function registerBillingAdminRoutes(router: Router) {
   });
   
   // GET /api/portal/billing-history - Get client's billing history
-  router.get('/api/portal/billing-history', async (req, res) => {
+  router.get('/api/portal/billing-history', requireClientPortalAccess, async (req: any, res) => {
     try {
-      // Get clientId from session
-      const clientId = parseInt((req.session as any).clientId || '0');
-      if (!clientId) {
-        return res.status(401).json({ error: 'Not authenticated' });
-      }
+      const clientId = req.clientId; // Set by middleware
       
       const limit = parseInt(req.query.limit as string) || 12;
       const billingHistory = await storage.getClientBillingHistory(clientId, limit);

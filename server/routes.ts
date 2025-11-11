@@ -39,6 +39,7 @@ import { db } from "./db";
 import { z } from "zod";
 import { requireAuth, type AuthenticatedRequest } from "./middleware/auth";
 import { setupAuth, isAuthenticated } from "./replitAuth";
+import { requireClientPortalAccess } from "./middleware/clientPortalAuth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
@@ -245,7 +246,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
 
   // Get client dashboard data
-  app.get("/api/clients/:id/dashboard", async (req, res) => {
+  app.get("/api/clients/:id/dashboard", requireClientPortalAccess, async (req: any, res) => {
     try {
       const clientId = parseInt(req.params.id);
 
@@ -457,7 +458,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Client data endpoints for Campaign Pro
-  app.get("/api/clients/:id", async (req, res) => {
+  app.get("/api/clients/:id", requireClientPortalAccess, async (req: any, res) => {
     try {
       const clientId = parseInt(req.params.id);
 
@@ -481,7 +482,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get client campaign data (client info + inbox messages + campaign history)
-  app.get("/api/clients/:id/campaign-data", async (req, res) => {
+  app.get("/api/clients/:id/campaign-data", requireClientPortalAccess, async (req: any, res) => {
     try {
       const clientId = parseInt(req.params.id);
 
@@ -521,7 +522,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get client messages for inbox
-  app.get("/api/clients/:id/messages", async (req, res) => {
+  app.get("/api/clients/:id/messages", requireClientPortalAccess, async (req: any, res) => {
     try {
       const clientId = parseInt(req.params.id);
       const limit = parseInt(req.query.limit as string) || 50;
@@ -793,7 +794,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get all business listings for a client
-  app.get("/api/clients/:id/listings", async (req, res) => {
+  app.get("/api/clients/:id/listings", requireClientPortalAccess, async (req: any, res) => {
     try {
       const clientId = parseInt(req.params.id);
 
@@ -842,7 +843,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get listing metrics for a client
-  app.get("/api/clients/:id/listings/metrics", async (req, res) => {
+  app.get("/api/clients/:id/listings/metrics", requireClientPortalAccess, async (req: any, res) => {
     try {
       const clientId = parseInt(req.params.id);
 
@@ -874,7 +875,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get all reviews for a client
-  app.get("/api/clients/:id/reviews", async (req, res) => {
+  app.get("/api/clients/:id/reviews", requireClientPortalAccess, async (req: any, res) => {
     try {
       const clientId = parseInt(req.params.id);
 
@@ -928,7 +929,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get review analytics for a client
-  app.get("/api/clients/:id/reviews/analytics", async (req, res) => {
+  app.get("/api/clients/:id/reviews/analytics", requireClientPortalAccess, async (req: any, res) => {
     try {
       const clientId = parseInt(req.params.id);
 

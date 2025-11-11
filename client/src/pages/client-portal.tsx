@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
 import { useLocation } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,7 +33,10 @@ import {
   CheckSquare,
   MessageCircle,
   Bell,
-  Lock
+  Lock,
+  CreditCard,
+  DollarSign,
+  Package
 } from "lucide-react";
 
 export default function ClientPortal() {
@@ -62,6 +66,18 @@ export default function ClientPortal() {
   // Fetch client dashboard data
   const { data: dashboardData, isLoading, error } = useQuery<any>({
     queryKey: [`/api/clients/${clientId}/dashboard`],
+    enabled: !!clientId,
+  });
+
+  // Fetch subscription data for billing tab
+  const { data: subscriptionData, isLoading: subscriptionLoading } = useQuery<any>({
+    queryKey: ['/api/portal/subscription'],
+    enabled: !!clientId,
+  });
+
+  // Fetch billing history for billing tab
+  const { data: billingHistoryData, isLoading: billingHistoryLoading } = useQuery<any>({
+    queryKey: ['/api/portal/billing-history'],
     enabled: !!clientId,
   });
 
@@ -857,6 +873,179 @@ export default function ClientPortal() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Billing Tab */}
+          <TabsContent value="billing" className="space-y-6">
+            {subscriptionLoading ? (
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="space-y-4">
+                    <Skeleton className="h-24 w-full" />
+                    <Skeleton className="h-24 w-full" />
+                  </div>
+                </CardContent>
+              </Card>
+            ) : subscriptionData?.subscription ? (
+              <>
+                {/* Account Status Alert (if not active) */}
+                {clientData?.client?.accountStatus && clientData.client.accountStatus !== 'active' && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      Your account status is <strong>{clientData.client.accountStatus}</strong>. 
+                      {clientData.client.accountStatus === 'suspended' && ' Please contact support to resolve billing issues.'}
+                      {clientData.client.accountStatus === 'pending' && ' Your account setup is being processed.'}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Subscription Summary */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Package className="h-5 w-5" />
+                      Current Subscription
+                    </CardTitle>
+                    <CardDescription>
+                      Your active plan and billing information
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div>
+                          <p className="text-sm text-gray-500 mb-1">Plan</p>
+                          <p className="text-2xl font-bold" data-testid="text-plan-name">
+                            {subscriptionData.subscription.plan?.name || 'N/A'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500 mb-1">Billing Cycle</p>
+                          <Badge variant="outline" className="text-base capitalize" data-testid="badge-billing-cycle">
+                            {subscriptionData.subscription.billingCycle}
+                          </Badge>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500 mb-1">Status</p>
+                          <Badge 
+                            variant={subscriptionData.subscription.status === 'active' ? 'default' : 'secondary'}
+                            className={subscriptionData.subscription.status === 'active' ? 'bg-green-100 text-green-700' : ''}
+                            data-testid="badge-subscription-status"
+                          >
+                            {subscriptionData.subscription.status}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <p className="text-sm text-gray-500 mb-1">Total Amount</p>
+                          <p className="text-3xl font-bold text-blue-600" data-testid="text-total-amount">
+                            ${parseFloat(subscriptionData.subscription.totalAmount || '0').toFixed(2)}
+                            <span className="text-base text-gray-500 ml-2">/ {subscriptionData.subscription.billingCycle}</span>
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500 mb-1">Next Billing Date</p>
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4 text-gray-400" />
+                            <p className="text-lg font-medium" data-testid="text-next-billing-date">
+                              {format(new Date(subscriptionData.subscription.nextBillingDate), 'MMMM d, yyyy')}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Add-ons Section */}
+                    {subscriptionData.subscription.addons && subscriptionData.subscription.addons.length > 0 && (
+                      <div className="mt-6 pt-6 border-t">
+                        <h4 className="font-semibold mb-3">Active Add-ons</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {subscriptionData.subscription.addons.map((addon: any) => (
+                            <div 
+                              key={addon.id}
+                              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"
+                              data-testid={`addon-${addon.id}`}
+                            >
+                              <span className="font-medium">{addon.name}</span>
+                              <span className="text-gray-600">+${parseFloat(addon.price).toFixed(2)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Billing History */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <DollarSign className="h-5 w-5" />
+                      Billing History
+                    </CardTitle>
+                    <CardDescription>
+                      Your recent billing transactions
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {billingHistoryLoading ? (
+                      <div className="space-y-3">
+                        <Skeleton className="h-16 w-full" />
+                        <Skeleton className="h-16 w-full" />
+                        <Skeleton className="h-16 w-full" />
+                      </div>
+                    ) : billingHistoryData?.billingHistory?.length > 0 ? (
+                      <div className="space-y-3">
+                        {billingHistoryData.billingHistory.map((transaction: any) => (
+                          <div 
+                            key={transaction.id}
+                            className="flex items-center justify-between p-4 bg-white rounded-lg border"
+                            data-testid={`transaction-${transaction.id}`}
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className="p-2 bg-blue-100 rounded">
+                                <CreditCard className="h-5 w-5 text-blue-600" />
+                              </div>
+                              <div>
+                                <p className="font-medium">${parseFloat(transaction.amount).toFixed(2)}</p>
+                                <div className="flex items-center gap-2 text-sm text-gray-500">
+                                  <Calendar className="h-3 w-3" />
+                                  {format(new Date(transaction.billingDate), 'MMM d, yyyy')}
+                                </div>
+                              </div>
+                            </div>
+                            <Badge
+                              variant={transaction.status === 'paid' ? 'default' : transaction.status === 'failed' ? 'destructive' : 'secondary'}
+                              className={transaction.status === 'paid' ? 'bg-green-100 text-green-700' : ''}
+                              data-testid={`badge-status-${transaction.id}`}
+                            >
+                              {transaction.status}
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-12 text-gray-500">
+                        <CreditCard className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                        <p>No billing history available</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </>
+            ) : (
+              <Card>
+                <CardContent className="pt-12 pb-12">
+                  <div className="text-center text-gray-500">
+                    <Package className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                    <p className="text-lg font-medium mb-2">No Active Subscription</p>
+                    <p className="text-sm">You don't have an active subscription plan.</p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
         </Tabs>
       </div>
