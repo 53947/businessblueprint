@@ -406,44 +406,44 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Applications</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-6 w-[90vw] max-w-[1000px]">
+                        <div className="p-3 w-[45vw] max-w-[500px]">
                           {/* Two-column layout: Commverse (left) | LocalBlue (right) */}
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                             {/* LEFT COLUMN: Commverse Bundle */}
-                            <div className="space-y-4">
-                              <div className="p-4 rounded-lg border-2 border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950">
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center gap-2">
-                                    <img src={commverseIcon} alt="Commverse" className="h-10 w-10 object-contain rounded-lg" />
+                            <div className="space-y-2">
+                              <div className="p-2 rounded-lg border border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950">
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center gap-1">
+                                    <img src={commverseIcon} alt="Commverse" className="h-6 w-6 object-contain rounded-lg" />
                                     <div>
-                                      <img src={commverseBundle} alt="Commverse Bundle" className="h-6 object-contain mb-1" />
-                                      <p className="text-xs text-gray-600 dark:text-gray-400">All 4 Communication Apps</p>
+                                      <img src={commverseBundle} alt="Commverse Bundle" className="h-4 object-contain mb-0.5" />
+                                      <p className="text-[9px] text-gray-600 dark:text-gray-400">All 4 Apps</p>
                                     </div>
                                   </div>
                                   <div>
-                                    <div className="text-xl font-bold text-blue-600 dark:text-blue-400">$100<span className="text-xs">/mo</span></div>
-                                    <p className="text-[10px] text-green-600 dark:text-green-400">Save $40/month</p>
+                                    <div className="text-sm font-bold text-blue-600 dark:text-blue-400">$100<span className="text-[9px]">/mo</span></div>
+                                    <p className="text-[8px] text-green-600 dark:text-green-400">Save $40</p>
                                   </div>
                                 </div>
                                 <Link href="/applications?bundle=commverse">
-                                  <Button size="sm" className="w-full" data-testid="button-get-commverse">
-                                    Get Commverse Bundle →
+                                  <Button size="sm" className="w-full h-6 text-xs" data-testid="button-get-commverse">
+                                    Get Bundle →
                                   </Button>
                                 </Link>
                               </div>
 
                               <div>
-                                <h4 className="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-2">
-                                  Or individual apps at $35/mo each
+                                <h4 className="text-[9px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-1">
+                                  Or $35/mo each
                                 </h4>
                               </div>
-                              <div className="grid grid-cols-2 gap-3">
+                              <div className="grid grid-cols-2 gap-2">
                             {/* /send */}
-                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 transition-all hover:border-green-500 hover:shadow-xl hover:from-green-50 hover:to-green-100 dark:hover:from-green-950 dark:hover:to-green-900 hover:scale-[1.02]" data-testid="card-app-send">
-                              <div className="flex items-center gap-2 mb-3">
-                                <img src={sendIcon} alt="/send icon" className="h-10 w-10 object-contain flex-shrink-0" />
-                                <div className="h-8 flex items-center">
-                                  <img src={sendLogo} alt="/send" className="h-8 w-32 object-contain" />
+                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-green-500 hover:shadow-lg hover:from-green-50 hover:to-green-100 dark:hover:from-green-950 dark:hover:to-green-900" data-testid="card-app-send">
+                              <div className="flex items-center gap-1 mb-1">
+                                <img src={sendIcon} alt="/send icon" className="h-5 w-5 object-contain flex-shrink-0" />
+                                <div className="h-4 flex items-center">
+                                  <img src={sendLogo} alt="/send" className="h-4 w-16 object-contain" />
                                 </div>
                               </div>
                               <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-send-title">Email + SMS Marketing</div>
