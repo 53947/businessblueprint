@@ -538,22 +538,22 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                             {/* RIGHT COLUMN: LocalBlue Bundle */}
                             <div className="space-y-2">
-                            <div className="p-4 rounded-lg border border-blue-600 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950">
+                            <div className="p-3 rounded-lg border border-blue-600 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950">
                               <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-3">
-                                  <img src={localBlueIcon} alt="LocalBlue" className="h-11 w-11 object-contain rounded-lg" />
+                                <div className="flex items-center gap-2">
+                                  <img src={localBlueIcon} alt="LocalBlue" className="h-9 w-9 object-contain rounded-lg" />
                                   <div>
-                                    <img src={localBlueLogo} alt="/localblue Bundle" className="h-7 object-contain mb-1" />
-                                    <p className="text-xs text-gray-600 dark:text-gray-400">Local Presence</p>
+                                    <img src={localBlueLogo} alt="/localblue Bundle" className="h-6 object-contain mb-1" />
+                                    <p className="text-[10px] text-gray-600 dark:text-gray-400">Local Presence</p>
                                   </div>
                                 </div>
                                 <div>
-                                  <div className="text-xl font-bold text-blue-600 dark:text-blue-400">$75<span className="text-sm">/mo</span></div>
-                                  <p className="text-xs text-green-600 dark:text-green-400">Save $10</p>
+                                  <div className="text-lg font-bold text-blue-600 dark:text-blue-400">$75<span className="text-xs">/mo</span></div>
+                                  <p className="text-[10px] text-green-600 dark:text-green-400">Save $10</p>
                                 </div>
                               </div>
                               <Link href="/applications?bundle=localblue">
-                                <Button className="w-full h-9 text-sm bg-blue-600 hover:bg-blue-700" data-testid="button-get-localblue">
+                                <Button size="sm" className="w-full h-8 text-sm bg-blue-600 hover:bg-blue-700" data-testid="button-get-localblue">
                                   Get Bundle →
                                 </Button>
                               </Link>
