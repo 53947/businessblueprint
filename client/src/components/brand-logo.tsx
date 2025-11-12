@@ -15,7 +15,9 @@ import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
 import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
 import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
 import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
+import hostsBlueWordmark from "@assets/Hosts Blue Lockup_1762931589296.png";
 import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
+import swipesBlueWordmark from "@assets/Swipes Blue Lockup_1762931589297.png";
 
 interface BrandLogoProps {
   brand: 'businessblueprint' | 'hostsblue' | 'swipesblue' | 'send' | 'inbox' | 'livechat';
@@ -82,34 +84,20 @@ export function BrandLogo({
   }
 
   if (brand === 'hostsblue') {
-    const textColor1 = '#8000FF'; // purple
-    const textColor2 = '#0000FF'; // blue - same as businessblueprint
-    const textColor3 = '#84D71A'; // green
-    
     return (
       <div className={`flex items-center gap-3 ${className}`}>
-        {showIcon && !textOnly && (
+        {showIcon && (
           <img 
             src={hostsBlueIcon} 
-            alt="hostsblue.com icon" 
+            alt="HostsBlue icon" 
             className={`${iconSize} object-contain`}
-            style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
           />
         )}
-        {!textOnly && (
-          <div className="leading-none pb-0.5" style={{ fontSize: textFontSize, fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
-            <span style={{ color: textColor1, fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
-            <span style={{ color: textColor2, fontFamily: 'Archivo, sans-serif' }}>blue</span>
-            <span style={{ color: textColor3, fontFamily: 'Archivo, sans-serif' }}>.com</span>
-          </div>
-        )}
-        {textOnly && (
-          <span className="leading-none" style={{ fontSize: textFontSize, fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
-            <span style={{ color: textColor1, fontFamily: '"Archivo Semi Expanded", sans-serif' }}>hosts</span>
-            <span style={{ color: textColor2, fontFamily: 'Archivo, sans-serif' }}>blue</span>
-            <span style={{ color: textColor3, fontFamily: 'Archivo, sans-serif' }}>.com</span>
-          </span>
-        )}
+        <img 
+          src={hostsBlueWordmark} 
+          alt="HostsBlue" 
+          className={`${logoSize} object-contain`}
+        />
       </div>
     );
   }
@@ -133,36 +121,21 @@ export function BrandLogo({
     );
   }
 
-  // swipesblue uses new lightning bolt icon
   if (brand === 'swipesblue') {
-    const textColor1 = '#FF0040'; // red
-    const textColor2 = '#0000FF'; // blue - same as businessblueprint
-    const textColor3 = '#84D71A'; // green
-    
     return (
       <div className={`flex items-center gap-3 ${className}`}>
-        {showIcon && !textOnly && (
+        {showIcon && (
           <img 
             src={swipesBlueIcon} 
-            alt="swipesblue.com icon" 
+            alt="SwipesBlue icon" 
             className={`${iconSize} object-contain`}
-            style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
           />
         )}
-        {!textOnly && (
-          <div className="leading-none pb-0.5" style={{ fontSize: textFontSize, fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
-            <span style={{ color: textColor1, fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
-            <span style={{ color: textColor2, fontFamily: 'Archivo, sans-serif' }}>blue</span>
-            <span style={{ color: textColor3, fontFamily: 'Archivo, sans-serif' }}>.com</span>
-          </div>
-        )}
-        {textOnly && (
-          <span className="leading-none" style={{ fontSize: textFontSize, fontWeight: 600, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}>
-            <span style={{ color: textColor1, fontFamily: '"Archivo Semi Expanded", sans-serif' }}>swipes</span>
-            <span style={{ color: textColor2, fontFamily: 'Archivo, sans-serif' }}>blue</span>
-            <span style={{ color: textColor3, fontFamily: 'Archivo, sans-serif' }}>.com</span>
-          </span>
-        )}
+        <img 
+          src={swipesBlueWordmark} 
+          alt="SwipesBlue" 
+          className={`${logoSize} object-contain`}
+        />
       </div>
     );
   }
