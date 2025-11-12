@@ -406,7 +406,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Applications</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-3 w-[45vw] max-w-[500px]">
+                        <div className="p-3 w-[90vw] max-w-[1000px]">
                           {/* Two-column layout: Commverse (left) | LocalBlue (right) */}
                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                             {/* LEFT COLUMN: Commverse Bundle */}
@@ -446,16 +446,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={sendLogo} alt="/send" className="h-4 w-16 object-contain" />
                                 </div>
                               </div>
-                              <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-send-title">Email + SMS Marketing</div>
-                              <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3" data-testid="text-app-send-description">
-                                Unified marketing campaigns with full compliance
+                              <div className="text-xs font-bold text-gray-900 dark:text-white" data-testid="text-app-send-title">Email + SMS Marketing</div>
+                              <p className="text-[10px] leading-tight text-gray-600 dark:text-gray-400 mb-1" data-testid="text-app-send-description">
+                                Unified campaigns
                               </p>
-                              <ul className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300 mb-4" data-testid="list-app-send-features">
-                                <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> Email & SMS Campaigns</li>
-                                <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> Contact Management</li>
-                                <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1.5">✓</span> GDPR/CAN-SPAM Compliant</li>
+                              <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-send-features">
+                                <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1">✓</span> Email & SMS</li>
+                                <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1">✓</span> Contact Mgmt</li>
+                                <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1">✓</span> Compliant</li>
                               </ul>
-                              <Button size="sm" className="w-full bg-green-600 hover:bg-green-700 mt-auto" asChild>
+                              <Button size="sm" className="w-full h-6 text-[10px] bg-green-600 hover:bg-green-700 mt-auto" asChild>
                                 <Link href="/send" data-testid="button-select-send">
                                   Select →
                                 </Link>
@@ -463,23 +463,23 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
 
                             {/* /inbox */}
-                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 transition-all hover:border-yellow-500 hover:shadow-xl hover:from-yellow-50 hover:to-yellow-100 dark:hover:from-yellow-950 dark:hover:to-yellow-900 hover:scale-[1.02]" data-testid="card-app-inbox">
-                              <div className="flex items-center gap-2 mb-3">
-                                <img src={inboxIcon} alt="/inbox icon" className="h-10 w-10 object-contain flex-shrink-0" />
-                                <div className="h-8 flex items-center">
-                                  <img src={inboxLogo} alt="/inbox" className="h-8 w-32 object-contain" />
+                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-yellow-500 hover:shadow-lg hover:from-yellow-50 hover:to-yellow-100 dark:hover:from-yellow-950 dark:hover:to-yellow-900" data-testid="card-app-inbox">
+                              <div className="flex items-center gap-1 mb-1">
+                                <img src={inboxIcon} alt="/inbox icon" className="h-5 w-5 object-contain flex-shrink-0" />
+                                <div className="h-4 flex items-center">
+                                  <img src={inboxLogo} alt="/inbox" className="h-4 w-16 object-contain" />
                                 </div>
                               </div>
-                              <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-inbox-title">Unified Communications</div>
-                              <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3" data-testid="text-app-inbox-description">
-                                Multi-channel messaging hub for all customer communications
+                              <div className="text-xs font-bold text-gray-900 dark:text-white" data-testid="text-app-inbox-title">Unified Comms</div>
+                              <p className="text-[10px] leading-tight text-gray-600 dark:text-gray-400 mb-1" data-testid="text-app-inbox-description">
+                                Multi-channel hub
                               </p>
-                              <ul className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300 mb-4" data-testid="list-app-inbox-features">
-                                <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Email, Chat & Social DMs</li>
-                                <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Real-time Messaging</li>
-                                <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1.5">✓</span> Team Collaboration</li>
+                              <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-inbox-features">
+                                <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1">✓</span> Email & Chat</li>
+                                <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1">✓</span> Real-time</li>
+                                <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1">✓</span> Team Collab</li>
                               </ul>
-                              <Button size="sm" className="w-full bg-yellow-600 hover:bg-yellow-700 mt-auto" asChild>
+                              <Button size="sm" className="w-full h-6 text-[10px] bg-yellow-600 hover:bg-yellow-700 mt-auto" asChild>
                                 <Link href="/inbox-app" data-testid="button-select-inbox">
                                   Select →
                                 </Link>
@@ -487,23 +487,23 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
 
                             {/* /livechat */}
-                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 transition-all hover:border-teal-500 hover:shadow-xl hover:from-teal-50 hover:to-teal-100 dark:hover:from-teal-950 dark:hover:to-teal-900 hover:scale-[1.02]" data-testid="card-app-livechat">
-                              <div className="flex items-center gap-2 mb-3">
-                                <img src={livechatIcon} alt="/livechat icon" className="h-10 w-10 object-contain flex-shrink-0" />
-                                <div className="h-8 flex items-center">
-                                  <img src={livechatLogo} alt="/livechat" className="h-8 w-32 object-contain" />
+                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-teal-500 hover:shadow-lg hover:from-teal-50 hover:to-teal-100 dark:hover:from-teal-950 dark:hover:to-teal-900" data-testid="card-app-livechat">
+                              <div className="flex items-center gap-1 mb-1">
+                                <img src={livechatIcon} alt="/livechat icon" className="h-5 w-5 object-contain flex-shrink-0" />
+                                <div className="h-4 flex items-center">
+                                  <img src={livechatLogo} alt="/livechat" className="h-4 w-16 object-contain" />
                                 </div>
                               </div>
-                              <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-livechat-title">Live Chat Widget</div>
-                              <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3" data-testid="text-app-livechat-description">
-                                Real-time customer chat for your website
+                              <div className="text-xs font-bold text-gray-900 dark:text-white" data-testid="text-app-livechat-title">Live Chat Widget</div>
+                              <p className="text-[10px] leading-tight text-gray-600 dark:text-gray-400 mb-1" data-testid="text-app-livechat-description">
+                                Website chat
                               </p>
-                              <ul className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300 mb-4" data-testid="list-app-livechat-features">
-                                <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1.5">✓</span> Website Live Chat</li>
-                                <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1.5">✓</span> Session Persistence</li>
-                                <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1.5">✓</span> Conversation History</li>
+                              <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-livechat-features">
+                                <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1">✓</span> Live Chat</li>
+                                <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1">✓</span> Persistence</li>
+                                <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1">✓</span> History</li>
                               </ul>
-                              <Button size="sm" className="w-full bg-teal-600 hover:bg-teal-700 mt-auto" asChild>
+                              <Button size="sm" className="w-full h-6 text-[10px] bg-teal-600 hover:bg-teal-700 mt-auto" asChild>
                                 <Link href="/livechat" data-testid="button-select-livechat">
                                   Select →
                                 </Link>
@@ -511,23 +511,23 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
 
                             {/* /content */}
-                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 transition-all hover:border-pink-500 hover:shadow-xl hover:from-pink-50 hover:to-pink-100 dark:hover:from-pink-950 dark:hover:to-pink-900 hover:scale-[1.02]" data-testid="card-app-content">
-                              <div className="flex items-center gap-2 mb-3">
-                                <img src={contentIcon} alt="/content icon" className="h-10 w-10 object-contain flex-shrink-0" />
-                                <div className="h-8 flex items-center">
-                                  <img src={contentLogo} alt="/content" className="h-8 w-32 object-contain" />
+                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-pink-500 hover:shadow-lg hover:from-pink-50 hover:to-pink-100 dark:hover:from-pink-950 dark:hover:to-pink-900" data-testid="card-app-content">
+                              <div className="flex items-center gap-1 mb-1">
+                                <img src={contentIcon} alt="/content icon" className="h-5 w-5 object-contain flex-shrink-0" />
+                                <div className="h-4 flex items-center">
+                                  <img src={contentLogo} alt="/content" className="h-4 w-16 object-contain" />
                                 </div>
                               </div>
-                              <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-content-title">Social Media Management</div>
-                              <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3" data-testid="text-app-content-description">
-                                Social media manager
+                              <div className="text-xs font-bold text-gray-900 dark:text-white" data-testid="text-app-content-title">Social Media</div>
+                              <p className="text-[10px] leading-tight text-gray-600 dark:text-gray-400 mb-1" data-testid="text-app-content-description">
+                                Social manager
                               </p>
-                              <ul className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300 mb-4" data-testid="list-app-content-features">
-                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> Content Calendar</li>
-                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> Media Library</li>
-                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1.5">✓</span> AI Caption Suggestions</li>
+                              <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-content-features">
+                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Calendar</li>
+                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Media Library</li>
+                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> AI Captions</li>
                               </ul>
-                              <Button size="sm" className="w-full bg-pink-600 hover:bg-pink-700 mt-auto" asChild>
+                              <Button size="sm" className="w-full h-6 text-[10px] bg-pink-600 hover:bg-pink-700 mt-auto" asChild>
                                 <Link href="/content" data-testid="button-select-content">
                                   Select →
                                 </Link>
