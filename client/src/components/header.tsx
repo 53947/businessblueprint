@@ -411,22 +411,22 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                             {/* LEFT COLUMN: Commverse Bundle */}
                             <div className="space-y-2">
-                              <div className="p-2 rounded-lg border border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950">
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center gap-1">
-                                    <img src={commverseIcon} alt="Commverse" className="h-6 w-6 object-contain rounded-lg" />
+                              <div className="p-3 rounded-lg border border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950">
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-2">
+                                    <img src={commverseIcon} alt="Commverse" className="h-9 w-9 object-contain rounded-lg" />
                                     <div>
-                                      <img src={commverseBundle} alt="Commverse Bundle" className="h-4 object-contain mb-0.5" />
-                                      <p className="text-[9px] text-gray-600 dark:text-gray-400">All 4 Apps</p>
+                                      <img src={commverseBundle} alt="Commverse Bundle" className="h-6 object-contain mb-1" />
+                                      <p className="text-[10px] text-gray-600 dark:text-gray-400">All 4 Apps</p>
                                     </div>
                                   </div>
                                   <div>
-                                    <div className="text-sm font-bold text-blue-600 dark:text-blue-400">$100<span className="text-[9px]">/mo</span></div>
-                                    <p className="text-[8px] text-green-600 dark:text-green-400">Save $40</p>
+                                    <div className="text-lg font-bold text-blue-600 dark:text-blue-400">$100<span className="text-xs">/mo</span></div>
+                                    <p className="text-[10px] text-green-600 dark:text-green-400">Save $40</p>
                                   </div>
                                 </div>
                                 <Link href="/applications?bundle=commverse">
-                                  <Button size="sm" className="w-full h-6 text-xs" data-testid="button-get-commverse">
+                                  <Button size="sm" className="w-full h-8 text-sm" data-testid="button-get-commverse">
                                     Get Bundle →
                                   </Button>
                                 </Link>
@@ -537,24 +537,24 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
 
                             {/* RIGHT COLUMN: LocalBlue Bundle */}
-                            <div className="space-y-4">
-                            <div className="mb-6 p-4 rounded-lg border-2 border-blue-600 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950">
+                            <div className="space-y-2">
+                            <div className="p-3 rounded-lg border border-blue-600 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950">
                               <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-3">
-                                  <img src={localBlueIcon} alt="LocalBlue" className="h-12 w-12 object-contain rounded-lg" />
+                                <div className="flex items-center gap-2">
+                                  <img src={localBlueIcon} alt="LocalBlue" className="h-9 w-9 object-contain rounded-lg" />
                                   <div>
-                                    <img src={localBlueLogo} alt="/localblue Bundle" className="h-8 object-contain mb-1" />
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">Local Presence Management</p>
+                                    <img src={localBlueLogo} alt="/localblue Bundle" className="h-6 object-contain mb-1" />
+                                    <p className="text-[10px] text-gray-600 dark:text-gray-400">Local Presence</p>
                                   </div>
                                 </div>
                                 <div>
-                                  <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">$75<span className="text-sm">/mo</span></div>
-                                  <p className="text-xs text-green-600 dark:text-green-400">Save $10/month</p>
+                                  <div className="text-lg font-bold text-blue-600 dark:text-blue-400">$75<span className="text-xs">/mo</span></div>
+                                  <p className="text-[10px] text-green-600 dark:text-green-400">Save $10</p>
                                 </div>
                               </div>
                               <Link href="/applications?bundle=localblue">
-                                <Button className="w-full bg-blue-600 hover:bg-blue-700" data-testid="button-get-localblue">
-                                  Get /localblue Bundle →
+                                <Button size="sm" className="w-full h-8 text-sm bg-blue-600 hover:bg-blue-700" data-testid="button-get-localblue">
+                                  Get Bundle →
                                 </Button>
                               </Link>
                             </div>
