@@ -455,7 +455,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1">✓</span> Contact Mgmt</li>
                                 <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1">✓</span> Compliant</li>
                               </ul>
-                              <Button size="sm" className="w-full h-6 text-[10px] bg-yellow-600 hover:bg-yellow-700 mt-auto" asChild>
+                              <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-black" style={{ backgroundColor: '#ffd700' }} asChild>
                                 <Link href="/send" data-testid="button-select-send">
                                   Select →
                                 </Link>
@@ -479,7 +479,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Real-time</li>
                                 <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Team Collab</li>
                               </ul>
-                              <Button size="sm" className="w-full h-6 text-[10px] bg-pink-600 hover:bg-pink-700 mt-auto" asChild>
+                              <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#6ea6ff' }} asChild>
                                 <Link href="/inbox-app" data-testid="button-select-inbox">
                                   Select →
                                 </Link>
@@ -503,7 +503,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1">✓</span> Persistence</li>
                                 <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1">✓</span> History</li>
                               </ul>
-                              <Button size="sm" className="w-full h-6 text-[10px] bg-teal-600 hover:bg-teal-700 mt-auto" asChild>
+                              <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#8002ff' }} asChild>
                                 <Link href="/livechat" data-testid="button-select-livechat">
                                   Select →
                                 </Link>
