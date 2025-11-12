@@ -455,7 +455,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1">✓</span> Contact Mgmt</li>
                                 <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1">✓</span> Compliant</li>
                               </ul>
-                              <Button size="sm" className="w-full h-6 text-[10px] bg-green-600 hover:bg-green-700 mt-auto" asChild>
+                              <Button size="sm" className="w-full h-6 text-[10px] bg-yellow-600 hover:bg-yellow-700 mt-auto" asChild>
                                 <Link href="/send" data-testid="button-select-send">
                                   Select →
                                 </Link>
@@ -463,7 +463,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
 
                             {/* /inbox */}
-                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-yellow-500 hover:shadow-lg hover:from-yellow-50 hover:to-yellow-100 dark:hover:from-yellow-950 dark:hover:to-yellow-900" data-testid="card-app-inbox">
+                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-pink-500 hover:shadow-lg hover:from-pink-50 hover:to-pink-100 dark:hover:from-pink-950 dark:hover:to-pink-900" data-testid="card-app-inbox">
                               <div className="flex items-center gap-1 mb-1">
                                 <img src={inboxIcon} alt="/inbox icon" className="h-5 w-5 object-contain flex-shrink-0" />
                                 <div className="h-4 flex items-center">
@@ -475,11 +475,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 Multi-channel hub
                               </p>
                               <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-inbox-features">
-                                <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1">✓</span> Email & Chat</li>
-                                <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1">✓</span> Real-time</li>
-                                <li className="flex items-center"><span className="text-yellow-500 dark:text-yellow-400 mr-1">✓</span> Team Collab</li>
+                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Email & Chat</li>
+                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Real-time</li>
+                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Team Collab</li>
                               </ul>
-                              <Button size="sm" className="w-full h-6 text-[10px] bg-yellow-600 hover:bg-yellow-700 mt-auto" asChild>
+                              <Button size="sm" className="w-full h-6 text-[10px] bg-pink-600 hover:bg-pink-700 mt-auto" asChild>
                                 <Link href="/inbox-app" data-testid="button-select-inbox">
                                   Select →
                                 </Link>
@@ -511,7 +511,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
 
                             {/* /content */}
-                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-pink-500 hover:shadow-lg hover:from-pink-50 hover:to-pink-100 dark:hover:from-pink-950 dark:hover:to-pink-900" data-testid="card-app-content">
+                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-fuchsia-500 hover:shadow-lg hover:from-fuchsia-50 hover:to-fuchsia-100 dark:hover:from-fuchsia-950 dark:hover:to-fuchsia-900" data-testid="card-app-content">
                               <div className="flex items-center gap-1 mb-1">
                                 <img src={contentIcon} alt="/content icon" className="h-5 w-5 object-contain flex-shrink-0" />
                                 <div className="h-4 flex items-center">
@@ -523,11 +523,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 Social manager
                               </p>
                               <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-content-features">
-                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Calendar</li>
-                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Media Library</li>
-                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> AI Captions</li>
+                                <li className="flex items-center"><span className="text-fuchsia-500 dark:text-fuchsia-400 mr-1">✓</span> Calendar</li>
+                                <li className="flex items-center"><span className="text-fuchsia-500 dark:text-fuchsia-400 mr-1">✓</span> Media Library</li>
+                                <li className="flex items-center"><span className="text-fuchsia-500 dark:text-fuchsia-400 mr-1">✓</span> AI Captions</li>
                               </ul>
-                              <Button size="sm" className="w-full h-6 text-[10px] bg-pink-600 hover:bg-pink-700 mt-auto" asChild>
+                              <Button size="sm" className="w-full h-6 text-[10px] bg-fuchsia-600 hover:bg-fuchsia-700 mt-auto" asChild>
                                 <Link href="/content" data-testid="button-select-content">
                                   Select →
                                 </Link>
