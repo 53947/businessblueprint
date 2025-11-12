@@ -437,6 +437,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const jwtToken = await jwtService.createDashboardToken(client.id, client.email);
       console.log('[Magic Link Verify] JWT token created successfully');
 
+      // Set session for portal access
+      (req.session as any).clientId = client.id;
+      (req.session as any).email = client.email;
+      console.log('[Magic Link Verify] Session set for client ID:', client.id);
+
       res.json({
         success: true,
         client: {
