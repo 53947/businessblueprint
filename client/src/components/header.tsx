@@ -559,30 +559,30 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </Link>
                             </div>
 
-                            <div className="mb-3">
-                              <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
-                                Or choose individual apps at $40/mo each
+                            <div className="mb-1">
+                              <h4 className="text-[9px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
+                                Or $40/mo each
                               </h4>
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-2">
                               {/* /reputation */}
-                              <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 transition-all hover:border-blue-500 hover:shadow-xl hover:from-blue-50 hover:to-blue-100 dark:hover:from-blue-950 dark:hover:to-blue-900 hover:scale-[1.02]" data-testid="card-app-reputation">
-                                <div className="flex items-center gap-2 mb-3">
-                                  <img src={reputationIcon} alt="/reputation icon" className="h-10 w-10 object-contain flex-shrink-0" />
-                                  <div className="h-8 flex items-center">
-                                    <img src={reputationLogo} alt="/reputation" className="h-8 w-32 object-contain" />
+                              <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-amber-500 hover:shadow-lg hover:from-amber-50 hover:to-amber-100 dark:hover:from-amber-950 dark:hover:to-amber-900" data-testid="card-app-reputation">
+                                <div className="flex items-center gap-1 mb-1">
+                                  <img src={reputationIcon} alt="/reputation icon" className="h-5 w-5 object-contain flex-shrink-0" />
+                                  <div className="h-4 flex items-center">
+                                    <img src={reputationLogo} alt="/reputation" className="h-4 w-16 object-contain" />
                                   </div>
                                 </div>
-                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-reputation-title">Review Management</div>
-                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3" data-testid="text-app-reputation-description">
-                                  Monitor and respond to customer reviews across all platforms
+                                <div className="text-xs font-bold text-gray-900 dark:text-white" data-testid="text-app-reputation-title">Review Mgmt</div>
+                                <p className="text-[10px] leading-tight text-gray-600 dark:text-gray-400 mb-1" data-testid="text-app-reputation-description">
+                                  Review response
                                 </p>
-                                <ul className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300 mb-4" data-testid="list-app-reputation-features">
-                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Multi-Platform Reviews</li>
-                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> AI-Powered Responses</li>
-                                  <li className="flex items-center"><span className="text-blue-500 dark:text-blue-400 mr-1.5">✓</span> Sentiment Analysis</li>
+                                <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-reputation-features">
+                                  <li className="flex items-center"><span className="text-amber-500 dark:text-amber-400 mr-1">✓</span> Multi-Platform</li>
+                                  <li className="flex items-center"><span className="text-amber-500 dark:text-amber-400 mr-1">✓</span> AI Responses</li>
+                                  <li className="flex items-center"><span className="text-amber-500 dark:text-amber-400 mr-1">✓</span> Sentiment</li>
                                 </ul>
-                                <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 mt-auto" asChild>
+                                <Button size="sm" className="w-full h-6 text-[10px] bg-amber-600 hover:bg-amber-700 mt-auto" asChild>
                                   <Link href="/reputation" data-testid="button-select-reputation">
                                     Select →
                                   </Link>
@@ -590,23 +590,23 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
 
                               {/* /listings */}
-                              <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 transition-all hover:border-indigo-500 hover:shadow-xl hover:from-indigo-50 hover:to-indigo-100 dark:hover:from-indigo-950 dark:hover:to-indigo-900 hover:scale-[1.02]" data-testid="card-app-listings">
-                                <div className="flex items-center gap-2 mb-3">
-                                  <img src={listingsIcon} alt="/listings icon" className="h-10 w-10 object-contain flex-shrink-0" />
-                                  <div className="h-8 flex items-center">
-                                    <img src={listingsLogo} alt="/listings" className="h-8 w-32 object-contain" />
+                              <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-rose-500 hover:shadow-lg hover:from-rose-50 hover:to-rose-100 dark:hover:from-rose-950 dark:hover:to-rose-900" data-testid="card-app-listings">
+                                <div className="flex items-center gap-1 mb-1">
+                                  <img src={listingsIcon} alt="/listings icon" className="h-5 w-5 object-contain flex-shrink-0" />
+                                  <div className="h-4 flex items-center">
+                                    <img src={listingsLogo} alt="/listings" className="h-4 w-16 object-contain" />
                                   </div>
                                 </div>
-                                <div className="text-base font-bold text-gray-900 dark:text-white" data-testid="text-app-listings-title">Business Listings</div>
-                                <p className="text-xs leading-relaxed text-gray-600 dark:text-gray-400 mb-3" data-testid="text-app-listings-description">
-                                  Manage business information across directories
+                                <div className="text-xs font-bold text-gray-900 dark:text-white" data-testid="text-app-listings-title">Business Listings</div>
+                                <p className="text-[10px] leading-tight text-gray-600 dark:text-gray-400 mb-1" data-testid="text-app-listings-description">
+                                  Directory sync
                                 </p>
-                                <ul className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300 mb-4" data-testid="list-app-listings-features">
-                                  <li className="flex items-center"><span className="text-indigo-500 dark:text-indigo-400 mr-1.5">✓</span> Directory Sync</li>
-                                  <li className="flex items-center"><span className="text-indigo-500 dark:text-indigo-400 mr-1.5">✓</span> Multi-Platform Management</li>
-                                  <li className="flex items-center"><span className="text-indigo-500 dark:text-indigo-400 mr-1.5">✓</span> Performance Analytics</li>
+                                <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-listings-features">
+                                  <li className="flex items-center"><span className="text-rose-500 dark:text-rose-400 mr-1">✓</span> Directory Sync</li>
+                                  <li className="flex items-center"><span className="text-rose-500 dark:text-rose-400 mr-1">✓</span> Multi-Platform</li>
+                                  <li className="flex items-center"><span className="text-rose-500 dark:text-rose-400 mr-1">✓</span> Analytics</li>
                                 </ul>
-                                <Button size="sm" className="w-full bg-indigo-600 hover:bg-indigo-700 mt-auto" asChild>
+                                <Button size="sm" className="w-full h-6 text-[10px] bg-rose-600 hover:bg-rose-700 mt-auto" asChild>
                                   <Link href="/listings" data-testid="button-select-listings">
                                     Select →
                                   </Link>
