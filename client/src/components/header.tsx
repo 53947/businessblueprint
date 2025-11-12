@@ -527,7 +527,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <li className="flex items-center"><span className="text-fuchsia-500 dark:text-fuchsia-400 mr-1">✓</span> Media Library</li>
                                 <li className="flex items-center"><span className="text-fuchsia-500 dark:text-fuchsia-400 mr-1">✓</span> AI Captions</li>
                               </ul>
-                              <Button size="sm" className="w-full h-6 text-[10px] bg-fuchsia-600 hover:bg-fuchsia-700 mt-auto" asChild>
+                              <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#e91ebc' }} asChild>
                                 <Link href="/content" data-testid="button-select-content">
                                   Select →
                                 </Link>
@@ -582,7 +582,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <li className="flex items-center"><span className="text-amber-500 dark:text-amber-400 mr-1">✓</span> AI Responses</li>
                                   <li className="flex items-center"><span className="text-amber-500 dark:text-amber-400 mr-1">✓</span> Sentiment</li>
                                 </ul>
-                                <Button size="sm" className="w-full h-6 text-[10px] bg-amber-600 hover:bg-amber-700 mt-auto" asChild>
+                                <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#D59600' }} asChild>
                                   <Link href="/reputation" data-testid="button-select-reputation">
                                     Select →
                                   </Link>
@@ -606,7 +606,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <li className="flex items-center"><span className="text-rose-500 dark:text-rose-400 mr-1">✓</span> Multi-Platform</li>
                                   <li className="flex items-center"><span className="text-rose-500 dark:text-rose-400 mr-1">✓</span> Analytics</li>
                                 </ul>
-                                <Button size="sm" className="w-full h-6 text-[10px] bg-rose-600 hover:bg-rose-700 mt-auto" asChild>
+                                <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#FF0040' }} asChild>
                                   <Link href="/listings" data-testid="button-select-listings">
                                     Select →
                                   </Link>
