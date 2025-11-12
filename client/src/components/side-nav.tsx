@@ -170,7 +170,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
     { 
       id: "hostsblue", 
       label: "hostsblue",
-      icon: <img src={hostsBlueIcon} alt="HostsBlue" className="w-7 h-7 object-contain" />,
+      icon: null,
       logo: hostsBlueWordmark,
       external: true,
       href: "https://hostsblue.com"
@@ -178,7 +178,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
     { 
       id: "swipesblue", 
       label: "swipesblue",
-      icon: <img src={swipesBlueIcon} alt="SwipesBlue" className="w-7 h-7 object-contain" />,
+      icon: null,
       logo: swipesBlueWordmark,
       external: true,
       href: "https://swipesblue.com"
@@ -244,15 +244,17 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
             title={item.hoverLabel || undefined}
             data-testid={`nav-item-${item.id}`}
           >
-            <span className={cn(
-              "flex-shrink-0 transition-transform duration-200",
-              activeTab === item.id ? "scale-110" : "group-hover:scale-105"
-            )}>
-              {item.icon}
-            </span>
+            {item.icon && (
+              <span className={cn(
+                "flex-shrink-0 transition-transform duration-200",
+                activeTab === item.id ? "scale-110" : "group-hover:scale-105"
+              )}>
+                {item.icon}
+              </span>
+            )}
             {!collapsed && (
               item.logo ? (
-                <img src={item.logo} alt={item.label} className="flex-1 h-7 object-contain object-left" data-testid={`logo-nav-${item.id}`} />
+                <img src={item.logo} alt={item.label} className="flex-1 h-8 object-contain object-left" data-testid={`logo-nav-${item.id}`} />
               ) : (
                 <span className="flex-1 text-base leading-7" data-testid={`text-nav-${item.id}`}>
                   {item.label}
