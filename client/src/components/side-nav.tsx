@@ -209,7 +209,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
         // Render divider
         if (item.isDivider) {
           return (
-            <div key={item.id} className="py-4">
+            <div key={item.id} className="py-2">
               <div className="border-t border-gray-200 dark:border-gray-700"></div>
             </div>
           );
@@ -235,7 +235,7 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
             onClick={() => handleNavClick(item, isMobile)}
             className={cn(
               "w-full flex items-center gap-3 px-4 rounded-lg transition-all duration-200 text-left group",
-              isMobile ? "h-14" : "h-11",
+              isMobile ? "h-12" : "h-9",
               activeTab === item.id 
                 ? "bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-600 dark:text-blue-400 font-semibold shadow-sm" 
                 : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-sm",
