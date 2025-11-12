@@ -543,7 +543,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <div className="flex items-center gap-1.5">
                                     <img src={localBlueIcon} alt="LocalBlue" className="h-7 w-7 object-contain rounded-lg" />
                                     <div>
-                                      <img src={localBlueLogo} alt="/localblue Bundle" className="h-5 object-contain mb-0.5" />
+                                      <img src={localBlueLogo} alt="/localblue Bundle" className="h-4 object-contain mb-0.5" />
                                       <p className="text-[9px] text-gray-600 dark:text-gray-400">All 3 Apps</p>
                                     </div>
                                   </div>
