@@ -254,7 +254,15 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
             )}
             {!collapsed && (
               item.logo ? (
-                <img src={item.logo} alt={item.label} className="flex-1 h-8 object-contain object-left" data-testid={`logo-nav-${item.id}`} />
+                <img 
+                  src={item.logo} 
+                  alt={item.label} 
+                  className={cn(
+                    "flex-1 object-contain object-left",
+                    item.id === "hostsblue" || item.id === "swipesblue" ? "h-7" : "h-5"
+                  )}
+                  data-testid={`logo-nav-${item.id}`} 
+                />
               ) : (
                 <span className="flex-1 text-base leading-7" data-testid={`text-nav-${item.id}`}>
                   {item.label}
