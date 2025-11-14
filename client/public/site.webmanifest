@@ -1,0 +1,17 @@
+{
+  "name": "BusinessBlueprint",
+  "short_name": "BusinessBlueprint",
+  "description": "AI-Powered Digital Intelligence Platform",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#0000FF",
+  "background_color": "#FFFFFF",
+  "display": "standalone",
+  "start_url": "/"
+}
