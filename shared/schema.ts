@@ -62,8 +62,8 @@ export const assessments = pgTable("assessments", {
   status: varchar("status", { length: 50 }).default("pending"), // pending, analyzing, completed, failed
   emailSent: boolean("email_sent").default(false),
   
-  // Pathway selection
-  selectedPathway: varchar("selected_pathway", { length: 20 }), // diy, msp, none
+  // Pathway selection (DIY-only platform)
+  selectedPathway: varchar("selected_pathway", { length: 20 }), // diy, none
   
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -296,10 +296,10 @@ export const insertCampaignSchema = createInsertSchema(campaigns).pick({
 // Subscription plans table
 export const subscriptionPlans = pgTable("subscription_plans", {
   id: serial("id").primaryKey(),
-  planId: varchar("plan_id", { length: 50 }).unique().notNull(), // msp-basic, diy-starter, etc.
+  planId: varchar("plan_id", { length: 50 }).unique().notNull(), // diy-starter, etc. (DIY-only)
   name: varchar("name", { length: 100 }).notNull(),
   description: text("description"),
-  pathway: varchar("pathway", { length: 20 }).notNull(), // msp, diy
+  pathway: varchar("pathway", { length: 20 }).notNull(), // diy (DIY-only platform)
   tierLevel: varchar("tier_level", { length: 50 }).notNull(), // basic, professional, enterprise
   basePrice: decimal("base_price", { precision: 10, scale: 2 }).notNull(),
   setupFee: decimal("setup_fee", { precision: 10, scale: 2 }).default('0.00'),
@@ -322,7 +322,7 @@ export const subscriptionAddons = pgTable("subscription_addons", {
   icon: varchar("icon", { length: 50 }), // Icon name from lucide-react (Brain, Ship, Sparkles, etc.)
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   billingCycle: varchar("billing_cycle", { length: 20 }).notNull(),
-  compatiblePathways: text("compatible_pathways").array(), // ["msp", "diy"] or ["msp"]
+  compatiblePathways: text("compatible_pathways").array(), // ["diy"] (DIY-only platform)
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -381,15 +381,14 @@ export const products = pgTable("products", {
   // Assessment category this product improves
   improvesCategory: text("improves_category").array(), // ["visibility", "reviews", "completeness", "engagement"]
   
-  // Pricing
+  // Pricing (DIY-only)
   diyPrice: decimal("diy_price", { precision: 10, scale: 2 }), // Price for DIY delivery
-  mspPrice: decimal("msp_price", { precision: 10, scale: 2 }), // Price for MSP delivery
   setupFee: decimal("setup_fee", { precision: 10, scale: 2 }).default('0.00'),
   billingCycle: varchar("billing_cycle", { length: 20 }).notNull(), // monthly, one_time
   
   // Service details
   features: jsonb("features"), // List of what's included
-  deliveryMethod: text("delivery_method").array(), // ["diy", "msp"] - which pathways can deliver this
+  deliveryMethod: text("delivery_method").array(), // ["diy"] - DIY-only platform
   estimatedImpact: varchar("estimated_impact", { length: 50 }), // How much it improves IQ score
   
   isActive: boolean("is_active").default(true),
@@ -495,7 +494,6 @@ export const insertProductSchema = createInsertSchema(products).pick({
   category: true,
   improvesCategory: true,
   diyPrice: true,
-  mspPrice: true,
   setupFee: true,
   billingCycle: true,
   features: true,

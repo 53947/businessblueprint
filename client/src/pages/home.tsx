@@ -4,7 +4,6 @@ import { useLocation, Link } from "wouter";
 import { AICoachIcon } from "@/components/pathway-icons";
 import compassIcon from "@assets/icons/compass.svg";
 import { HowItWorks } from "@/components/how-it-works";
-import { ServicePathways } from "@/components/service-pathways";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
@@ -153,16 +152,16 @@ export default function Home() {
                   <div className="flex gap-3 p-3 rounded-lg border-l-4 border-blue-500">
                     <div className="flex-shrink-0">
                       <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                        <Layers className="w-5 h-5 text-blue-600" />
+                        <img src={step3Icon} alt="LocalBlue" className="w-full h-full object-contain rounded-lg" />
                       </div>
                     </div>
                     <div className="flex-shrink-0">
                       <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold shadow-md">3</div>
                     </div>
                     <div>
-                      <div className="font-bold text-gray-900">Choose your base plan</div>
+                      <div className="font-bold text-gray-900">LocalBlue - Your Digital Base</div>
                       <p className="text-sm text-gray-600">
-                        Start ($99), Advanced ($299), or Scale ($999) - pick your structural depth
+                        Listings + Reputation management for digital excellence
                       </p>
                     </div>
                   </div>
@@ -170,16 +169,16 @@ export default function Home() {
                   <div className="flex gap-3 p-3 rounded-lg border-l-4 border-purple-500">
                     <div className="flex-shrink-0">
                       <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                        <Wrench className="w-5 h-5 text-purple-600" />
+                        <img src={step4Icon} alt="Coach Blue" className="w-full h-full object-contain rounded-lg" />
                       </div>
                     </div>
                     <div className="flex-shrink-0">
                       <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold shadow-md">4</div>
                     </div>
                     <div>
-                      <div className="font-bold text-gray-900">Select your build method</div>
+                      <div className="font-bold text-gray-900">Coach Blue - AI Business Coach</div>
                       <p className="text-sm text-gray-600">
-                        Do It Yourself, Managed Services Provided, or A La Carte (pick modules without base plan)
+                        AI guides you through every step of your growth journey
                       </p>
                     </div>
                   </div>
@@ -187,16 +186,16 @@ export default function Home() {
                   <div className="flex gap-3 p-3 rounded-lg border-l-4 border-green-500">
                     <div className="flex-shrink-0">
                       <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
-                        <Rocket className="w-5 h-5 text-green-600" />
+                        <img src={step5Icon} alt="CommVerse" className="w-full h-full object-contain rounded-lg" />
                       </div>
                     </div>
                     <div className="flex-shrink-0">
                       <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold shadow-md">5</div>
                     </div>
                     <div>
-                      <div className="font-bold text-gray-900">Start to Build</div>
+                      <div className="font-bold text-gray-900">CommVerse Bundle</div>
                       <p className="text-sm text-gray-600">
-                        Add Commverse apps, coaching, and access your dashboard
+                        Complete communication suite - /send, /inbox, /livechat, /content
                       </p>
                     </div>
                   </div>
@@ -293,9 +292,9 @@ export default function Home() {
                 <div className="flex items-center justify-center mb-4">
                   <BuildMethodIcon size={64} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Your Build Method</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">DIY Service</h3>
                 <p className="text-gray-600 text-sm">
-                  DIY (hands-on), MSP (managed for you), or ALC (pick specific tools) - recommended based on your comfort level.
+                  100% Do-It-Yourself platform - you control everything with our guidance and tools
                 </p>
               </CardContent>
             </Card>
@@ -751,9 +750,6 @@ export default function Home() {
       {/* How It Works */}
       <HowItWorks onStartAssessment={startAssessment} />
 
-      {/* Service Pathways */}
-      <ServicePathways />
-
       {/* Platform Ecosystem */}
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -793,7 +789,7 @@ export default function Home() {
                     <BrandLogo brand="hostsblue" size="md" showIcon={true} />
                   </div>
                 </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">Web Services & MSP Partner</p>
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">Web Services Partner</p>
                 <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
                   <li>• High-performance hosting</li>
                   <li>• Domain management</li>
