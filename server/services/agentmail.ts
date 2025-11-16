@@ -61,3 +61,10 @@ export async function getMyDrafts() {
   const drafts = await client.drafts.list();
   return drafts;
 }
+
+// Get a specific thread by ID (only needs threadId)
+export async function getThread(threadId: string) {
+  const client = await getUncachableAgentMailClient();
+  const thread = await client.threads.get(threadId);
+  return thread;
+}
