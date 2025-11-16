@@ -145,8 +145,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       const { pathway } = req.body;
 
-      if (!["diy", "msp", "combination", "none"].includes(pathway)) {
-        return res.status(400).json({ message: "Invalid pathway selection" });
+      if (!["diy", "none"].includes(pathway)) {
+        return res.status(400).json({ message: "Invalid pathway selection - only DIY is supported" });
       }
 
       await storage.updateAssessment(id, { selectedPathway: pathway });
@@ -214,15 +214,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const pathwayNames: Record<string, string> = {
-        'diy': 'DIY Platform',
-        'msp': 'Managed Services Starter',
-        'combination': 'Combination Plan'
+        'diy': 'DIY Platform'
       };
 
       const monthlyPrices: Record<string, number> = {
-        'diy': 49,
-        'msp': 299,
-        'combination': 199
+        'diy': 49
       };
 
       const emailSent = await emailService.sendCheckoutAbandonmentEmail(assessment.email, {
@@ -812,7 +808,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Client not found" });
       }
 
-      // Mock listings data - will be replaced with real data from Synup/Google Business
+      // Mock listings data
       const listings = [
         {
           id: 1,
@@ -893,7 +889,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Client not found" });
       }
 
-      // Mock reviews data - will be replaced with real data from Synup/review services
+      // Mock reviews data
       const reviews = [
         {
           id: 1,
@@ -1022,7 +1018,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Client not found" });
       }
 
-      // In production, this would update the listing via Synup/Google Business API
+      // In production, this would update the listing via API
       // For now, just return success
       res.json({
         success: true,
@@ -1081,7 +1077,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ...plan,
           features: Array.isArray(plan.features) ? plan.features : [],
           popular: plan.tierLevel === 'professional',
-          recommended: plan.pathway === 'msp' && plan.tierLevel === 'basic'
+          recommended: plan.pathway === 'diy' && plan.tierLevel === 'basic'
         }))
       });
     } catch (error) {
@@ -1297,11 +1293,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Get the appropriate plan based on pathway
+      // Get the appropriate plan based on pathway (DIY only)
       const planIdMap: Record<string, string> = {
-        'diy': 'diy-platform',
-        'msp': 'msp-starter',
-        'combination': 'msp-starter'
+        'diy': 'diy-platform'
       };
 
       const planStringId = planIdMap[pathway];
@@ -1327,11 +1321,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         selectedProducts = await db.select().from(productsTable)
           .where(inArray(productsTable.id, productIds));
 
-        // Calculate total based on pathway
+        // Calculate total (DIY pricing only)
         productsTotal = selectedProducts.reduce((sum, product) => {
-          const price = pathway === 'diy'
-            ? parseFloat(product.diyPrice || '0')
-            : parseFloat(product.mspPrice || '0');
+          const price = parseFloat(product.diyPrice || '0');
           return sum + price;
         }, 0);
       }
@@ -1359,9 +1351,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         planName: plan.name,
         planPrice: basePriceMonthly * cycleMonths,
         selectedAddons: selectedProducts.map(product => {
-          const monthlyPrice = pathway === 'diy'
-            ? parseFloat(product.diyPrice || '0')
-            : parseFloat(product.mspPrice || '0');
+          const monthlyPrice = parseFloat(product.diyPrice || '0');
           return {
             name: product.name,
             price: monthlyPrice * cycleMonths
@@ -1408,11 +1398,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Map pathway to plan ID
+      // Map pathway to plan ID (DIY only)
       const planIdMap: Record<string, string> = {
-        'diy': 'diy-platform',
-        'msp': 'msp-starter',
-        'combination': 'msp-starter'
+        'diy': 'diy-platform'
       };
 
       const planStringId = planIdMap[pathway];
@@ -1439,9 +1427,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .where(inArray(productsTable.id, productIds));
 
         productsTotal = selectedProducts.reduce((sum, product) => {
-          const price = pathway === 'diy'
-            ? parseFloat(product.diyPrice || '0')
-            : parseFloat(product.mspPrice || '0');
+          const price = parseFloat(product.diyPrice || '0');
           return sum + price;
         }, 0);
       }
@@ -1482,7 +1468,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Send enrollment confirmation email (assessment already fetched above)
       if (assessment) {
-        const pathwayName = pathway === 'msp' ? 'Managed Services' : 'DIY Platform';
+        const pathwayName = 'DIY Platform';
         const planName = `${plan.name} (${pathwayName})`;
         
         // Get selected product names for features list

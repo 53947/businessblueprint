@@ -47,12 +47,12 @@ export default function Journey() {
     },
     {
       id: "pathway",
-      title: "Choose Your Path",
-      description: "Do It Yourself (DIY) tools or Managed Services Provided (MSP)",
-      icon: () => <img src={digitalPathIcon} alt="Choose Your Path" className="w-16 h-16" />,
+      title: "DIY Platform",
+      description: "100% Do-It-Yourself platform with AI guidance",
+      icon: () => <img src={digitalPathIcon} alt="DIY Platform" className="w-16 h-16" />,
       color: "green" as const,
       path: "/subscription",
-      features: ["Do It Yourself (DIY) Self-Service Tools", "Full Managed Services Provided (MSP)", "Hybrid Approach", "Scalable Solutions"]
+      features: ["Self-Service DIY Tools", "AI Coach Guidance", "Complete Control", "Cost-Effective"]
     },
     {
       id: "coach",
@@ -246,8 +246,8 @@ export default function Journey() {
               Choose Your Perfect Path
             </h2>
             <p className="text-lg text-gray-600">
-              Whether you prefer hands-on control or full-service management, 
-              we have the right solution for your business.
+              Our 100% DIY platform gives you complete control with AI-powered guidance 
+              to transform your digital presence.
             </p>
           </div>
 
@@ -290,43 +290,6 @@ export default function Journey() {
               </CardContent>
             </Card>
 
-            {/* MSP Path */}
-            <Card className="border-2 border-purple-200 hover:border-purple-300 transition-colors">
-              <CardHeader className="text-center bg-purple-50">
-                <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-8 h-8 text-white" />
-                </div>
-                <CardTitle className="text-2xl text-purple-600">Managed Services Provided (MSP)</CardTitle>
-                <CardDescription className="text-lg">
-                  Full-service management by digital experts
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-6">
-                <ul className="space-y-3 mb-6">
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Expert team handles everything</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Faster time to results</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Focus on your business</span>
-                  </li>
-                  <li className="flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-500 mr-3" />
-                    <span>Premium AI Coach access</span>
-                  </li>
-                </ul>
-                <Link href="/subscription">
-                  <Button className="w-full bg-purple-600 hover:bg-purple-700" data-testid="button-msp-path">
-                    Start Managed Services Provided (MSP) Journey
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </section>

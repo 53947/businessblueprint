@@ -39,8 +39,7 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Solutions</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="/subscription" className="text-black font-bold hover:text-white transition-colors">DIY Tools</a></li>
-              <li><a href="/subscription" className="text-black font-bold hover:text-white transition-colors">Managed Services</a></li>
+              <li><a href="/subscription" className="text-black font-bold hover:text-white transition-colors">DIY Platform</a></li>
               <li><a href="/ai-coach" className="text-black font-bold hover:text-white transition-colors">AI Coach</a></li>
               <li><a href="/portal" className="text-black font-bold hover:text-white transition-colors">Client Portal</a></li>
               <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Analytics Dashboard</a></li>

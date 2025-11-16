@@ -70,9 +70,7 @@ const basePlans = [
 ];
 
 const executionStyles = [
-  { id: 'diy', img: diyImg, label: 'DIY', description: 'you install from the plan' },
-  { id: 'msp', img: hostsblueImg, label: 'MSP', description: 'our crew manages the build' },
-  { id: 'alc', img: alcImg, label: 'ALC', description: 'pick modules; no base plan' }
+  { id: 'diy', img: diyImg, label: 'DIY', description: '100% do-it-yourself platform' }
 ];
 
 const apps = [
@@ -109,8 +107,8 @@ export default function PricingPage() {
         {/* Architectural Framing Note */}
         <div className="max-w-4xl mx-auto mb-12 p-4 rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/5 to-purple-500/5">
           <p className="text-sm text-gray-300">
-            <strong className="text-white">Blueprint Overview — Architectural framing:</strong><br />
-            Foundation (Assessment) → Framing (Base Plan) → Build Method (Execution Style) → Fixtures (Apps) → Inspections (Coaching) → Handover (Checkout & Dashboard).
+            <strong className="text-white">Blueprint Overview — Your Journey:</strong><br />
+            Digital IQ Assessment → Blueprint Prescription → LocalBlue → Coach Blue → CommVerse Bundle → Dashboard
           </p>
         </div>
 
@@ -179,7 +177,7 @@ export default function PricingPage() {
         <section className="mb-16">
           <div className="mb-6">
             <p className="text-sm text-gray-400 text-center">
-              <strong className="text-white">Build Methods (Execution Style):</strong> DIY (owner-builder), MSP (managed contractor), or ALC (a la carte) where you select individual modules without a base plan.
+              <strong className="text-white">Build Method:</strong> 100% DIY (Do-It-Yourself) platform with AI guidance and tools
             </p>
           </div>
           <div className="flex flex-wrap gap-4 justify-center">
