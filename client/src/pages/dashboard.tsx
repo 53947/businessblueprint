@@ -35,21 +35,6 @@ export default function Dashboard() {
     enabled: !!assessmentId
   });
 
-  const selectPathway = async (pathway: "diy" | "msp") => {
-    try {
-      await apiRequest("PATCH", `/api/assessments/${assessmentId}/pathway`, { pathway });
-      toast({
-        title: "Pathway Selected",
-        description: `You've chosen the ${pathway.toUpperCase()} path. We'll be in touch soon!`,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update pathway selection",
-        variant: "destructive",
-      });
-    }
-  };
 
   if (isLoading) {
     return (
@@ -225,10 +210,9 @@ export default function Dashboard() {
             <div className="flex items-center space-x-2">
               <span className="text-sm text-blue-700">Current Plan:</span>
               <Badge variant="outline" className="text-blue-800 border-blue-300">
-                {assessment.pathway === "msp" ? "Managed Services Provided (MSP)" : "Do It Yourself (DIY)"}
+                Do It Yourself (DIY)
               </Badge>
             </div>
-            <span className="text-xs text-blue-600">Change plan below ↓</span>
           </div>
         </div>
         
@@ -353,45 +337,6 @@ export default function Dashboard() {
                       </p>
                     </div>
                   )}
-                </div>
-              </CardContent>
-            </Card>
-            
-            {/* Plan Options */}
-            <Card className="border-blue-200 bg-gradient-to-br from-blue-50 to-orange-50">
-              <CardHeader>
-                <CardTitle className="text-blue-900">Upgrade Your Path</CardTitle>
-                <p className="text-sm text-blue-700">Ready to accelerate your growth?</p>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {assessment.pathway !== "msp" && (
-                  <Button 
-                    onClick={() => selectPathway("msp")} 
-                    className="w-full justify-between bg-blue-600 hover:bg-white hover:text-blue-600 hover:border-blue-600 border-2 border-blue-600 text-white transition-all"
-                  >
-                    <div className="text-left">
-                      <div className="font-semibold">Managed Services Provided (MSP)</div>
-                      <div className="text-xs opacity-90">$499/month - Full service</div>
-                    </div>
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                )}
-                {assessment.pathway !== "diy" && (
-                  <Button 
-                    onClick={() => selectPathway("diy")} 
-                    className="w-full justify-between bg-orange-600 hover:bg-white hover:text-orange-600 hover:border-orange-600 border-2 border-orange-600 text-white transition-all"
-                  >
-                    <div className="text-left">
-                      <div className="font-semibold">Do It Yourself (DIY)</div>
-                      <div className="text-xs opacity-90">Free to $299/month</div>
-                    </div>
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                )}
-                <div className="pt-2 border-t border-blue-200">
-                  <Button variant="link" className="text-sm text-blue-600 p-0">
-                    💬 Schedule consultation
-                  </Button>
                 </div>
               </CardContent>
             </Card>

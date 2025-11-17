@@ -78,17 +78,13 @@ export default function SubscriptionPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   
-  // Read pathway from URL params
-  const urlParams = new URLSearchParams(window.location.search);
-  const urlPathway = urlParams.get('pathway') as 'diy' | 'msp' | null;
-  
   // State management
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
   const [selectedAddons, setSelectedAddons] = useState<{ addonId: string; quantity?: number; }[]>([]);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'quarterly' | 'annual'>('monthly');
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [pathway, setPathway] = useState<'diy' | 'msp'>(urlPathway || 'msp'); // Use URL param or default to MSP
+  const pathway = 'diy'; // DIY-only platform
 
   // Fetch plans and addons
   const { data: plansData, isLoading: plansLoading } = useQuery({
@@ -120,10 +116,9 @@ export default function SubscriptionPage() {
   const addons: ExtendedSubscriptionAddon[] = (addonsData as any)?.addons || [];
   const pricing: PricingCalculation | undefined = (pricingData as any)?.pricing;
 
-  // Filter plans by pathway
+  // Filter plans for DIY-only
   const diyPlans = plans.filter(p => p.pathway === 'diy');
-  const mspPlans = plans.filter(p => p.pathway === 'msp');
-  const currentPathwayPlans = pathway === 'diy' ? diyPlans : mspPlans;
+  const currentPathwayPlans = diyPlans;
 
   // Filter compatible addons
   const compatibleAddons = addons.filter(addon => 
@@ -220,37 +215,6 @@ export default function SubscriptionPage() {
           </p>
         </div>
 
-        {/* Pathway Selection */}
-        <div className="flex justify-center mb-8">
-          <div className="bg-white rounded-lg p-2 shadow-sm border">
-            <div className="flex space-x-1">
-              <button
-                onClick={() => setPathway('msp')}
-                className={`px-6 py-3 rounded-md text-sm font-medium transition-all ${
-                  pathway === 'msp'
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-                data-testid="button-pathway-msp"
-              >
-                <Crown className="w-4 h-4 inline mr-2" />
-                Managed Services Provided (MSP) (Recommended)
-              </button>
-              <button
-                onClick={() => setPathway('diy')}
-                className={`px-6 py-3 rounded-md text-sm font-medium transition-all ${
-                  pathway === 'diy'
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-                data-testid="button-pathway-diy"
-              >
-                <Zap className="w-4 h-4 inline mr-2" />
-                Do It Yourself (DIY)
-              </button>
-            </div>
-          </div>
-        </div>
 
         {/* Billing Cycle Selection */}
         <div className="flex justify-center mb-8">
@@ -283,17 +247,8 @@ export default function SubscriptionPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  {pathway === 'msp' ? (
-                    <>
-                      <Crown className="w-5 h-5 text-purple-600" />
-                      <span>Managed Services Provided (MSP) Plans</span>
-                    </>
-                  ) : (
-                    <>
-                      <Zap className="w-5 h-5 text-blue-600" />
-                      <span>Do It Yourself (DIY) Plans</span>
-                    </>
-                  )}
+                  <Zap className="w-5 h-5 text-blue-600" />
+                  <span>Do It Yourself (DIY) Plans</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>

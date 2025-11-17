@@ -278,55 +278,6 @@ export default function AssessmentCheckoutPage() {
               </CardContent>
             </Card>
 
-            <Card data-testid="card-pathway-selection">
-              <CardHeader>
-                <CardTitle>Choose Your Implementation Path</CardTitle>
-                <CardDescription>
-                  How would you like to implement these solutions?
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <RadioGroup value={pathway} onValueChange={(value: any) => setPathway(value)}>
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" data-testid="radio-diy">
-                      <RadioGroupItem value="diy" id="diy" data-testid="input-pathway-diy" />
-                      <Label htmlFor="diy" className="cursor-pointer flex-1">
-                        <div>
-                          <h4 className="font-semibold">Do It Yourself (DIY)</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Lower cost, you manage everything
-                          </p>
-                        </div>
-                      </Label>
-                    </div>
-
-                    <div className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" data-testid="radio-msp">
-                      <RadioGroupItem value="msp" id="msp" data-testid="input-pathway-msp" />
-                      <Label htmlFor="msp" className="cursor-pointer flex-1">
-                        <div>
-                          <h4 className="font-semibold">Managed Services Provided (MSP)</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            We handle everything for you
-                          </p>
-                        </div>
-                      </Label>
-                    </div>
-
-                    <div className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" data-testid="radio-combination">
-                      <RadioGroupItem value="combination" id="combination" data-testid="input-pathway-combination" />
-                      <Label htmlFor="combination" className="cursor-pointer flex-1">
-                        <div>
-                          <h4 className="font-semibold">Combination</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Mix of DIY and managed services
-                          </p>
-                        </div>
-                      </Label>
-                    </div>
-                  </div>
-                </RadioGroup>
-              </CardContent>
-            </Card>
           </div>
 
           <div className="lg:col-span-1">

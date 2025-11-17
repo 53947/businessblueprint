@@ -27,7 +27,7 @@ export default function Terms() {
             <li>AI-powered Digital Blueprint assessments</li>
             <li>Social media content management and scheduling</li>
             <li>Unified communication inbox (Commverse)</li>
-            <li>Business listings and reputation management (via Synup)</li>
+            <li>Business listings and reputation management</li>
             <li>Email and SMS marketing automation</li>
             <li>Live chat functionality</li>
             <li>AI Business Coach</li>
@@ -50,7 +50,6 @@ export default function Terms() {
           <p className="mb-4">We offer multiple subscription tiers:</p>
           <ul className="list-disc pl-6 mb-4">
             <li><strong>DIY Pathway:</strong> Self-service tools with AI Coach support</li>
-            <li><strong>MSP Pathway:</strong> Managed Service Provider with full-service support</li>
             <li><strong>À La Carte:</strong> Individual services purchased separately</li>
           </ul>
 
