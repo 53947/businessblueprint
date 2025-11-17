@@ -265,7 +265,7 @@ export default function PricingPage() {
                   </div>
                   <div className="text-xl font-bold">$99</div>
                 </div>
-                <div className="text-xs text-gray-500">DIY: $99 · MSP: $59 · ALC: $99</div>
+                <div className="text-xs text-gray-500">DIY: $99 · ALC: $99</div>
               </CardContent>
             </Card>
 
