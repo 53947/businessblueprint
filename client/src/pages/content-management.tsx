@@ -180,7 +180,7 @@ export default function ContentManagement() {
     if (selectedPlatforms.includes(platform)) {
       setSelectedPlatforms(selectedPlatforms.filter(p => p !== platform));
     } else {
-      const maxPlatforms = clientData?.client?.serviceType === 'msp' ? 7 : 3;
+      const maxPlatforms = 3; // DIY tier
       if (selectedPlatforms.length >= maxPlatforms) {
         toast({
           title: "Platform Limit Reached",
@@ -289,7 +289,7 @@ export default function ContentManagement() {
   if (!clientId) return null;
 
   const connectedPlatforms = platformsData?.platforms || [];
-  const maxPlatforms = clientData?.client?.serviceType === 'msp' ? 7 : 3;
+  const maxPlatforms = 3; // DIY tier
   const characterCount = caption.length;
   const maxCharacters = 2200; // Twitter is most restrictive at 280, but we'll use a general limit
 
@@ -700,11 +700,6 @@ export default function ContentManagement() {
                   <CardTitle>Available Platforms</CardTitle>
                   <CardDescription>
                     Connect new platforms to expand your reach
-                    {clientData?.client?.serviceType !== 'msp' && (
-                      <span className="ml-2 text-[#E91E8C] font-medium">
-                        (Upgrade to MSP tier for TikTok & Snapchat)
-                      </span>
-                    )}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -719,7 +714,7 @@ export default function ContentManagement() {
                           <div className="flex-1">
                             <h3 className="font-semibold">Facebook</h3>
                             <p className="text-sm text-gray-600">Post to pages & profiles</p>
-                            <Badge variant="secondary" className="mt-2 text-xs">DIY & MSP</Badge>
+                            <Badge variant="secondary" className="mt-2 text-xs">DIY</Badge>
                           </div>
                         </div>
                         <Button
@@ -743,7 +738,7 @@ export default function ContentManagement() {
                           <div className="flex-1">
                             <h3 className="font-semibold">Instagram</h3>
                             <p className="text-sm text-gray-600">Business accounts only</p>
-                            <Badge variant="secondary" className="mt-2 text-xs">DIY & MSP</Badge>
+                            <Badge variant="secondary" className="mt-2 text-xs">DIY</Badge>
                           </div>
                         </div>
                         <Button
@@ -767,7 +762,7 @@ export default function ContentManagement() {
                           <div className="flex-1">
                             <h3 className="font-semibold">LinkedIn</h3>
                             <p className="text-sm text-gray-600">Professional network</p>
-                            <Badge variant="secondary" className="mt-2 text-xs">DIY & MSP</Badge>
+                            <Badge variant="secondary" className="mt-2 text-xs">DIY</Badge>
                           </div>
                         </div>
                         <Button
@@ -791,7 +786,7 @@ export default function ContentManagement() {
                           <div className="flex-1">
                             <h3 className="font-semibold">X (Twitter)</h3>
                             <p className="text-sm text-gray-600">Tweets & threads</p>
-                            <Badge variant="secondary" className="mt-2 text-xs">DIY & MSP</Badge>
+                            <Badge variant="secondary" className="mt-2 text-xs">DIY</Badge>
                           </div>
                         </div>
                         <Button
@@ -815,7 +810,7 @@ export default function ContentManagement() {
                           <div className="flex-1">
                             <h3 className="font-semibold">Google Business</h3>
                             <p className="text-sm text-gray-600">Local business posts</p>
-                            <Badge variant="secondary" className="mt-2 text-xs">DIY & MSP</Badge>
+                            <Badge variant="secondary" className="mt-2 text-xs">DIY</Badge>
                           </div>
                         </div>
                         <Button
@@ -830,7 +825,7 @@ export default function ContentManagement() {
                     </Card>
 
                     {/* TikTok (MSP only) */}
-                    <Card className={clientData?.client?.serviceType !== 'msp' ? 'opacity-50' : connectedPlatforms.some((p: any) => p.platform === 'tiktok') ? 'opacity-50' : ''}>
+                    <Card className={connectedPlatforms.some((p: any) => p.platform === 'tiktok') ? 'opacity-50' : ''}>
                       <CardContent className="pt-6 space-y-4">
                         <div className="flex items-start gap-4">
                           <div className="w-12 h-12 rounded-lg bg-black flex items-center justify-center">
@@ -839,16 +834,16 @@ export default function ContentManagement() {
                           <div className="flex-1">
                             <h3 className="font-semibold">TikTok</h3>
                             <p className="text-sm text-gray-600">Short-form videos</p>
-                            <Badge variant="secondary" className="mt-2 text-xs bg-[#E91E8C] text-white">MSP Only</Badge>
+                            
                           </div>
                         </div>
                         <Button
                           className="w-full bg-black hover:bg-gray-900 text-white"
-                          disabled={clientData?.client?.serviceType !== 'msp' || connectedPlatforms.some((p: any) => p.platform === 'tiktok')}
+                          disabled={connectedPlatforms.some((p: any) => p.platform === 'tiktok')}
                           onClick={() => toast({ title: "Coming Soon", description: "TikTok integration will be available once API credentials are configured." })}
                           data-testid="button-connect-tiktok"
                         >
-                          {connectedPlatforms.some((p: any) => p.platform === 'tiktok') ? 'Connected' : clientData?.client?.serviceType !== 'msp' ? 'MSP Tier Required' : 'Connect TikTok'}
+                          {connectedPlatforms.some((p: any) => p.platform === 'tiktok') ? 'Connected' : 'Connect TikTok'}
                         </Button>
                       </CardContent>
                     </Card>

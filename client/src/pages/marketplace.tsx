@@ -202,38 +202,6 @@ export default function MarketplacePage() {
     }
   ];
 
-  const mspServices: Addon[] = [
-    {
-      id: 'standard-msp',
-      name: 'Standard MSP',
-      icon: Wrench,
-      emoji: '🛠️',
-      price: 313,
-      description: 'We do it for you',
-      accentColor: 'purple',
-      features: [
-        '10 managed hours included',
-        '$69/hr additional hours',
-        'Dedicated support team',
-        'Professional management'
-      ]
-    },
-    {
-      id: 'premium-msp',
-      name: 'Premium MSP',
-      icon: Paperclip,
-      emoji: '🧷',
-      price: 625,
-      description: 'Premium managed services',
-      accentColor: 'purple',
-      features: [
-        '20 managed hours included',
-        '$56/hr additional hours',
-        'Priority support',
-        'Advanced management'
-      ]
-    }
-  ];
 
   const alaCarteServices: Addon[] = [
     {

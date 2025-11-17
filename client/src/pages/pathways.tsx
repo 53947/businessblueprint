@@ -2,7 +2,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { useLocation } from "wouter";
 import { ArrowRight, Compass, Wrench, Lightbulb, Zap, Ship, Brain, Building2, CreditCard, Server, Mail, Inbox, MessageSquare } from "lucide-react";
-import { DIYIcon, MSPIcon, ALCIcon } from "@/components/pathway-icons";
+import { DIYIcon, ALCIcon } from "@/components/pathway-icons";
 import sendIcon from "@assets/native icons and favicons/: send app icon.png";
 import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
 import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
@@ -98,71 +98,6 @@ export default function PathwaysPage() {
                   className="w-full bg-white hover:bg-white/90 text-orange-600 font-semibold"
                   data-testid="button-explore-diy">
                   Explore DIY Plans
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* MSP Pathway */}
-            <Card className="border-2 border-blue-400 hover:border-blue-500 transition-all hover:shadow-xl" style={{ backgroundColor: '#0000FF' }}>
-              <CardContent className="p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <MSPIcon className="w-12 h-12" />
-                  <div>
-                    <h2 className="text-xl font-bold text-white">Managed Services (MSP)</h2>
-                    <p className="text-sm text-white/90 font-semibold">Expert execution</p>
-                  </div>
-                </div>
-                
-                <p className="text-white/90 mb-6 text-lg leading-relaxed">
-                  For busy owners who want results without the work. Our expert team handles execution, optimization, and reporting—you focus on running your business.
-                </p>
-
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-white text-sm">Expert Team</h3>
-                      <p className="text-xs text-white/80">Dedicated specialists</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-white text-sm">Done-For-You</h3>
-                      <p className="text-xs text-white/80">Full execution & content</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <ArrowRight className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-white text-sm">Strategic Guidance</h3>
-                      <p className="text-xs text-white/80">Monthly optimization</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 mb-6">
-                  <p className="text-sm font-semibold text-white mb-2">Base plan + services</p>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-bold text-white">$313</span>
-                    <span className="text-white/80">/month</span>
-                  </div>
-                  <p className="text-xs text-white/70 mt-1">Start tier • Advanced & Scale available</p>
-                </div>
-
-                <Button 
-                  onClick={() => setLocation('/marketplace')}
-                  className="w-full bg-white hover:bg-white/90 text-blue-600 font-semibold"
-                  data-testid="button-explore-msp">
-                  Explore MSP Services
                 </Button>
               </CardContent>
             </Card>
