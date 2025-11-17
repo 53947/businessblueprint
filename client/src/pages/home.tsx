@@ -67,7 +67,7 @@ export default function Home() {
                   data-testid="button-start-assessment"
                 >
                   <DigitalAssessmentIcon size={32} className="mr-2" />
-                  Start Free Assessment
+                  Start Free Digital IQ Assessment
                 </Button>
                 <Link href="/ai-coach">
                   <Button 
@@ -125,7 +125,7 @@ export default function Home() {
                       <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold shadow-md">1</div>
                     </div>
                     <div>
-                      <div className="font-bold text-gray-900">Complete your digital assessment</div>
+                      <div className="font-bold text-gray-900">Complete your Digital IQ Assessment</div>
                       <p className="text-sm text-gray-600">
                         AI analyzes your online presence and scores your Digital IQ
                       </p>
@@ -777,7 +777,7 @@ export default function Home() {
                   <li>• /content - Social Media Mgmt</li>
                 </ul>
                 <Button className="w-full border-2 border-[#FF6B00] text-[#FF6B00] bg-transparent hover:bg-[#FF6B00] hover:text-white transition-all mt-auto">
-                  Start Assessment
+                  Start Digital IQ Assessment
                 </Button>
               </CardContent>
             </Card>

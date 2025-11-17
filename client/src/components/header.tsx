@@ -1181,7 +1181,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 <Button size="lg" className="w-full justify-start gap-3 bg-blue-600 hover:bg-blue-700 text-white" asChild>
                   <a href="/assessment">
                     <img src={userPlusIcon} alt="" className="w-5 h-5" />
-                    <span className="font-semibold">Free Assessment</span>
+                    <span className="font-semibold">Free Digital IQ Assessment</span>
                   </a>
                 </Button>
               </div>
