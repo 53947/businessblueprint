@@ -51,7 +51,7 @@ export default function AssessmentCheckoutPage() {
   const urlParams = new URLSearchParams(window.location.search);
   const assessmentId = urlParams.get('id');
   
-  const [pathway, setPathway] = useState<'diy' | 'msp' | 'combination'>('msp');
+  const [pathway, setPathway] = useState<'diy' | 'none'>('diy');
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'quarterly' | 'annual'>('monthly');
   const [isProcessing, setIsProcessing] = useState(false);
