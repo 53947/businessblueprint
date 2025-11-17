@@ -26,7 +26,7 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Services</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="/assessment" className="text-black font-bold hover:text-white transition-colors">Digital Assessment</a></li>
+              <li><a href="/assessment" className="text-black font-bold hover:text-white transition-colors">Digital IQ Assessment</a></li>
               <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Website Development</a></li>
               <li><a href="#" className="text-black font-bold hover:text-white transition-colors">SEO Optimization</a></li>
               <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Reputation Management</a></li>

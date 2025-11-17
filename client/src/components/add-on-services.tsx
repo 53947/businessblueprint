@@ -453,7 +453,7 @@ export function AddOnServices() {
             <p className="text-gray-600 mb-6">Our AI assessment will recommend the perfect combination of services for your business</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button className="bg-blue-500 hover:bg-blue-600">
-                Get Free Assessment
+                Get Free Digital IQ Assessment
               </Button>
               <Button variant="outline">
                 Schedule Consultation
