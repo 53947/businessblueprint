@@ -30,7 +30,6 @@ interface ProductRecommendation {
   reason: string;
   priority: 'critical' | 'high' | 'medium' | 'low';
   diyPrice?: string;
-  mspPrice?: string;
   category: string;
 }
 
@@ -240,7 +239,7 @@ export default function AssessmentCheckoutPage() {
                   recommendations.map((rec) => {
                     const badge = getPriorityBadge(rec.priority);
                     const isSelected = selectedProducts.includes(rec.productId);
-                    const price = pathway === 'diy' ? rec.diyPrice : rec.mspPrice;
+                    const price = rec.diyPrice;
 
                     return (
                       <div
