@@ -54,15 +54,13 @@ const individualProducts = [
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
-      "DIY: 3 platforms (FB, IG, LinkedIn, X, Google Business) - pick your favorites",
-      "MSP: All 7 platforms including TikTok & Snapchat",
+      "3 platforms (FB, IG, LinkedIn, X, Google Business) - pick your favorites",
       "AI caption generator with tone control",
       "Smart hashtag suggestions",
       "Visual content calendar with drag-drop scheduling",
       "Media library with cloud storage",
       "Post analytics & performance tracking",
-      "Template library for quick posting",
-      "MSP: Dedicated strategist + team collaboration"
+      "Template library for quick posting"
     ]),
     deliveryMethod: ["diy"],
     estimatedImpact: "+15-20 points",
