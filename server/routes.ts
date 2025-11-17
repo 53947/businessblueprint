@@ -1719,7 +1719,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         reason: rec.reason,
         priority: rec.priority,
         diyPrice: rec.product.diyPrice,
-        mspPrice: rec.product.mspPrice,
         category: rec.product.category,
         currentScore: rec.currentScore,
         projectedScore: rec.projectedScore,

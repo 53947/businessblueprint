@@ -9,7 +9,6 @@ const individualProducts = [
     category: "core",
     improvesCategory: ["visibility", "completeness"],
     diyPrice: "29.99",
-    mspPrice: "49.99",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -19,7 +18,7 @@ const individualProducts = [
       "Duplicate listing cleanup",
       "NAP consistency monitoring"
     ]),
-    deliveryMethod: ["diy", "msp"],
+    deliveryMethod: ["diy"],
     estimatedImpact: "+15-25 points",
     displayOrder: 1,
     isActive: true
@@ -31,7 +30,6 @@ const individualProducts = [
     category: "core",
     improvesCategory: ["reviews", "engagement"],
     diyPrice: "39.99",
-    mspPrice: "59.99",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -41,7 +39,7 @@ const individualProducts = [
       "Email/SMS review requests",
       "Sentiment analysis"
     ]),
-    deliveryMethod: ["diy", "msp"],
+    deliveryMethod: ["diy"],
     estimatedImpact: "+20-30 points",
     displayOrder: 2,
     isActive: true
@@ -53,7 +51,6 @@ const individualProducts = [
     category: "core",
     improvesCategory: ["engagement", "visibility"],
     diyPrice: "49.99",
-    mspPrice: "79.99",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -67,7 +64,7 @@ const individualProducts = [
       "Template library for quick posting",
       "MSP: Dedicated strategist + team collaboration"
     ]),
-    deliveryMethod: ["diy", "msp"],
+    deliveryMethod: ["diy"],
     estimatedImpact: "+15-20 points",
     displayOrder: 3,
     isActive: true
@@ -79,7 +76,6 @@ const individualProducts = [
     category: "core",
     improvesCategory: ["visibility"],
     diyPrice: "59.99",
-    mspPrice: "89.99",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -89,7 +85,7 @@ const individualProducts = [
       "Competitor analysis",
       "Performance analytics (90-day history)"
     ]),
-    deliveryMethod: ["diy", "msp"],
+    deliveryMethod: ["diy"],
     estimatedImpact: "+10-15 points",
     displayOrder: 4,
     isActive: true
@@ -101,7 +97,6 @@ const individualProducts = [
     category: "core",
     improvesCategory: ["completeness", "visibility"],
     diyPrice: "99.00",
-    mspPrice: "149.00",
     setupFee: "0.00",
     billingCycle: "one_time",
     features: JSON.stringify([
@@ -111,7 +106,7 @@ const individualProducts = [
       "Category selection",
       "Hours & attributes setup"
     ]),
-    deliveryMethod: ["diy", "msp"],
+    deliveryMethod: ["diy"],
     estimatedImpact: "+25-35 points",
     displayOrder: 5,
     isActive: true
@@ -123,7 +118,6 @@ const individualProducts = [
     category: "core",
     improvesCategory: ["visibility", "completeness"],
     diyPrice: "69.99",
-    mspPrice: "99.99",
     setupFee: "99.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -133,7 +127,7 @@ const individualProducts = [
       "Search by address/zip",
       "Directions integration"
     ]),
-    deliveryMethod: ["diy", "msp"],
+    deliveryMethod: ["diy"],
     estimatedImpact: "+10-15 points",
     displayOrder: 6,
     isActive: true
@@ -145,7 +139,6 @@ const individualProducts = [
     category: "core",
     improvesCategory: ["completeness"],
     diyPrice: "29.99",
-    mspPrice: "79.99",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -155,7 +148,7 @@ const individualProducts = [
       "SSL certificate included",
       "Custom domain support"
     ]),
-    deliveryMethod: ["diy", "msp"],
+    deliveryMethod: ["diy"],
     estimatedImpact: "+15-20 points",
     displayOrder: 7,
     isActive: true
@@ -167,7 +160,6 @@ const individualProducts = [
     category: "solution",
     improvesCategory: ["visibility", "reviews", "completeness", "engagement"],
     diyPrice: "99.00",
-    mspPrice: "59.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -177,7 +169,7 @@ const individualProducts = [
       "Real-time help & support",
       "Team training support"
     ]),
-    deliveryMethod: ["diy", "msp"],
+    deliveryMethod: ["diy"],
     estimatedImpact: "Accelerates all improvements",
     displayOrder: 8,
     isActive: true
@@ -189,7 +181,6 @@ const individualProducts = [
     category: "solution",
     improvesCategory: ["visibility", "reviews", "completeness", "engagement"],
     diyPrice: "249.00",
-    mspPrice: "249.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
@@ -199,7 +190,7 @@ const individualProducts = [
       "Challenge navigation support",
       "Smooth transition to independence"
     ]),
-    deliveryMethod: ["diy", "msp"],
+    deliveryMethod: ["diy"],
     estimatedImpact: "Ensures successful implementation",
     displayOrder: 9,
     isActive: true
