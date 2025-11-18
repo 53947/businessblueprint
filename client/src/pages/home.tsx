@@ -29,6 +29,7 @@ import contentIcon from "@assets/native icons and favicons/: content app icon.pn
 import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
 import commverseBundle from "@assets/_ commverse bundle logo_1762731789054.png";
 import commverseIcon from "@assets/Commverse_1762731195351.png";
+import localBlueLogo from "@assets/localblue-logo.png";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -115,11 +116,11 @@ export default function Home() {
                   Custom digital growth plan based on AI analysis of your business
                 </p>
                 <div className="space-y-4 relative z-10">
-                  <div className="flex gap-3 p-3 rounded-lg border-l-4 border-orange-500">
+                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-orange-500">
                     <div className="flex-shrink-0">
                       <img src={badge1} alt="Step 1" className="w-16 h-16 object-contain" />
                     </div>
-                    <div>
+                    <div className="text-left">
                       <div className="font-bold text-gray-900">Complete your Digital IQ Assessment</div>
                       <p className="text-sm text-gray-600">
                         AI analyzes your online presence and scores your Digital IQ
@@ -127,11 +128,11 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  <div className="flex gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
+                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
                     <div className="flex-shrink-0">
                       <img src={badge2} alt="Step 2" className="w-16 h-16 object-contain" />
                     </div>
-                    <div>
+                    <div className="text-left">
                       <div className="font-bold text-gray-900">Get your prescribed blueprint</div>
                       <p className="text-sm text-gray-600">
                         We diagnose your digital presence and prescribe the exact blueprint your business needs to grow
@@ -139,23 +140,25 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  <div className="flex gap-3 p-3 rounded-lg border-l-4 border-blue-500">
+                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-blue-500">
                     <div className="flex-shrink-0">
                       <img src={badge3} alt="Step 3" className="w-16 h-16 object-contain" />
                     </div>
-                    <div>
-                      <div className="font-bold text-gray-900">LocalBlue - Your Digital Base</div>
+                    <div className="text-left">
+                      <div className="font-bold text-gray-900">
+                        <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
+                      </div>
                       <p className="text-sm text-gray-600">
                         Listings + Reputation management for digital excellence
                       </p>
                     </div>
                   </div>
                   
-                  <div className="flex gap-3 p-3 rounded-lg border-l-4 border-purple-500">
+                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-purple-500">
                     <div className="flex-shrink-0">
                       <img src={badge4} alt="Step 4" className="w-16 h-16 object-contain" />
                     </div>
-                    <div>
+                    <div className="text-left">
                       <div className="font-bold text-gray-900">Coach Blue - AI Business Coach</div>
                       <p className="text-sm text-gray-600">
                         AI guides you through every step of your growth journey
@@ -163,12 +166,14 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  <div className="flex gap-3 p-3 rounded-lg border-l-4 border-green-500">
+                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-green-500">
                     <div className="flex-shrink-0">
                       <img src={badge5} alt="Step 5" className="w-16 h-16 object-contain" />
                     </div>
-                    <div>
-                      <div className="font-bold text-gray-900">CommVerse Bundle</div>
+                    <div className="text-left">
+                      <div className="font-bold text-gray-900">
+                        <img src={commverseBundle} alt="CommVerse" className="h-4" />
+                      </div>
                       <p className="text-sm text-gray-600">
                         Complete communication suite - /send, /inbox, /livechat, /content
                       </p>
