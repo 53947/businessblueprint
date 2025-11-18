@@ -129,11 +129,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                           <div className="space-y-4">
                             <Link href="/assessment" className="block" data-testid="link-how-it-works-step1-digital-iq">
-                              <div className="flex gap-3 p-3 rounded-lg border-l-4 border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950 transition-colors cursor-pointer">
+                              <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950 transition-colors cursor-pointer">
                                 <div className="flex-shrink-0">
                                   <img src={badge1} alt="Step 1" className="w-16 h-16 object-contain" />
                                 </div>
-                                <div>
+                                <div className="text-left">
                                   <div className="font-bold text-gray-900 dark:text-white">Digital IQ Assessment</div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
                                     AI analyzes your online presence and scores your Digital IQ
@@ -142,11 +142,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </Link>
 
-                            <div className="flex gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
+                            <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
                               <div className="flex-shrink-0">
                                 <img src={badge2} alt="Step 2" className="w-16 h-16 object-contain" />
                               </div>
-                              <div>
+                              <div className="text-left">
                                 <div className="font-bold text-gray-900 dark:text-white">Get Your Prescribed Blueprint</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                   We diagnose your digital presence and prescribe the exact blueprint your business needs to grow
@@ -155,13 +155,13 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
 
                             <Link href="/localblue" className="block" data-testid="link-how-it-works-step3-localblue">
-                              <div className="flex gap-3 p-3 rounded-lg border-l-4 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors cursor-pointer">
+                              <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors cursor-pointer">
                                 <div className="flex-shrink-0">
                                   <img src={badge3} alt="Step 3" className="w-16 h-16 object-contain" />
                                 </div>
-                                <div>
-                                  <div className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                    <img src={localBlueLogo} alt="LocalBlue" className="h-5" />
+                                <div className="text-left">
+                                  <div className="font-bold text-gray-900 dark:text-white">
+                                    <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
                                   </div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
                                     Listings + Reputation management for digital excellence
@@ -171,11 +171,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </Link>
 
                             <Link href="/ai-coach" className="block" data-testid="link-how-it-works-step4-coach-blue">
-                              <div className="flex gap-3 p-3 rounded-lg border-l-4 border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950 transition-colors cursor-pointer">
+                              <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950 transition-colors cursor-pointer">
                                 <div className="flex-shrink-0">
                                   <img src={badge4} alt="Step 4" className="w-16 h-16 object-contain" />
                                 </div>
-                                <div>
+                                <div className="text-left">
                                   <div className="font-bold text-gray-900 dark:text-white">Coach Blue</div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
                                     AI Business Coach guides you through every step
@@ -185,13 +185,13 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </Link>
 
                             <Link href="/pricing?addon=commverse" className="block" data-testid="link-how-it-works-step5-commverse">
-                              <div className="flex gap-3 p-3 rounded-lg border-l-4 border-green-500 hover:bg-green-50 dark:hover:bg-green-950 transition-colors cursor-pointer">
+                              <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-green-500 hover:bg-green-50 dark:hover:bg-green-950 transition-colors cursor-pointer">
                                 <div className="flex-shrink-0">
                                   <img src={badge5} alt="Step 5" className="w-16 h-16 object-contain" />
                                 </div>
-                                <div>
-                                  <div className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                    <img src={commverseBundle} alt="commverse" className="h-5 inline-block" />
+                                <div className="text-left">
+                                  <div className="font-bold text-gray-900 dark:text-white">
+                                    <img src={commverseBundle} alt="commverse" className="h-4" />
                                   </div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
                                     Complete communication suite - /send, /inbox, /livechat, /content
