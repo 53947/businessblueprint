@@ -14,11 +14,11 @@ import bbLogo from "@assets/Blueprint_Favicon_1762489845363.png";
 import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
 import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
-import step1Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
-import step2Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/2-Get your prescribed blueprint.png";
-import step3Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/3-Choose your base plan.png";
-import step4Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/4-Select your build method.png";
-import step5Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/5-Start to Build.png";
+import step1Icon from "@assets/step1-digital-iq-assessment.png";
+import step2Icon from "@assets/step2-blueprint-prescription.png";
+import step3Icon from "@assets/step3-localblue.png";
+import step4Icon from "@assets/step4-coach-blue.png";
+import step5Icon from "@assets/step5-commverse.png";
 import sendIcon from "@assets/native icons and favicons/: send app icon.png";
 import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
 import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
@@ -117,8 +117,8 @@ export default function Home() {
                 <div className="space-y-4 relative z-10">
                   <div className="flex gap-3 p-3 rounded-lg border-l-4 border-orange-500">
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
-                        <ClipboardCheck className="w-5 h-5 text-orange-600" />
+                      <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center p-1">
+                        <img src={step1Icon} alt="Digital IQ Assessment" className="w-full h-full object-contain" />
                       </div>
                     </div>
                     <div className="flex-shrink-0">
@@ -134,8 +134,8 @@ export default function Home() {
                   
                   <div className="flex gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center">
-                        <FileText className="w-5 h-5 text-yellow-600" />
+                      <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center p-1">
+                        <img src={step2Icon} alt="Prescribed Blueprint" className="w-full h-full object-contain" />
                       </div>
                     </div>
                     <div className="flex-shrink-0">
@@ -151,8 +151,8 @@ export default function Home() {
                   
                   <div className="flex gap-3 p-3 rounded-lg border-l-4 border-blue-500">
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                        <img src={step3Icon} alt="LocalBlue" className="w-full h-full object-contain rounded-lg" />
+                      <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center p-1">
+                        <img src={step3Icon} alt="LocalBlue" className="w-full h-full object-contain" />
                       </div>
                     </div>
                     <div className="flex-shrink-0">
@@ -168,8 +168,8 @@ export default function Home() {
                   
                   <div className="flex gap-3 p-3 rounded-lg border-l-4 border-purple-500">
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                        <img src={step4Icon} alt="Coach Blue" className="w-full h-full object-contain rounded-lg" />
+                      <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center p-1">
+                        <img src={step4Icon} alt="Coach Blue" className="w-full h-full object-contain" />
                       </div>
                     </div>
                     <div className="flex-shrink-0">
@@ -185,8 +185,8 @@ export default function Home() {
                   
                   <div className="flex gap-3 p-3 rounded-lg border-l-4 border-green-500">
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
-                        <img src={step5Icon} alt="CommVerse" className="w-full h-full object-contain rounded-lg" />
+                      <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center p-1">
+                        <img src={step5Icon} alt="CommVerse" className="w-full h-full object-contain" />
                       </div>
                     </div>
                     <div className="flex-shrink-0">
