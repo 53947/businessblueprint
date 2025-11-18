@@ -62,13 +62,12 @@ import reputationIcon from "@assets/reputation app triad blue and repoutation go
 import reputationLogo from "@assets/reputation_1762930219633.png";
 import listingsIcon from "@assets/listings app_1762804610311.png";
 import listingsLogo from "@assets/listings_1762930219632.png";
-import localBlueIcon from "@assets/step3-localblue.png";
 import localBlueLogo from "@assets/localblue-logo.png";
-import step1Icon from "@assets/step1-digital-iq-assessment.png";
-import step2Icon from "@assets/step2-blueprint-prescription.png";
-import step3Icon from "@assets/step3-localblue.png";
-import step4Icon from "@assets/step4-coach-blue.png";
-import step5Icon from "@assets/step5-commverse.png";
+import badge1 from "@assets/badge-step1-digital-iq.png";
+import badge2 from "@assets/badge-step2-blueprint.png";
+import badge3 from "@assets/badge-step3-localblue.png";
+import badge4 from "@assets/badge-step4-coach.png";
+import badge5 from "@assets/badge-step5-commverse.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -132,12 +131,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <Link href="/assessment" className="block" data-testid="link-how-it-works-step1-digital-iq">
                               <div className="flex gap-3 p-3 rounded-lg border-l-4 border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950 transition-colors cursor-pointer">
                                 <div className="flex-shrink-0">
-                                  <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center p-1">
-                                    <img src={step1Icon} alt="Digital IQ Assessment" className="w-full h-full object-contain" />
-                                  </div>
-                                </div>
-                                <div className="flex-shrink-0">
-                                  <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold shadow-md">1</div>
+                                  <img src={badge1} alt="Step 1" className="w-16 h-16 object-contain" />
                                 </div>
                                 <div>
                                   <div className="font-bold text-gray-900 dark:text-white">Digital IQ Assessment</div>
@@ -150,12 +144,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                             <div className="flex gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
                               <div className="flex-shrink-0">
-                                <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center p-1">
-                                  <img src={step2Icon} alt="Prescribed Blueprint" className="w-full h-full object-contain" />
-                                </div>
-                              </div>
-                              <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-full bg-yellow-500 text-white flex items-center justify-center font-bold shadow-md">2</div>
+                                <img src={badge2} alt="Step 2" className="w-16 h-16 object-contain" />
                               </div>
                               <div>
                                 <div className="font-bold text-gray-900 dark:text-white">Get Your Prescribed Blueprint</div>
@@ -168,12 +157,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <Link href="/localblue" className="block" data-testid="link-how-it-works-step3-localblue">
                               <div className="flex gap-3 p-3 rounded-lg border-l-4 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors cursor-pointer">
                                 <div className="flex-shrink-0">
-                                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center p-1">
-                                    <img src={step3Icon} alt="LocalBlue" className="w-full h-full object-contain" />
-                                  </div>
-                                </div>
-                                <div className="flex-shrink-0">
-                                  <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold shadow-md">3</div>
+                                  <img src={badge3} alt="Step 3" className="w-16 h-16 object-contain" />
                                 </div>
                                 <div>
                                   <div className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -189,12 +173,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <Link href="/ai-coach" className="block" data-testid="link-how-it-works-step4-coach-blue">
                               <div className="flex gap-3 p-3 rounded-lg border-l-4 border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950 transition-colors cursor-pointer">
                                 <div className="flex-shrink-0">
-                                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center p-1">
-                                    <img src={step4Icon} alt="Coach Blue" className="w-full h-full object-contain" />
-                                  </div>
-                                </div>
-                                <div className="flex-shrink-0">
-                                  <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold shadow-md">4</div>
+                                  <img src={badge4} alt="Step 4" className="w-16 h-16 object-contain" />
                                 </div>
                                 <div>
                                   <div className="font-bold text-gray-900 dark:text-white">Coach Blue</div>
@@ -208,12 +187,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <Link href="/pricing?addon=commverse" className="block" data-testid="link-how-it-works-step5-commverse">
                               <div className="flex gap-3 p-3 rounded-lg border-l-4 border-green-500 hover:bg-green-50 dark:hover:bg-green-950 transition-colors cursor-pointer">
                                 <div className="flex-shrink-0">
-                                  <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center p-1">
-                                    <img src={step5Icon} alt="CommVerse" className="w-full h-full object-contain" />
-                                  </div>
-                                </div>
-                                <div className="flex-shrink-0">
-                                  <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold shadow-md">5</div>
+                                  <img src={badge5} alt="Step 5" className="w-16 h-16 object-contain" />
                                 </div>
                                 <div>
                                   <div className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -282,7 +256,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   className="block p-4 rounded-lg border-2 hover:shadow-lg transition-all"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <img src={localBlueIcon} alt="LocalBlue" className="w-8 h-8 rounded-lg" />
+                                    <img src={badge3} alt="LocalBlue" className="w-8 h-8 rounded-lg" />
                                     <img src={localBlueLogo} alt="LocalBlue" className="h-6 object-contain" />
                                   </div>
                                   <div className="text-2xl font-bold mb-1" style={{ color: '#0000FF' }}>$149<span className="text-sm">/mo</span></div>
@@ -587,7 +561,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="p-2 rounded-lg border border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950">
                                 <div className="flex items-center justify-between mb-2">
                                   <div className="flex items-center gap-1.5">
-                                    <img src={localBlueIcon} alt="LocalBlue" className="h-7 w-7 object-contain rounded-lg" />
+                                    <img src={badge3} alt="LocalBlue" className="h-7 w-7 object-contain rounded-lg" />
                                     <div>
                                       <img src={localBlueLogo} alt="/localblue Bundle" className="h-4 object-contain mb-0.5" />
                                       <p className="text-[9px] text-gray-600 dark:text-gray-400">All 3 Apps</p>
