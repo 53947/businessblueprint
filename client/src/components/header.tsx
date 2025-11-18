@@ -52,9 +52,9 @@ import hostsBlueWordmark from "@assets/Hosts Blue Lockup_1762931589296.png";
 import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
 import swipesBlueWordmark from "@assets/Swipes Blue Lockup_1762931589297.png";
 import blueprintIcon from "@assets/Blueprint_Favicon_1762489845363.png";
-import commverseBundle from "@assets/_ commverse bundle logo_1762731789054.png";
-import commverseIcon from "@assets/Commverse_1762731195351.png";
-import coachBlueIcon from "@assets/Coach Blue as Blue_1762721690836.png";
+import commverseBundle from "@assets/commverse-bundle-logo.png";
+import commverseIcon from "@assets/step5-commverse.png";
+import coachBlueIcon from "@assets/step4-coach-blue.png";
 import captainingIcon from "@assets/native icons and favicons/Captaining Icon.png";
 import alaCarteIcon from "@assets/native icons and favicons/A LA CARTE.png";
 import diyIcon from "@assets/native icons and favicons/diy.png";
@@ -62,13 +62,13 @@ import reputationIcon from "@assets/reputation app triad blue and repoutation go
 import reputationLogo from "@assets/reputation_1762930219633.png";
 import listingsIcon from "@assets/listings app_1762804610311.png";
 import listingsLogo from "@assets/listings_1762930219632.png";
-import localBlueIcon from "@assets/Local Blue App Icon_1762804584510.png";
-import localBlueLogo from "@assets/localblue_1762930219633.png";
-import step1Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
-import step2Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/2-Get your prescribed blueprint.png";
-import step3Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/3-Choose your base plan.png";
-import step4Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/4-Select your build method.png";
-import step5Icon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/5-Start to Build.png";
+import localBlueIcon from "@assets/step3-localblue.png";
+import localBlueLogo from "@assets/localblue-logo.png";
+import step1Icon from "@assets/step1-digital-iq-assessment.png";
+import step2Icon from "@assets/step2-blueprint-prescription.png";
+import step3Icon from "@assets/step3-localblue.png";
+import step4Icon from "@assets/step4-coach-blue.png";
+import step5Icon from "@assets/step5-commverse.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -132,17 +132,17 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <Link href="/assessment" className="block" data-testid="link-how-it-works-step1-digital-iq">
                               <div className="flex gap-3 p-3 rounded-lg border-l-4 border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950 transition-colors cursor-pointer">
                                 <div className="flex-shrink-0">
-                                  <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
-                                    <ClipboardCheck className="w-5 h-5 text-orange-600" />
+                                  <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center p-1">
+                                    <img src={step1Icon} alt="Digital IQ Assessment" className="w-full h-full object-contain" />
                                   </div>
                                 </div>
                                 <div className="flex-shrink-0">
                                   <div className="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold shadow-md">1</div>
                                 </div>
                                 <div>
-                                  <div className="font-bold text-gray-900 dark:text-white">Start Your Digital IQ</div>
+                                  <div className="font-bold text-gray-900 dark:text-white">Digital IQ Assessment</div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    AI analyzes your online presence and scores your Digital IQ (70-140)
+                                    AI analyzes your online presence and scores your Digital IQ
                                   </p>
                                 </div>
                               </div>
@@ -150,15 +150,15 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                             <div className="flex gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
                               <div className="flex-shrink-0">
-                                <div className="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center">
-                                  <FileText className="w-5 h-5 text-yellow-600" />
+                                <div className="w-10 h-10 rounded-lg bg-yellow-500/10 flex items-center justify-center p-1">
+                                  <img src={step2Icon} alt="Prescribed Blueprint" className="w-full h-full object-contain" />
                                 </div>
                               </div>
                               <div className="flex-shrink-0">
                                 <div className="w-8 h-8 rounded-full bg-yellow-500 text-white flex items-center justify-center font-bold shadow-md">2</div>
                               </div>
                               <div>
-                                <div className="font-bold text-gray-900 dark:text-white">Get your prescribed blueprint</div>
+                                <div className="font-bold text-gray-900 dark:text-white">Get Your Prescribed Blueprint</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
                                   We diagnose your digital presence and prescribe the exact blueprint your business needs to grow
                                 </p>
@@ -168,7 +168,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <Link href="/localblue" className="block" data-testid="link-how-it-works-step3-localblue">
                               <div className="flex gap-3 p-3 rounded-lg border-l-4 border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors cursor-pointer">
                                 <div className="flex-shrink-0">
-                                  <img src={localBlueIcon} alt="LocalBlue" className="w-8 h-8 rounded-lg" />
+                                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center p-1">
+                                    <img src={step3Icon} alt="LocalBlue" className="w-full h-full object-contain" />
+                                  </div>
                                 </div>
                                 <div className="flex-shrink-0">
                                   <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold shadow-md">3</div>
@@ -178,7 +180,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <img src={localBlueLogo} alt="LocalBlue" className="h-5" />
                                   </div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Your base - Listings + Reputation management for digital excellence
+                                    Listings + Reputation management for digital excellence
                                   </p>
                                 </div>
                               </div>
@@ -187,7 +189,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <Link href="/ai-coach" className="block" data-testid="link-how-it-works-step4-coach-blue">
                               <div className="flex gap-3 p-3 rounded-lg border-l-4 border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950 transition-colors cursor-pointer">
                                 <div className="flex-shrink-0">
-                                  <img src={coachBlueIcon} alt="Coach Blue" className="w-8 h-8 rounded-lg" />
+                                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center p-1">
+                                    <img src={step4Icon} alt="Coach Blue" className="w-full h-full object-contain" />
+                                  </div>
                                 </div>
                                 <div className="flex-shrink-0">
                                   <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold shadow-md">4</div>
@@ -204,7 +208,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <Link href="/pricing?addon=commverse" className="block" data-testid="link-how-it-works-step5-commverse">
                               <div className="flex gap-3 p-3 rounded-lg border-l-4 border-green-500 hover:bg-green-50 dark:hover:bg-green-950 transition-colors cursor-pointer">
                                 <div className="flex-shrink-0">
-                                  <img src={commverseIcon} alt="Commverse" className="w-8 h-8 rounded-lg" />
+                                  <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center p-1">
+                                    <img src={step5Icon} alt="CommVerse" className="w-full h-full object-contain" />
+                                  </div>
                                 </div>
                                 <div className="flex-shrink-0">
                                   <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold shadow-md">5</div>
@@ -214,7 +220,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <img src={commverseBundle} alt="commverse" className="h-5 inline-block" />
                                   </div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Add communication apps - /send, /inbox, /livechat, /content
+                                    Complete communication suite - /send, /inbox, /livechat, /content
                                   </p>
                                 </div>
                               </div>
