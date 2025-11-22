@@ -160,7 +160,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={badge3} alt="Step 3" className="w-16 h-16 object-contain" />
                                 </div>
                                 <div className="text-left">
-                                  <div className="font-bold text-gray-900 dark:text-white">LocalBlue</div>
+                                  <div className="font-bold text-gray-900 dark:text-white">
+                                    <img src={localBlueLogo} alt="LocalBlue" className="h-5" />
+                                  </div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
                                     Listings & reputation management
                                   </p>
@@ -188,7 +190,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={badge5} alt="Step 5" className="w-16 h-16 object-contain" />
                                 </div>
                                 <div className="text-left">
-                                  <div className="font-bold text-gray-900 dark:text-white">CommVerse</div>
+                                  <div className="font-bold text-gray-900 dark:text-white">
+                                    <img src={commverseBundle} alt="commverse" className="h-5" />
+                                  </div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
                                     Messaging suite: /send /inbox /livechat /content
                                   </p>
