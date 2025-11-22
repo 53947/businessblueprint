@@ -49,18 +49,20 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
             <div className="mb-8 lg:mb-0">
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm font-medium flex items-center">
-                  <span className="mr-2">🔍</span>
-                  Powered by Google Business Intelligence
-                </div>
-              </div>
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>We Assess. We Prescribe.</span> <span className="whitespace-nowrap text-[110%]">You Grow.</span>
+                We Assess. We Prescribe. You Grow.
               </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Our AI analyzes your online presence using Google Business Intelligence and prescribes your exact digital blueprint - not generic advice, but YOUR custom plan with the right apps, paths, and pricing.
+              
+              {/* Desktop copy */}
+              <p className="hidden lg:block text-xl text-gray-600 mb-8 leading-relaxed">
+                Our AI analyzes your entire online presence using Google Business Intelligence and delivers your prescribed digital blueprint — a custom, data-driven plan with the exact apps, actions, and pricing your business needs to grow.
               </p>
+              
+              {/* Mobile copy */}
+              <p className="lg:hidden text-xl text-gray-600 mb-8 leading-relaxed">
+                Our AI uses Google Business Intelligence to audit your online presence and deliver your exact digital blueprint — the apps, actions, and pricing your business needs to grow.
+              </p>
+              
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Button 
                   onClick={startAssessment} 
