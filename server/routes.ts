@@ -2591,8 +2591,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Meta (Facebook/Instagram/WhatsApp) Integration Routes
   app.use('/api/meta', metaRoutes);
 
-  // Task Management Routes
-  app.use('/api/tasks', tasksRouter);
+  // Task Management Routes (protected by authentication)
+  app.use('/api/tasks', isAuthenticated, tasksRouter);
 
   // Brand Colors Routes
   app.use('/api/brand-colors', brandColorsRoutes);

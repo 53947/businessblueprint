@@ -10,11 +10,13 @@ export const tasksRouter = Router();
 // Get all tasks for a client
 tasksRouter.get('/', async (req: Request, res: Response) => {
   try {
-    const clientId = (req as any).user?.id;
+    const user = (req as any).user;
     
-    if (!clientId) {
+    if (!user || !user.claims?.sub) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
+    
+    const clientId = user.claims.sub;
 
     const allTasks = await db
       .select()
@@ -32,12 +34,14 @@ tasksRouter.get('/', async (req: Request, res: Response) => {
 // Get a single task
 tasksRouter.get('/:id', async (req: Request, res: Response) => {
   try {
-    const clientId = (req as any).user?.id;
-    const taskId = parseInt(req.params.id);
-
-    if (!clientId) {
+    const user = (req as any).user;
+    
+    if (!user || !user.claims?.sub) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
+    
+    const clientId = user.claims.sub;
+    const taskId = parseInt(req.params.id);
 
     const [task] = await db
       .select()
@@ -61,11 +65,13 @@ tasksRouter.get('/:id', async (req: Request, res: Response) => {
 // Create a new task
 tasksRouter.post('/', async (req: Request, res: Response) => {
   try {
-    const clientId = (req as any).user?.id;
-
-    if (!clientId) {
+    const user = (req as any).user;
+    
+    if (!user || !user.claims?.sub) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
+    
+    const clientId = user.claims.sub;
 
     const taskSchema = z.object({
       title: z.string().min(1),
@@ -129,12 +135,14 @@ tasksRouter.post('/', async (req: Request, res: Response) => {
 // Update a task
 tasksRouter.patch('/:id', async (req: Request, res: Response) => {
   try {
-    const clientId = (req as any).user?.id;
-    const taskId = parseInt(req.params.id);
-
-    if (!clientId) {
+    const user = (req as any).user;
+    
+    if (!user || !user.claims?.sub) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
+    
+    const clientId = user.claims.sub;
+    const taskId = parseInt(req.params.id);
 
     const updateSchema = z.object({
       title: z.string().min(1).optional(),
@@ -235,12 +243,14 @@ tasksRouter.patch('/:id', async (req: Request, res: Response) => {
 // Delete a task
 tasksRouter.delete('/:id', async (req: Request, res: Response) => {
   try {
-    const clientId = (req as any).user?.id;
-    const taskId = parseInt(req.params.id);
-
-    if (!clientId) {
+    const user = (req as any).user;
+    
+    if (!user || !user.claims?.sub) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
+    
+    const clientId = user.claims.sub;
+    const taskId = parseInt(req.params.id);
 
     const [deletedTask] = await db
       .delete(tasks)
