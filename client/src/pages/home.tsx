@@ -147,7 +147,8 @@ export default function Home() {
                       <img src={badge3} alt="Step 3" className="w-16 h-16 object-contain" />
                     </div>
                     <div className="text-left">
-                      <div className="font-bold text-gray-900">
+                      <div className="font-bold text-gray-900 flex items-center gap-2">
+                        <span>Step 3 —</span>
                         <img src={localBlueLogo} alt="LocalBlue" className="h-5" />
                       </div>
                       <p className="text-sm text-gray-600">
@@ -175,7 +176,8 @@ export default function Home() {
                       <img src={badge5} alt="Step 5" className="w-16 h-16 object-contain" />
                     </div>
                     <div className="text-left">
-                      <div className="font-bold text-gray-900">
+                      <div className="font-bold text-gray-900 flex items-center gap-2">
+                        <span>Step 5 —</span>
                         <img src={commverseBundle} alt="CommVerse" className="h-5" />
                       </div>
                       <p className="text-sm text-gray-600">
