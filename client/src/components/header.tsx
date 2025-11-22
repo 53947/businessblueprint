@@ -136,7 +136,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="text-left">
                                   <div className="font-bold text-gray-900 dark:text-white">Digital IQ Assessment</div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    AI analyzes your online presence and scores your Digital IQ
+                                    AI-powered audit of your online presence
                                   </p>
                                 </div>
                               </div>
@@ -147,9 +147,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <img src={badge2} alt="Step 2" className="w-16 h-16 object-contain" />
                               </div>
                               <div className="text-left">
-                                <div className="font-bold text-gray-900 dark:text-white">Get Your Prescribed Blueprint</div>
+                                <div className="font-bold text-gray-900 dark:text-white">Prescribed Blueprint</div>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  We diagnose your digital presence and prescribe the exact blueprint your business needs to grow
+                                  Your personalized growth plan
                                 </p>
                               </div>
                             </div>
@@ -160,11 +160,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={badge3} alt="Step 3" className="w-16 h-16 object-contain" />
                                 </div>
                                 <div className="text-left">
-                                  <div className="font-bold text-gray-900 dark:text-white">
-                                    <img src={localBlueLogo} alt="LocalBlue" className="h-5" />
-                                  </div>
+                                  <div className="font-bold text-gray-900 dark:text-white">LocalBlue</div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Listings + Reputation management for digital excellence
+                                    Listings & reputation management
                                   </p>
                                 </div>
                               </div>
@@ -178,7 +176,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="text-left">
                                   <div className="font-bold text-gray-900 dark:text-white">Coach Blue</div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    AI Business Coach guides you through every step
+                                    Your AI business coach
                                   </p>
                                 </div>
                               </div>
@@ -190,11 +188,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={badge5} alt="Step 5" className="w-16 h-16 object-contain" />
                                 </div>
                                 <div className="text-left">
-                                  <div className="font-bold text-gray-900 dark:text-white">
-                                    <img src={commverseBundle} alt="commverse" className="h-5" />
-                                  </div>
+                                  <div className="font-bold text-gray-900 dark:text-white">CommVerse</div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Complete communication suite - /send, /inbox, /livechat, /content
+                                    Messaging suite: /send /inbox /livechat /content
                                   </p>
                                 </div>
                               </div>
