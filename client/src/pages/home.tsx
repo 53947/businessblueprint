@@ -111,9 +111,9 @@ export default function Home() {
                   </svg>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">A Blueprint to your growth</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">A Blueprint to Your Growth</h3>
                 <p className="text-sm text-gray-600 mb-6 relative z-10">
-                  Custom digital growth plan based on AI analysis of your business
+                  Custom digital growth plan built from AI analysis of your business.
                 </p>
                 <div className="space-y-4 relative z-10">
                   <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-orange-500">
@@ -121,9 +121,10 @@ export default function Home() {
                       <img src={badge1} alt="Step 1" className="w-16 h-16 object-contain" />
                     </div>
                     <div className="text-left">
-                      <div className="font-bold text-gray-900">Complete your Digital IQ Assessment</div>
+                      <div className="font-bold text-gray-900">Step 1 — Complete Your Digital IQ Assessment</div>
                       <p className="text-sm text-gray-600">
-                        AI analyzes your online presence and scores your Digital IQ
+                        Discover your Digital IQ score with a full AI audit of your online presence.
+                        Our system scans your website, listings, reviews, socials, SEO signals, and reputation to give your business a real-time Digital IQ score and show exactly where improvement is needed.
                       </p>
                     </div>
                   </div>
@@ -133,9 +134,10 @@ export default function Home() {
                       <img src={badge2} alt="Step 2" className="w-16 h-16 object-contain" />
                     </div>
                     <div className="text-left">
-                      <div className="font-bold text-gray-900">Get your prescribed blueprint</div>
+                      <div className="font-bold text-gray-900">Step 2 — Get Your Prescribed Blueprint</div>
                       <p className="text-sm text-gray-600">
-                        We diagnose your digital presence and prescribe the exact blueprint your business needs to grow
+                        Receive a personalized, AI-generated blueprint that diagnoses your digital weaknesses and prescribes the exact steps your business needs to grow.
+                        Your blueprint includes SEO recommendations, listings fixes, branding, content strategy, local ranking improvements, and revenue-focused action steps.
                       </p>
                     </div>
                   </div>
@@ -149,7 +151,8 @@ export default function Home() {
                         <img src={localBlueLogo} alt="LocalBlue" className="h-5" />
                       </div>
                       <p className="text-sm text-gray-600">
-                        Listings + Reputation management for digital excellence
+                        Boost your local visibility with complete listings management + reputation building.
+                        We correct, optimize, and syndicate your business listings across the web, manage reviews, improve local rankings, and help customers find and trust your business.
                       </p>
                     </div>
                   </div>
@@ -159,9 +162,10 @@ export default function Home() {
                       <img src={badge4} alt="Step 4" className="w-16 h-16 object-contain" />
                     </div>
                     <div className="text-left">
-                      <div className="font-bold text-gray-900">Coach Blue - AI Business Coach</div>
+                      <div className="font-bold text-gray-900">Step 4 — Coach Blue (AI Business Coach)</div>
                       <p className="text-sm text-gray-600">
-                        AI guides you through every step of your growth journey
+                        Your 24/7 AI business coach that walks you through every step of your growth journey.
+                        Coach Blue gives customized guidance, answers your marketing questions, tracks your progress, and helps you execute your blueprint with speed and clarity.
                       </p>
                     </div>
                   </div>
@@ -175,7 +179,8 @@ export default function Home() {
                         <img src={commverseBundle} alt="CommVerse" className="h-5" />
                       </div>
                       <p className="text-sm text-gray-600">
-                        Complete communication suite - /send, /inbox, /livechat, /content
+                        A complete communication suite: /send, /inbox, /livechat, and /content in one seamless platform.
+                        Send email/SMS, manage conversations, run live chat, publish content, and keep every customer interaction in one place. Built to convert more leads and streamline communication.
                       </p>
                     </div>
                   </div>
