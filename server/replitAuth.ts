@@ -39,7 +39,8 @@ export function getSession() {
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      maxAge: sessionTtl,
+      sameSite: 'lax',
+      // NO maxAge - this makes it a session cookie that expires when tab/browser closes
     },
   });
 }
