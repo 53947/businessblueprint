@@ -30,6 +30,8 @@ import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
 import commverseBundle from "@assets/_ commverse bundle logo_1762731789054.png";
 import commverseIcon from "@assets/Commverse_1762731195351.png";
 import localBlueLogo from "@assets/localblue-logo.png";
+import heroAssessmentIcon from "@assets/hero-assessment-icon.png";
+import heroCoachIcon from "@assets/hero-coach-icon.png";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -47,18 +49,20 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
             <div className="mb-8 lg:mb-0">
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm font-medium flex items-center">
-                  <span className="mr-2">🔍</span>
-                  Powered by Google Business Intelligence
-                </div>
-              </div>
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-                <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>We Assess. We Prescribe.</span> <span className="whitespace-nowrap text-[110%]">You Grow.</span>
+                We Assess. We Prescribe. You Grow.
               </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Our AI analyzes your online presence using Google Business Intelligence and prescribes your exact digital blueprint - not generic advice, but YOUR custom plan with the right apps, paths, and pricing.
+              
+              {/* Desktop copy */}
+              <p className="hidden lg:block text-xl text-gray-600 mb-8 leading-relaxed">
+                Our AI analyzes your entire online presence using Google Business Intelligence and delivers your prescribed digital blueprint — a custom, data-driven plan with the exact apps, actions, and pricing your business needs to grow.
               </p>
+              
+              {/* Mobile copy */}
+              <p className="lg:hidden text-xl text-gray-600 mb-8 leading-relaxed">
+                Our AI uses Google Business Intelligence to audit your online presence and deliver your exact digital blueprint — the apps, actions, and pricing your business needs to grow.
+              </p>
+              
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Button 
                   onClick={startAssessment} 
@@ -67,7 +71,7 @@ export default function Home() {
                   className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#FF6B00] font-semibold"
                   data-testid="button-start-assessment"
                 >
-                  <DigitalAssessmentIcon size={32} className="mr-2" />
+                  <img src={heroAssessmentIcon} alt="" className="w-8 h-8 mr-2" />
                   Start Free Digital IQ Assessment
                 </Button>
                 <Link href="/ai-coach">
@@ -77,7 +81,7 @@ export default function Home() {
                     className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#FF6B00] font-semibold w-full sm:w-auto"
                     data-testid="button-ai-coach"
                   >
-                    <CoachBlueIcon size={32} className="mr-2" />
+                    <img src={heroCoachIcon} alt="" className="w-8 h-8 mr-2" />
                     AI Business Coach
                   </Button>
                 </Link>
@@ -111,78 +115,77 @@ export default function Home() {
                   </svg>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">A Blueprint to Your Growth</h3>
-                <p className="text-sm text-gray-600 mb-6 relative z-10">
-                  Custom digital growth plan built from AI analysis of your business.
-                </p>
-                <div className="space-y-4 relative z-10">
-                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-orange-500">
-                    <div className="flex-shrink-0 -mt-4">
-                      <img src={badge1} alt="Step 1" className="w-16 h-16 object-contain" />
-                    </div>
+                {/* Desktop version */}
+                <div className="hidden lg:block">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">See Your Digital IQ Clearly</h3>
+                  <p className="text-sm text-gray-600 mb-6 relative z-10">
+                    Your Digital IQ Assessment reveals how your business shows up across search, listings, reviews, reputation, content, and visibility.
+                    You get a real score — and a clear understanding of what's working and what needs improvement.
+                  </p>
+                  
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">Your Personalized Growth Blueprint</h3>
+                  <p className="text-sm text-gray-600 mb-6 relative z-10">
+                    We turn your assessment into a precise, personalized blueprint.
+                    No generic audits.
+                    No guesswork.
+                    Just a step-by-step plan tailored to your business, industry, and goals.
+                  </p>
+                  
+                  <div className="space-y-4 relative z-10">
                     <div className="text-left">
-                      <div className="font-bold text-gray-900">Step 1 — Complete Your Digital IQ Assessment</div>
+                      <div className="font-bold text-gray-900 mb-1">LocalBlue (Step 3)</div>
                       <p className="text-sm text-gray-600">
-                        Discover your Digital IQ score with a full AI audit of your online presence.
-                        Our system scans your website, listings, reviews, socials, SEO signals, and reputation to give your business a real-time Digital IQ score and show exactly where improvement is needed.
+                        Strengthen your local presence with optimized listings, improved reputation, and local SEO ranking power.
+                      </p>
+                    </div>
+                    
+                    <div className="text-left">
+                      <div className="font-bold text-gray-900 mb-1">Coach Blue (Step 4)</div>
+                      <p className="text-sm text-gray-600">
+                        Your AI business coach helps you understand your blueprint, execute every step, and stay consistent — 24/7 guidance built for SMBs.
+                      </p>
+                    </div>
+                    
+                    <div className="text-left">
+                      <div className="font-bold text-gray-900 mb-1">CommVerse (Step 5)</div>
+                      <p className="text-sm text-gray-600">
+                        A complete communication suite to manage customers and conversations: /send, /inbox, /livechat, /content — all in one connected dashboard.
                       </p>
                     </div>
                   </div>
+                </div>
+                
+                {/* Mobile version */}
+                <div className="lg:hidden">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">Know Your Digital IQ</h3>
+                  <p className="text-sm text-gray-600 mb-6 relative z-10">
+                    Instant score + insights on your website, SEO, listings, reviews, and visibility.
+                  </p>
                   
-                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
-                    <div className="flex-shrink-0 -mt-4">
-                      <img src={badge2} alt="Step 2" className="w-16 h-16 object-contain" />
-                    </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">Your Prescribed Blueprint</h3>
+                  <p className="text-sm text-gray-600 mb-6 relative z-10">
+                    A custom growth plan with the precise steps your business needs — no generic advice.
+                  </p>
+                  
+                  <div className="space-y-4 relative z-10">
                     <div className="text-left">
-                      <div className="font-bold text-gray-900">Step 2 — Get Your Prescribed Blueprint</div>
+                      <div className="font-bold text-gray-900 mb-1">LocalBlue (Step 3)</div>
                       <p className="text-sm text-gray-600">
-                        Receive a personalized, AI-generated blueprint that diagnoses your digital weaknesses and prescribes the exact steps your business needs to grow.
-                        Your blueprint includes SEO recommendations, listings fixes, branding, content strategy, local ranking improvements, and revenue-focused action steps.
+                        Fix your listings, boost local SEO, and manage your reputation across the web.
                       </p>
                     </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-blue-500">
-                    <div className="flex-shrink-0 -mt-4">
-                      <img src={badge3} alt="Step 3" className="w-16 h-16 object-contain" />
-                    </div>
+                    
                     <div className="text-left">
-                      <div className="font-bold text-gray-900 flex items-center gap-2">
-                        <span>Step 3 —</span>
-                        <img src={localBlueLogo} alt="LocalBlue" className="h-5" />
-                      </div>
+                      <div className="font-bold text-gray-900 mb-1">Coach Blue (Step 4)</div>
                       <p className="text-sm text-gray-600">
-                        Boost your local visibility with complete listings management + reputation building.
-                        We correct, optimize, and syndicate your business listings across the web, manage reviews, improve local rankings, and help customers find and trust your business.
+                        Your AI coach walks you through every step of your blueprint and keeps you on track.
                       </p>
                     </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-purple-500">
-                    <div className="flex-shrink-0 -mt-4">
-                      <img src={badge4} alt="Step 4" className="w-16 h-16 object-contain" />
-                    </div>
+                    
                     <div className="text-left">
-                      <div className="font-bold text-gray-900">Step 4 — Coach Blue (AI Business Coach)</div>
+                      <div className="font-bold text-gray-900 mb-1">CommVerse (Step 5)</div>
                       <p className="text-sm text-gray-600">
-                        Your 24/7 AI business coach that walks you through every step of your growth journey.
-                        Coach Blue gives customized guidance, answers your marketing questions, tracks your progress, and helps you execute your blueprint with speed and clarity.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-green-500">
-                    <div className="flex-shrink-0 -mt-4">
-                      <img src={badge5} alt="Step 5" className="w-16 h-16 object-contain" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-gray-900 flex items-center gap-2">
-                        <span>Step 5 —</span>
-                        <img src={commverseBundle} alt="CommVerse" className="h-6" />
-                      </div>
-                      <p className="text-sm text-gray-600">
-                        A complete communication suite: /send, /inbox, /livechat, and /content in one seamless platform.
-                        Send email/SMS, manage conversations, run live chat, publish content, and keep every customer interaction in one place. Built to convert more leads and streamline communication.
+                        Messaging + communication suite: /send, /inbox, /livechat, /content — all-in-one.
                       </p>
                     </div>
                   </div>
