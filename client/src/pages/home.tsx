@@ -117,7 +117,7 @@ export default function Home() {
                 </p>
                 <div className="space-y-4 relative z-10">
                   <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-orange-500">
-                    <div className="flex-shrink-0">
+                    <div className="flex-shrink-0 -mt-4">
                       <img src={badge1} alt="Step 1" className="w-16 h-16 object-contain" />
                     </div>
                     <div className="text-left">
@@ -129,7 +129,7 @@ export default function Home() {
                   </div>
                   
                   <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
-                    <div className="flex-shrink-0">
+                    <div className="flex-shrink-0 -mt-4">
                       <img src={badge2} alt="Step 2" className="w-16 h-16 object-contain" />
                     </div>
                     <div className="text-left">
@@ -141,12 +141,12 @@ export default function Home() {
                   </div>
                   
                   <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-blue-500">
-                    <div className="flex-shrink-0">
+                    <div className="flex-shrink-0 -mt-4">
                       <img src={badge3} alt="Step 3" className="w-16 h-16 object-contain" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-gray-900">
-                        <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
+                        <img src={localBlueLogo} alt="LocalBlue" className="h-5" />
                       </div>
                       <p className="text-sm text-gray-600">
                         Listings + Reputation management for digital excellence
@@ -155,7 +155,7 @@ export default function Home() {
                   </div>
                   
                   <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-purple-500">
-                    <div className="flex-shrink-0">
+                    <div className="flex-shrink-0 -mt-4">
                       <img src={badge4} alt="Step 4" className="w-16 h-16 object-contain" />
                     </div>
                     <div className="text-left">
@@ -167,12 +167,12 @@ export default function Home() {
                   </div>
                   
                   <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-green-500">
-                    <div className="flex-shrink-0">
+                    <div className="flex-shrink-0 -mt-4">
                       <img src={badge5} alt="Step 5" className="w-16 h-16 object-contain" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-gray-900">
-                        <img src={commverseBundle} alt="CommVerse" className="h-4" />
+                        <img src={commverseBundle} alt="CommVerse" className="h-5" />
                       </div>
                       <p className="text-sm text-gray-600">
                         Complete communication suite - /send, /inbox, /livechat, /content
