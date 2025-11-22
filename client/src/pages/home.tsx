@@ -178,7 +178,7 @@ export default function Home() {
                     <div className="text-left">
                       <div className="font-bold text-gray-900 flex items-center gap-2">
                         <span>Step 5 —</span>
-                        <img src={commverseBundle} alt="CommVerse" className="h-5" />
+                        <img src={commverseBundle} alt="CommVerse" className="h-6" />
                       </div>
                       <p className="text-sm text-gray-600">
                         A complete communication suite: /send, /inbox, /livechat, and /content in one seamless platform.

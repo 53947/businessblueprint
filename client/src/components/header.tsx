@@ -191,7 +191,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                                 <div className="text-left">
                                   <div className="font-bold text-gray-900 dark:text-white">
-                                    <img src={commverseBundle} alt="commverse" className="h-5" />
+                                    <img src={commverseBundle} alt="commverse" className="h-6" />
                                   </div>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">
                                     Messaging suite: /send /inbox /livechat /content
