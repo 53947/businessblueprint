@@ -49,8 +49,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(path.resolve(process.cwd(), 'attached_assets/Blueprint_Favicon_1762489845363.ico'));
   });
 
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  app.get('/api/auth/user', async (req: any, res) => {
     try {
+      // Return null if not authenticated instead of 401
+      if (!req.isAuthenticated || !req.isAuthenticated()) {
+        return res.json({ user: null });
+      }
+      
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
       res.json(user);
