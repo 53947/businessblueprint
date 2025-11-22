@@ -115,77 +115,78 @@ export default function Home() {
                   </svg>
                 </div>
                 
-                {/* Desktop version */}
-                <div className="hidden lg:block">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">See Your Digital IQ Clearly</h3>
-                  <p className="text-sm text-gray-600 mb-6 relative z-10">
-                    Your Digital IQ Assessment reveals how your business shows up across search, listings, reviews, reputation, content, and visibility.
-                    You get a real score — and a clear understanding of what's working and what needs improvement.
-                  </p>
-                  
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">Your Personalized Growth Blueprint</h3>
-                  <p className="text-sm text-gray-600 mb-6 relative z-10">
-                    We turn your assessment into a precise, personalized blueprint.
-                    No generic audits.
-                    No guesswork.
-                    Just a step-by-step plan tailored to your business, industry, and goals.
-                  </p>
-                  
-                  <div className="space-y-4 relative z-10">
-                    <div className="text-left">
-                      <div className="font-bold text-gray-900 mb-1">LocalBlue (Step 3)</div>
-                      <p className="text-sm text-gray-600">
-                        Strengthen your local presence with optimized listings, improved reputation, and local SEO ranking power.
-                      </p>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">A Blueprint to Your Growth</h3>
+                <p className="text-sm text-gray-600 mb-6 relative z-10">
+                  Custom digital growth plan built from AI analysis of your business.
+                </p>
+                <div className="space-y-4 relative z-10">
+                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-orange-500">
+                    <div className="flex-shrink-0 -mt-4">
+                      <img src={badge1} alt="Step 1" className="w-16 h-16 object-contain" />
                     </div>
-                    
                     <div className="text-left">
-                      <div className="font-bold text-gray-900 mb-1">Coach Blue (Step 4)</div>
+                      <div className="font-bold text-gray-900">Step 1 — Complete Your Digital IQ Assessment</div>
                       <p className="text-sm text-gray-600">
-                        Your AI business coach helps you understand your blueprint, execute every step, and stay consistent — 24/7 guidance built for SMBs.
-                      </p>
-                    </div>
-                    
-                    <div className="text-left">
-                      <div className="font-bold text-gray-900 mb-1">CommVerse (Step 5)</div>
-                      <p className="text-sm text-gray-600">
-                        A complete communication suite to manage customers and conversations: /send, /inbox, /livechat, /content — all in one connected dashboard.
+                        Discover your Digital IQ score with a full AI audit of your online presence.
+                        Our system scans your website, listings, reviews, socials, SEO signals, and reputation to give your business a real-time Digital IQ score and show exactly where improvement is needed.
                       </p>
                     </div>
                   </div>
-                </div>
-                
-                {/* Mobile version */}
-                <div className="lg:hidden">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">Know Your Digital IQ</h3>
-                  <p className="text-sm text-gray-600 mb-6 relative z-10">
-                    Instant score + insights on your website, SEO, listings, reviews, and visibility.
-                  </p>
                   
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2 relative z-10">Your Prescribed Blueprint</h3>
-                  <p className="text-sm text-gray-600 mb-6 relative z-10">
-                    A custom growth plan with the precise steps your business needs — no generic advice.
-                  </p>
-                  
-                  <div className="space-y-4 relative z-10">
+                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
+                    <div className="flex-shrink-0 -mt-4">
+                      <img src={badge2} alt="Step 2" className="w-16 h-16 object-contain" />
+                    </div>
                     <div className="text-left">
-                      <div className="font-bold text-gray-900 mb-1">LocalBlue (Step 3)</div>
+                      <div className="font-bold text-gray-900">Step 2 — Get Your Prescribed Blueprint</div>
                       <p className="text-sm text-gray-600">
-                        Fix your listings, boost local SEO, and manage your reputation across the web.
+                        Receive a personalized, AI-generated blueprint that diagnoses your digital weaknesses and prescribes the exact steps your business needs to grow.
+                        Your blueprint includes SEO recommendations, listings fixes, branding, content strategy, local ranking improvements, and revenue-focused action steps.
                       </p>
                     </div>
-                    
+                  </div>
+                  
+                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-blue-500">
+                    <div className="flex-shrink-0 -mt-4">
+                      <img src={badge3} alt="Step 3" className="w-16 h-16 object-contain" />
+                    </div>
                     <div className="text-left">
-                      <div className="font-bold text-gray-900 mb-1">Coach Blue (Step 4)</div>
+                      <div className="font-bold text-gray-900 flex items-center gap-2">
+                        <span>Step 3 —</span>
+                        <img src={localBlueLogo} alt="LocalBlue" className="h-5" />
+                      </div>
                       <p className="text-sm text-gray-600">
-                        Your AI coach walks you through every step of your blueprint and keeps you on track.
+                        Boost your local visibility with complete listings management + reputation building.
+                        We correct, optimize, and syndicate your business listings across the web, manage reviews, improve local rankings, and help customers find and trust your business.
                       </p>
                     </div>
-                    
+                  </div>
+                  
+                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-purple-500">
+                    <div className="flex-shrink-0 -mt-4">
+                      <img src={badge4} alt="Step 4" className="w-16 h-16 object-contain" />
+                    </div>
                     <div className="text-left">
-                      <div className="font-bold text-gray-900 mb-1">CommVerse (Step 5)</div>
+                      <div className="font-bold text-gray-900">Step 4 — Coach Blue (AI Business Coach)</div>
                       <p className="text-sm text-gray-600">
-                        Messaging + communication suite: /send, /inbox, /livechat, /content — all-in-one.
+                        Your 24/7 AI business coach that walks you through every step of your growth journey.
+                        Coach Blue gives customized guidance, answers your marketing questions, tracks your progress, and helps you execute your blueprint with speed and clarity.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-green-500">
+                    <div className="flex-shrink-0 -mt-4">
+                      <img src={badge5} alt="Step 5" className="w-16 h-16 object-contain" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-gray-900 flex items-center gap-2">
+                        <span>Step 5 —</span>
+                        <img src={commverseBundle} alt="CommVerse" className="h-6" />
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        A complete communication suite: /send, /inbox, /livechat, and /content in one seamless platform.
+                        Send email/SMS, manage conversations, run live chat, publish content, and keep every customer interaction in one place. Built to convert more leads and streamline communication.
                       </p>
                     </div>
                   </div>
