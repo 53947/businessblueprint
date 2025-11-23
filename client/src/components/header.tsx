@@ -276,7 +276,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
                                       data-testid="button-add-send"
                                     >
-                                      Add - $35/mo
+                                      Add to Cart - $35/mo
                                     </Button>
                                     <a href="/send-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-send">Learn More</a>
                                   </div>
@@ -294,7 +294,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
                                       data-testid="button-add-inbox"
                                     >
-                                      Add - $35/mo
+                                      Add to Cart - $35/mo
                                     </Button>
                                     <a href="/inbox-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-inbox">Learn More</a>
                                   </div>
@@ -312,7 +312,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
                                       data-testid="button-add-livechat"
                                     >
-                                      Add - $35/mo
+                                      Add to Cart - $35/mo
                                     </Button>
                                     <a href="/livechat-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-livechat">Learn More</a>
                                   </div>
@@ -330,7 +330,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
                                       data-testid="button-add-content"
                                     >
-                                      Add - $35/mo
+                                      Add to Cart - $35/mo
                                     </Button>
                                     <a href="/content-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-content">Learn More</a>
                                   </div>
@@ -376,7 +376,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       onClick={() => handleAddToCart('listings-addon', '/listings', 40, 'addon')}
                                       data-testid="button-add-listings"
                                     >
-                                      Add - $40/mo
+                                      Add to Cart - $40/mo
                                     </Button>
                                     <a href="/listings-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-listings">Learn More</a>
                                   </div>
@@ -394,7 +394,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
                                       data-testid="button-add-reputation"
                                     >
-                                      Add - $40/mo
+                                      Add to Cart - $40/mo
                                     </Button>
                                     <a href="/reputation-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-reputation">Learn More</a>
                                   </div>
@@ -409,22 +409,41 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               ADDITIONAL SERVICES
                             </h4>
                             <div className="grid grid-cols-2 gap-2">
-                              <a href="/ai-coach" className="flex items-center gap-2 p-2 rounded border-2 hover:shadow transition-all" data-testid="link-coach-blue">
-                                <img src={badge4} alt="Coach Blue" className="w-8 h-8" />
-                                <div className="flex-1">
-                                  <div className="text-xs font-extrabold">COACH BLUE</div>
-                                  <p className="text-[9px] font-semibold text-gray-700">AI Business Coach</p>
+                              {/* Coach Blue - Add to Cart */}
+                              <div className="p-2 rounded border-2 hover:shadow transition-all">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <img src={badge4} alt="Coach Blue" className="w-8 h-8" />
+                                  <div className="flex-1">
+                                    <div className="text-xs font-extrabold">COACH BLUE</div>
+                                    <p className="text-[9px] font-semibold text-gray-700">AI Business Coach</p>
+                                  </div>
                                 </div>
-                                <div className="text-sm font-extrabold text-purple-600">$99/mo</div>
-                              </a>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline" 
+                                  className="w-full h-6 text-[10px] font-bold mb-1"
+                                  onClick={() => handleAddToCart('coach-blue', 'Coach Blue', 99, 'addon')}
+                                  data-testid="button-add-coach-blue"
+                                >
+                                  Add to Cart - $99/mo
+                                </Button>
+                                <a href="/ai-coach" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-coach-blue">Learn More</a>
+                              </div>
 
-                              <a href="/assessment" className="flex items-center gap-2 p-2 rounded border-2 hover:shadow transition-all" data-testid="link-digital-iq">
-                                <img src={badge1} alt="Digital IQ" className="w-8 h-8" />
-                                <div className="flex-1">
-                                  <div className="text-xs font-extrabold">Digital IQ</div>
-                                  <p className="text-[9px] font-semibold text-gray-700">Assessment</p>
+                              {/* Digital IQ - Start Assessment Link */}
+                              <a href="/assessment" className="p-2 rounded border-2 hover:shadow transition-all flex flex-col" data-testid="link-digital-iq">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <img src={badge1} alt="Digital IQ" className="w-8 h-8" />
+                                  <div className="flex-1">
+                                    <div className="text-xs font-extrabold">Digital IQ</div>
+                                    <p className="text-[9px] font-semibold text-gray-700">Assessment</p>
+                                  </div>
                                 </div>
-                                <div className="text-sm font-extrabold text-green-600">FREE</div>
+                                <div className="text-center">
+                                  <span className="text-[10px] font-bold text-green-600 bg-green-50 px-3 py-1 rounded">
+                                    Start Assessment - FREE
+                                  </span>
+                                </div>
                               </a>
                             </div>
                           </div>
