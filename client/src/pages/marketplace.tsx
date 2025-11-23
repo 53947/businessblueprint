@@ -78,6 +78,17 @@ export default function MarketplacePage() {
         console.error('Failed to load cart:', error);
       }
     }
+
+    // Listen for cart updates from other components (e.g., header)
+    const handleCartUpdate = (event: CustomEvent) => {
+      setCart(event.detail);
+    };
+
+    window.addEventListener('cartUpdated', handleCartUpdate as EventListener);
+    
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate as EventListener);
+    };
   }, []);
 
   useEffect(() => {
@@ -203,6 +214,8 @@ export default function MarketplacePage() {
   ];
 
 
+  const mspServices: Addon[] = []; // TODO: Define MSP services
+
   const alaCarteServices: Addon[] = [
     {
       id: 'reputation-management',
@@ -241,37 +254,49 @@ export default function MarketplacePage() {
   const addToCart = (item: Plan | Addon, type: 'plan' | 'addon', billingCycle?: 'monthly' | 'annual') => {
     const existingItem = cart.find(cartItem => cartItem.id === item.id);
 
+    let updatedCart;
     if (existingItem) {
-      setCart(cart.map(cartItem => 
+      updatedCart = cart.map(cartItem => 
         cartItem.id === item.id 
           ? { ...cartItem, quantity: cartItem.quantity + 1 }
           : cartItem
-      ));
+      );
     } else {
-      setCart([...cart, {
+      updatedCart = [...cart, {
         id: item.id,
         name: item.name,
         price: item.price,
         quantity: 1,
         type,
         billingCycle
-      }]);
+      }];
     }
+    
+    setCart(updatedCart);
+    localStorage.setItem('marketplace_cart', JSON.stringify(updatedCart));
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: updatedCart }));
     setIsCartOpen(true);
   };
 
   const removeFromCart = (itemId: string) => {
-    setCart(cart.filter(item => item.id !== itemId));
+    const updatedCart = cart.filter(item => item.id !== itemId);
+    setCart(updatedCart);
+    localStorage.setItem('marketplace_cart', JSON.stringify(updatedCart));
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: updatedCart }));
   };
 
   const updateQuantity = (itemId: string, change: number) => {
-    setCart(cart.map(item => {
+    const updatedCart = cart.map(item => {
       if (item.id === itemId) {
         const newQuantity = item.quantity + change;
         return newQuantity > 0 ? { ...item, quantity: newQuantity } : item;
       }
       return item;
-    }).filter(item => item.quantity > 0));
+    }).filter(item => item.quantity > 0);
+    
+    setCart(updatedCart);
+    localStorage.setItem('marketplace_cart', JSON.stringify(updatedCart));
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: updatedCart }));
   };
 
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);

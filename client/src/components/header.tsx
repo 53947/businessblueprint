@@ -3,6 +3,8 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
+import { addToCart } from "@/lib/cart";
 import { ClipboardCheck, FileText, Layers, Wrench, Rocket } from "lucide-react";
 import {
   NavigationMenu,
@@ -76,7 +78,16 @@ interface HeaderProps {
 export function Header({ showNavigation = true }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated } = useAuth();
+  const { toast } = useToast();
   const [hasClientPortalAccess, setHasClientPortalAccess] = useState(false);
+
+  const handleAddToCart = (id: string, name: string, price: number, type: 'plan' | 'addon') => {
+    addToCart(id, name, price, type, 'monthly');
+    toast({
+      title: "Added to cart",
+      description: `${name} has been added to your cart`,
+    });
+  };
 
   // Check if user has client portal access
   useEffect(() => {
@@ -219,15 +230,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Pricing</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-3 w-[600px]">
-                          {/* APP BUNDLES */}
-                          <div className="mb-4">
-                            <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
-                              APP BUNDLES - COMPLETE SOLUTIONS
-                            </h4>
-                            <div className="grid grid-cols-2 gap-2">
+                        <div className="p-3 w-[900px]">
+                          {/* APP BUNDLES - COMPLETE SOLUTIONS */}
+                          <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
+                            APP BUNDLES - COMPLETE SOLUTIONS
+                          </h4>
+                          
+                          {/* 2/3 Commverse + 1/3 LocalBlue Layout */}
+                          <div className="grid grid-cols-3 gap-3 mb-4">
+                            {/* LEFT 2/3: Commverse Bundle + Apps */}
+                            <div className="col-span-2 space-y-2">
                               {/* Commverse Bundle */}
-                              <a href="/pricing?bundle=commverse" className="block p-3 rounded border border-blue-600 hover:shadow-lg transition-all">
+                              <div className="p-3 rounded border border-blue-600 hover:shadow-lg transition-all">
                                 <div className="flex items-center gap-1 mb-1">
                                   <img src={commverseIcon} alt="" className="w-6 h-6" />
                                   <img src={commverseBundle} alt="Commverse" className="h-4" />
@@ -235,14 +249,102 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="text-xl font-bold mb-0.5" style={{ color: '#0000FF' }}>$100<span className="text-xs">/mo</span></div>
                                 <p className="text-[10px] text-gray-600 mb-1">/send + /inbox + /livechat + /content</p>
                                 <p className="text-[10px] text-green-600 mb-2">Save $40/month</p>
-                                <Button size="sm" variant="outline" className="w-full h-7 text-xs border-blue-600 text-blue-600 hover:bg-blue-50">
-                                  Select →
+                                <Button 
+                                  size="sm" 
+                                  variant="outline" 
+                                  className="w-full h-7 text-xs border-blue-600 text-blue-600 hover:bg-blue-50" 
+                                  onClick={() => handleAddToCart('bundle', 'Commverse Bundle', 100, 'addon')}
+                                  data-testid="button-add-commverse-bundle"
+                                >
+                                  Add to Cart
                                 </Button>
-                                <p className="text-[9px] text-gray-500 mt-1 text-center">COMMVERSE 2/3 OF BASE</p>
-                              </a>
+                              </div>
 
+                              {/* Commverse Individual Apps - $35/mo each */}
+                              <div>
+                                <h5 className="text-[9px] font-bold text-gray-600 mb-1.5 uppercase tracking-wide">
+                                  INDIVIDUAL APPS - $35/MO EACH
+                                </h5>
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#FF6B00' }}>
+                                    <div className="flex items-center gap-1 mb-1">
+                                      <img src={sendIcon} alt="" className="w-5 h-5" />
+                                      <img src={sendLogo} alt="/send" className="h-3" />
+                                    </div>
+                                    <p className="text-[9px] text-gray-600 mb-1">Email/SMS</p>
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline" 
+                                      className="w-full h-6 text-[10px] mb-1"
+                                      onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
+                                      data-testid="button-add-send"
+                                    >
+                                      Add to Cart
+                                    </Button>
+                                    <a href="/send-landing" className="text-[9px] text-blue-600 hover:underline block text-center" data-testid="link-learn-send">Learn More</a>
+                                  </div>
+
+                                  <div className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#0080FF' }}>
+                                    <div className="flex items-center gap-1 mb-1">
+                                      <img src={inboxIcon} alt="" className="w-5 h-5" />
+                                      <img src={inboxLogo} alt="/inbox" className="h-3" />
+                                    </div>
+                                    <p className="text-[9px] text-gray-600 mb-1">Unified Inbox</p>
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline" 
+                                      className="w-full h-6 text-[10px] mb-1"
+                                      onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
+                                      data-testid="button-add-inbox"
+                                    >
+                                      Add to Cart
+                                    </Button>
+                                    <a href="/inbox-landing" className="text-[9px] text-blue-600 hover:underline block text-center" data-testid="link-learn-inbox">Learn More</a>
+                                  </div>
+
+                                  <div className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#8000FF' }}>
+                                    <div className="flex items-center gap-1 mb-1">
+                                      <img src={livechatIcon} alt="" className="w-5 h-5" />
+                                      <img src={livechatLogo} alt="/livechat" className="h-3" />
+                                    </div>
+                                    <p className="text-[9px] text-gray-600 mb-1">Real-time</p>
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline" 
+                                      className="w-full h-6 text-[10px] mb-1"
+                                      onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
+                                      data-testid="button-add-livechat"
+                                    >
+                                      Add to Cart
+                                    </Button>
+                                    <a href="/livechat-landing" className="text-[9px] text-blue-600 hover:underline block text-center" data-testid="link-learn-livechat">Learn More</a>
+                                  </div>
+
+                                  <div className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#E91EBC' }}>
+                                    <div className="flex items-center gap-1 mb-1">
+                                      <img src={contentIcon} alt="" className="w-5 h-5" />
+                                      <img src={contentLogo} alt="/content" className="h-3" />
+                                    </div>
+                                    <p className="text-[9px] text-gray-600 mb-1">Social</p>
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline" 
+                                      className="w-full h-6 text-[10px] mb-1"
+                                      onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
+                                      data-testid="button-add-content"
+                                    >
+                                      Add to Cart
+                                    </Button>
+                                    <a href="/content-landing" className="text-[9px] text-blue-600 hover:underline block text-center" data-testid="link-learn-content">Learn More</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* RIGHT 1/3: LocalBlue Bundle + Apps */}
+                            <div className="col-span-1 space-y-2">
                               {/* LocalBlue Bundle */}
-                              <a href="/localblue" className="block p-3 rounded border border-blue-600 hover:shadow-lg transition-all">
+                              <div className="p-3 rounded border border-blue-600 hover:shadow-lg transition-all">
                                 <div className="flex items-center gap-1 mb-1">
                                   <img src={badge3} alt="" className="w-6 h-6" />
                                   <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
@@ -250,75 +352,60 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="text-xl font-bold mb-0.5" style={{ color: '#0000FF' }}>$60<span className="text-xs">/mo</span></div>
                                 <p className="text-[10px] text-gray-600 mb-1">/listings + /reputation</p>
                                 <p className="text-[10px] text-green-600 mb-2">Save $20/month</p>
-                                <Button size="sm" variant="outline" className="w-full h-7 text-xs border-blue-600 text-blue-600 hover:bg-blue-50">
-                                  Select →
+                                <Button 
+                                  size="sm" 
+                                  variant="outline" 
+                                  className="w-full h-7 text-xs border-blue-600 text-blue-600 hover:bg-blue-50"
+                                  onClick={() => handleAddToCart('localblue-bundle', 'LocalBlue Bundle', 60, 'addon')}
+                                  data-testid="button-add-localblue-bundle"
+                                >
+                                  Add to Cart
                                 </Button>
-                                <p className="text-[9px] text-gray-500 mt-1 text-center">localblue 1/3 of base</p>
-                              </a>
-                            </div>
-                          </div>
+                              </div>
 
-                          {/* INDIVIDUAL APPS - COMMVERSE */}
-                          <div className="mb-4">
-                            <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
-                              INDIVIDUAL APPS - $35/MO EACH
-                            </h4>
-                            <div className="grid grid-cols-2 gap-2">
-                              <a href="/send" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#FF6B00' }}>
-                                <div className="flex items-center gap-1 mb-1">
-                                  <img src={sendIcon} alt="" className="w-6 h-6" />
-                                  <img src={sendLogo} alt="/send" className="h-3" />
-                                </div>
-                                <p className="text-[9px] text-gray-600">Email/SMS</p>
-                              </a>
+                              {/* LocalBlue Individual Apps - $40/mo each */}
+                              <div>
+                                <h5 className="text-[9px] font-bold text-gray-600 mb-1.5 uppercase tracking-wide">
+                                  INDIVIDUAL APPS - $40/MO EACH
+                                </h5>
+                                <div className="space-y-2">
+                                  <div className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#FF0040' }}>
+                                    <div className="flex items-center gap-1 mb-1">
+                                      <img src={listingsIcon} alt="" className="w-5 h-5" />
+                                      <img src={listingsLogo} alt="/listings" className="h-3" />
+                                    </div>
+                                    <p className="text-[9px] text-gray-600 mb-1">Directory sync</p>
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline" 
+                                      className="w-full h-6 text-[10px] mb-1"
+                                      onClick={() => handleAddToCart('listings-app', '/listings', 40, 'addon')}
+                                      data-testid="button-add-listings"
+                                    >
+                                      Add to Cart
+                                    </Button>
+                                    <a href="/listings-landing" className="text-[9px] text-blue-600 hover:underline block text-center" data-testid="link-learn-listings">Learn More</a>
+                                  </div>
 
-                              <a href="/inbox" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#0080FF' }}>
-                                <div className="flex items-center gap-1 mb-1">
-                                  <img src={inboxIcon} alt="" className="w-6 h-6" />
-                                  <img src={inboxLogo} alt="/inbox" className="h-3" />
+                                  <div className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#D59600' }}>
+                                    <div className="flex items-center gap-1 mb-1">
+                                      <img src={reputationIcon} alt="" className="w-5 h-5" />
+                                      <img src={reputationLogo} alt="/reputation" className="h-3" />
+                                    </div>
+                                    <p className="text-[9px] text-gray-600 mb-1">Reviews</p>
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline" 
+                                      className="w-full h-6 text-[10px] mb-1"
+                                      onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
+                                      data-testid="button-add-reputation"
+                                    >
+                                      Add to Cart
+                                    </Button>
+                                    <a href="/reputation-landing" className="text-[9px] text-blue-600 hover:underline block text-center" data-testid="link-learn-reputation">Learn More</a>
+                                  </div>
                                 </div>
-                                <p className="text-[9px] text-gray-600">Unified Inbox</p>
-                              </a>
-
-                              <a href="/livechat" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#8000FF' }}>
-                                <div className="flex items-center gap-1 mb-1">
-                                  <img src={livechatIcon} alt="" className="w-6 h-6" />
-                                  <img src={livechatLogo} alt="/livechat" className="h-3" />
-                                </div>
-                                <p className="text-[9px] text-gray-600">Real-time</p>
-                              </a>
-
-                              <a href="/content" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#E91EBC' }}>
-                                <div className="flex items-center gap-1 mb-1">
-                                  <img src={contentIcon} alt="" className="w-6 h-6" />
-                                  <img src={contentLogo} alt="/content" className="h-3" />
-                                </div>
-                                <p className="text-[9px] text-gray-600">Social</p>
-                              </a>
-                            </div>
-                          </div>
-
-                          {/* INDIVIDUAL APPS - LOCALBLUE */}
-                          <div className="mb-4">
-                            <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
-                              INDIVIDUAL APPS - $40/MO EACH
-                            </h4>
-                            <div className="grid grid-cols-2 gap-2">
-                              <a href="/listings-landing" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#FF0040' }}>
-                                <div className="flex items-center gap-1 mb-1">
-                                  <img src={listingsIcon} alt="" className="w-6 h-6" />
-                                  <img src={listingsLogo} alt="/listings" className="h-3" />
-                                </div>
-                                <p className="text-[9px] text-gray-600">Directory sync</p>
-                              </a>
-
-                              <a href="/reputation-landing" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#D59600' }}>
-                                <div className="flex items-center gap-1 mb-1">
-                                  <img src={reputationIcon} alt="" className="w-6 h-6" />
-                                  <img src={reputationLogo} alt="/reputation" className="h-3" />
-                                </div>
-                                <p className="text-[9px] text-gray-600">Reviews</p>
-                              </a>
+                              </div>
                             </div>
                           </div>
 
@@ -328,16 +415,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               ADDITIONAL SERVICES
                             </h4>
                             <div className="grid grid-cols-2 gap-2">
-                              <a href="/ai-coach" className="flex items-center gap-2 p-2 rounded border hover:shadow transition-all">
-                                <img src={coachBlueIcon} alt="Coach Blue" className="w-8 h-8" />
+                              <a href="/ai-coach" className="flex items-center gap-2 p-2 rounded border hover:shadow transition-all" data-testid="link-coach-blue">
+                                <img src={badge4} alt="Coach Blue" className="w-8 h-8" />
                                 <div className="flex-1">
-                                  <div className="text-xs font-bold">Coach Blue</div>
-                                  <p className="text-[9px] text-gray-600">AI Agent Coach</p>
+                                  <div className="text-xs font-bold">COACH BLUE</div>
+                                  <p className="text-[9px] text-gray-600">AI Business Coach</p>
                                 </div>
                                 <div className="text-sm font-bold text-purple-600">$99/mo</div>
                               </a>
 
-                              <a href="/assessment" className="flex items-center gap-2 p-2 rounded border hover:shadow transition-all">
+                              <a href="/assessment" className="flex items-center gap-2 p-2 rounded border hover:shadow transition-all" data-testid="link-digital-iq">
                                 <img src={badge1} alt="Digital IQ" className="w-8 h-8" />
                                 <div className="flex-1">
                                   <div className="text-xs font-bold">Digital IQ</div>
