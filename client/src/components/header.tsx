@@ -572,7 +572,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-[9px] text-green-600 dark:text-green-400">Save $10</p>
                                   </div>
                                 </div>
-                                <Link href="/pricing">
+                                <Link href="/localblue">
                                   <Button size="sm" className="w-full h-6 text-xs" data-testid="button-get-localblue">
                                     Get Bundle →
                                   </Button>
@@ -603,7 +603,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <li className="flex items-center"><span className="text-amber-500 dark:text-amber-400 mr-1">✓</span> Sentiment</li>
                                 </ul>
                                 <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#D59600' }} asChild>
-                                  <Link href="/pricing" data-testid="button-select-reputation">
+                                  <Link href="/reputation-landing" data-testid="button-select-reputation">
                                     Select →
                                   </Link>
                                 </Button>
@@ -627,7 +627,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <li className="flex items-center"><span className="text-rose-500 dark:text-rose-400 mr-1">✓</span> Analytics</li>
                                 </ul>
                                 <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#FF0040' }} asChild>
-                                  <Link href="/pricing" data-testid="button-select-listings">
+                                  <Link href="/listings-landing" data-testid="button-select-listings">
                                     Select →
                                   </Link>
                                 </Button>
