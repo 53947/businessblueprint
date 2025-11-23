@@ -14,11 +14,11 @@ import bbLogo from "@assets/Blueprint_Favicon_1762489845363.png";
 import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
 import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
-import badge1 from "@assets/badge-step1-digital-iq.png";
-import badge2 from "@assets/badge-step2-blueprint.png";
-import badge3 from "@assets/badge-step3-localblue.png";
-import badge4 from "@assets/badge-step4-coach.png";
-import badge5 from "@assets/badge-step5-commverse.png";
+import badge1 from "@assets/generated_images/step_1_orange_badge_icon.png";
+import badge2 from "@assets/generated_images/step_2_yellow_badge_icon.png";
+import badge3 from "@assets/generated_images/step_3_blue_badge_icon.png";
+import badge4 from "@assets/generated_images/step_4_purple_badge_icon.png";
+import badge5 from "@assets/generated_images/step_5_green_badge_icon.png";
 import sendIcon from "@assets/native icons and favicons/: send app icon.png";
 import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
 import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
@@ -30,8 +30,8 @@ import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
 import commverseBundle from "@assets/_ commverse bundle logo_1762731789054.png";
 import commverseIcon from "@assets/Commverse_1762731195351.png";
 import localBlueLogo from "@assets/localblue-logo.png";
-import heroAssessmentIcon from "@assets/hero-assessment-icon.png";
-import heroCoachIcon from "@assets/hero-coach-icon.png";
+import heroAssessmentIcon from "@assets/generated_images/hero_assessment_orange_icon.png";
+import heroCoachIcon from "@assets/generated_images/hero_coach_purple_icon.png";
 
 export default function Home() {
   const [, setLocation] = useLocation();
