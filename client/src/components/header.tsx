@@ -247,9 +247,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={badge3} alt="" className="w-6 h-6" />
                                   <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
                                 </div>
-                                <div className="text-xl font-bold mb-0.5" style={{ color: '#0000FF' }}>$49<span className="text-xs">/mo</span></div>
+                                <div className="text-xl font-bold mb-0.5" style={{ color: '#0000FF' }}>$60<span className="text-xs">/mo</span></div>
                                 <p className="text-[10px] text-gray-600 mb-1">/listings + /reputation</p>
-                                <p className="text-[10px] text-green-600 mb-2">Your $60 list</p>
+                                <p className="text-[10px] text-green-600 mb-2">Save $20/month</p>
                                 <Button size="sm" variant="outline" className="w-full h-7 text-xs border-blue-600 text-blue-600 hover:bg-blue-50">
                                   Select →
                                 </Button>
@@ -258,12 +258,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
                           </div>
 
-                          {/* INDIVIDUAL APPS */}
+                          {/* INDIVIDUAL APPS - COMMVERSE */}
                           <div className="mb-4">
                             <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
                               INDIVIDUAL APPS - $35/MO EACH
                             </h4>
-                            <div className="grid grid-cols-3 gap-2">
+                            <div className="grid grid-cols-2 gap-2">
                               <a href="/send" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#FF6B00' }}>
                                 <div className="flex items-center gap-1 mb-1">
                                   <img src={sendIcon} alt="" className="w-6 h-6" />
@@ -295,7 +295,15 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                                 <p className="text-[9px] text-gray-600">Social</p>
                               </a>
+                            </div>
+                          </div>
 
+                          {/* INDIVIDUAL APPS - LOCALBLUE */}
+                          <div className="mb-4">
+                            <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
+                              INDIVIDUAL APPS - $40/MO EACH
+                            </h4>
+                            <div className="grid grid-cols-2 gap-2">
                               <a href="/listings-landing" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#FF0040' }}>
                                 <div className="flex items-center gap-1 mb-1">
                                   <img src={listingsIcon} alt="" className="w-6 h-6" />
