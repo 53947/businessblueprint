@@ -241,18 +241,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* LEFT 2/3: Commverse Bundle + Apps */}
                             <div className="col-span-2 space-y-2">
                               {/* Commverse Bundle */}
-                              <div className="p-3 rounded border border-blue-600 hover:shadow-lg transition-all">
+                              <div className="p-3 rounded border-2 border-blue-600 hover:shadow-lg transition-all">
                                 <div className="flex items-center gap-1 mb-1">
                                   <img src={commverseIcon} alt="" className="w-6 h-6" />
                                   <img src={commverseBundle} alt="Commverse" className="h-4" />
                                 </div>
-                                <div className="text-xl font-bold mb-0.5" style={{ color: '#0000FF' }}>$100<span className="text-xs">/mo</span></div>
-                                <p className="text-[10px] text-gray-600 mb-1">/send + /inbox + /livechat + /content</p>
-                                <p className="text-[10px] text-green-600 mb-2">Save $40/month</p>
+                                <div className="text-xl font-extrabold mb-0.5" style={{ color: '#0000FF' }}>$100<span className="text-xs font-bold">/mo</span></div>
+                                <p className="text-[10px] font-semibold text-gray-700 mb-1">/send + /inbox + /livechat + /content</p>
+                                <p className="text-[10px] font-bold text-green-600 mb-2">Save $40/month</p>
                                 <Button 
                                   size="sm" 
                                   variant="outline" 
-                                  className="w-full h-7 text-xs border-blue-600 text-blue-600 hover:bg-blue-50" 
+                                  className="w-full h-7 text-xs font-bold border-2 border-blue-600 text-blue-600 hover:bg-blue-50" 
                                   onClick={() => handleAddToCart('bundle', 'Commverse Bundle', 100, 'addon')}
                                   data-testid="button-add-commverse-bundle"
                                 >
@@ -260,82 +260,79 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </Button>
                               </div>
 
-                              {/* Commverse Individual Apps - $35/mo each */}
+                              {/* Commverse Individual Apps */}
                               <div>
-                                <h5 className="text-[9px] font-bold text-gray-600 mb-1.5 uppercase tracking-wide">
-                                  INDIVIDUAL APPS - $35/MO EACH
-                                </h5>
                                 <div className="grid grid-cols-2 gap-2">
-                                  <div className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#FF6B00' }}>
+                                  <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#FF6B00' }}>
                                     <div className="flex items-center gap-1 mb-1">
                                       <img src={sendIcon} alt="" className="w-5 h-5" />
                                       <img src={sendLogo} alt="/send" className="h-3" />
                                     </div>
-                                    <p className="text-[9px] text-gray-600 mb-1">Email/SMS</p>
+                                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Email/SMS</p>
                                     <Button 
                                       size="sm" 
                                       variant="outline" 
-                                      className="w-full h-6 text-[10px] mb-1"
+                                      className="w-full h-6 text-[10px] font-bold mb-1"
                                       onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
                                       data-testid="button-add-send"
                                     >
-                                      Add to Cart
+                                      Add - $35/mo
                                     </Button>
-                                    <a href="/send-landing" className="text-[9px] text-blue-600 hover:underline block text-center" data-testid="link-learn-send">Learn More</a>
+                                    <a href="/send-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-send">Learn More</a>
                                   </div>
 
-                                  <div className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#0080FF' }}>
+                                  <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#0080FF' }}>
                                     <div className="flex items-center gap-1 mb-1">
                                       <img src={inboxIcon} alt="" className="w-5 h-5" />
                                       <img src={inboxLogo} alt="/inbox" className="h-3" />
                                     </div>
-                                    <p className="text-[9px] text-gray-600 mb-1">Unified Inbox</p>
+                                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Unified Inbox</p>
                                     <Button 
                                       size="sm" 
                                       variant="outline" 
-                                      className="w-full h-6 text-[10px] mb-1"
+                                      className="w-full h-6 text-[10px] font-bold mb-1"
                                       onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
                                       data-testid="button-add-inbox"
                                     >
-                                      Add to Cart
+                                      Add - $35/mo
                                     </Button>
-                                    <a href="/inbox-landing" className="text-[9px] text-blue-600 hover:underline block text-center" data-testid="link-learn-inbox">Learn More</a>
+                                    <a href="/inbox-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-inbox">Learn More</a>
                                   </div>
 
-                                  <div className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#8000FF' }}>
+                                  <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#8000FF' }}>
                                     <div className="flex items-center gap-1 mb-1">
                                       <img src={livechatIcon} alt="" className="w-5 h-5" />
                                       <img src={livechatLogo} alt="/livechat" className="h-3" />
                                     </div>
-                                    <p className="text-[9px] text-gray-600 mb-1">Real-time</p>
+                                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Real-time</p>
                                     <Button 
                                       size="sm" 
                                       variant="outline" 
-                                      className="w-full h-6 text-[10px] mb-1"
+                                      className="w-full h-6 text-[10px] font-bold mb-1"
                                       onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
                                       data-testid="button-add-livechat"
                                     >
-                                      Add to Cart
+                                      Add - $35/mo
                                     </Button>
-                                    <a href="/livechat-landing" className="text-[9px] text-blue-600 hover:underline block text-center" data-testid="link-learn-livechat">Learn More</a>
+                                    <a href="/livechat-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-livechat">Learn More</a>
                                   </div>
 
-                                  <div className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#E91EBC' }}>
+                                  <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#E91EBC' }}>
                                     <div className="flex items-center gap-1 mb-1">
                                       <img src={contentIcon} alt="" className="w-5 h-5" />
                                       <img src={contentLogo} alt="/content" className="h-3" />
                                     </div>
-                                    <p className="text-[9px] text-gray-600 mb-1">Social</p>
+                                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Social</p>
                                     <Button 
                                       size="sm" 
                                       variant="outline" 
-                                      className="w-full h-6 text-[10px] mb-1"
+                                      className="w-full h-6 text-[10px] font-bold mb-1"
                                       onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
                                       data-testid="button-add-content"
                                     >
-                                      Add to Cart
+                                      Add - $35/mo
                                     </Button>
-                                    <a href="/content-landing" className="text-[9px] text-blue-600 hover:underline block text-center" data-testid="link-learn-content">Learn More</a>
+                                    <a href="/content-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-content">Learn More</a>
                                   </div>
                                 </div>
                               </div>
@@ -344,18 +341,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* RIGHT 1/3: LocalBlue Bundle + Apps */}
                             <div className="col-span-1 space-y-2">
                               {/* LocalBlue Bundle */}
-                              <div className="p-3 rounded border border-blue-600 hover:shadow-lg transition-all">
+                              <div className="p-3 rounded border-2 border-blue-600 hover:shadow-lg transition-all">
                                 <div className="flex items-center gap-1 mb-1">
                                   <img src={badge3} alt="" className="w-6 h-6" />
                                   <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
                                 </div>
-                                <div className="text-xl font-bold mb-0.5" style={{ color: '#0000FF' }}>$60<span className="text-xs">/mo</span></div>
-                                <p className="text-[10px] text-gray-600 mb-1">/listings + /reputation</p>
-                                <p className="text-[10px] text-green-600 mb-2">Save $20/month</p>
+                                <div className="text-xl font-extrabold mb-0.5" style={{ color: '#0000FF' }}>$60<span className="text-xs font-bold">/mo</span></div>
+                                <p className="text-[10px] font-semibold text-gray-700 mb-1">/listings + /reputation</p>
+                                <p className="text-[10px] font-bold text-green-600 mb-2">Save $20/month</p>
                                 <Button 
                                   size="sm" 
                                   variant="outline" 
-                                  className="w-full h-7 text-xs border-blue-600 text-blue-600 hover:bg-blue-50"
+                                  className="w-full h-7 text-xs font-bold border-2 border-blue-600 text-blue-600 hover:bg-blue-50"
                                   onClick={() => handleAddToCart('localblue-bundle', 'LocalBlue Bundle', 60, 'addon')}
                                   data-testid="button-add-localblue-bundle"
                                 >
@@ -363,46 +360,43 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </Button>
                               </div>
 
-                              {/* LocalBlue Individual Apps - $40/mo each */}
+                              {/* LocalBlue Individual Apps */}
                               <div>
-                                <h5 className="text-[9px] font-bold text-gray-600 mb-1.5 uppercase tracking-wide">
-                                  INDIVIDUAL APPS - $40/MO EACH
-                                </h5>
                                 <div className="space-y-2">
-                                  <div className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#FF0040' }}>
+                                  <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#FF0040' }}>
                                     <div className="flex items-center gap-1 mb-1">
                                       <img src={listingsIcon} alt="" className="w-5 h-5" />
                                       <img src={listingsLogo} alt="/listings" className="h-3" />
                                     </div>
-                                    <p className="text-[9px] text-gray-600 mb-1">Directory sync</p>
+                                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Directory sync</p>
                                     <Button 
                                       size="sm" 
                                       variant="outline" 
-                                      className="w-full h-6 text-[10px] mb-1"
-                                      onClick={() => handleAddToCart('listings-app', '/listings', 40, 'addon')}
+                                      className="w-full h-6 text-[10px] font-bold mb-1"
+                                      onClick={() => handleAddToCart('listings-addon', '/listings', 40, 'addon')}
                                       data-testid="button-add-listings"
                                     >
-                                      Add to Cart
+                                      Add - $40/mo
                                     </Button>
-                                    <a href="/listings-landing" className="text-[9px] text-blue-600 hover:underline block text-center" data-testid="link-learn-listings">Learn More</a>
+                                    <a href="/listings-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-listings">Learn More</a>
                                   </div>
 
-                                  <div className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#D59600' }}>
+                                  <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#D59600' }}>
                                     <div className="flex items-center gap-1 mb-1">
                                       <img src={reputationIcon} alt="" className="w-5 h-5" />
                                       <img src={reputationLogo} alt="/reputation" className="h-3" />
                                     </div>
-                                    <p className="text-[9px] text-gray-600 mb-1">Reviews</p>
+                                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Reviews</p>
                                     <Button 
                                       size="sm" 
                                       variant="outline" 
-                                      className="w-full h-6 text-[10px] mb-1"
+                                      className="w-full h-6 text-[10px] font-bold mb-1"
                                       onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
                                       data-testid="button-add-reputation"
                                     >
-                                      Add to Cart
+                                      Add - $40/mo
                                     </Button>
-                                    <a href="/reputation-landing" className="text-[9px] text-blue-600 hover:underline block text-center" data-testid="link-learn-reputation">Learn More</a>
+                                    <a href="/reputation-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-reputation">Learn More</a>
                                   </div>
                                 </div>
                               </div>
@@ -411,26 +405,26 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                           {/* ADDITIONAL SERVICES */}
                           <div>
-                            <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
+                            <h4 className="text-[10px] font-extrabold text-gray-700 mb-2 uppercase tracking-wide">
                               ADDITIONAL SERVICES
                             </h4>
                             <div className="grid grid-cols-2 gap-2">
-                              <a href="/ai-coach" className="flex items-center gap-2 p-2 rounded border hover:shadow transition-all" data-testid="link-coach-blue">
+                              <a href="/ai-coach" className="flex items-center gap-2 p-2 rounded border-2 hover:shadow transition-all" data-testid="link-coach-blue">
                                 <img src={badge4} alt="Coach Blue" className="w-8 h-8" />
                                 <div className="flex-1">
-                                  <div className="text-xs font-bold">COACH BLUE</div>
-                                  <p className="text-[9px] text-gray-600">AI Business Coach</p>
+                                  <div className="text-xs font-extrabold">COACH BLUE</div>
+                                  <p className="text-[9px] font-semibold text-gray-700">AI Business Coach</p>
                                 </div>
-                                <div className="text-sm font-bold text-purple-600">$99/mo</div>
+                                <div className="text-sm font-extrabold text-purple-600">$99/mo</div>
                               </a>
 
-                              <a href="/assessment" className="flex items-center gap-2 p-2 rounded border hover:shadow transition-all" data-testid="link-digital-iq">
+                              <a href="/assessment" className="flex items-center gap-2 p-2 rounded border-2 hover:shadow transition-all" data-testid="link-digital-iq">
                                 <img src={badge1} alt="Digital IQ" className="w-8 h-8" />
                                 <div className="flex-1">
-                                  <div className="text-xs font-bold">Digital IQ</div>
-                                  <p className="text-[9px] text-gray-600">Assessment</p>
+                                  <div className="text-xs font-extrabold">Digital IQ</div>
+                                  <p className="text-[9px] font-semibold text-gray-700">Assessment</p>
                                 </div>
-                                <div className="text-sm font-bold text-green-600">FREE</div>
+                                <div className="text-sm font-extrabold text-green-600">FREE</div>
                               </a>
                             </div>
                           </div>
