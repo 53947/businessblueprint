@@ -38,6 +38,9 @@ import BrandStudio from "@/pages/brand-studio";
 import ContentManagement from "@/pages/content-management";
 import ReputationManagement from "@/pages/reputation";
 import ListingsManagement from "@/pages/listings";
+import LocalBlueLanding from "@/pages/localblue-landing";
+import ListingsLanding from "@/pages/listings-landing";
+import ReputationLanding from "@/pages/reputation-landing";
 import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import DataDeletion from "@/pages/data-deletion";
@@ -80,8 +83,11 @@ function Router() {
       <Route path="/admin" component={AdminPanel} />
       <Route path="/brand-studio" component={BrandStudio} />
       <Route path="/content" component={ContentManagement} />
-      <Route path="/reputation" component={ReputationManagement} />
-      <Route path="/listings" component={ListingsManagement} />
+      <Route path="/localblue" component={LocalBlueLanding} />
+      <Route path="/listings-landing" component={ListingsLanding} />
+      <Route path="/reputation-landing" component={ReputationLanding} />
+      <Route path="/reputation-app" component={ReputationManagement} />
+      <Route path="/listings-app" component={ListingsManagement} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
       <Route path="/data-deletion" component={DataDeletion} />
