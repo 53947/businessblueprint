@@ -259,11 +259,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <img src={badge3} alt="LocalBlue" className="w-8 h-8 rounded-lg" />
                                     <img src={localBlueLogo} alt="LocalBlue" className="h-6 object-contain" />
                                   </div>
-                                  <div className="text-2xl font-bold mb-1" style={{ color: '#0000FF' }}>$149<span className="text-sm">/mo</span></div>
+                                  <div className="text-2xl font-bold mb-1" style={{ color: '#0000FF' }}>$49<span className="text-sm">/mo</span></div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                                     /listings + /reputation
                                   </p>
-                                  <p className="text-xs text-green-600 dark:text-green-400">Your digital base</p>
+                                  <p className="text-xs text-green-600 dark:text-green-400">$60 for both</p>
                                   <Button size="sm" style={{ backgroundColor: '#0000FF', color: 'white' }} className="w-full mt-3 hover:opacity-90">
                                     Select →
                                   </Button>
@@ -275,7 +275,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* Individual Apps */}
                           <div className="mb-6">
                             <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
-                              Individual Apps - $35/mo each
+                              Individual Apps - $35/mo each (LocalBlue apps $40 each)
                             </h4>
                             <div className="grid grid-cols-3 gap-3">
                               <NavigationMenuLink asChild>
