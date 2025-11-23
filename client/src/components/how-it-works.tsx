@@ -1,10 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import badge1 from "@assets/badge-step1-digital-iq.png";
-import badge2 from "@assets/badge-step2-blueprint.png";
-import badge3 from "@assets/badge-step3-localblue.png";
-import badge4 from "@assets/badge-step4-coach.png";
-import badge5 from "@assets/badge-step5-commverse.png";
+import badge1 from "@assets/step1-digital-iq-assessment.png";
+import badge2 from "@assets/step2-blueprint-prescription.png";
+import badge3 from "@assets/step3-localblue.png";
+import badge4 from "@assets/step4-coach-blue.png";
+import badge5 from "@assets/step5-commverse.png";
 
 interface HowItWorksProps {
   onStartAssessment: () => void;
