@@ -445,7 +445,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-[10px] text-green-600 dark:text-green-400">Save $40</p>
                                   </div>
                                 </div>
-                                <Link href="/applications?bundle=commverse">
+                                <Link href="/commverse">
                                   <Button size="sm" className="w-full h-8 text-sm" data-testid="button-get-commverse">
                                     Get Bundle →
                                   </Button>
@@ -500,7 +500,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Team Collab</li>
                               </ul>
                               <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#6ea6ff' }} asChild>
-                                <Link href="/inbox-app" data-testid="button-select-inbox">
+                                <Link href="/inbox" data-testid="button-select-inbox">
                                   Select →
                                 </Link>
                               </Button>
@@ -548,7 +548,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <li className="flex items-center"><span className="text-fuchsia-500 dark:text-fuchsia-400 mr-1">✓</span> AI Captions</li>
                               </ul>
                               <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#e91ebc' }} asChild>
-                                <Link href="/content" data-testid="button-select-content">
+                                <Link href="/content-landing" data-testid="button-select-content">
                                   Select →
                                 </Link>
                               </Button>
@@ -572,7 +572,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-[9px] text-green-600 dark:text-green-400">Save $10</p>
                                   </div>
                                 </div>
-                                <Link href="/applications?bundle=localblue">
+                                <Link href="/pricing">
                                   <Button size="sm" className="w-full h-6 text-xs" data-testid="button-get-localblue">
                                     Get Bundle →
                                   </Button>
@@ -603,7 +603,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <li className="flex items-center"><span className="text-amber-500 dark:text-amber-400 mr-1">✓</span> Sentiment</li>
                                 </ul>
                                 <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#D59600' }} asChild>
-                                  <Link href="/reputation" data-testid="button-select-reputation">
+                                  <Link href="/pricing" data-testid="button-select-reputation">
                                     Select →
                                   </Link>
                                 </Button>
@@ -627,7 +627,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <li className="flex items-center"><span className="text-rose-500 dark:text-rose-400 mr-1">✓</span> Analytics</li>
                                 </ul>
                                 <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#FF0040' }} asChild>
-                                  <Link href="/listings" data-testid="button-select-listings">
+                                  <Link href="/pricing" data-testid="button-select-listings">
                                     Select →
                                   </Link>
                                 </Button>
