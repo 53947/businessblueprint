@@ -14,11 +14,11 @@ import bbLogo from "@assets/Blueprint_Favicon_1762489845363.png";
 import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
 import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
-import badge1 from "@assets/step1-digital-iq-assessment.png";
-import badge2 from "@assets/step2-blueprint-prescription.png";
-import badge3 from "@assets/step3-localblue.png";
-import badge4 from "@assets/step4-coach-blue.png";
-import badge5 from "@assets/step5-commverse.png";
+import badge1 from "@assets/Digital IQ Assessment (1)_1763874287091.png";
+import badge2 from "@assets/Get Your Prescribed Blueprint (2)_1763874287090.png";
+import badge3 from "@assets/LocalBlue Bundle (3)_1763874287091.png";
+import badge4 from "@assets/Coach Blue as Blue(4)_1763874287091.png";
+import badge5 from "@assets/Commverse (5)_1763874287091.png";
 import sendIcon from "@assets/native icons and favicons/: send app icon.png";
 import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
 import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
@@ -30,8 +30,8 @@ import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
 import commverseBundle from "@assets/_ commverse bundle logo_1762731789054.png";
 import commverseIcon from "@assets/Commverse_1762731195351.png";
 import localBlueLogo from "@assets/localblue-logo.png";
-import heroAssessmentIcon from "@assets/step1-digital-iq-assessment.png";
-import heroCoachIcon from "@assets/step4-coach-blue.png";
+import heroAssessmentIcon from "@assets/Digital IQ Assessment (1)_1763874287091.png";
+import heroCoachIcon from "@assets/Coach Blue as Blue(4)_1763874287091.png";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -71,7 +71,7 @@ export default function Home() {
                   className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#FF6B00] font-semibold"
                   data-testid="button-start-assessment"
                 >
-                  <img src={heroAssessmentIcon} alt="" className="w-8 h-8 mr-2" />
+                  <img src={heroAssessmentIcon} alt="" className="w-6 h-6 mr-2" />
                   Start Free Digital IQ Assessment
                 </Button>
                 <Link href="/ai-coach">
@@ -81,7 +81,7 @@ export default function Home() {
                     className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#FF6B00] font-semibold w-full sm:w-auto"
                     data-testid="button-ai-coach"
                   >
-                    <img src={heroCoachIcon} alt="" className="w-8 h-8 mr-2" />
+                    <img src={heroCoachIcon} alt="" className="w-6 h-6 mr-2" />
                     AI Business Coach
                   </Button>
                 </Link>
@@ -122,7 +122,7 @@ export default function Home() {
                 <div className="space-y-4 relative z-10">
                   <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-orange-500">
                     <div className="flex-shrink-0 -mt-4">
-                      <img src={badge1} alt="Step 1" className="w-16 h-16 object-contain" />
+                      <img src={badge1} alt="Step 1" className="w-12 h-12 object-contain" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-gray-900">Step 1 — Complete Your Digital IQ Assessment</div>
@@ -135,7 +135,7 @@ export default function Home() {
                   
                   <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-yellow-500">
                     <div className="flex-shrink-0 -mt-4">
-                      <img src={badge2} alt="Step 2" className="w-16 h-16 object-contain" />
+                      <img src={badge2} alt="Step 2" className="w-12 h-12 object-contain" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-gray-900">Step 2 — Get Your Prescribed Blueprint</div>
@@ -148,7 +148,7 @@ export default function Home() {
                   
                   <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-blue-500">
                     <div className="flex-shrink-0 -mt-4">
-                      <img src={badge3} alt="Step 3" className="w-16 h-16 object-contain" />
+                      <img src={badge3} alt="Step 3" className="w-12 h-12 object-contain" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-gray-900 flex items-center gap-2">
@@ -164,7 +164,7 @@ export default function Home() {
                   
                   <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-purple-500">
                     <div className="flex-shrink-0 -mt-4">
-                      <img src={badge4} alt="Step 4" className="w-16 h-16 object-contain" />
+                      <img src={badge4} alt="Step 4" className="w-12 h-12 object-contain" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-gray-900">Step 4 — Coach Blue (AI Business Coach)</div>
@@ -177,7 +177,7 @@ export default function Home() {
                   
                   <div className="flex items-start gap-3 p-3 rounded-lg border-l-4 border-green-500">
                     <div className="flex-shrink-0 -mt-4">
-                      <img src={badge5} alt="Step 5" className="w-16 h-16 object-contain" />
+                      <img src={badge5} alt="Step 5" className="w-12 h-12 object-contain" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-gray-900 flex items-center gap-2">

@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, MapPin, Star, TrendingUp, Shield, Zap } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import badge3 from "@assets/step3-localblue.png";
+import badge3 from "@assets/LocalBlue Bundle (3)_1763874287091.png";
 import localBlueLogo from "@assets/localblue-logo.png";
 
 export default function LocalBlueLanding() {

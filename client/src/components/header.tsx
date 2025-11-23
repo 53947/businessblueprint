@@ -63,11 +63,11 @@ import reputationLogo from "@assets/reputation_1762930219633.png";
 import listingsIcon from "@assets/listings app_1762804610311.png";
 import listingsLogo from "@assets/listings_1762930219632.png";
 import localBlueLogo from "@assets/localblue-logo.png";
-import badge1 from "@assets/step1-digital-iq-assessment.png";
-import badge2 from "@assets/step2-blueprint-prescription.png";
-import badge3 from "@assets/step3-localblue.png";
-import badge4 from "@assets/step4-coach-blue.png";
-import badge5 from "@assets/step5-commverse.png";
+import badge1 from "@assets/Digital IQ Assessment (1)_1763874287091.png";
+import badge2 from "@assets/Get Your Prescribed Blueprint (2)_1763874287090.png";
+import badge3 from "@assets/LocalBlue Bundle (3)_1763874287091.png";
+import badge4 from "@assets/Coach Blue as Blue(4)_1763874287091.png";
+import badge5 from "@assets/Commverse (5)_1763874287091.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
