@@ -63,11 +63,11 @@ import reputationLogo from "@assets/reputation_1762930219633.png";
 import listingsIcon from "@assets/listings app_1762804610311.png";
 import listingsLogo from "@assets/listings_1762930219632.png";
 import localBlueLogo from "@assets/localblue-logo.png";
-import badge1 from "@assets/badge-step1-digital-iq.png";
-import badge2 from "@assets/badge-step2-blueprint.png";
-import badge3 from "@assets/badge-step3-localblue.png";
-import badge4 from "@assets/badge-step4-coach.png";
-import badge5 from "@assets/badge-step5-commverse.png";
+import badge1 from "@assets/generated_images/step_1_orange_badge_icon.png";
+import badge2 from "@assets/generated_images/step_2_yellow_badge_icon.png";
+import badge3 from "@assets/generated_images/step_3_blue_badge_icon.png";
+import badge4 from "@assets/generated_images/step_4_purple_badge_icon.png";
+import badge5 from "@assets/generated_images/step_5_green_badge_icon.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
