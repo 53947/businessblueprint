@@ -219,212 +219,124 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Pricing</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-6 w-[90vw] max-w-[900px]">
-                          {/* App Bundles */}
-                          <div className="mb-6">
-                            <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
-                              App Bundles - Complete Solutions
+                        <div className="p-3 w-[600px]">
+                          {/* APP BUNDLES */}
+                          <div className="mb-4">
+                            <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
+                              APP BUNDLES - COMPLETE SOLUTIONS
                             </h4>
-                            <div className="grid grid-cols-2 gap-4">
-                              <NavigationMenuLink asChild>
-                                <a
-                                  href="/pricing?bundle=commverse"
-                                  data-testid="link-bundle-commverse"
-                                  style={{ borderColor: '#0000FF' }}
-                                  className="block p-4 rounded-lg border-2 hover:shadow-lg transition-all"
-                                >
-                                  <div className="flex items-center gap-2 mb-2">
-                                    <img src={commverseIcon} alt="Commverse" className="w-8 h-8 rounded-lg" />
-                                    <img src={commverseBundle} alt="Commverse Bundle" className="h-6 object-contain" />
-                                  </div>
-                                  <div className="text-2xl font-bold mb-1" style={{ color: '#0000FF' }}>$100<span className="text-sm">/mo</span></div>
-                                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
-                                    /send + /inbox + /livechat + /content
-                                  </p>
-                                  <p className="text-xs text-green-600 dark:text-green-400">Save $40/month</p>
-                                  <Button size="sm" style={{ backgroundColor: '#0000FF', color: 'white' }} className="w-full mt-3 hover:opacity-90">
-                                    Select →
-                                  </Button>
-                                </a>
-                              </NavigationMenuLink>
+                            <div className="grid grid-cols-2 gap-2">
+                              {/* Commverse Bundle */}
+                              <a href="/pricing?bundle=commverse" className="block p-3 rounded border border-blue-600 hover:shadow-lg transition-all">
+                                <div className="flex items-center gap-1 mb-1">
+                                  <img src={commverseIcon} alt="" className="w-6 h-6" />
+                                  <img src={commverseBundle} alt="Commverse" className="h-4" />
+                                </div>
+                                <div className="text-xl font-bold mb-0.5" style={{ color: '#0000FF' }}>$100<span className="text-xs">/mo</span></div>
+                                <p className="text-[10px] text-gray-600 mb-1">/send + /inbox + /livechat + /content</p>
+                                <p className="text-[10px] text-green-600 mb-2">Save $40/month</p>
+                                <Button size="sm" variant="outline" className="w-full h-7 text-xs border-blue-600 text-blue-600 hover:bg-blue-50">
+                                  Select →
+                                </Button>
+                                <p className="text-[9px] text-gray-500 mt-1 text-center">COMMVERSE 2/3 OF BASE</p>
+                              </a>
 
-                              <NavigationMenuLink asChild>
-                                <a
-                                  href="/localblue"
-                                  data-testid="link-bundle-localblue"
-                                  style={{ borderColor: '#0000FF' }}
-                                  className="block p-4 rounded-lg border-2 hover:shadow-lg transition-all"
-                                >
-                                  <div className="flex items-center gap-2 mb-2">
-                                    <img src={badge3} alt="LocalBlue" className="w-8 h-8 rounded-lg" />
-                                    <img src={localBlueLogo} alt="LocalBlue" className="h-6 object-contain" />
-                                  </div>
-                                  <div className="text-2xl font-bold mb-1" style={{ color: '#0000FF' }}>$60<span className="text-sm">/mo</span></div>
-                                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
-                                    /listings + /reputation
-                                  </p>
-                                  <p className="text-xs text-green-600 dark:text-green-400">Save $20/month</p>
-                                  <Button size="sm" style={{ backgroundColor: '#0000FF', color: 'white' }} className="w-full mt-3 hover:opacity-90">
-                                    Select →
-                                  </Button>
-                                </a>
-                              </NavigationMenuLink>
+                              {/* LocalBlue Bundle */}
+                              <a href="/localblue" className="block p-3 rounded border border-blue-600 hover:shadow-lg transition-all">
+                                <div className="flex items-center gap-1 mb-1">
+                                  <img src={badge3} alt="" className="w-6 h-6" />
+                                  <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
+                                </div>
+                                <div className="text-xl font-bold mb-0.5" style={{ color: '#0000FF' }}>$49<span className="text-xs">/mo</span></div>
+                                <p className="text-[10px] text-gray-600 mb-1">/listings + /reputation</p>
+                                <p className="text-[10px] text-green-600 mb-2">Your $60 list</p>
+                                <Button size="sm" variant="outline" className="w-full h-7 text-xs border-blue-600 text-blue-600 hover:bg-blue-50">
+                                  Select →
+                                </Button>
+                                <p className="text-[9px] text-gray-500 mt-1 text-center">localblue 1/3 of base</p>
+                              </a>
                             </div>
                           </div>
 
-                          {/* Individual Apps */}
-                          <div className="mb-6">
-                            <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
-                              Individual Apps - $35/mo each
+                          {/* INDIVIDUAL APPS */}
+                          <div className="mb-4">
+                            <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
+                              INDIVIDUAL APPS - $35/MO EACH
                             </h4>
-                            <div className="grid grid-cols-3 gap-3">
-                              <NavigationMenuLink asChild>
-                                <a
-                                  href="/send"
-                                  data-testid="link-app-send"
-                                  style={{ borderColor: '#FF6B00' }}
-                                  className="flex flex-col gap-1 p-2 rounded-lg border hover:shadow-md transition-all"
-                                >
-                                  <div className="flex items-center gap-2">
-                                    <img src={sendIcon} alt="/send" className="w-8 h-8 rounded-lg" />
-                                    <div className="flex-1 min-w-0">
-                                      <img src={sendLogo} alt="/send" className="h-4 mb-1" />
-                                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Email/SMS</p>
-                                    </div>
-                                  </div>
-                                  <div className="text-sm font-bold" style={{ color: '#FF6B00' }}>$35/mo</div>
-                                </a>
-                              </NavigationMenuLink>
+                            <div className="grid grid-cols-3 gap-2">
+                              <a href="/send" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#FF6B00' }}>
+                                <div className="flex items-center gap-1 mb-1">
+                                  <img src={sendIcon} alt="" className="w-6 h-6" />
+                                  <img src={sendLogo} alt="/send" className="h-3" />
+                                </div>
+                                <p className="text-[9px] text-gray-600">Email/SMS</p>
+                              </a>
 
-                              <NavigationMenuLink asChild>
-                                <a
-                                  href="/inbox"
-                                  data-testid="link-app-inbox"
-                                  style={{ borderColor: '#0080FF' }}
-                                  className="flex flex-col gap-1 p-2 rounded-lg border hover:shadow-md transition-all"
-                                >
-                                  <div className="flex items-center gap-2">
-                                    <img src={inboxIcon} alt="/inbox" className="w-8 h-8 rounded-lg" />
-                                    <div className="flex-1 min-w-0">
-                                      <img src={inboxLogo} alt="/inbox" className="h-4 mb-1" />
-                                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Unified inbox</p>
-                                    </div>
-                                  </div>
-                                  <div className="text-sm font-bold" style={{ color: '#0080FF' }}>$35/mo</div>
-                                </a>
-                              </NavigationMenuLink>
+                              <a href="/inbox" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#0080FF' }}>
+                                <div className="flex items-center gap-1 mb-1">
+                                  <img src={inboxIcon} alt="" className="w-6 h-6" />
+                                  <img src={inboxLogo} alt="/inbox" className="h-3" />
+                                </div>
+                                <p className="text-[9px] text-gray-600">Unified Inbox</p>
+                              </a>
 
-                              <NavigationMenuLink asChild>
-                                <a
-                                  href="/livechat"
-                                  data-testid="link-app-livechat"
-                                  style={{ borderColor: '#8000FF' }}
-                                  className="flex flex-col gap-1 p-2 rounded-lg border hover:shadow-md transition-all"
-                                >
-                                  <div className="flex items-center gap-2">
-                                    <img src={livechatIcon} alt="/livechat" className="w-8 h-8 rounded-lg" />
-                                    <div className="flex-1 min-w-0">
-                                      <img src={livechatLogo} alt="/livechat" className="h-4 mb-1" />
-                                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Real-time</p>
-                                    </div>
-                                  </div>
-                                  <div className="text-sm font-bold" style={{ color: '#8000FF' }}>$35/mo</div>
-                                </a>
-                              </NavigationMenuLink>
+                              <a href="/livechat" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#8000FF' }}>
+                                <div className="flex items-center gap-1 mb-1">
+                                  <img src={livechatIcon} alt="" className="w-6 h-6" />
+                                  <img src={livechatLogo} alt="/livechat" className="h-3" />
+                                </div>
+                                <p className="text-[9px] text-gray-600">Real-time</p>
+                              </a>
 
-                              <NavigationMenuLink asChild>
-                                <a
-                                  href="/content"
-                                  data-testid="link-app-content"
-                                  style={{ borderColor: '#E91EBC' }}
-                                  className="flex flex-col gap-1 p-2 rounded-lg border hover:shadow-md transition-all"
-                                >
-                                  <div className="flex items-center gap-2">
-                                    <img src={contentIcon} alt="/content" className="w-8 h-8 rounded-lg" />
-                                    <div className="flex-1 min-w-0">
-                                      <img src={contentLogo} alt="/content" className="h-4 mb-1" />
-                                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Social</p>
-                                    </div>
-                                  </div>
-                                  <div className="text-sm font-bold" style={{ color: '#E91EBC' }}>$35/mo</div>
-                                </a>
-                              </NavigationMenuLink>
+                              <a href="/content" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#E91EBC' }}>
+                                <div className="flex items-center gap-1 mb-1">
+                                  <img src={contentIcon} alt="" className="w-6 h-6" />
+                                  <img src={contentLogo} alt="/content" className="h-3" />
+                                </div>
+                                <p className="text-[9px] text-gray-600">Social</p>
+                              </a>
 
-                              <NavigationMenuLink asChild>
-                                <a
-                                  href="/listings-landing"
-                                  data-testid="link-app-listings"
-                                  style={{ borderColor: '#FF0040' }}
-                                  className="flex flex-col gap-1 p-2 rounded-lg border hover:shadow-md transition-all"
-                                >
-                                  <div className="flex items-center gap-2">
-                                    <img src={listingsIcon} alt="/listings" className="w-8 h-8 rounded-lg" />
-                                    <div className="flex-1 min-w-0">
-                                      <img src={listingsLogo} alt="/listings" className="h-4 mb-1" />
-                                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Directory sync</p>
-                                    </div>
-                                  </div>
-                                  <div className="text-sm font-bold" style={{ color: '#FF0040' }}>$40/mo</div>
-                                </a>
-                              </NavigationMenuLink>
+                              <a href="/listings-landing" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#FF0040' }}>
+                                <div className="flex items-center gap-1 mb-1">
+                                  <img src={listingsIcon} alt="" className="w-6 h-6" />
+                                  <img src={listingsLogo} alt="/listings" className="h-3" />
+                                </div>
+                                <p className="text-[9px] text-gray-600">Directory sync</p>
+                              </a>
 
-                              <NavigationMenuLink asChild>
-                                <a
-                                  href="/reputation-landing"
-                                  data-testid="link-app-reputation"
-                                  style={{ borderColor: '#D59600' }}
-                                  className="flex flex-col gap-1 p-2 rounded-lg border hover:shadow-md transition-all"
-                                >
-                                  <div className="flex items-center gap-2">
-                                    <img src={reputationIcon} alt="/reputation" className="w-8 h-8 rounded-lg" />
-                                    <div className="flex-1 min-w-0">
-                                      <img src={reputationLogo} alt="/reputation" className="h-4 mb-1" />
-                                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Reviews</p>
-                                    </div>
-                                  </div>
-                                  <div className="text-sm font-bold" style={{ color: '#D59600' }}>$40/mo</div>
-                                </a>
-                              </NavigationMenuLink>
+                              <a href="/reputation-landing" className="p-2 rounded border hover:shadow transition-all" style={{ borderColor: '#D59600' }}>
+                                <div className="flex items-center gap-1 mb-1">
+                                  <img src={reputationIcon} alt="" className="w-6 h-6" />
+                                  <img src={reputationLogo} alt="/reputation" className="h-3" />
+                                </div>
+                                <p className="text-[9px] text-gray-600">Reviews</p>
+                              </a>
                             </div>
                           </div>
 
-                          {/* Additional Services */}
+                          {/* ADDITIONAL SERVICES */}
                           <div>
-                            <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
-                              Additional Services
+                            <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
+                              ADDITIONAL SERVICES
                             </h4>
-                            <div className="grid grid-cols-2 gap-3">
-                              <NavigationMenuLink asChild>
-                                <a
-                                  href="/ai-coach"
-                                  data-testid="link-service-coach-blue"
-                                  className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-purple-500 hover:shadow-md transition-all"
-                                >
-                                  <img src={coachBlueIcon} alt="Coach Blue" className="w-10 h-10 rounded-lg" />
-                                  <div className="flex-1">
-                                    <div className="font-bold text-gray-900 dark:text-white">Coach Blue</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400">AI Business Coach</p>
-                                  </div>
-                                  <div className="text-sm font-bold text-purple-600 dark:text-purple-400">$99/mo</div>
-                                </a>
-                              </NavigationMenuLink>
+                            <div className="grid grid-cols-2 gap-2">
+                              <a href="/ai-coach" className="flex items-center gap-2 p-2 rounded border hover:shadow transition-all">
+                                <img src={coachBlueIcon} alt="Coach Blue" className="w-8 h-8" />
+                                <div className="flex-1">
+                                  <div className="text-xs font-bold">Coach Blue</div>
+                                  <p className="text-[9px] text-gray-600">AI Agent Coach</p>
+                                </div>
+                                <div className="text-sm font-bold text-purple-600">$99/mo</div>
+                              </a>
 
-                              <NavigationMenuLink asChild>
-                                <a
-                                  href="/assessment"
-                                  data-testid="link-service-digital-iq"
-                                  className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-orange-500 hover:shadow-md transition-all"
-                                >
-                                  <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
-                                    <ClipboardCheck className="w-6 h-6 text-orange-600" />
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="font-bold text-gray-900 dark:text-white">Digital IQ</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400">Assessment</p>
-                                  </div>
-                                  <div className="text-sm font-bold text-green-600 dark:text-green-400">FREE</div>
-                                </a>
-                              </NavigationMenuLink>
+                              <a href="/assessment" className="flex items-center gap-2 p-2 rounded border hover:shadow transition-all">
+                                <img src={badge1} alt="Digital IQ" className="w-8 h-8" />
+                                <div className="flex-1">
+                                  <div className="text-xs font-bold">Digital IQ</div>
+                                  <p className="text-[9px] text-gray-600">Assessment</p>
+                                </div>
+                                <div className="text-sm font-bold text-green-600">FREE</div>
+                              </a>
                             </div>
                           </div>
                         </div>
