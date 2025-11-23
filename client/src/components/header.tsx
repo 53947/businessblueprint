@@ -80,9 +80,67 @@ export function Header({ showNavigation = true }: HeaderProps) {
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [hasClientPortalAccess, setHasClientPortalAccess] = useState(false);
+  
+  // Billing cycle state
+  const [globalBillingCycle, setGlobalBillingCycle] = useState<'monthly' | 'annual'>('monthly');
+  const [itemBillingOverrides, setItemBillingOverrides] = useState<Record<string, 'monthly' | 'annual'>>({});
 
-  const handleAddToCart = (id: string, name: string, price: number, type: 'plan' | 'addon') => {
-    addToCart(id, name, price, type, 'monthly');
+  // Clean up overrides when global cycle changes
+  // Remove any overrides that now match the new global cycle
+  useEffect(() => {
+    setItemBillingOverrides(prev => {
+      const updated = { ...prev };
+      let changed = false;
+      
+      for (const itemId in updated) {
+        if (updated[itemId] === globalBillingCycle) {
+          delete updated[itemId];
+          changed = true;
+        }
+      }
+      
+      return changed ? updated : prev;
+    });
+  }, [globalBillingCycle]);
+
+  // Calculate annual price (20% discount)
+  const getAnnualPrice = (monthlyPrice: number) => Math.round(monthlyPrice * 12 * 0.8);
+
+  // Get billing cycle for an item (override or global)
+  const getItemBillingCycle = (itemId: string) => itemBillingOverrides[itemId] || globalBillingCycle;
+
+  // Toggle individual item billing cycle
+  const toggleItemBilling = (itemId: string) => {
+    const currentCycle = getItemBillingCycle(itemId);
+    const newCycle = currentCycle === 'monthly' ? 'annual' : 'monthly';
+    
+    // If the new cycle matches the global cycle, remove the override
+    // This allows the item to follow the master toggle again
+    if (newCycle === globalBillingCycle) {
+      setItemBillingOverrides(prev => {
+        const updated = { ...prev };
+        delete updated[itemId];
+        return updated;
+      });
+    } else {
+      // Otherwise, set the override
+      setItemBillingOverrides(prev => ({ ...prev, [itemId]: newCycle }));
+    }
+  };
+
+  // Get price and billing cycle for an item
+  const getItemPrice = (itemId: string, monthlyPrice: number) => {
+    const cycle = getItemBillingCycle(itemId);
+    return {
+      price: cycle === 'annual' ? getAnnualPrice(monthlyPrice) : monthlyPrice,
+      cycle,
+      displayPrice: cycle === 'annual' ? `$${getAnnualPrice(monthlyPrice)}/yr` : `$${monthlyPrice}/mo`
+    };
+  };
+
+  const handleAddToCart = (id: string, name: string, monthlyPrice: number, type: 'plan' | 'addon') => {
+    const { price, cycle } = getItemPrice(id, monthlyPrice);
+    addToCart(id, name, price, type, cycle);
     toast({
       title: "Added to cart",
       description: `${name} has been added to your cart`,
@@ -231,6 +289,34 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="p-3 w-[900px]">
+                          {/* MASTER BILLING CYCLE TOGGLE */}
+                          <div className="flex items-center justify-center mb-4 pb-3 border-b-2 border-gray-300">
+                            <div className="flex items-center gap-3 bg-white rounded-full border-2 border-blue-600 p-1">
+                              <button
+                                onClick={() => setGlobalBillingCycle('monthly')}
+                                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                                  globalBillingCycle === 'monthly'
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-600 hover:text-blue-600'
+                                }`}
+                                data-testid="toggle-global-monthly"
+                              >
+                                Monthly
+                              </button>
+                              <button
+                                onClick={() => setGlobalBillingCycle('annual')}
+                                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                                  globalBillingCycle === 'annual'
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-600 hover:text-blue-600'
+                                }`}
+                                data-testid="toggle-global-annual"
+                              >
+                                Annual <span className="text-green-600">Save 20%</span>
+                              </button>
+                            </div>
+                          </div>
+
                           {/* APP BUNDLES - COMPLETE SOLUTIONS */}
                           <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
                             APP BUNDLES - COMPLETE SOLUTIONS
@@ -242,13 +328,26 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <div className="col-span-2 space-y-2">
                               {/* Commverse Bundle */}
                               <div className="p-3 rounded border-2 border-blue-600 hover:shadow-lg transition-all">
-                                <div className="flex items-center gap-1 mb-1">
-                                  <img src={commverseIcon} alt="" className="w-6 h-6" />
-                                  <img src={commverseBundle} alt="Commverse" className="h-4" />
+                                <div className="flex items-center justify-between mb-1">
+                                  <div className="flex items-center gap-1">
+                                    <img src={commverseIcon} alt="" className="w-6 h-6" />
+                                    <img src={commverseBundle} alt="Commverse" className="h-4" />
+                                  </div>
+                                  <button
+                                    onClick={() => toggleItemBilling('bundle')}
+                                    className="text-[8px] font-bold px-2 py-0.5 rounded border border-blue-400 hover:bg-blue-50"
+                                    data-testid="toggle-bundle"
+                                  >
+                                    {getItemBillingCycle('bundle') === 'monthly' ? 'Mo' : 'Yr'}
+                                  </button>
                                 </div>
-                                <div className="text-xl font-extrabold mb-0.5" style={{ color: '#0000FF' }}>$100<span className="text-xs font-bold">/mo</span></div>
+                                <div className="text-xl font-extrabold mb-0.5" style={{ color: '#0000FF' }}>
+                                  {getItemPrice('bundle', 100).displayPrice}
+                                </div>
                                 <p className="text-[10px] font-semibold text-gray-700 mb-1">/send + /inbox + /livechat + /content</p>
-                                <p className="text-[10px] font-bold text-green-600 mb-2">Save $40/month</p>
+                                <p className="text-[10px] font-bold text-green-600 mb-2">
+                                  {getItemBillingCycle('bundle') === 'annual' ? 'Save 20% annually' : 'Save $40/month'}
+                                </p>
                                 <Button 
                                   size="sm" 
                                   variant="outline" 
@@ -264,9 +363,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div>
                                 <div className="grid grid-cols-2 gap-2">
                                   <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#FF6B00' }}>
-                                    <div className="flex items-center gap-1 mb-1">
-                                      <img src={sendIcon} alt="" className="w-5 h-5" />
-                                      <img src={sendLogo} alt="/send" className="h-3" />
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-1">
+                                        <img src={sendIcon} alt="" className="w-5 h-5" />
+                                        <img src={sendLogo} alt="/send" className="h-3" />
+                                      </div>
+                                      <button
+                                        onClick={() => toggleItemBilling('send-addon')}
+                                        className="text-[7px] font-bold px-1.5 py-0.5 rounded border border-blue-400 hover:bg-blue-50"
+                                        data-testid="toggle-send"
+                                      >
+                                        {getItemBillingCycle('send-addon') === 'monthly' ? 'Mo' : 'Yr'}
+                                      </button>
                                     </div>
                                     <p className="text-[10px] font-semibold text-gray-700 mb-1">Email/SMS</p>
                                     <Button 
@@ -276,15 +384,24 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
                                       data-testid="button-add-send"
                                     >
-                                      Add to Cart - $35/mo
+                                      Add to Cart - {getItemPrice('send-addon', 35).displayPrice}
                                     </Button>
                                     <a href="/send-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-send">Learn More</a>
                                   </div>
 
                                   <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#0080FF' }}>
-                                    <div className="flex items-center gap-1 mb-1">
-                                      <img src={inboxIcon} alt="" className="w-5 h-5" />
-                                      <img src={inboxLogo} alt="/inbox" className="h-3" />
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-1">
+                                        <img src={inboxIcon} alt="" className="w-5 h-5" />
+                                        <img src={inboxLogo} alt="/inbox" className="h-3" />
+                                      </div>
+                                      <button
+                                        onClick={() => toggleItemBilling('inbox-addon')}
+                                        className="text-[7px] font-bold px-1.5 py-0.5 rounded border border-blue-400 hover:bg-blue-50"
+                                        data-testid="toggle-inbox"
+                                      >
+                                        {getItemBillingCycle('inbox-addon') === 'monthly' ? 'Mo' : 'Yr'}
+                                      </button>
                                     </div>
                                     <p className="text-[10px] font-semibold text-gray-700 mb-1">Unified Inbox</p>
                                     <Button 
@@ -294,15 +411,24 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
                                       data-testid="button-add-inbox"
                                     >
-                                      Add to Cart - $35/mo
+                                      Add to Cart - {getItemPrice('inbox-addon', 35).displayPrice}
                                     </Button>
                                     <a href="/inbox-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-inbox">Learn More</a>
                                   </div>
 
                                   <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#8000FF' }}>
-                                    <div className="flex items-center gap-1 mb-1">
-                                      <img src={livechatIcon} alt="" className="w-5 h-5" />
-                                      <img src={livechatLogo} alt="/livechat" className="h-3" />
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-1">
+                                        <img src={livechatIcon} alt="" className="w-5 h-5" />
+                                        <img src={livechatLogo} alt="/livechat" className="h-3" />
+                                      </div>
+                                      <button
+                                        onClick={() => toggleItemBilling('livechat-addon')}
+                                        className="text-[7px] font-bold px-1.5 py-0.5 rounded border border-blue-400 hover:bg-blue-50"
+                                        data-testid="toggle-livechat"
+                                      >
+                                        {getItemBillingCycle('livechat-addon') === 'monthly' ? 'Mo' : 'Yr'}
+                                      </button>
                                     </div>
                                     <p className="text-[10px] font-semibold text-gray-700 mb-1">Real-time</p>
                                     <Button 
@@ -312,15 +438,24 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
                                       data-testid="button-add-livechat"
                                     >
-                                      Add to Cart - $35/mo
+                                      Add to Cart - {getItemPrice('livechat-addon', 35).displayPrice}
                                     </Button>
                                     <a href="/livechat-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-livechat">Learn More</a>
                                   </div>
 
                                   <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#E91EBC' }}>
-                                    <div className="flex items-center gap-1 mb-1">
-                                      <img src={contentIcon} alt="" className="w-5 h-5" />
-                                      <img src={contentLogo} alt="/content" className="h-3" />
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-1">
+                                        <img src={contentIcon} alt="" className="w-5 h-5" />
+                                        <img src={contentLogo} alt="/content" className="h-3" />
+                                      </div>
+                                      <button
+                                        onClick={() => toggleItemBilling('content-addon')}
+                                        className="text-[7px] font-bold px-1.5 py-0.5 rounded border border-blue-400 hover:bg-blue-50"
+                                        data-testid="toggle-content"
+                                      >
+                                        {getItemBillingCycle('content-addon') === 'monthly' ? 'Mo' : 'Yr'}
+                                      </button>
                                     </div>
                                     <p className="text-[10px] font-semibold text-gray-700 mb-1">Social</p>
                                     <Button 
@@ -330,7 +465,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
                                       data-testid="button-add-content"
                                     >
-                                      Add to Cart - $35/mo
+                                      Add to Cart - {getItemPrice('content-addon', 35).displayPrice}
                                     </Button>
                                     <a href="/content-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-content">Learn More</a>
                                   </div>
@@ -342,13 +477,26 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <div className="col-span-1 space-y-2">
                               {/* LocalBlue Bundle */}
                               <div className="p-3 rounded border-2 border-blue-600 hover:shadow-lg transition-all">
-                                <div className="flex items-center gap-1 mb-1">
-                                  <img src={badge3} alt="" className="w-6 h-6" />
-                                  <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
+                                <div className="flex items-center justify-between mb-1">
+                                  <div className="flex items-center gap-1">
+                                    <img src={badge3} alt="" className="w-6 h-6" />
+                                    <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
+                                  </div>
+                                  <button
+                                    onClick={() => toggleItemBilling('localblue-bundle')}
+                                    className="text-[8px] font-bold px-2 py-0.5 rounded border border-blue-400 hover:bg-blue-50"
+                                    data-testid="toggle-localblue-bundle"
+                                  >
+                                    {getItemBillingCycle('localblue-bundle') === 'monthly' ? 'Mo' : 'Yr'}
+                                  </button>
                                 </div>
-                                <div className="text-xl font-extrabold mb-0.5" style={{ color: '#0000FF' }}>$60<span className="text-xs font-bold">/mo</span></div>
+                                <div className="text-xl font-extrabold mb-0.5" style={{ color: '#0000FF' }}>
+                                  {getItemPrice('localblue-bundle', 60).displayPrice}
+                                </div>
                                 <p className="text-[10px] font-semibold text-gray-700 mb-1">/listings + /reputation</p>
-                                <p className="text-[10px] font-bold text-green-600 mb-2">Save $20/month</p>
+                                <p className="text-[10px] font-bold text-green-600 mb-2">
+                                  {getItemBillingCycle('localblue-bundle') === 'annual' ? 'Save 20% annually' : 'Save $20/month'}
+                                </p>
                                 <Button 
                                   size="sm" 
                                   variant="outline" 
@@ -364,9 +512,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div>
                                 <div className="space-y-2">
                                   <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#FF0040' }}>
-                                    <div className="flex items-center gap-1 mb-1">
-                                      <img src={listingsIcon} alt="" className="w-5 h-5" />
-                                      <img src={listingsLogo} alt="/listings" className="h-3" />
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-1">
+                                        <img src={listingsIcon} alt="" className="w-5 h-5" />
+                                        <img src={listingsLogo} alt="/listings" className="h-3" />
+                                      </div>
+                                      <button
+                                        onClick={() => toggleItemBilling('listings-addon')}
+                                        className="text-[7px] font-bold px-1.5 py-0.5 rounded border border-blue-400 hover:bg-blue-50"
+                                        data-testid="toggle-listings"
+                                      >
+                                        {getItemBillingCycle('listings-addon') === 'monthly' ? 'Mo' : 'Yr'}
+                                      </button>
                                     </div>
                                     <p className="text-[10px] font-semibold text-gray-700 mb-1">Directory sync</p>
                                     <Button 
@@ -376,15 +533,24 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       onClick={() => handleAddToCart('listings-addon', '/listings', 40, 'addon')}
                                       data-testid="button-add-listings"
                                     >
-                                      Add to Cart - $40/mo
+                                      Add to Cart - {getItemPrice('listings-addon', 40).displayPrice}
                                     </Button>
                                     <a href="/listings-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-listings">Learn More</a>
                                   </div>
 
                                   <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#D59600' }}>
-                                    <div className="flex items-center gap-1 mb-1">
-                                      <img src={reputationIcon} alt="" className="w-5 h-5" />
-                                      <img src={reputationLogo} alt="/reputation" className="h-3" />
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-1">
+                                        <img src={reputationIcon} alt="" className="w-5 h-5" />
+                                        <img src={reputationLogo} alt="/reputation" className="h-3" />
+                                      </div>
+                                      <button
+                                        onClick={() => toggleItemBilling('reputation-management')}
+                                        className="text-[7px] font-bold px-1.5 py-0.5 rounded border border-blue-400 hover:bg-blue-50"
+                                        data-testid="toggle-reputation"
+                                      >
+                                        {getItemBillingCycle('reputation-management') === 'monthly' ? 'Mo' : 'Yr'}
+                                      </button>
                                     </div>
                                     <p className="text-[10px] font-semibold text-gray-700 mb-1">Reviews</p>
                                     <Button 
@@ -394,7 +560,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
                                       data-testid="button-add-reputation"
                                     >
-                                      Add to Cart - $40/mo
+                                      Add to Cart - {getItemPrice('reputation-management', 40).displayPrice}
                                     </Button>
                                     <a href="/reputation-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-reputation">Learn More</a>
                                   </div>
@@ -411,12 +577,21 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <div className="grid grid-cols-2 gap-2">
                               {/* Coach Blue - Add to Cart */}
                               <div className="p-2 rounded border-2 hover:shadow transition-all">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <img src={badge4} alt="Coach Blue" className="w-8 h-8" />
-                                  <div className="flex-1">
-                                    <div className="text-xs font-extrabold">COACH BLUE</div>
-                                    <p className="text-[9px] font-semibold text-gray-700">AI Business Coach</p>
+                                <div className="flex items-center justify-between mb-1">
+                                  <div className="flex items-center gap-2">
+                                    <img src={badge4} alt="Coach Blue" className="w-8 h-8" />
+                                    <div className="flex-1">
+                                      <div className="text-xs font-extrabold">COACH BLUE</div>
+                                      <p className="text-[9px] font-semibold text-gray-700">AI Business Coach</p>
+                                    </div>
                                   </div>
+                                  <button
+                                    onClick={() => toggleItemBilling('coach-blue')}
+                                    className="text-[7px] font-bold px-1.5 py-0.5 rounded border border-blue-400 hover:bg-blue-50"
+                                    data-testid="toggle-coach-blue"
+                                  >
+                                    {getItemBillingCycle('coach-blue') === 'monthly' ? 'Mo' : 'Yr'}
+                                  </button>
                                 </div>
                                 <Button 
                                   size="sm" 
@@ -425,7 +600,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   onClick={() => handleAddToCart('coach-blue', 'Coach Blue', 99, 'addon')}
                                   data-testid="button-add-coach-blue"
                                 >
-                                  Add to Cart - $99/mo
+                                  Add to Cart - {getItemPrice('coach-blue', 99).displayPrice}
                                 </Button>
                                 <a href="/ai-coach" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-coach-blue">Learn More</a>
                               </div>
