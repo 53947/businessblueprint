@@ -259,11 +259,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <img src={badge3} alt="LocalBlue" className="w-8 h-8 rounded-lg" />
                                     <img src={localBlueLogo} alt="LocalBlue" className="h-6 object-contain" />
                                   </div>
-                                  <div className="text-2xl font-bold mb-1" style={{ color: '#0000FF' }}>$49<span className="text-sm">/mo</span></div>
+                                  <div className="text-2xl font-bold mb-1" style={{ color: '#0000FF' }}>$60<span className="text-sm">/mo</span></div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
                                     /listings + /reputation
                                   </p>
-                                  <p className="text-xs text-green-600 dark:text-green-400">$60 for both</p>
+                                  <p className="text-xs text-green-600 dark:text-green-400">Save $20/month</p>
                                   <Button size="sm" style={{ backgroundColor: '#0000FF', color: 'white' }} className="w-full mt-3 hover:opacity-90">
                                     Select →
                                   </Button>
@@ -275,7 +275,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* Individual Apps */}
                           <div className="mb-6">
                             <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 uppercase tracking-wide">
-                              Individual Apps - $35/mo each (LocalBlue apps $40 each)
+                              Individual Apps - $35/mo each
                             </h4>
                             <div className="grid grid-cols-3 gap-3">
                               <NavigationMenuLink asChild>
@@ -283,14 +283,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   href="/send"
                                   data-testid="link-app-send"
                                   style={{ borderColor: '#FF6B00' }}
-                                  className="flex items-center gap-2 p-2 rounded-lg border hover:shadow-md transition-all"
+                                  className="flex flex-col gap-1 p-2 rounded-lg border hover:shadow-md transition-all"
                                 >
-                                  <img src={sendIcon} alt="/send" className="w-8 h-8 rounded-lg" />
-                                  <div className="flex-1 min-w-0">
-                                    <img src={sendLogo} alt="/send" className="h-4 mb-1" />
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Email/SMS</p>
+                                  <div className="flex items-center gap-2">
+                                    <img src={sendIcon} alt="/send" className="w-8 h-8 rounded-lg" />
+                                    <div className="flex-1 min-w-0">
+                                      <img src={sendLogo} alt="/send" className="h-4 mb-1" />
+                                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Email/SMS</p>
+                                    </div>
                                   </div>
-                                  <Button size="sm" style={{ backgroundColor: '#FF6B00', color: 'white' }} className="px-2 py-1 text-xs hover:opacity-90">+</Button>
+                                  <div className="text-sm font-bold" style={{ color: '#FF6B00' }}>$35/mo</div>
                                 </a>
                               </NavigationMenuLink>
 
@@ -299,14 +301,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   href="/inbox"
                                   data-testid="link-app-inbox"
                                   style={{ borderColor: '#0080FF' }}
-                                  className="flex items-center gap-2 p-2 rounded-lg border hover:shadow-md transition-all"
+                                  className="flex flex-col gap-1 p-2 rounded-lg border hover:shadow-md transition-all"
                                 >
-                                  <img src={inboxIcon} alt="/inbox" className="w-8 h-8 rounded-lg" />
-                                  <div className="flex-1 min-w-0">
-                                    <img src={inboxLogo} alt="/inbox" className="h-4 mb-1" />
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Unified inbox</p>
+                                  <div className="flex items-center gap-2">
+                                    <img src={inboxIcon} alt="/inbox" className="w-8 h-8 rounded-lg" />
+                                    <div className="flex-1 min-w-0">
+                                      <img src={inboxLogo} alt="/inbox" className="h-4 mb-1" />
+                                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Unified inbox</p>
+                                    </div>
                                   </div>
-                                  <Button size="sm" style={{ backgroundColor: '#0080FF', color: 'white' }} className="px-2 py-1 text-xs hover:opacity-90">+</Button>
+                                  <div className="text-sm font-bold" style={{ color: '#0080FF' }}>$35/mo</div>
                                 </a>
                               </NavigationMenuLink>
 
@@ -315,14 +319,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   href="/livechat"
                                   data-testid="link-app-livechat"
                                   style={{ borderColor: '#8000FF' }}
-                                  className="flex items-center gap-2 p-2 rounded-lg border hover:shadow-md transition-all"
+                                  className="flex flex-col gap-1 p-2 rounded-lg border hover:shadow-md transition-all"
                                 >
-                                  <img src={livechatIcon} alt="/livechat" className="w-8 h-8 rounded-lg" />
-                                  <div className="flex-1 min-w-0">
-                                    <img src={livechatLogo} alt="/livechat" className="h-4 mb-1" />
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Real-time</p>
+                                  <div className="flex items-center gap-2">
+                                    <img src={livechatIcon} alt="/livechat" className="w-8 h-8 rounded-lg" />
+                                    <div className="flex-1 min-w-0">
+                                      <img src={livechatLogo} alt="/livechat" className="h-4 mb-1" />
+                                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Real-time</p>
+                                    </div>
                                   </div>
-                                  <Button size="sm" style={{ backgroundColor: '#8000FF', color: 'white' }} className="px-2 py-1 text-xs hover:opacity-90">+</Button>
+                                  <div className="text-sm font-bold" style={{ color: '#8000FF' }}>$35/mo</div>
                                 </a>
                               </NavigationMenuLink>
 
@@ -331,46 +337,52 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   href="/content"
                                   data-testid="link-app-content"
                                   style={{ borderColor: '#E91EBC' }}
-                                  className="flex items-center gap-2 p-2 rounded-lg border hover:shadow-md transition-all"
+                                  className="flex flex-col gap-1 p-2 rounded-lg border hover:shadow-md transition-all"
                                 >
-                                  <img src={contentIcon} alt="/content" className="w-8 h-8 rounded-lg" />
-                                  <div className="flex-1 min-w-0">
-                                    <img src={contentLogo} alt="/content" className="h-4 mb-1" />
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Social</p>
+                                  <div className="flex items-center gap-2">
+                                    <img src={contentIcon} alt="/content" className="w-8 h-8 rounded-lg" />
+                                    <div className="flex-1 min-w-0">
+                                      <img src={contentLogo} alt="/content" className="h-4 mb-1" />
+                                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Social</p>
+                                    </div>
                                   </div>
-                                  <Button size="sm" style={{ backgroundColor: '#E91EBC', color: 'white' }} className="px-2 py-1 text-xs hover:opacity-90">+</Button>
+                                  <div className="text-sm font-bold" style={{ color: '#E91EBC' }}>$35/mo</div>
                                 </a>
                               </NavigationMenuLink>
 
                               <NavigationMenuLink asChild>
                                 <a
-                                  href="/listings"
+                                  href="/listings-landing"
                                   data-testid="link-app-listings"
                                   style={{ borderColor: '#FF0040' }}
-                                  className="flex items-center gap-2 p-2 rounded-lg border hover:shadow-md transition-all"
+                                  className="flex flex-col gap-1 p-2 rounded-lg border hover:shadow-md transition-all"
                                 >
-                                  <img src={listingsIcon} alt="/listings" className="w-8 h-8 rounded-lg" />
-                                  <div className="flex-1 min-w-0">
-                                    <img src={listingsLogo} alt="/listings" className="h-4 mb-1" />
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Directory sync</p>
+                                  <div className="flex items-center gap-2">
+                                    <img src={listingsIcon} alt="/listings" className="w-8 h-8 rounded-lg" />
+                                    <div className="flex-1 min-w-0">
+                                      <img src={listingsLogo} alt="/listings" className="h-4 mb-1" />
+                                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Directory sync</p>
+                                    </div>
                                   </div>
-                                  <Button size="sm" style={{ backgroundColor: '#FF0040', color: 'white' }} className="px-2 py-1 text-xs hover:opacity-90">+</Button>
+                                  <div className="text-sm font-bold" style={{ color: '#FF0040' }}>$40/mo</div>
                                 </a>
                               </NavigationMenuLink>
 
                               <NavigationMenuLink asChild>
                                 <a
-                                  href="/reputation"
+                                  href="/reputation-landing"
                                   data-testid="link-app-reputation"
                                   style={{ borderColor: '#D59600' }}
-                                  className="flex items-center gap-2 p-2 rounded-lg border hover:shadow-md transition-all"
+                                  className="flex flex-col gap-1 p-2 rounded-lg border hover:shadow-md transition-all"
                                 >
-                                  <img src={reputationIcon} alt="/reputation" className="w-8 h-8 rounded-lg" />
-                                  <div className="flex-1 min-w-0">
-                                    <img src={reputationLogo} alt="/reputation" className="h-4 mb-1" />
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Reviews</p>
+                                  <div className="flex items-center gap-2">
+                                    <img src={reputationIcon} alt="/reputation" className="w-8 h-8 rounded-lg" />
+                                    <div className="flex-1 min-w-0">
+                                      <img src={reputationLogo} alt="/reputation" className="h-4 mb-1" />
+                                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">Reviews</p>
+                                    </div>
                                   </div>
-                                  <Button size="sm" style={{ backgroundColor: '#D59600', color: 'white' }} className="px-2 py-1 text-xs hover:opacity-90">+</Button>
+                                  <div className="text-sm font-bold" style={{ color: '#D59600' }}>$40/mo</div>
                                 </a>
                               </NavigationMenuLink>
                             </div>
