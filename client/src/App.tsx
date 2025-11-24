@@ -32,6 +32,8 @@ import PathwaysPage from "@/pages/pathways";
 import PricingPage from "@/pages/pricing";
 import MarketplacePage from "@/pages/marketplace";
 import MarketplaceCheckoutPage from "@/pages/marketplace-checkout";
+import CartPage from "@/pages/cart";
+import CheckoutPage from "@/pages/checkout";
 import BIIF from "@/pages/biif";
 import AdminPanel from "@/pages/admin-panel";
 import BrandStudio from "@/pages/brand-studio";
@@ -65,6 +67,8 @@ function Router() {
       <Route path="/pricing" component={PricingPage} />
       <Route path="/marketplace" component={MarketplacePage} />
       <Route path="/marketplace/checkout" component={MarketplaceCheckoutPage} />
+      <Route path="/cart" component={CartPage} />
+      <Route path="/checkout" component={CheckoutPage} />
       <Route path="/subscription" component={Subscription} />
       <Route path="/sitemap" component={Sitemap} />
       <Route path="/journey" component={Journey} />
