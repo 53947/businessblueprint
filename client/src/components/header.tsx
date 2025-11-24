@@ -1222,30 +1222,31 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   )}
                 </Link>
                 
-                {/* Quick Access Inbox */}
+                {/* Inbox Button - Text only with proper padding */}
                 <a
                   href="/inbox"
-                  className="hidden md:flex items-center gap-1.5 px-2.5 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-medium text-sm transition-colors"
+                  className="hidden md:flex items-center px-6 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-sm transition-colors"
                   data-testid="button-quick-inbox"
                 >
-                  <img src={inboxIcon} alt="/inbox" className="w-5 h-5 opacity-90" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
-                  <span className="font-bold">Inbox</span>
+                  Inbox
                 </a>
+                
+                {/* Login Button - Text only with border and proper padding */}
                 <a
                   href="/api/login"
-                  className="hidden sm:flex items-center gap-1.5 px-2.5 py-2 hover:bg-gray-100 text-gray-900 rounded-md text-sm transition-colors"
+                  className="hidden sm:flex items-center px-6 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-sm font-medium transition-colors"
                   data-testid="button-login"
                 >
-                  <img src={logInIcon} alt="" className="w-5 h-5 opacity-90" style={{ filter: 'invert(0%) sepia(0%) saturate(0%) brightness(20%)' }} />
-                  <span>Login</span>
+                  Login
                 </a>
+                
+                {/* Digital IQ Button - Text only with proper padding */}
                 <a
                   href="/assessment"
-                  className="hidden sm:flex items-center gap-1.5 px-3 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-sm font-bold transition-all whitespace-nowrap"
+                  className="hidden sm:flex items-center px-6 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-sm font-bold transition-all"
                   data-testid="button-digital-iq"
                 >
-                  <ClipboardCheck className="w-5 h-5" />
-                  <span>Digital IQ</span>
+                  Digital IQ
                 </a>
               </>
             )}
