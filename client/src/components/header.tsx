@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { addToCart } from "@/lib/cart";
-import { ClipboardCheck, FileText, Layers, Wrench, Rocket } from "lucide-react";
+import { addToCart, getCartCount } from "@/lib/cart";
+import { ClipboardCheck, FileText, Layers, Wrench, Rocket, ShoppingCart } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -80,6 +80,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [hasClientPortalAccess, setHasClientPortalAccess] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
   
   // Billing cycle state
   const [globalBillingCycle, setGlobalBillingCycle] = useState<'monthly' | 'annual'>('monthly');
@@ -159,6 +160,20 @@ export function Header({ showNavigation = true }: HeaderProps) {
     // Check periodically in case session changes (every 5 seconds)
     const interval = setInterval(checkClientPortal, 5000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Track cart count
+  useEffect(() => {
+    // Update cart count on mount
+    setCartCount(getCartCount());
+
+    // Listen for cart updates
+    const handleCartUpdate = () => {
+      setCartCount(getCartCount());
+    };
+
+    window.addEventListener('cartUpdated', handleCartUpdate);
+    return () => window.removeEventListener('cartUpdated', handleCartUpdate);
   }, []);
 
   // User is logged in if they have Replit Auth OR Client Portal access
@@ -1193,6 +1208,20 @@ export function Header({ showNavigation = true }: HeaderProps) {
           <div className="flex items-center gap-1.5">
             {showNavigation && (
               <>
+                {/* Shopping Cart */}
+                <Link
+                  href="/cart"
+                  className="relative flex items-center gap-1.5 px-2.5 py-2 hover:bg-gray-100 text-gray-900 rounded-md text-sm transition-colors"
+                  data-testid="button-cart"
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  {cartCount > 0 && (
+                    <Badge className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs px-1.5 py-0.5 min-w-[1.25rem] h-5 flex items-center justify-center" data-testid="cart-count-badge">
+                      {cartCount}
+                    </Badge>
+                  )}
+                </Link>
+                
                 {/* Quick Access Inbox */}
                 <a
                   href="/inbox"

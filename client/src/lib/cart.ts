@@ -38,3 +38,35 @@ export function getCartCount(): number {
   const cart = getCart();
   return cart.reduce((sum, item) => sum + item.quantity, 0);
 }
+
+export function removeFromCart(id: string): void {
+  const cart = getCart();
+  const updatedCart = cart.filter(item => item.id !== id);
+  localStorage.setItem('marketplace_cart', JSON.stringify(updatedCart));
+  window.dispatchEvent(new CustomEvent('cartUpdated', { detail: updatedCart }));
+}
+
+export function updateQuantity(id: string, quantity: number): void {
+  const cart = getCart();
+  const item = cart.find(item => item.id === id);
+  
+  if (item) {
+    if (quantity <= 0) {
+      removeFromCart(id);
+    } else {
+      item.quantity = quantity;
+      localStorage.setItem('marketplace_cart', JSON.stringify(cart));
+      window.dispatchEvent(new CustomEvent('cartUpdated', { detail: cart }));
+    }
+  }
+}
+
+export function clearCart(): void {
+  localStorage.setItem('marketplace_cart', JSON.stringify([]));
+  window.dispatchEvent(new CustomEvent('cartUpdated', { detail: [] }));
+}
+
+export function getCartTotal(): number {
+  const cart = getCart();
+  return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+}
