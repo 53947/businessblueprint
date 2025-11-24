@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { addToCart, getCartCount } from "@/lib/cart";
+import { addToCart, getCartCount, getCartTotal } from "@/lib/cart";
 import { ClipboardCheck, FileText, Layers, Wrench, Rocket, ShoppingCart } from "lucide-react";
 import {
   NavigationMenu,
@@ -1243,7 +1243,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 {/* Digital IQ Button - Text only with proper padding */}
                 <a
                   href="/assessment"
-                  className="hidden sm:flex items-center px-6 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-sm font-bold transition-all"
+                  className="hidden sm:flex items-center px-6 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-sm font-bold transition-all whitespace-nowrap"
                   data-testid="button-digital-iq"
                 >
                   Digital IQ
@@ -1253,156 +1253,121 @@ export function Header({ showNavigation = true }: HeaderProps) {
           </div>
         </div>
 
-        {/* Mobile Menu - Matches Desktop Navigation Structure */}
+        {/* Mobile Menu - Mobile-First Redesign */}
         {isMobileMenuOpen && showNavigation && (
-          <div className="lg:hidden border-t border-gray-200 bg-white max-h-[calc(100vh-4rem)] overflow-y-auto">
-            <nav className="p-4 space-y-1">
-              {/* Applications Section */}
-              <div className="border-b border-gray-200 pb-3 mb-3">
-                <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-wide px-3 mb-2 flex items-center gap-2">
-                  <img src={layersIcon} alt="" className="w-4 h-4" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
-                  <span>Applications</span>
-                </h3>
-                <div className="space-y-1">
-                  <a href="/send" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-green-50 transition-colors" data-testid="link-mobile-send">
-                    <img src={sendIcon} alt="" className="h-7 w-7 object-contain" />
-                    <div className="flex-1">
-                      <img src={sendLogo} alt="/send" className="h-5 mb-1" />
-                      <div className="text-xs text-gray-600">Email & SMS Marketing</div>
+          <div className="lg:hidden fixed inset-0 top-20 z-40 bg-white flex flex-col">
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto pb-28">
+              <nav className="p-4">
+                
+                {/* Cart Preview - If has items */}
+                {cartCount > 0 && (
+                  <Link href="/cart" className="block mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg" data-testid="mobile-cart-preview">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <ShoppingCart className="w-5 h-5 text-blue-600" />
+                        <div>
+                          <div className="font-bold text-gray-900">{cartCount} {cartCount === 1 ? 'Item' : 'Items'} in Cart</div>
+                          <div className="text-sm text-gray-600">Tap to view & checkout</div>
+                        </div>
+                      </div>
+                      <div className="text-lg font-bold text-blue-600">${getCartTotal().toFixed(2)}</div>
                     </div>
-                  </a>
-                  <a href="/inbox-app" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-yellow-50 transition-colors" data-testid="link-mobile-inbox">
-                    <img src={inboxIcon} alt="" className="h-7 w-7 object-contain" />
-                    <div className="flex-1">
-                      <img src={inboxLogo} alt="/inbox" className="h-5 mb-1" />
-                      <div className="text-xs text-gray-600">Unified Communications</div>
+                  </Link>
+                )}
+
+                {/* Marketplace - Primary CTA */}
+                <a href="/marketplace" className="block mb-3 p-5 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg shadow-md active:scale-95 transition-transform" data-testid="mobile-marketplace-cta">
+                  <div className="flex items-center gap-3">
+                    <img src={shoppingBasketIcon} alt="" className="w-8 h-8" style={{ filter: 'brightness(0) invert(1)' }} />
+                    <div>
+                      <div className="text-lg font-extrabold">Marketplace</div>
+                      <div className="text-sm opacity-90">Browse all apps & pricing</div>
                     </div>
-                  </a>
-                  <a href="/livechat" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-teal-50 transition-colors" data-testid="link-mobile-livechat">
-                    <img src={livechatIcon} alt="" className="h-7 w-7 object-contain" />
-                    <div className="flex-1">
-                      <img src={livechatLogo} alt="/livechat" className="h-5 mb-1" />
-                      <div className="text-xs text-gray-600">Live Chat Widget</div>
+                  </div>
+                </a>
+
+                {/* Digital IQ - Secondary CTA */}
+                <a href="/assessment" className="block mb-6 p-5 bg-orange-500 text-white rounded-lg shadow-md active:scale-95 transition-transform" data-testid="mobile-digital-iq-cta">
+                  <div className="flex items-center gap-3">
+                    <ClipboardCheck className="w-8 h-8" />
+                    <div>
+                      <div className="text-lg font-extrabold">Free Digital IQ</div>
+                      <div className="text-sm opacity-90">Get your custom growth plan</div>
                     </div>
-                  </a>
-                  <a href="/content" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-pink-50 transition-colors" data-testid="link-mobile-content">
-                    <img src={contentIcon} alt="" className="h-7 w-7 object-contain" />
-                    <div className="flex-1">
-                      <img src={contentLogo} alt="/content" className="h-5 mb-1" />
-                      <div className="text-xs text-gray-600">Social Media Mgmt</div>
-                    </div>
-                  </a>
-                  
-                  {/* LocalBlue Apps */}
-                  <div className="pt-2 mt-2 border-t border-gray-100">
-                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide px-3 mb-2">Local SEO Mgmt</div>
-                    <a href="/listings" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-50 transition-colors" data-testid="link-mobile-listings">
-                      <img src={listingsIcon} alt="" className="h-7 w-7 object-contain" />
-                      <div className="flex-1">
-                        <img src={listingsLogo} alt="/listings" className="h-5 mb-1" />
-                        <div className="text-xs text-gray-600">Directory Sync & Consistency</div>
+                  </div>
+                </a>
+
+                {/* Quick Links - Apps */}
+                <div className="mb-6">
+                  <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3 px-2">Our Apps</h3>
+                  <div className="space-y-2">
+                    <a href="/send" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-send">
+                      <img src={sendIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-gray-900 truncate">Send</div>
+                        <div className="text-sm text-gray-600 truncate">Email & SMS Marketing</div>
                       </div>
                     </a>
-                    <a href="/reputation" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-yellow-50 transition-colors" data-testid="link-mobile-reputation">
-                      <img src={reputationIcon} alt="" className="h-7 w-7 object-contain" />
-                      <div className="flex-1">
-                        <img src={reputationLogo} alt="/reputation" className="h-5 mb-1" />
-                        <div className="text-xs text-gray-600">Review Response & Reputation Mgmt</div>
+                    <a href="/inbox-app" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-inbox">
+                      <img src={inboxIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-gray-900 truncate">Inbox</div>
+                        <div className="text-sm text-gray-600 truncate">Unified Communications</div>
+                      </div>
+                    </a>
+                    <a href="/livechat" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-livechat">
+                      <img src={livechatIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-gray-900 truncate">LiveChat</div>
+                        <div className="text-sm text-gray-600 truncate">Website Chat Widget</div>
+                      </div>
+                    </a>
+                    <a href="/content" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-content">
+                      <img src={contentIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-gray-900 truncate">Content</div>
+                        <div className="text-sm text-gray-600 truncate">Social Media Management</div>
+                      </div>
+                    </a>
+                    <a href="/listings" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-listings">
+                      <img src={listingsIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-gray-900 truncate">Listings</div>
+                        <div className="text-sm text-gray-600 truncate">Directory Management</div>
+                      </div>
+                    </a>
+                    <a href="/reputation" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-reputation">
+                      <img src={reputationIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-gray-900 truncate">Reputation</div>
+                        <div className="text-sm text-gray-600 truncate">Review Management</div>
                       </div>
                     </a>
                   </div>
                 </div>
-              </div>
 
-              {/* Solutions Section */}
-              <div className="border-b border-gray-200 pb-3 mb-3">
-                <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-wide px-3 mb-2 flex items-center gap-2">
-                  <img src={bookOpenIcon} alt="" className="w-4 h-4" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
-                  <span>Solutions</span>
-                </h3>
-                
-                {/* Platforms */}
-                <div className="space-y-1">
-                  <a href="/" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-orange-50 transition-colors" data-testid="link-mobile-businessblueprint">
-                    <img src={bbIcon} alt="" className="h-7 w-7 object-contain" />
-                    <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">BusinessBlueprint</div>
-                      <div className="text-xs text-gray-600">Digital intelligence</div>
-                    </div>
+                {/* Quick Links - Other */}
+                <div className="space-y-2">
+                  <a href="/journey" className="flex items-center gap-3 p-4 text-gray-700 active:bg-gray-50 rounded-lg" data-testid="mobile-link-journey">
+                    <img src={compassIcon} alt="" className="w-6 h-6" />
+                    <span className="font-medium">Getting Started</span>
                   </a>
-                  <a href="https://hostsblue.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-purple-50 transition-colors" data-testid="link-mobile-hostsblue">
-                    <img src={hostsBlueIcon} alt="" className="h-7 w-7 object-contain" />
-                    <div className="flex-1">
-                      <img src={hostsBlueWordmark} alt="HostsBlue" className="h-5 mb-1" />
-                      <div className="text-xs text-gray-600">Hosting & domains</div>
-                    </div>
-                  </a>
-                  <a href="https://swipesblue.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-50 transition-colors" data-testid="link-mobile-swipesblue">
-                    <img src={swipesBlueIcon} alt="" className="h-7 w-7 object-contain" />
-                    <div className="flex-1">
-                      <img src={swipesBlueWordmark} alt="SwipesBlue" className="h-5 mb-1" />
-                      <div className="text-xs text-gray-600">Payment gateway</div>
-                    </div>
+                  <a href="/about" className="flex items-center gap-3 p-4 text-gray-700 active:bg-gray-50 rounded-lg" data-testid="mobile-link-about">
+                    <img src={trendingUpIcon} alt="" className="w-6 h-6" />
+                    <span className="font-medium">Success Stories</span>
                   </a>
                 </div>
 
-                {/* Learning & Developer Resources */}
-                <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
-                  <a href="/journey" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-testid="link-mobile-journey">
-                    <img src={compassIcon} alt="" className="w-5 h-5" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
-                    <span className="text-sm text-gray-700">Getting Started</span>
-                  </a>
-                  <a href="/about" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-testid="link-mobile-about">
-                    <img src={trendingUpIcon} alt="" className="w-5 h-5" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
-                    <span className="text-sm text-gray-700">Success Stories</span>
-                  </a>
-                  <a href="/send-api-docs" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors" data-testid="link-mobile-api-docs">
-                    <img src={codeIcon} alt="" className="w-5 h-5" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
-                    <span className="text-sm text-gray-700">/send API Docs</span>
-                  </a>
-                </div>
-              </div>
+              </nav>
+            </div>
 
-              {/* Pricing Section */}
-              <div className="pb-3">
-                <h3 className="font-semibold text-gray-500 text-xs uppercase tracking-wide px-3 mb-2 flex items-center gap-2">
-                  <img src={dollarSignIcon} alt="" className="w-4 h-4" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
-                  <span>Pricing</span>
-                </h3>
-                <div className="space-y-1">
-                  <a href="/pathways" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-blue-50 transition-colors">
-                    <img src={compassIcon} alt="" className="w-6 h-6" style={{ filter: 'invert(31%) sepia(100%) saturate(2000%) hue-rotate(205deg) brightness(95%) contrast(101%)' }} />
-                    <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">Pathways</div>
-                      <div className="text-xs text-gray-600">DIY platform options</div>
-                    </div>
-                  </a>
-                  <a href="/marketplace" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-green-50 transition-colors">
-                    <img src={shoppingBasketIcon} alt="" className="w-6 h-6" style={{ filter: 'invert(46%) sepia(96%) saturate(589%) hue-rotate(86deg) brightness(92%) contrast(87%)' }} />
-                    <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">Marketplace</div>
-                      <div className="text-xs text-gray-600">Browse all pricing</div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col gap-2 pt-4 border-t border-gray-200">
-                <Button variant="outline" size="lg" className="w-full justify-start gap-3" asChild>
-                  <a href="/api/login">
-                    <img src={logInIcon} alt="" className="w-5 h-5" />
-                    <span className="font-semibold">Login</span>
-                  </a>
-                </Button>
-                <Button size="lg" className="w-full justify-start gap-3 bg-blue-600 hover:bg-blue-700 text-white" asChild>
-                  <a href="/assessment">
-                    <img src={userPlusIcon} alt="" className="w-5 h-5" />
-                    <span className="font-semibold">Free Digital IQ Assessment</span>
-                  </a>
-                </Button>
-              </div>
-            </nav>
+            {/* Sticky Footer - Login CTA */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-lg">
+              <a href="/api/login" className="flex items-center justify-center gap-3 w-full p-4 border-2 border-gray-900 text-gray-900 rounded-lg font-bold text-lg active:bg-gray-50 transition-colors" data-testid="mobile-login-btn">
+                Login
+              </a>
+            </div>
           </div>
         )}
       </div>
