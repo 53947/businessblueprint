@@ -1205,20 +1205,20 @@ export function Header({ showNavigation = true }: HeaderProps) {
           </div>
 
           {/* Right side - Quick Access & Login/Signup Buttons */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             {showNavigation && (
               <>
-                {/* Shopping Cart */}
+                {/* Shopping Cart - Icon only, clean design */}
                 <Link
                   href="/cart"
-                  className="relative flex items-center gap-1.5 px-2.5 py-2 hover:bg-gray-100 text-gray-900 rounded-md text-sm transition-colors"
+                  className="relative p-2 hover:bg-white rounded-md transition-colors"
                   data-testid="button-cart"
                 >
-                  <ShoppingCart className="w-5 h-5" />
+                  <ShoppingCart className="w-5 h-5 text-gray-700" />
                   {cartCount > 0 && (
-                    <Badge className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs px-1.5 py-0.5 min-w-[1.25rem] h-5 flex items-center justify-center" data-testid="cart-count-badge">
+                    <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center" data-testid="cart-count-badge">
                       {cartCount}
-                    </Badge>
+                    </span>
                   )}
                 </Link>
                 
