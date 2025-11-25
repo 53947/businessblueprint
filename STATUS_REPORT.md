@@ -6,6 +6,53 @@
 
 ## 📅 Recent Updates
 
+### November 25, 2025 - 6:14 PM - PRODUCTS MENU VERTICAL STACKING LAYOUT + DIGITAL IQ ASSESSMENT + COACH BLUE
+
+- 📋 **PRODUCTS MENU RESTRUCTURED TO VERTICAL STACKING:**
+  - Top Row (50/50 Split): Digital IQ Assessment (left) + Coach Blue (right)
+  - Row 2 (Full Width): LocalBlue Bundle with /listings + /reputation apps
+  - Row 3 (Full Width): Commverse Bundle with /send, /inbox, /livechat, /content apps
+  - Creates clear hierarchy: Assessment → AI Coach → Local Presence → Communication
+  
+- 🆕 **DIGITAL IQ ASSESSMENT CARD ADDED:**
+  - Top-left position (50% width)
+  - Free assessment (no pricing, no Add to Cart button)
+  - Single CTA: Direct link to `/assessment`
+  - Burgundy branding (`#A00028`) matching blueprint assessment theme
+  - Badge 1 icon (step 1 of BusinessBlueprint journey)
+  
+- 🤖 **COACH BLUE CARD ADDED:**
+  - Top-right position (50% width)
+  - AI Business Coach platform (same as AI Service)
+  - Standard CTAs: "Learn More" (landing page) + "Add to Cart +" (cart)
+  - Blue branding (Coach Blue official colors)
+  - Badge 2 icon (step 2 of BusinessBlueprint journey)
+  
+- 📐 **LAYOUT STRATEGY:**
+  - Vertical stacking (not side-by-side like original How It Works menu)
+  - Digital IQ Assessment + Coach Blue as featured items at top
+  - Bundles stacked below for clear product progression
+  - All bundle/app wordmarks maintain hierarchical sizing (bundles h-8, apps h-4)
+  
+- 🔗 **CTA PATTERN CONSISTENCY:**
+  - Digital IQ Assessment: Link to `/assessment` (free, no cart)
+  - Coach Blue: "Learn More" → landing page, "Add to Cart +" → cart
+  - LocalBlue apps: "Learn More" → landing page, "Add to Cart +" → cart
+  - Commverse apps: "Learn More" → landing page, "Add to Cart +" → cart
+  
+- ✅ **VERIFICATION COMPLETE:**
+  - 0 LSP/TypeScript errors
+  - App running without errors (6:14:00 PM)
+  - All CTAs linking correctly (assessment, learn more, add to cart)
+  - Vertical stacking layout rendering correctly
+  - Digital IQ Assessment and Coach Blue cards displaying at 50% width
+  - LocalBlue and Commverse bundles displaying at full width
+  
+- 🔧 **FILES MODIFIED:**
+  - `client/src/components/header.tsx`: Added Digital IQ + Coach Blue cards, restructured bundles vertically
+  
+- ✅ **STATUS:** COMPLETE - Products menu now features vertical stacking with Assessment → Coach → Bundles hierarchy
+
 ### November 25, 2025 - 5:27 PM - APP WORDMARK SIZING REFINEMENT + LOCALBLUE ICON UPDATE
 
 - 📏 **APP WORDMARK SIZE REDUCTION (50% SMALLER):**
