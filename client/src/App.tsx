@@ -60,6 +60,8 @@ function Router() {
       <Route path="/portal/login" component={ClientLogin} />
       <Route path="/portal/verify" component={VerifyMagicLink} />
       <Route path="/portal/test" component={PortalTestAccess} />
+      <Route path="/portal/dashboard" component={ClientPortal} />
+      <Route path="/portal/inbox" component={InboxPage} />
       <Route path="/portal" component={ClientPortal} />
       <Route path="/contact" component={Contact} />
       <Route path="/about" component={About} />
