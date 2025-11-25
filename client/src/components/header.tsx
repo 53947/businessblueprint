@@ -374,33 +374,65 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div>
                                 <div className="text-[9px] font-semibold text-gray-600 mb-1 px-1">Or choose individual apps:</div>
                                 <div className="grid grid-cols-4 gap-1">
-                                  {/* /send - Compact */}
-                                  <a href="/send" className="p-1.5 rounded border-2 hover:shadow transition-all flex flex-col items-center" style={{ borderColor: '#FF6B00' }} data-testid="link-send-compact">
+                                  {/* /send - Compact with Add Button */}
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all flex flex-col items-center" style={{ borderColor: '#FF6B00' }}>
                                     <img src={sendIcon} alt="" className="w-5 h-5 mb-0.5" />
                                     <p className="text-[8px] font-bold text-center text-gray-700">/send</p>
-                                    <p className="text-[7px] text-gray-600">{getItemPrice('send-addon', 35).displayPrice}</p>
-                                  </a>
+                                    <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('send-addon', 35).displayPrice}</p>
+                                    <button
+                                      onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
+                                      className="text-[7px] font-bold px-1 py-0.5 rounded text-white"
+                                      style={{ backgroundColor: '#FF6B00' }}
+                                      data-testid="button-add-send-compact"
+                                    >
+                                      Add
+                                    </button>
+                                  </div>
 
-                                  {/* /inbox - Compact */}
-                                  <a href="/inbox" className="p-1.5 rounded border-2 hover:shadow transition-all flex flex-col items-center" style={{ borderColor: '#0080FF' }} data-testid="link-inbox-compact">
+                                  {/* /inbox - Compact with Add Button */}
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all flex flex-col items-center" style={{ borderColor: '#0080FF' }}>
                                     <img src={inboxIcon} alt="" className="w-5 h-5 mb-0.5" />
                                     <p className="text-[8px] font-bold text-center text-gray-700">/inbox</p>
-                                    <p className="text-[7px] text-gray-600">{getItemPrice('inbox-addon', 35).displayPrice}</p>
-                                  </a>
+                                    <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('inbox-addon', 35).displayPrice}</p>
+                                    <button
+                                      onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
+                                      className="text-[7px] font-bold px-1 py-0.5 rounded text-white"
+                                      style={{ backgroundColor: '#0080FF' }}
+                                      data-testid="button-add-inbox-compact"
+                                    >
+                                      Add
+                                    </button>
+                                  </div>
 
-                                  {/* /livechat - Compact */}
-                                  <a href="/livechat" className="p-1.5 rounded border-2 hover:shadow transition-all flex flex-col items-center" style={{ borderColor: '#8000FF' }} data-testid="link-livechat-compact">
+                                  {/* /livechat - Compact with Add Button */}
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all flex flex-col items-center" style={{ borderColor: '#8000FF' }}>
                                     <img src={livechatIcon} alt="" className="w-5 h-5 mb-0.5" />
                                     <p className="text-[8px] font-bold text-center text-gray-700">/livechat</p>
-                                    <p className="text-[7px] text-gray-600">{getItemPrice('livechat-addon', 35).displayPrice}</p>
-                                  </a>
+                                    <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('livechat-addon', 35).displayPrice}</p>
+                                    <button
+                                      onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
+                                      className="text-[7px] font-bold px-1 py-0.5 rounded text-white"
+                                      style={{ backgroundColor: '#8000FF' }}
+                                      data-testid="button-add-livechat-compact"
+                                    >
+                                      Add
+                                    </button>
+                                  </div>
 
-                                  {/* /content - Compact */}
-                                  <a href="/content-landing" className="p-1.5 rounded border-2 hover:shadow transition-all flex flex-col items-center" style={{ borderColor: '#E91EBC' }} data-testid="link-content-compact">
+                                  {/* /content - Compact with Add Button */}
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all flex flex-col items-center" style={{ borderColor: '#E91EBC' }}>
                                     <img src={contentIcon} alt="" className="w-5 h-5 mb-0.5" />
                                     <p className="text-[8px] font-bold text-center text-gray-700">/content</p>
-                                    <p className="text-[7px] text-gray-600">{getItemPrice('content-addon', 35).displayPrice}</p>
-                                  </a>
+                                    <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('content-addon', 35).displayPrice}</p>
+                                    <button
+                                      onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
+                                      className="text-[7px] font-bold px-1 py-0.5 rounded text-white"
+                                      style={{ backgroundColor: '#E91EBC' }}
+                                      data-testid="button-add-content-compact"
+                                    >
+                                      Add
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -444,19 +476,35 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div>
                                 <div className="text-[9px] font-semibold text-gray-600 mb-1 px-1">Or choose individual apps:</div>
                                 <div className="grid grid-cols-2 gap-1">
-                                  {/* /listings - Compact */}
-                                  <a href="/listings-landing" className="p-1.5 rounded border-2 hover:shadow transition-all flex flex-col items-center" style={{ borderColor: '#FF0040' }} data-testid="link-listings-compact">
+                                  {/* /listings - Compact with Add Button */}
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all flex flex-col items-center" style={{ borderColor: '#FF0040' }}>
                                     <img src={listingsIcon} alt="" className="w-5 h-5 mb-0.5" />
                                     <p className="text-[8px] font-bold text-center text-gray-700">/listings</p>
-                                    <p className="text-[7px] text-gray-600">{getItemPrice('listings-addon', 40).displayPrice}</p>
-                                  </a>
+                                    <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('listings-addon', 40).displayPrice}</p>
+                                    <button
+                                      onClick={() => handleAddToCart('listings-addon', '/listings', 40, 'addon')}
+                                      className="text-[7px] font-bold px-1 py-0.5 rounded text-white"
+                                      style={{ backgroundColor: '#FF0040' }}
+                                      data-testid="button-add-listings-compact"
+                                    >
+                                      Add
+                                    </button>
+                                  </div>
 
-                                  {/* /reputation - Compact */}
-                                  <a href="/reputation-landing" className="p-1.5 rounded border-2 hover:shadow transition-all flex flex-col items-center" style={{ borderColor: '#D59600' }} data-testid="link-reputation-compact">
+                                  {/* /reputation - Compact with Add Button */}
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all flex flex-col items-center" style={{ borderColor: '#D59600' }}>
                                     <img src={reputationIcon} alt="" className="w-5 h-5 mb-0.5" />
                                     <p className="text-[8px] font-bold text-center text-gray-700">/reputation</p>
-                                    <p className="text-[7px] text-gray-600">{getItemPrice('reputation-management', 40).displayPrice}</p>
-                                  </a>
+                                    <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('reputation-management', 40).displayPrice}</p>
+                                    <button
+                                      onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
+                                      className="text-[7px] font-bold px-1 py-0.5 rounded text-white"
+                                      style={{ backgroundColor: '#D59600' }}
+                                      data-testid="button-add-reputation-compact"
+                                    >
+                                      Add
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             </div>
