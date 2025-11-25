@@ -330,15 +330,51 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
                           </div>
 
-                          {/* ALL 6 APPS - UNIFORM SINGLE ROW LAYOUT */}
-                          <h4 className="text-[10px] font-bold text-gray-700 mb-3 uppercase tracking-wide">
-                            ALL APPS
-                          </h4>
+                          {/* BUNDLES SECTION */}
+                          <div className="grid grid-cols-3 gap-4 mb-6">
+                            {/* COMMVERSE BUNDLE - 2/3 width */}
+                            <div className="col-span-2">
+                              <h4 className="text-[10px] font-bold text-gray-700 mb-3 uppercase tracking-wide">
+                                COMMVERSE BUNDLE
+                              </h4>
+                              {/* Bundle Card */}
+                              <div className="p-4 rounded-lg border-2 mb-4 hover:shadow-lg transition-all" style={{ borderColor: '#0080FF' }}>
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center gap-2">
+                                    <img src={commverseIcon} alt="" className="w-8 h-8" />
+                                    <div className="font-bold text-lg text-gray-900">Commverse Bundle</div>
+                                  </div>
+                                  <button
+                                    onClick={() => toggleItemBilling('bundle')}
+                                    className="text-xs font-bold px-3 py-1 rounded border-2 border-blue-600 hover:bg-blue-50"
+                                    data-testid="toggle-commverse-bundle"
+                                  >
+                                    {getItemBillingCycle('bundle') === 'monthly' ? 'Mo' : 'Yr'}
+                                  </button>
+                                </div>
+                                <div className="flex items-end justify-between">
+                                  <div>
+                                    <div className="text-2xl font-extrabold mb-1" style={{ color: '#0080FF' }}>
+                                      {getItemPrice('bundle', 100).displayPrice}
+                                    </div>
+                                    <a href="/commverse" className="text-sm font-bold text-blue-600 hover:underline">Learn More →</a>
+                                  </div>
+                                  <button
+                                    onClick={() => handleAddToCart('bundle', 'Commverse Bundle', 100, 'addon')}
+                                    className="text-2xl font-bold w-10 h-10 rounded-full text-white flex items-center justify-center"
+                                    style={{ backgroundColor: '#0080FF' }}
+                                    data-testid="button-add-commverse-bundle"
+                                    title="Add to Cart"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              </div>
 
-                          {/* Single Row: All 6 Apps with Identical Sizing */}
-                          <div className="grid grid-cols-6 gap-3 mb-4">
-                            {/* /send */}
-                            <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF6B00' }}>
+                              {/* 4 Apps in a Row */}
+                              <div className="grid grid-cols-4 gap-3">
+                                {/* /send */}
+                                <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF6B00' }}>
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={sendIcon} alt="" className="w-7 h-7" />
@@ -416,10 +452,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                                 <a href="/livechat" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
-                            </div>
 
-                            {/* /content */}
-                            <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E91EBC' }}>
+                                {/* /content */}
+                                <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E91EBC' }}>
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={contentIcon} alt="" className="w-7 h-7" />
@@ -443,10 +478,52 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                                 <a href="/content" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
+                              </div>
                             </div>
 
-                            {/* /listings */}
-                            <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }}>
+                            {/* LOCALBLUE BUNDLE - 1/3 width */}
+                            <div className="col-span-1">
+                              <h4 className="text-[10px] font-bold text-gray-700 mb-3 uppercase tracking-wide">
+                                LOCALBLUE BUNDLE
+                              </h4>
+                              {/* Bundle Card */}
+                              <div className="p-4 rounded-lg border-2 mb-4 hover:shadow-lg transition-all" style={{ borderColor: '#0000FF' }}>
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center gap-2">
+                                    <img src={localblueIcon} alt="" className="w-8 h-8" />
+                                    <div className="font-bold text-base text-gray-900">LocalBlue</div>
+                                  </div>
+                                  <button
+                                    onClick={() => toggleItemBilling('localblue-bundle')}
+                                    className="text-xs font-bold px-2 py-1 rounded border-2 border-blue-600 hover:bg-blue-50"
+                                    data-testid="toggle-localblue-bundle"
+                                  >
+                                    {getItemBillingCycle('localblue-bundle') === 'monthly' ? 'Mo' : 'Yr'}
+                                  </button>
+                                </div>
+                                <div className="flex items-end justify-between">
+                                  <div>
+                                    <div className="text-2xl font-extrabold mb-1" style={{ color: '#0000FF' }}>
+                                      {getItemPrice('localblue-bundle', 60).displayPrice}
+                                    </div>
+                                    <a href="/localblue" className="text-sm font-bold text-blue-600 hover:underline">Learn More →</a>
+                                  </div>
+                                  <button
+                                    onClick={() => handleAddToCart('localblue-bundle', 'LocalBlue Bundle', 60, 'addon')}
+                                    className="text-2xl font-bold w-10 h-10 rounded-full text-white flex items-center justify-center"
+                                    style={{ backgroundColor: '#0000FF' }}
+                                    data-testid="button-add-localblue-bundle"
+                                    title="Add to Cart"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* 2 Apps Stacked */}
+                              <div className="space-y-3">
+                                {/* /listings */}
+                                <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }}>
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={listingsIcon} alt="" className="w-7 h-7" />
@@ -470,130 +547,32 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                                 <a href="/listings" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
-                            </div>
 
-                            {/* /reputation */}
-                            <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }}>
-                              <div className="flex items-start justify-between mb-2">
-                                <div className="flex items-center gap-2">
-                                  <img src={reputationIcon} alt="" className="w-7 h-7" />
-                                  <div>
-                                    <p className="text-sm font-bold text-gray-700">/reputation</p>
-                                  </div>
-                                </div>
-                                <button
-                                  onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
-                                  className="text-lg font-bold w-6 h-6 rounded-full text-white flex items-center justify-center flex-shrink-0"
-                                  style={{ backgroundColor: '#D59600' }}
-                                  data-testid="button-add-reputation"
-                                  title="Add to Cart"
-                                >
-                                  +
-                                </button>
-                              </div>
-                              <div className="border-t pt-2">
-                                <div className="text-sm font-extrabold mb-1" style={{ color: '#D59600' }}>
-                                  {getItemPrice('reputation-management', 40).displayPrice}
-                                </div>
-                                <a href="/reputation" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* LOCALBLUE BUNDLE */}
-                          <div className="mb-6">
-                            <h4 className="text-[10px] font-bold text-gray-700 mb-3 uppercase tracking-wide">
-                              LOCALBLUE BUNDLE
-                            </h4>
-                            <div className="p-3 rounded border-2 border-blue-600 hover:shadow-lg transition-all mb-4">
-                              <div className="flex items-center justify-between mb-2">
-                                <div className="flex items-center gap-1">
-                                  <img src={badge3} alt="" className="w-6 h-6" />
-                                  <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
-                                </div>
-                                <button
-                                  onClick={() => toggleItemBilling('localblue-bundle')}
-                                  className="text-[8px] font-bold px-2 py-0.5 rounded border border-blue-400 hover:bg-blue-50"
-                                  data-testid="toggle-localblue-bundle"
-                                >
-                                  {getItemBillingCycle('localblue-bundle') === 'monthly' ? 'Mo' : 'Yr'}
-                                </button>
-                              </div>
-                              <div className="text-xl font-extrabold mb-0.5" style={{ color: '#0000FF' }}>
-                                {getItemPrice('localblue-bundle', 60).displayPrice}
-                              </div>
-                              <p className="text-[10px] font-semibold text-gray-700 mb-1">/listings + /reputation</p>
-                              <p className="text-[10px] font-bold text-green-600 mb-2">
-                                {getItemBillingCycle('localblue-bundle') === 'annual' ? 'Save 20% annually' : 'Save $20/month'}
-                              </p>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="w-full h-7 text-xs font-bold border-2 border-blue-600 text-blue-600 hover:bg-blue-50"
-                                onClick={() => handleAddToCart('localblue-bundle', 'LocalBlue Bundle', 60, 'addon')}
-                                data-testid="button-add-localblue-bundle"
-                              >
-                                Add to Cart
-                              </Button>
-                            </div>
-
-                            <h4 className="text-[10px] font-bold text-gray-700 mb-3 uppercase tracking-wide">
-                              LOCALBLUE - 2 Apps
-                            </h4>
-                            <div className="grid grid-cols-2 gap-3">
-                              {/* /listings */}
-                              <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }}>
-                                <div className="flex items-start justify-between mb-2">
-                                  <div className="flex items-center gap-2">
-                                    <img src={listingsIcon} alt="" className="w-7 h-7" />
-                                    <div>
-                                      <p className="text-sm font-bold text-gray-700">/listings</p>
-                                      <p className="text-[10px] text-gray-500">Directory Sync</p>
+                                {/* /reputation */}
+                                <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }}>
+                                  <div className="flex items-start justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                      <img src={reputationIcon} alt="" className="w-7 h-7" />
+                                      <div>
+                                        <p className="text-sm font-bold text-gray-700">/reputation</p>
+                                      </div>
                                     </div>
+                                    <button
+                                      onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
+                                      className="text-lg font-bold w-6 h-6 rounded-full text-white flex items-center justify-center flex-shrink-0"
+                                      style={{ backgroundColor: '#D59600' }}
+                                      data-testid="button-add-reputation"
+                                      title="Add to Cart"
+                                    >
+                                      +
+                                    </button>
                                   </div>
-                                  <button
-                                    onClick={() => handleAddToCart('listings-addon', '/listings', 40, 'addon')}
-                                    className="text-lg font-bold w-6 h-6 rounded-full text-white flex items-center justify-center flex-shrink-0"
-                                    style={{ backgroundColor: '#FF0040' }}
-                                    data-testid="button-add-listings"
-                                    title="Add to Cart"
-                                  >
-                                    +
-                                  </button>
-                                </div>
-                                <div className="border-t pt-2">
-                                  <div className="text-sm font-extrabold mb-1" style={{ color: '#FF0040' }}>
-                                    {getItemPrice('listings-addon', 40).displayPrice}
-                                  </div>
-                                  <a href="/listings" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
-                                </div>
-                              </div>
-
-                              {/* /reputation */}
-                              <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }}>
-                                <div className="flex items-start justify-between mb-2">
-                                  <div className="flex items-center gap-2">
-                                    <img src={reputationIcon} alt="" className="w-7 h-7" />
-                                    <div>
-                                      <p className="text-sm font-bold text-gray-700">/reputation</p>
-                                      <p className="text-[10px] text-gray-500">Review Mgmt</p>
+                                  <div className="border-t pt-2">
+                                    <div className="text-sm font-extrabold mb-1" style={{ color: '#D59600' }}>
+                                      {getItemPrice('reputation-management', 40).displayPrice}
                                     </div>
+                                    <a href="/reputation" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                   </div>
-                                  <button
-                                    onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
-                                    className="text-lg font-bold w-6 h-6 rounded-full text-white flex items-center justify-center flex-shrink-0"
-                                    style={{ backgroundColor: '#D59600' }}
-                                    data-testid="button-add-reputation"
-                                    title="Add to Cart"
-                                  >
-                                    +
-                                  </button>
-                                </div>
-                                <div className="border-t pt-2">
-                                  <div className="text-sm font-extrabold mb-1" style={{ color: '#D59600' }}>
-                                    {getItemPrice('reputation-management', 40).displayPrice}
-                                  </div>
-                                  <a href="/reputation" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                 </div>
                               </div>
                             </div>
