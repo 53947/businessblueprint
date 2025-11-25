@@ -6,6 +6,38 @@
 
 ## 📅 Recent Updates
 
+### November 25, 2025 - 5:27 PM - APP WORDMARK SIZING REFINEMENT + LOCALBLUE ICON UPDATE
+
+- 📏 **APP WORDMARK SIZE REDUCTION (50% SMALLER):**
+  - Reduced 6 individual app wordmarks from `h-8` to `h-4` for better visual hierarchy
+  - Smaller wordmarks emphasize bundle titles over individual apps
+  - **Apps resized:** /send, /inbox, /livechat, /content, /listings, /reputation (all now `h-4`)
+  - **Bundles unchanged:** Commverse Bundle and LocalBlue wordmarks remain at `h-8`
+  
+- 🎨 **LOCALBLUE ICON REPLACEMENT:**
+  - Replaced old LocalBlue bundle icon with official brand icon
+  - New icon: `localblue_1764091108634.png` (blue location pin with yellow star)
+  - Matches official LocalBlue branding for local business presence apps
+  - All other bundle/app icons remain unchanged (user confirmed "correct and fantastic")
+  
+- 📐 **SIZING HIERARCHY (FINAL):**
+  - Bundle title wordmarks: `h-8` (Commverse Bundle, LocalBlue) — PRIMARY
+  - Individual app wordmarks: `h-4` (6 apps) — SECONDARY
+  - Creates clear visual hierarchy: Bundles > Apps
+  - 50% reduction in app wordmark size improves readability
+  
+- ✅ **VERIFICATION COMPLETE:**
+  - 0 LSP/TypeScript errors
+  - App running without errors (5:26:50 PM)
+  - LocalBlue icon importing correctly
+  - All 6 app wordmarks rendering at `h-4`
+  - Bundle wordmarks (2) confirmed at `h-8`
+  
+- 🔧 **FILES MODIFIED:**
+  - `client/src/components/header.tsx`: 1 icon import change + 6 CSS class changes (h-8 → h-4)
+  
+- ✅ **STATUS:** COMPLETE - App wordmarks at h-4, bundle wordmarks at h-8, LocalBlue icon updated
+
 ### November 25, 2025 - 5:02 PM - WORDMARK REPLACEMENT: 8 APP NAMES + BUNDLE TITLES
 
 - 🎨 **WORDMARK IMAGE REPLACEMENT (COMPLETE):**
