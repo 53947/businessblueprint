@@ -29,6 +29,20 @@ export default function ReputationLanding() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
+                className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white font-bold"
+                style={{ backgroundColor: '#FF6B00' }}
+                onClick={() => {
+                  const event = new CustomEvent('addToCart', { 
+                    detail: { sku: 'reputation-management', name: '/reputation', price: 40, type: 'addon' }
+                  });
+                  window.dispatchEvent(event);
+                }}
+                data-testid="button-add-to-cart"
+              >
+                Add to Cart
+              </Button>
+              <Button 
+                size="lg" 
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity"
                 style={{ backgroundColor: '#D59600', color: '#FFF' }}
                 asChild

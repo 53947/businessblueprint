@@ -373,69 +373,81 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               {/* Commverse Individual Apps - Single Row */}
                               <div>
                                 <div className="text-[9px] font-semibold text-gray-600 mb-1 px-1">Or choose individual apps:</div>
-                                <div className="grid grid-cols-4 gap-2">
+                                <div className="grid grid-cols-4 gap-1">
                                   {/* /send */}
-                                  <div className="flex flex-col items-center gap-0.5 relative">
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all relative" style={{ borderColor: '#FF6B00' }}>
                                     <button
                                       onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
-                                      className="text-lg font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
+                                      className="absolute top-1 right-1 text-sm font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
                                       style={{ backgroundColor: '#FF6B00' }}
                                       data-testid="button-add-send-compact"
                                       title="Add to Cart"
                                     >
                                       +
                                     </button>
-                                    <img src={sendIcon} alt="" className="w-5 h-5" />
-                                    <p className="text-[8px] font-bold text-center text-gray-700">/send</p>
-                                    <p className="text-[7px] text-gray-600">{getItemPrice('send-addon', 35).displayPrice}</p>
+                                    <div className="flex flex-col items-center">
+                                      <img src={sendIcon} alt="" className="w-5 h-5 mb-0.5" />
+                                      <p className="text-[8px] font-bold text-center text-gray-700 mb-1">/send</p>
+                                      <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('send-addon', 35).displayPrice}</p>
+                                      <a href="/send" className="text-[7px] font-bold text-blue-600 hover:underline">Learn More</a>
+                                    </div>
                                   </div>
 
                                   {/* /inbox */}
-                                  <div className="flex flex-col items-center gap-0.5">
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all relative" style={{ borderColor: '#0080FF' }}>
                                     <button
                                       onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
-                                      className="text-lg font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
+                                      className="absolute top-1 right-1 text-sm font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
                                       style={{ backgroundColor: '#0080FF' }}
                                       data-testid="button-add-inbox-compact"
                                       title="Add to Cart"
                                     >
                                       +
                                     </button>
-                                    <img src={inboxIcon} alt="" className="w-5 h-5" />
-                                    <p className="text-[8px] font-bold text-center text-gray-700">/inbox</p>
-                                    <p className="text-[7px] text-gray-600">{getItemPrice('inbox-addon', 35).displayPrice}</p>
+                                    <div className="flex flex-col items-center">
+                                      <img src={inboxIcon} alt="" className="w-5 h-5 mb-0.5" />
+                                      <p className="text-[8px] font-bold text-center text-gray-700 mb-1">/inbox</p>
+                                      <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('inbox-addon', 35).displayPrice}</p>
+                                      <a href="/inbox" className="text-[7px] font-bold text-blue-600 hover:underline">Learn More</a>
+                                    </div>
                                   </div>
 
                                   {/* /livechat */}
-                                  <div className="flex flex-col items-center gap-0.5">
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all relative" style={{ borderColor: '#8000FF' }}>
                                     <button
                                       onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
-                                      className="text-lg font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
+                                      className="absolute top-1 right-1 text-sm font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
                                       style={{ backgroundColor: '#8000FF' }}
                                       data-testid="button-add-livechat-compact"
                                       title="Add to Cart"
                                     >
                                       +
                                     </button>
-                                    <img src={livechatIcon} alt="" className="w-5 h-5" />
-                                    <p className="text-[8px] font-bold text-center text-gray-700">/livechat</p>
-                                    <p className="text-[7px] text-gray-600">{getItemPrice('livechat-addon', 35).displayPrice}</p>
+                                    <div className="flex flex-col items-center">
+                                      <img src={livechatIcon} alt="" className="w-5 h-5 mb-0.5" />
+                                      <p className="text-[8px] font-bold text-center text-gray-700 mb-1">/livechat</p>
+                                      <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('livechat-addon', 35).displayPrice}</p>
+                                      <a href="/livechat" className="text-[7px] font-bold text-blue-600 hover:underline">Learn More</a>
+                                    </div>
                                   </div>
 
                                   {/* /content */}
-                                  <div className="flex flex-col items-center gap-0.5">
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all relative" style={{ borderColor: '#E91EBC' }}>
                                     <button
                                       onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
-                                      className="text-lg font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
+                                      className="absolute top-1 right-1 text-sm font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
                                       style={{ backgroundColor: '#E91EBC' }}
                                       data-testid="button-add-content-compact"
                                       title="Add to Cart"
                                     >
                                       +
                                     </button>
-                                    <img src={contentIcon} alt="" className="w-5 h-5" />
-                                    <p className="text-[8px] font-bold text-center text-gray-700">/content</p>
-                                    <p className="text-[7px] text-gray-600">{getItemPrice('content-addon', 35).displayPrice}</p>
+                                    <div className="flex flex-col items-center">
+                                      <img src={contentIcon} alt="" className="w-5 h-5 mb-0.5" />
+                                      <p className="text-[8px] font-bold text-center text-gray-700 mb-1">/content</p>
+                                      <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('content-addon', 35).displayPrice}</p>
+                                      <a href="/content" className="text-[7px] font-bold text-blue-600 hover:underline">Learn More</a>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -479,37 +491,43 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               {/* LocalBlue Individual Apps - Single Row */}
                               <div>
                                 <div className="text-[9px] font-semibold text-gray-600 mb-1 px-1">Or choose individual apps:</div>
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-2 gap-1">
                                   {/* /listings */}
-                                  <div className="flex flex-col items-center gap-0.5">
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all relative" style={{ borderColor: '#FF0040' }}>
                                     <button
                                       onClick={() => handleAddToCart('listings-addon', '/listings', 40, 'addon')}
-                                      className="text-lg font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
+                                      className="absolute top-1 right-1 text-sm font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
                                       style={{ backgroundColor: '#FF0040' }}
                                       data-testid="button-add-listings-compact"
                                       title="Add to Cart"
                                     >
                                       +
                                     </button>
-                                    <img src={listingsIcon} alt="" className="w-5 h-5" />
-                                    <p className="text-[8px] font-bold text-center text-gray-700">/listings</p>
-                                    <p className="text-[7px] text-gray-600">{getItemPrice('listings-addon', 40).displayPrice}</p>
+                                    <div className="flex flex-col items-center">
+                                      <img src={listingsIcon} alt="" className="w-5 h-5 mb-0.5" />
+                                      <p className="text-[8px] font-bold text-center text-gray-700 mb-1">/listings</p>
+                                      <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('listings-addon', 40).displayPrice}</p>
+                                      <a href="/listings" className="text-[7px] font-bold text-blue-600 hover:underline">Learn More</a>
+                                    </div>
                                   </div>
 
                                   {/* /reputation */}
-                                  <div className="flex flex-col items-center gap-0.5">
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all relative" style={{ borderColor: '#D59600' }}>
                                     <button
                                       onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
-                                      className="text-lg font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
+                                      className="absolute top-1 right-1 text-sm font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
                                       style={{ backgroundColor: '#D59600' }}
                                       data-testid="button-add-reputation-compact"
                                       title="Add to Cart"
                                     >
                                       +
                                     </button>
-                                    <img src={reputationIcon} alt="" className="w-5 h-5" />
-                                    <p className="text-[8px] font-bold text-center text-gray-700">/reputation</p>
-                                    <p className="text-[7px] text-gray-600">{getItemPrice('reputation-management', 40).displayPrice}</p>
+                                    <div className="flex flex-col items-center">
+                                      <img src={reputationIcon} alt="" className="w-5 h-5 mb-0.5" />
+                                      <p className="text-[8px] font-bold text-center text-gray-700 mb-1">/reputation</p>
+                                      <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('reputation-management', 40).displayPrice}</p>
+                                      <a href="/reputation" className="text-[7px] font-bold text-blue-600 hover:underline">Learn More</a>
+                                    </div>
                                   </div>
                                 </div>
                               </div>

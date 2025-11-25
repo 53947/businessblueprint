@@ -30,6 +30,20 @@ export default function InboxLanding() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
+                className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white font-bold"
+                style={{ backgroundColor: '#FF6B00' }}
+                onClick={() => {
+                  const event = new CustomEvent('addToCart', { 
+                    detail: { sku: 'inbox-addon', name: '/inbox', price: 35, type: 'addon' }
+                  });
+                  window.dispatchEvent(event);
+                }}
+                data-testid="button-add-to-cart"
+              >
+                Add to Cart
+              </Button>
+              <Button 
+                size="lg" 
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white"
                 style={{ backgroundColor: '#0080FF' }}
                 asChild
@@ -40,22 +54,12 @@ export default function InboxLanding() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 py-6 shadow-md hover:bg-[#FC6ACD]/10 transition-colors"
-                style={{ borderColor: '#FC6ACD', color: '#FC6ACD' }}
+                className="text-lg px-8 py-6 shadow-md hover:bg-[#0080FF]/10 transition-colors"
+                style={{ borderColor: '#0080FF', color: '#0080FF' }}
                 asChild
                 data-testid="button-view-pricing"
               >
                 <a href="/commverse-pricing">View Pricing</a>
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="text-lg px-8 py-6 shadow-md hover:bg-[#0080FF]/10 transition-colors"
-                style={{ borderColor: '#0080FF', color: '#0080FF' }}
-                asChild
-                data-testid="button-try-demo"
-              >
-                <a href="/inbox-app">Try Live Demo</a>
               </Button>
             </div>
           </div>
