@@ -711,10 +711,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                             {/* Row 3: Digital IQ + Commverse Apps */}
                             <NavigationMenuLink asChild>
-                              <a href="/assessment" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#A00028' }} data-testid="link-solution-blueprint-growth">
-                                <img src={badge1} alt="Blueprint to Your Growth" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">Blueprint to Your Growth</div>
-                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Free Assessment</p>
+                              <a href="/assessment" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#A00028' }} data-testid="link-solution-digital-iq">
+                                <img src={badge1} alt="Digital IQ" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">Digital IQ</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Business Assessment</p>
                               </a>
                             </NavigationMenuLink>
 
