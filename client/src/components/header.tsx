@@ -370,82 +370,98 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </Button>
                               </div>
 
-                              {/* Commverse Individual Apps - Single Row */}
+                              {/* Commverse Individual Apps - 2x2 Grid */}
                               <div>
                                 <div className="text-[9px] font-semibold text-gray-600 mb-1 px-1">Or choose individual apps:</div>
-                                <div className="grid grid-cols-4 gap-1">
+                                <div className="grid grid-cols-2 gap-1">
                                   {/* /send */}
-                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all relative" style={{ borderColor: '#FF6B00' }}>
-                                    <button
-                                      onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
-                                      className="absolute top-1 right-1 text-sm font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
-                                      style={{ backgroundColor: '#FF6B00' }}
-                                      data-testid="button-add-send-compact"
-                                      title="Add to Cart"
-                                    >
-                                      +
-                                    </button>
-                                    <div className="flex flex-col items-center">
-                                      <img src={sendIcon} alt="" className="w-5 h-5 mb-0.5" />
-                                      <p className="text-[8px] font-bold text-center text-gray-700 mb-1">/send</p>
-                                      <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('send-addon', 35).displayPrice}</p>
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#FF6B00' }}>
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-0.5 flex-1">
+                                        <img src={sendIcon} alt="" className="w-5 h-5" />
+                                        <p className="text-[8px] font-bold text-gray-700">/send</p>
+                                      </div>
+                                      <button
+                                        onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
+                                        className="text-sm font-bold w-4 h-4 rounded-full text-white flex items-center justify-center flex-shrink-0"
+                                        style={{ backgroundColor: '#FF6B00' }}
+                                        data-testid="button-add-send-compact"
+                                        title="Add to Cart"
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                      <p className="text-[7px] text-gray-600">{getItemPrice('send-addon', 35).displayPrice}</p>
                                       <a href="/send" className="text-[7px] font-bold text-blue-600 hover:underline">Learn More</a>
                                     </div>
                                   </div>
 
                                   {/* /inbox */}
-                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all relative" style={{ borderColor: '#0080FF' }}>
-                                    <button
-                                      onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
-                                      className="absolute top-1 right-1 text-sm font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
-                                      style={{ backgroundColor: '#0080FF' }}
-                                      data-testid="button-add-inbox-compact"
-                                      title="Add to Cart"
-                                    >
-                                      +
-                                    </button>
-                                    <div className="flex flex-col items-center">
-                                      <img src={inboxIcon} alt="" className="w-5 h-5 mb-0.5" />
-                                      <p className="text-[8px] font-bold text-center text-gray-700 mb-1">/inbox</p>
-                                      <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('inbox-addon', 35).displayPrice}</p>
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#0080FF' }}>
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-0.5 flex-1">
+                                        <img src={inboxIcon} alt="" className="w-5 h-5" />
+                                        <p className="text-[8px] font-bold text-gray-700">/inbox</p>
+                                      </div>
+                                      <button
+                                        onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
+                                        className="text-sm font-bold w-4 h-4 rounded-full text-white flex items-center justify-center flex-shrink-0"
+                                        style={{ backgroundColor: '#0080FF' }}
+                                        data-testid="button-add-inbox-compact"
+                                        title="Add to Cart"
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                      <p className="text-[7px] text-gray-600">{getItemPrice('inbox-addon', 35).displayPrice}</p>
                                       <a href="/inbox" className="text-[7px] font-bold text-blue-600 hover:underline">Learn More</a>
                                     </div>
                                   </div>
 
                                   {/* /livechat */}
-                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all relative" style={{ borderColor: '#8000FF' }}>
-                                    <button
-                                      onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
-                                      className="absolute top-1 right-1 text-sm font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
-                                      style={{ backgroundColor: '#8000FF' }}
-                                      data-testid="button-add-livechat-compact"
-                                      title="Add to Cart"
-                                    >
-                                      +
-                                    </button>
-                                    <div className="flex flex-col items-center">
-                                      <img src={livechatIcon} alt="" className="w-5 h-5 mb-0.5" />
-                                      <p className="text-[8px] font-bold text-center text-gray-700 mb-1">/livechat</p>
-                                      <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('livechat-addon', 35).displayPrice}</p>
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#8000FF' }}>
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-0.5 flex-1">
+                                        <img src={livechatIcon} alt="" className="w-5 h-5" />
+                                        <p className="text-[8px] font-bold text-gray-700">/livechat</p>
+                                      </div>
+                                      <button
+                                        onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
+                                        className="text-sm font-bold w-4 h-4 rounded-full text-white flex items-center justify-center flex-shrink-0"
+                                        style={{ backgroundColor: '#8000FF' }}
+                                        data-testid="button-add-livechat-compact"
+                                        title="Add to Cart"
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                      <p className="text-[7px] text-gray-600">{getItemPrice('livechat-addon', 35).displayPrice}</p>
                                       <a href="/livechat" className="text-[7px] font-bold text-blue-600 hover:underline">Learn More</a>
                                     </div>
                                   </div>
 
                                   {/* /content */}
-                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all relative" style={{ borderColor: '#E91EBC' }}>
-                                    <button
-                                      onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
-                                      className="absolute top-1 right-1 text-sm font-bold w-5 h-5 rounded-full text-white flex items-center justify-center"
-                                      style={{ backgroundColor: '#E91EBC' }}
-                                      data-testid="button-add-content-compact"
-                                      title="Add to Cart"
-                                    >
-                                      +
-                                    </button>
-                                    <div className="flex flex-col items-center">
-                                      <img src={contentIcon} alt="" className="w-5 h-5 mb-0.5" />
-                                      <p className="text-[8px] font-bold text-center text-gray-700 mb-1">/content</p>
-                                      <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('content-addon', 35).displayPrice}</p>
+                                  <div className="p-1.5 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#E91EBC' }}>
+                                    <div className="flex items-center justify-between mb-1">
+                                      <div className="flex items-center gap-0.5 flex-1">
+                                        <img src={contentIcon} alt="" className="w-5 h-5" />
+                                        <p className="text-[8px] font-bold text-gray-700">/content</p>
+                                      </div>
+                                      <button
+                                        onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
+                                        className="text-sm font-bold w-4 h-4 rounded-full text-white flex items-center justify-center flex-shrink-0"
+                                        style={{ backgroundColor: '#E91EBC' }}
+                                        data-testid="button-add-content-compact"
+                                        title="Add to Cart"
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                      <p className="text-[7px] text-gray-600">{getItemPrice('content-addon', 35).displayPrice}</p>
                                       <a href="/content" className="text-[7px] font-bold text-blue-600 hover:underline">Learn More</a>
                                     </div>
                                   </div>
