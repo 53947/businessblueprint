@@ -292,11 +292,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Pricing (ENHANCED) */}
+                    {/* Products (Merged Applications + Pricing) */}
                     <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid="menu-trigger-pricing">
-                        <img src={dollarSignIcon} alt="" className="w-4 h-4" />
-                        <span>Pricing</span>
+                      <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid="menu-trigger-products">
+                        <img src={shoppingBasketIcon} alt="" className="w-4 h-4" />
+                        <span>Products</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="p-3 w-[900px]">
@@ -387,17 +387,29 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                         {getItemBillingCycle('send-addon') === 'monthly' ? 'Mo' : 'Yr'}
                                       </button>
                                     </div>
-                                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Email/SMS</p>
-                                    <Button 
-                                      size="sm" 
-                                      variant="outline" 
-                                      className="w-full h-6 text-[10px] font-bold mb-1"
-                                      onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
-                                      data-testid="button-add-send"
-                                    >
-                                      Add to Cart - {getItemPrice('send-addon', 35).displayPrice}
-                                    </Button>
-                                    <a href="/send-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-send">Learn More</a>
+                                    <p className="text-[10px] font-semibold text-gray-700 mb-2">Email/SMS</p>
+                                    <div className="flex gap-1 items-center mb-1">
+                                      <Button 
+                                        size="sm" 
+                                        variant="outline" 
+                                        className="flex-1 h-6 text-[8px] font-bold border-2"
+                                        style={{ borderColor: '#FF6B00', color: '#FF6B00' }}
+                                        asChild
+                                        data-testid="button-learn-send"
+                                      >
+                                        <a href="/send">Learn More →</a>
+                                      </Button>
+                                      <div className="text-[9px] font-bold text-gray-700 px-1 whitespace-nowrap">{getItemPrice('send-addon', 35).displayPrice}</div>
+                                      <Button 
+                                        size="sm" 
+                                        className="flex-1 h-6 text-[8px] font-bold text-white"
+                                        style={{ backgroundColor: '#FF6B00' }}
+                                        onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
+                                        data-testid="button-add-send"
+                                      >
+                                        Add to Cart
+                                      </Button>
+                                    </div>
                                   </div>
 
                                   <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#0080FF' }}>
@@ -414,17 +426,29 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                         {getItemBillingCycle('inbox-addon') === 'monthly' ? 'Mo' : 'Yr'}
                                       </button>
                                     </div>
-                                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Unified Inbox</p>
-                                    <Button 
-                                      size="sm" 
-                                      variant="outline" 
-                                      className="w-full h-6 text-[10px] font-bold mb-1"
-                                      onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
-                                      data-testid="button-add-inbox"
-                                    >
-                                      Add to Cart - {getItemPrice('inbox-addon', 35).displayPrice}
-                                    </Button>
-                                    <a href="/inbox-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-inbox">Learn More</a>
+                                    <p className="text-[10px] font-semibold text-gray-700 mb-2">Unified Inbox</p>
+                                    <div className="flex gap-1 items-center mb-1">
+                                      <Button 
+                                        size="sm" 
+                                        variant="outline" 
+                                        className="flex-1 h-6 text-[8px] font-bold border-2"
+                                        style={{ borderColor: '#0080FF', color: '#0080FF' }}
+                                        asChild
+                                        data-testid="button-learn-inbox"
+                                      >
+                                        <a href="/inbox">Learn More →</a>
+                                      </Button>
+                                      <div className="text-[9px] font-bold text-gray-700 px-1 whitespace-nowrap">{getItemPrice('inbox-addon', 35).displayPrice}</div>
+                                      <Button 
+                                        size="sm" 
+                                        className="flex-1 h-6 text-[8px] font-bold text-white"
+                                        style={{ backgroundColor: '#0080FF' }}
+                                        onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
+                                        data-testid="button-add-inbox"
+                                      >
+                                        Add to Cart
+                                      </Button>
+                                    </div>
                                   </div>
 
                                   <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#8000FF' }}>
@@ -441,17 +465,29 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                         {getItemBillingCycle('livechat-addon') === 'monthly' ? 'Mo' : 'Yr'}
                                       </button>
                                     </div>
-                                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Real-time</p>
-                                    <Button 
-                                      size="sm" 
-                                      variant="outline" 
-                                      className="w-full h-6 text-[10px] font-bold mb-1"
-                                      onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
-                                      data-testid="button-add-livechat"
-                                    >
-                                      Add to Cart - {getItemPrice('livechat-addon', 35).displayPrice}
-                                    </Button>
-                                    <a href="/livechat-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-livechat">Learn More</a>
+                                    <p className="text-[10px] font-semibold text-gray-700 mb-2">Real-time</p>
+                                    <div className="flex gap-1 items-center mb-1">
+                                      <Button 
+                                        size="sm" 
+                                        variant="outline" 
+                                        className="flex-1 h-6 text-[8px] font-bold border-2"
+                                        style={{ borderColor: '#8000FF', color: '#8000FF' }}
+                                        asChild
+                                        data-testid="button-learn-livechat"
+                                      >
+                                        <a href="/livechat">Learn More →</a>
+                                      </Button>
+                                      <div className="text-[9px] font-bold text-gray-700 px-1 whitespace-nowrap">{getItemPrice('livechat-addon', 35).displayPrice}</div>
+                                      <Button 
+                                        size="sm" 
+                                        className="flex-1 h-6 text-[8px] font-bold text-white"
+                                        style={{ backgroundColor: '#8000FF' }}
+                                        onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
+                                        data-testid="button-add-livechat"
+                                      >
+                                        Add to Cart
+                                      </Button>
+                                    </div>
                                   </div>
 
                                   <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#E91EBC' }}>
@@ -468,17 +504,29 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                         {getItemBillingCycle('content-addon') === 'monthly' ? 'Mo' : 'Yr'}
                                       </button>
                                     </div>
-                                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Social</p>
-                                    <Button 
-                                      size="sm" 
-                                      variant="outline" 
-                                      className="w-full h-6 text-[10px] font-bold mb-1"
-                                      onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
-                                      data-testid="button-add-content"
-                                    >
-                                      Add to Cart - {getItemPrice('content-addon', 35).displayPrice}
-                                    </Button>
-                                    <a href="/content-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-content">Learn More</a>
+                                    <p className="text-[10px] font-semibold text-gray-700 mb-2">Social</p>
+                                    <div className="flex gap-1 items-center mb-1">
+                                      <Button 
+                                        size="sm" 
+                                        variant="outline" 
+                                        className="flex-1 h-6 text-[8px] font-bold border-2"
+                                        style={{ borderColor: '#E91EBC', color: '#E91EBC' }}
+                                        asChild
+                                        data-testid="button-learn-content"
+                                      >
+                                        <a href="/content-landing">Learn More →</a>
+                                      </Button>
+                                      <div className="text-[9px] font-bold text-gray-700 px-1 whitespace-nowrap">{getItemPrice('content-addon', 35).displayPrice}</div>
+                                      <Button 
+                                        size="sm" 
+                                        className="flex-1 h-6 text-[8px] font-bold text-white"
+                                        style={{ backgroundColor: '#E91EBC' }}
+                                        onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
+                                        data-testid="button-add-content"
+                                      >
+                                        Add to Cart
+                                      </Button>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -536,17 +584,29 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                         {getItemBillingCycle('listings-addon') === 'monthly' ? 'Mo' : 'Yr'}
                                       </button>
                                     </div>
-                                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Directory sync</p>
-                                    <Button 
-                                      size="sm" 
-                                      variant="outline" 
-                                      className="w-full h-6 text-[10px] font-bold mb-1"
-                                      onClick={() => handleAddToCart('listings-addon', '/listings', 40, 'addon')}
-                                      data-testid="button-add-listings"
-                                    >
-                                      Add to Cart - {getItemPrice('listings-addon', 40).displayPrice}
-                                    </Button>
-                                    <a href="/listings-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-listings">Learn More</a>
+                                    <p className="text-[10px] font-semibold text-gray-700 mb-2">Directory sync</p>
+                                    <div className="flex gap-1 items-center mb-1">
+                                      <Button 
+                                        size="sm" 
+                                        variant="outline" 
+                                        className="flex-1 h-6 text-[8px] font-bold border-2"
+                                        style={{ borderColor: '#FF0040', color: '#FF0040' }}
+                                        asChild
+                                        data-testid="button-learn-listings"
+                                      >
+                                        <a href="/listings-landing">Learn More →</a>
+                                      </Button>
+                                      <div className="text-[9px] font-bold text-gray-700 px-1 whitespace-nowrap">{getItemPrice('listings-addon', 40).displayPrice}</div>
+                                      <Button 
+                                        size="sm" 
+                                        className="flex-1 h-6 text-[8px] font-bold text-white"
+                                        style={{ backgroundColor: '#FF0040' }}
+                                        onClick={() => handleAddToCart('listings-addon', '/listings', 40, 'addon')}
+                                        data-testid="button-add-listings"
+                                      >
+                                        Add to Cart
+                                      </Button>
+                                    </div>
                                   </div>
 
                                   <div className="p-2 rounded border-2 hover:shadow transition-all" style={{ borderColor: '#D59600' }}>
@@ -563,17 +623,29 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                         {getItemBillingCycle('reputation-management') === 'monthly' ? 'Mo' : 'Yr'}
                                       </button>
                                     </div>
-                                    <p className="text-[10px] font-semibold text-gray-700 mb-1">Reviews</p>
-                                    <Button 
-                                      size="sm" 
-                                      variant="outline" 
-                                      className="w-full h-6 text-[10px] font-bold mb-1"
-                                      onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
-                                      data-testid="button-add-reputation"
-                                    >
-                                      Add to Cart - {getItemPrice('reputation-management', 40).displayPrice}
-                                    </Button>
-                                    <a href="/reputation-landing" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-reputation">Learn More</a>
+                                    <p className="text-[10px] font-semibold text-gray-700 mb-2">Reviews</p>
+                                    <div className="flex gap-1 items-center mb-1">
+                                      <Button 
+                                        size="sm" 
+                                        variant="outline" 
+                                        className="flex-1 h-6 text-[8px] font-bold border-2"
+                                        style={{ borderColor: '#D59600', color: '#D59600' }}
+                                        asChild
+                                        data-testid="button-learn-reputation"
+                                      >
+                                        <a href="/reputation-landing">Learn More →</a>
+                                      </Button>
+                                      <div className="text-[9px] font-bold text-gray-700 px-1 whitespace-nowrap">{getItemPrice('reputation-management', 40).displayPrice}</div>
+                                      <Button 
+                                        size="sm" 
+                                        className="flex-1 h-6 text-[8px] font-bold text-white"
+                                        style={{ backgroundColor: '#D59600' }}
+                                        onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
+                                        data-testid="button-add-reputation"
+                                      >
+                                        Add to Cart
+                                      </Button>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -604,16 +676,28 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     {getItemBillingCycle('coach-blue') === 'monthly' ? 'Mo' : 'Yr'}
                                   </button>
                                 </div>
-                                <Button 
-                                  size="sm" 
-                                  variant="outline" 
-                                  className="w-full h-6 text-[10px] font-bold mb-1"
-                                  onClick={() => handleAddToCart('coach-blue', 'Coach Blue', 99, 'addon')}
-                                  data-testid="button-add-coach-blue"
-                                >
-                                  Add to Cart - {getItemPrice('coach-blue', 99).displayPrice}
-                                </Button>
-                                <a href="/ai-coach" className="text-[9px] font-semibold text-blue-600 hover:underline block text-center" data-testid="link-learn-coach-blue">Learn More</a>
+                                <div className="flex gap-1 items-center mb-1">
+                                  <Button 
+                                    size="sm" 
+                                    variant="outline" 
+                                    className="flex-1 h-6 text-[8px] font-bold border-2"
+                                    style={{ borderColor: '#A855F7', color: '#A855F7' }}
+                                    asChild
+                                    data-testid="button-learn-coach-blue"
+                                  >
+                                    <a href="/ai-coach">Learn More →</a>
+                                  </Button>
+                                  <div className="text-[9px] font-bold text-gray-700 px-1 whitespace-nowrap">{getItemPrice('coach-blue', 99).displayPrice}</div>
+                                  <Button 
+                                    size="sm" 
+                                    className="flex-1 h-6 text-[8px] font-bold text-white"
+                                    style={{ backgroundColor: '#A855F7' }}
+                                    onClick={() => handleAddToCart('coach-blue', 'Coach Blue', 99, 'addon')}
+                                    data-testid="button-add-coach-blue"
+                                  >
+                                    Add to Cart
+                                  </Button>
+                                </div>
                               </div>
 
                               {/* Digital IQ - Start Assessment Link */}
@@ -631,172 +715,6 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   </span>
                                 </div>
                               </a>
-                            </div>
-                          </div>
-                        </div>
-                      </NavigationMenuContent>
-                    </NavigationMenuItem>
-
-                    {/* Applications - Information-Focused App Cards */}
-                    <NavigationMenuItem>
-                      <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid="menu-trigger-applications">
-                        <img src={layersIcon} alt="" className="w-4 h-4" />
-                        <span>Applications</span>
-                      </NavigationMenuTrigger>
-                      <NavigationMenuContent>
-                        <div className="p-4 w-[90vw] max-w-[1000px]">
-                          {/* Two-column layout: Commverse (left) | LocalBlue (right) */}
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            {/* LEFT COLUMN: Commverse Bundle */}
-                            <div className="space-y-3">
-                              {/* Commverse Bundle Card */}
-                              <Link href="/commverse-landing" className="block" data-testid="link-commverse-bundle">
-                                <div className="p-3 rounded-lg border-2 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#0080FF' }}>
-                                  <div className="flex items-center gap-3 mb-2">
-                                    <img src={commverseIcon} alt="Commverse" className="h-10 w-10 object-contain rounded-lg" />
-                                    <div>
-                                      <img src={commverseBundle} alt="Commverse Bundle" className="h-6 object-contain mb-1" />
-                                      <p className="text-xs text-gray-600 dark:text-gray-400">Complete Communication Suite - 4 Apps</p>
-                                    </div>
-                                  </div>
-                                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-                                    Email, SMS, unified inbox, live chat, and social media management
-                                  </p>
-                                  <Button size="sm" className="w-full text-white hover:opacity-90" style={{ backgroundColor: '#0080FF' }} data-testid="button-learn-commverse">
-                                    Learn More →
-                                  </Button>
-                                </div>
-                              </Link>
-
-                              {/* Individual Commverse Apps */}
-                              <div className="grid grid-cols-2 gap-2">
-                                {/* /send */}
-                                <Link href="/send-landing" className="block" data-testid="link-send">
-                                  <div className="group flex flex-col h-full rounded-lg border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 p-3 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#FF6B00' }}>
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <img src={sendIcon} alt="/send icon" className="h-6 w-6 object-contain flex-shrink-0" />
-                                      <img src={sendLogo} alt="/send" className="h-5 object-contain" />
-                                    </div>
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-1">Email + SMS Marketing</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 flex-grow">
-                                      Unified campaigns with contact management
-                                    </p>
-                                    <Button size="sm" className="w-full text-white hover:opacity-90 text-xs" style={{ backgroundColor: '#FF6B00' }}>
-                                      Learn More →
-                                    </Button>
-                                  </div>
-                                </Link>
-
-                                {/* /inbox */}
-                                <Link href="/inbox-landing" className="block" data-testid="link-inbox">
-                                  <div className="group flex flex-col h-full rounded-lg border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 p-3 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#0080FF' }}>
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <img src={inboxIcon} alt="/inbox icon" className="h-6 w-6 object-contain flex-shrink-0" />
-                                      <img src={inboxLogo} alt="/inbox" className="h-5 object-contain" />
-                                    </div>
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-1">Unified Communications</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 flex-grow">
-                                      Multi-channel hub with team collaboration
-                                    </p>
-                                    <Button size="sm" className="w-full text-white hover:opacity-90 text-xs" style={{ backgroundColor: '#0080FF' }}>
-                                      Learn More →
-                                    </Button>
-                                  </div>
-                                </Link>
-
-                                {/* /livechat */}
-                                <Link href="/livechat-landing" className="block" data-testid="link-livechat">
-                                  <div className="group flex flex-col h-full rounded-lg border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 p-3 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#8000FF' }}>
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <img src={livechatIcon} alt="/livechat icon" className="h-6 w-6 object-contain flex-shrink-0" />
-                                      <img src={livechatLogo} alt="/livechat" className="h-5 object-contain" />
-                                    </div>
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-1">Live Chat Widget</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 flex-grow">
-                                      Website chat with conversation history
-                                    </p>
-                                    <Button size="sm" className="w-full text-white hover:opacity-90 text-xs" style={{ backgroundColor: '#8000FF' }}>
-                                      Learn More →
-                                    </Button>
-                                  </div>
-                                </Link>
-
-                                {/* /content */}
-                                <Link href="/content-landing" className="block" data-testid="link-content">
-                                  <div className="group flex flex-col h-full rounded-lg border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 p-3 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#E91EBC' }}>
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <img src={contentIcon} alt="/content icon" className="h-6 w-6 object-contain flex-shrink-0" />
-                                      <img src={contentLogo} alt="/content" className="h-5 object-contain" />
-                                    </div>
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-1">Social Media Manager</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 flex-grow">
-                                      Calendar, media library, AI captions
-                                    </p>
-                                    <Button size="sm" className="w-full text-white hover:opacity-90 text-xs" style={{ backgroundColor: '#E91EBC' }}>
-                                      Learn More →
-                                    </Button>
-                                  </div>
-                                </Link>
-                              </div>
-                            </div>
-
-                            {/* RIGHT COLUMN: LocalBlue Bundle */}
-                            <div className="space-y-3">
-                              {/* LocalBlue Bundle Card */}
-                              <Link href="/localblue-landing" className="block" data-testid="link-localblue-bundle">
-                                <div className="p-3 rounded-lg border-2 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#0000FF' }}>
-                                  <div className="flex items-center gap-3 mb-2">
-                                    <img src={badge3} alt="LocalBlue" className="h-10 w-10 object-contain rounded-lg" />
-                                    <div>
-                                      <img src={localBlueLogo} alt="/localblue Bundle" className="h-6 object-contain mb-1" />
-                                      <p className="text-xs text-gray-600 dark:text-gray-400">Complete Local Presence - 3 Apps</p>
-                                    </div>
-                                  </div>
-                                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-                                    Business listings, reputation management, and review response
-                                  </p>
-                                  <Button size="sm" className="w-full text-white hover:opacity-90" style={{ backgroundColor: '#0000FF' }} data-testid="button-learn-localblue">
-                                    Learn More →
-                                  </Button>
-                                </div>
-                              </Link>
-
-                              {/* Individual LocalBlue Apps */}
-                              <div className="grid grid-cols-2 gap-2">
-                                {/* /listings */}
-                                <Link href="/listings-landing" className="block" data-testid="link-listings">
-                                  <div className="group flex flex-col h-full rounded-lg border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 p-3 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#FF0040' }}>
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <img src={listingsIcon} alt="/listings icon" className="h-6 w-6 object-contain flex-shrink-0" />
-                                      <img src={listingsLogo} alt="/listings" className="h-5 object-contain" />
-                                    </div>
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-1">Business Listings</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 flex-grow">
-                                      Directory sync across 100+ platforms
-                                    </p>
-                                    <Button size="sm" className="w-full text-white hover:opacity-90 text-xs" style={{ backgroundColor: '#FF0040' }}>
-                                      Learn More →
-                                    </Button>
-                                  </div>
-                                </Link>
-
-                                {/* /reputation */}
-                                <Link href="/reputation-landing" className="block" data-testid="link-reputation">
-                                  <div className="group flex flex-col h-full rounded-lg border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 p-3 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#D59600' }}>
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <img src={reputationIcon} alt="/reputation icon" className="h-6 w-6 object-contain flex-shrink-0" />
-                                      <img src={reputationLogo} alt="/reputation" className="h-5 object-contain" />
-                                    </div>
-                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-1">Review Management</div>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 flex-grow">
-                                      AI-powered review response & monitoring
-                                    </p>
-                                    <Button size="sm" className="w-full text-white hover:opacity-90 text-xs" style={{ backgroundColor: '#D59600' }}>
-                                      Learn More →
-                                    </Button>
-                                  </div>
-                                </Link>
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -873,7 +791,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="/send-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF6B00' }} data-testid="link-solution-send">
+                              <a href="/send" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF6B00' }} data-testid="link-solution-send">
                                 <img src={sendIcon} alt="/send" className="h-12 w-12 object-contain mb-2" />
                                 <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/send</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Email & SMS</p>
@@ -881,7 +799,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="/inbox-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#0080FF' }} data-testid="link-solution-inbox">
+                              <a href="/inbox" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#0080FF' }} data-testid="link-solution-inbox">
                                 <img src={inboxIcon} alt="/inbox" className="h-12 w-12 object-contain mb-2" />
                                 <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/inbox</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Unified Comms</p>
@@ -890,7 +808,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                             {/* Row 4: More Apps */}
                             <NavigationMenuLink asChild>
-                              <a href="/livechat-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#8000FF' }} data-testid="link-solution-livechat">
+                              <a href="/livechat" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#8000FF' }} data-testid="link-solution-livechat">
                                 <img src={livechatIcon} alt="/livechat" className="h-12 w-12 object-contain mb-2" />
                                 <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/livechat</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Live Chat</p>
@@ -1292,16 +1210,85 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   </Link>
                 )}
 
-                {/* Marketplace - Primary CTA */}
-                <a href="/marketplace" className="block mb-3 p-5 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg shadow-md active:scale-95 transition-transform" data-testid="mobile-marketplace-cta">
-                  <div className="flex items-center gap-3">
+                {/* Products - Primary CTA with Billing Toggle */}
+                <div className="block mb-3 p-5 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-md" data-testid="mobile-products-cta">
+                  <div className="flex items-center gap-3 mb-3">
                     <img src={shoppingBasketIcon} alt="" className="w-8 h-8" style={{ filter: 'brightness(0) invert(1)' }} />
                     <div>
-                      <div className="text-lg font-extrabold">Marketplace</div>
-                      <div className="text-sm opacity-90">Browse all apps & pricing</div>
+                      <div className="text-lg font-extrabold">Our Products</div>
+                      <div className="text-sm opacity-90">Apps & bundles with pricing</div>
                     </div>
                   </div>
-                </a>
+                  {/* Mobile Billing Toggle */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setGlobalBillingCycle('monthly')}
+                      className={`flex-1 py-2 px-3 rounded text-sm font-bold transition-all ${
+                        globalBillingCycle === 'monthly'
+                          ? 'bg-white text-blue-600'
+                          : 'bg-white/20 text-white border border-white/30'
+                      }`}
+                      data-testid="mobile-toggle-monthly"
+                    >
+                      Monthly
+                    </button>
+                    <button
+                      onClick={() => setGlobalBillingCycle('annual')}
+                      className={`flex-1 py-2 px-3 rounded text-sm font-bold transition-all ${
+                        globalBillingCycle === 'annual'
+                          ? 'bg-white text-blue-600'
+                          : 'bg-white/20 text-white border border-white/30'
+                      }`}
+                      data-testid="mobile-toggle-annual"
+                    >
+                      Annual (Save 20%)
+                    </button>
+                  </div>
+                </div>
+
+                {/* Mobile Products - Bundles & Top Apps */}
+                <div className="mb-6">
+                  <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3 px-2">Featured Bundles</h3>
+                  <div className="space-y-2">
+                    {/* Commverse Bundle */}
+                    <div className="p-4 bg-white border-2 rounded-lg" style={{ borderColor: '#0080FF' }} data-testid="mobile-commverse-bundle">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="font-bold text-gray-900">Commverse Bundle</div>
+                        <div className="text-sm font-bold text-blue-600">{getItemPrice('bundle', 100).displayPrice}</div>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3">/send • /inbox • /livechat • /content</p>
+                      <div className="flex gap-2">
+                        <Link href="/commverse" className="flex-1">
+                          <Button size="sm" variant="outline" className="w-full h-8 text-xs border-2" style={{ borderColor: '#0080FF', color: '#0080FF' }} data-testid="mobile-learn-commverse">
+                            Learn More
+                          </Button>
+                        </Link>
+                        <Button size="sm" className="flex-1 h-8 text-xs text-white" style={{ backgroundColor: '#0080FF' }} onClick={() => handleAddToCart('bundle', 'Commverse Bundle', 100, 'addon')} data-testid="mobile-add-commverse">
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* LocalBlue Bundle */}
+                    <div className="p-4 bg-white border-2 rounded-lg" style={{ borderColor: '#0000FF' }} data-testid="mobile-localblue-bundle">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="font-bold text-gray-900">LocalBlue Bundle</div>
+                        <div className="text-sm font-bold text-blue-600">{getItemPrice('localblue-bundle', 60).displayPrice}</div>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3">/listings • /reputation</p>
+                      <div className="flex gap-2">
+                        <Link href="/localblue" className="flex-1">
+                          <Button size="sm" variant="outline" className="w-full h-8 text-xs border-2" style={{ borderColor: '#0000FF', color: '#0000FF' }} data-testid="mobile-learn-localblue">
+                            Learn More
+                          </Button>
+                        </Link>
+                        <Button size="sm" className="flex-1 h-8 text-xs text-white" style={{ backgroundColor: '#0000FF' }} onClick={() => handleAddToCart('localblue-bundle', 'LocalBlue Bundle', 60, 'addon')} data-testid="mobile-add-localblue">
+                          Add
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Digital IQ - Secondary CTA */}
                 <a href="/assessment" className="block mb-6 p-5 bg-orange-500 text-white rounded-lg shadow-md active:scale-95 transition-transform" data-testid="mobile-digital-iq-cta">
