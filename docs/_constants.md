@@ -57,7 +57,7 @@
 
 | App | Base (slash "/") | Accent (app name) | Notes |
 |------|------------------|------------------|-------|
-| **/localblue** | `#09080E` | `#0000FF` | LocalBlue bundle - local business presence |
+| **/localblue** | `#09080E` | `#6EA6FF` | LocalBlue bundle - local business presence (uses gradient midpoint) |
 | **/listings** | `#09080E` | `#FF0040` | Directory sync & consistency |
 | **/reputation** | `#09080E` | `#D59600` | Review response & reputation management (gold) |
 
