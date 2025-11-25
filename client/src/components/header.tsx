@@ -452,9 +452,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                                 <a href="/livechat" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
+                            </div>
 
-                                {/* /content */}
-                                <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E91EBC' }}>
+                            {/* /content */}
+                            <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E91EBC' }}>
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={contentIcon} alt="" className="w-7 h-7" />
@@ -547,38 +548,38 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                                 <a href="/listings" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
+                            </div>
 
-                                {/* /reputation */}
-                                <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }}>
-                                  <div className="flex items-start justify-between mb-2">
-                                    <div className="flex items-center gap-2">
-                                      <img src={reputationIcon} alt="" className="w-7 h-7" />
-                                      <div>
-                                        <p className="text-sm font-bold text-gray-700">/reputation</p>
-                                      </div>
-                                    </div>
-                                    <button
-                                      onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
-                                      className="text-lg font-bold w-6 h-6 rounded-full text-white flex items-center justify-center flex-shrink-0"
-                                      style={{ backgroundColor: '#D59600' }}
-                                      data-testid="button-add-reputation"
-                                      title="Add to Cart"
-                                    >
-                                      +
-                                    </button>
-                                  </div>
-                                  <div className="border-t pt-2">
-                                    <div className="text-sm font-extrabold mb-1" style={{ color: '#D59600' }}>
-                                      {getItemPrice('reputation-management', 40).displayPrice}
-                                    </div>
-                                    <a href="/reputation" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                            {/* /reputation */}
+                            <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }}>
+                              <div className="flex items-start justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <img src={reputationIcon} alt="" className="w-7 h-7" />
+                                  <div>
+                                    <p className="text-sm font-bold text-gray-700">/reputation</p>
                                   </div>
                                 </div>
+                                <button
+                                  onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
+                                  className="text-lg font-bold w-6 h-6 rounded-full text-white flex items-center justify-center flex-shrink-0"
+                                  style={{ backgroundColor: '#D59600' }}
+                                  data-testid="button-add-reputation"
+                                  title="Add to Cart"
+                                >
+                                  +
+                                </button>
+                              </div>
+                              <div className="border-t pt-2">
+                                <div className="text-sm font-extrabold mb-1" style={{ color: '#D59600' }}>
+                                  {getItemPrice('reputation-management', 40).displayPrice}
+                                </div>
+                                <a href="/reputation" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
                             </div>
                           </div>
+                        </div>
 
-                          {/* AI COACH & DIGITAL IQ - 50/50 WIDTH */}
+                        {/* AI COACH & DIGITAL IQ - 50/50 WIDTH */}
                           <div className="mb-4">
                             <h4 className="text-[10px] font-bold text-gray-700 mb-3 uppercase tracking-wide">
                               AI SERVICES
