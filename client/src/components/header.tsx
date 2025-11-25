@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { addToCart, getCartCount, getCartTotal } from "@/lib/cart";
-import { ClipboardCheck, FileText, Layers, Wrench, Rocket, ShoppingCart } from "lucide-react";
+import { addToCart, getCartCount } from "@/lib/cart";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -70,6 +69,8 @@ import badge2 from "@assets/Get Your Prescribed Blueprint (2)_1763874287090.png"
 import badge3 from "@assets/LocalBlue Bundle (3)_1763874287091.png";
 import badge4 from "@assets/Coach Blue as Blue(4)_1763874287091.png";
 import badge5 from "@assets/Commverse (5)_1763874287091.png";
+import consoleBluelogo from "@assets/ConsoleBlue-favicon_1764031868761.png";
+import siteInspectorLogo from "@assets/siteinspetor-logo_1764028049473.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -82,12 +83,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
   const [hasClientPortalAccess, setHasClientPortalAccess] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   
-  // Billing cycle state
+  // Billing cycle state (used by Pricing menu only - NOT Applications menu)
   const [globalBillingCycle, setGlobalBillingCycle] = useState<'monthly' | 'annual'>('monthly');
   const [itemBillingOverrides, setItemBillingOverrides] = useState<Record<string, 'monthly' | 'annual'>>({});
 
   // Clean up overrides when global cycle changes
-  // Remove any overrides that now match the new global cycle
   useEffect(() => {
     setItemBillingOverrides(prev => {
       const updated = { ...prev };
@@ -115,8 +115,6 @@ export function Header({ showNavigation = true }: HeaderProps) {
     const currentCycle = getItemBillingCycle(itemId);
     const newCycle = currentCycle === 'monthly' ? 'annual' : 'monthly';
     
-    // If the new cycle matches the global cycle, remove the override
-    // This allows the item to follow the master toggle again
     if (newCycle === globalBillingCycle) {
       setItemBillingOverrides(prev => {
         const updated = { ...prev };
@@ -124,7 +122,6 @@ export function Header({ showNavigation = true }: HeaderProps) {
         return updated;
       });
     } else {
-      // Otherwise, set the override
       setItemBillingOverrides(prev => ({ ...prev, [itemId]: newCycle }));
     }
   };
@@ -162,12 +159,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
     return () => clearInterval(interval);
   }, []);
 
-  // Track cart count
+  // Track cart count (used by Pricing menu only)
   useEffect(() => {
-    // Update cart count on mount
     setCartCount(getCartCount());
 
-    // Listen for cart updates
     const handleCartUpdate = () => {
       setCartCount(getCartCount());
     };
@@ -641,298 +636,288 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Applications - Commverse Apps with Bundle Highlight */}
+                    {/* Applications - Information-Focused App Cards */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid="menu-trigger-applications">
                         <img src={layersIcon} alt="" className="w-4 h-4" />
                         <span>Applications</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-3 w-[90vw] max-w-[1000px]">
+                        <div className="p-4 w-[90vw] max-w-[1000px]">
                           {/* Two-column layout: Commverse (left) | LocalBlue (right) */}
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                             {/* LEFT COLUMN: Commverse Bundle */}
-                            <div className="space-y-2">
-                              <div className="p-3 rounded-lg border border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950">
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className="flex items-center gap-2">
-                                    <img src={commverseIcon} alt="Commverse" className="h-9 w-9 object-contain rounded-lg" />
+                            <div className="space-y-3">
+                              {/* Commverse Bundle Card */}
+                              <Link href="/commverse-landing" className="block" data-testid="link-commverse-bundle">
+                                <div className="p-3 rounded-lg border-2 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#0080FF' }}>
+                                  <div className="flex items-center gap-3 mb-2">
+                                    <img src={commverseIcon} alt="Commverse" className="h-10 w-10 object-contain rounded-lg" />
                                     <div>
                                       <img src={commverseBundle} alt="Commverse Bundle" className="h-6 object-contain mb-1" />
-                                      <p className="text-[10px] text-gray-600 dark:text-gray-400">All 4 Apps</p>
+                                      <p className="text-xs text-gray-600 dark:text-gray-400">Complete Communication Suite - 4 Apps</p>
                                     </div>
                                   </div>
-                                  <div>
-                                    <div className="text-lg font-bold text-blue-600 dark:text-blue-400">$100<span className="text-xs">/mo</span></div>
-                                    <p className="text-[10px] text-green-600 dark:text-green-400">Save $40</p>
-                                  </div>
-                                </div>
-                                <Link href="/commverse">
-                                  <Button size="sm" className="w-full h-8 text-sm" data-testid="button-get-commverse">
-                                    Get Bundle →
+                                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                                    Email, SMS, unified inbox, live chat, and social media management
+                                  </p>
+                                  <Button size="sm" className="w-full text-white hover:opacity-90" style={{ backgroundColor: '#0080FF' }} data-testid="button-learn-commverse">
+                                    Learn More →
                                   </Button>
-                                </Link>
-                              </div>
+                                </div>
+                              </Link>
 
-                              <div>
-                                <h4 className="text-[9px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-1">
-                                  Or $35/mo each
-                                </h4>
-                              </div>
+                              {/* Individual Commverse Apps */}
                               <div className="grid grid-cols-2 gap-2">
-                            {/* /send */}
-                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-green-500 hover:shadow-lg hover:from-green-50 hover:to-green-100 dark:hover:from-green-950 dark:hover:to-green-900" data-testid="card-app-send">
-                              <div className="flex items-center gap-1 mb-1">
-                                <img src={sendIcon} alt="/send icon" className="h-5 w-5 object-contain flex-shrink-0" />
-                                <div className="h-4 flex items-center">
-                                  <img src={sendLogo} alt="/send" className="h-4 w-16 object-contain" />
-                                </div>
-                              </div>
-                              <div className="text-xs font-bold text-gray-900 dark:text-white" data-testid="text-app-send-title">Email + SMS Marketing</div>
-                              <p className="text-[10px] leading-tight text-gray-600 dark:text-gray-400 mb-1" data-testid="text-app-send-description">
-                                Unified campaigns
-                              </p>
-                              <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-send-features">
-                                <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1">✓</span> Email & SMS</li>
-                                <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1">✓</span> Contact Mgmt</li>
-                                <li className="flex items-center"><span className="text-green-500 dark:text-green-400 mr-1">✓</span> Compliant</li>
-                              </ul>
-                              <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-black" style={{ backgroundColor: '#ffd700' }} asChild>
-                                <Link href="/send" data-testid="button-select-send">
-                                  Select →
+                                {/* /send */}
+                                <Link href="/send-landing" className="block" data-testid="link-send">
+                                  <div className="group flex flex-col h-full rounded-lg border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 p-3 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#FF6B00' }}>
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <img src={sendIcon} alt="/send icon" className="h-6 w-6 object-contain flex-shrink-0" />
+                                      <img src={sendLogo} alt="/send" className="h-5 object-contain" />
+                                    </div>
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-1">Email + SMS Marketing</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 flex-grow">
+                                      Unified campaigns with contact management
+                                    </p>
+                                    <Button size="sm" className="w-full text-white hover:opacity-90 text-xs" style={{ backgroundColor: '#FF6B00' }}>
+                                      Learn More →
+                                    </Button>
+                                  </div>
                                 </Link>
-                              </Button>
-                            </div>
 
-                            {/* /inbox */}
-                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-pink-500 hover:shadow-lg hover:from-pink-50 hover:to-pink-100 dark:hover:from-pink-950 dark:hover:to-pink-900" data-testid="card-app-inbox">
-                              <div className="flex items-center gap-1 mb-1">
-                                <img src={inboxIcon} alt="/inbox icon" className="h-5 w-5 object-contain flex-shrink-0" />
-                                <div className="h-4 flex items-center">
-                                  <img src={inboxLogo} alt="/inbox" className="h-4 w-16 object-contain" />
-                                </div>
-                              </div>
-                              <div className="text-xs font-bold text-gray-900 dark:text-white" data-testid="text-app-inbox-title">Unified Comms</div>
-                              <p className="text-[10px] leading-tight text-gray-600 dark:text-gray-400 mb-1" data-testid="text-app-inbox-description">
-                                Multi-channel hub
-                              </p>
-                              <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-inbox-features">
-                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Email & Chat</li>
-                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Real-time</li>
-                                <li className="flex items-center"><span className="text-pink-500 dark:text-pink-400 mr-1">✓</span> Team Collab</li>
-                              </ul>
-                              <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#6ea6ff' }} asChild>
-                                <Link href="/inbox" data-testid="button-select-inbox">
-                                  Select →
+                                {/* /inbox */}
+                                <Link href="/inbox-landing" className="block" data-testid="link-inbox">
+                                  <div className="group flex flex-col h-full rounded-lg border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 p-3 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#0080FF' }}>
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <img src={inboxIcon} alt="/inbox icon" className="h-6 w-6 object-contain flex-shrink-0" />
+                                      <img src={inboxLogo} alt="/inbox" className="h-5 object-contain" />
+                                    </div>
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-1">Unified Communications</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 flex-grow">
+                                      Multi-channel hub with team collaboration
+                                    </p>
+                                    <Button size="sm" className="w-full text-white hover:opacity-90 text-xs" style={{ backgroundColor: '#0080FF' }}>
+                                      Learn More →
+                                    </Button>
+                                  </div>
                                 </Link>
-                              </Button>
-                            </div>
 
-                            {/* /livechat */}
-                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-teal-500 hover:shadow-lg hover:from-teal-50 hover:to-teal-100 dark:hover:from-teal-950 dark:hover:to-teal-900" data-testid="card-app-livechat">
-                              <div className="flex items-center gap-1 mb-1">
-                                <img src={livechatIcon} alt="/livechat icon" className="h-5 w-5 object-contain flex-shrink-0" />
-                                <div className="h-4 flex items-center">
-                                  <img src={livechatLogo} alt="/livechat" className="h-4 w-16 object-contain" />
-                                </div>
-                              </div>
-                              <div className="text-xs font-bold text-gray-900 dark:text-white" data-testid="text-app-livechat-title">Live Chat Widget</div>
-                              <p className="text-[10px] leading-tight text-gray-600 dark:text-gray-400 mb-1" data-testid="text-app-livechat-description">
-                                Website chat
-                              </p>
-                              <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-livechat-features">
-                                <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1">✓</span> Live Chat</li>
-                                <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1">✓</span> Persistence</li>
-                                <li className="flex items-center"><span className="text-teal-500 dark:text-teal-400 mr-1">✓</span> History</li>
-                              </ul>
-                              <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#8002ff' }} asChild>
-                                <Link href="/livechat" data-testid="button-select-livechat">
-                                  Select →
+                                {/* /livechat */}
+                                <Link href="/livechat-landing" className="block" data-testid="link-livechat">
+                                  <div className="group flex flex-col h-full rounded-lg border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 p-3 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#8000FF' }}>
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <img src={livechatIcon} alt="/livechat icon" className="h-6 w-6 object-contain flex-shrink-0" />
+                                      <img src={livechatLogo} alt="/livechat" className="h-5 object-contain" />
+                                    </div>
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-1">Live Chat Widget</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 flex-grow">
+                                      Website chat with conversation history
+                                    </p>
+                                    <Button size="sm" className="w-full text-white hover:opacity-90 text-xs" style={{ backgroundColor: '#8000FF' }}>
+                                      Learn More →
+                                    </Button>
+                                  </div>
                                 </Link>
-                              </Button>
-                            </div>
 
-                            {/* /content */}
-                            <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-fuchsia-500 hover:shadow-lg hover:from-fuchsia-50 hover:to-fuchsia-100 dark:hover:from-fuchsia-950 dark:hover:to-fuchsia-900" data-testid="card-app-content">
-                              <div className="flex items-center gap-1 mb-1">
-                                <img src={contentIcon} alt="/content icon" className="h-5 w-5 object-contain flex-shrink-0" />
-                                <div className="h-4 flex items-center">
-                                  <img src={contentLogo} alt="/content" className="h-4 w-16 object-contain" />
-                                </div>
-                              </div>
-                              <div className="text-xs font-bold text-gray-900 dark:text-white" data-testid="text-app-content-title">Social Media</div>
-                              <p className="text-[10px] leading-tight text-gray-600 dark:text-gray-400 mb-1" data-testid="text-app-content-description">
-                                Social manager
-                              </p>
-                              <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-content-features">
-                                <li className="flex items-center"><span className="text-fuchsia-500 dark:text-fuchsia-400 mr-1">✓</span> Calendar</li>
-                                <li className="flex items-center"><span className="text-fuchsia-500 dark:text-fuchsia-400 mr-1">✓</span> Media Library</li>
-                                <li className="flex items-center"><span className="text-fuchsia-500 dark:text-fuchsia-400 mr-1">✓</span> AI Captions</li>
-                              </ul>
-                              <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#e91ebc' }} asChild>
-                                <Link href="/content-landing" data-testid="button-select-content">
-                                  Select →
+                                {/* /content */}
+                                <Link href="/content-landing" className="block" data-testid="link-content">
+                                  <div className="group flex flex-col h-full rounded-lg border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 p-3 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#E91EBC' }}>
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <img src={contentIcon} alt="/content icon" className="h-6 w-6 object-contain flex-shrink-0" />
+                                      <img src={contentLogo} alt="/content" className="h-5 object-contain" />
+                                    </div>
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-1">Social Media Manager</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 flex-grow">
+                                      Calendar, media library, AI captions
+                                    </p>
+                                    <Button size="sm" className="w-full text-white hover:opacity-90 text-xs" style={{ backgroundColor: '#E91EBC' }}>
+                                      Learn More →
+                                    </Button>
+                                  </div>
                                 </Link>
-                              </Button>
-                            </div>
                               </div>
                             </div>
 
                             {/* RIGHT COLUMN: LocalBlue Bundle */}
-                            <div className="space-y-2">
-                              <div className="p-2 rounded-lg border border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950">
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center gap-1.5">
-                                    <img src={badge3} alt="LocalBlue" className="h-7 w-7 object-contain rounded-lg" />
+                            <div className="space-y-3">
+                              {/* LocalBlue Bundle Card */}
+                              <Link href="/localblue-landing" className="block" data-testid="link-localblue-bundle">
+                                <div className="p-3 rounded-lg border-2 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#0000FF' }}>
+                                  <div className="flex items-center gap-3 mb-2">
+                                    <img src={badge3} alt="LocalBlue" className="h-10 w-10 object-contain rounded-lg" />
                                     <div>
-                                      <img src={localBlueLogo} alt="/localblue Bundle" className="h-4 object-contain mb-0.5" />
-                                      <p className="text-[9px] text-gray-600 dark:text-gray-400">All 3 Apps</p>
+                                      <img src={localBlueLogo} alt="/localblue Bundle" className="h-6 object-contain mb-1" />
+                                      <p className="text-xs text-gray-600 dark:text-gray-400">Complete Local Presence - 3 Apps</p>
                                     </div>
                                   </div>
-                                  <div>
-                                    <div className="text-base font-bold text-blue-600 dark:text-blue-400">$75<span className="text-[10px]">/mo</span></div>
-                                    <p className="text-[9px] text-green-600 dark:text-green-400">Save $10</p>
-                                  </div>
-                                </div>
-                                <Link href="/localblue">
-                                  <Button size="sm" className="w-full h-6 text-xs" data-testid="button-get-localblue">
-                                    Get Bundle →
+                                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                                    Business listings, reputation management, and review response
+                                  </p>
+                                  <Button size="sm" className="w-full text-white hover:opacity-90" style={{ backgroundColor: '#0000FF' }} data-testid="button-learn-localblue">
+                                    Learn More →
                                   </Button>
+                                </div>
+                              </Link>
+
+                              {/* Individual LocalBlue Apps */}
+                              <div className="grid grid-cols-2 gap-2">
+                                {/* /listings */}
+                                <Link href="/listings-landing" className="block" data-testid="link-listings">
+                                  <div className="group flex flex-col h-full rounded-lg border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 p-3 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#FF0040' }}>
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <img src={listingsIcon} alt="/listings icon" className="h-6 w-6 object-contain flex-shrink-0" />
+                                      <img src={listingsLogo} alt="/listings" className="h-5 object-contain" />
+                                    </div>
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-1">Business Listings</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 flex-grow">
+                                      Directory sync across 100+ platforms
+                                    </p>
+                                    <Button size="sm" className="w-full text-white hover:opacity-90 text-xs" style={{ backgroundColor: '#FF0040' }}>
+                                      Learn More →
+                                    </Button>
+                                  </div>
+                                </Link>
+
+                                {/* /reputation */}
+                                <Link href="/reputation-landing" className="block" data-testid="link-reputation">
+                                  <div className="group flex flex-col h-full rounded-lg border-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 p-3 transition-all hover:shadow-lg cursor-pointer" style={{ borderColor: '#D59600' }}>
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <img src={reputationIcon} alt="/reputation icon" className="h-6 w-6 object-contain flex-shrink-0" />
+                                      <img src={reputationLogo} alt="/reputation" className="h-5 object-contain" />
+                                    </div>
+                                    <div className="text-sm font-bold text-gray-900 dark:text-white mb-1">Review Management</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 flex-grow">
+                                      AI-powered review response & monitoring
+                                    </p>
+                                    <Button size="sm" className="w-full text-white hover:opacity-90 text-xs" style={{ backgroundColor: '#D59600' }}>
+                                      Learn More →
+                                    </Button>
+                                  </div>
                                 </Link>
                               </div>
-
-                            <div className="mb-1">
-                              <h4 className="text-[9px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">
-                                Or $40/mo each
-                              </h4>
                             </div>
-                            <div className="grid grid-cols-2 gap-2">
-                              {/* /reputation */}
-                              <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-amber-500 hover:shadow-lg hover:from-amber-50 hover:to-amber-100 dark:hover:from-amber-950 dark:hover:to-amber-900" data-testid="card-app-reputation">
-                                <div className="flex items-center gap-1 mb-1">
-                                  <img src={reputationIcon} alt="/reputation icon" className="h-5 w-5 object-contain flex-shrink-0" />
-                                  <div className="h-4 flex items-center">
-                                    <img src={reputationLogo} alt="/reputation" className="h-4 w-16 object-contain" />
-                                  </div>
-                                </div>
-                                <div className="text-xs font-bold text-gray-900 dark:text-white" data-testid="text-app-reputation-title">Review Mgmt</div>
-                                <p className="text-[10px] leading-tight text-gray-600 dark:text-gray-400 mb-1" data-testid="text-app-reputation-description">
-                                  Review response
-                                </p>
-                                <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-reputation-features">
-                                  <li className="flex items-center"><span className="text-amber-500 dark:text-amber-400 mr-1">✓</span> Multi-Platform</li>
-                                  <li className="flex items-center"><span className="text-amber-500 dark:text-amber-400 mr-1">✓</span> AI Responses</li>
-                                  <li className="flex items-center"><span className="text-amber-500 dark:text-amber-400 mr-1">✓</span> Sentiment</li>
-                                </ul>
-                                <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#D59600' }} asChild>
-                                  <Link href="/reputation-landing" data-testid="button-select-reputation">
-                                    Select →
-                                  </Link>
-                                </Button>
-                              </div>
-
-                              {/* /listings */}
-                              <div className="group flex flex-col h-full rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-2 transition-all hover:border-rose-500 hover:shadow-lg hover:from-rose-50 hover:to-rose-100 dark:hover:from-rose-950 dark:hover:to-rose-900" data-testid="card-app-listings">
-                                <div className="flex items-center gap-1 mb-1">
-                                  <img src={listingsIcon} alt="/listings icon" className="h-5 w-5 object-contain flex-shrink-0" />
-                                  <div className="h-4 flex items-center">
-                                    <img src={listingsLogo} alt="/listings" className="h-4 w-16 object-contain" />
-                                  </div>
-                                </div>
-                                <div className="text-xs font-bold text-gray-900 dark:text-white" data-testid="text-app-listings-title">Business Listings</div>
-                                <p className="text-[10px] leading-tight text-gray-600 dark:text-gray-400 mb-1" data-testid="text-app-listings-description">
-                                  Directory sync
-                                </p>
-                                <ul className="space-y-0.5 text-[9px] text-gray-700 dark:text-gray-300 mb-2" data-testid="list-app-listings-features">
-                                  <li className="flex items-center"><span className="text-rose-500 dark:text-rose-400 mr-1">✓</span> Directory Sync</li>
-                                  <li className="flex items-center"><span className="text-rose-500 dark:text-rose-400 mr-1">✓</span> Multi-Platform</li>
-                                  <li className="flex items-center"><span className="text-rose-500 dark:text-rose-400 mr-1">✓</span> Analytics</li>
-                                </ul>
-                                <Button size="sm" className="w-full h-6 text-[10px] mt-auto text-white" style={{ backgroundColor: '#FF0040' }} asChild>
-                                  <Link href="/listings-landing" data-testid="button-select-listings">
-                                    Select →
-                                  </Link>
-                                </Button>
-                              </div>
-                              </div> {/* Close LocalBlue apps grid */}
-                            </div> {/* Close RIGHT column */}
-                          </div> {/* Close main grid wrapper */}
-                        </div> {/* Close Applications content container */}
+                          </div>
+                        </div>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
-                    {/* Solutions */}
+                    {/* Solutions - All 13 Items */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid="menu-trigger-solutions">
                         <img src={lightbulbIcon} alt="" className="w-4 h-4" />
                         <span>Solutions</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid gap-4 p-6 w-[90vw] max-w-[600px]">
-                          <div className="grid grid-cols-1 gap-4">
+                        <div className="p-4 w-[90vw] max-w-[900px]">
+                          <div className="grid grid-cols-3 gap-3">
+                            {/* Row 1: Main Platforms */}
                             <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-orange-500 hover:shadow-lg"
-                                href="/solutions/businessblueprint"
-                                data-testid="link-solution-businessblueprint"
-                              >
-                                <div className="flex items-center gap-3 mb-2">
-                                  <img src={blueprintIcon} alt="BusinessBlueprint" className="h-12 w-12 object-contain" />
-                                  <div>
-                                    <div className="text-lg font-bold text-gray-900 dark:text-white">BusinessBlueprint</div>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">AI-Powered Digital Intelligence Platform</p>
-                                  </div>
-                                </div>
-                                <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
-                                  <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> <Link href="/assessment" className="hover:text-orange-500 underline" data-testid="link-solutions-digital-iq">Digital IQ Scanner</Link> - Get your score (70-140)</li>
-                                  <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> AI-powered assessment & coaching</li>
-                                  <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> Complete communication suite</li>
-                                  <li className="flex items-center"><span className="text-orange-500 mr-1.5">•</span> Dashboard & analytics</li>
-                                </ul>
+                              <a href="/" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF6B00' }} data-testid="link-solution-businessblueprint">
+                                <img src={blueprintIcon} alt="BusinessBlueprint" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">BusinessBlueprint</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Digital Intelligence</p>
                               </a>
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-purple-500 hover:shadow-lg"
-                                href="/solutions/hostsblue"
-                                data-testid="link-solution-hostsblue"
-                              >
-                                <div className="flex items-center gap-3 mb-2">
-                                  <img src={hostsBlueIcon} alt="HostsBlue" className="h-12 w-12 object-contain" />
-                                  <div>
-                                    <div className="text-lg font-bold text-gray-900 dark:text-white">HostsBlue</div>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">Web Services Partner</p>
-                                  </div>
-                                </div>
-                                <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
-                                  <li className="flex items-center"><span className="text-purple-500 mr-1.5">•</span> High-performance hosting</li>
-                                  <li className="flex items-center"><span className="text-purple-500 mr-1.5">•</span> Domain management</li>
-                                  <li className="flex items-center"><span className="text-purple-500 mr-1.5">•</span> Website builder tools</li>
-                                  <li className="flex items-center"><span className="text-purple-500 mr-1.5">•</span> Technical infrastructure</li>
-                                </ul>
+                              <a href="#hostsblue" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#8000FF' }} data-testid="link-solution-hostsblue">
+                                <img src={hostsBlueIcon} alt="HostsBlue" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">HostsBlue</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Web Services</p>
                               </a>
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a
-                                className="group block select-none space-y-2 rounded-lg border border-gray-200 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700 p-4 leading-none no-underline outline-none transition-all hover:border-red-500 hover:shadow-lg"
-                                href="/solutions/swipesblue"
-                                data-testid="link-solution-swipesblue"
-                              >
-                                <div className="flex items-center gap-3 mb-2">
-                                  <img src={swipesBlueIcon} alt="SwipesBlue" className="h-12 w-12 object-contain" />
-                                  <div>
-                                    <div className="text-lg font-bold text-gray-900 dark:text-white">SwipesBlue</div>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">Secure Payment Gateway</p>
-                                  </div>
-                                </div>
-                                <ul className="space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
-                                  <li className="flex items-center"><span className="text-red-500 mr-1.5">•</span> Secure checkout integration</li>
-                                  <li className="flex items-center"><span className="text-red-500 mr-1.5">•</span> Transaction management</li>
-                                  <li className="flex items-center"><span className="text-red-500 mr-1.5">•</span> Powers all platform payments</li>
-                                  <li className="flex items-center"><span className="text-red-500 mr-1.5">•</span> Embedded payment flows</li>
-                                </ul>
+                              <a href="#swipesblue" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF0040' }} data-testid="link-solution-swipesblue">
+                                <img src={swipesBlueIcon} alt="SwipesBlue" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">SwipesBlue</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Payment Gateway</p>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* Row 2: New Platforms */}
+                            <NavigationMenuLink asChild>
+                              <a href="#consoleblue" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#0000FF' }} data-testid="link-solution-consoleblue">
+                                <img src={consoleBluelogo} alt="ConsoleBlue" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">ConsoleBlue</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Admin Console</p>
+                              </a>
+                            </NavigationMenuLink>
+
+                            <NavigationMenuLink asChild>
+                              <a href="#siteinspector" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#0000FF' }} data-testid="link-solution-siteinspector">
+                                <img src={siteInspectorLogo} alt="SiteInspector" className="h-12 w-auto object-contain mb-2 max-w-full" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">SiteInspector</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Site Analysis</p>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* Row 2 Col 3: AI Business Coach */}
+                            <NavigationMenuLink asChild>
+                              <a href="/ai-coach" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#A855F7' }} data-testid="link-solution-ai-coach">
+                                <img src={badge4} alt="AI Business Coach" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">AI Business Coach</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Smart Guidance</p>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* Row 3: Digital IQ + Commverse Apps */}
+                            <NavigationMenuLink asChild>
+                              <a href="/assessment" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#F97316' }} data-testid="link-solution-digital-iq">
+                                <img src={badge1} alt="Digital IQ" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">Digital IQ</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">AI Assessment</p>
+                              </a>
+                            </NavigationMenuLink>
+
+                            <NavigationMenuLink asChild>
+                              <a href="/send-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF6B00' }} data-testid="link-solution-send">
+                                <img src={sendIcon} alt="/send" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/send</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Email & SMS</p>
+                              </a>
+                            </NavigationMenuLink>
+
+                            <NavigationMenuLink asChild>
+                              <a href="/inbox-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#0080FF' }} data-testid="link-solution-inbox">
+                                <img src={inboxIcon} alt="/inbox" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/inbox</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Unified Comms</p>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* Row 4: More Apps */}
+                            <NavigationMenuLink asChild>
+                              <a href="/livechat-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#8000FF' }} data-testid="link-solution-livechat">
+                                <img src={livechatIcon} alt="/livechat" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/livechat</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Live Chat</p>
+                              </a>
+                            </NavigationMenuLink>
+
+                            <NavigationMenuLink asChild>
+                              <a href="/content-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#E91EBC' }} data-testid="link-solution-content">
+                                <img src={contentIcon} alt="/content" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/content</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Social Media</p>
+                              </a>
+                            </NavigationMenuLink>
+
+                            <NavigationMenuLink asChild>
+                              <a href="/listings-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF0040' }} data-testid="link-solution-listings">
+                                <img src={listingsIcon} alt="/listings" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/listings</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Directory Sync</p>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* Row 5: Last App */}
+                            <NavigationMenuLink asChild>
+                              <a href="/reputation-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#D59600' }} data-testid="link-solution-reputation">
+                                <img src={reputationIcon} alt="/reputation" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/reputation</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Review Mgmt</p>
                               </a>
                             </NavigationMenuLink>
                           </div>
@@ -1005,7 +990,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
                                 href="/"
-                                data-testid="link-solutions-businessblueprint"
+                                data-testid="link-resources-businessblueprint"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
                                   <img src={bbIcon} alt="BusinessBlueprint" className="w-full h-full object-contain" />
@@ -1020,7 +1005,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
                                 href="#hostsblue"
-                                data-testid="link-solutions-hostsblue"
+                                data-testid="link-resources-hostsblue"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
                                   <img src={hostsBlueIcon} alt="HostsBlue" className="w-full h-full object-contain" />
@@ -1035,7 +1020,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
                                 href="#swipesblue"
-                                data-testid="link-solutions-swipesblue"
+                                data-testid="link-resources-swipesblue"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
                                   <img src={swipesBlueIcon} alt="SwipesBlue" className="w-full h-full object-contain" />
@@ -1043,6 +1028,36 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">SwipesBlue</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Payment gateway</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="#consoleblue"
+                                data-testid="link-resources-consoleblue"
+                              >
+                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
+                                  <img src={consoleBluelogo} alt="ConsoleBlue" className="w-full h-full object-contain" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">ConsoleBlue</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Admin console</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="#siteinspector"
+                                data-testid="link-resources-siteinspector"
+                              >
+                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
+                                  <img src={siteInspectorLogo} alt="SiteInspector" className="h-4 w-auto object-contain max-w-full" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">SiteInspector</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Site analysis tool</p>
                                 </div>
                               </a>
                             </NavigationMenuLink>
