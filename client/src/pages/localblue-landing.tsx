@@ -56,14 +56,14 @@ export default function LocalBlueLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#0000FF' }}>$75/mo</div>
-              <span className="text-white text-xl">for all 3 LocalBlue apps</span>
+              <div className="text-4xl font-bold" style={{ color: '#0000FF' }}>$60/mo</div>
+              <span className="text-white text-xl">for all LocalBlue apps</span>
               <span className="text-gray-400 text-2xl">|</span>
               <div className="text-4xl font-bold text-white">$40/mo</div>
               <span className="text-white text-xl">each standalone</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /listings + /reputation + local SEO = Complete local presence management
+              /listings + /reputation = Complete local presence management
             </p>
           </div>
         </div>

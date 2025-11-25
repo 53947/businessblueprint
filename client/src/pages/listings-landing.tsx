@@ -73,11 +73,11 @@ export default function ListingsLanding() {
               <div className="text-4xl font-bold" style={{ color: '#FF0040' }}>$40/mo</div>
               <span className="text-white text-xl">standalone</span>
               <span className="text-gray-400 text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">$75/mo</div>
-              <span className="text-white text-xl">for all 3 LocalBlue apps</span>
+              <div className="text-4xl font-bold text-white">$60/mo</div>
+              <span className="text-white text-xl">for all LocalBlue apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /listings + /reputation + local SEO = Complete local presence management
+              /listings + /reputation = Complete local presence management
             </p>
           </div>
         </div>

@@ -73,11 +73,11 @@ export default function ReputationLanding() {
               <div className="text-4xl font-bold" style={{ color: '#D59600' }}>$40/mo</div>
               <span className="text-white text-xl">standalone</span>
               <span className="text-gray-400 text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">$75/mo</div>
-              <span className="text-white text-xl">for all 3 LocalBlue apps</span>
+              <div className="text-4xl font-bold text-white">$60/mo</div>
+              <span className="text-white text-xl">for all LocalBlue apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /reputation + /listings + local SEO = Complete local presence management
+              /reputation + /listings = Complete local presence management
             </p>
           </div>
         </div>

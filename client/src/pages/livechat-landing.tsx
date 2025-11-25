@@ -73,11 +73,11 @@ export default function LivechatLanding() {
               <div className="text-4xl font-bold" style={{ color: '#8000FF' }}>$35/mo</div>
               <span className="text-white text-xl">standalone</span>
               <span className="text-gray-400 text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">$75/mo</div>
-              <span className="text-white text-xl">for all 3 Commverse apps</span>
+              <div className="text-4xl font-bold text-white">$100/mo</div>
+              <span className="text-white text-xl">for all 4 Commverse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /send + /livechat + /inbox = Complete communication ecosystem
+              /send + /livechat + /inbox + /content = Complete communication ecosystem
             </p>
           </div>
         </div>
