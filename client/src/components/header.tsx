@@ -545,7 +545,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               {/* 4 Apps in a Row */}
                               <div className="grid grid-cols-4 gap-2">
                                 {/* /send */}
-                                <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF6B00' }}>
+                                <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FFFF00', boxShadow: '0 0 0 2px #000000' }}>
                               <div className="flex items-start justify-between mb-1">
                                 <div className="flex items-center gap-1.5">
                                   <img src={sendIcon} alt="" className="w-5 h-5" />
