@@ -72,7 +72,7 @@ import badge4 from "@assets/Coach Blue as Blue(4)_1763874287091.png";
 import badge5 from "@assets/Commverse (5)_1763874287091.png";
 import consoleBluelogo from "@assets/ConsoleBlue-favicon_1764031868761.png";
 import siteInspectorLogo from "@assets/siteinspetor-logo_1764028049473.png";
-import localblueIcon from "@assets/localblue-logo.png";
+import localblueIcon from "@assets/localblue_1764091108634.png";
 import commverseWordmark from "@assets/: commverse bundle name_1764089275240.png";
 import localblueWordmark from "@assets/_ localblue color triad black and triad blue_1764089275239.png";
 import sendWordmark from "@assets/: send app logo_1764088895509.png";
@@ -386,7 +386,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={sendIcon} alt="" className="w-7 h-7" />
-                                  <img src={sendWordmark} alt="/send" className="h-8" />
+                                  <img src={sendWordmark} alt="/send" className="h-4" />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
@@ -411,7 +411,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={inboxIcon} alt="" className="w-7 h-7" />
-                                  <img src={inboxWordmark} alt="/inbox" className="h-8" />
+                                  <img src={inboxWordmark} alt="/inbox" className="h-4" />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
@@ -436,7 +436,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={livechatIcon} alt="" className="w-7 h-7" />
-                                  <img src={livechatWordmark} alt="/livechat" className="h-8" />
+                                  <img src={livechatWordmark} alt="/livechat" className="h-4" />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
@@ -461,7 +461,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={contentIcon} alt="" className="w-7 h-7" />
-                                  <img src={contentWordmark} alt="/content" className="h-8" />
+                                  <img src={contentWordmark} alt="/content" className="h-4" />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
@@ -528,7 +528,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={listingsIcon} alt="" className="w-7 h-7" />
-                                  <img src={listingsWordmark} alt="/listings" className="h-8" />
+                                  <img src={listingsWordmark} alt="/listings" className="h-4" />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('listings-addon', '/listings', 40, 'addon')}
@@ -553,7 +553,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={reputationIcon} alt="" className="w-7 h-7" />
-                                  <img src={reputationWordmark} alt="/reputation" className="h-8" />
+                                  <img src={reputationWordmark} alt="/reputation" className="h-4" />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
