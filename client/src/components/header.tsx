@@ -520,8 +520,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                               </div>
 
-                              {/* 2 Apps Stacked */}
-                              <div className="space-y-3">
+                              {/* 2 Apps in a Row */}
+                              <div className="grid grid-cols-2 gap-3">
                                 {/* /listings */}
                                 <div className="p-3 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }}>
                               <div className="flex items-start justify-between mb-2">
