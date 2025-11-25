@@ -72,6 +72,8 @@ import badge4 from "@assets/Coach Blue as Blue(4)_1763874287091.png";
 import badge5 from "@assets/Commverse (5)_1763874287091.png";
 import consoleBluelogo from "@assets/ConsoleBlue-favicon_1764031868761.png";
 import siteInspectorLogo from "@assets/siteinspetor-logo_1764028049473.png";
+import localblueIcon from "@assets/localblue-logo.png";
+
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -83,7 +85,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
   const { toast } = useToast();
   const [hasClientPortalAccess, setHasClientPortalAccess] = useState(false);
   const [cartCount, setCartCount] = useState(0);
-  
+
   // Billing cycle state (used by Pricing menu only - NOT Applications menu)
   const [globalBillingCycle, setGlobalBillingCycle] = useState<'monthly' | 'annual'>('monthly');
   const [itemBillingOverrides, setItemBillingOverrides] = useState<Record<string, 'monthly' | 'annual'>>({});
@@ -93,14 +95,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
     setItemBillingOverrides(prev => {
       const updated = { ...prev };
       let changed = false;
-      
+
       for (const itemId in updated) {
         if (updated[itemId] === globalBillingCycle) {
           delete updated[itemId];
           changed = true;
         }
       }
-      
+
       return changed ? updated : prev;
     });
   }, [globalBillingCycle]);
@@ -115,7 +117,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
   const toggleItemBilling = (itemId: string) => {
     const currentCycle = getItemBillingCycle(itemId);
     const newCycle = currentCycle === 'monthly' ? 'annual' : 'monthly';
-    
+
     if (newCycle === globalBillingCycle) {
       setItemBillingOverrides(prev => {
         const updated = { ...prev };
@@ -332,7 +334,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           <h4 className="text-[10px] font-bold text-gray-700 mb-3 uppercase tracking-wide">
                             ALL APPS
                           </h4>
-                          
+
                           {/* Single Row: All 6 Apps with Identical Sizing */}
                           <div className="grid grid-cols-6 gap-3 mb-4">
                             {/* /send */}
@@ -524,9 +526,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <p className="text-[10px] font-bold text-green-600 mb-2">
                                 {getItemBillingCycle('localblue-bundle') === 'annual' ? 'Save 20% annually' : 'Save $20/month'}
                               </p>
-                              <Button 
-                                size="sm" 
-                                variant="outline" 
+                              <Button
+                                size="sm"
+                                variant="outline"
                                 className="w-full h-7 text-xs font-bold border-2 border-blue-600 text-blue-600 hover:bg-blue-50"
                                 onClick={() => handleAddToCart('localblue-bundle', 'LocalBlue Bundle', 60, 'addon')}
                                 data-testid="button-add-localblue-bundle"
@@ -1114,7 +1116,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     </span>
                   )}
                 </Link>
-                
+
                 {/* Inbox Button - Text only with proper padding */}
                 <a
                   href="/inbox"
@@ -1123,7 +1125,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 >
                   Inbox
                 </a>
-                
+
                 {/* Login Button - Text only with border and proper padding */}
                 <a
                   href="/api/login"
@@ -1132,7 +1134,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 >
                   Login
                 </a>
-                
+
                 {/* Digital IQ Button - Text only with proper padding */}
                 <a
                   href="/assessment"
@@ -1152,7 +1154,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
             {/* Scrollable Content */}
             <div className="flex-1 overflow-y-auto pb-28">
               <nav className="p-4">
-                
+
                 {/* Cart Preview - If has items */}
                 {cartCount > 0 && (
                   <Link href="/cart" className="block mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg" data-testid="mobile-cart-preview">
