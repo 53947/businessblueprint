@@ -75,7 +75,7 @@ import siteInspectorLogo from "@assets/siteinspetor-logo_1764028049473.png";
 import localblueIcon from "@assets/localblue_1764091108634.png";
 import commverseWordmark from "@assets/_ comverse bundle_1764096245312.png";
 import localblueWordmark from "@assets/_ local blue bundle_1764096245313.png";
-import sendWordmark from "@assets/: send app logo_1764088895509.png";
+import sendWordmark from "@assets/send_1764097900898.png";
 import inboxWordmark from "@assets/: inbox app logo_1764088895509.png";
 import livechatWordmark from "@assets/: livechat app logo_1764088895509.png";
 import contentWordmark from "@assets/: content app logo_1764088895508.png";
