@@ -642,6 +642,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
                           </div>
                         </div>
+                        </div>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
 
