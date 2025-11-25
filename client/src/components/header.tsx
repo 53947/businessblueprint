@@ -381,11 +381,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('send-addon', 35).displayPrice}</p>
                                     <button
                                       onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
-                                      className="text-[7px] font-bold px-1 py-0.5 rounded text-white"
+                                      className="text-lg font-bold w-6 h-6 rounded text-white flex items-center justify-center"
                                       style={{ backgroundColor: '#FF6B00' }}
                                       data-testid="button-add-send-compact"
                                     >
-                                      Add
+                                      +
                                     </button>
                                   </div>
 
@@ -396,11 +396,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('inbox-addon', 35).displayPrice}</p>
                                     <button
                                       onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
-                                      className="text-[7px] font-bold px-1 py-0.5 rounded text-white"
+                                      className="text-lg font-bold w-6 h-6 rounded text-white flex items-center justify-center"
                                       style={{ backgroundColor: '#0080FF' }}
                                       data-testid="button-add-inbox-compact"
                                     >
-                                      Add
+                                      +
                                     </button>
                                   </div>
 
@@ -411,11 +411,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('livechat-addon', 35).displayPrice}</p>
                                     <button
                                       onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
-                                      className="text-[7px] font-bold px-1 py-0.5 rounded text-white"
+                                      className="text-lg font-bold w-6 h-6 rounded text-white flex items-center justify-center"
                                       style={{ backgroundColor: '#8000FF' }}
                                       data-testid="button-add-livechat-compact"
                                     >
-                                      Add
+                                      +
                                     </button>
                                   </div>
 
@@ -426,11 +426,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('content-addon', 35).displayPrice}</p>
                                     <button
                                       onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
-                                      className="text-[7px] font-bold px-1 py-0.5 rounded text-white"
+                                      className="text-lg font-bold w-6 h-6 rounded text-white flex items-center justify-center"
                                       style={{ backgroundColor: '#E91EBC' }}
                                       data-testid="button-add-content-compact"
                                     >
-                                      Add
+                                      +
                                     </button>
                                   </div>
                                 </div>
@@ -483,11 +483,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('listings-addon', 40).displayPrice}</p>
                                     <button
                                       onClick={() => handleAddToCart('listings-addon', '/listings', 40, 'addon')}
-                                      className="text-[7px] font-bold px-1 py-0.5 rounded text-white"
+                                      className="text-lg font-bold w-6 h-6 rounded text-white flex items-center justify-center"
                                       style={{ backgroundColor: '#FF0040' }}
                                       data-testid="button-add-listings-compact"
                                     >
-                                      Add
+                                      +
                                     </button>
                                   </div>
 
@@ -498,11 +498,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-[7px] text-gray-600 mb-1">{getItemPrice('reputation-management', 40).displayPrice}</p>
                                     <button
                                       onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
-                                      className="text-[7px] font-bold px-1 py-0.5 rounded text-white"
+                                      className="text-lg font-bold w-6 h-6 rounded text-white flex items-center justify-center"
                                       style={{ backgroundColor: '#D59600' }}
                                       data-testid="button-add-reputation-compact"
                                     >
-                                      Add
+                                      +
                                     </button>
                                   </div>
                                 </div>
