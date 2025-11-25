@@ -71,7 +71,7 @@ import badge3 from "@assets/LocalBlue Bundle (3)_1763874287091.png";
 import badge4 from "@assets/Coach Blue as Blue(4)_1763874287091.png";
 import badge5 from "@assets/Commverse (5)_1763874287091.png";
 import consoleBluelogo from "@assets/ConsoleBlue-favicon_1764031868761.png";
-import siteInspectorLogo from "@assets/siteinspetor-logo_1764028049473.png";
+import siteInspectorIcon from "@assets/SiteInspectorIcon_1764098487505.png";
 import localblueIcon from "@assets/localblue_1764091108634.png";
 import commverseWordmark from "@assets/_ comverse bundle_1764096245312.png";
 import localblueWordmark from "@assets/_ local blue bundle_1764096245313.png";
@@ -694,7 +694,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                             <NavigationMenuLink asChild>
                               <a href="#siteinspector" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#0000FF' }} data-testid="link-solution-siteinspector">
-                                <img src={siteInspectorLogo} alt="SiteInspector" className="h-12 w-auto object-contain mb-2 max-w-full" />
+                                <img src={siteInspectorIcon} alt="SiteInspector" className="h-12 w-12 object-contain mb-2" />
                                 <div className="text-sm font-bold text-gray-900 dark:text-white text-center">SiteInspector</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Site Analysis</p>
                               </a>
@@ -900,7 +900,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 data-testid="link-resources-siteinspector"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={siteInspectorLogo} alt="SiteInspector" className="h-4 w-auto object-contain max-w-full" />
+                                  <img src={siteInspectorIcon} alt="SiteInspector" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">SiteInspector</div>
