@@ -208,13 +208,13 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           </div>
 
                           <div className="space-y-3">
-                            <Link href="/assessment" className="block" data-testid="link-how-it-works-step1-digital-iq">
-                              <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950 transition-colors cursor-pointer">
+                            <Link href="/assessment" className="block" data-testid="link-how-it-works-step1-blueprint">
+                              <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 hover:transition-colors cursor-pointer" style={{ borderColor: '#A00028', backgroundColor: 'transparent' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#fafafa'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}>
                                 <div className="flex-shrink-0 -mt-2">
                                   <img src={badge1} alt="Step 1" className="w-10 h-10 object-contain" />
                                 </div>
                                 <div className="text-left">
-                                  <div className="font-bold text-sm text-gray-900 dark:text-white">Digital IQ Assessment</div>
+                                  <div className="font-bold text-sm text-gray-900 dark:text-white">Blueprint to Your Growth</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">
                                     AI-powered audit of your online presence
                                   </p>
@@ -283,8 +283,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                           <div className="mt-6">
                             <Link href="/assessment">
-                              <Button className="w-full bg-orange-500 hover:bg-orange-600" data-testid="button-start-digital-iq">
-                                Get Your Digital IQ Score →
+                              <Button className="w-full text-white" style={{ backgroundColor: '#A00028' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#800020'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#A00028'} data-testid="button-start-blueprint">
+                                Start Your Blueprint Assessment →
                               </Button>
                             </Link>
                           </div>
