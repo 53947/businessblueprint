@@ -14,7 +14,7 @@ import bbLogo from "@assets/Blueprint_Favicon_1762489845363.png";
 import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
 import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
 import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
-import badge1 from "@assets/Digital IQ Assessment (1)_1763874287091.png";
+import blueprintToGrowthIcon from "@assets/digital iq assessment_1764056639965.png";
 import badge2 from "@assets/Get Your Prescribed Blueprint (2)_1763874287090.png";
 import badge3 from "@assets/LocalBlue Bundle (3)_1763874287091.png";
 import badge4 from "@assets/Coach Blue as Blue(4)_1763874287091.png";
@@ -30,7 +30,7 @@ import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
 import commverseBundle from "@assets/_ commverse bundle logo_1762731789054.png";
 import commverseIcon from "@assets/Commverse_1762731195351.png";
 import localBlueLogo from "@assets/localblue-logo.png";
-import heroAssessmentIcon from "@assets/Digital IQ Assessment (1)_1763874287091.png";
+import heroAssessmentIcon from "@assets/digital iq assessment_1764056639965.png";
 import heroCoachIcon from "@assets/Coach Blue as Blue(4)_1763874287091.png";
 
 export default function Home() {
@@ -68,11 +68,11 @@ export default function Home() {
                   onClick={startAssessment} 
                   size="lg" 
                   variant="outline"
-                  className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#FF6B00] font-semibold"
+                  className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#A00028] font-semibold"
                   data-testid="button-start-assessment"
                 >
                   <img src={heroAssessmentIcon} alt="" className="w-6 h-6 mr-2" />
-                  Start Free Digital IQ Assessment
+                  Start Free Blueprint to Your Growth
                 </Button>
                 <Link href="/ai-coach">
                   <Button 
@@ -120,14 +120,14 @@ export default function Home() {
                   Custom digital growth plan built from AI analysis of your business.
                 </p>
                 <div className="space-y-3 relative z-10">
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-orange-500">
+                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: '#A00028' }}>
                     <div className="flex-shrink-0 -mt-2">
-                      <img src={badge1} alt="Step 1" className="w-10 h-10 object-contain" />
+                      <img src={blueprintToGrowthIcon} alt="Step 1" className="w-10 h-10 object-contain" />
                     </div>
                     <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 1 — Digital IQ Assessment</div>
+                      <div className="font-bold text-sm text-gray-900">Step 1 — Blueprint to Your Growth</div>
                       <p className="text-xs text-gray-600">
-                        AI audit of your online presence with real-time Digital IQ score.
+                        AI audit of your online presence with custom growth plan.
                       </p>
                     </div>
                   </div>
