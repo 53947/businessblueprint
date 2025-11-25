@@ -576,10 +576,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
                           </div>
-                        </div>
 
-                        {/* AI COACH & DIGITAL IQ - 50/50 WIDTH */}
-                          <div className="mb-4">
+                          {/* AI COACH & DIGITAL IQ - BOTTOM 50/50 WIDTH */}
+                          <div className="mt-6 pt-4 border-t border-gray-300">
                             <h4 className="text-[10px] font-bold text-gray-700 mb-3 uppercase tracking-wide">
                               AI SERVICES
                             </h4>
@@ -657,9 +656,6 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
                           </div>
-                        </div>
-                        </div>
-                        </div>
                         </div>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
