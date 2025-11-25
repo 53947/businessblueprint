@@ -70,7 +70,7 @@ import badge2 from "@assets/Get Your Prescribed Blueprint (2)_1763874287090.png"
 import badge3 from "@assets/LocalBlue Bundle (3)_1763874287091.png";
 import badge4 from "@assets/Coach Blue as Blue(4)_1763874287091.png";
 import badge5 from "@assets/Commverse (5)_1763874287091.png";
-import consoleBluelogo from "@assets/ConsoleBlue-favicon_1764031868761.png";
+import consoleBluelogo from "@assets/Blue Favicon_1764098681244.png";
 import siteInspectorIcon from "@assets/SiteInspectorIcon_1764098487505.png";
 import localblueIcon from "@assets/localblue_1764091108634.png";
 import commverseWordmark from "@assets/_ comverse bundle_1764096245312.png";
