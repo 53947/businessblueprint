@@ -73,6 +73,14 @@ import badge5 from "@assets/Commverse (5)_1763874287091.png";
 import consoleBluelogo from "@assets/ConsoleBlue-favicon_1764031868761.png";
 import siteInspectorLogo from "@assets/siteinspetor-logo_1764028049473.png";
 import localblueIcon from "@assets/localblue-logo.png";
+import commverseWordmark from "@assets/commverse bundle name_1764089275240.png";
+import localblueWordmark from "@assets/_ localblue color triad black and triad blue_1764089275239.png";
+import sendWordmark from "@assets/send app logo_1764088895509.png";
+import inboxWordmark from "@assets/inbox app logo_1764088895509.png";
+import livechatWordmark from "@assets/livechat app logo_1764088895509.png";
+import contentWordmark from "@assets/content app logo_1764088895508.png";
+import listingsWordmark from "@assets/listings color triad black and FF0040_1764089307839.png";
+import reputationWordmark from "@assets/reputation color triad black and D59600_1764089307840.png";
 
 
 interface HeaderProps {
@@ -342,7 +350,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-center justify-between mb-2">
                                   <div className="flex items-center gap-2">
                                     <img src={commverseIcon} alt="" className="w-8 h-8" />
-                                    <div className="font-bold text-lg text-gray-900">Commverse Bundle</div>
+                                    <img src={commverseWordmark} alt="Commverse" className="h-8" />
                                   </div>
                                   <button
                                     onClick={() => toggleItemBilling('bundle')}
@@ -378,9 +386,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={sendIcon} alt="" className="w-7 h-7" />
-                                  <div>
-                                    <p className="text-sm font-bold text-gray-700">/send</p>
-                                  </div>
+                                  <img src={sendWordmark} alt="/send" className="h-8" />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
@@ -405,9 +411,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={inboxIcon} alt="" className="w-7 h-7" />
-                                  <div>
-                                    <p className="text-sm font-bold text-gray-700">/inbox</p>
-                                  </div>
+                                  <img src={inboxWordmark} alt="/inbox" className="h-8" />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
@@ -432,9 +436,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={livechatIcon} alt="" className="w-7 h-7" />
-                                  <div>
-                                    <p className="text-sm font-bold text-gray-700">/livechat</p>
-                                  </div>
+                                  <img src={livechatWordmark} alt="/livechat" className="h-8" />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
@@ -459,9 +461,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={contentIcon} alt="" className="w-7 h-7" />
-                                  <div>
-                                    <p className="text-sm font-bold text-gray-700">/content</p>
-                                  </div>
+                                  <img src={contentWordmark} alt="/content" className="h-8" />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
@@ -492,7 +492,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-center justify-between mb-2">
                                   <div className="flex items-center gap-2">
                                     <img src={localblueIcon} alt="" className="w-8 h-8" />
-                                    <div className="font-bold text-base text-gray-900">LocalBlue</div>
+                                    <img src={localblueWordmark} alt="LocalBlue" className="h-8" />
                                   </div>
                                   <button
                                     onClick={() => toggleItemBilling('localblue-bundle')}
@@ -528,9 +528,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={listingsIcon} alt="" className="w-7 h-7" />
-                                  <div>
-                                    <p className="text-sm font-bold text-gray-700">/listings</p>
-                                  </div>
+                                  <img src={listingsWordmark} alt="/listings" className="h-8" />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('listings-addon', '/listings', 40, 'addon')}
@@ -555,9 +553,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-2">
                                 <div className="flex items-center gap-2">
                                   <img src={reputationIcon} alt="" className="w-7 h-7" />
-                                  <div>
-                                    <p className="text-sm font-bold text-gray-700">/reputation</p>
-                                  </div>
+                                  <img src={reputationWordmark} alt="/reputation" className="h-8" />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
