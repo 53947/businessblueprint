@@ -480,6 +480,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <a href="/content" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
                             </div>
+                          </div>
 
                             {/* LOCALBLUE BUNDLE - 1/3 width */}
                             <div className="col-span-1">
@@ -576,6 +577,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
                           </div>
+                        </div>
+                      </div>
 
                           {/* AI COACH & DIGITAL IQ - BOTTOM 50/50 WIDTH */}
                           <div className="mt-6 pt-4 border-t border-gray-300">
@@ -656,6 +659,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
                           </div>
+                        </div>
                         </div>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
