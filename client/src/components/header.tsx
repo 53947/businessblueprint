@@ -328,8 +328,43 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
                           </div>
 
-                          {/* COMMVERSE SECTION - 4 BOXES */}
+                          {/* COMMVERSE BUNDLE */}
                           <div className="mb-6">
+                            <h4 className="text-[10px] font-bold text-gray-700 mb-3 uppercase tracking-wide">
+                              COMMVERSE BUNDLE
+                            </h4>
+                            <div className="p-3 rounded border-2 border-blue-600 hover:shadow-lg transition-all mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-1">
+                                  <img src={commverseIcon} alt="" className="w-6 h-6" />
+                                  <img src={commverseBundle} alt="Commverse" className="h-4" />
+                                </div>
+                                <button
+                                  onClick={() => toggleItemBilling('bundle')}
+                                  className="text-[8px] font-bold px-2 py-0.5 rounded border border-blue-400 hover:bg-blue-50"
+                                  data-testid="toggle-bundle"
+                                >
+                                  {getItemBillingCycle('bundle') === 'monthly' ? 'Mo' : 'Yr'}
+                                </button>
+                              </div>
+                              <div className="text-xl font-extrabold mb-0.5" style={{ color: '#0000FF' }}>
+                                {getItemPrice('bundle', 100).displayPrice}
+                              </div>
+                              <p className="text-[10px] font-semibold text-gray-700 mb-1">/send + /inbox + /livechat + /content</p>
+                              <p className="text-[10px] font-bold text-green-600 mb-2">
+                                {getItemBillingCycle('bundle') === 'annual' ? 'Save 20% annually' : 'Save $40/month'}
+                              </p>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="w-full h-7 text-xs font-bold border-2 border-blue-600 text-blue-600 hover:bg-blue-50" 
+                                onClick={() => handleAddToCart('bundle', 'Commverse Bundle', 100, 'addon')}
+                                data-testid="button-add-commverse-bundle"
+                              >
+                                Add to Cart
+                              </Button>
+                            </div>
+
                             <h4 className="text-[10px] font-bold text-gray-700 mb-3 uppercase tracking-wide">
                               COMMVERSE - 4 Apps
                             </h4>
@@ -448,8 +483,43 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
                           </div>
 
-                          {/* LOCALBLUE SECTION - 2 BOXES */}
+                          {/* LOCALBLUE BUNDLE */}
                           <div className="mb-6">
+                            <h4 className="text-[10px] font-bold text-gray-700 mb-3 uppercase tracking-wide">
+                              LOCALBLUE BUNDLE
+                            </h4>
+                            <div className="p-3 rounded border-2 border-blue-600 hover:shadow-lg transition-all mb-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-1">
+                                  <img src={badge3} alt="" className="w-6 h-6" />
+                                  <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
+                                </div>
+                                <button
+                                  onClick={() => toggleItemBilling('localblue-bundle')}
+                                  className="text-[8px] font-bold px-2 py-0.5 rounded border border-blue-400 hover:bg-blue-50"
+                                  data-testid="toggle-localblue-bundle"
+                                >
+                                  {getItemBillingCycle('localblue-bundle') === 'monthly' ? 'Mo' : 'Yr'}
+                                </button>
+                              </div>
+                              <div className="text-xl font-extrabold mb-0.5" style={{ color: '#0000FF' }}>
+                                {getItemPrice('localblue-bundle', 60).displayPrice}
+                              </div>
+                              <p className="text-[10px] font-semibold text-gray-700 mb-1">/listings + /reputation</p>
+                              <p className="text-[10px] font-bold text-green-600 mb-2">
+                                {getItemBillingCycle('localblue-bundle') === 'annual' ? 'Save 20% annually' : 'Save $20/month'}
+                              </p>
+                              <Button 
+                                size="sm" 
+                                variant="outline" 
+                                className="w-full h-7 text-xs font-bold border-2 border-blue-600 text-blue-600 hover:bg-blue-50"
+                                onClick={() => handleAddToCart('localblue-bundle', 'LocalBlue Bundle', 60, 'addon')}
+                                data-testid="button-add-localblue-bundle"
+                              >
+                                Add to Cart
+                              </Button>
+                            </div>
+
                             <h4 className="text-[10px] font-bold text-gray-700 mb-3 uppercase tracking-wide">
                               LOCALBLUE - 2 Apps
                             </h4>
