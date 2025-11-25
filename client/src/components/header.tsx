@@ -35,6 +35,7 @@ import usersIcon from "@assets/icons/users.svg";
 import lightbulbIcon from "@assets/icons/lightbulb.svg";
 import wrenchIcon from "@assets/icons/wrench.svg";
 import messageSquareIcon from "@assets/icons/message-square.svg";
+import settingsIcon from "@assets/native icons and favicons/settings.png";
 import { BrandLogo, BrandIcon } from "@/components/brand-logo";
 import bbAvatar from "@assets/Blueprint_Favicon_1762489845363.png";
 import bbIcon from "@assets/Blueprint_Favicon_1762489845363.png";
@@ -1028,6 +1029,27 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                               </a>
                             </NavigationMenuLink>
+
+                            {/* Administration Section */}
+                            <div className="border-t border-gray-200 pt-2 mt-2">
+                              <div className="flex items-center gap-2 mb-2">
+                                <img src={settingsIcon} alt="" className="w-4 h-4" style={{ filter: 'invert(46%) sepia(96%) saturate(589%) hue-rotate(86deg) brightness(92%) contrast(87%)' }} />
+                                <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Administration</h4>
+                              </div>
+                              <NavigationMenuLink asChild>
+                                <a
+                                  className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                  href="/api/login"
+                                  data-testid="link-resources-admin-login"
+                                >
+                                  <img src={logInIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
+                                  <div>
+                                    <div className="text-sm font-medium text-gray-900 dark:text-white">Admin Login</div>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">Owner & staff access</p>
+                                  </div>
+                                </a>
+                              </NavigationMenuLink>
+                            </div>
                           </div>
 
                           {/* Featured CTA - Full Width */}
@@ -1095,7 +1117,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                 {/* Login Button - Text only with border and proper padding */}
                 <a
-                  href="/api/login"
+                  href="/portal/login"
                   className="hidden sm:flex items-center px-6 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-sm font-medium transition-colors"
                   data-testid="button-login"
                 >
@@ -1295,7 +1317,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
             {/* Sticky Footer - Login CTA */}
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-lg">
-              <a href="/api/login" className="flex items-center justify-center gap-3 w-full p-4 border-2 border-gray-900 text-gray-900 rounded-lg font-bold text-lg active:bg-gray-50 transition-colors" data-testid="mobile-login-btn">
+              <a href="/portal/login" className="flex items-center justify-center gap-3 w-full p-4 border-2 border-gray-900 text-gray-900 rounded-lg font-bold text-lg active:bg-gray-50 transition-colors" data-testid="mobile-login-btn">
                 Login
               </a>
             </div>
