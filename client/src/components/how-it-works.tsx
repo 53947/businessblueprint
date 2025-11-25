@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import badge1 from "@assets/Digital IQ Assessment (1)_1763874287091.png";
+import badge1 from "@assets/digital iq assessment_1764056639965.png";
 import badge2 from "@assets/Get Your Prescribed Blueprint (2)_1763874287090.png";
 import badge3 from "@assets/LocalBlue Bundle (3)_1763874287091.png";
 import badge4 from "@assets/Coach Blue as Blue(4)_1763874287091.png";
@@ -20,13 +20,13 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
         </div>
 
         <div className="grid md:grid-cols-5 gap-4 mb-12">
-          {/* Step 1 - Digital IQ Assessment */}
+          {/* Step 1 - Blueprint to Your Growth */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={badge1} alt="Digital IQ Assessment" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <img src={badge1} alt="Blueprint to Your Growth" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Digital IQ Assessment</h3>
-            <p className="text-xs text-gray-600">AI analyzes your online presence and scores your Digital IQ</p>
+            <h3 className="text-sm font-bold text-gray-900 mb-1">Blueprint to Your Growth</h3>
+            <p className="text-xs text-gray-600">AI analyzes your online presence and creates your growth blueprint</p>
           </div>
 
           {/* Step 2 - Prescribed Blueprint */}

@@ -65,7 +65,7 @@ import reputationLogo from "@assets/reputation_1762930219633.png";
 import listingsIcon from "@assets/listings app_1762804610311.png";
 import listingsLogo from "@assets/listings_1762930219632.png";
 import localBlueLogo from "@assets/localblue-logo.png";
-import badge1 from "@assets/Digital IQ Assessment (1)_1763874287091.png";
+import badge1 from "@assets/digital iq assessment_1764056639965.png";
 import badge2 from "@assets/Get Your Prescribed Blueprint (2)_1763874287090.png";
 import badge3 from "@assets/LocalBlue Bundle (3)_1763874287091.png";
 import badge4 from "@assets/Coach Blue as Blue(4)_1763874287091.png";
@@ -299,7 +299,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Products</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-3 w-[900px]">
+                        <div className="p-4 w-[1200px]">
                           {/* MASTER BILLING CYCLE TOGGLE */}
                           <div className="flex items-center justify-center mb-4 pb-3 border-b-2 border-gray-300">
                             <div className="flex items-center gap-3 bg-white rounded-full border-2 border-blue-600 p-1">
@@ -328,14 +328,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
                           </div>
 
-                          {/* APP BUNDLES - COMPLETE SOLUTIONS */}
+                          {/* APP BUNDLES - WIDER 4-COLUMN LAYOUT */}
                           <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
-                            APP BUNDLES - COMPLETE SOLUTIONS
+                            BUNDLES & APPS
                           </h4>
                           
-                          {/* 2/3 Commverse + 1/3 LocalBlue Layout */}
-                          <div className="grid grid-cols-3 gap-3 mb-4">
-                            {/* LEFT 2/3: Commverse Bundle + Apps */}
+                          {/* Wider 4-column Layout: Commverse (2 cols) + LocalBlue (1 col) + Services (1 col) */}
+                          <div className="grid grid-cols-4 gap-3 mb-4">
+                            {/* COLUMN 1-2: Commverse Bundle + Individual Apps (clearly grouped as sequence) */}
                             <div className="col-span-2 space-y-2">
                               {/* Commverse Bundle */}
                               <div className="p-3 rounded border-2 border-blue-600 hover:shadow-lg transition-all">
@@ -532,7 +532,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
 
-                            {/* RIGHT 1/3: LocalBlue Bundle + Apps */}
+                            {/* COLUMN 3: LocalBlue Bundle + Apps */}
                             <div className="col-span-1 space-y-2">
                               {/* LocalBlue Bundle */}
                               <div className="p-3 rounded border-2 border-blue-600 hover:shadow-lg transition-all">
@@ -700,18 +700,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                               </div>
 
-                              {/* Digital IQ - Start Assessment Link */}
-                              <a href="/assessment" className="p-2 rounded border-2 hover:shadow transition-all flex flex-col" data-testid="link-digital-iq">
+                              {/* Blueprint to Your Growth - Start Assessment Link */}
+                              <a href="/assessment" className="p-2 rounded border-2 hover:shadow transition-all flex flex-col" style={{ borderColor: '#A00028' }} data-testid="link-blueprint-growth">
                                 <div className="flex items-center gap-2 mb-2">
-                                  <img src={badge1} alt="Digital IQ" className="w-8 h-8" />
+                                  <img src={badge1} alt="Blueprint to Your Growth" className="w-8 h-8" />
                                   <div className="flex-1">
-                                    <div className="text-xs font-extrabold">Digital IQ</div>
-                                    <p className="text-[9px] font-semibold text-gray-700">Assessment</p>
+                                    <div className="text-xs font-extrabold" style={{ color: '#A00028' }}>Blueprint</div>
+                                    <p className="text-[9px] font-semibold text-gray-700">Free Assessment</p>
                                   </div>
                                 </div>
                                 <div className="text-center">
                                   <span className="text-[10px] font-bold text-green-600 bg-green-50 px-3 py-1 rounded">
-                                    Start Assessment - FREE
+                                    Start Now - FREE
                                   </span>
                                 </div>
                               </a>
@@ -783,10 +783,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                             {/* Row 3: Digital IQ + Commverse Apps */}
                             <NavigationMenuLink asChild>
-                              <a href="/assessment" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#F97316' }} data-testid="link-solution-digital-iq">
-                                <img src={badge1} alt="Digital IQ" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">Digital IQ</div>
-                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">AI Assessment</p>
+                              <a href="/assessment" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#A00028' }} data-testid="link-solution-blueprint-growth">
+                                <img src={badge1} alt="Blueprint to Your Growth" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">Blueprint to Your Growth</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Free Assessment</p>
                               </a>
                             </NavigationMenuLink>
 
@@ -1290,13 +1290,13 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   </div>
                 </div>
 
-                {/* Digital IQ - Secondary CTA */}
-                <a href="/assessment" className="block mb-6 p-5 bg-orange-500 text-white rounded-lg shadow-md active:scale-95 transition-transform" data-testid="mobile-digital-iq-cta">
+                {/* Blueprint to Your Growth - Secondary CTA */}
+                <a href="/assessment" className="block mb-6 p-5 text-white rounded-lg shadow-md active:scale-95 transition-transform" style={{ backgroundColor: '#A00028' }} data-testid="mobile-blueprint-cta">
                   <div className="flex items-center gap-3">
-                    <ClipboardCheck className="w-8 h-8" />
+                    <img src={badge1} alt="Blueprint" className="w-8 h-8" />
                     <div>
-                      <div className="text-lg font-extrabold">Free Digital IQ</div>
-                      <div className="text-sm opacity-90">Get your custom growth plan</div>
+                      <div className="text-lg font-extrabold">Blueprint to Your Growth</div>
+                      <div className="text-sm opacity-90">AI-powered growth assessment</div>
                     </div>
                   </div>
                 </a>
