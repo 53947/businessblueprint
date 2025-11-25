@@ -73,14 +73,14 @@ import badge5 from "@assets/Commverse (5)_1763874287091.png";
 import consoleBluelogo from "@assets/ConsoleBlue-favicon_1764031868761.png";
 import siteInspectorLogo from "@assets/siteinspetor-logo_1764028049473.png";
 import localblueIcon from "@assets/localblue-logo.png";
-import commverseWordmark from "@assets/commverse bundle name_1764089275240.png";
+import commverseWordmark from "@assets/: commverse bundle name_1764089275240.png";
 import localblueWordmark from "@assets/_ localblue color triad black and triad blue_1764089275239.png";
-import sendWordmark from "@assets/send app logo_1764088895509.png";
-import inboxWordmark from "@assets/inbox app logo_1764088895509.png";
-import livechatWordmark from "@assets/livechat app logo_1764088895509.png";
-import contentWordmark from "@assets/content app logo_1764088895508.png";
-import listingsWordmark from "@assets/listings color triad black and FF0040_1764089307839.png";
-import reputationWordmark from "@assets/reputation color triad black and D59600_1764089307840.png";
+import sendWordmark from "@assets/: send app logo_1764088895509.png";
+import inboxWordmark from "@assets/: inbox app logo_1764088895509.png";
+import livechatWordmark from "@assets/: livechat app logo_1764088895509.png";
+import contentWordmark from "@assets/: content app logo_1764088895508.png";
+import listingsWordmark from "@assets/: listings color triad black and FF0040_1764089307839.png";
+import reputationWordmark from "@assets/: reputation color triad black and D59600_1764089307840.png";
 
 
 interface HeaderProps {

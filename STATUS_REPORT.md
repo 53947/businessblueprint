@@ -6,6 +6,47 @@
 
 ## 📅 Recent Updates
 
+### November 25, 2025 - 5:02 PM - WORDMARK REPLACEMENT: 8 APP NAMES + BUNDLE TITLES
+
+- 🎨 **WORDMARK IMAGE REPLACEMENT (COMPLETE):**
+  - Replaced 8 text-based app names with official wordmark images throughout Products menu
+  - All wordmarks now displayed using brand assets (not typed text)
+  - Consistent sizing: All wordmarks set to `h-8` for perfect height uniformity
+  
+- 🏷️ **REPLACED TEXT LABELS (8 TOTAL):**
+  - **Bundle Titles (2):** Commverse Bundle, LocalBlue
+  - **Commverse Apps (4):** /send, /inbox, /livechat, /content
+  - **LocalBlue Apps (2):** /listings, /reputation
+  
+- 🖼️ **NEW WORDMARK ASSETS IMPORTED (8):**
+  - `commverse bundle name_1764089275240.png` - Orange/Blue gradient
+  - `_ localblue color triad black and triad blue_1764089275239.png` - Blue gradient
+  - `send app logo_1764088895509.png` - Yellow wordmark
+  - `inbox app logo_1764088895509.png` - Pink/Blue wordmark
+  - `livechat app logo_1764088895509.png` - Purple wordmark
+  - `content app logo_1764088895508.png` - Magenta wordmark
+  - `listings color triad black and FF0040_1764089307839.png` - Red/Pink wordmark
+  - `reputation color triad black and D59600_1764089307840.png` - Gold wordmark
+  
+- 📦 **ARCHIVE DOCUMENTATION:**
+  - Old text-based app names preserved in project history
+  - Previous wordmark assets kept in `attached_assets/` for reference (not deleted)
+  - All 8 imports added to `client/src/components/header.tsx` (lines 79-86)
+  - All 8 text elements replaced with `<img>` tags with alt text
+  
+- ✅ **VERIFICATION COMPLETE:**
+  - 0 LSP/TypeScript errors
+  - App running without errors (5:01:18 PM)
+  - All imports resolving correctly with colon-prefixed file names
+  - Consistent `h-8` sizing on all wordmarks ensures visual uniformity
+  - Bundle wordmarks: `h-8` (matching app wordmarks for consistency)
+  - App wordmarks: `h-8` (across Commverse + LocalBlue apps)
+  
+- 🔧 **FILES MODIFIED:**
+  - `client/src/components/header.tsx`: 8 imports + 8 text-to-image replacements
+  
+- ✅ **STATUS:** COMPLETE - All 8 wordmarks now displaying as brand images with consistent sizing
+
 ### November 10, 2025 - 10:50 PM - APPLICATIONS DROPDOWN WORDMARKS & SELECT BUTTONS
 
 - 🎨 **WORDMARK STANDARDIZATION:**
