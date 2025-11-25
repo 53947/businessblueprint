@@ -1106,23 +1106,35 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   )}
                 </Link>
 
-                {/* Inbox Button - Text only with proper padding */}
-                <a
-                  href="/inbox"
-                  className="hidden md:flex items-center px-6 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-sm transition-colors"
-                  data-testid="button-quick-inbox"
-                >
-                  Inbox
-                </a>
+                {/* Inbox Button - Only visible when logged in, links to portal inbox */}
+                {(isAuthenticated || hasClientPortalAccess) && (
+                  <a
+                    href="/portal/inbox"
+                    className="hidden md:flex items-center px-6 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-sm transition-colors"
+                    data-testid="button-quick-inbox"
+                  >
+                    Inbox
+                  </a>
+                )}
 
-                {/* Login Button - Text only with border and proper padding */}
-                <a
-                  href="/portal/login"
-                  className="hidden sm:flex items-center px-6 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-sm font-medium transition-colors"
-                  data-testid="button-login"
-                >
-                  Login
-                </a>
+                {/* Login/Dashboard Button - Shows Dashboard when authenticated */}
+                {(isAuthenticated || hasClientPortalAccess) ? (
+                  <a
+                    href="/portal/dashboard"
+                    className="hidden sm:flex items-center px-6 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-sm font-medium transition-colors"
+                    data-testid="button-dashboard"
+                  >
+                    Dashboard
+                  </a>
+                ) : (
+                  <a
+                    href="/portal/login"
+                    className="hidden sm:flex items-center px-6 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-sm font-medium transition-colors"
+                    data-testid="button-login"
+                  >
+                    Login
+                  </a>
+                )}
 
                 {/* Digital IQ Button - Text only with proper padding */}
                 <a
@@ -1262,13 +1274,15 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <div className="text-sm text-gray-600 truncate">Email & SMS Marketing</div>
                       </div>
                     </a>
-                    <a href="/inbox-app" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-inbox">
-                      <img src={inboxIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-gray-900 truncate">Inbox</div>
-                        <div className="text-sm text-gray-600 truncate">Unified Communications</div>
-                      </div>
-                    </a>
+                    {(isAuthenticated || hasClientPortalAccess) && (
+                      <a href="/portal/inbox" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-inbox">
+                        <img src={inboxIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold text-gray-900 truncate">Inbox</div>
+                          <div className="text-sm text-gray-600 truncate">Unified Communications</div>
+                        </div>
+                      </a>
+                    )}
                     <a href="/livechat" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-livechat">
                       <img src={livechatIcon} alt="" className="w-10 h-10 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
@@ -1315,11 +1329,17 @@ export function Header({ showNavigation = true }: HeaderProps) {
               </nav>
             </div>
 
-            {/* Sticky Footer - Login CTA */}
+            {/* Sticky Footer - Login/Dashboard CTA */}
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-lg">
-              <a href="/portal/login" className="flex items-center justify-center gap-3 w-full p-4 border-2 border-gray-900 text-gray-900 rounded-lg font-bold text-lg active:bg-gray-50 transition-colors" data-testid="mobile-login-btn">
-                Login
-              </a>
+              {(isAuthenticated || hasClientPortalAccess) ? (
+                <a href="/portal/dashboard" className="flex items-center justify-center gap-3 w-full p-4 border-2 border-gray-900 text-gray-900 rounded-lg font-bold text-lg active:bg-gray-50 transition-colors" data-testid="mobile-dashboard-btn">
+                  Dashboard
+                </a>
+              ) : (
+                <a href="/portal/login" className="flex items-center justify-center gap-3 w-full p-4 border-2 border-gray-900 text-gray-900 rounded-lg font-bold text-lg active:bg-gray-50 transition-colors" data-testid="mobile-login-btn">
+                  Login
+                </a>
+              )}
             </div>
           </div>
         )}
