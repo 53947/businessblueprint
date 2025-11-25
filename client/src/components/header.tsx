@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { addToCart, getCartCount } from "@/lib/cart";
+import { addToCart, getCartCount, getCartTotal } from "@/lib/cart";
+import { ShoppingCart, ClipboardCheck } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
