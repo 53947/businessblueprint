@@ -429,6 +429,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                               <div className="flex items-end justify-between">
                                 <div>
+                                  <p className="text-xs text-gray-600 mb-1">Includes both applications below</p>
                                   <div className="text-lg font-extrabold mb-1" style={{ color: '#0000FF' }}>
                                     {getItemPrice('localblue-bundle', 60).displayPrice}
                                   </div>
@@ -522,6 +523,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                                 <div className="flex items-end justify-between">
                                   <div>
+                                    <p className="text-xs text-gray-600 mb-1">Includes all 4 applications below</p>
                                     <div className="text-lg font-extrabold mb-1" style={{ color: '#0080FF' }}>
                                       {getItemPrice('bundle', 100).displayPrice}
                                     </div>
