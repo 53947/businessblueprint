@@ -302,6 +302,19 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="p-4 w-[1400px]">
+                          {/* FEATURED SECTION - TOP */}
+                          <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-lg border border-blue-200 dark:border-blue-800">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-1">✨ Complete Digital Suite</h3>
+                                <p className="text-xs text-gray-600 dark:text-gray-400">Everything you need to grow your business online</p>
+                              </div>
+                              <a href="/pricing" className="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap">
+                                View All Plans
+                              </a>
+                            </div>
+                          </div>
+
                           {/* MASTER BILLING CYCLE TOGGLE */}
                           <div className="flex items-center justify-center mb-4 pb-3 border-b-2 border-gray-300">
                             <div className="flex items-center gap-3 bg-white rounded-full border-2 border-blue-600 p-1">
@@ -654,6 +667,66 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     </button>
                                   </div>
                                 </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* PRICING PLANS SECTION */}
+                          <div className="mt-6 pt-4 border-t border-gray-300">
+                            <h4 className="text-[10px] font-bold text-gray-700 mb-4 uppercase tracking-wide">
+                              PRICING PLANS
+                            </h4>
+                            <div className="grid grid-cols-4 gap-3">
+                              {/* Starter Plan */}
+                              <div className="p-4 rounded-lg border-2 border-gray-300 hover:shadow-lg transition-all">
+                                <div className="font-bold text-sm text-gray-900 mb-2">Starter</div>
+                                <div className="text-2xl font-extrabold text-blue-600 mb-1">{globalBillingCycle === 'annual' ? '$99' : '$9'}</div>
+                                <p className="text-xs text-gray-600 mb-3">/{globalBillingCycle === 'annual' ? 'year' : 'month'}</p>
+                                <p className="text-xs text-gray-600 mb-3">Core essentials for small businesses</p>
+                                <Button size="sm" variant="outline" className="w-full" data-testid="button-starter-plan">Learn More</Button>
+                              </div>
+
+                              {/* Professional Plan - FEATURED */}
+                              <div className="p-4 rounded-lg border-2 border-blue-600 hover:shadow-lg transition-all relative">
+                                <div className="absolute -top-3 left-4 bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold">Most Popular</div>
+                                <div className="font-bold text-sm text-gray-900 mb-2">Professional</div>
+                                <div className="text-2xl font-extrabold text-blue-600 mb-1">{globalBillingCycle === 'annual' ? '$299' : '$29'}</div>
+                                <p className="text-xs text-gray-600 mb-3">/{globalBillingCycle === 'annual' ? 'year' : 'month'}</p>
+                                <p className="text-xs text-gray-600 mb-3">Full feature set for growth</p>
+                                <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700" data-testid="button-professional-plan">Get Started</Button>
+                              </div>
+
+                              {/* Enterprise Plan */}
+                              <div className="p-4 rounded-lg border-2 border-gray-300 hover:shadow-lg transition-all">
+                                <div className="font-bold text-sm text-gray-900 mb-2">Enterprise</div>
+                                <div className="text-2xl font-extrabold text-gray-900 mb-1">Custom</div>
+                                <p className="text-xs text-gray-600 mb-3">/month</p>
+                                <p className="text-xs text-gray-600 mb-3">Everything for large orgs</p>
+                                <Button size="sm" variant="outline" className="w-full" data-testid="button-enterprise-plan">Contact Sales</Button>
+                              </div>
+
+                              {/* Custom Solutions */}
+                              <div className="p-4 rounded-lg border-2 border-gray-300 hover:shadow-lg transition-all">
+                                <div className="font-bold text-sm text-gray-900 mb-2">À La Carte</div>
+                                <div className="text-2xl font-extrabold text-gray-900 mb-1">Build</div>
+                                <p className="text-xs text-gray-600 mb-3">/month</p>
+                                <p className="text-xs text-gray-600 mb-3">Pick apps you need</p>
+                                <Button size="sm" variant="outline" className="w-full" data-testid="button-alacarte-plan">Customize</Button>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* CTA SECTION - BOTTOM */}
+                          <div className="mt-6 pt-4 border-t border-gray-300">
+                            <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950 dark:to-red-950 rounded-lg p-4 border border-orange-200 dark:border-orange-800">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <div className="text-sm font-bold text-gray-900 dark:text-white">Need help choosing?</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Talk to our sales team for a free consultation</p>
+                                </div>
+                                <a href="/contact" className="px-4 py-2 bg-orange-600 text-white text-xs font-bold rounded-md hover:bg-orange-700 transition-colors whitespace-nowrap">
+                                  Chat with Sales
+                                </a>
                               </div>
                             </div>
                           </div>
