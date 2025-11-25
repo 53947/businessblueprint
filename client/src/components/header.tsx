@@ -73,8 +73,8 @@ import badge5 from "@assets/Commverse (5)_1763874287091.png";
 import consoleBluelogo from "@assets/ConsoleBlue-favicon_1764031868761.png";
 import siteInspectorLogo from "@assets/siteinspetor-logo_1764028049473.png";
 import localblueIcon from "@assets/localblue_1764091108634.png";
-import commverseWordmark from "@assets/: commverse bundle name_1764089275240.png";
-import localblueWordmark from "@assets/_ localblue color triad black and triad blue_1764089275239.png";
+import commverseWordmark from "@assets/_ comverse bundle_1764096245312.png";
+import localblueWordmark from "@assets/_ local blue bundle_1764096245313.png";
 import sendWordmark from "@assets/: send app logo_1764088895509.png";
 import inboxWordmark from "@assets/: inbox app logo_1764088895509.png";
 import livechatWordmark from "@assets/: livechat app logo_1764088895509.png";
@@ -413,11 +413,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               LOCALBLUE BUNDLE
                             </h4>
                             {/* Bundle Card */}
-                            <div className="p-2 rounded-lg border-2 mb-2 hover:shadow-lg transition-all" style={{ borderColor: '#0000FF' }}>
+                            <div className="p-2 rounded-lg border-2 mb-2 hover:shadow-lg transition-all" style={{ borderColor: '#6EA6FF' }}>
                               <div className="flex items-center justify-between mb-1">
                                 <div className="flex items-center gap-1.5">
                                   <img src={localblueIcon} alt="" className="w-6 h-6" />
-                                  <img src={localblueWordmark} alt="LocalBlue" className="h-8" />
+                                  <img src={localblueWordmark} alt="LocalBlue Bundle" className="h-8" />
                                 </div>
                                 <button
                                   onClick={() => toggleItemBilling('localblue-bundle')}
@@ -430,7 +430,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-end justify-between">
                                 <div>
                                   <p className="text-xs text-gray-600 mb-1">Includes both applications below</p>
-                                  <div className="text-lg font-extrabold mb-1" style={{ color: '#0000FF' }}>
+                                  <div className="text-lg font-extrabold mb-1" style={{ color: '#6EA6FF' }}>
                                     {getItemPrice('localblue-bundle', 60).displayPrice}
                                   </div>
                                   <a href="/localblue" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
@@ -438,7 +438,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <button
                                   onClick={() => handleAddToCart('localblue-bundle', 'LocalBlue Bundle', 60, 'addon')}
                                   className="text-lg font-bold w-8 h-8 rounded-full text-white flex items-center justify-center"
-                                  style={{ backgroundColor: '#0000FF' }}
+                                  style={{ backgroundColor: '#6EA6FF' }}
                                   data-testid="button-add-localblue-bundle"
                                   title="Add to Cart"
                                 >
@@ -507,15 +507,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 COMMVERSE BUNDLE
                               </h4>
                               {/* Bundle Card */}
-                              <div className="p-2 rounded-lg border-2 mb-2 hover:shadow-lg transition-all" style={{ borderColor: '#0080FF' }}>
+                              <div className="p-2 rounded-lg border-2 mb-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF6B00' }}>
                                 <div className="flex items-center justify-between mb-1">
                                   <div className="flex items-center gap-1.5">
                                     <img src={commverseIcon} alt="" className="w-6 h-6" />
-                                    <img src={commverseWordmark} alt="Commverse" className="h-8" />
+                                    <img src={commverseWordmark} alt="Commverse Bundle" className="h-8" />
                                   </div>
                                   <button
                                     onClick={() => toggleItemBilling('bundle')}
-                                    className="text-xs font-bold px-3 py-1 rounded border-2 border-blue-600 hover:bg-blue-50"
+                                    className="text-xs font-bold px-3 py-1 rounded border-2 hover:bg-orange-50"
+                                    style={{ borderColor: '#FF6B00' }}
                                     data-testid="toggle-commverse-bundle"
                                   >
                                     {getItemBillingCycle('bundle') === 'monthly' ? 'Mo' : 'Yr'}
@@ -524,7 +525,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="flex items-end justify-between">
                                   <div>
                                     <p className="text-xs text-gray-600 mb-1">Includes all 4 applications below</p>
-                                    <div className="text-lg font-extrabold mb-1" style={{ color: '#0080FF' }}>
+                                    <div className="text-lg font-extrabold mb-1" style={{ color: '#FF6B00' }}>
                                       {getItemPrice('bundle', 100).displayPrice}
                                     </div>
                                     <a href="/commverse" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
@@ -532,7 +533,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <button
                                     onClick={() => handleAddToCart('bundle', 'Commverse Bundle', 100, 'addon')}
                                     className="text-lg font-bold w-8 h-8 rounded-full text-white flex items-center justify-center"
-                                    style={{ backgroundColor: '#0080FF' }}
+                                    style={{ backgroundColor: '#FF6B00' }}
                                     data-testid="button-add-commverse-bundle"
                                     title="Add to Cart"
                                   >
@@ -548,7 +549,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="flex items-start justify-between mb-1">
                                 <div className="flex items-center gap-1.5">
                                   <img src={sendIcon} alt="" className="w-5 h-5" />
-                                  <img src={sendWordmark} alt="/send" className="h-4" />
+                                  <img src={sendWordmark} alt="/send" className="h-4" style={{ filter: 'drop-shadow(0 0 1px #09080E) drop-shadow(0 0 1px #09080E)' }} />
                                 </div>
                                 <button
                                   onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
