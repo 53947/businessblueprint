@@ -29,6 +29,20 @@ export default function SendLanding() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
+                className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white font-bold"
+                style={{ backgroundColor: '#FF6B00' }}
+                onClick={() => {
+                  const event = new CustomEvent('addToCart', { 
+                    detail: { sku: 'send-addon', name: '/send', price: 35, type: 'addon' }
+                  });
+                  window.dispatchEvent(event);
+                }}
+                data-testid="button-add-to-cart"
+              >
+                Add to Cart
+              </Button>
+              <Button 
+                size="lg" 
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity"
                 style={{ backgroundColor: '#E6B747', color: '#000' }}
                 asChild
@@ -45,16 +59,6 @@ export default function SendLanding() {
                 data-testid="button-view-pricing"
               >
                 <a href="/commverse-pricing">View Pricing</a>
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="text-lg px-8 py-6 shadow-md hover:bg-[#E6B747]/10 transition-colors"
-                style={{ borderColor: '#E6B747', color: '#000' }}
-                asChild
-                data-testid="button-try-demo"
-              >
-                <a href="/send-app">Try Live Demo</a>
               </Button>
             </div>
           </div>
