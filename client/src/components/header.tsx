@@ -479,7 +479,6 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                                 <a href="/content" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
-                              </div>
                             </div>
 
                             {/* LOCALBLUE BUNDLE - 1/3 width */}
@@ -658,6 +657,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
                           </div>
+                        </div>
+                        </div>
+                        </div>
                         </div>
                       </NavigationMenuContent>
                     </NavigationMenuItem>
