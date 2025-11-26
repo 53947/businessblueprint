@@ -481,11 +481,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         token: jwtToken,
         message: "Login successful"
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Magic link verification error:", error);
+      console.error("Error stack:", error?.stack);
+      console.error("Error message:", error?.message);
       res.status(500).json({
         success: false,
-        message: "Verification failed. Please try again."
+        message: "Verification failed. Please try again.",
+        debug: process.env.NODE_ENV === 'development' ? error?.message : undefined
       });
     }
   });
