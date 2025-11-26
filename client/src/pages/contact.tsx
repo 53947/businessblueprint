@@ -121,6 +121,8 @@ export default function Contact() {
                 <Button 
                   variant="outline" 
                   className="border-yellow-500 text-yellow-600 hover:bg-yellow-500 hover:text-white"
+                  onClick={() => window.location.href = '/assessment'}
+                  data-testid="btn-take-assessment"
                 >
                   Take Free Assessment
                 </Button>
