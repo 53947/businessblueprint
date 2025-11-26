@@ -138,6 +138,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Public lookup endpoint for finding assessment results
+  app.get("/api/assessments/lookup", async (req, res) => {
+    try {
+      const { email } = req.query;
+
+      if (!email || typeof email !== 'string') {
+        return res.status(400).json({ message: "Email parameter is required" });
+      }
+
+      const assessments = await storage.getAssessmentsByEmail(email);
+      
+      if (!assessments || assessments.length === 0) {
+        return res.status(404).json({ 
+          message: "No assessments found for this email address.",
+          assessments: [] 
+        });
+      }
+
+      // Return simplified assessment data for the lookup page
+      const simplifiedAssessments = assessments.map(a => ({
+        id: a.id,
+        businessName: a.businessName,
+        status: a.status,
+        digitalScore: a.digitalScore,
+        createdAt: a.createdAt
+      }));
+
+      res.json({ 
+        success: true,
+        assessments: simplifiedAssessments 
+      });
+    } catch (error) {
+      console.error("Error looking up assessments:", error);
+      res.status(500).json({ message: "Failed to look up assessments" });
+    }
+  });
+
   // Get all assessments (admin only - protected by Replit Auth)
   app.get("/api/admin/assessments", isAuthenticated, async (req, res) => {
     try {
