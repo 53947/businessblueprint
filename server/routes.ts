@@ -104,12 +104,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create assessment with pending status
       const assessment = await storage.createAssessment(validatedData);
 
+      // Create or find client account for this email
+      let client = await storage.getClientByEmail(validatedData.email);
+      if (!client) {
+        client = await storage.createClient({
+          companyName: validatedData.businessName,
+          email: validatedData.email,
+          phone: validatedData.phone,
+          website: validatedData.website || undefined,
+          address: validatedData.address,
+          accountStatus: "active" as const
+        });
+        console.log(`[Assessment] Created client account for ${validatedData.email}, ID: ${client.id}`);
+      }
+
+      // Link assessment to client
+      await storage.linkAssessmentToClient(client.id, assessment.id);
+      console.log(`[Assessment] Linked assessment ${assessment.id} to client ${client.id}`);
+
       // Start background analysis
       processAssessmentAsync(assessment.id, googleService, aiService, emailService, storage);
 
       res.json({
         success: true,
         assessmentId: assessment.id,
+        clientId: client.id,
         message: "Assessment started. You'll receive results via email within 2-3 minutes."
       });
     } catch (error) {
