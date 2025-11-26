@@ -488,7 +488,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({
         success: false,
         message: "Verification failed. Please try again.",
-        debug: process.env.NODE_ENV === 'development' ? error?.message : undefined
+        error: error?.message,
+        code: error?.code
       });
     }
   });
