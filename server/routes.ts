@@ -69,6 +69,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const aiService = new OpenAIAnalysisService();
   const emailService = new EmailService();
 
+  // Temporary setup endpoint to create demo accounts (for Meta review)
+  app.post("/api/setup/demo-accounts", async (req, res) => {
+    try {
+      const demoAccounts = [
+        { companyName: "Demo Restaurant", email: "demo@businessblueprint.io", accountStatus: "active" as const },
+        { companyName: "Test Business", email: "test@businessblueprint.io", accountStatus: "active" as const },
+        { companyName: "Social Media Agency", email: "agency@businessblueprint.io", accountStatus: "active" as const }
+      ];
+
+      const results = [];
+      for (const account of demoAccounts) {
+        const existing = await storage.getClientByEmail(account.email);
+        if (existing) {
+          results.push({ email: account.email, status: "already exists", id: existing.id });
+        } else {
+          const created = await storage.createClient(account);
+          results.push({ email: account.email, status: "created", id: created.id });
+        }
+      }
+
+      res.json({ success: true, accounts: results });
+    } catch (error) {
+      console.error("Demo account setup error:", error);
+      res.status(500).json({ success: false, error: "Failed to create demo accounts" });
+    }
+  });
+
   // Create new assessment
   app.post("/api/assessments", async (req, res) => {
     try {
