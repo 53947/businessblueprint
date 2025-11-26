@@ -745,10 +745,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error(`❌ Error sending magic link email to ${normalizedEmail}:`, err.message);
       });
 
+      // For demo accounts, return the magic link directly (Meta App Review)
+      const isDemoAccount = ['demo@businessblueprint.io', 'test@businessblueprint.io', 'agency@businessblueprint.io'].includes(normalizedEmail);
+
       // Immediately respond to user
       res.json({
         success: true,
-        message: "Check your email! We've sent you a secure login link.",
+        message: isDemoAccount 
+          ? "Demo account detected - use the link below to login instantly."
+          : "Check your email! We've sent you a secure login link.",
+        ...(isDemoAccount && { 
+          demoLink: magicLink,
+          note: "This link is provided for Meta App Review testing purposes."
+        }),
         ...(process.env.NODE_ENV === 'development' && { 
           devToken: token,
           devLink: magicLink 
