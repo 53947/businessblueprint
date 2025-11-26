@@ -35,6 +35,10 @@ export default function Dashboard() {
     enabled: !!assessmentId
   });
 
+  const selectPathway = (pathway: string) => {
+    window.location.href = `/assessment-checkout?id=${assessmentId}&pathway=${pathway}`;
+  };
+
 
   if (isLoading) {
     return (

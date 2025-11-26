@@ -184,4 +184,26 @@ npm run db:push
 
 ---
 
+## 📧 Email Delivery Status (IMPORTANT)
+
+**Issue:** Replit blocks outbound SMTP (port 587), so Nodemailer cannot send emails.
+
+**Current Workaround (Nov 2025):**
+1. Assessment dashboard shows "Save This Page" with copy-able link after submission
+2. `/find-results` page allows users to look up assessments by email
+3. Demo accounts (demo@, test@, agency@businessblueprint.io) return direct links without email
+
+**Recommended Fix:** Set up Resend integration for transactional email delivery:
+- Best pricing: $20/mo for 50,000 emails
+- Free tier: 3,000 emails/month
+- Clean API with excellent TypeScript support
+- Use Replit's Resend connector integration
+
+**Files affected:**
+- `server/services/email.ts` - Current Nodemailer implementation (non-functional in production)
+- `client/src/pages/find-results.tsx` - Email lookup fallback page
+- `client/src/pages/dashboard.tsx` - Shows copy-able dashboard link during analysis
+
+---
+
 **Remember:** This file governs **how we work together**. For **what we're building**, see the technical docs referenced above.
