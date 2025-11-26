@@ -1,0 +1,46 @@
+ACCESS INSTRUCTIONS FOR BUSINESS BLUEPRINT
+App URL: https://businessblueprint.io
+STEP 1: LOGIN
+- Click "Login" in the top navigation bar
+- Use test credentials provided below (see question 3)
+- You'll be redirected to the Client Portal dashboard
+STEP 2: NAVIGATE TO SOCIAL MEDIA FEATURES
+- Click "Content" in the left sidebar menu
+- This opens the social media content management module at /content
+STEP 3: CONNECT FACEBOOK/INSTAGRAM
+- Click "Connect Platform" or "Add Account" button
+- Select Facebook or Instagram from the platform options
+- Authorize with your Facebook test account
+- Grant the requested permissions
+STEP 4: TEST MESSAGING INTEGRATION
+- Click "Inbox" in the left sidebar (route: /inbox-app)
+- This is our unified communication hub (Commverse)
+- Send a test message to your connected Facebook Page via Facebook
+- Verify the message appears in Business Blueprint's inbox in real-time
+META API INTEGRATIONS USED:
+✓ Facebook Login - Used for account authentication and platform connections
+✓ Pages API - For managing Facebook Pages and posting content
+✓ Instagram Graph API - For Instagram content publishing and insights
+✓ Messenger Platform - Webhook integration for receiving Facebook messages and comments
+✓ Instagram Messaging API - Webhook integration for receiving Instagram DMs
+PERMISSIONS REQUESTED:
+- pages_manage_posts (post content to Facebook Pages)
+- pages_read_engagement (read comments and reactions)
+- pages_messaging (receive and respond to messages)
+- instagram_basic (access Instagram account info)
+- instagram_content_publish (post to Instagram)
+- instagram_manage_messages (receive and respond to Instagram DMs)
+WEBHOOK ENDPOINT:
+https://businessblueprint.io/api/webhooks/meta
+This endpoint receives real-time updates for:
+- Facebook Page messages
+- Instagram direct messages
+- Post comments
+- All webhook events are processed and displayed in the /inbox-app interface
+NAVIGATION SUMMARY:
+1. Login at /portal/login
+2. Dashboard at /portal
+3. Social media posting at /content
+4. Message inbox at /inbox-app
+5. Settings and account management in sidebar
+For technical support or questions during review, contact: support@businessblueprint.io
