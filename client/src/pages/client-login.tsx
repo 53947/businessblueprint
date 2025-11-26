@@ -14,6 +14,7 @@ export default function ClientLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [emailSent, setEmailSent] = useState(false);
+  const [demoLink, setDemoLink] = useState("");
   const [, setLocation] = useLocation();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
@@ -53,6 +54,10 @@ export default function ClientLogin() {
         // Show success message - user needs to check their email
         setEmailSent(true);
         setError("");
+        // Store demo link if provided (for Meta App Review demo accounts)
+        if (data.demoLink) {
+          setDemoLink(data.demoLink);
+        }
       } else {
         setError(data.message || "Unable to send login link. Please check your email address.");
       }
@@ -102,6 +107,25 @@ export default function ClientLogin() {
                   <strong>Check your email!</strong> We've sent a secure login link to <strong>{email}</strong>
                 </AlertDescription>
               </Alert>
+
+              {demoLink && (
+                <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 space-y-3">
+                  <h3 className="font-semibold text-amber-900">Demo Account - Instant Access</h3>
+                  <p className="text-sm text-amber-800">
+                    This is a demo account for testing. Click below to login instantly:
+                  </p>
+                  <a
+                    href={demoLink}
+                    className="block w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-4 rounded-lg text-center transition-colors"
+                    data-testid="link-demo-login"
+                  >
+                    Login to Demo Account
+                  </a>
+                  <p className="text-xs text-amber-700">
+                    This link is provided for Meta App Review testing purposes.
+                  </p>
+                </div>
+              )}
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
                 <h3 className="font-semibold text-blue-900">What happens next:</h3>
