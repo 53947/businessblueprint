@@ -790,18 +790,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const magicLink = `${frontendUrl}/portal/verify?token=${token}`;
 
       // Send magic link email asynchronously (fire and forget to avoid blocking)
-      const emailService = new EmailService();
-      emailService.sendMagicLinkEmail(
+      const magicLinkEmailService = new ResendEmailService();
+      magicLinkEmailService.sendMagicLinkEmail(
         normalizedEmail,
         magicLink,
         client.companyName
-      ).then(sent => {
+      ).then((sent: boolean) => {
         if (sent) {
           console.log(`✅ Magic link email sent to ${normalizedEmail}`);
         } else {
           console.warn(`⚠️ Failed to send email to ${normalizedEmail}. Magic link: ${magicLink}`);
         }
-      }).catch(err => {
+      }).catch((err: Error) => {
         console.error(`❌ Error sending magic link email to ${normalizedEmail}:`, err.message);
       });
 
@@ -2723,7 +2723,7 @@ async function processAssessmentAsync(
   assessmentId: number,
   googleService: GoogleBusinessService,
   aiService: OpenAIAnalysisService,
-  emailService: EmailService,
+  emailService: ResendEmailService,
   storage: any
 ) {
   try {
