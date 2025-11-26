@@ -47,6 +47,7 @@ import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import DataDeletion from "@/pages/data-deletion";
 import PortalTestAccess from "@/pages/portal-test-access";
+import FindResults from "@/pages/find-results";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -97,6 +98,7 @@ function Router() {
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
       <Route path="/data-deletion" component={DataDeletion} />
+      <Route path="/find-results" component={FindResults} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -94,20 +94,65 @@ export default function Dashboard() {
   const analysisResults = assessment.analysisResults;
 
   if (assessment.status === "pending" || assessment.status === "analyzing") {
+    const dashboardUrl = `${window.location.origin}/dashboard/${assessmentId}`;
+    
+    const copyToClipboard = () => {
+      navigator.clipboard.writeText(dashboardUrl);
+      toast({
+        title: "Link Copied!",
+        description: "Dashboard link copied to clipboard. Bookmark this page to return anytime.",
+      });
+    };
+    
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Card className="max-w-md">
-          <CardContent className="p-6 text-center">
-            <Clock className="w-12 h-12 text-blue-500 mx-auto mb-4 animate-spin" />
-            <h2 className="text-xl font-bold mb-2">Analysis in Progress</h2>
-            <p className="text-gray-600 mb-4">
-              We're creating your comprehensive digital snapshot using Google's data and AI. 
-              This process takes up to 24 hours for the most accurate analysis.
+        <Card className="max-w-lg">
+          <CardContent className="p-8 text-center">
+            <Clock className="w-16 h-16 text-blue-500 mx-auto mb-4 animate-spin" />
+            <h2 className="text-2xl font-bold mb-2">Calculating Your Digital IQ Score...</h2>
+            <p className="text-gray-600 mb-6">
+              We're analyzing your digital presence across Google, Yelp, social media and more. 
+              This typically takes 2-3 minutes.
             </p>
+            
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+              <h3 className="font-semibold text-yellow-800 mb-2">Save This Page!</h3>
+              <p className="text-sm text-yellow-700 mb-3">
+                Bookmark this page or copy the link below to access your results anytime:
+              </p>
+              <div className="flex items-center gap-2">
+                <input 
+                  type="text" 
+                  readOnly 
+                  value={dashboardUrl}
+                  className="flex-1 px-3 py-2 text-sm bg-white border border-yellow-300 rounded-md"
+                  data-testid="dashboard-url-input"
+                />
+                <Button 
+                  size="sm" 
+                  onClick={copyToClipboard}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                  data-testid="copy-dashboard-link"
+                >
+                  Copy
+                </Button>
+              </div>
+            </div>
+            
             <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
               <Mail className="w-4 h-4" />
-              <span>Results will be emailed to {assessment.email}</span>
+              <span>Results will also be emailed to {assessment.email}</span>
             </div>
+            
+            <Button 
+              variant="outline" 
+              className="mt-6"
+              onClick={() => window.location.reload()}
+              data-testid="refresh-results"
+            >
+              <Clock className="w-4 h-4 mr-2" />
+              Refresh to check for results
+            </Button>
           </CardContent>
         </Card>
       </div>
