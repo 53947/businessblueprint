@@ -1,0 +1,145 @@
+# Project Metadata Schema
+
+This document defines all available variables for documentation generation.
+
+## Required Variables
+
+### Project Basics
+- `Business Blueprint` - Full project name
+- `Creates Digital Intelligence` - One-line project description
+- `` - Detailed project overview (2-3 paragraphs)
+
+### Features & Capabilities
+- `` - Array of feature strings
+- `` - Array of objects: {name, description, implementation}
+
+### Technology Stack
+- `` - Array of objects: {category, technologies}
+- `` - Primary programming language
+- `` - Frontend architecture description
+- `` - Backend architecture description
+- `` - Database architecture description
+- `` - Authentication architecture description
+
+### Setup & Configuration
+- `` - Array of prerequisite strings
+- `` - Installation commands
+- `` - Commands to run the application
+- `` - Configuration steps
+
+### Project Structure
+- `` - ASCII tree of project structure
+- `` - Array of objects: {name, purpose, technology, responsibilities[], dependencies[], apis[]}
+
+### Documentation & Resources
+- `` - Array of objects: {name, url}
+- `` - Array of objects: {name, url, description}
+
+### Team & Workflow
+- `` - Array of objects: {team, members[{name, role, contact}]}
+- `` - Array of objects: {name, purpose, link}
+- `` - Development workflow description
+- `` - Code review process description
+- `` - Git workflow description
+
+### Guidelines & Standards
+- `` - Core coding principles
+- `` - Array of objects: {type, rules[], examples}
+- `` - File organization guidelines
+- `` - Component structure guidelines
+- `` - State management guidelines
+- `` - API design guidelines
+- `` - Error handling guidelines
+- `` - Array of objects: {type, description, requirements[], example}
+- `` - Array of checklist items
+- `` - Performance guidelines
+- `` - Security guidelines
+
+### Architecture Details
+- `` - High-level system overview
+- `` - ASCII architecture diagram
+- `` - Array of objects: {name, description, columns[], relations[]}
+- `` - Data flow description
+- `` - ASCII data flow diagram
+- `` - Security architecture description
+- `` - Deployment architecture description
+- `` - Performance considerations
+- `` - Scalability strategy
+
+### Configuration & Constants
+- `` - Array of objects: {name, type, required, description, default, example}
+- `` - Array of objects: {name, baseUrl, endpoints[]}
+- `` - Array of objects: {category, codes[{code, name, description}]}
+- `` - Array of objects: {field, rules[{type, description}]}
+- `` - Array of objects: {name, description, default}
+- `` - Array of objects: {endpoint, limit, window}
+- `` - Array of objects: {type, limit}
+
+### Onboarding & Help
+- `` - Welcome message for new team members
+- `` - Array of objects: {phase, tasks[]}
+- `` - Array of objects: {name, version, purpose, installCommand}
+- `` - Array of objects: {step, command, note}
+- `` - Array of objects: {question, answer}
+- `` - Guide for getting help
+- `` - Array of objects: {name, url, description}
+
+### Issue Management
+- `` - Default issue assignee
+- `` - Array of objects: {field, example}
+- `` - Array of objects: {name, color, description}
+
+### Status Reporting
+- `` - Report date
+- `` - Reporting period
+- `` - Reporter name
+- `` - Executive summary
+- `` - Boolean: project is on track
+- `` - Boolean: project is at risk
+- `` - Boolean: project is off track
+- `` - Array of objects: {name, current, target, percentage}
+- `` - Array of objects: {title, completedDate, impact, details}
+- `` - Array of objects: {title, status, progress, owner, expectedCompletion, blockers}
+- `` - Array of objects: {title, owner, startDate}
+- `` - Array of objects: {title, severity, probability, impact, mitigation}
+- `` - Budget allocated
+- `` - Budget spent
+- `` - Budget percentage used
+- `` - Budget remaining
+- `` - Budget notes
+- `` - Array of update strings
+- `` - Array of objects: {date, decision, rationale}
+- `` - Array of objects: {task, owner, dueDate}
+- `` - Array of next step strings
+- `` - Questions or feedback section
+
+### Miscellaneous
+- `` - Specific project goal
+- `` - Array of objects: {category, value}
+- `` - Array of objects: {name, description}
+- `` - Development guidelines text
+- `` - Array of objects: {date, description}
+- `` - Contributing guidelines
+- `` - License information
+- `` - Contact information
+- `` - New member overview
+- `` - Testing guidelines
+- `` - Deployment process description
+- `` - Documentation requirements
+- `` - Primary language style guide
+
+## Handlebars Helpers
+
+### Conditionals
+```handlebars
+
+...
+```
+
+### Iteration
+```handlebars
+```
+
+### Comments
+```handlebars
+```
