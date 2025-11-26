@@ -24,7 +24,7 @@ import {
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
-import { EmailService } from "./services/email";
+import { ResendEmailService } from "./services/resend-email";
 import { inboxEmailService } from "./services/inbox-email";
 import { aiCoachService } from "./services/aiCoach";
 import { PricingEngine } from "./services/pricing";
@@ -67,7 +67,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const googleService = new GoogleBusinessService();
   const aiService = new OpenAIAnalysisService();
-  const emailService = new EmailService();
+  const emailService = new ResendEmailService();
 
   // Temporary setup endpoint to create demo accounts (for Meta review)
   app.post("/api/setup/demo-accounts", async (req, res) => {

@@ -1,6 +1,17 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY || '');
+let resendInstance: Resend | null = null;
+
+function getResendClient(): Resend {
+  if (!resendInstance) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.warn('[Email Service] RESEND_API_KEY not set. Emails will not be sent.');
+    }
+    resendInstance = new Resend(apiKey || 'dummy-key-for-startup');
+  }
+  return resendInstance;
+}
 
 interface EmailReportData {
   businessName: string;
@@ -23,7 +34,12 @@ interface ReviewAlertData {
 export class ResendEmailService {
   async sendVerificationEmail(email: string, companyName: string, verificationCode: string): Promise<boolean> {
     try {
+      if (!process.env.RESEND_API_KEY) {
+        console.warn('[Email Service] RESEND_API_KEY not configured');
+        return false;
+      }
       const htmlContent = this.generateVerificationEmailHTML(companyName, verificationCode);
+      const resend = getResendClient();
       await resend.emails.send({
         from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
         to: email,
@@ -39,7 +55,9 @@ export class ResendEmailService {
 
   async sendEmailChangeNotification(oldEmail: string, newEmail: string, companyName: string): Promise<boolean> {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateEmailChangeNotificationHTML(companyName, newEmail);
+      const resend = getResendClient();
       await resend.emails.send({
         from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
         to: oldEmail,
@@ -55,7 +73,9 @@ export class ResendEmailService {
 
   async sendAssessmentReport(email: string, data: EmailReportData): Promise<boolean> {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateReportHTML(data);
+      const resend = getResendClient();
       await resend.emails.send({
         from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
         to: email,
@@ -71,9 +91,11 @@ export class ResendEmailService {
 
   async sendReviewAlert(email: string, data: ReviewAlertData): Promise<boolean> {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateReviewAlertHTML(data);
       const sentiment = data.rating <= 2 ? 'Negative' : data.rating >= 4 ? 'Positive' : 'Neutral';
       const urgency = data.rating <= 2 ? '⚠️ URGENT' : '';
+      const resend = getResendClient();
       await resend.emails.send({
         from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
         to: email,
@@ -96,7 +118,9 @@ export class ResendEmailService {
     features: string[];
   }): Promise<boolean> {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateEnrollmentConfirmationHTML(data);
+      const resend = getResendClient();
       await resend.emails.send({
         from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
         to: email,
@@ -116,7 +140,9 @@ export class ResendEmailService {
     assessmentId: number;
   }): Promise<boolean> {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generatePathwayReminderHTML(data);
+      const resend = getResendClient();
       await resend.emails.send({
         from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
         to: email,
@@ -138,7 +164,9 @@ export class ResendEmailService {
     assessmentId: number;
   }): Promise<boolean> {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateCheckoutAbandonmentHTML(data);
+      const resend = getResendClient();
       await resend.emails.send({
         from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
         to: email,
@@ -154,7 +182,9 @@ export class ResendEmailService {
 
   async sendMagicLinkEmail(email: string, magicLink: string, companyName?: string): Promise<boolean> {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateMagicLinkHTML(magicLink, companyName);
+      const resend = getResendClient();
       await resend.emails.send({
         from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
         to: email,
@@ -173,7 +203,9 @@ export class ResendEmailService {
     assessmentId: number;
   }): Promise<boolean> {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateThankYouIntroductionHTML(data);
+      const resend = getResendClient();
       await resend.emails.send({
         from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
         to: email,
