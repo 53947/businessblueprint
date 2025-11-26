@@ -118,4 +118,4 @@ externalPort = 8008
 id = "module:nodejs-20/formatter:prettier"
 
 [agent]
-integrations = ["javascript_log_in_with_replit:1.0.0", "agentmail:1.0.0"]
+integrations = ["javascript_log_in_with_replit:1.0.0", "agentmail:1.0.0", "javascript_object_storage:1.0.0"]
