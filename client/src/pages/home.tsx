@@ -119,15 +119,16 @@ export default function Home() {
                 <p className="text-xs text-gray-600 mb-4 relative z-10">
                   Custom digital growth plan built from AI analysis of your business.
                 </p>
-                <div className="space-y-3 relative z-10">
+                {/* Desktop Version - Full Text */}
+                <div className="hidden md:block space-y-3 relative z-10">
                   <div className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: '#A00028' }}>
                     <div className="flex-shrink-0 -mt-2">
                       <img src={blueprintToGrowthIcon} alt="Step 1" className="w-10 h-10 object-contain" />
                     </div>
                     <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 1 — Blueprint to Your Growth</div>
+                      <div className="font-bold text-sm text-gray-900">Step 1 — Complete Your Digital IQ Assessment</div>
                       <p className="text-xs text-gray-600">
-                        AI audit of your online presence with custom growth plan.
+                        You start with a quick assessment, and we generate your custom blueprint.
                       </p>
                     </div>
                   </div>
@@ -139,7 +140,7 @@ export default function Home() {
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900">Step 2 — Prescribed Blueprint</div>
                       <p className="text-xs text-gray-600">
-                        Custom action plan with SEO, content strategy, and revenue-focused steps.
+                        Your custom action plan with SEO, content strategy, and revenue-focused steps.
                       </p>
                     </div>
                   </div>
@@ -154,7 +155,7 @@ export default function Home() {
                         <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
                       </div>
                       <p className="text-xs text-gray-600">
-                        Listings management + reputation building for local visibility.
+                        Listings management + reputation building for stronger local visibility.
                       </p>
                     </div>
                   </div>
@@ -166,7 +167,7 @@ export default function Home() {
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900">Step 4 — Coach Blue</div>
                       <p className="text-xs text-gray-600">
-                        24/7 AI business coach guiding you through your growth journey.
+                        24/7 AI business coach guiding you through every step of your growth journey.
                       </p>
                     </div>
                   </div>
@@ -182,6 +183,75 @@ export default function Home() {
                       </div>
                       <p className="text-xs text-gray-600">
                         Complete communication suite: /send, /inbox, /livechat, /content.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mobile Version - Short Text */}
+                <div className="block md:hidden space-y-3 relative z-10">
+                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: '#A00028' }}>
+                    <div className="flex-shrink-0 -mt-2">
+                      <img src={blueprintToGrowthIcon} alt="Step 1" className="w-10 h-10 object-contain" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-sm text-gray-900">Step 1 — Digital IQ Assessment</div>
+                      <p className="text-xs text-gray-600">
+                        Quick assessment → instant blueprint.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-yellow-500">
+                    <div className="flex-shrink-0 -mt-2">
+                      <img src={badge2} alt="Step 2" className="w-10 h-10 object-contain" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-sm text-gray-900">Step 2 — Prescribed Blueprint</div>
+                      <p className="text-xs text-gray-600">
+                        Your clear action plan to grow.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-blue-500">
+                    <div className="flex-shrink-0 -mt-2">
+                      <img src={badge3} alt="Step 3" className="w-10 h-10 object-contain" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
+                        <span>Step 3 —</span>
+                        <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
+                      </div>
+                      <p className="text-xs text-gray-600">
+                        Boost local visibility & reviews.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-purple-500">
+                    <div className="flex-shrink-0 -mt-2">
+                      <img src={badge4} alt="Step 4" className="w-10 h-10 object-contain" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-sm text-gray-900">Step 4 — Coach Blue</div>
+                      <p className="text-xs text-gray-600">
+                        Your 24/7 AI business coach.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-green-500">
+                    <div className="flex-shrink-0 -mt-2">
+                      <img src={badge5} alt="Step 5" className="w-10 h-10 object-contain" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
+                        <span>Step 5 —</span>
+                        <img src={commverseBundle} alt="CommVerse" className="h-5" />
+                      </div>
+                      <p className="text-xs text-gray-600">
+                        Messaging, chat, email, content.
                       </p>
                     </div>
                   </div>
