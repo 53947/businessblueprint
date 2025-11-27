@@ -15,6 +15,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { NAV_ITEMS } from "@/components/navigation-config";
 import layersIcon from "@assets/icons/layers.svg";
 import bookOpenIcon from "@assets/icons/book-open.svg";
 import dollarSignIcon from "@assets/icons/dollar-sign.svg";
@@ -87,6 +88,17 @@ import reputationWordmark from "@assets/: reputation color triad black and D5960
 interface HeaderProps {
   showNavigation?: boolean;
 }
+
+// Helper to get icon for nav item
+const getNavIcon = (navLabel: string) => {
+  switch(navLabel) {
+    case 'How It Works': return compassIcon;
+    case 'Products': return shoppingBasketIcon;
+    case 'Solutions': return lightbulbIcon;
+    case 'Resources': return bookOpenIcon;
+    default: return compassIcon;
+  }
+};
 
 export function Header({ showNavigation = true }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -198,10 +210,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
             {showNavigation && (
               <>
-                {/* Desktop Mega Menu - Closer spacing */}
+                {/* Desktop Mega Menu - Closer spacing
+                    NOTE: Menu items rendered below MUST match NAV_ITEMS order and labels.
+                    Update navigation-config.ts and sync both desktop/mobile. */}
                 <NavigationMenu className="hidden lg:flex ml-4">
                   <NavigationMenuList className="-space-x-4">
-                    {/* How It Works (NEW) */}
+                    {/* How It Works - Desktop Mega Menu Item */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid="menu-trigger-how-it-works">
                         <img src={compassIcon} alt="" className="w-4 h-4" />
@@ -1149,7 +1163,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
           </div>
         </div>
 
-        {/* Mobile Menu - Mobile-First Redesign */}
+        {/* Mobile Menu - Mobile-First Redesign
+            NOTE: This menu must stay in sync with NAV_ITEMS order and labels from navigation-config.ts.
+            Main nav sections: How It Works → Products → Solutions → Resources
+            Action items: Cart → Inbox → Dashboard → Digital IQ */}
         {isMobileMenuOpen && showNavigation && (
           <div className="lg:hidden fixed inset-0 top-20 z-40 bg-white flex flex-col">
             {/* Scrollable Content */}
