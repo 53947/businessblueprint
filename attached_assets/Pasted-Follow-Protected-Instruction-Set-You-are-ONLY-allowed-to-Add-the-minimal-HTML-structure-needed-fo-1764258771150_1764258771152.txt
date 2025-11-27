@@ -1,0 +1,97 @@
+Follow Protected Instruction Set:
+You are ONLY allowed to:
+
+Add the minimal HTML structure needed for responsive show/hide of text
+
+Insert the mobile text I provide
+
+Apply responsive classes to control visibility
+
+You MUST NOT change:
+
+Existing layout or structure
+
+Styling, classes, colors, icons, spacing, or components
+
+Any wording of the desktop (full) text
+
+✅ SECTION: “How It Works” Steps (Desktop vs Mobile Text)
+
+Current desktop wording should stay as-is:
+
+Step 1 — Complete Your Digital IQ Assessment
+You start with a quick assessment, and we generate your custom blueprint.
+
+Step 2 — Prescribed Blueprint
+Your custom action plan with SEO, content strategy, and revenue-focused steps.
+
+Step 3 — LocalBlue
+Listings management + reputation building for stronger local visibility.
+
+Step 4 — Coach Blue
+24/7 AI business coach guiding you through every step of your growth journey.
+
+Step 5 — CommVerse
+Complete communication suite: /send, /inbox, /livechat, /content.
+
+This is the desktop version and should remain visible on desktop and larger screens.
+
+✅ Mobile version text (to show ONLY on smaller screens)
+
+Use this copy for mobile only:
+
+Step 1 — Digital IQ Assessment
+Quick assessment → instant blueprint.
+
+Step 2 — Prescribed Blueprint
+Your clear action plan to grow.
+
+Step 3 — LocalBlue
+Boost local visibility & reviews.
+
+Step 4 — Coach Blue
+Your 24/7 AI business coach.
+
+Step 5 — CommVerse
+Messaging, chat, email, content.
+
+✅ Implementation Instructions (keep this high-level & safe)
+
+Wrap the desktop text for the steps in a container that is:
+
+Visible on desktop / larger screens
+
+Hidden on mobile
+
+Create a second container with the mobile text above, with:
+
+Visible on mobile
+
+Hidden on desktop / larger screens
+
+You may use your existing responsive utility classes (for example, something like):
+
+mobile-only vs desktop-only
+
+or hidden md:block and block md:hidden
+
+or any equivalent pattern already used in this project
+
+Do not change:
+
+HTML hierarchy of the existing desktop block
+
+Any classes used for styling
+
+Any spacing, margins, or layout for the section
+
+Any wording I’ve given you here
+
+Your only structural change should be:
+
+A second text block for mobile
+
+Show/hide logic via responsive classes
+
+Acknowledge with:
+“Confirmed — I will only add responsive show/hide structure and mobile text, and will not change anything else.”
