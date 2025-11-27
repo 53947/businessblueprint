@@ -225,9 +225,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={badge1} alt="Step 1" className="w-10 h-10 object-contain" />
                                 </div>
                                 <div className="text-left">
-                                  <div className="font-bold text-sm text-gray-900 dark:text-white">Blueprint to Your Growth</div>
+                                  <div className="font-bold text-sm text-gray-900 dark:text-white">Complete Your Digital IQ Assessment</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">
-                                    AI-powered audit of your online presence
+                                    You start with a quick assessment, and we generate your custom blueprint.
                                   </p>
                                 </div>
                               </div>
@@ -240,7 +240,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <div className="text-left">
                                 <div className="font-bold text-sm text-gray-900 dark:text-white">Prescribed Blueprint</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400">
-                                  Your personalized growth plan
+                                  Your custom action plan with SEO, content strategy, and revenue-focused steps.
                                 </p>
                               </div>
                             </div>
@@ -255,7 +255,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <img src={localBlueLogo} alt="LocalBlue" className="h-4" />
                                   </div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">
-                                    Listings & reputation management
+                                    Listings management + reputation building for stronger local visibility.
                                   </p>
                                 </div>
                               </div>
@@ -269,7 +269,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="text-left">
                                   <div className="font-bold text-sm text-gray-900 dark:text-white">Coach Blue</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">
-                                    Your AI business coach
+                                    24/7 AI business coach guiding you through every step of your growth journey.
                                   </p>
                                 </div>
                               </div>
@@ -285,7 +285,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <img src={commverseBundle} alt="commverse" className="h-5" />
                                   </div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">
-                                    Messaging suite: /send /inbox /livechat /content
+                                    Complete communication suite: /send, /inbox, /livechat, /content.
                                   </p>
                                 </div>
                               </div>
@@ -1257,8 +1257,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   <div className="flex items-center gap-3">
                     <img src={badge1} alt="Blueprint" className="w-8 h-8" />
                     <div>
-                      <div className="text-lg font-extrabold">Blueprint to Your Growth</div>
-                      <div className="text-sm opacity-90">AI-powered growth assessment</div>
+                      <div className="text-lg font-extrabold">Digital IQ Assessment</div>
+                      <div className="text-sm opacity-90">Quick scan → instant blueprint.</div>
                     </div>
                   </div>
                 </a>

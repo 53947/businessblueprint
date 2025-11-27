@@ -20,13 +20,13 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
         </div>
 
         <div className="grid md:grid-cols-5 gap-4 mb-12">
-          {/* Step 1 - Blueprint to Your Growth */}
+          {/* Step 1 - Complete Your Digital IQ Assessment */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={badge1} alt="Blueprint to Your Growth" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <img src={badge1} alt="Complete Your Digital IQ Assessment" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Blueprint to Your Growth</h3>
-            <p className="text-xs text-gray-600">AI analyzes your online presence and creates your growth blueprint</p>
+            <h3 className="text-sm font-bold text-gray-900 mb-1">Complete Your Digital IQ Assessment</h3>
+            <p className="text-xs text-gray-600">You start with a quick assessment, and we generate your custom blueprint. Built to identify gaps, opportunities, and your fastest paths to growth.</p>
           </div>
 
           {/* Step 2 - Prescribed Blueprint */}
@@ -34,8 +34,8 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
             <div className="flex items-center justify-center mx-auto mb-2">
               <img src={badge2} alt="Prescribed Blueprint" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Get Your Prescribed Blueprint</h3>
-            <p className="text-xs text-gray-600">We diagnose your digital presence and prescribe the exact blueprint your business needs to grow</p>
+            <h3 className="text-sm font-bold text-gray-900 mb-1">Prescribed Blueprint</h3>
+            <p className="text-xs text-gray-600">Your custom action plan with SEO, content strategy, and revenue-focused steps. Engineered to increase visibility, drive traffic, and boost conversions.</p>
           </div>
 
           {/* Step 3 - LocalBlue */}
@@ -43,8 +43,8 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
             <div className="flex items-center justify-center mx-auto mb-2">
               <img src={badge3} alt="LocalBlue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">LocalBlue - Your Digital Base</h3>
-            <p className="text-xs text-gray-600">Listings + Reputation management for digital excellence</p>
+            <h3 className="text-sm font-bold text-gray-900 mb-1">LocalBlue</h3>
+            <p className="text-xs text-gray-600">Listings management + reputation building for stronger local visibility. Helps you rank higher locally and turn searches into real customers.</p>
           </div>
 
           {/* Step 4 - Coach Blue */}
@@ -52,17 +52,17 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
             <div className="flex items-center justify-center mx-auto mb-2">
               <img src={badge4} alt="Coach Blue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Coach Blue - AI Business Coach</h3>
-            <p className="text-xs text-gray-600">AI guides you through every step of your growth journey</p>
+            <h3 className="text-sm font-bold text-gray-900 mb-1">Coach Blue</h3>
+            <p className="text-xs text-gray-600">24/7 AI business coach guiding you through every step of your growth journey. Keeps you on track with daily insights, reminders, and growth tasks.</p>
           </div>
 
-          {/* Step 5 - CommVerse Bundle */}
+          {/* Step 5 - CommVerse */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
               <img src={badge5} alt="CommVerse" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">CommVerse Bundle</h3>
-            <p className="text-xs text-gray-600">Complete communication suite - /send, /inbox, /livechat, /content</p>
+            <h3 className="text-sm font-bold text-gray-900 mb-1">CommVerse</h3>
+            <p className="text-xs text-gray-600">Complete communication suite: /send, /inbox, /livechat, /content. Ensures customers find you, contact you, and stay connected effortlessly.</p>
           </div>
         </div>
 
