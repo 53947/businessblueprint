@@ -171,11 +171,24 @@ export function Header({ showNavigation = true }: HeaderProps) {
     });
   };
 
-  // Check if user has client portal access
+  // Check if user has client portal access - must have BOTH clientId AND authToken
   useEffect(() => {
     const checkClientPortal = () => {
       const clientId = sessionStorage.getItem("clientId");
-      setHasClientPortalAccess(!!clientId);
+      const authToken = sessionStorage.getItem("authToken");
+      
+      // Only consider user logged in if they have BOTH tokens
+      if (clientId && authToken) {
+        setHasClientPortalAccess(true);
+      } else {
+        setHasClientPortalAccess(false);
+        // Clean up stale data
+        if (clientId || authToken) {
+          sessionStorage.removeItem("clientId");
+          sessionStorage.removeItem("authToken");
+          localStorage.removeItem("clientId");
+        }
+      }
     };
 
     checkClientPortal();
@@ -1108,20 +1121,6 @@ export function Header({ showNavigation = true }: HeaderProps) {
           <div className="hidden lg:flex items-center gap-2">
             {showNavigation && (
               <>
-                {/* Shopping Cart - Icon only, clean design */}
-                <Link
-                  href="/cart"
-                  className="relative p-2 hover:bg-white rounded-md transition-colors"
-                  data-testid="button-cart"
-                >
-                  <ShoppingCart className="w-5 h-5 text-gray-700" />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center" data-testid="cart-count-badge">
-                      {cartCount}
-                    </span>
-                  )}
-                </Link>
-
                 {/* Inbox Button - Only visible when logged in, links to portal inbox */}
                 {(isAuthenticated || hasClientPortalAccess) && (
                   <a
@@ -1160,6 +1159,20 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 >
                   Digital IQ
                 </a>
+
+                {/* Shopping Cart - Icon only, on far right */}
+                <Link
+                  href="/cart"
+                  className="relative p-2 hover:bg-white rounded-md transition-colors ml-4"
+                  data-testid="button-cart"
+                >
+                  <ShoppingCart className="w-5 h-5 text-gray-700" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center" data-testid="cart-count-badge">
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
               </>
             )}
           </div>
