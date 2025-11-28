@@ -15,7 +15,8 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import { NAV_ITEMS } from "@/components/navigation-config";
+import { NAV_ITEMS, HOW_IT_WORKS_STEPS } from "@/components/navigation-config";
+import { Plus, Minus } from "lucide-react";
 import layersIcon from "@assets/icons/layers.svg";
 import bookOpenIcon from "@assets/icons/book-open.svg";
 import dollarSignIcon from "@assets/icons/dollar-sign.svg";
@@ -102,6 +103,7 @@ const getNavIcon = (navLabel: string) => {
 
 export function Header({ showNavigation = true }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openAccordion, setOpenAccordion] = useState<string | null>(null);
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [hasClientPortalAccess, setHasClientPortalAccess] = useState(false);
@@ -1190,155 +1192,82 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 )}
 
 
-                {/* Navigation Sections - Generated from NAV_ITEMS */}
-                <div className="space-y-4">
-                  {NAV_ITEMS.map((item) => (
-                    <div key={item.label} className="border-t pt-4">
-                      <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3 px-2">{item.label}</h3>
-                      <div className="space-y-2">
-                        {/* How It Works - 5 Steps to Growth */}
-                        {item.label === 'How It Works' && (
-                          <>
-                            <a href="/assessment" className="flex items-center gap-4 p-4 bg-white border-l-4 rounded-lg active:bg-gray-50" style={{ borderColor: '#A00028' }} data-testid="mobile-link-step1">
-                              <img src={badge1} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="text-xs font-bold text-gray-500 uppercase">Step 1</div>
-                                <div className="font-bold text-gray-900 truncate">Digital IQ Assessment</div>
-                                <div className="text-xs text-gray-600 truncate">Quick assessment → custom blueprint</div>
+                {/* Accordion Navigation - +/- Toggles */}
+                <div className="space-y-2">
+                  {NAV_ITEMS.map((item) => {
+                    const isOpen = openAccordion === item.label;
+                    return (
+                      <div key={item.label} className="border rounded-lg overflow-hidden">
+                        {/* Accordion Header with +/- Toggle */}
+                        <button
+                          onClick={() => setOpenAccordion(isOpen ? null : item.label)}
+                          className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+                          data-testid={`mobile-accordion-${item.label.toLowerCase().replace(' ', '-')}`}
+                        >
+                          <div className="text-left">
+                            <div className="font-bold text-gray-900">{item.label}</div>
+                            {item.description && <div className="text-xs text-gray-600">{item.description}</div>}
+                          </div>
+                          {isOpen ? <Minus className="w-5 h-5 text-blue-600 flex-shrink-0" /> : <Plus className="w-5 h-5 text-gray-600 flex-shrink-0" />}
+                        </button>
+
+                        {/* Accordion Content */}
+                        {isOpen && (
+                          <div className="p-4 border-t space-y-3">
+                            {item.title && (
+                              <div className="mb-3">
+                                <h4 className="font-bold text-gray-900">{item.title}</h4>
+                                {item.description && <p className="text-xs text-gray-600 mt-1">{item.description}</p>}
                               </div>
-                            </a>
-                            <div className="flex items-center gap-4 p-4 bg-white border-l-4 rounded-lg" style={{ borderColor: '#FFC107' }}>
-                              <img src={badge2} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="text-xs font-bold text-gray-500 uppercase">Step 2</div>
-                                <div className="font-bold text-gray-900 truncate">Prescribed Blueprint</div>
-                                <div className="text-xs text-gray-600 truncate">SEO, content strategy, revenue steps</div>
-                              </div>
-                            </div>
-                            <a href="/localblue" className="flex items-center gap-4 p-4 bg-white border-l-4 rounded-lg active:bg-gray-50" style={{ borderColor: '#0000FF' }} data-testid="mobile-link-step3">
-                              <img src={badge3} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="text-xs font-bold text-gray-500 uppercase">Step 3</div>
-                                <div className="font-bold text-gray-900 truncate">LocalBlue</div>
-                                <div className="text-xs text-gray-600 truncate">Listings + reputation for local growth</div>
-                              </div>
-                            </a>
-                            <a href="/ai-coach" className="flex items-center gap-4 p-4 bg-white border-l-4 rounded-lg active:bg-gray-50" style={{ borderColor: '#A855F7' }} data-testid="mobile-link-step4">
-                              <img src={badge4} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="text-xs font-bold text-gray-500 uppercase">Step 4</div>
-                                <div className="font-bold text-gray-900 truncate">Coach Blue</div>
-                                <div className="text-xs text-gray-600 truncate">24/7 AI guidance through your journey</div>
-                              </div>
-                            </a>
-                            <a href="/pricing?addon=commverse" className="flex items-center gap-4 p-4 bg-white border-l-4 rounded-lg active:bg-gray-50" style={{ borderColor: '#22C55E' }} data-testid="mobile-link-step5">
-                              <img src={badge5} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="text-xs font-bold text-gray-500 uppercase">Step 5</div>
-                                <div className="font-bold text-gray-900 truncate">Commverse Bundle</div>
-                                <div className="text-xs text-gray-600 truncate">/send, /inbox, /livechat, /content</div>
-                              </div>
-                            </a>
-                          </>
-                        )}
-                        
-                        {/* Products */}
-                        {item.label === 'Products' && (
-                          <>
-                            <a href="/send" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-send">
-                              <img src={sendIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="font-bold text-gray-900 truncate">/send</div>
-                                <div className="text-sm text-gray-600 truncate">Email & SMS</div>
-                              </div>
-                            </a>
-                            {(isAuthenticated || hasClientPortalAccess) && (
-                              <a href="/portal/inbox" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-inbox">
-                                <img src={inboxIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                                <div className="flex-1 min-w-0">
-                                  <div className="font-bold text-gray-900 truncate">/inbox</div>
-                                  <div className="text-sm text-gray-600 truncate">Comms Hub</div>
-                                </div>
-                              </a>
                             )}
-                            <a href="/livechat" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-livechat">
-                              <img src={livechatIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="font-bold text-gray-900 truncate">/livechat</div>
-                                <div className="text-sm text-gray-600 truncate">Chat Widget</div>
+
+                            {/* How It Works Steps */}
+                            {item.label === 'How It Works' && (
+                              <div className="space-y-2">
+                                {HOW_IT_WORKS_STEPS.map((step) => (
+                                  <a key={step.number} href={step.href} className="flex items-start gap-3 p-3 bg-white border-l-4 rounded hover:bg-gray-50 transition-colors" style={{ borderColor: step.borderColor }} data-testid={step.testId}>
+                                    <div className="text-xs font-bold text-gray-500 uppercase mt-1">Step {step.number}</div>
+                                    <div className="flex-1">
+                                      <div className="font-bold text-sm text-gray-900">{step.title}</div>
+                                      <div className="text-xs text-gray-600">{step.description}</div>
+                                    </div>
+                                  </a>
+                                ))}
                               </div>
-                            </a>
-                            <a href="/content" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-content">
-                              <img src={contentIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="font-bold text-gray-900 truncate">/content</div>
-                                <div className="text-sm text-gray-600 truncate">Social Media</div>
+                            )}
+
+                            {/* Products */}
+                            {item.label === 'Products' && (
+                              <div className="space-y-2 text-sm">
+                                <div className="text-gray-600">Apps and bundles with pricing options</div>
+                                <a href="/pricing" className="block p-2 text-blue-600 font-bold hover:underline">View All Products →</a>
                               </div>
-                            </a>
-                            <a href="/listings" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-listings">
-                              <img src={listingsIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="font-bold text-gray-900 truncate">/listings</div>
-                                <div className="text-sm text-gray-600 truncate">Directory</div>
+                            )}
+
+                            {/* Solutions */}
+                            {item.label === 'Solutions' && (
+                              <div className="space-y-2 text-sm">
+                                <a href="/assessment" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">Digital IQ Assessment</a>
+                                <a href="/" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">BusinessBlueprint</a>
+                                <a href="/ai-coach" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">Coach Blue</a>
+                                <a href="/localblue" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">LocalBlue</a>
                               </div>
-                            </a>
-                            <a href="/reputation" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-reputation">
-                              <img src={reputationIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="font-bold text-gray-900 truncate">/reputation</div>
-                                <div className="text-sm text-gray-600 truncate">Reviews</div>
+                            )}
+
+                            {/* Resources */}
+                            {item.label === 'Resources' && (
+                              <div className="space-y-2 text-sm">
+                                <a href="/journey" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">Getting Started</a>
+                                <a href="/about" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">Success Stories</a>
+                                <a href="/contact" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">Contact Us</a>
+                                <a href="/portal" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">Client Portal</a>
                               </div>
-                            </a>
-                          </>
-                        )}
-                        
-                        {/* Solutions - Links to main solutions */}
-                        {item.label === 'Solutions' && (
-                          <>
-                            <a href="/assessment" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-solution-iq">
-                              <img src={badge1} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="font-bold text-gray-900 truncate">Digital IQ</div>
-                                <div className="text-sm text-gray-600 truncate">Business Assessment</div>
-                              </div>
-                            </a>
-                            <a href="/" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-solution-bb">
-                              <img src={blueprintIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="font-bold text-gray-900 truncate">BusinessBlueprint</div>
-                                <div className="text-sm text-gray-600 truncate">Main Platform</div>
-                              </div>
-                            </a>
-                            <a href="#consoleblue" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-solution-console">
-                              <img src={consoleBluelogo} alt="" className="w-10 h-10 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="font-bold text-gray-900 truncate">ConsoleBlue</div>
-                                <div className="text-sm text-gray-600 truncate">Admin Console</div>
-                              </div>
-                            </a>
-                          </>
-                        )}
-                        
-                        {/* Resources - Quick Links */}
-                        {item.label === 'Resources' && (
-                          <>
-                            <a href="/journey" className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-journey">
-                              <img src={compassIcon} alt="" className="w-6 h-6" />
-                              <span className="font-medium">Getting Started</span>
-                            </a>
-                            <a href="/about" className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-about">
-                              <img src={trendingUpIcon} alt="" className="w-6 h-6" />
-                              <span className="font-medium">Success Stories</span>
-                            </a>
-                            <a href="/contact" className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-contact">
-                              <img src={messageSquareIcon} alt="" className="w-6 h-6" />
-                              <span className="font-medium">Contact Us</span>
-                            </a>
-                          </>
+                            )}
+                          </div>
                         )}
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
               </nav>
