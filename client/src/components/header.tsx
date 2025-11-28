@@ -1196,28 +1196,47 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     <div key={item.label} className="border-t pt-4">
                       <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3 px-2">{item.label}</h3>
                       <div className="space-y-2">
-                        {/* How It Works */}
+                        {/* How It Works - 5 Steps to Growth */}
                         {item.label === 'How It Works' && (
                           <>
-                            <a href="/assessment" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-assessment">
+                            <a href="/assessment" className="flex items-center gap-4 p-4 bg-white border-l-4 rounded-lg active:bg-gray-50" style={{ borderColor: '#A00028' }} data-testid="mobile-link-step1">
                               <img src={badge1} alt="" className="w-10 h-10 flex-shrink-0" />
                               <div className="flex-1 min-w-0">
+                                <div className="text-xs font-bold text-gray-500 uppercase">Step 1</div>
                                 <div className="font-bold text-gray-900 truncate">Digital IQ Assessment</div>
-                                <div className="text-sm text-gray-600 truncate">Get your blueprint</div>
+                                <div className="text-xs text-gray-600 truncate">Quick assessment → custom blueprint</div>
                               </div>
                             </a>
-                            <a href="/ai-coach" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-coach">
-                              <img src={badge4} alt="" className="w-10 h-10 flex-shrink-0" />
+                            <div className="flex items-center gap-4 p-4 bg-white border-l-4 rounded-lg" style={{ borderColor: '#FFC107' }}>
+                              <img src={badge2} alt="" className="w-10 h-10 flex-shrink-0" />
                               <div className="flex-1 min-w-0">
-                                <div className="font-bold text-gray-900 truncate">Coach Blue</div>
-                                <div className="text-sm text-gray-600 truncate">AI business guidance</div>
+                                <div className="text-xs font-bold text-gray-500 uppercase">Step 2</div>
+                                <div className="font-bold text-gray-900 truncate">Prescribed Blueprint</div>
+                                <div className="text-xs text-gray-600 truncate">SEO, content strategy, revenue steps</div>
                               </div>
-                            </a>
-                            <a href="/localblue" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-localblue">
+                            </div>
+                            <a href="/localblue" className="flex items-center gap-4 p-4 bg-white border-l-4 rounded-lg active:bg-gray-50" style={{ borderColor: '#0000FF' }} data-testid="mobile-link-step3">
                               <img src={badge3} alt="" className="w-10 h-10 flex-shrink-0" />
                               <div className="flex-1 min-w-0">
+                                <div className="text-xs font-bold text-gray-500 uppercase">Step 3</div>
                                 <div className="font-bold text-gray-900 truncate">LocalBlue</div>
-                                <div className="text-sm text-gray-600 truncate">Local visibility</div>
+                                <div className="text-xs text-gray-600 truncate">Listings + reputation for local growth</div>
+                              </div>
+                            </a>
+                            <a href="/ai-coach" className="flex items-center gap-4 p-4 bg-white border-l-4 rounded-lg active:bg-gray-50" style={{ borderColor: '#A855F7' }} data-testid="mobile-link-step4">
+                              <img src={badge4} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="text-xs font-bold text-gray-500 uppercase">Step 4</div>
+                                <div className="font-bold text-gray-900 truncate">Coach Blue</div>
+                                <div className="text-xs text-gray-600 truncate">24/7 AI guidance through your journey</div>
+                              </div>
+                            </a>
+                            <a href="/pricing?addon=commverse" className="flex items-center gap-4 p-4 bg-white border-l-4 rounded-lg active:bg-gray-50" style={{ borderColor: '#22C55E' }} data-testid="mobile-link-step5">
+                              <img src={badge5} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="text-xs font-bold text-gray-500 uppercase">Step 5</div>
+                                <div className="font-bold text-gray-900 truncate">Commverse Bundle</div>
+                                <div className="text-xs text-gray-600 truncate">/send, /inbox, /livechat, /content</div>
                               </div>
                             </a>
                           </>
