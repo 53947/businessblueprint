@@ -203,7 +203,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
   return (
     <header className="bg-gray-100 border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between lg:h-20 h-16">
           {/* Logo - Takes up ~1/5 of header width */}
           <div className="flex items-center w-1/5 min-w-fit mr-4">
             <Link href="/" className="hover:opacity-80 transition-opacity cursor-pointer" data-testid="header-logo">
@@ -1165,12 +1165,52 @@ export function Header({ showNavigation = true }: HeaderProps) {
           </div>
         </div>
 
+        {/* Mobile Second Row - Action Buttons (Only on mobile) */}
+        <div className="lg:hidden flex items-center justify-between gap-2 h-16 border-t border-gray-200 flex-wrap p-2">
+          {showNavigation && (
+            <>
+              {/* Cart - Icon + Badge */}
+              <Link href="/cart" className="relative p-2 hover:bg-white rounded-md transition-colors" data-testid="button-cart-mobile">
+                <ShoppingCart className="w-5 h-5 text-gray-700" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center" data-testid="cart-count-badge-mobile">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* Inbox - Only when logged in */}
+              {(isAuthenticated || hasClientPortalAccess) && (
+                <a href="/portal/inbox" className="flex-1 px-2 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs text-center transition-colors" data-testid="button-inbox-mobile">
+                  Inbox
+                </a>
+              )}
+
+              {/* Dashboard or Login */}
+              {(isAuthenticated || hasClientPortalAccess) ? (
+                <a href="/portal/dashboard" className="flex-1 px-2 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium text-center transition-colors" data-testid="button-dashboard-mobile">
+                  Dashboard
+                </a>
+              ) : (
+                <a href="/portal/login" className="flex-1 px-2 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium text-center transition-colors" data-testid="button-login-mobile">
+                  Login
+                </a>
+              )}
+
+              {/* Digital IQ */}
+              <a href="/assessment" className="flex-1 px-2 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs font-bold text-center transition-all" data-testid="button-digital-iq-mobile">
+                Digital IQ
+              </a>
+            </>
+          )}
+        </div>
+
         {/* Mobile Menu - Mobile-First Redesign
             NOTE: This menu must stay in sync with NAV_ITEMS order and labels from navigation-config.ts.
             Main nav sections: How It Works → Products → Solutions → Resources
             Action items: Cart → Inbox → Dashboard → Digital IQ */}
         {isMobileMenuOpen && showNavigation && (
-          <div className="lg:hidden fixed inset-0 top-20 z-40 bg-white flex flex-col">
+          <div className="lg:hidden fixed inset-0 lg:top-20 top-32 z-40 bg-white flex flex-col">
             {/* Scrollable Content */}
             <div className="flex-1 overflow-y-auto pb-28">
               <nav className="p-4">
