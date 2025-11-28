@@ -1117,7 +1117,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 {/* Mobile Cart - Icon only, top right corner */}
                 <Link
                   href="/cart"
-                  className="lg:hidden relative hover:opacity-80 transition-opacity ml-3"
+                  className="lg:hidden relative hover:opacity-80 transition-opacity ml-auto mr-1"
                   data-testid="button-cart-mobile-top"
                 >
                   <ShoppingCart className="w-7 h-7 text-gray-700" />
