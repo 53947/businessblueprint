@@ -1117,12 +1117,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 {/* Mobile Cart - Icon only, top right corner */}
                 <Link
                   href="/cart"
-                  className="lg:hidden relative p-2 hover:bg-white rounded-md transition-colors ml-auto"
+                  className="lg:hidden relative hover:opacity-80 transition-opacity"
                   data-testid="button-cart-mobile-top"
                 >
-                  <ShoppingCart className="w-5 h-5 text-gray-700" />
+                  <ShoppingCart className="w-7 h-7 text-gray-700" />
                   {cartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center" data-testid="cart-count-badge-mobile-top">
+                    <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center" data-testid="cart-count-badge-mobile-top">
                       {cartCount}
                     </span>
                   )}
