@@ -84,6 +84,7 @@ import livechatWordmark from "@assets/: livechat app logo_1764088895509.png";
 import contentWordmark from "@assets/: content app logo_1764088895508.png";
 import listingsWordmark from "@assets/: listings color triad black and FF0040_1764089307839.png";
 import reputationWordmark from "@assets/: reputation color triad black and D59600_1764089307840.png";
+import businessIQScannerIcon from "@assets/business iq scanner_1764306033154.png";
 
 
 interface HeaderProps {
@@ -739,12 +740,20 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </a>
                             </NavigationMenuLink>
 
-                            {/* Row 3: Digital IQ + Commverse Apps */}
+                            {/* Row 3: Digital IQ + Business IQ Scanner + Commverse Apps */}
                             <NavigationMenuLink asChild>
                               <a href="/assessment" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#A00028' }} data-testid="link-solution-digital-iq">
                                 <img src={badge1} alt="Digital IQ" className="h-12 w-12 object-contain mb-2" />
                                 <div className="text-sm font-bold text-gray-900 dark:text-white text-center">Digital IQ</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Business Assessment</p>
+                              </a>
+                            </NavigationMenuLink>
+
+                            <NavigationMenuLink asChild>
+                              <a href="/assessment" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#0000FF' }} data-testid="link-solution-business-iq-scanner">
+                                <img src={businessIQScannerIcon} alt="Business IQ Scanner" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">Business IQ Scanner</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Digital Footprint Analysis</p>
                               </a>
                             </NavigationMenuLink>
 

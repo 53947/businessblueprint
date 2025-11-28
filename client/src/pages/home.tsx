@@ -55,12 +55,12 @@ export default function Home() {
               
               {/* Desktop copy */}
               <p className="hidden lg:block text-xl text-gray-600 mb-8 leading-relaxed">
-                Our AI analyzes your entire online presence using Google Business Intelligence and delivers your prescribed digital blueprint — a custom, data-driven plan with the exact apps, actions, and pricing your business needs to grow.
+                Powered by our Business IQ Scanner, your full digital footprint is analyzed using Google Business Intelligence to expose gaps, opportunities, and revenue-ready action steps. Our AI then delivers your prescribed Digital Blueprint — a custom, data-driven plan with the exact apps, actions, and pricing your business needs to grow.
               </p>
               
               {/* Mobile copy */}
               <p className="lg:hidden text-xl text-gray-600 mb-8 leading-relaxed">
-                Our AI uses Google Business Intelligence to audit your online presence and deliver your exact digital blueprint — the apps, actions, and pricing your business needs to grow.
+                Your full digital footprint analyzed by Business IQ Scanner with Google Business Intelligence. Get your prescribed Digital Blueprint — the apps, actions, and pricing your business needs to grow.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
