@@ -1113,6 +1113,20 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     <img src={menuIcon} alt="" className="w-5 h-5" />
                   )}
                 </button>
+
+                {/* Mobile Cart - Icon only, top right corner */}
+                <Link
+                  href="/cart"
+                  className="lg:hidden relative p-2 hover:bg-white rounded-md transition-colors ml-auto"
+                  data-testid="button-cart-mobile-top"
+                >
+                  <ShoppingCart className="w-5 h-5 text-gray-700" />
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center" data-testid="cart-count-badge-mobile-top">
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
               </>
             )}
           </div>
@@ -1204,16 +1218,6 @@ export function Header({ showNavigation = true }: HeaderProps) {
               <a href="/assessment" className="flex-1 px-2 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs font-bold text-center transition-all" data-testid="button-digital-iq-mobile">
                 Digital IQ
               </a>
-
-              {/* Cart - Icon + Badge, on far right */}
-              <Link href="/cart" className="relative p-2 hover:bg-white rounded-md transition-colors ml-auto" data-testid="button-cart-mobile">
-                <ShoppingCart className="w-5 h-5 text-gray-700" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center" data-testid="cart-count-badge-mobile">
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
             </>
           )}
         </div>
