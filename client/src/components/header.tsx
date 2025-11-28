@@ -1104,8 +1104,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
             )}
           </div>
 
-          {/* Right side - Quick Access & Login/Signup Buttons */}
-          <div className="flex items-center gap-2">
+          {/* Right side - Quick Access & Login/Signup Buttons (Desktop only) */}
+          <div className="hidden lg:flex items-center gap-2">
             {showNavigation && (
               <>
                 {/* Shopping Cart - Icon only, clean design */}
