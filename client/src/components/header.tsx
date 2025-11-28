@@ -1126,7 +1126,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 {(isAuthenticated || hasClientPortalAccess) && (
                   <a
                     href="/portal/inbox"
-                    className="hidden md:flex items-center px-6 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-sm transition-colors"
+                    className="flex items-center px-2 sm:px-6 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs sm:text-sm transition-colors"
                     data-testid="button-quick-inbox"
                   >
                     Inbox
@@ -1137,7 +1137,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 {(isAuthenticated || hasClientPortalAccess) ? (
                   <a
                     href="/portal/dashboard"
-                    className="hidden sm:flex items-center px-6 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-sm font-medium transition-colors"
+                    className="flex items-center px-2 sm:px-6 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs sm:text-sm font-medium transition-colors"
                     data-testid="button-dashboard"
                   >
                     Dashboard
@@ -1145,7 +1145,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 ) : (
                   <a
                     href="/portal/login"
-                    className="hidden sm:flex items-center px-6 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-sm font-medium transition-colors"
+                    className="flex items-center px-2 sm:px-6 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs sm:text-sm font-medium transition-colors"
                     data-testid="button-login"
                   >
                     Login
@@ -1155,7 +1155,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 {/* Digital IQ Button - Text only with proper padding */}
                 <a
                   href="/assessment"
-                  className="hidden sm:flex items-center px-6 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-sm font-bold transition-all whitespace-nowrap"
+                  className="flex items-center px-2 sm:px-6 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs sm:text-sm font-bold transition-all whitespace-nowrap"
                   data-testid="button-digital-iq"
                 >
                   Digital IQ
