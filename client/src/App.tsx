@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -105,6 +106,19 @@ function Router() {
 }
 
 function App() {
+  // Clean up stale auth data on app init
+  useEffect(() => {
+    const clientId = sessionStorage.getItem("clientId");
+    const authToken = sessionStorage.getItem("authToken");
+    
+    // Clear stale data - must have BOTH to be valid
+    if (!authToken || !clientId) {
+      sessionStorage.removeItem("clientId");
+      sessionStorage.removeItem("authToken");
+      localStorage.removeItem("clientId");
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
