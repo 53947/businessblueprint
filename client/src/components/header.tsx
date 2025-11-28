@@ -1236,11 +1236,177 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             )}
 
-                            {/* Products */}
+                            {/* Products - Full inline display */}
                             {item.label === 'Products' && (
-                              <div className="space-y-2 text-sm">
-                                <div className="text-gray-600">Apps and bundles with pricing options</div>
-                                <a href="/pricing" className="block p-2 text-blue-600 font-bold hover:underline">View All Products →</a>
+                              <div className="space-y-3">
+                                {/* TOP ROW: Digital IQ + Coach Blue */}
+                                <div className="space-y-2">
+                                  {/* Digital IQ Assessment - FREE */}
+                                  <div className="p-2 rounded-lg border-2" style={{ borderColor: '#A00028' }}>
+                                    <div className="flex items-center justify-between mb-2">
+                                      <div>
+                                        <p className="text-sm font-bold text-gray-900">Digital IQ Assessment</p>
+                                        <p className="text-xs text-gray-500">Free Business Intelligence Tool</p>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                      <div>
+                                        <div className="text-lg font-extrabold" style={{ color: '#A00028' }}>Free</div>
+                                        <p className="text-xs text-gray-600">Discover your business opportunities</p>
+                                      </div>
+                                      <a href="/assessment" className="px-2 py-1 rounded text-xs font-bold text-white" style={{ backgroundColor: '#A00028' }} data-testid="mobile-start-assessment">
+                                        Start →
+                                      </a>
+                                    </div>
+                                  </div>
+
+                                  {/* Coach Blue */}
+                                  <div className="p-2 rounded-lg border-2" style={{ borderColor: '#A855F7' }}>
+                                    <div className="flex items-center justify-between mb-2">
+                                      <div>
+                                        <p className="text-sm font-bold text-gray-900">Coach Blue</p>
+                                        <p className="text-xs text-gray-500">AI Business Coach</p>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                      <div>
+                                        <div className="text-lg font-extrabold" style={{ color: '#A855F7' }}>$99/mo</div>
+                                        <a href="/ai-coach" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                      </div>
+                                      <button className="text-lg font-bold w-6 h-6 rounded-full text-white flex items-center justify-center" style={{ backgroundColor: '#A855F7' }} data-testid="mobile-add-coach-blue" title="Add to Cart">+</button>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* LOCALBLUE BUNDLE */}
+                                <div className="border-t pt-3">
+                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">LocalBlue Bundle</h4>
+                                  
+                                  {/* Bundle Card */}
+                                  <div className="p-2 rounded-lg border-2 mb-2" style={{ borderColor: '#6EA6FF' }}>
+                                    <div className="flex items-center justify-between mb-2">
+                                      <div>
+                                        <p className="text-sm font-bold text-gray-900">LocalBlue Bundle</p>
+                                        <p className="text-xs text-gray-500">Listings + Reputation</p>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                      <div>
+                                        <p className="text-xs text-gray-600 mb-1">Includes both apps below</p>
+                                        <div className="text-lg font-extrabold" style={{ color: '#6EA6FF' }}>$60/mo</div>
+                                        <a href="/localblue" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                      </div>
+                                      <button className="text-lg font-bold w-6 h-6 rounded-full text-white flex items-center justify-center" style={{ backgroundColor: '#6EA6FF' }} data-testid="mobile-add-localblue" title="Add to Cart">+</button>
+                                    </div>
+                                  </div>
+
+                                  {/* 2 Apps */}
+                                  <div className="grid grid-cols-2 gap-2">
+                                    {/* /listings */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#FF0040' }}>
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div>
+                                          <p className="text-xs font-bold text-gray-900">/listings</p>
+                                          <p className="text-xs text-gray-500">Directory</p>
+                                        </div>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#FF0040' }} data-testid="mobile-add-listings" title="Add to Cart">+</button>
+                                      </div>
+                                      <div className="text-xs font-extrabold" style={{ color: '#FF0040' }}>$40/mo</div>
+                                      <a href="/listings" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                    </div>
+
+                                    {/* /reputation */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#D59600' }}>
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div>
+                                          <p className="text-xs font-bold text-gray-900">/reputation</p>
+                                          <p className="text-xs text-gray-500">Reviews</p>
+                                        </div>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#D59600' }} data-testid="mobile-add-reputation" title="Add to Cart">+</button>
+                                      </div>
+                                      <div className="text-xs font-extrabold" style={{ color: '#D59600' }}>$40/mo</div>
+                                      <a href="/reputation" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* COMMVERSE BUNDLE */}
+                                <div className="border-t pt-3">
+                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Commverse Bundle</h4>
+                                  
+                                  {/* Bundle Card */}
+                                  <div className="p-2 rounded-lg border-2 mb-2" style={{ borderColor: '#FF6B00' }}>
+                                    <div className="flex items-center justify-between mb-2">
+                                      <div>
+                                        <p className="text-sm font-bold text-gray-900">Commverse Bundle</p>
+                                        <p className="text-xs text-gray-500">Communication Suite</p>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                      <div>
+                                        <p className="text-xs text-gray-600 mb-1">Includes all 4 apps below</p>
+                                        <div className="text-lg font-extrabold" style={{ color: '#FF6B00' }}>$100/mo</div>
+                                        <a href="/commverse" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                      </div>
+                                      <button className="text-lg font-bold w-6 h-6 rounded-full text-white flex items-center justify-center" style={{ backgroundColor: '#FF6B00' }} data-testid="mobile-add-commverse" title="Add to Cart">+</button>
+                                    </div>
+                                  </div>
+
+                                  {/* 4 Apps */}
+                                  <div className="grid grid-cols-2 gap-2">
+                                    {/* /send */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#FFFF00', boxShadow: '0 0 0 1px #000000' }}>
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div>
+                                          <p className="text-xs font-bold text-gray-900">/send</p>
+                                          <p className="text-xs text-gray-500">Email & SMS</p>
+                                        </div>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#FF6B00' }} data-testid="mobile-add-send" title="Add to Cart">+</button>
+                                      </div>
+                                      <div className="text-xs font-extrabold" style={{ color: '#FF6B00' }}>$35/mo</div>
+                                      <a href="/send" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                    </div>
+
+                                    {/* /inbox */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#0080FF' }}>
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div>
+                                          <p className="text-xs font-bold text-gray-900">/inbox</p>
+                                          <p className="text-xs text-gray-500">Comms Hub</p>
+                                        </div>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#0080FF' }} data-testid="mobile-add-inbox" title="Add to Cart">+</button>
+                                      </div>
+                                      <div className="text-xs font-extrabold" style={{ color: '#0080FF' }}>$35/mo</div>
+                                      <a href="/inbox" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                    </div>
+
+                                    {/* /livechat */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#8000FF' }}>
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div>
+                                          <p className="text-xs font-bold text-gray-900">/livechat</p>
+                                          <p className="text-xs text-gray-500">Chat Widget</p>
+                                        </div>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#8000FF' }} data-testid="mobile-add-livechat" title="Add to Cart">+</button>
+                                      </div>
+                                      <div className="text-xs font-extrabold" style={{ color: '#8000FF' }}>$35/mo</div>
+                                      <a href="/livechat" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                    </div>
+
+                                    {/* /content */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#E91EBC' }}>
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div>
+                                          <p className="text-xs font-bold text-gray-900">/content</p>
+                                          <p className="text-xs text-gray-500">Social Media</p>
+                                        </div>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#E91EBC' }} data-testid="mobile-add-content" title="Add to Cart">+</button>
+                                      </div>
+                                      <div className="text-xs font-extrabold" style={{ color: '#E91EBC' }}>$35/mo</div>
+                                      <a href="/content" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             )}
 
