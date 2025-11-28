@@ -1280,67 +1280,136 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   </div>
                 </a>
 
-                {/* Quick Links - Apps */}
-                <div className="mb-6">
-                  <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3 px-2">Our Apps</h3>
-                  <div className="space-y-2">
-                    <a href="/send" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-send">
-                      <img src={sendIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-gray-900 truncate">Send</div>
-                        <div className="text-sm text-gray-600 truncate">Email & SMS Marketing</div>
+                {/* Navigation Sections - Generated from NAV_ITEMS */}
+                <div className="space-y-4">
+                  {NAV_ITEMS.map((item) => (
+                    <div key={item.label} className="border-t pt-4">
+                      <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3 px-2">{item.label}</h3>
+                      <div className="space-y-2">
+                        {/* How It Works */}
+                        {item.label === 'How It Works' && (
+                          <>
+                            <a href="/assessment" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-assessment">
+                              <img src={badge1} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="font-bold text-gray-900 truncate">Digital IQ Assessment</div>
+                                <div className="text-sm text-gray-600 truncate">Get your blueprint</div>
+                              </div>
+                            </a>
+                            <a href="/ai-coach" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-coach">
+                              <img src={badge4} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="font-bold text-gray-900 truncate">Coach Blue</div>
+                                <div className="text-sm text-gray-600 truncate">AI business guidance</div>
+                              </div>
+                            </a>
+                            <a href="/localblue" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-localblue">
+                              <img src={badge3} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="font-bold text-gray-900 truncate">LocalBlue</div>
+                                <div className="text-sm text-gray-600 truncate">Local visibility</div>
+                              </div>
+                            </a>
+                          </>
+                        )}
+                        
+                        {/* Products */}
+                        {item.label === 'Products' && (
+                          <>
+                            <a href="/send" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-send">
+                              <img src={sendIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="font-bold text-gray-900 truncate">/send</div>
+                                <div className="text-sm text-gray-600 truncate">Email & SMS</div>
+                              </div>
+                            </a>
+                            {(isAuthenticated || hasClientPortalAccess) && (
+                              <a href="/portal/inbox" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-inbox">
+                                <img src={inboxIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-bold text-gray-900 truncate">/inbox</div>
+                                  <div className="text-sm text-gray-600 truncate">Comms Hub</div>
+                                </div>
+                              </a>
+                            )}
+                            <a href="/livechat" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-livechat">
+                              <img src={livechatIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="font-bold text-gray-900 truncate">/livechat</div>
+                                <div className="text-sm text-gray-600 truncate">Chat Widget</div>
+                              </div>
+                            </a>
+                            <a href="/content" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-content">
+                              <img src={contentIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="font-bold text-gray-900 truncate">/content</div>
+                                <div className="text-sm text-gray-600 truncate">Social Media</div>
+                              </div>
+                            </a>
+                            <a href="/listings" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-listings">
+                              <img src={listingsIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="font-bold text-gray-900 truncate">/listings</div>
+                                <div className="text-sm text-gray-600 truncate">Directory</div>
+                              </div>
+                            </a>
+                            <a href="/reputation" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-reputation">
+                              <img src={reputationIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="font-bold text-gray-900 truncate">/reputation</div>
+                                <div className="text-sm text-gray-600 truncate">Reviews</div>
+                              </div>
+                            </a>
+                          </>
+                        )}
+                        
+                        {/* Solutions - Links to main solutions */}
+                        {item.label === 'Solutions' && (
+                          <>
+                            <a href="/assessment" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-solution-iq">
+                              <img src={badge1} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="font-bold text-gray-900 truncate">Digital IQ</div>
+                                <div className="text-sm text-gray-600 truncate">Business Assessment</div>
+                              </div>
+                            </a>
+                            <a href="/" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-solution-bb">
+                              <img src={blueprintIcon} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="font-bold text-gray-900 truncate">BusinessBlueprint</div>
+                                <div className="text-sm text-gray-600 truncate">Main Platform</div>
+                              </div>
+                            </a>
+                            <a href="#consoleblue" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-solution-console">
+                              <img src={consoleBluelogo} alt="" className="w-10 h-10 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <div className="font-bold text-gray-900 truncate">ConsoleBlue</div>
+                                <div className="text-sm text-gray-600 truncate">Admin Console</div>
+                              </div>
+                            </a>
+                          </>
+                        )}
+                        
+                        {/* Resources - Quick Links */}
+                        {item.label === 'Resources' && (
+                          <>
+                            <a href="/journey" className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-journey">
+                              <img src={compassIcon} alt="" className="w-6 h-6" />
+                              <span className="font-medium">Getting Started</span>
+                            </a>
+                            <a href="/about" className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-about">
+                              <img src={trendingUpIcon} alt="" className="w-6 h-6" />
+                              <span className="font-medium">Success Stories</span>
+                            </a>
+                            <a href="/contact" className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-contact">
+                              <img src={messageSquareIcon} alt="" className="w-6 h-6" />
+                              <span className="font-medium">Contact Us</span>
+                            </a>
+                          </>
+                        )}
                       </div>
-                    </a>
-                    {(isAuthenticated || hasClientPortalAccess) && (
-                      <a href="/portal/inbox" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-inbox">
-                        <img src={inboxIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <div className="font-bold text-gray-900 truncate">Inbox</div>
-                          <div className="text-sm text-gray-600 truncate">Unified Communications</div>
-                        </div>
-                      </a>
-                    )}
-                    <a href="/livechat" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-livechat">
-                      <img src={livechatIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-gray-900 truncate">LiveChat</div>
-                        <div className="text-sm text-gray-600 truncate">Website Chat Widget</div>
-                      </div>
-                    </a>
-                    <a href="/content" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-content">
-                      <img src={contentIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-gray-900 truncate">Content</div>
-                        <div className="text-sm text-gray-600 truncate">Social Media Management</div>
-                      </div>
-                    </a>
-                    <a href="/listings" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-listings">
-                      <img src={listingsIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-gray-900 truncate">Listings</div>
-                        <div className="text-sm text-gray-600 truncate">Directory Management</div>
-                      </div>
-                    </a>
-                    <a href="/reputation" className="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg active:bg-gray-50" data-testid="mobile-link-reputation">
-                      <img src={reputationIcon} alt="" className="w-10 h-10 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-gray-900 truncate">Reputation</div>
-                        <div className="text-sm text-gray-600 truncate">Review Management</div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-
-                {/* Quick Links - Other */}
-                <div className="space-y-2">
-                  <a href="/journey" className="flex items-center gap-3 p-4 text-gray-700 active:bg-gray-50 rounded-lg" data-testid="mobile-link-journey">
-                    <img src={compassIcon} alt="" className="w-6 h-6" />
-                    <span className="font-medium">Getting Started</span>
-                  </a>
-                  <a href="/about" className="flex items-center gap-3 p-4 text-gray-700 active:bg-gray-50 rounded-lg" data-testid="mobile-link-about">
-                    <img src={trendingUpIcon} alt="" className="w-6 h-6" />
-                    <span className="font-medium">Success Stories</span>
-                  </a>
+                    </div>
+                  ))}
                 </div>
 
               </nav>
