@@ -803,8 +803,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         expiresAt
       });
 
-      // Generate magic link URL
-      const frontendUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
+      // Generate magic link URL - use request origin in development
+      let frontendUrl = process.env.FRONTEND_URL;
+      if (!frontendUrl) {
+        const protocol = req.secure ? 'https' : 'http';
+        const host = req.get('host') || 'localhost:5000';
+        frontendUrl = `${protocol}://${host}`;
+      }
       const magicLink = `${frontendUrl}/portal/verify?token=${token}`;
 
       // Send magic link email asynchronously (fire and forget to avoid blocking)
