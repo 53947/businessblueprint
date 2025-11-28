@@ -1410,23 +1410,194 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             )}
 
-                            {/* Solutions */}
+                            {/* Solutions - 13 Platforms & Apps Grid */}
                             {item.label === 'Solutions' && (
-                              <div className="space-y-2 text-sm">
-                                <a href="/assessment" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">Digital IQ Assessment</a>
-                                <a href="/" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">BusinessBlueprint</a>
-                                <a href="/ai-coach" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">Coach Blue</a>
-                                <a href="/localblue" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">LocalBlue</a>
+                              <div className="space-y-3">
+                                <div className="grid grid-cols-2 gap-2">
+                                  {/* BusinessBlueprint */}
+                                  <a href="/" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF6B00' }} data-testid="mobile-link-businessblueprint">
+                                    <p className="text-xs font-bold text-gray-900 text-center">BusinessBlueprint</p>
+                                    <p className="text-xs text-gray-600 text-center">Digital Intelligence</p>
+                                  </a>
+
+                                  {/* HostsBlue */}
+                                  <a href="#hostsblue" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#8000FF' }} data-testid="mobile-link-hostsblue">
+                                    <p className="text-xs font-bold text-gray-900 text-center">HostsBlue</p>
+                                    <p className="text-xs text-gray-600 text-center">Web Services</p>
+                                  </a>
+
+                                  {/* SwipesBlue */}
+                                  <a href="#swipesblue" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }} data-testid="mobile-link-swipesblue">
+                                    <p className="text-xs font-bold text-gray-900 text-center">SwipesBlue</p>
+                                    <p className="text-xs text-gray-600 text-center">Payment Gateway</p>
+                                  </a>
+
+                                  {/* ConsoleBlue */}
+                                  <a href="#consoleblue" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#0000FF' }} data-testid="mobile-link-consoleblue">
+                                    <p className="text-xs font-bold text-gray-900 text-center">ConsoleBlue</p>
+                                    <p className="text-xs text-gray-600 text-center">Admin Console</p>
+                                  </a>
+
+                                  {/* SiteInspector */}
+                                  <a href="#siteinspector" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#0000FF' }} data-testid="mobile-link-siteinspector">
+                                    <p className="text-xs font-bold text-gray-900 text-center">SiteInspector</p>
+                                    <p className="text-xs text-gray-600 text-center">Site Analysis</p>
+                                  </a>
+
+                                  {/* AI Business Coach */}
+                                  <a href="/ai-coach" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#A855F7' }} data-testid="mobile-link-ai-coach">
+                                    <p className="text-xs font-bold text-gray-900 text-center">Coach Blue</p>
+                                    <p className="text-xs text-gray-600 text-center">Smart Guidance</p>
+                                  </a>
+
+                                  {/* Digital IQ */}
+                                  <a href="/assessment" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#A00028' }} data-testid="mobile-link-digital-iq">
+                                    <p className="text-xs font-bold text-gray-900 text-center">Digital IQ</p>
+                                    <p className="text-xs text-gray-600 text-center">Business Assessment</p>
+                                  </a>
+
+                                  {/* /send */}
+                                  <a href="/send" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF6B00' }} data-testid="mobile-link-send-app">
+                                    <p className="text-xs font-bold text-gray-900 text-center">/send</p>
+                                    <p className="text-xs text-gray-600 text-center">Email & SMS</p>
+                                  </a>
+
+                                  {/* /inbox */}
+                                  <a href="/inbox" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#0080FF' }} data-testid="mobile-link-inbox-app">
+                                    <p className="text-xs font-bold text-gray-900 text-center">/inbox</p>
+                                    <p className="text-xs text-gray-600 text-center">Unified Comms</p>
+                                  </a>
+
+                                  {/* /livechat */}
+                                  <a href="/livechat" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#8000FF' }} data-testid="mobile-link-livechat-app">
+                                    <p className="text-xs font-bold text-gray-900 text-center">/livechat</p>
+                                    <p className="text-xs text-gray-600 text-center">Live Chat</p>
+                                  </a>
+
+                                  {/* /content */}
+                                  <a href="/content-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E91EBC' }} data-testid="mobile-link-content-app">
+                                    <p className="text-xs font-bold text-gray-900 text-center">/content</p>
+                                    <p className="text-xs text-gray-600 text-center">Social Media</p>
+                                  </a>
+
+                                  {/* /listings */}
+                                  <a href="/listings-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }} data-testid="mobile-link-listings-app">
+                                    <p className="text-xs font-bold text-gray-900 text-center">/listings</p>
+                                    <p className="text-xs text-gray-600 text-center">Directory Sync</p>
+                                  </a>
+
+                                  {/* /reputation */}
+                                  <a href="/reputation-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }} data-testid="mobile-link-reputation-app">
+                                    <p className="text-xs font-bold text-gray-900 text-center">/reputation</p>
+                                    <p className="text-xs text-gray-600 text-center">Review Mgmt</p>
+                                  </a>
+                                </div>
                               </div>
                             )}
 
-                            {/* Resources */}
+                            {/* Resources - 4 Columns */}
                             {item.label === 'Resources' && (
-                              <div className="space-y-2 text-sm">
-                                <a href="/journey" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">Getting Started</a>
-                                <a href="/about" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">Success Stories</a>
-                                <a href="/contact" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">Contact Us</a>
-                                <a href="/portal" className="block p-2 text-gray-900 hover:bg-gray-50 rounded">Client Portal</a>
+                              <div className="space-y-4">
+                                {/* Learning */}
+                                <div>
+                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Learn</h4>
+                                  <div className="space-y-2">
+                                    <a href="/journey" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">Getting Started Guide</div>
+                                      <p className="text-xs text-gray-600">5-step digital growth journey</p>
+                                    </a>
+                                    <a href="/about" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">Success Stories</div>
+                                      <p className="text-xs text-gray-600">Real results from businesses</p>
+                                    </a>
+                                    <a href="/biif" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">Video Tutorials</div>
+                                      <p className="text-xs text-gray-600">Step-by-step walkthroughs</p>
+                                    </a>
+                                  </div>
+                                </div>
+
+                                {/* Platforms */}
+                                <div className="border-t pt-3">
+                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Platforms</h4>
+                                  <div className="space-y-2">
+                                    <a href="/" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">BusinessBlueprint</div>
+                                      <p className="text-xs text-gray-600">Digital intelligence platform</p>
+                                    </a>
+                                    <a href="#hostsblue" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">HostsBlue</div>
+                                      <p className="text-xs text-gray-600">Website hosting & builder</p>
+                                    </a>
+                                    <a href="#swipesblue" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">SwipesBlue</div>
+                                      <p className="text-xs text-gray-600">Payment gateway</p>
+                                    </a>
+                                    <a href="#consoleblue" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">ConsoleBlue</div>
+                                      <p className="text-xs text-gray-600">Admin console</p>
+                                    </a>
+                                    <a href="#siteinspector" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">SiteInspector</div>
+                                      <p className="text-xs text-gray-600">Site analysis tool</p>
+                                    </a>
+                                  </div>
+                                </div>
+
+                                {/* Developers */}
+                                <div className="border-t pt-3">
+                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Developers</h4>
+                                  <div className="space-y-2">
+                                    <a href="/send-api-docs" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/send API Docs</div>
+                                      <p className="text-xs text-gray-600">Email & SMS API reference</p>
+                                    </a>
+                                    <a href="/inbox-api-docs" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/inbox API Docs</div>
+                                      <p className="text-xs text-gray-600">Unified communications API</p>
+                                    </a>
+                                    <a href="/content-api-docs" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/content API Docs</div>
+                                      <p className="text-xs text-gray-600">Social media posting API</p>
+                                    </a>
+                                    <a href="/livechat-install" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">LiveChat Installation</div>
+                                      <p className="text-xs text-gray-600">Widget integration guide</p>
+                                    </a>
+                                    <a href="/sitemap" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">Site Map</div>
+                                      <p className="text-xs text-gray-600">Complete navigation</p>
+                                    </a>
+                                  </div>
+                                </div>
+
+                                {/* Support & Administration */}
+                                <div className="border-t pt-3">
+                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Support</h4>
+                                  <div className="space-y-2">
+                                    <a href="/contact" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">Help Center</div>
+                                      <p className="text-xs text-gray-600">Get answers & support</p>
+                                    </a>
+                                    <a href="/livechat-demo" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">Live Demo</div>
+                                      <p className="text-xs text-gray-600">Try our live chat</p>
+                                    </a>
+                                    <a href="/portal" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">Client Portal</div>
+                                      <p className="text-xs text-gray-600">Manage your account</p>
+                                    </a>
+                                  </div>
+
+                                  {/* Administration */}
+                                  <div className="border-t border-gray-200 pt-2 mt-2">
+                                    <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Administration</h4>
+                                    <a href="/api/login" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">Admin Login</div>
+                                      <p className="text-xs text-gray-600">Owner & staff access</p>
+                                    </a>
+                                  </div>
+                                </div>
                               </div>
                             )}
                           </div>
