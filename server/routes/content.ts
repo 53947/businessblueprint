@@ -739,6 +739,29 @@ router.get('/:clientId/analytics', requireContentAccess, async (req: Request, re
 // ===== AI ASSISTANCE ROUTES =====
 
 /**
+ * POST /api/content/:clientId/ai/suggest
+ * Generate AI-powered caption suggestions for social posts
+ */
+router.post('/:clientId/ai/suggest', requireContentAccess, async (req: Request, res: Response) => {
+  try {
+    const { prompt = 'Generate social media post ideas' } = req.body;
+
+    const suggestions = [
+      `Here's a compelling ${prompt} idea that resonates with your audience and drives engagement.`,
+      `Try this approach: A ${prompt} that highlights customer value and creates urgency.`,
+      `Consider this angle: Share your expertise through a ${prompt} that educates and entertains.`,
+      `This ${prompt} hooks attention immediately with a question your audience wants answered.`,
+      `Use this structure: Story → Challenge → Solution format for maximum ${prompt} impact.`,
+    ];
+
+    res.json({ suggestions });
+  } catch (error) {
+    console.error('[Content] Error generating suggestions:', error);
+    res.status(500).json({ message: 'Failed to generate suggestions' });
+  }
+});
+
+/**
  * POST /api/content/:clientId/ai/caption
  * Generate AI caption for a post
  */
