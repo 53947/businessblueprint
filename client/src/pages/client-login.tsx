@@ -29,11 +29,21 @@ export default function ClientLogin() {
       return;
     }
     
-    // Clear stale session data
-    if (sessionClientId && !authToken) {
-      sessionStorage.removeItem("clientId");
-      localStorage.removeItem("clientId");
-    }
+    // ALWAYS clear ALL auth data on login page load to ensure fresh state
+    // This prevents stale tokens from persisting
+    sessionStorage.removeItem("clientId");
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("clientName");
+    sessionStorage.removeItem("externalId");
+    sessionStorage.removeItem("isEmailVerified");
+    sessionStorage.removeItem("lastLogin");
+    
+    localStorage.removeItem("clientId");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("clientName");
+    localStorage.removeItem("externalId");
+    localStorage.removeItem("isEmailVerified");
+    localStorage.removeItem("lastLogin");
     
     setIsCheckingAuth(false);
   }, []);
