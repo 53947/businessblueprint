@@ -215,7 +215,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
   return (
     <header className="bg-gray-100 border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="flex items-center justify-between lg:h-20 h-16">
           {/* Logo - Takes up ~1/5 of header width */}
           <div className="flex items-center w-1/5 min-w-fit mr-4">
@@ -1114,10 +1114,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   )}
                 </button>
 
-                {/* Mobile Cart - Icon only, top right corner */}
+                {/* Mobile Cart - Icon only, top right corner - Absolute positioned at screen edge */}
                 <Link
                   href="/cart"
-                  className="lg:hidden relative hover:opacity-80 transition-opacity ml-auto mr-1"
+                  className="lg:hidden absolute top-4 hover:opacity-80 transition-opacity"
+                  style={{ right: '16px' }}
                   data-testid="button-cart-mobile-top"
                 >
                   <ShoppingCart className="w-7 h-7 text-gray-700" />
