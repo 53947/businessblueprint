@@ -761,8 +761,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const normalizedEmail = email.toLowerCase().trim();
 
+      // Auto-create demo accounts on first login attempt
+      const demoAccounts: Record<string, string> = {
+        'demo@businessblueprint.io': 'Demo Restaurant',
+        'test@businessblueprint.io': 'Test Business',
+        'agency@businessblueprint.io': 'Social Media Agency'
+      };
+
       // Find client by email (case-insensitive, trimmed)
-      const client = await storage.getClientByEmail(normalizedEmail);
+      let client = await storage.getClientByEmail(normalizedEmail);
+
+      // Auto-create demo account if it doesn't exist
+      if (!client && demoAccounts[normalizedEmail]) {
+        client = await storage.createClient({
+          companyName: demoAccounts[normalizedEmail],
+          email: normalizedEmail,
+          accountStatus: "active" as const
+        });
+        console.log(`[Login] Auto-created demo account: ${normalizedEmail} (ID: ${client.id})`);
+      }
 
       if (!client) {
         return res.status(404).json({
