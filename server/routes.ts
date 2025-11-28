@@ -791,9 +791,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate secure random token
       const token = randomBytes(32).toString('hex');
       
-      // Token expires in 15 minutes
+      // Token expires in 24 hours for demo accounts, 15 minutes for others
       const expiresAt = new Date();
-      expiresAt.setMinutes(expiresAt.getMinutes() + 15);
+      const isDemoAccount = ['demo@businessblueprint.io', 'test@businessblueprint.io', 'agency@businessblueprint.io'].includes(normalizedEmail);
+      expiresAt.setMinutes(expiresAt.getMinutes() + (isDemoAccount ? 1440 : 15)); // 24 hours or 15 minutes
 
       // Store token in database
       await storage.createMagicLinkToken({
@@ -823,7 +824,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       // For demo accounts, return the magic link directly (Meta App Review)
-      const isDemoAccount = ['demo@businessblueprint.io', 'test@businessblueprint.io', 'agency@businessblueprint.io'].includes(normalizedEmail);
+      // isDemoAccount already defined above
 
       // Immediately respond to user
       res.json({
