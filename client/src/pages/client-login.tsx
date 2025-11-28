@@ -21,10 +21,20 @@ export default function ClientLogin() {
   // Check if already logged in
   useEffect(() => {
     const sessionClientId = sessionStorage.getItem("clientId");
-    if (sessionClientId) {
+    const authToken = sessionStorage.getItem("authToken");
+    
+    // Only redirect if BOTH clientId and authToken exist (fully authenticated)
+    if (sessionClientId && authToken) {
       window.location.href = "/portal";
       return;
     }
+    
+    // Clear stale session data
+    if (sessionClientId && !authToken) {
+      sessionStorage.removeItem("clientId");
+      localStorage.removeItem("clientId");
+    }
+    
     setIsCheckingAuth(false);
   }, []);
 
