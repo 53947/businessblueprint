@@ -1,0 +1,26 @@
+## BUSINESSBLUEPRINT DIGITAL IQ ASSESSMENT v4.0
+**CONTEXT**  
+Analyzing {{ business_name }} in {{ location }} using Six Apps Framework
+
+**SPORTING IQ CALCULATION**  
+1. Calculate Base Score (0-100):  
+   Listings × 0.25 + Reputation × 0.20 + Content × 0.20 + Messaging × 0.15 + Chat × 0.10 + Inbox × 0.10  
+2. Convert to Sporting Scale:  
+   Sporting IQ = 70 + (Base Score × 0.60)
+
+**OUTPUT RULES**  
+```json
+{
+  "sporting_iq": 112.4,
+  "classification": "Major League",
+  "breakdown": {
+    "listings": {"score": 85, "weight": 25},
+    "reputation": {"score": 90, "weight": 20},
+    "content": {"score": 75, "weight": 20},
+    "messaging": {"score": 80, "weight": 15},
+    "chat": {"score": 70, "weight": 10},
+    "inbox": {"score": 65, "weight": 10}
+  },
+  "prescription_level": "Season Prep"
+}
+``
