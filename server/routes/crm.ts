@@ -38,6 +38,7 @@ crmRouter.get("/contacts", async (req, res) => {
     const clientId = parseInt(req.query.clientId as string);
     const search = req.query.search as string;
     const lifecycleStage = req.query.lifecycleStage as string;
+    const leadSource = req.query.leadSource as string;
     const limit = parseInt(req.query.limit as string) || 50;
     const offset = parseInt(req.query.offset as string) || 0;
 
@@ -49,6 +50,9 @@ crmRouter.get("/contacts", async (req, res) => {
     }
     if (lifecycleStage) {
       conditions.push(eq(crmContacts.lifecycleStage, lifecycleStage));
+    }
+    if (leadSource) {
+      conditions.push(eq(crmContacts.leadSource, leadSource));
     }
     if (search) {
       conditions.push(

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useMemo } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { 
   Users, 
@@ -21,7 +21,15 @@ import {
   UserPlus,
   Target,
   Clock,
-  ArrowUpRight
+  ArrowUpRight,
+  Download,
+  MoreHorizontal,
+  Trash2,
+  Tag,
+  ChevronLeft,
+  ChevronDown,
+  X,
+  Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,7 +37,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { z } from "zod";
 import { cn } from "@/lib/utils";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 import relationshipsIcon from "@assets/__relationships_1766748093805.png";
 
 interface CrmStats {
@@ -180,7 +200,7 @@ export default function RelationshipsPage() {
               </div>
               <Button 
                 className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
-                data-testid="btn-add-contact"
+                data-testid="btn-header-add-contact"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Contact
@@ -500,83 +520,577 @@ function QuickActionCard({
   );
 }
 
+const contactFormSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().optional(),
+  email: z.string().email("Invalid email").optional().or(z.literal("")),
+  phone: z.string().optional(),
+  jobTitle: z.string().optional(),
+  lifecycleStage: z.string().optional(),
+  leadSource: z.string().optional(),
+});
+
+type ContactFormData = z.infer<typeof contactFormSchema>;
+
+const lifecycleStages = [
+  { value: "subscriber", label: "Subscriber" },
+  { value: "lead", label: "Lead" },
+  { value: "marketing_qualified", label: "Marketing Qualified" },
+  { value: "sales_qualified", label: "Sales Qualified" },
+  { value: "opportunity", label: "Opportunity" },
+  { value: "customer", label: "Customer" },
+  { value: "evangelist", label: "Evangelist" },
+];
+
+const leadSources = [
+  { value: "website", label: "Website" },
+  { value: "referral", label: "Referral" },
+  { value: "social", label: "Social Media" },
+  { value: "email", label: "Email Campaign" },
+  { value: "event", label: "Event" },
+  { value: "other", label: "Other" },
+];
+
 function ContactsView() {
-  const { data: contactsData, isLoading } = useQuery<{ contacts: CrmContact[]; total: number }>({
-    queryKey: ["/api/crm/contacts"],
+  const { toast } = useToast();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedStage, setSelectedStage] = useState<string>("all");
+  const [selectedSource, setSelectedSource] = useState<string>("all");
+  const [selectedContacts, setSelectedContacts] = useState<Set<number>>(new Set());
+  const [page, setPage] = useState(1);
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const limit = 25;
+
+  const buildContactsUrl = () => {
+    const params = new URLSearchParams();
+    if (searchQuery) params.set("search", searchQuery);
+    if (selectedStage !== "all") params.set("lifecycleStage", selectedStage);
+    if (selectedSource !== "all") params.set("leadSource", selectedSource);
+    params.set("limit", limit.toString());
+    params.set("offset", ((page - 1) * limit).toString());
+    return `/api/crm/contacts?${params.toString()}`;
+  };
+
+  const { data: contactsData, isLoading, refetch } = useQuery<{ contacts: CrmContact[]; total: number }>({
+    queryKey: [buildContactsUrl()],
   });
+
+  const contacts = contactsData?.contacts || [];
+  const total = contactsData?.total || 0;
+  const totalPages = Math.ceil(total / limit);
+
+  const createContactMutation = useMutation({
+    mutationFn: async (data: ContactFormData) => {
+      return apiRequest("POST", "/api/crm/contacts", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => 
+        typeof query.queryKey[0] === 'string' && query.queryKey[0].startsWith('/api/crm/contacts')
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/stats"] });
+      setShowAddDialog(false);
+      form.reset();
+      toast({ title: "Contact created", description: "The contact has been added successfully." });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message || "Failed to create contact", variant: "destructive" });
+    },
+  });
+
+  const deleteContactsMutation = useMutation({
+    mutationFn: async (ids: number[]) => {
+      await Promise.all(ids.map(id => apiRequest("DELETE", `/api/crm/contacts/${id}`)));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => 
+        typeof query.queryKey[0] === 'string' && query.queryKey[0].startsWith('/api/crm/contacts')
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/stats"] });
+      setSelectedContacts(new Set());
+      toast({ title: "Contacts deleted", description: `${selectedContacts.size} contact(s) deleted.` });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to delete contacts", variant: "destructive" });
+    },
+  });
+
+  const form = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      jobTitle: "",
+      lifecycleStage: "lead",
+      leadSource: "",
+    },
+  });
+
+  const toggleSelectAll = () => {
+    if (selectedContacts.size === contacts.length) {
+      setSelectedContacts(new Set());
+    } else {
+      setSelectedContacts(new Set(contacts.map(c => c.id)));
+    }
+  };
+
+  const toggleSelectContact = (id: number) => {
+    const newSelected = new Set(selectedContacts);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedContacts(newSelected);
+  };
+
+  const exportContacts = () => {
+    const dataToExport = selectedContacts.size > 0 
+      ? contacts.filter(c => selectedContacts.has(c.id))
+      : contacts;
+    
+    const headers = ["First Name", "Last Name", "Email", "Phone", "Job Title", "Stage", "Created"];
+    const rows = dataToExport.map(c => [
+      c.firstName || "",
+      c.lastName || "",
+      c.email || "",
+      c.phone || "",
+      c.jobTitle || "",
+      c.lifecycleStage || "Lead",
+      new Date(c.createdAt).toLocaleDateString(),
+    ]);
+    
+    const csv = [headers.join(","), ...rows.map(r => r.map(cell => `"${cell}"`).join(","))].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `contacts-export-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast({ title: "Export complete", description: `Exported ${dataToExport.length} contacts.` });
+  };
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSelectedStage("all");
+    setSelectedSource("all");
+    setPage(1);
+  };
+
+  const hasActiveFilters = searchQuery || selectedStage !== "all" || selectedSource !== "all";
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm">
+      {/* Header Actions */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Input
+              placeholder="Search contacts..."
+              value={searchQuery}
+              onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
+              className="pl-9 w-64"
+              data-testid="input-search-contacts"
+            />
+          </div>
+
+          {/* Filter Toggle */}
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setShowFilters(!showFilters)}
+            className={hasActiveFilters ? "border-[#22C55E] text-[#22C55E]" : ""}
+            data-testid="btn-toggle-filters"
+          >
             <Filter className="w-4 h-4 mr-2" />
             Filters
+            {hasActiveFilters && <Badge className="ml-2 bg-[#22C55E] text-white text-xs">Active</Badge>}
           </Button>
-          <Button variant="outline" size="sm">
-            All Contacts
-          </Button>
+
+          {/* Segment Tabs */}
+          <div className="flex items-center gap-1 border rounded-lg p-1">
+            {["all", "lead", "customer", "opportunity"].map((stage) => (
+              <Button
+                key={stage}
+                variant={selectedStage === stage ? "default" : "ghost"}
+                size="sm"
+                onClick={() => { setSelectedStage(stage); setPage(1); }}
+                className={selectedStage === stage ? "bg-[#22C55E] hover:bg-[#16A34A] text-white" : ""}
+                data-testid={`btn-segment-${stage}`}
+              >
+                {stage === "all" ? "All" : stage.charAt(0).toUpperCase() + stage.slice(1)}
+              </Button>
+            ))}
+          </div>
         </div>
+
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">Export</Button>
-          <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white" size="sm">
-            <Plus className="w-4 h-4 mr-2" />
-            Add Contact
+          {/* Bulk Actions */}
+          {selectedContacts.size > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" data-testid="btn-bulk-actions">
+                  <MoreHorizontal className="w-4 h-4 mr-2" />
+                  {selectedContacts.size} selected
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={exportContacts}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Export Selected
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={() => deleteContactsMutation.mutate(Array.from(selectedContacts))}
+                  className="text-red-600"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete Selected
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+
+          <Button variant="outline" size="sm" onClick={exportContacts} data-testid="btn-export">
+            <Download className="w-4 h-4 mr-2" />
+            Export
           </Button>
+
+          <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+            <DialogTrigger asChild>
+              <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white" size="sm" data-testid="btn-add-contact">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Contact
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>Add New Contact</DialogTitle>
+                <DialogDescription>Enter the contact details below.</DialogDescription>
+              </DialogHeader>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit((data) => createContactMutation.mutate(data))} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>First Name *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="John" {...field} data-testid="input-first-name" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Last Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Doe" {...field} data-testid="input-last-name" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input placeholder="john@example.com" type="email" {...field} data-testid="input-email" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone</FormLabel>
+                        <FormControl>
+                          <Input placeholder="+1 (555) 000-0000" {...field} data-testid="input-phone" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="jobTitle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Job Title</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Marketing Manager" {...field} data-testid="input-job-title" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="lifecycleStage"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Lifecycle Stage</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-lifecycle-stage">
+                                <SelectValue placeholder="Select stage" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {lifecycleStages.map((stage) => (
+                                <SelectItem key={stage.value} value={stage.value}>{stage.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="leadSource"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Lead Source</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-lead-source">
+                                <SelectValue placeholder="Select source" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {leadSources.map((source) => (
+                                <SelectItem key={source.value} value={source.value}>{source.label}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <DialogFooter>
+                    <Button type="button" variant="outline" onClick={() => setShowAddDialog(false)}>
+                      Cancel
+                    </Button>
+                    <Button 
+                      type="submit" 
+                      className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                      disabled={createContactMutation.isPending}
+                      data-testid="btn-save-contact"
+                    >
+                      {createContactMutation.isPending ? "Saving..." : "Save Contact"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
+      {/* Filter Panel */}
+      {showFilters && (
+        <Card className="border-[#22C55E]/20">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-4 flex-wrap">
+              <div className="flex items-center gap-2">
+                <Label className="text-sm font-medium">Stage:</Label>
+                <Select value={selectedStage} onValueChange={(v) => { setSelectedStage(v); setPage(1); }}>
+                  <SelectTrigger className="w-40" data-testid="filter-stage">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Stages</SelectItem>
+                    {lifecycleStages.map((stage) => (
+                      <SelectItem key={stage.value} value={stage.value}>{stage.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Label className="text-sm font-medium">Source:</Label>
+                <Select value={selectedSource} onValueChange={(v) => { setSelectedSource(v); setPage(1); }}>
+                  <SelectTrigger className="w-40" data-testid="filter-source">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Sources</SelectItem>
+                    {leadSources.map((source) => (
+                      <SelectItem key={source.value} value={source.value}>{source.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {hasActiveFilters && (
+                <Button variant="ghost" size="sm" onClick={clearFilters} className="text-gray-500">
+                  <X className="w-4 h-4 mr-1" />
+                  Clear Filters
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Results Info */}
+      <div className="flex items-center justify-between text-sm text-gray-500">
+        <span>
+          Showing {contacts.length} of {total} contacts
+          {hasActiveFilters && " (filtered)"}
+        </span>
+        {totalPages > 1 && (
+          <span>Page {page} of {totalPages}</span>
+        )}
+      </div>
+
+      {/* Contact Table */}
       <Card>
         <CardContent className="p-0">
           <table className="w-full">
             <thead className="bg-gray-50 dark:bg-gray-800 border-b">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stage</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Added</th>
+                <th className="px-4 py-3 text-left">
+                  <Checkbox 
+                    checked={contacts.length > 0 && selectedContacts.size === contacts.length}
+                    onCheckedChange={toggleSelectAll}
+                    data-testid="checkbox-select-all"
+                  />
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stage</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Added</th>
+                <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {isLoading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i}>
-                    <td colSpan={5} className="px-6 py-4">
+                    <td colSpan={7} className="px-4 py-4">
                       <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
                     </td>
                   </tr>
                 ))
-              ) : contactsData?.contacts.length === 0 ? (
+              ) : contacts.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center">
+                  <td colSpan={7} className="px-4 py-12 text-center">
                     <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                    <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-1">No contacts yet</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Add your first contact to get started</p>
+                    <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                      {hasActiveFilters ? "No contacts match your filters" : "No contacts yet"}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                      {hasActiveFilters ? "Try adjusting your filters" : "Add your first contact to get started"}
+                    </p>
+                    {!hasActiveFilters && (
+                      <Button 
+                        onClick={() => setShowAddDialog(true)}
+                        className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add First Contact
+                      </Button>
+                    )}
                   </td>
                 </tr>
               ) : (
-                contactsData?.contacts.map((contact) => (
-                  <tr key={contact.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
-                    <td className="px-6 py-4">
+                contacts.map((contact) => (
+                  <tr 
+                    key={contact.id} 
+                    className="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                    data-testid={`contact-row-${contact.id}`}
+                  >
+                    <td className="px-4 py-4">
+                      <Checkbox 
+                        checked={selectedContacts.has(contact.id)}
+                        onCheckedChange={() => toggleSelectContact(contact.id)}
+                        data-testid={`checkbox-contact-${contact.id}`}
+                      />
+                    </td>
+                    <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-8 w-8">
                           <AvatarFallback className="bg-[#22C55E]/10 text-[#22C55E] text-xs">
                             {(contact.firstName?.[0] || "") + (contact.lastName?.[0] || "")}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">
-                          {contact.firstName} {contact.lastName}
-                        </span>
+                        <div>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white block">
+                            {contact.firstName} {contact.lastName}
+                          </span>
+                          {contact.jobTitle && (
+                            <span className="text-xs text-gray-500">{contact.jobTitle}</span>
+                          )}
+                        </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{contact.email || "-"}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{contact.phone || "-"}</td>
-                    <td className="px-6 py-4">
-                      <Badge variant="outline">{contact.lifecycleStage || "Lead"}</Badge>
+                    <td className="px-4 py-4 text-sm text-gray-500">{contact.email || "-"}</td>
+                    <td className="px-4 py-4 text-sm text-gray-500">{contact.phone || "-"}</td>
+                    <td className="px-4 py-4">
+                      <Badge 
+                        variant="outline"
+                        className={cn(
+                          contact.lifecycleStage === "customer" && "border-[#22C55E] text-[#22C55E]",
+                          contact.lifecycleStage === "opportunity" && "border-blue-500 text-blue-500",
+                          contact.lifecycleStage === "lead" && "border-yellow-500 text-yellow-500"
+                        )}
+                      >
+                        {contact.lifecycleStage || "Lead"}
+                      </Badge>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-4 py-4 text-sm text-gray-500">
                       {new Date(contact.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-4">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm" data-testid={`btn-contact-menu-${contact.id}`}>
+                            <MoreHorizontal className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>View Details</DropdownMenuItem>
+                          <DropdownMenuItem>Edit Contact</DropdownMenuItem>
+                          <DropdownMenuItem>Add Note</DropdownMenuItem>
+                          <DropdownMenuItem>Create Task</DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem 
+                            className="text-red-600"
+                            onClick={() => deleteContactsMutation.mutate([contact.id])}
+                          >
+                            Delete Contact
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </td>
                   </tr>
                 ))
@@ -585,6 +1099,50 @@ function ContactsView() {
           </table>
         </CardContent>
       </Card>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+            data-testid="btn-prev-page"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            Previous
+          </Button>
+          <div className="flex items-center gap-1">
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              const pageNum = page <= 3 ? i + 1 : page + i - 2;
+              if (pageNum < 1 || pageNum > totalPages) return null;
+              return (
+                <Button
+                  key={pageNum}
+                  variant={pageNum === page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPage(pageNum)}
+                  className={pageNum === page ? "bg-[#22C55E] hover:bg-[#16A34A]" : ""}
+                  data-testid={`btn-page-${pageNum}`}
+                >
+                  {pageNum}
+                </Button>
+              );
+            })}
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            data-testid="btn-next-page"
+          >
+            Next
+            <ChevronRight className="w-4 h-4 ml-1" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
