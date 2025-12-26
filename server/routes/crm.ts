@@ -36,6 +36,7 @@ export const crmRouter = Router();
 crmRouter.get("/contacts", async (req, res) => {
   try {
     const clientId = parseInt(req.query.clientId as string);
+    const companyId = parseInt(req.query.companyId as string);
     const search = req.query.search as string;
     const lifecycleStage = req.query.lifecycleStage as string;
     const leadSource = req.query.leadSource as string;
@@ -47,6 +48,9 @@ crmRouter.get("/contacts", async (req, res) => {
     const conditions = [];
     if (clientId) {
       conditions.push(eq(crmContacts.clientId, clientId));
+    }
+    if (companyId) {
+      conditions.push(eq(crmContacts.companyId, companyId));
     }
     if (lifecycleStage) {
       conditions.push(eq(crmContacts.lifecycleStage, lifecycleStage));
@@ -182,12 +186,16 @@ crmRouter.get("/companies", async (req, res) => {
   try {
     const clientId = parseInt(req.query.clientId as string);
     const search = req.query.search as string;
+    const type = req.query.type as string;
     const limit = parseInt(req.query.limit as string) || 50;
     const offset = parseInt(req.query.offset as string) || 0;
 
     const conditions = [];
     if (clientId) {
       conditions.push(eq(crmCompanies.clientId, clientId));
+    }
+    if (type) {
+      conditions.push(eq(crmCompanies.type, type));
     }
     if (search) {
       conditions.push(
@@ -382,6 +390,8 @@ crmRouter.post("/pipelines/:pipelineId/stages", async (req, res) => {
 crmRouter.get("/deals", async (req, res) => {
   try {
     const clientId = parseInt(req.query.clientId as string);
+    const companyId = parseInt(req.query.companyId as string);
+    const contactId = parseInt(req.query.contactId as string);
     const pipelineId = parseInt(req.query.pipelineId as string);
     const stageId = parseInt(req.query.stageId as string);
     const status = req.query.status as string;
@@ -390,6 +400,8 @@ crmRouter.get("/deals", async (req, res) => {
 
     const conditions = [];
     if (clientId) conditions.push(eq(crmDeals.clientId, clientId));
+    if (companyId) conditions.push(eq(crmDeals.companyId, companyId));
+    if (contactId) conditions.push(eq(crmDeals.contactId, contactId));
     if (pipelineId) conditions.push(eq(crmDeals.pipelineId, pipelineId));
     if (stageId) conditions.push(eq(crmDeals.stageId, stageId));
     if (status) conditions.push(eq(crmDeals.status, status));

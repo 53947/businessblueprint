@@ -34,7 +34,11 @@ import {
   Briefcase,
   DollarSign,
   MapPin,
-  Globe
+  Globe,
+  Loader2,
+  ArrowLeft,
+  Eye,
+  Linkedin
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1705,16 +1709,767 @@ function ContactsView() {
   );
 }
 
-function CompaniesView() {
+interface CrmCompany {
+  id: number;
+  name: string;
+  domain: string | null;
+  industry: string | null;
+  size: string | null;
+  revenue: string | null;
+  phone: string | null;
+  email: string | null;
+  website: string | null;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  postalCode: string | null;
+  country: string | null;
+  linkedinUrl: string | null;
+  twitterUrl: string | null;
+  facebookUrl: string | null;
+  type: string | null;
+  status: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const companyFormSchema = z.object({
+  name: z.string().min(1, "Company name is required"),
+  domain: z.string().optional(),
+  industry: z.string().optional(),
+  size: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().email().optional().or(z.literal("")),
+  website: z.string().optional(),
+  type: z.string().optional(),
+});
+
+type CompanyFormData = z.infer<typeof companyFormSchema>;
+
+function CompanyDetailView({ companyId, onBack }: { companyId: number; onBack: () => void }) {
+  const { toast } = useToast();
+  
+  const { data: company, isLoading } = useQuery<CrmCompany>({
+    queryKey: [`/api/crm/companies/${companyId}`],
+    enabled: companyId !== null,
+  });
+  
+  const buildContactsUrl = () => {
+    const params = new URLSearchParams();
+    params.set("companyId", companyId.toString());
+    params.set("limit", "100");
+    return `/api/crm/contacts?${params.toString()}`;
+  };
+  
+  const { data: contactsData } = useQuery<{ contacts: CrmContact[]; total: number }>({
+    queryKey: [buildContactsUrl()],
+  });
+  
+  const { data: dealsData } = useQuery<{ deals: CrmDeal[]; total: number }>({
+    queryKey: [`/api/crm/deals?companyId=${companyId}&limit=10`],
+  });
+  
+  const { data: notesData } = useQuery<{ notes: CrmNote[] }>({
+    queryKey: [`/api/crm/notes?companyId=${companyId}&limit=20`],
+  });
+  
+  const [showNoteDialog, setShowNoteDialog] = useState(false);
+  const [noteContent, setNoteContent] = useState("");
+  
+  const addNoteMutation = useMutation({
+    mutationFn: async (content: string) => {
+      return apiRequest("POST", "/api/crm/notes", {
+        companyId,
+        content,
+        noteType: "general",
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/crm/notes?companyId=${companyId}&limit=20`] });
+      setShowNoteDialog(false);
+      setNoteContent("");
+      toast({ title: "Note added", description: "Note has been saved to this company." });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to add note", variant: "destructive" });
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-8 h-8 animate-spin text-[#22C55E]" />
+      </div>
+    );
+  }
+
+  if (!company) {
+    return (
+      <div className="text-center py-12">
+        <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+        <p className="text-gray-500">Company not found</p>
+        <Button variant="outline" onClick={onBack} className="mt-4">
+          Back to Companies
+        </Button>
+      </div>
+    );
+  }
+
+  const contacts = contactsData?.contacts || [];
+  const deals = dealsData?.deals || [];
+  const notes = notesData?.notes || [];
+
   return (
-    <div className="text-center py-12">
-      <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Companies</h2>
-      <p className="text-gray-500 dark:text-gray-400 mb-4">Track business accounts and their contacts</p>
-      <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white">
-        <Plus className="w-4 h-4 mr-2" />
-        Add Company
-      </Button>
+    <div className="space-y-6" data-testid="company-detail-view">
+      {/* Header */}
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="sm" onClick={onBack} data-testid="btn-back-to-companies">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Companies
+        </Button>
+      </div>
+      
+      {/* Company header card */}
+      <Card data-testid="company-header">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-6">
+            <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-[#22C55E]/20 to-[#22C55E]/10 flex items-center justify-center">
+              <Building2 className="w-8 h-8 text-[#22C55E]" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white" data-testid="company-name">
+                  {company.name}
+                </h1>
+                <Badge className={cn(
+                  "capitalize",
+                  company.type === "customer" ? "bg-[#22C55E]/10 text-[#22C55E]" :
+                  company.type === "partner" ? "bg-blue-100 text-blue-800" :
+                  company.type === "vendor" ? "bg-purple-100 text-purple-800" :
+                  "bg-gray-100 text-gray-800"
+                )}>
+                  {company.type || "Prospect"}
+                </Badge>
+              </div>
+              {company.industry && (
+                <p className="text-gray-600 dark:text-gray-400">{company.industry}</p>
+              )}
+              <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                {company.size && <span>{company.size} employees</span>}
+                {company.domain && (
+                  <a href={`https://${company.domain}`} target="_blank" rel="noopener noreferrer" 
+                     className="text-[#22C55E] hover:underline flex items-center gap-1">
+                    <Globe className="w-3 h-3" />
+                    {company.domain}
+                  </a>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => setShowNoteDialog(true)} data-testid="btn-add-company-note">
+                <FileText className="w-4 h-4 mr-2" />
+                Add Note
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left column - Info + Contacts */}
+        <div className="space-y-6">
+          {/* Company Information */}
+          <Card data-testid="company-info-card">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Company Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {company.email && (
+                <div className="flex items-center gap-3">
+                  <Mail className="w-4 h-4 text-gray-400" />
+                  <a href={`mailto:${company.email}`} className="text-sm text-[#22C55E] hover:underline">
+                    {company.email}
+                  </a>
+                </div>
+              )}
+              {company.phone && (
+                <div className="flex items-center gap-3">
+                  <Phone className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm">{company.phone}</span>
+                </div>
+              )}
+              {company.website && (
+                <div className="flex items-center gap-3">
+                  <Globe className="w-4 h-4 text-gray-400" />
+                  <a href={company.website.startsWith("http") ? company.website : `https://${company.website}`} 
+                     target="_blank" rel="noopener noreferrer" className="text-sm text-[#22C55E] hover:underline">
+                    {company.website}
+                  </a>
+                </div>
+              )}
+              {(company.city || company.state) && (
+                <div className="flex items-center gap-3">
+                  <MapPin className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm">
+                    {[company.city, company.state, company.country].filter(Boolean).join(", ")}
+                  </span>
+                </div>
+              )}
+              {company.linkedinUrl && (
+                <div className="flex items-center gap-3">
+                  <Linkedin className="w-4 h-4 text-gray-400" />
+                  <a href={company.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-[#22C55E] hover:underline">
+                    LinkedIn
+                  </a>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Details */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-500">Industry</span>
+                <span className="text-sm font-medium">{company.industry || "—"}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-500">Size</span>
+                <span className="text-sm font-medium">{company.size || "—"}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-500">Revenue</span>
+                <span className="text-sm font-medium">{company.revenue || "—"}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-500">Created</span>
+                <span className="text-sm font-medium">
+                  {new Date(company.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Middle column - Contacts */}
+        <div className="space-y-6">
+          <Card data-testid="company-contacts-card">
+            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <CardTitle className="text-base">Contacts ({contacts.length})</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {contacts.length === 0 ? (
+                <div className="text-center py-6">
+                  <Users className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                  <p className="text-sm text-gray-500">No contacts linked</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {contacts.map((contact) => (
+                    <div key={contact.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-[#22C55E]/10 text-[#22C55E] text-xs">
+                          {(contact.firstName?.[0] || "")}{(contact.lastName?.[0] || "")}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">
+                          {contact.firstName} {contact.lastName}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">
+                          {contact.jobTitle || contact.email}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Deals */}
+          <Card data-testid="company-deals-card">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Deals ({deals.length})</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {deals.length === 0 ? (
+                <div className="text-center py-6">
+                  <DollarSign className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                  <p className="text-sm text-gray-500">No deals yet</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {deals.map((deal) => (
+                    <div key={deal.id} className="p-3 border rounded-lg">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-medium text-sm">{deal.name}</span>
+                        <Badge variant="outline" className="text-xs">
+                          {deal.stage}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-[#22C55E] font-medium">
+                        ${(deal.value || 0).toLocaleString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right column - Notes */}
+        <div className="space-y-6">
+          <Card data-testid="company-notes-card">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Notes ({notes.length})</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {notes.length === 0 ? (
+                <div className="text-center py-6">
+                  <FileText className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                  <p className="text-sm text-gray-500">No notes yet</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {notes.map((note) => (
+                    <div key={note.id} className="p-3 border rounded-lg">
+                      <p className="text-sm text-gray-700 dark:text-gray-300">{note.content}</p>
+                      <p className="text-xs text-gray-400 mt-2">
+                        {new Date(note.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Add Note Dialog */}
+      <Dialog open={showNoteDialog} onOpenChange={setShowNoteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Note</DialogTitle>
+            <DialogDescription>Add a note to this company record.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Textarea
+              placeholder="Enter your note..."
+              value={noteContent}
+              onChange={(e) => setNoteContent(e.target.value)}
+              rows={4}
+              data-testid="input-company-note-content"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowNoteDialog(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={() => addNoteMutation.mutate(noteContent)}
+              disabled={!noteContent.trim() || addNoteMutation.isPending}
+              className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+              data-testid="btn-save-company-note"
+            >
+              {addNoteMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Save Note
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+function CompaniesView() {
+  const { toast } = useToast();
+  const [selectedCompanyId, setSelectedCompanyId] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedType, setSelectedType] = useState("all");
+  const [page, setPage] = useState(1);
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const pageSize = 20;
+
+  const buildCompaniesUrl = () => {
+    const params = new URLSearchParams();
+    if (searchQuery) params.set("search", searchQuery);
+    if (selectedType !== "all") params.set("type", selectedType);
+    params.set("limit", pageSize.toString());
+    params.set("offset", ((page - 1) * pageSize).toString());
+    return `/api/crm/companies?${params.toString()}`;
+  };
+
+  const { data: companiesData, isLoading } = useQuery<{ companies: CrmCompany[]; total: number }>({
+    queryKey: [buildCompaniesUrl()],
+  });
+
+  const form = useForm<CompanyFormData>({
+    resolver: zodResolver(companyFormSchema),
+    defaultValues: {
+      name: "",
+      domain: "",
+      industry: "",
+      size: "",
+      phone: "",
+      email: "",
+      website: "",
+      type: "prospect",
+    },
+  });
+
+  const createCompanyMutation = useMutation({
+    mutationFn: async (data: CompanyFormData) => {
+      return apiRequest("POST", "/api/crm/companies", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => 
+        typeof query.queryKey[0] === 'string' && query.queryKey[0].startsWith('/api/crm/companies')
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/stats"] });
+      setShowAddDialog(false);
+      form.reset();
+      toast({ title: "Company created", description: "New company has been added successfully." });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to create company", variant: "destructive" });
+    },
+  });
+
+  const onSubmit = (data: CompanyFormData) => {
+    createCompanyMutation.mutate(data);
+  };
+
+  // If a company is selected, show detail view (must be after all hooks)
+  if (selectedCompanyId !== null) {
+    return <CompanyDetailView companyId={selectedCompanyId} onBack={() => setSelectedCompanyId(null)} />;
+  }
+
+  const companies = companiesData?.companies || [];
+  const totalCompanies = companiesData?.total || 0;
+  const totalPages = Math.ceil(totalCompanies / pageSize);
+
+  return (
+    <div className="space-y-6" data-testid="companies-view">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Companies</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {totalCompanies} {totalCompanies === 1 ? "company" : "companies"}
+          </p>
+        </div>
+        <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+          <DialogTrigger asChild>
+            <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white" data-testid="btn-add-company">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Company
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Add Company</DialogTitle>
+              <DialogDescription>Create a new company record.</DialogDescription>
+            </DialogHeader>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company Name *</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Acme Inc." {...field} data-testid="input-company-name" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="domain"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Domain</FormLabel>
+                      <FormControl>
+                        <Input placeholder="acme.com" {...field} data-testid="input-company-domain" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="industry"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Industry</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value || ""}>
+                          <FormControl>
+                            <SelectTrigger data-testid="select-company-industry">
+                              <SelectValue placeholder="Select..." />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="technology">Technology</SelectItem>
+                            <SelectItem value="healthcare">Healthcare</SelectItem>
+                            <SelectItem value="finance">Finance</SelectItem>
+                            <SelectItem value="retail">Retail</SelectItem>
+                            <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                            <SelectItem value="professional_services">Professional Services</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="size"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Size</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value || ""}>
+                          <FormControl>
+                            <SelectTrigger data-testid="select-company-size">
+                              <SelectValue placeholder="Select..." />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="1-10">1-10</SelectItem>
+                            <SelectItem value="11-50">11-50</SelectItem>
+                            <SelectItem value="51-200">51-200</SelectItem>
+                            <SelectItem value="201-500">201-500</SelectItem>
+                            <SelectItem value="500+">500+</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Type</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value || "prospect"}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-company-type">
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="prospect">Prospect</SelectItem>
+                          <SelectItem value="customer">Customer</SelectItem>
+                          <SelectItem value="partner">Partner</SelectItem>
+                          <SelectItem value="vendor">Vendor</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="info@acme.com" {...field} data-testid="input-company-email" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone</FormLabel>
+                      <FormControl>
+                        <Input placeholder="+1 555-0123" {...field} data-testid="input-company-phone" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setShowAddDialog(false)}>
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    disabled={createCompanyMutation.isPending}
+                    className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                    data-testid="btn-save-company"
+                  >
+                    {createCompanyMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                    Create Company
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Filters */}
+      <div className="flex items-center gap-4">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Input
+            placeholder="Search companies..."
+            value={searchQuery}
+            onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
+            className="pl-10"
+            data-testid="input-search-companies"
+          />
+        </div>
+        <Select value={selectedType} onValueChange={(v) => { setSelectedType(v); setPage(1); }}>
+          <SelectTrigger className="w-40" data-testid="select-company-type-filter">
+            <SelectValue placeholder="All Types" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Types</SelectItem>
+            <SelectItem value="prospect">Prospect</SelectItem>
+            <SelectItem value="customer">Customer</SelectItem>
+            <SelectItem value="partner">Partner</SelectItem>
+            <SelectItem value="vendor">Vendor</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Company Table */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin text-[#22C55E]" />
+        </div>
+      ) : companies.length === 0 ? (
+        <div className="text-center py-12">
+          <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No companies yet</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-4">Add your first company to get started.</p>
+        </div>
+      ) : (
+        <Card>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 dark:bg-gray-800">
+                <tr>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Company</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Industry</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Size</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Type</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Created</th>
+                  <th className="text-right py-3 px-4 text-sm font-medium text-gray-500 dark:text-gray-400">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                {companies.map((company) => (
+                  <tr 
+                    key={company.id} 
+                    className="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                    data-testid={`company-row-${company.id}`}
+                    onClick={() => setSelectedCompanyId(company.id)}
+                  >
+                    <td className="py-3 px-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-[#22C55E]/10 flex items-center justify-center">
+                          <Building2 className="w-4 h-4 text-[#22C55E]" />
+                        </div>
+                        <div>
+                          <p 
+                            className="font-medium text-gray-900 dark:text-white hover:text-[#22C55E]"
+                            data-testid={`link-company-name-${company.id}`}
+                          >
+                            {company.name}
+                          </p>
+                          {company.domain && (
+                            <p className="text-xs text-gray-500">{company.domain}</p>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400 capitalize">
+                      {company.industry?.replace(/_/g, " ") || "—"}
+                    </td>
+                    <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
+                      {company.size || "—"}
+                    </td>
+                    <td className="py-3 px-4">
+                      <Badge className={cn(
+                        "capitalize",
+                        company.type === "customer" ? "bg-[#22C55E]/10 text-[#22C55E]" :
+                        company.type === "partner" ? "bg-blue-100 text-blue-800" :
+                        company.type === "vendor" ? "bg-purple-100 text-purple-800" :
+                        "bg-gray-100 text-gray-800"
+                      )}>
+                        {company.type || "Prospect"}
+                      </Badge>
+                    </td>
+                    <td className="py-3 px-4 text-sm text-gray-600 dark:text-gray-400">
+                      {new Date(company.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="py-3 px-4 text-right" onClick={(e) => e.stopPropagation()}>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setSelectedCompanyId(company.id)}
+                        data-testid={`btn-view-company-${company.id}`}
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      )}
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-gray-500">
+            Showing {((page - 1) * pageSize) + 1} to {Math.min(page * pageSize, totalCompanies)} of {totalCompanies}
+          </p>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              data-testid="btn-prev-company-page"
+            >
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              Previous
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              data-testid="btn-next-company-page"
+            >
+              Next
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
