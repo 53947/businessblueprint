@@ -131,6 +131,47 @@ interface CrmTimeline {
   createdAt: string;
 }
 
+interface CrmPipeline {
+  id: number;
+  name: string;
+  description: string | null;
+  isDefault: boolean | null;
+  isActive: boolean | null;
+  displayOrder: number | null;
+  stages: CrmPipelineStage[];
+  createdAt: string;
+}
+
+interface CrmPipelineStage {
+  id: number;
+  pipelineId: number;
+  name: string;
+  probability: number | null;
+  displayOrder: number | null;
+  stageType: string | null;
+  color: string | null;
+  createdAt: string;
+}
+
+interface CrmDealWithDetails {
+  id: number;
+  contactId: number | null;
+  companyId: number | null;
+  pipelineId: number | null;
+  stageId: number | null;
+  name: string;
+  description: string | null;
+  amount: string | null;
+  currency: string | null;
+  probability: number | null;
+  expectedCloseDate: string | null;
+  status: string | null;
+  contact?: CrmContact;
+  company?: CrmCompany;
+  createdAt: string;
+  updatedAt: string;
+}
+
 type Section = "dashboard" | "contacts" | "companies" | "pipeline" | "tasks" | "timeline" | "analytics" | "settings";
 
 const sidebarItems = [
@@ -2475,15 +2516,553 @@ function CompaniesView() {
 }
 
 function PipelineView() {
+  const { toast } = useToast();
+  const [showAddDealDialog, setShowAddDealDialog] = useState(false);
+  const [selectedDeal, setSelectedDeal] = useState<CrmDealWithDetails | null>(null);
+  const [showDealDetail, setShowDealDetail] = useState(false);
+  const [draggedDealId, setDraggedDealId] = useState<number | null>(null);
+  const [selectedPipelineId, setSelectedPipelineId] = useState<number | null>(null);
+
+  const { data: pipelinesData, isLoading: pipelinesLoading } = useQuery<CrmPipeline[]>({
+    queryKey: ["/api/crm/pipelines"],
+  });
+
+  const { data: dealsData, isLoading: dealsLoading, refetch: refetchDeals } = useQuery<{ deals: CrmDealWithDetails[]; total: number }>({
+    queryKey: ["/api/crm/deals?limit=500"],
+  });
+
+  const { data: contactsData } = useQuery<{ contacts: CrmContact[]; total: number }>({
+    queryKey: ["/api/crm/contacts?limit=200"],
+  });
+
+  const { data: companiesData } = useQuery<{ companies: CrmCompany[]; total: number }>({
+    queryKey: ["/api/crm/companies?limit=200"],
+  });
+
+  const createPipelineMutation = useMutation({
+    mutationFn: async (data: { name: string; description?: string }) => {
+      return apiRequest("/api/crm/pipelines", { method: "POST", body: JSON.stringify(data) });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/pipelines") });
+      toast({ title: "Pipeline created" });
+    },
+  });
+
+  const createDealMutation = useMutation({
+    mutationFn: async (data: { name: string; amount?: string; contactId?: number; companyId?: number; pipelineId: number; stageId: number; expectedCloseDate?: string }) => {
+      return apiRequest("/api/crm/deals", { method: "POST", body: JSON.stringify(data) });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/deals") });
+      queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/stats") });
+      setShowAddDealDialog(false);
+      toast({ title: "Deal created" });
+    },
+    onError: (error: Error) => {
+      toast({ title: "Failed to create deal", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const updateDealMutation = useMutation({
+    mutationFn: async ({ id, ...data }: { id: number; stageId?: number; status?: string }) => {
+      return apiRequest(`/api/crm/deals/${id}`, { method: "PATCH", body: JSON.stringify(data) });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/deals") });
+      queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/stats") });
+    },
+  });
+
+  const pipelines = pipelinesData || [];
+  const deals = dealsData?.deals || [];
+  const contacts = contactsData?.contacts || [];
+  const companies = companiesData?.companies || [];
+
+  const activePipeline = pipelines.find(p => selectedPipelineId ? p.id === selectedPipelineId : p.isDefault) || pipelines[0];
+  const stages = activePipeline?.stages?.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)) || [];
+
+  const dealsByStage = useMemo(() => {
+    const grouped: Record<number, CrmDealWithDetails[]> = {};
+    stages.forEach(stage => { grouped[stage.id] = []; });
+    deals.forEach(deal => {
+      if (deal.stageId && grouped[deal.stageId]) {
+        grouped[deal.stageId].push(deal);
+      }
+    });
+    return grouped;
+  }, [deals, stages]);
+
+  const stageStats = useMemo(() => {
+    return stages.map(stage => {
+      const stageDeals = dealsByStage[stage.id] || [];
+      const totalValue = stageDeals.reduce((sum, d) => sum + (parseFloat(d.amount || "0") || 0), 0);
+      const weightedValue = totalValue * ((stage.probability || 0) / 100);
+      return { stage, count: stageDeals.length, totalValue, weightedValue };
+    });
+  }, [stages, dealsByStage]);
+
+  const totalPipelineValue = stageStats.reduce((sum, s) => sum + s.totalValue, 0);
+  const totalWeightedValue = stageStats.reduce((sum, s) => sum + s.weightedValue, 0);
+
+  const handleDragStart = (e: React.DragEvent, dealId: number) => {
+    e.dataTransfer.setData("dealId", dealId.toString());
+    setDraggedDealId(dealId);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedDealId(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetStageId: number) => {
+    e.preventDefault();
+    const dealId = parseInt(e.dataTransfer.getData("dealId"));
+    if (dealId && dealId !== draggedDealId) return;
+    
+    const deal = deals.find(d => d.id === dealId);
+    if (deal && deal.stageId !== targetStageId) {
+      const targetStage = stages.find(s => s.id === targetStageId);
+      await updateDealMutation.mutateAsync({ 
+        id: dealId, 
+        stageId: targetStageId,
+        status: targetStage?.stageType === "won" ? "won" : targetStage?.stageType === "lost" ? "lost" : "open"
+      });
+      toast({ title: `Deal moved to ${targetStage?.name}` });
+    }
+    setDraggedDealId(null);
+  };
+
+  const dealFormSchema = z.object({
+    name: z.string().min(1, "Deal name is required"),
+    amount: z.string().optional(),
+    contactId: z.string().optional(),
+    companyId: z.string().optional(),
+    expectedCloseDate: z.string().optional(),
+  });
+
+  const dealForm = useForm<z.infer<typeof dealFormSchema>>({
+    resolver: zodResolver(dealFormSchema),
+    defaultValues: { name: "", amount: "", contactId: "", companyId: "", expectedCloseDate: "" },
+  });
+
+  const handleCreateDeal = (values: z.infer<typeof dealFormSchema>) => {
+    console.log("[PipelineView] handleCreateDeal called with:", values);
+    if (!activePipeline || stages.length === 0) {
+      console.log("[PipelineView] No pipeline available");
+      toast({ title: "No pipeline available", variant: "destructive" });
+      return;
+    }
+    const firstActiveStage = stages.find(s => s.stageType === "active") || stages[0];
+    console.log("[PipelineView] Creating deal with stage:", firstActiveStage);
+    createDealMutation.mutate({
+      name: values.name,
+      amount: values.amount || undefined,
+      contactId: values.contactId ? parseInt(values.contactId) : undefined,
+      companyId: values.companyId ? parseInt(values.companyId) : undefined,
+      pipelineId: activePipeline.id,
+      stageId: firstActiveStage.id,
+      expectedCloseDate: values.expectedCloseDate || undefined,
+    });
+  };
+
+  if (pipelinesLoading || dealsLoading) {
+    return (
+      <div className="flex items-center justify-center py-12" data-testid="pipeline-loading">
+        <Loader2 className="w-8 h-8 animate-spin text-[#22C55E]" />
+      </div>
+    );
+  }
+
+  if (pipelines.length === 0) {
+    return (
+      <div className="text-center py-12" data-testid="pipeline-empty">
+        <Kanban className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Pipelines Yet</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-4">Create your first sales pipeline to start tracking deals</p>
+        <Button 
+          className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+          onClick={() => createPipelineMutation.mutate({ name: "Sales Pipeline", description: "Default sales pipeline" })}
+          disabled={createPipelineMutation.isPending}
+          data-testid="btn-create-pipeline"
+        >
+          {createPipelineMutation.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Plus className="w-4 h-4 mr-2" />}
+          Create Pipeline
+        </Button>
+      </div>
+    );
+  }
+
   return (
-    <div className="text-center py-12">
-      <Kanban className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Sales Pipeline</h2>
-      <p className="text-gray-500 dark:text-gray-400 mb-4">Visualize and manage your deals through stages</p>
-      <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white">
-        <Plus className="w-4 h-4 mr-2" />
-        Create Deal
-      </Button>
+    <div className="space-y-4" data-testid="pipeline-view">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Sales Pipeline</h2>
+          {pipelines.length > 1 && (
+            <Select 
+              value={activePipeline?.id?.toString()} 
+              onValueChange={(val) => setSelectedPipelineId(parseInt(val))}
+            >
+              <SelectTrigger className="w-48" data-testid="select-pipeline">
+                <SelectValue placeholder="Select pipeline" />
+              </SelectTrigger>
+              <SelectContent>
+                {pipelines.map(p => (
+                  <SelectItem key={p.id} value={p.id.toString()} data-testid={`pipeline-option-${p.id}`}>
+                    {p.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        </div>
+        <Button 
+          className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+          onClick={() => setShowAddDealDialog(true)}
+          data-testid="btn-add-deal"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Add Deal
+        </Button>
+      </div>
+
+      {/* Forecast Summary */}
+      <div className="grid grid-cols-4 gap-4">
+        <Card data-testid="stat-total-deals">
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{deals.length}</div>
+            <p className="text-sm text-gray-500">Total Deals</p>
+          </CardContent>
+        </Card>
+        <Card data-testid="stat-pipeline-value">
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">${totalPipelineValue.toLocaleString()}</div>
+            <p className="text-sm text-gray-500">Pipeline Value</p>
+          </CardContent>
+        </Card>
+        <Card data-testid="stat-weighted-value">
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold text-[#22C55E]">${totalWeightedValue.toLocaleString()}</div>
+            <p className="text-sm text-gray-500">Weighted Forecast</p>
+          </CardContent>
+        </Card>
+        <Card data-testid="stat-avg-deal">
+          <CardContent className="pt-4">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              ${deals.length > 0 ? Math.round(totalPipelineValue / deals.length).toLocaleString() : 0}
+            </div>
+            <p className="text-sm text-gray-500">Avg Deal Size</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Kanban Board */}
+      <div className="overflow-x-auto pb-4" data-testid="kanban-board">
+        <div className="flex gap-4 min-w-max">
+          {stages.map((stage) => {
+            const stageDeals = dealsByStage[stage.id] || [];
+            const stageValue = stageDeals.reduce((sum, d) => sum + (parseFloat(d.amount || "0") || 0), 0);
+            return (
+              <div 
+                key={stage.id}
+                className="w-72 flex-shrink-0 bg-gray-50 dark:bg-gray-900 rounded-lg"
+                onDragOver={handleDragOver}
+                onDrop={(e) => handleDrop(e, stage.id)}
+                data-testid={`stage-column-${stage.id}`}
+              >
+                {/* Stage Header */}
+                <div 
+                  className="p-3 border-b border-gray-200 dark:border-gray-700 rounded-t-lg"
+                  style={{ borderTopColor: stage.color || "#3B82F6", borderTopWidth: "3px" }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-gray-900 dark:text-white" data-testid={`stage-name-${stage.id}`}>
+                        {stage.name}
+                      </span>
+                      <Badge variant="secondary" className="text-xs" data-testid={`stage-count-${stage.id}`}>
+                        {stageDeals.length}
+                      </Badge>
+                    </div>
+                    {stage.probability !== null && (
+                      <span className="text-xs text-gray-500">{stage.probability}%</span>
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-500 mt-1">
+                    ${stageValue.toLocaleString()}
+                  </div>
+                </div>
+
+                {/* Deals */}
+                <div className="p-2 space-y-2 min-h-[200px]" data-testid={`stage-deals-${stage.id}`}>
+                  {stageDeals.map((deal) => (
+                    <div
+                      key={deal.id}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, deal.id)}
+                      onDragEnd={handleDragEnd}
+                      onClick={() => { setSelectedDeal(deal); setShowDealDetail(true); }}
+                      className={cn(
+                        "p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 cursor-pointer hover:shadow-md transition-shadow",
+                        draggedDealId === deal.id && "opacity-50"
+                      )}
+                      data-testid={`deal-card-${deal.id}`}
+                    >
+                      <div className="font-medium text-gray-900 dark:text-white text-sm mb-1" data-testid={`deal-name-${deal.id}`}>
+                        {deal.name}
+                      </div>
+                      {deal.amount && (
+                        <div className="flex items-center gap-1 text-sm text-[#22C55E] font-semibold mb-2">
+                          <DollarSign className="w-3 h-3" />
+                          {parseFloat(deal.amount).toLocaleString()}
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        {deal.contact && (
+                          <span className="flex items-center gap-1">
+                            <Users className="w-3 h-3" />
+                            {deal.contact.firstName} {deal.contact.lastName}
+                          </span>
+                        )}
+                        {deal.company && (
+                          <span className="flex items-center gap-1">
+                            <Building2 className="w-3 h-3" />
+                            {deal.company.name}
+                          </span>
+                        )}
+                      </div>
+                      {deal.expectedCloseDate && (
+                        <div className="flex items-center gap-1 text-xs text-gray-400 mt-1">
+                          <Calendar className="w-3 h-3" />
+                          {new Date(deal.expectedCloseDate).toLocaleDateString()}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {stageDeals.length === 0 && (
+                    <div className="text-center py-8 text-gray-400 text-sm" data-testid={`stage-empty-${stage.id}`}>
+                      Drop deals here
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Add Deal Dialog */}
+      <Dialog open={showAddDealDialog} onOpenChange={setShowAddDealDialog}>
+        <DialogContent data-testid="add-deal-dialog">
+          <DialogHeader>
+            <DialogTitle>Add New Deal</DialogTitle>
+            <DialogDescription>Create a new deal in your pipeline</DialogDescription>
+          </DialogHeader>
+          <Form {...dealForm}>
+            <form onSubmit={dealForm.handleSubmit(handleCreateDeal, (errors) => console.log("[PipelineView] Form validation errors:", errors))} className="space-y-4">
+              <FormField
+                control={dealForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Deal Name *</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Website Redesign Project" {...field} data-testid="input-deal-name" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={dealForm.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Amount ($)</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="10000" {...field} data-testid="input-deal-amount" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={dealForm.control}
+                name="contactId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Contact</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger data-testid="select-deal-contact">
+                          <SelectValue placeholder="Select a contact" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {contacts.map(c => (
+                          <SelectItem key={c.id} value={c.id.toString()}>
+                            {c.firstName} {c.lastName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={dealForm.control}
+                name="companyId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Company</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger data-testid="select-deal-company">
+                          <SelectValue placeholder="Select a company" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {companies.map(c => (
+                          <SelectItem key={c.id} value={c.id.toString()}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={dealForm.control}
+                name="expectedCloseDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Expected Close Date</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} data-testid="input-deal-close-date" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setShowAddDealDialog(false)}>Cancel</Button>
+                <Button 
+                  type="submit" 
+                  className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                  disabled={createDealMutation.isPending}
+                  data-testid="btn-save-deal"
+                >
+                  {createDealMutation.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                  Create Deal
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Deal Detail Dialog */}
+      <Dialog open={showDealDetail} onOpenChange={setShowDealDetail}>
+        <DialogContent className="max-w-lg" data-testid="deal-detail-dialog">
+          {selectedDeal && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{selectedDeal.name}</DialogTitle>
+                <DialogDescription>Deal Details</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-xs text-gray-500">Amount</Label>
+                    <p className="text-lg font-semibold text-[#22C55E]">
+                      ${selectedDeal.amount ? parseFloat(selectedDeal.amount).toLocaleString() : "0"}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-xs text-gray-500">Status</Label>
+                    <Badge variant={selectedDeal.status === "won" ? "default" : selectedDeal.status === "lost" ? "destructive" : "secondary"}>
+                      {selectedDeal.status || "open"}
+                    </Badge>
+                  </div>
+                </div>
+
+                {selectedDeal.description && (
+                  <div>
+                    <Label className="text-xs text-gray-500">Description</Label>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">{selectedDeal.description}</p>
+                  </div>
+                )}
+
+                {selectedDeal.contact && (
+                  <div>
+                    <Label className="text-xs text-gray-500">Contact</Label>
+                    <p className="text-sm">{selectedDeal.contact.firstName} {selectedDeal.contact.lastName}</p>
+                  </div>
+                )}
+
+                {selectedDeal.company && (
+                  <div>
+                    <Label className="text-xs text-gray-500">Company</Label>
+                    <p className="text-sm">{selectedDeal.company.name}</p>
+                  </div>
+                )}
+
+                {selectedDeal.expectedCloseDate && (
+                  <div>
+                    <Label className="text-xs text-gray-500">Expected Close Date</Label>
+                    <p className="text-sm">{new Date(selectedDeal.expectedCloseDate).toLocaleDateString()}</p>
+                  </div>
+                )}
+
+                <div className="flex gap-2 pt-4">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1 text-[#22C55E] border-[#22C55E]"
+                    onClick={async () => {
+                      const wonStage = stages.find(s => s.stageType === "won");
+                      if (wonStage) {
+                        await updateDealMutation.mutateAsync({ id: selectedDeal.id, stageId: wonStage.id, status: "won" });
+                        setShowDealDetail(false);
+                        toast({ title: "Deal marked as won!" });
+                      }
+                    }}
+                    disabled={updateDealMutation.isPending}
+                    data-testid="btn-mark-won"
+                  >
+                    <Check className="w-4 h-4 mr-2" />
+                    Mark Won
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={async () => {
+                      const lostStage = stages.find(s => s.stageType === "lost");
+                      if (lostStage) {
+                        await updateDealMutation.mutateAsync({ id: selectedDeal.id, stageId: lostStage.id, status: "lost" });
+                        setShowDealDetail(false);
+                        toast({ title: "Deal marked as lost" });
+                      }
+                    }}
+                    disabled={updateDealMutation.isPending}
+                    data-testid="btn-mark-lost"
+                  >
+                    <X className="w-4 h-4 mr-2" />
+                    Mark Lost
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
