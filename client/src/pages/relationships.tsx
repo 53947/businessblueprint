@@ -29,7 +29,12 @@ import {
   ChevronLeft,
   ChevronDown,
   X,
-  Check
+  Check,
+  FileText,
+  Briefcase,
+  DollarSign,
+  MapPin,
+  Globe
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,6 +48,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -66,9 +72,17 @@ interface CrmContact {
   lastName: string | null;
   email: string | null;
   phone: string | null;
+  mobilePhone: string | null;
   jobTitle: string | null;
   lifecycleStage: string | null;
+  leadSource: string | null;
   lastActivityDate: string | null;
+  lastContactedAt: string | null;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  linkedinUrl: string | null;
+  websiteUrl: string | null;
   createdAt: string;
 }
 
@@ -79,6 +93,38 @@ interface CrmTask {
   status: string;
   priority: string;
   dueDate: string | null;
+  contactId: number | null;
+  completedAt: string | null;
+  createdAt: string;
+}
+
+interface CrmDeal {
+  id: number;
+  contactId: number | null;
+  name: string;
+  amount: string | null;
+  status: string;
+  createdAt: string;
+}
+
+interface CrmNote {
+  id: number;
+  contactId: number | null;
+  content: string;
+  noteType: string;
+  isPinned: boolean;
+  createdAt: string;
+}
+
+interface CrmTimeline {
+  id: number;
+  contactId: number | null;
+  eventType: string;
+  title: string;
+  description: string | null;
+  sourceApp: string | null;
+  occurredAt: string;
+  createdAt: string;
 }
 
 type Section = "dashboard" | "contacts" | "companies" | "pipeline" | "tasks" | "timeline" | "analytics" | "settings";
@@ -551,12 +597,516 @@ const leadSources = [
   { value: "other", label: "Other" },
 ];
 
+function ContactDetailView({ contactId, onBack }: { contactId: number; onBack: () => void }) {
+  const { toast } = useToast();
+  const [showAddNoteDialog, setShowAddNoteDialog] = useState(false);
+  const [showAddTaskDialog, setShowAddTaskDialog] = useState(false);
+  const [noteContent, setNoteContent] = useState("");
+  const [taskTitle, setTaskTitle] = useState("");
+  const [taskDueDate, setTaskDueDate] = useState("");
+
+  // Fetch contact details
+  const { data: contact, isLoading: contactLoading } = useQuery<CrmContact>({
+    queryKey: [`/api/crm/contacts/${contactId}`],
+  });
+
+  // Fetch timeline events
+  const { data: timelineData } = useQuery<{ timeline: CrmTimeline[] }>({
+    queryKey: [`/api/crm/timeline?contactId=${contactId}`],
+  });
+
+  // Fetch linked deals
+  const { data: dealsData } = useQuery<{ deals: CrmDeal[] }>({
+    queryKey: [`/api/crm/deals?contactId=${contactId}`],
+  });
+
+  // Fetch linked tasks
+  const { data: tasksData } = useQuery<{ tasks: CrmTask[] }>({
+    queryKey: [`/api/crm/tasks?contactId=${contactId}`],
+  });
+
+  // Fetch notes
+  const { data: notesData } = useQuery<{ notes: CrmNote[] }>({
+    queryKey: [`/api/crm/notes?contactId=${contactId}`],
+  });
+
+  const timeline = timelineData?.timeline || [];
+  const deals = dealsData?.deals || [];
+  const tasks = tasksData?.tasks || [];
+  const notes = notesData?.notes || [];
+
+  const createNoteMutation = useMutation({
+    mutationFn: async (content: string) => {
+      return apiRequest("POST", "/api/crm/notes", {
+        contactId,
+        content,
+        noteType: "general",
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => 
+        typeof query.queryKey[0] === 'string' && query.queryKey[0].includes('/api/crm/notes')
+      });
+      queryClient.invalidateQueries({ predicate: (query) => 
+        typeof query.queryKey[0] === 'string' && query.queryKey[0].includes('/api/crm/timeline')
+      });
+      setShowAddNoteDialog(false);
+      setNoteContent("");
+      toast({ title: "Note added", description: "Your note has been saved." });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to add note", variant: "destructive" });
+    },
+  });
+
+  const createTaskMutation = useMutation({
+    mutationFn: async (data: { title: string; dueDate?: string }) => {
+      return apiRequest("POST", "/api/crm/tasks", {
+        contactId,
+        title: data.title,
+        dueDate: data.dueDate ? new Date(data.dueDate) : undefined,
+        status: "pending",
+        priority: "medium",
+        taskType: "follow_up",
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => 
+        typeof query.queryKey[0] === 'string' && query.queryKey[0].includes('/api/crm/tasks')
+      });
+      queryClient.invalidateQueries({ predicate: (query) => 
+        typeof query.queryKey[0] === 'string' && query.queryKey[0].includes('/api/crm/timeline')
+      });
+      setShowAddTaskDialog(false);
+      setTaskTitle("");
+      setTaskDueDate("");
+      toast({ title: "Task created", description: "Your task has been added." });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to create task", variant: "destructive" });
+    },
+  });
+
+  const completeTaskMutation = useMutation({
+    mutationFn: async (taskId: number) => {
+      return apiRequest("PATCH", `/api/crm/tasks/${taskId}`, {
+        status: "completed",
+        completedAt: new Date(),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => 
+        typeof query.queryKey[0] === 'string' && query.queryKey[0].includes('/api/crm/tasks')
+      });
+    },
+  });
+
+  if (contactLoading || !contact) {
+    return (
+      <div className="space-y-4">
+        <div className="h-8 w-32 bg-gray-200 rounded animate-pulse" />
+        <Card>
+          <CardContent className="p-6">
+            <div className="h-20 bg-gray-200 rounded animate-pulse" />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const getTimelineIcon = (eventType: string) => {
+    switch (eventType) {
+      case "note_added": return <FileText className="w-4 h-4" />;
+      case "task_created": case "task_completed": return <CheckSquare className="w-4 h-4" />;
+      case "deal_created": case "deal_stage_changed": return <Briefcase className="w-4 h-4" />;
+      case "email_sent": case "email_received": return <Mail className="w-4 h-4" />;
+      case "call_made": case "call_received": return <Phone className="w-4 h-4" />;
+      case "contact_created": return <UserPlus className="w-4 h-4" />;
+      default: return <Clock className="w-4 h-4" />;
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Back Button & Header */}
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="sm" onClick={onBack} data-testid="btn-back-to-contacts">
+          <ChevronLeft className="w-4 h-4 mr-1" />
+          Back to Contacts
+        </Button>
+      </div>
+
+      {/* Contact Header */}
+      <Card data-testid="contact-header">
+        <CardContent className="p-6">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-4">
+              <Avatar className="h-16 w-16">
+                <AvatarFallback className="bg-[#22C55E]/10 text-[#22C55E] text-xl">
+                  {(contact.firstName?.[0] || "") + (contact.lastName?.[0] || "")}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white" data-testid="contact-name">
+                  {contact.firstName} {contact.lastName}
+                </h2>
+                {contact.jobTitle && (
+                  <p className="text-gray-500" data-testid="contact-job-title">{contact.jobTitle}</p>
+                )}
+                <Badge 
+                  variant="outline"
+                  className={cn(
+                    "mt-2",
+                    contact.lifecycleStage === "customer" && "border-[#22C55E] text-[#22C55E]",
+                    contact.lifecycleStage === "opportunity" && "border-blue-500 text-blue-500",
+                    contact.lifecycleStage === "lead" && "border-yellow-500 text-yellow-500"
+                  )}
+                  data-testid="contact-stage-badge"
+                >
+                  {contact.lifecycleStage || "Lead"}
+                </Badge>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={() => setShowAddNoteDialog(true)} data-testid="btn-add-note">
+                <FileText className="w-4 h-4 mr-2" />
+                Add Note
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setShowAddTaskDialog(true)} data-testid="btn-add-task">
+                <CheckSquare className="w-4 h-4 mr-2" />
+                Add Task
+              </Button>
+              <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white" size="sm" data-testid="btn-create-deal">
+                <DollarSign className="w-4 h-4 mr-2" />
+                Create Deal
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column: Contact Details & Info */}
+        <div className="space-y-6">
+          {/* Contact Information */}
+          <Card data-testid="contact-info-card">
+            <CardHeader>
+              <CardTitle className="text-base">Contact Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {contact.email && (
+                <div className="flex items-center gap-3" data-testid="contact-email">
+                  <Mail className="w-4 h-4 text-gray-400" />
+                  <a href={`mailto:${contact.email}`} className="text-sm text-[#22C55E] hover:underline">
+                    {contact.email}
+                  </a>
+                </div>
+              )}
+              {contact.phone && (
+                <div className="flex items-center gap-3" data-testid="contact-phone">
+                  <Phone className="w-4 h-4 text-gray-400" />
+                  <a href={`tel:${contact.phone}`} className="text-sm text-gray-700 dark:text-gray-300">
+                    {contact.phone}
+                  </a>
+                </div>
+              )}
+              {contact.mobilePhone && (
+                <div className="flex items-center gap-3" data-testid="contact-mobile">
+                  <Phone className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">{contact.mobilePhone} (Mobile)</span>
+                </div>
+              )}
+              {(contact.city || contact.state || contact.country) && (
+                <div className="flex items-center gap-3" data-testid="contact-location">
+                  <MapPin className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                    {[contact.city, contact.state, contact.country].filter(Boolean).join(", ")}
+                  </span>
+                </div>
+              )}
+              {contact.linkedinUrl && (
+                <div className="flex items-center gap-3">
+                  <Globe className="w-4 h-4 text-gray-400" />
+                  <a href={contact.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-[#22C55E] hover:underline">
+                    LinkedIn Profile
+                  </a>
+                </div>
+              )}
+              {contact.websiteUrl && (
+                <div className="flex items-center gap-3">
+                  <Globe className="w-4 h-4 text-gray-400" />
+                  <a href={contact.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-[#22C55E] hover:underline">
+                    Website
+                  </a>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Additional Details */}
+          <Card data-testid="contact-details-card">
+            <CardHeader>
+              <CardTitle className="text-base">Details</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-500">Lead Source</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-white capitalize">
+                  {contact.leadSource || "Unknown"}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-500">Created</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  {new Date(contact.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+              {contact.lastContactedAt && (
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-500">Last Contacted</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-white">
+                    {new Date(contact.lastContactedAt).toLocaleDateString()}
+                  </span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Linked Deals */}
+          <Card data-testid="contact-deals-card">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-base">Deals</CardTitle>
+              <Badge variant="secondary">{deals.length}</Badge>
+            </CardHeader>
+            <CardContent>
+              {deals.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center py-4">No deals yet</p>
+              ) : (
+                <div className="space-y-3">
+                  {deals.slice(0, 5).map((deal) => (
+                    <div key={deal.id} className="flex items-center justify-between p-2 rounded-lg bg-gray-50 dark:bg-gray-800" data-testid={`deal-item-${deal.id}`}>
+                      <div>
+                        <p className="text-sm font-medium">{deal.name}</p>
+                        <p className="text-xs text-gray-500">{deal.status}</p>
+                      </div>
+                      <span className="text-sm font-medium text-[#22C55E]">
+                        ${Number(deal.amount || 0).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Middle Column: Timeline */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Activity Timeline */}
+          <Card data-testid="contact-timeline-card">
+            <CardHeader>
+              <CardTitle className="text-base">Activity Timeline</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {timeline.length === 0 ? (
+                <div className="text-center py-8">
+                  <Clock className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-sm text-gray-500">No activity yet</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {timeline.slice(0, 10).map((event) => (
+                    <div key={event.id} className="flex gap-3" data-testid={`timeline-event-${event.id}`}>
+                      <div className="flex flex-col items-center">
+                        <div className="w-8 h-8 rounded-full bg-[#22C55E]/10 flex items-center justify-center text-[#22C55E]">
+                          {getTimelineIcon(event.eventType)}
+                        </div>
+                        <div className="w-0.5 flex-1 bg-gray-200 mt-2" />
+                      </div>
+                      <div className="flex-1 pb-4">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">{event.title}</p>
+                        {event.description && (
+                          <p className="text-sm text-gray-500 mt-1">{event.description}</p>
+                        )}
+                        <p className="text-xs text-gray-400 mt-1">
+                          {new Date(event.occurredAt).toLocaleString()}
+                          {event.sourceApp && ` · via ${event.sourceApp}`}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Tasks */}
+          <Card data-testid="contact-tasks-card">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-base">Tasks</CardTitle>
+              <Badge variant="secondary">{tasks.filter(t => t.status !== "completed").length} pending</Badge>
+            </CardHeader>
+            <CardContent>
+              {tasks.length === 0 ? (
+                <div className="text-center py-8">
+                  <CheckSquare className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-sm text-gray-500">No tasks yet</p>
+                  <Button variant="outline" size="sm" className="mt-3" onClick={() => setShowAddTaskDialog(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add First Task
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {tasks.slice(0, 5).map((task) => (
+                    <div key={task.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800" data-testid={`task-item-${task.id}`}>
+                      <Checkbox
+                        checked={task.status === "completed"}
+                        onCheckedChange={() => task.status !== "completed" && completeTaskMutation.mutate(task.id)}
+                        data-testid={`checkbox-task-${task.id}`}
+                      />
+                      <div className="flex-1">
+                        <p className={cn("text-sm", task.status === "completed" && "line-through text-gray-400")}>
+                          {task.title}
+                        </p>
+                        {task.dueDate && (
+                          <p className="text-xs text-gray-500">
+                            Due: {new Date(task.dueDate).toLocaleDateString()}
+                          </p>
+                        )}
+                      </div>
+                      <Badge 
+                        variant="outline" 
+                        className={cn(
+                          "text-xs",
+                          task.priority === "high" && "border-red-500 text-red-500",
+                          task.priority === "urgent" && "border-red-600 text-red-600",
+                          task.priority === "medium" && "border-yellow-500 text-yellow-500"
+                        )}
+                      >
+                        {task.priority}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Notes */}
+          <Card data-testid="contact-notes-card">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-base">Notes</CardTitle>
+              <Badge variant="secondary">{notes.length}</Badge>
+            </CardHeader>
+            <CardContent>
+              {notes.length === 0 ? (
+                <div className="text-center py-8">
+                  <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-sm text-gray-500">No notes yet</p>
+                  <Button variant="outline" size="sm" className="mt-3" onClick={() => setShowAddNoteDialog(true)}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add First Note
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {notes.slice(0, 5).map((note) => (
+                    <div key={note.id} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800" data-testid={`note-item-${note.id}`}>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{note.content}</p>
+                      <p className="text-xs text-gray-400 mt-2">
+                        {new Date(note.createdAt).toLocaleString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Add Note Dialog */}
+      <Dialog open={showAddNoteDialog} onOpenChange={setShowAddNoteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Note</DialogTitle>
+            <DialogDescription>Add a note for {contact.firstName} {contact.lastName}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Textarea
+              placeholder="Enter your note..."
+              value={noteContent}
+              onChange={(e) => setNoteContent(e.target.value)}
+              rows={4}
+              data-testid="input-note-content"
+            />
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowAddNoteDialog(false)}>Cancel</Button>
+              <Button 
+                className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                onClick={() => createNoteMutation.mutate(noteContent)}
+                disabled={!noteContent.trim() || createNoteMutation.isPending}
+                data-testid="btn-save-note"
+              >
+                Save Note
+              </Button>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Task Dialog */}
+      <Dialog open={showAddTaskDialog} onOpenChange={setShowAddTaskDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Task</DialogTitle>
+            <DialogDescription>Create a task for {contact.firstName} {contact.lastName}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Task Title</Label>
+              <Input
+                placeholder="Enter task title..."
+                value={taskTitle}
+                onChange={(e) => setTaskTitle(e.target.value)}
+                data-testid="input-task-title"
+              />
+            </div>
+            <div>
+              <Label>Due Date (Optional)</Label>
+              <Input
+                type="date"
+                value={taskDueDate}
+                onChange={(e) => setTaskDueDate(e.target.value)}
+                data-testid="input-task-due-date"
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowAddTaskDialog(false)}>Cancel</Button>
+              <Button 
+                className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                onClick={() => createTaskMutation.mutate({ title: taskTitle, dueDate: taskDueDate })}
+                disabled={!taskTitle.trim() || createTaskMutation.isPending}
+                data-testid="btn-save-task"
+              >
+                Create Task
+              </Button>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
 function ContactsView() {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStage, setSelectedStage] = useState<string>("all");
   const [selectedSource, setSelectedSource] = useState<string>("all");
   const [selectedContacts, setSelectedContacts] = useState<Set<number>>(new Set());
+  const [selectedContactId, setSelectedContactId] = useState<number | null>(null);
   const [page, setPage] = useState(1);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -574,6 +1124,7 @@ function ContactsView() {
 
   const { data: contactsData, isLoading, refetch } = useQuery<{ contacts: CrmContact[]; total: number }>({
     queryKey: [buildContactsUrl()],
+    enabled: selectedContactId === null,
   });
 
   const contacts = contactsData?.contacts || [];
@@ -627,6 +1178,11 @@ function ContactsView() {
       leadSource: "",
     },
   });
+
+  // If a contact is selected, show detail view (must be after all hooks)
+  if (selectedContactId !== null) {
+    return <ContactDetailView contactId={selectedContactId} onBack={() => setSelectedContactId(null)} />;
+  }
 
   const toggleSelectAll = () => {
     if (selectedContacts.size === contacts.length) {
@@ -1036,7 +1592,7 @@ function ContactsView() {
                         data-testid={`checkbox-contact-${contact.id}`}
                       />
                     </td>
-                    <td className="px-4 py-4">
+                    <td className="px-4 py-4" onClick={() => setSelectedContactId(contact.id)}>
                       <div className="flex items-center gap-3">
                         <Avatar className="h-8 w-8">
                           <AvatarFallback className="bg-[#22C55E]/10 text-[#22C55E] text-xs">
@@ -1044,7 +1600,7 @@ function ContactsView() {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white block">
+                          <span className="text-sm font-medium text-gray-900 dark:text-white block hover:text-[#22C55E]" data-testid={`link-contact-name-${contact.id}`}>
                             {contact.firstName} {contact.lastName}
                           </span>
                           {contact.jobTitle && (
@@ -1078,7 +1634,9 @@ function ContactsView() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>View Details</DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setSelectedContactId(contact.id)} data-testid={`btn-view-details-${contact.id}`}>
+                            View Details
+                          </DropdownMenuItem>
                           <DropdownMenuItem>Edit Contact</DropdownMenuItem>
                           <DropdownMenuItem>Add Note</DropdownMenuItem>
                           <DropdownMenuItem>Create Task</DropdownMenuItem>
