@@ -29,9 +29,11 @@ All wordmarks use Archivo family, 24 pt, 2 pt blur, 10 pt distance @ 315°.
 
 ---
 
-## 🧭 Pathways and Plans
-Pathways: Orange DIY / Blue MSP / Green ALC  
-Base Plans: Start (Orange) / Advanced (Blue) / Scale (Green)  
+## 🧭 Platform Model & Plans
+
+**Platform Model:** BusinessBlueprint is a **DIY-only platform** powered by **Coach Blue** (AI Business Coach).
+
+**Base Plans:** Start (Orange) / Advanced (Blue) / Scale (Green)
 
 ---
 

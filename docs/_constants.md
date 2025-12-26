@@ -24,7 +24,8 @@
 | **bb.accent** | `#FF6B00` | BusinessBlueprint accent (LOCKED - vivid orange) |
 | **swipes.red** | `#FF0040` | SwipesBlue accent; payments & alerts |
 | **hosts.purple** | `#8000FF` | HostsBlue primary; secondary on BusinessBlueprint |
-| **tld.green** | `#00FF40` | Shared green for TLDs and ALC/Scale |
+| **tld.green** | `#00FF40` | Shared green for TLDs and Scale plans |
+| **relationships.green** | `#22C55E` | /relationships CRM accent color |
 
 ---
 
@@ -68,14 +69,27 @@
 
 ---
 
-## 5️⃣ Pathways & Base Plan Mapping
+## 4️⃣.2 CRM App Colors
 
-### Pathways
-| Pathway | Color | Hex |
-|----------|--------|------|
-| DIY | Orange | `#FF6B00` |
-| MSP | Blue | `#0000FF` |
-| ALC (A la Carte) | Green | `#00FF40` |
+| App | Base (slash "/") | Accent (app name) | Notes |
+|------|------------------|------------------|-------|
+| **/relationships** | `#09080E` | `#22C55E` | CRM - customer relationship management (green) |
+
+**Official Branding Assets:**
+- `/relationships`: Green wordmark + handshake icon (TriadBlue #0000FF & Green #22C55E figures)
+- Icon file: `attached_assets/__relationships_1766748093805.png`
+
+**Pricing Tiers:**
+- **Starter (Free):** Contacts, companies, basic fields, scheduler, notes, tags
+- **Performance ($29/mo):** Unified timeline, pipeline/deals, automations, API access, webhooks, analytics
+
+---
+
+## 5️⃣ Platform Model & Base Plans
+
+### Platform Model
+BusinessBlueprint is a **DIY-only platform** powered by **Coach Blue** (AI Business Coach).
+Users complete assessments, receive their digital blueprint, and execute with AI-guided assistance.
 
 ### Base Plans
 | Plan | Color | Hex |
