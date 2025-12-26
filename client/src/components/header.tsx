@@ -85,6 +85,7 @@ import contentWordmark from "@assets/: content app logo_1764088895508.png";
 import listingsWordmark from "@assets/: listings color triad black and FF0040_1764089307839.png";
 import reputationWordmark from "@assets/: reputation color triad black and D59600_1764089307840.png";
 import businessIQScannerIcon from "@assets/business iq scanner_1764306033154.png";
+import relationshipsIcon from "@assets/__relationships_1766748093805.png";
 
 
 interface HeaderProps {
@@ -340,7 +341,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>Products</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-2 w-[900px]">
+                        <div className="p-2 w-[900px] max-h-[80vh] overflow-y-auto">
                           {/* MASTER BILLING CYCLE TOGGLE */}
                           <div className="flex items-center justify-center mb-2 pb-2 border-b border-gray-300">
                             <div className="flex items-center gap-3 bg-white rounded-full border-2 border-blue-600 p-1">
@@ -434,6 +435,87 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 >
                                   +
                                 </button>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* RELATIONSHIPS CRM - 50/50 STARTER + PERFORMANCE */}
+                          <div className="mb-3">
+                            <h4 className="text-[10px] font-bold text-gray-700 mb-2 uppercase tracking-wide">
+                              CUSTOMER RELATIONSHIPS
+                            </h4>
+                            <div className="grid grid-cols-2 gap-2">
+                              {/* /relationships Starter - FREE */}
+                              <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#22C55E' }} data-testid="card-relationships-starter">
+                                <div className="flex items-start justify-between mb-1">
+                                  <div className="flex items-center gap-1.5">
+                                    <img src={relationshipsIcon} alt="" className="w-6 h-6 rounded" />
+                                    <div>
+                                      <p className="text-sm font-bold text-gray-900">
+                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#22C55E' }}>relationships</span>
+                                      </p>
+                                      <p className="text-xs text-gray-500">Starter</p>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex items-end justify-between">
+                                  <div>
+                                    <div className="text-lg font-extrabold mb-1" style={{ color: '#22C55E' }}>
+                                      Free
+                                    </div>
+                                    <p className="text-xs text-gray-600">Contacts, companies, scheduler</p>
+                                  </div>
+                                  <a 
+                                    href="/relationships" 
+                                    className="px-3 py-1.5 rounded text-sm font-bold text-white hover:opacity-90 transition-opacity"
+                                    style={{ backgroundColor: '#22C55E' }}
+                                    data-testid="button-start-relationships"
+                                  >
+                                    Get Started →
+                                  </a>
+                                </div>
+                              </div>
+
+                              {/* /relationships Performance - $29/mo */}
+                              <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#22C55E' }} data-testid="card-relationships-performance">
+                                <div className="flex items-start justify-between mb-1">
+                                  <div className="flex items-center gap-1.5">
+                                    <img src={relationshipsIcon} alt="" className="w-6 h-6 rounded" />
+                                    <div>
+                                      <p className="text-sm font-bold text-gray-900">
+                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#22C55E' }}>relationships</span>
+                                      </p>
+                                      <p className="text-xs text-gray-500">Performance</p>
+                                    </div>
+                                  </div>
+                                  <button
+                                    onClick={() => toggleItemBilling('relationships-performance')}
+                                    className="text-xs font-bold px-3 py-1 rounded border-2 hover:bg-green-50"
+                                    style={{ borderColor: '#22C55E' }}
+                                    data-testid="toggle-relationships-performance"
+                                  >
+                                    {getItemBillingCycle('relationships-performance') === 'monthly' ? 'Mo' : 'Yr'}
+                                  </button>
+                                </div>
+                                <div className="flex items-end justify-between">
+                                  <div>
+                                    <div className="text-lg font-extrabold mb-1" style={{ color: '#22C55E' }}>
+                                      {getItemPrice('relationships-performance', 29).displayPrice}
+                                    </div>
+                                    <a href="/relationships" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                  </div>
+                                  <button
+                                    onClick={() => handleAddToCart('relationships-performance', '/relationships Performance', 29, 'addon')}
+                                    className="text-lg font-bold w-8 h-8 rounded-full text-white flex items-center justify-center"
+                                    style={{ backgroundColor: '#22C55E' }}
+                                    data-testid="button-add-relationships"
+                                    title="Add to Cart"
+                                  >
+                                    +
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
