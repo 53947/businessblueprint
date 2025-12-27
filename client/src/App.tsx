@@ -50,6 +50,7 @@ import DataDeletion from "@/pages/data-deletion";
 import PortalTestAccess from "@/pages/portal-test-access";
 import FindResults from "@/pages/find-results";
 import Relationships from "@/pages/relationships";
+import ApiDocs from "@/pages/api-docs";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -102,6 +103,7 @@ function Router() {
       <Route path="/data-deletion" component={DataDeletion} />
       <Route path="/find-results" component={FindResults} />
       <Route path="/relationships" component={Relationships} />
+      <Route path="/api-docs" component={ApiDocs} />
       <Route component={NotFound} />
     </Switch>
   );
