@@ -10,6 +10,7 @@ import {
   crmNotes, 
   crmTimeline,
   crmSegments,
+  crmSegmentMembers,
   crmAppointments,
   crmTags,
   crmSubscriptions,
@@ -26,7 +27,7 @@ import {
   insertCrmAppointmentSchema,
   insertCrmTagSchema,
 } from "@shared/schema";
-import { eq, and, desc, asc, ilike, or, sql } from "drizzle-orm";
+import { eq, and, desc, asc, ilike, or, sql, inArray } from "drizzle-orm";
 import { z } from "zod";
 
 export const crmRouter = Router();
@@ -1334,6 +1335,314 @@ crmRouter.post("/forms/:slug/submit", async (req, res) => {
   } catch (error) {
     console.error("[CRM] Error processing form submission:", error);
     res.status(500).json({ error: "Failed to process submission" });
+  }
+});
+
+// ==================== INTEGRATION ENDPOINTS ====================
+// These endpoints are used by other apps to pull contact data from /relationships
+
+// Lookup contact by email or phone (used by /inbox, /livechat, etc.)
+crmRouter.get("/integration/lookup", async (req, res) => {
+  try {
+    const { email, phone } = req.query;
+    
+    if (!email && !phone) {
+      return res.status(400).json({ error: "Email or phone required" });
+    }
+    
+    let contact = null;
+    
+    if (email && typeof email === 'string') {
+      const results = await db
+        .select()
+        .from(crmContacts)
+        .where(eq(crmContacts.email, email.toLowerCase()))
+        .limit(1);
+      if (results.length > 0) contact = results[0];
+    }
+    
+    if (!contact && phone && typeof phone === 'string') {
+      const results = await db
+        .select()
+        .from(crmContacts)
+        .where(eq(crmContacts.phone, phone))
+        .limit(1);
+      if (results.length > 0) contact = results[0];
+    }
+    
+    if (!contact) {
+      return res.json({ found: false, contact: null });
+    }
+    
+    // Get related company
+    let company = null;
+    if (contact.companyId) {
+      const companyResults = await db
+        .select()
+        .from(crmCompanies)
+        .where(eq(crmCompanies.id, contact.companyId))
+        .limit(1);
+      if (companyResults.length > 0) company = companyResults[0];
+    }
+    
+    res.json({
+      found: true,
+      contact: {
+        id: contact.id,
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        email: contact.email,
+        phone: contact.phone,
+        title: contact.title,
+        lifecycleStage: contact.lifecycleStage,
+        leadSource: contact.leadSource,
+        customFields: contact.customFields,
+        tags: contact.tags,
+      },
+      company: company ? {
+        id: company.id,
+        name: company.name,
+        industry: company.industry,
+        website: company.website,
+      } : null
+    });
+  } catch (error) {
+    console.error("[CRM] Integration lookup error:", error);
+    res.status(500).json({ error: "Failed to lookup contact" });
+  }
+});
+
+// Get full contact context for an app (includes deals, recent activity)
+crmRouter.get("/integration/context/:id", async (req, res) => {
+  try {
+    const contactId = parseInt(req.params.id);
+    
+    // Get contact
+    const contacts = await db
+      .select()
+      .from(crmContacts)
+      .where(eq(crmContacts.id, contactId))
+      .limit(1);
+    
+    if (contacts.length === 0) {
+      return res.status(404).json({ error: "Contact not found" });
+    }
+    
+    const contact = contacts[0];
+    
+    // Get company
+    let company = null;
+    if (contact.companyId) {
+      const companies = await db
+        .select()
+        .from(crmCompanies)
+        .where(eq(crmCompanies.id, contact.companyId))
+        .limit(1);
+      if (companies.length > 0) company = companies[0];
+    }
+    
+    // Get open deals
+    const deals = await db
+      .select()
+      .from(crmDeals)
+      .where(eq(crmDeals.contactId, contactId))
+      .orderBy(desc(crmDeals.updatedAt))
+      .limit(5);
+    
+    // Get recent timeline
+    const recentActivity = await db
+      .select()
+      .from(crmTimeline)
+      .where(eq(crmTimeline.contactId, contactId))
+      .orderBy(desc(crmTimeline.occurredAt))
+      .limit(10);
+    
+    // Tags are stored directly on the contact
+    const contactTags = contact.tags || [];
+    
+    res.json({
+      contact: {
+        id: contact.id,
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        email: contact.email,
+        phone: contact.phone,
+        title: contact.title,
+        lifecycleStage: contact.lifecycleStage,
+        leadSource: contact.leadSource,
+        customFields: contact.customFields,
+      },
+      company: company ? {
+        id: company.id,
+        name: company.name,
+        industry: company.industry,
+        website: company.website,
+        size: company.size,
+      } : null,
+      deals: deals.map(d => ({
+        id: d.id,
+        title: d.title,
+        value: d.value,
+        stage: d.stage,
+        probability: d.probability,
+      })),
+      recentActivity: recentActivity.map(a => ({
+        id: a.id,
+        eventType: a.eventType,
+        title: a.title,
+        description: a.description,
+        sourceApp: a.sourceApp,
+        occurredAt: a.occurredAt,
+      })),
+      tags: contactTags,
+      totalDealValue: deals.reduce((sum, d) => sum + (Number(d.value) || 0), 0),
+    });
+  } catch (error) {
+    console.error("[CRM] Integration context error:", error);
+    res.status(500).json({ error: "Failed to get contact context" });
+  }
+});
+
+// Get segments for targeting (used by /send, /content)
+crmRouter.get("/integration/segments", async (req, res) => {
+  try {
+    const segments = await db
+      .select({
+        id: crmSegments.id,
+        name: crmSegments.name,
+        description: crmSegments.description,
+        memberCount: crmSegments.memberCount,
+        segmentType: crmSegments.segmentType,
+      })
+      .from(crmSegments)
+      .orderBy(crmSegments.name);
+    
+    res.json({ segments });
+  } catch (error) {
+    console.error("[CRM] Integration segments error:", error);
+    res.status(500).json({ error: "Failed to get segments" });
+  }
+});
+
+// Get segment members (for email campaigns, etc.)
+crmRouter.get("/integration/segments/:id/members", async (req, res) => {
+  try {
+    const segmentId = parseInt(req.params.id);
+    const limit = Math.min(parseInt(req.query.limit as string) || 100, 1000);
+    const offset = parseInt(req.query.offset as string) || 0;
+    
+    const members = await db
+      .select({
+        id: crmContacts.id,
+        firstName: crmContacts.firstName,
+        lastName: crmContacts.lastName,
+        email: crmContacts.email,
+        phone: crmContacts.phone,
+      })
+      .from(crmSegmentMembers)
+      .innerJoin(crmContacts, eq(crmSegmentMembers.contactId, crmContacts.id))
+      .where(eq(crmSegmentMembers.segmentId, segmentId))
+      .limit(limit)
+      .offset(offset);
+    
+    res.json({ members, segmentId });
+  } catch (error) {
+    console.error("[CRM] Integration segment members error:", error);
+    res.status(500).json({ error: "Failed to get segment members" });
+  }
+});
+
+// Add timeline event from another app
+crmRouter.post("/integration/timeline", async (req, res) => {
+  try {
+    const { contactId, companyId, eventType, title, description, sourceApp, sourceEntityType, sourceEntityId, metadata } = req.body;
+    
+    if (!eventType || !title || !sourceApp) {
+      return res.status(400).json({ error: "eventType, title, and sourceApp are required" });
+    }
+    
+    // Lookup contactId if email provided
+    let resolvedContactId = contactId;
+    if (!resolvedContactId && req.body.email) {
+      const contacts = await db
+        .select({ id: crmContacts.id, clientId: crmContacts.clientId })
+        .from(crmContacts)
+        .where(eq(crmContacts.email, req.body.email))
+        .limit(1);
+      if (contacts.length > 0) {
+        resolvedContactId = contacts[0].id;
+      }
+    }
+    
+    // Get clientId from contact if available
+    let clientId = null;
+    if (resolvedContactId) {
+      const contacts = await db
+        .select({ clientId: crmContacts.clientId })
+        .from(crmContacts)
+        .where(eq(crmContacts.id, resolvedContactId))
+        .limit(1);
+      if (contacts.length > 0) {
+        clientId = contacts[0].clientId;
+      }
+    }
+    
+    const [event] = await db.insert(crmTimeline).values({
+      clientId,
+      contactId: resolvedContactId,
+      companyId,
+      eventType,
+      title,
+      description,
+      sourceApp,
+      sourceEntityType,
+      sourceEntityId,
+      metadata: metadata || {},
+      occurredAt: new Date(),
+      actorType: 'system',
+    }).returning();
+    
+    res.json({ success: true, eventId: event.id });
+  } catch (error) {
+    console.error("[CRM] Integration timeline error:", error);
+    res.status(500).json({ error: "Failed to add timeline event" });
+  }
+});
+
+// Bulk lookup contacts by emails (used by /send for campaign targeting)
+crmRouter.post("/integration/bulk-lookup", async (req, res) => {
+  try {
+    const { emails } = req.body;
+    
+    if (!Array.isArray(emails) || emails.length === 0) {
+      return res.status(400).json({ error: "emails array required" });
+    }
+    
+    if (emails.length > 1000) {
+      return res.status(400).json({ error: "Maximum 1000 emails per request" });
+    }
+    
+    const contacts = await db
+      .select({
+        id: crmContacts.id,
+        firstName: crmContacts.firstName,
+        lastName: crmContacts.lastName,
+        email: crmContacts.email,
+        phone: crmContacts.phone,
+        lifecycleStage: crmContacts.lifecycleStage,
+      })
+      .from(crmContacts)
+      .where(inArray(crmContacts.email, emails.map((e: string) => e.toLowerCase())));
+    
+    const contactMap: Record<string, any> = {};
+    contacts.forEach(c => {
+      if (c.email) contactMap[c.email.toLowerCase()] = c;
+    });
+    
+    res.json({ contacts: contactMap, found: contacts.length });
+  } catch (error) {
+    console.error("[CRM] Integration bulk lookup error:", error);
+    res.status(500).json({ error: "Failed to bulk lookup contacts" });
   }
 });
 

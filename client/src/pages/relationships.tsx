@@ -8,6 +8,7 @@ import {
   CheckSquare, 
   History, 
   BarChart3, 
+  BarChart2,
   Settings, 
   Plus, 
   Search,
@@ -45,7 +46,9 @@ import {
   Building,
   Upload,
   FileSpreadsheet,
-  ArrowRight
+  ArrowRight,
+  LogIn,
+  Send
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -4631,15 +4634,162 @@ function SchedulerView() {
   );
 }
 
+interface TimelineEvent {
+  id: number;
+  contactId: number | null;
+  companyId: number | null;
+  dealId: number | null;
+  eventType: string;
+  eventSubtype: string | null;
+  title: string;
+  description: string | null;
+  sourceApp: string | null;
+  sourceEntityType: string | null;
+  occurredAt: string;
+  actorType: string | null;
+}
+
 function TimelineView() {
+  const { data: timelineData, isLoading } = useQuery<{ events: TimelineEvent[] }>({
+    queryKey: ["/api/crm/timeline"],
+  });
+
+  const events = timelineData?.events || [];
+
+  const getEventIcon = (eventType: string, sourceApp: string | null) => {
+    switch (eventType) {
+      case 'contact_created':
+        return <UserPlus className="w-4 h-4" />;
+      case 'assessment_started':
+        return <BarChart2 className="w-4 h-4" />;
+      case 'portal_login':
+        return <LogIn className="w-4 h-4" />;
+      case 'deal_created':
+      case 'deal_stage_changed':
+        return <DollarSign className="w-4 h-4" />;
+      case 'note_added':
+        return <FileText className="w-4 h-4" />;
+      case 'task_created':
+      case 'task_completed':
+        return <CheckSquare className="w-4 h-4" />;
+      case 'email_sent':
+        return <Send className="w-4 h-4" />;
+      default:
+        return <Clock className="w-4 h-4" />;
+    }
+  };
+
+  const getSourceAppColor = (sourceApp: string | null) => {
+    switch (sourceApp) {
+      case 'relationships': return 'bg-[#22C55E]/10 text-[#22C55E]';
+      case 'send': return 'bg-blue-100 text-blue-600';
+      case 'inbox': return 'bg-purple-100 text-purple-600';
+      case 'livechat': return 'bg-orange-100 text-orange-600';
+      case 'content': return 'bg-pink-100 text-pink-600';
+      case 'listings': return 'bg-red-100 text-red-600';
+      case 'reputation': return 'bg-yellow-100 text-yellow-600';
+      default: return 'bg-gray-100 text-gray-600';
+    }
+  };
+
+  const formatTimeAgo = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return date.toLocaleDateString();
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="flex gap-4 animate-pulse">
+            <div className="w-10 h-10 bg-gray-200 rounded-full" />
+            <div className="flex-1 space-y-2">
+              <div className="h-4 bg-gray-200 rounded w-3/4" />
+              <div className="h-3 bg-gray-200 rounded w-1/2" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (events.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <History className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Activity Timeline</h2>
+        <p className="text-gray-500 dark:text-gray-400 mb-4">
+          All customer interactions across apps will appear here
+        </p>
+        <Badge className="bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]/20">
+          Performance Tier Feature
+        </Badge>
+      </div>
+    );
+  }
+
   return (
-    <div className="text-center py-12">
-      <History className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Activity Timeline</h2>
-      <p className="text-gray-500 dark:text-gray-400 mb-4">View all customer interactions across apps</p>
-      <Badge className="bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]/20">
-        Performance Tier Feature
-      </Badge>
+    <div className="space-y-6" data-testid="timeline-view">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Activity Timeline</h2>
+          <p className="text-sm text-gray-500">Unified view of all customer interactions</p>
+        </div>
+        <Badge className="bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]/20">
+          Performance Tier
+        </Badge>
+      </div>
+
+      <Card>
+        <CardContent className="p-0">
+          <div className="divide-y">
+            {events.map((event, index) => (
+              <div key={event.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-testid={`timeline-event-${event.id}`}>
+                <div className="flex gap-4">
+                  <div className={cn("w-10 h-10 rounded-full flex items-center justify-center", getSourceAppColor(event.sourceApp))}>
+                    {getEventIcon(event.eventType, event.sourceApp)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                        {event.title}
+                      </h4>
+                      <span className="text-xs text-gray-500 whitespace-nowrap">
+                        {formatTimeAgo(event.occurredAt)}
+                      </span>
+                    </div>
+                    {event.description && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
+                        {event.description}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-2 mt-2">
+                      {event.sourceApp && (
+                        <Badge variant="outline" className="text-xs">
+                          /{event.sourceApp}
+                        </Badge>
+                      )}
+                      <Badge variant="secondary" className="text-xs">
+                        {event.eventType.replace(/_/g, ' ')}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
