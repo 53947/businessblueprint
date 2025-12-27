@@ -2049,11 +2049,11 @@ function CompanyDetailView({ companyId, onBack }: { companyId: number; onBack: (
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-medium text-sm">{deal.name}</span>
                         <Badge variant="outline" className="text-xs">
-                          {deal.stage}
+                          {deal.status || "open"}
                         </Badge>
                       </div>
                       <p className="text-sm text-[#22C55E] font-medium">
-                        ${(deal.value || 0).toLocaleString()}
+                        ${parseFloat(deal.amount || "0").toLocaleString()}
                       </p>
                     </div>
                   ))}
@@ -2541,7 +2541,7 @@ function PipelineView() {
 
   const createPipelineMutation = useMutation({
     mutationFn: async (data: { name: string; description?: string }) => {
-      return apiRequest("/api/crm/pipelines", { method: "POST", body: JSON.stringify(data) });
+      return apiRequest("POST", "/api/crm/pipelines", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/pipelines") });
@@ -2551,7 +2551,7 @@ function PipelineView() {
 
   const createDealMutation = useMutation({
     mutationFn: async (data: { name: string; amount?: string; contactId?: number; companyId?: number; pipelineId: number; stageId: number; expectedCloseDate?: string }) => {
-      return apiRequest("/api/crm/deals", { method: "POST", body: JSON.stringify(data) });
+      return apiRequest("POST", "/api/crm/deals", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/deals") });
@@ -2566,7 +2566,7 @@ function PipelineView() {
 
   const updateDealMutation = useMutation({
     mutationFn: async ({ id, ...data }: { id: number; stageId?: number; status?: string }) => {
-      return apiRequest(`/api/crm/deals/${id}`, { method: "PATCH", body: JSON.stringify(data) });
+      return apiRequest("PATCH", `/api/crm/deals/${id}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/deals") });
@@ -2650,14 +2650,11 @@ function PipelineView() {
   });
 
   const handleCreateDeal = (values: z.infer<typeof dealFormSchema>) => {
-    console.log("[PipelineView] handleCreateDeal called with:", values);
     if (!activePipeline || stages.length === 0) {
-      console.log("[PipelineView] No pipeline available");
       toast({ title: "No pipeline available", variant: "destructive" });
       return;
     }
     const firstActiveStage = stages.find(s => s.stageType === "active") || stages[0];
-    console.log("[PipelineView] Creating deal with stage:", firstActiveStage);
     createDealMutation.mutate({
       name: values.name,
       amount: values.amount || undefined,
@@ -2864,7 +2861,7 @@ function PipelineView() {
             <DialogDescription>Create a new deal in your pipeline</DialogDescription>
           </DialogHeader>
           <Form {...dealForm}>
-            <form onSubmit={dealForm.handleSubmit(handleCreateDeal, (errors) => console.log("[PipelineView] Form validation errors:", errors))} className="space-y-4">
+            <form onSubmit={dealForm.handleSubmit(handleCreateDeal)} className="space-y-4">
               <FormField
                 control={dealForm.control}
                 name="name"
