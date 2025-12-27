@@ -4794,15 +4794,322 @@ function TimelineView() {
   );
 }
 
+interface AnalyticsData {
+  summary: {
+    totalContacts: number;
+    totalDeals: number;
+    pipelineValue: number;
+    winRate: number;
+    avgDealValue: number;
+    openDeals: number;
+    wonDeals: number;
+    lostDeals: number;
+  };
+  lifecycleDistribution: { stage: string | null; count: number }[];
+  dealsByStatus: { status: string; count: number; totalValue: number }[];
+  pipelineBreakdown: { stageName: string | null; stageId: number | null; count: number; totalValue: number }[];
+  leadSources: { source: string | null; count: number }[];
+  activityTrend: { date: string; count: number }[];
+  taskStats: { status: string; count: number }[];
+}
+
 function AnalyticsView() {
+  const { data: analytics, isLoading } = useQuery<AnalyticsData>({
+    queryKey: ["/api/crm/analytics"],
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12" data-testid="analytics-loading">
+        <Loader2 className="w-8 h-8 animate-spin text-[#22C55E]" />
+      </div>
+    );
+  }
+
+  if (!analytics) {
+    return (
+      <div className="text-center py-12" data-testid="analytics-error">
+        <AlertCircle className="w-16 h-16 text-red-300 mx-auto mb-4" />
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Unable to load analytics</h2>
+        <p className="text-gray-500">Please try again later.</p>
+      </div>
+    );
+  }
+
+  const { summary, lifecycleDistribution, pipelineBreakdown, leadSources, taskStats } = analytics;
+
+  const lifecycleColors: Record<string, string> = {
+    subscriber: "#6366F1",
+    lead: "#22C55E",
+    opportunity: "#F59E0B",
+    customer: "#3B82F6",
+    evangelist: "#8B5CF6",
+    other: "#9CA3AF",
+  };
+
+  const formatCurrency = (value: number) => {
+    if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
+    if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
+    return `$${value.toFixed(0)}`;
+  };
+
   return (
-    <div className="text-center py-12">
-      <TrendingUp className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Analytics</h2>
-      <p className="text-gray-500 dark:text-gray-400 mb-4">Customer lifecycle and deal forecasting insights</p>
-      <Badge className="bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]/20">
-        Performance Tier Feature
-      </Badge>
+    <div className="space-y-6" data-testid="analytics-view">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Analytics Dashboard</h2>
+          <p className="text-gray-500 dark:text-gray-400">Customer lifecycle and deal forecasting insights</p>
+        </div>
+        <Badge className="bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]/20">
+          Performance Tier
+        </Badge>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card data-testid="stat-total-contacts">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total Contacts</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{summary.totalContacts}</p>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <Users className="w-5 h-5 text-blue-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card data-testid="stat-pipeline-value">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Pipeline Value</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(summary.pipelineValue)}</p>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                <DollarSign className="w-5 h-5 text-green-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card data-testid="stat-win-rate">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Win Rate</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{summary.winRate}%</p>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-emerald-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card data-testid="stat-avg-deal">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Avg Deal Value</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(summary.avgDealValue)}</p>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-purple-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Deal Stats */}
+      <div className="grid md:grid-cols-3 gap-4">
+        <Card data-testid="stat-open-deals">
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+              <Timer className="w-6 h-6 text-amber-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{summary.openDeals}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Open Deals</p>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card data-testid="stat-won-deals">
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+              <CheckCircle className="w-6 h-6 text-green-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{summary.wonDeals}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Won Deals</p>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card data-testid="stat-lost-deals">
+          <CardContent className="p-4 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+              <XCircle className="w-6 h-6 text-red-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{summary.lostDeals}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Lost Deals</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid lg:grid-cols-2 gap-6">
+        {/* Customer Lifecycle Distribution */}
+        <Card data-testid="chart-lifecycle">
+          <CardHeader>
+            <CardTitle className="text-base">Customer Lifecycle</CardTitle>
+            <CardDescription>Contact distribution by stage</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {lifecycleDistribution.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">No contacts yet</div>
+            ) : (
+              <div className="space-y-3">
+                {lifecycleDistribution.map((item) => {
+                  const stage = item.stage || 'unknown';
+                  const percentage = summary.totalContacts > 0 
+                    ? (item.count / summary.totalContacts) * 100 
+                    : 0;
+                  return (
+                    <div key={stage} className="space-y-1" data-testid={`lifecycle-${stage}`}>
+                      <div className="flex justify-between text-sm">
+                        <span className="capitalize text-gray-700 dark:text-gray-300">{stage}</span>
+                        <span className="text-gray-500">{item.count} ({percentage.toFixed(1)}%)</span>
+                      </div>
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div 
+                          className="h-2 rounded-full transition-all duration-500"
+                          style={{ 
+                            width: `${percentage}%`,
+                            backgroundColor: lifecycleColors[stage] || lifecycleColors.other
+                          }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Pipeline Breakdown */}
+        <Card data-testid="chart-pipeline">
+          <CardHeader>
+            <CardTitle className="text-base">Pipeline Breakdown</CardTitle>
+            <CardDescription>Open deals by stage</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {pipelineBreakdown.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">No open deals in pipeline</div>
+            ) : (
+              <div className="space-y-3">
+                {pipelineBreakdown.map((item, index) => {
+                  const totalPipelineCount = pipelineBreakdown.reduce((sum, p) => sum + p.count, 0);
+                  const percentage = totalPipelineCount > 0 
+                    ? (item.count / totalPipelineCount) * 100 
+                    : 0;
+                  const stageColors = ["#3B82F6", "#22C55E", "#F59E0B", "#8B5CF6", "#EC4899"];
+                  return (
+                    <div key={item.stageId || index} className="space-y-1" data-testid={`pipeline-stage-${item.stageId}`}>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-700 dark:text-gray-300">{item.stageName || 'Unknown Stage'}</span>
+                        <span className="text-gray-500">{item.count} deals • {formatCurrency(item.totalValue)}</span>
+                      </div>
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div 
+                          className="h-2 rounded-full transition-all duration-500"
+                          style={{ 
+                            width: `${percentage}%`,
+                            backgroundColor: stageColors[index % stageColors.length]
+                          }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Lead Sources */}
+        <Card data-testid="chart-lead-sources">
+          <CardHeader>
+            <CardTitle className="text-base">Lead Sources</CardTitle>
+            <CardDescription>Where your contacts come from</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {leadSources.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">No lead source data</div>
+            ) : (
+              <div className="space-y-2">
+                {leadSources.slice(0, 6).map((item) => {
+                  const source = item.source || 'unknown';
+                  const totalLeads = leadSources.reduce((sum, s) => sum + s.count, 0);
+                  const percentage = totalLeads > 0 ? (item.count / totalLeads) * 100 : 0;
+                  return (
+                    <div key={source} className="flex items-center justify-between p-2 rounded bg-gray-50 dark:bg-gray-800" data-testid={`source-${source}`}>
+                      <div className="flex items-center gap-2">
+                        <Globe className="w-4 h-4 text-gray-400" />
+                        <span className="text-sm capitalize text-gray-700 dark:text-gray-300">{source.replace(/_/g, ' ')}</span>
+                      </div>
+                      <Badge variant="secondary">{item.count} ({percentage.toFixed(0)}%)</Badge>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Task Stats */}
+        <Card data-testid="chart-tasks">
+          <CardHeader>
+            <CardTitle className="text-base">Task Overview</CardTitle>
+            <CardDescription>Task completion status</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {taskStats.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">No tasks yet</div>
+            ) : (
+              <div className="grid grid-cols-2 gap-4">
+                {taskStats.map((item) => {
+                  const statusColors: Record<string, { bg: string; text: string; icon: typeof CheckCircle }> = {
+                    completed: { bg: "bg-green-100 dark:bg-green-900/30", text: "text-green-600", icon: CheckCircle },
+                    pending: { bg: "bg-amber-100 dark:bg-amber-900/30", text: "text-amber-600", icon: Clock },
+                    in_progress: { bg: "bg-blue-100 dark:bg-blue-900/30", text: "text-blue-600", icon: Timer },
+                    cancelled: { bg: "bg-gray-100 dark:bg-gray-800", text: "text-gray-600", icon: XCircle },
+                  };
+                  const config = statusColors[item.status] || statusColors.pending;
+                  const Icon = config.icon;
+                  return (
+                    <div key={item.status} className={cn("p-3 rounded-lg", config.bg)} data-testid={`task-${item.status}`}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Icon className={cn("w-4 h-4", config.text)} />
+                        <span className={cn("text-sm font-medium capitalize", config.text)}>
+                          {item.status.replace(/_/g, ' ')}
+                        </span>
+                      </div>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{item.count}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -1646,4 +1646,118 @@ crmRouter.post("/integration/bulk-lookup", async (req, res) => {
   }
 });
 
+// ============================================================================
+// ANALYTICS (Performance Tier)
+// ============================================================================
+
+crmRouter.get("/analytics", async (req, res) => {
+  try {
+    // Contact lifecycle distribution
+    const lifecycleStats = await db
+      .select({
+        stage: crmContacts.lifecycleStage,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(crmContacts)
+      .groupBy(crmContacts.lifecycleStage);
+    
+    // Deal pipeline stats
+    const dealStats = await db
+      .select({
+        status: crmDeals.status,
+        count: sql<number>`count(*)::int`,
+        totalValue: sql<number>`coalesce(sum(${crmDeals.amount}::float), 0)::float`,
+      })
+      .from(crmDeals)
+      .groupBy(crmDeals.status);
+    
+    // Pipeline stage breakdown
+    const pipelineBreakdown = await db
+      .select({
+        stageName: crmPipelineStages.name,
+        stageId: crmDeals.stageId,
+        count: sql<number>`count(*)::int`,
+        totalValue: sql<number>`coalesce(sum(${crmDeals.amount}::float), 0)::float`,
+      })
+      .from(crmDeals)
+      .leftJoin(crmPipelineStages, eq(crmDeals.stageId, crmPipelineStages.id))
+      .where(eq(crmDeals.status, 'open'))
+      .groupBy(crmDeals.stageId, crmPipelineStages.name);
+    
+    // Lead source distribution
+    const leadSourceStats = await db
+      .select({
+        source: crmContacts.leadSource,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(crmContacts)
+      .where(sql`${crmContacts.leadSource} is not null`)
+      .groupBy(crmContacts.leadSource);
+    
+    // Recent activity (last 30 days)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const activityByDay = await db
+      .select({
+        date: sql<string>`date(${crmTimeline.occurredAt})`,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(crmTimeline)
+      .where(sql`${crmTimeline.occurredAt} >= ${thirtyDaysAgo.toISOString()}`)
+      .groupBy(sql`date(${crmTimeline.occurredAt})`)
+      .orderBy(sql`date(${crmTimeline.occurredAt})`);
+    
+    // Task completion stats
+    const taskStats = await db
+      .select({
+        status: crmTasks.status,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(crmTasks)
+      .groupBy(crmTasks.status);
+    
+    // Win rate calculation
+    const wonDeals = dealStats.find(d => d.status === 'won');
+    const lostDeals = dealStats.find(d => d.status === 'lost');
+    const totalClosed = (wonDeals?.count || 0) + (lostDeals?.count || 0);
+    const winRate = totalClosed > 0 ? ((wonDeals?.count || 0) / totalClosed) * 100 : 0;
+    
+    // Total pipeline value
+    const openDeals = dealStats.find(d => d.status === 'open');
+    const pipelineValue = openDeals?.totalValue || 0;
+    
+    // Average deal value
+    const allDealsCount = dealStats.reduce((sum, d) => sum + d.count, 0);
+    const allDealsValue = dealStats.reduce((sum, d) => sum + d.totalValue, 0);
+    const avgDealValue = allDealsCount > 0 ? allDealsValue / allDealsCount : 0;
+    
+    // Totals
+    const totalContacts = lifecycleStats.reduce((sum, s) => sum + s.count, 0);
+    const totalDeals = dealStats.reduce((sum, d) => sum + d.count, 0);
+    
+    res.json({
+      summary: {
+        totalContacts,
+        totalDeals,
+        pipelineValue,
+        winRate: Math.round(winRate * 10) / 10,
+        avgDealValue: Math.round(avgDealValue * 100) / 100,
+        openDeals: openDeals?.count || 0,
+        wonDeals: wonDeals?.count || 0,
+        lostDeals: lostDeals?.count || 0,
+      },
+      lifecycleDistribution: lifecycleStats,
+      dealsByStatus: dealStats,
+      pipelineBreakdown,
+      leadSources: leadSourceStats,
+      activityTrend: activityByDay,
+      taskStats,
+    });
+  } catch (error) {
+    console.error("[CRM] Analytics error:", error);
+    res.status(500).json({ error: "Failed to fetch analytics" });
+  }
+});
+
 export default crmRouter;
