@@ -20,7 +20,9 @@ import {
   AlertCircle,
   CheckCircle2,
   Clock,
-  ExternalLink
+  ExternalLink,
+  Link2,
+  UserCheck
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -75,6 +77,24 @@ export default function ReputationManagement() {
     queryKey: [`/api/clients/${clientId}/reviews`],
     enabled: !!clientId,
   });
+
+  // CRM contacts lookup (Performance tier) - to match reviewers to CRM contacts
+  const { data: crmContacts } = useQuery<any[]>({
+    queryKey: ['/api/crm/contacts'],
+    enabled: !!clientId,
+  });
+
+  // Helper to check if reviewer is a known CRM contact
+  const findCrmContact = (reviewerName: string) => {
+    if (!crmContacts || !reviewerName) return null;
+    // Match by first name or full name
+    const nameLower = reviewerName.toLowerCase();
+    return crmContacts.find(contact => {
+      const fullName = `${contact.firstName} ${contact.lastName}`.toLowerCase();
+      const firstName = (contact.firstName || '').toLowerCase();
+      return fullName.includes(nameLower) || nameLower.includes(firstName);
+    });
+  };
 
   // Respond to review mutation
   const respondMutation = useMutation({
@@ -394,8 +414,15 @@ export default function ReputationManagement() {
                           </div>
                         </div>
                         <p className="text-sm text-gray-900 mb-2">{review.reviewText}</p>
-                        <p className="text-xs text-gray-500">
-                          {review.reviewerName} · {format(new Date(review.reviewDate), 'MMM d, yyyy')}
+                        <p className="text-xs text-gray-500 flex items-center gap-1">
+                          {review.reviewerName}
+                          {findCrmContact(review.reviewerName) && (
+                            <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 text-[10px] px-1 py-0" data-testid={`badge-crm-contact-${review.id}`}>
+                              <UserCheck className="w-2 h-2 mr-0.5" />
+                              CRM
+                            </Badge>
+                          )}
+                          · {format(new Date(review.reviewDate), 'MMM d, yyyy')}
                         </p>
                       </div>
                       <div className="flex gap-2">
@@ -462,8 +489,15 @@ export default function ReputationManagement() {
                       </div>
                       
                       <p className="text-gray-900 mb-2">{review.reviewText}</p>
-                      <p className="text-sm text-gray-500 mb-3">
-                        {review.reviewerName} · {format(new Date(review.reviewDate), 'MMM d, yyyy')}
+                      <p className="text-sm text-gray-500 mb-3 flex items-center gap-1">
+                        {review.reviewerName}
+                        {findCrmContact(review.reviewerName) && (
+                          <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 text-[10px] px-1 py-0" data-testid={`badge-crm-contact-full-${review.id}`}>
+                            <UserCheck className="w-2 h-2 mr-0.5" />
+                            CRM Contact
+                          </Badge>
+                        )}
+                        · {format(new Date(review.reviewDate), 'MMM d, yyyy')}
                       </p>
 
                       {review.response && (

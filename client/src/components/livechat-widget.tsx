@@ -3,7 +3,8 @@ import { io, Socket } from 'socket.io-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MessageCircle, X, Send, Minimize2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { MessageCircle, X, Send, Minimize2, UserCheck } from 'lucide-react';
 import { nanoid } from 'nanoid';
 
 interface Message {
@@ -20,6 +21,13 @@ interface LiveChatWidgetProps {
   primaryColor?: string;
 }
 
+interface CrmContactInfo {
+  id: number;
+  firstName: string;
+  lastName: string;
+  lifecycleStage?: string;
+}
+
 export function LiveChatWidget({ clientId, companyName, primaryColor = '#007bff' }: LiveChatWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -27,6 +35,7 @@ export function LiveChatWidget({ clientId, companyName, primaryColor = '#007bff'
   const [inputMessage, setInputMessage] = useState('');
   const [visitorName, setVisitorName] = useState('');
   const [visitorEmail, setVisitorEmail] = useState('');
+  const [crmContact, setCrmContact] = useState<CrmContactInfo | null>(null);
   const [sessionId] = useState(() => {
     // Persist sessionId in localStorage for reconnection
     const stored = localStorage.getItem('livechat-sessionId');
@@ -126,6 +135,61 @@ export function LiveChatWidget({ clientId, companyName, primaryColor = '#007bff'
     // Scroll to bottom when new messages arrive
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // CRM lookup when email is provided (Performance tier feature)
+  // Use ref to track lookup state without triggering re-renders
+  const lastEmailRef = useRef('');
+  
+  useEffect(() => {
+    // Clear contact immediately when email changes
+    if (visitorEmail !== lastEmailRef.current) {
+      setCrmContact(null);
+    }
+    
+    // Skip if email is invalid
+    if (!visitorEmail || !visitorEmail.includes('@') || !visitorEmail.includes('.')) {
+      return;
+    }
+    
+    // Skip if same email was already successfully looked up
+    if (visitorEmail === lastEmailRef.current) return;
+    
+    const timeoutId = setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/crm/integration/lookup?email=${encodeURIComponent(visitorEmail)}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.found && data.contact) {
+            setCrmContact({
+              id: data.contact.id,
+              firstName: data.contact.firstName,
+              lastName: data.contact.lastName,
+              lifecycleStage: data.contact.lifecycleStage,
+            });
+            // Auto-fill name if found and empty
+            if (!visitorName && data.contact.firstName) {
+              setVisitorName(`${data.contact.firstName} ${data.contact.lastName || ''}`.trim());
+            }
+            // Mark as successfully looked up
+            lastEmailRef.current = visitorEmail;
+          } else {
+            setCrmContact(null);
+            // Still mark as looked up to avoid repeated lookups for non-existent contacts
+            lastEmailRef.current = visitorEmail;
+          }
+        } else {
+          // On error, don't mark as looked up so retry is possible
+          setCrmContact(null);
+        }
+      } catch (err) {
+        console.error('CRM lookup failed:', err);
+        setCrmContact(null);
+        // On error, don't mark as looked up so retry is possible
+      }
+    }, 500); // Debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [visitorEmail, visitorName]);
 
   const handleStartChat = () => {
     if (!visitorName.trim()) return;
@@ -268,11 +332,17 @@ export function LiveChatWidget({ clientId, companyName, primaryColor = '#007bff'
                 <div className="flex-1 flex flex-col justify-center p-6 gap-4" data-testid="form-start-chat">
                   <div className="text-center mb-4">
                     <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                      Welcome! 👋
+                      {crmContact ? `Welcome back, ${crmContact.firstName}!` : 'Welcome! 👋'}
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                       Start a conversation with our team
                     </p>
+                    {crmContact && (
+                      <Badge className="mt-2 bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300" data-testid="badge-crm-recognized">
+                        <UserCheck className="w-3 h-3 mr-1" />
+                        Recognized Contact
+                      </Badge>
+                    )}
                   </div>
                   <Input
                     type="text"

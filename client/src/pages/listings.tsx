@@ -21,7 +21,9 @@ import {
   Phone,
   Mail,
   Globe,
-  Calendar
+  Calendar,
+  Link2,
+  Building2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -69,6 +71,13 @@ export default function ListingsManagement() {
   const { data: listings, isLoading: listingsLoading } = useQuery<BusinessListing[]>({
     queryKey: [`/api/clients/${clientId}/listings`],
     enabled: !!clientId,
+  });
+
+  // CRM company lookup (Performance tier) - pulls business info from /relationships
+  const { data: crmCompany } = useQuery<any>({
+    queryKey: ['/api/crm/companies'],
+    enabled: !!clientId,
+    select: (data) => data?.[0] // Get primary company
   });
 
   // Update listing mutation
@@ -299,6 +308,65 @@ export default function ListingsManagement() {
                 </CardContent>
               </Card>
             </div>
+
+            {/* CRM Company Integration (Performance tier) */}
+            {crmCompany && (
+              <Card className="mb-8" data-testid="card-crm-company">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Link2 className="h-4 w-4 text-green-600" />
+                    CRM Business Data
+                    <Badge className="bg-green-100 text-green-700 text-xs">Performance</Badge>
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Linked from /relationships company records
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid md:grid-cols-4 gap-4">
+                    <div className="flex items-center gap-2">
+                      <Building2 className="h-4 w-4 text-gray-400" />
+                      <div>
+                        <p className="text-xs text-gray-500">Company</p>
+                        <p className="font-medium text-sm" data-testid="text-crm-company-name">{crmCompany.name}</p>
+                      </div>
+                    </div>
+                    {crmCompany.industry && (
+                      <div className="flex items-center gap-2">
+                        <TrendingUp className="h-4 w-4 text-gray-400" />
+                        <div>
+                          <p className="text-xs text-gray-500">Industry</p>
+                          <p className="font-medium text-sm" data-testid="text-crm-company-industry">{crmCompany.industry}</p>
+                        </div>
+                      </div>
+                    )}
+                    {crmCompany.phone && (
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-4 w-4 text-gray-400" />
+                        <div>
+                          <p className="text-xs text-gray-500">Phone</p>
+                          <p className="font-medium text-sm" data-testid="text-crm-company-phone">{crmCompany.phone}</p>
+                        </div>
+                      </div>
+                    )}
+                    {crmCompany.website && (
+                      <div className="flex items-center gap-2">
+                        <Globe className="h-4 w-4 text-gray-400" />
+                        <div>
+                          <p className="text-xs text-gray-500">Website</p>
+                          <p className="font-medium text-sm" data-testid="text-crm-company-website">{crmCompany.website}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-3 pt-3 border-t flex justify-end">
+                    <Button variant="ghost" size="sm" className="text-xs" onClick={() => window.location.href = '/relationships'} data-testid="button-view-crm">
+                      View in /relationships
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Listing Status Overview */}
             <div className="grid md:grid-cols-3 gap-6 mb-8">

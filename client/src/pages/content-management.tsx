@@ -42,7 +42,9 @@ import {
   Globe,
   Zap,
   TrendingUp,
-  BarChart3
+  BarChart3,
+  Link2,
+  Users
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -96,6 +98,15 @@ export default function ContentManagement() {
     queryKey: [`/api/content/${clientId}/media`],
     enabled: !!clientId,
   });
+
+  // CRM segments for audience targeting (Performance tier)
+  const { data: crmSegments } = useQuery<any[]>({
+    queryKey: ['/api/crm/integration/segments'],
+    enabled: !!clientId,
+  });
+
+  // Audience targeting state
+  const [selectedSegments, setSelectedSegments] = useState<number[]>([]);
 
   // Create post mutation
   const createPostMutation = useMutation({
@@ -162,6 +173,7 @@ export default function ContentManagement() {
     setSelectedMediaIds([]);
     setIsScheduled(false);
     setAiSuggestions([]);
+    setSelectedSegments([]);
   };
 
   const handleAddHashtag = () => {
@@ -272,6 +284,7 @@ export default function ContentManagement() {
       mediaIds: selectedMediaIds,
       status: isScheduled ? "scheduled" : "published",
       scheduledFor,
+      targetSegments: selectedSegments.length > 0 ? selectedSegments : undefined,
     });
   };
 
@@ -550,6 +563,66 @@ export default function ContentManagement() {
                     Clear
                   </Button>
                 </div>
+
+                {/* CRM Audience Targeting (Performance tier) */}
+                {crmSegments && crmSegments.length > 0 && (
+                  <Card data-testid="card-crm-audience">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <Link2 className="h-4 w-4 text-green-600" />
+                        Audience Targeting
+                        <Badge className="bg-green-100 text-green-700 text-xs">Performance</Badge>
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        Target your content to CRM segments from /relationships
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-2">
+                      <div className="space-y-2">
+                        {crmSegments.slice(0, 5).map((segment: any) => (
+                          <div
+                            key={segment.id}
+                            className={`flex items-center justify-between p-2 rounded-lg border cursor-pointer transition-colors ${
+                              selectedSegments.includes(segment.id) 
+                                ? 'bg-green-50 border-green-300 dark:bg-green-950 dark:border-green-700' 
+                                : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                            }`}
+                            onClick={() => {
+                              setSelectedSegments(prev => 
+                                prev.includes(segment.id) 
+                                  ? prev.filter(id => id !== segment.id)
+                                  : [...prev, segment.id]
+                              );
+                            }}
+                            data-testid={`crm-segment-${segment.id}`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <Users className="h-4 w-4 text-gray-400" />
+                              <span className="text-sm font-medium">{segment.name}</span>
+                            </div>
+                            <Badge variant="secondary" className="text-xs" data-testid={`text-segment-count-${segment.id}`}>
+                              {segment.contactCount || 0}
+                            </Badge>
+                          </div>
+                        ))}
+                        {selectedSegments.length > 0 && (
+                          <p className="text-xs text-green-600 mt-2" data-testid="text-targeting-summary">
+                            Targeting {selectedSegments.length} segment{selectedSegments.length > 1 ? 's' : ''}
+                          </p>
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full mt-2 text-xs"
+                          onClick={() => setLocation('/relationships')}
+                          data-testid="button-view-crm"
+                        >
+                          View all segments in /relationships
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
 
               {/* AI Coach Sidebar */}

@@ -2997,6 +2997,7 @@ async function processAssessmentAsync(
 
 async function registerInboxRoutes(app: Express) {
   // Create livechat session (public - for customer-facing chat widget)
+  // Also auto-creates CRM contact if email is provided (Performance tier feature)
   app.post("/api/inbox/livechat/session", async (req, res) => {
     try {
       const validatedData = insertLivechatSessionSchema.parse(req.body);
@@ -3006,13 +3007,74 @@ async function registerInboxRoutes(app: Express) {
         status: 'active',
       }).returning();
 
+      let crmContactId: number | null = null;
+
+      // Auto-create CRM contact if email is provided
+      if (validatedData.visitorEmail) {
+        try {
+          // Check if contact exists
+          const existing = await db.select()
+            .from(crmContacts)
+            .where(eq(crmContacts.email, validatedData.visitorEmail))
+            .limit(1);
+
+          if (existing.length > 0) {
+            crmContactId = existing[0].id;
+            
+            // Log livechat interaction as timeline event
+            await db.insert(crmTimelineEvents).values({
+              contactId: existing[0].id,
+              eventType: 'livechat',
+              title: 'Started live chat session',
+              description: `Visitor started a live chat session from ${validatedData.pageUrl || 'unknown page'}`,
+              metadata: { sessionId: session.sessionId, pageUrl: validatedData.pageUrl, pageTitle: validatedData.pageTitle },
+              source: 'livechat',
+            });
+          } else {
+            // Create new contact from livechat visitor
+            const nameParts = (validatedData.visitorName || '').split(' ');
+            const firstName = nameParts[0] || 'Visitor';
+            const lastName = nameParts.slice(1).join(' ') || '';
+
+            const [newContact] = await db.insert(crmContacts).values({
+              firstName,
+              lastName,
+              email: validatedData.visitorEmail,
+              lifecycleStage: 'lead',
+              leadSource: 'livechat',
+              customFields: {
+                livechatSessionId: session.sessionId,
+                firstPageUrl: validatedData.pageUrl,
+                firstPageTitle: validatedData.pageTitle,
+              },
+            }).returning();
+            
+            crmContactId = newContact.id;
+
+            // Log creation event
+            await db.insert(crmTimelineEvents).values({
+              contactId: newContact.id,
+              eventType: 'contact_created',
+              title: 'Contact created from live chat',
+              description: `New contact created when ${validatedData.visitorName} started a live chat session`,
+              metadata: { sessionId: session.sessionId },
+              source: 'livechat',
+            });
+          }
+        } catch (crmError) {
+          console.error("Error creating CRM contact from livechat:", crmError);
+          // Don't fail the session creation, just log the error
+        }
+      }
+
       res.json({
         success: true,
         session: {
           id: session.id,
           sessionId: session.sessionId,
           conversationId: session.conversationId,
-          status: session.status
+          status: session.status,
+          crmContactId,
         }
       });
     } catch (error) {
