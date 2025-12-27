@@ -15,6 +15,9 @@ import {
   crmTags,
   crmSubscriptions,
   crmLeadForms,
+  crmAutomations,
+  crmAutomationSteps,
+  crmAutomationExecutions,
   insertCrmContactSchema,
   insertCrmLeadFormSchema,
   insertCrmCompanySchema,
@@ -26,11 +29,233 @@ import {
   insertCrmTimelineSchema,
   insertCrmAppointmentSchema,
   insertCrmTagSchema,
+  insertCrmAutomationSchema,
+  insertCrmAutomationStepSchema,
 } from "@shared/schema";
 import { eq, and, desc, asc, ilike, or, sql, inArray } from "drizzle-orm";
 import { z } from "zod";
 
 export const crmRouter = Router();
+
+// ============================================================================
+// AUTOMATION TRIGGER DISPATCHER
+// ============================================================================
+// MVP Implementation Notes:
+// - Triggers: contact_created, deal_stage_changed, deal_won, deal_lost + manual
+// - Step execution: synchronous (add_tag, remove_tag, update_contact, create_task, add_to_segment)
+// - Async steps (wait, email, webhook): logged but require job queue for production
+// - Conditions: basic evaluation (always, equals, contains, exists)
+// ============================================================================
+
+function evaluateCondition(
+  conditionType: string | null,
+  conditionConfig: Record<string, any> | null,
+  triggerData: Record<string, any>,
+  contact: any
+): boolean {
+  if (!conditionType || conditionType === 'always') {
+    return true;
+  }
+  
+  const config = conditionConfig || {};
+  const fieldValue = config.field ? (triggerData[config.field] || contact?.[config.field]) : null;
+  
+  switch (conditionType) {
+    case 'equals':
+      return String(fieldValue) === String(config.value);
+    case 'not_equals':
+      return String(fieldValue) !== String(config.value);
+    case 'contains':
+      return String(fieldValue || '').includes(String(config.value || ''));
+    case 'exists':
+      return fieldValue !== null && fieldValue !== undefined && fieldValue !== '';
+    case 'not_exists':
+      return fieldValue === null || fieldValue === undefined || fieldValue === '';
+    default:
+      return true;
+  }
+}
+
+async function executeAutomationTrigger(
+  triggerType: string,
+  contactId?: number,
+  triggerData?: Record<string, any>
+) {
+  try {
+    // Find all active automations with this trigger type
+    const automations = await db
+      .select()
+      .from(crmAutomations)
+      .where(and(
+        eq(crmAutomations.triggerType, triggerType),
+        eq(crmAutomations.isActive, true)
+      ));
+
+    for (const automation of automations) {
+      // Get automation steps
+      const steps = await db
+        .select()
+        .from(crmAutomationSteps)
+        .where(eq(crmAutomationSteps.automationId, automation.id))
+        .orderBy(asc(crmAutomationSteps.stepOrder));
+
+      if (steps.length === 0) continue;
+
+      // Create execution record
+      const [execution] = await db.insert(crmAutomationExecutions).values({
+        automationId: automation.id,
+        contactId: contactId || null,
+        status: 'running',
+        currentStep: 0,
+        totalSteps: steps.length,
+        triggerData: triggerData || {},
+      }).returning();
+
+      // Update automation run count
+      await db
+        .update(crmAutomations)
+        .set({ 
+          runCount: sql`${crmAutomations.runCount} + 1`,
+          lastRunAt: new Date(),
+        })
+        .where(eq(crmAutomations.id, automation.id));
+
+      // Execute steps synchronously
+      const executionLog: { step: number; action: string; result: string; timestamp: Date }[] = [];
+      let finalStatus = 'completed';
+      let errorMessage: string | null = null;
+      
+      // Fetch contact for condition evaluation
+      let contact: any = null;
+      if (contactId) {
+        const [c] = await db.select().from(crmContacts).where(eq(crmContacts.id, contactId));
+        contact = c;
+      }
+
+      for (let i = 0; i < steps.length; i++) {
+        const step = steps[i];
+        const config = step.config as Record<string, any> || {};
+
+        try {
+          // Evaluate step condition
+          const conditionMet = evaluateCondition(
+            step.conditionType,
+            step.conditionConfig as Record<string, any>,
+            triggerData || {},
+            contact
+          );
+          
+          if (!conditionMet) {
+            executionLog.push({ step: i + 1, action: step.stepType, result: 'Skipped: condition not met', timestamp: new Date() });
+            continue;
+          }
+
+          await db
+            .update(crmAutomationExecutions)
+            .set({ currentStep: i + 1 })
+            .where(eq(crmAutomationExecutions.id, execution.id));
+
+          switch (step.stepType) {
+            case 'add_tag':
+              if (contactId && config.tag) {
+                const [contact] = await db.select().from(crmContacts).where(eq(crmContacts.id, contactId));
+                if (contact) {
+                  const currentTags = Array.isArray(contact.tags) ? contact.tags : [];
+                  if (!currentTags.includes(config.tag)) {
+                    await db.update(crmContacts)
+                      .set({ tags: [...currentTags, config.tag] })
+                      .where(eq(crmContacts.id, contactId));
+                  }
+                }
+              }
+              executionLog.push({ step: i + 1, action: 'add_tag', result: `Added tag: ${config.tag || 'none'}`, timestamp: new Date() });
+              break;
+
+            case 'remove_tag':
+              if (contactId && config.tag) {
+                const [contact] = await db.select().from(crmContacts).where(eq(crmContacts.id, contactId));
+                if (contact) {
+                  const currentTags = Array.isArray(contact.tags) ? contact.tags : [];
+                  await db.update(crmContacts)
+                    .set({ tags: currentTags.filter((t: string) => t !== config.tag) })
+                    .where(eq(crmContacts.id, contactId));
+                }
+              }
+              executionLog.push({ step: i + 1, action: 'remove_tag', result: `Removed tag: ${config.tag || 'none'}`, timestamp: new Date() });
+              break;
+
+            case 'update_contact':
+              if (contactId && config.field && config.value !== undefined) {
+                await db.update(crmContacts)
+                  .set({ [config.field]: config.value })
+                  .where(eq(crmContacts.id, contactId));
+              }
+              executionLog.push({ step: i + 1, action: 'update_contact', result: `Updated ${config.field || 'field'}`, timestamp: new Date() });
+              break;
+
+            case 'create_task':
+              const taskTitle = config.title || 'Automated task';
+              await db.insert(crmTasks).values({
+                contactId: contactId || null,
+                title: taskTitle,
+                description: config.description || `Created by automation: ${automation.name}`,
+                status: 'pending',
+                priority: config.priority || 'medium',
+                dueDate: config.dueDate ? new Date(config.dueDate) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+              });
+              executionLog.push({ step: i + 1, action: 'create_task', result: `Created task: ${taskTitle}`, timestamp: new Date() });
+              break;
+
+            case 'add_to_segment':
+              if (contactId && config.segmentId) {
+                await db.insert(crmSegmentMembers).values({
+                  segmentId: parseInt(config.segmentId),
+                  contactId,
+                }).onConflictDoNothing();
+              }
+              executionLog.push({ step: i + 1, action: 'add_to_segment', result: `Added to segment ${config.segmentId || 'unknown'}`, timestamp: new Date() });
+              break;
+
+            case 'wait':
+              const waitDuration = config.duration || '1 day';
+              executionLog.push({ step: i + 1, action: 'wait', result: `Wait: ${waitDuration} (skipped in sync execution)`, timestamp: new Date() });
+              break;
+
+            case 'send_email':
+              executionLog.push({ step: i + 1, action: 'send_email', result: `Email queued: ${config.subject || 'No subject'}`, timestamp: new Date() });
+              break;
+
+            case 'webhook':
+              executionLog.push({ step: i + 1, action: 'webhook', result: `Webhook: ${config.url || 'No URL'}`, timestamp: new Date() });
+              break;
+
+            default:
+              executionLog.push({ step: i + 1, action: step.stepType, result: 'Unknown step type', timestamp: new Date() });
+          }
+        } catch (stepError: any) {
+          executionLog.push({ step: i + 1, action: step.stepType, result: `Error: ${stepError.message}`, timestamp: new Date() });
+          finalStatus = 'failed';
+          errorMessage = `Step ${i + 1} failed: ${stepError.message}`;
+          break;
+        }
+      }
+
+      await db
+        .update(crmAutomationExecutions)
+        .set({ 
+          status: finalStatus,
+          completedAt: new Date(),
+          errorMessage,
+          executionLog,
+        })
+        .where(eq(crmAutomationExecutions.id, execution.id));
+
+      console.log(`[CRM] Automation "${automation.name}" ${finalStatus} for trigger "${triggerType}"${contactId ? ` (contact ${contactId})` : ''}`);
+    }
+  } catch (error) {
+    console.error("[CRM] Automation trigger error:", error);
+  }
+}
 
 // ============================================================================
 // CONTACTS
@@ -132,6 +357,14 @@ crmRouter.post("/contacts", async (req, res) => {
         actorType: "user",
       });
     }
+
+    // Trigger automations for contact_created
+    executeAutomationTrigger('contact_created', contact.id, {
+      contactId: contact.id,
+      email: contact.email,
+      firstName: contact.firstName,
+      lastName: contact.lastName,
+    });
 
     res.status(201).json(contact);
   } catch (error) {
@@ -655,6 +888,29 @@ crmRouter.patch("/deals/:id/stage", async (req, res) => {
         occurredAt: new Date(),
         sourceApp: "relationships",
         actorType: "user",
+      });
+    }
+
+    // Trigger automations for deal_stage_changed
+    executeAutomationTrigger('deal_stage_changed', deal.contactId || undefined, {
+      dealId: deal.id,
+      stageName: stage[0].name,
+      stageType: stage[0].stageType,
+      status: deal.status,
+    });
+
+    // Also trigger deal_won or deal_lost if applicable
+    if (stage[0].stageType === 'won') {
+      executeAutomationTrigger('deal_won', deal.contactId || undefined, {
+        dealId: deal.id,
+        dealName: deal.name,
+        amount: deal.amount,
+      });
+    } else if (stage[0].stageType === 'lost') {
+      executeAutomationTrigger('deal_lost', deal.contactId || undefined, {
+        dealId: deal.id,
+        dealName: deal.name,
+        amount: deal.amount,
       });
     }
 
@@ -1643,6 +1899,380 @@ crmRouter.post("/integration/bulk-lookup", async (req, res) => {
   } catch (error) {
     console.error("[CRM] Integration bulk lookup error:", error);
     res.status(500).json({ error: "Failed to bulk lookup contacts" });
+  }
+});
+
+// ============================================================================
+// AUTOMATIONS (Performance Tier)
+// ============================================================================
+
+// List automations
+crmRouter.get("/automations", async (req, res) => {
+  try {
+    const automations = await db
+      .select()
+      .from(crmAutomations)
+      .orderBy(desc(crmAutomations.createdAt));
+    
+    res.json({ automations });
+  } catch (error) {
+    console.error("[CRM] List automations error:", error);
+    res.status(500).json({ error: "Failed to fetch automations" });
+  }
+});
+
+// Get automation with steps
+crmRouter.get("/automations/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    
+    const [automation] = await db
+      .select()
+      .from(crmAutomations)
+      .where(eq(crmAutomations.id, id));
+    
+    if (!automation) {
+      return res.status(404).json({ error: "Automation not found" });
+    }
+    
+    const steps = await db
+      .select()
+      .from(crmAutomationSteps)
+      .where(eq(crmAutomationSteps.automationId, id))
+      .orderBy(asc(crmAutomationSteps.stepOrder));
+    
+    // Recent executions
+    const executions = await db
+      .select()
+      .from(crmAutomationExecutions)
+      .where(eq(crmAutomationExecutions.automationId, id))
+      .orderBy(desc(crmAutomationExecutions.startedAt))
+      .limit(10);
+    
+    res.json({ automation, steps, executions });
+  } catch (error) {
+    console.error("[CRM] Get automation error:", error);
+    res.status(500).json({ error: "Failed to fetch automation" });
+  }
+});
+
+// Create automation
+crmRouter.post("/automations", async (req, res) => {
+  try {
+    const parsed = insertCrmAutomationSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.errors });
+    }
+    
+    const [automation] = await db.insert(crmAutomations).values(parsed.data).returning();
+    res.status(201).json({ automation });
+  } catch (error) {
+    console.error("[CRM] Create automation error:", error);
+    res.status(500).json({ error: "Failed to create automation" });
+  }
+});
+
+// Update automation
+crmRouter.patch("/automations/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const updates = req.body;
+    
+    const [automation] = await db
+      .update(crmAutomations)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(crmAutomations.id, id))
+      .returning();
+    
+    if (!automation) {
+      return res.status(404).json({ error: "Automation not found" });
+    }
+    
+    res.json({ automation });
+  } catch (error) {
+    console.error("[CRM] Update automation error:", error);
+    res.status(500).json({ error: "Failed to update automation" });
+  }
+});
+
+// Delete automation
+crmRouter.delete("/automations/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    
+    await db.delete(crmAutomations).where(eq(crmAutomations.id, id));
+    res.json({ success: true });
+  } catch (error) {
+    console.error("[CRM] Delete automation error:", error);
+    res.status(500).json({ error: "Failed to delete automation" });
+  }
+});
+
+// Add steps to automation
+crmRouter.post("/automations/:id/steps", async (req, res) => {
+  try {
+    const automationId = parseInt(req.params.id);
+    const { steps } = req.body;
+    
+    if (!Array.isArray(steps)) {
+      return res.status(400).json({ error: "steps array required" });
+    }
+    
+    // Delete existing steps and replace
+    await db.delete(crmAutomationSteps).where(eq(crmAutomationSteps.automationId, automationId));
+    
+    // Insert new steps
+    if (steps.length > 0) {
+      const stepsToInsert = steps.map((step: any, index: number) => ({
+        automationId,
+        stepOrder: index + 1,
+        stepType: step.stepType,
+        config: step.config || {},
+        conditionType: step.conditionType,
+        conditionConfig: step.conditionConfig || {},
+      }));
+      
+      await db.insert(crmAutomationSteps).values(stepsToInsert);
+    }
+    
+    const insertedSteps = await db
+      .select()
+      .from(crmAutomationSteps)
+      .where(eq(crmAutomationSteps.automationId, automationId))
+      .orderBy(asc(crmAutomationSteps.stepOrder));
+    
+    res.json({ steps: insertedSteps });
+  } catch (error) {
+    console.error("[CRM] Add automation steps error:", error);
+    res.status(500).json({ error: "Failed to add automation steps" });
+  }
+});
+
+// Trigger automation manually (for testing)
+crmRouter.post("/automations/:id/trigger", async (req, res) => {
+  try {
+    const automationId = parseInt(req.params.id);
+    const { contactId, triggerData } = req.body;
+    
+    const [automation] = await db
+      .select()
+      .from(crmAutomations)
+      .where(eq(crmAutomations.id, automationId));
+    
+    if (!automation) {
+      return res.status(404).json({ error: "Automation not found" });
+    }
+    
+    const steps = await db
+      .select()
+      .from(crmAutomationSteps)
+      .where(eq(crmAutomationSteps.automationId, automationId))
+      .orderBy(asc(crmAutomationSteps.stepOrder));
+    
+    // Create execution record
+    const [execution] = await db.insert(crmAutomationExecutions).values({
+      automationId,
+      contactId,
+      status: 'running',
+      currentStep: 0,
+      totalSteps: steps.length,
+      triggerData: triggerData || {},
+    }).returning();
+    
+    // Update automation run count
+    await db
+      .update(crmAutomations)
+      .set({ 
+        runCount: sql`${crmAutomations.runCount} + 1`,
+        lastRunAt: new Date(),
+      })
+      .where(eq(crmAutomations.id, automationId));
+    
+    // Execute steps synchronously (MVP implementation)
+    const executionLog: { step: number; action: string; result: string; timestamp: Date }[] = [];
+    let finalStatus = 'completed';
+    let errorMessage: string | null = null;
+    
+    // Fetch contact for condition evaluation
+    let contact: any = null;
+    if (contactId) {
+      const [c] = await db.select().from(crmContacts).where(eq(crmContacts.id, contactId));
+      contact = c;
+    }
+    
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+      const config = step.config as Record<string, any> || {};
+      
+      try {
+        // Evaluate step condition
+        const conditionMet = evaluateCondition(
+          step.conditionType,
+          step.conditionConfig as Record<string, any>,
+          triggerData || {},
+          contact
+        );
+        
+        if (!conditionMet) {
+          executionLog.push({ step: i + 1, action: step.stepType, result: 'Skipped: condition not met', timestamp: new Date() });
+          continue;
+        }
+        
+        // Update current step
+        await db
+          .update(crmAutomationExecutions)
+          .set({ currentStep: i + 1 })
+          .where(eq(crmAutomationExecutions.id, execution.id));
+        
+        // Execute step based on type
+        switch (step.stepType) {
+          case 'add_tag':
+            if (contactId && config.tag) {
+              const [contactData] = await db.select().from(crmContacts).where(eq(crmContacts.id, contactId));
+              if (contactData) {
+                const currentTags = Array.isArray(contactData.tags) ? contactData.tags : [];
+                if (!currentTags.includes(config.tag)) {
+                  await db.update(crmContacts)
+                    .set({ tags: [...currentTags, config.tag] })
+                    .where(eq(crmContacts.id, contactId));
+                }
+              }
+            }
+            executionLog.push({ step: i + 1, action: 'add_tag', result: `Added tag: ${config.tag || 'none'}`, timestamp: new Date() });
+            break;
+            
+          case 'remove_tag':
+            if (contactId && config.tag) {
+              const [contact] = await db.select().from(crmContacts).where(eq(crmContacts.id, contactId));
+              if (contact) {
+                const currentTags = Array.isArray(contact.tags) ? contact.tags : [];
+                await db.update(crmContacts)
+                  .set({ tags: currentTags.filter((t: string) => t !== config.tag) })
+                  .where(eq(crmContacts.id, contactId));
+              }
+            }
+            executionLog.push({ step: i + 1, action: 'remove_tag', result: `Removed tag: ${config.tag || 'none'}`, timestamp: new Date() });
+            break;
+            
+          case 'update_contact':
+            if (contactId && config.field && config.value !== undefined) {
+              await db.update(crmContacts)
+                .set({ [config.field]: config.value })
+                .where(eq(crmContacts.id, contactId));
+            }
+            executionLog.push({ step: i + 1, action: 'update_contact', result: `Updated ${config.field || 'field'}`, timestamp: new Date() });
+            break;
+            
+          case 'create_task':
+            const taskTitle = config.title || 'Automated task';
+            await db.insert(crmTasks).values({
+              contactId: contactId || null,
+              title: taskTitle,
+              description: config.description || `Created by automation: ${automation.name}`,
+              status: 'pending',
+              priority: config.priority || 'medium',
+              dueDate: config.dueDate ? new Date(config.dueDate) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days default
+            });
+            executionLog.push({ step: i + 1, action: 'create_task', result: `Created task: ${taskTitle}`, timestamp: new Date() });
+            break;
+            
+          case 'add_to_segment':
+            if (contactId && config.segmentId) {
+              await db.insert(crmSegmentMembers).values({
+                segmentId: parseInt(config.segmentId),
+                contactId,
+              }).onConflictDoNothing();
+            }
+            executionLog.push({ step: i + 1, action: 'add_to_segment', result: `Added to segment ${config.segmentId || 'unknown'}`, timestamp: new Date() });
+            break;
+            
+          case 'wait':
+            // For MVP, just log the wait step (real implementation would use a job queue)
+            const waitDuration = config.duration || '1 day';
+            executionLog.push({ step: i + 1, action: 'wait', result: `Wait step: ${waitDuration} (skipped in sync execution)`, timestamp: new Date() });
+            break;
+            
+          case 'send_email':
+            // Log email action (real implementation would send email)
+            executionLog.push({ step: i + 1, action: 'send_email', result: `Email queued: ${config.subject || 'No subject'} (requires email integration)`, timestamp: new Date() });
+            break;
+            
+          case 'webhook':
+            // Log webhook action (real implementation would call webhook)
+            executionLog.push({ step: i + 1, action: 'webhook', result: `Webhook: ${config.url || 'No URL'} (requires async execution)`, timestamp: new Date() });
+            break;
+            
+          default:
+            executionLog.push({ step: i + 1, action: step.stepType, result: 'Unknown step type', timestamp: new Date() });
+        }
+      } catch (stepError: any) {
+        executionLog.push({ step: i + 1, action: step.stepType, result: `Error: ${stepError.message}`, timestamp: new Date() });
+        finalStatus = 'failed';
+        errorMessage = `Step ${i + 1} failed: ${stepError.message}`;
+        break;
+      }
+    }
+    
+    // Update execution with final status
+    await db
+      .update(crmAutomationExecutions)
+      .set({ 
+        status: finalStatus,
+        completedAt: new Date(),
+        errorMessage,
+        executionLog,
+      })
+      .where(eq(crmAutomationExecutions.id, execution.id));
+    
+    res.json({ 
+      success: finalStatus === 'completed', 
+      execution: { 
+        ...execution, 
+        status: finalStatus,
+        executionLog,
+        errorMessage 
+      },
+      message: finalStatus === 'completed' 
+        ? `Automation completed successfully (${steps.length} steps executed)` 
+        : `Automation failed: ${errorMessage}`
+    });
+  } catch (error) {
+    console.error("[CRM] Trigger automation error:", error);
+    res.status(500).json({ error: "Failed to trigger automation" });
+  }
+});
+
+// Get automation execution history
+crmRouter.get("/automations/:id/executions", async (req, res) => {
+  try {
+    const automationId = parseInt(req.params.id);
+    
+    const executions = await db
+      .select({
+        id: crmAutomationExecutions.id,
+        status: crmAutomationExecutions.status,
+        currentStep: crmAutomationExecutions.currentStep,
+        totalSteps: crmAutomationExecutions.totalSteps,
+        startedAt: crmAutomationExecutions.startedAt,
+        completedAt: crmAutomationExecutions.completedAt,
+        errorMessage: crmAutomationExecutions.errorMessage,
+        contact: {
+          id: crmContacts.id,
+          firstName: crmContacts.firstName,
+          lastName: crmContacts.lastName,
+          email: crmContacts.email,
+        },
+      })
+      .from(crmAutomationExecutions)
+      .leftJoin(crmContacts, eq(crmAutomationExecutions.contactId, crmContacts.id))
+      .where(eq(crmAutomationExecutions.automationId, automationId))
+      .orderBy(desc(crmAutomationExecutions.startedAt))
+      .limit(50);
+    
+    res.json({ executions });
+  } catch (error) {
+    console.error("[CRM] Get automation executions error:", error);
+    res.status(500).json({ error: "Failed to fetch automation executions" });
   }
 });
 

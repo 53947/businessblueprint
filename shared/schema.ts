@@ -2524,6 +2524,88 @@ export const insertCrmLeadFormSchema = createInsertSchema(crmLeadForms).omit({
   submissionCount: true,
 });
 
+// CRM Automations - Workflow automation engine (Performance tier)
+export const crmAutomations = pgTable("crm_automations", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  
+  // Basic info
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  
+  // Trigger configuration
+  triggerType: varchar("trigger_type", { length: 50 }).notNull(), // contact_created, contact_updated, deal_stage_changed, form_submitted, tag_added, manual
+  triggerConfig: jsonb("trigger_config").default({}), // Additional trigger conditions
+  
+  // Status
+  isActive: boolean("is_active").default(true),
+  
+  // Stats
+  runCount: integer("run_count").default(0),
+  lastRunAt: timestamp("last_run_at"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Automation steps (actions to perform)
+export const crmAutomationSteps = pgTable("crm_automation_steps", {
+  id: serial("id").primaryKey(),
+  automationId: integer("automation_id").references(() => crmAutomations.id, { onDelete: "cascade" }).notNull(),
+  
+  // Ordering
+  stepOrder: integer("step_order").notNull(),
+  
+  // Step type and config
+  stepType: varchar("step_type", { length: 50 }).notNull(), // wait, update_contact, add_tag, remove_tag, send_email, create_task, add_to_segment, webhook
+  config: jsonb("config").default({}), // Step-specific configuration
+  
+  // Conditional execution
+  conditionType: varchar("condition_type", { length: 50 }), // if_tag, if_stage, if_field, always
+  conditionConfig: jsonb("condition_config").default({}),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Automation execution log
+export const crmAutomationExecutions = pgTable("crm_automation_executions", {
+  id: serial("id").primaryKey(),
+  automationId: integer("automation_id").references(() => crmAutomations.id, { onDelete: "cascade" }).notNull(),
+  contactId: integer("contact_id").references(() => crmContacts.id),
+  
+  // Execution status
+  status: varchar("status", { length: 20 }).notNull().default("running"), // running, completed, failed, cancelled
+  
+  // Progress
+  currentStep: integer("current_step").default(0),
+  totalSteps: integer("total_steps").default(0),
+  
+  // Timing
+  startedAt: timestamp("started_at").defaultNow(),
+  completedAt: timestamp("completed_at"),
+  scheduledNextStep: timestamp("scheduled_next_step"),
+  
+  // Error handling
+  errorMessage: text("error_message"),
+  
+  // Context
+  triggerData: jsonb("trigger_data").default({}),
+  executionLog: jsonb("execution_log").default([]),
+});
+
+export const insertCrmAutomationSchema = createInsertSchema(crmAutomations).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  runCount: true,
+  lastRunAt: true,
+});
+
+export const insertCrmAutomationStepSchema = createInsertSchema(crmAutomationSteps).omit({
+  id: true,
+  createdAt: true,
+});
+
 // CRM Types
 export type CrmCompany = typeof crmCompanies.$inferSelect;
 export type InsertCrmCompany = z.infer<typeof insertCrmCompanySchema>;
@@ -2554,3 +2636,8 @@ export type CrmSubscription = typeof crmSubscriptions.$inferSelect;
 export type InsertCrmSubscription = z.infer<typeof insertCrmSubscriptionSchema>;
 export type CrmLeadForm = typeof crmLeadForms.$inferSelect;
 export type InsertCrmLeadForm = z.infer<typeof insertCrmLeadFormSchema>;
+export type CrmAutomation = typeof crmAutomations.$inferSelect;
+export type InsertCrmAutomation = z.infer<typeof insertCrmAutomationSchema>;
+export type CrmAutomationStep = typeof crmAutomationSteps.$inferSelect;
+export type InsertCrmAutomationStep = z.infer<typeof insertCrmAutomationStepSchema>;
+export type CrmAutomationExecution = typeof crmAutomationExecutions.$inferSelect;

@@ -48,7 +48,15 @@ import {
   FileSpreadsheet,
   ArrowRight,
   LogIn,
-  Send
+  Send,
+  Zap,
+  Timer,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  Play,
+  Pause,
+  RefreshCw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -200,7 +208,7 @@ interface CrmAppointment {
   updatedAt: string;
 }
 
-type Section = "dashboard" | "contacts" | "companies" | "pipeline" | "tasks" | "scheduler" | "timeline" | "analytics" | "settings";
+type Section = "dashboard" | "contacts" | "companies" | "pipeline" | "tasks" | "scheduler" | "timeline" | "automations" | "analytics" | "settings";
 
 const sidebarItems = [
   { id: "dashboard" as const, label: "Dashboard", icon: BarChart3 },
@@ -210,6 +218,7 @@ const sidebarItems = [
   { id: "tasks" as const, label: "Tasks", icon: CheckSquare },
   { id: "scheduler" as const, label: "Scheduler", icon: CalendarDays },
   { id: "timeline" as const, label: "Timeline", icon: History },
+  { id: "automations" as const, label: "Automations", icon: Zap },
   { id: "analytics" as const, label: "Analytics", icon: TrendingUp },
   { id: "settings" as const, label: "Settings", icon: Settings },
 ];
@@ -345,6 +354,7 @@ export default function RelationshipsPage() {
           {activeSection === "tasks" && <TasksView />}
           {activeSection === "scheduler" && <SchedulerView />}
           {activeSection === "timeline" && <TimelineView />}
+          {activeSection === "automations" && <AutomationsView />}
           {activeSection === "analytics" && <AnalyticsView />}
           {activeSection === "settings" && <SettingsView />}
         </div>
@@ -4785,6 +4795,574 @@ function TimelineView() {
                     </div>
                   </div>
                 </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ============================================================================
+// AUTOMATIONS VIEW
+// ============================================================================
+
+interface CrmAutomation {
+  id: number;
+  clientId: number | null;
+  name: string;
+  description: string | null;
+  triggerType: string;
+  triggerConfig: Record<string, any>;
+  isActive: boolean | null;
+  runCount: number | null;
+  lastRunAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface CrmAutomationStep {
+  id: number;
+  automationId: number;
+  stepOrder: number;
+  stepType: string;
+  config: Record<string, any>;
+  conditionType: string | null;
+  conditionConfig: Record<string, any>;
+  createdAt: string;
+}
+
+// Note: Only triggers with backend dispatcher wiring are shown
+const TRIGGER_TYPES = [
+  { value: "contact_created", label: "Contact Created", description: "When a new contact is added" },
+  { value: "deal_stage_changed", label: "Deal Stage Changed", description: "When a deal moves stages" },
+  { value: "deal_won", label: "Deal Won", description: "When a deal is marked as won" },
+  { value: "deal_lost", label: "Deal Lost", description: "When a deal is marked as lost" },
+  { value: "manual", label: "Manual Trigger", description: "Run manually via Run Now" },
+];
+
+const STEP_TYPES = [
+  { value: "wait", label: "Wait", icon: Clock },
+  { value: "update_contact", label: "Update Contact", icon: User },
+  { value: "add_tag", label: "Add Tag", icon: Tag },
+  { value: "remove_tag", label: "Remove Tag", icon: X },
+  { value: "create_task", label: "Create Task", icon: CheckSquare },
+  { value: "add_to_segment", label: "Add to Segment", icon: Users },
+  { value: "send_email", label: "Send Email", icon: Mail },
+  { value: "webhook", label: "Webhook", icon: Globe },
+];
+
+function AutomationsView() {
+  const { toast } = useToast();
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [selectedAutomation, setSelectedAutomation] = useState<CrmAutomation | null>(null);
+  const [showStepsDialog, setShowStepsDialog] = useState(false);
+  const [editingSteps, setEditingSteps] = useState<{ stepType: string; config: Record<string, any> }[]>([]);
+  const [newName, setNewName] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [newTriggerType, setNewTriggerType] = useState("contact_created");
+
+  const { data: automationsData, isLoading } = useQuery<{ automations: CrmAutomation[] }>({
+    queryKey: ["/api/crm/automations"],
+  });
+  
+  // Fetch steps when editing
+  const { data: automationDetail } = useQuery<{ automation: CrmAutomation; steps: CrmAutomationStep[] }>({
+    queryKey: ["/api/crm/automations", selectedAutomation?.id],
+    enabled: !!selectedAutomation && showStepsDialog,
+  });
+
+  const automations = automationsData?.automations || [];
+
+  const createMutation = useMutation({
+    mutationFn: async (data: { name: string; description: string; triggerType: string }) => {
+      return apiRequest("POST", "/api/crm/automations", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/automations"] });
+      setShowCreateDialog(false);
+      setNewName("");
+      setNewDescription("");
+      setNewTriggerType("contact_created");
+      toast({ title: "Automation created", description: "Your automation workflow is ready to configure." });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message || "Failed to create automation", variant: "destructive" });
+    },
+  });
+
+  const toggleMutation = useMutation({
+    mutationFn: async ({ id, isActive }: { id: number; isActive: boolean }) => {
+      return apiRequest("PATCH", `/api/crm/automations/${id}`, { isActive });
+    },
+    onSuccess: (_, vars) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/automations"] });
+      toast({ title: vars.isActive ? "Automation activated" : "Automation paused" });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return apiRequest("DELETE", `/api/crm/automations/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/automations"] });
+      toast({ title: "Automation deleted" });
+    },
+  });
+
+  const triggerMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return apiRequest("POST", `/api/crm/automations/${id}/trigger`, {});
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/automations"] });
+      toast({ title: "Automation triggered", description: "The automation is now running." });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to trigger automation", variant: "destructive" });
+    },
+  });
+
+  const saveStepsMutation = useMutation({
+    mutationFn: async ({ automationId, steps }: { automationId: number; steps: { stepType: string; config: Record<string, any> }[] }) => {
+      return apiRequest("POST", `/api/crm/automations/${automationId}/steps`, { steps });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/automations"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/automations", selectedAutomation?.id] });
+      setShowStepsDialog(false);
+      setSelectedAutomation(null);
+      setEditingSteps([]);
+      toast({ title: "Steps saved", description: "Automation workflow updated." });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to save steps", variant: "destructive" });
+    },
+  });
+
+  const openStepsDialog = (automation: CrmAutomation) => {
+    setSelectedAutomation(automation);
+    setEditingSteps([]);
+    setShowStepsDialog(true);
+  };
+
+  // Sync steps when automationDetail loads
+  const currentSteps = automationDetail?.steps || [];
+  if (showStepsDialog && currentSteps.length > 0 && editingSteps.length === 0) {
+    setEditingSteps(currentSteps.map(s => ({ stepType: s.stepType, config: s.config || {} })));
+  }
+
+  const addStep = (stepType: string) => {
+    setEditingSteps([...editingSteps, { stepType, config: {} }]);
+  };
+
+  const removeStep = (index: number) => {
+    setEditingSteps(editingSteps.filter((_, i) => i !== index));
+  };
+
+  const updateStepConfig = (index: number, key: string, value: string) => {
+    const updated = [...editingSteps];
+    updated[index] = { ...updated[index], config: { ...updated[index].config, [key]: value } };
+    setEditingSteps(updated);
+  };
+
+  const getStepLabel = (stepType: string) => {
+    return STEP_TYPES.find(s => s.value === stepType)?.label || stepType;
+  };
+
+  const getStepIcon = (stepType: string) => {
+    return STEP_TYPES.find(s => s.value === stepType)?.icon || Clock;
+  };
+
+  const getTriggerLabel = (triggerType: string) => {
+    return TRIGGER_TYPES.find(t => t.value === triggerType)?.label || triggerType;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12" data-testid="automations-loading">
+        <Loader2 className="w-8 h-8 animate-spin text-[#22C55E]" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6" data-testid="automations-view">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Automation Workflows</h2>
+          <p className="text-gray-500 dark:text-gray-400">Automate follow-ups, sequences, and actions</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge className="bg-[#22C55E]/10 text-[#22C55E] border-[#22C55E]/20">
+            Performance Tier
+          </Badge>
+          <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+            <DialogTrigger asChild>
+              <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white" data-testid="btn-create-automation">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Automation
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Create Automation</DialogTitle>
+                <DialogDescription>Set up a new workflow to automate your CRM processes.</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label>Name *</Label>
+                  <Input
+                    placeholder="Welcome new contacts"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    data-testid="input-automation-name"
+                  />
+                </div>
+                <div>
+                  <Label>Description</Label>
+                  <Textarea
+                    placeholder="Describe what this automation does..."
+                    value={newDescription}
+                    onChange={(e) => setNewDescription(e.target.value)}
+                    data-testid="input-automation-description"
+                  />
+                </div>
+                <div>
+                  <Label>Trigger</Label>
+                  <Select value={newTriggerType} onValueChange={setNewTriggerType}>
+                    <SelectTrigger data-testid="select-trigger-type">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TRIGGER_TYPES.map((trigger) => (
+                        <SelectItem key={trigger.value} value={trigger.value}>
+                          <div className="flex flex-col items-start">
+                            <span>{trigger.label}</span>
+                            <span className="text-xs text-gray-500">{trigger.description}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowCreateDialog(false)}>Cancel</Button>
+                <Button
+                  className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                  onClick={() => createMutation.mutate({ 
+                    name: newName, 
+                    description: newDescription, 
+                    triggerType: newTriggerType 
+                  })}
+                  disabled={!newName.trim() || createMutation.isPending}
+                  data-testid="btn-save-automation"
+                >
+                  {createMutation.isPending ? "Creating..." : "Create Automation"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+
+      {automations.length === 0 ? (
+        <Card>
+          <CardContent className="py-12 text-center">
+            <Zap className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No automations yet</h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-4">
+              Create your first automation to streamline your workflows.
+            </p>
+            <Button
+              className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+              onClick={() => setShowCreateDialog(true)}
+              data-testid="btn-create-first-automation"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Create Your First Automation
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-4">
+          {automations.map((automation) => (
+            <Card key={automation.id} className="hover:shadow-md transition-shadow" data-testid={`automation-card-${automation.id}`}>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center",
+                      automation.isActive 
+                        ? "bg-[#22C55E]/10" 
+                        : "bg-gray-100 dark:bg-gray-800"
+                    )}>
+                      <Zap className={cn(
+                        "w-5 h-5",
+                        automation.isActive ? "text-[#22C55E]" : "text-gray-400"
+                      )} />
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-gray-900 dark:text-white">{automation.name}</h3>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <Badge variant="secondary" className="text-xs">
+                          {getTriggerLabel(automation.triggerType)}
+                        </Badge>
+                        <span>•</span>
+                        <span>{automation.runCount || 0} runs</span>
+                        {automation.lastRunAt && (
+                          <>
+                            <span>•</span>
+                            <span>Last run: {new Date(automation.lastRunAt).toLocaleDateString()}</span>
+                          </>
+                        )}
+                      </div>
+                      {automation.description && (
+                        <p className="text-sm text-gray-500 mt-1">{automation.description}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {automation.triggerType === 'manual' && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => triggerMutation.mutate(automation.id)}
+                        disabled={triggerMutation.isPending}
+                        data-testid={`btn-trigger-${automation.id}`}
+                      >
+                        <Play className="w-4 h-4 mr-1" />
+                        Run
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => toggleMutation.mutate({ 
+                        id: automation.id, 
+                        isActive: !automation.isActive 
+                      })}
+                      data-testid={`btn-toggle-${automation.id}`}
+                    >
+                      {automation.isActive ? (
+                        <Pause className="w-4 h-4 text-amber-500" />
+                      ) : (
+                        <Play className="w-4 h-4 text-green-500" />
+                      )}
+                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" data-testid={`btn-automation-menu-${automation.id}`}>
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => openStepsDialog(automation)}>
+                          <Settings className="w-4 h-4 mr-2" />
+                          Configure Steps
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          className="text-red-600"
+                          onClick={() => deleteMutation.mutate(automation.id)}
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* Steps Configuration Dialog */}
+      <Dialog open={showStepsDialog} onOpenChange={(open) => {
+        setShowStepsDialog(open);
+        if (!open) {
+          setSelectedAutomation(null);
+          setEditingSteps([]);
+        }
+      }}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Configure Steps - {selectedAutomation?.name}</DialogTitle>
+            <DialogDescription>
+              Add actions that will execute when this automation triggers.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            {/* Current Steps */}
+            {editingSteps.length === 0 ? (
+              <div className="text-center py-4 text-gray-500 text-sm">
+                No steps configured. Add steps below.
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {editingSteps.map((step, index) => {
+                  const StepIcon = getStepIcon(step.stepType);
+                  return (
+                    <div 
+                      key={index} 
+                      className="p-3 rounded-lg border bg-gray-50 dark:bg-gray-800 space-y-2"
+                      data-testid={`step-item-${index}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-6 h-6 rounded-full bg-[#22C55E]/10 flex items-center justify-center text-xs font-medium text-[#22C55E]">
+                            {index + 1}
+                          </div>
+                          <StepIcon className="w-4 h-4 text-gray-500" />
+                          <span className="text-sm font-medium">{getStepLabel(step.stepType)}</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeStep(index)}
+                          data-testid={`btn-remove-step-${index}`}
+                        >
+                          <X className="w-4 h-4 text-red-500" />
+                        </Button>
+                      </div>
+                      {/* Step configuration inputs */}
+                      {(step.stepType === 'add_tag' || step.stepType === 'remove_tag') && (
+                        <Input
+                          placeholder="Tag name"
+                          value={step.config.tag || ''}
+                          onChange={(e) => updateStepConfig(index, 'tag', e.target.value)}
+                          className="text-sm"
+                          data-testid={`input-step-tag-${index}`}
+                        />
+                      )}
+                      {step.stepType === 'create_task' && (
+                        <Input
+                          placeholder="Task title"
+                          value={step.config.title || ''}
+                          onChange={(e) => updateStepConfig(index, 'title', e.target.value)}
+                          className="text-sm"
+                          data-testid={`input-step-title-${index}`}
+                        />
+                      )}
+                      {step.stepType === 'wait' && (
+                        <Input
+                          placeholder="Duration (e.g., 1 day, 2 hours)"
+                          value={step.config.duration || ''}
+                          onChange={(e) => updateStepConfig(index, 'duration', e.target.value)}
+                          className="text-sm"
+                          data-testid={`input-step-duration-${index}`}
+                        />
+                      )}
+                      {step.stepType === 'send_email' && (
+                        <Input
+                          placeholder="Email subject"
+                          value={step.config.subject || ''}
+                          onChange={(e) => updateStepConfig(index, 'subject', e.target.value)}
+                          className="text-sm"
+                          data-testid={`input-step-subject-${index}`}
+                        />
+                      )}
+                      {step.stepType === 'webhook' && (
+                        <Input
+                          placeholder="Webhook URL"
+                          value={step.config.url || ''}
+                          onChange={(e) => updateStepConfig(index, 'url', e.target.value)}
+                          className="text-sm"
+                          data-testid={`input-step-url-${index}`}
+                        />
+                      )}
+                      {step.stepType === 'add_to_segment' && (
+                        <Input
+                          placeholder="Segment ID"
+                          value={step.config.segmentId || ''}
+                          onChange={(e) => updateStepConfig(index, 'segmentId', e.target.value)}
+                          className="text-sm"
+                          data-testid={`input-step-segmentId-${index}`}
+                        />
+                      )}
+                      {step.stepType === 'update_contact' && (
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="Field name (e.g., lifecycleStage)"
+                            value={step.config.field || ''}
+                            onChange={(e) => updateStepConfig(index, 'field', e.target.value)}
+                            className="text-sm flex-1"
+                            data-testid={`input-step-field-${index}`}
+                          />
+                          <Input
+                            placeholder="New value"
+                            value={step.config.value || ''}
+                            onChange={(e) => updateStepConfig(index, 'value', e.target.value)}
+                            className="text-sm flex-1"
+                            data-testid={`input-step-value-${index}`}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Add Step */}
+            <div>
+              <Label className="text-sm font-medium">Add Step</Label>
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                {STEP_TYPES.map((step) => (
+                  <Button
+                    key={step.value}
+                    variant="outline"
+                    size="sm"
+                    className="justify-start"
+                    onClick={() => addStep(step.value)}
+                    data-testid={`btn-add-step-${step.value}`}
+                  >
+                    <step.icon className="w-4 h-4 mr-2" />
+                    {step.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowStepsDialog(false)}>Cancel</Button>
+            <Button
+              className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+              onClick={() => {
+                if (selectedAutomation) {
+                  saveStepsMutation.mutate({ automationId: selectedAutomation.id, steps: editingSteps });
+                }
+              }}
+              disabled={saveStepsMutation.isPending}
+              data-testid="btn-save-steps"
+            >
+              {saveStepsMutation.isPending ? "Saving..." : "Save Steps"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Automation step types reference */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Available Step Types</CardTitle>
+          <CardDescription>Actions you can add to your automation workflows</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {STEP_TYPES.map((step) => (
+              <div 
+                key={step.value} 
+                className="flex items-center gap-2 p-3 rounded-lg bg-gray-50 dark:bg-gray-800"
+                data-testid={`step-type-${step.value}`}
+              >
+                <step.icon className="w-4 h-4 text-gray-500" />
+                <span className="text-sm text-gray-700 dark:text-gray-300">{step.label}</span>
               </div>
             ))}
           </div>
