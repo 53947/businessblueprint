@@ -36,7 +36,9 @@ import {
   Lock,
   CreditCard,
   DollarSign,
-  Package
+  Package,
+  Users,
+  Sparkles
 } from "lucide-react";
 
 export default function ClientPortal() {
@@ -301,6 +303,80 @@ export default function ClientPortal() {
             </CardContent>
           </Card>
         </div>
+
+        {/* CRM Hub - Prominent Entry Point */}
+        <Card className="mb-8 border-2 border-green-500 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950 dark:to-emerald-950" data-testid="card-relationships-crm">
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-xl flex items-center justify-center">
+                  <Users className="w-8 h-8 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">/relationships</h3>
+                    <Badge className="bg-green-500 text-white">CRM</Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Your customer command center — manage contacts, deals, and tasks
+                  </p>
+                </div>
+              </div>
+              <div className="flex-1 grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white" data-testid="text-crm-contacts-count">
+                    {clientData?.crm?.contactsCount || 0}
+                  </div>
+                  <p className="text-xs text-gray-500">Contacts</p>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white" data-testid="text-crm-deals-count">
+                    {clientData?.crm?.activeDeals || 0}
+                  </div>
+                  <p className="text-xs text-gray-500">Active Deals</p>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white" data-testid="text-crm-tasks-count">
+                    {clientData?.crm?.tasksDue || 0}
+                  </div>
+                  <p className="text-xs text-gray-500">Tasks Due</p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <Button 
+                  variant="outline" 
+                  className="border-green-500 text-green-700 hover:bg-green-100 dark:text-green-400 dark:hover:bg-green-900"
+                  onClick={() => setLocation("/relationships")}
+                  data-testid="button-open-crm"
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Open CRM
+                </Button>
+                <Button 
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                  onClick={() => setLocation("/relationships")}
+                  data-testid="button-add-contact"
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Add Contact
+                </Button>
+              </div>
+            </div>
+            
+            {/* First-run prompt for new users - only show when no contacts */}
+            {(!clientData?.crm?.contactsCount || clientData.crm.contactsCount === 0) && (
+              <div className="mt-4 pt-4 border-t border-green-200 dark:border-green-800">
+                <Alert className="bg-green-100 dark:bg-green-900/50 border-green-200 dark:border-green-800">
+                  <Sparkles className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  <AlertDescription className="text-sm text-green-800 dark:text-green-200">
+                    <strong>Get Started:</strong> Your CRM is the single source of truth for all customer data. 
+                    Add your first contact to unlock unified timelines, deal tracking, and automation across all your apps.
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* 5 Service Boxes - Official Order */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">

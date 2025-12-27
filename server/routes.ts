@@ -24,6 +24,8 @@ import {
   inboxMessages2,
   brandAssets,
   crmContacts,
+  crmDeals,
+  crmTasks,
   crmTimeline
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
@@ -38,7 +40,7 @@ import { reviewAI } from "./services/reviewAI";
 import { jwtService } from "./services/jwt";
 import { presenceScannerService } from "./services/presenceScanner";
 import { dashboardAccess } from "@shared/schema";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, or, lte } from "drizzle-orm";
 import { db } from "./db";
 import { z } from "zod";
 import { requireAuth, type AuthenticatedRequest } from "./middleware/auth";
@@ -425,6 +427,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get latest campaign for /send card
       const latestCampaign = campaigns.length > 0 ? campaigns[0] : null;
 
+      // Get CRM stats
+      let crmStats = { contactsCount: 0, activeDeals: 0, tasksDue: 0 };
+      try {
+        // Count contacts for this client
+        const contacts = await db.select().from(crmContacts).where(eq(crmContacts.clientId, clientId));
+        crmStats.contactsCount = contacts.length;
+        
+        // Count active deals
+        const activeDeals = await db.select().from(crmDeals).where(
+          and(eq(crmDeals.clientId, clientId), eq(crmDeals.status, "open"))
+        );
+        crmStats.activeDeals = activeDeals.length;
+        
+        // Count tasks due today or overdue
+        const today = new Date();
+        today.setHours(23, 59, 59, 999);
+        const tasks = await db.select().from(crmTasks).where(
+          and(
+            eq(crmTasks.clientId, clientId),
+            or(eq(crmTasks.status, "pending"), eq(crmTasks.status, "in_progress"))
+          )
+        );
+        crmStats.tasksDue = tasks.filter(t => t.dueDate && new Date(t.dueDate) <= today).length;
+      } catch (err) {
+        console.error("[Dashboard] Error fetching CRM stats:", err);
+      }
+
       // Calculate basic metrics
       const dashboardData = {
         client,
@@ -479,6 +508,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           unread: messages.filter((m: any) => !m.isRead).length,
           total: messages.length,
           recent: messages.slice(0, 5)
+        },
+        crm: {
+          contactsCount: crmStats.contactsCount,
+          activeDeals: crmStats.activeDeals,
+          tasksDue: crmStats.tasksDue
         }
       };
 
