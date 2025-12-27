@@ -18,6 +18,7 @@ import {
   insertCrmDealSchema,
   insertCrmTaskSchema,
   insertCrmNoteSchema,
+  insertWebhookSubscriptionSchema,
 } from "@shared/schema";
 import { eq, and, desc, asc, ilike, or, sql, isNull } from "drizzle-orm";
 import { z } from "zod";
@@ -173,6 +174,8 @@ publicApiRouter.get("/", (req, res) => {
       pipelines: "/api/v1/pipelines",
       segments: "/api/v1/segments",
       timeline: "/api/v1/timeline",
+      webhooks: "/api/v1/webhooks",
+      apiKeys: "/api/v1/api-keys",
     },
     authentication: "Bearer token (API key)",
   });
@@ -729,3 +732,332 @@ publicApiRouter.post("/generate-test-key", async (req, res) => {
     res.status(500).json({ error: "Failed to generate test key" });
   }
 });
+
+// ===========================================
+// WEBHOOK MANAGEMENT ENDPOINTS
+// ===========================================
+
+function generateWebhookSecret(): string {
+  return crypto.randomBytes(32).toString("hex");
+}
+
+function signWebhookPayload(payload: string, secret: string): string {
+  return crypto
+    .createHmac("sha256", secret)
+    .update(payload)
+    .digest("hex");
+}
+
+// List webhooks
+publicApiRouter.get("/webhooks", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req: AuthenticatedRequest, res) => {
+  try {
+    let conditions: any[] = [];
+    
+    // Tenant isolation
+    if (req.apiKey?.clientId) {
+      conditions.push(eq(webhookSubscriptions.clientId, req.apiKey.clientId));
+    }
+    
+    const query = conditions.length > 0
+      ? db.select().from(webhookSubscriptions).where(and(...conditions))
+      : db.select().from(webhookSubscriptions);
+    
+    const webhooks = await query.orderBy(desc(webhookSubscriptions.createdAt));
+    
+    // Remove secrets from response
+    const sanitizedWebhooks = webhooks.map(({ secret, ...rest }) => rest);
+
+    res.json({ data: sanitizedWebhooks });
+  } catch (error) {
+    console.error("[API] List webhooks error:", error);
+    res.status(500).json({ error: "Failed to list webhooks" });
+  }
+});
+
+// Create webhook
+publicApiRouter.post("/webhooks", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req: AuthenticatedRequest, res) => {
+  try {
+    const secret = generateWebhookSecret();
+    
+    const validatedData = insertWebhookSubscriptionSchema.parse({
+      ...req.body,
+      clientId: req.apiKey?.clientId || req.body.clientId,
+      secret,
+    });
+
+    const [webhook] = await db.insert(webhookSubscriptions).values(validatedData).returning();
+    
+    res.status(201).json({ 
+      data: { ...webhook, secret: undefined },
+      secret,
+      message: "Webhook created. Save the secret - it cannot be retrieved again. Use it to verify webhook signatures."
+    });
+  } catch (error) {
+    console.error("[API] Create webhook error:", error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create webhook" });
+  }
+});
+
+// Get webhook by ID
+publicApiRouter.get("/webhooks/:id", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req: AuthenticatedRequest, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    
+    let conditions = [eq(webhookSubscriptions.id, id)];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq(webhookSubscriptions.clientId, req.apiKey.clientId));
+    }
+    
+    const [webhook] = await db
+      .select()
+      .from(webhookSubscriptions)
+      .where(and(...conditions));
+
+    if (!webhook) {
+      return res.status(404).json({ error: "Webhook not found" });
+    }
+
+    // Remove secret from response
+    const { secret, ...sanitizedWebhook } = webhook;
+    res.json({ data: sanitizedWebhook });
+  } catch (error) {
+    console.error("[API] Get webhook error:", error);
+    res.status(500).json({ error: "Failed to fetch webhook" });
+  }
+});
+
+// Update webhook
+publicApiRouter.patch("/webhooks/:id", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req: AuthenticatedRequest, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const partialSchema = insertWebhookSubscriptionSchema.partial().omit({ secret: true });
+    const validatedData = partialSchema.parse(req.body);
+
+    let conditions = [eq(webhookSubscriptions.id, id)];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq(webhookSubscriptions.clientId, req.apiKey.clientId));
+    }
+
+    const [webhook] = await db
+      .update(webhookSubscriptions)
+      .set({ ...validatedData, updatedAt: new Date() })
+      .where(and(...conditions))
+      .returning();
+
+    if (!webhook) {
+      return res.status(404).json({ error: "Webhook not found" });
+    }
+
+    // Remove secret from response
+    const { secret, ...sanitizedWebhook } = webhook;
+    res.json({ data: sanitizedWebhook });
+  } catch (error) {
+    console.error("[API] Update webhook error:", error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to update webhook" });
+  }
+});
+
+// Delete webhook
+publicApiRouter.delete("/webhooks/:id", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req: AuthenticatedRequest, res) => {
+  try {
+    const id = parseInt(req.params.id);
+
+    let conditions = [eq(webhookSubscriptions.id, id)];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq(webhookSubscriptions.clientId, req.apiKey.clientId));
+    }
+
+    const [deleted] = await db
+      .delete(webhookSubscriptions)
+      .where(and(...conditions))
+      .returning();
+
+    if (!deleted) {
+      return res.status(404).json({ error: "Webhook not found" });
+    }
+
+    res.json({ message: "Webhook deleted successfully" });
+  } catch (error) {
+    console.error("[API] Delete webhook error:", error);
+    res.status(500).json({ error: "Failed to delete webhook" });
+  }
+});
+
+// Rotate webhook secret
+publicApiRouter.post("/webhooks/:id/rotate-secret", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req: AuthenticatedRequest, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const newSecret = generateWebhookSecret();
+
+    let conditions = [eq(webhookSubscriptions.id, id)];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq(webhookSubscriptions.clientId, req.apiKey.clientId));
+    }
+
+    const [webhook] = await db
+      .update(webhookSubscriptions)
+      .set({ secret: newSecret, updatedAt: new Date() })
+      .where(and(...conditions))
+      .returning();
+
+    if (!webhook) {
+      return res.status(404).json({ error: "Webhook not found" });
+    }
+
+    res.json({ 
+      message: "Webhook secret rotated. Save the new secret - it cannot be retrieved again.",
+      secret: newSecret
+    });
+  } catch (error) {
+    console.error("[API] Rotate webhook secret error:", error);
+    res.status(500).json({ error: "Failed to rotate webhook secret" });
+  }
+});
+
+// ===========================================
+// WEBHOOK DISPATCHER SERVICE
+// ===========================================
+
+export interface WebhookEvent {
+  event: string;
+  data: any;
+  timestamp: string;
+  id: string;
+}
+
+export async function dispatchWebhookEvent(
+  clientId: number | null,
+  eventType: string,
+  data: any
+): Promise<void> {
+  try {
+    // Get all active webhook subscriptions that are subscribed to this event
+    let conditions: any[] = [
+      eq(webhookSubscriptions.isActive, true),
+    ];
+    
+    if (clientId) {
+      conditions.push(eq(webhookSubscriptions.clientId, clientId));
+    }
+    
+    const subscriptions = await db
+      .select()
+      .from(webhookSubscriptions)
+      .where(and(...conditions));
+
+    // Filter subscriptions that are subscribed to this event
+    const matchingSubscriptions = subscriptions.filter(sub => {
+      if (!sub.events || sub.events.length === 0) return false;
+      return sub.events.includes(eventType) || sub.events.includes("*");
+    });
+
+    if (matchingSubscriptions.length === 0) {
+      console.log(`[Webhooks] No subscriptions for event: ${eventType}`);
+      return;
+    }
+
+    // Create webhook event payload
+    const event: WebhookEvent = {
+      id: crypto.randomUUID(),
+      event: eventType,
+      data,
+      timestamp: new Date().toISOString(),
+    };
+
+    const payload = JSON.stringify(event);
+
+    // Dispatch to all matching subscriptions (async, non-blocking)
+    for (const subscription of matchingSubscriptions) {
+      // Fire and forget - don't block on webhook delivery
+      dispatchToSubscription(subscription, payload, event.id).catch(err => {
+        console.error(`[Webhooks] Failed to dispatch to ${subscription.url}:`, err);
+      });
+    }
+
+    console.log(`[Webhooks] Dispatched ${eventType} to ${matchingSubscriptions.length} subscriptions`);
+  } catch (error) {
+    console.error("[Webhooks] Error dispatching event:", error);
+  }
+}
+
+async function dispatchToSubscription(
+  subscription: typeof webhookSubscriptions.$inferSelect,
+  payload: string,
+  eventId: string
+): Promise<void> {
+  const signature = signWebhookPayload(payload, subscription.secret);
+  
+  try {
+    const response = await fetch(subscription.url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Webhook-Id": eventId,
+        "X-Webhook-Signature": `sha256=${signature}`,
+        "X-Webhook-Timestamp": new Date().toISOString(),
+        "User-Agent": "BusinessBlueprint-Webhooks/1.0",
+      },
+      body: payload,
+      signal: AbortSignal.timeout(30000), // 30 second timeout
+    });
+
+    if (response.ok) {
+      // Update success timestamp
+      await db
+        .update(webhookSubscriptions)
+        .set({ 
+          lastSuccessAt: new Date(),
+          failureCount: 0,
+        })
+        .where(eq(webhookSubscriptions.id, subscription.id));
+      
+      console.log(`[Webhooks] Successfully delivered to ${subscription.url}`);
+    } else {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+  } catch (error) {
+    // Update failure count
+    const newFailureCount = (subscription.failureCount || 0) + 1;
+    
+    await db
+      .update(webhookSubscriptions)
+      .set({ 
+        lastFailedAt: new Date(),
+        failureCount: newFailureCount,
+        // Disable webhook after 10 consecutive failures
+        isActive: newFailureCount < 10,
+      })
+      .where(eq(webhookSubscriptions.id, subscription.id));
+    
+    console.error(`[Webhooks] Delivery failed to ${subscription.url}:`, error);
+    
+    if (newFailureCount >= 10) {
+      console.warn(`[Webhooks] Disabled subscription ${subscription.id} after 10 failures`);
+    }
+  }
+}
+
+// Available webhook events (for documentation)
+export const WEBHOOK_EVENTS = [
+  "contact.created",
+  "contact.updated",
+  "contact.deleted",
+  "company.created",
+  "company.updated",
+  "company.deleted",
+  "deal.created",
+  "deal.updated",
+  "deal.stage_changed",
+  "deal.won",
+  "deal.lost",
+  "task.created",
+  "task.completed",
+  "note.created",
+  "timeline.event_created",
+];

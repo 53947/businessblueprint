@@ -34,6 +34,7 @@ import {
 } from "@shared/schema";
 import { eq, and, desc, asc, ilike, or, sql, inArray } from "drizzle-orm";
 import { z } from "zod";
+import { dispatchWebhookEvent } from "./api";
 
 export const crmRouter = Router();
 
@@ -366,6 +367,9 @@ crmRouter.post("/contacts", async (req, res) => {
       lastName: contact.lastName,
     });
 
+    // Dispatch webhook event
+    dispatchWebhookEvent(contact.clientId, 'contact.created', contact);
+
     res.status(201).json(contact);
   } catch (error) {
     console.error("[CRM] Error creating contact:", error);
@@ -476,6 +480,9 @@ crmRouter.patch("/contacts/:id", async (req, res) => {
       return res.status(404).json({ error: "Contact not found" });
     }
 
+    // Dispatch webhook event
+    dispatchWebhookEvent(contact.clientId, 'contact.updated', contact);
+
     res.json(contact);
   } catch (error) {
     console.error("[CRM] Error updating contact:", error);
@@ -489,7 +496,17 @@ crmRouter.patch("/contacts/:id", async (req, res) => {
 crmRouter.delete("/contacts/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
+    
+    // Get the contact first to get clientId for webhook
+    const [contact] = await db.select().from(crmContacts).where(eq(crmContacts.id, id));
+    
     await db.delete(crmContacts).where(eq(crmContacts.id, id));
+    
+    // Dispatch webhook event
+    if (contact) {
+      dispatchWebhookEvent(contact.clientId, 'contact.deleted', { id, email: contact.email });
+    }
+    
     res.status(204).send();
   } catch (error) {
     console.error("[CRM] Error deleting contact:", error);
@@ -800,6 +817,9 @@ crmRouter.post("/deals", async (req, res) => {
       });
     }
 
+    // Dispatch webhook event
+    dispatchWebhookEvent(deal.clientId, 'deal.created', deal);
+
     res.status(201).json(deal);
   } catch (error) {
     console.error("[CRM] Error creating deal:", error);
@@ -906,13 +926,24 @@ crmRouter.patch("/deals/:id/stage", async (req, res) => {
         dealName: deal.name,
         amount: deal.amount,
       });
+      // Dispatch webhook for deal won
+      dispatchWebhookEvent(deal.clientId, 'deal.won', deal);
     } else if (stage[0].stageType === 'lost') {
       executeAutomationTrigger('deal_lost', deal.contactId || undefined, {
         dealId: deal.id,
         dealName: deal.name,
         amount: deal.amount,
       });
+      // Dispatch webhook for deal lost
+      dispatchWebhookEvent(deal.clientId, 'deal.lost', deal);
     }
+
+    // Dispatch webhook for stage change
+    dispatchWebhookEvent(deal.clientId, 'deal.stage_changed', {
+      deal,
+      newStage: stage[0].name,
+      stageType: stage[0].stageType,
+    });
 
     res.json(deal);
   } catch (error) {
