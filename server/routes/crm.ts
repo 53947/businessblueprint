@@ -848,7 +848,13 @@ crmRouter.get("/appointments", async (req, res) => {
 
 crmRouter.post("/appointments", async (req, res) => {
   try {
-    const validatedData = insertCrmAppointmentSchema.parse(req.body);
+    // Convert string dates to Date objects
+    const body = { ...req.body };
+    if (typeof body.startTime === "string") body.startTime = new Date(body.startTime);
+    if (typeof body.endTime === "string") body.endTime = new Date(body.endTime);
+    if (typeof body.reminderDate === "string") body.reminderDate = new Date(body.reminderDate);
+    
+    const validatedData = insertCrmAppointmentSchema.parse(body);
     const [appointment] = await db.insert(crmAppointments).values(validatedData).returning();
 
     if (validatedData.clientId && validatedData.contactId) {
@@ -877,8 +883,14 @@ crmRouter.post("/appointments", async (req, res) => {
 crmRouter.patch("/appointments/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
+    // Convert string dates to Date objects
+    const body = { ...req.body };
+    if (typeof body.startTime === "string") body.startTime = new Date(body.startTime);
+    if (typeof body.endTime === "string") body.endTime = new Date(body.endTime);
+    if (typeof body.reminderDate === "string") body.reminderDate = new Date(body.reminderDate);
+    
     const partialSchema = insertCrmAppointmentSchema.partial();
-    const validatedData = partialSchema.parse(req.body);
+    const validatedData = partialSchema.parse(body);
     const updateData = { ...validatedData, updatedAt: new Date() };
 
     const [appointment] = await db

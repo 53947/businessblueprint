@@ -176,7 +176,25 @@ interface CrmDealWithDetails {
   updatedAt: string;
 }
 
-type Section = "dashboard" | "contacts" | "companies" | "pipeline" | "tasks" | "timeline" | "analytics" | "settings";
+interface CrmAppointment {
+  id: number;
+  clientId: number | null;
+  contactId: number | null;
+  title: string;
+  description: string | null;
+  startTime: string;
+  endTime: string;
+  timezone: string | null;
+  appointmentType: string | null;
+  location: string | null;
+  meetingUrl: string | null;
+  status: string | null;
+  reminderSent: boolean | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+type Section = "dashboard" | "contacts" | "companies" | "pipeline" | "tasks" | "scheduler" | "timeline" | "analytics" | "settings";
 
 const sidebarItems = [
   { id: "dashboard" as const, label: "Dashboard", icon: BarChart3 },
@@ -184,6 +202,7 @@ const sidebarItems = [
   { id: "companies" as const, label: "Companies", icon: Building2 },
   { id: "pipeline" as const, label: "Pipeline", icon: Kanban },
   { id: "tasks" as const, label: "Tasks", icon: CheckSquare },
+  { id: "scheduler" as const, label: "Scheduler", icon: CalendarDays },
   { id: "timeline" as const, label: "Timeline", icon: History },
   { id: "analytics" as const, label: "Analytics", icon: TrendingUp },
   { id: "settings" as const, label: "Settings", icon: Settings },
@@ -318,6 +337,7 @@ export default function RelationshipsPage() {
           {activeSection === "companies" && <CompaniesView />}
           {activeSection === "pipeline" && <PipelineView />}
           {activeSection === "tasks" && <TasksView />}
+          {activeSection === "scheduler" && <SchedulerView />}
           {activeSection === "timeline" && <TimelineView />}
           {activeSection === "analytics" && <AnalyticsView />}
           {activeSection === "settings" && <SettingsView />}
@@ -3770,6 +3790,605 @@ function TasksView() {
                     </>
                   )}
                 </Button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+function SchedulerView() {
+  const { toast } = useToast();
+  const [showAddAppointmentDialog, setShowAddAppointmentDialog] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<CrmAppointment | null>(null);
+  const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar");
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  const { data: appointmentsData, isLoading: appointmentsLoading } = useQuery<{ appointments: CrmAppointment[] }>({
+    queryKey: ["/api/crm/appointments?limit=200"],
+  });
+
+  const { data: contactsData } = useQuery<{ contacts: CrmContact[]; total: number }>({
+    queryKey: ["/api/crm/contacts?limit=200"],
+  });
+
+  const createAppointmentMutation = useMutation({
+    mutationFn: async (data: { title: string; description?: string; startTime: string; endTime: string; appointmentType?: string; location?: string; meetingUrl?: string; contactId?: number }) => {
+      return apiRequest("POST", "/api/crm/appointments", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/appointments") });
+      setShowAddAppointmentDialog(false);
+      toast({ title: "Appointment scheduled" });
+    },
+    onError: (error: Error) => {
+      toast({ title: "Failed to schedule appointment", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const updateAppointmentMutation = useMutation({
+    mutationFn: async ({ id, ...data }: { id: number; status?: string }) => {
+      return apiRequest("PATCH", `/api/crm/appointments/${id}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/appointments") });
+      setSelectedAppointment(null);
+      toast({ title: "Appointment updated" });
+    },
+  });
+
+  const deleteAppointmentMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return apiRequest("DELETE", `/api/crm/appointments/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/appointments") });
+      setSelectedAppointment(null);
+      toast({ title: "Appointment deleted" });
+    },
+  });
+
+  const appointments = appointmentsData?.appointments || [];
+  const contacts = contactsData?.contacts || [];
+
+  const getContactName = (contactId: number | null) => {
+    if (!contactId) return null;
+    const contact = contacts.find(c => c.id === contactId);
+    return contact ? `${contact.firstName} ${contact.lastName}` : null;
+  };
+
+  const getStatusColor = (status: string | null) => {
+    switch (status) {
+      case "confirmed": return "bg-green-100 text-green-700 border-green-200";
+      case "cancelled": return "bg-red-100 text-red-700 border-red-200";
+      case "completed": return "bg-gray-100 text-gray-700 border-gray-200";
+      case "no_show": return "bg-orange-100 text-orange-700 border-orange-200";
+      default: return "bg-blue-100 text-blue-700 border-blue-200";
+    }
+  };
+
+  const getTypeIcon = (type: string | null) => {
+    switch (type) {
+      case "call": return <Phone className="w-4 h-4" />;
+      case "demo": return <Eye className="w-4 h-4" />;
+      case "consultation": return <Users className="w-4 h-4" />;
+      default: return <Calendar className="w-4 h-4" />;
+    }
+  };
+
+  const appointmentFormSchema = z.object({
+    title: z.string().min(1, "Title is required"),
+    description: z.string().optional(),
+    date: z.string().min(1, "Date is required"),
+    startTime: z.string().min(1, "Start time is required"),
+    endTime: z.string().min(1, "End time is required"),
+    appointmentType: z.string().default("meeting"),
+    location: z.string().optional(),
+    meetingUrl: z.string().optional(),
+    contactId: z.string().optional(),
+  });
+
+  const appointmentForm = useForm<z.infer<typeof appointmentFormSchema>>({
+    resolver: zodResolver(appointmentFormSchema),
+    defaultValues: { title: "", description: "", date: "", startTime: "09:00", endTime: "10:00", appointmentType: "meeting", location: "", meetingUrl: "", contactId: "" },
+  });
+
+  const handleCreateAppointment = (values: z.infer<typeof appointmentFormSchema>) => {
+    const startDateTime = new Date(`${values.date}T${values.startTime}`);
+    const endDateTime = new Date(`${values.date}T${values.endTime}`);
+    createAppointmentMutation.mutate({
+      title: values.title,
+      description: values.description || undefined,
+      startTime: startDateTime.toISOString(),
+      endTime: endDateTime.toISOString(),
+      appointmentType: values.appointmentType,
+      location: values.location || undefined,
+      meetingUrl: values.meetingUrl || undefined,
+      contactId: values.contactId && values.contactId !== "none" ? parseInt(values.contactId) : undefined,
+    });
+  };
+
+  const calendarStartOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+  const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate();
+  const startDayOfWeek = calendarStartOfMonth.getDay();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const getAppointmentsForDate = (date: Date) => {
+    return appointments.filter(apt => {
+      const aptDate = new Date(apt.startTime);
+      return aptDate.getFullYear() === date.getFullYear() &&
+             aptDate.getMonth() === date.getMonth() &&
+             aptDate.getDate() === date.getDate();
+    });
+  };
+
+  const upcomingAppointments = appointments
+    .filter(apt => new Date(apt.startTime) >= today && apt.status !== "cancelled")
+    .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
+    .slice(0, 10);
+
+  if (appointmentsLoading) {
+    return (
+      <div className="flex items-center justify-center py-12" data-testid="scheduler-loading">
+        <Loader2 className="w-8 h-8 animate-spin text-[#22C55E]" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6" data-testid="scheduler-view">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Scheduler</h1>
+          <p className="text-gray-500 dark:text-gray-400">Manage appointments and meetings</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center border rounded-lg overflow-hidden">
+            <Button
+              variant={viewMode === "calendar" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("calendar")}
+              className={viewMode === "calendar" ? "bg-[#22C55E] hover:bg-[#16A34A]" : ""}
+              data-testid="btn-view-calendar-scheduler"
+            >
+              <CalendarDays className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("list")}
+              className={viewMode === "list" ? "bg-[#22C55E] hover:bg-[#16A34A]" : ""}
+              data-testid="btn-view-list-scheduler"
+            >
+              <List className="w-4 h-4" />
+            </Button>
+          </div>
+          <Button
+            onClick={() => setShowAddAppointmentDialog(true)}
+            className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+            data-testid="btn-add-appointment"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Schedule Appointment
+          </Button>
+        </div>
+      </div>
+
+      {viewMode === "calendar" ? (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="lg:col-span-2" data-testid="scheduler-calendar">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                <h3 className="font-semibold">
+                  {currentMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                </h3>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-7 gap-1 mb-2">
+                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(day => (
+                  <div key={day} className="text-center text-xs font-medium text-gray-500 py-2">{day}</div>
+                ))}
+              </div>
+              <div className="grid grid-cols-7 gap-1">
+                {Array.from({ length: startDayOfWeek }).map((_, i) => (
+                  <div key={`empty-${i}`} className="h-20 bg-gray-50 dark:bg-gray-800 rounded-lg" />
+                ))}
+                {Array.from({ length: daysInMonth }).map((_, i) => {
+                  const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), i + 1);
+                  const dayAppointments = getAppointmentsForDate(date);
+                  const isToday = date.toDateString() === today.toDateString();
+                  return (
+                    <div
+                      key={i}
+                      className={`h-20 p-1 rounded-lg border overflow-hidden ${isToday ? "border-[#22C55E] bg-[#22C55E]/5" : "border-gray-200 dark:border-gray-700"}`}
+                    >
+                      <div className={`text-xs font-medium mb-1 ${isToday ? "text-[#22C55E]" : "text-gray-600 dark:text-gray-400"}`}>
+                        {i + 1}
+                      </div>
+                      <div className="space-y-0.5">
+                        {dayAppointments.slice(0, 2).map(apt => (
+                          <div
+                            key={apt.id}
+                            className="text-xs truncate px-1 py-0.5 rounded cursor-pointer bg-[#22C55E]/10 text-[#22C55E]"
+                            onClick={() => setSelectedAppointment(apt)}
+                          >
+                            {new Date(apt.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} {apt.title}
+                          </div>
+                        ))}
+                        {dayAppointments.length > 2 && (
+                          <div className="text-xs text-gray-400 px-1">+{dayAppointments.length - 2} more</div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card data-testid="upcoming-appointments">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Upcoming Appointments</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {upcomingAppointments.length === 0 ? (
+                <div className="text-center py-6">
+                  <CalendarDays className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                  <p className="text-sm text-gray-500">No upcoming appointments</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {upcomingAppointments.map(apt => (
+                    <div
+                      key={apt.id}
+                      className="p-3 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      onClick={() => setSelectedAppointment(apt)}
+                      data-testid={`appointment-card-${apt.id}`}
+                    >
+                      <div className="flex items-start gap-2">
+                        <span className="text-gray-400 mt-0.5">{getTypeIcon(apt.appointmentType)}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate">{apt.title}</p>
+                          <p className="text-xs text-gray-500">
+                            {new Date(apt.startTime).toLocaleDateString()} at {new Date(apt.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          </p>
+                          {apt.contactId && (
+                            <p className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+                              <User className="w-3 h-3" />
+                              {getContactName(apt.contactId)}
+                            </p>
+                          )}
+                        </div>
+                        <Badge variant="outline" className={`text-xs ${getStatusColor(apt.status)}`}>
+                          {apt.status}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      ) : (
+        <Card data-testid="scheduler-list">
+          <CardHeader>
+            <CardTitle>All Appointments</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {appointments.length === 0 ? (
+              <div className="text-center py-12">
+                <CalendarDays className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No appointments yet</h2>
+                <p className="text-gray-500 dark:text-gray-400 mb-4">Schedule your first appointment</p>
+                <Button onClick={() => setShowAddAppointmentDialog(true)} className="bg-[#22C55E] hover:bg-[#16A34A] text-white">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Schedule Appointment
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {appointments.map(apt => (
+                  <div
+                    key={apt.id}
+                    className="flex items-center gap-4 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+                    onClick={() => setSelectedAppointment(apt)}
+                  >
+                    <div className="text-gray-400">{getTypeIcon(apt.appointmentType)}</div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium">{apt.title}</p>
+                      <p className="text-sm text-gray-500">
+                        {new Date(apt.startTime).toLocaleDateString()} {new Date(apt.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} - {new Date(apt.endTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      </p>
+                    </div>
+                    {apt.contactId && (
+                      <div className="text-sm text-gray-500 flex items-center gap-1">
+                        <User className="w-4 h-4" />
+                        {getContactName(apt.contactId)}
+                      </div>
+                    )}
+                    <Badge variant="outline" className={getStatusColor(apt.status)}>
+                      {apt.status}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      <Dialog open={showAddAppointmentDialog} onOpenChange={setShowAddAppointmentDialog}>
+        <DialogContent className="max-w-lg" data-testid="add-appointment-dialog">
+          <DialogHeader>
+            <DialogTitle>Schedule Appointment</DialogTitle>
+            <DialogDescription>Create a new appointment or meeting</DialogDescription>
+          </DialogHeader>
+          <Form {...appointmentForm}>
+            <form onSubmit={appointmentForm.handleSubmit(handleCreateAppointment)} className="space-y-4">
+              <FormField
+                control={appointmentForm.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title *</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Sales call with..." {...field} data-testid="input-appointment-title" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={appointmentForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Meeting details..." {...field} data-testid="input-appointment-description" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-3 gap-4">
+                <FormField
+                  control={appointmentForm.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Date *</FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} data-testid="input-appointment-date" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={appointmentForm.control}
+                  name="startTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Start *</FormLabel>
+                      <FormControl>
+                        <Input type="time" {...field} data-testid="input-appointment-start" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={appointmentForm.control}
+                  name="endTime"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>End *</FormLabel>
+                      <FormControl>
+                        <Input type="time" {...field} data-testid="input-appointment-end" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={appointmentForm.control}
+                  name="appointmentType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Type</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-appointment-type">
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="meeting">Meeting</SelectItem>
+                          <SelectItem value="call">Call</SelectItem>
+                          <SelectItem value="demo">Demo</SelectItem>
+                          <SelectItem value="consultation">Consultation</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={appointmentForm.control}
+                  name="contactId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Contact</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-appointment-contact">
+                            <SelectValue placeholder="Select..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          {contacts.map(contact => (
+                            <SelectItem key={contact.id} value={contact.id.toString()}>
+                              {contact.firstName} {contact.lastName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={appointmentForm.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Location</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Office, conference room..." {...field} data-testid="input-appointment-location" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={appointmentForm.control}
+                name="meetingUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Meeting URL</FormLabel>
+                    <FormControl>
+                      <Input placeholder="https://zoom.us/..." {...field} data-testid="input-appointment-url" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end gap-3">
+                <Button type="button" variant="outline" onClick={() => setShowAddAppointmentDialog(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={createAppointmentMutation.isPending}
+                  className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                  data-testid="btn-save-appointment"
+                >
+                  {createAppointmentMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Schedule"}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!selectedAppointment} onOpenChange={(open) => !open && setSelectedAppointment(null)}>
+        <DialogContent className="max-w-lg" data-testid="appointment-detail-dialog">
+          {selectedAppointment && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <span className="text-gray-400">{getTypeIcon(selectedAppointment.appointmentType)}</span>
+                  {selectedAppointment.title}
+                </DialogTitle>
+                <DialogDescription>
+                  <Badge variant="outline" className={getStatusColor(selectedAppointment.status)}>
+                    {selectedAppointment.status}
+                  </Badge>
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-sm text-gray-500">Date & Time</Label>
+                  <p className="mt-1 flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    {new Date(selectedAppointment.startTime).toLocaleDateString()} {new Date(selectedAppointment.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} - {new Date(selectedAppointment.endTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  </p>
+                </div>
+                {selectedAppointment.description && (
+                  <div>
+                    <Label className="text-sm text-gray-500">Description</Label>
+                    <p className="mt-1">{selectedAppointment.description}</p>
+                  </div>
+                )}
+                {selectedAppointment.contactId && (
+                  <div>
+                    <Label className="text-sm text-gray-500">Contact</Label>
+                    <p className="mt-1 flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      {getContactName(selectedAppointment.contactId)}
+                    </p>
+                  </div>
+                )}
+                {selectedAppointment.location && (
+                  <div>
+                    <Label className="text-sm text-gray-500">Location</Label>
+                    <p className="mt-1 flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      {selectedAppointment.location}
+                    </p>
+                  </div>
+                )}
+                {selectedAppointment.meetingUrl && (
+                  <div>
+                    <Label className="text-sm text-gray-500">Meeting Link</Label>
+                    <a href={selectedAppointment.meetingUrl} target="_blank" rel="noopener noreferrer" className="mt-1 flex items-center gap-2 text-[#22C55E] hover:underline">
+                      <Globe className="w-4 h-4" />
+                      Join Meeting
+                    </a>
+                  </div>
+                )}
+              </div>
+              <div className="flex justify-between pt-4 border-t">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => deleteAppointmentMutation.mutate(selectedAppointment.id)}
+                  disabled={deleteAppointmentMutation.isPending}
+                  data-testid="btn-delete-appointment"
+                >
+                  {deleteAppointmentMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Delete"}
+                </Button>
+                <div className="flex gap-2">
+                  {selectedAppointment.status === "scheduled" && (
+                    <Button
+                      variant="outline"
+                      onClick={() => updateAppointmentMutation.mutate({ id: selectedAppointment.id, status: "confirmed" })}
+                      disabled={updateAppointmentMutation.isPending}
+                      data-testid="btn-confirm-appointment"
+                    >
+                      {updateAppointmentMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm"}
+                    </Button>
+                  )}
+                  {(selectedAppointment.status === "scheduled" || selectedAppointment.status === "confirmed") && (
+                    <Button
+                      onClick={() => updateAppointmentMutation.mutate({ id: selectedAppointment.id, status: "completed" })}
+                      disabled={updateAppointmentMutation.isPending}
+                      className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                      data-testid="btn-complete-appointment"
+                    >
+                      {updateAppointmentMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Mark Complete"}
+                    </Button>
+                  )}
+                </div>
               </div>
             </>
           )}
