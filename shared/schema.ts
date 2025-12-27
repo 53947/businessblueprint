@@ -2641,3 +2641,79 @@ export type InsertCrmAutomation = z.infer<typeof insertCrmAutomationSchema>;
 export type CrmAutomationStep = typeof crmAutomationSteps.$inferSelect;
 export type InsertCrmAutomationStep = z.infer<typeof insertCrmAutomationStepSchema>;
 export type CrmAutomationExecution = typeof crmAutomationExecutions.$inferSelect;
+
+// ============================================================================
+// PUBLIC API - API Keys for External Integration
+// ============================================================================
+
+export const apiKeys = pgTable("api_keys", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id, { onDelete: "cascade" }),
+  
+  // Key identification
+  name: varchar("name", { length: 100 }).notNull(),
+  keyHash: varchar("key_hash", { length: 64 }).notNull().unique(), // SHA-256 hash of the actual key
+  keyPrefix: varchar("key_prefix", { length: 8 }).notNull(), // First 8 chars for identification
+  
+  // Permissions and scopes
+  scopes: text("scopes").array().default([]), // read:contacts, write:contacts, read:deals, etc.
+  
+  // Rate limiting
+  rateLimit: integer("rate_limit").default(1000), // requests per hour
+  requestsThisHour: integer("requests_this_hour").default(0),
+  rateLimitResetAt: timestamp("rate_limit_reset_at"),
+  
+  // Tracking
+  lastUsedAt: timestamp("last_used_at"),
+  totalRequests: integer("total_requests").default(0),
+  
+  // Status
+  isActive: boolean("is_active").default(true),
+  expiresAt: timestamp("expires_at"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_api_keys_hash").on(table.keyHash),
+  index("idx_api_keys_client").on(table.clientId),
+]);
+
+export const insertApiKeySchema = createInsertSchema(apiKeys).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// Webhook subscriptions for external integrations
+export const webhookSubscriptions = pgTable("webhook_subscriptions", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id, { onDelete: "cascade" }),
+  
+  // Webhook configuration
+  url: text("url").notNull(),
+  secret: varchar("secret", { length: 64 }).notNull(), // For signature verification
+  
+  // Events to subscribe to
+  events: text("events").array().default([]), // contact.created, deal.updated, etc.
+  
+  // Status
+  isActive: boolean("is_active").default(true),
+  failureCount: integer("failure_count").default(0),
+  lastFailedAt: timestamp("last_failed_at"),
+  lastSuccessAt: timestamp("last_success_at"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertWebhookSubscriptionSchema = createInsertSchema(webhookSubscriptions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// API Types
+export type ApiKey = typeof apiKeys.$inferSelect;
+export type InsertApiKey = z.infer<typeof insertApiKeySchema>;
+export type WebhookSubscription = typeof webhookSubscriptions.$inferSelect;
+export type InsertWebhookSubscription = z.infer<typeof insertWebhookSubscriptionSchema>;

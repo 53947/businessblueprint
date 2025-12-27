@@ -9,6 +9,7 @@ import { tasksRouter } from "./routes/tasks";
 import brandColorsRoutes from "./routes/brand-colors";
 import { registerBillingAdminRoutes } from "./routes/billing-admin";
 import { crmRouter } from "./routes/crm";
+import { publicApiRouter } from "./routes/api";
 import {
   insertAssessmentSchema,
   subscriptionPlans,
@@ -2841,6 +2842,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // CRM (/relationships) Routes
   app.use('/api/crm', crmRouter);
+  
+  // Public API v1 Routes (external integrations)
+  app.use('/api/v1', publicApiRouter);
 
   const httpServer = createServer(app);
   return httpServer;
