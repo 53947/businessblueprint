@@ -42,7 +42,10 @@ import {
   Linkedin,
   List,
   User,
-  Building
+  Building,
+  Upload,
+  FileSpreadsheet,
+  ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1179,6 +1182,11 @@ function ContactsView() {
   const [page, setPage] = useState(1);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [importStep, setImportStep] = useState<"upload" | "mapping" | "preview">("upload");
+  const [csvData, setCsvData] = useState<{ headers: string[]; rows: string[][] }>({ headers: [], rows: [] });
+  const [columnMapping, setColumnMapping] = useState<Record<string, string>>({});
+  const [duplicateHandling, setDuplicateHandling] = useState<"skip" | "update">("skip");
   const limit = 25;
 
   const buildContactsUrl = () => {
@@ -1234,6 +1242,123 @@ function ContactsView() {
       toast({ title: "Error", description: "Failed to delete contacts", variant: "destructive" });
     },
   });
+
+  const importContactsMutation = useMutation({
+    mutationFn: async (data: { contacts: Record<string, string>[]; duplicateHandling: string }) => {
+      return apiRequest("POST", "/api/crm/contacts/import", data);
+    },
+    onSuccess: (result: any) => {
+      queryClient.invalidateQueries({ predicate: (query) => 
+        typeof query.queryKey[0] === 'string' && query.queryKey[0].startsWith('/api/crm/contacts')
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/stats"] });
+      setShowImportDialog(false);
+      setImportStep("upload");
+      setCsvData({ headers: [], rows: [] });
+      setColumnMapping({});
+      toast({ 
+        title: "Import complete", 
+        description: `Created: ${result.imported}, Updated: ${result.updated}, Skipped: ${result.skipped}${result.totalErrors > 0 ? `, Errors: ${result.totalErrors}` : ""}` 
+      });
+    },
+    onError: (error: any) => {
+      toast({ title: "Import failed", description: error.message || "Failed to import contacts", variant: "destructive" });
+    },
+  });
+
+  const csvFieldOptions = [
+    { value: "firstName", label: "First Name" },
+    { value: "lastName", label: "Last Name" },
+    { value: "email", label: "Email" },
+    { value: "phone", label: "Phone" },
+    { value: "jobTitle", label: "Job Title" },
+    { value: "company", label: "Company" },
+    { value: "lifecycleStage", label: "Lifecycle Stage" },
+    { value: "leadSource", label: "Lead Source" },
+    { value: "address", label: "Address" },
+    { value: "city", label: "City" },
+    { value: "state", label: "State" },
+    { value: "country", label: "Country" },
+    { value: "postalCode", label: "Postal Code" },
+  ];
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result as string;
+      const lines = text.split(/\r?\n/).filter(line => line.trim());
+      if (lines.length < 2) {
+        toast({ title: "Invalid file", description: "CSV must have at least a header row and one data row", variant: "destructive" });
+        return;
+      }
+      
+      const parseCSVLine = (line: string) => {
+        const result: string[] = [];
+        let current = "";
+        let inQuotes = false;
+        for (const char of line) {
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = "";
+          } else {
+            current += char;
+          }
+        }
+        result.push(current.trim());
+        return result;
+      };
+      
+      const headers = parseCSVLine(lines[0]);
+      const rows = lines.slice(1).map(line => parseCSVLine(line));
+      
+      const autoMapping: Record<string, string> = {};
+      headers.forEach((header) => {
+        const normalized = header.toLowerCase().replace(/[^a-z]/g, "");
+        if (normalized.includes("first") || normalized === "firstname") autoMapping[header] = "firstName";
+        else if (normalized.includes("last") || normalized === "lastname") autoMapping[header] = "lastName";
+        else if (normalized.includes("email")) autoMapping[header] = "email";
+        else if (normalized.includes("phone") || normalized.includes("tel")) autoMapping[header] = "phone";
+        else if (normalized.includes("title") || normalized.includes("position")) autoMapping[header] = "jobTitle";
+        else if (normalized.includes("company") || normalized.includes("org")) autoMapping[header] = "company";
+        else if (normalized.includes("city")) autoMapping[header] = "city";
+        else if (normalized.includes("state")) autoMapping[header] = "state";
+        else if (normalized.includes("country")) autoMapping[header] = "country";
+        else if (normalized.includes("zip") || normalized.includes("postal")) autoMapping[header] = "postalCode";
+        else if (normalized.includes("address")) autoMapping[header] = "address";
+        else if (normalized.includes("source")) autoMapping[header] = "leadSource";
+      });
+      
+      setCsvData({ headers, rows });
+      setColumnMapping(autoMapping);
+      setImportStep("mapping");
+    };
+    reader.readAsText(file);
+  };
+
+  const handleImport = () => {
+    const mappedContacts = csvData.rows.map(row => {
+      const contact: Record<string, string> = {};
+      csvData.headers.forEach((header, index) => {
+        const fieldName = columnMapping[header];
+        if (fieldName && row[index]) {
+          contact[fieldName] = row[index];
+        }
+      });
+      return contact;
+    }).filter(c => c.email || c.firstName || c.lastName);
+    
+    if (mappedContacts.length === 0) {
+      toast({ title: "No valid contacts", description: "Please map at least email, first name, or last name", variant: "destructive" });
+      return;
+    }
+    
+    importContactsMutation.mutate({ contacts: mappedContacts, duplicateHandling });
+  };
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
@@ -1380,6 +1505,114 @@ function ContactsView() {
               </DropdownMenuContent>
             </DropdownMenu>
           )}
+
+          <Dialog open={showImportDialog} onOpenChange={(open) => {
+            setShowImportDialog(open);
+            if (!open) {
+              setImportStep("upload");
+              setCsvData({ headers: [], rows: [] });
+              setColumnMapping({});
+            }
+          }}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" data-testid="btn-import">
+                <Upload className="w-4 h-4 mr-2" />
+                Import
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>
+                  {importStep === "upload" && "Import Contacts"}
+                  {importStep === "mapping" && "Map Columns"}
+                  {importStep === "preview" && "Preview Import"}
+                </DialogTitle>
+                <DialogDescription>
+                  {importStep === "upload" && "Upload a CSV file with your contacts."}
+                  {importStep === "mapping" && "Map your CSV columns to contact fields."}
+                  {importStep === "preview" && "Review and confirm your import."}
+                </DialogDescription>
+              </DialogHeader>
+
+              {importStep === "upload" && (
+                <div className="space-y-4">
+                  <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
+                    <FileSpreadsheet className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <Label htmlFor="csv-upload" className="cursor-pointer">
+                      <span className="text-[#22C55E] font-medium">Click to upload</span>
+                      <span className="text-gray-500"> or drag and drop</span>
+                    </Label>
+                    <p className="text-sm text-gray-500 mt-2">CSV files only (max 5,000 rows)</p>
+                    <Input
+                      id="csv-upload"
+                      type="file"
+                      accept=".csv"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      data-testid="input-csv-upload"
+                    />
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    <h4 className="font-medium mb-2">Expected format:</h4>
+                    <p>First row should contain column headers (First Name, Last Name, Email, etc.)</p>
+                  </div>
+                </div>
+              )}
+
+              {importStep === "mapping" && (
+                <div className="space-y-4">
+                  <p className="text-sm text-gray-500">
+                    Found {csvData.rows.length} contact(s). Map your CSV columns to the appropriate fields.
+                  </p>
+                  <div className="space-y-3 max-h-[300px] overflow-y-auto">
+                    {csvData.headers.map((header) => (
+                      <div key={header} className="flex items-center gap-4">
+                        <div className="w-1/3 text-sm font-medium truncate">{header}</div>
+                        <ArrowRight className="w-4 h-4 text-gray-400" />
+                        <Select
+                          value={columnMapping[header] || "skip"}
+                          onValueChange={(value) => setColumnMapping({ ...columnMapping, [header]: value === "skip" ? "" : value })}
+                        >
+                          <SelectTrigger className="w-2/3" data-testid={`select-mapping-${header}`}>
+                            <SelectValue placeholder="Select field..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="skip">Skip this column</SelectItem>
+                            {csvFieldOptions.map((opt) => (
+                              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="border-t pt-4">
+                    <Label className="text-sm font-medium">Duplicate handling:</Label>
+                    <Select value={duplicateHandling} onValueChange={(v: "skip" | "update") => setDuplicateHandling(v)}>
+                      <SelectTrigger className="mt-2" data-testid="select-duplicate-handling">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="skip">Skip duplicates (by email)</SelectItem>
+                        <SelectItem value="update">Update existing contacts</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setImportStep("upload")}>Back</Button>
+                    <Button
+                      className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                      onClick={handleImport}
+                      disabled={importContactsMutation.isPending}
+                      data-testid="btn-run-import"
+                    >
+                      {importContactsMutation.isPending ? "Importing..." : `Import ${csvData.rows.length} Contacts`}
+                    </Button>
+                  </DialogFooter>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
 
           <Button variant="outline" size="sm" onClick={exportContacts} data-testid="btn-export">
             <Download className="w-4 h-4 mr-2" />
@@ -4424,9 +4657,89 @@ function AnalyticsView() {
   );
 }
 
+interface CrmLeadForm {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  fields: { name: string; label: string; type: string; required: boolean }[];
+  buttonText: string | null;
+  successMessage: string | null;
+  defaultLifecycleStage: string | null;
+  defaultLeadSource: string | null;
+  submissionCount: number | null;
+  isActive: boolean | null;
+  createdAt: string;
+}
+
 function SettingsView() {
+  const { toast } = useToast();
+  const [showFormBuilder, setShowFormBuilder] = useState(false);
+  const [formName, setFormName] = useState("");
+  const [formSlug, setFormSlug] = useState("");
+  const [showEmbedCode, setShowEmbedCode] = useState<CrmLeadForm | null>(null);
+
+  const { data: formsData, isLoading } = useQuery<{ forms: CrmLeadForm[] }>({
+    queryKey: ["/api/crm/forms"],
+  });
+
+  const forms = formsData?.forms || [];
+
+  const createFormMutation = useMutation({
+    mutationFn: async (data: { name: string; slug: string }) => {
+      return apiRequest("POST", "/api/crm/forms", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/forms"] });
+      setShowFormBuilder(false);
+      setFormName("");
+      setFormSlug("");
+      toast({ title: "Form created", description: "Your lead capture form is ready to use." });
+    },
+    onError: (error: any) => {
+      toast({ title: "Error", description: error.message || "Failed to create form", variant: "destructive" });
+    },
+  });
+
+  const deleteFormMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return apiRequest("DELETE", `/api/crm/forms/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/forms"] });
+      toast({ title: "Form deleted" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to delete form", variant: "destructive" });
+    },
+  });
+
+  const toggleFormMutation = useMutation({
+    mutationFn: async ({ id, isActive }: { id: number; isActive: boolean }) => {
+      return apiRequest("PATCH", `/api/crm/forms/${id}`, { isActive });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/crm/forms"] });
+    },
+  });
+
+  const generateSlug = (name: string) => {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  };
+
+  const getEmbedCode = (form: CrmLeadForm) => {
+    const baseUrl = window.location.origin;
+    return `<iframe 
+  src="${baseUrl}/embed/form/${form.slug}" 
+  width="100%" 
+  height="400" 
+  frameborder="0"
+  style="border: none; max-width: 500px;">
+</iframe>`;
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="settings-view">
       <Card>
         <CardHeader>
           <CardTitle>CRM Settings</CardTitle>
@@ -4449,13 +4762,6 @@ function SettingsView() {
           </div>
           <div className="flex items-center justify-between p-4 border rounded-lg">
             <div>
-              <h3 className="font-medium">Import/Export</h3>
-              <p className="text-sm text-gray-500">Bulk import or export contact data</p>
-            </div>
-            <Button variant="outline">Open</Button>
-          </div>
-          <div className="flex items-center justify-between p-4 border rounded-lg">
-            <div>
               <h3 className="font-medium">App Integrations</h3>
               <p className="text-sm text-gray-500">Connect /relationships with other apps</p>
             </div>
@@ -4463,6 +4769,149 @@ function SettingsView() {
           </div>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Lead Capture Forms</CardTitle>
+            <CardDescription>Create embeddable forms to capture leads on your website</CardDescription>
+          </div>
+          <Dialog open={showFormBuilder} onOpenChange={setShowFormBuilder}>
+            <DialogTrigger asChild>
+              <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white" size="sm" data-testid="btn-create-form">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Form
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create Lead Form</DialogTitle>
+                <DialogDescription>Set up a new form to capture leads on your website.</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label>Form Name *</Label>
+                  <Input
+                    placeholder="Contact Us Form"
+                    value={formName}
+                    onChange={(e) => {
+                      setFormName(e.target.value);
+                      setFormSlug(generateSlug(e.target.value));
+                    }}
+                    data-testid="input-form-name"
+                  />
+                </div>
+                <div>
+                  <Label>URL Slug</Label>
+                  <Input
+                    placeholder="contact-us"
+                    value={formSlug}
+                    onChange={(e) => setFormSlug(e.target.value)}
+                    data-testid="input-form-slug"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Used in embed URLs</p>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowFormBuilder(false)}>Cancel</Button>
+                <Button
+                  className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                  onClick={() => createFormMutation.mutate({ name: formName, slug: formSlug })}
+                  disabled={!formName.trim() || !formSlug.trim() || createFormMutation.isPending}
+                  data-testid="btn-save-form"
+                >
+                  {createFormMutation.isPending ? "Creating..." : "Create Form"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+            </div>
+          ) : forms.length === 0 ? (
+            <div className="text-center py-8">
+              <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-1">No forms yet</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Create your first lead capture form to start collecting contacts.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {forms.map((form) => (
+                <div key={form.id} className="flex items-center justify-between p-4 border rounded-lg" data-testid={`form-row-${form.id}`}>
+                  <div className="flex items-center gap-4">
+                    <div className={cn(
+                      "w-3 h-3 rounded-full",
+                      form.isActive ? "bg-green-500" : "bg-gray-400"
+                    )} />
+                    <div>
+                      <h4 className="font-medium">{form.name}</h4>
+                      <p className="text-sm text-gray-500">/{form.slug} • {form.submissionCount || 0} submissions</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowEmbedCode(form)}
+                      data-testid={`btn-embed-${form.id}`}
+                    >
+                      <Globe className="w-4 h-4 mr-2" />
+                      Embed
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => toggleFormMutation.mutate({ id: form.id, isActive: !form.isActive })}
+                    >
+                      {form.isActive ? <Eye className="w-4 h-4" /> : <X className="w-4 h-4" />}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => deleteFormMutation.mutate(form.id)}
+                      className="text-red-600 hover:text-red-700"
+                      data-testid={`btn-delete-form-${form.id}`}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Dialog open={!!showEmbedCode} onOpenChange={() => setShowEmbedCode(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Embed Form: {showEmbedCode?.name}</DialogTitle>
+            <DialogDescription>Copy this code to embed the form on your website.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+              <pre className="text-sm overflow-x-auto whitespace-pre-wrap">
+                {showEmbedCode && getEmbedCode(showEmbedCode)}
+              </pre>
+            </div>
+            <Button
+              className="w-full"
+              onClick={() => {
+                if (showEmbedCode) {
+                  navigator.clipboard.writeText(getEmbedCode(showEmbedCode));
+                  toast({ title: "Copied", description: "Embed code copied to clipboard" });
+                }
+              }}
+              data-testid="btn-copy-embed"
+            >
+              Copy to Clipboard
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

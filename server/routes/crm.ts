@@ -13,7 +13,9 @@ import {
   crmAppointments,
   crmTags,
   crmSubscriptions,
+  crmLeadForms,
   insertCrmContactSchema,
+  insertCrmLeadFormSchema,
   insertCrmCompanySchema,
   insertCrmDealSchema,
   insertCrmPipelineSchema,
@@ -137,6 +139,89 @@ crmRouter.post("/contacts", async (req, res) => {
       return res.status(400).json({ error: "Validation error", details: error.errors });
     }
     res.status(500).json({ error: "Failed to create contact" });
+  }
+});
+
+crmRouter.post("/contacts/import", async (req, res) => {
+  try {
+    const { contacts, duplicateHandling = "skip", clientId } = req.body;
+    
+    if (!Array.isArray(contacts) || contacts.length === 0) {
+      return res.status(400).json({ error: "No contacts provided" });
+    }
+    
+    if (contacts.length > 5000) {
+      return res.status(400).json({ error: "Maximum 5000 contacts per import" });
+    }
+    
+    const results = {
+      created: 0,
+      updated: 0,
+      skipped: 0,
+      errors: [] as { row: number; error: string }[],
+    };
+    
+    for (let i = 0; i < contacts.length; i++) {
+      try {
+        const contact = contacts[i];
+        
+        // Add defaults for required/optional fields that might be missing from CSV
+        const contactWithDefaults = {
+          ...contact,
+          clientId: contact.clientId || clientId || null,
+          lifecycleStage: contact.lifecycleStage || "lead",
+          leadSource: contact.leadSource || "csv_import",
+        };
+        
+        // Use partial schema since we're providing sensible defaults
+        const partialSchema = insertCrmContactSchema.partial().extend({
+          firstName: z.string().optional(),
+          lastName: z.string().optional(),
+          email: z.string().email().optional(),
+        });
+        const validatedData = partialSchema.parse(contactWithDefaults);
+        
+        if (validatedData.email) {
+          const existing = await db
+            .select()
+            .from(crmContacts)
+            .where(eq(crmContacts.email, validatedData.email))
+            .limit(1);
+          
+          if (existing.length > 0) {
+            if (duplicateHandling === "update") {
+              await db.update(crmContacts)
+                .set({ ...validatedData, updatedAt: new Date() })
+                .where(eq(crmContacts.id, existing[0].id));
+              results.updated++;
+            } else {
+              results.skipped++;
+            }
+            continue;
+          }
+        }
+        
+        await db.insert(crmContacts).values(validatedData);
+        results.created++;
+      } catch (error) {
+        results.errors.push({
+          row: i + 1,
+          error: error instanceof z.ZodError ? error.errors[0]?.message || "Validation error" : "Unknown error",
+        });
+      }
+    }
+    
+    res.json({
+      success: true,
+      imported: results.created,
+      updated: results.updated,
+      skipped: results.skipped,
+      errors: results.errors.slice(0, 10),
+      totalErrors: results.errors.length,
+    });
+  } catch (error) {
+    console.error("[CRM] Error importing contacts:", error);
+    res.status(500).json({ error: "Failed to import contacts" });
   }
 });
 
@@ -1066,6 +1151,189 @@ crmRouter.get("/stats", async (req, res) => {
   } catch (error) {
     console.error("[CRM] Error fetching stats:", error);
     res.status(500).json({ error: "Failed to fetch stats" });
+  }
+});
+
+// ==================== LEAD FORMS ====================
+
+crmRouter.get("/forms", async (req, res) => {
+  try {
+    const clientId = parseInt(req.query.clientId as string);
+    const conditions = clientId ? [eq(crmLeadForms.clientId, clientId)] : [];
+    
+    const forms = await db
+      .select()
+      .from(crmLeadForms)
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
+      .orderBy(desc(crmLeadForms.createdAt));
+    
+    res.json({ forms });
+  } catch (error) {
+    console.error("[CRM] Error fetching forms:", error);
+    res.status(500).json({ error: "Failed to fetch forms" });
+  }
+});
+
+crmRouter.get("/forms/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const form = await db
+      .select()
+      .from(crmLeadForms)
+      .where(eq(crmLeadForms.id, id))
+      .limit(1);
+    
+    if (!form.length) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+    
+    res.json(form[0]);
+  } catch (error) {
+    console.error("[CRM] Error fetching form:", error);
+    res.status(500).json({ error: "Failed to fetch form" });
+  }
+});
+
+crmRouter.post("/forms", async (req, res) => {
+  try {
+    const validatedData = insertCrmLeadFormSchema.parse(req.body);
+    const [form] = await db.insert(crmLeadForms).values(validatedData).returning();
+    res.status(201).json(form);
+  } catch (error) {
+    console.error("[CRM] Error creating form:", error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create form" });
+  }
+});
+
+crmRouter.patch("/forms/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const partialSchema = insertCrmLeadFormSchema.partial();
+    const validatedData = partialSchema.parse(req.body);
+    const updateData = { ...validatedData, updatedAt: new Date() };
+    
+    const [form] = await db
+      .update(crmLeadForms)
+      .set(updateData)
+      .where(eq(crmLeadForms.id, id))
+      .returning();
+    
+    if (!form) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+    
+    res.json(form);
+  } catch (error) {
+    console.error("[CRM] Error updating form:", error);
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to update form" });
+  }
+});
+
+crmRouter.delete("/forms/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const [deleted] = await db
+      .delete(crmLeadForms)
+      .where(eq(crmLeadForms.id, id))
+      .returning();
+    
+    if (!deleted) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error("[CRM] Error deleting form:", error);
+    res.status(500).json({ error: "Failed to delete form" });
+  }
+});
+
+// Public endpoint for form submissions (no auth required)
+crmRouter.post("/forms/:slug/submit", async (req, res) => {
+  try {
+    const slug = req.params.slug;
+    const submission = req.body;
+    
+    // Find form by slug
+    const [form] = await db
+      .select()
+      .from(crmLeadForms)
+      .where(eq(crmLeadForms.slug, slug))
+      .limit(1);
+    
+    if (!form || !form.isActive) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+    
+    // Create contact from submission
+    const contactData = {
+      clientId: form.clientId,
+      firstName: submission.firstName || null,
+      lastName: submission.lastName || null,
+      email: submission.email || null,
+      phone: submission.phone || null,
+      lifecycleStage: form.defaultLifecycleStage || "lead",
+      leadSource: form.defaultLeadSource || "web_form",
+    };
+    
+    // Check for existing contact by email
+    if (contactData.email) {
+      const existing = await db
+        .select()
+        .from(crmContacts)
+        .where(eq(crmContacts.email, contactData.email))
+        .limit(1);
+      
+      if (existing.length > 0) {
+        // Update existing contact
+        await db
+          .update(crmContacts)
+          .set({ ...contactData, updatedAt: new Date() })
+          .where(eq(crmContacts.id, existing[0].id));
+        
+        // Increment submission count
+        await db
+          .update(crmLeadForms)
+          .set({ submissionCount: sql`submission_count + 1` })
+          .where(eq(crmLeadForms.id, form.id));
+        
+        res.json({ success: true, message: form.successMessage, contactId: existing[0].id });
+        return;
+      }
+    }
+    
+    // Create new contact
+    const [contact] = await db.insert(crmContacts).values(contactData).returning();
+    
+    // Increment submission count
+    await db
+      .update(crmLeadForms)
+      .set({ submissionCount: sql`submission_count + 1` })
+      .where(eq(crmLeadForms.id, form.id));
+    
+    // Add timeline event
+    if (form.clientId) {
+      await db.insert(crmTimeline).values({
+        clientId: form.clientId,
+        contactId: contact.id,
+        eventType: "form_submission",
+        title: `Form submission: ${form.name}`,
+        occurredAt: new Date(),
+        sourceApp: "relationships",
+        actorType: "contact",
+      });
+    }
+    
+    res.json({ success: true, message: form.successMessage, contactId: contact.id });
+  } catch (error) {
+    console.error("[CRM] Error processing form submission:", error);
+    res.status(500).json({ error: "Failed to process submission" });
   }
 });
 

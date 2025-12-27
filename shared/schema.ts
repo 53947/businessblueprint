@@ -2403,6 +2403,44 @@ export const crmSubscriptions = pgTable("crm_subscriptions", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// CRM Lead Capture Forms - Embeddable forms for contact collection
+export const crmLeadForms = pgTable("crm_lead_forms", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  
+  // Form identity
+  name: varchar("name", { length: 100 }).notNull(),
+  slug: varchar("slug", { length: 50 }).notNull(), // URL-friendly identifier
+  description: text("description"),
+  
+  // Form configuration
+  fields: jsonb("fields").notNull().default([
+    { name: "firstName", label: "First Name", type: "text", required: true },
+    { name: "lastName", label: "Last Name", type: "text", required: false },
+    { name: "email", label: "Email", type: "email", required: true },
+    { name: "phone", label: "Phone", type: "tel", required: false },
+  ]),
+  
+  // Styling
+  buttonText: varchar("button_text", { length: 50 }).default("Submit"),
+  successMessage: varchar("success_message", { length: 255 }).default("Thank you! We'll be in touch soon."),
+  
+  // Lead assignment
+  defaultLifecycleStage: varchar("default_lifecycle_stage", { length: 50 }).default("lead"),
+  defaultLeadSource: varchar("default_lead_source", { length: 100 }),
+  assignToUserId: integer("assign_to_user_id"),
+  
+  // Tracking
+  submissionCount: integer("submission_count").default(0),
+  isActive: boolean("is_active").default(true),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  unique().on(table.clientId, table.slug),
+  index("idx_crm_lead_forms_client").on(table.clientId),
+]);
+
 // Insert schemas for CRM tables
 export const insertCrmCompanySchema = createInsertSchema(crmCompanies).omit({
   id: true,
@@ -2479,6 +2517,13 @@ export const insertCrmSubscriptionSchema = createInsertSchema(crmSubscriptions).
   updatedAt: true,
 });
 
+export const insertCrmLeadFormSchema = createInsertSchema(crmLeadForms).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  submissionCount: true,
+});
+
 // CRM Types
 export type CrmCompany = typeof crmCompanies.$inferSelect;
 export type InsertCrmCompany = z.infer<typeof insertCrmCompanySchema>;
@@ -2507,3 +2552,5 @@ export type CrmCustomFieldDef = typeof crmCustomFieldDefs.$inferSelect;
 export type InsertCrmCustomFieldDef = z.infer<typeof insertCrmCustomFieldDefSchema>;
 export type CrmSubscription = typeof crmSubscriptions.$inferSelect;
 export type InsertCrmSubscription = z.infer<typeof insertCrmSubscriptionSchema>;
+export type CrmLeadForm = typeof crmLeadForms.$inferSelect;
+export type InsertCrmLeadForm = z.infer<typeof insertCrmLeadFormSchema>;
