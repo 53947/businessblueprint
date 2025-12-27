@@ -38,6 +38,8 @@ import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { BRAND_HEX } from '@/lib/brand-colors';
+import { CrmEmptyState, CRM_EMPTY_CONFIGS } from '@/components/crm-empty-state';
+import { useCrmPresence } from '@/hooks/use-crm-presence';
 
 interface Conversation {
   id: number;
@@ -139,6 +141,8 @@ export default function InboxPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
   const { toast } = useToast();
+  
+  const crmPresence = useCrmPresence();
 
   // Check authentication
   useEffect(() => {
@@ -191,6 +195,9 @@ export default function InboxPage() {
     queryKey: [`/api/crm/integration/context/${crmContactId}`],
     enabled: !!crmLookup?.found && !!crmContactId,
   });
+
+  // CRM empty state - show when CRM has no data (uses shared hook)
+  const showCrmEmptyState = crmPresence.state === 'empty';
 
   // Send message mutation
   const sendMessageMutation = useMutation({
@@ -397,8 +404,21 @@ export default function InboxPage() {
               <Loader2 className="w-6 h-6 animate-spin" data-testid="loader-conversations" />
             </div>
           ) : conversations.length === 0 ? (
-            <div className="p-8 text-center text-gray-500 dark:text-gray-400" data-testid="text-no-conversations">
-              No conversations yet
+            <div className="p-4" data-testid="text-no-conversations">
+              {crmPresence.state === 'loading' ? (
+                <p className="text-center text-gray-500 dark:text-gray-400 py-4">
+                  Loading...
+                </p>
+              ) : showCrmEmptyState ? (
+                <CrmEmptyState 
+                  {...CRM_EMPTY_CONFIGS.inbox} 
+                  variant="compact" 
+                />
+              ) : (
+                <p className="text-center text-gray-500 dark:text-gray-400 py-4">
+                  No conversations yet
+                </p>
+              )}
             </div>
           ) : (
             conversations.map((conversation) => {

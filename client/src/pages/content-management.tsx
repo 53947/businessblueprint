@@ -47,12 +47,16 @@ import {
   Users
 } from "lucide-react";
 import { format } from "date-fns";
+import { CrmEmptyState, CRM_EMPTY_CONFIGS } from "@/components/crm-empty-state";
+import { useCrmPresence } from "@/hooks/use-crm-presence";
 
 export default function ContentManagement() {
   const [, setLocation] = useLocation();
   const [clientId, setClientId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("composer");
   const { toast } = useToast();
+  
+  const crmPresence = useCrmPresence();
 
   // Composer state
   const [caption, setCaption] = useState("");
@@ -99,11 +103,11 @@ export default function ContentManagement() {
     enabled: !!clientId,
   });
 
-  // CRM segments for audience targeting (Performance tier)
-  const { data: crmSegments } = useQuery<any[]>({
-    queryKey: ['/api/crm/integration/segments'],
-    enabled: !!clientId,
-  });
+  // Use shared CRM data from hook (avoids duplicate queries)
+  const crmSegments = crmPresence.segments;
+  
+  // Show CRM empty state when CRM has no data (using shared hook)
+  const showCrmEmptyState = crmPresence.state === 'empty';
 
   // Audience targeting state
   const [selectedSegments, setSelectedSegments] = useState<number[]>([]);
@@ -313,6 +317,13 @@ export default function ContentManagement() {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-[#E91E8C] to-[#FF66CC] bg-clip-text text-transparent" data-testid="heading-content-management">Content Management</h1>
           <p className="text-gray-600 mt-2">Create, schedule, and manage your social media content</p>
         </div>
+
+        {/* CRM Empty State - Show when no audience segments */}
+        {showCrmEmptyState && (
+          <div className="mb-6">
+            <CrmEmptyState {...CRM_EMPTY_CONFIGS.content} variant="compact" />
+          </div>
+        )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-6 lg:w-auto lg:inline-grid [&>button[data-state=active]]:bg-[#E91E8C] [&>button[data-state=active]]:text-white">

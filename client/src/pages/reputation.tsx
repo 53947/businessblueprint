@@ -28,6 +28,8 @@ import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { format } from "date-fns";
 import reputationIcon from "@assets/logos and wordmarks/: reputation app logo.png";
+import { CrmEmptyState, CRM_EMPTY_CONFIGS } from "@/components/crm-empty-state";
+import { useCrmPresence } from "@/hooks/use-crm-presence";
 
 interface Review {
   id: number;
@@ -62,6 +64,8 @@ export default function ReputationManagement() {
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [responseText, setResponseText] = useState('');
   const [showResponseDialog, setShowResponseDialog] = useState(false);
+  
+  const crmPresence = useCrmPresence();
 
   // Get client ID from session
   const clientId = sessionStorage.getItem("clientId");
@@ -78,11 +82,11 @@ export default function ReputationManagement() {
     enabled: !!clientId,
   });
 
-  // CRM contacts lookup (Performance tier) - to match reviewers to CRM contacts
-  const { data: crmContacts } = useQuery<any[]>({
-    queryKey: ['/api/crm/contacts'],
-    enabled: !!clientId,
-  });
+  // Use shared CRM data from hook (avoids duplicate queries)
+  const crmContacts = crmPresence.contacts;
+  
+  // Show CRM empty state for unauthenticated users or when CRM has no data
+  const showCrmEmptyState = crmPresence.state === 'unauthenticated' || crmPresence.state === 'empty';
 
   // Helper to check if reviewer is a known CRM contact
   const findCrmContact = (reviewerName: string) => {
@@ -281,6 +285,13 @@ export default function ReputationManagement() {
       />
 
       <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        {/* CRM Empty State - Show when no contacts or no clientId */}
+        {showCrmEmptyState && (
+          <div className="mb-6">
+            <CrmEmptyState {...CRM_EMPTY_CONFIGS.reputation} variant="compact" />
+          </div>
+        )}
+
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           {/* Overview Tab */}
           <TabsContent value="overview">

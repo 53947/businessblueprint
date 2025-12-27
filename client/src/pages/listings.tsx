@@ -28,6 +28,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import listingsIcon from "@assets/logos and wordmarks/: listings app logo.png";
+import { CrmEmptyState, CRM_EMPTY_CONFIGS } from "@/components/crm-empty-state";
+import { useCrmPresence } from "@/hooks/use-crm-presence";
 
 interface BusinessListing {
   id: number;
@@ -57,6 +59,8 @@ export default function ListingsManagement() {
   const [activeTab, setActiveTab] = useState('overview');
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [selectedListing, setSelectedListing] = useState<BusinessListing | null>(null);
+  
+  const crmPresence = useCrmPresence();
 
   // Get client ID from session
   const clientId = sessionStorage.getItem("clientId");
@@ -73,12 +77,11 @@ export default function ListingsManagement() {
     enabled: !!clientId,
   });
 
-  // CRM company lookup (Performance tier) - pulls business info from /relationships
-  const { data: crmCompany } = useQuery<any>({
-    queryKey: ['/api/crm/companies'],
-    enabled: !!clientId,
-    select: (data) => data?.[0] // Get primary company
-  });
+  // Use shared CRM data from hook (avoids duplicate queries)
+  const crmCompany = crmPresence.companies?.[0]; // Get primary company
+  
+  // Show CRM empty state for unauthenticated users or when CRM has no data
+  const showCrmEmptyState = crmPresence.state === 'unauthenticated' || crmPresence.state === 'empty';
 
   // Update listing mutation
   const updateListingMutation = useMutation({
@@ -258,6 +261,13 @@ export default function ListingsManagement() {
       />
 
       <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        {/* CRM Empty State - Show when no company data or no clientId */}
+        {showCrmEmptyState && (
+          <div className="mb-6">
+            <CrmEmptyState {...CRM_EMPTY_CONFIGS.listings} variant="compact" />
+          </div>
+        )}
+
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           {/* Overview Tab */}
           <TabsContent value="overview">

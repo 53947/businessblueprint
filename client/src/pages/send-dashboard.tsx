@@ -26,23 +26,8 @@ import { useLocation } from "wouter";
 import { BrandLogo } from "@/components/brand-logo";
 import { SectionHeader } from "@/components/section-header";
 import { useToast } from "@/hooks/use-toast";
-
-interface CrmContact {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  lifecycleStage?: string;
-}
-
-interface CrmSegment {
-  id: number;
-  name: string;
-  description?: string;
-  memberCount?: number;
-  segmentType?: string;
-}
+import { CrmEmptyState, CRM_EMPTY_CONFIGS } from "@/components/crm-empty-state";
+import { useCrmPresence } from "@/hooks/use-crm-presence";
 
 interface DashboardMetrics {
   totalContacts: number;
@@ -72,6 +57,8 @@ export default function SendDashboard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
+  
+  const crmPresence = useCrmPresence();
 
   // Fetch dashboard metrics
   const { data: metrics, isLoading: metricsLoading } = useQuery<DashboardMetrics>({
@@ -83,17 +70,12 @@ export default function SendDashboard() {
     queryKey: ['/api/send/campaigns/recent'],
   });
 
-  // Fetch CRM contacts for targeting (Performance tier integration)
-  const { data: crmContacts, isLoading: crmContactsLoading } = useQuery<CrmContact[]>({
-    queryKey: ['/api/crm/contacts'],
-  });
-
-  // Fetch CRM segments for targeting (Performance tier integration)
-  const { data: crmSegmentsData, isLoading: crmSegmentsLoading } = useQuery<{ segments: CrmSegment[] }>({
-    queryKey: ['/api/crm/integration/segments'],
-  });
-
-  const crmSegments = crmSegmentsData?.segments || [];
+  // Use shared CRM data from hook (avoids duplicate queries)
+  const crmContacts = crmPresence.contacts;
+  const crmSegments = crmPresence.segments;
+  
+  // Show CRM empty state for unauthenticated users or when CRM has no data
+  const showCrmEmptyState = crmPresence.state === 'unauthenticated' || crmPresence.state === 'empty';
 
   // Mock data for development (will be replaced by real API data)
   const mockMetrics = {
@@ -190,6 +172,13 @@ export default function SendDashboard() {
       />
 
       <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        {/* CRM Empty State - Show for unauthenticated users OR when CRM has no data */}
+        {showCrmEmptyState && (
+          <div className="mb-6">
+            <CrmEmptyState {...CRM_EMPTY_CONFIGS.send} variant="compact" />
+          </div>
+        )}
 
         {/* Key Metrics */}
         {metricsLoading ? (
