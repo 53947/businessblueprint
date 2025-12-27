@@ -21,7 +21,9 @@ import {
   insertLivechatSessionSchema,
   inboxConversations,
   inboxMessages2,
-  brandAssets // Import brandAssets schema
+  brandAssets,
+  crmContacts,
+  crmTimeline
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
@@ -122,6 +124,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Link assessment to client
       await storage.linkAssessmentToClient(client.id, assessment.id);
       console.log(`[Assessment] Linked assessment ${assessment.id} to client ${client.id}`);
+
+      // Auto-create CRM contact for /relationships
+      try {
+        // Check if CRM contact already exists for this email
+        const existingCrmContact = await db
+          .select()
+          .from(crmContacts)
+          .where(eq(crmContacts.email, validatedData.email))
+          .limit(1);
+        
+        let crmContactId: number | null = null;
+        
+        if (existingCrmContact.length === 0) {
+          // Parse name if provided (some assessments have full name field)
+          const [crmContact] = await db.insert(crmContacts).values({
+            clientId: client.id,
+            firstName: validatedData.businessName?.split(' ')[0] || 'Business',
+            lastName: 'Owner',
+            email: validatedData.email,
+            phone: validatedData.phone || null,
+            lifecycleStage: 'lead',
+            leadSource: 'assessment',
+            customFields: {
+              businessName: validatedData.businessName,
+              industry: validatedData.industry,
+              website: validatedData.website || null,
+              address: validatedData.address,
+              assessmentId: assessment.id
+            }
+          }).returning();
+          
+          crmContactId = crmContact.id;
+          console.log(`[Assessment] Created CRM contact ${crmContactId} for ${validatedData.email}`);
+          
+          // Add timeline event
+          await db.insert(crmTimeline).values({
+            clientId: client.id,
+            contactId: crmContactId,
+            eventType: 'assessment_started',
+            title: `Digital IQ Assessment started for ${validatedData.businessName}`,
+            description: `Assessment ID: ${assessment.id}`,
+            occurredAt: new Date(),
+            sourceApp: 'relationships',
+            actorType: 'system'
+          });
+        } else {
+          crmContactId = existingCrmContact[0].id;
+          console.log(`[Assessment] CRM contact already exists: ${crmContactId}`);
+          
+          // Update existing contact with assessment link (guard against null customFields)
+          const existingCustomFields = existingCrmContact[0].customFields || {};
+          await db.update(crmContacts)
+            .set({
+              customFields: {
+                ...(typeof existingCustomFields === 'object' ? existingCustomFields : {}),
+                businessName: validatedData.businessName,
+                industry: validatedData.industry,
+                website: validatedData.website || null,
+                assessmentId: assessment.id
+              },
+              updatedAt: new Date()
+            })
+            .where(eq(crmContacts.id, crmContactId));
+        }
+      } catch (crmError) {
+        console.error('[Assessment] Failed to create CRM contact:', crmError);
+        // Don't fail the assessment if CRM creation fails
+      }
 
       // Start background analysis
       processAssessmentAsync(assessment.id, googleService, aiService, emailService, storage);
@@ -516,6 +586,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
         loginCount: (client.loginCount || 0) + 1
       });
       console.log('[Magic Link Verify] Login tracking updated');
+
+      // Auto-create or link CRM contact for /relationships
+      try {
+        const existingCrmContact = await db
+          .select()
+          .from(crmContacts)
+          .where(eq(crmContacts.email, client.email))
+          .limit(1);
+        
+        if (existingCrmContact.length === 0) {
+          const [crmContact] = await db.insert(crmContacts).values({
+            clientId: client.id,
+            firstName: client.companyName?.split(' ')[0] || 'Portal',
+            lastName: 'User',
+            email: client.email,
+            phone: client.phone || null,
+            lifecycleStage: 'lead',
+            leadSource: 'portal_signup'
+          }).returning();
+          
+          console.log(`[Magic Link Verify] Created CRM contact ${crmContact.id} for portal user ${client.email}`);
+          
+          await db.insert(crmTimeline).values({
+            clientId: client.id,
+            contactId: crmContact.id,
+            eventType: 'portal_login',
+            title: `First portal login by ${client.companyName || client.email}`,
+            occurredAt: new Date(),
+            sourceApp: 'relationships',
+            actorType: 'system'
+          });
+        } else {
+          // Update existing contact to link to this client if not already linked
+          if (!existingCrmContact[0].clientId) {
+            await db.update(crmContacts)
+              .set({ clientId: client.id, updatedAt: new Date() })
+              .where(eq(crmContacts.id, existingCrmContact[0].id));
+            console.log(`[Magic Link Verify] Linked existing CRM contact ${existingCrmContact[0].id} to client ${client.id}`);
+          }
+        }
+      } catch (crmError) {
+        console.error('[Magic Link Verify] Failed to create/link CRM contact:', crmError);
+        // Don't fail login if CRM sync fails
+      }
 
       // Generate JWT token
       console.log('[Magic Link Verify] Creating dashboard token for client ID:', client.id);

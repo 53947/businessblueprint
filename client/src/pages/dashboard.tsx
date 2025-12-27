@@ -21,8 +21,13 @@ import {
   Download,
   Mail,
   Map,
-  Brain
+  Brain,
+  Sparkles,
+  UserCircle,
+  ListTodo,
+  MessageSquare
 } from "lucide-react";
+import { Link } from "wouter";
 import { apiRequest } from "@/lib/queryClient";
 
 export default function Dashboard() {
@@ -264,6 +269,58 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
+        {/* Post-Assessment Onboarding Welcome Card */}
+        <Card className="mb-6 border-[#22C55E]/30 bg-gradient-to-r from-green-50/50 to-white" data-testid="onboarding-card">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-[#22C55E]/10 rounded-full">
+                <Sparkles className="w-6 h-6 text-[#22C55E]" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Welcome to your Digital Blueprint!
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  You've been added to our Customer Relationship Manager (/relationships). 
+                  This is your home base for managing your digital presence journey.
+                </p>
+                <div className="grid sm:grid-cols-3 gap-3">
+                  <Link href="/relationships">
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start border-[#22C55E]/30 hover:bg-[#22C55E]/5 hover:border-[#22C55E]"
+                      data-testid="btn-view-crm-contact"
+                    >
+                      <UserCircle className="w-4 h-4 mr-2 text-[#22C55E]" />
+                      View Your Profile
+                    </Button>
+                  </Link>
+                  <Link href="/relationships?view=tasks">
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start border-[#22C55E]/30 hover:bg-[#22C55E]/5 hover:border-[#22C55E]"
+                      data-testid="btn-view-tasks"
+                    >
+                      <ListTodo className="w-4 h-4 mr-2 text-[#22C55E]" />
+                      Your Next Steps
+                    </Button>
+                  </Link>
+                  <Link href="/ai-coach">
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start border-blue-300 hover:bg-blue-50 hover:border-blue-500"
+                      data-testid="btn-ai-coach"
+                    >
+                      <MessageSquare className="w-4 h-4 mr-2 text-blue-600" />
+                      Ask AI Coach
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
         
         <div className="grid lg:grid-cols-5 gap-8">
           {/* Main Content - Digital Blueprint */}
