@@ -15,6 +15,7 @@ import {
   Mail,
   Phone,
   Calendar,
+  CalendarDays,
   ChevronRight,
   Star,
   TrendingUp,
@@ -38,7 +39,10 @@ import {
   Loader2,
   ArrowLeft,
   Eye,
-  Linkedin
+  Linkedin,
+  List,
+  User,
+  Building
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -3065,15 +3069,712 @@ function PipelineView() {
 }
 
 function TasksView() {
+  const { toast } = useToast();
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [priorityFilter, setPriorityFilter] = useState<string>("all");
+  const [viewMode, setViewMode] = useState<"list" | "calendar">("list");
+  const [showAddTaskDialog, setShowAddTaskDialog] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<CrmTask | null>(null);
+  const [calendarDate, setCalendarDate] = useState(new Date());
+
+  const buildTasksUrl = () => {
+    const params = new URLSearchParams();
+    params.append("limit", "200");
+    if (statusFilter !== "all") params.append("status", statusFilter);
+    return `/api/crm/tasks?${params.toString()}`;
+  };
+
+  const { data: tasksData, isLoading: tasksLoading } = useQuery<{ tasks: CrmTask[]; total: number }>({
+    queryKey: [buildTasksUrl()],
+  });
+
+  const { data: contactsData } = useQuery<{ contacts: CrmContact[]; total: number }>({
+    queryKey: ["/api/crm/contacts?limit=200"],
+  });
+
+  const { data: companiesData } = useQuery<{ companies: CrmCompany[]; total: number }>({
+    queryKey: ["/api/crm/companies?limit=200"],
+  });
+
+  const { data: dealsData } = useQuery<{ deals: CrmDeal[]; total: number }>({
+    queryKey: ["/api/crm/deals?limit=200"],
+  });
+
+  const createTaskMutation = useMutation({
+    mutationFn: async (data: { title: string; description?: string; taskType?: string; priority?: string; dueDate?: string; contactId?: number; companyId?: number; dealId?: number }) => {
+      return apiRequest("POST", "/api/crm/tasks", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/tasks") });
+      setShowAddTaskDialog(false);
+      toast({ title: "Task created" });
+    },
+    onError: (error: Error) => {
+      toast({ title: "Failed to create task", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const updateTaskMutation = useMutation({
+    mutationFn: async ({ id, ...data }: { id: number; status?: string; title?: string; description?: string; priority?: string; dueDate?: string | null }) => {
+      return apiRequest("PATCH", `/api/crm/tasks/${id}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/tasks") });
+      setSelectedTask(null);
+    },
+  });
+
+  const deleteTaskMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return apiRequest("DELETE", `/api/crm/tasks/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ predicate: (query) => (query.queryKey[0] as string).startsWith("/api/crm/tasks") });
+      setSelectedTask(null);
+      toast({ title: "Task deleted" });
+    },
+  });
+
+  const tasks = tasksData?.tasks || [];
+  const contacts = contactsData?.contacts || [];
+  const companies = companiesData?.companies || [];
+  const deals = dealsData?.deals || [];
+
+  const filteredTasks = tasks.filter(task => {
+    if (priorityFilter !== "all" && task.priority !== priorityFilter) return false;
+    return true;
+  });
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const nextWeek = new Date(today);
+  nextWeek.setDate(nextWeek.getDate() + 7);
+
+  const overdueTasks = filteredTasks.filter(t => t.status !== "completed" && t.dueDate && new Date(t.dueDate) < today);
+  const todayTasks = filteredTasks.filter(t => t.status !== "completed" && t.dueDate && new Date(t.dueDate) >= today && new Date(t.dueDate) < tomorrow);
+  const upcomingTasks = filteredTasks.filter(t => t.status !== "completed" && t.dueDate && new Date(t.dueDate) >= tomorrow && new Date(t.dueDate) < nextWeek);
+  const laterTasks = filteredTasks.filter(t => t.status !== "completed" && (!t.dueDate || new Date(t.dueDate) >= nextWeek));
+  const completedTasks = filteredTasks.filter(t => t.status === "completed");
+
+  const getContactName = (contactId: number | null) => {
+    if (!contactId) return null;
+    const contact = contacts.find(c => c.id === contactId);
+    return contact ? `${contact.firstName} ${contact.lastName}` : null;
+  };
+
+  const getCompanyName = (companyId: number | null) => {
+    if (!companyId) return null;
+    const company = companies.find(c => c.id === companyId);
+    return company?.name || null;
+  };
+
+  const getDealName = (dealId: number | null) => {
+    if (!dealId) return null;
+    const deal = deals.find(d => d.id === dealId);
+    return deal?.name || null;
+  };
+
+  const taskFormSchema = z.object({
+    title: z.string().min(1, "Title is required"),
+    description: z.string().optional(),
+    taskType: z.string().default("task"),
+    priority: z.string().default("medium"),
+    dueDate: z.string().optional(),
+    contactId: z.string().optional(),
+    companyId: z.string().optional(),
+    dealId: z.string().optional(),
+  });
+
+  const taskForm = useForm<z.infer<typeof taskFormSchema>>({
+    resolver: zodResolver(taskFormSchema),
+    defaultValues: { title: "", description: "", taskType: "task", priority: "medium", dueDate: "", contactId: "", companyId: "", dealId: "" },
+  });
+
+  const handleCreateTask = (values: z.infer<typeof taskFormSchema>) => {
+    createTaskMutation.mutate({
+      title: values.title,
+      description: values.description || undefined,
+      taskType: values.taskType,
+      priority: values.priority,
+      dueDate: values.dueDate || undefined,
+      contactId: values.contactId && values.contactId !== "none" ? parseInt(values.contactId) : undefined,
+      companyId: values.companyId && values.companyId !== "none" ? parseInt(values.companyId) : undefined,
+      dealId: values.dealId && values.dealId !== "none" ? parseInt(values.dealId) : undefined,
+    });
+  };
+
+  const handleToggleComplete = (task: CrmTask) => {
+    updateTaskMutation.mutate({
+      id: task.id,
+      status: task.status === "completed" ? "pending" : "completed",
+    });
+  };
+
+  const getPriorityColor = (priority: string | null) => {
+    switch (priority) {
+      case "urgent": return "text-red-600 bg-red-50";
+      case "high": return "text-orange-600 bg-orange-50";
+      case "medium": return "text-yellow-600 bg-yellow-50";
+      case "low": return "text-blue-600 bg-blue-50";
+      default: return "text-gray-600 bg-gray-50";
+    }
+  };
+
+  const getTaskTypeIcon = (taskType: string | null) => {
+    switch (taskType) {
+      case "call": return <Phone className="w-4 h-4" />;
+      case "email": return <Mail className="w-4 h-4" />;
+      case "meeting": return <Users className="w-4 h-4" />;
+      case "follow_up": return <Clock className="w-4 h-4" />;
+      default: return <CheckSquare className="w-4 h-4" />;
+    }
+  };
+
+  const TaskCard = ({ task }: { task: CrmTask }) => (
+    <div
+      className={`p-3 border rounded-lg cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 ${task.status === "completed" ? "opacity-60" : ""}`}
+      onClick={() => setSelectedTask(task)}
+      data-testid={`task-card-${task.id}`}
+    >
+      <div className="flex items-start gap-3">
+        <button
+          onClick={(e) => { e.stopPropagation(); handleToggleComplete(task); }}
+          className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${task.status === "completed" ? "bg-[#22C55E] border-[#22C55E] text-white" : "border-gray-300 hover:border-[#22C55E]"}`}
+          data-testid={`task-checkbox-${task.id}`}
+        >
+          {task.status === "completed" && <Check className="w-3 h-3" />}
+        </button>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-gray-400">{getTaskTypeIcon(task.taskType)}</span>
+            <span className={`font-medium text-sm ${task.status === "completed" ? "line-through text-gray-400" : ""}`}>
+              {task.title}
+            </span>
+          </div>
+          {task.description && (
+            <p className="text-xs text-gray-500 line-clamp-1 mb-1">{task.description}</p>
+          )}
+          <div className="flex items-center gap-2 flex-wrap">
+            {task.priority && (
+              <Badge variant="outline" className={`text-xs ${getPriorityColor(task.priority)}`}>
+                {task.priority}
+              </Badge>
+            )}
+            {task.dueDate && (
+              <span className={`text-xs flex items-center gap-1 ${new Date(task.dueDate) < today && task.status !== "completed" ? "text-red-500" : "text-gray-500"}`}>
+                <Calendar className="w-3 h-3" />
+                {new Date(task.dueDate).toLocaleDateString()}
+              </span>
+            )}
+            {task.contactId && (
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <User className="w-3 h-3" />
+                {getContactName(task.contactId)}
+              </span>
+            )}
+            {task.companyId && (
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <Building className="w-3 h-3" />
+                {getCompanyName(task.companyId)}
+              </span>
+            )}
+            {task.dealId && (
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <DollarSign className="w-3 h-3" />
+                {getDealName(task.dealId)}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const TaskSection = ({ title, tasks, color }: { title: string; tasks: CrmTask[]; color: string }) => {
+    if (tasks.length === 0) return null;
+    return (
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <span className={`w-2 h-2 rounded-full ${color}`} />
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">{title}</h3>
+          <Badge variant="outline" className="text-xs">{tasks.length}</Badge>
+        </div>
+        <div className="space-y-2">
+          {tasks.map(task => <TaskCard key={task.id} task={task} />)}
+        </div>
+      </div>
+    );
+  };
+
+  const calendarStartOfMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1);
+  const calendarEndOfMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 0);
+  const daysInMonth = calendarEndOfMonth.getDate();
+  const startDayOfWeek = calendarStartOfMonth.getDay();
+
+  const getTasksForDate = (date: Date) => {
+    return filteredTasks.filter(t => {
+      if (!t.dueDate) return false;
+      const taskDate = new Date(t.dueDate);
+      return taskDate.getFullYear() === date.getFullYear() &&
+             taskDate.getMonth() === date.getMonth() &&
+             taskDate.getDate() === date.getDate();
+    });
+  };
+
+  if (tasksLoading) {
+    return (
+      <div className="flex items-center justify-center py-12" data-testid="tasks-loading">
+        <Loader2 className="w-8 h-8 animate-spin text-[#22C55E]" />
+      </div>
+    );
+  }
+
   return (
-    <div className="text-center py-12">
-      <CheckSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Tasks</h2>
-      <p className="text-gray-500 dark:text-gray-400 mb-4">Stay organized with follow-up tasks and reminders</p>
-      <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white">
-        <Plus className="w-4 h-4 mr-2" />
-        Create Task
-      </Button>
+    <div className="space-y-6" data-testid="tasks-view">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Tasks</h1>
+          <p className="text-gray-500 dark:text-gray-400">Manage follow-ups, calls, and to-dos</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center border rounded-lg overflow-hidden">
+            <Button
+              variant={viewMode === "list" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("list")}
+              className={viewMode === "list" ? "bg-[#22C55E] hover:bg-[#16A34A]" : ""}
+              data-testid="btn-view-list"
+            >
+              <List className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={viewMode === "calendar" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("calendar")}
+              className={viewMode === "calendar" ? "bg-[#22C55E] hover:bg-[#16A34A]" : ""}
+              data-testid="btn-view-calendar"
+            >
+              <CalendarDays className="w-4 h-4" />
+            </Button>
+          </div>
+          <Button
+            onClick={() => setShowAddTaskDialog(true)}
+            className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+            data-testid="btn-add-task"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Task
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-40" data-testid="select-status-filter">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Status</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="completed">Completed</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+          <SelectTrigger className="w-40" data-testid="select-priority-filter">
+            <SelectValue placeholder="Priority" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Priorities</SelectItem>
+            <SelectItem value="urgent">Urgent</SelectItem>
+            <SelectItem value="high">High</SelectItem>
+            <SelectItem value="medium">Medium</SelectItem>
+            <SelectItem value="low">Low</SelectItem>
+          </SelectContent>
+        </Select>
+        <div className="flex-1" />
+        <span className="text-sm text-gray-500">{filteredTasks.length} tasks</span>
+      </div>
+
+      {viewMode === "list" ? (
+        <div>
+          {filteredTasks.length === 0 ? (
+            <div className="text-center py-12">
+              <CheckSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No tasks yet</h2>
+              <p className="text-gray-500 dark:text-gray-400 mb-4">Create your first task to stay organized</p>
+              <Button onClick={() => setShowAddTaskDialog(true)} className="bg-[#22C55E] hover:bg-[#16A34A] text-white">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Task
+              </Button>
+            </div>
+          ) : (
+            <>
+              <TaskSection title="Overdue" tasks={overdueTasks} color="bg-red-500" />
+              <TaskSection title="Today" tasks={todayTasks} color="bg-[#22C55E]" />
+              <TaskSection title="This Week" tasks={upcomingTasks} color="bg-blue-500" />
+              <TaskSection title="Later" tasks={laterTasks} color="bg-gray-400" />
+              {statusFilter === "all" && <TaskSection title="Completed" tasks={completedTasks} color="bg-gray-300" />}
+            </>
+          )}
+        </div>
+      ) : (
+        <Card data-testid="calendar-view">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1))}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <h3 className="font-semibold">
+                {calendarDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+              </h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1))}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-7 gap-1 mb-2">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(day => (
+                <div key={day} className="text-center text-xs font-medium text-gray-500 py-2">{day}</div>
+              ))}
+            </div>
+            <div className="grid grid-cols-7 gap-1">
+              {Array.from({ length: startDayOfWeek }).map((_, i) => (
+                <div key={`empty-${i}`} className="h-24 bg-gray-50 dark:bg-gray-800 rounded-lg" />
+              ))}
+              {Array.from({ length: daysInMonth }).map((_, i) => {
+                const date = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), i + 1);
+                const dayTasks = getTasksForDate(date);
+                const isToday = date.toDateString() === today.toDateString();
+                return (
+                  <div
+                    key={i}
+                    className={`h-24 p-1 rounded-lg border overflow-hidden ${isToday ? "border-[#22C55E] bg-[#22C55E]/5" : "border-gray-200 dark:border-gray-700"}`}
+                  >
+                    <div className={`text-xs font-medium mb-1 ${isToday ? "text-[#22C55E]" : "text-gray-600 dark:text-gray-400"}`}>
+                      {i + 1}
+                    </div>
+                    <div className="space-y-0.5">
+                      {dayTasks.slice(0, 3).map(task => (
+                        <div
+                          key={task.id}
+                          className={`text-xs truncate px-1 py-0.5 rounded cursor-pointer ${task.status === "completed" ? "bg-gray-100 text-gray-400 line-through" : "bg-[#22C55E]/10 text-[#22C55E]"}`}
+                          onClick={() => setSelectedTask(task)}
+                        >
+                          {task.title}
+                        </div>
+                      ))}
+                      {dayTasks.length > 3 && (
+                        <div className="text-xs text-gray-400 px-1">+{dayTasks.length - 3} more</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <Dialog open={showAddTaskDialog} onOpenChange={setShowAddTaskDialog}>
+        <DialogContent className="max-w-lg" data-testid="add-task-dialog">
+          <DialogHeader>
+            <DialogTitle>Add New Task</DialogTitle>
+            <DialogDescription>Create a new task or follow-up</DialogDescription>
+          </DialogHeader>
+          <Form {...taskForm}>
+            <form onSubmit={taskForm.handleSubmit(handleCreateTask)} className="space-y-4">
+              <FormField
+                control={taskForm.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title *</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Call to follow up..." {...field} data-testid="input-task-title" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={taskForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Additional details..." {...field} data-testid="input-task-description" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={taskForm.control}
+                  name="taskType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Type</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-task-type">
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="task">Task</SelectItem>
+                          <SelectItem value="call">Call</SelectItem>
+                          <SelectItem value="email">Email</SelectItem>
+                          <SelectItem value="meeting">Meeting</SelectItem>
+                          <SelectItem value="follow_up">Follow-up</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={taskForm.control}
+                  name="priority"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Priority</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-task-priority">
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                          <SelectItem value="urgent">Urgent</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={taskForm.control}
+                name="dueDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Due Date</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} data-testid="input-task-due-date" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-3 gap-4">
+                <FormField
+                  control={taskForm.control}
+                  name="contactId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Contact</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-task-contact">
+                            <SelectValue placeholder="Select..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          {contacts.map(contact => (
+                            <SelectItem key={contact.id} value={contact.id.toString()}>
+                              {contact.firstName} {contact.lastName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={taskForm.control}
+                  name="companyId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-task-company">
+                            <SelectValue placeholder="Select..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          {companies.map(company => (
+                            <SelectItem key={company.id} value={company.id.toString()}>
+                              {company.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={taskForm.control}
+                  name="dealId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Deal</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger data-testid="select-task-deal">
+                            <SelectValue placeholder="Select..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          {deals.map(deal => (
+                            <SelectItem key={deal.id} value={deal.id.toString()}>
+                              {deal.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex justify-end gap-3">
+                <Button type="button" variant="outline" onClick={() => setShowAddTaskDialog(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={createTaskMutation.isPending}
+                  className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                  data-testid="btn-save-task"
+                >
+                  {createTaskMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Task"}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!selectedTask} onOpenChange={(open) => !open && setSelectedTask(null)}>
+        <DialogContent className="max-w-lg" data-testid="task-detail-dialog">
+          {selectedTask && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <span className="text-gray-400">{getTaskTypeIcon(selectedTask.taskType)}</span>
+                  {selectedTask.title}
+                </DialogTitle>
+                <DialogDescription>
+                  Created {new Date(selectedTask.createdAt).toLocaleDateString()}
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                {selectedTask.description && (
+                  <div>
+                    <Label className="text-sm text-gray-500">Description</Label>
+                    <p className="mt-1">{selectedTask.description}</p>
+                  </div>
+                )}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-sm text-gray-500">Status</Label>
+                    <Badge className={selectedTask.status === "completed" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}>
+                      {selectedTask.status}
+                    </Badge>
+                  </div>
+                  <div>
+                    <Label className="text-sm text-gray-500">Priority</Label>
+                    <Badge className={getPriorityColor(selectedTask.priority)}>
+                      {selectedTask.priority}
+                    </Badge>
+                  </div>
+                </div>
+                {selectedTask.dueDate && (
+                  <div>
+                    <Label className="text-sm text-gray-500">Due Date</Label>
+                    <p className="flex items-center gap-2 mt-1">
+                      <Calendar className="w-4 h-4" />
+                      {new Date(selectedTask.dueDate).toLocaleDateString()}
+                    </p>
+                  </div>
+                )}
+                <div className="flex flex-wrap gap-4">
+                  {selectedTask.contactId && (
+                    <div>
+                      <Label className="text-sm text-gray-500">Contact</Label>
+                      <p className="flex items-center gap-2 mt-1">
+                        <User className="w-4 h-4" />
+                        {getContactName(selectedTask.contactId)}
+                      </p>
+                    </div>
+                  )}
+                  {selectedTask.companyId && (
+                    <div>
+                      <Label className="text-sm text-gray-500">Company</Label>
+                      <p className="flex items-center gap-2 mt-1">
+                        <Building className="w-4 h-4" />
+                        {getCompanyName(selectedTask.companyId)}
+                      </p>
+                    </div>
+                  )}
+                  {selectedTask.dealId && (
+                    <div>
+                      <Label className="text-sm text-gray-500">Deal</Label>
+                      <p className="flex items-center gap-2 mt-1">
+                        <DollarSign className="w-4 h-4" />
+                        {getDealName(selectedTask.dealId)}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex justify-between pt-4 border-t">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => deleteTaskMutation.mutate(selectedTask.id)}
+                  disabled={deleteTaskMutation.isPending}
+                  data-testid="btn-delete-task"
+                >
+                  {deleteTaskMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Delete"}
+                </Button>
+                <Button
+                  onClick={() => handleToggleComplete(selectedTask)}
+                  disabled={updateTaskMutation.isPending}
+                  className={selectedTask.status === "completed" ? "" : "bg-[#22C55E] hover:bg-[#16A34A] text-white"}
+                  data-testid="btn-toggle-complete"
+                >
+                  {updateTaskMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : selectedTask.status === "completed" ? (
+                    "Mark Incomplete"
+                  ) : (
+                    <>
+                      <Check className="w-4 h-4 mr-2" />
+                      Mark Complete
+                    </>
+                  )}
+                </Button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
