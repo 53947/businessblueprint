@@ -25,7 +25,13 @@ import {
   Home,
   Settings,
   Filter,
-  Archive
+  Archive,
+  User,
+  Building2,
+  DollarSign,
+  Clock,
+  ExternalLink,
+  Link2
 } from 'lucide-react';
 import { SiWhatsapp, SiTiktok } from 'react-icons/si';
 import { apiRequest, queryClient } from '@/lib/queryClient';
@@ -54,6 +60,49 @@ interface Message {
   fromName: string;
   status: string;
   createdAt: string;
+}
+
+interface CrmContext {
+  contact: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone?: string;
+    title?: string;
+    lifecycleStage?: string;
+    leadSource?: string;
+    customFields?: Record<string, any>;
+  };
+  company?: {
+    id: number;
+    name: string;
+    industry?: string;
+    website?: string;
+    size?: string;
+  };
+  deals: Array<{
+    id: number;
+    title: string;
+    value: number;
+    stage?: string;
+    probability?: number;
+  }>;
+  recentActivity: Array<{
+    id: number;
+    eventType: string;
+    title: string;
+    description?: string;
+    sourceApp?: string;
+    occurredAt: string;
+  }>;
+  tags: string[];
+  totalDealValue: number;
+}
+
+interface CrmLookupResult {
+  found: boolean;
+  contact: { id: number } | null;
 }
 
 const CHANNEL_ICONS: Record<string, any> = {
@@ -121,6 +170,26 @@ export default function InboxPage() {
   const { data: messages = [], isLoading: messagesLoading } = useQuery<Message[]>({
     queryKey: ['/api/inbox/conversations', selectedConversation, 'messages'],
     enabled: !!selectedConversation && !!authToken && !!clientId,
+  });
+
+  // Get selected conversation for CRM lookup
+  const selectedConv = conversations.find(c => c.id === selectedConversation);
+
+  // CRM lookup by contact identifier (email/phone)
+  const contactEmail = selectedConv?.contactIdentifier && selectedConv.contactIdentifier.includes('@') 
+    ? selectedConv.contactIdentifier 
+    : undefined;
+  
+  const { data: crmLookup, isLoading: crmLookupLoading } = useQuery<CrmLookupResult>({
+    queryKey: [`/api/crm/integration/lookup?email=${encodeURIComponent(contactEmail || '')}`],
+    enabled: !!contactEmail,
+  });
+
+  // Fetch CRM context when contact is found
+  const crmContactId = crmLookup?.contact?.id;
+  const { data: crmContext, isLoading: crmContextLoading } = useQuery<CrmContext>({
+    queryKey: [`/api/crm/integration/context/${crmContactId}`],
+    enabled: !!crmLookup?.found && !!crmContactId,
   });
 
   // Send message mutation
@@ -273,8 +342,6 @@ export default function InboxPage() {
       }, 2000);
     }
   };
-
-  const selectedConv = conversations.find(c => c.id === selectedConversation);
 
   const inboxTabs = [
     {
@@ -505,6 +572,128 @@ export default function InboxPage() {
           </div>
         )}
       </div>
+
+      {/* CRM Context Panel */}
+      {selectedConv && (
+        <div className="w-72 border-l border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-y-auto" data-testid="crm-context-panel">
+          <div className="p-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Link2 className="w-4 h-4 text-green-600" />
+              <h3 className="font-semibold text-sm text-gray-900 dark:text-white" data-testid="text-crm-title">CRM Context</h3>
+              <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 text-xs" data-testid="badge-performance-tier">
+                Performance
+              </Badge>
+            </div>
+
+            {crmLookupLoading || crmContextLoading ? (
+              <div className="space-y-3" data-testid="crm-loading-skeleton">
+                <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              </div>
+            ) : crmContext ? (
+              <div className="space-y-4" data-testid="crm-context-content">
+                {/* Contact Info */}
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3" data-testid="crm-contact-section">
+                  <div className="flex items-center gap-2 mb-2">
+                    <User className="w-4 h-4 text-gray-500" />
+                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Contact</span>
+                  </div>
+                  <p className="font-medium text-gray-900 dark:text-white" data-testid="crm-contact-name">
+                    {crmContext.contact.firstName} {crmContext.contact.lastName}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400" data-testid="crm-contact-email">{crmContext.contact.email}</p>
+                  {crmContext.contact.lifecycleStage && (
+                    <Badge className="mt-2 capitalize" variant="outline" data-testid="crm-lifecycle-stage">{crmContext.contact.lifecycleStage}</Badge>
+                  )}
+                </div>
+
+                {/* Company */}
+                {crmContext.company && (
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3" data-testid="crm-company-section">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Building2 className="w-4 h-4 text-gray-500" />
+                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Company</span>
+                    </div>
+                    <p className="font-medium text-gray-900 dark:text-white" data-testid="crm-company-name">{crmContext.company.name}</p>
+                    {crmContext.company.industry && (
+                      <p className="text-sm text-gray-500 dark:text-gray-400" data-testid="crm-company-industry">{crmContext.company.industry}</p>
+                    )}
+                  </div>
+                )}
+
+                {/* Deals */}
+                {crmContext.deals.length > 0 && (
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3" data-testid="crm-deals-section">
+                    <div className="flex items-center gap-2 mb-2">
+                      <DollarSign className="w-4 h-4 text-gray-500" />
+                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Deals</span>
+                    </div>
+                    <div className="space-y-2">
+                      {crmContext.deals.slice(0, 3).map((deal) => (
+                        <div key={deal.id} className="flex justify-between items-center text-sm" data-testid={`crm-deal-${deal.id}`}>
+                          <span className="text-gray-900 dark:text-white truncate">{deal.title}</span>
+                          <span className="text-green-600 font-medium" data-testid={`crm-deal-value-${deal.id}`}>${deal.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white mt-2" data-testid="crm-total-deal-value">
+                      Total: ${crmContext.totalDealValue.toLocaleString()}
+                    </p>
+                  </div>
+                )}
+
+                {/* Recent Activity */}
+                {crmContext.recentActivity.length > 0 && (
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3" data-testid="crm-activity-section">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="w-4 h-4 text-gray-500" />
+                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Recent Activity</span>
+                    </div>
+                    <div className="space-y-2">
+                      {crmContext.recentActivity.slice(0, 3).map((activity) => (
+                        <div key={activity.id} className="text-sm" data-testid={`crm-activity-${activity.id}`}>
+                          <p className="text-gray-900 dark:text-white">{activity.title}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {formatDistanceToNow(new Date(activity.occurredAt), { addSuffix: true })}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* View in CRM Button */}
+                <Button 
+                  className="w-full" 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setLocation('/relationships')}
+                  data-testid="button-view-crm"
+                >
+                  <ExternalLink className="w-3 h-3 mr-2" />
+                  View in /relationships
+                </Button>
+              </div>
+            ) : (
+              <div className="text-center py-6" data-testid="crm-empty-state">
+                <User className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3" data-testid="text-no-crm-record">
+                  No CRM record found
+                </p>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setLocation('/relationships')}
+                  data-testid="button-create-crm-contact"
+                >
+                  Create Contact
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );

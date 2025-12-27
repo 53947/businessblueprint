@@ -16,13 +16,33 @@ import {
   CheckCircle2,
   Activity,
   BarChart3,
-  Settings
+  Settings,
+  Link2,
+  ExternalLink,
+  Filter
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLocation } from "wouter";
 import { BrandLogo } from "@/components/brand-logo";
 import { SectionHeader } from "@/components/section-header";
 import { useToast } from "@/hooks/use-toast";
+
+interface CrmContact {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  lifecycleStage?: string;
+}
+
+interface CrmSegment {
+  id: number;
+  name: string;
+  description?: string;
+  memberCount?: number;
+  segmentType?: string;
+}
 
 interface DashboardMetrics {
   totalContacts: number;
@@ -62,6 +82,18 @@ export default function SendDashboard() {
   const { data: recentCampaigns, isLoading: campaignsLoading } = useQuery<ActivityItem[]>({
     queryKey: ['/api/send/campaigns/recent'],
   });
+
+  // Fetch CRM contacts for targeting (Performance tier integration)
+  const { data: crmContacts, isLoading: crmContactsLoading } = useQuery<CrmContact[]>({
+    queryKey: ['/api/crm/contacts'],
+  });
+
+  // Fetch CRM segments for targeting (Performance tier integration)
+  const { data: crmSegmentsData, isLoading: crmSegmentsLoading } = useQuery<{ segments: CrmSegment[] }>({
+    queryKey: ['/api/crm/integration/segments'],
+  });
+
+  const crmSegments = crmSegmentsData?.segments || [];
 
   // Mock data for development (will be replaced by real API data)
   const mockMetrics = {
@@ -244,6 +276,7 @@ export default function SendDashboard() {
         <Tabs defaultValue="overview" className="space-y-6">
           <TabsList>
             <TabsTrigger value="overview" data-testid="tab-overview">Overview</TabsTrigger>
+            <TabsTrigger value="contacts" data-testid="tab-contacts-list">Contacts</TabsTrigger>
             <TabsTrigger value="campaigns" data-testid="tab-campaigns">Recent Campaigns</TabsTrigger>
             <TabsTrigger value="analytics" data-testid="tab-analytics">Analytics</TabsTrigger>
           </TabsList>
@@ -364,6 +397,46 @@ export default function SendDashboard() {
                     </Button>
                   </CardContent>
                 </Card>
+
+                {/* CRM Integration Card */}
+                <Card className="mt-6 border-green-200 dark:border-green-800 bg-green-50/50 dark:bg-green-900/20">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-2">
+                      <Link2 className="w-5 h-5 text-green-600" />
+                      <CardTitle className="text-base">CRM Integration</CardTitle>
+                    </div>
+                    <CardDescription>Pull contacts from /relationships</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {crmContactsLoading ? (
+                      <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    ) : (
+                      <>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">CRM Contacts</span>
+                          <span className="font-semibold text-green-700 dark:text-green-400" data-testid="crm-contacts-count">
+                            {(crmContacts?.length || 0).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600 dark:text-gray-400">Segments</span>
+                          <span className="font-semibold text-green-700 dark:text-green-400" data-testid="crm-segments-count">
+                            {crmSegments.length}
+                          </span>
+                        </div>
+                      </>
+                    )}
+                    <Button 
+                      className="w-full justify-center mt-2" 
+                      variant="outline"
+                      onClick={() => setLocation('/relationships')}
+                      data-testid="button-manage-crm"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Manage in /relationships
+                    </Button>
+                  </CardContent>
+                </Card>
               </div>
             </div>
 
@@ -421,6 +494,147 @@ export default function SendDashboard() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Contacts Tab - CRM Integration */}
+          <TabsContent value="contacts" className="space-y-6">
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* Contact List from CRM */}
+              <div className="lg:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle>CRM Contacts</CardTitle>
+                        <CardDescription>Contacts synced from /relationships</CardDescription>
+                      </div>
+                      <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+                        <Link2 className="w-3 h-3 mr-1" />
+                        Performance
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {crmContactsLoading ? (
+                      <div className="space-y-3">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <div key={i} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                            <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4 mb-2"></div>
+                            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-1/2"></div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : crmContacts && crmContacts.length > 0 ? (
+                      <div className="space-y-2 max-h-96 overflow-y-auto">
+                        {crmContacts.slice(0, 20).map((contact) => (
+                          <div key={contact.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg" data-testid={`crm-contact-${contact.id}`}>
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                                <span className="text-green-700 dark:text-green-300 text-sm font-medium">
+                                  {contact.firstName?.[0]?.toUpperCase() || '?'}
+                                </span>
+                              </div>
+                              <div>
+                                <p className="font-medium text-gray-900 dark:text-white">
+                                  {contact.firstName} {contact.lastName}
+                                </p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{contact.email}</p>
+                              </div>
+                            </div>
+                            {contact.lifecycleStage && (
+                              <Badge variant="outline" className="capitalize">{contact.lifecycleStage}</Badge>
+                            )}
+                          </div>
+                        ))}
+                        {crmContacts.length > 20 && (
+                          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">
+                            Showing 20 of {crmContacts.length} contacts
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500 dark:text-gray-400 mb-4">No contacts in CRM yet</p>
+                        <Button onClick={() => setLocation('/relationships')} data-testid="button-add-crm-contacts">
+                          Add Contacts in /relationships
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Segments for Targeting */}
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Filter className="w-4 h-4" />
+                      Segments
+                    </CardTitle>
+                    <CardDescription>Target specific audiences</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {crmSegmentsLoading ? (
+                      <div className="space-y-3">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                        ))}
+                      </div>
+                    ) : crmSegments.length > 0 ? (
+                      <div className="space-y-2">
+                        {crmSegments.map((segment) => (
+                          <div key={segment.id} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700" data-testid={`segment-${segment.id}`}>
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium text-gray-900 dark:text-white">{segment.name}</span>
+                              <Badge variant="secondary">{segment.memberCount || 0}</Badge>
+                            </div>
+                            {segment.description && (
+                              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{segment.description}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-6">
+                        <Filter className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mb-3">No segments created yet</p>
+                        <Button variant="outline" size="sm" onClick={() => setLocation('/relationships')} data-testid="button-create-segment">
+                          Create Segment
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="mt-6">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base">Manage Contacts</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <Button 
+                      className="w-full justify-start" 
+                      variant="outline"
+                      onClick={() => setLocation('/relationships')}
+                      data-testid="button-go-to-crm"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Open /relationships CRM
+                    </Button>
+                    <Button 
+                      className="w-full justify-start" 
+                      variant="outline"
+                      onClick={() => toast({ title: 'Sync', description: 'Contacts are synced in real-time' })}
+                      data-testid="button-sync-contacts"
+                    >
+                      <Link2 className="w-4 h-4 mr-2" />
+                      Sync Status: Live
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </TabsContent>
 
           {/* Campaigns Tab */}
