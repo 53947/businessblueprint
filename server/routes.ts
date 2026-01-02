@@ -149,12 +149,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create or find client account for this email
       let client = await storage.getClientByEmail(validatedData.email);
       if (!client) {
+        // Build full formatted address from assessment fields
+        const fullAddress = [
+          validatedData.attention ? `Attn: ${validatedData.attention}` : null,
+          validatedData.address,
+          validatedData.address2,
+          validatedData.unit ? `Unit ${validatedData.unit}` : null,
+          `${validatedData.city}, ${validatedData.state} ${validatedData.zipCode}`,
+          validatedData.country || 'United States'
+        ].filter(Boolean).join('\n');
+        
         client = await storage.createClient({
           companyName: validatedData.businessName,
           email: validatedData.email,
           phone: validatedData.phone,
           website: validatedData.website || undefined,
-          address: validatedData.address,
+          address: fullAddress,
           accountStatus: "active" as const,
         });
         console.log(
@@ -197,6 +207,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 industry: validatedData.industry,
                 website: validatedData.website || null,
                 address: validatedData.address,
+                address2: validatedData.address2 || null,
+                unit: validatedData.unit || null,
+                attention: validatedData.attention || null,
+                city: validatedData.city,
+                state: validatedData.state,
+                zipCode: validatedData.zipCode,
+                country: validatedData.country || 'United States',
                 assessmentId: assessment.id,
               },
             })
