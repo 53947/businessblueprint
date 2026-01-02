@@ -10,6 +10,7 @@ import brandColorsRoutes from "./routes/brand-colors";
 import { registerBillingAdminRoutes } from "./routes/billing-admin";
 import { crmRouter } from "./routes/crm";
 import { publicApiRouter } from "./routes/api";
+import { registerPaymentRoutes } from "./routes/payments";
 import {
   insertAssessmentSchema,
   subscriptionPlans,
@@ -26,7 +27,7 @@ import {
   crmContacts,
   crmDeals,
   crmTasks,
-  crmTimeline
+  crmTimeline,
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
@@ -51,17 +52,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
 
   // Serve favicon.ico from attached_assets
-  app.get('/favicon.ico', (req, res) => {
-    res.sendFile(path.resolve(process.cwd(), 'attached_assets/Blueprint_Favicon_1762489845363.ico'));
+  app.get("/favicon.ico", (req, res) => {
+    res.sendFile(
+      path.resolve(
+        process.cwd(),
+        "attached_assets/Blueprint_Favicon_1762489845363.ico",
+      ),
+    );
   });
 
-  app.get('/api/auth/user', async (req: any, res) => {
+  app.get("/api/auth/user", async (req: any, res) => {
     try {
       // Return null if not authenticated instead of 401
       if (!req.isAuthenticated || !req.isAuthenticated()) {
         return res.json({ user: null });
       }
-      
+
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
       res.json(user);
@@ -79,26 +85,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/setup/demo-accounts", async (req, res) => {
     try {
       const demoAccounts = [
-        { companyName: "Demo Restaurant", email: "demo@businessblueprint.io", accountStatus: "active" as const },
-        { companyName: "Test Business", email: "test@businessblueprint.io", accountStatus: "active" as const },
-        { companyName: "Social Media Agency", email: "agency@businessblueprint.io", accountStatus: "active" as const }
+        {
+          companyName: "Demo Restaurant",
+          email: "demo@businessblueprint.io",
+          accountStatus: "active" as const,
+        },
+        {
+          companyName: "Test Business",
+          email: "test@businessblueprint.io",
+          accountStatus: "active" as const,
+        },
+        {
+          companyName: "Social Media Agency",
+          email: "agency@businessblueprint.io",
+          accountStatus: "active" as const,
+        },
       ];
 
       const results = [];
       for (const account of demoAccounts) {
         const existing = await storage.getClientByEmail(account.email);
         if (existing) {
-          results.push({ email: account.email, status: "already exists", id: existing.id });
+          results.push({
+            email: account.email,
+            status: "already exists",
+            id: existing.id,
+          });
         } else {
           const created = await storage.createClient(account);
-          results.push({ email: account.email, status: "created", id: created.id });
+          results.push({
+            email: account.email,
+            status: "created",
+            id: created.id,
+          });
         }
       }
 
       res.json({ success: true, accounts: results });
     } catch (error) {
       console.error("Demo account setup error:", error);
-      res.status(500).json({ success: false, error: "Failed to create demo accounts" });
+      res
+        .status(500)
+        .json({ success: false, error: "Failed to create demo accounts" });
     }
   });
 
@@ -119,14 +147,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
           phone: validatedData.phone,
           website: validatedData.website || undefined,
           address: validatedData.address,
-          accountStatus: "active" as const
+          accountStatus: "active" as const,
         });
-        console.log(`[Assessment] Created client account for ${validatedData.email}, ID: ${client.id}`);
+        console.log(
+          `[Assessment] Created client account for ${validatedData.email}, ID: ${client.id}`,
+        );
       }
 
       // Link assessment to client
       await storage.linkAssessmentToClient(client.id, assessment.id);
-      console.log(`[Assessment] Linked assessment ${assessment.id} to client ${client.id}`);
+      console.log(
+        `[Assessment] Linked assessment ${assessment.id} to client ${client.id}`,
+      );
 
       // Auto-create CRM contact for /relationships
       try {
@@ -136,80 +168,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .from(crmContacts)
           .where(eq(crmContacts.email, validatedData.email))
           .limit(1);
-        
+
         let crmContactId: number | null = null;
-        
+
         if (existingCrmContact.length === 0) {
           // Parse name if provided (some assessments have full name field)
-          const [crmContact] = await db.insert(crmContacts).values({
-            clientId: client.id,
-            firstName: validatedData.businessName?.split(' ')[0] || 'Business',
-            lastName: 'Owner',
-            email: validatedData.email,
-            phone: validatedData.phone || null,
-            lifecycleStage: 'lead',
-            leadSource: 'assessment',
-            customFields: {
-              businessName: validatedData.businessName,
-              industry: validatedData.industry,
-              website: validatedData.website || null,
-              address: validatedData.address,
-              assessmentId: assessment.id
-            }
-          }).returning();
-          
+          const [crmContact] = await db
+            .insert(crmContacts)
+            .values({
+              clientId: client.id,
+              firstName:
+                validatedData.businessName?.split(" ")[0] || "Business",
+              lastName: "Owner",
+              email: validatedData.email,
+              phone: validatedData.phone || null,
+              lifecycleStage: "lead",
+              leadSource: "assessment",
+              customFields: {
+                businessName: validatedData.businessName,
+                industry: validatedData.industry,
+                website: validatedData.website || null,
+                address: validatedData.address,
+                assessmentId: assessment.id,
+              },
+            })
+            .returning();
+
           crmContactId = crmContact.id;
-          console.log(`[Assessment] Created CRM contact ${crmContactId} for ${validatedData.email}`);
-          
+          console.log(
+            `[Assessment] Created CRM contact ${crmContactId} for ${validatedData.email}`,
+          );
+
           // Add timeline event
           await db.insert(crmTimeline).values({
             clientId: client.id,
             contactId: crmContactId,
-            eventType: 'assessment_started',
+            eventType: "assessment_started",
             title: `Digital IQ Assessment started for ${validatedData.businessName}`,
             description: `Assessment ID: ${assessment.id}`,
             occurredAt: new Date(),
-            sourceApp: 'relationships',
-            actorType: 'system'
+            sourceApp: "relationships",
+            actorType: "system",
           });
         } else {
           crmContactId = existingCrmContact[0].id;
-          console.log(`[Assessment] CRM contact already exists: ${crmContactId}`);
-          
+          console.log(
+            `[Assessment] CRM contact already exists: ${crmContactId}`,
+          );
+
           // Update existing contact with assessment link (guard against null customFields)
           const existingCustomFields = existingCrmContact[0].customFields || {};
-          await db.update(crmContacts)
+          await db
+            .update(crmContacts)
             .set({
               customFields: {
-                ...(typeof existingCustomFields === 'object' ? existingCustomFields : {}),
+                ...(typeof existingCustomFields === "object"
+                  ? existingCustomFields
+                  : {}),
                 businessName: validatedData.businessName,
                 industry: validatedData.industry,
                 website: validatedData.website || null,
-                assessmentId: assessment.id
+                assessmentId: assessment.id,
               },
-              updatedAt: new Date()
+              updatedAt: new Date(),
             })
             .where(eq(crmContacts.id, crmContactId));
         }
       } catch (crmError) {
-        console.error('[Assessment] Failed to create CRM contact:', crmError);
+        console.error("[Assessment] Failed to create CRM contact:", crmError);
         // Don't fail the assessment if CRM creation fails
       }
 
       // Start background analysis
-      processAssessmentAsync(assessment.id, googleService, aiService, emailService, storage);
+      processAssessmentAsync(
+        assessment.id,
+        googleService,
+        aiService,
+        emailService,
+        storage,
+      );
 
       res.json({
         success: true,
         assessmentId: assessment.id,
         clientId: client.id,
-        message: "Assessment started. You'll receive results via email within 2-3 minutes."
+        message:
+          "Assessment started. You'll receive results via email within 2-3 minutes.",
       });
     } catch (error) {
       console.error("Error creating assessment:", error as Error);
       res.status(400).json({
         success: false,
-        message: "Invalid assessment data provided"
+        message: "Invalid assessment data provided",
       });
     }
   });
@@ -219,7 +269,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email } = req.query;
 
-      if (!email || typeof email !== 'string') {
+      if (!email || typeof email !== "string") {
         return res.status(400).json({ message: "Email parameter is required" });
       }
 
@@ -236,31 +286,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { email } = req.query;
 
-      if (!email || typeof email !== 'string') {
+      if (!email || typeof email !== "string") {
         return res.status(400).json({ message: "Email parameter is required" });
       }
 
       const assessments = await storage.getAssessmentsByEmail(email);
-      
+
       if (!assessments || assessments.length === 0) {
-        return res.status(404).json({ 
+        return res.status(404).json({
           message: "No assessments found for this email address.",
-          assessments: [] 
+          assessments: [],
         });
       }
 
       // Return simplified assessment data for the lookup page
-      const simplifiedAssessments = assessments.map(a => ({
+      const simplifiedAssessments = assessments.map((a) => ({
         id: a.id,
         businessName: a.businessName,
         status: a.status,
         digitalScore: a.digitalScore,
-        createdAt: a.createdAt
+        createdAt: a.createdAt,
       }));
 
-      res.json({ 
+      res.json({
         success: true,
-        assessments: simplifiedAssessments 
+        assessments: simplifiedAssessments,
       });
     } catch (error) {
       console.error("Error looking up assessments:", error);
@@ -289,11 +339,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Assessment not found" });
       }
 
-      const recommendations = await storage.getRecommendationsByAssessmentId(id);
+      const recommendations =
+        await storage.getRecommendationsByAssessmentId(id);
 
       res.json({
         assessment,
-        recommendations
+        recommendations,
       });
     } catch (error) {
       console.error("Error fetching assessment:", error);
@@ -308,7 +359,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { pathway } = req.body;
 
       if (!["diy", "none"].includes(pathway)) {
-        return res.status(400).json({ message: "Invalid pathway selection - only DIY is supported" });
+        return res.status(400).json({
+          message: "Invalid pathway selection - only DIY is supported",
+        });
       }
 
       await storage.updateAssessment(id, { selectedPathway: pathway });
@@ -331,15 +384,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Only send if pathway hasn't been selected
-      if (assessment.selectedPathway && assessment.selectedPathway !== 'none') {
+      if (assessment.selectedPathway && assessment.selectedPathway !== "none") {
         return res.status(400).json({ message: "Pathway already selected" });
       }
 
-      const emailSent = await emailService.sendPathwayReminderEmail(assessment.email, {
-        businessName: assessment.businessName,
-        digitalScore: assessment.digitalScore || 0,
-        assessmentId: id
-      });
+      const emailSent = await emailService.sendPathwayReminderEmail(
+        assessment.email,
+        {
+          businessName: assessment.businessName,
+          digitalScore: assessment.digitalScore || 0,
+          assessmentId: id,
+        },
+      );
 
       if (emailSent) {
         res.json({ success: true, message: "Pathway reminder sent" });
@@ -362,12 +418,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Assessment not found" });
       }
 
-      if (!assessment.selectedPathway || assessment.selectedPathway === 'none') {
+      if (
+        !assessment.selectedPathway ||
+        assessment.selectedPathway === "none"
+      ) {
         return res.status(400).json({ message: "No pathway selected yet" });
       }
 
       // Check if subscription exists
-      const existingSubscriptions = await db.select()
+      const existingSubscriptions = await db
+        .select()
         .from(subscriptions as any)
         .where(eq((subscriptions as any).assessmentId, id));
 
@@ -376,20 +436,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const pathwayNames: Record<string, string> = {
-        'diy': 'DIY Platform'
+        diy: "DIY Platform",
       };
 
       const monthlyPrices: Record<string, number> = {
-        'diy': 49
+        diy: 49,
       };
 
-      const emailSent = await emailService.sendCheckoutAbandonmentEmail(assessment.email, {
-        businessName: assessment.businessName,
-        pathway: assessment.selectedPathway,
-        planName: pathwayNames[assessment.selectedPathway],
-        monthlyPrice: monthlyPrices[assessment.selectedPathway],
-        assessmentId: id
-      });
+      const emailSent = await emailService.sendCheckoutAbandonmentEmail(
+        assessment.email,
+        {
+          businessName: assessment.businessName,
+          pathway: assessment.selectedPathway,
+          planName: pathwayNames[assessment.selectedPathway],
+          monthlyPrice: monthlyPrices[assessment.selectedPathway],
+          assessmentId: id,
+        },
+      );
 
       if (emailSent) {
         res.json({ success: true, message: "Checkout reminder sent" });
@@ -402,129 +465,152 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-
   // Get client dashboard data
-  app.get("/api/clients/:id/dashboard", requireClientPortalAccess, async (req: any, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
-
-      if (isNaN(clientId)) {
-        return res.status(400).json({ message: "Invalid client ID" });
-      }
-
-      // Get client basic info
-      const client = await storage.getClient(clientId);
-      if (!client) {
-        return res.status(404).json({ message: "Client not found" });
-      }
-
-      // Get recent campaigns
-      const campaigns = await storage.getCampaignsByClient(clientId);
-
-      // Get recent inbox messages
-      const messages = await storage.getMessagesByClient(clientId);
-
-      // Get latest campaign for /send card
-      const latestCampaign = campaigns.length > 0 ? campaigns[0] : null;
-
-      // Get CRM stats
-      let crmStats = { contactsCount: 0, activeDeals: 0, tasksDue: 0 };
+  app.get(
+    "/api/clients/:id/dashboard",
+    requireClientPortalAccess,
+    async (req: any, res) => {
       try {
-        // Count contacts for this client
-        const contacts = await db.select().from(crmContacts).where(eq(crmContacts.clientId, clientId));
-        crmStats.contactsCount = contacts.length;
-        
-        // Count active deals
-        const activeDeals = await db.select().from(crmDeals).where(
-          and(eq(crmDeals.clientId, clientId), eq(crmDeals.status, "open"))
-        );
-        crmStats.activeDeals = activeDeals.length;
-        
-        // Count tasks due today or overdue
-        const today = new Date();
-        today.setHours(23, 59, 59, 999);
-        const tasks = await db.select().from(crmTasks).where(
-          and(
-            eq(crmTasks.clientId, clientId),
-            or(eq(crmTasks.status, "pending"), eq(crmTasks.status, "in_progress"))
-          )
-        );
-        crmStats.tasksDue = tasks.filter(t => t.dueDate && new Date(t.dueDate) <= today).length;
-      } catch (err) {
-        console.error("[Dashboard] Error fetching CRM stats:", err);
-      }
+        const clientId = parseInt(req.params.id);
 
-      // Calculate basic metrics
-      const dashboardData = {
-        client,
-        digitalScore: 75, // Could be calculated from various factors
-        lastUpdated: client.updatedAt,
-        listings: {
-          total: client.enabledFeatures ? client.enabledFeatures.split(',').length : 0,
-          verified: client.enabledFeatures ? client.enabledFeatures.split(',').length - 1 : 0,
-          pending: 1,
-          citations: 12, // Placeholder for citations count
-          platforms: ["Google Business", "Yelp", "Facebook", "Apple Maps"]
-        },
-        reviews: {
-          average: 4.3,
-          total: 156,
-          recent: 12,
-          response_rate: 85
-        },
-        campaigns: {
-          active: campaigns.filter((c: any) => c.status === 'active').length,
-          pending: campaigns.filter((c: any) => c.status === 'draft').length,
-          total: campaigns.length,
-          performance: {
-            reach: 2340,
-            clicks: 89,
-            conversions: 12
-          },
-          latest: latestCampaign ? {
-            name: latestCampaign.name || 'Recent Campaign',
-            status: latestCampaign.status || 'active',
-            unsubscribes: 3, // Placeholder - will be from analytics
-            clickThroughs: 47, // Placeholder
-            purchases: 8, // Placeholder
-            sent: 250 // Placeholder - will be from campaign analytics
-          } : null
-        },
-        socialMedia: {
-          isSetup: false, // Placeholder - check if profiles connected
-          newLikes: 24,
-          newComments: 8,
-          newMessages: 5,
-          connectedProfiles: 0
-        },
-        livechat: {
-          isSetup: false, // Placeholder - check if widget installed
-          participationRating: 4.8,
-          inQueue: 2,
-          totalChats: 145,
-          avgResponseTime: '2.3 min'
-        },
-        messages: {
-          unread: messages.filter((m: any) => !m.isRead).length,
-          total: messages.length,
-          recent: messages.slice(0, 5)
-        },
-        crm: {
-          contactsCount: crmStats.contactsCount,
-          activeDeals: crmStats.activeDeals,
-          tasksDue: crmStats.tasksDue
+        if (isNaN(clientId)) {
+          return res.status(400).json({ message: "Invalid client ID" });
         }
-      };
 
-      res.json({ success: true, data: dashboardData });
-    } catch (error) {
-      console.error("Error fetching client dashboard:", error);
-      res.status(500).json({
-        message: "Failed to fetch dashboard data",
-        error: (error as Error).message
-      });
-    }
-  });
+        // Get client basic info
+        const client = await storage.getClient(clientId);
+        if (!client) {
+          return res.status(404).json({ message: "Client not found" });
+        }
+
+        // Get recent campaigns
+        const campaigns = await storage.getCampaignsByClient(clientId);
+
+        // Get recent inbox messages
+        const messages = await storage.getMessagesByClient(clientId);
+
+        // Get latest campaign for /send card
+        const latestCampaign = campaigns.length > 0 ? campaigns[0] : null;
+
+        // Get CRM stats
+        let crmStats = { contactsCount: 0, activeDeals: 0, tasksDue: 0 };
+        try {
+          // Count contacts for this client
+          const contacts = await db
+            .select()
+            .from(crmContacts)
+            .where(eq(crmContacts.clientId, clientId));
+          crmStats.contactsCount = contacts.length;
+
+          // Count active deals
+          const activeDeals = await db
+            .select()
+            .from(crmDeals)
+            .where(
+              and(eq(crmDeals.clientId, clientId), eq(crmDeals.status, "open")),
+            );
+          crmStats.activeDeals = activeDeals.length;
+
+          // Count tasks due today or overdue
+          const today = new Date();
+          today.setHours(23, 59, 59, 999);
+          const tasks = await db
+            .select()
+            .from(crmTasks)
+            .where(
+              and(
+                eq(crmTasks.clientId, clientId),
+                or(
+                  eq(crmTasks.status, "pending"),
+                  eq(crmTasks.status, "in_progress"),
+                ),
+              ),
+            );
+          crmStats.tasksDue = tasks.filter(
+            (t) => t.dueDate && new Date(t.dueDate) <= today,
+          ).length;
+        } catch (err) {
+          console.error("[Dashboard] Error fetching CRM stats:", err);
+        }
+
+        // Calculate basic metrics
+        const dashboardData = {
+          client,
+          digitalScore: 75, // Could be calculated from various factors
+          lastUpdated: client.updatedAt,
+          listings: {
+            total: client.enabledFeatures
+              ? client.enabledFeatures.split(",").length
+              : 0,
+            verified: client.enabledFeatures
+              ? client.enabledFeatures.split(",").length - 1
+              : 0,
+            pending: 1,
+            citations: 12, // Placeholder for citations count
+            platforms: ["Google Business", "Yelp", "Facebook", "Apple Maps"],
+          },
+          reviews: {
+            average: 4.3,
+            total: 156,
+            recent: 12,
+            response_rate: 85,
+          },
+          campaigns: {
+            active: campaigns.filter((c: any) => c.status === "active").length,
+            pending: campaigns.filter((c: any) => c.status === "draft").length,
+            total: campaigns.length,
+            performance: {
+              reach: 2340,
+              clicks: 89,
+              conversions: 12,
+            },
+            latest: latestCampaign
+              ? {
+                  name: latestCampaign.name || "Recent Campaign",
+                  status: latestCampaign.status || "active",
+                  unsubscribes: 3, // Placeholder - will be from analytics
+                  clickThroughs: 47, // Placeholder
+                  purchases: 8, // Placeholder
+                  sent: 250, // Placeholder - will be from campaign analytics
+                }
+              : null,
+          },
+          socialMedia: {
+            isSetup: false, // Placeholder - check if profiles connected
+            newLikes: 24,
+            newComments: 8,
+            newMessages: 5,
+            connectedProfiles: 0,
+          },
+          livechat: {
+            isSetup: false, // Placeholder - check if widget installed
+            participationRating: 4.8,
+            inQueue: 2,
+            totalChats: 145,
+            avgResponseTime: "2.3 min",
+          },
+          messages: {
+            unread: messages.filter((m: any) => !m.isRead).length,
+            total: messages.length,
+            recent: messages.slice(0, 5),
+          },
+          crm: {
+            contactsCount: crmStats.contactsCount,
+            activeDeals: crmStats.activeDeals,
+            tasksDue: crmStats.tasksDue,
+          },
+        };
+
+        res.json({ success: true, data: dashboardData });
+      } catch (error) {
+        console.error("Error fetching client dashboard:", error);
+        res.status(500).json({
+          message: "Failed to fetch dashboard data",
+          error: (error as Error).message,
+        });
+      }
+    },
+  );
 
   // Get all clients (admin only - protected by Replit Auth)
   app.get("/api/admin/clients", isAuthenticated, async (req, res) => {
@@ -542,10 +628,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { token } = req.query;
 
-      if (!token || typeof token !== 'string') {
+      if (!token || typeof token !== "string") {
         return res.status(400).json({
           success: false,
-          message: "Invalid verification link"
+          message: "Invalid verification link",
         });
       }
 
@@ -555,7 +641,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!magicToken) {
         return res.status(404).json({
           success: false,
-          message: "Invalid or expired login link. Please request a new one."
+          message: "Invalid or expired login link. Please request a new one.",
         });
       }
 
@@ -563,7 +649,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (magicToken.used) {
         return res.status(400).json({
           success: false,
-          message: "This login link has already been used. Please request a new one."
+          message:
+            "This login link has already been used. Please request a new one.",
         });
       }
 
@@ -571,56 +658,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (new Date() > new Date(magicToken.expiresAt)) {
         return res.status(400).json({
           success: false,
-          message: "This login link has expired. Please request a new one."
+          message: "This login link has expired. Please request a new one.",
         });
       }
 
       // Find client by email
       const client = await storage.getClientByEmail(magicToken.email);
 
-      console.log('[Magic Link Verify] Found client:', client ? { id: client.id, email: client.email, idType: typeof client.id } : 'null');
+      console.log(
+        "[Magic Link Verify] Found client:",
+        client
+          ? { id: client.id, email: client.email, idType: typeof client.id }
+          : "null",
+      );
 
       if (!client) {
         return res.status(404).json({
           success: false,
-          message: "Account not found"
+          message: "Account not found",
         });
       }
 
       // Validate client ID is a valid number
-      console.log('[Magic Link Verify] Validating client.id:', {
+      console.log("[Magic Link Verify] Validating client.id:", {
         id: client.id,
         type: typeof client.id,
         isNaN: isNaN(client.id as any),
-        isNumber: typeof client.id === 'number',
-        fullClient: JSON.stringify(client)
+        isNumber: typeof client.id === "number",
+        fullClient: JSON.stringify(client),
       });
 
-      if (!client.id || typeof client.id !== 'number' || isNaN(client.id)) {
-        console.error('[Magic Link Verify] Invalid client ID detected:', {
+      if (!client.id || typeof client.id !== "number" || isNaN(client.id)) {
+        console.error("[Magic Link Verify] Invalid client ID detected:", {
           id: client.id,
           type: typeof client.id,
-          isNaN: isNaN(client.id as any)
+          isNaN: isNaN(client.id as any),
         });
         return res.status(500).json({
           success: false,
-          message: "Account configuration error"
+          message: "Account configuration error",
         });
       }
 
-      console.log('[Magic Link Verify] Client ID validation passed:', client.id);
+      console.log(
+        "[Magic Link Verify] Client ID validation passed:",
+        client.id,
+      );
 
       // Mark token as used
       await storage.markTokenAsUsed(token);
-      console.log('[Magic Link Verify] Token marked as used');
+      console.log("[Magic Link Verify] Token marked as used");
 
       // Update login tracking
-      console.log('[Magic Link Verify] Updating client login tracking for ID:', client.id);
+      console.log(
+        "[Magic Link Verify] Updating client login tracking for ID:",
+        client.id,
+      );
       await storage.updateClient(client.id, {
         lastLoginTime: new Date(),
-        loginCount: (client.loginCount || 0) + 1
+        loginCount: (client.loginCount || 0) + 1,
       });
-      console.log('[Magic Link Verify] Login tracking updated');
+      console.log("[Magic Link Verify] Login tracking updated");
 
       // Auto-create or link CRM contact for /relationships
       try {
@@ -629,52 +727,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .from(crmContacts)
           .where(eq(crmContacts.email, client.email))
           .limit(1);
-        
+
         if (existingCrmContact.length === 0) {
-          const [crmContact] = await db.insert(crmContacts).values({
-            clientId: client.id,
-            firstName: client.companyName?.split(' ')[0] || 'Portal',
-            lastName: 'User',
-            email: client.email,
-            phone: client.phone || null,
-            lifecycleStage: 'lead',
-            leadSource: 'portal_signup'
-          }).returning();
-          
-          console.log(`[Magic Link Verify] Created CRM contact ${crmContact.id} for portal user ${client.email}`);
-          
+          const [crmContact] = await db
+            .insert(crmContacts)
+            .values({
+              clientId: client.id,
+              firstName: client.companyName?.split(" ")[0] || "Portal",
+              lastName: "User",
+              email: client.email,
+              phone: client.phone || null,
+              lifecycleStage: "lead",
+              leadSource: "portal_signup",
+            })
+            .returning();
+
+          console.log(
+            `[Magic Link Verify] Created CRM contact ${crmContact.id} for portal user ${client.email}`,
+          );
+
           await db.insert(crmTimeline).values({
             clientId: client.id,
             contactId: crmContact.id,
-            eventType: 'portal_login',
+            eventType: "portal_login",
             title: `First portal login by ${client.companyName || client.email}`,
             occurredAt: new Date(),
-            sourceApp: 'relationships',
-            actorType: 'system'
+            sourceApp: "relationships",
+            actorType: "system",
           });
         } else {
           // Update existing contact to link to this client if not already linked
           if (!existingCrmContact[0].clientId) {
-            await db.update(crmContacts)
+            await db
+              .update(crmContacts)
               .set({ clientId: client.id, updatedAt: new Date() })
               .where(eq(crmContacts.id, existingCrmContact[0].id));
-            console.log(`[Magic Link Verify] Linked existing CRM contact ${existingCrmContact[0].id} to client ${client.id}`);
+            console.log(
+              `[Magic Link Verify] Linked existing CRM contact ${existingCrmContact[0].id} to client ${client.id}`,
+            );
           }
         }
       } catch (crmError) {
-        console.error('[Magic Link Verify] Failed to create/link CRM contact:', crmError);
+        console.error(
+          "[Magic Link Verify] Failed to create/link CRM contact:",
+          crmError,
+        );
         // Don't fail login if CRM sync fails
       }
 
       // Generate JWT token
-      console.log('[Magic Link Verify] Creating dashboard token for client ID:', client.id);
-      const jwtToken = await jwtService.createDashboardToken(client.id, client.email);
-      console.log('[Magic Link Verify] JWT token created successfully');
+      console.log(
+        "[Magic Link Verify] Creating dashboard token for client ID:",
+        client.id,
+      );
+      const jwtToken = await jwtService.createDashboardToken(
+        client.id,
+        client.email,
+      );
+      console.log("[Magic Link Verify] JWT token created successfully");
 
       // Set session for portal access
       (req.session as any).clientId = client.id;
       (req.session as any).email = client.email;
-      console.log('[Magic Link Verify] Session set for client ID:', client.id);
+      console.log("[Magic Link Verify] Session set for client ID:", client.id);
 
       res.json({
         success: true,
@@ -682,10 +797,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           id: client.id,
           companyName: client.companyName,
           email: client.email,
-          isEmailVerified: client.isEmailVerified || false
+          isEmailVerified: client.isEmailVerified || false,
         },
         token: jwtToken,
-        message: "Login successful"
+        message: "Login successful",
       });
     } catch (error: any) {
       console.error("Magic link verification error:", error);
@@ -695,88 +810,107 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: false,
         message: "Verification failed. Please try again.",
         error: error?.message,
-        code: error?.code
+        code: error?.code,
       });
     }
   });
 
   // Client data endpoints for Campaign Pro
-  app.get("/api/clients/:id", requireClientPortalAccess, async (req: any, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
+  app.get(
+    "/api/clients/:id",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
 
-      // Validate that we have a valid number
-      if (isNaN(clientId) || !isFinite(clientId)) {
-        console.error('[GET /api/clients/:id] Invalid client ID:', req.params.id);
-        return res.status(400).json({ message: "Invalid client ID format" });
+        // Validate that we have a valid number
+        if (isNaN(clientId) || !isFinite(clientId)) {
+          console.error(
+            "[GET /api/clients/:id] Invalid client ID:",
+            req.params.id,
+          );
+          return res.status(400).json({ message: "Invalid client ID format" });
+        }
+
+        const client = await storage.getClient(clientId);
+
+        if (!client) {
+          return res.status(404).json({ message: "Client not found" });
+        }
+
+        res.json(client);
+      } catch (error) {
+        console.error("Error fetching client:", error);
+        res.status(500).json({ message: "Failed to fetch client" });
       }
-
-      const client = await storage.getClient(clientId);
-
-      if (!client) {
-        return res.status(404).json({ message: "Client not found" });
-      }
-
-      res.json(client);
-    } catch (error) {
-      console.error("Error fetching client:", error);
-      res.status(500).json({ message: "Failed to fetch client" });
-    }
-  });
+    },
+  );
 
   // Get client campaign data (client info + inbox messages + campaign history)
-  app.get("/api/clients/:id/campaign-data", requireClientPortalAccess, async (req: any, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
+  app.get(
+    "/api/clients/:id/campaign-data",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
 
-      // Validate that we have a valid number
-      if (isNaN(clientId) || !isFinite(clientId)) {
-        console.error('[GET /api/clients/:id/campaign-data] Invalid client ID:', req.params.id);
-        return res.status(400).json({ message: "Invalid client ID format" });
-      }
-
-      // Get client data directly from storage
-      const client = await storage.getClient(clientId);
-      if (!client) {
-        return res.status(404).json({ message: "Client not found" });
-      }
-
-      // Get campaigns and messages
-      const campaigns = await storage.getCampaignsByClient(clientId);
-      const messages = await storage.getMessagesByClient(clientId);
-
-      const campaignData = {
-        client,
-        campaigns,
-        messages,
-        stats: {
-          totalCampaigns: campaigns.length,
-          activeCampaigns: campaigns.filter(c => c.status === 'active').length,
-          totalMessages: messages.length,
-          unreadMessages: messages.filter(m => !m.isRead).length
+        // Validate that we have a valid number
+        if (isNaN(clientId) || !isFinite(clientId)) {
+          console.error(
+            "[GET /api/clients/:id/campaign-data] Invalid client ID:",
+            req.params.id,
+          );
+          return res.status(400).json({ message: "Invalid client ID format" });
         }
-      };
 
-      res.json(campaignData);
-    } catch (error) {
-      console.error("Error fetching campaign data:", error);
-      res.status(500).json({ message: "Failed to fetch campaign data" });
-    }
-  });
+        // Get client data directly from storage
+        const client = await storage.getClient(clientId);
+        if (!client) {
+          return res.status(404).json({ message: "Client not found" });
+        }
+
+        // Get campaigns and messages
+        const campaigns = await storage.getCampaignsByClient(clientId);
+        const messages = await storage.getMessagesByClient(clientId);
+
+        const campaignData = {
+          client,
+          campaigns,
+          messages,
+          stats: {
+            totalCampaigns: campaigns.length,
+            activeCampaigns: campaigns.filter((c) => c.status === "active")
+              .length,
+            totalMessages: messages.length,
+            unreadMessages: messages.filter((m) => !m.isRead).length,
+          },
+        };
+
+        res.json(campaignData);
+      } catch (error) {
+        console.error("Error fetching campaign data:", error);
+        res.status(500).json({ message: "Failed to fetch campaign data" });
+      }
+    },
+  );
 
   // Get client messages for inbox
-  app.get("/api/clients/:id/messages", requireClientPortalAccess, async (req: any, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
-      const limit = parseInt(req.query.limit as string) || 50;
+  app.get(
+    "/api/clients/:id/messages",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        const limit = parseInt(req.query.limit as string) || 50;
 
-      const messages = await storage.getClientMessages(clientId, limit);
-      res.json(messages);
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-      res.status(500).json({ message: "Failed to fetch messages" });
-    }
-  });
+        const messages = await storage.getClientMessages(clientId, limit);
+        res.json(messages);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+        res.status(500).json({ message: "Failed to fetch messages" });
+      }
+    },
+  );
 
   // Mark message as read
   app.patch("/api/messages/:id/read", async (req, res) => {
@@ -808,7 +942,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/dashboard/:token", async (req, res) => {
     try {
       const { token } = req.params;
-      const { jwtService } = await import('./services/jwt');
+      const { jwtService } = await import("./services/jwt");
 
       // Verify JWT token
       const payload = jwtService.verifyToken(token);
@@ -833,11 +967,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Dashboard access verified",
         clientId: payload.clientId,
         permissions: payload.permissions,
-        redirectUrl: `/portal?token=${token}`
+        redirectUrl: `/portal?token=${token}`,
       });
     } catch (error) {
       console.error("Error accessing dashboard:", error);
-      if (error instanceof Error && error.message.includes('Invalid token')) {
+      if (error instanceof Error && error.message.includes("Invalid token")) {
         res.status(401).json({ message: "Invalid or expired token" });
       } else {
         res.status(500).json({ message: "Failed to access dashboard" });
@@ -848,11 +982,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // JWT public key endpoint for external verification
   app.get("/api/auth/jwks", async (req, res) => {
     try {
-      const { jwtService } = await import('./services/jwt');
+      const { jwtService } = await import("./services/jwt");
       const jwk = jwtService.getJWK();
 
       res.json({
-        keys: [jwk]
+        keys: [jwk],
       });
     } catch (error) {
       console.error("Error getting JWK:", error);
@@ -864,7 +998,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/clients/:id/dashboard-token", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
-      const { jwtService } = await import('./services/jwt');
+      const { jwtService } = await import("./services/jwt");
 
       const client = await storage.getClient(clientId);
       if (!client) {
@@ -877,7 +1011,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.json({
           token,
           dashboardUrl: `/api/dashboard/${token}`,
-          expiresIn: '24h'
+          expiresIn: "24h",
         });
       } else {
         res.status(500).json({ message: "Failed to create dashboard token" });
@@ -896,7 +1030,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!email) {
         return res.status(400).json({
           success: false,
-          message: "Email address is required"
+          message: "Email address is required",
         });
       }
 
@@ -905,7 +1039,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!emailRegex.test(email)) {
         return res.status(400).json({
           success: false,
-          message: "Please enter a valid email address"
+          message: "Please enter a valid email address",
         });
       }
 
@@ -913,9 +1047,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Auto-create demo accounts on first login attempt
       const demoAccounts: Record<string, string> = {
-        'demo@businessblueprint.io': 'Demo Restaurant',
-        'test@businessblueprint.io': 'Test Business',
-        'agency@businessblueprint.io': 'Social Media Agency'
+        "demo@businessblueprint.io": "Demo Restaurant",
+        "test@businessblueprint.io": "Test Business",
+        "agency@businessblueprint.io": "Social Media Agency",
       };
 
       // Find client by email (case-insensitive, trimmed)
@@ -926,57 +1060,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
         client = await storage.createClient({
           companyName: demoAccounts[normalizedEmail],
           email: normalizedEmail,
-          accountStatus: "active" as const
+          accountStatus: "active" as const,
         });
-        console.log(`[Login] Auto-created demo account: ${normalizedEmail} (ID: ${client.id})`);
+        console.log(
+          `[Login] Auto-created demo account: ${normalizedEmail} (ID: ${client.id})`,
+        );
       }
 
       if (!client) {
         return res.status(404).json({
           success: false,
-          message: "No account found with this email address. Please check your email or contact support."
+          message:
+            "No account found with this email address. Please check your email or contact support.",
         });
       }
 
       // Generate secure random token
-      const token = randomBytes(32).toString('hex');
-      
+      const token = randomBytes(32).toString("hex");
+
       // Token expires in 24 hours for demo accounts, 15 minutes for others
       const expiresAt = new Date();
-      const isDemoAccount = ['demo@businessblueprint.io', 'test@businessblueprint.io', 'agency@businessblueprint.io'].includes(normalizedEmail);
-      expiresAt.setMinutes(expiresAt.getMinutes() + (isDemoAccount ? 1440 : 15)); // 24 hours or 15 minutes
+      const isDemoAccount = [
+        "demo@businessblueprint.io",
+        "test@businessblueprint.io",
+        "agency@businessblueprint.io",
+      ].includes(normalizedEmail);
+      expiresAt.setMinutes(
+        expiresAt.getMinutes() + (isDemoAccount ? 1440 : 15),
+      ); // 24 hours or 15 minutes
 
       // Store token in database
       await storage.createMagicLinkToken({
         email: normalizedEmail,
         token,
-        expiresAt
+        expiresAt,
       });
 
       // Generate magic link URL - use request origin in development
       let frontendUrl = process.env.FRONTEND_URL;
       if (!frontendUrl) {
-        const protocol = req.secure ? 'https' : 'http';
-        const host = req.get('host') || 'localhost:5000';
+        const protocol = req.secure ? "https" : "http";
+        const host = req.get("host") || "localhost:5000";
         frontendUrl = `${protocol}://${host}`;
       }
       const magicLink = `${frontendUrl}/portal/verify?token=${token}`;
 
       // Send magic link email asynchronously (fire and forget to avoid blocking)
       const magicLinkEmailService = new ResendEmailService();
-      magicLinkEmailService.sendMagicLinkEmail(
-        normalizedEmail,
-        magicLink,
-        client.companyName
-      ).then((sent: boolean) => {
-        if (sent) {
-          console.log(`✅ Magic link email sent to ${normalizedEmail}`);
-        } else {
-          console.warn(`⚠️ Failed to send email to ${normalizedEmail}. Magic link: ${magicLink}`);
-        }
-      }).catch((err: Error) => {
-        console.error(`❌ Error sending magic link email to ${normalizedEmail}:`, err.message);
-      });
+      magicLinkEmailService
+        .sendMagicLinkEmail(normalizedEmail, magicLink, client.companyName)
+        .then((sent: boolean) => {
+          if (sent) {
+            console.log(`✅ Magic link email sent to ${normalizedEmail}`);
+          } else {
+            console.warn(
+              `⚠️ Failed to send email to ${normalizedEmail}. Magic link: ${magicLink}`,
+            );
+          }
+        })
+        .catch((err: Error) => {
+          console.error(
+            `❌ Error sending magic link email to ${normalizedEmail}:`,
+            err.message,
+          );
+        });
 
       // For demo accounts, return the magic link directly (Meta App Review)
       // isDemoAccount already defined above
@@ -984,23 +1131,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Immediately respond to user
       res.json({
         success: true,
-        message: isDemoAccount 
+        message: isDemoAccount
           ? "Demo account detected - use the link below to login instantly."
           : "Check your email! We've sent you a secure login link.",
-        ...(isDemoAccount && { 
+        ...(isDemoAccount && {
           demoLink: magicLink,
-          note: "This link is provided for Meta App Review testing purposes."
+          note: "This link is provided for Meta App Review testing purposes.",
         }),
-        ...(process.env.NODE_ENV === 'development' && { 
+        ...(process.env.NODE_ENV === "development" && {
           devToken: token,
-          devLink: magicLink 
-        })
+          devLink: magicLink,
+        }),
       });
     } catch (error) {
       console.error("Client login error:", error);
       res.status(500).json({
         success: false,
-        message: "Login failed. Please try again."
+        message: "Login failed. Please try again.",
       });
     }
   });
@@ -1027,9 +1174,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         digitalScore,
         assessments: assessments.length,
         campaigns: campaigns.length,
-        activeCampaigns: campaigns.filter(c => c.status === 'active').length,
+        activeCampaigns: campaigns.filter((c) => c.status === "active").length,
         recentMessages: messages,
-        lastUpdated: latestAssessment?.createdAt || new Date().toISOString()
+        lastUpdated: latestAssessment?.createdAt || new Date().toISOString(),
       };
 
       res.json(dashboardData);
@@ -1057,8 +1204,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           { name: "Google Business", status: "verified", url: "#" },
           { name: "Yelp", status: "verified", url: "#" },
           { name: "Facebook", status: "pending", url: "#" },
-          { name: "Apple Maps", status: "verified", url: "#" }
-        ]
+          { name: "Apple Maps", status: "verified", url: "#" },
+        ],
       };
 
       res.json(listings);
@@ -1069,175 +1216,195 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get all business listings for a client
-  app.get("/api/clients/:id/listings", requireClientPortalAccess, async (req: any, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
+  app.get(
+    "/api/clients/:id/listings",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
 
-      if (isNaN(clientId)) {
-        return res.status(400).json({ error: "Invalid client ID" });
-      }
-
-      const client = await storage.getClient(clientId);
-      if (!client) {
-        return res.status(404).json({ error: "Client not found" });
-      }
-
-      // Mock listings data
-      const listings = [
-        {
-          id: 1,
-          platform: "Google Business",
-          status: "active",
-          name: client.companyName || "Business Name",
-          address: client.address || "123 Main St, City, ST 12345",
-          phone: client.phone || "(555) 123-4567",
-          website: client.website || "https://example.com",
-          hours: "Mon-Fri 9AM-5PM",
-          lastUpdated: new Date().toISOString(),
-          url: "https://g.page/example"
-        },
-        {
-          id: 2,
-          platform: "Yelp",
-          status: "active",
-          name: client.companyName || "Business Name",
-          address: client.address || "123 Main St, City, ST 12345",
-          phone: client.phone || "(555) 123-4567",
-          website: client.website || "https://example.com",
-          hours: "Mon-Fri 9AM-5PM",
-          lastUpdated: new Date(Date.now() - 86400000).toISOString(),
-          url: "https://yelp.com/biz/example"
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
         }
-      ];
 
-      res.json(listings);
-    } catch (error) {
-      console.error("Error fetching client listings:", error);
-      res.status(500).json({ error: "Failed to fetch listings" });
-    }
-  });
+        const client = await storage.getClient(clientId);
+        if (!client) {
+          return res.status(404).json({ error: "Client not found" });
+        }
+
+        // Mock listings data
+        const listings = [
+          {
+            id: 1,
+            platform: "Google Business",
+            status: "active",
+            name: client.companyName || "Business Name",
+            address: client.address || "123 Main St, City, ST 12345",
+            phone: client.phone || "(555) 123-4567",
+            website: client.website || "https://example.com",
+            hours: "Mon-Fri 9AM-5PM",
+            lastUpdated: new Date().toISOString(),
+            url: "https://g.page/example",
+          },
+          {
+            id: 2,
+            platform: "Yelp",
+            status: "active",
+            name: client.companyName || "Business Name",
+            address: client.address || "123 Main St, City, ST 12345",
+            phone: client.phone || "(555) 123-4567",
+            website: client.website || "https://example.com",
+            hours: "Mon-Fri 9AM-5PM",
+            lastUpdated: new Date(Date.now() - 86400000).toISOString(),
+            url: "https://yelp.com/biz/example",
+          },
+        ];
+
+        res.json(listings);
+      } catch (error) {
+        console.error("Error fetching client listings:", error);
+        res.status(500).json({ error: "Failed to fetch listings" });
+      }
+    },
+  );
 
   // Get listing metrics for a client
-  app.get("/api/clients/:id/listings/metrics", requireClientPortalAccess, async (req: any, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
+  app.get(
+    "/api/clients/:id/listings/metrics",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
 
-      if (isNaN(clientId)) {
-        return res.status(400).json({ error: "Invalid client ID" });
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
+        }
+
+        const client = await storage.getClient(clientId);
+        if (!client) {
+          return res.status(404).json({ error: "Client not found" });
+        }
+
+        // Mock metrics - will be replaced with real data
+        const metrics = {
+          totalListings: 12,
+          activeListings: 10,
+          pendingListings: 1,
+          errorListings: 1,
+          totalViews: 4523,
+          totalClicks: 892,
+          avgRating: 4.6,
+        };
+
+        res.json(metrics);
+      } catch (error) {
+        console.error("Error fetching listing metrics:", error);
+        res.status(500).json({ error: "Failed to fetch listing metrics" });
       }
-
-      const client = await storage.getClient(clientId);
-      if (!client) {
-        return res.status(404).json({ error: "Client not found" });
-      }
-
-      // Mock metrics - will be replaced with real data
-      const metrics = {
-        totalListings: 12,
-        activeListings: 10,
-        pendingListings: 1,
-        errorListings: 1,
-        totalViews: 4523,
-        totalClicks: 892,
-        avgRating: 4.6
-      };
-
-      res.json(metrics);
-    } catch (error) {
-      console.error("Error fetching listing metrics:", error);
-      res.status(500).json({ error: "Failed to fetch listing metrics" });
-    }
-  });
+    },
+  );
 
   // Get all reviews for a client
-  app.get("/api/clients/:id/reviews", requireClientPortalAccess, async (req: any, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
+  app.get(
+    "/api/clients/:id/reviews",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
 
-      if (isNaN(clientId)) {
-        return res.status(400).json({ error: "Invalid client ID" });
-      }
-
-      const client = await storage.getClient(clientId);
-      if (!client) {
-        return res.status(404).json({ error: "Client not found" });
-      }
-
-      // Mock reviews data
-      const reviews = [
-        {
-          id: 1,
-          platform: "Google",
-          rating: 5,
-          reviewText: "Excellent service! The team was professional and delivered beyond expectations.",
-          reviewerName: "Sarah J.",
-          reviewDate: new Date().toISOString(),
-          sentiment: "positive"
-        },
-        {
-          id: 2,
-          platform: "Yelp",
-          rating: 2,
-          reviewText: "Service was slow and the staff seemed uninterested. Not what I expected.",
-          reviewerName: "Mike T.",
-          reviewDate: new Date(Date.now() - 86400000).toISOString(),
-          sentiment: "negative"
-        },
-        {
-          id: 3,
-          platform: "Facebook",
-          rating: 4,
-          reviewText: "Good experience overall. A few minor issues but nothing major.",
-          reviewerName: "Jennifer L.",
-          reviewDate: new Date(Date.now() - 172800000).toISOString(),
-          response: "Thank you for your feedback! We appreciate your business.",
-          responseDate: new Date(Date.now() - 86400000).toISOString(),
-          sentiment: "positive"
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
         }
-      ];
 
-      res.json(reviews);
-    } catch (error) {
-      console.error("Error fetching client reviews:", error);
-      res.status(500).json({ error: "Failed to fetch reviews" });
-    }
-  });
+        const client = await storage.getClient(clientId);
+        if (!client) {
+          return res.status(404).json({ error: "Client not found" });
+        }
+
+        // Mock reviews data
+        const reviews = [
+          {
+            id: 1,
+            platform: "Google",
+            rating: 5,
+            reviewText:
+              "Excellent service! The team was professional and delivered beyond expectations.",
+            reviewerName: "Sarah J.",
+            reviewDate: new Date().toISOString(),
+            sentiment: "positive",
+          },
+          {
+            id: 2,
+            platform: "Yelp",
+            rating: 2,
+            reviewText:
+              "Service was slow and the staff seemed uninterested. Not what I expected.",
+            reviewerName: "Mike T.",
+            reviewDate: new Date(Date.now() - 86400000).toISOString(),
+            sentiment: "negative",
+          },
+          {
+            id: 3,
+            platform: "Facebook",
+            rating: 4,
+            reviewText:
+              "Good experience overall. A few minor issues but nothing major.",
+            reviewerName: "Jennifer L.",
+            reviewDate: new Date(Date.now() - 172800000).toISOString(),
+            response:
+              "Thank you for your feedback! We appreciate your business.",
+            responseDate: new Date(Date.now() - 86400000).toISOString(),
+            sentiment: "positive",
+          },
+        ];
+
+        res.json(reviews);
+      } catch (error) {
+        console.error("Error fetching client reviews:", error);
+        res.status(500).json({ error: "Failed to fetch reviews" });
+      }
+    },
+  );
 
   // Get review analytics for a client
-  app.get("/api/clients/:id/reviews/analytics", requireClientPortalAccess, async (req: any, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
+  app.get(
+    "/api/clients/:id/reviews/analytics",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
 
-      if (isNaN(clientId)) {
-        return res.status(400).json({ error: "Invalid client ID" });
-      }
-
-      const client = await storage.getClient(clientId);
-      if (!client) {
-        return res.status(404).json({ error: "Client not found" });
-      }
-
-      // Mock analytics - will be replaced with real data
-      const analytics = {
-        averageRating: 4.6,
-        totalReviews: 347,
-        positiveCount: 289,
-        negativeCount: 23,
-        neutralCount: 35,
-        responseRate: 87.5,
-        platformBreakdown: {
-          google: 198,
-          yelp: 124,
-          facebook: 25
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
         }
-      };
 
-      res.json(analytics);
-    } catch (error) {
-      console.error("Error fetching review analytics:", error);
-      res.status(500).json({ error: "Failed to fetch review analytics" });
-    }
-  });
+        const client = await storage.getClient(clientId);
+        if (!client) {
+          return res.status(404).json({ error: "Client not found" });
+        }
+
+        // Mock analytics - will be replaced with real data
+        const analytics = {
+          averageRating: 4.6,
+          totalReviews: 347,
+          positiveCount: 289,
+          negativeCount: 23,
+          neutralCount: 35,
+          responseRate: 87.5,
+          platformBreakdown: {
+            google: 198,
+            yelp: 124,
+            facebook: 25,
+          },
+        };
+
+        res.json(analytics);
+      } catch (error) {
+        console.error("Error fetching review analytics:", error);
+        res.status(500).json({ error: "Failed to fetch review analytics" });
+      }
+    },
+  );
 
   // Respond to a review
   app.post("/api/clients/:id/reviews/:reviewId/respond", async (req, res) => {
@@ -1247,7 +1414,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { response, useAI } = req.body;
 
       if (isNaN(clientId) || isNaN(reviewId)) {
-        return res.status(400).json({ error: "Invalid client ID or review ID" });
+        return res
+          .status(400)
+          .json({ error: "Invalid client ID or review ID" });
       }
 
       const client = await storage.getClient(clientId);
@@ -1261,7 +1430,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (useAI && !response) {
         // This would call the ReviewAI service to generate a response
         // For now, return success with mock response
-        reviewResponse = "Thank you for your feedback! We truly appreciate your business and are committed to providing excellent service.";
+        reviewResponse =
+          "Thank you for your feedback! We truly appreciate your business and are committed to providing excellent service.";
       }
 
       // In production, this would post the response to the review platform
@@ -1269,7 +1439,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         success: true,
         response: reviewResponse,
-        postedAt: new Date().toISOString()
+        postedAt: new Date().toISOString(),
       });
     } catch (error) {
       console.error("Error responding to review:", error);
@@ -1284,7 +1454,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const listingId = parseInt(req.params.listingId);
 
       if (isNaN(clientId) || isNaN(listingId)) {
-        return res.status(400).json({ error: "Invalid client ID or listing ID" });
+        return res
+          .status(400)
+          .json({ error: "Invalid client ID or listing ID" });
       }
 
       const client = await storage.getClient(clientId);
@@ -1297,7 +1469,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         success: true,
         message: "Listing updated successfully",
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       });
     } catch (error) {
       console.error("Error updating listing:", error);
@@ -1342,23 +1514,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get available subscription plans
   app.get("/api/subscription-plans", async (req, res) => {
     try {
-      const plans = await db.select().from(subscriptionPlans)
+      const plans = await db
+        .select()
+        .from(subscriptionPlans)
         .where(eq(subscriptionPlans.isActive, true));
 
       res.json({
         success: true,
-        plans: plans.map(plan => ({
+        plans: plans.map((plan) => ({
           ...plan,
           features: Array.isArray(plan.features) ? plan.features : [],
-          popular: plan.tierLevel === 'professional',
-          recommended: plan.pathway === 'diy' && plan.tierLevel === 'basic'
-        }))
+          popular: plan.tierLevel === "professional",
+          recommended: plan.pathway === "diy" && plan.tierLevel === "basic",
+        })),
       });
     } catch (error) {
       console.error("Error fetching subscription plans:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to fetch subscription plans"
+        message: "Failed to fetch subscription plans",
       });
     }
   });
@@ -1366,38 +1540,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get available subscription addons
   app.get("/api/subscription-addons", async (req, res) => {
     try {
-      const addons = await db.select().from(subscriptionAddons)
+      const addons = await db
+        .select()
+        .from(subscriptionAddons)
         .where(eq(subscriptionAddons.isActive, true));
 
       // Map icons for frontend based on category
       const categoryIconMap: Record<string, string> = {
-        'seo': 'Globe',
-        'social': 'Users',
-        'ppc': 'Zap',
-        'content': 'Sparkles',
-        'email': 'Users',
-        'reputation': 'Star',
-        'analytics': 'Sparkles',
-        'website': 'Globe',
-        'ai-coach': 'Brain',
-        'coaching': 'Ship'
+        seo: "Globe",
+        social: "Users",
+        ppc: "Zap",
+        content: "Sparkles",
+        email: "Users",
+        reputation: "Star",
+        analytics: "Sparkles",
+        website: "Globe",
+        "ai-coach": "Brain",
+        coaching: "Ship",
       };
 
-      const addonsWithIcons = addons.map(addon => ({
+      const addonsWithIcons = addons.map((addon) => ({
         ...addon,
-        icon: categoryIconMap[addon.category as string] || 'Sparkles',
-        billingType: addon.billingCycle === 'one_time' ? 'one_time' : 'monthly'
+        icon: categoryIconMap[addon.category as string] || "Sparkles",
+        billingType: addon.billingCycle === "one_time" ? "one_time" : "monthly",
       }));
 
       res.json({
         success: true,
-        addons: addonsWithIcons
+        addons: addonsWithIcons,
       });
     } catch (error) {
       console.error("Error fetching subscription addons:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to fetch subscription addons"
+        message: "Failed to fetch subscription addons",
       });
     }
   });
@@ -1407,13 +1583,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // Validate request body
       const orderSchema = z.object({
-        items: z.array(z.object({
-          id: z.string(),
-          name: z.string(),
-          price: z.number(),
-          quantity: z.number(),
-          type: z.enum(['app', 'addon'])
-        })),
+        items: z.array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+            price: z.number(),
+            quantity: z.number(),
+            type: z.enum(["app", "addon"]),
+          }),
+        ),
         paymentToken: z.string().min(16, "Valid payment token required"),
         customerInfo: z.object({
           firstName: z.string().min(1, "First name is required"),
@@ -1423,13 +1601,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           address: z.string().optional(),
           city: z.string().optional(),
           state: z.string().optional(),
-          zip: z.string().optional()
+          zip: z.string().optional(),
         }),
         totals: z.object({
           subtotal: z.number(),
           tax: z.number(),
-          total: z.number()
-        })
+          total: z.number(),
+        }),
       });
 
       const validation = orderSchema.safeParse(req.body);
@@ -1437,14 +1615,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({
           success: false,
           message: "Invalid order data",
-          errors: validation.error.errors
+          errors: validation.error.errors,
         });
       }
 
       const { items, paymentToken, customerInfo, totals } = validation.data;
 
       // SECURITY: Recalculate totals server-side
-      const calculatedSubtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const calculatedSubtotal = items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0,
+      );
       const calculatedTax = calculatedSubtotal * 0.08; // 8% tax
       const calculatedTotal = calculatedSubtotal + calculatedTax;
 
@@ -1452,56 +1633,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (Math.abs(calculatedTotal - totals.total) > 0.01) {
         return res.status(400).json({
           success: false,
-          message: "Order total mismatch. Please refresh and try again."
+          message: "Order total mismatch. Please refresh and try again.",
         });
       }
 
       // Create recurring subscription with NMI for the monthly total
       const nmiRequest = {
-        planId: 'marketplace-order-' + Date.now(), // Unique identifier
+        planId: "marketplace-order-" + Date.now(), // Unique identifier
         customerData: {
           firstName: customerInfo.firstName,
           lastName: customerInfo.lastName,
           email: customerInfo.email,
-          phone: customerInfo.phone || '',
-          address: customerInfo.address || '',
-          city: customerInfo.city || '',
-          state: customerInfo.state || '',
-          zip: customerInfo.zip || ''
+          phone: customerInfo.phone || "",
+          address: customerInfo.address || "",
+          city: customerInfo.city || "",
+          state: customerInfo.state || "",
+          zip: customerInfo.zip || "",
         },
         paymentToken,
         planAmount: calculatedTotal.toFixed(2),
-        billingCycle: 'monthly' as const
+        billingCycle: "monthly" as const,
       };
 
       const nmiResult = await NMIService.createSubscription(nmiRequest);
 
-      if (nmiResult.response !== '1') {
+      if (nmiResult.response !== "1") {
         return res.status(400).json({
           success: false,
-          message: nmiResult.responsetext || 'Payment processing failed'
+          message: nmiResult.responsetext || "Payment processing failed",
         });
       }
 
       // Log successful order (could save to database if needed)
-      console.log('✅ Marketplace order successful:', {
+      console.log("✅ Marketplace order successful:", {
         subscriptionId: nmiResult.subscription_id,
         customerEmail: customerInfo.email,
         items: items.length,
-        total: calculatedTotal
+        total: calculatedTotal,
       });
 
       res.json({
         success: true,
         message: "Order processed successfully",
         subscriptionId: nmiResult.subscription_id,
-        items: items.map(item => item.name)
+        items: items.map((item) => item.name),
       });
     } catch (error) {
       console.error("Error processing marketplace order:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to process order. Please try again."
+        message: "Failed to process order. Please try again.",
       });
     }
   });
@@ -1509,29 +1690,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Calculate pricing for selected plan and addons
   app.post("/api/pricing/calculate", async (req, res) => {
     try {
-      const { planId, addons: selectedAddons = [], billingCycle = 'monthly' } = req.body;
+      const {
+        planId,
+        addons: selectedAddons = [],
+        billingCycle = "monthly",
+      } = req.body;
 
       if (!planId) {
         return res.status(400).json({
           success: false,
-          message: "Plan ID is required"
+          message: "Plan ID is required",
         });
       }
 
       // Get plan details
-      const plan = await db.select().from(subscriptionPlans)
+      const plan = await db
+        .select()
+        .from(subscriptionPlans)
         .where(eq(subscriptionPlans.planId, planId))
         .limit(1);
 
       if (plan.length === 0) {
         return res.status(404).json({
           success: false,
-          message: "Plan not found"
+          message: "Plan not found",
         });
       }
 
       // Get addon details
-      const addons = await db.select().from(subscriptionAddons)
+      const addons = await db
+        .select()
+        .from(subscriptionAddons)
         .where(eq(subscriptionAddons.isActive, true));
 
       // Calculate pricing using PricingEngine
@@ -1539,18 +1728,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         plan[0],
         addons,
         selectedAddons,
-        billingCycle
+        billingCycle,
       );
 
       res.json({
         success: true,
-        pricing
+        pricing,
       });
     } catch (error) {
       console.error("Error calculating pricing:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to calculate pricing"
+        message: "Failed to calculate pricing",
       });
     }
   });
@@ -1558,29 +1747,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Calculate bundle pricing from assessment recommendations
   app.post("/api/pricing/calculate-bundle", async (req, res) => {
     try {
-      const { assessmentId, pathway, productIds = [], billingCycle = 'monthly' } = req.body;
+      const {
+        assessmentId,
+        pathway,
+        productIds = [],
+        billingCycle = "monthly",
+      } = req.body;
 
       if (!assessmentId || !pathway) {
         return res.status(400).json({
           success: false,
-          message: "Assessment ID and pathway are required"
+          message: "Assessment ID and pathway are required",
         });
       }
 
       // Get the appropriate plan based on pathway (DIY only)
       const planIdMap: Record<string, string> = {
-        'diy': 'diy-platform'
+        diy: "diy-platform",
       };
 
       const planStringId = planIdMap[pathway];
-      const [plan] = await db.select().from(subscriptionPlans)
+      const [plan] = await db
+        .select()
+        .from(subscriptionPlans)
         .where(eq(subscriptionPlans.planId, planStringId))
         .limit(1);
 
       if (!plan) {
         return res.status(404).json({
           success: false,
-          message: "Plan not found for pathway"
+          message: "Plan not found for pathway",
         });
       }
 
@@ -1592,12 +1788,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let productsTotal = 0;
 
       if (productIds.length > 0) {
-        selectedProducts = await db.select().from(productsTable)
+        selectedProducts = await db
+          .select()
+          .from(productsTable)
           .where(inArray(productsTable.id, productIds));
 
         // Calculate total (DIY pricing only)
         productsTotal = selectedProducts.reduce((sum, product) => {
-          const price = parseFloat(product.diyPrice || '0');
+          const price = parseFloat(product.diyPrice || "0");
           return sum + price;
         }, 0);
       }
@@ -1607,14 +1805,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const productsMonthly = productsTotal;
 
       // Multiply by billing cycle months
-      const cycleMonths = billingCycle === 'quarterly' ? 3 : billingCycle === 'annual' ? 12 : 1;
+      const cycleMonths =
+        billingCycle === "quarterly" ? 3 : billingCycle === "annual" ? 12 : 1;
       const subtotal = (basePriceMonthly + productsMonthly) * cycleMonths;
 
       // Apply discount for longer billing cycles
       let discount = 0;
-      if (billingCycle === 'quarterly') {
+      if (billingCycle === "quarterly") {
         discount = subtotal * 0.05; // 5% discount
-      } else if (billingCycle === 'annual') {
+      } else if (billingCycle === "annual") {
         discount = subtotal * 0.15; // 15% discount
       }
 
@@ -1624,29 +1823,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const pricing = {
         planName: plan.name,
         planPrice: basePriceMonthly * cycleMonths,
-        selectedAddons: selectedProducts.map(product => {
-          const monthlyPrice = parseFloat(product.diyPrice || '0');
+        selectedAddons: selectedProducts.map((product) => {
+          const monthlyPrice = parseFloat(product.diyPrice || "0");
           return {
             name: product.name,
-            price: monthlyPrice * cycleMonths
+            price: monthlyPrice * cycleMonths,
           };
         }),
         subtotal,
         discount,
         total,
         billingCycle,
-        savings: discount
+        savings: discount,
       };
 
       res.json({
         success: true,
-        pricing
+        pricing,
       });
     } catch (error) {
       console.error("Error calculating bundle pricing:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to calculate bundle pricing"
+        message: "Failed to calculate bundle pricing",
       });
     }
   });
@@ -1654,12 +1853,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create subscription from assessment
   app.post("/api/subscriptions/create-from-assessment", async (req, res) => {
     try {
-      const { assessmentId, pathway, productIds = [], billingCycle = 'monthly' } = req.body;
+      const {
+        assessmentId,
+        pathway,
+        productIds = [],
+        billingCycle = "monthly",
+      } = req.body;
 
       if (!assessmentId || !pathway) {
         return res.status(400).json({
           success: false,
-          message: "Assessment ID and pathway are required"
+          message: "Assessment ID and pathway are required",
         });
       }
 
@@ -1668,24 +1872,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!assessment) {
         return res.status(404).json({
           success: false,
-          message: "Assessment not found"
+          message: "Assessment not found",
         });
       }
 
       // Map pathway to plan ID (DIY only)
       const planIdMap: Record<string, string> = {
-        'diy': 'diy-platform'
+        diy: "diy-platform",
       };
 
       const planStringId = planIdMap[pathway];
-      const [plan] = await db.select().from(subscriptionPlans)
+      const [plan] = await db
+        .select()
+        .from(subscriptionPlans)
         .where(eq(subscriptionPlans.planId, planStringId))
         .limit(1);
 
       if (!plan) {
         return res.status(404).json({
           success: false,
-          message: "Plan not found"
+          message: "Plan not found",
         });
       }
 
@@ -1697,11 +1903,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let productsTotal = 0;
 
       if (productIds.length > 0) {
-        selectedProducts = await db.select().from(productsTable)
+        selectedProducts = await db
+          .select()
+          .from(productsTable)
           .where(inArray(productsTable.id, productIds));
 
         productsTotal = selectedProducts.reduce((sum, product) => {
-          const price = parseFloat(product.diyPrice || '0');
+          const price = parseFloat(product.diyPrice || "0");
           return sum + price;
         }, 0);
       }
@@ -1711,14 +1919,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const productsMonthly = productsTotal;
 
       // Multiply by billing cycle months
-      const cycleMonths = billingCycle === 'quarterly' ? 3 : billingCycle === 'annual' ? 12 : 1;
+      const cycleMonths =
+        billingCycle === "quarterly" ? 3 : billingCycle === "annual" ? 12 : 1;
       const subtotal = (basePriceMonthly + productsMonthly) * cycleMonths;
 
       // Apply discount for longer billing cycles
       let discount = 0;
-      if (billingCycle === 'quarterly') {
+      if (billingCycle === "quarterly") {
         discount = subtotal * 0.05;
-      } else if (billingCycle === 'annual') {
+      } else if (billingCycle === "annual") {
         discount = subtotal * 0.15;
       }
 
@@ -1728,7 +1937,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const subscriptionData = {
         assessmentId,
         planId: plan.id,
-        status: 'pending_payment' as const,
+        status: "pending_payment" as const,
         baseAmount: (basePriceMonthly * cycleMonths).toString(),
         addonAmount: (productsMonthly * cycleMonths).toString(),
         totalAmount: total.toString(),
@@ -1736,46 +1945,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       // Create the subscription
-      const subscription = await db.insert(subscriptions)
+      const subscription = await db
+        .insert(subscriptions)
         .values(subscriptionData)
         .returning();
-      
+
       // Send enrollment confirmation email (assessment already fetched above)
       if (assessment) {
-        const pathwayName = 'DIY Platform';
+        const pathwayName = "DIY Platform";
         const planName = `${plan.name} (${pathwayName})`;
-        
+
         // Get selected product names for features list
         const featuresPromises = selectedProducts.map(async (prod) => {
-          const product = selectedProducts.find(p => p.id === prod.id);
-          return product?.name || '';
+          const product = selectedProducts.find((p) => p.id === prod.id);
+          return product?.name || "";
         });
         const productNames = await Promise.all(featuresPromises);
-        
+
         // Build features list
         const baseFeatures = Array.isArray(plan.features) ? plan.features : [];
         const allFeatures = [...baseFeatures, ...productNames.filter(Boolean)];
-        
+
         await emailService.sendEnrollmentConfirmation(assessment.email, {
           businessName: assessment.businessName,
           pathway,
           planName,
           monthlyPrice: parseFloat(total.toFixed(2)),
           nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          features: allFeatures
+          features: allFeatures,
         });
       }
 
       res.json({
         success: true,
         subscription: subscription[0],
-        message: "Subscription created successfully"
+        message: "Subscription created successfully",
       });
     } catch (error) {
       console.error("Error creating subscription from assessment:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to create subscription"
+        message: "Failed to create subscription",
       });
     }
   });
@@ -1785,19 +1995,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
 
-      const [subscription] = await db.select()
+      const [subscription] = await db
+        .select()
         .from(subscriptions)
         .where(eq(subscriptions.id, parseInt(id)));
 
       if (!subscription) {
         return res.status(404).json({
           success: false,
-          message: "Subscription not found"
+          message: "Subscription not found",
         });
       }
 
       const now = new Date();
-      const isTrialActive = subscription.isTrialActive &&
+      const isTrialActive =
+        subscription.isTrialActive &&
         subscription.trialPeriodEnd &&
         now < subscription.trialPeriodEnd;
 
@@ -1806,15 +2018,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         trialStatus: {
           isTrialActive,
           trialPeriodEnd: subscription.trialPeriodEnd,
-          daysRemaining: isTrialActive && subscription.trialPeriodEnd ?
-            Math.ceil((subscription.trialPeriodEnd.getTime() - now.getTime()) / (24 * 60 * 60 * 1000)) : 0
-        }
+          daysRemaining:
+            isTrialActive && subscription.trialPeriodEnd
+              ? Math.ceil(
+                  (subscription.trialPeriodEnd.getTime() - now.getTime()) /
+                    (24 * 60 * 60 * 1000),
+                )
+              : 0,
+        },
       });
     } catch (error) {
       console.error("Error checking trial status:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to check trial status"
+        message: "Failed to check trial status",
       });
     }
   });
@@ -1825,11 +2042,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Validate request body with Zod schema
       const subscriptionSchema = z.object({
         planId: z.string().min(1, "Plan ID is required"),
-        addons: z.array(z.object({
-          addonId: z.string(),
-          quantity: z.number().optional()
-        })).default([]),
-        billingCycle: z.enum(['monthly', 'quarterly', 'annual']),
+        addons: z
+          .array(
+            z.object({
+              addonId: z.string(),
+              quantity: z.number().optional(),
+            }),
+          )
+          .default([]),
+        billingCycle: z.enum(["monthly", "quarterly", "annual"]),
         paymentToken: z.string().min(16, "Valid payment token required"),
         customerInfo: z.object({
           firstName: z.string().min(1, "First name is required"),
@@ -1839,8 +2060,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           address: z.string().optional(),
           city: z.string().optional(),
           state: z.string().optional(),
-          zip: z.string().optional()
-        })
+          zip: z.string().optional(),
+        }),
       });
 
       const validation = subscriptionSchema.safeParse(req.body);
@@ -1848,7 +2069,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({
           success: false,
           message: "Invalid subscription data",
-          errors: validation.error.errors
+          errors: validation.error.errors,
         });
       }
 
@@ -1857,23 +2078,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
         addons: selectedAddons,
         billingCycle,
         paymentToken,
-        customerInfo
+        customerInfo,
       } = validation.data;
 
       // Get plan details
-      const plan = await db.select().from(subscriptionPlans)
+      const plan = await db
+        .select()
+        .from(subscriptionPlans)
         .where(eq(subscriptionPlans.planId, planId))
         .limit(1);
 
       if (plan.length === 0) {
         return res.status(404).json({
           success: false,
-          message: "Plan not found"
+          message: "Plan not found",
         });
       }
 
       // Get addon details for subscription creation
-      const addons = await db.select().from(subscriptionAddons)
+      const addons = await db
+        .select()
+        .from(subscriptionAddons)
         .where(eq(subscriptionAddons.isActive, true));
 
       // SECURITY: Recalculate pricing server-side - never trust client amounts
@@ -1881,7 +2106,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         plan[0],
         addons,
         selectedAddons,
-        billingCycle
+        billingCycle,
       );
 
       // Handle setup fee separately if present (including setup fee tax)
@@ -1890,25 +2115,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         setupTransactionResult = await NMIService.processTransaction(
           paymentToken,
           pricing.oneTimeTotal.toFixed(2), // setupFee + setupFeeTax
-          `${plan[0].name} Setup Fee`
+          `${plan[0].name} Setup Fee`,
         );
 
-        if (setupTransactionResult.response !== '1') {
+        if (setupTransactionResult.response !== "1") {
           return res.status(400).json({
             success: false,
-            message: setupTransactionResult.responsetext || 'Setup fee payment failed'
+            message:
+              setupTransactionResult.responsetext || "Setup fee payment failed",
           });
         }
       }
 
       // Check if AI Coach addon is selected for trial eligibility
-      const hasAiCoachAddon = selectedAddons.some(addon =>
-        addons.find(a => a.addonId === addon.addonId)?.category === 'ai-coach'
+      const hasAiCoachAddon = selectedAddons.some(
+        (addon) =>
+          addons.find((a) => a.addonId === addon.addonId)?.category ===
+          "ai-coach",
       );
 
       // 7-day trial for AI Coach addons
       const isTrialEligible = hasAiCoachAddon;
-      const trialPeriodEnd = isTrialEligible ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null;
+      const trialPeriodEnd = isTrialEligible
+        ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        : null;
 
       // Create NMI subscription for recurring charges only (no setup fee components)
       const recurringAmount = pricing.recurringTotal.toFixed(2); // recurringSubtotal + recurringTax
@@ -1918,24 +2148,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
           firstName: customerInfo.firstName,
           lastName: customerInfo.lastName,
           email: customerInfo.email,
-          phone: customerInfo.phone || '',
-          address: customerInfo.address || '',
-          city: customerInfo.city || '',
-          state: customerInfo.state || '',
-          zip: customerInfo.zip || ''
+          phone: customerInfo.phone || "",
+          address: customerInfo.address || "",
+          city: customerInfo.city || "",
+          state: customerInfo.state || "",
+          zip: customerInfo.zip || "",
         },
         paymentToken,
         planAmount: recurringAmount,
         billingCycle,
-        startDate: trialPeriodEnd ? trialPeriodEnd.toISOString().split('T')[0] : undefined // Start billing after trial
+        startDate: trialPeriodEnd
+          ? trialPeriodEnd.toISOString().split("T")[0]
+          : undefined, // Start billing after trial
       };
 
       const nmiResult = await NMIService.createSubscription(nmiRequest);
 
-      if (nmiResult.response !== '1') {
+      if (nmiResult.response !== "1") {
         return res.status(400).json({
           success: false,
-          message: nmiResult.responsetext || 'Subscription creation failed'
+          message: nmiResult.responsetext || "Subscription creation failed",
         });
       }
 
@@ -1943,24 +2175,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const subscriptionData = {
         nmiSubscriptionId: nmiResult.subscription_id,
         planId: plan[0].id,
-        status: isTrialEligible ? 'trial' : 'active',
+        status: isTrialEligible ? "trial" : "active",
         baseAmount: pricing.basePrice.toFixed(2),
         addonAmount: pricing.totalAddons.toFixed(2),
         totalAmount: pricing.recurringTotal.toFixed(2), // Only recurring charges in subscription record
         billingCycle,
         paymentMethod: {
-          type: 'card',
-          maskedNumber: '****1234',
-          lastFour: '1234'
+          type: "card",
+          maskedNumber: "****1234",
+          lastFour: "1234",
         },
         currentPeriodStart: new Date(),
         currentPeriodEnd: calculateNextBillingDate(billingCycle),
-        nextPaymentDate: isTrialEligible ? trialPeriodEnd : calculateNextBillingDate(billingCycle),
+        nextPaymentDate: isTrialEligible
+          ? trialPeriodEnd
+          : calculateNextBillingDate(billingCycle),
         trialPeriodEnd: trialPeriodEnd,
-        isTrialActive: isTrialEligible
+        isTrialActive: isTrialEligible,
       };
 
-      const [newSubscription] = await db.insert(subscriptions)
+      const [newSubscription] = await db
+        .insert(subscriptions)
         .values(subscriptionData)
         .returning();
 
@@ -1968,14 +2203,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: true,
         subscription: newSubscription,
         nmiSubscriptionId: nmiResult.subscription_id,
-        message: "Subscription created successfully"
+        message: "Subscription created successfully",
       });
-
     } catch (error) {
       console.error("Error creating subscription:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to create subscription"
+        message: "Failed to create subscription",
       });
     }
   });
@@ -1984,10 +2218,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/assessments/:id/product-recommendations", async (req, res) => {
     try {
       const assessmentId = parseInt(req.params.id);
-      const recs = await productRecommendationService.getRecommendations(assessmentId);
+      const recs =
+        await productRecommendationService.getRecommendations(assessmentId);
 
       // Flatten the nested product structure for frontend
-      const recommendations = recs.map(rec => ({
+      const recommendations = recs.map((rec) => ({
         productId: rec.product.id,
         productName: rec.product.name,
         reason: rec.reason,
@@ -1996,18 +2231,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         category: rec.product.category,
         currentScore: rec.currentScore,
         projectedScore: rec.projectedScore,
-        scoreImprovement: rec.scoreImprovement
+        scoreImprovement: rec.scoreImprovement,
       }));
 
       res.json({
         success: true,
-        recommendations
+        recommendations,
       });
     } catch (error) {
       console.error("Error fetching product recommendations:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to fetch product recommendations"
+        message: "Failed to fetch product recommendations",
       });
     }
   });
@@ -2027,22 +2262,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         conditions.push(eq(products.category, category));
       }
 
-      const allProducts = await db.select().from(products).where(and(...conditions));
+      const allProducts = await db
+        .select()
+        .from(products)
+        .where(and(...conditions));
 
       // Filter by delivery method if specified
       const filteredProducts = deliveryMethod
-        ? allProducts.filter(p => p.deliveryMethod?.includes(deliveryMethod))
+        ? allProducts.filter((p) => p.deliveryMethod?.includes(deliveryMethod))
         : allProducts;
 
       res.json({
         success: true,
-        products: filteredProducts
+        products: filteredProducts,
       });
     } catch (error) {
       console.error("Error fetching products:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to fetch products"
+        message: "Failed to fetch products",
       });
     }
   });
@@ -2054,24 +2292,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { products } = await import("@shared/schema");
       const { eq } = await import("drizzle-orm");
 
-      const [product] = await db.select().from(products).where(eq(products.id, productId));
+      const [product] = await db
+        .select()
+        .from(products)
+        .where(eq(products.id, productId));
 
       if (!product) {
         return res.status(404).json({
           success: false,
-          message: "Product not found"
+          message: "Product not found",
         });
       }
 
       res.json({
         success: true,
-        product
+        product,
       });
     } catch (error) {
       console.error("Error fetching product:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to fetch product"
+        message: "Failed to fetch product",
       });
     }
   });
@@ -2082,541 +2323,614 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ============================================================================
 
   // Create contact
-  app.post("/api/send/contacts", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const validatedData = insertSendContactSchema.parse(req.body);
+  app.post(
+    "/api/send/contacts",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const validatedData = insertSendContactSchema.parse(req.body);
 
-      // GDPR/CAN-SPAM Compliance Validation
-      if (!validatedData.email && !validatedData.phone) {
-        return res.status(400).json({
+        // GDPR/CAN-SPAM Compliance Validation
+        if (!validatedData.email && !validatedData.phone) {
+          return res.status(400).json({
+            success: false,
+            message: "At least one contact method (email or phone) is required",
+          });
+        }
+
+        // Ensure email consent is provided if email is present
+        if (validatedData.email && !validatedData.emailConsent) {
+          return res.status(400).json({
+            success: false,
+            message:
+              "Email consent is required when providing an email address (GDPR/CAN-SPAM compliance)",
+          });
+        }
+
+        // Ensure SMS consent is provided if phone is present
+        if (validatedData.phone && !validatedData.smsConsent) {
+          return res.status(400).json({
+            success: false,
+            message:
+              "SMS consent is required when providing a phone number (TCPA compliance)",
+          });
+        }
+
+        // Force clientId to match authenticated user (prevent cross-client data leakage)
+        const contactData = {
+          ...validatedData,
+          clientId,
+          emailConsentDate: validatedData.emailConsent ? new Date() : null,
+          smsConsentDate: validatedData.smsConsent ? new Date() : null,
+        };
+
+        const contact = await storage.createSendContact(contactData);
+        res.json({ success: true, contact });
+      } catch (error) {
+        console.error("Error creating contact:", error);
+        res.status(400).json({
           success: false,
-          message: "At least one contact method (email or phone) is required"
+          message:
+            error instanceof Error ? error.message : "Failed to create contact",
         });
       }
-
-      // Ensure email consent is provided if email is present
-      if (validatedData.email && !validatedData.emailConsent) {
-        return res.status(400).json({
-          success: false,
-          message: "Email consent is required when providing an email address (GDPR/CAN-SPAM compliance)"
-        });
-      }
-
-      // Ensure SMS consent is provided if phone is present
-      if (validatedData.phone && !validatedData.smsConsent) {
-        return res.status(400).json({
-          success: false,
-          message: "SMS consent is required when providing a phone number (TCPA compliance)"
-        });
-      }
-
-      // Force clientId to match authenticated user (prevent cross-client data leakage)
-      const contactData = {
-        ...validatedData,
-        clientId,
-        emailConsentDate: validatedData.emailConsent ? new Date() : null,
-        smsConsentDate: validatedData.smsConsent ? new Date() : null
-      };
-
-      const contact = await storage.createSendContact(contactData);
-      res.json({ success: true, contact });
-    } catch (error) {
-      console.error("Error creating contact:", error);
-      res.status(400).json({
-        success: false,
-        message: error instanceof Error ? error.message : "Failed to create contact"
-      });
-    }
-  });
+    },
+  );
 
   // Get all contacts for authenticated client (with pagination)
-  app.get("/api/send/contacts", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const limit = Math.min(parseInt(req.query.limit as string) || 100, 1000); // Max 1000
-      const offset = parseInt(req.query.offset as string) || 0;
+  app.get(
+    "/api/send/contacts",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const limit = Math.min(
+          parseInt(req.query.limit as string) || 100,
+          1000,
+        ); // Max 1000
+        const offset = parseInt(req.query.offset as string) || 0;
 
-      const contacts = await storage.getSendContactsByClient(clientId);
+        const contacts = await storage.getSendContactsByClient(clientId);
 
-      // Apply pagination
-      const paginatedContacts = contacts.slice(offset, offset + limit);
+        // Apply pagination
+        const paginatedContacts = contacts.slice(offset, offset + limit);
 
-      res.json({
-        success: true,
-        contacts: paginatedContacts,
-        pagination: {
-          total: contacts.length,
-          limit,
-          offset,
-          hasMore: offset + limit < contacts.length
-        }
-      });
-    } catch (error) {
-      console.error("Error fetching contacts:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch contacts"
-      });
-    }
-  });
+        res.json({
+          success: true,
+          contacts: paginatedContacts,
+          pagination: {
+            total: contacts.length,
+            limit,
+            offset,
+            hasMore: offset + limit < contacts.length,
+          },
+        });
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch contacts",
+        });
+      }
+    },
+  );
 
   // Get single contact (with client ownership validation)
-  app.get("/api/send/contacts/:id", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const id = parseInt(req.params.id);
+  app.get(
+    "/api/send/contacts/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
 
-      if (isNaN(id)) {
-        return res.status(400).json({
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid contact ID",
+          });
+        }
+
+        const contact = await storage.getSendContact(id);
+
+        if (!contact) {
+          return res.status(404).json({
+            success: false,
+            message: "Contact not found",
+          });
+        }
+
+        // Verify client ownership
+        if (contact.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: Contact belongs to another client",
+          });
+        }
+
+        res.json({ success: true, contact });
+      } catch (error) {
+        console.error("Error fetching contact:", error);
+        res.status(500).json({
           success: false,
-          message: "Invalid contact ID"
+          message: "Failed to fetch contact",
         });
       }
-
-      const contact = await storage.getSendContact(id);
-
-      if (!contact) {
-        return res.status(404).json({
-          success: false,
-          message: "Contact not found"
-        });
-      }
-
-      // Verify client ownership
-      if (contact.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: Contact belongs to another client"
-        });
-      }
-
-      res.json({ success: true, contact });
-    } catch (error) {
-      console.error("Error fetching contact:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch contact"
-      });
-    }
-  });
+    },
+  );
 
   // Update contact (with client ownership validation)
-  app.patch("/api/send/contacts/:id", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const id = parseInt(req.params.id);
+  app.patch(
+    "/api/send/contacts/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
 
-      if (isNaN(id)) {
-        return res.status(400).json({
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid contact ID",
+          });
+        }
+
+        // Verify contact exists and belongs to client
+        const existingContact = await storage.getSendContact(id);
+        if (!existingContact) {
+          return res.status(404).json({
+            success: false,
+            message: "Contact not found",
+          });
+        }
+
+        if (existingContact.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: Contact belongs to another client",
+          });
+        }
+
+        const updateData = insertSendContactSchema.partial().parse(req.body);
+
+        // Prevent clientId tampering
+        if ("clientId" in updateData) {
+          delete (updateData as any).clientId;
+        }
+
+        const contact = await storage.updateSendContact(id, updateData);
+        res.json({ success: true, contact });
+      } catch (error) {
+        console.error("Error updating contact:", error);
+        res.status(400).json({
           success: false,
-          message: "Invalid contact ID"
+          message:
+            error instanceof Error ? error.message : "Failed to update contact",
         });
       }
-
-      // Verify contact exists and belongs to client
-      const existingContact = await storage.getSendContact(id);
-      if (!existingContact) {
-        return res.status(404).json({
-          success: false,
-          message: "Contact not found"
-        });
-      }
-
-      if (existingContact.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: Contact belongs to another client"
-        });
-      }
-
-      const updateData = insertSendContactSchema.partial().parse(req.body);
-
-      // Prevent clientId tampering
-      if ('clientId' in updateData) {
-        delete (updateData as any).clientId;
-      }
-
-      const contact = await storage.updateSendContact(id, updateData);
-      res.json({ success: true, contact });
-    } catch (error) {
-      console.error("Error updating contact:", error);
-      res.status(400).json({
-        success: false,
-        message: error instanceof Error ? error.message : "Failed to update contact"
-      });
-    }
-  });
+    },
+  );
 
   // Delete contact (with client ownership validation)
-  app.delete("/api/send/contacts/:id", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const id = parseInt(req.params.id);
+  app.delete(
+    "/api/send/contacts/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
 
-      if (isNaN(id)) {
-        return res.status(400).json({
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid contact ID",
+          });
+        }
+
+        // Verify contact exists and belongs to client
+        const existingContact = await storage.getSendContact(id);
+        if (!existingContact) {
+          return res.status(404).json({
+            success: false,
+            message: "Contact not found",
+          });
+        }
+
+        if (existingContact.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: Contact belongs to another client",
+          });
+        }
+
+        await storage.deleteSendContact(id);
+        res.json({ success: true, message: "Contact deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting contact:", error);
+        res.status(500).json({
           success: false,
-          message: "Invalid contact ID"
+          message: "Failed to delete contact",
         });
       }
-
-      // Verify contact exists and belongs to client
-      const existingContact = await storage.getSendContact(id);
-      if (!existingContact) {
-        return res.status(404).json({
-          success: false,
-          message: "Contact not found"
-        });
-      }
-
-      if (existingContact.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: Contact belongs to another client"
-        });
-      }
-
-      await storage.deleteSendContact(id);
-      res.json({ success: true, message: "Contact deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting contact:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to delete contact"
-      });
-    }
-  });
+    },
+  );
 
   // Create list
-  app.post("/api/send/lists", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const validatedData = insertSendListSchema.parse(req.body);
+  app.post(
+    "/api/send/lists",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const validatedData = insertSendListSchema.parse(req.body);
 
-      // Force clientId to match authenticated user
-      const listData = {
-        ...validatedData,
-        clientId
-      };
+        // Force clientId to match authenticated user
+        const listData = {
+          ...validatedData,
+          clientId,
+        };
 
-      const list = await storage.createSendList(listData);
-      res.json({ success: true, list });
-    } catch (error) {
-      console.error("Error creating list:", error);
-      res.status(400).json({
-        success: false,
-        message: error instanceof Error ? error.message : "Failed to create list"
-      });
-    }
-  });
+        const list = await storage.createSendList(listData);
+        res.json({ success: true, list });
+      } catch (error) {
+        console.error("Error creating list:", error);
+        res.status(400).json({
+          success: false,
+          message:
+            error instanceof Error ? error.message : "Failed to create list",
+        });
+      }
+    },
+  );
 
   // Get all lists for authenticated client (with pagination)
-  app.get("/api/send/lists", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const limit = Math.min(parseInt(req.query.limit as string) || 100, 1000); // Max 1000
-      const offset = parseInt(req.query.offset as string) || 0;
+  app.get(
+    "/api/send/lists",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const limit = Math.min(
+          parseInt(req.query.limit as string) || 100,
+          1000,
+        ); // Max 1000
+        const offset = parseInt(req.query.offset as string) || 0;
 
-      const lists = await storage.getSendListsByClient(clientId);
+        const lists = await storage.getSendListsByClient(clientId);
 
-      // Apply pagination
-      const paginatedLists = lists.slice(offset, offset + limit);
+        // Apply pagination
+        const paginatedLists = lists.slice(offset, offset + limit);
 
-      res.json({
-        success: true,
-        lists: paginatedLists,
-        pagination: {
-          total: lists.length,
-          limit,
-          offset,
-          hasMore: offset + limit < lists.length
-        }
-      });
-    } catch (error) {
-      console.error("Error fetching lists:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch lists"
-      });
-    }
-  });
+        res.json({
+          success: true,
+          lists: paginatedLists,
+          pagination: {
+            total: lists.length,
+            limit,
+            offset,
+            hasMore: offset + limit < lists.length,
+          },
+        });
+      } catch (error) {
+        console.error("Error fetching lists:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch lists",
+        });
+      }
+    },
+  );
 
   // Get single list (with client ownership validation)
-  app.get("/api/send/lists/:id", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const id = parseInt(req.params.id);
+  app.get(
+    "/api/send/lists/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
 
-      if (isNaN(id)) {
-        return res.status(400).json({
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid list ID",
+          });
+        }
+
+        const list = await storage.getSendList(id);
+
+        if (!list) {
+          return res.status(404).json({
+            success: false,
+            message: "List not found",
+          });
+        }
+
+        // Verify client ownership
+        if (list.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: List belongs to another client",
+          });
+        }
+
+        res.json({ success: true, list });
+      } catch (error) {
+        console.error("Error fetching list:", error);
+        res.status(500).json({
           success: false,
-          message: "Invalid list ID"
+          message: "Failed to fetch list",
         });
       }
-
-      const list = await storage.getSendList(id);
-
-      if (!list) {
-        return res.status(404).json({
-          success: false,
-          message: "List not found"
-        });
-      }
-
-      // Verify client ownership
-      if (list.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: List belongs to another client"
-        });
-      }
-
-      res.json({ success: true, list });
-    } catch (error) {
-      console.error("Error fetching list:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch list"
-      });
-    }
-  });
+    },
+  );
 
   // Update list (with client ownership validation)
-  app.patch("/api/send/lists/:id", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const id = parseInt(req.params.id);
+  app.patch(
+    "/api/send/lists/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
 
-      if (isNaN(id)) {
-        return res.status(400).json({
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid list ID",
+          });
+        }
+
+        // Verify list exists and belongs to client
+        const existingList = await storage.getSendList(id);
+        if (!existingList) {
+          return res.status(404).json({
+            success: false,
+            message: "List not found",
+          });
+        }
+
+        if (existingList.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: List belongs to another client",
+          });
+        }
+
+        const updateData = insertSendListSchema.partial().parse(req.body);
+
+        // Prevent clientId tampering
+        if ("clientId" in updateData) {
+          delete (updateData as any).clientId;
+        }
+
+        const list = await storage.updateSendList(id, updateData);
+        res.json({ success: true, list });
+      } catch (error) {
+        console.error("Error updating list:", error);
+        res.status(400).json({
           success: false,
-          message: "Invalid list ID"
+          message:
+            error instanceof Error ? error.message : "Failed to update list",
         });
       }
-
-      // Verify list exists and belongs to client
-      const existingList = await storage.getSendList(id);
-      if (!existingList) {
-        return res.status(404).json({
-          success: false,
-          message: "List not found"
-        });
-      }
-
-      if (existingList.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: List belongs to another client"
-        });
-      }
-
-      const updateData = insertSendListSchema.partial().parse(req.body);
-
-      // Prevent clientId tampering
-      if ('clientId' in updateData) {
-        delete (updateData as any).clientId;
-      }
-
-      const list = await storage.updateSendList(id, updateData);
-      res.json({ success: true, list });
-    } catch (error) {
-      console.error("Error updating list:", error);
-      res.status(400).json({
-        success: false,
-        message: error instanceof Error ? error.message : "Failed to update list"
-      });
-    }
-  });
+    },
+  );
 
   // Delete list (with client ownership validation)
-  app.delete("/api/send/lists/:id", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const id = parseInt(req.params.id);
+  app.delete(
+    "/api/send/lists/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
 
-      if (isNaN(id)) {
-        return res.status(400).json({
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid list ID",
+          });
+        }
+
+        // Verify list exists and belongs to client
+        const existingList = await storage.getSendList(id);
+        if (!existingList) {
+          return res.status(404).json({
+            success: false,
+            message: "List not found",
+          });
+        }
+
+        if (existingList.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: List belongs to another client",
+          });
+        }
+
+        await storage.deleteSendList(id);
+        res.json({ success: true, message: "List deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting list:", error);
+        res.status(500).json({
           success: false,
-          message: "Invalid list ID"
+          message: "Failed to delete list",
         });
       }
-
-      // Verify list exists and belongs to client
-      const existingList = await storage.getSendList(id);
-      if (!existingList) {
-        return res.status(404).json({
-          success: false,
-          message: "List not found"
-        });
-      }
-
-      if (existingList.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: List belongs to another client"
-        });
-      }
-
-      await storage.deleteSendList(id);
-      res.json({ success: true, message: "List deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting list:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to delete list"
-      });
-    }
-  });
+    },
+  );
 
   // Add contact to list (with ownership validation)
-  app.post("/api/send/lists/:listId/contacts/:contactId", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const listId = parseInt(req.params.listId);
-      const contactId = parseInt(req.params.contactId);
+  app.post(
+    "/api/send/lists/:listId/contacts/:contactId",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const listId = parseInt(req.params.listId);
+        const contactId = parseInt(req.params.contactId);
 
-      if (isNaN(listId) || isNaN(contactId)) {
-        return res.status(400).json({
+        if (isNaN(listId) || isNaN(contactId)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid list or contact ID",
+          });
+        }
+
+        // Verify list and contact both exist and belong to client
+        const [list, contact] = await Promise.all([
+          storage.getSendList(listId),
+          storage.getSendContact(contactId),
+        ]);
+
+        if (!list) {
+          return res.status(404).json({
+            success: false,
+            message: "List not found",
+          });
+        }
+
+        if (!contact) {
+          return res.status(404).json({
+            success: false,
+            message: "Contact not found",
+          });
+        }
+
+        // Verify both belong to the same client
+        if (list.clientId !== clientId || contact.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: Resources belong to another client",
+          });
+        }
+
+        await storage.addContactToList(listId, contactId);
+        res.json({
+          success: true,
+          message: "Contact added to list successfully",
+        });
+      } catch (error) {
+        console.error("Error adding contact to list:", error);
+        res.status(500).json({
           success: false,
-          message: "Invalid list or contact ID"
+          message: "Failed to add contact to list",
         });
       }
-
-      // Verify list and contact both exist and belong to client
-      const [list, contact] = await Promise.all([
-        storage.getSendList(listId),
-        storage.getSendContact(contactId)
-      ]);
-
-      if (!list) {
-        return res.status(404).json({
-          success: false,
-          message: "List not found"
-        });
-      }
-
-      if (!contact) {
-        return res.status(404).json({
-          success: false,
-          message: "Contact not found"
-        });
-      }
-
-      // Verify both belong to the same client
-      if (list.clientId !== clientId || contact.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: Resources belong to another client"
-        });
-      }
-
-      await storage.addContactToList(listId, contactId);
-      res.json({ success: true, message: "Contact added to list successfully" });
-    } catch (error) {
-      console.error("Error adding contact to list:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to add contact to list"
-      });
-    }
-  });
+    },
+  );
 
   // Remove contact from list (with ownership validation)
-  app.delete("/api/send/lists/:listId/contacts/:contactId", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const listId = parseInt(req.params.listId);
-      const contactId = parseInt(req.params.contactId);
+  app.delete(
+    "/api/send/lists/:listId/contacts/:contactId",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const listId = parseInt(req.params.listId);
+        const contactId = parseInt(req.params.contactId);
 
-      if (isNaN(listId) || isNaN(contactId)) {
-        return res.status(400).json({
+        if (isNaN(listId) || isNaN(contactId)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid list or contact ID",
+          });
+        }
+
+        // Verify list belongs to client
+        const list = await storage.getSendList(listId);
+        if (!list) {
+          return res.status(404).json({
+            success: false,
+            message: "List not found",
+          });
+        }
+
+        if (list.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: List belongs to another client",
+          });
+        }
+
+        await storage.removeContactFromList(listId, contactId);
+        res.json({
+          success: true,
+          message: "Contact removed from list successfully",
+        });
+      } catch (error) {
+        console.error("Error removing contact from list:", error);
+        res.status(500).json({
           success: false,
-          message: "Invalid list or contact ID"
+          message: "Failed to remove contact from list",
         });
       }
-
-      // Verify list belongs to client
-      const list = await storage.getSendList(listId);
-      if (!list) {
-        return res.status(404).json({
-          success: false,
-          message: "List not found"
-        });
-      }
-
-      if (list.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: List belongs to another client"
-        });
-      }
-
-      await storage.removeContactFromList(listId, contactId);
-      res.json({ success: true, message: "Contact removed from list successfully" });
-    } catch (error) {
-      console.error("Error removing contact from list:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to remove contact from list"
-      });
-    }
-  });
+    },
+  );
 
   // Get all contacts in a list (with ownership validation and pagination)
-  app.get("/api/send/lists/:listId/contacts", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const listId = parseInt(req.params.listId);
-      const limit = Math.min(parseInt(req.query.limit as string) || 100, 1000); // Max 1000
-      const offset = parseInt(req.query.offset as string) || 0;
+  app.get(
+    "/api/send/lists/:listId/contacts",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const listId = parseInt(req.params.listId);
+        const limit = Math.min(
+          parseInt(req.query.limit as string) || 100,
+          1000,
+        ); // Max 1000
+        const offset = parseInt(req.query.offset as string) || 0;
 
-      if (isNaN(listId)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid list ID"
-        });
-      }
-
-      // Verify list belongs to client
-      const list = await storage.getSendList(listId);
-      if (!list) {
-        return res.status(404).json({
-          success: false,
-          message: "List not found"
-        });
-      }
-
-      if (list.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: List belongs to another client"
-        });
-      }
-
-      const contacts = await storage.getListContacts(listId);
-
-      // Apply pagination
-      const paginatedContacts = contacts.slice(offset, offset + limit);
-
-      res.json({
-        success: true,
-        contacts: paginatedContacts,
-        pagination: {
-          total: contacts.length,
-          limit,
-          offset,
-          hasMore: offset + limit < contacts.length
+        if (isNaN(listId)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid list ID",
+          });
         }
-      });
-    } catch (error) {
-      console.error("Error fetching list contacts:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch list contacts"
-      });
-    }
-  });
+
+        // Verify list belongs to client
+        const list = await storage.getSendList(listId);
+        if (!list) {
+          return res.status(404).json({
+            success: false,
+            message: "List not found",
+          });
+        }
+
+        if (list.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: List belongs to another client",
+          });
+        }
+
+        const contacts = await storage.getListContacts(listId);
+
+        // Apply pagination
+        const paginatedContacts = contacts.slice(offset, offset + limit);
+
+        res.json({
+          success: true,
+          contacts: paginatedContacts,
+          pagination: {
+            total: contacts.length,
+            limit,
+            offset,
+            hasMore: offset + limit < contacts.length,
+          },
+        });
+      } catch (error) {
+        console.error("Error fetching list contacts:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch list contacts",
+        });
+      }
+    },
+  );
 
   // ============================================================================
   // Brand Studio API Routes - Asset Management
@@ -2627,12 +2941,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const upload = multer.default({ storage: multer.default.memoryStorage() });
 
   // Upload brand asset
-  app.post("/api/brand-assets", upload.single('file'), async (req, res) => {
+  app.post("/api/brand-assets", upload.single("file"), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({
           success: false,
-          message: "No file uploaded"
+          message: "No file uploaded",
         });
       }
 
@@ -2641,12 +2955,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!name || !type) {
         return res.status(400).json({
           success: false,
-          message: "Name and type are required"
+          message: "Name and type are required",
         });
       }
 
       // Convert file to base64
-      const base64Data = req.file.buffer.toString('base64');
+      const base64Data = req.file.buffer.toString("base64");
 
       const assetData = {
         name,
@@ -2654,7 +2968,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fileName: req.file.originalname,
         mimeType: req.file.mimetype,
         size: req.file.size,
-        data: base64Data
+        data: base64Data,
       };
 
       const asset = await storage.createBrandAsset(assetData);
@@ -2667,14 +2981,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           type: asset.type,
           fileName: asset.fileName,
           size: asset.size,
-          createdAt: asset.createdAt
-        }
+          createdAt: asset.createdAt,
+        },
       });
     } catch (error) {
       console.error("Error uploading brand asset:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to upload asset"
+        message: "Failed to upload asset",
       });
     }
   });
@@ -2684,26 +2998,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { type } = req.query;
 
-      const assets = type && typeof type === 'string'
-        ? await storage.getBrandAssetsByType(type)
-        : await storage.getAllBrandAssets();
+      const assets =
+        type && typeof type === "string"
+          ? await storage.getBrandAssetsByType(type)
+          : await storage.getAllBrandAssets();
 
       res.json({
         success: true,
-        assets: assets.map(asset => ({
+        assets: assets.map((asset) => ({
           id: asset.id,
           name: asset.name,
           type: asset.type,
           fileName: asset.fileName,
           size: asset.size,
-          createdAt: asset.createdAt
-        }))
+          createdAt: asset.createdAt,
+        })),
       });
     } catch (error) {
       console.error("Error fetching brand assets:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to fetch assets"
+        message: "Failed to fetch assets",
       });
     }
   });
@@ -2716,7 +3031,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({
           success: false,
-          message: "Invalid asset ID"
+          message: "Invalid asset ID",
         });
       }
 
@@ -2725,7 +3040,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!asset) {
         return res.status(404).json({
           success: false,
-          message: "Asset not found"
+          message: "Asset not found",
         });
       }
 
@@ -2740,14 +3055,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           mimeType: asset.mimeType,
           size: asset.size,
           data: asset.data,
-          createdAt: asset.createdAt
-        }
+          createdAt: asset.createdAt,
+        },
       });
     } catch (error) {
       console.error("Error fetching brand asset:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to fetch asset"
+        message: "Failed to fetch asset",
       });
     }
   });
@@ -2761,14 +3076,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({
           success: false,
-          message: "Invalid asset ID"
+          message: "Invalid asset ID",
         });
       }
 
       if (!fileName) {
         return res.status(400).json({
           success: false,
-          message: "New filename is required"
+          message: "New filename is required",
         });
       }
 
@@ -2776,7 +3091,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!asset) {
         return res.status(404).json({
           success: false,
-          message: "Asset not found"
+          message: "Asset not found",
         });
       }
 
@@ -2784,13 +3099,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({
         success: true,
-        message: "Asset renamed successfully"
+        message: "Asset renamed successfully",
       });
     } catch (error) {
       console.error("Error renaming brand asset:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to rename asset"
+        message: "Failed to rename asset",
       });
     }
   });
@@ -2803,7 +3118,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({
           success: false,
-          message: "Invalid asset ID"
+          message: "Invalid asset ID",
         });
       }
 
@@ -2811,13 +3126,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({
         success: true,
-        message: "Asset deleted successfully"
+        message: "Asset deleted successfully",
       });
     } catch (error) {
       console.error("Error deleting brand asset:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to delete asset"
+        message: "Failed to delete asset",
       });
     }
   });
@@ -2829,29 +3144,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Get all assets and find by filename
       const allAssets = await storage.getAllBrandAssets();
-      const asset = allAssets.find(a => a.fileName === filename);
+      const asset = allAssets.find((a) => a.fileName === filename);
 
       if (!asset) {
         return res.status(404).json({
           success: false,
-          message: "Asset not found"
+          message: "Asset not found",
         });
       }
 
       // Convert base64 to buffer
-      const buffer = Buffer.from(asset.data, 'base64');
+      const buffer = Buffer.from(asset.data, "base64");
 
       // Set appropriate headers
-      res.setHeader('Content-Type', asset.mimeType);
-      res.setHeader('Content-Length', buffer.length);
-      res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+      res.setHeader("Content-Type", asset.mimeType);
+      res.setHeader("Content-Length", buffer.length);
+      res.setHeader("Cache-Control", "public, max-age=31536000"); // Cache for 1 year
 
       res.send(buffer);
     } catch (error) {
       console.error("Error serving asset:", error);
       res.status(500).json({
         success: false,
-        message: "Failed to serve asset"
+        message: "Failed to serve asset",
       });
     }
   });
@@ -2860,25 +3175,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
   await registerInboxRoutes(app);
 
   // Content Management Routes
-  app.use('/api/content', contentRoutes);
+  app.use("/api/content", contentRoutes);
 
   // Meta (Facebook/Instagram/WhatsApp) Integration Routes
-  app.use('/api/meta', metaRoutes);
+  app.use("/api/meta", metaRoutes);
 
   // Task Management Routes (protected by authentication)
-  app.use('/api/tasks', isAuthenticated, tasksRouter);
+  app.use("/api/tasks", isAuthenticated, tasksRouter);
 
   // Brand Colors Routes
-  app.use('/api/brand-colors', brandColorsRoutes);
+  app.use("/api/brand-colors", brandColorsRoutes);
 
   // Billing & Account Management Routes
   registerBillingAdminRoutes(app);
 
   // CRM (/relationships) Routes
-  app.use('/api/crm', crmRouter);
-  
+  app.use("/api/crm", crmRouter);
+
   // Public API v1 Routes (external integrations)
-  app.use('/api/v1', publicApiRouter);
+  app.use("/api/v1", publicApiRouter);
+
+  app.use("/api/v1", publicApiRouter);
+
+  // Payment Processing Routes
+  registerPaymentRoutes(app);
 
   const httpServer = createServer(app);
   return httpServer;
@@ -2888,9 +3208,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 function calculateNextBillingDate(billingCycle: string): Date {
   const now = new Date();
   switch (billingCycle) {
-    case 'quarterly':
+    case "quarterly":
       return new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000); // 90 days
-    case 'annual':
+    case "annual":
       return new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000); // 365 days
     default: // monthly
       return new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days
@@ -2903,7 +3223,7 @@ async function processAssessmentAsync(
   googleService: GoogleBusinessService,
   aiService: OpenAIAnalysisService,
   emailService: ResendEmailService,
-  storage: any
+  storage: any,
 ) {
   try {
     // Update status to analyzing
@@ -2913,7 +3233,9 @@ async function processAssessmentAsync(
     if (!assessment) throw new Error("Assessment not found");
 
     // Run comprehensive presence scan
-    console.log(`🔍 Running independent presence scan for ${assessment.businessName}`);
+    console.log(
+      `🔍 Running independent presence scan for ${assessment.businessName}`,
+    );
     const presenceScan = await presenceScannerService.scanBusiness({
       businessName: assessment.businessName,
       website: assessment.website || undefined,
@@ -2924,35 +3246,39 @@ async function processAssessmentAsync(
     // Get Google Business data (still used for detailed GBP info)
     const googleData = await googleService.searchBusiness(
       assessment.businessName,
-      assessment.address
+      assessment.address,
     );
 
     // Calculate presence score using our independent scanner
     const presenceScore = {
       overallScore: presenceScan.overall.digitalIQScore,
       scores: {
-        visibility: Math.round(presenceScan.directories.score * 0.7 + presenceScan.website.score * 0.3),
+        visibility: Math.round(
+          presenceScan.directories.score * 0.7 +
+            presenceScan.website.score * 0.3,
+        ),
         reviews: presenceScan.reviews.score,
         completeness: presenceScan.overall.completeness,
         engagement: presenceScan.socialMedia.score,
       },
-      insights: presenceScan.recommendations
+      insights: presenceScan.recommendations,
     };
 
     // Generate product recommendations based on scores
-    const productRecommendations = await productRecommendationService.generateRecommendations(
-      assessmentId,
-      {
+    const productRecommendations =
+      await productRecommendationService.generateRecommendations(assessmentId, {
         visibility: presenceScore.scores.visibility,
         reviews: presenceScore.scores.reviews,
         completeness: presenceScore.scores.completeness,
         engagement: presenceScore.scores.engagement,
-        overall: presenceScore.overallScore
-      }
-    );
+        overall: presenceScore.overallScore,
+      });
 
     // Save product recommendations to database
-    await productRecommendationService.saveRecommendations(assessmentId, productRecommendations);
+    await productRecommendationService.saveRecommendations(
+      assessmentId,
+      productRecommendations,
+    );
 
     // Get AI analysis (enhanced with our scan data)
     const analysisResult = await aiService.analyzeBusinessPresence({
@@ -2960,10 +3286,10 @@ async function processAssessmentAsync(
         name: assessment.businessName,
         industry: assessment.industry,
         location: assessment.location,
-        website: assessment.website || undefined
+        website: assessment.website || undefined,
       },
       googleData,
-      presenceScore
+      presenceScore,
     });
 
     // Combine AI analysis with our independent scan data
@@ -2974,15 +3300,15 @@ async function processAssessmentAsync(
       scanDate: presenceScan.overall.lastScanned,
       recommendations: [
         ...analysisResult.recommendations,
-        ...presenceScan.recommendations.map(rec => ({
-          category: 'digital_presence',
+        ...presenceScan.recommendations.map((rec) => ({
+          category: "digital_presence",
           title: rec,
           description: rec,
-          priority: 'medium' as const,
-          estimatedImpact: 'moderate',
-          estimatedEffort: 'low'
-        }))
-      ]
+          priority: "medium" as const,
+          estimatedImpact: "moderate",
+          estimatedEffort: "low",
+        })),
+      ],
     };
 
     // Update assessment with results
@@ -2990,7 +3316,7 @@ async function processAssessmentAsync(
       googleBusinessData: googleData,
       analysisResults: enhancedAnalysis,
       digitalScore: presenceScan.overall.digitalIQScore,
-      status: "completed"
+      status: "completed",
     });
 
     // Save recommendations
@@ -3001,28 +3327,30 @@ async function processAssessmentAsync(
         title: rec.title,
         description: rec.description,
         priority: rec.priority,
-        estimatedImpact: rec.estimatedImpact || 'moderate',
-        estimatedEffort: rec.estimatedEffort || 'low'
+        estimatedImpact: rec.estimatedImpact || "moderate",
+        estimatedEffort: rec.estimatedEffort || "low",
       });
     }
 
     // Send email report with enhanced data
-    const emailSent = await emailService.sendAssessmentReport(assessment.email, {
-      businessName: assessment.businessName,
-      digitalScore: presenceScan.overall.digitalIQScore,
-      summary: `Your Digital IQ Score: ${presenceScan.overall.digitalIQScore}/140. ${enhancedAnalysis.summary}`,
-      recommendations: enhancedAnalysis.recommendations,
-      assessmentId
-    });
+    const emailSent = await emailService.sendAssessmentReport(
+      assessment.email,
+      {
+        businessName: assessment.businessName,
+        digitalScore: presenceScan.overall.digitalIQScore,
+        summary: `Your Digital IQ Score: ${presenceScan.overall.digitalIQScore}/140. ${enhancedAnalysis.summary}`,
+        recommendations: enhancedAnalysis.recommendations,
+        assessmentId,
+      },
+    );
 
     await storage.updateAssessment(assessmentId, { emailSent });
 
     // Send thank you and introduction email
     await emailService.sendThankYouIntroduction(assessment.email, {
       businessName: assessment.businessName,
-      assessmentId
+      assessmentId,
     });
-
   } catch (error) {
     console.error("Error processing assessment:", error);
     await storage.updateAssessment(assessmentId, { status: "failed" });
@@ -3040,10 +3368,13 @@ async function registerInboxRoutes(app: Express) {
     try {
       const validatedData = insertLivechatSessionSchema.parse(req.body);
 
-      const [session] = await db.insert(livechatSessions).values({
-        ...validatedData,
-        status: 'active',
-      }).returning();
+      const [session] = await db
+        .insert(livechatSessions)
+        .values({
+          ...validatedData,
+          status: "active",
+        })
+        .returning();
 
       let crmContactId: number | null = null;
 
@@ -3051,52 +3382,60 @@ async function registerInboxRoutes(app: Express) {
       if (validatedData.visitorEmail) {
         try {
           // Check if contact exists
-          const existing = await db.select()
+          const existing = await db
+            .select()
             .from(crmContacts)
             .where(eq(crmContacts.email, validatedData.visitorEmail))
             .limit(1);
 
           if (existing.length > 0) {
             crmContactId = existing[0].id;
-            
+
             // Log livechat interaction as timeline event
             await db.insert(crmTimelineEvents).values({
               contactId: existing[0].id,
-              eventType: 'livechat',
-              title: 'Started live chat session',
-              description: `Visitor started a live chat session from ${validatedData.pageUrl || 'unknown page'}`,
-              metadata: { sessionId: session.sessionId, pageUrl: validatedData.pageUrl, pageTitle: validatedData.pageTitle },
-              source: 'livechat',
+              eventType: "livechat",
+              title: "Started live chat session",
+              description: `Visitor started a live chat session from ${validatedData.pageUrl || "unknown page"}`,
+              metadata: {
+                sessionId: session.sessionId,
+                pageUrl: validatedData.pageUrl,
+                pageTitle: validatedData.pageTitle,
+              },
+              source: "livechat",
             });
           } else {
             // Create new contact from livechat visitor
-            const nameParts = (validatedData.visitorName || '').split(' ');
-            const firstName = nameParts[0] || 'Visitor';
-            const lastName = nameParts.slice(1).join(' ') || '';
+            const nameParts = (validatedData.visitorName || "").split(" ");
+            const firstName = nameParts[0] || "Visitor";
+            const lastName = nameParts.slice(1).join(" ") || "";
 
-            const [newContact] = await db.insert(crmContacts).values({
-              firstName,
-              lastName,
-              email: validatedData.visitorEmail,
-              lifecycleStage: 'lead',
-              leadSource: 'livechat',
-              customFields: {
-                livechatSessionId: session.sessionId,
-                firstPageUrl: validatedData.pageUrl,
-                firstPageTitle: validatedData.pageTitle,
-              },
-            }).returning();
-            
+            const [newContact] = await db
+              .insert(crmContacts)
+              .values({
+                firstName,
+                lastName,
+                email: validatedData.visitorEmail,
+                lifecycleStage: "lead",
+                leadSource: "livechat",
+                customFields: {
+                  livechatSessionId: session.sessionId,
+                  firstPageUrl: validatedData.pageUrl,
+                  firstPageTitle: validatedData.pageTitle,
+                },
+              })
+              .returning();
+
             crmContactId = newContact.id;
 
             // Log creation event
             await db.insert(crmTimelineEvents).values({
               contactId: newContact.id,
-              eventType: 'contact_created',
-              title: 'Contact created from live chat',
+              eventType: "contact_created",
+              title: "Contact created from live chat",
               description: `New contact created when ${validatedData.visitorName} started a live chat session`,
               metadata: { sessionId: session.sessionId },
-              source: 'livechat',
+              source: "livechat",
             });
           }
         } catch (crmError) {
@@ -3113,162 +3452,195 @@ async function registerInboxRoutes(app: Express) {
           conversationId: session.conversationId,
           status: session.status,
           crmContactId,
-        }
+        },
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({
           success: false,
           error: "Invalid session data",
-          details: error.errors
+          details: error.errors,
         });
       }
       console.error("Error creating livechat session:", error);
       res.status(500).json({
         success: false,
-        error: "Failed to create session"
+        error: "Failed to create session",
       });
     }
   });
 
   // Get all conversations for inbox (REQUIRES AUTHENTICATION)
-  app.get("/api/inbox/conversations", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!; // Get from authenticated JWT token
+  app.get(
+    "/api/inbox/conversations",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!; // Get from authenticated JWT token
 
-      const conversations = await db.select()
-        .from(inboxConversations)
-        .where(eq(inboxConversations.clientId, clientId))
-        .orderBy(desc(inboxConversations.updatedAt));
+        const conversations = await db
+          .select()
+          .from(inboxConversations)
+          .where(eq(inboxConversations.clientId, clientId))
+          .orderBy(desc(inboxConversations.updatedAt));
 
-      // Get last message for each conversation
-      const conversationsWithMessages = await Promise.all(
-        conversations.map(async (conv) => {
-          const lastMessage = await db.select()
-            .from(inboxMessages2)
-            .where(eq(inboxMessages2.conversationId, conv.id))
-            .orderBy(desc(inboxMessages2.createdAt))
-            .limit(1);
+        // Get last message for each conversation
+        const conversationsWithMessages = await Promise.all(
+          conversations.map(async (conv) => {
+            const lastMessage = await db
+              .select()
+              .from(inboxMessages2)
+              .where(eq(inboxMessages2.conversationId, conv.id))
+              .orderBy(desc(inboxMessages2.createdAt))
+              .limit(1);
 
-          return {
-            id: conv.id,
-            contactName: conv.contactName,
-            contactIdentifier: conv.contactIdentifier,
-            primaryChannelType: conv.primaryChannelType,
-            subject: conv.subject,
-            status: conv.status,
-            priority: conv.priority,
-            unreadCount: conv.unreadCount || 0,
-            lastMessageAt: conv.updatedAt,
-            lastMessagePreview: lastMessage[0]?.content || null,
-          };
-        })
-      );
+            return {
+              id: conv.id,
+              contactName: conv.contactName,
+              contactIdentifier: conv.contactIdentifier,
+              primaryChannelType: conv.primaryChannelType,
+              subject: conv.subject,
+              status: conv.status,
+              priority: conv.priority,
+              unreadCount: conv.unreadCount || 0,
+              lastMessageAt: conv.updatedAt,
+              lastMessagePreview: lastMessage[0]?.content || null,
+            };
+          }),
+        );
 
-      res.json(conversationsWithMessages);
-    } catch (error) {
-      console.error("Error fetching conversations:", error);
-      res.status(500).json({ error: "Failed to fetch conversations" });
-    }
-  });
+        res.json(conversationsWithMessages);
+      } catch (error) {
+        console.error("Error fetching conversations:", error);
+        res.status(500).json({ error: "Failed to fetch conversations" });
+      }
+    },
+  );
 
   // Get messages for a conversation (REQUIRES AUTHENTICATION)
-  app.get("/api/inbox/conversations/:conversationId/messages", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const conversationId = parseInt(req.params.conversationId);
+  app.get(
+    "/api/inbox/conversations/:conversationId/messages",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const conversationId = parseInt(req.params.conversationId);
 
-      // Verify the conversation belongs to the authenticated client
-      const [conversation] = await db.select()
-        .from(inboxConversations)
-        .where(and(
-          eq(inboxConversations.id, conversationId),
-          eq(inboxConversations.clientId, clientId)
-        ))
-        .limit(1);
+        // Verify the conversation belongs to the authenticated client
+        const [conversation] = await db
+          .select()
+          .from(inboxConversations)
+          .where(
+            and(
+              eq(inboxConversations.id, conversationId),
+              eq(inboxConversations.clientId, clientId),
+            ),
+          )
+          .limit(1);
 
-      if (!conversation) {
-        return res.status(404).json({ error: "Conversation not found or access denied" });
+        if (!conversation) {
+          return res
+            .status(404)
+            .json({ error: "Conversation not found or access denied" });
+        }
+
+        const messages = await db
+          .select()
+          .from(inboxMessages2)
+          .where(eq(inboxMessages2.conversationId, conversationId))
+          .orderBy(inboxMessages2.createdAt);
+
+        res.json(messages);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+        res.status(500).json({ error: "Failed to fetch messages" });
       }
-
-      const messages = await db.select()
-        .from(inboxMessages2)
-        .where(eq(inboxMessages2.conversationId, conversationId))
-        .orderBy(inboxMessages2.createdAt);
-
-      res.json(messages);
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-      res.status(500).json({ error: "Failed to fetch messages" });
-    }
-  });
+    },
+  );
 
   // Send a message (REQUIRES AUTHENTICATION)
-  app.post("/api/inbox/send-message", requireAuth, async (req: AuthenticatedRequest, res) => {
-    try {
-      const clientId = req.clientId!;
-      const { conversationId, message } = req.body;
+  app.post(
+    "/api/inbox/send-message",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const { conversationId, message } = req.body;
 
-      if (!conversationId || !message) {
-        return res.status(400).json({ error: "Missing required fields" });
-      }
-
-      // Get conversation and verify it belongs to the authenticated client
-      const [conversation] = await db.select()
-        .from(inboxConversations)
-        .where(and(
-          eq(inboxConversations.id, conversationId),
-          eq(inboxConversations.clientId, clientId)
-        ))
-        .limit(1);
-
-      if (!conversation) {
-        return res.status(404).json({ error: "Conversation not found or access denied" });
-      }
-
-      const agentName = 'Agent'; // TODO: Get from client profile
-      const agentEmail = 'agent@businessblueprint.io'; // TODO: Get from client profile
-
-      // Send via appropriate channel
-      let deliveryStatus = 'sent';
-      let errorMessage: string | null = null;
-
-      if (conversation.primaryChannelType === 'email') {
-        try {
-          await inboxEmailService.sendMessage(conversationId, message, agentName);
-          deliveryStatus = 'delivered';
-        } catch (emailError: any) {
-          errorMessage = emailError.message;
-          console.error('Email send error:', errorMessage);
-          return res.status(500).json({
-            error: "Failed to send email",
-            details: errorMessage
-          });
+        if (!conversationId || !message) {
+          return res.status(400).json({ error: "Missing required fields" });
         }
+
+        // Get conversation and verify it belongs to the authenticated client
+        const [conversation] = await db
+          .select()
+          .from(inboxConversations)
+          .where(
+            and(
+              eq(inboxConversations.id, conversationId),
+              eq(inboxConversations.clientId, clientId),
+            ),
+          )
+          .limit(1);
+
+        if (!conversation) {
+          return res
+            .status(404)
+            .json({ error: "Conversation not found or access denied" });
+        }
+
+        const agentName = "Agent"; // TODO: Get from client profile
+        const agentEmail = "agent@businessblueprint.io"; // TODO: Get from client profile
+
+        // Send via appropriate channel
+        let deliveryStatus = "sent";
+        let errorMessage: string | null = null;
+
+        if (conversation.primaryChannelType === "email") {
+          try {
+            await inboxEmailService.sendMessage(
+              conversationId,
+              message,
+              agentName,
+            );
+            deliveryStatus = "delivered";
+          } catch (emailError: any) {
+            errorMessage = emailError.message;
+            console.error("Email send error:", errorMessage);
+            return res.status(500).json({
+              error: "Failed to send email",
+              details: errorMessage,
+            });
+          }
+        }
+
+        const [newMessage] = await db
+          .insert(inboxMessages2)
+          .values({
+            conversationId,
+            channelType: conversation.primaryChannelType,
+            messageType: "outgoing",
+            direction: "outbound",
+            content: message,
+            fromIdentifier: agentEmail,
+            fromName: agentName,
+            toIdentifier: conversation.contactIdentifier,
+            toName: conversation.contactName || undefined,
+            status: deliveryStatus,
+          })
+          .returning();
+
+        // Update conversation timestamp
+        await db
+          .update(inboxConversations)
+          .set({ updatedAt: new Date() })
+          .where(eq(inboxConversations.id, conversationId));
+
+        res.json(newMessage);
+      } catch (error) {
+        console.error("Error sending message:", error);
+        res.status(500).json({ error: "Failed to send message" });
       }
-
-      const [newMessage] = await db.insert(inboxMessages2).values({
-        conversationId,
-        channelType: conversation.primaryChannelType,
-        messageType: 'outgoing',
-        direction: 'outbound',
-        content: message,
-        fromIdentifier: agentEmail,
-        fromName: agentName,
-        toIdentifier: conversation.contactIdentifier,
-        toName: conversation.contactName || undefined,
-        status: deliveryStatus,
-      }).returning();
-
-      // Update conversation timestamp
-      await db.update(inboxConversations)
-        .set({ updatedAt: new Date() })
-        .where(eq(inboxConversations.id, conversationId));
-
-      res.json(newMessage);
-    } catch (error) {
-      console.error("Error sending message:", error);
-      res.status(500).json({ error: "Failed to send message" });
-    }
-  });
+    },
+  );
 }
