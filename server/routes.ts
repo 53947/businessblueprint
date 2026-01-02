@@ -805,8 +805,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Check if token has been used
-      if (magicToken.used) {
+      // Check if token has been used (allow demo accounts to reuse tokens)
+      const isDemoEmail = [
+        "demo@businessblueprint.io",
+        "test@businessblueprint.io",
+        "agency@businessblueprint.io",
+      ].includes(magicToken.email.toLowerCase());
+      
+      if (magicToken.used && !isDemoEmail) {
         return res.status(400).json({
           success: false,
           message:
