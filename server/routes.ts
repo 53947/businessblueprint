@@ -871,9 +871,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         client.id,
       );
 
-      // Mark token as used
-      await storage.markTokenAsUsed(token);
-      console.log("[Magic Link Verify] Token marked as used");
+      // NOTE: Token is marked as used AFTER successful JWT generation (see below)
+      // This prevents tokens from being consumed when downstream operations fail
 
       // Update login tracking
       console.log(
@@ -956,6 +955,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       (req.session as any).clientId = client.id;
       (req.session as any).email = client.email;
       console.log("[Magic Link Verify] Session set for client ID:", client.id);
+
+      // Mark token as used ONLY after everything succeeded
+      // This prevents tokens from being consumed when downstream operations fail
+      await storage.markTokenAsUsed(token);
+      console.log("[Magic Link Verify] Token marked as used after successful verification");
 
       res.json({
         success: true,
