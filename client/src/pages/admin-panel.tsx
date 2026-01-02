@@ -67,6 +67,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { format, formatDistanceToNow } from "date-fns";
+import { EmailManagement } from "@/components/admin/email-management";
 
 interface Client {
   id: number;
@@ -155,7 +156,7 @@ interface SubscriptionWithDetails {
   }>;
 }
 
-type AdminTab = 'dashboard' | 'clients' | 'assessments' | 'billing' | 'tickets' | 'prescriptions' | 'settings';
+type AdminTab = 'dashboard' | 'clients' | 'assessments' | 'billing' | 'tickets' | 'prescriptions' | 'emails' | 'settings';
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
@@ -362,6 +363,7 @@ export default function AdminPanel() {
     { id: 'billing' as AdminTab, label: 'Billing', icon: CreditCard, badge: subscriptionsData?.stats?.totalSubscriptions },
     { id: 'tickets' as AdminTab, label: 'Support', icon: Ticket, badge: openTickets },
     { id: 'prescriptions' as AdminTab, label: 'Prescriptions', icon: ClipboardList, badge: pendingPrescriptions },
+    { id: 'emails' as AdminTab, label: 'Emails', icon: Mail },
     { id: 'settings' as AdminTab, label: 'Settings', icon: Settings },
   ];
 
@@ -1376,6 +1378,11 @@ export default function AdminPanel() {
                 </CardContent>
               </Card>
             </div>
+          )}
+
+          {/* EMAILS TAB */}
+          {activeTab === 'emails' && (
+            <EmailManagement />
           )}
 
           {/* SETTINGS TAB */}

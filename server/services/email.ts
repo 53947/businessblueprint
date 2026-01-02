@@ -1,5 +1,7 @@
 // Email service using Resend integration for transactional emails
 import { Resend } from 'resend';
+import { db } from '../db';
+import { emailLogs } from '@shared/schema';
 
 interface EmailReportData {
   businessName: string;
@@ -57,80 +59,196 @@ async function getResendClient() {
   };
 }
 
+interface EmailLogData {
+  recipientEmail: string;
+  recipientName?: string;
+  clientId?: number;
+  assessmentId?: number;
+  emailType: string;
+  subject: string;
+  htmlBody: string;
+  sentByAdminId?: number;
+}
+
+async function logEmailSend(data: EmailLogData, status: 'sent' | 'failed', errorMessage?: string, resendApiId?: string): Promise<number | null> {
+  try {
+    const [log] = await db.insert(emailLogs).values({
+      recipientEmail: data.recipientEmail,
+      recipientName: data.recipientName || null,
+      clientId: data.clientId || null,
+      assessmentId: data.assessmentId || null,
+      emailType: data.emailType,
+      subject: data.subject,
+      htmlBody: data.htmlBody,
+      status,
+      errorMessage: errorMessage || null,
+      resendApiId: resendApiId || null,
+      sentAt: status === 'sent' ? new Date() : null,
+      sentByAdminId: data.sentByAdminId || null,
+    }).returning();
+    return log.id;
+  } catch (err) {
+    console.error('[EmailService] Failed to log email:', err);
+    return null;
+  }
+}
+
 export class EmailService {
   generateVerificationCode(): string {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
 
   async sendVerificationEmail(email: string, companyName: string, verificationCode: string): Promise<boolean> {
+    const subject = `Verify Your Email - ${verificationCode}`;
+    const htmlContent = this.generateVerificationEmailHTML(companyName, verificationCode);
+    
     try {
       const { client, fromEmail } = await getResendClient();
-      const htmlContent = this.generateVerificationEmailHTML(companyName, verificationCode);
       
-      await client.emails.send({
+      const result = await client.emails.send({
         from: fromEmail,
         to: email,
-        subject: `Verify Your Email - ${verificationCode}`,
+        subject,
         html: htmlContent,
       });
+      
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: companyName,
+        emailType: 'verification',
+        subject,
+        htmlBody: htmlContent,
+      }, 'sent', undefined, result.data?.id);
+      
       return true;
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: companyName,
+        emailType: 'verification',
+        subject,
+        htmlBody: htmlContent,
+      }, 'failed', errorMsg);
+      
       console.error('Error sending verification email:', error);
       return false;
     }
   }
 
   async sendEmailChangeNotification(oldEmail: string, newEmail: string, companyName: string): Promise<boolean> {
+    const subject = `Email Address Changed - Action May Be Required`;
+    const htmlContent = this.generateEmailChangeNotificationHTML(companyName, newEmail);
+    
     try {
       const { client, fromEmail } = await getResendClient();
-      const htmlContent = this.generateEmailChangeNotificationHTML(companyName, newEmail);
       
-      await client.emails.send({
+      const result = await client.emails.send({
         from: fromEmail,
         to: oldEmail,
-        subject: `Email Address Changed - Action May Be Required`,
+        subject,
         html: htmlContent,
       });
+      
+      await logEmailSend({
+        recipientEmail: oldEmail,
+        recipientName: companyName,
+        emailType: 'email_change',
+        subject,
+        htmlBody: htmlContent,
+      }, 'sent', undefined, result.data?.id);
+      
       return true;
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      await logEmailSend({
+        recipientEmail: oldEmail,
+        recipientName: companyName,
+        emailType: 'email_change',
+        subject,
+        htmlBody: htmlContent,
+      }, 'failed', errorMsg);
+      
       console.error('Error sending email change notification:', error);
       return false;
     }
   }
 
   async sendAssessmentReport(email: string, data: EmailReportData): Promise<boolean> {
+    const subject = `Your Digital Presence Assessment Results - Score: ${data.digitalScore}`;
+    const htmlContent = this.generateReportHTML(data);
+    
     try {
       const { client, fromEmail } = await getResendClient();
-      const htmlContent = this.generateReportHTML(data);
       
-      await client.emails.send({
+      const result = await client.emails.send({
         from: fromEmail,
         to: email,
-        subject: `Your Digital Presence Assessment Results - Score: ${data.digitalScore}`,
+        subject,
         html: htmlContent,
       });
+      
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        assessmentId: data.assessmentId,
+        emailType: 'assessment_report',
+        subject,
+        htmlBody: htmlContent,
+      }, 'sent', undefined, result.data?.id);
+      
       return true;
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        assessmentId: data.assessmentId,
+        emailType: 'assessment_report',
+        subject,
+        htmlBody: htmlContent,
+      }, 'failed', errorMsg);
+      
       console.error('Error sending email:', error);
       return false;
     }
   }
 
   async sendReviewAlert(email: string, data: ReviewAlertData): Promise<boolean> {
+    const htmlContent = this.generateReviewAlertHTML(data);
+    const sentiment = data.rating <= 2 ? 'Negative' : data.rating >= 4 ? 'Positive' : 'Neutral';
+    const urgency = data.rating <= 2 ? '⚠️ URGENT' : '';
+    const subject = `${urgency} New ${sentiment} Review on ${data.platform} - ${data.rating} ${data.rating === 1 ? 'Star' : 'Stars'}`;
+    
     try {
       const { client, fromEmail } = await getResendClient();
-      const htmlContent = this.generateReviewAlertHTML(data);
-      const sentiment = data.rating <= 2 ? 'Negative' : data.rating >= 4 ? 'Positive' : 'Neutral';
-      const urgency = data.rating <= 2 ? '⚠️ URGENT' : '';
       
-      await client.emails.send({
+      const result = await client.emails.send({
         from: fromEmail,
         to: email,
-        subject: `${urgency} New ${sentiment} Review on ${data.platform} - ${data.rating} ${data.rating === 1 ? 'Star' : 'Stars'}`,
+        subject,
         html: htmlContent,
       });
+      
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        emailType: 'review_alert',
+        subject,
+        htmlBody: htmlContent,
+      }, 'sent', undefined, result.data?.id);
+      
       return true;
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        emailType: 'review_alert',
+        subject,
+        htmlBody: htmlContent,
+      }, 'failed', errorMsg);
+      
       console.error('Error sending review alert email:', error);
       return false;
     }
@@ -144,18 +262,38 @@ export class EmailService {
     nextBillingDate: Date;
     features: string[];
   }): Promise<boolean> {
+    const subject = `Welcome to ${data.planName} - Your Digital Growth Journey Begins!`;
+    const htmlContent = this.generateEnrollmentConfirmationHTML(data);
+    
     try {
       const { client, fromEmail } = await getResendClient();
-      const htmlContent = this.generateEnrollmentConfirmationHTML(data);
       
-      await client.emails.send({
+      const result = await client.emails.send({
         from: fromEmail,
         to: email,
-        subject: `Welcome to ${data.planName} - Your Digital Growth Journey Begins!`,
+        subject,
         html: htmlContent,
       });
+      
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        emailType: 'enrollment_confirmation',
+        subject,
+        htmlBody: htmlContent,
+      }, 'sent', undefined, result.data?.id);
+      
       return true;
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        emailType: 'enrollment_confirmation',
+        subject,
+        htmlBody: htmlContent,
+      }, 'failed', errorMsg);
+      
       console.error('Error sending enrollment confirmation email:', error);
       return false;
     }
@@ -166,18 +304,40 @@ export class EmailService {
     digitalScore: number;
     assessmentId: number;
   }): Promise<boolean> {
+    const subject = `Still deciding? Your Digital Growth Plan is ready, ${data.businessName}`;
+    const htmlContent = this.generatePathwayReminderHTML(data);
+    
     try {
       const { client, fromEmail } = await getResendClient();
-      const htmlContent = this.generatePathwayReminderHTML(data);
       
-      await client.emails.send({
+      const result = await client.emails.send({
         from: fromEmail,
         to: email,
-        subject: `Still deciding? Your Digital Growth Plan is ready, ${data.businessName}`,
+        subject,
         html: htmlContent,
       });
+      
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        assessmentId: data.assessmentId,
+        emailType: 'pathway_reminder',
+        subject,
+        htmlBody: htmlContent,
+      }, 'sent', undefined, result.data?.id);
+      
       return true;
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        assessmentId: data.assessmentId,
+        emailType: 'pathway_reminder',
+        subject,
+        htmlBody: htmlContent,
+      }, 'failed', errorMsg);
+      
       console.error('Error sending pathway reminder email:', error);
       return false;
     }
@@ -190,36 +350,78 @@ export class EmailService {
     monthlyPrice: number;
     assessmentId: number;
   }): Promise<boolean> {
+    const subject = `Complete your enrollment - ${data.planName} is waiting for you!`;
+    const htmlContent = this.generateCheckoutAbandonmentHTML(data);
+    
     try {
       const { client, fromEmail } = await getResendClient();
-      const htmlContent = this.generateCheckoutAbandonmentHTML(data);
       
-      await client.emails.send({
+      const result = await client.emails.send({
         from: fromEmail,
         to: email,
-        subject: `Complete your enrollment - ${data.planName} is waiting for you!`,
+        subject,
         html: htmlContent,
       });
+      
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        assessmentId: data.assessmentId,
+        emailType: 'checkout_abandonment',
+        subject,
+        htmlBody: htmlContent,
+      }, 'sent', undefined, result.data?.id);
+      
       return true;
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        assessmentId: data.assessmentId,
+        emailType: 'checkout_abandonment',
+        subject,
+        htmlBody: htmlContent,
+      }, 'failed', errorMsg);
+      
       console.error('Error sending checkout abandonment email:', error);
       return false;
     }
   }
 
   async sendMagicLinkEmail(email: string, magicLink: string, companyName?: string): Promise<boolean> {
+    const subject = 'Your Secure Login Link - Business Blueprint';
+    const htmlContent = this.generateMagicLinkHTML(magicLink, companyName);
+    
     try {
       const { client, fromEmail } = await getResendClient();
-      const htmlContent = this.generateMagicLinkHTML(magicLink, companyName);
       
-      await client.emails.send({
+      const result = await client.emails.send({
         from: fromEmail,
         to: email,
-        subject: 'Your Secure Login Link - Business Blueprint',
+        subject,
         html: htmlContent,
       });
+      
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: companyName,
+        emailType: 'magic_link',
+        subject,
+        htmlBody: htmlContent,
+      }, 'sent', undefined, result.data?.id);
+      
       return true;
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: companyName,
+        emailType: 'magic_link',
+        subject,
+        htmlBody: htmlContent,
+      }, 'failed', errorMsg);
+      
       console.error('Error sending magic link email:', error);
       return false;
     }
@@ -229,18 +431,40 @@ export class EmailService {
     businessName: string;
     assessmentId: number;
   }): Promise<boolean> {
+    const subject = `Meet Coach Blue - Your AI Guide to Digital Success`;
+    const htmlContent = this.generateThankYouIntroductionHTML(data);
+    
     try {
       const { client, fromEmail } = await getResendClient();
-      const htmlContent = this.generateThankYouIntroductionHTML(data);
       
-      await client.emails.send({
+      const result = await client.emails.send({
         from: fromEmail,
         to: email,
-        subject: `Meet Coach Blue 🤖 - Your AI Guide to Digital Success`,
+        subject,
         html: htmlContent,
       });
+      
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        assessmentId: data.assessmentId,
+        emailType: 'coach_blue_intro',
+        subject,
+        htmlBody: htmlContent,
+      }, 'sent', undefined, result.data?.id);
+      
       return true;
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        assessmentId: data.assessmentId,
+        emailType: 'coach_blue_intro',
+        subject,
+        htmlBody: htmlContent,
+      }, 'failed', errorMsg);
+      
       console.error('Error sending thank you introduction email:', error);
       return false;
     }
@@ -251,19 +475,41 @@ export class EmailService {
     assessmentId: number;
     digitalScore?: number;
   }): Promise<boolean> {
+    const subject = `Welcome to Business Blueprint, ${data.businessName}!`;
+    const htmlContent = this.generateWelcomeEmailHTML(data);
+    
     try {
       const { client, fromEmail } = await getResendClient();
-      const htmlContent = this.generateWelcomeEmailHTML(data);
       
-      await client.emails.send({
+      const result = await client.emails.send({
         from: fromEmail,
         to: email,
-        subject: `Welcome to Business Blueprint, ${data.businessName}!`,
+        subject,
         html: htmlContent,
       });
+      
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        assessmentId: data.assessmentId,
+        emailType: 'welcome',
+        subject,
+        htmlBody: htmlContent,
+      }, 'sent', undefined, result.data?.id);
+      
       console.log(`[Email] Welcome email sent to ${email}`);
       return true;
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      await logEmailSend({
+        recipientEmail: email,
+        recipientName: data.businessName,
+        assessmentId: data.assessmentId,
+        emailType: 'welcome',
+        subject,
+        htmlBody: htmlContent,
+      }, 'failed', errorMsg);
+      
       console.error('Error sending welcome email:', error);
       return false;
     }

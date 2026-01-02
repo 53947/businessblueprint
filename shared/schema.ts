@@ -2844,6 +2844,83 @@ export const adminActivityLog = pgTable("admin_activity_log", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Email logs - tracks all emails sent/attempted
+export const emailLogs = pgTable("email_logs", {
+  id: serial("id").primaryKey(),
+  
+  // Recipient info
+  recipientEmail: varchar("recipient_email", { length: 255 }).notNull(),
+  recipientName: varchar("recipient_name", { length: 255 }),
+  clientId: integer("client_id").references(() => clients.id),
+  assessmentId: integer("assessment_id").references(() => assessments.id),
+  
+  // Email content
+  emailType: varchar("email_type", { length: 50 }).notNull(), // welcome, magic_link, assessment_report, etc.
+  templateId: integer("template_id"), // Reference to email_templates if using custom template
+  subject: varchar("subject", { length: 500 }).notNull(),
+  htmlBody: text("html_body").notNull(),
+  
+  // Status tracking
+  status: varchar("status", { length: 30 }).default("pending"), // pending, sent, failed, bounced, opened, clicked
+  errorMessage: text("error_message"),
+  resendApiId: varchar("resend_api_id", { length: 255 }), // Resend's email ID for tracking
+  
+  // Engagement tracking
+  sentAt: timestamp("sent_at"),
+  openedAt: timestamp("opened_at"),
+  clickedAt: timestamp("clicked_at"),
+  bouncedAt: timestamp("bounced_at"),
+  
+  // Retry tracking
+  retryCount: integer("retry_count").default(0),
+  lastRetryAt: timestamp("last_retry_at"),
+  
+  // Admin sender (for manual sends)
+  sentByAdminId: integer("sent_by_admin_id").references(() => clients.id),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_email_logs_recipient").on(table.recipientEmail),
+  index("idx_email_logs_status").on(table.status),
+  index("idx_email_logs_type").on(table.emailType),
+  index("idx_email_logs_client").on(table.clientId),
+]);
+
+// Email templates - editable email templates
+export const emailTemplates = pgTable("email_templates", {
+  id: serial("id").primaryKey(),
+  
+  // Template identification
+  name: varchar("name", { length: 100 }).notNull(), // Internal name (e.g., "welcome", "assessment_report")
+  displayName: varchar("display_name", { length: 255 }).notNull(), // Human-readable name
+  description: text("description"),
+  
+  // Template content
+  subject: varchar("subject", { length: 500 }).notNull(),
+  htmlBody: text("html_body").notNull(),
+  
+  // Available variables for this template (e.g., {businessName}, {dashboardLink})
+  availableVariables: jsonb("available_variables"), // Array of {name, description}
+  
+  // Template settings
+  isSystem: boolean("is_system").default(false), // System templates can't be deleted
+  isActive: boolean("is_active").default(true),
+  
+  // Trigger settings for automated emails
+  triggerType: varchar("trigger_type", { length: 50 }), // manual, after_assessment, after_subscription, days_after_inactivity
+  triggerConfig: jsonb("trigger_config"), // Additional config like {daysAfter: 3}
+  
+  // Audit
+  createdById: integer("created_by_id").references(() => clients.id),
+  lastEditedById: integer("last_edited_by_id").references(() => clients.id),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_email_templates_name").on(table.name),
+  index("idx_email_templates_trigger").on(table.triggerType),
+]);
+
 // Insert schemas
 export const insertSupportTicketSchema = createInsertSchema(supportTickets).omit({
   id: true,
@@ -2891,3 +2968,33 @@ export type InsertPrescription = z.infer<typeof insertPrescriptionSchema>;
 export type UpdatePrescription = z.infer<typeof updatePrescriptionSchema>;
 export type AdminActivityLog = typeof adminActivityLog.$inferSelect;
 export type InsertAdminActivityLog = z.infer<typeof insertAdminActivityLogSchema>;
+
+// Email Management Schemas
+export const insertEmailLogSchema = createInsertSchema(emailLogs).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertEmailTemplateSchema = createInsertSchema(emailTemplates).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const updateEmailTemplateSchema = z.object({
+  displayName: z.string().optional(),
+  description: z.string().optional(),
+  subject: z.string().optional(),
+  htmlBody: z.string().optional(),
+  availableVariables: z.array(z.object({ name: z.string(), description: z.string() })).optional(),
+  isActive: z.boolean().optional(),
+  triggerType: z.enum(['manual', 'after_assessment', 'after_subscription', 'days_after_inactivity']).optional(),
+  triggerConfig: z.record(z.any()).optional(),
+});
+
+// Email Management Types
+export type EmailLog = typeof emailLogs.$inferSelect;
+export type InsertEmailLog = z.infer<typeof insertEmailLogSchema>;
+export type EmailTemplate = typeof emailTemplates.$inferSelect;
+export type InsertEmailTemplate = z.infer<typeof insertEmailTemplateSchema>;
+export type UpdateEmailTemplate = z.infer<typeof updateEmailTemplateSchema>;
