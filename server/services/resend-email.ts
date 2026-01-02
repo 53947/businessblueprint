@@ -1,16 +1,86 @@
 import { Resend } from 'resend';
 
-let resendInstance: Resend | null = null;
+// Replit Resend Connector Integration
+// WARNING: Never cache this client - access tokens may expire
+let connectionSettings: any;
 
-function getResendClient(): Resend {
-  if (!resendInstance) {
-    const apiKey = process.env.RESEND_API_KEY;
-    if (!apiKey) {
-      console.warn('[Email Service] RESEND_API_KEY not set. Emails will not be sent.');
+async function getResendCredentials(): Promise<{ apiKey: string; fromEmail: string } | null> {
+  try {
+    const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
+    
+    // If no connector hostname, fall back to env var
+    if (!hostname) {
+      const apiKey = process.env.RESEND_API_KEY;
+      if (apiKey) {
+        return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
+      }
+      console.warn('[Email Service] No Resend connector or RESEND_API_KEY configured');
+      return null;
     }
-    resendInstance = new Resend(apiKey || 'dummy-key-for-startup');
+    
+    const xReplitToken = process.env.REPL_IDENTITY 
+      ? 'repl ' + process.env.REPL_IDENTITY 
+      : process.env.WEB_REPL_RENEWAL 
+      ? 'depl ' + process.env.WEB_REPL_RENEWAL 
+      : null;
+
+    if (!xReplitToken) {
+      // Fall back to env var
+      const apiKey = process.env.RESEND_API_KEY;
+      if (apiKey) {
+        return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
+      }
+      console.warn('[Email Service] No Replit token found for connector');
+      return null;
+    }
+
+    connectionSettings = await fetch(
+      'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
+      {
+        headers: {
+          'Accept': 'application/json',
+          'X_REPLIT_TOKEN': xReplitToken
+        }
+      }
+    ).then(res => res.json()).then(data => data.items?.[0]);
+
+    if (!connectionSettings || !connectionSettings.settings?.api_key) {
+      // Fall back to env var
+      const apiKey = process.env.RESEND_API_KEY;
+      if (apiKey) {
+        console.log('[Email Service] Using RESEND_API_KEY from environment');
+        return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
+      }
+      console.warn('[Email Service] Resend connector not configured');
+      return null;
+    }
+    
+    console.log('[Email Service] Using Resend connector credentials');
+    return {
+      apiKey: connectionSettings.settings.api_key,
+      fromEmail: connectionSettings.settings.from_email || 'noreply@businessblueprint.io'
+    };
+  } catch (error) {
+    console.error('[Email Service] Error fetching Resend credentials:', error);
+    // Fall back to env var
+    const apiKey = process.env.RESEND_API_KEY;
+    if (apiKey) {
+      return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
+    }
+    return null;
   }
-  return resendInstance;
+}
+
+// Get a fresh Resend client (never cached per connector requirements)
+async function getResendClient(): Promise<{ client: Resend; fromEmail: string } | null> {
+  const credentials = await getResendCredentials();
+  if (!credentials) {
+    return null;
+  }
+  return {
+    client: new Resend(credentials.apiKey),
+    fromEmail: credentials.fromEmail
+  };
 }
 
 interface EmailReportData {
@@ -34,14 +104,14 @@ interface ReviewAlertData {
 export class ResendEmailService {
   async sendVerificationEmail(email: string, companyName: string, verificationCode: string): Promise<boolean> {
     try {
-      if (!process.env.RESEND_API_KEY) {
-        console.warn('[Email Service] RESEND_API_KEY not configured');
+      const resendClient = await getResendClient();
+      if (!resendClient) {
+        console.warn('[Email Service] Resend not configured');
         return false;
       }
       const htmlContent = this.generateVerificationEmailHTML(companyName, verificationCode);
-      const resend = getResendClient();
-      await resend.emails.send({
-        from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
+      await resendClient.client.emails.send({
+        from: resendClient.fromEmail,
         to: email,
         subject: `Verify Your Email - ${verificationCode}`,
         html: htmlContent,
@@ -55,11 +125,11 @@ export class ResendEmailService {
 
   async sendEmailChangeNotification(oldEmail: string, newEmail: string, companyName: string): Promise<boolean> {
     try {
-      if (!process.env.RESEND_API_KEY) return false;
+      const resendClient = await getResendClient();
+      if (!resendClient) return false;
       const htmlContent = this.generateEmailChangeNotificationHTML(companyName, newEmail);
-      const resend = getResendClient();
-      await resend.emails.send({
-        from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
+      await resendClient.client.emails.send({
+        from: resendClient.fromEmail,
         to: oldEmail,
         subject: `Email Address Changed - Action May Be Required`,
         html: htmlContent,
@@ -73,11 +143,11 @@ export class ResendEmailService {
 
   async sendAssessmentReport(email: string, data: EmailReportData): Promise<boolean> {
     try {
-      if (!process.env.RESEND_API_KEY) return false;
+      const resendClient = await getResendClient();
+      if (!resendClient) return false;
       const htmlContent = this.generateReportHTML(data);
-      const resend = getResendClient();
-      await resend.emails.send({
-        from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
+      await resendClient.client.emails.send({
+        from: resendClient.fromEmail,
         to: email,
         subject: `Your Digital Presence Assessment Results - Score: ${data.digitalScore}`,
         html: htmlContent,
@@ -91,13 +161,13 @@ export class ResendEmailService {
 
   async sendReviewAlert(email: string, data: ReviewAlertData): Promise<boolean> {
     try {
-      if (!process.env.RESEND_API_KEY) return false;
+      const resendClient = await getResendClient();
+      if (!resendClient) return false;
       const htmlContent = this.generateReviewAlertHTML(data);
       const sentiment = data.rating <= 2 ? 'Negative' : data.rating >= 4 ? 'Positive' : 'Neutral';
       const urgency = data.rating <= 2 ? '⚠️ URGENT' : '';
-      const resend = getResendClient();
-      await resend.emails.send({
-        from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
+      await resendClient.client.emails.send({
+        from: resendClient.fromEmail,
         to: email,
         subject: `${urgency} New ${sentiment} Review on ${data.platform} - ${data.rating} ${data.rating === 1 ? 'Star' : 'Stars'}`,
         html: htmlContent,
@@ -118,11 +188,11 @@ export class ResendEmailService {
     features: string[];
   }): Promise<boolean> {
     try {
-      if (!process.env.RESEND_API_KEY) return false;
+      const resendClient = await getResendClient();
+      if (!resendClient) return false;
       const htmlContent = this.generateEnrollmentConfirmationHTML(data);
-      const resend = getResendClient();
-      await resend.emails.send({
-        from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
+      await resendClient.client.emails.send({
+        from: resendClient.fromEmail,
         to: email,
         subject: `Welcome to ${data.planName} - Your Digital Growth Journey Begins!`,
         html: htmlContent,
@@ -140,11 +210,11 @@ export class ResendEmailService {
     assessmentId: number;
   }): Promise<boolean> {
     try {
-      if (!process.env.RESEND_API_KEY) return false;
+      const resendClient = await getResendClient();
+      if (!resendClient) return false;
       const htmlContent = this.generatePathwayReminderHTML(data);
-      const resend = getResendClient();
-      await resend.emails.send({
-        from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
+      await resendClient.client.emails.send({
+        from: resendClient.fromEmail,
         to: email,
         subject: `Still deciding? Your Digital Growth Plan is ready, ${data.businessName}`,
         html: htmlContent,
@@ -164,11 +234,11 @@ export class ResendEmailService {
     assessmentId: number;
   }): Promise<boolean> {
     try {
-      if (!process.env.RESEND_API_KEY) return false;
+      const resendClient = await getResendClient();
+      if (!resendClient) return false;
       const htmlContent = this.generateCheckoutAbandonmentHTML(data);
-      const resend = getResendClient();
-      await resend.emails.send({
-        from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
+      await resendClient.client.emails.send({
+        from: resendClient.fromEmail,
         to: email,
         subject: `Complete your enrollment - ${data.planName} is waiting for you!`,
         html: htmlContent,
@@ -182,11 +252,11 @@ export class ResendEmailService {
 
   async sendMagicLinkEmail(email: string, magicLink: string, companyName?: string): Promise<boolean> {
     try {
-      if (!process.env.RESEND_API_KEY) return false;
+      const resendClient = await getResendClient();
+      if (!resendClient) return false;
       const htmlContent = this.generateMagicLinkHTML(magicLink, companyName);
-      const resend = getResendClient();
-      await resend.emails.send({
-        from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
+      await resendClient.client.emails.send({
+        from: resendClient.fromEmail,
         to: email,
         subject: 'Your Secure Login Link - Business Blueprint',
         html: htmlContent,
@@ -203,11 +273,11 @@ export class ResendEmailService {
     assessmentId: number;
   }): Promise<boolean> {
     try {
-      if (!process.env.RESEND_API_KEY) return false;
+      const resendClient = await getResendClient();
+      if (!resendClient) return false;
       const htmlContent = this.generateThankYouIntroductionHTML(data);
-      const resend = getResendClient();
-      await resend.emails.send({
-        from: process.env.FROM_EMAIL || 'noreply@businessblueprint.io',
+      await resendClient.client.emails.send({
+        from: resendClient.fromEmail,
         to: email,
         subject: `Meet Coach Blue 🤖 - Your AI Guide to Digital Success`,
         html: htmlContent,
