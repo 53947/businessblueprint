@@ -79,6 +79,7 @@ import { cn } from "@/lib/utils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import relationshipsIcon from "@assets/__relationships_1766748093805.png";
+import bbLogo from "@assets/1-Master_business_blueprint_logo_only_1767324548364.png";
 
 interface CrmStats {
   contacts: number;
@@ -297,6 +298,21 @@ export default function RelationshipsPage() {
               Upgrade to Performance
             </Button>
           </div>
+        </div>
+
+        {/* Exit to Portal */}
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+          <Link href="/portal/dashboard">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="w-full flex items-center justify-center gap-2"
+              data-testid="btn-exit-to-portal"
+            >
+              <img src={bbLogo} alt="BusinessBlueprint" className="h-4" />
+              <span>Exit to Portal</span>
+            </Button>
+          </Link>
         </div>
       </aside>
 
