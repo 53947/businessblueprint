@@ -17,6 +17,9 @@ import {
   subscriptionAddonSelections,
   billingHistory,
   accountStatusHistory,
+  supportTickets,
+  ticketComments,
+  prescriptions,
   type Assessment,
   type InsertAssessment,
   type Recommendation,
@@ -44,6 +47,12 @@ import {
   type BillingHistory,
   type AccountStatusHistory,
   type InsertAccountStatusHistory,
+  type SupportTicket,
+  type InsertSupportTicket,
+  type TicketComment,
+  type InsertTicketComment,
+  type Prescription,
+  type InsertPrescription,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, sql } from "drizzle-orm";
@@ -160,6 +169,16 @@ export interface IStorage {
   updateClientAccountStatus(clientId: number, newStatus: AccountStatus, reason?: string | null, changedBy?: number | null): Promise<Client>;
   recordAccountStatusChange(record: InsertAccountStatusHistory): Promise<AccountStatusHistory>;
   getClientAccountStatusHistory(clientId: number): Promise<AccountStatusHistory[]>;
+
+  // Support Ticket operations
+  getAllTickets(): Promise<(SupportTicket & { client: { companyName: string | null; email: string } | null })[]>;
+  createTicket(data: Omit<InsertSupportTicket, 'id' | 'createdAt' | 'updatedAt' | 'status'> & { category?: string; priority?: string }): Promise<SupportTicket>;
+  updateTicket(id: number, data: { status?: string; priority?: string; resolution?: string }): Promise<SupportTicket>;
+  addTicketComment(ticketId: number, data: { content: string; authorType?: string; isInternal?: boolean }): Promise<TicketComment>;
+
+  // Prescription operations  
+  getAllPrescriptions(): Promise<(Prescription & { client: { companyName: string | null } | null })[]>;
+  updatePrescription(id: number, data: { status?: string; reviewNotes?: string; implementationProgress?: number }): Promise<Prescription>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -752,6 +771,121 @@ export class DatabaseStorage implements IStorage {
       .from(accountStatusHistory)
       .where(eq(accountStatusHistory.clientId, clientId))
       .orderBy(desc(accountStatusHistory.createdAt));
+  }
+
+  // Support Ticket operations
+  async getAllTickets(): Promise<(SupportTicket & { client: { companyName: string | null; email: string } | null })[]> {
+    const ticketList = await db
+      .select({
+        ticket: supportTickets,
+        client: {
+          companyName: clients.companyName,
+          email: clients.email,
+        },
+      })
+      .from(supportTickets)
+      .leftJoin(clients, eq(supportTickets.clientId, clients.id))
+      .orderBy(desc(supportTickets.createdAt));
+
+    return ticketList.map((t) => ({
+      ...t.ticket,
+      client: t.client,
+    }));
+  }
+
+  async createTicket(data: Omit<InsertSupportTicket, 'id' | 'createdAt' | 'updatedAt' | 'status'> & { category?: string; priority?: string }): Promise<SupportTicket> {
+    const [newTicket] = await db
+      .insert(supportTickets)
+      .values({
+        clientId: data.clientId,
+        subject: data.subject,
+        description: data.description,
+        category: data.category || "general",
+        priority: data.priority || "medium",
+        status: "open",
+      })
+      .returning();
+
+    return newTicket;
+  }
+
+  async updateTicket(id: number, data: { status?: string; priority?: string; resolution?: string }): Promise<SupportTicket> {
+    const updateData: Partial<SupportTicket> = { updatedAt: new Date() };
+    if (data.status) updateData.status = data.status;
+    if (data.priority) updateData.priority = data.priority;
+    if (data.resolution) updateData.resolution = data.resolution;
+    if (data.status === "resolved" || data.status === "closed") {
+      updateData.resolvedAt = new Date();
+    }
+
+    const [updatedTicket] = await db
+      .update(supportTickets)
+      .set(updateData)
+      .where(eq(supportTickets.id, id))
+      .returning();
+
+    return updatedTicket;
+  }
+
+  async addTicketComment(ticketId: number, data: { content: string; authorType?: string; isInternal?: boolean }): Promise<TicketComment> {
+    const [newComment] = await db
+      .insert(ticketComments)
+      .values({
+        ticketId,
+        content: data.content,
+        isInternal: data.isInternal || false,
+        authorType: data.authorType || "admin",
+      })
+      .returning();
+
+    // Update first response time if this is the first comment
+    const ticket = await db.select().from(supportTickets).where(eq(supportTickets.id, ticketId)).limit(1);
+    if (ticket[0] && !ticket[0].firstResponseAt) {
+      await db.update(supportTickets).set({ firstResponseAt: new Date() }).where(eq(supportTickets.id, ticketId));
+    }
+
+    return newComment;
+  }
+
+  // Prescription operations
+  async getAllPrescriptions(): Promise<(Prescription & { client: { companyName: string | null } | null })[]> {
+    const prescriptionList = await db
+      .select({
+        prescription: prescriptions,
+        client: {
+          companyName: clients.companyName,
+        },
+      })
+      .from(prescriptions)
+      .leftJoin(clients, eq(prescriptions.clientId, clients.id))
+      .orderBy(desc(prescriptions.createdAt));
+
+    return prescriptionList.map((p) => ({
+      ...p.prescription,
+      client: p.client,
+    }));
+  }
+
+  async updatePrescription(id: number, data: { status?: string; reviewNotes?: string; implementationProgress?: number }): Promise<Prescription> {
+    const updateData: Partial<Prescription> = { updatedAt: new Date() };
+    if (data.status) updateData.status = data.status;
+    if (data.reviewNotes) updateData.reviewNotes = data.reviewNotes;
+    if (data.implementationProgress !== undefined) updateData.implementationProgress = data.implementationProgress;
+
+    if (data.status === "approved") {
+      updateData.reviewedAt = new Date();
+    }
+    if (data.status === "delivered") {
+      updateData.deliveredAt = new Date();
+    }
+
+    const [updatedPrescription] = await db
+      .update(prescriptions)
+      .set(updateData)
+      .where(eq(prescriptions.id, id))
+      .returning();
+
+    return updatedPrescription;
   }
 }
 

@@ -2717,3 +2717,159 @@ export type ApiKey = typeof apiKeys.$inferSelect;
 export type InsertApiKey = z.infer<typeof insertApiKeySchema>;
 export type WebhookSubscription = typeof webhookSubscriptions.$inferSelect;
 export type InsertWebhookSubscription = z.infer<typeof insertWebhookSubscriptionSchema>;
+
+// ============================================================================
+// SUPPORT TICKETS - Client Support System
+// ============================================================================
+
+export const supportTickets = pgTable("support_tickets", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  
+  // Ticket details
+  subject: varchar("subject", { length: 255 }).notNull(),
+  description: text("description").notNull(),
+  category: varchar("category", { length: 50 }).default("general"), // general, billing, technical, feature_request
+  
+  // Status tracking
+  status: varchar("status", { length: 30 }).default("open"), // open, in_progress, waiting_on_client, resolved, closed
+  priority: varchar("priority", { length: 20 }).default("medium"), // low, medium, high, urgent
+  
+  // Assignment
+  assignedToId: integer("assigned_to_id").references(() => clients.id),
+  assignedAt: timestamp("assigned_at"),
+  
+  // Resolution
+  resolution: text("resolution"),
+  resolvedAt: timestamp("resolved_at"),
+  
+  // SLA tracking
+  firstResponseAt: timestamp("first_response_at"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_ticket_client").on(table.clientId),
+  index("idx_ticket_status").on(table.status),
+]);
+
+// Ticket comments/messages
+export const ticketComments = pgTable("ticket_comments", {
+  id: serial("id").primaryKey(),
+  ticketId: integer("ticket_id").references(() => supportTickets.id, { onDelete: "cascade" }).notNull(),
+  
+  // Comment author
+  authorId: integer("author_id").references(() => clients.id),
+  authorType: varchar("author_type", { length: 20 }).notNull(), // admin, client
+  
+  // Content
+  content: text("content").notNull(),
+  isInternal: boolean("is_internal").default(false), // internal notes vs client-visible
+  
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// ============================================================================
+// AI PRESCRIPTIONS - Generated Business Recommendations
+// ============================================================================
+
+export const prescriptions = pgTable("prescriptions", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  assessmentId: integer("assessment_id").references(() => assessments.id),
+  
+  // Prescription details
+  title: varchar("title", { length: 255 }).notNull(),
+  summary: text("summary"),
+  
+  // AI-generated content
+  recommendations: jsonb("recommendations"), // Array of recommendation objects
+  actionItems: jsonb("action_items"), // Prioritized action items
+  timeline: jsonb("timeline"), // Implementation timeline
+  
+  // Status workflow
+  status: varchar("status", { length: 30 }).default("pending_review"), // pending_review, approved, delivered, in_progress, completed
+  
+  // Review workflow
+  reviewedById: integer("reviewed_by_id").references(() => clients.id),
+  reviewedAt: timestamp("reviewed_at"),
+  reviewNotes: text("review_notes"),
+  
+  // Delivery tracking
+  deliveredAt: timestamp("delivered_at"),
+  viewedAt: timestamp("viewed_at"),
+  
+  // Implementation tracking
+  implementationProgress: integer("implementation_progress").default(0), // 0-100
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_prescription_client").on(table.clientId),
+  index("idx_prescription_status").on(table.status),
+]);
+
+// Admin activity log
+export const adminActivityLog = pgTable("admin_activity_log", {
+  id: serial("id").primaryKey(),
+  adminId: integer("admin_id").references(() => clients.id),
+  
+  // Action details
+  action: varchar("action", { length: 100 }).notNull(), // view_client, update_status, approve_prescription, etc.
+  resourceType: varchar("resource_type", { length: 50 }), // client, ticket, prescription, etc.
+  resourceId: integer("resource_id"),
+  
+  // Context
+  details: jsonb("details"),
+  ipAddress: varchar("ip_address", { length: 45 }),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Insert schemas
+export const insertSupportTicketSchema = createInsertSchema(supportTickets).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertTicketCommentSchema = createInsertSchema(ticketComments).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertPrescriptionSchema = createInsertSchema(prescriptions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertAdminActivityLogSchema = createInsertSchema(adminActivityLog).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Update schemas for partial updates
+export const updateSupportTicketSchema = z.object({
+  status: z.enum(['open', 'in_progress', 'waiting_on_client', 'resolved', 'closed']).optional(),
+  priority: z.enum(['low', 'medium', 'high', 'urgent']).optional(),
+  resolution: z.string().optional(),
+});
+
+export const updatePrescriptionSchema = z.object({
+  status: z.enum(['pending_review', 'approved', 'delivered', 'in_progress', 'completed']).optional(),
+  reviewNotes: z.string().optional(),
+  implementationProgress: z.number().min(0).max(100).optional(),
+});
+
+// Support & Prescription Types
+export type SupportTicket = typeof supportTickets.$inferSelect;
+export type InsertSupportTicket = z.infer<typeof insertSupportTicketSchema>;
+export type UpdateSupportTicket = z.infer<typeof updateSupportTicketSchema>;
+export type TicketComment = typeof ticketComments.$inferSelect;
+export type InsertTicketComment = z.infer<typeof insertTicketCommentSchema>;
+export type Prescription = typeof prescriptions.$inferSelect;
+export type InsertPrescription = z.infer<typeof insertPrescriptionSchema>;
+export type UpdatePrescription = z.infer<typeof updatePrescriptionSchema>;
+export type AdminActivityLog = typeof adminActivityLog.$inferSelect;
+export type InsertAdminActivityLog = z.infer<typeof insertAdminActivityLogSchema>;

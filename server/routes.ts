@@ -28,6 +28,14 @@ import {
   crmDeals,
   crmTasks,
   crmTimeline,
+  supportTickets,
+  ticketComments,
+  prescriptions,
+  clients,
+  insertSupportTicketSchema,
+  insertTicketCommentSchema,
+  updateSupportTicketSchema,
+  updatePrescriptionSchema,
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
@@ -615,11 +623,163 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all clients (admin only - protected by Replit Auth)
   app.get("/api/admin/clients", isAuthenticated, async (req, res) => {
     try {
-      const clients = await storage.getAllClients();
-      res.json(clients);
+      const clientList = await storage.getAllClients();
+      res.json(clientList);
     } catch (error) {
       console.error("Error fetching clients:", error);
       res.status(500).json({ message: "Failed to fetch clients" });
+    }
+  });
+
+  // ========================================
+  // ADMIN - Support Tickets
+  // ========================================
+
+  // Get all support tickets (admin only)
+  app.get("/api/admin/tickets", isAuthenticated, async (req, res) => {
+    try {
+      const tickets = await storage.getAllTickets();
+      res.json(tickets);
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+      res.status(500).json({ message: "Failed to fetch tickets" });
+    }
+  });
+
+  // Create support ticket
+  app.post("/api/admin/tickets", isAuthenticated, async (req, res) => {
+    try {
+      // Validate using drizzle-zod schema
+      const validationResult = insertSupportTicketSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          errors: validationResult.error.flatten().fieldErrors 
+        });
+      }
+
+      const { clientId, subject, description, category, priority } = validationResult.data;
+
+      const newTicket = await storage.createTicket({
+        clientId,
+        subject,
+        description,
+        category,
+        priority,
+      });
+
+      res.json(newTicket);
+    } catch (error) {
+      console.error("Error creating ticket:", error);
+      res.status(500).json({ message: "Failed to create ticket" });
+    }
+  });
+
+  // Update support ticket
+  app.patch("/api/admin/tickets/:id", isAuthenticated, async (req, res) => {
+    try {
+      const ticketId = parseInt(req.params.id);
+
+      if (isNaN(ticketId)) {
+        return res.status(400).json({ message: "Invalid ticket ID" });
+      }
+
+      // Validate using shared schema from @shared/schema.ts
+      const validationResult = updateSupportTicketSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          errors: validationResult.error.flatten().fieldErrors 
+        });
+      }
+
+      const { status, priority, resolution } = validationResult.data;
+      const updatedTicket = await storage.updateTicket(ticketId, { status, priority, resolution });
+      res.json(updatedTicket);
+    } catch (error) {
+      console.error("Error updating ticket:", error);
+      res.status(500).json({ message: "Failed to update ticket" });
+    }
+  });
+
+  // Add comment to ticket
+  app.post("/api/admin/tickets/:id/comments", isAuthenticated, async (req, res) => {
+    try {
+      const ticketId = parseInt(req.params.id);
+
+      if (isNaN(ticketId)) {
+        return res.status(400).json({ message: "Invalid ticket ID" });
+      }
+
+      // Validate using drizzle-zod schema
+      const commentData = { ...req.body, ticketId };
+      const validationResult = insertTicketCommentSchema.safeParse(commentData);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          errors: validationResult.error.flatten().fieldErrors 
+        });
+      }
+
+      const { content, isInternal } = validationResult.data;
+
+      const newComment = await storage.addTicketComment(ticketId, {
+        content,
+        isInternal,
+        authorType: "admin",
+      });
+
+      res.json(newComment);
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      res.status(500).json({ message: "Failed to add comment" });
+    }
+  });
+
+  // ========================================
+  // ADMIN - Prescriptions
+  // ========================================
+
+  // Get all prescriptions (admin only)
+  app.get("/api/admin/prescriptions", isAuthenticated, async (req, res) => {
+    try {
+      const prescriptionList = await storage.getAllPrescriptions();
+      res.json(prescriptionList);
+    } catch (error) {
+      console.error("Error fetching prescriptions:", error);
+      res.status(500).json({ message: "Failed to fetch prescriptions" });
+    }
+  });
+
+  // Update prescription status
+  app.patch("/api/admin/prescriptions/:id", isAuthenticated, async (req, res) => {
+    try {
+      const prescriptionId = parseInt(req.params.id);
+
+      if (isNaN(prescriptionId)) {
+        return res.status(400).json({ message: "Invalid prescription ID" });
+      }
+
+      // Validate using shared schema from @shared/schema.ts
+      const validationResult = updatePrescriptionSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          errors: validationResult.error.flatten().fieldErrors 
+        });
+      }
+
+      const { status, reviewNotes, implementationProgress } = validationResult.data;
+      const updatedPrescription = await storage.updatePrescription(prescriptionId, {
+        status,
+        reviewNotes,
+        implementationProgress,
+      });
+
+      res.json(updatedPrescription);
+    } catch (error) {
+      console.error("Error updating prescription:", error);
+      res.status(500).json({ message: "Failed to update prescription" });
     }
   });
 
@@ -3396,7 +3556,7 @@ async function registerInboxRoutes(app: Express) {
             crmContactId = existing[0].id;
 
             // Log livechat interaction as timeline event
-            await db.insert(crmTimelineEvents).values({
+            await db.insert(crmTimeline).values({
               contactId: existing[0].id,
               eventType: "livechat",
               title: "Started live chat session",
@@ -3433,7 +3593,7 @@ async function registerInboxRoutes(app: Express) {
             crmContactId = newContact.id;
 
             // Log creation event
-            await db.insert(crmTimelineEvents).values({
+            await db.insert(crmTimeline).values({
               contactId: newContact.id,
               eventType: "contact_created",
               title: "Contact created from live chat",
