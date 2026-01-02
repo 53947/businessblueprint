@@ -11,6 +11,9 @@ var __export = (target, all) => {
 // shared/schema.ts
 var schema_exports = {};
 __export(schema_exports, {
+  accountStatusHistory: () => accountStatusHistory,
+  adminActivityLog: () => adminActivityLog,
+  apiKeys: () => apiKeys,
   assessmentProductRecommendations: () => assessmentProductRecommendations,
   assessments: () => assessments,
   billingHistory: () => billingHistory,
@@ -23,6 +26,24 @@ __export(schema_exports, {
   contentMedia: () => contentMedia,
   contentPosts: () => contentPosts,
   contentTemplates: () => contentTemplates,
+  crmAppointments: () => crmAppointments,
+  crmAutomationExecutions: () => crmAutomationExecutions,
+  crmAutomationSteps: () => crmAutomationSteps,
+  crmAutomations: () => crmAutomations,
+  crmCompanies: () => crmCompanies,
+  crmContacts: () => crmContacts,
+  crmCustomFieldDefs: () => crmCustomFieldDefs,
+  crmDeals: () => crmDeals,
+  crmLeadForms: () => crmLeadForms,
+  crmNotes: () => crmNotes,
+  crmPipelineStages: () => crmPipelineStages,
+  crmPipelines: () => crmPipelines,
+  crmSegmentMembers: () => crmSegmentMembers,
+  crmSegments: () => crmSegments,
+  crmSubscriptions: () => crmSubscriptions,
+  crmTags: () => crmTags,
+  crmTasks: () => crmTasks,
+  crmTimeline: () => crmTimeline,
   dashboardAccess: () => dashboardAccess,
   dnsRecords: () => dnsRecords,
   domainTransfers: () => domainTransfers,
@@ -37,6 +58,9 @@ __export(schema_exports, {
   inboxMessages2: () => inboxMessages2,
   inboxParticipants: () => inboxParticipants,
   inboxQuickReplies: () => inboxQuickReplies,
+  insertAccountStatusHistorySchema: () => insertAccountStatusHistorySchema,
+  insertAdminActivityLogSchema: () => insertAdminActivityLogSchema,
+  insertApiKeySchema: () => insertApiKeySchema,
   insertAssessmentProductRecommendationSchema: () => insertAssessmentProductRecommendationSchema,
   insertAssessmentSchema: () => insertAssessmentSchema,
   insertBillingHistorySchema: () => insertBillingHistorySchema,
@@ -49,6 +73,22 @@ __export(schema_exports, {
   insertContentPostSchema: () => insertContentPostSchema,
   insertContentTemplateSchema: () => insertContentTemplateSchema,
   insertConversationSchema: () => insertConversationSchema,
+  insertCrmAppointmentSchema: () => insertCrmAppointmentSchema,
+  insertCrmAutomationSchema: () => insertCrmAutomationSchema,
+  insertCrmAutomationStepSchema: () => insertCrmAutomationStepSchema,
+  insertCrmCompanySchema: () => insertCrmCompanySchema,
+  insertCrmContactSchema: () => insertCrmContactSchema,
+  insertCrmCustomFieldDefSchema: () => insertCrmCustomFieldDefSchema,
+  insertCrmDealSchema: () => insertCrmDealSchema,
+  insertCrmLeadFormSchema: () => insertCrmLeadFormSchema,
+  insertCrmNoteSchema: () => insertCrmNoteSchema,
+  insertCrmPipelineSchema: () => insertCrmPipelineSchema,
+  insertCrmPipelineStageSchema: () => insertCrmPipelineStageSchema,
+  insertCrmSegmentSchema: () => insertCrmSegmentSchema,
+  insertCrmSubscriptionSchema: () => insertCrmSubscriptionSchema,
+  insertCrmTagSchema: () => insertCrmTagSchema,
+  insertCrmTaskSchema: () => insertCrmTaskSchema,
+  insertCrmTimelineSchema: () => insertCrmTimelineSchema,
   insertDnsRecordSchema: () => insertDnsRecordSchema,
   insertDomainSchema: () => insertDomainSchema,
   insertDomainTransferSchema: () => insertDomainTransferSchema,
@@ -59,6 +99,7 @@ __export(schema_exports, {
   insertInboxMessageSchema: () => insertInboxMessageSchema,
   insertLivechatSessionSchema: () => insertLivechatSessionSchema,
   insertMagicLinkTokenSchema: () => insertMagicLinkTokenSchema,
+  insertPrescriptionSchema: () => insertPrescriptionSchema,
   insertProductSchema: () => insertProductSchema,
   insertQuickReplySchema: () => insertQuickReplySchema,
   insertRecommendationSchema: () => insertRecommendationSchema,
@@ -71,10 +112,14 @@ __export(schema_exports, {
   insertSubscriptionAddonSchema: () => insertSubscriptionAddonSchema,
   insertSubscriptionPlanSchema: () => insertSubscriptionPlanSchema,
   insertSubscriptionSchema: () => insertSubscriptionSchema,
+  insertSupportTicketSchema: () => insertSupportTicketSchema,
   insertTaskSchema: () => insertTaskSchema,
+  insertTicketCommentSchema: () => insertTicketCommentSchema,
+  insertWebhookSubscriptionSchema: () => insertWebhookSubscriptionSchema,
   livechatSessions: () => livechatSessions,
   magicLinkTokens: () => magicLinkTokens,
   nameserverHistory: () => nameserverHistory,
+  prescriptions: () => prescriptions,
   products: () => products,
   recommendations: () => recommendations,
   sendAutomations: () => sendAutomations,
@@ -95,8 +140,13 @@ __export(schema_exports, {
   subscriptionAddons: () => subscriptionAddons,
   subscriptionPlans: () => subscriptionPlans,
   subscriptions: () => subscriptions,
+  supportTickets: () => supportTickets,
   tasks: () => tasks,
-  users: () => users
+  ticketComments: () => ticketComments,
+  updatePrescriptionSchema: () => updatePrescriptionSchema,
+  updateSupportTicketSchema: () => updateSupportTicketSchema,
+  users: () => users,
+  webhookSubscriptions: () => webhookSubscriptions
 });
 import {
   pgTable,
@@ -113,7 +163,8 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
-var sessions, users, assessments, recommendations, clients, magicLinkTokens, inboxMessages, campaigns, emailChangeHistory, dashboardAccess, clientAssessments, insertAssessmentSchema, insertRecommendationSchema, insertClientSchema, insertMagicLinkTokenSchema, insertEmailChangeHistorySchema, insertInboxMessageSchema, insertCampaignSchema, subscriptionPlans, subscriptionAddons, subscriptions, subscriptionAddonSelections, products, assessmentProductRecommendations, billingHistory, insertSubscriptionPlanSchema, insertSubscriptionAddonSchema, insertSubscriptionSchema, insertBillingHistorySchema, insertProductSchema, insertAssessmentProductRecommendationSchema, sendContacts, sendLists, sendListContacts, sendTemplates, sendCampaigns, sendCampaignSends, sendAutomations, sendConsentRecords, sendSuppressionList, sendBounceLog, sendPreferenceCenter, sendUnsubscribeRecords, insertSendContactSchema, insertSendListSchema, insertSendTemplateSchema, insertSendCampaignSchema, insertSendAutomationSchema, domains, dnsRecords, domainTransfers, nameserverHistory, impersonationSessions, impersonationAuditLog, insertDomainSchema, insertDnsRecordSchema, insertDomainTransferSchema, insertImpersonationSessionSchema, insertImpersonationAuditSchema, inboxChannelConnections, inboxConversations, inboxMessages2, inboxAttachments, inboxQuickReplies, inboxParticipants, livechatSessions, brandAssets, insertChannelConnectionSchema, insertConversationSchema, insertInboxMessage2Schema, insertQuickReplySchema, insertLivechatSessionSchema, insertBrandAssetSchema, socialMediaAccounts, contentMedia, contentPosts, contentAnalytics, contentTemplates, insertSocialMediaAccountSchema, insertContentMediaSchema, insertContentPostSchema, insertContentTemplateSchema, tasks, insertTaskSchema, brandColors, insertBrandColorSchema;
+import { z } from "zod";
+var sessions, users, assessments, recommendations, clients, magicLinkTokens, inboxMessages, campaigns, emailChangeHistory, dashboardAccess, clientAssessments, accountStatusHistory, insertAssessmentSchema, insertRecommendationSchema, insertClientSchema, insertAccountStatusHistorySchema, insertMagicLinkTokenSchema, insertEmailChangeHistorySchema, insertInboxMessageSchema, insertCampaignSchema, subscriptionPlans, subscriptionAddons, subscriptions, subscriptionAddonSelections, products, assessmentProductRecommendations, billingHistory, insertSubscriptionPlanSchema, insertSubscriptionAddonSchema, insertSubscriptionSchema, insertBillingHistorySchema, insertProductSchema, insertAssessmentProductRecommendationSchema, sendContacts, sendLists, sendListContacts, sendTemplates, sendCampaigns, sendCampaignSends, sendAutomations, sendConsentRecords, sendSuppressionList, sendBounceLog, sendPreferenceCenter, sendUnsubscribeRecords, insertSendContactSchema, insertSendListSchema, insertSendTemplateSchema, insertSendCampaignSchema, insertSendAutomationSchema, domains, dnsRecords, domainTransfers, nameserverHistory, impersonationSessions, impersonationAuditLog, insertDomainSchema, insertDnsRecordSchema, insertDomainTransferSchema, insertImpersonationSessionSchema, insertImpersonationAuditSchema, inboxChannelConnections, inboxConversations, inboxMessages2, inboxAttachments, inboxQuickReplies, inboxParticipants, livechatSessions, brandAssets, insertChannelConnectionSchema, insertConversationSchema, insertInboxMessage2Schema, insertQuickReplySchema, insertLivechatSessionSchema, insertBrandAssetSchema, socialMediaAccounts, contentMedia, contentPosts, contentAnalytics, contentTemplates, insertSocialMediaAccountSchema, insertContentMediaSchema, insertContentPostSchema, insertContentTemplateSchema, tasks, insertTaskSchema, brandColors, insertBrandColorSchema, crmCompanies, crmContacts, crmPipelines, crmPipelineStages, crmDeals, crmTasks, crmNotes, crmTimeline, crmSegments, crmSegmentMembers, crmCustomFieldDefs, crmAppointments, crmTags, crmSubscriptions, crmLeadForms, insertCrmCompanySchema, insertCrmContactSchema, insertCrmPipelineSchema, insertCrmPipelineStageSchema, insertCrmDealSchema, insertCrmTaskSchema, insertCrmNoteSchema, insertCrmTimelineSchema, insertCrmSegmentSchema, insertCrmAppointmentSchema, insertCrmTagSchema, insertCrmCustomFieldDefSchema, insertCrmSubscriptionSchema, insertCrmLeadFormSchema, crmAutomations, crmAutomationSteps, crmAutomationExecutions, insertCrmAutomationSchema, insertCrmAutomationStepSchema, apiKeys, insertApiKeySchema, webhookSubscriptions, insertWebhookSubscriptionSchema, supportTickets, ticketComments, prescriptions, adminActivityLog, insertSupportTicketSchema, insertTicketCommentSchema, insertPrescriptionSchema, insertAdminActivityLogSchema, updateSupportTicketSchema, updatePrescriptionSchema;
 var init_schema = __esm({
   "shared/schema.ts"() {
     "use strict";
@@ -153,9 +204,9 @@ var init_schema = __esm({
       status: varchar("status", { length: 50 }).default("pending"),
       // pending, analyzing, completed, failed
       emailSent: boolean("email_sent").default(false),
-      // Pathway selection
+      // Pathway selection (DIY-only platform)
       selectedPathway: varchar("selected_pathway", { length: 20 }),
-      // diy, msp, none
+      // diy, none
       createdAt: timestamp("created_at").defaultNow(),
       updatedAt: timestamp("updated_at").defaultNow()
     });
@@ -187,6 +238,8 @@ var init_schema = __esm({
       // CO,VI,SP,RE,SO,RI
       // System protection - prevents automated deletion
       isProtected: boolean("is_protected").default(false),
+      // Admin access control
+      isAdmin: boolean("is_admin").default(false),
       // Email verification
       isEmailVerified: boolean("is_email_verified").default(false),
       verificationCode: text("verification_code"),
@@ -194,6 +247,14 @@ var init_schema = __esm({
       // Login tracking
       lastLoginTime: timestamp("last_login_time"),
       loginCount: integer("login_count").default(0),
+      // Account status management
+      accountStatus: varchar("account_status", { length: 20 }).default("active"),
+      // active, suspended, inactive, pending, banned
+      suspensionReason: text("suspension_reason"),
+      // Reason if suspended
+      statusChangedAt: timestamp("status_changed_at"),
+      statusChangedBy: integer("status_changed_by"),
+      // Admin ID who changed status
       createdAt: timestamp("created_at").defaultNow(),
       updatedAt: timestamp("updated_at").defaultNow()
     });
@@ -264,6 +325,18 @@ var init_schema = __esm({
       assessmentId: integer("assessment_id").references(() => assessments.id),
       createdAt: timestamp("created_at").defaultNow()
     });
+    accountStatusHistory = pgTable("account_status_history", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id).notNull(),
+      previousStatus: varchar("previous_status", { length: 20 }),
+      newStatus: varchar("new_status", { length: 20 }).notNull(),
+      reason: text("reason"),
+      changedBy: integer("changed_by"),
+      // Admin ID who made the change
+      ipAddress: varchar("ip_address", { length: 45 }),
+      userAgent: text("user_agent"),
+      createdAt: timestamp("created_at").defaultNow()
+    });
     insertAssessmentSchema = createInsertSchema(assessments).pick({
       businessName: true,
       industry: true,
@@ -295,7 +368,20 @@ var init_schema = __esm({
       verificationCode: true,
       verificationExpiry: true,
       lastLoginTime: true,
-      loginCount: true
+      loginCount: true,
+      accountStatus: true,
+      suspensionReason: true,
+      statusChangedAt: true,
+      statusChangedBy: true
+    });
+    insertAccountStatusHistorySchema = createInsertSchema(accountStatusHistory).pick({
+      clientId: true,
+      previousStatus: true,
+      newStatus: true,
+      reason: true,
+      changedBy: true,
+      ipAddress: true,
+      userAgent: true
     });
     insertMagicLinkTokenSchema = createInsertSchema(magicLinkTokens).pick({
       email: true,
@@ -333,11 +419,11 @@ var init_schema = __esm({
     subscriptionPlans = pgTable("subscription_plans", {
       id: serial("id").primaryKey(),
       planId: varchar("plan_id", { length: 50 }).unique().notNull(),
-      // msp-basic, diy-starter, etc.
+      // diy-starter, etc. (DIY-only)
       name: varchar("name", { length: 100 }).notNull(),
       description: text("description"),
       pathway: varchar("pathway", { length: 20 }).notNull(),
-      // msp, diy
+      // diy (DIY-only platform)
       tierLevel: varchar("tier_level", { length: 50 }).notNull(),
       // basic, professional, enterprise
       basePrice: decimal("base_price", { precision: 10, scale: 2 }).notNull(),
@@ -364,7 +450,7 @@ var init_schema = __esm({
       price: decimal("price", { precision: 10, scale: 2 }).notNull(),
       billingCycle: varchar("billing_cycle", { length: 20 }).notNull(),
       compatiblePathways: text("compatible_pathways").array(),
-      // ["msp", "diy"] or ["msp"]
+      // ["diy"] (DIY-only platform)
       isActive: boolean("is_active").default(true),
       createdAt: timestamp("created_at").defaultNow()
     });
@@ -416,11 +502,9 @@ var init_schema = __esm({
       // Assessment category this product improves
       improvesCategory: text("improves_category").array(),
       // ["visibility", "reviews", "completeness", "engagement"]
-      // Pricing
+      // Pricing (DIY-only)
       diyPrice: decimal("diy_price", { precision: 10, scale: 2 }),
       // Price for DIY delivery
-      mspPrice: decimal("msp_price", { precision: 10, scale: 2 }),
-      // Price for MSP delivery
       setupFee: decimal("setup_fee", { precision: 10, scale: 2 }).default("0.00"),
       billingCycle: varchar("billing_cycle", { length: 20 }).notNull(),
       // monthly, one_time
@@ -428,7 +512,7 @@ var init_schema = __esm({
       features: jsonb("features"),
       // List of what's included
       deliveryMethod: text("delivery_method").array(),
-      // ["diy", "msp"] - which pathways can deliver this
+      // ["diy"] - DIY-only platform
       estimatedImpact: varchar("estimated_impact", { length: 50 }),
       // How much it improves IQ score
       isActive: boolean("is_active").default(true),
@@ -528,7 +612,6 @@ var init_schema = __esm({
       category: true,
       improvesCategory: true,
       diyPrice: true,
-      mspPrice: true,
       setupFee: true,
       billingCycle: true,
       features: true,
@@ -1713,6 +1796,730 @@ var init_schema = __esm({
       id: true,
       createdAt: true
     });
+    crmCompanies = pgTable("crm_companies", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      // Company information
+      name: varchar("name", { length: 255 }).notNull(),
+      domain: varchar("domain", { length: 255 }),
+      industry: varchar("industry", { length: 100 }),
+      size: varchar("size", { length: 50 }),
+      // 1-10, 11-50, 51-200, 201-500, 500+
+      revenue: varchar("revenue", { length: 50 }),
+      // <1M, 1M-10M, 10M-50M, 50M+
+      // Contact details
+      phone: varchar("phone", { length: 30 }),
+      email: varchar("email", { length: 255 }),
+      website: varchar("website", { length: 500 }),
+      // Address
+      address: text("address"),
+      city: varchar("city", { length: 100 }),
+      state: varchar("state", { length: 100 }),
+      postalCode: varchar("postal_code", { length: 20 }),
+      country: varchar("country", { length: 100 }),
+      // Social profiles
+      linkedinUrl: varchar("linkedin_url", { length: 500 }),
+      twitterUrl: varchar("twitter_url", { length: 500 }),
+      facebookUrl: varchar("facebook_url", { length: 500 }),
+      // Relationship details
+      type: varchar("type", { length: 50 }).default("prospect"),
+      // prospect, customer, partner, vendor
+      status: varchar("status", { length: 50 }).default("active"),
+      // active, inactive, churned
+      // Owner/assignment
+      ownerId: integer("owner_id").references(() => clients.id),
+      // Custom fields (JSON for flexibility)
+      customFields: jsonb("custom_fields"),
+      // Tags for segmentation
+      tags: text("tags").array(),
+      // Tracking
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      index("idx_crm_companies_client").on(table.clientId),
+      index("idx_crm_companies_domain").on(table.domain),
+      index("idx_crm_companies_name").on(table.name)
+    ]);
+    crmContacts = pgTable("crm_contacts", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      companyId: integer("company_id").references(() => crmCompanies.id),
+      // Contact information
+      firstName: varchar("first_name", { length: 100 }),
+      lastName: varchar("last_name", { length: 100 }),
+      email: varchar("email", { length: 255 }),
+      phone: varchar("phone", { length: 30 }),
+      mobilePhone: varchar("mobile_phone", { length: 30 }),
+      // Job details
+      jobTitle: varchar("job_title", { length: 150 }),
+      department: varchar("department", { length: 100 }),
+      // Address
+      address: text("address"),
+      city: varchar("city", { length: 100 }),
+      state: varchar("state", { length: 100 }),
+      postalCode: varchar("postal_code", { length: 20 }),
+      country: varchar("country", { length: 100 }),
+      // Social profiles
+      linkedinUrl: varchar("linkedin_url", { length: 500 }),
+      twitterUrl: varchar("twitter_url", { length: 500 }),
+      // Contact status
+      status: varchar("status", { length: 50 }).default("active"),
+      // active, inactive, unsubscribed
+      lifecycleStage: varchar("lifecycle_stage", { length: 50 }).default("lead"),
+      // lead, subscriber, opportunity, customer, evangelist
+      // Lead scoring
+      leadScore: integer("lead_score").default(0),
+      leadSource: varchar("lead_source", { length: 100 }),
+      // website, referral, cold_outreach, event, assessment, etc.
+      // Source tracking - how this contact entered the system
+      sourceType: varchar("source_type", { length: 50 }),
+      // manual, import, assessment, portal_signup, api, form
+      sourceId: varchar("source_id", { length: 100 }),
+      // Reference to source entity (e.g., assessment ID)
+      sourceMetadata: jsonb("source_metadata"),
+      // Additional source details
+      // Owner/assignment
+      ownerId: integer("owner_id").references(() => clients.id),
+      // Communication preferences
+      emailOptIn: boolean("email_opt_in").default(true),
+      smsOptIn: boolean("sms_opt_in").default(false),
+      preferredContactMethod: varchar("preferred_contact_method", { length: 20 }),
+      // email, phone, sms
+      timezone: varchar("timezone", { length: 50 }),
+      // Marketing tracking
+      lastActivityDate: timestamp("last_activity_date"),
+      lastContactedDate: timestamp("last_contacted_date"),
+      // Custom fields (JSON for flexibility)
+      customFields: jsonb("custom_fields"),
+      // Tags for segmentation
+      tags: text("tags").array(),
+      // Avatar/photo
+      avatarUrl: varchar("avatar_url", { length: 500 }),
+      // Tracking
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      index("idx_crm_contacts_client").on(table.clientId),
+      index("idx_crm_contacts_company").on(table.companyId),
+      index("idx_crm_contacts_email").on(table.email),
+      index("idx_crm_contacts_lifecycle").on(table.lifecycleStage)
+    ]);
+    crmPipelines = pgTable("crm_pipelines", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      name: varchar("name", { length: 100 }).notNull(),
+      description: text("description"),
+      isDefault: boolean("is_default").default(false),
+      isActive: boolean("is_active").default(true),
+      // Display order
+      displayOrder: integer("display_order").default(0),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    });
+    crmPipelineStages = pgTable("crm_pipeline_stages", {
+      id: serial("id").primaryKey(),
+      pipelineId: integer("pipeline_id").references(() => crmPipelines.id).notNull(),
+      name: varchar("name", { length: 100 }).notNull(),
+      probability: integer("probability").default(0),
+      // Win probability (0-100%)
+      displayOrder: integer("display_order").default(0),
+      // Stage type
+      stageType: varchar("stage_type", { length: 20 }).default("active"),
+      // active, won, lost
+      // Color for visual display
+      color: varchar("color", { length: 7 }).default("#3B82F6"),
+      // Hex color
+      createdAt: timestamp("created_at").defaultNow()
+    });
+    crmDeals = pgTable("crm_deals", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      contactId: integer("contact_id").references(() => crmContacts.id),
+      companyId: integer("company_id").references(() => crmCompanies.id),
+      pipelineId: integer("pipeline_id").references(() => crmPipelines.id),
+      stageId: integer("stage_id").references(() => crmPipelineStages.id),
+      // Deal information
+      name: varchar("name", { length: 255 }).notNull(),
+      description: text("description"),
+      // Value
+      amount: decimal("amount", { precision: 12, scale: 2 }),
+      currency: varchar("currency", { length: 3 }).default("USD"),
+      // Probability and forecast
+      probability: integer("probability").default(0),
+      // Win probability (0-100%)
+      expectedCloseDate: timestamp("expected_close_date"),
+      actualCloseDate: timestamp("actual_close_date"),
+      // Status
+      status: varchar("status", { length: 20 }).default("open"),
+      // open, won, lost
+      lostReason: varchar("lost_reason", { length: 100 }),
+      // Owner/assignment
+      ownerId: integer("owner_id").references(() => clients.id),
+      // Source
+      dealSource: varchar("deal_source", { length: 100 }),
+      // website, referral, cold_outreach, etc.
+      // Custom fields
+      customFields: jsonb("custom_fields"),
+      // Tags
+      tags: text("tags").array(),
+      // Tracking
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      index("idx_crm_deals_client").on(table.clientId),
+      index("idx_crm_deals_contact").on(table.contactId),
+      index("idx_crm_deals_stage").on(table.stageId),
+      index("idx_crm_deals_status").on(table.status)
+    ]);
+    crmTasks = pgTable("crm_tasks", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      // Linked entities
+      contactId: integer("contact_id").references(() => crmContacts.id),
+      companyId: integer("company_id").references(() => crmCompanies.id),
+      dealId: integer("deal_id").references(() => crmDeals.id),
+      // Task details
+      title: varchar("title", { length: 255 }).notNull(),
+      description: text("description"),
+      // Type and status
+      taskType: varchar("task_type", { length: 50 }).default("task"),
+      // task, call, email, meeting, follow_up
+      status: varchar("status", { length: 20 }).default("pending"),
+      // pending, completed, cancelled
+      priority: varchar("priority", { length: 20 }).default("medium"),
+      // low, medium, high, urgent
+      // Timing
+      dueDate: timestamp("due_date"),
+      reminderDate: timestamp("reminder_date"),
+      completedAt: timestamp("completed_at"),
+      // Assignment
+      assignedToId: integer("assigned_to_id").references(() => clients.id),
+      assignedById: integer("assigned_by_id").references(() => clients.id),
+      // Tracking
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      index("idx_crm_tasks_client").on(table.clientId),
+      index("idx_crm_tasks_contact").on(table.contactId),
+      index("idx_crm_tasks_due").on(table.dueDate),
+      index("idx_crm_tasks_status").on(table.status)
+    ]);
+    crmNotes = pgTable("crm_notes", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      // Linked entities (at least one should be set)
+      contactId: integer("contact_id").references(() => crmContacts.id),
+      companyId: integer("company_id").references(() => crmCompanies.id),
+      dealId: integer("deal_id").references(() => crmDeals.id),
+      // Note content
+      content: text("content").notNull(),
+      // Type
+      noteType: varchar("note_type", { length: 50 }).default("general"),
+      // general, call, meeting, email
+      // Author
+      authorId: integer("author_id").references(() => clients.id),
+      // Pinned notes appear at top
+      isPinned: boolean("is_pinned").default(false),
+      // Tracking
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      index("idx_crm_notes_contact").on(table.contactId),
+      index("idx_crm_notes_company").on(table.companyId),
+      index("idx_crm_notes_deal").on(table.dealId)
+    ]);
+    crmTimeline = pgTable("crm_timeline", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      // Linked entities
+      contactId: integer("contact_id").references(() => crmContacts.id),
+      companyId: integer("company_id").references(() => crmCompanies.id),
+      dealId: integer("deal_id").references(() => crmDeals.id),
+      // Event details
+      eventType: varchar("event_type", { length: 50 }).notNull(),
+      // email_sent, call_made, note_added, deal_stage_changed, form_submitted, etc.
+      eventSubtype: varchar("event_subtype", { length: 50 }),
+      // More specific event classification
+      title: varchar("title", { length: 255 }).notNull(),
+      description: text("description"),
+      // Source app (for integration events)
+      sourceApp: varchar("source_app", { length: 50 }),
+      // relationships, send, inbox, livechat, content, listings, reputation
+      sourceEntityType: varchar("source_entity_type", { length: 50 }),
+      // email, message, post, review, etc.
+      sourceEntityId: varchar("source_entity_id", { length: 100 }),
+      // ID in source app
+      // Event metadata
+      metadata: jsonb("metadata"),
+      // Additional event-specific data
+      // Who performed the action
+      actorId: integer("actor_id").references(() => clients.id),
+      actorType: varchar("actor_type", { length: 20 }),
+      // user, system, automation
+      // Tracking
+      occurredAt: timestamp("occurred_at").notNull(),
+      createdAt: timestamp("created_at").defaultNow()
+    }, (table) => [
+      index("idx_crm_timeline_contact").on(table.contactId),
+      index("idx_crm_timeline_company").on(table.companyId),
+      index("idx_crm_timeline_occurred").on(table.occurredAt),
+      index("idx_crm_timeline_event_type").on(table.eventType)
+    ]);
+    crmSegments = pgTable("crm_segments", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      name: varchar("name", { length: 100 }).notNull(),
+      description: text("description"),
+      // Segment type
+      segmentType: varchar("segment_type", { length: 20 }).default("dynamic"),
+      // static, dynamic
+      // Filter criteria (for dynamic segments)
+      filterCriteria: jsonb("filter_criteria"),
+      // { field, operator, value }[]
+      // For static segments, member IDs are stored
+      memberCount: integer("member_count").default(0),
+      // Color for visual display
+      color: varchar("color", { length: 7 }).default("#22C55E"),
+      // Is this a system segment (can't be deleted)
+      isSystem: boolean("is_system").default(false),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    });
+    crmSegmentMembers = pgTable("crm_segment_members", {
+      id: serial("id").primaryKey(),
+      segmentId: integer("segment_id").references(() => crmSegments.id).notNull(),
+      contactId: integer("contact_id").references(() => crmContacts.id).notNull(),
+      addedAt: timestamp("added_at").defaultNow()
+    }, (table) => [
+      unique().on(table.segmentId, table.contactId)
+    ]);
+    crmCustomFieldDefs = pgTable("crm_custom_field_defs", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      // Field details
+      fieldName: varchar("field_name", { length: 100 }).notNull(),
+      fieldLabel: varchar("field_label", { length: 100 }).notNull(),
+      fieldType: varchar("field_type", { length: 30 }).notNull(),
+      // text, number, date, select, multiselect, boolean, email, phone, url
+      // Where this field applies
+      entityType: varchar("entity_type", { length: 30 }).notNull(),
+      // contact, company, deal
+      // Options for select/multiselect
+      options: text("options").array(),
+      // Validation
+      isRequired: boolean("is_required").default(false),
+      defaultValue: text("default_value"),
+      // Display
+      displayOrder: integer("display_order").default(0),
+      isHidden: boolean("is_hidden").default(false),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    });
+    crmAppointments = pgTable("crm_appointments", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      contactId: integer("contact_id").references(() => crmContacts.id),
+      // Appointment details
+      title: varchar("title", { length: 255 }).notNull(),
+      description: text("description"),
+      // Timing
+      startTime: timestamp("start_time").notNull(),
+      endTime: timestamp("end_time").notNull(),
+      timezone: varchar("timezone", { length: 50 }).default("UTC"),
+      // Type
+      appointmentType: varchar("appointment_type", { length: 50 }).default("meeting"),
+      // meeting, call, demo, consultation
+      // Location
+      location: varchar("location", { length: 255 }),
+      meetingUrl: varchar("meeting_url", { length: 500 }),
+      // Zoom, Google Meet, etc.
+      // Status
+      status: varchar("status", { length: 20 }).default("scheduled"),
+      // scheduled, confirmed, cancelled, completed, no_show
+      // Reminders
+      reminderSent: boolean("reminder_sent").default(false),
+      reminderMinutesBefore: integer("reminder_minutes_before").default(30),
+      // Booking metadata
+      bookedByContactEmail: varchar("booked_by_email", { length: 255 }),
+      bookingNotes: text("booking_notes"),
+      // Recurrence (optional)
+      isRecurring: boolean("is_recurring").default(false),
+      recurrenceRule: varchar("recurrence_rule", { length: 255 }),
+      // RRULE format
+      parentAppointmentId: integer("parent_appointment_id"),
+      // Tracking
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      index("idx_crm_appointments_client").on(table.clientId),
+      index("idx_crm_appointments_contact").on(table.contactId),
+      index("idx_crm_appointments_start").on(table.startTime)
+    ]);
+    crmTags = pgTable("crm_tags", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      name: varchar("name", { length: 50 }).notNull(),
+      color: varchar("color", { length: 7 }).default("#6B7280"),
+      // Hex color
+      // Usage count for display
+      usageCount: integer("usage_count").default(0),
+      createdAt: timestamp("created_at").defaultNow()
+    }, (table) => [
+      unique().on(table.clientId, table.name)
+    ]);
+    crmSubscriptions = pgTable("crm_subscriptions", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id).unique(),
+      // Tier: starter (free), performance ($29/mo)
+      tier: varchar("tier", { length: 20 }).notNull().default("starter"),
+      // Billing
+      billingCycle: varchar("billing_cycle", { length: 20 }),
+      // monthly, annual (null for starter)
+      currentPeriodStart: timestamp("current_period_start"),
+      currentPeriodEnd: timestamp("current_period_end"),
+      // Status
+      status: varchar("status", { length: 20 }).default("active"),
+      // active, cancelled, past_due
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    });
+    crmLeadForms = pgTable("crm_lead_forms", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      // Form identity
+      name: varchar("name", { length: 100 }).notNull(),
+      slug: varchar("slug", { length: 50 }).notNull(),
+      // URL-friendly identifier
+      description: text("description"),
+      // Form configuration
+      fields: jsonb("fields").notNull().default([
+        { name: "firstName", label: "First Name", type: "text", required: true },
+        { name: "lastName", label: "Last Name", type: "text", required: false },
+        { name: "email", label: "Email", type: "email", required: true },
+        { name: "phone", label: "Phone", type: "tel", required: false }
+      ]),
+      // Styling
+      buttonText: varchar("button_text", { length: 50 }).default("Submit"),
+      successMessage: varchar("success_message", { length: 255 }).default("Thank you! We'll be in touch soon."),
+      // Lead assignment
+      defaultLifecycleStage: varchar("default_lifecycle_stage", { length: 50 }).default("lead"),
+      defaultLeadSource: varchar("default_lead_source", { length: 100 }),
+      assignToUserId: integer("assign_to_user_id"),
+      // Tracking
+      submissionCount: integer("submission_count").default(0),
+      isActive: boolean("is_active").default(true),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      unique().on(table.clientId, table.slug),
+      index("idx_crm_lead_forms_client").on(table.clientId)
+    ]);
+    insertCrmCompanySchema = createInsertSchema(crmCompanies).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    insertCrmContactSchema = createInsertSchema(crmContacts).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    insertCrmPipelineSchema = createInsertSchema(crmPipelines).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    insertCrmPipelineStageSchema = createInsertSchema(crmPipelineStages).omit({
+      id: true,
+      createdAt: true
+    });
+    insertCrmDealSchema = createInsertSchema(crmDeals).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    insertCrmTaskSchema = createInsertSchema(crmTasks).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    insertCrmNoteSchema = createInsertSchema(crmNotes).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    insertCrmTimelineSchema = createInsertSchema(crmTimeline).omit({
+      id: true,
+      createdAt: true
+    });
+    insertCrmSegmentSchema = createInsertSchema(crmSegments).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    insertCrmAppointmentSchema = createInsertSchema(crmAppointments).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    insertCrmTagSchema = createInsertSchema(crmTags).omit({
+      id: true,
+      createdAt: true
+    });
+    insertCrmCustomFieldDefSchema = createInsertSchema(crmCustomFieldDefs).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    insertCrmSubscriptionSchema = createInsertSchema(crmSubscriptions).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    insertCrmLeadFormSchema = createInsertSchema(crmLeadForms).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true,
+      submissionCount: true
+    });
+    crmAutomations = pgTable("crm_automations", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      // Basic info
+      name: varchar("name", { length: 255 }).notNull(),
+      description: text("description"),
+      // Trigger configuration
+      triggerType: varchar("trigger_type", { length: 50 }).notNull(),
+      // contact_created, contact_updated, deal_stage_changed, form_submitted, tag_added, manual
+      triggerConfig: jsonb("trigger_config").default({}),
+      // Additional trigger conditions
+      // Status
+      isActive: boolean("is_active").default(true),
+      // Stats
+      runCount: integer("run_count").default(0),
+      lastRunAt: timestamp("last_run_at"),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    });
+    crmAutomationSteps = pgTable("crm_automation_steps", {
+      id: serial("id").primaryKey(),
+      automationId: integer("automation_id").references(() => crmAutomations.id, { onDelete: "cascade" }).notNull(),
+      // Ordering
+      stepOrder: integer("step_order").notNull(),
+      // Step type and config
+      stepType: varchar("step_type", { length: 50 }).notNull(),
+      // wait, update_contact, add_tag, remove_tag, send_email, create_task, add_to_segment, webhook
+      config: jsonb("config").default({}),
+      // Step-specific configuration
+      // Conditional execution
+      conditionType: varchar("condition_type", { length: 50 }),
+      // if_tag, if_stage, if_field, always
+      conditionConfig: jsonb("condition_config").default({}),
+      createdAt: timestamp("created_at").defaultNow()
+    });
+    crmAutomationExecutions = pgTable("crm_automation_executions", {
+      id: serial("id").primaryKey(),
+      automationId: integer("automation_id").references(() => crmAutomations.id, { onDelete: "cascade" }).notNull(),
+      contactId: integer("contact_id").references(() => crmContacts.id),
+      // Execution status
+      status: varchar("status", { length: 20 }).notNull().default("running"),
+      // running, completed, failed, cancelled
+      // Progress
+      currentStep: integer("current_step").default(0),
+      totalSteps: integer("total_steps").default(0),
+      // Timing
+      startedAt: timestamp("started_at").defaultNow(),
+      completedAt: timestamp("completed_at"),
+      scheduledNextStep: timestamp("scheduled_next_step"),
+      // Error handling
+      errorMessage: text("error_message"),
+      // Context
+      triggerData: jsonb("trigger_data").default({}),
+      executionLog: jsonb("execution_log").default([])
+    });
+    insertCrmAutomationSchema = createInsertSchema(crmAutomations).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true,
+      runCount: true,
+      lastRunAt: true
+    });
+    insertCrmAutomationStepSchema = createInsertSchema(crmAutomationSteps).omit({
+      id: true,
+      createdAt: true
+    });
+    apiKeys = pgTable("api_keys", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id, { onDelete: "cascade" }),
+      // Key identification
+      name: varchar("name", { length: 100 }).notNull(),
+      keyHash: varchar("key_hash", { length: 64 }).notNull().unique(),
+      // SHA-256 hash of the actual key
+      keyPrefix: varchar("key_prefix", { length: 8 }).notNull(),
+      // First 8 chars for identification
+      // Permissions and scopes
+      scopes: text("scopes").array().default([]),
+      // read:contacts, write:contacts, read:deals, etc.
+      // Rate limiting
+      rateLimit: integer("rate_limit").default(1e3),
+      // requests per hour
+      requestsThisHour: integer("requests_this_hour").default(0),
+      rateLimitResetAt: timestamp("rate_limit_reset_at"),
+      // Tracking
+      lastUsedAt: timestamp("last_used_at"),
+      totalRequests: integer("total_requests").default(0),
+      // Status
+      isActive: boolean("is_active").default(true),
+      expiresAt: timestamp("expires_at"),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      index("idx_api_keys_hash").on(table.keyHash),
+      index("idx_api_keys_client").on(table.clientId)
+    ]);
+    insertApiKeySchema = createInsertSchema(apiKeys).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    webhookSubscriptions = pgTable("webhook_subscriptions", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id, { onDelete: "cascade" }),
+      // Webhook configuration
+      url: text("url").notNull(),
+      secret: varchar("secret", { length: 64 }).notNull(),
+      // For signature verification
+      // Events to subscribe to
+      events: text("events").array().default([]),
+      // contact.created, deal.updated, etc.
+      // Status
+      isActive: boolean("is_active").default(true),
+      failureCount: integer("failure_count").default(0),
+      lastFailedAt: timestamp("last_failed_at"),
+      lastSuccessAt: timestamp("last_success_at"),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    });
+    insertWebhookSubscriptionSchema = createInsertSchema(webhookSubscriptions).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    supportTickets = pgTable("support_tickets", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      // Ticket details
+      subject: varchar("subject", { length: 255 }).notNull(),
+      description: text("description").notNull(),
+      category: varchar("category", { length: 50 }).default("general"),
+      // general, billing, technical, feature_request
+      // Status tracking
+      status: varchar("status", { length: 30 }).default("open"),
+      // open, in_progress, waiting_on_client, resolved, closed
+      priority: varchar("priority", { length: 20 }).default("medium"),
+      // low, medium, high, urgent
+      // Assignment
+      assignedToId: integer("assigned_to_id").references(() => clients.id),
+      assignedAt: timestamp("assigned_at"),
+      // Resolution
+      resolution: text("resolution"),
+      resolvedAt: timestamp("resolved_at"),
+      // SLA tracking
+      firstResponseAt: timestamp("first_response_at"),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      index("idx_ticket_client").on(table.clientId),
+      index("idx_ticket_status").on(table.status)
+    ]);
+    ticketComments = pgTable("ticket_comments", {
+      id: serial("id").primaryKey(),
+      ticketId: integer("ticket_id").references(() => supportTickets.id, { onDelete: "cascade" }).notNull(),
+      // Comment author
+      authorId: integer("author_id").references(() => clients.id),
+      authorType: varchar("author_type", { length: 20 }).notNull(),
+      // admin, client
+      // Content
+      content: text("content").notNull(),
+      isInternal: boolean("is_internal").default(false),
+      // internal notes vs client-visible
+      createdAt: timestamp("created_at").defaultNow()
+    });
+    prescriptions = pgTable("prescriptions", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      assessmentId: integer("assessment_id").references(() => assessments.id),
+      // Prescription details
+      title: varchar("title", { length: 255 }).notNull(),
+      summary: text("summary"),
+      // AI-generated content
+      recommendations: jsonb("recommendations"),
+      // Array of recommendation objects
+      actionItems: jsonb("action_items"),
+      // Prioritized action items
+      timeline: jsonb("timeline"),
+      // Implementation timeline
+      // Status workflow
+      status: varchar("status", { length: 30 }).default("pending_review"),
+      // pending_review, approved, delivered, in_progress, completed
+      // Review workflow
+      reviewedById: integer("reviewed_by_id").references(() => clients.id),
+      reviewedAt: timestamp("reviewed_at"),
+      reviewNotes: text("review_notes"),
+      // Delivery tracking
+      deliveredAt: timestamp("delivered_at"),
+      viewedAt: timestamp("viewed_at"),
+      // Implementation tracking
+      implementationProgress: integer("implementation_progress").default(0),
+      // 0-100
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      index("idx_prescription_client").on(table.clientId),
+      index("idx_prescription_status").on(table.status)
+    ]);
+    adminActivityLog = pgTable("admin_activity_log", {
+      id: serial("id").primaryKey(),
+      adminId: integer("admin_id").references(() => clients.id),
+      // Action details
+      action: varchar("action", { length: 100 }).notNull(),
+      // view_client, update_status, approve_prescription, etc.
+      resourceType: varchar("resource_type", { length: 50 }),
+      // client, ticket, prescription, etc.
+      resourceId: integer("resource_id"),
+      // Context
+      details: jsonb("details"),
+      ipAddress: varchar("ip_address", { length: 45 }),
+      createdAt: timestamp("created_at").defaultNow()
+    });
+    insertSupportTicketSchema = createInsertSchema(supportTickets).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    insertTicketCommentSchema = createInsertSchema(ticketComments).omit({
+      id: true,
+      createdAt: true
+    });
+    insertPrescriptionSchema = createInsertSchema(prescriptions).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    insertAdminActivityLogSchema = createInsertSchema(adminActivityLog).omit({
+      id: true,
+      createdAt: true
+    });
+    updateSupportTicketSchema = z.object({
+      status: z.enum(["open", "in_progress", "waiting_on_client", "resolved", "closed"]).optional(),
+      priority: z.enum(["low", "medium", "high", "urgent"]).optional(),
+      resolution: z.string().optional()
+    });
+    updatePrescriptionSchema = z.object({
+      status: z.enum(["pending_review", "approved", "delivered", "in_progress", "completed"]).optional(),
+      reviewNotes: z.string().optional(),
+      implementationProgress: z.number().min(0).max(100).optional()
+    });
   }
 });
 
@@ -2796,8 +3603,8 @@ __export(jwt_exports, {
   jwtService: () => jwtService
 });
 import jwt from "jsonwebtoken";
-import crypto2 from "crypto";
-import { eq as eq10 } from "drizzle-orm";
+import crypto3 from "crypto";
+import { eq as eq16 } from "drizzle-orm";
 var JWTService, jwtService;
 var init_jwt = __esm({
   "server/services/jwt.ts"() {
@@ -2810,7 +3617,13 @@ var init_jwt = __esm({
       // Allow HS256 as well
       constructor() {
         this.keyPair = this.generateKeyPair();
-        this.algorithm = this.keyPair.privateKey.length > 0 && this.keyPair.publicKey.length > 0 ? "RS256" : "HS256";
+        const hasValidRSAKeys = this.keyPair.privateKey && this.keyPair.publicKey && this.keyPair.privateKey.length > 100 && this.keyPair.publicKey.length > 100 && this.keyPair.privateKey.includes("-----BEGIN") && this.keyPair.publicKey.includes("-----BEGIN");
+        this.algorithm = hasValidRSAKeys ? "RS256" : "HS256";
+        console.log(`[JWT Service] Using algorithm: ${this.algorithm}`);
+        console.log(`[JWT Service] Private key length: ${this.keyPair.privateKey?.length || 0}, Public key length: ${this.keyPair.publicKey?.length || 0}`);
+        if (this.algorithm === "HS256" && !process.env.JWT_SECRET) {
+          console.warn("[JWT Service] WARNING: No JWT_SECRET set, using fallback key (not recommended for production)");
+        }
       }
       /**
        * Generate RSA key pair for JWT signing
@@ -2885,13 +3698,13 @@ var init_jwt = __esm({
        * Revoke a token (mark as inactive in database)
        */
       async revokeToken(token) {
-        await db.update(dashboardAccess).set({ isActive: false }).where(eq10(dashboardAccess.accessToken, token));
+        await db.update(dashboardAccess).set({ isActive: false }).where(eq16(dashboardAccess.accessToken, token));
       }
       /**
        * Check if token is active in database
        */
       async isTokenActive(token) {
-        const [record] = await db.select().from(dashboardAccess).where(eq10(dashboardAccess.accessToken, token));
+        const [record] = await db.select().from(dashboardAccess).where(eq16(dashboardAccess.accessToken, token));
         return record?.isActive || false;
       }
       /**
@@ -2905,13 +3718,13 @@ var init_jwt = __esm({
        */
       getJWK() {
         if (this.algorithm === "RS256" && this.keyPair.publicKey) {
-          const publicKey = crypto2.createPublicKey(this.keyPair.publicKey);
+          const publicKey = crypto3.createPublicKey(this.keyPair.publicKey);
           const jwk = publicKey.export({ format: "jwk" });
           return {
             ...jwk,
             alg: this.algorithm,
             use: "sig",
-            kid: crypto2.createHash("sha256").update(this.keyPair.publicKey).digest("hex").substring(0, 16)
+            kid: crypto3.createHash("sha256").update(this.keyPair.publicKey).digest("hex").substring(0, 16)
           };
         }
         return null;
@@ -2928,8 +3741,8 @@ __export(scheduler_exports, {
   startScheduler: () => startScheduler,
   stopScheduler: () => stopScheduler
 });
-import { eq as eq13, and as and11, lte, isNull, or } from "drizzle-orm";
-import { sql as sql5 } from "drizzle-orm";
+import { eq as eq19, and as and13, lte as lte2, isNull as isNull2, or as or4 } from "drizzle-orm";
+import { sql as sql7 } from "drizzle-orm";
 function startScheduler() {
   if (isRunning) {
     console.log("[Scheduler] Already running");
@@ -2961,16 +3774,16 @@ function stopScheduler() {
 async function processScheduledPosts() {
   try {
     const duePosts = await db.select().from(contentPosts).where(
-      and11(
-        eq13(contentPosts.status, "scheduled"),
-        lte(contentPosts.scheduledFor, sql5`NOW()`),
-        or(
-          isNull(contentPosts.lockedAt),
-          lte(contentPosts.lockedAt, sql5`NOW() - INTERVAL '5 minutes'`)
+      and13(
+        eq19(contentPosts.status, "scheduled"),
+        lte2(contentPosts.scheduledFor, sql7`NOW()`),
+        or4(
+          isNull2(contentPosts.lockedAt),
+          lte2(contentPosts.lockedAt, sql7`NOW() - INTERVAL '5 minutes'`)
         ),
-        or(
-          isNull(contentPosts.nextRetryAt),
-          lte(contentPosts.nextRetryAt, sql5`NOW()`)
+        or4(
+          isNull2(contentPosts.nextRetryAt),
+          lte2(contentPosts.nextRetryAt, sql7`NOW()`)
         )
       )
     ).limit(10);
@@ -2988,15 +3801,15 @@ async function processScheduledPosts() {
 async function processPost(postId) {
   try {
     const claimed = await db.update(contentPosts).set({
-      lockedAt: sql5`NOW()`,
+      lockedAt: sql7`NOW()`,
       status: "publishing"
     }).where(
-      and11(
-        eq13(contentPosts.id, postId),
-        eq13(contentPosts.status, "scheduled"),
-        or(
-          isNull(contentPosts.lockedAt),
-          lte(contentPosts.lockedAt, sql5`NOW() - INTERVAL '5 minutes'`)
+      and13(
+        eq19(contentPosts.id, postId),
+        eq19(contentPosts.status, "scheduled"),
+        or4(
+          isNull2(contentPosts.lockedAt),
+          lte2(contentPosts.lockedAt, sql7`NOW() - INTERVAL '5 minutes'`)
         )
       )
     ).returning();
@@ -3010,11 +3823,11 @@ async function processPost(postId) {
       await publishPost2(post);
       await db.update(contentPosts).set({
         status: "published",
-        publishedAt: sql5`NOW()`,
+        publishedAt: sql7`NOW()`,
         lockedAt: null,
         lastError: null,
-        updatedAt: sql5`NOW()`
-      }).where(eq13(contentPosts.id, postId));
+        updatedAt: sql7`NOW()`
+      }).where(eq19(contentPosts.id, postId));
       console.log(`[Scheduler] \u2705 Successfully published post ${postId}`);
     } catch (publishError) {
       const attempts = (post.attempts || 0) + 1;
@@ -3026,8 +3839,8 @@ async function processPost(postId) {
         nextRetryAt: maxReached ? null : nextRetryAt,
         lastError: publishError.message || "Unknown error",
         lockedAt: null,
-        updatedAt: sql5`NOW()`
-      }).where(eq13(contentPosts.id, postId));
+        updatedAt: sql7`NOW()`
+      }).where(eq19(contentPosts.id, postId));
       if (maxReached) {
         console.error(`[Scheduler] \u274C Post ${postId} failed after ${attempts} attempts:`, publishError.message);
       } else {
@@ -3041,8 +3854,8 @@ async function processPost(postId) {
         status: "scheduled",
         lockedAt: null,
         lastError: error.message || "Scheduler error",
-        updatedAt: sql5`NOW()`
-      }).where(eq13(contentPosts.id, postId));
+        updatedAt: sql7`NOW()`
+      }).where(eq19(contentPosts.id, postId));
     } catch (releaseError) {
       console.error(`[Scheduler] Failed to release lock for post ${postId}:`, releaseError);
     }
@@ -3280,6 +4093,176 @@ var DatabaseStorage = class {
       sql2`${magicLinkTokens.expiresAt} < ${now}`
     );
   }
+  // Subscription & Billing operations
+  async getAllSubscriptions() {
+    const allSubscriptions = await db.select().from(subscriptions).orderBy(desc(subscriptions.createdAt));
+    const result = [];
+    for (const subscription of allSubscriptions) {
+      const [client2] = await db.select().from(clients).where(eq(clients.id, subscription.clientId));
+      const [plan] = await db.select().from(subscriptionPlans).where(eq(subscriptionPlans.id, subscription.planId));
+      const addonSelections = await db.select().from(subscriptionAddonSelections).where(eq(subscriptionAddonSelections.subscriptionId, subscription.id));
+      const addons = [];
+      for (const selection of addonSelections) {
+        const [addon] = await db.select().from(subscriptionAddons).where(eq(subscriptionAddons.id, selection.addonId));
+        if (addon) {
+          addons.push({ addon, selection });
+        }
+      }
+      const billing = await db.select().from(billingHistory).where(eq(billingHistory.subscriptionId, subscription.id)).orderBy(desc(billingHistory.billingDate)).limit(6);
+      if (client2 && plan) {
+        result.push({
+          subscription,
+          client: client2,
+          plan,
+          addons,
+          billingHistory: billing
+        });
+      }
+    }
+    return result;
+  }
+  async getClientSubscription(clientId) {
+    const [subscription] = await db.select().from(subscriptions).where(
+      and(
+        eq(subscriptions.clientId, clientId),
+        eq(subscriptions.status, "active")
+      )
+    ).limit(1);
+    if (!subscription) {
+      return void 0;
+    }
+    const [plan] = await db.select().from(subscriptionPlans).where(eq(subscriptionPlans.id, subscription.planId));
+    if (!plan) {
+      return void 0;
+    }
+    const addonSelections = await db.select().from(subscriptionAddonSelections).where(eq(subscriptionAddonSelections.subscriptionId, subscription.id));
+    const addons = [];
+    for (const selection of addonSelections) {
+      const [addon] = await db.select().from(subscriptionAddons).where(eq(subscriptionAddons.id, selection.addonId));
+      if (addon) {
+        addons.push({
+          addon,
+          quantity: selection.quantity ?? 1,
+          unitPrice: selection.unitPrice ?? "0.00",
+          totalPrice: selection.totalPrice ?? "0.00"
+        });
+      }
+    }
+    return {
+      subscription,
+      plan,
+      addons,
+      nextBillingDate: subscription.nextPaymentDate,
+      lastPaymentDate: subscription.lastPaymentDate
+    };
+  }
+  async getClientBillingHistory(clientId, limit = 12) {
+    const [subscription] = await db.select().from(subscriptions).where(eq(subscriptions.clientId, clientId)).limit(1);
+    if (!subscription) {
+      return [];
+    }
+    return await db.select().from(billingHistory).where(eq(billingHistory.subscriptionId, subscription.id)).orderBy(desc(billingHistory.billingDate)).limit(limit);
+  }
+  async getAllSubscriptionPlans() {
+    return await db.select().from(subscriptionPlans).where(eq(subscriptionPlans.isActive, true)).orderBy(subscriptionPlans.pathway, subscriptionPlans.tierLevel);
+  }
+  async getAllSubscriptionAddons() {
+    return await db.select().from(subscriptionAddons).where(eq(subscriptionAddons.isActive, true)).orderBy(subscriptionAddons.category, subscriptionAddons.name);
+  }
+  // Account status management
+  async updateClientAccountStatus(clientId, newStatus, reason, changedBy) {
+    const [client2] = await db.update(clients).set({
+      accountStatus: newStatus,
+      suspensionReason: reason ?? null,
+      statusChangedAt: /* @__PURE__ */ new Date(),
+      statusChangedBy: changedBy ?? null,
+      updatedAt: /* @__PURE__ */ new Date()
+    }).where(eq(clients.id, clientId)).returning();
+    return client2;
+  }
+  async recordAccountStatusChange(record) {
+    const [history] = await db.insert(accountStatusHistory).values(record).returning();
+    return history;
+  }
+  async getClientAccountStatusHistory(clientId) {
+    return await db.select().from(accountStatusHistory).where(eq(accountStatusHistory.clientId, clientId)).orderBy(desc(accountStatusHistory.createdAt));
+  }
+  // Support Ticket operations
+  async getAllTickets() {
+    const ticketList = await db.select({
+      ticket: supportTickets,
+      client: {
+        companyName: clients.companyName,
+        email: clients.email
+      }
+    }).from(supportTickets).leftJoin(clients, eq(supportTickets.clientId, clients.id)).orderBy(desc(supportTickets.createdAt));
+    return ticketList.map((t) => ({
+      ...t.ticket,
+      client: t.client
+    }));
+  }
+  async createTicket(data) {
+    const [newTicket] = await db.insert(supportTickets).values({
+      clientId: data.clientId,
+      subject: data.subject,
+      description: data.description,
+      category: data.category || "general",
+      priority: data.priority || "medium",
+      status: "open"
+    }).returning();
+    return newTicket;
+  }
+  async updateTicket(id, data) {
+    const updateData = { updatedAt: /* @__PURE__ */ new Date() };
+    if (data.status) updateData.status = data.status;
+    if (data.priority) updateData.priority = data.priority;
+    if (data.resolution) updateData.resolution = data.resolution;
+    if (data.status === "resolved" || data.status === "closed") {
+      updateData.resolvedAt = /* @__PURE__ */ new Date();
+    }
+    const [updatedTicket] = await db.update(supportTickets).set(updateData).where(eq(supportTickets.id, id)).returning();
+    return updatedTicket;
+  }
+  async addTicketComment(ticketId, data) {
+    const [newComment] = await db.insert(ticketComments).values({
+      ticketId,
+      content: data.content,
+      isInternal: data.isInternal || false,
+      authorType: data.authorType || "admin"
+    }).returning();
+    const ticket = await db.select().from(supportTickets).where(eq(supportTickets.id, ticketId)).limit(1);
+    if (ticket[0] && !ticket[0].firstResponseAt) {
+      await db.update(supportTickets).set({ firstResponseAt: /* @__PURE__ */ new Date() }).where(eq(supportTickets.id, ticketId));
+    }
+    return newComment;
+  }
+  // Prescription operations
+  async getAllPrescriptions() {
+    const prescriptionList = await db.select({
+      prescription: prescriptions,
+      client: {
+        companyName: clients.companyName
+      }
+    }).from(prescriptions).leftJoin(clients, eq(prescriptions.clientId, clients.id)).orderBy(desc(prescriptions.createdAt));
+    return prescriptionList.map((p) => ({
+      ...p.prescription,
+      client: p.client
+    }));
+  }
+  async updatePrescription(id, data) {
+    const updateData = { updatedAt: /* @__PURE__ */ new Date() };
+    if (data.status) updateData.status = data.status;
+    if (data.reviewNotes) updateData.reviewNotes = data.reviewNotes;
+    if (data.implementationProgress !== void 0) updateData.implementationProgress = data.implementationProgress;
+    if (data.status === "approved") {
+      updateData.reviewedAt = /* @__PURE__ */ new Date();
+    }
+    if (data.status === "delivered") {
+      updateData.deliveredAt = /* @__PURE__ */ new Date();
+    }
+    const [updatedPrescription] = await db.update(prescriptions).set(updateData).where(eq(prescriptions.id, id)).returning();
+    return updatedPrescription;
+  }
 };
 var storage = new DatabaseStorage();
 
@@ -3290,50 +4273,333 @@ import { randomBytes } from "crypto";
 init_db();
 init_schema();
 import { Router } from "express";
-import { z } from "zod";
-import { eq as eq4, and as and4, desc as desc2, sql as sql4 } from "drizzle-orm";
+import { z as z2 } from "zod";
+import { eq as eq5, and as and4, desc as desc2, sql as sql4 } from "drizzle-orm";
 
 // server/services/mediaStorage.ts
 init_db();
 init_schema();
-import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { Upload } from "@aws-sdk/lib-storage";
 import { nanoid } from "nanoid";
 import sharp from "sharp";
 import { eq as eq2, and as and2, sql as sql3 } from "drizzle-orm";
-var validateStorageConfig = () => {
-  const accessKeyId = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID;
-  const secretAccessKey = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
-  const bucket = process.env.CLOUDFLARE_R2_BUCKET || process.env.S3_BUCKET;
-  if (!accessKeyId || !secretAccessKey) {
-    console.warn("[MediaStorage] WARNING: S3/R2 credentials not configured. Media uploads will fail. Set CLOUDFLARE_R2_ACCESS_KEY_ID and CLOUDFLARE_R2_SECRET_ACCESS_KEY.");
-    return false;
+
+// server/objectStorage.ts
+import { Storage } from "@google-cloud/storage";
+import { randomUUID } from "crypto";
+
+// server/objectAcl.ts
+var ACL_POLICY_METADATA_KEY = "custom:aclPolicy";
+function isPermissionAllowed(requested, granted) {
+  if (requested === "read" /* READ */) {
+    return ["read" /* READ */, "write" /* WRITE */].includes(granted);
   }
-  if (!bucket) {
-    console.warn("[MediaStorage] WARNING: S3/R2 bucket not configured. Set CLOUDFLARE_R2_BUCKET.");
-    return false;
+  return granted === "write" /* WRITE */;
+}
+function createObjectAccessGroup(group) {
+  switch (group.type) {
+    default:
+      throw new Error(`Unknown access group type: ${group.type}`);
   }
-  return true;
-};
-var isConfigured = validateStorageConfig();
-var s3Client = new S3Client({
-  region: process.env.CLOUDFLARE_R2_REGION || "auto",
-  endpoint: process.env.CLOUDFLARE_R2_ENDPOINT || process.env.S3_ENDPOINT,
-  credentials: {
-    accessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY || ""
+}
+async function setObjectAclPolicy(objectFile, aclPolicy) {
+  const [exists] = await objectFile.exists();
+  if (!exists) {
+    throw new Error(`Object not found: ${objectFile.name}`);
   }
-});
-var BUCKET_NAME = process.env.CLOUDFLARE_R2_BUCKET || process.env.S3_BUCKET || "business-blueprint-content";
-var CDN_URL = process.env.CLOUDFLARE_R2_CDN_URL || process.env.CDN_URL;
-var MediaStorageService = class {
-  /**
-   * Upload media to R2/S3 and save metadata to database
-   */
-  async uploadMedia(options) {
-    if (!isConfigured) {
-      throw new Error("Media storage is not configured. Please set CLOUDFLARE_R2_ACCESS_KEY_ID, CLOUDFLARE_R2_SECRET_ACCESS_KEY, and CLOUDFLARE_R2_BUCKET environment variables.");
+  await objectFile.setMetadata({
+    metadata: {
+      [ACL_POLICY_METADATA_KEY]: JSON.stringify(aclPolicy)
     }
+  });
+}
+async function getObjectAclPolicy(objectFile) {
+  const [metadata] = await objectFile.getMetadata();
+  const aclPolicy = metadata?.metadata?.[ACL_POLICY_METADATA_KEY];
+  if (!aclPolicy) {
+    return null;
+  }
+  return JSON.parse(aclPolicy);
+}
+async function canAccessObject({
+  userId,
+  objectFile,
+  requestedPermission
+}) {
+  const aclPolicy = await getObjectAclPolicy(objectFile);
+  if (!aclPolicy) {
+    return false;
+  }
+  if (aclPolicy.visibility === "public" && requestedPermission === "read" /* READ */) {
+    return true;
+  }
+  if (!userId) {
+    return false;
+  }
+  if (aclPolicy.owner === userId) {
+    return true;
+  }
+  for (const rule of aclPolicy.aclRules || []) {
+    const accessGroup = createObjectAccessGroup(rule.group);
+    if (await accessGroup.hasMember(userId) && isPermissionAllowed(requestedPermission, rule.permission)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// server/objectStorage.ts
+var REPLIT_SIDECAR_ENDPOINT = "http://127.0.0.1:1106";
+var objectStorageClient = new Storage({
+  credentials: {
+    audience: "replit",
+    subject_token_type: "access_token",
+    token_url: `${REPLIT_SIDECAR_ENDPOINT}/token`,
+    type: "external_account",
+    credential_source: {
+      url: `${REPLIT_SIDECAR_ENDPOINT}/credential`,
+      format: {
+        type: "json",
+        subject_token_field_name: "access_token"
+      }
+    },
+    universe_domain: "googleapis.com"
+  },
+  projectId: ""
+});
+var ObjectNotFoundError = class _ObjectNotFoundError extends Error {
+  constructor() {
+    super("Object not found");
+    this.name = "ObjectNotFoundError";
+    Object.setPrototypeOf(this, _ObjectNotFoundError.prototype);
+  }
+};
+var ObjectStorageService = class {
+  constructor() {
+  }
+  getPublicObjectSearchPaths() {
+    const pathsStr = process.env.PUBLIC_OBJECT_SEARCH_PATHS || "";
+    const paths = Array.from(
+      new Set(
+        pathsStr.split(",").map((path4) => path4.trim()).filter((path4) => path4.length > 0)
+      )
+    );
+    if (paths.length === 0) {
+      throw new Error(
+        "PUBLIC_OBJECT_SEARCH_PATHS not set. Create a bucket in 'Object Storage' tool and set PUBLIC_OBJECT_SEARCH_PATHS env var (comma-separated paths)."
+      );
+    }
+    return paths;
+  }
+  getPrivateObjectDir() {
+    const dir = process.env.PRIVATE_OBJECT_DIR || "";
+    if (!dir) {
+      throw new Error(
+        "PRIVATE_OBJECT_DIR not set. Create a bucket in 'Object Storage' tool and set PRIVATE_OBJECT_DIR env var."
+      );
+    }
+    return dir;
+  }
+  getBucketName() {
+    const bucketId = process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID || "";
+    if (!bucketId) {
+      throw new Error(
+        "DEFAULT_OBJECT_STORAGE_BUCKET_ID not set. Create a bucket in 'Object Storage' tool."
+      );
+    }
+    return bucketId;
+  }
+  async searchPublicObject(filePath) {
+    for (const searchPath of this.getPublicObjectSearchPaths()) {
+      const fullPath = `${searchPath}/${filePath}`;
+      const { bucketName, objectName } = this.parseObjectPath(fullPath);
+      const bucket = objectStorageClient.bucket(bucketName);
+      const file = bucket.file(objectName);
+      const [exists] = await file.exists();
+      if (exists) {
+        return file;
+      }
+    }
+    return null;
+  }
+  async downloadObject(file, res, cacheTtlSec = 3600) {
+    try {
+      const [metadata] = await file.getMetadata();
+      const aclPolicy = await getObjectAclPolicy(file);
+      const isPublic = aclPolicy?.visibility === "public";
+      res.set({
+        "Content-Type": metadata.contentType || "application/octet-stream",
+        "Content-Length": metadata.size,
+        "Cache-Control": `${isPublic ? "public" : "private"}, max-age=${cacheTtlSec}`
+      });
+      const stream = file.createReadStream();
+      stream.on("error", (err) => {
+        console.error("Stream error:", err);
+        if (!res.headersSent) {
+          res.status(500).json({ error: "Error streaming file" });
+        }
+      });
+      stream.pipe(res);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: "Error downloading file" });
+      }
+    }
+  }
+  async getObjectEntityUploadURL() {
+    const privateObjectDir = this.getPrivateObjectDir();
+    if (!privateObjectDir) {
+      throw new Error(
+        "PRIVATE_OBJECT_DIR not set. Create a bucket in 'Object Storage' tool and set PRIVATE_OBJECT_DIR env var."
+      );
+    }
+    const objectId = randomUUID();
+    const fullPath = `${privateObjectDir}/uploads/${objectId}`;
+    const { bucketName, objectName } = this.parseObjectPath(fullPath);
+    return this.signObjectURL({
+      bucketName,
+      objectName,
+      method: "PUT",
+      ttlSec: 900
+    });
+  }
+  async uploadBuffer(buffer, key, contentType) {
+    const bucketName = this.getBucketName();
+    const bucket = objectStorageClient.bucket(bucketName);
+    const file = bucket.file(key);
+    await file.save(buffer, {
+      contentType,
+      metadata: {
+        cacheControl: "public, max-age=31536000"
+      }
+    });
+    return await this.signObjectURL({
+      bucketName,
+      objectName: key,
+      method: "GET",
+      ttlSec: 31536e3
+    });
+  }
+  async deleteObject(key) {
+    const bucketName = this.getBucketName();
+    const bucket = objectStorageClient.bucket(bucketName);
+    const file = bucket.file(key);
+    await file.delete({ ignoreNotFound: true });
+  }
+  async getPublicUrl(key) {
+    const bucketName = this.getBucketName();
+    return await this.signObjectURL({
+      bucketName,
+      objectName: key,
+      method: "GET",
+      ttlSec: 31536e3
+    });
+  }
+  async getObjectEntityFile(objectPath) {
+    if (!objectPath.startsWith("/objects/")) {
+      throw new ObjectNotFoundError();
+    }
+    const parts = objectPath.slice(1).split("/");
+    if (parts.length < 2) {
+      throw new ObjectNotFoundError();
+    }
+    const entityId = parts.slice(1).join("/");
+    let entityDir = this.getPrivateObjectDir();
+    if (!entityDir.endsWith("/")) {
+      entityDir = `${entityDir}/`;
+    }
+    const objectEntityPath = `${entityDir}${entityId}`;
+    const { bucketName, objectName } = this.parseObjectPath(objectEntityPath);
+    const bucket = objectStorageClient.bucket(bucketName);
+    const objectFile = bucket.file(objectName);
+    const [exists] = await objectFile.exists();
+    if (!exists) {
+      throw new ObjectNotFoundError();
+    }
+    return objectFile;
+  }
+  normalizeObjectEntityPath(rawPath) {
+    if (!rawPath.startsWith("https://storage.googleapis.com/")) {
+      return rawPath;
+    }
+    const url = new URL(rawPath);
+    const rawObjectPath = url.pathname;
+    let objectEntityDir = this.getPrivateObjectDir();
+    if (!objectEntityDir.endsWith("/")) {
+      objectEntityDir = `${objectEntityDir}/`;
+    }
+    if (!rawObjectPath.startsWith(objectEntityDir)) {
+      return rawObjectPath;
+    }
+    const entityId = rawObjectPath.slice(objectEntityDir.length);
+    return `/objects/${entityId}`;
+  }
+  async trySetObjectEntityAclPolicy(rawPath, aclPolicy) {
+    const normalizedPath = this.normalizeObjectEntityPath(rawPath);
+    if (!normalizedPath.startsWith("/")) {
+      return normalizedPath;
+    }
+    const objectFile = await this.getObjectEntityFile(normalizedPath);
+    await setObjectAclPolicy(objectFile, aclPolicy);
+    return normalizedPath;
+  }
+  async canAccessObjectEntity({
+    userId,
+    objectFile,
+    requestedPermission
+  }) {
+    return canAccessObject({
+      userId,
+      objectFile,
+      requestedPermission: requestedPermission ?? "read" /* READ */
+    });
+  }
+  parseObjectPath(path4) {
+    if (!path4.startsWith("/")) {
+      path4 = `/${path4}`;
+    }
+    const pathParts = path4.split("/");
+    if (pathParts.length < 3) {
+      throw new Error("Invalid path: must contain at least a bucket name");
+    }
+    const bucketName = pathParts[1];
+    const objectName = pathParts.slice(2).join("/");
+    return { bucketName, objectName };
+  }
+  async signObjectURL({
+    bucketName,
+    objectName,
+    method,
+    ttlSec
+  }) {
+    const request = {
+      bucket_name: bucketName,
+      object_name: objectName,
+      method,
+      expires_at: new Date(Date.now() + ttlSec * 1e3).toISOString()
+    };
+    const response = await fetch(
+      `${REPLIT_SIDECAR_ENDPOINT}/object-storage/signed-object-url`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(request)
+      }
+    );
+    if (!response.ok) {
+      throw new Error(
+        `Failed to sign object URL, errorcode: ${response.status}, make sure you're running on Replit`
+      );
+    }
+    const { signed_url: signedURL } = await response.json();
+    return signedURL;
+  }
+};
+
+// server/services/mediaStorage.ts
+var objectStorage = new ObjectStorageService();
+var MediaStorageService = class {
+  async uploadMedia(options) {
     const { clientId, file, fileName, mimeType, folder = "Uploads", altText, tags } = options;
     const ext = fileName.split(".").pop() || "";
     const storageKey = `content/${clientId}/${folder}/${nanoid()}.${ext}`;
@@ -3343,19 +4609,7 @@ var MediaStorageService = class {
     if (fileType === "video") {
       thumbnailUrl = await this.generateVideoThumbnail(file, storageKey);
     }
-    const upload = new Upload({
-      client: s3Client,
-      params: {
-        Bucket: BUCKET_NAME,
-        Key: storageKey,
-        Body: file,
-        ContentType: mimeType,
-        CacheControl: "public, max-age=31536000"
-        // 1 year cache
-      }
-    });
-    await upload.done();
-    const storageUrl = CDN_URL ? `${CDN_URL}/${storageKey}` : `https://${BUCKET_NAME}.s3.amazonaws.com/${storageKey}`;
+    const storageUrl = await objectStorage.uploadBuffer(file, storageKey, mimeType);
     const [mediaRecord] = await db.insert(contentMedia).values({
       clientId,
       fileName,
@@ -3374,9 +4628,6 @@ var MediaStorageService = class {
     }).returning();
     return mediaRecord;
   }
-  /**
-   * Delete media from R2/S3 and database
-   */
   async deleteMedia(mediaId, clientId) {
     const [media] = await db.select().from(contentMedia).where(and2(
       eq2(contentMedia.id, mediaId),
@@ -3385,16 +4636,10 @@ var MediaStorageService = class {
     if (!media) {
       throw new Error("Media not found or unauthorized");
     }
-    await s3Client.send(new DeleteObjectCommand({
-      Bucket: BUCKET_NAME,
-      Key: media.storageKey
-    }));
+    await objectStorage.deleteObject(media.storageKey);
     if (media.thumbnailUrl) {
       const thumbnailKey = media.thumbnailUrl.split("/").slice(-3).join("/");
-      await s3Client.send(new DeleteObjectCommand({
-        Bucket: BUCKET_NAME,
-        Key: thumbnailKey
-      }));
+      await objectStorage.deleteObject(thumbnailKey);
     }
     await db.delete(contentMedia).where(and2(
       eq2(contentMedia.id, mediaId),
@@ -3402,16 +4647,10 @@ var MediaStorageService = class {
     ));
     return { success: true };
   }
-  /**
-   * Get all media for a client
-   */
   async getClientMedia(clientId, folder) {
     const query = folder ? and2(eq2(contentMedia.clientId, clientId), eq2(contentMedia.folder, folder)) : eq2(contentMedia.clientId, clientId);
     return await db.select().from(contentMedia).where(query).orderBy(contentMedia.createdAt);
   }
-  /**
-   * Get media by ID
-   */
   async getMediaById(mediaId, clientId) {
     const [media] = await db.select().from(contentMedia).where(and2(
       eq2(contentMedia.id, mediaId),
@@ -3419,9 +4658,6 @@ var MediaStorageService = class {
     ));
     return media;
   }
-  /**
-   * Update media metadata (alt text, tags, folder)
-   */
   async updateMediaMetadata(mediaId, clientId, updates) {
     const [updated] = await db.update(contentMedia).set(updates).where(and2(
       eq2(contentMedia.id, mediaId),
@@ -3429,24 +4665,15 @@ var MediaStorageService = class {
     )).returning();
     return updated;
   }
-  /**
-   * Increment usage count when media is used in a post
-   */
   async incrementUsageCount(mediaId) {
     await db.update(contentMedia).set({ usageCount: sql3`${contentMedia.usageCount} + 1` }).where(eq2(contentMedia.id, mediaId));
   }
-  /**
-   * Determine file type from MIME type
-   */
   determineFileType(mimeType) {
     if (mimeType.startsWith("video/")) return "video";
     if (mimeType === "image/gif") return "gif";
     if (mimeType.startsWith("image/")) return "image";
     throw new Error(`Unsupported file type: ${mimeType}`);
   }
-  /**
-   * Get media metadata (dimensions, size)
-   */
   async getMediaMetadata(file, mimeType, fileType) {
     const fileSize = file.length;
     if (fileType === "image" || fileType === "gif") {
@@ -3469,14 +4696,10 @@ var MediaStorageService = class {
         fileSize,
         fileType: "video",
         duration: void 0
-        // Would need ffmpeg
       };
     }
     return { fileSize, fileType: "image" };
   }
-  /**
-   * Generate thumbnail for video
-   */
   async generateVideoThumbnail(file, storageKey) {
     console.log("[MediaStorage] Video thumbnail generation not yet implemented");
     return null;
@@ -3487,6 +4710,34 @@ var mediaStorageService = new MediaStorageService();
 // server/routes/content.ts
 init_contentPublisher();
 init_platformFactory();
+
+// server/utils/demoAccounts.ts
+init_db();
+init_schema();
+import { eq as eq4 } from "drizzle-orm";
+var DEMO_EMAILS = [
+  "demo@businessblueprint.io",
+  "test@businessblueprint.io",
+  "agency@businessblueprint.io"
+];
+function isDemoEmail(email) {
+  return DEMO_EMAILS.includes(email.toLowerCase());
+}
+async function isDemoAccountById(clientId) {
+  try {
+    const client2 = await db.query.clients.findFirst({
+      where: eq4(clients.id, clientId),
+      columns: { email: true }
+    });
+    if (!client2?.email) return false;
+    return isDemoEmail(client2.email);
+  } catch (error) {
+    console.error("[isDemoAccountById] Error checking demo status:", error);
+    return false;
+  }
+}
+
+// server/routes/content.ts
 var router = Router();
 var mediaStorage = new MediaStorageService();
 async function requireContentAccess(req, res, next) {
@@ -3495,15 +4746,18 @@ async function requireContentAccess(req, res, next) {
     return res.status(400).json({ message: "Client ID is required" });
   }
   try {
+    if (await isDemoAccountById(clientId)) {
+      return next();
+    }
     const hasAccess = await db.select({ id: subscriptionAddonSelections.id }).from(subscriptionAddonSelections).innerJoin(
       subscriptions,
-      eq4(subscriptionAddonSelections.subscriptionId, subscriptions.id)
+      eq5(subscriptionAddonSelections.subscriptionId, subscriptions.id)
     ).innerJoin(
       subscriptionAddons,
-      eq4(subscriptionAddonSelections.addonId, subscriptionAddons.id)
+      eq5(subscriptionAddonSelections.addonId, subscriptionAddons.id)
     ).where(
       and4(
-        eq4(subscriptions.clientId, clientId),
+        eq5(subscriptions.clientId, clientId),
         sql4`${subscriptionAddons.name} LIKE '%Content Management%'`
       )
     ).limit(1);
@@ -3519,9 +4773,12 @@ async function requireContentAccess(req, res, next) {
   }
 }
 async function getPlatformLimits(clientId) {
-  const [subscription] = await db.select({ addonName: subscriptionAddons.name }).from(subscriptionAddonSelections).innerJoin(subscriptions, eq4(subscriptionAddonSelections.subscriptionId, subscriptions.id)).innerJoin(subscriptionAddons, eq4(subscriptionAddonSelections.addonId, subscriptionAddons.id)).where(
+  if (await isDemoAccountById(clientId)) {
+    return { maxPlatforms: 7, tier: "msp" };
+  }
+  const [subscription] = await db.select({ addonName: subscriptionAddons.name }).from(subscriptionAddonSelections).innerJoin(subscriptions, eq5(subscriptionAddonSelections.subscriptionId, subscriptions.id)).innerJoin(subscriptionAddons, eq5(subscriptionAddonSelections.addonId, subscriptionAddons.id)).where(
     and4(
-      eq4(subscriptions.clientId, clientId),
+      eq5(subscriptions.clientId, clientId),
       sql4`${subscriptionAddons.name} LIKE '%Content Management%'`
     )
   ).limit(1);
@@ -3536,9 +4793,9 @@ router.get("/:clientId/posts", requireContentAccess, async (req, res) => {
     const clientId = parseInt(req.params.clientId);
     const status = req.query.status;
     const posts = status ? await db.select().from(contentPosts).where(and4(
-      eq4(contentPosts.clientId, clientId),
-      eq4(contentPosts.status, status)
-    )).orderBy(desc2(contentPosts.createdAt)) : await db.select().from(contentPosts).where(eq4(contentPosts.clientId, clientId)).orderBy(desc2(contentPosts.createdAt));
+      eq5(contentPosts.clientId, clientId),
+      eq5(contentPosts.status, status)
+    )).orderBy(desc2(contentPosts.createdAt)) : await db.select().from(contentPosts).where(eq5(contentPosts.clientId, clientId)).orderBy(desc2(contentPosts.createdAt));
     res.json(posts);
   } catch (error) {
     console.error("[Content] Error fetching posts:", error);
@@ -3550,8 +4807,8 @@ router.get("/:clientId/posts/:postId", requireContentAccess, async (req, res) =>
     const clientId = parseInt(req.params.clientId);
     const postId = parseInt(req.params.postId);
     const [post] = await db.select().from(contentPosts).where(and4(
-      eq4(contentPosts.id, postId),
-      eq4(contentPosts.clientId, clientId)
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
     ));
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -3565,21 +4822,21 @@ router.get("/:clientId/posts/:postId", requireContentAccess, async (req, res) =>
 router.post("/:clientId/posts", requireContentAccess, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
-    const postSchema = z.object({
-      caption: z.string(),
-      platforms: z.array(z.string()),
-      hashtags: z.array(z.string()).optional(),
-      mediaIds: z.array(z.number()).optional(),
-      scheduledFor: z.coerce.date().refine((date) => !isNaN(date.getTime()) && date > /* @__PURE__ */ new Date(), {
+    const postSchema = z2.object({
+      caption: z2.string(),
+      platforms: z2.array(z2.string()),
+      hashtags: z2.array(z2.string()).optional(),
+      mediaIds: z2.array(z2.number()).optional(),
+      scheduledFor: z2.coerce.date().refine((date) => !isNaN(date.getTime()) && date > /* @__PURE__ */ new Date(), {
         message: "scheduledFor must be a valid future date"
       }).optional(),
-      platformCustomizations: z.any().optional(),
-      timezone: z.string().optional(),
-      status: z.string().optional(),
-      isAIGenerated: z.boolean().optional(),
-      aiPrompt: z.string().optional(),
-      contentScore: z.number().optional(),
-      templateId: z.number().optional()
+      platformCustomizations: z2.any().optional(),
+      timezone: z2.string().optional(),
+      status: z2.string().optional(),
+      isAIGenerated: z2.boolean().optional(),
+      aiPrompt: z2.string().optional(),
+      contentScore: z2.number().optional(),
+      templateId: z2.number().optional()
     });
     const validatedBody = postSchema.parse(req.body);
     const [post] = await db.insert(contentPosts).values({
@@ -3589,7 +4846,7 @@ router.post("/:clientId/posts", requireContentAccess, async (req, res) => {
     res.status(201).json(post);
   } catch (error) {
     console.error("[Content] Error creating post:", error);
-    if (error instanceof z.ZodError) {
+    if (error instanceof z2.ZodError) {
       return res.status(400).json({ message: "Validation error", errors: error.errors });
     }
     res.status(500).json({ message: "Failed to create post" });
@@ -3599,26 +4856,26 @@ router.put("/:clientId/posts/:postId", requireContentAccess, async (req, res) =>
   try {
     const clientId = parseInt(req.params.clientId);
     const postId = parseInt(req.params.postId);
-    const updateSchema = z.object({
-      caption: z.string().optional(),
-      platforms: z.array(z.string()).optional(),
-      hashtags: z.array(z.string()).optional(),
-      mediaIds: z.array(z.number()).optional(),
-      scheduledFor: z.coerce.date().refine((date) => !isNaN(date.getTime()) && date > /* @__PURE__ */ new Date(), {
+    const updateSchema = z2.object({
+      caption: z2.string().optional(),
+      platforms: z2.array(z2.string()).optional(),
+      hashtags: z2.array(z2.string()).optional(),
+      mediaIds: z2.array(z2.number()).optional(),
+      scheduledFor: z2.coerce.date().refine((date) => !isNaN(date.getTime()) && date > /* @__PURE__ */ new Date(), {
         message: "scheduledFor must be a valid future date"
       }).optional(),
-      platformCustomizations: z.any().optional(),
-      timezone: z.string().optional(),
-      status: z.string().optional(),
-      isAIGenerated: z.boolean().optional(),
-      aiPrompt: z.string().optional(),
-      contentScore: z.number().optional(),
-      templateId: z.number().optional()
+      platformCustomizations: z2.any().optional(),
+      timezone: z2.string().optional(),
+      status: z2.string().optional(),
+      isAIGenerated: z2.boolean().optional(),
+      aiPrompt: z2.string().optional(),
+      contentScore: z2.number().optional(),
+      templateId: z2.number().optional()
     });
     const data = updateSchema.parse(req.body);
     const [post] = await db.update(contentPosts).set(data).where(and4(
-      eq4(contentPosts.id, postId),
-      eq4(contentPosts.clientId, clientId)
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
     )).returning();
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -3626,7 +4883,7 @@ router.put("/:clientId/posts/:postId", requireContentAccess, async (req, res) =>
     res.json(post);
   } catch (error) {
     console.error("[Content] Error updating post:", error);
-    if (error instanceof z.ZodError) {
+    if (error instanceof z2.ZodError) {
       return res.status(400).json({ message: "Validation error", errors: error.errors });
     }
     res.status(500).json({ message: "Failed to update post" });
@@ -3637,8 +4894,8 @@ router.delete("/:clientId/posts/:postId", requireContentAccess, async (req, res)
     const clientId = parseInt(req.params.clientId);
     const postId = parseInt(req.params.postId);
     const [deleted] = await db.delete(contentPosts).where(and4(
-      eq4(contentPosts.id, postId),
-      eq4(contentPosts.clientId, clientId)
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
     )).returning();
     if (!deleted) {
       return res.status(404).json({ message: "Post not found" });
@@ -3654,8 +4911,8 @@ router.post("/:clientId/posts/:postId/publish", requireContentAccess, async (req
     const clientId = parseInt(req.params.clientId);
     const postId = parseInt(req.params.postId);
     const [post] = await db.select().from(contentPosts).where(and4(
-      eq4(contentPosts.id, postId),
-      eq4(contentPosts.clientId, clientId)
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
     ));
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -3665,13 +4922,13 @@ router.post("/:clientId/posts/:postId/publish", requireContentAccess, async (req
     }
     const isScheduled = post.scheduledFor && new Date(post.scheduledFor) > /* @__PURE__ */ new Date();
     if (isScheduled) {
-      await db.update(contentPosts).set({ status: "scheduled" }).where(eq4(contentPosts.id, postId));
+      await db.update(contentPosts).set({ status: "scheduled" }).where(eq5(contentPosts.id, postId));
       res.json({
         message: "Post scheduled successfully",
         scheduledFor: post.scheduledFor
       });
     } else {
-      const [updatedPost] = await db.update(contentPosts).set({ status: "publishing", attempts: 0 }).where(eq4(contentPosts.id, postId)).returning();
+      const [updatedPost] = await db.update(contentPosts).set({ status: "publishing", attempts: 0 }).where(eq5(contentPosts.id, postId)).returning();
       publishPost(updatedPost).catch(async (err) => {
         console.error("[Content] Background publish failed:", err);
         await db.update(contentPosts).set({
@@ -3680,7 +4937,7 @@ router.post("/:clientId/posts/:postId/publish", requireContentAccess, async (req
           attempts: 1,
           lockedAt: null
           // Release lock
-        }).where(eq4(contentPosts.id, postId));
+        }).where(eq5(contentPosts.id, postId));
       });
       res.json({ message: "Post is being published" });
     }
@@ -3693,8 +4950,8 @@ router.get("/:clientId/schedule", requireContentAccess, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     const scheduledPosts = await db.select().from(contentPosts).where(and4(
-      eq4(contentPosts.clientId, clientId),
-      eq4(contentPosts.status, "scheduled")
+      eq5(contentPosts.clientId, clientId),
+      eq5(contentPosts.status, "scheduled")
     )).orderBy(contentPosts.scheduledFor);
     res.json(scheduledPosts);
   } catch (error) {
@@ -3706,15 +4963,15 @@ router.put("/:clientId/schedule/:postId", requireContentAccess, async (req, res)
   try {
     const clientId = parseInt(req.params.clientId);
     const postId = parseInt(req.params.postId);
-    const scheduleSchema = z.object({
-      scheduledFor: z.coerce.date().refine((date) => !isNaN(date.getTime()) && date > /* @__PURE__ */ new Date(), {
+    const scheduleSchema = z2.object({
+      scheduledFor: z2.coerce.date().refine((date) => !isNaN(date.getTime()) && date > /* @__PURE__ */ new Date(), {
         message: "scheduledFor must be a valid future date"
       })
     });
     const { scheduledFor: newScheduleDate } = scheduleSchema.parse(req.body);
     const [existingPost] = await db.select().from(contentPosts).where(and4(
-      eq4(contentPosts.id, postId),
-      eq4(contentPosts.clientId, clientId)
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
     ));
     if (!existingPost) {
       return res.status(404).json({ message: "Post not found" });
@@ -3727,8 +4984,8 @@ router.put("/:clientId/schedule/:postId", requireContentAccess, async (req, res)
       attempts: 0,
       nextRetryAt: null
     }).where(and4(
-      eq4(contentPosts.id, postId),
-      eq4(contentPosts.clientId, clientId)
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
     )).returning();
     res.json({
       message: "Schedule updated successfully",
@@ -3736,7 +4993,7 @@ router.put("/:clientId/schedule/:postId", requireContentAccess, async (req, res)
     });
   } catch (error) {
     console.error("[Content] Error updating schedule:", error);
-    if (error instanceof z.ZodError) {
+    if (error instanceof z2.ZodError) {
       return res.status(400).json({ message: "Validation error", errors: error.errors });
     }
     res.status(500).json({ message: "Failed to update schedule" });
@@ -3747,9 +5004,9 @@ router.delete("/:clientId/schedule/:postId", requireContentAccess, async (req, r
     const clientId = parseInt(req.params.clientId);
     const postId = parseInt(req.params.postId);
     const [existingPost] = await db.select().from(contentPosts).where(and4(
-      eq4(contentPosts.id, postId),
-      eq4(contentPosts.clientId, clientId),
-      eq4(contentPosts.status, "scheduled")
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId),
+      eq5(contentPosts.status, "scheduled")
     ));
     if (!existingPost) {
       return res.status(404).json({ message: "Scheduled post not found" });
@@ -3762,8 +5019,8 @@ router.delete("/:clientId/schedule/:postId", requireContentAccess, async (req, r
       attempts: 0,
       nextRetryAt: null
     }).where(and4(
-      eq4(contentPosts.id, postId),
-      eq4(contentPosts.clientId, clientId)
+      eq5(contentPosts.id, postId),
+      eq5(contentPosts.clientId, clientId)
     )).returning();
     res.json({
       message: "Schedule cancelled successfully",
@@ -3779,9 +5036,9 @@ router.get("/:clientId/media", requireContentAccess, async (req, res) => {
     const clientId = parseInt(req.params.clientId);
     const folder = req.query.folder;
     const media = folder ? await db.select().from(contentMedia).where(and4(
-      eq4(contentMedia.clientId, clientId),
-      eq4(contentMedia.folder, folder)
-    )).orderBy(desc2(contentMedia.createdAt)) : await db.select().from(contentMedia).where(eq4(contentMedia.clientId, clientId)).orderBy(desc2(contentMedia.createdAt));
+      eq5(contentMedia.clientId, clientId),
+      eq5(contentMedia.folder, folder)
+    )).orderBy(desc2(contentMedia.createdAt)) : await db.select().from(contentMedia).where(eq5(contentMedia.clientId, clientId)).orderBy(desc2(contentMedia.createdAt));
     res.json(media);
   } catch (error) {
     console.error("[Content] Error fetching media:", error);
@@ -3828,7 +5085,7 @@ router.delete("/:clientId/media/:mediaId", requireContentAccess, async (req, res
 router.get("/:clientId/platforms", requireContentAccess, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
-    const accounts = await db.select().from(socialMediaAccounts).where(eq4(socialMediaAccounts.clientId, clientId)).orderBy(socialMediaAccounts.platform);
+    const accounts = await db.select().from(socialMediaAccounts).where(eq5(socialMediaAccounts.clientId, clientId)).orderBy(socialMediaAccounts.platform);
     const limits = await getPlatformLimits(clientId);
     res.json({
       accounts,
@@ -3844,25 +5101,25 @@ router.post("/:clientId/platforms", requireContentAccess, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     const limits = await getPlatformLimits(clientId);
-    const currentAccounts = await db.select().from(socialMediaAccounts).where(eq4(socialMediaAccounts.clientId, clientId));
+    const currentAccounts = await db.select().from(socialMediaAccounts).where(eq5(socialMediaAccounts.clientId, clientId));
     if (currentAccounts.length >= limits.maxPlatforms) {
       return res.status(400).json({
         message: `Platform limit reached. Your ${limits.tier.toUpperCase()} tier supports ${limits.maxPlatforms} platforms.`
       });
     }
-    const accountSchema = z.object({
-      platform: z.string(),
-      platformAccountId: z.string(),
-      accessToken: z.string(),
-      refreshToken: z.string().optional(),
-      tokenExpiresAt: z.string().transform((str) => new Date(str)).optional(),
-      platformAccountName: z.string().optional(),
-      platformAccountHandle: z.string().optional(),
-      platformAccountAvatar: z.string().optional(),
-      accountType: z.string().optional(),
-      permissions: z.array(z.string()).optional(),
-      metadata: z.any().optional(),
-      isActive: z.boolean().optional()
+    const accountSchema = z2.object({
+      platform: z2.string(),
+      platformAccountId: z2.string(),
+      accessToken: z2.string(),
+      refreshToken: z2.string().optional(),
+      tokenExpiresAt: z2.string().transform((str) => new Date(str)).optional(),
+      platformAccountName: z2.string().optional(),
+      platformAccountHandle: z2.string().optional(),
+      platformAccountAvatar: z2.string().optional(),
+      accountType: z2.string().optional(),
+      permissions: z2.array(z2.string()).optional(),
+      metadata: z2.any().optional(),
+      isActive: z2.boolean().optional()
     });
     const validatedBody = accountSchema.parse(req.body);
     const isValid = await PlatformFactory.validateCredentials(validatedBody.platform, {
@@ -3881,7 +5138,7 @@ router.post("/:clientId/platforms", requireContentAccess, async (req, res) => {
     res.status(201).json(account);
   } catch (error) {
     console.error("[Content] Error connecting platform:", error);
-    if (error instanceof z.ZodError) {
+    if (error instanceof z2.ZodError) {
       return res.status(400).json({ message: "Validation error", errors: error.errors });
     }
     res.status(500).json({ message: "Failed to connect platform" });
@@ -3892,8 +5149,8 @@ router.delete("/:clientId/platforms/:accountId", requireContentAccess, async (re
     const clientId = parseInt(req.params.clientId);
     const accountId = parseInt(req.params.accountId);
     const [deleted] = await db.delete(socialMediaAccounts).where(and4(
-      eq4(socialMediaAccounts.id, accountId),
-      eq4(socialMediaAccounts.clientId, clientId)
+      eq5(socialMediaAccounts.id, accountId),
+      eq5(socialMediaAccounts.clientId, clientId)
     )).returning();
     if (!deleted) {
       return res.status(404).json({ message: "Platform account not found" });
@@ -3907,7 +5164,7 @@ router.delete("/:clientId/platforms/:accountId", requireContentAccess, async (re
 router.get("/:clientId/analytics", requireContentAccess, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
-    const posts = await db.select().from(contentPosts).where(eq4(contentPosts.clientId, clientId));
+    const posts = await db.select().from(contentPosts).where(eq5(contentPosts.clientId, clientId));
     const postIds = posts.map((p) => p.id);
     const analytics = postIds.length > 0 ? await db.select().from(contentAnalytics).where(sql4`${contentAnalytics.postId} IN (${sql4.join(postIds.map((id) => sql4`${id}`), sql4`, `)})`).orderBy(desc2(contentAnalytics.lastSyncedAt)) : [];
     const summary = {
@@ -3921,6 +5178,22 @@ router.get("/:clientId/analytics", requireContentAccess, async (req, res) => {
   } catch (error) {
     console.error("[Content] Error fetching analytics:", error);
     res.status(500).json({ message: "Failed to fetch analytics" });
+  }
+});
+router.post("/:clientId/ai/suggest", requireContentAccess, async (req, res) => {
+  try {
+    const { prompt = "Generate social media post ideas" } = req.body;
+    const suggestions = [
+      `Here's a compelling ${prompt} idea that resonates with your audience and drives engagement.`,
+      `Try this approach: A ${prompt} that highlights customer value and creates urgency.`,
+      `Consider this angle: Share your expertise through a ${prompt} that educates and entertains.`,
+      `This ${prompt} hooks attention immediately with a question your audience wants answered.`,
+      `Use this structure: Story \u2192 Challenge \u2192 Solution format for maximum ${prompt} impact.`
+    ];
+    res.json({ suggestions });
+  } catch (error) {
+    console.error("[Content] Error generating suggestions:", error);
+    res.status(500).json({ message: "Failed to generate suggestions" });
   }
 });
 router.post("/:clientId/ai/caption", requireContentAccess, async (req, res) => {
@@ -3958,12 +5231,98 @@ var content_default = router;
 init_db();
 init_schema();
 import { Router as Router2 } from "express";
-import { eq as eq5, and as and5 } from "drizzle-orm";
+import { eq as eq6, and as and5 } from "drizzle-orm";
 import crypto from "crypto";
 var router2 = Router2();
 var META_APP_ID = process.env.META_APP_ID;
 var META_APP_SECRET = process.env.META_APP_SECRET;
 var META_WEBHOOK_VERIFY_TOKEN = process.env.META_WEBHOOK_VERIFY_TOKEN || "businessblueprint_meta_verify_2025";
+var VALID_PLATFORMS = ["facebook", "instagram"];
+var ALLOWED_RETURN_PATHS = [
+  "/portal/inbox",
+  "/portal/dashboard",
+  "/content",
+  "/inbox"
+];
+var PLATFORM_SCOPES = {
+  facebook: [
+    "pages_show_list",
+    "pages_read_engagement",
+    "pages_manage_posts",
+    "pages_messaging",
+    "pages_manage_metadata"
+  ],
+  instagram: [
+    "pages_show_list",
+    "instagram_basic",
+    "instagram_content_publish",
+    "instagram_manage_messages",
+    "pages_read_engagement"
+  ]
+};
+function signState(data) {
+  const payload = Buffer.from(JSON.stringify(data)).toString("base64");
+  const signature = crypto.createHmac("sha256", META_APP_SECRET || "fallback-secret").update(payload).digest("hex");
+  return `${payload}.${signature}`;
+}
+function verifyState(state) {
+  try {
+    const [payload, signature] = state.split(".");
+    if (!payload || !signature) {
+      return { valid: false };
+    }
+    const expectedSignature = crypto.createHmac("sha256", META_APP_SECRET || "fallback-secret").update(payload).digest("hex");
+    if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
+      return { valid: false };
+    }
+    const data = JSON.parse(Buffer.from(payload, "base64").toString());
+    return { valid: true, data };
+  } catch {
+    return { valid: false };
+  }
+}
+function isValidReturnPath(path4) {
+  if (!path4) return false;
+  return path4.startsWith("/") && ALLOWED_RETURN_PATHS.some(
+    (allowed) => path4 === allowed || path4.startsWith(allowed + "?") || path4.startsWith(allowed + "/")
+  );
+}
+router2.get("/oauth/start", (req, res) => {
+  try {
+    const clientId = req.query.clientId;
+    const platformParam = req.query.platform;
+    const returnUrl = req.query.returnUrl;
+    if (!clientId || isNaN(parseInt(clientId))) {
+      return res.status(400).json({ error: "Valid clientId is required" });
+    }
+    if (!META_APP_ID || !META_APP_SECRET) {
+      return res.status(500).json({ error: "Meta App not configured" });
+    }
+    const platform = VALID_PLATFORMS.includes(platformParam) ? platformParam : "facebook";
+    const safeReturnUrl = isValidReturnPath(returnUrl) ? returnUrl : "/portal/inbox";
+    const stateData = {
+      clientId: parseInt(clientId),
+      platform,
+      returnUrl: safeReturnUrl,
+      nonce: crypto.randomBytes(16).toString("hex"),
+      timestamp: Date.now()
+    };
+    const state = signState(stateData);
+    const scopes = PLATFORM_SCOPES[platform];
+    const redirectUri = getRedirectUri(req);
+    const authUrl = new URL("https://www.facebook.com/v21.0/dialog/oauth");
+    authUrl.searchParams.set("client_id", META_APP_ID);
+    authUrl.searchParams.set("redirect_uri", redirectUri);
+    authUrl.searchParams.set("scope", scopes.join(","));
+    authUrl.searchParams.set("state", state);
+    authUrl.searchParams.set("response_type", "code");
+    console.log(`\u2705 Starting ${platform} OAuth for client ${clientId}`);
+    res.redirect(authUrl.toString());
+  } catch (error) {
+    console.error("OAuth start error:", error);
+    res.status(500).json({ error: "Failed to start OAuth flow" });
+  }
+});
 router2.get("/webhooks/meta", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
@@ -3998,33 +5357,59 @@ router2.post("/webhooks/meta", async (req, res) => {
 router2.get("/oauth/callback", async (req, res) => {
   try {
     const code = req.query.code;
-    const state = req.query.state;
+    const stateParam = req.query.state;
     if (!code) {
       return res.status(400).json({ error: "No authorization code provided" });
     }
+    if (!stateParam) {
+      return res.status(400).json({ error: "Invalid state parameter" });
+    }
+    const stateResult = verifyState(stateParam);
+    if (!stateResult.valid || !stateResult.data) {
+      console.error("\u274C Invalid or tampered state parameter");
+      return res.status(403).json({ error: "Invalid state - possible CSRF attack" });
+    }
+    const stateAge = Date.now() - (stateResult.data.timestamp || 0);
+    if (stateAge > 10 * 60 * 1e3) {
+      console.error("\u274C State parameter expired");
+      return res.status(400).json({ error: "OAuth session expired. Please try again." });
+    }
+    const clientId = stateResult.data.clientId;
+    const platform = VALID_PLATFORMS.includes(stateResult.data.platform) ? stateResult.data.platform : "facebook";
+    const returnUrl = isValidReturnPath(stateResult.data.returnUrl) ? stateResult.data.returnUrl : "/portal/inbox";
     const tokenResponse = await fetch(
       `https://graph.facebook.com/v21.0/oauth/access_token?client_id=${META_APP_ID}&client_secret=${META_APP_SECRET}&code=${code}&redirect_uri=${encodeURIComponent(getRedirectUri(req))}`
     );
     const tokenData = await tokenResponse.json();
     if (!tokenData.access_token) {
+      console.error("Token exchange failed:", tokenData);
       throw new Error("Failed to get access token");
     }
+    const longLivedResponse = await fetch(
+      `https://graph.facebook.com/v21.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${META_APP_ID}&client_secret=${META_APP_SECRET}&fb_exchange_token=${tokenData.access_token}`
+    );
+    const longLivedData = await longLivedResponse.json();
+    const userAccessToken = longLivedData.access_token || tokenData.access_token;
     const pageTokenResponse = await fetch(
-      `https://graph.facebook.com/v21.0/me/accounts?access_token=${tokenData.access_token}`
+      `https://graph.facebook.com/v21.0/me/accounts?access_token=${userAccessToken}`
     );
     const pageData = await pageTokenResponse.json();
-    const clientId = parseInt(state);
+    if (pageData.error) {
+      console.error("Failed to get pages:", pageData.error);
+      throw new Error(pageData.error.message || "Failed to get pages");
+    }
     if (pageData.data && pageData.data.length > 0) {
       for (const page of pageData.data) {
         const existing = await db.select().from(inboxChannelConnections).where(
           and5(
-            eq5(inboxChannelConnections.clientId, clientId),
-            eq5(inboxChannelConnections.channelType, "facebook"),
-            eq5(inboxChannelConnections.channelIdentifier, page.id)
+            eq6(inboxChannelConnections.clientId, clientId),
+            eq6(inboxChannelConnections.channelType, platform),
+            eq6(inboxChannelConnections.channelIdentifier, page.id)
           )
         );
         const credentials = {
           pageAccessToken: page.access_token,
+          userAccessToken,
           pageId: page.id,
           pageName: page.name,
           category: page.category
@@ -4036,11 +5421,11 @@ router2.get("/oauth/callback", async (req, res) => {
             status: "active",
             lastSyncedAt: /* @__PURE__ */ new Date(),
             updatedAt: /* @__PURE__ */ new Date()
-          }).where(eq5(inboxChannelConnections.id, existing[0].id));
+          }).where(eq6(inboxChannelConnections.id, existing[0].id));
         } else {
           await db.insert(inboxChannelConnections).values({
             clientId,
-            channelType: "facebook",
+            channelType: platform,
             channelIdentifier: page.id,
             channelName: page.name,
             credentials,
@@ -4048,12 +5433,14 @@ router2.get("/oauth/callback", async (req, res) => {
             lastSyncedAt: /* @__PURE__ */ new Date()
           });
         }
+        console.log(`\u2705 Connected ${platform} page: ${page.name}`);
       }
     }
-    res.redirect("/inbox?tab=settings&oauth=success");
+    const redirectWithStatus = returnUrl.includes("?") ? `${returnUrl}&oauth=success&platform=${platform}` : `${returnUrl}?oauth=success&platform=${platform}`;
+    res.redirect(redirectWithStatus);
   } catch (error) {
     console.error("OAuth callback error:", error);
-    res.redirect("/inbox?tab=settings&oauth=error");
+    res.redirect("/portal/inbox?oauth=error");
   }
 });
 function verifyWebhookSignature(body, signature) {
@@ -4089,8 +5476,8 @@ async function processMessagingEvent(event, platform) {
     const channelType = platform === "instagram" ? "instagram" : "facebook";
     const [channel] = await db.select().from(inboxChannelConnections).where(
       and5(
-        eq5(inboxChannelConnections.channelType, channelType),
-        eq5(inboxChannelConnections.channelIdentifier, recipientId)
+        eq6(inboxChannelConnections.channelType, channelType),
+        eq6(inboxChannelConnections.channelIdentifier, recipientId)
       )
     );
     if (!channel || !channel.clientId) {
@@ -4099,9 +5486,9 @@ async function processMessagingEvent(event, platform) {
     }
     let [conversation] = await db.select().from(inboxConversations).where(
       and5(
-        eq5(inboxConversations.clientId, channel.clientId),
-        eq5(inboxConversations.contactIdentifier, senderId),
-        eq5(inboxConversations.primaryChannelType, channelType)
+        eq6(inboxConversations.clientId, channel.clientId),
+        eq6(inboxConversations.contactIdentifier, senderId),
+        eq6(inboxConversations.primaryChannelType, channelType)
       )
     );
     if (!conversation) {
@@ -4123,7 +5510,7 @@ async function processMessagingEvent(event, platform) {
         lastMessagePreview: messageText.substring(0, 100),
         unreadCount: (conversation.unreadCount || 0) + 1,
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq5(inboxConversations.id, conversation.id));
+      }).where(eq6(inboxConversations.id, conversation.id));
     }
     await db.insert(inboxMessages2).values({
       conversationId: conversation.id,
@@ -4170,16 +5557,16 @@ async function processComment(comment, pageId, platform) {
     const channelType = platform === "instagram" ? "instagram" : "facebook";
     const [channel] = await db.select().from(inboxChannelConnections).where(
       and5(
-        eq5(inboxChannelConnections.channelType, channelType),
-        eq5(inboxChannelConnections.channelIdentifier, pageId)
+        eq6(inboxChannelConnections.channelType, channelType),
+        eq6(inboxChannelConnections.channelIdentifier, pageId)
       )
     );
     if (!channel || !channel.clientId) return;
     let [conversation] = await db.select().from(inboxConversations).where(
       and5(
-        eq5(inboxConversations.clientId, channel.clientId),
-        eq5(inboxConversations.contactIdentifier, senderId),
-        eq5(inboxConversations.primaryChannelType, channelType)
+        eq6(inboxConversations.clientId, channel.clientId),
+        eq6(inboxConversations.contactIdentifier, senderId),
+        eq6(inboxConversations.primaryChannelType, channelType)
       )
     );
     if (!conversation) {
@@ -4236,8 +5623,8 @@ var meta_default = router2;
 init_db();
 init_schema();
 import { Router as Router3 } from "express";
-import { eq as eq6, and as and6, desc as desc3 } from "drizzle-orm";
-import { z as z2 } from "zod";
+import { eq as eq7, and as and6, desc as desc3 } from "drizzle-orm";
+import { z as z3 } from "zod";
 
 // server/services/github-sync.ts
 var GitHubSyncService = class {
@@ -4420,11 +5807,12 @@ var githubSync = new GitHubSyncService();
 var tasksRouter = Router3();
 tasksRouter.get("/", async (req, res) => {
   try {
-    const clientId = req.user?.id;
-    if (!clientId) {
+    const user = req.user;
+    if (!user || !user.claims?.sub) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    const allTasks = await db.select().from(tasks).where(eq6(tasks.clientId, clientId)).orderBy(desc3(tasks.createdAt));
+    const clientId = user.claims.sub;
+    const allTasks = await db.select().from(tasks).where(eq7(tasks.clientId, clientId)).orderBy(desc3(tasks.createdAt));
     res.json(allTasks);
   } catch (error) {
     console.error("Error fetching tasks:", error);
@@ -4433,14 +5821,15 @@ tasksRouter.get("/", async (req, res) => {
 });
 tasksRouter.get("/:id", async (req, res) => {
   try {
-    const clientId = req.user?.id;
-    const taskId = parseInt(req.params.id);
-    if (!clientId) {
+    const user = req.user;
+    if (!user || !user.claims?.sub) {
       return res.status(401).json({ message: "Unauthorized" });
     }
+    const clientId = user.claims.sub;
+    const taskId = parseInt(req.params.id);
     const [task] = await db.select().from(tasks).where(and6(
-      eq6(tasks.id, taskId),
-      eq6(tasks.clientId, clientId)
+      eq7(tasks.id, taskId),
+      eq7(tasks.clientId, clientId)
     ));
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
@@ -4453,20 +5842,21 @@ tasksRouter.get("/:id", async (req, res) => {
 });
 tasksRouter.post("/", async (req, res) => {
   try {
-    const clientId = req.user?.id;
-    if (!clientId) {
+    const user = req.user;
+    if (!user || !user.claims?.sub) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    const taskSchema = z2.object({
-      title: z2.string().min(1),
-      description: z2.string().optional(),
-      status: z2.enum(["todo", "in_progress", "completed", "cancelled"]).default("todo"),
-      priority: z2.enum(["low", "medium", "high", "urgent"]).default("medium"),
-      assignedTo: z2.string().optional(),
-      assignedBy: z2.string().optional(),
-      dueDate: z2.string().optional(),
-      tags: z2.array(z2.string()).optional(),
-      relatedTo: z2.any().optional()
+    const clientId = user.claims.sub;
+    const taskSchema = z3.object({
+      title: z3.string().min(1),
+      description: z3.string().optional(),
+      status: z3.enum(["todo", "in_progress", "completed", "cancelled"]).default("todo"),
+      priority: z3.enum(["low", "medium", "high", "urgent"]).default("medium"),
+      assignedTo: z3.string().optional(),
+      assignedBy: z3.string().optional(),
+      dueDate: z3.string().optional(),
+      tags: z3.array(z3.string()).optional(),
+      relatedTo: z3.any().optional()
     });
     const validatedData = taskSchema.parse(req.body);
     const [newTask] = await db.insert(tasks).values({
@@ -4480,7 +5870,7 @@ tasksRouter.post("/", async (req, res) => {
           await db.update(tasks).set({
             githubIssueId: `#${issue.number}`,
             githubIssueUrl: issue.html_url
-          }).where(eq6(tasks.id, newTask.id));
+          }).where(eq7(tasks.id, newTask.id));
           console.log(`[Tasks] Task ${newTask.id} synced to GitHub issue #${issue.number}`);
         }
       }).catch((error) => {
@@ -4493,7 +5883,7 @@ tasksRouter.post("/", async (req, res) => {
     res.status(201).json(newTask);
   } catch (error) {
     console.error("Error creating task:", error);
-    if (error instanceof z2.ZodError) {
+    if (error instanceof z3.ZodError) {
       return res.status(400).json({ message: "Validation error", errors: error.errors });
     }
     res.status(500).json({ message: "Failed to create task" });
@@ -4501,21 +5891,22 @@ tasksRouter.post("/", async (req, res) => {
 });
 tasksRouter.patch("/:id", async (req, res) => {
   try {
-    const clientId = req.user?.id;
-    const taskId = parseInt(req.params.id);
-    if (!clientId) {
+    const user = req.user;
+    if (!user || !user.claims?.sub) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    const updateSchema = z2.object({
-      title: z2.string().min(1).optional(),
-      description: z2.string().optional(),
-      status: z2.enum(["todo", "in_progress", "completed", "cancelled"]).optional(),
-      priority: z2.enum(["low", "medium", "high", "urgent"]).optional(),
-      assignedTo: z2.string().optional(),
-      assignedBy: z2.string().optional(),
-      dueDate: z2.string().optional(),
-      tags: z2.array(z2.string()).optional(),
-      relatedTo: z2.any().optional()
+    const clientId = user.claims.sub;
+    const taskId = parseInt(req.params.id);
+    const updateSchema = z3.object({
+      title: z3.string().min(1).optional(),
+      description: z3.string().optional(),
+      status: z3.enum(["todo", "in_progress", "completed", "cancelled"]).optional(),
+      priority: z3.enum(["low", "medium", "high", "urgent"]).optional(),
+      assignedTo: z3.string().optional(),
+      assignedBy: z3.string().optional(),
+      dueDate: z3.string().optional(),
+      tags: z3.array(z3.string()).optional(),
+      relatedTo: z3.any().optional()
     });
     const validatedData = updateSchema.parse(req.body);
     const updateData = {
@@ -4529,8 +5920,8 @@ tasksRouter.patch("/:id", async (req, res) => {
       updateData.completedAt = /* @__PURE__ */ new Date();
     }
     const [updatedTask] = await db.update(tasks).set(updateData).where(and6(
-      eq6(tasks.id, taskId),
-      eq6(tasks.clientId, clientId)
+      eq7(tasks.id, taskId),
+      eq7(tasks.clientId, clientId)
     )).returning();
     if (!updatedTask) {
       return res.status(404).json({ message: "Task not found" });
@@ -4574,7 +5965,7 @@ tasksRouter.patch("/:id", async (req, res) => {
     res.json(updatedTask);
   } catch (error) {
     console.error("Error updating task:", error);
-    if (error instanceof z2.ZodError) {
+    if (error instanceof z3.ZodError) {
       return res.status(400).json({ message: "Validation error", errors: error.errors });
     }
     res.status(500).json({ message: "Failed to update task" });
@@ -4582,14 +5973,15 @@ tasksRouter.patch("/:id", async (req, res) => {
 });
 tasksRouter.delete("/:id", async (req, res) => {
   try {
-    const clientId = req.user?.id;
-    const taskId = parseInt(req.params.id);
-    if (!clientId) {
+    const user = req.user;
+    if (!user || !user.claims?.sub) {
       return res.status(401).json({ message: "Unauthorized" });
     }
+    const clientId = user.claims.sub;
+    const taskId = parseInt(req.params.id);
     const [deletedTask] = await db.delete(tasks).where(and6(
-      eq6(tasks.id, taskId),
-      eq6(tasks.clientId, clientId)
+      eq7(tasks.id, taskId),
+      eq7(tasks.clientId, clientId)
     )).returning();
     if (!deletedTask) {
       return res.status(404).json({ message: "Task not found" });
@@ -4605,7 +5997,7 @@ tasksRouter.delete("/:id", async (req, res) => {
 init_db();
 init_schema();
 import { Router as Router4 } from "express";
-import { eq as eq7 } from "drizzle-orm";
+import { eq as eq8 } from "drizzle-orm";
 var router3 = Router4();
 router3.get("/", async (req, res) => {
   try {
@@ -4632,7 +6024,7 @@ router3.delete("/:id", async (req, res) => {
     if (isNaN(id)) {
       return res.status(400).json({ success: false, error: "Invalid ID" });
     }
-    await db.delete(brandColors).where(eq7(brandColors.id, id));
+    await db.delete(brandColors).where(eq8(brandColors.id, id));
     res.json({ success: true });
   } catch (error) {
     console.error("Error deleting brand color:", error);
@@ -4640,6 +6032,3118 @@ router3.delete("/:id", async (req, res) => {
   }
 });
 var brand_colors_default = router3;
+
+// server/routes/billing-admin.ts
+import { z as z4 } from "zod";
+
+// server/replitAuth.ts
+import * as client from "openid-client";
+import { Strategy } from "openid-client/passport";
+import passport from "passport";
+import session from "express-session";
+import memoize from "memoizee";
+import connectPg from "connect-pg-simple";
+if (!process.env.REPLIT_DOMAINS) {
+  throw new Error("Environment variable REPLIT_DOMAINS not provided");
+}
+var getOidcConfig = memoize(
+  async () => {
+    return await client.discovery(
+      new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
+      process.env.REPL_ID
+    );
+  },
+  { maxAge: 3600 * 1e3 }
+);
+function getSession() {
+  const sessionTtl = 7 * 24 * 60 * 60 * 1e3;
+  const pgStore = connectPg(session);
+  const sessionStore = new pgStore({
+    conString: process.env.DATABASE_URL,
+    createTableIfMissing: false,
+    ttl: sessionTtl,
+    tableName: "sessions"
+  });
+  return session({
+    secret: process.env.SESSION_SECRET,
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax"
+      // NO maxAge - this makes it a session cookie that expires when tab/browser closes
+    }
+  });
+}
+function updateUserSession(user, tokens) {
+  user.claims = tokens.claims();
+  user.access_token = tokens.access_token;
+  user.refresh_token = tokens.refresh_token;
+  user.expires_at = user.claims?.exp;
+}
+async function upsertUser(claims) {
+  await storage.upsertUser({
+    id: claims["sub"],
+    email: claims["email"],
+    firstName: claims["first_name"],
+    lastName: claims["last_name"],
+    profileImageUrl: claims["profile_image_url"]
+  });
+}
+async function setupAuth(app2) {
+  app2.set("trust proxy", 1);
+  app2.use(getSession());
+  app2.use(passport.initialize());
+  app2.use(passport.session());
+  const config = await getOidcConfig();
+  const verify = async (tokens, verified) => {
+    const user = {};
+    updateUserSession(user, tokens);
+    await upsertUser(tokens.claims());
+    verified(null, user);
+  };
+  for (const domain of process.env.REPLIT_DOMAINS.split(",")) {
+    const strategy = new Strategy(
+      {
+        name: `replitauth:${domain}`,
+        config,
+        scope: "openid email profile offline_access",
+        callbackURL: `https://${domain}/api/callback`
+      },
+      verify
+    );
+    passport.use(strategy);
+  }
+  passport.serializeUser((user, cb) => cb(null, user));
+  passport.deserializeUser((user, cb) => cb(null, user));
+  app2.get("/api/login", (req, res, next) => {
+    passport.authenticate(`replitauth:${req.hostname}`, {
+      prompt: "login consent",
+      scope: ["openid", "email", "profile", "offline_access"]
+    })(req, res, next);
+  });
+  app2.get("/api/callback", (req, res, next) => {
+    passport.authenticate(`replitauth:${req.hostname}`, {
+      successReturnToOrRedirect: "/",
+      failureRedirect: "/api/login"
+    })(req, res, next);
+  });
+  app2.get("/api/logout", (req, res) => {
+    req.logout(() => {
+      res.redirect(
+        client.buildEndSessionUrl(config, {
+          client_id: process.env.REPL_ID,
+          post_logout_redirect_uri: `${req.protocol}://${req.hostname}`
+        }).href
+      );
+    });
+  });
+}
+var isAuthenticated = async (req, res, next) => {
+  const user = req.user;
+  if (!req.isAuthenticated() || !user.expires_at) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const now = Math.floor(Date.now() / 1e3);
+  if (now <= user.expires_at) {
+    return next();
+  }
+  const refreshToken = user.refresh_token;
+  if (!refreshToken) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+  try {
+    const config = await getOidcConfig();
+    const tokenResponse = await client.refreshTokenGrant(config, refreshToken);
+    updateUserSession(user, tokenResponse);
+    return next();
+  } catch (error) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+};
+
+// server/routes/billing-admin.ts
+init_db();
+init_schema();
+import { eq as eq10 } from "drizzle-orm";
+
+// server/middleware/clientPortalAuth.ts
+init_db();
+init_schema();
+import { eq as eq9 } from "drizzle-orm";
+async function requireClientPortalAccess(req, res, next) {
+  try {
+    const sessionClientId = parseInt(req.session.clientId || "0");
+    const urlClientId = req.params.id ? parseInt(req.params.id) : null;
+    if (!sessionClientId) {
+      return res.status(401).json({
+        error: "Not authenticated",
+        message: "Please log in to access your dashboard"
+      });
+    }
+    if (urlClientId && urlClientId !== sessionClientId) {
+      return res.status(403).json({
+        error: "Access denied",
+        message: "You do not have permission to access this resource"
+      });
+    }
+    const client2 = await db.query.clients.findFirst({
+      where: eq9(clients.id, sessionClientId),
+      columns: {
+        id: true,
+        accountStatus: true,
+        companyName: true,
+        email: true
+      }
+    });
+    if (!client2) {
+      return res.status(404).json({
+        error: "Account not found",
+        message: "Your account could not be found"
+      });
+    }
+    if (client2.accountStatus !== "active") {
+      const statusMessages = {
+        suspended: "Your account has been suspended. Please contact support to resolve billing issues.",
+        banned: "Your account access has been restricted. Please contact support for assistance.",
+        inactive: "Your account is inactive. Please contact support to reactivate your account.",
+        pending: "Your account setup is still being processed. Please check back later or contact support."
+      };
+      const accountStatus = client2.accountStatus || "inactive";
+      return res.status(403).json({
+        error: "Account access restricted",
+        message: statusMessages[accountStatus] || "Your account status prevents portal access",
+        accountStatus
+      });
+    }
+    req.clientId = sessionClientId;
+    req.client = client2;
+    next();
+  } catch (error) {
+    console.error("[ClientPortalAuth] Error checking access:", error);
+    return res.status(500).json({ error: "Authentication check failed" });
+  }
+}
+
+// server/routes/billing-admin.ts
+var requireAdmin = [isAuthenticated, async (req, res, next) => {
+  try {
+    const userId = req.user?.claims?.sub;
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+    const user = await db.query.clients.findFirst({
+      where: eq10(clients.id, parseInt(userId))
+    });
+    if (!user || !user.isAdmin) {
+      return res.status(403).json({ error: "Admin access required" });
+    }
+    next();
+  } catch (error) {
+    console.error("Admin check error:", error);
+    return res.status(500).json({ error: "Authorization check failed" });
+  }
+}];
+function registerBillingAdminRoutes(router4) {
+  router4.get("/api/admin/subscriptions", requireAdmin, async (req, res) => {
+    try {
+      const subscriptions2 = await storage.getAllSubscriptions();
+      const stats = {
+        totalSubscriptions: subscriptions2.length,
+        activeSubscriptions: subscriptions2.filter((s) => s.subscription.status === "active").length,
+        monthlyRecurringRevenue: subscriptions2.filter((s) => s.subscription.status === "active" && s.subscription.billingCycle === "monthly").reduce((sum, s) => sum + parseFloat(s.subscription.totalAmount || "0"), 0)
+      };
+      res.json({ subscriptions: subscriptions2, stats });
+    } catch (error) {
+      console.error("Error fetching subscriptions:", error);
+      res.status(500).json({ error: "Failed to fetch subscriptions" });
+    }
+  });
+  router4.get("/api/admin/clients/:id/billing", requireAdmin, async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const client2 = await storage.getClient(clientId);
+      if (!client2) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+      const subscription = await storage.getClientSubscription(clientId);
+      const billingHistory2 = await storage.getClientBillingHistory(clientId, 12);
+      const statusHistory = await storage.getClientAccountStatusHistory(clientId);
+      res.json({
+        client: client2,
+        subscription,
+        billingHistory: billingHistory2,
+        statusHistory
+      });
+    } catch (error) {
+      console.error("Error fetching client billing:", error);
+      res.status(500).json({ error: "Failed to fetch client billing details" });
+    }
+  });
+  router4.patch("/api/admin/clients/:id/status", requireAdmin, async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const statusSchema = z4.object({
+        status: z4.enum(["active", "suspended", "inactive", "pending", "banned"]),
+        reason: z4.string().optional(),
+        changedBy: z4.number().optional()
+      });
+      const { status, reason, changedBy } = statusSchema.parse(req.body);
+      const currentClient = await storage.getClient(clientId);
+      if (!currentClient) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+      const updatedClient = await storage.updateClientAccountStatus(
+        clientId,
+        status,
+        reason || null,
+        changedBy || null
+      );
+      await storage.recordAccountStatusChange({
+        clientId,
+        previousStatus: currentClient.accountStatus || "active",
+        newStatus: status,
+        reason: reason || null,
+        changedBy: changedBy || null,
+        ipAddress: req.ip || null,
+        userAgent: req.get("user-agent") || null
+      });
+      res.json({ client: updatedClient });
+    } catch (error) {
+      if (error instanceof z4.ZodError) {
+        return res.status(400).json({ error: "Invalid request data", details: error.errors });
+      }
+      console.error("Error updating account status:", error);
+      res.status(500).json({ error: "Failed to update account status" });
+    }
+  });
+  router4.get("/api/portal/subscription", requireClientPortalAccess, async (req, res) => {
+    try {
+      const clientId = req.clientId;
+      const subscription = await storage.getClientSubscription(clientId);
+      if (!subscription) {
+        return res.json({ subscription: null });
+      }
+      res.json({ subscription });
+    } catch (error) {
+      console.error("Error fetching client subscription:", error);
+      res.status(500).json({ error: "Failed to fetch subscription details" });
+    }
+  });
+  router4.get("/api/portal/billing-history", requireClientPortalAccess, async (req, res) => {
+    try {
+      const clientId = req.clientId;
+      const limit = parseInt(req.query.limit) || 12;
+      const billingHistory2 = await storage.getClientBillingHistory(clientId, limit);
+      res.json({ billingHistory: billingHistory2 });
+    } catch (error) {
+      console.error("Error fetching billing history:", error);
+      res.status(500).json({ error: "Failed to fetch billing history" });
+    }
+  });
+  router4.get("/api/subscription-plans", async (req, res) => {
+    try {
+      const plans = await storage.getAllSubscriptionPlans();
+      res.json({ plans });
+    } catch (error) {
+      console.error("Error fetching subscription plans:", error);
+      res.status(500).json({ error: "Failed to fetch subscription plans" });
+    }
+  });
+  router4.get("/api/subscription-addons", async (req, res) => {
+    try {
+      const addons = await storage.getAllSubscriptionAddons();
+      res.json({ addons });
+    } catch (error) {
+      console.error("Error fetching subscription addons:", error);
+      res.status(500).json({ error: "Failed to fetch subscription addons" });
+    }
+  });
+}
+
+// server/routes/crm.ts
+init_db();
+init_schema();
+import { Router as Router6 } from "express";
+import { eq as eq12, and as and8, desc as desc5, asc as asc2, ilike as ilike2, or as or2, sql as sql6, inArray } from "drizzle-orm";
+import { z as z6 } from "zod";
+
+// server/routes/api.ts
+init_db();
+init_schema();
+import { Router as Router5 } from "express";
+import { eq as eq11, and as and7, desc as desc4, asc, ilike, or, sql as sql5, isNull } from "drizzle-orm";
+import { z as z5 } from "zod";
+import crypto2 from "crypto";
+var publicApiRouter = Router5();
+function hashApiKey(key) {
+  return crypto2.createHash("sha256").update(key).digest("hex");
+}
+function generateApiKey() {
+  const key = `bb_${crypto2.randomBytes(32).toString("hex")}`;
+  const hash = hashApiKey(key);
+  const prefix = key.substring(0, 8);
+  return { key, hash, prefix };
+}
+async function authenticateApiKey(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).json({
+      error: "Unauthorized",
+      message: "Missing or invalid Authorization header. Use: Bearer <api_key>"
+    });
+    return;
+  }
+  const key = authHeader.substring(7);
+  const keyHash = hashApiKey(key);
+  try {
+    const [apiKeyRecord] = await db.select().from(apiKeys).where(eq11(apiKeys.keyHash, keyHash));
+    if (!apiKeyRecord) {
+      res.status(401).json({ error: "Unauthorized", message: "Invalid API key" });
+      return;
+    }
+    if (!apiKeyRecord.isActive) {
+      res.status(403).json({ error: "Forbidden", message: "API key is inactive" });
+      return;
+    }
+    if (apiKeyRecord.expiresAt && new Date(apiKeyRecord.expiresAt) < /* @__PURE__ */ new Date()) {
+      res.status(403).json({ error: "Forbidden", message: "API key has expired" });
+      return;
+    }
+    const now = /* @__PURE__ */ new Date();
+    const resetAt = apiKeyRecord.rateLimitResetAt ? new Date(apiKeyRecord.rateLimitResetAt) : null;
+    if (!resetAt || resetAt < now) {
+      await db.update(apiKeys).set({
+        requestsThisHour: 1,
+        rateLimitResetAt: new Date(now.getTime() + 60 * 60 * 1e3),
+        lastUsedAt: now,
+        totalRequests: sql5`${apiKeys.totalRequests} + 1`
+      }).where(eq11(apiKeys.id, apiKeyRecord.id));
+    } else {
+      if ((apiKeyRecord.requestsThisHour || 0) >= (apiKeyRecord.rateLimit || 1e3)) {
+        res.status(429).json({
+          error: "Rate limit exceeded",
+          message: `Rate limit of ${apiKeyRecord.rateLimit} requests per hour exceeded`,
+          retryAfter: Math.ceil((resetAt.getTime() - now.getTime()) / 1e3)
+        });
+        return;
+      }
+      await db.update(apiKeys).set({
+        requestsThisHour: sql5`${apiKeys.requestsThisHour} + 1`,
+        lastUsedAt: now,
+        totalRequests: sql5`${apiKeys.totalRequests} + 1`
+      }).where(eq11(apiKeys.id, apiKeyRecord.id));
+    }
+    req.apiKey = {
+      id: apiKeyRecord.id,
+      clientId: apiKeyRecord.clientId,
+      scopes: apiKeyRecord.scopes || [],
+      name: apiKeyRecord.name
+    };
+    next();
+  } catch (error) {
+    console.error("[API] Authentication error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+function requireScope(...scopes) {
+  return (req, res, next) => {
+    if (!req.apiKey) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+    const keyScopes = req.apiKey.scopes || [];
+    if (keyScopes.includes("*")) {
+      next();
+      return;
+    }
+    const hasRequiredScope = scopes.some((scope) => keyScopes.includes(scope));
+    if (!hasRequiredScope) {
+      res.status(403).json({
+        error: "Forbidden",
+        message: `This endpoint requires one of the following scopes: ${scopes.join(", ")}`,
+        requiredScopes: scopes,
+        yourScopes: keyScopes
+      });
+      return;
+    }
+    next();
+  };
+}
+publicApiRouter.get("/", (req, res) => {
+  res.json({
+    name: "BusinessBlueprint Public API",
+    version: "1.0.0",
+    documentation: "/api/v1/docs",
+    endpoints: {
+      contacts: "/api/v1/contacts",
+      companies: "/api/v1/companies",
+      deals: "/api/v1/deals",
+      tasks: "/api/v1/tasks",
+      notes: "/api/v1/notes",
+      pipelines: "/api/v1/pipelines",
+      segments: "/api/v1/segments",
+      timeline: "/api/v1/timeline",
+      webhooks: "/api/v1/webhooks",
+      apiKeys: "/api/v1/api-keys"
+    },
+    authentication: "Bearer token (API key)"
+  });
+});
+publicApiRouter.get("/me", authenticateApiKey, (req, res) => {
+  res.json({
+    apiKey: {
+      id: req.apiKey?.id,
+      name: req.apiKey?.name,
+      scopes: req.apiKey?.scopes
+    }
+  });
+});
+publicApiRouter.get("/contacts", authenticateApiKey, requireScope("read:contacts", "*"), async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit) || 50, 100);
+    const offset = parseInt(req.query.offset) || 0;
+    const search = req.query.search;
+    const lifecycleStage = req.query.lifecycleStage;
+    let conditions = [];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(crmContacts.clientId, req.apiKey.clientId));
+    }
+    if (search) {
+      conditions.push(
+        or(
+          ilike(crmContacts.firstName, `%${search}%`),
+          ilike(crmContacts.lastName, `%${search}%`),
+          ilike(crmContacts.email, `%${search}%`)
+        )
+      );
+    }
+    if (lifecycleStage) {
+      conditions.push(eq11(crmContacts.lifecycleStage, lifecycleStage));
+    }
+    const query = conditions.length > 0 ? db.select().from(crmContacts).where(and7(...conditions)) : db.select().from(crmContacts);
+    const contacts = await query.orderBy(desc4(crmContacts.createdAt)).limit(limit).offset(offset);
+    res.json({
+      data: contacts,
+      pagination: {
+        limit,
+        offset,
+        hasMore: contacts.length === limit
+      }
+    });
+  } catch (error) {
+    console.error("[API] Get contacts error:", error);
+    res.status(500).json({ error: "Failed to fetch contacts" });
+  }
+});
+publicApiRouter.get("/contacts/:id", authenticateApiKey, requireScope("read:contacts", "*"), async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    let conditions = [eq11(crmContacts.id, id)];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(crmContacts.clientId, req.apiKey.clientId));
+    }
+    const [contact] = await db.select().from(crmContacts).where(and7(...conditions));
+    if (!contact) {
+      return res.status(404).json({ error: "Contact not found" });
+    }
+    res.json({ data: contact });
+  } catch (error) {
+    console.error("[API] Get contact error:", error);
+    res.status(500).json({ error: "Failed to fetch contact" });
+  }
+});
+publicApiRouter.post("/contacts", authenticateApiKey, requireScope("write:contacts", "*"), async (req, res) => {
+  try {
+    const validatedData = insertCrmContactSchema.parse({
+      ...req.body,
+      clientId: req.apiKey?.clientId || req.body.clientId
+    });
+    const [contact] = await db.insert(crmContacts).values(validatedData).returning();
+    res.status(201).json({ data: contact });
+  } catch (error) {
+    console.error("[API] Create contact error:", error);
+    if (error instanceof z5.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create contact" });
+  }
+});
+publicApiRouter.patch("/contacts/:id", authenticateApiKey, requireScope("write:contacts", "*"), async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const partialSchema = insertCrmContactSchema.partial();
+    const validatedData = partialSchema.parse(req.body);
+    let conditions = [eq11(crmContacts.id, id)];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(crmContacts.clientId, req.apiKey.clientId));
+    }
+    const [contact] = await db.update(crmContacts).set({ ...validatedData, updatedAt: /* @__PURE__ */ new Date() }).where(and7(...conditions)).returning();
+    if (!contact) {
+      return res.status(404).json({ error: "Contact not found" });
+    }
+    res.json({ data: contact });
+  } catch (error) {
+    console.error("[API] Update contact error:", error);
+    if (error instanceof z5.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to update contact" });
+  }
+});
+publicApiRouter.delete("/contacts/:id", authenticateApiKey, requireScope("delete:contacts", "*"), async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    let conditions = [eq11(crmContacts.id, id)];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(crmContacts.clientId, req.apiKey.clientId));
+    }
+    const [deleted] = await db.delete(crmContacts).where(and7(...conditions)).returning();
+    if (!deleted) {
+      return res.status(404).json({ error: "Contact not found" });
+    }
+    res.json({ message: "Contact deleted successfully" });
+  } catch (error) {
+    console.error("[API] Delete contact error:", error);
+    res.status(500).json({ error: "Failed to delete contact" });
+  }
+});
+publicApiRouter.get("/companies", authenticateApiKey, requireScope("read:companies", "*"), async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit) || 50, 100);
+    const offset = parseInt(req.query.offset) || 0;
+    const search = req.query.search;
+    let conditions = [];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(crmCompanies.clientId, req.apiKey.clientId));
+    }
+    if (search) {
+      conditions.push(ilike(crmCompanies.name, `%${search}%`));
+    }
+    const query = conditions.length > 0 ? db.select().from(crmCompanies).where(and7(...conditions)) : db.select().from(crmCompanies);
+    const companies = await query.orderBy(desc4(crmCompanies.createdAt)).limit(limit).offset(offset);
+    res.json({
+      data: companies,
+      pagination: { limit, offset, hasMore: companies.length === limit }
+    });
+  } catch (error) {
+    console.error("[API] Get companies error:", error);
+    res.status(500).json({ error: "Failed to fetch companies" });
+  }
+});
+publicApiRouter.post("/companies", authenticateApiKey, requireScope("write:companies", "*"), async (req, res) => {
+  try {
+    const validatedData = insertCrmCompanySchema.parse({
+      ...req.body,
+      clientId: req.apiKey?.clientId || req.body.clientId
+    });
+    const [company] = await db.insert(crmCompanies).values(validatedData).returning();
+    res.status(201).json({ data: company });
+  } catch (error) {
+    console.error("[API] Create company error:", error);
+    if (error instanceof z5.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create company" });
+  }
+});
+publicApiRouter.get("/deals", authenticateApiKey, requireScope("read:deals", "*"), async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit) || 50, 100);
+    const offset = parseInt(req.query.offset) || 0;
+    const status = req.query.status;
+    const pipelineId = parseInt(req.query.pipelineId);
+    let conditions = [];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(crmDeals.clientId, req.apiKey.clientId));
+    }
+    if (status) {
+      conditions.push(eq11(crmDeals.status, status));
+    }
+    if (pipelineId) {
+      conditions.push(eq11(crmDeals.pipelineId, pipelineId));
+    }
+    const query = conditions.length > 0 ? db.select().from(crmDeals).where(and7(...conditions)) : db.select().from(crmDeals);
+    const deals = await query.orderBy(desc4(crmDeals.createdAt)).limit(limit).offset(offset);
+    res.json({
+      data: deals,
+      pagination: { limit, offset, hasMore: deals.length === limit }
+    });
+  } catch (error) {
+    console.error("[API] Get deals error:", error);
+    res.status(500).json({ error: "Failed to fetch deals" });
+  }
+});
+publicApiRouter.post("/deals", authenticateApiKey, requireScope("write:deals", "*"), async (req, res) => {
+  try {
+    const validatedData = insertCrmDealSchema.parse({
+      ...req.body,
+      clientId: req.apiKey?.clientId || req.body.clientId
+    });
+    const [deal] = await db.insert(crmDeals).values(validatedData).returning();
+    res.status(201).json({ data: deal });
+  } catch (error) {
+    console.error("[API] Create deal error:", error);
+    if (error instanceof z5.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create deal" });
+  }
+});
+publicApiRouter.get("/tasks", authenticateApiKey, requireScope("read:tasks", "*"), async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit) || 50, 100);
+    const offset = parseInt(req.query.offset) || 0;
+    const status = req.query.status;
+    const contactId = parseInt(req.query.contactId);
+    let conditions = [];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(crmTasks.clientId, req.apiKey.clientId));
+    }
+    if (status) {
+      conditions.push(eq11(crmTasks.status, status));
+    }
+    if (contactId) {
+      conditions.push(eq11(crmTasks.contactId, contactId));
+    }
+    const query = conditions.length > 0 ? db.select().from(crmTasks).where(and7(...conditions)) : db.select().from(crmTasks);
+    const tasks2 = await query.orderBy(desc4(crmTasks.createdAt)).limit(limit).offset(offset);
+    res.json({
+      data: tasks2,
+      pagination: { limit, offset, hasMore: tasks2.length === limit }
+    });
+  } catch (error) {
+    console.error("[API] Get tasks error:", error);
+    res.status(500).json({ error: "Failed to fetch tasks" });
+  }
+});
+publicApiRouter.post("/tasks", authenticateApiKey, requireScope("write:tasks", "*"), async (req, res) => {
+  try {
+    const validatedData = insertCrmTaskSchema.parse({
+      ...req.body,
+      clientId: req.apiKey?.clientId || req.body.clientId
+    });
+    const [task] = await db.insert(crmTasks).values(validatedData).returning();
+    res.status(201).json({ data: task });
+  } catch (error) {
+    console.error("[API] Create task error:", error);
+    if (error instanceof z5.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create task" });
+  }
+});
+publicApiRouter.get("/pipelines", authenticateApiKey, requireScope("read:pipelines", "*"), async (req, res) => {
+  try {
+    let pipelinesQuery = db.select().from(crmPipelines);
+    if (req.apiKey?.clientId) {
+      pipelinesQuery = db.select().from(crmPipelines).where(
+        or(
+          eq11(crmPipelines.clientId, req.apiKey.clientId),
+          isNull(crmPipelines.clientId)
+        )
+      );
+    }
+    const pipelines = await pipelinesQuery.orderBy(asc(crmPipelines.id));
+    const pipelinesWithStages = await Promise.all(
+      pipelines.map(async (pipeline) => {
+        const stages = await db.select().from(crmPipelineStages).where(eq11(crmPipelineStages.pipelineId, pipeline.id)).orderBy(asc(crmPipelineStages.id));
+        return { ...pipeline, stages };
+      })
+    );
+    res.json({ data: pipelinesWithStages });
+  } catch (error) {
+    console.error("[API] Get pipelines error:", error);
+    res.status(500).json({ error: "Failed to fetch pipelines" });
+  }
+});
+publicApiRouter.get("/segments", authenticateApiKey, requireScope("read:segments", "*"), async (req, res) => {
+  try {
+    let segments;
+    if (req.apiKey?.clientId) {
+      segments = await db.select().from(crmSegments).where(eq11(crmSegments.clientId, req.apiKey.clientId)).orderBy(asc(crmSegments.name));
+    } else {
+      segments = await db.select().from(crmSegments).orderBy(asc(crmSegments.name));
+    }
+    res.json({ data: segments });
+  } catch (error) {
+    console.error("[API] Get segments error:", error);
+    res.status(500).json({ error: "Failed to fetch segments" });
+  }
+});
+publicApiRouter.get("/timeline", authenticateApiKey, requireScope("read:timeline", "*"), async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit) || 50, 100);
+    const offset = parseInt(req.query.offset) || 0;
+    const contactId = parseInt(req.query.contactId);
+    const companyId = parseInt(req.query.companyId);
+    let conditions = [];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(crmTimeline.clientId, req.apiKey.clientId));
+    }
+    if (contactId) {
+      conditions.push(eq11(crmTimeline.contactId, contactId));
+    }
+    if (companyId) {
+      conditions.push(eq11(crmTimeline.companyId, companyId));
+    }
+    const query = conditions.length > 0 ? db.select().from(crmTimeline).where(and7(...conditions)) : db.select().from(crmTimeline);
+    const events = await query.orderBy(desc4(crmTimeline.occurredAt)).limit(limit).offset(offset);
+    res.json({
+      data: events,
+      pagination: { limit, offset, hasMore: events.length === limit }
+    });
+  } catch (error) {
+    console.error("[API] Get timeline error:", error);
+    res.status(500).json({ error: "Failed to fetch timeline" });
+  }
+});
+publicApiRouter.post("/api-keys", authenticateApiKey, requireScope("admin:api-keys", "*"), async (req, res) => {
+  try {
+    const { name, scopes, rateLimit, expiresAt } = req.body;
+    if (!name) {
+      return res.status(400).json({ error: "Name is required" });
+    }
+    const { key, hash, prefix } = generateApiKey();
+    const [apiKey] = await db.insert(apiKeys).values({
+      clientId: req.apiKey?.clientId,
+      name,
+      keyHash: hash,
+      keyPrefix: prefix,
+      scopes: scopes || ["*"],
+      rateLimit: rateLimit || 1e3,
+      expiresAt: expiresAt ? new Date(expiresAt) : null
+    }).returning();
+    res.status(201).json({
+      message: "API key created. Save this key - it cannot be retrieved again.",
+      key,
+      apiKey: {
+        id: apiKey.id,
+        name: apiKey.name,
+        prefix: apiKey.keyPrefix,
+        scopes: apiKey.scopes,
+        rateLimit: apiKey.rateLimit,
+        expiresAt: apiKey.expiresAt,
+        createdAt: apiKey.createdAt
+      }
+    });
+  } catch (error) {
+    console.error("[API] Create API key error:", error);
+    res.status(500).json({ error: "Failed to create API key" });
+  }
+});
+publicApiRouter.get("/api-keys", authenticateApiKey, requireScope("admin:api-keys", "*"), async (req, res) => {
+  try {
+    const keys = await db.select({
+      id: apiKeys.id,
+      name: apiKeys.name,
+      prefix: apiKeys.keyPrefix,
+      scopes: apiKeys.scopes,
+      rateLimit: apiKeys.rateLimit,
+      isActive: apiKeys.isActive,
+      lastUsedAt: apiKeys.lastUsedAt,
+      totalRequests: apiKeys.totalRequests,
+      expiresAt: apiKeys.expiresAt,
+      createdAt: apiKeys.createdAt
+    }).from(apiKeys).where(req.apiKey?.clientId ? eq11(apiKeys.clientId, req.apiKey.clientId) : sql5`true`);
+    res.json({ data: keys });
+  } catch (error) {
+    console.error("[API] List API keys error:", error);
+    res.status(500).json({ error: "Failed to list API keys" });
+  }
+});
+publicApiRouter.delete("/api-keys/:id", authenticateApiKey, requireScope("admin:api-keys", "*"), async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    let conditions = [eq11(apiKeys.id, id)];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(apiKeys.clientId, req.apiKey.clientId));
+    }
+    const [deleted] = await db.delete(apiKeys).where(and7(...conditions)).returning();
+    if (!deleted) {
+      return res.status(404).json({ error: "API key not found" });
+    }
+    res.json({ message: "API key deleted successfully" });
+  } catch (error) {
+    console.error("[API] Delete API key error:", error);
+    res.status(500).json({ error: "Failed to delete API key" });
+  }
+});
+publicApiRouter.post("/generate-test-key", async (req, res) => {
+  if (process.env.NODE_ENV === "production") {
+    return res.status(403).json({
+      error: "Forbidden",
+      message: "Test key generation is disabled in production. Use the admin API to create keys."
+    });
+  }
+  try {
+    const { key, hash, prefix } = generateApiKey();
+    const [apiKey] = await db.insert(apiKeys).values({
+      name: "Test API Key (Dev)",
+      keyHash: hash,
+      keyPrefix: prefix,
+      scopes: ["*"],
+      rateLimit: 1e3
+    }).returning();
+    res.status(201).json({
+      message: "Test API key created (development only). Save this key - it cannot be retrieved again.",
+      key,
+      id: apiKey.id,
+      prefix: apiKey.keyPrefix
+    });
+  } catch (error) {
+    console.error("[API] Generate test key error:", error);
+    res.status(500).json({ error: "Failed to generate test key" });
+  }
+});
+function generateWebhookSecret() {
+  return crypto2.randomBytes(32).toString("hex");
+}
+function signWebhookPayload(payload, secret) {
+  return crypto2.createHmac("sha256", secret).update(payload).digest("hex");
+}
+publicApiRouter.get("/webhooks", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req, res) => {
+  try {
+    let conditions = [];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(webhookSubscriptions.clientId, req.apiKey.clientId));
+    }
+    const query = conditions.length > 0 ? db.select().from(webhookSubscriptions).where(and7(...conditions)) : db.select().from(webhookSubscriptions);
+    const webhooks = await query.orderBy(desc4(webhookSubscriptions.createdAt));
+    const sanitizedWebhooks = webhooks.map(({ secret, ...rest }) => rest);
+    res.json({ data: sanitizedWebhooks });
+  } catch (error) {
+    console.error("[API] List webhooks error:", error);
+    res.status(500).json({ error: "Failed to list webhooks" });
+  }
+});
+publicApiRouter.post("/webhooks", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req, res) => {
+  try {
+    const secret = generateWebhookSecret();
+    const validatedData = insertWebhookSubscriptionSchema.parse({
+      ...req.body,
+      clientId: req.apiKey?.clientId || req.body.clientId,
+      secret
+    });
+    const [webhook] = await db.insert(webhookSubscriptions).values(validatedData).returning();
+    res.status(201).json({
+      data: { ...webhook, secret: void 0 },
+      secret,
+      message: "Webhook created. Save the secret - it cannot be retrieved again. Use it to verify webhook signatures."
+    });
+  } catch (error) {
+    console.error("[API] Create webhook error:", error);
+    if (error instanceof z5.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create webhook" });
+  }
+});
+publicApiRouter.get("/webhooks/:id", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    let conditions = [eq11(webhookSubscriptions.id, id)];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(webhookSubscriptions.clientId, req.apiKey.clientId));
+    }
+    const [webhook] = await db.select().from(webhookSubscriptions).where(and7(...conditions));
+    if (!webhook) {
+      return res.status(404).json({ error: "Webhook not found" });
+    }
+    const { secret, ...sanitizedWebhook } = webhook;
+    res.json({ data: sanitizedWebhook });
+  } catch (error) {
+    console.error("[API] Get webhook error:", error);
+    res.status(500).json({ error: "Failed to fetch webhook" });
+  }
+});
+publicApiRouter.patch("/webhooks/:id", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const partialSchema = insertWebhookSubscriptionSchema.partial().omit({ secret: true });
+    const validatedData = partialSchema.parse(req.body);
+    let conditions = [eq11(webhookSubscriptions.id, id)];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(webhookSubscriptions.clientId, req.apiKey.clientId));
+    }
+    const [webhook] = await db.update(webhookSubscriptions).set({ ...validatedData, updatedAt: /* @__PURE__ */ new Date() }).where(and7(...conditions)).returning();
+    if (!webhook) {
+      return res.status(404).json({ error: "Webhook not found" });
+    }
+    const { secret, ...sanitizedWebhook } = webhook;
+    res.json({ data: sanitizedWebhook });
+  } catch (error) {
+    console.error("[API] Update webhook error:", error);
+    if (error instanceof z5.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to update webhook" });
+  }
+});
+publicApiRouter.delete("/webhooks/:id", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    let conditions = [eq11(webhookSubscriptions.id, id)];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(webhookSubscriptions.clientId, req.apiKey.clientId));
+    }
+    const [deleted] = await db.delete(webhookSubscriptions).where(and7(...conditions)).returning();
+    if (!deleted) {
+      return res.status(404).json({ error: "Webhook not found" });
+    }
+    res.json({ message: "Webhook deleted successfully" });
+  } catch (error) {
+    console.error("[API] Delete webhook error:", error);
+    res.status(500).json({ error: "Failed to delete webhook" });
+  }
+});
+publicApiRouter.post("/webhooks/:id/rotate-secret", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const newSecret = generateWebhookSecret();
+    let conditions = [eq11(webhookSubscriptions.id, id)];
+    if (req.apiKey?.clientId) {
+      conditions.push(eq11(webhookSubscriptions.clientId, req.apiKey.clientId));
+    }
+    const [webhook] = await db.update(webhookSubscriptions).set({ secret: newSecret, updatedAt: /* @__PURE__ */ new Date() }).where(and7(...conditions)).returning();
+    if (!webhook) {
+      return res.status(404).json({ error: "Webhook not found" });
+    }
+    res.json({
+      message: "Webhook secret rotated. Save the new secret - it cannot be retrieved again.",
+      secret: newSecret
+    });
+  } catch (error) {
+    console.error("[API] Rotate webhook secret error:", error);
+    res.status(500).json({ error: "Failed to rotate webhook secret" });
+  }
+});
+async function dispatchWebhookEvent(clientId, eventType, data) {
+  try {
+    let conditions = [
+      eq11(webhookSubscriptions.isActive, true)
+    ];
+    if (clientId) {
+      conditions.push(eq11(webhookSubscriptions.clientId, clientId));
+    }
+    const subscriptions2 = await db.select().from(webhookSubscriptions).where(and7(...conditions));
+    const matchingSubscriptions = subscriptions2.filter((sub) => {
+      if (!sub.events || sub.events.length === 0) return false;
+      return sub.events.includes(eventType) || sub.events.includes("*");
+    });
+    if (matchingSubscriptions.length === 0) {
+      console.log(`[Webhooks] No subscriptions for event: ${eventType}`);
+      return;
+    }
+    const event = {
+      id: crypto2.randomUUID(),
+      event: eventType,
+      data,
+      timestamp: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    const payload = JSON.stringify(event);
+    for (const subscription of matchingSubscriptions) {
+      dispatchToSubscription(subscription, payload, event.id).catch((err) => {
+        console.error(`[Webhooks] Failed to dispatch to ${subscription.url}:`, err);
+      });
+    }
+    console.log(`[Webhooks] Dispatched ${eventType} to ${matchingSubscriptions.length} subscriptions`);
+  } catch (error) {
+    console.error("[Webhooks] Error dispatching event:", error);
+  }
+}
+async function dispatchToSubscription(subscription, payload, eventId) {
+  const signature = signWebhookPayload(payload, subscription.secret);
+  try {
+    const response = await fetch(subscription.url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Webhook-Id": eventId,
+        "X-Webhook-Signature": `sha256=${signature}`,
+        "X-Webhook-Timestamp": (/* @__PURE__ */ new Date()).toISOString(),
+        "User-Agent": "BusinessBlueprint-Webhooks/1.0"
+      },
+      body: payload,
+      signal: AbortSignal.timeout(3e4)
+      // 30 second timeout
+    });
+    if (response.ok) {
+      await db.update(webhookSubscriptions).set({
+        lastSuccessAt: /* @__PURE__ */ new Date(),
+        failureCount: 0
+      }).where(eq11(webhookSubscriptions.id, subscription.id));
+      console.log(`[Webhooks] Successfully delivered to ${subscription.url}`);
+    } else {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+  } catch (error) {
+    const newFailureCount = (subscription.failureCount || 0) + 1;
+    await db.update(webhookSubscriptions).set({
+      lastFailedAt: /* @__PURE__ */ new Date(),
+      failureCount: newFailureCount,
+      // Disable webhook after 10 consecutive failures
+      isActive: newFailureCount < 10
+    }).where(eq11(webhookSubscriptions.id, subscription.id));
+    console.error(`[Webhooks] Delivery failed to ${subscription.url}:`, error);
+    if (newFailureCount >= 10) {
+      console.warn(`[Webhooks] Disabled subscription ${subscription.id} after 10 failures`);
+    }
+  }
+}
+
+// server/routes/crm.ts
+var crmRouter = Router6();
+function evaluateCondition(conditionType, conditionConfig, triggerData, contact) {
+  if (!conditionType || conditionType === "always") {
+    return true;
+  }
+  const config = conditionConfig || {};
+  const fieldValue = config.field ? triggerData[config.field] || contact?.[config.field] : null;
+  switch (conditionType) {
+    case "equals":
+      return String(fieldValue) === String(config.value);
+    case "not_equals":
+      return String(fieldValue) !== String(config.value);
+    case "contains":
+      return String(fieldValue || "").includes(String(config.value || ""));
+    case "exists":
+      return fieldValue !== null && fieldValue !== void 0 && fieldValue !== "";
+    case "not_exists":
+      return fieldValue === null || fieldValue === void 0 || fieldValue === "";
+    default:
+      return true;
+  }
+}
+async function executeAutomationTrigger(triggerType, contactId, triggerData) {
+  try {
+    const automations = await db.select().from(crmAutomations).where(and8(
+      eq12(crmAutomations.triggerType, triggerType),
+      eq12(crmAutomations.isActive, true)
+    ));
+    for (const automation of automations) {
+      const steps = await db.select().from(crmAutomationSteps).where(eq12(crmAutomationSteps.automationId, automation.id)).orderBy(asc2(crmAutomationSteps.stepOrder));
+      if (steps.length === 0) continue;
+      const [execution] = await db.insert(crmAutomationExecutions).values({
+        automationId: automation.id,
+        contactId: contactId || null,
+        status: "running",
+        currentStep: 0,
+        totalSteps: steps.length,
+        triggerData: triggerData || {}
+      }).returning();
+      await db.update(crmAutomations).set({
+        runCount: sql6`${crmAutomations.runCount} + 1`,
+        lastRunAt: /* @__PURE__ */ new Date()
+      }).where(eq12(crmAutomations.id, automation.id));
+      const executionLog = [];
+      let finalStatus = "completed";
+      let errorMessage = null;
+      let contact = null;
+      if (contactId) {
+        const [c] = await db.select().from(crmContacts).where(eq12(crmContacts.id, contactId));
+        contact = c;
+      }
+      for (let i = 0; i < steps.length; i++) {
+        const step = steps[i];
+        const config = step.config || {};
+        try {
+          const conditionMet = evaluateCondition(
+            step.conditionType,
+            step.conditionConfig,
+            triggerData || {},
+            contact
+          );
+          if (!conditionMet) {
+            executionLog.push({ step: i + 1, action: step.stepType, result: "Skipped: condition not met", timestamp: /* @__PURE__ */ new Date() });
+            continue;
+          }
+          await db.update(crmAutomationExecutions).set({ currentStep: i + 1 }).where(eq12(crmAutomationExecutions.id, execution.id));
+          switch (step.stepType) {
+            case "add_tag":
+              if (contactId && config.tag) {
+                const [contact2] = await db.select().from(crmContacts).where(eq12(crmContacts.id, contactId));
+                if (contact2) {
+                  const currentTags = Array.isArray(contact2.tags) ? contact2.tags : [];
+                  if (!currentTags.includes(config.tag)) {
+                    await db.update(crmContacts).set({ tags: [...currentTags, config.tag] }).where(eq12(crmContacts.id, contactId));
+                  }
+                }
+              }
+              executionLog.push({ step: i + 1, action: "add_tag", result: `Added tag: ${config.tag || "none"}`, timestamp: /* @__PURE__ */ new Date() });
+              break;
+            case "remove_tag":
+              if (contactId && config.tag) {
+                const [contact2] = await db.select().from(crmContacts).where(eq12(crmContacts.id, contactId));
+                if (contact2) {
+                  const currentTags = Array.isArray(contact2.tags) ? contact2.tags : [];
+                  await db.update(crmContacts).set({ tags: currentTags.filter((t) => t !== config.tag) }).where(eq12(crmContacts.id, contactId));
+                }
+              }
+              executionLog.push({ step: i + 1, action: "remove_tag", result: `Removed tag: ${config.tag || "none"}`, timestamp: /* @__PURE__ */ new Date() });
+              break;
+            case "update_contact":
+              if (contactId && config.field && config.value !== void 0) {
+                await db.update(crmContacts).set({ [config.field]: config.value }).where(eq12(crmContacts.id, contactId));
+              }
+              executionLog.push({ step: i + 1, action: "update_contact", result: `Updated ${config.field || "field"}`, timestamp: /* @__PURE__ */ new Date() });
+              break;
+            case "create_task":
+              const taskTitle = config.title || "Automated task";
+              await db.insert(crmTasks).values({
+                contactId: contactId || null,
+                title: taskTitle,
+                description: config.description || `Created by automation: ${automation.name}`,
+                status: "pending",
+                priority: config.priority || "medium",
+                dueDate: config.dueDate ? new Date(config.dueDate) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1e3)
+              });
+              executionLog.push({ step: i + 1, action: "create_task", result: `Created task: ${taskTitle}`, timestamp: /* @__PURE__ */ new Date() });
+              break;
+            case "add_to_segment":
+              if (contactId && config.segmentId) {
+                await db.insert(crmSegmentMembers).values({
+                  segmentId: parseInt(config.segmentId),
+                  contactId
+                }).onConflictDoNothing();
+              }
+              executionLog.push({ step: i + 1, action: "add_to_segment", result: `Added to segment ${config.segmentId || "unknown"}`, timestamp: /* @__PURE__ */ new Date() });
+              break;
+            case "wait":
+              const waitDuration = config.duration || "1 day";
+              executionLog.push({ step: i + 1, action: "wait", result: `Wait: ${waitDuration} (skipped in sync execution)`, timestamp: /* @__PURE__ */ new Date() });
+              break;
+            case "send_email":
+              executionLog.push({ step: i + 1, action: "send_email", result: `Email queued: ${config.subject || "No subject"}`, timestamp: /* @__PURE__ */ new Date() });
+              break;
+            case "webhook":
+              executionLog.push({ step: i + 1, action: "webhook", result: `Webhook: ${config.url || "No URL"}`, timestamp: /* @__PURE__ */ new Date() });
+              break;
+            default:
+              executionLog.push({ step: i + 1, action: step.stepType, result: "Unknown step type", timestamp: /* @__PURE__ */ new Date() });
+          }
+        } catch (stepError) {
+          executionLog.push({ step: i + 1, action: step.stepType, result: `Error: ${stepError.message}`, timestamp: /* @__PURE__ */ new Date() });
+          finalStatus = "failed";
+          errorMessage = `Step ${i + 1} failed: ${stepError.message}`;
+          break;
+        }
+      }
+      await db.update(crmAutomationExecutions).set({
+        status: finalStatus,
+        completedAt: /* @__PURE__ */ new Date(),
+        errorMessage,
+        executionLog
+      }).where(eq12(crmAutomationExecutions.id, execution.id));
+      console.log(`[CRM] Automation "${automation.name}" ${finalStatus} for trigger "${triggerType}"${contactId ? ` (contact ${contactId})` : ""}`);
+    }
+  } catch (error) {
+    console.error("[CRM] Automation trigger error:", error);
+  }
+}
+crmRouter.get("/contacts", async (req, res) => {
+  try {
+    const clientId = parseInt(req.query.clientId);
+    const companyId = parseInt(req.query.companyId);
+    const search = req.query.search;
+    const lifecycleStage = req.query.lifecycleStage;
+    const leadSource = req.query.leadSource;
+    const limit = parseInt(req.query.limit) || 50;
+    const offset = parseInt(req.query.offset) || 0;
+    let query = db.select().from(crmContacts);
+    const conditions = [];
+    if (clientId) {
+      conditions.push(eq12(crmContacts.clientId, clientId));
+    }
+    if (companyId) {
+      conditions.push(eq12(crmContacts.companyId, companyId));
+    }
+    if (lifecycleStage) {
+      conditions.push(eq12(crmContacts.lifecycleStage, lifecycleStage));
+    }
+    if (leadSource) {
+      conditions.push(eq12(crmContacts.leadSource, leadSource));
+    }
+    if (search) {
+      conditions.push(
+        or2(
+          ilike2(crmContacts.firstName, `%${search}%`),
+          ilike2(crmContacts.lastName, `%${search}%`),
+          ilike2(crmContacts.email, `%${search}%`)
+        )
+      );
+    }
+    const contacts = await db.select().from(crmContacts).where(conditions.length > 0 ? and8(...conditions) : void 0).orderBy(desc5(crmContacts.createdAt)).limit(limit).offset(offset);
+    const countResult = await db.select({ count: sql6`count(*)` }).from(crmContacts).where(conditions.length > 0 ? and8(...conditions) : void 0);
+    res.json({
+      contacts,
+      total: Number(countResult[0]?.count || 0),
+      limit,
+      offset
+    });
+  } catch (error) {
+    console.error("[CRM] Error fetching contacts:", error);
+    res.status(500).json({ error: "Failed to fetch contacts" });
+  }
+});
+crmRouter.get("/contacts/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const contact = await db.select().from(crmContacts).where(eq12(crmContacts.id, id)).limit(1);
+    if (!contact.length) {
+      return res.status(404).json({ error: "Contact not found" });
+    }
+    res.json(contact[0]);
+  } catch (error) {
+    console.error("[CRM] Error fetching contact:", error);
+    res.status(500).json({ error: "Failed to fetch contact" });
+  }
+});
+crmRouter.post("/contacts", async (req, res) => {
+  try {
+    const validatedData = insertCrmContactSchema.parse(req.body);
+    const [contact] = await db.insert(crmContacts).values(validatedData).returning();
+    if (validatedData.clientId) {
+      await db.insert(crmTimeline).values({
+        clientId: validatedData.clientId,
+        contactId: contact.id,
+        eventType: "contact_created",
+        title: `Contact created: ${validatedData.firstName || ""} ${validatedData.lastName || ""}`.trim(),
+        occurredAt: /* @__PURE__ */ new Date(),
+        sourceApp: "relationships",
+        actorType: "user"
+      });
+    }
+    executeAutomationTrigger("contact_created", contact.id, {
+      contactId: contact.id,
+      email: contact.email,
+      firstName: contact.firstName,
+      lastName: contact.lastName
+    });
+    dispatchWebhookEvent(contact.clientId, "contact.created", contact);
+    res.status(201).json(contact);
+  } catch (error) {
+    console.error("[CRM] Error creating contact:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create contact" });
+  }
+});
+crmRouter.post("/contacts/import", async (req, res) => {
+  try {
+    const { contacts, duplicateHandling = "skip", clientId } = req.body;
+    if (!Array.isArray(contacts) || contacts.length === 0) {
+      return res.status(400).json({ error: "No contacts provided" });
+    }
+    if (contacts.length > 5e3) {
+      return res.status(400).json({ error: "Maximum 5000 contacts per import" });
+    }
+    const results = {
+      created: 0,
+      updated: 0,
+      skipped: 0,
+      errors: []
+    };
+    for (let i = 0; i < contacts.length; i++) {
+      try {
+        const contact = contacts[i];
+        const contactWithDefaults = {
+          ...contact,
+          clientId: contact.clientId || clientId || null,
+          lifecycleStage: contact.lifecycleStage || "lead",
+          leadSource: contact.leadSource || "csv_import"
+        };
+        const partialSchema = insertCrmContactSchema.partial().extend({
+          firstName: z6.string().optional(),
+          lastName: z6.string().optional(),
+          email: z6.string().email().optional()
+        });
+        const validatedData = partialSchema.parse(contactWithDefaults);
+        if (validatedData.email) {
+          const existing = await db.select().from(crmContacts).where(eq12(crmContacts.email, validatedData.email)).limit(1);
+          if (existing.length > 0) {
+            if (duplicateHandling === "update") {
+              await db.update(crmContacts).set({ ...validatedData, updatedAt: /* @__PURE__ */ new Date() }).where(eq12(crmContacts.id, existing[0].id));
+              results.updated++;
+            } else {
+              results.skipped++;
+            }
+            continue;
+          }
+        }
+        await db.insert(crmContacts).values(validatedData);
+        results.created++;
+      } catch (error) {
+        results.errors.push({
+          row: i + 1,
+          error: error instanceof z6.ZodError ? error.errors[0]?.message || "Validation error" : "Unknown error"
+        });
+      }
+    }
+    res.json({
+      success: true,
+      imported: results.created,
+      updated: results.updated,
+      skipped: results.skipped,
+      errors: results.errors.slice(0, 10),
+      totalErrors: results.errors.length
+    });
+  } catch (error) {
+    console.error("[CRM] Error importing contacts:", error);
+    res.status(500).json({ error: "Failed to import contacts" });
+  }
+});
+crmRouter.patch("/contacts/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const partialSchema = insertCrmContactSchema.partial();
+    const validatedData = partialSchema.parse(req.body);
+    const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
+    const [contact] = await db.update(crmContacts).set(updateData).where(eq12(crmContacts.id, id)).returning();
+    if (!contact) {
+      return res.status(404).json({ error: "Contact not found" });
+    }
+    dispatchWebhookEvent(contact.clientId, "contact.updated", contact);
+    res.json(contact);
+  } catch (error) {
+    console.error("[CRM] Error updating contact:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to update contact" });
+  }
+});
+crmRouter.delete("/contacts/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const [contact] = await db.select().from(crmContacts).where(eq12(crmContacts.id, id));
+    await db.delete(crmContacts).where(eq12(crmContacts.id, id));
+    if (contact) {
+      dispatchWebhookEvent(contact.clientId, "contact.deleted", { id, email: contact.email });
+    }
+    res.status(204).send();
+  } catch (error) {
+    console.error("[CRM] Error deleting contact:", error);
+    res.status(500).json({ error: "Failed to delete contact" });
+  }
+});
+crmRouter.get("/companies", async (req, res) => {
+  try {
+    const clientId = parseInt(req.query.clientId);
+    const search = req.query.search;
+    const type = req.query.type;
+    const limit = parseInt(req.query.limit) || 50;
+    const offset = parseInt(req.query.offset) || 0;
+    const conditions = [];
+    if (clientId) {
+      conditions.push(eq12(crmCompanies.clientId, clientId));
+    }
+    if (type) {
+      conditions.push(eq12(crmCompanies.type, type));
+    }
+    if (search) {
+      conditions.push(
+        or2(
+          ilike2(crmCompanies.name, `%${search}%`),
+          ilike2(crmCompanies.domain, `%${search}%`)
+        )
+      );
+    }
+    const companies = await db.select().from(crmCompanies).where(conditions.length > 0 ? and8(...conditions) : void 0).orderBy(desc5(crmCompanies.createdAt)).limit(limit).offset(offset);
+    const countResult = await db.select({ count: sql6`count(*)` }).from(crmCompanies).where(conditions.length > 0 ? and8(...conditions) : void 0);
+    res.json({
+      companies,
+      total: Number(countResult[0]?.count || 0),
+      limit,
+      offset
+    });
+  } catch (error) {
+    console.error("[CRM] Error fetching companies:", error);
+    res.status(500).json({ error: "Failed to fetch companies" });
+  }
+});
+crmRouter.get("/companies/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const company = await db.select().from(crmCompanies).where(eq12(crmCompanies.id, id)).limit(1);
+    if (!company.length) {
+      return res.status(404).json({ error: "Company not found" });
+    }
+    res.json(company[0]);
+  } catch (error) {
+    console.error("[CRM] Error fetching company:", error);
+    res.status(500).json({ error: "Failed to fetch company" });
+  }
+});
+crmRouter.post("/companies", async (req, res) => {
+  try {
+    const validatedData = insertCrmCompanySchema.parse(req.body);
+    const [company] = await db.insert(crmCompanies).values(validatedData).returning();
+    res.status(201).json(company);
+  } catch (error) {
+    console.error("[CRM] Error creating company:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create company" });
+  }
+});
+crmRouter.patch("/companies/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const partialSchema = insertCrmCompanySchema.partial();
+    const validatedData = partialSchema.parse(req.body);
+    const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
+    const [company] = await db.update(crmCompanies).set(updateData).where(eq12(crmCompanies.id, id)).returning();
+    if (!company) {
+      return res.status(404).json({ error: "Company not found" });
+    }
+    res.json(company);
+  } catch (error) {
+    console.error("[CRM] Error updating company:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to update company" });
+  }
+});
+crmRouter.delete("/companies/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    await db.delete(crmCompanies).where(eq12(crmCompanies.id, id));
+    res.status(204).send();
+  } catch (error) {
+    console.error("[CRM] Error deleting company:", error);
+    res.status(500).json({ error: "Failed to delete company" });
+  }
+});
+crmRouter.get("/pipelines", async (req, res) => {
+  try {
+    const clientId = parseInt(req.query.clientId);
+    const conditions = [];
+    if (clientId) {
+      conditions.push(eq12(crmPipelines.clientId, clientId));
+    }
+    const pipelines = await db.select().from(crmPipelines).where(conditions.length > 0 ? and8(...conditions) : void 0).orderBy(asc2(crmPipelines.displayOrder));
+    const pipelinesWithStages = await Promise.all(
+      pipelines.map(async (pipeline) => {
+        const stages = await db.select().from(crmPipelineStages).where(eq12(crmPipelineStages.pipelineId, pipeline.id)).orderBy(asc2(crmPipelineStages.displayOrder));
+        return { ...pipeline, stages };
+      })
+    );
+    res.json(pipelinesWithStages);
+  } catch (error) {
+    console.error("[CRM] Error fetching pipelines:", error);
+    res.status(500).json({ error: "Failed to fetch pipelines" });
+  }
+});
+crmRouter.post("/pipelines", async (req, res) => {
+  try {
+    const validatedData = insertCrmPipelineSchema.parse(req.body);
+    const [pipeline] = await db.insert(crmPipelines).values(validatedData).returning();
+    const defaultStages = [
+      { name: "Qualified", probability: 10, displayOrder: 0, stageType: "active", color: "#3B82F6" },
+      { name: "Meeting Scheduled", probability: 30, displayOrder: 1, stageType: "active", color: "#8B5CF6" },
+      { name: "Proposal Sent", probability: 50, displayOrder: 2, stageType: "active", color: "#F59E0B" },
+      { name: "Negotiation", probability: 70, displayOrder: 3, stageType: "active", color: "#EF4444" },
+      { name: "Won", probability: 100, displayOrder: 4, stageType: "won", color: "#22C55E" },
+      { name: "Lost", probability: 0, displayOrder: 5, stageType: "lost", color: "#6B7280" }
+    ];
+    for (const stage of defaultStages) {
+      await db.insert(crmPipelineStages).values({
+        pipelineId: pipeline.id,
+        ...stage
+      });
+    }
+    res.status(201).json(pipeline);
+  } catch (error) {
+    console.error("[CRM] Error creating pipeline:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create pipeline" });
+  }
+});
+crmRouter.post("/pipelines/:pipelineId/stages", async (req, res) => {
+  try {
+    const pipelineId = parseInt(req.params.pipelineId);
+    const validatedData = insertCrmPipelineStageSchema.parse({ ...req.body, pipelineId });
+    const [stage] = await db.insert(crmPipelineStages).values(validatedData).returning();
+    res.status(201).json(stage);
+  } catch (error) {
+    console.error("[CRM] Error creating stage:", error);
+    res.status(500).json({ error: "Failed to create stage" });
+  }
+});
+crmRouter.get("/deals", async (req, res) => {
+  try {
+    const clientId = parseInt(req.query.clientId);
+    const companyId = parseInt(req.query.companyId);
+    const contactId = parseInt(req.query.contactId);
+    const pipelineId = parseInt(req.query.pipelineId);
+    const stageId = parseInt(req.query.stageId);
+    const status = req.query.status;
+    const limit = parseInt(req.query.limit) || 50;
+    const offset = parseInt(req.query.offset) || 0;
+    const conditions = [];
+    if (clientId) conditions.push(eq12(crmDeals.clientId, clientId));
+    if (companyId) conditions.push(eq12(crmDeals.companyId, companyId));
+    if (contactId) conditions.push(eq12(crmDeals.contactId, contactId));
+    if (pipelineId) conditions.push(eq12(crmDeals.pipelineId, pipelineId));
+    if (stageId) conditions.push(eq12(crmDeals.stageId, stageId));
+    if (status) conditions.push(eq12(crmDeals.status, status));
+    const deals = await db.select().from(crmDeals).where(conditions.length > 0 ? and8(...conditions) : void 0).orderBy(desc5(crmDeals.createdAt)).limit(limit).offset(offset);
+    const countResult = await db.select({ count: sql6`count(*)` }).from(crmDeals).where(conditions.length > 0 ? and8(...conditions) : void 0);
+    const totalValueResult = await db.select({ total: sql6`COALESCE(SUM(amount), 0)` }).from(crmDeals).where(
+      and8(
+        ...conditions.length > 0 ? conditions : [],
+        eq12(crmDeals.status, "open")
+      )
+    );
+    res.json({
+      deals,
+      total: Number(countResult[0]?.count || 0),
+      totalValue: Number(totalValueResult[0]?.total || 0),
+      limit,
+      offset
+    });
+  } catch (error) {
+    console.error("[CRM] Error fetching deals:", error);
+    res.status(500).json({ error: "Failed to fetch deals" });
+  }
+});
+crmRouter.get("/deals/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const deal = await db.select().from(crmDeals).where(eq12(crmDeals.id, id)).limit(1);
+    if (!deal.length) {
+      return res.status(404).json({ error: "Deal not found" });
+    }
+    res.json(deal[0]);
+  } catch (error) {
+    console.error("[CRM] Error fetching deal:", error);
+    res.status(500).json({ error: "Failed to fetch deal" });
+  }
+});
+crmRouter.post("/deals", async (req, res) => {
+  try {
+    const validatedData = insertCrmDealSchema.parse(req.body);
+    const [deal] = await db.insert(crmDeals).values(validatedData).returning();
+    if (validatedData.clientId) {
+      await db.insert(crmTimeline).values({
+        clientId: validatedData.clientId,
+        contactId: validatedData.contactId,
+        dealId: deal.id,
+        eventType: "deal_created",
+        title: `Deal created: ${validatedData.name}`,
+        description: validatedData.amount ? `Value: $${validatedData.amount}` : void 0,
+        occurredAt: /* @__PURE__ */ new Date(),
+        sourceApp: "relationships",
+        actorType: "user"
+      });
+    }
+    dispatchWebhookEvent(deal.clientId, "deal.created", deal);
+    res.status(201).json(deal);
+  } catch (error) {
+    console.error("[CRM] Error creating deal:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create deal" });
+  }
+});
+crmRouter.patch("/deals/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const partialSchema = insertCrmDealSchema.partial();
+    const validatedData = partialSchema.parse(req.body);
+    const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
+    const [deal] = await db.update(crmDeals).set(updateData).where(eq12(crmDeals.id, id)).returning();
+    if (!deal) {
+      return res.status(404).json({ error: "Deal not found" });
+    }
+    res.json(deal);
+  } catch (error) {
+    console.error("[CRM] Error updating deal:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to update deal" });
+  }
+});
+crmRouter.patch("/deals/:id/stage", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { stageId } = req.body;
+    const stage = await db.select().from(crmPipelineStages).where(eq12(crmPipelineStages.id, stageId)).limit(1);
+    if (!stage.length) {
+      return res.status(404).json({ error: "Stage not found" });
+    }
+    const updateData = {
+      stageId,
+      probability: stage[0].probability,
+      updatedAt: /* @__PURE__ */ new Date()
+    };
+    if (stage[0].stageType === "won") {
+      updateData.status = "won";
+      updateData.actualCloseDate = /* @__PURE__ */ new Date();
+    } else if (stage[0].stageType === "lost") {
+      updateData.status = "lost";
+      updateData.actualCloseDate = /* @__PURE__ */ new Date();
+    } else {
+      updateData.status = "open";
+    }
+    const [deal] = await db.update(crmDeals).set(updateData).where(eq12(crmDeals.id, id)).returning();
+    if (!deal) {
+      return res.status(404).json({ error: "Deal not found" });
+    }
+    if (deal.clientId) {
+      await db.insert(crmTimeline).values({
+        clientId: deal.clientId,
+        contactId: deal.contactId,
+        dealId: deal.id,
+        eventType: "deal_stage_changed",
+        title: `Deal moved to: ${stage[0].name}`,
+        occurredAt: /* @__PURE__ */ new Date(),
+        sourceApp: "relationships",
+        actorType: "user"
+      });
+    }
+    executeAutomationTrigger("deal_stage_changed", deal.contactId || void 0, {
+      dealId: deal.id,
+      stageName: stage[0].name,
+      stageType: stage[0].stageType,
+      status: deal.status
+    });
+    if (stage[0].stageType === "won") {
+      executeAutomationTrigger("deal_won", deal.contactId || void 0, {
+        dealId: deal.id,
+        dealName: deal.name,
+        amount: deal.amount
+      });
+      dispatchWebhookEvent(deal.clientId, "deal.won", deal);
+    } else if (stage[0].stageType === "lost") {
+      executeAutomationTrigger("deal_lost", deal.contactId || void 0, {
+        dealId: deal.id,
+        dealName: deal.name,
+        amount: deal.amount
+      });
+      dispatchWebhookEvent(deal.clientId, "deal.lost", deal);
+    }
+    dispatchWebhookEvent(deal.clientId, "deal.stage_changed", {
+      deal,
+      newStage: stage[0].name,
+      stageType: stage[0].stageType
+    });
+    res.json(deal);
+  } catch (error) {
+    console.error("[CRM] Error updating deal stage:", error);
+    res.status(500).json({ error: "Failed to update deal stage" });
+  }
+});
+crmRouter.delete("/deals/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    await db.delete(crmDeals).where(eq12(crmDeals.id, id));
+    res.status(204).send();
+  } catch (error) {
+    console.error("[CRM] Error deleting deal:", error);
+    res.status(500).json({ error: "Failed to delete deal" });
+  }
+});
+crmRouter.get("/tasks", async (req, res) => {
+  try {
+    const clientId = parseInt(req.query.clientId);
+    const contactId = parseInt(req.query.contactId);
+    const status = req.query.status;
+    const limit = parseInt(req.query.limit) || 50;
+    const offset = parseInt(req.query.offset) || 0;
+    const conditions = [];
+    if (clientId) conditions.push(eq12(crmTasks.clientId, clientId));
+    if (contactId) conditions.push(eq12(crmTasks.contactId, contactId));
+    if (status) conditions.push(eq12(crmTasks.status, status));
+    const tasks2 = await db.select().from(crmTasks).where(conditions.length > 0 ? and8(...conditions) : void 0).orderBy(asc2(crmTasks.dueDate)).limit(limit).offset(offset);
+    res.json({ tasks: tasks2 });
+  } catch (error) {
+    console.error("[CRM] Error fetching tasks:", error);
+    res.status(500).json({ error: "Failed to fetch tasks" });
+  }
+});
+crmRouter.post("/tasks", async (req, res) => {
+  try {
+    const validatedData = insertCrmTaskSchema.parse(req.body);
+    const [task] = await db.insert(crmTasks).values(validatedData).returning();
+    res.status(201).json(task);
+  } catch (error) {
+    console.error("[CRM] Error creating task:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create task" });
+  }
+});
+crmRouter.patch("/tasks/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const partialSchema = insertCrmTaskSchema.partial();
+    const validatedData = partialSchema.parse(req.body);
+    const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
+    if (updateData.status === "completed" && !updateData.completedAt) {
+      updateData.completedAt = /* @__PURE__ */ new Date();
+    }
+    const [task] = await db.update(crmTasks).set(updateData).where(eq12(crmTasks.id, id)).returning();
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+    res.json(task);
+  } catch (error) {
+    console.error("[CRM] Error updating task:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to update task" });
+  }
+});
+crmRouter.delete("/tasks/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    await db.delete(crmTasks).where(eq12(crmTasks.id, id));
+    res.status(204).send();
+  } catch (error) {
+    console.error("[CRM] Error deleting task:", error);
+    res.status(500).json({ error: "Failed to delete task" });
+  }
+});
+crmRouter.get("/notes", async (req, res) => {
+  try {
+    const contactId = parseInt(req.query.contactId);
+    const companyId = parseInt(req.query.companyId);
+    const dealId = parseInt(req.query.dealId);
+    const conditions = [];
+    if (contactId) conditions.push(eq12(crmNotes.contactId, contactId));
+    if (companyId) conditions.push(eq12(crmNotes.companyId, companyId));
+    if (dealId) conditions.push(eq12(crmNotes.dealId, dealId));
+    const notes = await db.select().from(crmNotes).where(conditions.length > 0 ? and8(...conditions) : void 0).orderBy(desc5(crmNotes.isPinned), desc5(crmNotes.createdAt));
+    res.json({ notes });
+  } catch (error) {
+    console.error("[CRM] Error fetching notes:", error);
+    res.status(500).json({ error: "Failed to fetch notes" });
+  }
+});
+crmRouter.post("/notes", async (req, res) => {
+  try {
+    const validatedData = insertCrmNoteSchema.parse(req.body);
+    const [note] = await db.insert(crmNotes).values(validatedData).returning();
+    if (validatedData.clientId && validatedData.contactId) {
+      await db.insert(crmTimeline).values({
+        clientId: validatedData.clientId,
+        contactId: validatedData.contactId,
+        eventType: "note_added",
+        title: "Note added",
+        description: validatedData.content.substring(0, 100) + (validatedData.content.length > 100 ? "..." : ""),
+        occurredAt: /* @__PURE__ */ new Date(),
+        sourceApp: "relationships",
+        actorType: "user"
+      });
+    }
+    res.status(201).json(note);
+  } catch (error) {
+    console.error("[CRM] Error creating note:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create note" });
+  }
+});
+crmRouter.patch("/notes/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const partialSchema = insertCrmNoteSchema.partial();
+    const validatedData = partialSchema.parse(req.body);
+    const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
+    const [note] = await db.update(crmNotes).set(updateData).where(eq12(crmNotes.id, id)).returning();
+    if (!note) {
+      return res.status(404).json({ error: "Note not found" });
+    }
+    res.json(note);
+  } catch (error) {
+    console.error("[CRM] Error updating note:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to update note" });
+  }
+});
+crmRouter.delete("/notes/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    await db.delete(crmNotes).where(eq12(crmNotes.id, id));
+    res.status(204).send();
+  } catch (error) {
+    console.error("[CRM] Error deleting note:", error);
+    res.status(500).json({ error: "Failed to delete note" });
+  }
+});
+crmRouter.get("/timeline", async (req, res) => {
+  try {
+    const contactId = parseInt(req.query.contactId);
+    const companyId = parseInt(req.query.companyId);
+    const limit = parseInt(req.query.limit) || 50;
+    const offset = parseInt(req.query.offset) || 0;
+    const conditions = [];
+    if (contactId) conditions.push(eq12(crmTimeline.contactId, contactId));
+    if (companyId) conditions.push(eq12(crmTimeline.companyId, companyId));
+    const events = await db.select().from(crmTimeline).where(conditions.length > 0 ? and8(...conditions) : void 0).orderBy(desc5(crmTimeline.occurredAt)).limit(limit).offset(offset);
+    res.json({ events });
+  } catch (error) {
+    console.error("[CRM] Error fetching timeline:", error);
+    res.status(500).json({ error: "Failed to fetch timeline" });
+  }
+});
+crmRouter.post("/timeline", async (req, res) => {
+  try {
+    const validatedData = insertCrmTimelineSchema.parse(req.body);
+    const [event] = await db.insert(crmTimeline).values(validatedData).returning();
+    res.status(201).json(event);
+  } catch (error) {
+    console.error("[CRM] Error creating timeline event:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create timeline event" });
+  }
+});
+crmRouter.get("/appointments", async (req, res) => {
+  try {
+    const clientId = parseInt(req.query.clientId);
+    const contactId = parseInt(req.query.contactId);
+    const startDate = req.query.startDate;
+    const endDate = req.query.endDate;
+    const conditions = [];
+    if (clientId) conditions.push(eq12(crmAppointments.clientId, clientId));
+    if (contactId) conditions.push(eq12(crmAppointments.contactId, contactId));
+    if (startDate) conditions.push(sql6`start_time >= ${new Date(startDate)}`);
+    if (endDate) conditions.push(sql6`start_time <= ${new Date(endDate)}`);
+    const appointments = await db.select().from(crmAppointments).where(conditions.length > 0 ? and8(...conditions) : void 0).orderBy(asc2(crmAppointments.startTime));
+    res.json({ appointments });
+  } catch (error) {
+    console.error("[CRM] Error fetching appointments:", error);
+    res.status(500).json({ error: "Failed to fetch appointments" });
+  }
+});
+crmRouter.post("/appointments", async (req, res) => {
+  try {
+    const body = { ...req.body };
+    if (typeof body.startTime === "string") body.startTime = new Date(body.startTime);
+    if (typeof body.endTime === "string") body.endTime = new Date(body.endTime);
+    if (typeof body.reminderDate === "string") body.reminderDate = new Date(body.reminderDate);
+    const validatedData = insertCrmAppointmentSchema.parse(body);
+    const [appointment] = await db.insert(crmAppointments).values(validatedData).returning();
+    if (validatedData.clientId && validatedData.contactId) {
+      await db.insert(crmTimeline).values({
+        clientId: validatedData.clientId,
+        contactId: validatedData.contactId,
+        eventType: "appointment_scheduled",
+        title: `Appointment scheduled: ${validatedData.title}`,
+        description: `${new Date(validatedData.startTime).toLocaleString()}`,
+        occurredAt: /* @__PURE__ */ new Date(),
+        sourceApp: "relationships",
+        actorType: "user"
+      });
+    }
+    res.status(201).json(appointment);
+  } catch (error) {
+    console.error("[CRM] Error creating appointment:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create appointment" });
+  }
+});
+crmRouter.patch("/appointments/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const body = { ...req.body };
+    if (typeof body.startTime === "string") body.startTime = new Date(body.startTime);
+    if (typeof body.endTime === "string") body.endTime = new Date(body.endTime);
+    if (typeof body.reminderDate === "string") body.reminderDate = new Date(body.reminderDate);
+    const partialSchema = insertCrmAppointmentSchema.partial();
+    const validatedData = partialSchema.parse(body);
+    const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
+    const [appointment] = await db.update(crmAppointments).set(updateData).where(eq12(crmAppointments.id, id)).returning();
+    if (!appointment) {
+      return res.status(404).json({ error: "Appointment not found" });
+    }
+    res.json(appointment);
+  } catch (error) {
+    console.error("[CRM] Error updating appointment:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to update appointment" });
+  }
+});
+crmRouter.delete("/appointments/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    await db.delete(crmAppointments).where(eq12(crmAppointments.id, id));
+    res.status(204).send();
+  } catch (error) {
+    console.error("[CRM] Error deleting appointment:", error);
+    res.status(500).json({ error: "Failed to delete appointment" });
+  }
+});
+crmRouter.get("/tags", async (req, res) => {
+  try {
+    const clientId = parseInt(req.query.clientId);
+    const conditions = [];
+    if (clientId) conditions.push(eq12(crmTags.clientId, clientId));
+    const tags = await db.select().from(crmTags).where(conditions.length > 0 ? and8(...conditions) : void 0).orderBy(desc5(crmTags.usageCount));
+    res.json({ tags });
+  } catch (error) {
+    console.error("[CRM] Error fetching tags:", error);
+    res.status(500).json({ error: "Failed to fetch tags" });
+  }
+});
+crmRouter.post("/tags", async (req, res) => {
+  try {
+    const validatedData = insertCrmTagSchema.parse(req.body);
+    const [tag] = await db.insert(crmTags).values(validatedData).returning();
+    res.status(201).json(tag);
+  } catch (error) {
+    console.error("[CRM] Error creating tag:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create tag" });
+  }
+});
+crmRouter.get("/segments", async (req, res) => {
+  try {
+    const clientId = parseInt(req.query.clientId);
+    const conditions = [];
+    if (clientId) conditions.push(eq12(crmSegments.clientId, clientId));
+    const segments = await db.select().from(crmSegments).where(conditions.length > 0 ? and8(...conditions) : void 0).orderBy(asc2(crmSegments.name));
+    res.json({ segments });
+  } catch (error) {
+    console.error("[CRM] Error fetching segments:", error);
+    res.status(500).json({ error: "Failed to fetch segments" });
+  }
+});
+crmRouter.get("/subscription", async (req, res) => {
+  try {
+    const clientId = parseInt(req.query.clientId);
+    if (!clientId) {
+      return res.status(400).json({ error: "clientId is required" });
+    }
+    const subscription = await db.select().from(crmSubscriptions).where(eq12(crmSubscriptions.clientId, clientId)).limit(1);
+    if (!subscription.length) {
+      return res.json({ tier: "starter", status: "active" });
+    }
+    res.json(subscription[0]);
+  } catch (error) {
+    console.error("[CRM] Error fetching subscription:", error);
+    res.status(500).json({ error: "Failed to fetch subscription" });
+  }
+});
+crmRouter.get("/stats", async (req, res) => {
+  try {
+    const clientId = parseInt(req.query.clientId);
+    const conditions = clientId ? [eq12(crmContacts.clientId, clientId)] : [];
+    const dealConditions = clientId ? [eq12(crmDeals.clientId, clientId)] : [];
+    const taskConditions = clientId ? [eq12(crmTasks.clientId, clientId)] : [];
+    const [contactCount] = await db.select({ count: sql6`count(*)` }).from(crmContacts).where(conditions.length > 0 ? and8(...conditions) : void 0);
+    const [companyCount] = await db.select({ count: sql6`count(*)` }).from(crmCompanies).where(clientId ? eq12(crmCompanies.clientId, clientId) : void 0);
+    const [openDeals] = await db.select({
+      count: sql6`count(*)`,
+      value: sql6`COALESCE(SUM(amount), 0)`
+    }).from(crmDeals).where(and8(
+      ...dealConditions,
+      eq12(crmDeals.status, "open")
+    ));
+    const [pendingTasks] = await db.select({ count: sql6`count(*)` }).from(crmTasks).where(and8(
+      ...taskConditions,
+      eq12(crmTasks.status, "pending")
+    ));
+    res.json({
+      contacts: Number(contactCount?.count || 0),
+      companies: Number(companyCount?.count || 0),
+      openDeals: Number(openDeals?.count || 0),
+      dealValue: Number(openDeals?.value || 0),
+      pendingTasks: Number(pendingTasks?.count || 0)
+    });
+  } catch (error) {
+    console.error("[CRM] Error fetching stats:", error);
+    res.status(500).json({ error: "Failed to fetch stats" });
+  }
+});
+crmRouter.get("/forms", async (req, res) => {
+  try {
+    const clientId = parseInt(req.query.clientId);
+    const conditions = clientId ? [eq12(crmLeadForms.clientId, clientId)] : [];
+    const forms = await db.select().from(crmLeadForms).where(conditions.length > 0 ? and8(...conditions) : void 0).orderBy(desc5(crmLeadForms.createdAt));
+    res.json({ forms });
+  } catch (error) {
+    console.error("[CRM] Error fetching forms:", error);
+    res.status(500).json({ error: "Failed to fetch forms" });
+  }
+});
+crmRouter.get("/forms/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const form = await db.select().from(crmLeadForms).where(eq12(crmLeadForms.id, id)).limit(1);
+    if (!form.length) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+    res.json(form[0]);
+  } catch (error) {
+    console.error("[CRM] Error fetching form:", error);
+    res.status(500).json({ error: "Failed to fetch form" });
+  }
+});
+crmRouter.post("/forms", async (req, res) => {
+  try {
+    const validatedData = insertCrmLeadFormSchema.parse(req.body);
+    const [form] = await db.insert(crmLeadForms).values(validatedData).returning();
+    res.status(201).json(form);
+  } catch (error) {
+    console.error("[CRM] Error creating form:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to create form" });
+  }
+});
+crmRouter.patch("/forms/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const partialSchema = insertCrmLeadFormSchema.partial();
+    const validatedData = partialSchema.parse(req.body);
+    const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
+    const [form] = await db.update(crmLeadForms).set(updateData).where(eq12(crmLeadForms.id, id)).returning();
+    if (!form) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+    res.json(form);
+  } catch (error) {
+    console.error("[CRM] Error updating form:", error);
+    if (error instanceof z6.ZodError) {
+      return res.status(400).json({ error: "Validation error", details: error.errors });
+    }
+    res.status(500).json({ error: "Failed to update form" });
+  }
+});
+crmRouter.delete("/forms/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const [deleted] = await db.delete(crmLeadForms).where(eq12(crmLeadForms.id, id)).returning();
+    if (!deleted) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+    res.json({ success: true });
+  } catch (error) {
+    console.error("[CRM] Error deleting form:", error);
+    res.status(500).json({ error: "Failed to delete form" });
+  }
+});
+crmRouter.post("/forms/:slug/submit", async (req, res) => {
+  try {
+    const slug = req.params.slug;
+    const submission = req.body;
+    const [form] = await db.select().from(crmLeadForms).where(eq12(crmLeadForms.slug, slug)).limit(1);
+    if (!form || !form.isActive) {
+      return res.status(404).json({ error: "Form not found" });
+    }
+    const contactData = {
+      clientId: form.clientId,
+      firstName: submission.firstName || null,
+      lastName: submission.lastName || null,
+      email: submission.email || null,
+      phone: submission.phone || null,
+      lifecycleStage: form.defaultLifecycleStage || "lead",
+      leadSource: form.defaultLeadSource || "web_form"
+    };
+    if (contactData.email) {
+      const existing = await db.select().from(crmContacts).where(eq12(crmContacts.email, contactData.email)).limit(1);
+      if (existing.length > 0) {
+        await db.update(crmContacts).set({ ...contactData, updatedAt: /* @__PURE__ */ new Date() }).where(eq12(crmContacts.id, existing[0].id));
+        await db.update(crmLeadForms).set({ submissionCount: sql6`submission_count + 1` }).where(eq12(crmLeadForms.id, form.id));
+        res.json({ success: true, message: form.successMessage, contactId: existing[0].id });
+        return;
+      }
+    }
+    const [contact] = await db.insert(crmContacts).values(contactData).returning();
+    await db.update(crmLeadForms).set({ submissionCount: sql6`submission_count + 1` }).where(eq12(crmLeadForms.id, form.id));
+    if (form.clientId) {
+      await db.insert(crmTimeline).values({
+        clientId: form.clientId,
+        contactId: contact.id,
+        eventType: "form_submission",
+        title: `Form submission: ${form.name}`,
+        occurredAt: /* @__PURE__ */ new Date(),
+        sourceApp: "relationships",
+        actorType: "contact"
+      });
+    }
+    res.json({ success: true, message: form.successMessage, contactId: contact.id });
+  } catch (error) {
+    console.error("[CRM] Error processing form submission:", error);
+    res.status(500).json({ error: "Failed to process submission" });
+  }
+});
+crmRouter.get("/integration/lookup", async (req, res) => {
+  try {
+    const { email, phone } = req.query;
+    if (!email && !phone) {
+      return res.status(400).json({ error: "Email or phone required" });
+    }
+    let contact = null;
+    if (email && typeof email === "string") {
+      const results = await db.select().from(crmContacts).where(eq12(crmContacts.email, email.toLowerCase())).limit(1);
+      if (results.length > 0) contact = results[0];
+    }
+    if (!contact && phone && typeof phone === "string") {
+      const results = await db.select().from(crmContacts).where(eq12(crmContacts.phone, phone)).limit(1);
+      if (results.length > 0) contact = results[0];
+    }
+    if (!contact) {
+      return res.json({ found: false, contact: null });
+    }
+    let company = null;
+    if (contact.companyId) {
+      const companyResults = await db.select().from(crmCompanies).where(eq12(crmCompanies.id, contact.companyId)).limit(1);
+      if (companyResults.length > 0) company = companyResults[0];
+    }
+    res.json({
+      found: true,
+      contact: {
+        id: contact.id,
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        email: contact.email,
+        phone: contact.phone,
+        title: contact.title,
+        lifecycleStage: contact.lifecycleStage,
+        leadSource: contact.leadSource,
+        customFields: contact.customFields,
+        tags: contact.tags
+      },
+      company: company ? {
+        id: company.id,
+        name: company.name,
+        industry: company.industry,
+        website: company.website
+      } : null
+    });
+  } catch (error) {
+    console.error("[CRM] Integration lookup error:", error);
+    res.status(500).json({ error: "Failed to lookup contact" });
+  }
+});
+crmRouter.get("/integration/context/:id", async (req, res) => {
+  try {
+    const contactId = parseInt(req.params.id);
+    const contacts = await db.select().from(crmContacts).where(eq12(crmContacts.id, contactId)).limit(1);
+    if (contacts.length === 0) {
+      return res.status(404).json({ error: "Contact not found" });
+    }
+    const contact = contacts[0];
+    let company = null;
+    if (contact.companyId) {
+      const companies = await db.select().from(crmCompanies).where(eq12(crmCompanies.id, contact.companyId)).limit(1);
+      if (companies.length > 0) company = companies[0];
+    }
+    const deals = await db.select().from(crmDeals).where(eq12(crmDeals.contactId, contactId)).orderBy(desc5(crmDeals.updatedAt)).limit(5);
+    const recentActivity = await db.select().from(crmTimeline).where(eq12(crmTimeline.contactId, contactId)).orderBy(desc5(crmTimeline.occurredAt)).limit(10);
+    const contactTags = contact.tags || [];
+    res.json({
+      contact: {
+        id: contact.id,
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        email: contact.email,
+        phone: contact.phone,
+        title: contact.title,
+        lifecycleStage: contact.lifecycleStage,
+        leadSource: contact.leadSource,
+        customFields: contact.customFields
+      },
+      company: company ? {
+        id: company.id,
+        name: company.name,
+        industry: company.industry,
+        website: company.website,
+        size: company.size
+      } : null,
+      deals: deals.map((d) => ({
+        id: d.id,
+        title: d.title,
+        value: d.value,
+        stage: d.stage,
+        probability: d.probability
+      })),
+      recentActivity: recentActivity.map((a) => ({
+        id: a.id,
+        eventType: a.eventType,
+        title: a.title,
+        description: a.description,
+        sourceApp: a.sourceApp,
+        occurredAt: a.occurredAt
+      })),
+      tags: contactTags,
+      totalDealValue: deals.reduce((sum, d) => sum + (Number(d.value) || 0), 0)
+    });
+  } catch (error) {
+    console.error("[CRM] Integration context error:", error);
+    res.status(500).json({ error: "Failed to get contact context" });
+  }
+});
+crmRouter.get("/integration/segments", async (req, res) => {
+  try {
+    const segments = await db.select({
+      id: crmSegments.id,
+      name: crmSegments.name,
+      description: crmSegments.description,
+      memberCount: crmSegments.memberCount,
+      segmentType: crmSegments.segmentType
+    }).from(crmSegments).orderBy(crmSegments.name);
+    res.json({ segments });
+  } catch (error) {
+    console.error("[CRM] Integration segments error:", error);
+    res.status(500).json({ error: "Failed to get segments" });
+  }
+});
+crmRouter.get("/integration/segments/:id/members", async (req, res) => {
+  try {
+    const segmentId = parseInt(req.params.id);
+    const limit = Math.min(parseInt(req.query.limit) || 100, 1e3);
+    const offset = parseInt(req.query.offset) || 0;
+    const members = await db.select({
+      id: crmContacts.id,
+      firstName: crmContacts.firstName,
+      lastName: crmContacts.lastName,
+      email: crmContacts.email,
+      phone: crmContacts.phone
+    }).from(crmSegmentMembers).innerJoin(crmContacts, eq12(crmSegmentMembers.contactId, crmContacts.id)).where(eq12(crmSegmentMembers.segmentId, segmentId)).limit(limit).offset(offset);
+    res.json({ members, segmentId });
+  } catch (error) {
+    console.error("[CRM] Integration segment members error:", error);
+    res.status(500).json({ error: "Failed to get segment members" });
+  }
+});
+crmRouter.post("/integration/timeline", async (req, res) => {
+  try {
+    const { contactId, companyId, eventType, title, description, sourceApp, sourceEntityType, sourceEntityId, metadata } = req.body;
+    if (!eventType || !title || !sourceApp) {
+      return res.status(400).json({ error: "eventType, title, and sourceApp are required" });
+    }
+    let resolvedContactId = contactId;
+    if (!resolvedContactId && req.body.email) {
+      const contacts = await db.select({ id: crmContacts.id, clientId: crmContacts.clientId }).from(crmContacts).where(eq12(crmContacts.email, req.body.email)).limit(1);
+      if (contacts.length > 0) {
+        resolvedContactId = contacts[0].id;
+      }
+    }
+    let clientId = null;
+    if (resolvedContactId) {
+      const contacts = await db.select({ clientId: crmContacts.clientId }).from(crmContacts).where(eq12(crmContacts.id, resolvedContactId)).limit(1);
+      if (contacts.length > 0) {
+        clientId = contacts[0].clientId;
+      }
+    }
+    const [event] = await db.insert(crmTimeline).values({
+      clientId,
+      contactId: resolvedContactId,
+      companyId,
+      eventType,
+      title,
+      description,
+      sourceApp,
+      sourceEntityType,
+      sourceEntityId,
+      metadata: metadata || {},
+      occurredAt: /* @__PURE__ */ new Date(),
+      actorType: "system"
+    }).returning();
+    res.json({ success: true, eventId: event.id });
+  } catch (error) {
+    console.error("[CRM] Integration timeline error:", error);
+    res.status(500).json({ error: "Failed to add timeline event" });
+  }
+});
+crmRouter.post("/integration/bulk-lookup", async (req, res) => {
+  try {
+    const { emails } = req.body;
+    if (!Array.isArray(emails) || emails.length === 0) {
+      return res.status(400).json({ error: "emails array required" });
+    }
+    if (emails.length > 1e3) {
+      return res.status(400).json({ error: "Maximum 1000 emails per request" });
+    }
+    const contacts = await db.select({
+      id: crmContacts.id,
+      firstName: crmContacts.firstName,
+      lastName: crmContacts.lastName,
+      email: crmContacts.email,
+      phone: crmContacts.phone,
+      lifecycleStage: crmContacts.lifecycleStage
+    }).from(crmContacts).where(inArray(crmContacts.email, emails.map((e) => e.toLowerCase())));
+    const contactMap = {};
+    contacts.forEach((c) => {
+      if (c.email) contactMap[c.email.toLowerCase()] = c;
+    });
+    res.json({ contacts: contactMap, found: contacts.length });
+  } catch (error) {
+    console.error("[CRM] Integration bulk lookup error:", error);
+    res.status(500).json({ error: "Failed to bulk lookup contacts" });
+  }
+});
+crmRouter.get("/automations", async (req, res) => {
+  try {
+    const automations = await db.select().from(crmAutomations).orderBy(desc5(crmAutomations.createdAt));
+    res.json({ automations });
+  } catch (error) {
+    console.error("[CRM] List automations error:", error);
+    res.status(500).json({ error: "Failed to fetch automations" });
+  }
+});
+crmRouter.get("/automations/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const [automation] = await db.select().from(crmAutomations).where(eq12(crmAutomations.id, id));
+    if (!automation) {
+      return res.status(404).json({ error: "Automation not found" });
+    }
+    const steps = await db.select().from(crmAutomationSteps).where(eq12(crmAutomationSteps.automationId, id)).orderBy(asc2(crmAutomationSteps.stepOrder));
+    const executions = await db.select().from(crmAutomationExecutions).where(eq12(crmAutomationExecutions.automationId, id)).orderBy(desc5(crmAutomationExecutions.startedAt)).limit(10);
+    res.json({ automation, steps, executions });
+  } catch (error) {
+    console.error("[CRM] Get automation error:", error);
+    res.status(500).json({ error: "Failed to fetch automation" });
+  }
+});
+crmRouter.post("/automations", async (req, res) => {
+  try {
+    const parsed = insertCrmAutomationSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.errors });
+    }
+    const [automation] = await db.insert(crmAutomations).values(parsed.data).returning();
+    res.status(201).json({ automation });
+  } catch (error) {
+    console.error("[CRM] Create automation error:", error);
+    res.status(500).json({ error: "Failed to create automation" });
+  }
+});
+crmRouter.patch("/automations/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const updates = req.body;
+    const [automation] = await db.update(crmAutomations).set({ ...updates, updatedAt: /* @__PURE__ */ new Date() }).where(eq12(crmAutomations.id, id)).returning();
+    if (!automation) {
+      return res.status(404).json({ error: "Automation not found" });
+    }
+    res.json({ automation });
+  } catch (error) {
+    console.error("[CRM] Update automation error:", error);
+    res.status(500).json({ error: "Failed to update automation" });
+  }
+});
+crmRouter.delete("/automations/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    await db.delete(crmAutomations).where(eq12(crmAutomations.id, id));
+    res.json({ success: true });
+  } catch (error) {
+    console.error("[CRM] Delete automation error:", error);
+    res.status(500).json({ error: "Failed to delete automation" });
+  }
+});
+crmRouter.post("/automations/:id/steps", async (req, res) => {
+  try {
+    const automationId = parseInt(req.params.id);
+    const { steps } = req.body;
+    if (!Array.isArray(steps)) {
+      return res.status(400).json({ error: "steps array required" });
+    }
+    await db.delete(crmAutomationSteps).where(eq12(crmAutomationSteps.automationId, automationId));
+    if (steps.length > 0) {
+      const stepsToInsert = steps.map((step, index2) => ({
+        automationId,
+        stepOrder: index2 + 1,
+        stepType: step.stepType,
+        config: step.config || {},
+        conditionType: step.conditionType,
+        conditionConfig: step.conditionConfig || {}
+      }));
+      await db.insert(crmAutomationSteps).values(stepsToInsert);
+    }
+    const insertedSteps = await db.select().from(crmAutomationSteps).where(eq12(crmAutomationSteps.automationId, automationId)).orderBy(asc2(crmAutomationSteps.stepOrder));
+    res.json({ steps: insertedSteps });
+  } catch (error) {
+    console.error("[CRM] Add automation steps error:", error);
+    res.status(500).json({ error: "Failed to add automation steps" });
+  }
+});
+crmRouter.post("/automations/:id/trigger", async (req, res) => {
+  try {
+    const automationId = parseInt(req.params.id);
+    const { contactId, triggerData } = req.body;
+    const [automation] = await db.select().from(crmAutomations).where(eq12(crmAutomations.id, automationId));
+    if (!automation) {
+      return res.status(404).json({ error: "Automation not found" });
+    }
+    const steps = await db.select().from(crmAutomationSteps).where(eq12(crmAutomationSteps.automationId, automationId)).orderBy(asc2(crmAutomationSteps.stepOrder));
+    const [execution] = await db.insert(crmAutomationExecutions).values({
+      automationId,
+      contactId,
+      status: "running",
+      currentStep: 0,
+      totalSteps: steps.length,
+      triggerData: triggerData || {}
+    }).returning();
+    await db.update(crmAutomations).set({
+      runCount: sql6`${crmAutomations.runCount} + 1`,
+      lastRunAt: /* @__PURE__ */ new Date()
+    }).where(eq12(crmAutomations.id, automationId));
+    const executionLog = [];
+    let finalStatus = "completed";
+    let errorMessage = null;
+    let contact = null;
+    if (contactId) {
+      const [c] = await db.select().from(crmContacts).where(eq12(crmContacts.id, contactId));
+      contact = c;
+    }
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+      const config = step.config || {};
+      try {
+        const conditionMet = evaluateCondition(
+          step.conditionType,
+          step.conditionConfig,
+          triggerData || {},
+          contact
+        );
+        if (!conditionMet) {
+          executionLog.push({ step: i + 1, action: step.stepType, result: "Skipped: condition not met", timestamp: /* @__PURE__ */ new Date() });
+          continue;
+        }
+        await db.update(crmAutomationExecutions).set({ currentStep: i + 1 }).where(eq12(crmAutomationExecutions.id, execution.id));
+        switch (step.stepType) {
+          case "add_tag":
+            if (contactId && config.tag) {
+              const [contactData] = await db.select().from(crmContacts).where(eq12(crmContacts.id, contactId));
+              if (contactData) {
+                const currentTags = Array.isArray(contactData.tags) ? contactData.tags : [];
+                if (!currentTags.includes(config.tag)) {
+                  await db.update(crmContacts).set({ tags: [...currentTags, config.tag] }).where(eq12(crmContacts.id, contactId));
+                }
+              }
+            }
+            executionLog.push({ step: i + 1, action: "add_tag", result: `Added tag: ${config.tag || "none"}`, timestamp: /* @__PURE__ */ new Date() });
+            break;
+          case "remove_tag":
+            if (contactId && config.tag) {
+              const [contact2] = await db.select().from(crmContacts).where(eq12(crmContacts.id, contactId));
+              if (contact2) {
+                const currentTags = Array.isArray(contact2.tags) ? contact2.tags : [];
+                await db.update(crmContacts).set({ tags: currentTags.filter((t) => t !== config.tag) }).where(eq12(crmContacts.id, contactId));
+              }
+            }
+            executionLog.push({ step: i + 1, action: "remove_tag", result: `Removed tag: ${config.tag || "none"}`, timestamp: /* @__PURE__ */ new Date() });
+            break;
+          case "update_contact":
+            if (contactId && config.field && config.value !== void 0) {
+              await db.update(crmContacts).set({ [config.field]: config.value }).where(eq12(crmContacts.id, contactId));
+            }
+            executionLog.push({ step: i + 1, action: "update_contact", result: `Updated ${config.field || "field"}`, timestamp: /* @__PURE__ */ new Date() });
+            break;
+          case "create_task":
+            const taskTitle = config.title || "Automated task";
+            await db.insert(crmTasks).values({
+              contactId: contactId || null,
+              title: taskTitle,
+              description: config.description || `Created by automation: ${automation.name}`,
+              status: "pending",
+              priority: config.priority || "medium",
+              dueDate: config.dueDate ? new Date(config.dueDate) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1e3)
+              // 7 days default
+            });
+            executionLog.push({ step: i + 1, action: "create_task", result: `Created task: ${taskTitle}`, timestamp: /* @__PURE__ */ new Date() });
+            break;
+          case "add_to_segment":
+            if (contactId && config.segmentId) {
+              await db.insert(crmSegmentMembers).values({
+                segmentId: parseInt(config.segmentId),
+                contactId
+              }).onConflictDoNothing();
+            }
+            executionLog.push({ step: i + 1, action: "add_to_segment", result: `Added to segment ${config.segmentId || "unknown"}`, timestamp: /* @__PURE__ */ new Date() });
+            break;
+          case "wait":
+            const waitDuration = config.duration || "1 day";
+            executionLog.push({ step: i + 1, action: "wait", result: `Wait step: ${waitDuration} (skipped in sync execution)`, timestamp: /* @__PURE__ */ new Date() });
+            break;
+          case "send_email":
+            executionLog.push({ step: i + 1, action: "send_email", result: `Email queued: ${config.subject || "No subject"} (requires email integration)`, timestamp: /* @__PURE__ */ new Date() });
+            break;
+          case "webhook":
+            executionLog.push({ step: i + 1, action: "webhook", result: `Webhook: ${config.url || "No URL"} (requires async execution)`, timestamp: /* @__PURE__ */ new Date() });
+            break;
+          default:
+            executionLog.push({ step: i + 1, action: step.stepType, result: "Unknown step type", timestamp: /* @__PURE__ */ new Date() });
+        }
+      } catch (stepError) {
+        executionLog.push({ step: i + 1, action: step.stepType, result: `Error: ${stepError.message}`, timestamp: /* @__PURE__ */ new Date() });
+        finalStatus = "failed";
+        errorMessage = `Step ${i + 1} failed: ${stepError.message}`;
+        break;
+      }
+    }
+    await db.update(crmAutomationExecutions).set({
+      status: finalStatus,
+      completedAt: /* @__PURE__ */ new Date(),
+      errorMessage,
+      executionLog
+    }).where(eq12(crmAutomationExecutions.id, execution.id));
+    res.json({
+      success: finalStatus === "completed",
+      execution: {
+        ...execution,
+        status: finalStatus,
+        executionLog,
+        errorMessage
+      },
+      message: finalStatus === "completed" ? `Automation completed successfully (${steps.length} steps executed)` : `Automation failed: ${errorMessage}`
+    });
+  } catch (error) {
+    console.error("[CRM] Trigger automation error:", error);
+    res.status(500).json({ error: "Failed to trigger automation" });
+  }
+});
+crmRouter.get("/automations/:id/executions", async (req, res) => {
+  try {
+    const automationId = parseInt(req.params.id);
+    const executions = await db.select({
+      id: crmAutomationExecutions.id,
+      status: crmAutomationExecutions.status,
+      currentStep: crmAutomationExecutions.currentStep,
+      totalSteps: crmAutomationExecutions.totalSteps,
+      startedAt: crmAutomationExecutions.startedAt,
+      completedAt: crmAutomationExecutions.completedAt,
+      errorMessage: crmAutomationExecutions.errorMessage,
+      contact: {
+        id: crmContacts.id,
+        firstName: crmContacts.firstName,
+        lastName: crmContacts.lastName,
+        email: crmContacts.email
+      }
+    }).from(crmAutomationExecutions).leftJoin(crmContacts, eq12(crmAutomationExecutions.contactId, crmContacts.id)).where(eq12(crmAutomationExecutions.automationId, automationId)).orderBy(desc5(crmAutomationExecutions.startedAt)).limit(50);
+    res.json({ executions });
+  } catch (error) {
+    console.error("[CRM] Get automation executions error:", error);
+    res.status(500).json({ error: "Failed to fetch automation executions" });
+  }
+});
+crmRouter.get("/analytics", async (req, res) => {
+  try {
+    const lifecycleStats = await db.select({
+      stage: crmContacts.lifecycleStage,
+      count: sql6`count(*)::int`
+    }).from(crmContacts).groupBy(crmContacts.lifecycleStage);
+    const dealStats = await db.select({
+      status: crmDeals.status,
+      count: sql6`count(*)::int`,
+      totalValue: sql6`coalesce(sum(${crmDeals.amount}::float), 0)::float`
+    }).from(crmDeals).groupBy(crmDeals.status);
+    const pipelineBreakdown = await db.select({
+      stageName: crmPipelineStages.name,
+      stageId: crmDeals.stageId,
+      count: sql6`count(*)::int`,
+      totalValue: sql6`coalesce(sum(${crmDeals.amount}::float), 0)::float`
+    }).from(crmDeals).leftJoin(crmPipelineStages, eq12(crmDeals.stageId, crmPipelineStages.id)).where(eq12(crmDeals.status, "open")).groupBy(crmDeals.stageId, crmPipelineStages.name);
+    const leadSourceStats = await db.select({
+      source: crmContacts.leadSource,
+      count: sql6`count(*)::int`
+    }).from(crmContacts).where(sql6`${crmContacts.leadSource} is not null`).groupBy(crmContacts.leadSource);
+    const thirtyDaysAgo = /* @__PURE__ */ new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const activityByDay = await db.select({
+      date: sql6`date(${crmTimeline.occurredAt})`,
+      count: sql6`count(*)::int`
+    }).from(crmTimeline).where(sql6`${crmTimeline.occurredAt} >= ${thirtyDaysAgo.toISOString()}`).groupBy(sql6`date(${crmTimeline.occurredAt})`).orderBy(sql6`date(${crmTimeline.occurredAt})`);
+    const taskStats = await db.select({
+      status: crmTasks.status,
+      count: sql6`count(*)::int`
+    }).from(crmTasks).groupBy(crmTasks.status);
+    const wonDeals = dealStats.find((d) => d.status === "won");
+    const lostDeals = dealStats.find((d) => d.status === "lost");
+    const totalClosed = (wonDeals?.count || 0) + (lostDeals?.count || 0);
+    const winRate = totalClosed > 0 ? (wonDeals?.count || 0) / totalClosed * 100 : 0;
+    const openDeals = dealStats.find((d) => d.status === "open");
+    const pipelineValue = openDeals?.totalValue || 0;
+    const allDealsCount = dealStats.reduce((sum, d) => sum + d.count, 0);
+    const allDealsValue = dealStats.reduce((sum, d) => sum + d.totalValue, 0);
+    const avgDealValue = allDealsCount > 0 ? allDealsValue / allDealsCount : 0;
+    const totalContacts = lifecycleStats.reduce((sum, s) => sum + s.count, 0);
+    const totalDeals = dealStats.reduce((sum, d) => sum + d.count, 0);
+    res.json({
+      summary: {
+        totalContacts,
+        totalDeals,
+        pipelineValue,
+        winRate: Math.round(winRate * 10) / 10,
+        avgDealValue: Math.round(avgDealValue * 100) / 100,
+        openDeals: openDeals?.count || 0,
+        wonDeals: wonDeals?.count || 0,
+        lostDeals: lostDeals?.count || 0
+      },
+      lifecycleDistribution: lifecycleStats,
+      dealsByStatus: dealStats,
+      pipelineBreakdown,
+      leadSources: leadSourceStats,
+      activityTrend: activityByDay,
+      taskStats
+    });
+  } catch (error) {
+    console.error("[CRM] Analytics error:", error);
+    res.status(500).json({ error: "Failed to fetch analytics" });
+  }
+});
+
+// server/routes/payments.ts
+init_db();
+init_schema();
+import { eq as eq13 } from "drizzle-orm";
+
+// server/services/StripeProvider.ts
+import Stripe from "stripe";
+var StripeProvider = class {
+  stripe;
+  name = "stripe";
+  constructor(apiKey) {
+    if (!apiKey) {
+      throw new Error("Stripe API key is required");
+    }
+    this.stripe = new Stripe(apiKey, {
+      apiVersion: "2025-12-15.clover"
+    });
+  }
+  /**
+   * Process a one-time charge
+   */
+  async charge(params) {
+    try {
+      const amountInCents = Math.round(params.amount * 100);
+      const charge = await this.stripe.charges.create({
+        amount: amountInCents,
+        currency: "usd",
+        customer: params.customerId,
+        source: params.source,
+        description: params.description || "",
+        metadata: params.metadata || {}
+      });
+      return {
+        success: true,
+        transactionId: charge.id,
+        amount: charge.amount / 100,
+        status: charge.status,
+        provider: this.name,
+        raw: charge
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: `Stripe charge failed: ${error.message}`,
+        provider: this.name
+      };
+    }
+  }
+  /**
+   * Refund a transaction
+   */
+  async refund(transactionId, amount) {
+    try {
+      const refundData = {
+        charge: transactionId
+      };
+      if (amount !== void 0) {
+        refundData.amount = Math.round(amount * 100);
+      }
+      const refund = await this.stripe.refunds.create(refundData);
+      return {
+        success: true,
+        refundId: refund.id,
+        transactionId: refund.charge,
+        amount: refund.amount / 100,
+        status: refund.status || "pending",
+        provider: this.name,
+        raw: refund
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: `Stripe refund failed: ${error.message}`,
+        provider: this.name
+      };
+    }
+  }
+  /**
+   * Create a customer
+   */
+  async createCustomer(params) {
+    try {
+      const customer = await this.stripe.customers.create({
+        email: params.email,
+        name: params.name,
+        phone: params.phone,
+        metadata: params.metadata || {}
+      });
+      return {
+        success: true,
+        customerId: customer.id,
+        provider: this.name,
+        raw: customer
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: `Stripe customer creation failed: ${error.message}`,
+        provider: this.name
+      };
+    }
+  }
+  /**
+   * Update customer
+   */
+  async updateCustomer(customerId, updates) {
+    try {
+      const customer = await this.stripe.customers.update(customerId, updates);
+      return {
+        success: true,
+        customerId: customer.id,
+        provider: this.name,
+        raw: customer
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: `Stripe customer update failed: ${error.message}`,
+        provider: this.name
+      };
+    }
+  }
+  /**
+   * Delete customer
+   */
+  async deleteCustomer(customerId) {
+    try {
+      const deleted = await this.stripe.customers.del(customerId);
+      return {
+        success: true,
+        customerId: deleted.id,
+        provider: this.name,
+        raw: deleted
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: `Stripe customer deletion failed: ${error.message}`,
+        provider: this.name
+      };
+    }
+  }
+  /**
+   * Add payment method to customer
+   */
+  async addPaymentMethod(customerId, paymentMethodId) {
+    try {
+      const paymentMethod = await this.stripe.paymentMethods.attach(paymentMethodId, {
+        customer: customerId
+      });
+      return {
+        success: true,
+        paymentMethodId: paymentMethod.id,
+        customerId: paymentMethod.customer,
+        provider: this.name,
+        raw: paymentMethod
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: `Stripe payment method attachment failed: ${error.message}`,
+        provider: this.name
+      };
+    }
+  }
+  /**
+   * Create payment intent (modern Stripe way)
+   */
+  async createPaymentIntent(params) {
+    try {
+      const amountInCents = Math.round(params.amount * 100);
+      const paymentIntent = await this.stripe.paymentIntents.create({
+        amount: amountInCents,
+        currency: "usd",
+        customer: params.customerId,
+        metadata: params.metadata || {}
+      });
+      return {
+        success: true,
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id,
+        status: paymentIntent.status,
+        provider: this.name,
+        raw: paymentIntent
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: `Stripe payment intent creation failed: ${error.message}`,
+        provider: this.name
+      };
+    }
+  }
+};
+
+// server/services/payment-service.ts
+var PaymentService = class {
+  provider;
+  constructor() {
+    const stripeKey = process.env.STRIPE_SECRET_KEY;
+    if (!stripeKey) {
+      throw new Error("STRIPE_SECRET_KEY not configured in environment");
+    }
+    this.provider = new StripeProvider(stripeKey);
+  }
+  /**
+   * Get the active provider name
+   */
+  getProviderName() {
+    return this.provider.name;
+  }
+  /**
+   * Process a charge
+   */
+  async charge(params) {
+    return await this.provider.charge(params);
+  }
+  /**
+   * Refund a transaction
+   */
+  async refund(transactionId, amount) {
+    return await this.provider.refund(transactionId, amount);
+  }
+  /**
+   * Create a customer
+   */
+  async createCustomer(params) {
+    return await this.provider.createCustomer(params);
+  }
+  /**
+   * Update a customer
+   */
+  async updateCustomer(customerId, updates) {
+    return await this.provider.updateCustomer(customerId, updates);
+  }
+  /**
+   * Delete a customer
+   */
+  async deleteCustomer(customerId) {
+    return await this.provider.deleteCustomer(customerId);
+  }
+  /**
+   * Add payment method to customer
+   */
+  async addPaymentMethod(customerId, paymentMethodId) {
+    return await this.provider.addPaymentMethod(customerId, paymentMethodId);
+  }
+  /**
+   * Create payment intent
+   */
+  async createPaymentIntent(params) {
+    return await this.provider.createPaymentIntent(params);
+  }
+};
+var paymentService = new PaymentService();
+
+// server/routes/payments.ts
+console.log("[PAYMENT ROUTES] File loaded!");
+function registerPaymentRoutes(app2) {
+  console.log("[PAYMENT ROUTES] Registering routes...");
+  app2.get("/api/payments/test", async (req, res) => {
+    try {
+      const provider = paymentService.getProviderName();
+      res.json({
+        success: true,
+        provider,
+        message: "Payment service is ready"
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+  app2.get("/api/payments/methods", async (req, res) => {
+    try {
+      const methods = paymentService.getSupportedMethods?.() ?? [];
+      res.json({
+        success: true,
+        methods
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+  app2.post("/api/payments/create-intent", async (req, res) => {
+    try {
+      const { amount, customerId, metadata } = req.body;
+      if (!amount || !customerId) {
+        return res.status(400).json({
+          success: false,
+          error: "Amount and customerId are required"
+        });
+      }
+      const customer = await db.query.users.findFirst({
+        where: (users2, { eq: eq20 }) => eq20(users2.id, customerId)
+      });
+      if (!customer) {
+        return res.status(404).json({
+          success: false,
+          error: "Customer not found"
+        });
+      }
+      let paymentCustomerId = customer.stripeCustomerId;
+      if (!paymentCustomerId) {
+        const customerName = customer.firstName && customer.lastName ? `${customer.firstName} ${customer.lastName}` : customer.email || "Customer";
+        const result2 = await paymentService.createCustomer({
+          email: customer.email || "",
+          name: customerName,
+          metadata: {
+            crm_id: customer.id.toString()
+          }
+        });
+        if (!result2.success) {
+          return res.status(500).json(result2);
+        }
+        paymentCustomerId = result2.customerId;
+        await db.update(users).set({ stripeCustomerId: paymentCustomerId }).where(eq13(users.id, customer.id));
+      }
+      const result = await paymentService.createPaymentIntent({
+        amount: parseFloat(amount),
+        customerId: paymentCustomerId,
+        metadata: metadata || {}
+      });
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+  app2.post("/api/payments/charge", async (req, res) => {
+    try {
+      const { amount, customerId, paymentMethodId, description, metadata } = req.body;
+      if (!amount || !customerId || !paymentMethodId) {
+        return res.status(400).json({
+          success: false,
+          error: "Amount, customerId, and paymentMethodId are required"
+        });
+      }
+      const customer = await db.query.users.findFirst({
+        where: (users2, { eq: eq20 }) => eq20(users2.id, customerId)
+      });
+      if (!customer || !customer.stripeCustomerId) {
+        return res.status(404).json({
+          success: false,
+          error: "Customer not found or not set up for payments"
+        });
+      }
+      const customerName = customer.firstName && customer.lastName ? `${customer.firstName} ${customer.lastName}` : customer.email || "Customer";
+      const result = await paymentService.charge({
+        amount: parseFloat(amount),
+        customerId: customer.stripeCustomerId,
+        source: paymentMethodId,
+        description: description || `Payment for ${customerName}`,
+        metadata: metadata || {}
+      });
+      if (result.success) {
+      }
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+  app2.post("/api/payments/refund", async (req, res) => {
+    try {
+      const { transactionId, amount } = req.body;
+      if (!transactionId) {
+        return res.status(400).json({
+          success: false,
+          error: "transactionId is required"
+        });
+      }
+      const result = await paymentService.refund(
+        transactionId,
+        amount ? parseFloat(amount) : void 0
+      );
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+  app2.post("/api/payments/customers", async (req, res) => {
+    try {
+      const { email, name, phone, metadata } = req.body;
+      if (!email || !name) {
+        return res.status(400).json({
+          success: false,
+          error: "Email and name are required"
+        });
+      }
+      const result = await paymentService.createCustomer({
+        email,
+        name,
+        phone,
+        metadata: metadata || {}
+      });
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+  app2.get("/api/payments/config", async (req, res) => {
+    try {
+      res.json({
+        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+        provider: paymentService.getProviderName()
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+  console.log("[PAYMENT ROUTES] Routes registered successfully!");
+}
 
 // server/routes.ts
 init_schema();
@@ -4897,35 +9401,34 @@ Focus on actionable recommendations that clearly differentiate between DIY appro
   }
 };
 
-// server/services/email.ts
-import nodemailer from "nodemailer";
-var EmailService = class {
-  transporter;
-  constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.gmail.com",
-      port: parseInt(process.env.SMTP_PORT || "587"),
-      secure: false,
-      // Use TLS (STARTTLS) on port 587
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-      }
-    });
+// server/services/resend-email.ts
+import { Resend } from "resend";
+var resendInstance = null;
+function getResendClient() {
+  if (!resendInstance) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.warn("[Email Service] RESEND_API_KEY not set. Emails will not be sent.");
+    }
+    resendInstance = new Resend(apiKey || "dummy-key-for-startup");
   }
-  generateVerificationCode() {
-    return Math.floor(1e5 + Math.random() * 9e5).toString();
-  }
+  return resendInstance;
+}
+var ResendEmailService = class {
   async sendVerificationEmail(email, companyName, verificationCode) {
     try {
+      if (!process.env.RESEND_API_KEY) {
+        console.warn("[Email Service] RESEND_API_KEY not configured");
+        return false;
+      }
       const htmlContent = this.generateVerificationEmailHTML(companyName, verificationCode);
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      const resend = getResendClient();
+      await resend.emails.send({
+        from: process.env.FROM_EMAIL || "noreply@businessblueprint.io",
         to: email,
         subject: `Verify Your Email - ${verificationCode}`,
         html: htmlContent
-      };
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error("Error sending verification email:", error);
@@ -4934,14 +9437,15 @@ var EmailService = class {
   }
   async sendEmailChangeNotification(oldEmail, newEmail, companyName) {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateEmailChangeNotificationHTML(companyName, newEmail);
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      const resend = getResendClient();
+      await resend.emails.send({
+        from: process.env.FROM_EMAIL || "noreply@businessblueprint.io",
         to: oldEmail,
         subject: `Email Address Changed - Action May Be Required`,
         html: htmlContent
-      };
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error("Error sending email change notification:", error);
@@ -4950,80 +9454,85 @@ var EmailService = class {
   }
   async sendAssessmentReport(email, data) {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateReportHTML(data);
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      const resend = getResendClient();
+      await resend.emails.send({
+        from: process.env.FROM_EMAIL || "noreply@businessblueprint.io",
         to: email,
         subject: `Your Digital Presence Assessment Results - Score: ${data.digitalScore}`,
         html: htmlContent
-      };
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
-      console.error("Error sending email:", error);
+      console.error("Error sending assessment report:", error);
       return false;
     }
   }
   async sendReviewAlert(email, data) {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateReviewAlertHTML(data);
       const sentiment = data.rating <= 2 ? "Negative" : data.rating >= 4 ? "Positive" : "Neutral";
       const urgency = data.rating <= 2 ? "\u26A0\uFE0F URGENT" : "";
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      const resend = getResendClient();
+      await resend.emails.send({
+        from: process.env.FROM_EMAIL || "noreply@businessblueprint.io",
         to: email,
         subject: `${urgency} New ${sentiment} Review on ${data.platform} - ${data.rating} ${data.rating === 1 ? "Star" : "Stars"}`,
         html: htmlContent
-      };
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
-      console.error("Error sending review alert email:", error);
+      console.error("Error sending review alert:", error);
       return false;
     }
   }
   async sendEnrollmentConfirmation(email, data) {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateEnrollmentConfirmationHTML(data);
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      const resend = getResendClient();
+      await resend.emails.send({
+        from: process.env.FROM_EMAIL || "noreply@businessblueprint.io",
         to: email,
         subject: `Welcome to ${data.planName} - Your Digital Growth Journey Begins!`,
         html: htmlContent
-      };
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
-      console.error("Error sending enrollment confirmation email:", error);
+      console.error("Error sending enrollment confirmation:", error);
       return false;
     }
   }
   async sendPathwayReminderEmail(email, data) {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generatePathwayReminderHTML(data);
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      const resend = getResendClient();
+      await resend.emails.send({
+        from: process.env.FROM_EMAIL || "noreply@businessblueprint.io",
         to: email,
         subject: `Still deciding? Your Digital Growth Plan is ready, ${data.businessName}`,
         html: htmlContent
-      };
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
-      console.error("Error sending pathway reminder email:", error);
+      console.error("Error sending pathway reminder:", error);
       return false;
     }
   }
   async sendCheckoutAbandonmentEmail(email, data) {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateCheckoutAbandonmentHTML(data);
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      const resend = getResendClient();
+      await resend.emails.send({
+        from: process.env.FROM_EMAIL || "noreply@businessblueprint.io",
         to: email,
         subject: `Complete your enrollment - ${data.planName} is waiting for you!`,
         html: htmlContent
-      };
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error("Error sending checkout abandonment email:", error);
@@ -5032,14 +9541,15 @@ var EmailService = class {
   }
   async sendMagicLinkEmail(email, magicLink, companyName) {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateMagicLinkHTML(magicLink, companyName);
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      const resend = getResendClient();
+      await resend.emails.send({
+        from: process.env.FROM_EMAIL || "noreply@businessblueprint.io",
         to: email,
         subject: "Your Secure Login Link - Business Blueprint",
         html: htmlContent
-      };
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error("Error sending magic link email:", error);
@@ -5048,674 +9558,62 @@ var EmailService = class {
   }
   async sendThankYouIntroduction(email, data) {
     try {
+      if (!process.env.RESEND_API_KEY) return false;
       const htmlContent = this.generateThankYouIntroductionHTML(data);
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      const resend = getResendClient();
+      await resend.emails.send({
+        from: process.env.FROM_EMAIL || "noreply@businessblueprint.io",
         to: email,
         subject: `Meet Coach Blue \u{1F916} - Your AI Guide to Digital Success`,
         html: htmlContent
-      };
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
-      console.error("Error sending thank you introduction email:", error);
+      console.error("Error sending thank you introduction:", error);
       return false;
     }
   }
   generateReportHTML(data) {
     const highPriorityRecs = data.recommendations.filter((r) => r.priority === "high").slice(0, 3);
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Digital Presence Assessment Results</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; }
-        .header { background: linear-gradient(135deg, #FF6B35, #8B5CF6); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-        .score-circle { display: inline-block; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin: 20px 0; }
-        .content { background: white; padding: 30px; border: 1px solid #e0e0e0; }
-        .score-value { font-size: 48px; font-weight: bold; color: #fff; }
-        .section { margin: 30px 0; }
-        .recommendation { background: #f8f9fa; padding: 20px; margin: 15px 0; border-left: 4px solid #FF6B35; border-radius: 4px; }
-        .cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 5px; }
-        .secondary-button { background: #8B5CF6; }
-        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; border-radius: 0 0 8px 8px; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>Digital Presence Assessment Results</h1>
-        <h2>${data.businessName}</h2>
-        <div class="score-circle">
-            <div>
-                <div class="score-value">${data.digitalScore}</div>
-                <div style="font-size: 14px;">out of 140</div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="content">
-        <div class="section">
-            <h2>Executive Summary</h2>
-            <p>${data.summary}</p>
-        </div>
-        
-        <div class="section">
-            <h2>Priority Recommendations</h2>
-            ${highPriorityRecs.map((rec) => `
-                <div class="recommendation">
-                    <h3>${rec.title}</h3>
-                    <p>${rec.description}</p>
-                    <p><strong>Estimated Impact:</strong> ${rec.estimatedImpact}</p>
-                    <p><strong>Estimated Effort:</strong> ${rec.estimatedEffort}</p>
-                </div>
-            `).join("")}
-        </div>
-        
-        <div class="section" style="text-align: center;">
-            <h2>Choose Your Path Forward</h2>
-            <p>Ready to improve your digital presence? We offer two paths to success:</p>
-            
-            <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/dashboard/${data.assessmentId}?path=diy" class="cta-button">
-                \u{1F6E0}\uFE0F DIY Path - $49/month
-            </a>
-            
-            <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/dashboard/${data.assessmentId}?path=msp" class="cta-button secondary-button">
-                \u{1F3AF} Managed Services - $299/month
-            </a>
-            
-            <p style="margin-top: 20px;">
-                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/dashboard/${data.assessmentId}">View Full Report</a>
-            </p>
-        </div>
-    </div>
-    
-    <div class="footer">
-        <p>This assessment was powered by Google Business Intelligence and AI analysis.</p>
-        <p>Questions? Reply to this email or visit our support center.</p>
-        <p><small>\xA9 2024 businessblueprint.io</small></p>
-    </div>
-</body>
-</html>`;
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Your Digital Presence Assessment Results</title><style>body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; }.header { background: linear-gradient(135deg, #FF6B35, #8B5CF6); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }.score-circle { display: inline-block; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin: 20px 0; }.content { background: white; padding: 30px; border: 1px solid #e0e0e0; }.score-value { font-size: 48px; font-weight: bold; color: #fff; }.section { margin: 30px 0; }.recommendation { background: #f8f9fa; padding: 20px; margin: 15px 0; border-left: 4px solid #FF6B35; border-radius: 4px; }.cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 5px; }.secondary-button { background: #8B5CF6; }.footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; border-radius: 0 0 8px 8px; }</style></head><body><div class="header"><h1>Digital Presence Assessment Results</h1><h2>${data.businessName}</h2><div class="score-circle"><div><div class="score-value">${data.digitalScore}</div><div style="font-size: 14px;">out of 140</div></div></div></div><div class="content"><div class="section"><h2>Executive Summary</h2><p>${data.summary}</p></div><div class="section"><h2>Priority Recommendations</h2>${highPriorityRecs.map((rec) => `<div class="recommendation"><h3>${rec.title}</h3><p>${rec.description}</p><p><strong>Estimated Impact:</strong> ${rec.estimatedImpact}</p><p><strong>Estimated Effort:</strong> ${rec.estimatedEffort}</p></div>`).join("")}</div><div class="section" style="text-align: center;"><h2>Choose Your Path Forward</h2><p>Ready to improve your digital presence? We offer two paths to success:</p><a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/dashboard/${data.assessmentId}?path=diy" class="cta-button">\u{1F6E0}\uFE0F DIY Path - $49/month</a><a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/dashboard/${data.assessmentId}?path=msp" class="cta-button secondary-button">\u{1F3AF} Managed Services - $299/month</a><p style="margin-top: 20px;"><a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/dashboard/${data.assessmentId}">View Full Report</a></p></div></div><div class="footer"><p>This assessment was powered by Google Business Intelligence and AI analysis.</p><p>Questions? Reply to this email or visit our support center.</p><p><small>\xA9 2024 businessblueprint.io</small></p></div></body></html>`;
   }
   generateVerificationEmailHTML(companyName, verificationCode) {
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Email</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
-        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #8B5CF6, #0057FF); color: white; padding: 40px; text-align: center; }
-        .content { padding: 40px; }
-        .code-box { background: #f8f9fa; border: 2px dashed #8B5CF6; padding: 30px; text-align: center; border-radius: 8px; margin: 30px 0; }
-        .code { font-size: 36px; font-weight: bold; color: #8B5CF6; letter-spacing: 8px; font-family: 'Courier New', monospace; }
-        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-        .warning { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 15px; margin: 20px 0; border-radius: 4px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>\u{1F4E7} Verify Your Email</h1>
-            <p>${companyName}</p>
-        </div>
-        
-        <div class="content">
-            <p>Hello,</p>
-            <p>Please use the verification code below to confirm your email address and activate your account:</p>
-            
-            <div class="code-box">
-                <div class="code">${verificationCode}</div>
-            </div>
-            
-            <p>Enter this code on the verification page to complete your email confirmation.</p>
-            
-            <div class="warning">
-                <p style="margin: 0;"><strong>Security Note:</strong> This code expires in 15 minutes. Never share this code with anyone.</p>
-            </div>
-            
-            <p>If you didn't request this verification, you can safely ignore this email.</p>
-        </div>
-        
-        <div class="footer">
-            <p>Need help? Contact our support team.</p>
-            <p><small>\xA9 2024 businessblueprint.io</small></p>
-        </div>
-    </div>
-</body>
-</html>`;
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Verify Your Email</title><style>body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }.container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }.header { background: linear-gradient(135deg, #8B5CF6, #0057FF); color: white; padding: 40px; text-align: center; }.content { padding: 40px; }.code-box { background: #f8f9fa; border: 2px dashed #8B5CF6; padding: 30px; text-align: center; border-radius: 8px; margin: 30px 0; }.code { font-size: 36px; font-weight: bold; color: #8B5CF6; letter-spacing: 8px; font-family: 'Courier New', monospace; }.footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }.warning { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 15px; margin: 20px 0; border-radius: 4px; }</style></head><body><div class="container"><div class="header"><h1>\u{1F4E7} Verify Your Email</h1><p>${companyName}</p></div><div class="content"><p>Hello,</p><p>Please use the verification code below to confirm your email address and activate your account:</p><div class="code-box"><div class="code">${verificationCode}</div></div><p>Enter this code on the verification page to complete your email confirmation.</p><div class="warning"><p style="margin: 0;"><strong>Security Note:</strong> This code expires in 15 minutes. Never share this code with anyone.</p></div><p>If you didn't request this verification, you can safely ignore this email.</p></div><div class="footer"><p>Need help? Contact our support team.</p><p><small>\xA9 2024 businessblueprint.io</small></p></div></div></body></html>`;
   }
   generateEmailChangeNotificationHTML(companyName, newEmail) {
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Address Changed</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
-        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #F59E0B, #DC2626); color: white; padding: 40px; text-align: center; }
-        .content { padding: 40px; }
-        .alert-box { background: #FEF2F2; border: 2px solid #DC2626; padding: 20px; border-radius: 8px; margin: 20px 0; }
-        .cta-button { display: inline-block; background: #DC2626; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
-        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>\u26A0\uFE0F Email Address Changed</h1>
-            <p>${companyName}</p>
-        </div>
-        
-        <div class="content">
-            <p>This is an important security notification.</p>
-            
-            <div class="alert-box">
-                <p style="margin: 0;"><strong>Your account email has been changed to:</strong></p>
-                <p style="font-size: 18px; margin: 10px 0; font-weight: bold;">${newEmail}</p>
-            </div>
-            
-            <p>If you made this change, you can safely ignore this email. Your account is secure.</p>
-            
-            <p><strong>Did not make this change?</strong></p>
-            <p>If you did not authorize this email change, please take immediate action:</p>
-            
-            <div style="text-align: center; margin: 30px 0;">
-                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/contact" class="cta-button">
-                    Contact Support Immediately
-                </a>
-            </div>
-            
-            <p style="font-size: 14px; color: #666;">
-                This notification was sent to your previous email address as a security measure.
-            </p>
-        </div>
-        
-        <div class="footer">
-            <p>For security questions, contact our support team immediately.</p>
-            <p><small>\xA9 2024 businessblueprint.io</small></p>
-        </div>
-    </div>
-</body>
-</html>`;
+    return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Email Address Changed</title></head><body><p>Your account email has been changed to: ${newEmail}</p></body></html>`;
   }
   generateEnrollmentConfirmationHTML(data) {
-    const pathwayColor = data.pathway === "msp" ? "#8B5CF6" : "#FF6B35";
-    const pathwayName = data.pathway === "msp" ? "Managed Services" : "DIY Platform";
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Business Blueprint</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
-        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, ${pathwayColor}, #0057FF); color: white; padding: 40px; text-align: center; }
-        .content { padding: 40px; }
-        .plan-box { background: #f8f9fa; border: 2px solid ${pathwayColor}; padding: 20px; border-radius: 8px; margin: 20px 0; }
-        .feature-list { list-style: none; padding: 0; margin: 20px 0; }
-        .feature-list li { padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
-        .feature-list li:before { content: "\u2713 "; color: ${pathwayColor}; font-weight: bold; margin-right: 10px; }
-        .cta-button { display: inline-block; background: ${pathwayColor}; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
-        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-        .next-steps { background: #E0F2FE; border-left: 4px solid #0284C7; padding: 15px; margin: 20px 0; border-radius: 4px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>\u{1F389} Welcome to Business Blueprint!</h1>
-            <p style="font-size: 18px; margin-top: 10px;">${data.businessName}</p>
-        </div>
-        
-        <div class="content">
-            <p>Congratulations! You've taken the first step toward transforming your digital presence.</p>
-            
-            <div class="plan-box">
-                <h2 style="color: ${pathwayColor}; margin-top: 0;">${data.planName}</h2>
-                <p style="font-size: 14px; color: #666; margin-bottom: 15px;">${pathwayName} Pathway</p>
-                <p style="font-size: 32px; font-weight: bold; color: #333; margin: 10px 0;">
-                    $${data.monthlyPrice.toFixed(2)}<span style="font-size: 16px; font-weight: normal;">/month</span>
-                </p>
-                <p style="font-size: 14px; color: #666;">Next billing date: ${data.nextBillingDate.toLocaleDateString()}</p>
-            </div>
-            
-            <h3>What's Included:</h3>
-            <ul class="feature-list">
-                ${data.features.map((feature) => `<li>${feature}</li>`).join("")}
-            </ul>
-            
-            <div class="next-steps">
-                <h4 style="color: #0284C7; margin-top: 0;">\u{1F680} Next Steps:</h4>
-                <ol style="margin: 10px 0; padding-left: 20px;">
-                    <li>Check your email for login credentials</li>
-                    <li>Access your client portal dashboard</li>
-                    <li>Complete your business profile setup</li>
-                    ${data.pathway === "msp" ? "<li>Your dedicated account manager will contact you within 24 hours</li>" : "<li>Start using the platform tools immediately</li>"}
-                </ol>
-            </div>
-            
-            <div style="text-align: center; margin: 30px 0;">
-                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/client-login" class="cta-button">
-                    Access Your Dashboard
-                </a>
-            </div>
-            
-            <div style="background: #FEF3C7; border: 1px solid #F59E0B; padding: 15px; border-radius: 4px; margin: 20px 0;">
-                <p style="margin: 0;"><strong>\u{1F4DE} Need Help?</strong> Our support team is here for you:</p>
-                <p style="margin: 5px 0 0 0;">Email: support@businessblueprint.io | Live Chat available in your dashboard</p>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>Thank you for choosing Business Blueprint!</p>
-            <p>We're excited to help you grow your digital presence.</p>
-            <p><small>\xA9 2024 businessblueprint.io</small></p>
-        </div>
-    </div>
-</body>
-</html>`;
+    return `<!DOCTYPE html><html><body><p>Welcome to ${data.planName}!</p></body></html>`;
   }
   generatePathwayReminderHTML(data) {
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Digital Growth Plan is Ready</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
-        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #FF6B35, #8B5CF6); color: white; padding: 40px; text-align: center; }
-        .content { padding: 40px; }
-        .score-badge { background: rgba(255,255,255,0.2); display: inline-block; padding: 10px 20px; border-radius: 20px; font-size: 24px; font-weight: bold; margin: 10px 0; }
-        .cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 10px; }
-        .secondary-button { background: #8B5CF6; }
-        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-        .highlight-box { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 15px; margin: 20px 0; border-radius: 4px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>\u{1F4CA} Your Digital Growth Plan is Ready!</h1>
-            <p style="font-size: 18px; margin-top: 10px;">${data.businessName}</p>
-            <div class="score-badge">Digital IQ Score: ${data.digitalScore}</div>
-        </div>
-        
-        <div class="content">
-            <p>Hi there,</p>
-            
-            <p>We noticed you completed your Digital Presence Assessment but haven't selected a pathway yet. Your personalized growth plan is ready and waiting!</p>
-            
-            <div class="highlight-box">
-                <p style="margin: 0;"><strong>\u{1F3AF} Quick Reminder:</strong> Businesses that implement their Digital Growth Plan within 30 days see 3x faster results than those who wait.</p>
-            </div>
-            
-            <h3>Choose Your Path:</h3>
-            
-            <p><strong>Option 1: DIY Platform</strong> - $49/month<br>
-            Perfect if you want hands-on control and prefer to manage everything yourself.</p>
-            
-            <p><strong>Option 2: Managed Services</strong> - Starting at $299/month<br>
-            Let our experts handle everything while you focus on running your business.</p>
-            
-            <div style="text-align: center; margin: 40px 0;">
-                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/assessment-checkout?id=${data.assessmentId}" class="cta-button">
-                    Choose Your Pathway
-                </a>
-                
-                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/dashboard/${data.assessmentId}" class="cta-button secondary-button">
-                    Review My Assessment
-                </a>
-            </div>
-            
-            <p style="margin-top: 30px;">Have questions? Just reply to this email - we're here to help!</p>
-        </div>
-        
-        <div class="footer">
-            <p>Ready to transform your digital presence?</p>
-            <p><small>\xA9 2024 businessblueprint.io</small></p>
-        </div>
-    </div>
-</body>
-</html>`;
+    return `<!DOCTYPE html><html><body><p>Your Digital IQ Score: ${data.digitalScore}</p></body></html>`;
   }
   generateCheckoutAbandonmentHTML(data) {
-    const pathwayColor = data.pathway === "msp" ? "#8B5CF6" : "#FF6B35";
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complete Your Enrollment</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
-        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, ${pathwayColor}, #0057FF); color: white; padding: 40px; text-align: center; }
-        .content { padding: 40px; }
-        .plan-box { background: #f8f9fa; border: 2px solid ${pathwayColor}; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
-        .cta-button { display: inline-block; background: ${pathwayColor}; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
-        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-        .benefit-list { list-style: none; padding: 0; margin: 20px 0; }
-        .benefit-list li { padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
-        .benefit-list li:before { content: "\u2713 "; color: ${pathwayColor}; font-weight: bold; margin-right: 10px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>\u23F0 You're Almost There!</h1>
-            <p style="font-size: 18px; margin-top: 10px;">${data.businessName}</p>
-        </div>
-        
-        <div class="content">
-            <p>Hi,</p>
-            
-            <p>We noticed you started enrolling in <strong>${data.planName}</strong> but didn't complete the process. No worries - we saved your spot!</p>
-            
-            <div class="plan-box">
-                <h2 style="color: ${pathwayColor}; margin-top: 0;">${data.planName}</h2>
-                <p style="font-size: 32px; font-weight: bold; margin: 10px 0;">
-                    $${data.monthlyPrice.toFixed(2)}<span style="font-size: 16px; font-weight: normal;">/month</span>
-                </p>
-            </div>
-            
-            <h3>Why complete your enrollment today:</h3>
-            <ul class="benefit-list">
-                <li>Start seeing results within the first week</li>
-                <li>Get expert guidance from day one</li>
-                <li>Lock in your current pricing</li>
-                <li>Cancel anytime - no long-term commitment</li>
-            </ul>
-            
-            <div style="text-align: center; margin: 40px 0;">
-                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/assessment-checkout?id=${data.assessmentId}" class="cta-button">
-                    Complete My Enrollment
-                </a>
-            </div>
-            
-            <p style="margin-top: 30px; text-align: center; color: #666;">
-                Need help or have questions? Just reply to this email.
-            </p>
-        </div>
-        
-        <div class="footer">
-            <p>Your digital growth journey is just one click away!</p>
-            <p><small>\xA9 2024 businessblueprint.io</small></p>
-        </div>
-    </div>
-</body>
-</html>`;
-  }
-  generateMagicLinkHTML(magicLink, companyName) {
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Secure Login Link</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
-        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #0057FF, #8B5CF6); color: white; padding: 40px; text-align: center; }
-        .content { padding: 40px; }
-        .info-box { background: #E0F2FE; border-left: 4px solid #0057FF; padding: 20px; margin: 20px 0; border-radius: 4px; }
-        .cta-button { display: inline-block; background: #0057FF; color: white; padding: 18px 36px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; font-size: 18px; box-shadow: 0 4px 12px rgba(0,87,255,0.3); }
-        .cta-button:hover { background: #0041CC; }
-        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-        .security-note { background: #FFF4E6; padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 14px; }
-        .expiry-warning { color: #FF6B35; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>\u{1F510} Secure Login Link</h1>
-            <p style="font-size: 18px; margin-top: 10px;">${companyName || "Business Blueprint"}</p>
-        </div>
-        
-        <div class="content">
-            <p>Hello,</p>
-            
-            <p>You requested access to your Business Blueprint dashboard. Click the button below to log in securely:</p>
-            
-            <div style="text-align: center; margin: 30px 0;">
-                <a href="${magicLink}" class="cta-button">
-                    Access My Dashboard
-                </a>
-            </div>
-            
-            <div class="info-box">
-                <h3 style="margin-top: 0;">Why No Password?</h3>
-                <p style="margin-bottom: 0;">We use email-based authentication for maximum security. This means:</p>
-                <ul style="margin: 10px 0;">
-                    <li>No passwords to remember or forget</li>
-                    <li>No risk of password breaches</li>
-                    <li>Access controlled by your email inbox</li>
-                    <li>Each login link is unique and time-limited</li>
-                </ul>
-            </div>
-            
-            <div class="security-note">
-                <p style="margin: 0;"><strong>\u23F1\uFE0F Important:</strong> This link will expire in <span class="expiry-warning">15 minutes</span> for your security.</p>
-                <p style="margin: 10px 0 0 0;">If it expires, simply return to the login page and request a new link.</p>
-            </div>
-            
-            <p style="margin-top: 30px; color: #666; font-size: 14px;">
-                <strong>Didn't request this login?</strong> You can safely ignore this email. The link will expire automatically.
-            </p>
-        </div>
-        
-        <div class="footer">
-            <p>Your security is our priority.</p>
-            <p><small>\xA9 2024 businessblueprint.io</small></p>
-        </div>
-    </div>
-</body>
-</html>`;
-  }
-  generateThankYouIntroductionHTML(data) {
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Digital Success Blueprint is Ready</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
-        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #0057FF, #FFA500); color: white; padding: 40px; text-align: center; }
-        .content { padding: 40px; }
-        .urgency-box { background: #FFF4E6; border-left: 4px solid #FFA500; padding: 20px; margin: 20px 0; border-radius: 4px; }
-        .cta-button { display: inline-block; background: #FFA500; color: white; padding: 18px 36px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 15px 0; font-size: 18px; box-shadow: 0 4px 12px rgba(255,165,0,0.3); }
-        .cta-button:hover { background: #FF8C00; }
-        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-        .benefit-box { background: #E0F2FE; padding: 15px; border-radius: 8px; margin: 15px 0; }
-        .stat-highlight { font-size: 24px; font-weight: bold; color: #0057FF; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>\u{1F3AF} ${data.businessName}</h1>
-            <p style="font-size: 20px; margin-top: 10px;">Your Digital Success Blueprint is Ready</p>
-        </div>
-        
-        <div class="content">
-            <p><strong>Here's the truth:</strong></p>
-            
-            <p>Right now, potential customers are searching for businesses like yours. They're reading reviews, checking social media, and deciding who to call.</p>
-            
-            <p><span class="stat-highlight">93%</span> won't even consider you if they can't verify your business online.</p>
-            
-            <div class="urgency-box">
-                <p style="margin: 0;"><strong>\u26A1 The window is closing.</strong></p>
-                <p style="margin: 10px 0 0 0;">Every day you wait, your competitors are capturing customers who should be yours. The businesses that act within 7 days see results 3x faster than those who delay.</p>
-            </div>
-            
-            <h2 style="color: #0057FF;">What You Need Right Now</h2>
-            
-            <p>Based on your assessment, here's exactly what will move the needle for ${data.businessName}:</p>
-            
-            <div class="benefit-box">
-                <h3 style="margin-top: 0; color: #0057FF;">\u{1F5FA}\uFE0F Step 1: Get Found (Week 1)</h3>
-                <p><strong>Listings Management ($44/mo)</strong> - Your business information synced across 200+ directories. When someone searches, you show up. Consistently. Everywhere.</p>
-                <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Without this, you're invisible to 68% of local searchers.</p>
-            </div>
-            
-            <div class="benefit-box">
-                <h3 style="margin-top: 0; color: #0057FF;">\u2B50 Step 2: Build Trust (Week 2)</h3>
-                <p><strong>Reviews Management ($25/mo)</strong> - Monitor every review, respond instantly with AI assistance, turn feedback into 5-star ratings.</p>
-                <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">88% of customers trust online reviews as much as personal recommendations.</p>
-            </div>
-            
-            <div class="benefit-box">
-                <h3 style="margin-top: 0; color: #0057FF;">\u{1F916} Step 3: Stay Consistent (Week 3)</h3>
-                <p><strong>AI Business Coach (pay as you use)</strong> - Your 24/7 marketing strategist. Get personalized guidance, automate repetitive tasks, avoid costly mistakes.</p>
-                <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;"><em>Everyone gets the same expert-level guidance regardless of what they spend. You pay only for what you use.</em></p>
-            </div>
-            
-            <h2 style="color: #0057FF; margin-top: 40px;">Two Paths Forward</h2>
-            
-            <p><strong>DIY Path:</strong> Start with Listings ($44) + Reviews ($25) = $69/mo. Add AI Coach when you need guidance. Perfect if you want hands-on control.</p>
-            
-            <p><strong>Done-For-You:</strong> Standard MSP ($313/mo) - We handle everything. 10 hours of expert work monthly. You focus on running your business while we build your digital presence.</p>
-            
-            <div style="text-align: center; margin: 40px 0;">
-                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/marketplace" class="cta-button">
-                    \u{1F680} Start Building Your Presence Now
-                </a>
-            </div>
-            
-            <div class="urgency-box">
-                <h3 style="color: #FFA500; margin-top: 0;">\u23F0 Limited Time: First Month Analysis Included</h3>
-                <p style="margin: 0;">Subscribe in the next 48 hours and we'll include a comprehensive competitor analysis ($299 value) showing exactly where you stand and how to overtake them.</p>
-            </div>
-            
-            <h3 style="color: #0057FF;">What Happens After You Subscribe:</h3>
-            <ol>
-                <li><strong>Instant Access:</strong> Your dashboard activates immediately</li>
-                <li><strong>Quick Wins:</strong> We identify 3 changes you can make today for immediate impact</li>
-                <li><strong>Week 1 Results:</strong> You'll see your first reviews come in and rankings improve</li>
-                <li><strong>30-Day Guarantee:</strong> Not seeing results? Full refund, no questions asked</li>
-            </ol>
-            
-            <p style="margin-top: 30px;"><strong>Questions? Text me directly:</strong> Just reply to this email and I'll personally respond within 2 hours.</p>
-            
-            <p>Your competitors aren't waiting. Don't let them win customers that should be yours.</p>
-            
-            <p><strong>Coach Blue \u{1F916}</strong><br>
-            Business Blueprint AI<br>
-            <em>P.S. - Check your inbox for your detailed assessment report. It shows exactly where you're losing customers right now.</em></p>
-        </div>
-        
-        <div class="footer">
-            <p>Business Blueprint - Turning Assessments Into Action</p>
-            <p>Get Found \u2022 Get Customers \u2022 Get Business</p>
-            <p><small>\xA9 2024 businessblueprint.io</small></p>
-        </div>
-    </div>
-</body>
-</html>`;
+    return `<!DOCTYPE html><html><body><p>Complete your enrollment for ${data.planName}</p></body></html>`;
   }
   generateReviewAlertHTML(data) {
-    const ratingColor = data.rating <= 2 ? "#DC2626" : data.rating >= 4 ? "#16A34A" : "#F59E0B";
-    const sentiment = data.rating <= 2 ? "Negative" : data.rating >= 4 ? "Positive" : "Neutral";
-    const stars = "\u2B50".repeat(data.rating);
-    return `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Review Alert</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
-        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: ${ratingColor}; color: white; padding: 30px; text-align: center; }
-        .content { padding: 30px; }
-        .review-box { background: #f8f9fa; padding: 20px; border-left: 4px solid ${ratingColor}; border-radius: 4px; margin: 20px 0; }
-        .rating { font-size: 32px; margin: 10px 0; }
-        .meta { color: #666; font-size: 14px; margin: 10px 0; }
-        .cta-button { display: inline-block; background: ${ratingColor}; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
-        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>\u{1F514} New ${sentiment} Review</h1>
-            <div class="rating">${stars}</div>
-            <h2>${data.businessName}</h2>
-        </div>
-        
-        <div class="content">
-            <div class="meta">
-                <strong>Platform:</strong> ${data.platform}<br>
-                ${data.reviewerName ? `<strong>Reviewer:</strong> ${data.reviewerName}<br>` : ""}
-                ${data.locationName ? `<strong>Location:</strong> ${data.locationName}<br>` : ""}
-                <strong>Date:</strong> ${new Date(data.reviewDate).toLocaleDateString()}
-            </div>
-            
-            <div class="review-box">
-                <p><strong>Review:</strong></p>
-                <p>${data.reviewText || "No text provided"}</p>
-            </div>
-            
-            ${data.rating <= 2 ? `
-            <div style="background: #FEF3C7; border: 1px solid #F59E0B; padding: 15px; border-radius: 4px; margin: 20px 0;">
-                <p style="margin: 0;"><strong>\u26A0\uFE0F Action Required:</strong> This negative review requires immediate attention. Consider responding promptly to address the customer's concerns.</p>
-            </div>
-            ` : ""}
-            
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="${process.env.FRONTEND_URL || "https://businessblueprint.io"}/dashboard" class="cta-button">
-                    Respond to Review
-                </a>
-                <p style="margin-top: 15px; color: #666; font-size: 14px;">
-                    Tip: Use our AI-powered response generator to craft the perfect reply.
-                </p>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>You're receiving this because you have review alerts enabled.</p>
-            <p>Manage your notification preferences in your dashboard settings.</p>
-            <p><small>\xA9 2024 businessblueprint.io</small></p>
-        </div>
-    </div>
-</body>
-</html>`;
+    return `<!DOCTYPE html><html><body><p>New ${data.rating}-star review on ${data.platform}: ${data.reviewText}</p></body></html>`;
+  }
+  generateMagicLinkHTML(magicLink, companyName) {
+    return `<!DOCTYPE html><html><body><p>Click the link to login: <a href="${magicLink}">${magicLink}</a></p></body></html>`;
+  }
+  generateThankYouIntroductionHTML(data) {
+    return `<!DOCTYPE html><html><body><p>Thank you for completing your assessment, ${data.businessName}!</p></body></html>`;
   }
 };
 
 // server/services/inbox-email.ts
 init_db();
 init_schema();
-import nodemailer2 from "nodemailer";
-import { eq as eq8, and as and7 } from "drizzle-orm";
+import nodemailer from "nodemailer";
+import { eq as eq14, and as and9 } from "drizzle-orm";
 var InboxEmailService = class {
   transporter;
   constructor() {
     const smtpPort = parseInt(process.env.SMTP_PORT || "587");
     const isSecure = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : smtpPort === 465;
-    this.transporter = nodemailer2.createTransport({
+    this.transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || "smtp.gmail.com",
       port: smtpPort,
       secure: isSecure,
@@ -5730,17 +9628,17 @@ var InboxEmailService = class {
    * @throws Error with details about the failure
    */
   async sendMessage(conversationId, content, fromName) {
-    const [conversation] = await db.select().from(inboxConversations).where(eq8(inboxConversations.id, conversationId)).limit(1);
+    const [conversation] = await db.select().from(inboxConversations).where(eq14(inboxConversations.id, conversationId)).limit(1);
     if (!conversation) {
       throw new Error("Conversation not found");
     }
     if (conversation.primaryChannelType !== "email") {
       throw new Error("Conversation is not an email thread");
     }
-    const [channelConnection] = await db.select().from(inboxChannelConnections).where(and7(
-      eq8(inboxChannelConnections.clientId, conversation.clientId),
-      eq8(inboxChannelConnections.channelType, "email"),
-      eq8(inboxChannelConnections.status, "active")
+    const [channelConnection] = await db.select().from(inboxChannelConnections).where(and9(
+      eq14(inboxChannelConnections.clientId, conversation.clientId),
+      eq14(inboxChannelConnections.channelType, "email"),
+      eq14(inboxChannelConnections.status, "active")
     )).limit(1);
     const fromEmail = channelConnection?.channelIdentifier || process.env.FROM_EMAIL || "inbox@businessblueprint.io";
     const toEmail = conversation.contactIdentifier;
@@ -5812,10 +9710,10 @@ var InboxEmailService = class {
    */
   async handleIncomingEmail(data) {
     try {
-      let conversation = await db.select().from(inboxConversations).where(and7(
-        eq8(inboxConversations.clientId, data.clientId),
-        eq8(inboxConversations.contactIdentifier, data.from),
-        eq8(inboxConversations.primaryChannelType, "email")
+      let conversation = await db.select().from(inboxConversations).where(and9(
+        eq14(inboxConversations.clientId, data.clientId),
+        eq14(inboxConversations.contactIdentifier, data.from),
+        eq14(inboxConversations.primaryChannelType, "email")
       )).limit(1);
       let conversationId;
       if (conversation.length === 0) {
@@ -5834,7 +9732,7 @@ var InboxEmailService = class {
         await db.update(inboxConversations).set({
           subject: data.subject,
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq8(inboxConversations.id, conversationId));
+        }).where(eq14(inboxConversations.id, conversationId));
       }
       const [message] = await db.insert(inboxMessages2).values({
         conversationId,
@@ -6505,7 +10403,7 @@ var NMIService = class {
 // server/services/productRecommendations.ts
 init_db();
 init_schema();
-import { eq as eq9 } from "drizzle-orm";
+import { eq as eq15 } from "drizzle-orm";
 var ProductRecommendationService = class {
   /**
    * Generate product recommendations based on assessment scores
@@ -6544,7 +10442,7 @@ var ProductRecommendationService = class {
     if (weakCategories.length === 0) {
       return [];
     }
-    const allProducts = await db.select().from(products).where(eq9(products.isActive, true));
+    const allProducts = await db.select().from(products).where(eq15(products.isActive, true));
     for (const weakCat of weakCategories) {
       const matchingProducts = allProducts.filter(
         (product) => product.improvesCategory?.includes(weakCat.category)
@@ -6633,7 +10531,7 @@ var ProductRecommendationService = class {
       categoryAffected: assessmentProductRecommendations.categoryAffected,
       isAccepted: assessmentProductRecommendations.isAccepted,
       isPurchased: assessmentProductRecommendations.isPurchased
-    }).from(assessmentProductRecommendations).innerJoin(products, eq9(assessmentProductRecommendations.productId, products.id)).where(eq9(assessmentProductRecommendations.assessmentId, assessmentId));
+    }).from(assessmentProductRecommendations).innerJoin(products, eq15(assessmentProductRecommendations.productId, products.id)).where(eq15(assessmentProductRecommendations.assessmentId, assessmentId));
     return recs;
   }
 };
@@ -7478,8 +11376,8 @@ var presenceScannerService = new PresenceScannerService();
 // server/routes.ts
 init_schema();
 init_db();
-import { eq as eq11, desc as desc4, and as and9 } from "drizzle-orm";
-import { z as z3 } from "zod";
+import { eq as eq17, desc as desc6, and as and11, or as or3 } from "drizzle-orm";
+import { z as z7 } from "zod";
 
 // server/middleware/auth.ts
 init_jwt();
@@ -7517,143 +11415,22 @@ async function requireAuth(req, res, next) {
   }
 }
 
-// server/replitAuth.ts
-import * as client from "openid-client";
-import { Strategy } from "openid-client/passport";
-import passport from "passport";
-import session from "express-session";
-import memoize from "memoizee";
-import connectPg from "connect-pg-simple";
-if (!process.env.REPLIT_DOMAINS) {
-  throw new Error("Environment variable REPLIT_DOMAINS not provided");
-}
-var getOidcConfig = memoize(
-  async () => {
-    return await client.discovery(
-      new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
-      process.env.REPL_ID
-    );
-  },
-  { maxAge: 3600 * 1e3 }
-);
-function getSession() {
-  const sessionTtl = 7 * 24 * 60 * 60 * 1e3;
-  const pgStore = connectPg(session);
-  const sessionStore = new pgStore({
-    conString: process.env.DATABASE_URL,
-    createTableIfMissing: false,
-    ttl: sessionTtl,
-    tableName: "sessions"
-  });
-  return session({
-    secret: process.env.SESSION_SECRET,
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: sessionTtl
-    }
-  });
-}
-function updateUserSession(user, tokens) {
-  user.claims = tokens.claims();
-  user.access_token = tokens.access_token;
-  user.refresh_token = tokens.refresh_token;
-  user.expires_at = user.claims?.exp;
-}
-async function upsertUser(claims) {
-  await storage.upsertUser({
-    id: claims["sub"],
-    email: claims["email"],
-    firstName: claims["first_name"],
-    lastName: claims["last_name"],
-    profileImageUrl: claims["profile_image_url"]
-  });
-}
-async function setupAuth(app2) {
-  app2.set("trust proxy", 1);
-  app2.use(getSession());
-  app2.use(passport.initialize());
-  app2.use(passport.session());
-  const config = await getOidcConfig();
-  const verify = async (tokens, verified) => {
-    const user = {};
-    updateUserSession(user, tokens);
-    await upsertUser(tokens.claims());
-    verified(null, user);
-  };
-  for (const domain of process.env.REPLIT_DOMAINS.split(",")) {
-    const strategy = new Strategy(
-      {
-        name: `replitauth:${domain}`,
-        config,
-        scope: "openid email profile offline_access",
-        callbackURL: `https://${domain}/api/callback`
-      },
-      verify
-    );
-    passport.use(strategy);
-  }
-  passport.serializeUser((user, cb) => cb(null, user));
-  passport.deserializeUser((user, cb) => cb(null, user));
-  app2.get("/api/login", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, {
-      prompt: "login consent",
-      scope: ["openid", "email", "profile", "offline_access"]
-    })(req, res, next);
-  });
-  app2.get("/api/callback", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, {
-      successReturnToOrRedirect: "/",
-      failureRedirect: "/api/login"
-    })(req, res, next);
-  });
-  app2.get("/api/logout", (req, res) => {
-    req.logout(() => {
-      res.redirect(
-        client.buildEndSessionUrl(config, {
-          client_id: process.env.REPL_ID,
-          post_logout_redirect_uri: `${req.protocol}://${req.hostname}`
-        }).href
-      );
-    });
-  });
-}
-var isAuthenticated = async (req, res, next) => {
-  const user = req.user;
-  if (!req.isAuthenticated() || !user.expires_at) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-  const now = Math.floor(Date.now() / 1e3);
-  if (now <= user.expires_at) {
-    return next();
-  }
-  const refreshToken = user.refresh_token;
-  if (!refreshToken) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
-  }
-  try {
-    const config = await getOidcConfig();
-    const tokenResponse = await client.refreshTokenGrant(config, refreshToken);
-    updateUserSession(user, tokenResponse);
-    return next();
-  } catch (error) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
-  }
-};
-
 // server/routes.ts
 async function registerRoutes(app2) {
   await setupAuth(app2);
   app2.get("/favicon.ico", (req, res) => {
-    res.sendFile(path.resolve(process.cwd(), "attached_assets/Blueprint_Favicon_1762489845363.ico"));
+    res.sendFile(
+      path.resolve(
+        process.cwd(),
+        "attached_assets/Blueprint_Favicon_1762489845363.ico"
+      )
+    );
   });
-  app2.get("/api/auth/user", isAuthenticated, async (req, res) => {
+  app2.get("/api/auth/user", async (req, res) => {
     try {
+      if (!req.isAuthenticated || !req.isAuthenticated()) {
+        return res.json({ user: null });
+      }
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
       res.json(user);
@@ -7664,15 +11441,137 @@ async function registerRoutes(app2) {
   });
   const googleService = new GoogleBusinessService();
   const aiService = new OpenAIAnalysisService();
-  const emailService = new EmailService();
+  const emailService = new ResendEmailService();
+  app2.post("/api/setup/demo-accounts", async (req, res) => {
+    try {
+      const demoAccounts = [
+        {
+          companyName: "Demo Restaurant",
+          email: "demo@businessblueprint.io",
+          accountStatus: "active"
+        },
+        {
+          companyName: "Test Business",
+          email: "test@businessblueprint.io",
+          accountStatus: "active"
+        },
+        {
+          companyName: "Social Media Agency",
+          email: "agency@businessblueprint.io",
+          accountStatus: "active"
+        }
+      ];
+      const results = [];
+      for (const account of demoAccounts) {
+        const existing = await storage.getClientByEmail(account.email);
+        if (existing) {
+          results.push({
+            email: account.email,
+            status: "already exists",
+            id: existing.id
+          });
+        } else {
+          const created = await storage.createClient(account);
+          results.push({
+            email: account.email,
+            status: "created",
+            id: created.id
+          });
+        }
+      }
+      res.json({ success: true, accounts: results });
+    } catch (error) {
+      console.error("Demo account setup error:", error);
+      res.status(500).json({ success: false, error: "Failed to create demo accounts" });
+    }
+  });
   app2.post("/api/assessments", async (req, res) => {
     try {
       const validatedData = insertAssessmentSchema.parse(req.body);
       const assessment = await storage.createAssessment(validatedData);
-      processAssessmentAsync(assessment.id, googleService, aiService, emailService, storage);
+      let client2 = await storage.getClientByEmail(validatedData.email);
+      if (!client2) {
+        client2 = await storage.createClient({
+          companyName: validatedData.businessName,
+          email: validatedData.email,
+          phone: validatedData.phone,
+          website: validatedData.website || void 0,
+          address: validatedData.address,
+          accountStatus: "active"
+        });
+        console.log(
+          `[Assessment] Created client account for ${validatedData.email}, ID: ${client2.id}`
+        );
+      }
+      await storage.linkAssessmentToClient(client2.id, assessment.id);
+      console.log(
+        `[Assessment] Linked assessment ${assessment.id} to client ${client2.id}`
+      );
+      try {
+        const existingCrmContact = await db.select().from(crmContacts).where(eq17(crmContacts.email, validatedData.email)).limit(1);
+        let crmContactId = null;
+        if (existingCrmContact.length === 0) {
+          const [crmContact] = await db.insert(crmContacts).values({
+            clientId: client2.id,
+            firstName: validatedData.businessName?.split(" ")[0] || "Business",
+            lastName: "Owner",
+            email: validatedData.email,
+            phone: validatedData.phone || null,
+            lifecycleStage: "lead",
+            leadSource: "assessment",
+            customFields: {
+              businessName: validatedData.businessName,
+              industry: validatedData.industry,
+              website: validatedData.website || null,
+              address: validatedData.address,
+              assessmentId: assessment.id
+            }
+          }).returning();
+          crmContactId = crmContact.id;
+          console.log(
+            `[Assessment] Created CRM contact ${crmContactId} for ${validatedData.email}`
+          );
+          await db.insert(crmTimeline).values({
+            clientId: client2.id,
+            contactId: crmContactId,
+            eventType: "assessment_started",
+            title: `Digital IQ Assessment started for ${validatedData.businessName}`,
+            description: `Assessment ID: ${assessment.id}`,
+            occurredAt: /* @__PURE__ */ new Date(),
+            sourceApp: "relationships",
+            actorType: "system"
+          });
+        } else {
+          crmContactId = existingCrmContact[0].id;
+          console.log(
+            `[Assessment] CRM contact already exists: ${crmContactId}`
+          );
+          const existingCustomFields = existingCrmContact[0].customFields || {};
+          await db.update(crmContacts).set({
+            customFields: {
+              ...typeof existingCustomFields === "object" ? existingCustomFields : {},
+              businessName: validatedData.businessName,
+              industry: validatedData.industry,
+              website: validatedData.website || null,
+              assessmentId: assessment.id
+            },
+            updatedAt: /* @__PURE__ */ new Date()
+          }).where(eq17(crmContacts.id, crmContactId));
+        }
+      } catch (crmError) {
+        console.error("[Assessment] Failed to create CRM contact:", crmError);
+      }
+      processAssessmentAsync(
+        assessment.id,
+        googleService,
+        aiService,
+        emailService,
+        storage
+      );
       res.json({
         success: true,
         assessmentId: assessment.id,
+        clientId: client2.id,
         message: "Assessment started. You'll receive results via email within 2-3 minutes."
       });
     } catch (error) {
@@ -7694,6 +11593,35 @@ async function registerRoutes(app2) {
     } catch (error) {
       console.error("Error fetching assessments:", error);
       res.status(500).json({ message: "Failed to fetch assessments" });
+    }
+  });
+  app2.get("/api/assessments/lookup", async (req, res) => {
+    try {
+      const { email } = req.query;
+      if (!email || typeof email !== "string") {
+        return res.status(400).json({ message: "Email parameter is required" });
+      }
+      const assessments3 = await storage.getAssessmentsByEmail(email);
+      if (!assessments3 || assessments3.length === 0) {
+        return res.status(404).json({
+          message: "No assessments found for this email address.",
+          assessments: []
+        });
+      }
+      const simplifiedAssessments = assessments3.map((a) => ({
+        id: a.id,
+        businessName: a.businessName,
+        status: a.status,
+        digitalScore: a.digitalScore,
+        createdAt: a.createdAt
+      }));
+      res.json({
+        success: true,
+        assessments: simplifiedAssessments
+      });
+    } catch (error) {
+      console.error("Error looking up assessments:", error);
+      res.status(500).json({ message: "Failed to look up assessments" });
     }
   });
   app2.get("/api/admin/assessments", isAuthenticated, async (req, res) => {
@@ -7726,8 +11654,10 @@ async function registerRoutes(app2) {
     try {
       const id = parseInt(req.params.id);
       const { pathway } = req.body;
-      if (!["diy", "msp", "combination", "none"].includes(pathway)) {
-        return res.status(400).json({ message: "Invalid pathway selection" });
+      if (!["diy", "none"].includes(pathway)) {
+        return res.status(400).json({
+          message: "Invalid pathway selection - only DIY is supported"
+        });
       }
       await storage.updateAssessment(id, { selectedPathway: pathway });
       res.json({ success: true, message: "Pathway updated successfully" });
@@ -7746,11 +11676,14 @@ async function registerRoutes(app2) {
       if (assessment.selectedPathway && assessment.selectedPathway !== "none") {
         return res.status(400).json({ message: "Pathway already selected" });
       }
-      const emailSent = await emailService.sendPathwayReminderEmail(assessment.email, {
-        businessName: assessment.businessName,
-        digitalScore: assessment.digitalScore || 0,
-        assessmentId: id
-      });
+      const emailSent = await emailService.sendPathwayReminderEmail(
+        assessment.email,
+        {
+          businessName: assessment.businessName,
+          digitalScore: assessment.digitalScore || 0,
+          assessmentId: id
+        }
+      );
       if (emailSent) {
         res.json({ success: true, message: "Pathway reminder sent" });
       } else {
@@ -7771,27 +11704,26 @@ async function registerRoutes(app2) {
       if (!assessment.selectedPathway || assessment.selectedPathway === "none") {
         return res.status(400).json({ message: "No pathway selected yet" });
       }
-      const existingSubscriptions = await db.select().from(subscriptions).where(eq11(subscriptions.assessmentId, id));
+      const existingSubscriptions = await db.select().from(subscriptions).where(eq17(subscriptions.assessmentId, id));
       if (existingSubscriptions.length > 0) {
         return res.status(400).json({ message: "Subscription already exists" });
       }
       const pathwayNames = {
-        "diy": "DIY Platform",
-        "msp": "Managed Services Starter",
-        "combination": "Combination Plan"
+        diy: "DIY Platform"
       };
       const monthlyPrices = {
-        "diy": 49,
-        "msp": 299,
-        "combination": 199
+        diy: 49
       };
-      const emailSent = await emailService.sendCheckoutAbandonmentEmail(assessment.email, {
-        businessName: assessment.businessName,
-        pathway: assessment.selectedPathway,
-        planName: pathwayNames[assessment.selectedPathway],
-        monthlyPrice: monthlyPrices[assessment.selectedPathway],
-        assessmentId: id
-      });
+      const emailSent = await emailService.sendCheckoutAbandonmentEmail(
+        assessment.email,
+        {
+          businessName: assessment.businessName,
+          pathway: assessment.selectedPathway,
+          planName: pathwayNames[assessment.selectedPathway],
+          monthlyPrice: monthlyPrices[assessment.selectedPathway],
+          assessmentId: id
+        }
+      );
       if (emailSent) {
         res.json({ success: true, message: "Checkout reminder sent" });
       } else {
@@ -7802,98 +11734,245 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Failed to send checkout reminder" });
     }
   });
-  app2.get("/api/clients/:id/dashboard", async (req, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
-      if (isNaN(clientId)) {
-        return res.status(400).json({ message: "Invalid client ID" });
-      }
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
-        return res.status(404).json({ message: "Client not found" });
-      }
-      const campaigns2 = await storage.getCampaignsByClient(clientId);
-      const messages = await storage.getMessagesByClient(clientId);
-      const latestCampaign = campaigns2.length > 0 ? campaigns2[0] : null;
-      const dashboardData = {
-        client: client2,
-        digitalScore: 75,
-        // Could be calculated from various factors
-        lastUpdated: client2.updatedAt,
-        listings: {
-          total: client2.enabledFeatures ? client2.enabledFeatures.split(",").length : 0,
-          verified: client2.enabledFeatures ? client2.enabledFeatures.split(",").length - 1 : 0,
-          pending: 1,
-          citations: 12,
-          // Placeholder for citations count
-          platforms: ["Google Business", "Yelp", "Facebook", "Apple Maps"]
-        },
-        reviews: {
-          average: 4.3,
-          total: 156,
-          recent: 12,
-          response_rate: 85
-        },
-        campaigns: {
-          active: campaigns2.filter((c) => c.status === "active").length,
-          pending: campaigns2.filter((c) => c.status === "draft").length,
-          total: campaigns2.length,
-          performance: {
-            reach: 2340,
-            clicks: 89,
-            conversions: 12
-          },
-          latest: latestCampaign ? {
-            name: latestCampaign.name || "Recent Campaign",
-            status: latestCampaign.status || "active",
-            unsubscribes: 3,
-            // Placeholder - will be from analytics
-            clickThroughs: 47,
-            // Placeholder
-            purchases: 8,
-            // Placeholder
-            sent: 250
-            // Placeholder - will be from campaign analytics
-          } : null
-        },
-        socialMedia: {
-          isSetup: false,
-          // Placeholder - check if profiles connected
-          newLikes: 24,
-          newComments: 8,
-          newMessages: 5,
-          connectedProfiles: 0
-        },
-        livechat: {
-          isSetup: false,
-          // Placeholder - check if widget installed
-          participationRating: 4.8,
-          inQueue: 2,
-          totalChats: 145,
-          avgResponseTime: "2.3 min"
-        },
-        messages: {
-          unread: messages.filter((m) => !m.isRead).length,
-          total: messages.length,
-          recent: messages.slice(0, 5)
+  app2.get(
+    "/api/clients/:id/dashboard",
+    requireClientPortalAccess,
+    async (req, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ message: "Invalid client ID" });
         }
-      };
-      res.json({ success: true, data: dashboardData });
-    } catch (error) {
-      console.error("Error fetching client dashboard:", error);
-      res.status(500).json({
-        message: "Failed to fetch dashboard data",
-        error: error.message
-      });
+        const client2 = await storage.getClient(clientId);
+        if (!client2) {
+          return res.status(404).json({ message: "Client not found" });
+        }
+        const campaigns2 = await storage.getCampaignsByClient(clientId);
+        const messages = await storage.getMessagesByClient(clientId);
+        const latestCampaign = campaigns2.length > 0 ? campaigns2[0] : null;
+        let crmStats = { contactsCount: 0, activeDeals: 0, tasksDue: 0 };
+        try {
+          const contacts = await db.select().from(crmContacts).where(eq17(crmContacts.clientId, clientId));
+          crmStats.contactsCount = contacts.length;
+          const activeDeals = await db.select().from(crmDeals).where(
+            and11(eq17(crmDeals.clientId, clientId), eq17(crmDeals.status, "open"))
+          );
+          crmStats.activeDeals = activeDeals.length;
+          const today = /* @__PURE__ */ new Date();
+          today.setHours(23, 59, 59, 999);
+          const tasks2 = await db.select().from(crmTasks).where(
+            and11(
+              eq17(crmTasks.clientId, clientId),
+              or3(
+                eq17(crmTasks.status, "pending"),
+                eq17(crmTasks.status, "in_progress")
+              )
+            )
+          );
+          crmStats.tasksDue = tasks2.filter(
+            (t) => t.dueDate && new Date(t.dueDate) <= today
+          ).length;
+        } catch (err) {
+          console.error("[Dashboard] Error fetching CRM stats:", err);
+        }
+        const dashboardData = {
+          client: client2,
+          digitalScore: 75,
+          // Could be calculated from various factors
+          lastUpdated: client2.updatedAt,
+          listings: {
+            total: client2.enabledFeatures ? client2.enabledFeatures.split(",").length : 0,
+            verified: client2.enabledFeatures ? client2.enabledFeatures.split(",").length - 1 : 0,
+            pending: 1,
+            citations: 12,
+            // Placeholder for citations count
+            platforms: ["Google Business", "Yelp", "Facebook", "Apple Maps"]
+          },
+          reviews: {
+            average: 4.3,
+            total: 156,
+            recent: 12,
+            response_rate: 85
+          },
+          campaigns: {
+            active: campaigns2.filter((c) => c.status === "active").length,
+            pending: campaigns2.filter((c) => c.status === "draft").length,
+            total: campaigns2.length,
+            performance: {
+              reach: 2340,
+              clicks: 89,
+              conversions: 12
+            },
+            latest: latestCampaign ? {
+              name: latestCampaign.name || "Recent Campaign",
+              status: latestCampaign.status || "active",
+              unsubscribes: 3,
+              // Placeholder - will be from analytics
+              clickThroughs: 47,
+              // Placeholder
+              purchases: 8,
+              // Placeholder
+              sent: 250
+              // Placeholder - will be from campaign analytics
+            } : null
+          },
+          socialMedia: {
+            isSetup: false,
+            // Placeholder - check if profiles connected
+            newLikes: 24,
+            newComments: 8,
+            newMessages: 5,
+            connectedProfiles: 0
+          },
+          livechat: {
+            isSetup: false,
+            // Placeholder - check if widget installed
+            participationRating: 4.8,
+            inQueue: 2,
+            totalChats: 145,
+            avgResponseTime: "2.3 min"
+          },
+          messages: {
+            unread: messages.filter((m) => !m.isRead).length,
+            total: messages.length,
+            recent: messages.slice(0, 5)
+          },
+          crm: {
+            contactsCount: crmStats.contactsCount,
+            activeDeals: crmStats.activeDeals,
+            tasksDue: crmStats.tasksDue
+          }
+        };
+        res.json({ success: true, data: dashboardData });
+      } catch (error) {
+        console.error("Error fetching client dashboard:", error);
+        res.status(500).json({
+          message: "Failed to fetch dashboard data",
+          error: error.message
+        });
+      }
     }
-  });
+  );
   app2.get("/api/admin/clients", isAuthenticated, async (req, res) => {
     try {
-      const clients3 = await storage.getAllClients();
-      res.json(clients3);
+      const clientList = await storage.getAllClients();
+      res.json(clientList);
     } catch (error) {
       console.error("Error fetching clients:", error);
       res.status(500).json({ message: "Failed to fetch clients" });
+    }
+  });
+  app2.get("/api/admin/tickets", isAuthenticated, async (req, res) => {
+    try {
+      const tickets = await storage.getAllTickets();
+      res.json(tickets);
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+      res.status(500).json({ message: "Failed to fetch tickets" });
+    }
+  });
+  app2.post("/api/admin/tickets", isAuthenticated, async (req, res) => {
+    try {
+      const validationResult = insertSupportTicketSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({
+          message: "Validation failed",
+          errors: validationResult.error.flatten().fieldErrors
+        });
+      }
+      const { clientId, subject, description, category, priority } = validationResult.data;
+      const newTicket = await storage.createTicket({
+        clientId,
+        subject,
+        description,
+        category,
+        priority
+      });
+      res.json(newTicket);
+    } catch (error) {
+      console.error("Error creating ticket:", error);
+      res.status(500).json({ message: "Failed to create ticket" });
+    }
+  });
+  app2.patch("/api/admin/tickets/:id", isAuthenticated, async (req, res) => {
+    try {
+      const ticketId = parseInt(req.params.id);
+      if (isNaN(ticketId)) {
+        return res.status(400).json({ message: "Invalid ticket ID" });
+      }
+      const validationResult = updateSupportTicketSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({
+          message: "Validation failed",
+          errors: validationResult.error.flatten().fieldErrors
+        });
+      }
+      const { status, priority, resolution } = validationResult.data;
+      const updatedTicket = await storage.updateTicket(ticketId, { status, priority, resolution });
+      res.json(updatedTicket);
+    } catch (error) {
+      console.error("Error updating ticket:", error);
+      res.status(500).json({ message: "Failed to update ticket" });
+    }
+  });
+  app2.post("/api/admin/tickets/:id/comments", isAuthenticated, async (req, res) => {
+    try {
+      const ticketId = parseInt(req.params.id);
+      if (isNaN(ticketId)) {
+        return res.status(400).json({ message: "Invalid ticket ID" });
+      }
+      const commentData = { ...req.body, ticketId };
+      const validationResult = insertTicketCommentSchema.safeParse(commentData);
+      if (!validationResult.success) {
+        return res.status(400).json({
+          message: "Validation failed",
+          errors: validationResult.error.flatten().fieldErrors
+        });
+      }
+      const { content, isInternal } = validationResult.data;
+      const newComment = await storage.addTicketComment(ticketId, {
+        content,
+        isInternal,
+        authorType: "admin"
+      });
+      res.json(newComment);
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      res.status(500).json({ message: "Failed to add comment" });
+    }
+  });
+  app2.get("/api/admin/prescriptions", isAuthenticated, async (req, res) => {
+    try {
+      const prescriptionList = await storage.getAllPrescriptions();
+      res.json(prescriptionList);
+    } catch (error) {
+      console.error("Error fetching prescriptions:", error);
+      res.status(500).json({ message: "Failed to fetch prescriptions" });
+    }
+  });
+  app2.patch("/api/admin/prescriptions/:id", isAuthenticated, async (req, res) => {
+    try {
+      const prescriptionId = parseInt(req.params.id);
+      if (isNaN(prescriptionId)) {
+        return res.status(400).json({ message: "Invalid prescription ID" });
+      }
+      const validationResult = updatePrescriptionSchema.safeParse(req.body);
+      if (!validationResult.success) {
+        return res.status(400).json({
+          message: "Validation failed",
+          errors: validationResult.error.flatten().fieldErrors
+        });
+      }
+      const { status, reviewNotes, implementationProgress } = validationResult.data;
+      const updatedPrescription = await storage.updatePrescription(prescriptionId, {
+        status,
+        reviewNotes,
+        implementationProgress
+      });
+      res.json(updatedPrescription);
+    } catch (error) {
+      console.error("Error updating prescription:", error);
+      res.status(500).json({ message: "Failed to update prescription" });
     }
   });
   app2.get("/api/clients/verify-magic-link", async (req, res) => {
@@ -7912,7 +11991,12 @@ async function registerRoutes(app2) {
           message: "Invalid or expired login link. Please request a new one."
         });
       }
-      if (magicToken.used) {
+      const isDemoEmail2 = [
+        "demo@businessblueprint.io",
+        "test@businessblueprint.io",
+        "agency@businessblueprint.io"
+      ].includes(magicToken.email.toLowerCase());
+      if (magicToken.used && !isDemoEmail2) {
         return res.status(400).json({
           success: false,
           message: "This login link has already been used. Please request a new one."
@@ -7925,7 +12009,10 @@ async function registerRoutes(app2) {
         });
       }
       const client2 = await storage.getClientByEmail(magicToken.email);
-      console.log("[Magic Link Verify] Found client:", client2 ? { id: client2.id, email: client2.email, idType: typeof client2.id } : "null");
+      console.log(
+        "[Magic Link Verify] Found client:",
+        client2 ? { id: client2.id, email: client2.email, idType: typeof client2.id } : "null"
+      );
       if (!client2) {
         return res.status(404).json({
           success: false,
@@ -7950,18 +12037,71 @@ async function registerRoutes(app2) {
           message: "Account configuration error"
         });
       }
-      console.log("[Magic Link Verify] Client ID validation passed:", client2.id);
-      await storage.markTokenAsUsed(token);
-      console.log("[Magic Link Verify] Token marked as used");
-      console.log("[Magic Link Verify] Updating client login tracking for ID:", client2.id);
+      console.log(
+        "[Magic Link Verify] Client ID validation passed:",
+        client2.id
+      );
+      console.log(
+        "[Magic Link Verify] Updating client login tracking for ID:",
+        client2.id
+      );
       await storage.updateClient(client2.id, {
         lastLoginTime: /* @__PURE__ */ new Date(),
         loginCount: (client2.loginCount || 0) + 1
       });
       console.log("[Magic Link Verify] Login tracking updated");
-      console.log("[Magic Link Verify] Creating dashboard token for client ID:", client2.id);
-      const jwtToken = await jwtService.createDashboardToken(client2.id, client2.email);
+      try {
+        const existingCrmContact = await db.select().from(crmContacts).where(eq17(crmContacts.email, client2.email)).limit(1);
+        if (existingCrmContact.length === 0) {
+          const [crmContact] = await db.insert(crmContacts).values({
+            clientId: client2.id,
+            firstName: client2.companyName?.split(" ")[0] || "Portal",
+            lastName: "User",
+            email: client2.email,
+            phone: client2.phone || null,
+            lifecycleStage: "lead",
+            leadSource: "portal_signup"
+          }).returning();
+          console.log(
+            `[Magic Link Verify] Created CRM contact ${crmContact.id} for portal user ${client2.email}`
+          );
+          await db.insert(crmTimeline).values({
+            clientId: client2.id,
+            contactId: crmContact.id,
+            eventType: "portal_login",
+            title: `First portal login by ${client2.companyName || client2.email}`,
+            occurredAt: /* @__PURE__ */ new Date(),
+            sourceApp: "relationships",
+            actorType: "system"
+          });
+        } else {
+          if (!existingCrmContact[0].clientId) {
+            await db.update(crmContacts).set({ clientId: client2.id, updatedAt: /* @__PURE__ */ new Date() }).where(eq17(crmContacts.id, existingCrmContact[0].id));
+            console.log(
+              `[Magic Link Verify] Linked existing CRM contact ${existingCrmContact[0].id} to client ${client2.id}`
+            );
+          }
+        }
+      } catch (crmError) {
+        console.error(
+          "[Magic Link Verify] Failed to create/link CRM contact:",
+          crmError
+        );
+      }
+      console.log(
+        "[Magic Link Verify] Creating dashboard token for client ID:",
+        client2.id
+      );
+      const jwtToken = await jwtService.createDashboardToken(
+        client2.id,
+        client2.email
+      );
       console.log("[Magic Link Verify] JWT token created successfully");
+      req.session.clientId = client2.id;
+      req.session.email = client2.email;
+      console.log("[Magic Link Verify] Session set for client ID:", client2.id);
+      await storage.markTokenAsUsed(token);
+      console.log("[Magic Link Verify] Token marked as used after successful verification");
       res.json({
         success: true,
         client: {
@@ -7975,70 +12115,92 @@ async function registerRoutes(app2) {
       });
     } catch (error) {
       console.error("Magic link verification error:", error);
+      console.error("Error stack:", error?.stack);
+      console.error("Error message:", error?.message);
       res.status(500).json({
         success: false,
-        message: "Verification failed. Please try again."
+        message: "Verification failed. Please try again.",
+        error: error?.message,
+        code: error?.code
       });
     }
   });
-  app2.get("/api/clients/:id", async (req, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
-      if (isNaN(clientId) || !isFinite(clientId)) {
-        console.error("[GET /api/clients/:id] Invalid client ID:", req.params.id);
-        return res.status(400).json({ message: "Invalid client ID format" });
-      }
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
-        return res.status(404).json({ message: "Client not found" });
-      }
-      res.json(client2);
-    } catch (error) {
-      console.error("Error fetching client:", error);
-      res.status(500).json({ message: "Failed to fetch client" });
-    }
-  });
-  app2.get("/api/clients/:id/campaign-data", async (req, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
-      if (isNaN(clientId) || !isFinite(clientId)) {
-        console.error("[GET /api/clients/:id/campaign-data] Invalid client ID:", req.params.id);
-        return res.status(400).json({ message: "Invalid client ID format" });
-      }
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
-        return res.status(404).json({ message: "Client not found" });
-      }
-      const campaigns2 = await storage.getCampaignsByClient(clientId);
-      const messages = await storage.getMessagesByClient(clientId);
-      const campaignData = {
-        client: client2,
-        campaigns: campaigns2,
-        messages,
-        stats: {
-          totalCampaigns: campaigns2.length,
-          activeCampaigns: campaigns2.filter((c) => c.status === "active").length,
-          totalMessages: messages.length,
-          unreadMessages: messages.filter((m) => !m.isRead).length
+  app2.get(
+    "/api/clients/:id",
+    requireClientPortalAccess,
+    async (req, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId) || !isFinite(clientId)) {
+          console.error(
+            "[GET /api/clients/:id] Invalid client ID:",
+            req.params.id
+          );
+          return res.status(400).json({ message: "Invalid client ID format" });
         }
-      };
-      res.json(campaignData);
-    } catch (error) {
-      console.error("Error fetching campaign data:", error);
-      res.status(500).json({ message: "Failed to fetch campaign data" });
+        const client2 = await storage.getClient(clientId);
+        if (!client2) {
+          return res.status(404).json({ message: "Client not found" });
+        }
+        res.json(client2);
+      } catch (error) {
+        console.error("Error fetching client:", error);
+        res.status(500).json({ message: "Failed to fetch client" });
+      }
     }
-  });
-  app2.get("/api/clients/:id/messages", async (req, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
-      const limit = parseInt(req.query.limit) || 50;
-      const messages = await storage.getClientMessages(clientId, limit);
-      res.json(messages);
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-      res.status(500).json({ message: "Failed to fetch messages" });
+  );
+  app2.get(
+    "/api/clients/:id/campaign-data",
+    requireClientPortalAccess,
+    async (req, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId) || !isFinite(clientId)) {
+          console.error(
+            "[GET /api/clients/:id/campaign-data] Invalid client ID:",
+            req.params.id
+          );
+          return res.status(400).json({ message: "Invalid client ID format" });
+        }
+        const client2 = await storage.getClient(clientId);
+        if (!client2) {
+          return res.status(404).json({ message: "Client not found" });
+        }
+        const campaigns2 = await storage.getCampaignsByClient(clientId);
+        const messages = await storage.getMessagesByClient(clientId);
+        const campaignData = {
+          client: client2,
+          campaigns: campaigns2,
+          messages,
+          stats: {
+            totalCampaigns: campaigns2.length,
+            activeCampaigns: campaigns2.filter((c) => c.status === "active").length,
+            totalMessages: messages.length,
+            unreadMessages: messages.filter((m) => !m.isRead).length
+          }
+        };
+        res.json(campaignData);
+      } catch (error) {
+        console.error("Error fetching campaign data:", error);
+        res.status(500).json({ message: "Failed to fetch campaign data" });
+      }
     }
-  });
+  );
+  app2.get(
+    "/api/clients/:id/messages",
+    requireClientPortalAccess,
+    async (req, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        const limit = parseInt(req.query.limit) || 50;
+        const messages = await storage.getClientMessages(clientId, limit);
+        res.json(messages);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+        res.status(500).json({ message: "Failed to fetch messages" });
+      }
+    }
+  );
   app2.patch("/api/messages/:id/read", async (req, res) => {
     try {
       const messageId = parseInt(req.params.id);
@@ -8069,7 +12231,7 @@ async function registerRoutes(app2) {
       if (!isActive) {
         return res.status(401).json({ message: "Token has been revoked" });
       }
-      const [dashboardRecord] = await db.select().from(dashboardAccess).where(eq11(dashboardAccess.accessToken, token));
+      const [dashboardRecord] = await db.select().from(dashboardAccess).where(eq17(dashboardAccess.accessToken, token));
       if (!dashboardRecord) {
         return res.status(404).json({ message: "Dashboard access not found" });
       }
@@ -8140,7 +12302,22 @@ async function registerRoutes(app2) {
         });
       }
       const normalizedEmail = email.toLowerCase().trim();
-      const client2 = await storage.getClientByEmail(normalizedEmail);
+      const demoAccounts = {
+        "demo@businessblueprint.io": "Demo Restaurant",
+        "test@businessblueprint.io": "Test Business",
+        "agency@businessblueprint.io": "Social Media Agency"
+      };
+      let client2 = await storage.getClientByEmail(normalizedEmail);
+      if (!client2 && demoAccounts[normalizedEmail]) {
+        client2 = await storage.createClient({
+          companyName: demoAccounts[normalizedEmail],
+          email: normalizedEmail,
+          accountStatus: "active"
+        });
+        console.log(
+          `[Login] Auto-created demo account: ${normalizedEmail} (ID: ${client2.id})`
+        );
+      }
       if (!client2) {
         return res.status(404).json({
           success: false,
@@ -8149,31 +12326,50 @@ async function registerRoutes(app2) {
       }
       const token = randomBytes(32).toString("hex");
       const expiresAt = /* @__PURE__ */ new Date();
-      expiresAt.setMinutes(expiresAt.getMinutes() + 15);
+      const isDemoAccount = [
+        "demo@businessblueprint.io",
+        "test@businessblueprint.io",
+        "agency@businessblueprint.io"
+      ].includes(normalizedEmail);
+      expiresAt.setMinutes(
+        expiresAt.getMinutes() + (isDemoAccount ? 1440 : 15)
+      );
       await storage.createMagicLinkToken({
         email: normalizedEmail,
         token,
         expiresAt
       });
-      const frontendUrl = process.env.FRONTEND_URL || "https://businessblueprint.io";
+      let frontendUrl;
+      if (process.env.NODE_ENV === "development") {
+        const protocol = req.get("x-forwarded-proto") || (req.secure ? "https" : "http");
+        const host = req.get("host") || "localhost:5000";
+        frontendUrl = `${protocol}://${host}`;
+      } else {
+        frontendUrl = process.env.FRONTEND_URL || `https://${req.get("host")}`;
+      }
       const magicLink = `${frontendUrl}/portal/verify?token=${token}`;
-      const emailService2 = new EmailService();
-      emailService2.sendMagicLinkEmail(
-        normalizedEmail,
-        magicLink,
-        client2.companyName
-      ).then((sent) => {
+      const magicLinkEmailService = new ResendEmailService();
+      magicLinkEmailService.sendMagicLinkEmail(normalizedEmail, magicLink, client2.companyName).then((sent) => {
         if (sent) {
           console.log(`\u2705 Magic link email sent to ${normalizedEmail}`);
         } else {
-          console.warn(`\u26A0\uFE0F Failed to send email to ${normalizedEmail}. Magic link: ${magicLink}`);
+          console.warn(
+            `\u26A0\uFE0F Failed to send email to ${normalizedEmail}. Magic link: ${magicLink}`
+          );
         }
       }).catch((err) => {
-        console.error(`\u274C Error sending magic link email to ${normalizedEmail}:`, err.message);
+        console.error(
+          `\u274C Error sending magic link email to ${normalizedEmail}:`,
+          err.message
+        );
       });
       res.json({
         success: true,
-        message: "Check your email! We've sent you a secure login link.",
+        message: isDemoAccount ? "Demo account detected - use the link below to login instantly." : "Check your email! We've sent you a secure login link.",
+        ...isDemoAccount && {
+          demoLink: magicLink,
+          note: "This link is provided for Meta App Review testing purposes."
+        },
         ...process.env.NODE_ENV === "development" && {
           devToken: token,
           devLink: magicLink
@@ -8238,149 +12434,165 @@ async function registerRoutes(app2) {
       res.status(500).json({ error: "Failed to load listings data" });
     }
   });
-  app2.get("/api/clients/:id/listings", async (req, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
-      if (isNaN(clientId)) {
-        return res.status(400).json({ error: "Invalid client ID" });
-      }
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
-        return res.status(404).json({ error: "Client not found" });
-      }
-      const listings = [
-        {
-          id: 1,
-          platform: "Google Business",
-          status: "active",
-          name: client2.companyName || "Business Name",
-          address: client2.address || "123 Main St, City, ST 12345",
-          phone: client2.phone || "(555) 123-4567",
-          website: client2.website || "https://example.com",
-          hours: "Mon-Fri 9AM-5PM",
-          lastUpdated: (/* @__PURE__ */ new Date()).toISOString(),
-          url: "https://g.page/example"
-        },
-        {
-          id: 2,
-          platform: "Yelp",
-          status: "active",
-          name: client2.companyName || "Business Name",
-          address: client2.address || "123 Main St, City, ST 12345",
-          phone: client2.phone || "(555) 123-4567",
-          website: client2.website || "https://example.com",
-          hours: "Mon-Fri 9AM-5PM",
-          lastUpdated: new Date(Date.now() - 864e5).toISOString(),
-          url: "https://yelp.com/biz/example"
+  app2.get(
+    "/api/clients/:id/listings",
+    requireClientPortalAccess,
+    async (req, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
         }
-      ];
-      res.json(listings);
-    } catch (error) {
-      console.error("Error fetching client listings:", error);
-      res.status(500).json({ error: "Failed to fetch listings" });
-    }
-  });
-  app2.get("/api/clients/:id/listings/metrics", async (req, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
-      if (isNaN(clientId)) {
-        return res.status(400).json({ error: "Invalid client ID" });
-      }
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
-        return res.status(404).json({ error: "Client not found" });
-      }
-      const metrics = {
-        totalListings: 12,
-        activeListings: 10,
-        pendingListings: 1,
-        errorListings: 1,
-        totalViews: 4523,
-        totalClicks: 892,
-        avgRating: 4.6
-      };
-      res.json(metrics);
-    } catch (error) {
-      console.error("Error fetching listing metrics:", error);
-      res.status(500).json({ error: "Failed to fetch listing metrics" });
-    }
-  });
-  app2.get("/api/clients/:id/reviews", async (req, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
-      if (isNaN(clientId)) {
-        return res.status(400).json({ error: "Invalid client ID" });
-      }
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
-        return res.status(404).json({ error: "Client not found" });
-      }
-      const reviews = [
-        {
-          id: 1,
-          platform: "Google",
-          rating: 5,
-          reviewText: "Excellent service! The team was professional and delivered beyond expectations.",
-          reviewerName: "Sarah J.",
-          reviewDate: (/* @__PURE__ */ new Date()).toISOString(),
-          sentiment: "positive"
-        },
-        {
-          id: 2,
-          platform: "Yelp",
-          rating: 2,
-          reviewText: "Service was slow and the staff seemed uninterested. Not what I expected.",
-          reviewerName: "Mike T.",
-          reviewDate: new Date(Date.now() - 864e5).toISOString(),
-          sentiment: "negative"
-        },
-        {
-          id: 3,
-          platform: "Facebook",
-          rating: 4,
-          reviewText: "Good experience overall. A few minor issues but nothing major.",
-          reviewerName: "Jennifer L.",
-          reviewDate: new Date(Date.now() - 1728e5).toISOString(),
-          response: "Thank you for your feedback! We appreciate your business.",
-          responseDate: new Date(Date.now() - 864e5).toISOString(),
-          sentiment: "positive"
+        const client2 = await storage.getClient(clientId);
+        if (!client2) {
+          return res.status(404).json({ error: "Client not found" });
         }
-      ];
-      res.json(reviews);
-    } catch (error) {
-      console.error("Error fetching client reviews:", error);
-      res.status(500).json({ error: "Failed to fetch reviews" });
+        const listings = [
+          {
+            id: 1,
+            platform: "Google Business",
+            status: "active",
+            name: client2.companyName || "Business Name",
+            address: client2.address || "123 Main St, City, ST 12345",
+            phone: client2.phone || "(555) 123-4567",
+            website: client2.website || "https://example.com",
+            hours: "Mon-Fri 9AM-5PM",
+            lastUpdated: (/* @__PURE__ */ new Date()).toISOString(),
+            url: "https://g.page/example"
+          },
+          {
+            id: 2,
+            platform: "Yelp",
+            status: "active",
+            name: client2.companyName || "Business Name",
+            address: client2.address || "123 Main St, City, ST 12345",
+            phone: client2.phone || "(555) 123-4567",
+            website: client2.website || "https://example.com",
+            hours: "Mon-Fri 9AM-5PM",
+            lastUpdated: new Date(Date.now() - 864e5).toISOString(),
+            url: "https://yelp.com/biz/example"
+          }
+        ];
+        res.json(listings);
+      } catch (error) {
+        console.error("Error fetching client listings:", error);
+        res.status(500).json({ error: "Failed to fetch listings" });
+      }
     }
-  });
-  app2.get("/api/clients/:id/reviews/analytics", async (req, res) => {
-    try {
-      const clientId = parseInt(req.params.id);
-      if (isNaN(clientId)) {
-        return res.status(400).json({ error: "Invalid client ID" });
-      }
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
-        return res.status(404).json({ error: "Client not found" });
-      }
-      const analytics = {
-        averageRating: 4.6,
-        totalReviews: 347,
-        positiveCount: 289,
-        negativeCount: 23,
-        neutralCount: 35,
-        responseRate: 87.5,
-        platformBreakdown: {
-          google: 198,
-          yelp: 124,
-          facebook: 25
+  );
+  app2.get(
+    "/api/clients/:id/listings/metrics",
+    requireClientPortalAccess,
+    async (req, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
         }
-      };
-      res.json(analytics);
-    } catch (error) {
-      console.error("Error fetching review analytics:", error);
-      res.status(500).json({ error: "Failed to fetch review analytics" });
+        const client2 = await storage.getClient(clientId);
+        if (!client2) {
+          return res.status(404).json({ error: "Client not found" });
+        }
+        const metrics = {
+          totalListings: 12,
+          activeListings: 10,
+          pendingListings: 1,
+          errorListings: 1,
+          totalViews: 4523,
+          totalClicks: 892,
+          avgRating: 4.6
+        };
+        res.json(metrics);
+      } catch (error) {
+        console.error("Error fetching listing metrics:", error);
+        res.status(500).json({ error: "Failed to fetch listing metrics" });
+      }
     }
-  });
+  );
+  app2.get(
+    "/api/clients/:id/reviews",
+    requireClientPortalAccess,
+    async (req, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
+        }
+        const client2 = await storage.getClient(clientId);
+        if (!client2) {
+          return res.status(404).json({ error: "Client not found" });
+        }
+        const reviews = [
+          {
+            id: 1,
+            platform: "Google",
+            rating: 5,
+            reviewText: "Excellent service! The team was professional and delivered beyond expectations.",
+            reviewerName: "Sarah J.",
+            reviewDate: (/* @__PURE__ */ new Date()).toISOString(),
+            sentiment: "positive"
+          },
+          {
+            id: 2,
+            platform: "Yelp",
+            rating: 2,
+            reviewText: "Service was slow and the staff seemed uninterested. Not what I expected.",
+            reviewerName: "Mike T.",
+            reviewDate: new Date(Date.now() - 864e5).toISOString(),
+            sentiment: "negative"
+          },
+          {
+            id: 3,
+            platform: "Facebook",
+            rating: 4,
+            reviewText: "Good experience overall. A few minor issues but nothing major.",
+            reviewerName: "Jennifer L.",
+            reviewDate: new Date(Date.now() - 1728e5).toISOString(),
+            response: "Thank you for your feedback! We appreciate your business.",
+            responseDate: new Date(Date.now() - 864e5).toISOString(),
+            sentiment: "positive"
+          }
+        ];
+        res.json(reviews);
+      } catch (error) {
+        console.error("Error fetching client reviews:", error);
+        res.status(500).json({ error: "Failed to fetch reviews" });
+      }
+    }
+  );
+  app2.get(
+    "/api/clients/:id/reviews/analytics",
+    requireClientPortalAccess,
+    async (req, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
+        }
+        const client2 = await storage.getClient(clientId);
+        if (!client2) {
+          return res.status(404).json({ error: "Client not found" });
+        }
+        const analytics = {
+          averageRating: 4.6,
+          totalReviews: 347,
+          positiveCount: 289,
+          negativeCount: 23,
+          neutralCount: 35,
+          responseRate: 87.5,
+          platformBreakdown: {
+            google: 198,
+            yelp: 124,
+            facebook: 25
+          }
+        };
+        res.json(analytics);
+      } catch (error) {
+        console.error("Error fetching review analytics:", error);
+        res.status(500).json({ error: "Failed to fetch review analytics" });
+      }
+    }
+  );
   app2.post("/api/clients/:id/reviews/:reviewId/respond", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
@@ -8405,6 +12617,27 @@ async function registerRoutes(app2) {
     } catch (error) {
       console.error("Error responding to review:", error);
       res.status(500).json({ error: "Failed to post review response" });
+    }
+  });
+  app2.patch("/api/clients/:id/listings/:listingId", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      const listingId = parseInt(req.params.listingId);
+      if (isNaN(clientId) || isNaN(listingId)) {
+        return res.status(400).json({ error: "Invalid client ID or listing ID" });
+      }
+      const client2 = await storage.getClient(clientId);
+      if (!client2) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+      res.json({
+        success: true,
+        message: "Listing updated successfully",
+        updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+      });
+    } catch (error) {
+      console.error("Error updating listing:", error);
+      res.status(500).json({ error: "Failed to update listing" });
     }
   });
   app2.post("/api/ai-coach/guidance", async (req, res) => {
@@ -8437,14 +12670,14 @@ async function registerRoutes(app2) {
   });
   app2.get("/api/subscription-plans", async (req, res) => {
     try {
-      const plans = await db.select().from(subscriptionPlans).where(eq11(subscriptionPlans.isActive, true));
+      const plans = await db.select().from(subscriptionPlans).where(eq17(subscriptionPlans.isActive, true));
       res.json({
         success: true,
         plans: plans.map((plan) => ({
           ...plan,
           features: Array.isArray(plan.features) ? plan.features : [],
           popular: plan.tierLevel === "professional",
-          recommended: plan.pathway === "msp" && plan.tierLevel === "basic"
+          recommended: plan.pathway === "diy" && plan.tierLevel === "basic"
         }))
       });
     } catch (error) {
@@ -8457,18 +12690,18 @@ async function registerRoutes(app2) {
   });
   app2.get("/api/subscription-addons", async (req, res) => {
     try {
-      const addons = await db.select().from(subscriptionAddons).where(eq11(subscriptionAddons.isActive, true));
+      const addons = await db.select().from(subscriptionAddons).where(eq17(subscriptionAddons.isActive, true));
       const categoryIconMap = {
-        "seo": "Globe",
-        "social": "Users",
-        "ppc": "Zap",
-        "content": "Sparkles",
-        "email": "Users",
-        "reputation": "Star",
-        "analytics": "Sparkles",
-        "website": "Globe",
+        seo: "Globe",
+        social: "Users",
+        ppc: "Zap",
+        content: "Sparkles",
+        email: "Users",
+        reputation: "Star",
+        analytics: "Sparkles",
+        website: "Globe",
         "ai-coach": "Brain",
-        "coaching": "Ship"
+        coaching: "Ship"
       };
       const addonsWithIcons = addons.map((addon) => ({
         ...addon,
@@ -8489,29 +12722,31 @@ async function registerRoutes(app2) {
   });
   app2.post("/api/marketplace/orders", async (req, res) => {
     try {
-      const orderSchema = z3.object({
-        items: z3.array(z3.object({
-          id: z3.string(),
-          name: z3.string(),
-          price: z3.number(),
-          quantity: z3.number(),
-          type: z3.enum(["app", "addon"])
-        })),
-        paymentToken: z3.string().min(16, "Valid payment token required"),
-        customerInfo: z3.object({
-          firstName: z3.string().min(1, "First name is required"),
-          lastName: z3.string().min(1, "Last name is required"),
-          email: z3.string().email("Valid email required"),
-          phone: z3.string().optional(),
-          address: z3.string().optional(),
-          city: z3.string().optional(),
-          state: z3.string().optional(),
-          zip: z3.string().optional()
+      const orderSchema = z7.object({
+        items: z7.array(
+          z7.object({
+            id: z7.string(),
+            name: z7.string(),
+            price: z7.number(),
+            quantity: z7.number(),
+            type: z7.enum(["app", "addon"])
+          })
+        ),
+        paymentToken: z7.string().min(16, "Valid payment token required"),
+        customerInfo: z7.object({
+          firstName: z7.string().min(1, "First name is required"),
+          lastName: z7.string().min(1, "Last name is required"),
+          email: z7.string().email("Valid email required"),
+          phone: z7.string().optional(),
+          address: z7.string().optional(),
+          city: z7.string().optional(),
+          state: z7.string().optional(),
+          zip: z7.string().optional()
         }),
-        totals: z3.object({
-          subtotal: z3.number(),
-          tax: z3.number(),
-          total: z3.number()
+        totals: z7.object({
+          subtotal: z7.number(),
+          tax: z7.number(),
+          total: z7.number()
         })
       });
       const validation = orderSchema.safeParse(req.body);
@@ -8523,7 +12758,10 @@ async function registerRoutes(app2) {
         });
       }
       const { items, paymentToken, customerInfo, totals } = validation.data;
-      const calculatedSubtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const calculatedSubtotal = items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
       const calculatedTax = calculatedSubtotal * 0.08;
       const calculatedTotal = calculatedSubtotal + calculatedTax;
       if (Math.abs(calculatedTotal - totals.total) > 0.01) {
@@ -8578,21 +12816,25 @@ async function registerRoutes(app2) {
   });
   app2.post("/api/pricing/calculate", async (req, res) => {
     try {
-      const { planId, addons: selectedAddons = [], billingCycle = "monthly" } = req.body;
+      const {
+        planId,
+        addons: selectedAddons = [],
+        billingCycle = "monthly"
+      } = req.body;
       if (!planId) {
         return res.status(400).json({
           success: false,
           message: "Plan ID is required"
         });
       }
-      const plan = await db.select().from(subscriptionPlans).where(eq11(subscriptionPlans.planId, planId)).limit(1);
+      const plan = await db.select().from(subscriptionPlans).where(eq17(subscriptionPlans.planId, planId)).limit(1);
       if (plan.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Plan not found"
         });
       }
-      const addons = await db.select().from(subscriptionAddons).where(eq11(subscriptionAddons.isActive, true));
+      const addons = await db.select().from(subscriptionAddons).where(eq17(subscriptionAddons.isActive, true));
       const pricing = PricingEngine.calculateSubscriptionPrice(
         plan[0],
         addons,
@@ -8613,7 +12855,12 @@ async function registerRoutes(app2) {
   });
   app2.post("/api/pricing/calculate-bundle", async (req, res) => {
     try {
-      const { assessmentId, pathway, productIds = [], billingCycle = "monthly" } = req.body;
+      const {
+        assessmentId,
+        pathway,
+        productIds = [],
+        billingCycle = "monthly"
+      } = req.body;
       if (!assessmentId || !pathway) {
         return res.status(400).json({
           success: false,
@@ -8621,12 +12868,10 @@ async function registerRoutes(app2) {
         });
       }
       const planIdMap = {
-        "diy": "diy-platform",
-        "msp": "msp-starter",
-        "combination": "msp-starter"
+        diy: "diy-platform"
       };
       const planStringId = planIdMap[pathway];
-      const [plan] = await db.select().from(subscriptionPlans).where(eq11(subscriptionPlans.planId, planStringId)).limit(1);
+      const [plan] = await db.select().from(subscriptionPlans).where(eq17(subscriptionPlans.planId, planStringId)).limit(1);
       if (!plan) {
         return res.status(404).json({
           success: false,
@@ -8634,13 +12879,13 @@ async function registerRoutes(app2) {
         });
       }
       const { products: productsTable } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-      const { inArray: inArray2 } = await import("drizzle-orm");
+      const { inArray: inArray3 } = await import("drizzle-orm");
       let selectedProducts = [];
       let productsTotal = 0;
       if (productIds.length > 0) {
-        selectedProducts = await db.select().from(productsTable).where(inArray2(productsTable.id, productIds));
+        selectedProducts = await db.select().from(productsTable).where(inArray3(productsTable.id, productIds));
         productsTotal = selectedProducts.reduce((sum, product) => {
-          const price = pathway === "diy" ? parseFloat(product.diyPrice || "0") : parseFloat(product.mspPrice || "0");
+          const price = parseFloat(product.diyPrice || "0");
           return sum + price;
         }, 0);
       }
@@ -8659,7 +12904,7 @@ async function registerRoutes(app2) {
         planName: plan.name,
         planPrice: basePriceMonthly * cycleMonths,
         selectedAddons: selectedProducts.map((product) => {
-          const monthlyPrice = pathway === "diy" ? parseFloat(product.diyPrice || "0") : parseFloat(product.mspPrice || "0");
+          const monthlyPrice = parseFloat(product.diyPrice || "0");
           return {
             name: product.name,
             price: monthlyPrice * cycleMonths
@@ -8685,7 +12930,12 @@ async function registerRoutes(app2) {
   });
   app2.post("/api/subscriptions/create-from-assessment", async (req, res) => {
     try {
-      const { assessmentId, pathway, productIds = [], billingCycle = "monthly" } = req.body;
+      const {
+        assessmentId,
+        pathway,
+        productIds = [],
+        billingCycle = "monthly"
+      } = req.body;
       if (!assessmentId || !pathway) {
         return res.status(400).json({
           success: false,
@@ -8700,12 +12950,10 @@ async function registerRoutes(app2) {
         });
       }
       const planIdMap = {
-        "diy": "diy-platform",
-        "msp": "msp-starter",
-        "combination": "msp-starter"
+        diy: "diy-platform"
       };
       const planStringId = planIdMap[pathway];
-      const [plan] = await db.select().from(subscriptionPlans).where(eq11(subscriptionPlans.planId, planStringId)).limit(1);
+      const [plan] = await db.select().from(subscriptionPlans).where(eq17(subscriptionPlans.planId, planStringId)).limit(1);
       if (!plan) {
         return res.status(404).json({
           success: false,
@@ -8713,13 +12961,13 @@ async function registerRoutes(app2) {
         });
       }
       const { products: productsTable } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-      const { inArray: inArray2 } = await import("drizzle-orm");
+      const { inArray: inArray3 } = await import("drizzle-orm");
       let selectedProducts = [];
       let productsTotal = 0;
       if (productIds.length > 0) {
-        selectedProducts = await db.select().from(productsTable).where(inArray2(productsTable.id, productIds));
+        selectedProducts = await db.select().from(productsTable).where(inArray3(productsTable.id, productIds));
         productsTotal = selectedProducts.reduce((sum, product) => {
-          const price = pathway === "diy" ? parseFloat(product.diyPrice || "0") : parseFloat(product.mspPrice || "0");
+          const price = parseFloat(product.diyPrice || "0");
           return sum + price;
         }, 0);
       }
@@ -8745,7 +12993,7 @@ async function registerRoutes(app2) {
       };
       const subscription = await db.insert(subscriptions).values(subscriptionData).returning();
       if (assessment) {
-        const pathwayName = pathway === "msp" ? "Managed Services" : "DIY Platform";
+        const pathwayName = "DIY Platform";
         const planName = `${plan.name} (${pathwayName})`;
         const featuresPromises = selectedProducts.map(async (prod) => {
           const product = selectedProducts.find((p) => p.id === prod.id);
@@ -8779,7 +13027,7 @@ async function registerRoutes(app2) {
   app2.get("/api/subscriptions/:id/trial-status", async (req, res) => {
     try {
       const { id } = req.params;
-      const [subscription] = await db.select().from(subscriptions).where(eq11(subscriptions.id, parseInt(id)));
+      const [subscription] = await db.select().from(subscriptions).where(eq17(subscriptions.id, parseInt(id)));
       if (!subscription) {
         return res.status(404).json({
           success: false,
@@ -8793,7 +13041,9 @@ async function registerRoutes(app2) {
         trialStatus: {
           isTrialActive,
           trialPeriodEnd: subscription.trialPeriodEnd,
-          daysRemaining: isTrialActive && subscription.trialPeriodEnd ? Math.ceil((subscription.trialPeriodEnd.getTime() - now.getTime()) / (24 * 60 * 60 * 1e3)) : 0
+          daysRemaining: isTrialActive && subscription.trialPeriodEnd ? Math.ceil(
+            (subscription.trialPeriodEnd.getTime() - now.getTime()) / (24 * 60 * 60 * 1e3)
+          ) : 0
         }
       });
     } catch (error) {
@@ -8806,23 +13056,25 @@ async function registerRoutes(app2) {
   });
   app2.post("/api/subscriptions", async (req, res) => {
     try {
-      const subscriptionSchema = z3.object({
-        planId: z3.string().min(1, "Plan ID is required"),
-        addons: z3.array(z3.object({
-          addonId: z3.string(),
-          quantity: z3.number().optional()
-        })).default([]),
-        billingCycle: z3.enum(["monthly", "quarterly", "annual"]),
-        paymentToken: z3.string().min(16, "Valid payment token required"),
-        customerInfo: z3.object({
-          firstName: z3.string().min(1, "First name is required"),
-          lastName: z3.string().min(1, "Last name is required"),
-          email: z3.string().email("Valid email required"),
-          phone: z3.string().optional(),
-          address: z3.string().optional(),
-          city: z3.string().optional(),
-          state: z3.string().optional(),
-          zip: z3.string().optional()
+      const subscriptionSchema = z7.object({
+        planId: z7.string().min(1, "Plan ID is required"),
+        addons: z7.array(
+          z7.object({
+            addonId: z7.string(),
+            quantity: z7.number().optional()
+          })
+        ).default([]),
+        billingCycle: z7.enum(["monthly", "quarterly", "annual"]),
+        paymentToken: z7.string().min(16, "Valid payment token required"),
+        customerInfo: z7.object({
+          firstName: z7.string().min(1, "First name is required"),
+          lastName: z7.string().min(1, "Last name is required"),
+          email: z7.string().email("Valid email required"),
+          phone: z7.string().optional(),
+          address: z7.string().optional(),
+          city: z7.string().optional(),
+          state: z7.string().optional(),
+          zip: z7.string().optional()
         })
       });
       const validation = subscriptionSchema.safeParse(req.body);
@@ -8840,14 +13092,14 @@ async function registerRoutes(app2) {
         paymentToken,
         customerInfo
       } = validation.data;
-      const plan = await db.select().from(subscriptionPlans).where(eq11(subscriptionPlans.planId, planId)).limit(1);
+      const plan = await db.select().from(subscriptionPlans).where(eq17(subscriptionPlans.planId, planId)).limit(1);
       if (plan.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Plan not found"
         });
       }
-      const addons = await db.select().from(subscriptionAddons).where(eq11(subscriptionAddons.isActive, true));
+      const addons = await db.select().from(subscriptionAddons).where(eq17(subscriptionAddons.isActive, true));
       const pricing = PricingEngine.calculateSubscriptionPrice(
         plan[0],
         addons,
@@ -8945,7 +13197,6 @@ async function registerRoutes(app2) {
         reason: rec.reason,
         priority: rec.priority,
         diyPrice: rec.product.diyPrice,
-        mspPrice: rec.product.mspPrice,
         category: rec.product.category,
         currentScore: rec.currentScore,
         projectedScore: rec.projectedScore,
@@ -8968,12 +13219,12 @@ async function registerRoutes(app2) {
       const deliveryMethod = req.query.deliveryMethod;
       const category = req.query.category;
       const { products: products2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-      const { eq: eq14, and: and12 } = await import("drizzle-orm");
-      const conditions = [eq14(products2.isActive, true)];
+      const { eq: eq20, and: and14 } = await import("drizzle-orm");
+      const conditions = [eq20(products2.isActive, true)];
       if (category) {
-        conditions.push(eq14(products2.category, category));
+        conditions.push(eq20(products2.category, category));
       }
-      const allProducts = await db.select().from(products2).where(and12(...conditions));
+      const allProducts = await db.select().from(products2).where(and14(...conditions));
       const filteredProducts = deliveryMethod ? allProducts.filter((p) => p.deliveryMethod?.includes(deliveryMethod)) : allProducts;
       res.json({
         success: true,
@@ -8991,8 +13242,8 @@ async function registerRoutes(app2) {
     try {
       const productId = parseInt(req.params.id);
       const { products: products2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-      const { eq: eq14 } = await import("drizzle-orm");
-      const [product] = await db.select().from(products2).where(eq14(products2.id, productId));
+      const { eq: eq20 } = await import("drizzle-orm");
+      const [product] = await db.select().from(products2).where(eq20(products2.id, productId));
       if (!product) {
         return res.status(404).json({
           success: false,
@@ -9011,438 +13262,505 @@ async function registerRoutes(app2) {
       });
     }
   });
-  app2.post("/api/send/contacts", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const validatedData = insertSendContactSchema.parse(req.body);
-      if (!validatedData.email && !validatedData.phone) {
-        return res.status(400).json({
-          success: false,
-          message: "At least one contact method (email or phone) is required"
-        });
-      }
-      if (validatedData.email && !validatedData.emailConsent) {
-        return res.status(400).json({
-          success: false,
-          message: "Email consent is required when providing an email address (GDPR/CAN-SPAM compliance)"
-        });
-      }
-      if (validatedData.phone && !validatedData.smsConsent) {
-        return res.status(400).json({
-          success: false,
-          message: "SMS consent is required when providing a phone number (TCPA compliance)"
-        });
-      }
-      const contactData = {
-        ...validatedData,
-        clientId,
-        emailConsentDate: validatedData.emailConsent ? /* @__PURE__ */ new Date() : null,
-        smsConsentDate: validatedData.smsConsent ? /* @__PURE__ */ new Date() : null
-      };
-      const contact = await storage.createSendContact(contactData);
-      res.json({ success: true, contact });
-    } catch (error) {
-      console.error("Error creating contact:", error);
-      res.status(400).json({
-        success: false,
-        message: error instanceof Error ? error.message : "Failed to create contact"
-      });
-    }
-  });
-  app2.get("/api/send/contacts", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const limit = Math.min(parseInt(req.query.limit) || 100, 1e3);
-      const offset = parseInt(req.query.offset) || 0;
-      const contacts = await storage.getSendContactsByClient(clientId);
-      const paginatedContacts = contacts.slice(offset, offset + limit);
-      res.json({
-        success: true,
-        contacts: paginatedContacts,
-        pagination: {
-          total: contacts.length,
-          limit,
-          offset,
-          hasMore: offset + limit < contacts.length
+  app2.post(
+    "/api/send/contacts",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const validatedData = insertSendContactSchema.parse(req.body);
+        if (!validatedData.email && !validatedData.phone) {
+          return res.status(400).json({
+            success: false,
+            message: "At least one contact method (email or phone) is required"
+          });
         }
-      });
-    } catch (error) {
-      console.error("Error fetching contacts:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch contacts"
-      });
-    }
-  });
-  app2.get("/api/send/contacts/:id", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid contact ID"
-        });
-      }
-      const contact = await storage.getSendContact(id);
-      if (!contact) {
-        return res.status(404).json({
-          success: false,
-          message: "Contact not found"
-        });
-      }
-      if (contact.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: Contact belongs to another client"
-        });
-      }
-      res.json({ success: true, contact });
-    } catch (error) {
-      console.error("Error fetching contact:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch contact"
-      });
-    }
-  });
-  app2.patch("/api/send/contacts/:id", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid contact ID"
-        });
-      }
-      const existingContact = await storage.getSendContact(id);
-      if (!existingContact) {
-        return res.status(404).json({
-          success: false,
-          message: "Contact not found"
-        });
-      }
-      if (existingContact.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: Contact belongs to another client"
-        });
-      }
-      const updateData = insertSendContactSchema.partial().parse(req.body);
-      if ("clientId" in updateData) {
-        delete updateData.clientId;
-      }
-      const contact = await storage.updateSendContact(id, updateData);
-      res.json({ success: true, contact });
-    } catch (error) {
-      console.error("Error updating contact:", error);
-      res.status(400).json({
-        success: false,
-        message: error instanceof Error ? error.message : "Failed to update contact"
-      });
-    }
-  });
-  app2.delete("/api/send/contacts/:id", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid contact ID"
-        });
-      }
-      const existingContact = await storage.getSendContact(id);
-      if (!existingContact) {
-        return res.status(404).json({
-          success: false,
-          message: "Contact not found"
-        });
-      }
-      if (existingContact.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: Contact belongs to another client"
-        });
-      }
-      await storage.deleteSendContact(id);
-      res.json({ success: true, message: "Contact deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting contact:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to delete contact"
-      });
-    }
-  });
-  app2.post("/api/send/lists", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const validatedData = insertSendListSchema.parse(req.body);
-      const listData = {
-        ...validatedData,
-        clientId
-      };
-      const list = await storage.createSendList(listData);
-      res.json({ success: true, list });
-    } catch (error) {
-      console.error("Error creating list:", error);
-      res.status(400).json({
-        success: false,
-        message: error instanceof Error ? error.message : "Failed to create list"
-      });
-    }
-  });
-  app2.get("/api/send/lists", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const limit = Math.min(parseInt(req.query.limit) || 100, 1e3);
-      const offset = parseInt(req.query.offset) || 0;
-      const lists = await storage.getSendListsByClient(clientId);
-      const paginatedLists = lists.slice(offset, offset + limit);
-      res.json({
-        success: true,
-        lists: paginatedLists,
-        pagination: {
-          total: lists.length,
-          limit,
-          offset,
-          hasMore: offset + limit < lists.length
+        if (validatedData.email && !validatedData.emailConsent) {
+          return res.status(400).json({
+            success: false,
+            message: "Email consent is required when providing an email address (GDPR/CAN-SPAM compliance)"
+          });
         }
-      });
-    } catch (error) {
-      console.error("Error fetching lists:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch lists"
-      });
-    }
-  });
-  app2.get("/api/send/lists/:id", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid list ID"
-        });
-      }
-      const list = await storage.getSendList(id);
-      if (!list) {
-        return res.status(404).json({
-          success: false,
-          message: "List not found"
-        });
-      }
-      if (list.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: List belongs to another client"
-        });
-      }
-      res.json({ success: true, list });
-    } catch (error) {
-      console.error("Error fetching list:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch list"
-      });
-    }
-  });
-  app2.patch("/api/send/lists/:id", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid list ID"
-        });
-      }
-      const existingList = await storage.getSendList(id);
-      if (!existingList) {
-        return res.status(404).json({
-          success: false,
-          message: "List not found"
-        });
-      }
-      if (existingList.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: List belongs to another client"
-        });
-      }
-      const updateData = insertSendListSchema.partial().parse(req.body);
-      if ("clientId" in updateData) {
-        delete updateData.clientId;
-      }
-      const list = await storage.updateSendList(id, updateData);
-      res.json({ success: true, list });
-    } catch (error) {
-      console.error("Error updating list:", error);
-      res.status(400).json({
-        success: false,
-        message: error instanceof Error ? error.message : "Failed to update list"
-      });
-    }
-  });
-  app2.delete("/api/send/lists/:id", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid list ID"
-        });
-      }
-      const existingList = await storage.getSendList(id);
-      if (!existingList) {
-        return res.status(404).json({
-          success: false,
-          message: "List not found"
-        });
-      }
-      if (existingList.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: List belongs to another client"
-        });
-      }
-      await storage.deleteSendList(id);
-      res.json({ success: true, message: "List deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting list:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to delete list"
-      });
-    }
-  });
-  app2.post("/api/send/lists/:listId/contacts/:contactId", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const listId = parseInt(req.params.listId);
-      const contactId = parseInt(req.params.contactId);
-      if (isNaN(listId) || isNaN(contactId)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid list or contact ID"
-        });
-      }
-      const [list, contact] = await Promise.all([
-        storage.getSendList(listId),
-        storage.getSendContact(contactId)
-      ]);
-      if (!list) {
-        return res.status(404).json({
-          success: false,
-          message: "List not found"
-        });
-      }
-      if (!contact) {
-        return res.status(404).json({
-          success: false,
-          message: "Contact not found"
-        });
-      }
-      if (list.clientId !== clientId || contact.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: Resources belong to another client"
-        });
-      }
-      await storage.addContactToList(listId, contactId);
-      res.json({ success: true, message: "Contact added to list successfully" });
-    } catch (error) {
-      console.error("Error adding contact to list:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to add contact to list"
-      });
-    }
-  });
-  app2.delete("/api/send/lists/:listId/contacts/:contactId", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const listId = parseInt(req.params.listId);
-      const contactId = parseInt(req.params.contactId);
-      if (isNaN(listId) || isNaN(contactId)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid list or contact ID"
-        });
-      }
-      const list = await storage.getSendList(listId);
-      if (!list) {
-        return res.status(404).json({
-          success: false,
-          message: "List not found"
-        });
-      }
-      if (list.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: List belongs to another client"
-        });
-      }
-      await storage.removeContactFromList(listId, contactId);
-      res.json({ success: true, message: "Contact removed from list successfully" });
-    } catch (error) {
-      console.error("Error removing contact from list:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to remove contact from list"
-      });
-    }
-  });
-  app2.get("/api/send/lists/:listId/contacts", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const listId = parseInt(req.params.listId);
-      const limit = Math.min(parseInt(req.query.limit) || 100, 1e3);
-      const offset = parseInt(req.query.offset) || 0;
-      if (isNaN(listId)) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid list ID"
-        });
-      }
-      const list = await storage.getSendList(listId);
-      if (!list) {
-        return res.status(404).json({
-          success: false,
-          message: "List not found"
-        });
-      }
-      if (list.clientId !== clientId) {
-        return res.status(403).json({
-          success: false,
-          message: "Access denied: List belongs to another client"
-        });
-      }
-      const contacts = await storage.getListContacts(listId);
-      const paginatedContacts = contacts.slice(offset, offset + limit);
-      res.json({
-        success: true,
-        contacts: paginatedContacts,
-        pagination: {
-          total: contacts.length,
-          limit,
-          offset,
-          hasMore: offset + limit < contacts.length
+        if (validatedData.phone && !validatedData.smsConsent) {
+          return res.status(400).json({
+            success: false,
+            message: "SMS consent is required when providing a phone number (TCPA compliance)"
+          });
         }
-      });
-    } catch (error) {
-      console.error("Error fetching list contacts:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to fetch list contacts"
-      });
+        const contactData = {
+          ...validatedData,
+          clientId,
+          emailConsentDate: validatedData.emailConsent ? /* @__PURE__ */ new Date() : null,
+          smsConsentDate: validatedData.smsConsent ? /* @__PURE__ */ new Date() : null
+        };
+        const contact = await storage.createSendContact(contactData);
+        res.json({ success: true, contact });
+      } catch (error) {
+        console.error("Error creating contact:", error);
+        res.status(400).json({
+          success: false,
+          message: error instanceof Error ? error.message : "Failed to create contact"
+        });
+      }
     }
-  });
+  );
+  app2.get(
+    "/api/send/contacts",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const limit = Math.min(
+          parseInt(req.query.limit) || 100,
+          1e3
+        );
+        const offset = parseInt(req.query.offset) || 0;
+        const contacts = await storage.getSendContactsByClient(clientId);
+        const paginatedContacts = contacts.slice(offset, offset + limit);
+        res.json({
+          success: true,
+          contacts: paginatedContacts,
+          pagination: {
+            total: contacts.length,
+            limit,
+            offset,
+            hasMore: offset + limit < contacts.length
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch contacts"
+        });
+      }
+    }
+  );
+  app2.get(
+    "/api/send/contacts/:id",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid contact ID"
+          });
+        }
+        const contact = await storage.getSendContact(id);
+        if (!contact) {
+          return res.status(404).json({
+            success: false,
+            message: "Contact not found"
+          });
+        }
+        if (contact.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: Contact belongs to another client"
+          });
+        }
+        res.json({ success: true, contact });
+      } catch (error) {
+        console.error("Error fetching contact:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch contact"
+        });
+      }
+    }
+  );
+  app2.patch(
+    "/api/send/contacts/:id",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid contact ID"
+          });
+        }
+        const existingContact = await storage.getSendContact(id);
+        if (!existingContact) {
+          return res.status(404).json({
+            success: false,
+            message: "Contact not found"
+          });
+        }
+        if (existingContact.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: Contact belongs to another client"
+          });
+        }
+        const updateData = insertSendContactSchema.partial().parse(req.body);
+        if ("clientId" in updateData) {
+          delete updateData.clientId;
+        }
+        const contact = await storage.updateSendContact(id, updateData);
+        res.json({ success: true, contact });
+      } catch (error) {
+        console.error("Error updating contact:", error);
+        res.status(400).json({
+          success: false,
+          message: error instanceof Error ? error.message : "Failed to update contact"
+        });
+      }
+    }
+  );
+  app2.delete(
+    "/api/send/contacts/:id",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid contact ID"
+          });
+        }
+        const existingContact = await storage.getSendContact(id);
+        if (!existingContact) {
+          return res.status(404).json({
+            success: false,
+            message: "Contact not found"
+          });
+        }
+        if (existingContact.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: Contact belongs to another client"
+          });
+        }
+        await storage.deleteSendContact(id);
+        res.json({ success: true, message: "Contact deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting contact:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to delete contact"
+        });
+      }
+    }
+  );
+  app2.post(
+    "/api/send/lists",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const validatedData = insertSendListSchema.parse(req.body);
+        const listData = {
+          ...validatedData,
+          clientId
+        };
+        const list = await storage.createSendList(listData);
+        res.json({ success: true, list });
+      } catch (error) {
+        console.error("Error creating list:", error);
+        res.status(400).json({
+          success: false,
+          message: error instanceof Error ? error.message : "Failed to create list"
+        });
+      }
+    }
+  );
+  app2.get(
+    "/api/send/lists",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const limit = Math.min(
+          parseInt(req.query.limit) || 100,
+          1e3
+        );
+        const offset = parseInt(req.query.offset) || 0;
+        const lists = await storage.getSendListsByClient(clientId);
+        const paginatedLists = lists.slice(offset, offset + limit);
+        res.json({
+          success: true,
+          lists: paginatedLists,
+          pagination: {
+            total: lists.length,
+            limit,
+            offset,
+            hasMore: offset + limit < lists.length
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching lists:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch lists"
+        });
+      }
+    }
+  );
+  app2.get(
+    "/api/send/lists/:id",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid list ID"
+          });
+        }
+        const list = await storage.getSendList(id);
+        if (!list) {
+          return res.status(404).json({
+            success: false,
+            message: "List not found"
+          });
+        }
+        if (list.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: List belongs to another client"
+          });
+        }
+        res.json({ success: true, list });
+      } catch (error) {
+        console.error("Error fetching list:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch list"
+        });
+      }
+    }
+  );
+  app2.patch(
+    "/api/send/lists/:id",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid list ID"
+          });
+        }
+        const existingList = await storage.getSendList(id);
+        if (!existingList) {
+          return res.status(404).json({
+            success: false,
+            message: "List not found"
+          });
+        }
+        if (existingList.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: List belongs to another client"
+          });
+        }
+        const updateData = insertSendListSchema.partial().parse(req.body);
+        if ("clientId" in updateData) {
+          delete updateData.clientId;
+        }
+        const list = await storage.updateSendList(id, updateData);
+        res.json({ success: true, list });
+      } catch (error) {
+        console.error("Error updating list:", error);
+        res.status(400).json({
+          success: false,
+          message: error instanceof Error ? error.message : "Failed to update list"
+        });
+      }
+    }
+  );
+  app2.delete(
+    "/api/send/lists/:id",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid list ID"
+          });
+        }
+        const existingList = await storage.getSendList(id);
+        if (!existingList) {
+          return res.status(404).json({
+            success: false,
+            message: "List not found"
+          });
+        }
+        if (existingList.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: List belongs to another client"
+          });
+        }
+        await storage.deleteSendList(id);
+        res.json({ success: true, message: "List deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting list:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to delete list"
+        });
+      }
+    }
+  );
+  app2.post(
+    "/api/send/lists/:listId/contacts/:contactId",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const listId = parseInt(req.params.listId);
+        const contactId = parseInt(req.params.contactId);
+        if (isNaN(listId) || isNaN(contactId)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid list or contact ID"
+          });
+        }
+        const [list, contact] = await Promise.all([
+          storage.getSendList(listId),
+          storage.getSendContact(contactId)
+        ]);
+        if (!list) {
+          return res.status(404).json({
+            success: false,
+            message: "List not found"
+          });
+        }
+        if (!contact) {
+          return res.status(404).json({
+            success: false,
+            message: "Contact not found"
+          });
+        }
+        if (list.clientId !== clientId || contact.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: Resources belong to another client"
+          });
+        }
+        await storage.addContactToList(listId, contactId);
+        res.json({
+          success: true,
+          message: "Contact added to list successfully"
+        });
+      } catch (error) {
+        console.error("Error adding contact to list:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to add contact to list"
+        });
+      }
+    }
+  );
+  app2.delete(
+    "/api/send/lists/:listId/contacts/:contactId",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const listId = parseInt(req.params.listId);
+        const contactId = parseInt(req.params.contactId);
+        if (isNaN(listId) || isNaN(contactId)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid list or contact ID"
+          });
+        }
+        const list = await storage.getSendList(listId);
+        if (!list) {
+          return res.status(404).json({
+            success: false,
+            message: "List not found"
+          });
+        }
+        if (list.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: List belongs to another client"
+          });
+        }
+        await storage.removeContactFromList(listId, contactId);
+        res.json({
+          success: true,
+          message: "Contact removed from list successfully"
+        });
+      } catch (error) {
+        console.error("Error removing contact from list:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to remove contact from list"
+        });
+      }
+    }
+  );
+  app2.get(
+    "/api/send/lists/:listId/contacts",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const listId = parseInt(req.params.listId);
+        const limit = Math.min(
+          parseInt(req.query.limit) || 100,
+          1e3
+        );
+        const offset = parseInt(req.query.offset) || 0;
+        if (isNaN(listId)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid list ID"
+          });
+        }
+        const list = await storage.getSendList(listId);
+        if (!list) {
+          return res.status(404).json({
+            success: false,
+            message: "List not found"
+          });
+        }
+        if (list.clientId !== clientId) {
+          return res.status(403).json({
+            success: false,
+            message: "Access denied: List belongs to another client"
+          });
+        }
+        const contacts = await storage.getListContacts(listId);
+        const paginatedContacts = contacts.slice(offset, offset + limit);
+        res.json({
+          success: true,
+          contacts: paginatedContacts,
+          pagination: {
+            total: contacts.length,
+            limit,
+            offset,
+            hasMore: offset + limit < contacts.length
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching list contacts:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch list contacts"
+        });
+      }
+    }
+  );
   const multer = await import("multer");
   const upload = multer.default({ storage: multer.default.memoryStorage() });
   app2.post("/api/brand-assets", upload.single("file"), async (req, res) => {
@@ -9634,8 +13952,13 @@ async function registerRoutes(app2) {
   await registerInboxRoutes(app2);
   app2.use("/api/content", content_default);
   app2.use("/api/meta", meta_default);
-  app2.use("/api/tasks", tasksRouter);
+  app2.use("/api/tasks", isAuthenticated, tasksRouter);
   app2.use("/api/brand-colors", brand_colors_default);
+  registerBillingAdminRoutes(app2);
+  app2.use("/api/crm", crmRouter);
+  app2.use("/api/v1", publicApiRouter);
+  app2.use("/api/v1", publicApiRouter);
+  registerPaymentRoutes(app2);
   const httpServer = createServer(app2);
   return httpServer;
 }
@@ -9657,7 +13980,9 @@ async function processAssessmentAsync(assessmentId, googleService, aiService, em
     await storage2.updateAssessment(assessmentId, { status: "analyzing" });
     const assessment = await storage2.getAssessment(assessmentId);
     if (!assessment) throw new Error("Assessment not found");
-    console.log(`\u{1F50D} Running independent presence scan for ${assessment.businessName}`);
+    console.log(
+      `\u{1F50D} Running independent presence scan for ${assessment.businessName}`
+    );
     const presenceScan = await presenceScannerService.scanBusiness({
       businessName: assessment.businessName,
       website: assessment.website || void 0,
@@ -9671,24 +13996,26 @@ async function processAssessmentAsync(assessmentId, googleService, aiService, em
     const presenceScore = {
       overallScore: presenceScan.overall.digitalIQScore,
       scores: {
-        visibility: Math.round(presenceScan.directories.score * 0.7 + presenceScan.website.score * 0.3),
+        visibility: Math.round(
+          presenceScan.directories.score * 0.7 + presenceScan.website.score * 0.3
+        ),
         reviews: presenceScan.reviews.score,
         completeness: presenceScan.overall.completeness,
         engagement: presenceScan.socialMedia.score
       },
       insights: presenceScan.recommendations
     };
-    const productRecommendations = await productRecommendationService.generateRecommendations(
+    const productRecommendations = await productRecommendationService.generateRecommendations(assessmentId, {
+      visibility: presenceScore.scores.visibility,
+      reviews: presenceScore.scores.reviews,
+      completeness: presenceScore.scores.completeness,
+      engagement: presenceScore.scores.engagement,
+      overall: presenceScore.overallScore
+    });
+    await productRecommendationService.saveRecommendations(
       assessmentId,
-      {
-        visibility: presenceScore.scores.visibility,
-        reviews: presenceScore.scores.reviews,
-        completeness: presenceScore.scores.completeness,
-        engagement: presenceScore.scores.engagement,
-        overall: presenceScore.overallScore
-      }
+      productRecommendations
     );
-    await productRecommendationService.saveRecommendations(assessmentId, productRecommendations);
     const analysisResult = await aiService.analyzeBusinessPresence({
       businessInfo: {
         name: assessment.businessName,
@@ -9735,13 +14062,16 @@ async function processAssessmentAsync(assessmentId, googleService, aiService, em
         estimatedEffort: rec.estimatedEffort || "low"
       });
     }
-    const emailSent = await emailService.sendAssessmentReport(assessment.email, {
-      businessName: assessment.businessName,
-      digitalScore: presenceScan.overall.digitalIQScore,
-      summary: `Your Digital IQ Score: ${presenceScan.overall.digitalIQScore}/140. ${enhancedAnalysis.summary}`,
-      recommendations: enhancedAnalysis.recommendations,
-      assessmentId
-    });
+    const emailSent = await emailService.sendAssessmentReport(
+      assessment.email,
+      {
+        businessName: assessment.businessName,
+        digitalScore: presenceScan.overall.digitalIQScore,
+        summary: `Your Digital IQ Score: ${presenceScan.overall.digitalIQScore}/140. ${enhancedAnalysis.summary}`,
+        recommendations: enhancedAnalysis.recommendations,
+        assessmentId
+      }
+    );
     await storage2.updateAssessment(assessmentId, { emailSent });
     await emailService.sendThankYouIntroduction(assessment.email, {
       businessName: assessment.businessName,
@@ -9760,17 +14090,66 @@ async function registerInboxRoutes(app2) {
         ...validatedData,
         status: "active"
       }).returning();
+      let crmContactId = null;
+      if (validatedData.visitorEmail) {
+        try {
+          const existing = await db.select().from(crmContacts).where(eq17(crmContacts.email, validatedData.visitorEmail)).limit(1);
+          if (existing.length > 0) {
+            crmContactId = existing[0].id;
+            await db.insert(crmTimeline).values({
+              contactId: existing[0].id,
+              eventType: "livechat",
+              title: "Started live chat session",
+              description: `Visitor started a live chat session from ${validatedData.pageUrl || "unknown page"}`,
+              metadata: {
+                sessionId: session2.sessionId,
+                pageUrl: validatedData.pageUrl,
+                pageTitle: validatedData.pageTitle
+              },
+              source: "livechat"
+            });
+          } else {
+            const nameParts = (validatedData.visitorName || "").split(" ");
+            const firstName = nameParts[0] || "Visitor";
+            const lastName = nameParts.slice(1).join(" ") || "";
+            const [newContact] = await db.insert(crmContacts).values({
+              firstName,
+              lastName,
+              email: validatedData.visitorEmail,
+              lifecycleStage: "lead",
+              leadSource: "livechat",
+              customFields: {
+                livechatSessionId: session2.sessionId,
+                firstPageUrl: validatedData.pageUrl,
+                firstPageTitle: validatedData.pageTitle
+              }
+            }).returning();
+            crmContactId = newContact.id;
+            await db.insert(crmTimeline).values({
+              contactId: newContact.id,
+              eventType: "contact_created",
+              title: "Contact created from live chat",
+              description: `New contact created when ${validatedData.visitorName} started a live chat session`,
+              metadata: { sessionId: session2.sessionId },
+              source: "livechat"
+            });
+          }
+        } catch (crmError) {
+          console.error("Error creating CRM contact from livechat:", crmError);
+        }
+      }
       res.json({
         success: true,
         session: {
           id: session2.id,
           sessionId: session2.sessionId,
           conversationId: session2.conversationId,
-          status: session2.status
+          status: session2.status,
+          crmContactId
         }
       });
     } catch (error) {
-      if (error instanceof z3.ZodError) {
+      if (error instanceof z7.ZodError) {
         return res.status(400).json({
           success: false,
           error: "Invalid session data",
@@ -9784,101 +14163,121 @@ async function registerInboxRoutes(app2) {
       });
     }
   });
-  app2.get("/api/inbox/conversations", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const conversations = await db.select().from(inboxConversations).where(eq11(inboxConversations.clientId, clientId)).orderBy(desc4(inboxConversations.updatedAt));
-      const conversationsWithMessages = await Promise.all(
-        conversations.map(async (conv) => {
-          const lastMessage = await db.select().from(inboxMessages2).where(eq11(inboxMessages2.conversationId, conv.id)).orderBy(desc4(inboxMessages2.createdAt)).limit(1);
-          return {
-            id: conv.id,
-            contactName: conv.contactName,
-            contactIdentifier: conv.contactIdentifier,
-            primaryChannelType: conv.primaryChannelType,
-            subject: conv.subject,
-            status: conv.status,
-            priority: conv.priority,
-            unreadCount: conv.unreadCount || 0,
-            lastMessageAt: conv.updatedAt,
-            lastMessagePreview: lastMessage[0]?.content || null
-          };
-        })
-      );
-      res.json(conversationsWithMessages);
-    } catch (error) {
-      console.error("Error fetching conversations:", error);
-      res.status(500).json({ error: "Failed to fetch conversations" });
+  app2.get(
+    "/api/inbox/conversations",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const conversations = await db.select().from(inboxConversations).where(eq17(inboxConversations.clientId, clientId)).orderBy(desc6(inboxConversations.updatedAt));
+        const conversationsWithMessages = await Promise.all(
+          conversations.map(async (conv) => {
+            const lastMessage = await db.select().from(inboxMessages2).where(eq17(inboxMessages2.conversationId, conv.id)).orderBy(desc6(inboxMessages2.createdAt)).limit(1);
+            return {
+              id: conv.id,
+              contactName: conv.contactName,
+              contactIdentifier: conv.contactIdentifier,
+              primaryChannelType: conv.primaryChannelType,
+              subject: conv.subject,
+              status: conv.status,
+              priority: conv.priority,
+              unreadCount: conv.unreadCount || 0,
+              lastMessageAt: conv.updatedAt,
+              lastMessagePreview: lastMessage[0]?.content || null
+            };
+          })
+        );
+        res.json(conversationsWithMessages);
+      } catch (error) {
+        console.error("Error fetching conversations:", error);
+        res.status(500).json({ error: "Failed to fetch conversations" });
+      }
     }
-  });
-  app2.get("/api/inbox/conversations/:conversationId/messages", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const conversationId = parseInt(req.params.conversationId);
-      const [conversation] = await db.select().from(inboxConversations).where(and9(
-        eq11(inboxConversations.id, conversationId),
-        eq11(inboxConversations.clientId, clientId)
-      )).limit(1);
-      if (!conversation) {
-        return res.status(404).json({ error: "Conversation not found or access denied" });
-      }
-      const messages = await db.select().from(inboxMessages2).where(eq11(inboxMessages2.conversationId, conversationId)).orderBy(inboxMessages2.createdAt);
-      res.json(messages);
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-      res.status(500).json({ error: "Failed to fetch messages" });
-    }
-  });
-  app2.post("/api/inbox/send-message", requireAuth, async (req, res) => {
-    try {
-      const clientId = req.clientId;
-      const { conversationId, message } = req.body;
-      if (!conversationId || !message) {
-        return res.status(400).json({ error: "Missing required fields" });
-      }
-      const [conversation] = await db.select().from(inboxConversations).where(and9(
-        eq11(inboxConversations.id, conversationId),
-        eq11(inboxConversations.clientId, clientId)
-      )).limit(1);
-      if (!conversation) {
-        return res.status(404).json({ error: "Conversation not found or access denied" });
-      }
-      const agentName = "Agent";
-      const agentEmail = "agent@businessblueprint.io";
-      let deliveryStatus = "sent";
-      let errorMessage = null;
-      if (conversation.primaryChannelType === "email") {
-        try {
-          await inboxEmailService.sendMessage(conversationId, message, agentName);
-          deliveryStatus = "delivered";
-        } catch (emailError) {
-          errorMessage = emailError.message;
-          console.error("Email send error:", errorMessage);
-          return res.status(500).json({
-            error: "Failed to send email",
-            details: errorMessage
-          });
+  );
+  app2.get(
+    "/api/inbox/conversations/:conversationId/messages",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const conversationId = parseInt(req.params.conversationId);
+        const [conversation] = await db.select().from(inboxConversations).where(
+          and11(
+            eq17(inboxConversations.id, conversationId),
+            eq17(inboxConversations.clientId, clientId)
+          )
+        ).limit(1);
+        if (!conversation) {
+          return res.status(404).json({ error: "Conversation not found or access denied" });
         }
+        const messages = await db.select().from(inboxMessages2).where(eq17(inboxMessages2.conversationId, conversationId)).orderBy(inboxMessages2.createdAt);
+        res.json(messages);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+        res.status(500).json({ error: "Failed to fetch messages" });
       }
-      const [newMessage] = await db.insert(inboxMessages2).values({
-        conversationId,
-        channelType: conversation.primaryChannelType,
-        messageType: "outgoing",
-        direction: "outbound",
-        content: message,
-        fromIdentifier: agentEmail,
-        fromName: agentName,
-        toIdentifier: conversation.contactIdentifier,
-        toName: conversation.contactName || void 0,
-        status: deliveryStatus
-      }).returning();
-      await db.update(inboxConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq11(inboxConversations.id, conversationId));
-      res.json(newMessage);
-    } catch (error) {
-      console.error("Error sending message:", error);
-      res.status(500).json({ error: "Failed to send message" });
     }
-  });
+  );
+  app2.post(
+    "/api/inbox/send-message",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const { conversationId, message } = req.body;
+        if (!conversationId || !message) {
+          return res.status(400).json({ error: "Missing required fields" });
+        }
+        const [conversation] = await db.select().from(inboxConversations).where(
+          and11(
+            eq17(inboxConversations.id, conversationId),
+            eq17(inboxConversations.clientId, clientId)
+          )
+        ).limit(1);
+        if (!conversation) {
+          return res.status(404).json({ error: "Conversation not found or access denied" });
+        }
+        const agentName = "Agent";
+        const agentEmail = "agent@businessblueprint.io";
+        let deliveryStatus = "sent";
+        let errorMessage = null;
+        if (conversation.primaryChannelType === "email") {
+          try {
+            await inboxEmailService.sendMessage(
+              conversationId,
+              message,
+              agentName
+            );
+            deliveryStatus = "delivered";
+          } catch (emailError) {
+            errorMessage = emailError.message;
+            console.error("Email send error:", errorMessage);
+            return res.status(500).json({
+              error: "Failed to send email",
+              details: errorMessage
+            });
+          }
+        }
+        const [newMessage] = await db.insert(inboxMessages2).values({
+          conversationId,
+          channelType: conversation.primaryChannelType,
+          messageType: "outgoing",
+          direction: "outbound",
+          content: message,
+          fromIdentifier: agentEmail,
+          fromName: agentName,
+          toIdentifier: conversation.contactIdentifier,
+          toName: conversation.contactName || void 0,
+          status: deliveryStatus
+        }).returning();
+        await db.update(inboxConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq17(inboxConversations.id, conversationId));
+        res.json(newMessage);
+      } catch (error) {
+        console.error("Error sending message:", error);
+        res.status(500).json({ error: "Failed to send message" });
+      }
+    }
+  );
 }
 
 // server/vite.ts
@@ -10008,7 +14407,7 @@ init_db();
 init_schema();
 init_jwt();
 import { Server } from "socket.io";
-import { eq as eq12, and as and10 } from "drizzle-orm";
+import { eq as eq18, and as and12 } from "drizzle-orm";
 function setupWebSocket(server) {
   const io = new Server(server, {
     cors: {
@@ -10077,7 +14476,7 @@ function setupWebSocket(server) {
             lastMessagePreview: data.message.substring(0, 100)
           }).returning();
           conversationId = conversation.id;
-          await db.update(livechatSessions).set({ conversationId }).where(eq12(livechatSessions.sessionId, data.sessionId));
+          await db.update(livechatSessions).set({ conversationId }).where(eq18(livechatSessions.sessionId, data.sessionId));
         }
         const [message] = await db.insert(inboxMessages2).values({
           conversationId,
@@ -10095,9 +14494,9 @@ function setupWebSocket(server) {
         await db.update(inboxConversations).set({
           lastMessageAt: /* @__PURE__ */ new Date(),
           lastMessagePreview: data.message.substring(0, 100),
-          unreadCount: db.$count(inboxMessages2, eq12(inboxMessages2.conversationId, conversationId)),
+          unreadCount: db.$count(inboxMessages2, eq18(inboxMessages2.conversationId, conversationId)),
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq12(inboxConversations.id, conversationId));
+        }).where(eq18(inboxConversations.id, conversationId));
         io.to(`conversation:${conversationId}`).emit("message:new", {
           ...message,
           conversationId
@@ -10119,7 +14518,7 @@ function setupWebSocket(server) {
     });
     socket.on("agent:message", async (data) => {
       try {
-        const [conversation] = await db.select().from(inboxConversations).where(eq12(inboxConversations.id, data.conversationId)).limit(1);
+        const [conversation] = await db.select().from(inboxConversations).where(eq18(inboxConversations.id, data.conversationId)).limit(1);
         if (!conversation) {
           socket.emit("message:error", { error: "Conversation not found" });
           return;
@@ -10142,7 +14541,7 @@ function setupWebSocket(server) {
           lastMessageAt: /* @__PURE__ */ new Date(),
           lastMessagePreview: data.message.substring(0, 100),
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq12(inboxConversations.id, data.conversationId));
+        }).where(eq18(inboxConversations.id, data.conversationId));
         io.to(`conversation:${data.conversationId}`).emit("message:new", {
           ...message,
           conversationId: data.conversationId
@@ -10181,12 +14580,12 @@ function setupWebSocket(server) {
           status: "read",
           readAt: /* @__PURE__ */ new Date()
         }).where(
-          and10(
-            eq12(inboxMessages2.conversationId, data.conversationId),
-            eq12(inboxMessages2.direction, "inbound")
+          and12(
+            eq18(inboxMessages2.conversationId, data.conversationId),
+            eq18(inboxMessages2.direction, "inbound")
           )
         );
-        await db.update(inboxConversations).set({ unreadCount: 0 }).where(eq12(inboxConversations.id, data.conversationId));
+        await db.update(inboxConversations).set({ unreadCount: 0 }).where(eq18(inboxConversations.id, data.conversationId));
         io.to(`conversation:${data.conversationId}`).emit("messages:read", {
           conversationId: data.conversationId
         });
@@ -10199,9 +14598,9 @@ function setupWebSocket(server) {
       socket.join(`session:${sessionId}`);
       console.log(`Customer ${socket.id} joined session: ${sessionId}`);
       try {
-        const [session2] = await db.select().from(livechatSessions).where(eq12(livechatSessions.sessionId, sessionId)).limit(1);
+        const [session2] = await db.select().from(livechatSessions).where(eq18(livechatSessions.sessionId, sessionId)).limit(1);
         if (session2 && session2.conversationId) {
-          const messages = await db.select().from(inboxMessages2).where(eq12(inboxMessages2.conversationId, session2.conversationId)).orderBy(inboxMessages2.createdAt);
+          const messages = await db.select().from(inboxMessages2).where(eq18(inboxMessages2.conversationId, session2.conversationId)).orderBy(inboxMessages2.createdAt);
           socket.emit("message:history", { messages });
         }
       } catch (error) {
