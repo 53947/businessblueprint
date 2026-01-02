@@ -5,7 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { addToCart, getCartCount, getCartTotal } from "@/lib/cart";
-import { ShoppingCart, ClipboardCheck } from "lucide-react";
+import { ShoppingCart, ClipboardCheck, User, Settings, CreditCard, LogOut, ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -214,6 +221,26 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
   // User is logged in if they have Replit Auth OR Client Portal access
   const isLoggedIn = isAuthenticated || hasClientPortalAccess;
+
+  // Handle sign out for both client portal and admin auth
+  const handleSignOut = () => {
+    // Clear client portal session data
+    sessionStorage.removeItem("clientId");
+    sessionStorage.removeItem("externalId");
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("clientName");
+    sessionStorage.removeItem("loginRedirect");
+    localStorage.removeItem("clientId");
+    setHasClientPortalAccess(false);
+    
+    // If authenticated via Replit Auth, redirect to logout endpoint
+    if (isAuthenticated) {
+      window.location.href = "/api/logout";
+    } else {
+      // For client portal users, redirect to login page (matching existing side-nav behavior)
+      window.location.href = "/portal/login";
+    }
+  };
 
   return (
     <header className="bg-gray-100 border-b border-gray-200 sticky top-0 z-50">
@@ -1236,15 +1263,49 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   Inbox
                 </a>
 
-                {/* Login/Dashboard Button - Shows Dashboard when authenticated */}
+                {/* Login/Account Dropdown - Shows Account menu when authenticated */}
                 {isLoggedIn ? (
-                  <a
-                    href="/portal/dashboard"
-                    className="flex items-center px-2 sm:px-6 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs sm:text-sm font-medium transition-colors"
-                    data-testid="button-dashboard"
-                  >
-                    Dashboard
-                  </a>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        className="flex items-center gap-1 px-2 sm:px-4 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs sm:text-sm font-medium transition-colors"
+                        data-testid="button-account-dropdown"
+                      >
+                        <User className="w-4 h-4" />
+                        <span>Account</span>
+                        <ChevronDown className="w-3 h-3" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem asChild>
+                        <a href="/portal/dashboard" className="flex items-center gap-2 cursor-pointer" data-testid="menu-item-dashboard">
+                          <User className="w-4 h-4" />
+                          <span>My Profile</span>
+                        </a>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <a href="/portal/settings" className="flex items-center gap-2 cursor-pointer" data-testid="menu-item-settings">
+                          <Settings className="w-4 h-4" />
+                          <span>Settings</span>
+                        </a>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <a href="/portal/billing" className="flex items-center gap-2 cursor-pointer" data-testid="menu-item-billing">
+                          <CreditCard className="w-4 h-4" />
+                          <span>Billing & Subscriptions</span>
+                        </a>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem 
+                        onClick={handleSignOut}
+                        className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                        data-testid="menu-item-sign-out"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Sign Out</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 ) : (
                   <a
                     href="/portal/login"
@@ -1291,11 +1352,46 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 Inbox
               </a>
 
-              {/* Dashboard or Login */}
+              {/* Account Dropdown or Login */}
               {isLoggedIn ? (
-                <a href="/portal/dashboard" className="flex-1 px-2 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium text-center transition-colors" data-testid="button-dashboard-mobile">
-                  Dashboard
-                </a>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex-1 flex items-center justify-center gap-1 px-2 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium transition-colors" data-testid="button-account-dropdown-mobile">
+                      <User className="w-3 h-3" />
+                      <span>Account</span>
+                      <ChevronDown className="w-3 h-3" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="center" className="w-48">
+                    <DropdownMenuItem asChild>
+                      <a href="/portal/dashboard" className="flex items-center gap-2 cursor-pointer" data-testid="menu-item-dashboard-mobile">
+                        <User className="w-4 h-4" />
+                        <span>My Profile</span>
+                      </a>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <a href="/portal/settings" className="flex items-center gap-2 cursor-pointer" data-testid="menu-item-settings-mobile">
+                        <Settings className="w-4 h-4" />
+                        <span>Settings</span>
+                      </a>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <a href="/portal/billing" className="flex items-center gap-2 cursor-pointer" data-testid="menu-item-billing-mobile">
+                        <CreditCard className="w-4 h-4" />
+                        <span>Billing & Subscriptions</span>
+                      </a>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={handleSignOut}
+                      className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                      data-testid="menu-item-sign-out-mobile"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Sign Out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <a href="/portal/login" className="flex-1 px-2 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium text-center transition-colors" data-testid="button-login-mobile">
                   Login
