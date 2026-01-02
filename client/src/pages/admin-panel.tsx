@@ -247,14 +247,24 @@ export default function AdminPanel() {
                 </p>
               </div>
             </div>
-            <Button 
-              onClick={() => setLocation('/brand-studio')}
-              className="bg-purple-600 hover:bg-purple-700"
-              data-testid="button-brand-studio"
-            >
-              <Palette className="w-4 h-4 mr-2" />
-              Brand Studio
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                onClick={() => setLocation('/brand-studio')}
+                className="bg-purple-600 hover:bg-purple-700"
+                data-testid="button-brand-studio"
+              >
+                <Palette className="w-4 h-4 mr-2" />
+                Brand Studio
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => window.location.href = '/api/logout'}
+                className="border-red-600 text-red-600 hover:bg-red-50"
+                data-testid="button-admin-logout"
+              >
+                Exit Admin
+              </Button>
+            </div>
           </div>
         </div>
 

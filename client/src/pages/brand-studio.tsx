@@ -17,8 +17,10 @@ import {
   Shield,
   Eye,
   Save,
-  Edit2
+  Edit2,
+  ArrowLeft
 } from "lucide-react";
+import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 
@@ -34,6 +36,7 @@ interface Asset {
 
 export default function BrandStudio() {
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState('logos');
   const [previewAsset, setPreviewAsset] = useState<Asset | null>(null);
   const [assetUrls, setAssetUrls] = useState<Record<number, string>>({});
@@ -352,18 +355,28 @@ export default function BrandStudio() {
       <main className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
-              <Palette className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
+                <Palette className="w-8 h-8 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="title-brand-studio">
+                  Brand Studio
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Manage your logos, icons, colors, and brand assets
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="title-brand-studio">
-                Brand Studio
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400">
-                Manage your logos, icons, colors, and brand assets
-              </p>
-            </div>
+            <Button 
+              onClick={() => setLocation('/admin')}
+              variant="outline"
+              data-testid="button-back-to-admin"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Admin
+            </Button>
           </div>
         </div>
 

@@ -1251,27 +1251,21 @@ export function Header({ showNavigation = true }: HeaderProps) {
           </div>
 
           {/* Right side - Quick Access & Login/Signup Buttons (Desktop only) */}
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-1">
             {showNavigation && (
               <>
-                {/* Inbox Button - Always visible; requires login first if not authenticated */}
-                <a
-                  href={isLoggedIn ? "/portal/inbox" : "/portal/login?redirect=/portal/inbox"}
-                  className="flex items-center px-2 sm:px-6 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs sm:text-sm transition-colors"
-                  data-testid="button-quick-inbox"
-                >
-                  Inbox
-                </a>
-
-                {/* Login/Account Dropdown - Shows Account menu when authenticated */}
+                {/* Account Dropdown with image placeholder - Shows Account menu when authenticated */}
                 {isLoggedIn ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <button
-                        className="flex items-center gap-1 px-2 sm:px-4 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs sm:text-sm font-medium transition-colors"
+                        className="flex items-center gap-1 px-2 py-1.5 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium transition-colors"
                         data-testid="button-account-dropdown"
                       >
-                        <User className="w-4 h-4" />
+                        {/* Image placeholder for client logo/profile picture */}
+                        <div className="w-5 h-5 rounded-full bg-gray-200 border border-gray-300 flex items-center justify-center overflow-hidden">
+                          <User className="w-3 h-3 text-gray-500" />
+                        </div>
                         <span>Account</span>
                         <ChevronDown className="w-3 h-3" />
                       </button>
@@ -1279,6 +1273,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     <DropdownMenuContent align="end" className="w-48">
                       <DropdownMenuItem asChild>
                         <a href="/portal/dashboard" className="flex items-center gap-2 cursor-pointer" data-testid="menu-item-dashboard">
+                          <ClipboardCheck className="w-4 h-4" />
+                          <span>Dashboard</span>
+                        </a>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <a href="/portal/account" className="flex items-center gap-2 cursor-pointer" data-testid="menu-item-my-account">
+                          <User className="w-4 h-4" />
+                          <span>My Account</span>
+                        </a>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <a href="/portal/profile" className="flex items-center gap-2 cursor-pointer" data-testid="menu-item-my-profile">
                           <User className="w-4 h-4" />
                           <span>My Profile</span>
                         </a>
@@ -1309,17 +1315,37 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 ) : (
                   <a
                     href="/portal/login"
-                    className="flex items-center px-2 sm:px-6 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs sm:text-sm font-medium transition-colors"
+                    className="flex items-center px-2 py-1.5 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium transition-colors"
                     data-testid="button-login"
                   >
                     Login
                   </a>
                 )}
 
+                {/* Dashboard Button - Standalone, visible when logged in */}
+                {isLoggedIn && (
+                  <a
+                    href="/portal/dashboard"
+                    className="flex items-center px-2 py-1.5 bg-gray-900 hover:bg-gray-800 text-white rounded-md text-xs font-medium transition-colors"
+                    data-testid="button-dashboard"
+                  >
+                    Dashboard
+                  </a>
+                )}
+
+                {/* Inbox Button - Always visible; requires login first if not authenticated */}
+                <a
+                  href={isLoggedIn ? "/portal/inbox" : "/portal/login?redirect=/portal/inbox"}
+                  className="flex items-center px-2 py-1.5 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs transition-colors"
+                  data-testid="button-quick-inbox"
+                >
+                  Inbox
+                </a>
+
                 {/* Digital IQ Button - Requires login first if not authenticated */}
                 <a
                   href={isLoggedIn ? "/assessment" : "/portal/login?redirect=/assessment"}
-                  className="flex items-center px-2 sm:px-6 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs sm:text-sm font-bold transition-all whitespace-nowrap"
+                  className="flex items-center px-2 py-1.5 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs font-bold transition-all whitespace-nowrap"
                   data-testid="button-digital-iq"
                 >
                   Digital IQ
@@ -1328,12 +1354,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 {/* Shopping Cart - Icon only, on far right */}
                 <Link
                   href="/cart"
-                  className="relative p-2 hover:bg-white rounded-md transition-colors ml-4"
+                  className="relative p-1.5 hover:bg-white rounded-md transition-colors ml-2"
                   data-testid="button-cart"
                 >
-                  <ShoppingCart className="w-5 h-5 text-gray-700" />
+                  <ShoppingCart className="w-4 h-4 text-gray-700" />
                   {cartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center" data-testid="cart-count-badge">
+                    <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center" data-testid="cart-count-badge">
                       {cartCount}
                     </span>
                   )}
