@@ -1096,12 +1096,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         expiresAt,
       });
 
-      // Generate magic link URL - use request origin in development
-      let frontendUrl = process.env.FRONTEND_URL;
-      if (!frontendUrl) {
-        const protocol = req.secure ? "https" : "http";
+      // Generate magic link URL - always use request origin in development
+      let frontendUrl: string;
+      if (process.env.NODE_ENV === "development") {
+        // In development, use the request origin so links work correctly
+        const protocol = req.get("x-forwarded-proto") || (req.secure ? "https" : "http");
         const host = req.get("host") || "localhost:5000";
         frontendUrl = `${protocol}://${host}`;
+      } else {
+        // In production, use FRONTEND_URL or fall back to request origin
+        frontendUrl = process.env.FRONTEND_URL || `https://${req.get("host")}`;
       }
       const magicLink = `${frontendUrl}/portal/verify?token=${token}`;
 
