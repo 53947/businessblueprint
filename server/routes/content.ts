@@ -24,12 +24,14 @@ import { eq, and, desc, sql } from 'drizzle-orm';
 import { MediaStorageService } from '../services/mediaStorage';
 import { publishPost } from '../workers/contentPublisher';
 import { PlatformFactory } from '../services/platforms/platformFactory';
+import { isDemoAccountById } from '../utils/demoAccounts';
 
 const router = Router();
 const mediaStorage = new MediaStorageService();
 
 /**
  * Middleware: Check if client has Content Management access
+ * Demo accounts get full access without subscription checks
  */
 async function requireContentAccess(req: Request, res: Response, next: Function) {
   const clientId = parseInt(req.params.clientId || req.body.clientId);
@@ -39,6 +41,11 @@ async function requireContentAccess(req: Request, res: Response, next: Function)
   }
 
   try {
+    // Demo accounts get full access
+    if (await isDemoAccountById(clientId)) {
+      return next();
+    }
+
     const hasAccess = await db
       .select({ id: subscriptionAddonSelections.id })
       .from(subscriptionAddonSelections)
@@ -73,8 +80,14 @@ async function requireContentAccess(req: Request, res: Response, next: Function)
 
 /**
  * Get platform limits for client's subscription tier
+ * Demo accounts get MSP-level access
  */
 async function getPlatformLimits(clientId: number): Promise<{ maxPlatforms: number; tier: 'diy' | 'msp' }> {
+  // Demo accounts get full MSP-level access
+  if (await isDemoAccountById(clientId)) {
+    return { maxPlatforms: 7, tier: 'msp' };
+  }
+
   const [subscription] = await db
     .select({ addonName: subscriptionAddons.name })
     .from(subscriptionAddonSelections)
