@@ -45,8 +45,20 @@ export const assessments = pgTable("assessments", {
   id: serial("id").primaryKey(),
   businessName: varchar("business_name", { length: 255 }).notNull(),
   industry: varchar("industry", { length: 100 }).notNull(),
-  address: text("address").notNull(),
-  location: varchar("location", { length: 255 }).notNull(),
+  
+  // Address fields (SEO-optimized for local listings)
+  address: text("address").notNull(), // Address Line 1 (street address)
+  address2: text("address2"), // Address Line 2 (optional)
+  unit: varchar("unit", { length: 50 }), // Suite/Unit number (optional)
+  attention: varchar("attention", { length: 100 }), // Attention line (optional)
+  city: varchar("city", { length: 100 }).notNull(),
+  state: varchar("state", { length: 100 }).notNull(),
+  zipCode: varchar("zip_code", { length: 20 }).notNull(),
+  country: varchar("country", { length: 100 }).notNull().default("United States"),
+  
+  // Legacy field for backwards compatibility
+  location: varchar("location", { length: 255 }), // Now optional, computed from city/state
+  
   phone: varchar("phone", { length: 20 }).notNull(),
   email: varchar("email", { length: 255 }).notNull(),
   website: varchar("website", { length: 500 }),
@@ -210,7 +222,13 @@ export const insertAssessmentSchema = createInsertSchema(assessments).pick({
   businessName: true,
   industry: true,
   address: true,
-  location: true,
+  address2: true,
+  unit: true,
+  attention: true,
+  city: true,
+  state: true,
+  zipCode: true,
+  country: true,
   phone: true,
   email: true,
   website: true,

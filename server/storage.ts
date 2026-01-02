@@ -203,9 +203,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createAssessment(assessmentData: InsertAssessment): Promise<Assessment> {
+    // Compute legacy location field from city and state for backwards compatibility
+    const dataWithLocation = {
+      ...assessmentData,
+      location: assessmentData.city && assessmentData.state 
+        ? `${assessmentData.city}, ${assessmentData.state}` 
+        : undefined,
+    };
+    
     const [assessment] = await db
       .insert(assessments)
-      .values(assessmentData)
+      .values(dataWithLocation)
       .returning();
     return assessment;
   }

@@ -31,7 +31,13 @@ export function AssessmentForm() {
       businessName: "",
       industry: "",
       address: "",
-      location: "",
+      address2: "",
+      unit: "",
+      attention: "",
+      city: "",
+      state: "",
+      zipCode: "",
+      country: "United States",
       phone: "",
       email: "",
       website: "",
@@ -80,7 +86,7 @@ export function AssessmentForm() {
     
     switch (currentStep) {
       case 0:
-        fieldsToValidate = ["businessName", "industry", "address", "location"];
+        fieldsToValidate = ["businessName", "industry", "address", "city", "state", "zipCode"];
         break;
       case 1:
         fieldsToValidate = ["phone", "email"];
@@ -151,8 +157,11 @@ export function AssessmentForm() {
                     </div>
                     <div>
                       <Label htmlFor="industry">Industry *</Label>
-                      <Select onValueChange={(value) => form.setValue("industry", value)}>
-                        <SelectTrigger>
+                      <Select 
+                        value={form.watch("industry")} 
+                        onValueChange={(value) => form.setValue("industry", value, { shouldValidate: true })}
+                      >
+                        <SelectTrigger data-testid="select-industry">
                           <SelectValue placeholder="Select your industry" />
                         </SelectTrigger>
                         <SelectContent>
@@ -174,32 +183,165 @@ export function AssessmentForm() {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="address">Business Address *</Label>
-                      <Input
-                        id="address"
-                        placeholder="Street address"
-                        {...form.register("address")}
-                      />
-                      {form.formState.errors.address && (
-                        <p className="text-sm text-red-600 mt-1">
-                          {form.formState.errors.address.message}
-                        </p>
-                      )}
+                  {/* Address Section */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-medium text-gray-700 border-b pb-2">Business Address</h3>
+                    
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="address">Address Line 1 *</Label>
+                        <Input
+                          id="address"
+                          placeholder="Street address"
+                          data-testid="input-address"
+                          {...form.register("address")}
+                        />
+                        {form.formState.errors.address && (
+                          <p className="text-sm text-red-600 mt-1">
+                            {form.formState.errors.address.message}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <Label htmlFor="address2">Address Line 2</Label>
+                        <Input
+                          id="address2"
+                          placeholder="Building, floor, etc. (optional)"
+                          data-testid="input-address2"
+                          {...form.register("address2")}
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <Label htmlFor="location">City, State *</Label>
-                      <Input
-                        id="location"
-                        placeholder="City, State"
-                        {...form.register("location")}
-                      />
-                      {form.formState.errors.location && (
-                        <p className="text-sm text-red-600 mt-1">
-                          {form.formState.errors.location.message}
-                        </p>
-                      )}
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="unit">Suite / Unit</Label>
+                        <Input
+                          id="unit"
+                          placeholder="Suite 100 (optional)"
+                          data-testid="input-unit"
+                          {...form.register("unit")}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="attention">Attention</Label>
+                        <Input
+                          id="attention"
+                          placeholder="Attn: Name (optional)"
+                          data-testid="input-attention"
+                          {...form.register("attention")}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-4 gap-4">
+                      <div className="md:col-span-1">
+                        <Label htmlFor="city">City *</Label>
+                        <Input
+                          id="city"
+                          placeholder="City"
+                          data-testid="input-city"
+                          {...form.register("city")}
+                        />
+                        {form.formState.errors.city && (
+                          <p className="text-sm text-red-600 mt-1">
+                            {form.formState.errors.city.message}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <Label htmlFor="state">State *</Label>
+                        <Select 
+                          value={form.watch("state")} 
+                          onValueChange={(value) => form.setValue("state", value, { shouldValidate: true })}
+                        >
+                          <SelectTrigger data-testid="select-state">
+                            <SelectValue placeholder="State" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="AL">Alabama</SelectItem>
+                            <SelectItem value="AK">Alaska</SelectItem>
+                            <SelectItem value="AZ">Arizona</SelectItem>
+                            <SelectItem value="AR">Arkansas</SelectItem>
+                            <SelectItem value="CA">California</SelectItem>
+                            <SelectItem value="CO">Colorado</SelectItem>
+                            <SelectItem value="CT">Connecticut</SelectItem>
+                            <SelectItem value="DE">Delaware</SelectItem>
+                            <SelectItem value="FL">Florida</SelectItem>
+                            <SelectItem value="GA">Georgia</SelectItem>
+                            <SelectItem value="HI">Hawaii</SelectItem>
+                            <SelectItem value="ID">Idaho</SelectItem>
+                            <SelectItem value="IL">Illinois</SelectItem>
+                            <SelectItem value="IN">Indiana</SelectItem>
+                            <SelectItem value="IA">Iowa</SelectItem>
+                            <SelectItem value="KS">Kansas</SelectItem>
+                            <SelectItem value="KY">Kentucky</SelectItem>
+                            <SelectItem value="LA">Louisiana</SelectItem>
+                            <SelectItem value="ME">Maine</SelectItem>
+                            <SelectItem value="MD">Maryland</SelectItem>
+                            <SelectItem value="MA">Massachusetts</SelectItem>
+                            <SelectItem value="MI">Michigan</SelectItem>
+                            <SelectItem value="MN">Minnesota</SelectItem>
+                            <SelectItem value="MS">Mississippi</SelectItem>
+                            <SelectItem value="MO">Missouri</SelectItem>
+                            <SelectItem value="MT">Montana</SelectItem>
+                            <SelectItem value="NE">Nebraska</SelectItem>
+                            <SelectItem value="NV">Nevada</SelectItem>
+                            <SelectItem value="NH">New Hampshire</SelectItem>
+                            <SelectItem value="NJ">New Jersey</SelectItem>
+                            <SelectItem value="NM">New Mexico</SelectItem>
+                            <SelectItem value="NY">New York</SelectItem>
+                            <SelectItem value="NC">North Carolina</SelectItem>
+                            <SelectItem value="ND">North Dakota</SelectItem>
+                            <SelectItem value="OH">Ohio</SelectItem>
+                            <SelectItem value="OK">Oklahoma</SelectItem>
+                            <SelectItem value="OR">Oregon</SelectItem>
+                            <SelectItem value="PA">Pennsylvania</SelectItem>
+                            <SelectItem value="RI">Rhode Island</SelectItem>
+                            <SelectItem value="SC">South Carolina</SelectItem>
+                            <SelectItem value="SD">South Dakota</SelectItem>
+                            <SelectItem value="TN">Tennessee</SelectItem>
+                            <SelectItem value="TX">Texas</SelectItem>
+                            <SelectItem value="UT">Utah</SelectItem>
+                            <SelectItem value="VT">Vermont</SelectItem>
+                            <SelectItem value="VA">Virginia</SelectItem>
+                            <SelectItem value="WA">Washington</SelectItem>
+                            <SelectItem value="WV">West Virginia</SelectItem>
+                            <SelectItem value="WI">Wisconsin</SelectItem>
+                            <SelectItem value="WY">Wyoming</SelectItem>
+                            <SelectItem value="DC">Washington DC</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {form.formState.errors.state && (
+                          <p className="text-sm text-red-600 mt-1">
+                            {form.formState.errors.state.message}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <Label htmlFor="zipCode">Zip Code *</Label>
+                        <Input
+                          id="zipCode"
+                          placeholder="12345"
+                          data-testid="input-zipcode"
+                          {...form.register("zipCode")}
+                        />
+                        {form.formState.errors.zipCode && (
+                          <p className="text-sm text-red-600 mt-1">
+                            {form.formState.errors.zipCode.message}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <Label htmlFor="country">Country</Label>
+                        <Input
+                          id="country"
+                          data-testid="input-country"
+                          {...form.register("country")}
+                          disabled
+                          className="bg-gray-100"
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -287,14 +429,26 @@ export function AssessmentForm() {
                         <Label className="text-sm font-medium text-gray-500">Industry</Label>
                         <p className="text-sm font-medium">{form.watch("industry")}</p>
                       </div>
-                      <div>
-                        <Label className="text-sm font-medium text-gray-500">Address</Label>
-                        <p className="text-sm font-medium">{form.watch("address")}</p>
+                    </div>
+                    
+                    {/* Full Address Display */}
+                    <div>
+                      <Label className="text-sm font-medium text-gray-500">Business Address</Label>
+                      <div className="text-sm font-medium space-y-0.5">
+                        {form.watch("attention") && <p>Attn: {form.watch("attention")}</p>}
+                        <p>
+                          {form.watch("address")}
+                          {form.watch("unit") && `, ${form.watch("unit")}`}
+                        </p>
+                        {form.watch("address2") && <p>{form.watch("address2")}</p>}
+                        <p>
+                          {form.watch("city")}, {form.watch("state")} {form.watch("zipCode")}
+                        </p>
+                        <p>{form.watch("country")}</p>
                       </div>
-                      <div>
-                        <Label className="text-sm font-medium text-gray-500">Location</Label>
-                        <p className="text-sm font-medium">{form.watch("location")}</p>
-                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <Label className="text-sm font-medium text-gray-500">Phone</Label>
                         <p className="text-sm font-medium">{form.watch("phone")}</p>
