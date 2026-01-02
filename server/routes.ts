@@ -264,6 +264,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Don't fail the assessment if CRM creation fails
       }
 
+      // Send welcome email immediately
+      try {
+        await emailService.sendWelcomeEmail(validatedData.email, {
+          businessName: validatedData.businessName,
+          assessmentId: assessment.id,
+        });
+        console.log(`[Assessment] Welcome email sent to ${validatedData.email}`);
+      } catch (emailError) {
+        console.error("[Assessment] Failed to send welcome email:", emailError);
+        // Don't fail the assessment if email fails
+      }
+
       // Start background analysis
       processAssessmentAsync(
         assessment.id,

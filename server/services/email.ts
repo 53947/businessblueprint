@@ -246,6 +246,113 @@ export class EmailService {
     }
   }
 
+  async sendWelcomeEmail(email: string, data: {
+    businessName: string;
+    assessmentId: number;
+    digitalScore?: number;
+  }): Promise<boolean> {
+    try {
+      const { client, fromEmail } = await getResendClient();
+      const htmlContent = this.generateWelcomeEmailHTML(data);
+      
+      await client.emails.send({
+        from: fromEmail,
+        to: email,
+        subject: `Welcome to Business Blueprint, ${data.businessName}!`,
+        html: htmlContent,
+      });
+      console.log(`[Email] Welcome email sent to ${email}`);
+      return true;
+    } catch (error) {
+      console.error('Error sending welcome email:', error);
+      return false;
+    }
+  }
+
+  private generateWelcomeEmailHTML(data: {
+    businessName: string;
+    assessmentId: number;
+    digitalScore?: number;
+  }): string {
+    const dashboardUrl = `${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}`;
+    const scoreSection = data.digitalScore ? `
+            <div style="background: rgba(255,255,255,0.2); display: inline-block; padding: 15px 30px; border-radius: 25px; margin: 15px 0;">
+                <div style="font-size: 36px; font-weight: bold;">${data.digitalScore}</div>
+                <div style="font-size: 14px;">Your Digital IQ Score</div>
+            </div>` : '';
+    
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Business Blueprint</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #0057FF, #8B5CF6); color: white; padding: 40px; text-align: center; }
+        .content { padding: 40px; }
+        .cta-button { display: inline-block; background: #0057FF; color: white; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 20px 0; }
+        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .feature-list { list-style: none; padding: 0; margin: 25px 0; }
+        .feature-list li { padding: 12px 0; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; }
+        .feature-list li:last-child { border-bottom: none; }
+        .feature-icon { margin-right: 15px; font-size: 20px; }
+        .next-steps { background: #E0F2FE; border-left: 4px solid #0284C7; padding: 20px; margin: 25px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Welcome to Business Blueprint!</h1>
+            <p style="font-size: 20px; margin-top: 10px;">${data.businessName}</p>
+            ${scoreSection}
+        </div>
+        
+        <div class="content">
+            <p>Congratulations on taking the first step toward transforming your digital presence!</p>
+            
+            <p>Your personalized Digital Growth Plan is ready. Here's what you can do next:</p>
+            
+            <ul class="feature-list">
+                <li><span class="feature-icon">📊</span> View your complete Digital IQ Assessment results</li>
+                <li><span class="feature-icon">🎯</span> See personalized recommendations for your business</li>
+                <li><span class="feature-icon">🤖</span> Chat with Coach Blue, your AI business advisor</li>
+                <li><span class="feature-icon">📈</span> Explore growth pathways tailored to your needs</li>
+            </ul>
+            
+            <div class="next-steps">
+                <h3 style="color: #0284C7; margin-top: 0;">🚀 Your Next Steps:</h3>
+                <ol style="margin: 10px 0; padding-left: 20px;">
+                    <li>Access your personalized dashboard</li>
+                    <li>Review your Digital IQ breakdown</li>
+                    <li>Explore your recommended growth pathway</li>
+                    <li>Start implementing your action plan</li>
+                </ol>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="${dashboardUrl}" class="cta-button">
+                    Access Your Dashboard
+                </a>
+            </div>
+            
+            <p style="font-size: 14px; color: #666; text-align: center;">
+                Bookmark this link to easily return to your dashboard anytime.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>Questions? Reply to this email or visit our support center.</p>
+            <p>We're here to help you succeed!</p>
+            <p><small>© 2024 businessblueprint.io</small></p>
+        </div>
+    </div>
+</body>
+</html>`;
+  }
+
   private generateReportHTML(data: EmailReportData): string {
     const highPriorityRecs = data.recommendations.filter(r => r.priority === 'high').slice(0, 3);
     
