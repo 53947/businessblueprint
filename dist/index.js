@@ -3616,13 +3616,18 @@ var init_jwt = __esm({
       algorithm;
       // Allow HS256 as well
       constructor() {
+        console.log("[JWT Service] v2.0.1 - Initializing with HS256 forced mode");
         this.keyPair = this.generateKeyPair();
-        const hasValidRSAKeys = this.keyPair.privateKey && this.keyPair.publicKey && this.keyPair.privateKey.length > 100 && this.keyPair.publicKey.length > 100 && this.keyPair.privateKey.includes("-----BEGIN") && this.keyPair.publicKey.includes("-----BEGIN");
+        const hasValidRSAKeys = this.keyPair.privateKey && this.keyPair.publicKey && this.keyPair.privateKey.length > 100 && this.keyPair.publicKey.length > 100 && this.keyPair.privateKey.includes("-----BEGIN RSA") && this.keyPair.publicKey.includes("-----BEGIN");
         this.algorithm = hasValidRSAKeys ? "RS256" : "HS256";
-        console.log(`[JWT Service] Using algorithm: ${this.algorithm}`);
-        console.log(`[JWT Service] Private key length: ${this.keyPair.privateKey?.length || 0}, Public key length: ${this.keyPair.publicKey?.length || 0}`);
-        if (this.algorithm === "HS256" && !process.env.JWT_SECRET) {
-          console.warn("[JWT Service] WARNING: No JWT_SECRET set, using fallback key (not recommended for production)");
+        console.log(`[JWT Service] v2.0.1 Algorithm selected: ${this.algorithm}`);
+        console.log(`[JWT Service] Private key present: ${!!this.keyPair.privateKey && this.keyPair.privateKey.length > 0}, Public key present: ${!!this.keyPair.publicKey && this.keyPair.publicKey.length > 0}`);
+        if (this.algorithm === "HS256") {
+          const hasSecret = !!process.env.JWT_SECRET;
+          console.log(`[JWT Service] JWT_SECRET configured: ${hasSecret}`);
+          if (!hasSecret) {
+            console.warn("[JWT Service] WARNING: No JWT_SECRET set, using fallback key");
+          }
         }
       }
       /**
