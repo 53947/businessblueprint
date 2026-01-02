@@ -26,10 +26,21 @@ export class JWTService {
   constructor() {
     this.keyPair = this.generateKeyPair();
     // Determine algorithm based on key availability (check for valid PEM keys)
-    const hasValidRSAKeys = this.keyPair.privateKey.includes('-----BEGIN') && 
+    // Must have BOTH private and public keys with proper PEM headers
+    const hasValidRSAKeys = this.keyPair.privateKey && 
+                            this.keyPair.publicKey &&
+                            this.keyPair.privateKey.length > 100 &&
+                            this.keyPair.publicKey.length > 100 &&
+                            this.keyPair.privateKey.includes('-----BEGIN') && 
                             this.keyPair.publicKey.includes('-----BEGIN');
     this.algorithm = hasValidRSAKeys ? 'RS256' : 'HS256';
     console.log(`[JWT Service] Using algorithm: ${this.algorithm}`);
+    console.log(`[JWT Service] Private key length: ${this.keyPair.privateKey?.length || 0}, Public key length: ${this.keyPair.publicKey?.length || 0}`);
+    
+    // Validate that we have a signing secret for HS256
+    if (this.algorithm === 'HS256' && !process.env.JWT_SECRET) {
+      console.warn('[JWT Service] WARNING: No JWT_SECRET set, using fallback key (not recommended for production)');
+    }
   }
 
   /**
