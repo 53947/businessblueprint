@@ -42,9 +42,13 @@ export default function VerifyMagicLink() {
 
           setStatus('success');
           
-          // Redirect to portal after 2 seconds
+          // Check for stored redirect destination, then clean up
+          const redirectTo = sessionStorage.getItem('loginRedirect') || '/portal';
+          sessionStorage.removeItem('loginRedirect');
+          
+          // Redirect after 2 seconds
           setTimeout(() => {
-            window.location.href = "/portal";
+            window.location.href = redirectTo;
           }, 2000);
         } else {
           setStatus('error');

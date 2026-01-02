@@ -18,6 +18,10 @@ export default function ClientLogin() {
   const [, setLocation] = useLocation();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
+  // Get redirect parameter from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirectTo = urlParams.get('redirect') || '/portal';
+
   // Check if already logged in
   useEffect(() => {
     const sessionClientId = sessionStorage.getItem("clientId");
@@ -25,8 +29,13 @@ export default function ClientLogin() {
     
     // Only redirect if BOTH clientId and authToken exist (fully authenticated)
     if (sessionClientId && authToken) {
-      window.location.href = "/portal";
+      window.location.href = redirectTo;
       return;
+    }
+    
+    // Store the redirect destination for after magic link verification
+    if (redirectTo !== '/portal') {
+      sessionStorage.setItem('loginRedirect', redirectTo);
     }
     
     // ALWAYS clear ALL auth data on login page load to ensure fresh state

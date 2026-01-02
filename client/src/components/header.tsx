@@ -1227,19 +1227,17 @@ export function Header({ showNavigation = true }: HeaderProps) {
           <div className="hidden lg:flex items-center gap-2">
             {showNavigation && (
               <>
-                {/* Inbox Button - Only visible when logged in, links to portal inbox */}
-                {(isAuthenticated || hasClientPortalAccess) && (
-                  <a
-                    href="/portal/inbox"
-                    className="flex items-center px-2 sm:px-6 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs sm:text-sm transition-colors"
-                    data-testid="button-quick-inbox"
-                  >
-                    Inbox
-                  </a>
-                )}
+                {/* Inbox Button - Always visible; requires login first if not authenticated */}
+                <a
+                  href={isLoggedIn ? "/portal/inbox" : "/portal/login?redirect=/portal/inbox"}
+                  className="flex items-center px-2 sm:px-6 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs sm:text-sm transition-colors"
+                  data-testid="button-quick-inbox"
+                >
+                  Inbox
+                </a>
 
                 {/* Login/Dashboard Button - Shows Dashboard when authenticated */}
-                {(isAuthenticated || hasClientPortalAccess) ? (
+                {isLoggedIn ? (
                   <a
                     href="/portal/dashboard"
                     className="flex items-center px-2 sm:px-6 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs sm:text-sm font-medium transition-colors"
@@ -1257,9 +1255,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   </a>
                 )}
 
-                {/* Digital IQ Button - Text only with proper padding */}
+                {/* Digital IQ Button - Requires login first if not authenticated */}
                 <a
-                  href="/assessment"
+                  href={isLoggedIn ? "/assessment" : "/portal/login?redirect=/assessment"}
                   className="flex items-center px-2 sm:px-6 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs sm:text-sm font-bold transition-all whitespace-nowrap"
                   data-testid="button-digital-iq"
                 >
@@ -1288,15 +1286,13 @@ export function Header({ showNavigation = true }: HeaderProps) {
         <div className="lg:hidden flex items-center justify-between gap-2 h-16 border-t border-gray-200 flex-wrap p-2">
           {showNavigation && (
             <>
-              {/* Inbox - Only when logged in */}
-              {(isAuthenticated || hasClientPortalAccess) && (
-                <a href="/portal/inbox" className="flex-1 px-2 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs text-center transition-colors" data-testid="button-inbox-mobile">
-                  Inbox
-                </a>
-              )}
+              {/* Inbox - Always visible; requires login first if not authenticated */}
+              <a href={isLoggedIn ? "/portal/inbox" : "/portal/login?redirect=/portal/inbox"} className="flex-1 px-2 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs text-center transition-colors" data-testid="button-inbox-mobile">
+                Inbox
+              </a>
 
               {/* Dashboard or Login */}
-              {(isAuthenticated || hasClientPortalAccess) ? (
+              {isLoggedIn ? (
                 <a href="/portal/dashboard" className="flex-1 px-2 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium text-center transition-colors" data-testid="button-dashboard-mobile">
                   Dashboard
                 </a>
@@ -1306,8 +1302,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 </a>
               )}
 
-              {/* Digital IQ */}
-              <a href="/assessment" className="flex-1 px-2 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs font-bold text-center transition-all" data-testid="button-digital-iq-mobile">
+              {/* Digital IQ - Requires login first if not authenticated */}
+              <a href={isLoggedIn ? "/assessment" : "/portal/login?redirect=/assessment"} className="flex-1 px-2 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs font-bold text-center transition-all" data-testid="button-digital-iq-mobile">
                 Digital IQ
               </a>
             </>
