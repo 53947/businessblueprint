@@ -1,4 +1,5 @@
-import nodemailer from 'nodemailer';
+// Email service using Resend integration for transactional emails
+import { Resend } from 'resend';
 
 interface EmailReportData {
   businessName: string;
@@ -18,37 +19,60 @@ interface ReviewAlertData {
   locationName?: string;
 }
 
-export class EmailService {
-  private transporter: nodemailer.Transporter;
+let connectionSettings: any;
 
-  constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: false, // Use TLS (STARTTLS) on port 587
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+async function getCredentials() {
+  const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
+  const xReplitToken = process.env.REPL_IDENTITY 
+    ? 'repl ' + process.env.REPL_IDENTITY 
+    : process.env.WEB_REPL_RENEWAL 
+    ? 'depl ' + process.env.WEB_REPL_RENEWAL 
+    : null;
+
+  if (!xReplitToken) {
+    throw new Error('X_REPLIT_TOKEN not found for repl/depl');
   }
 
+  connectionSettings = await fetch(
+    'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
+    {
+      headers: {
+        'Accept': 'application/json',
+        'X_REPLIT_TOKEN': xReplitToken
+      }
+    }
+  ).then(res => res.json()).then(data => data.items?.[0]);
+
+  if (!connectionSettings || (!connectionSettings.settings.api_key)) {
+    throw new Error('Resend not connected');
+  }
+  return { apiKey: connectionSettings.settings.api_key, fromEmail: connectionSettings.settings.from_email };
+}
+
+async function getResendClient() {
+  const { apiKey, fromEmail } = await getCredentials();
+  return {
+    client: new Resend(apiKey),
+    fromEmail: fromEmail || 'noreply@businessblueprint.io'
+  };
+}
+
+export class EmailService {
   generateVerificationCode(): string {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
 
   async sendVerificationEmail(email: string, companyName: string, verificationCode: string): Promise<boolean> {
     try {
+      const { client, fromEmail } = await getResendClient();
       const htmlContent = this.generateVerificationEmailHTML(companyName, verificationCode);
       
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      await client.emails.send({
+        from: fromEmail,
         to: email,
         subject: `Verify Your Email - ${verificationCode}`,
         html: htmlContent,
-      };
-
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error('Error sending verification email:', error);
@@ -58,16 +82,15 @@ export class EmailService {
 
   async sendEmailChangeNotification(oldEmail: string, newEmail: string, companyName: string): Promise<boolean> {
     try {
+      const { client, fromEmail } = await getResendClient();
       const htmlContent = this.generateEmailChangeNotificationHTML(companyName, newEmail);
       
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      await client.emails.send({
+        from: fromEmail,
         to: oldEmail,
         subject: `Email Address Changed - Action May Be Required`,
         html: htmlContent,
-      };
-
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error('Error sending email change notification:', error);
@@ -77,16 +100,15 @@ export class EmailService {
 
   async sendAssessmentReport(email: string, data: EmailReportData): Promise<boolean> {
     try {
+      const { client, fromEmail } = await getResendClient();
       const htmlContent = this.generateReportHTML(data);
       
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      await client.emails.send({
+        from: fromEmail,
         to: email,
         subject: `Your Digital Presence Assessment Results - Score: ${data.digitalScore}`,
         html: htmlContent,
-      };
-
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error('Error sending email:', error);
@@ -96,18 +118,17 @@ export class EmailService {
 
   async sendReviewAlert(email: string, data: ReviewAlertData): Promise<boolean> {
     try {
+      const { client, fromEmail } = await getResendClient();
       const htmlContent = this.generateReviewAlertHTML(data);
       const sentiment = data.rating <= 2 ? 'Negative' : data.rating >= 4 ? 'Positive' : 'Neutral';
       const urgency = data.rating <= 2 ? '⚠️ URGENT' : '';
       
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      await client.emails.send({
+        from: fromEmail,
         to: email,
         subject: `${urgency} New ${sentiment} Review on ${data.platform} - ${data.rating} ${data.rating === 1 ? 'Star' : 'Stars'}`,
         html: htmlContent,
-      };
-
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error('Error sending review alert email:', error);
@@ -124,16 +145,15 @@ export class EmailService {
     features: string[];
   }): Promise<boolean> {
     try {
+      const { client, fromEmail } = await getResendClient();
       const htmlContent = this.generateEnrollmentConfirmationHTML(data);
       
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      await client.emails.send({
+        from: fromEmail,
         to: email,
         subject: `Welcome to ${data.planName} - Your Digital Growth Journey Begins!`,
         html: htmlContent,
-      };
-
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error('Error sending enrollment confirmation email:', error);
@@ -147,16 +167,15 @@ export class EmailService {
     assessmentId: number;
   }): Promise<boolean> {
     try {
+      const { client, fromEmail } = await getResendClient();
       const htmlContent = this.generatePathwayReminderHTML(data);
       
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      await client.emails.send({
+        from: fromEmail,
         to: email,
         subject: `Still deciding? Your Digital Growth Plan is ready, ${data.businessName}`,
         html: htmlContent,
-      };
-
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error('Error sending pathway reminder email:', error);
@@ -172,16 +191,15 @@ export class EmailService {
     assessmentId: number;
   }): Promise<boolean> {
     try {
+      const { client, fromEmail } = await getResendClient();
       const htmlContent = this.generateCheckoutAbandonmentHTML(data);
       
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      await client.emails.send({
+        from: fromEmail,
         to: email,
         subject: `Complete your enrollment - ${data.planName} is waiting for you!`,
         html: htmlContent,
-      };
-
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error('Error sending checkout abandonment email:', error);
@@ -191,16 +209,15 @@ export class EmailService {
 
   async sendMagicLinkEmail(email: string, magicLink: string, companyName?: string): Promise<boolean> {
     try {
+      const { client, fromEmail } = await getResendClient();
       const htmlContent = this.generateMagicLinkHTML(magicLink, companyName);
       
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      await client.emails.send({
+        from: fromEmail,
         to: email,
         subject: 'Your Secure Login Link - Business Blueprint',
         html: htmlContent,
-      };
-
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error('Error sending magic link email:', error);
@@ -213,16 +230,15 @@ export class EmailService {
     assessmentId: number;
   }): Promise<boolean> {
     try {
+      const { client, fromEmail } = await getResendClient();
       const htmlContent = this.generateThankYouIntroductionHTML(data);
       
-      const mailOptions = {
-        from: process.env.FROM_EMAIL,
+      await client.emails.send({
+        from: fromEmail,
         to: email,
         subject: `Meet Coach Blue 🤖 - Your AI Guide to Digital Success`,
         html: htmlContent,
-      };
-
-      await this.transporter.sendMail(mailOptions);
+      });
       return true;
     } catch (error) {
       console.error('Error sending thank you introduction email:', error);
@@ -561,17 +577,11 @@ export class EmailService {
                 <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/assessment-checkout?id=${data.assessmentId}" class="cta-button">
                     Choose Your Pathway
                 </a>
-                
-                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}" class="cta-button secondary-button">
-                    Review My Assessment
-                </a>
             </div>
-            
-            <p style="margin-top: 30px;">Have questions? Just reply to this email - we're here to help!</p>
         </div>
         
         <div class="footer">
-            <p>Ready to transform your digital presence?</p>
+            <p>Questions? Reply to this email or visit our support center.</p>
             <p><small>© 2024 businessblueprint.io</small></p>
         </div>
     </div>
@@ -600,54 +610,33 @@ export class EmailService {
         .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .header { background: linear-gradient(135deg, ${pathwayColor}, #0057FF); color: white; padding: 40px; text-align: center; }
         .content { padding: 40px; }
-        .plan-box { background: #f8f9fa; border: 2px solid ${pathwayColor}; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
         .cta-button { display: inline-block; background: ${pathwayColor}; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
         .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-        .benefit-list { list-style: none; padding: 0; margin: 20px 0; }
-        .benefit-list li { padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
-        .benefit-list li:before { content: "✓ "; color: ${pathwayColor}; font-weight: bold; margin-right: 10px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>⏰ You're Almost There!</h1>
-            <p style="font-size: 18px; margin-top: 10px;">${data.businessName}</p>
+            <h1>Complete Your Enrollment</h1>
+            <p>${data.businessName}</p>
         </div>
         
         <div class="content">
-            <p>Hi,</p>
+            <p>Hi there,</p>
             
-            <p>We noticed you started enrolling in <strong>${data.planName}</strong> but didn't complete the process. No worries - we saved your spot!</p>
+            <p>We noticed you started the enrollment process for <strong>${data.planName}</strong> but didn't complete it. Your spot is still reserved!</p>
             
-            <div class="plan-box">
-                <h2 style="color: ${pathwayColor}; margin-top: 0;">${data.planName}</h2>
-                <p style="font-size: 32px; font-weight: bold; margin: 10px 0;">
-                    $${data.monthlyPrice.toFixed(2)}<span style="font-size: 16px; font-weight: normal;">/month</span>
-                </p>
-            </div>
-            
-            <h3>Why complete your enrollment today:</h3>
-            <ul class="benefit-list">
-                <li>Start seeing results within the first week</li>
-                <li>Get expert guidance from day one</li>
-                <li>Lock in your current pricing</li>
-                <li>Cancel anytime - no long-term commitment</li>
-            </ul>
+            <p>Complete your enrollment now to start improving your digital presence immediately.</p>
             
             <div style="text-align: center; margin: 40px 0;">
                 <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/assessment-checkout?id=${data.assessmentId}" class="cta-button">
-                    Complete My Enrollment
+                    Complete Your Enrollment
                 </a>
             </div>
-            
-            <p style="margin-top: 30px; text-align: center; color: #666;">
-                Need help or have questions? Just reply to this email.
-            </p>
         </div>
         
         <div class="footer">
-            <p>Your digital growth journey is just one click away!</p>
+            <p>Questions? Reply to this email or visit our support center.</p>
             <p><small>© 2024 businessblueprint.io</small></p>
         </div>
     </div>
@@ -668,55 +657,44 @@ export class EmailService {
         .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .header { background: linear-gradient(135deg, #0057FF, #8B5CF6); color: white; padding: 40px; text-align: center; }
         .content { padding: 40px; }
-        .info-box { background: #E0F2FE; border-left: 4px solid #0057FF; padding: 20px; margin: 20px 0; border-radius: 4px; }
-        .cta-button { display: inline-block; background: #0057FF; color: white; padding: 18px 36px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 20px 0; font-size: 18px; box-shadow: 0 4px 12px rgba(0,87,255,0.3); }
-        .cta-button:hover { background: #0041CC; }
+        .cta-button { display: inline-block; background: #0057FF; color: white; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 20px 0; }
         .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-        .security-note { background: #FFF4E6; padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 14px; }
-        .expiry-warning { color: #FF6B35; font-weight: bold; }
+        .warning { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 15px; margin: 20px 0; border-radius: 4px; }
+        .link-box { background: #f8f9fa; border: 1px solid #e0e0e0; padding: 15px; border-radius: 4px; word-break: break-all; margin: 15px 0; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>🔐 Secure Login Link</h1>
-            <p style="font-size: 18px; margin-top: 10px;">${companyName || 'Business Blueprint'}</p>
+            ${companyName ? `<p>${companyName}</p>` : ''}
         </div>
         
         <div class="content">
             <p>Hello,</p>
             
-            <p>You requested access to your Business Blueprint dashboard. Click the button below to log in securely:</p>
+            <p>Click the button below to securely log into your Business Blueprint account:</p>
             
-            <div style="text-align: center; margin: 30px 0;">
+            <div style="text-align: center;">
                 <a href="${magicLink}" class="cta-button">
-                    Access My Dashboard
+                    Log In to Your Account
                 </a>
             </div>
             
-            <div class="info-box">
-                <h3 style="margin-top: 0;">Why No Password?</h3>
-                <p style="margin-bottom: 0;">We use email-based authentication for maximum security. This means:</p>
-                <ul style="margin: 10px 0;">
-                    <li>No passwords to remember or forget</li>
-                    <li>No risk of password breaches</li>
-                    <li>Access controlled by your email inbox</li>
-                    <li>Each login link is unique and time-limited</li>
-                </ul>
+            <p style="font-size: 14px; color: #666;">Or copy and paste this link into your browser:</p>
+            <div class="link-box">
+                <code style="font-size: 12px;">${magicLink}</code>
             </div>
             
-            <div class="security-note">
-                <p style="margin: 0;"><strong>⏱️ Important:</strong> This link will expire in <span class="expiry-warning">15 minutes</span> for your security.</p>
-                <p style="margin: 10px 0 0 0;">If it expires, simply return to the login page and request a new link.</p>
+            <div class="warning">
+                <p style="margin: 0;"><strong>Security Note:</strong> This link expires in 15 minutes and can only be used once. Never share this link with anyone.</p>
             </div>
             
-            <p style="margin-top: 30px; color: #666; font-size: 14px;">
-                <strong>Didn't request this login?</strong> You can safely ignore this email. The link will expire automatically.
-            </p>
+            <p>If you didn't request this login link, you can safely ignore this email. Someone may have entered your email address by mistake.</p>
         </div>
         
         <div class="footer">
-            <p>Your security is our priority.</p>
+            <p>Need help? Contact our support team.</p>
             <p><small>© 2024 businessblueprint.io</small></p>
         </div>
     </div>
@@ -734,98 +712,39 @@ export class EmailService {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Digital Success Blueprint is Ready</title>
+    <title>Meet Coach Blue</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
         .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #0057FF, #FFA500); color: white; padding: 40px; text-align: center; }
+        .header { background: linear-gradient(135deg, #8B5CF6, #0057FF); color: white; padding: 40px; text-align: center; }
         .content { padding: 40px; }
-        .urgency-box { background: #FFF4E6; border-left: 4px solid #FFA500; padding: 20px; margin: 20px 0; border-radius: 4px; }
-        .cta-button { display: inline-block; background: #FFA500; color: white; padding: 18px 36px; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 15px 0; font-size: 18px; box-shadow: 0 4px 12px rgba(255,165,0,0.3); }
-        .cta-button:hover { background: #FF8C00; }
+        .cta-button { display: inline-block; background: #8B5CF6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
         .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-        .benefit-box { background: #E0F2FE; padding: 15px; border-radius: 8px; margin: 15px 0; }
-        .stat-highlight { font-size: 24px; font-weight: bold; color: #0057FF; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎯 ${data.businessName}</h1>
-            <p style="font-size: 20px; margin-top: 10px;">Your Digital Success Blueprint is Ready</p>
+            <h1>🤖 Meet Coach Blue</h1>
+            <p>Your AI Guide to Digital Success</p>
         </div>
         
         <div class="content">
-            <p><strong>Here's the truth:</strong></p>
+            <p>Hi ${data.businessName},</p>
             
-            <p>Right now, potential customers are searching for businesses like yours. They're reading reviews, checking social media, and deciding who to call.</p>
+            <p>Thank you for completing your Digital IQ Assessment! We're excited to introduce you to Coach Blue, your personal AI business coach.</p>
             
-            <p><span class="stat-highlight">93%</span> won't even consider you if they can't verify your business online.</p>
-            
-            <div class="urgency-box">
-                <p style="margin: 0;"><strong>⚡ The window is closing.</strong></p>
-                <p style="margin: 10px 0 0 0;">Every day you wait, your competitors are capturing customers who should be yours. The businesses that act within 7 days see results 3x faster than those who delay.</p>
-            </div>
-            
-            <h2 style="color: #0057FF;">What You Need Right Now</h2>
-            
-            <p>Based on your assessment, here's exactly what will move the needle for ${data.businessName}:</p>
-            
-            <div class="benefit-box">
-                <h3 style="margin-top: 0; color: #0057FF;">🗺️ Step 1: Get Found (Week 1)</h3>
-                <p><strong>Listings Management ($44/mo)</strong> - Your business information synced across 200+ directories. When someone searches, you show up. Consistently. Everywhere.</p>
-                <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Without this, you're invisible to 68% of local searchers.</p>
-            </div>
-            
-            <div class="benefit-box">
-                <h3 style="margin-top: 0; color: #0057FF;">⭐ Step 2: Build Trust (Week 2)</h3>
-                <p><strong>Reviews Management ($25/mo)</strong> - Monitor every review, respond instantly with AI assistance, turn feedback into 5-star ratings.</p>
-                <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">88% of customers trust online reviews as much as personal recommendations.</p>
-            </div>
-            
-            <div class="benefit-box">
-                <h3 style="margin-top: 0; color: #0057FF;">🤖 Step 3: Stay Consistent (Week 3)</h3>
-                <p><strong>AI Business Coach (pay as you use)</strong> - Your 24/7 marketing strategist. Get personalized guidance, automate repetitive tasks, avoid costly mistakes.</p>
-                <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;"><em>Everyone gets the same expert-level guidance regardless of what they spend. You pay only for what you use.</em></p>
-            </div>
-            
-            <h2 style="color: #0057FF; margin-top: 40px;">Two Paths Forward</h2>
-            
-            <p><strong>DIY Path:</strong> Start with Listings ($44) + Reviews ($25) = $69/mo. Add AI Coach when you need guidance. Perfect if you want hands-on control.</p>
-            
-            <p><strong>Done-For-You:</strong> Standard MSP ($313/mo) - We handle everything. 10 hours of expert work monthly. You focus on running your business while we build your digital presence.</p>
+            <p>Coach Blue is here to help you navigate your digital growth journey with personalized guidance and actionable insights.</p>
             
             <div style="text-align: center; margin: 40px 0;">
-                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/marketplace" class="cta-button">
-                    🚀 Start Building Your Presence Now
+                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}" class="cta-button">
+                    Start Your Journey with Coach Blue
                 </a>
             </div>
-            
-            <div class="urgency-box">
-                <h3 style="color: #FFA500; margin-top: 0;">⏰ Limited Time: First Month Analysis Included</h3>
-                <p style="margin: 0;">Subscribe in the next 48 hours and we'll include a comprehensive competitor analysis ($299 value) showing exactly where you stand and how to overtake them.</p>
-            </div>
-            
-            <h3 style="color: #0057FF;">What Happens After You Subscribe:</h3>
-            <ol>
-                <li><strong>Instant Access:</strong> Your dashboard activates immediately</li>
-                <li><strong>Quick Wins:</strong> We identify 3 changes you can make today for immediate impact</li>
-                <li><strong>Week 1 Results:</strong> You'll see your first reviews come in and rankings improve</li>
-                <li><strong>30-Day Guarantee:</strong> Not seeing results? Full refund, no questions asked</li>
-            </ol>
-            
-            <p style="margin-top: 30px;"><strong>Questions? Text me directly:</strong> Just reply to this email and I'll personally respond within 2 hours.</p>
-            
-            <p>Your competitors aren't waiting. Don't let them win customers that should be yours.</p>
-            
-            <p><strong>Coach Blue 🤖</strong><br>
-            Business Blueprint AI<br>
-            <em>P.S. - Check your inbox for your detailed assessment report. It shows exactly where you're losing customers right now.</em></p>
         </div>
         
         <div class="footer">
-            <p>Business Blueprint - Turning Assessments Into Action</p>
-            <p>Get Found • Get Customers • Get Business</p>
+            <p>Questions? Reply to this email or visit our support center.</p>
             <p><small>© 2024 businessblueprint.io</small></p>
         </div>
     </div>
@@ -834,9 +753,8 @@ export class EmailService {
   }
 
   private generateReviewAlertHTML(data: ReviewAlertData): string {
-    const ratingColor = data.rating <= 2 ? '#DC2626' : data.rating >= 4 ? '#16A34A' : '#F59E0B';
-    const sentiment = data.rating <= 2 ? 'Negative' : data.rating >= 4 ? 'Positive' : 'Neutral';
-    const stars = '⭐'.repeat(data.rating);
+    const starColor = data.rating >= 4 ? '#22C55E' : data.rating <= 2 ? '#EF4444' : '#F59E0B';
+    const stars = '★'.repeat(data.rating) + '☆'.repeat(5 - data.rating);
     
     return `
 <!DOCTYPE html>
@@ -848,55 +766,39 @@ export class EmailService {
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
         .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: ${ratingColor}; color: white; padding: 30px; text-align: center; }
+        .header { background: ${starColor}; color: white; padding: 30px; text-align: center; }
         .content { padding: 30px; }
-        .review-box { background: #f8f9fa; padding: 20px; border-left: 4px solid ${ratingColor}; border-radius: 4px; margin: 20px 0; }
-        .rating { font-size: 32px; margin: 10px 0; }
-        .meta { color: #666; font-size: 14px; margin: 10px 0; }
-        .cta-button { display: inline-block; background: ${ratingColor}; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
+        .stars { font-size: 32px; color: #FFD700; }
+        .review-box { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid ${starColor}; }
         .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔔 New ${sentiment} Review</h1>
-            <div class="rating">${stars}</div>
-            <h2>${data.businessName}</h2>
+            <h1>${data.rating <= 2 ? '⚠️' : data.rating >= 4 ? '🎉' : '📝'} New Review on ${data.platform}</h1>
+            <div class="stars">${stars}</div>
         </div>
         
         <div class="content">
-            <div class="meta">
-                <strong>Platform:</strong> ${data.platform}<br>
-                ${data.reviewerName ? `<strong>Reviewer:</strong> ${data.reviewerName}<br>` : ''}
-                ${data.locationName ? `<strong>Location:</strong> ${data.locationName}<br>` : ''}
-                <strong>Date:</strong> ${new Date(data.reviewDate).toLocaleDateString()}
-            </div>
+            <p><strong>Business:</strong> ${data.businessName}</p>
+            ${data.locationName ? `<p><strong>Location:</strong> ${data.locationName}</p>` : ''}
+            ${data.reviewerName ? `<p><strong>Reviewer:</strong> ${data.reviewerName}</p>` : ''}
+            <p><strong>Date:</strong> ${data.reviewDate.toLocaleDateString()}</p>
             
             <div class="review-box">
-                <p><strong>Review:</strong></p>
-                <p>${data.reviewText || 'No text provided'}</p>
+                <p style="font-style: italic;">"${data.reviewText}"</p>
             </div>
             
             ${data.rating <= 2 ? `
-            <div style="background: #FEF3C7; border: 1px solid #F59E0B; padding: 15px; border-radius: 4px; margin: 20px 0;">
-                <p style="margin: 0;"><strong>⚠️ Action Required:</strong> This negative review requires immediate attention. Consider responding promptly to address the customer's concerns.</p>
+            <div style="background: #FEF2F2; border: 1px solid #EF4444; padding: 15px; border-radius: 4px;">
+                <p style="margin: 0;"><strong>⚠️ Action Recommended:</strong> This negative review needs your attention. Respond promptly to address the customer's concerns.</p>
             </div>
             ` : ''}
-            
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard" class="cta-button">
-                    Respond to Review
-                </a>
-                <p style="margin-top: 15px; color: #666; font-size: 14px;">
-                    Tip: Use our AI-powered response generator to craft the perfect reply.
-                </p>
-            </div>
         </div>
         
         <div class="footer">
-            <p>You're receiving this because you have review alerts enabled.</p>
-            <p>Manage your notification preferences in your dashboard settings.</p>
+            <p>Manage all your reviews in your Business Blueprint dashboard.</p>
             <p><small>© 2024 businessblueprint.io</small></p>
         </div>
     </div>
