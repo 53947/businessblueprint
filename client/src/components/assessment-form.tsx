@@ -91,6 +91,15 @@ export function AssessmentForm() {
   const onSubmit = (data: InsertAssessment) => {
     createAssessmentMutation.mutate(data);
   };
+  
+  // Handler for explicit submit - validates and submits manually
+  const handleExplicitSubmit = async () => {
+    const isValid = await form.trigger();
+    if (isValid) {
+      const data = form.getValues();
+      onSubmit(data);
+    }
+  };
 
   const validateCurrentStep = async () => {
     let fieldsToValidate: (keyof InsertAssessment)[] = [];
@@ -157,7 +166,7 @@ export function AssessmentForm() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <Card className="shadow-xl border border-gray-100">
           <CardContent className="p-8">
-            <form onSubmit={form.handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
+            <form onSubmit={(e) => e.preventDefault()} onKeyDown={handleKeyDown}>
               {/* Step 1: Business Basics */}
               {currentStep === 0 && (
                 <div className="space-y-6">
@@ -525,8 +534,9 @@ export function AssessmentForm() {
                     </Button>
                   ) : (
                     <Button 
-                      type="submit" 
+                      type="button"
                       disabled={createAssessmentMutation.isPending}
+                      onClick={handleExplicitSubmit}
                       className="border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                       data-testid="button-submit-digital-iq"
                     >
