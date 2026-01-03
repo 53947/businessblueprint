@@ -1,9 +1,5 @@
-import OpenAI from "openai";
-
-// the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_SECRET_KEY || ""
-});
+import { unifiedAI } from './ai-provider';
+import { aiSettingsService } from './ai-settings';
 
 interface BusinessAnalysisInput {
   businessInfo: {
@@ -47,10 +43,12 @@ interface AnalysisResult {
 export class OpenAIAnalysisService {
   async analyzeBusinessPresence(input: BusinessAnalysisInput): Promise<AnalysisResult> {
     try {
+      const provider = await aiSettingsService.getProvider('assessment');
+      console.log(`[Business Analysis] Using ${provider} for assessment analysis`);
+      
       const prompt = this.buildAnalysisPrompt(input);
       
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+      const response = await unifiedAI.getCompletion(provider, {
         messages: [
           {
             role: "system",
@@ -61,12 +59,14 @@ export class OpenAIAnalysisService {
             content: prompt
           }
         ],
-        response_format: { type: "json_object" },
+        responseFormat: 'json',
         temperature: 0.7,
-        max_tokens: 2000
+        maxTokens: 3000
       });
 
-      const result = JSON.parse(response.choices[0].message.content || "{}");
+      console.log(`[Business Analysis] ${provider} analysis complete. Tokens used: ${response.tokensUsed}`);
+      
+      const result = JSON.parse(response.content || "{}");
       return this.validateAndFormatResult(result, input.presenceScore.overallScore);
     } catch (error) {
       console.error("Error analyzing business presence:", error);

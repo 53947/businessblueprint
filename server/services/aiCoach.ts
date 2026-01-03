@@ -1,4 +1,5 @@
-import OpenAI from "openai";
+import { unifiedAI } from './ai-provider';
+import { aiSettingsService } from './ai-settings';
 
 interface CoachingContext {
   businessInfo: {
@@ -36,24 +37,18 @@ interface CoachingResponse {
 }
 
 export class AICoachService {
-  private openai: OpenAI;
-
-  constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-  }
-
   async getPersonalizedGuidance(context: CoachingContext): Promise<CoachingResponse> {
     const prompt = this.buildCoachingPrompt(context);
     
     try {
-      const response = await this.openai.chat.completions.create({
-        model: "gpt-4o",
+      const provider = await aiSettingsService.getProvider('coach_blue');
+      console.log(`[Coach Blue] Using ${provider} for coaching`);
+      
+      const response = await unifiedAI.getCompletion(provider, {
         messages: [
           {
             role: "system",
-            content: `You are an expert digital marketing coach specializing in helping small businesses improve their online presence. You provide encouraging, actionable, and personalized guidance based on their current situation and experience level.
+            content: `You are Coach Blue, an expert digital marketing coach specializing in helping small businesses improve their online presence. You provide encouraging, actionable, and personalized guidance based on their current situation and experience level.
 
 Key principles:
 - Be supportive and motivational
@@ -69,13 +64,14 @@ Key principles:
           }
         ],
         temperature: 0.7,
-        max_tokens: 1000
+        maxTokens: 1500
       });
 
-      const content = response.choices[0]?.message?.content;
-      if (!content) throw new Error("No response from AI coach");
+      console.log(`[Coach Blue] ${provider} response complete`);
 
-      return this.parseCoachingResponse(content);
+      if (!response.content) throw new Error("No response from AI coach");
+
+      return this.parseCoachingResponse(response.content);
     } catch (error) {
       console.error("Error getting AI coaching:", error);
       return this.getFallbackGuidance(context);
@@ -100,12 +96,13 @@ Provide detailed step-by-step instructions, practical tips, common mistakes to a
 `;
 
     try {
-      const response = await this.openai.chat.completions.create({
-        model: "gpt-4o",
+      const provider = await aiSettingsService.getProvider('coach_blue');
+      
+      const response = await unifiedAI.getCompletion(provider, {
         messages: [
           {
             role: "system",
-            content: "You are a digital marketing tutor. Break down complex tasks into simple, actionable steps that anyone can follow."
+            content: "You are Coach Blue, a digital marketing tutor. Break down complex tasks into simple, actionable steps that anyone can follow."
           },
           {
             role: "user",
@@ -113,11 +110,10 @@ Provide detailed step-by-step instructions, practical tips, common mistakes to a
           }
         ],
         temperature: 0.3,
-        max_tokens: 800
+        maxTokens: 1200
       });
 
-      const content = response.choices[0]?.message?.content || "";
-      return this.parseStepByStepResponse(content);
+      return this.parseStepByStepResponse(response.content);
     } catch (error) {
       console.error("Error getting step-by-step help:", error);
       return this.getFallbackSteps(task);
@@ -141,12 +137,13 @@ Provide an encouraging progress analysis with specific achievements and next pri
 `;
 
     try {
-      const response = await this.openai.chat.completions.create({
-        model: "gpt-4o",
+      const provider = await aiSettingsService.getProvider('coach_blue');
+      
+      const response = await unifiedAI.getCompletion(provider, {
         messages: [
           {
             role: "system",
-            content: "You are an encouraging business coach. Focus on celebrating achievements and providing clear direction for continued growth."
+            content: "You are Coach Blue, an encouraging business coach. Focus on celebrating achievements and providing clear direction for continued growth."
           },
           {
             role: "user",
@@ -154,11 +151,10 @@ Provide an encouraging progress analysis with specific achievements and next pri
           }
         ],
         temperature: 0.7,
-        max_tokens: 600
+        maxTokens: 800
       });
 
-      const content = response.choices[0]?.message?.content || "";
-      return this.parseProgressResponse(content);
+      return this.parseProgressResponse(response.content);
     } catch (error) {
       console.error("Error analyzing progress:", error);
       return {

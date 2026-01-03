@@ -601,6 +601,7 @@ export class EmailService {
 
   private generateReportHTML(data: EmailReportData): string {
     const highPriorityRecs = data.recommendations.filter(r => r.priority === 'high').slice(0, 3);
+    const baseUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
     
     return `
 <!DOCTYPE html>
@@ -608,72 +609,85 @@ export class EmailService {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Digital Presence Assessment Results</title>
+    <title>Your Digital IQ Assessment Results - BusinessBlueprint</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; }
-        .header { background: linear-gradient(135deg, #FF6B35, #8B5CF6); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-        .score-circle { display: inline-block; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin: 20px 0; }
-        .content { background: white; padding: 30px; border: 1px solid #e0e0e0; }
-        .score-value { font-size: 48px; font-weight: bold; color: #fff; }
+        body { font-family: 'Archivo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1a1a2e; max-width: 600px; margin: 0 auto; background: #f5f7fa; }
+        .container { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 20px; }
+        .header { background: linear-gradient(135deg, #0066CC 0%, #004499 100%); color: white; padding: 40px 30px; text-align: center; }
+        .logo { font-size: 28px; font-weight: 700; margin-bottom: 15px; }
+        .logo span { color: #FF8C42; }
+        .score-container { display: inline-block; background: rgba(255,255,255,0.15); border-radius: 16px; padding: 25px 40px; margin: 20px 0; }
+        .score-value { font-size: 56px; font-weight: 700; color: #fff; line-height: 1; }
+        .score-label { font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 5px; }
+        .content { padding: 35px 30px; }
         .section { margin: 30px 0; }
-        .recommendation { background: #f8f9fa; padding: 20px; margin: 15px 0; border-left: 4px solid #FF6B35; border-radius: 4px; }
-        .cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 5px; }
-        .secondary-button { background: #8B5CF6; }
-        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; border-radius: 0 0 8px 8px; }
+        .section h2 { color: #0066CC; font-size: 20px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #FF8C42; padding-bottom: 8px; display: inline-block; }
+        .recommendation { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 20px; margin: 15px 0; border-left: 4px solid #FF8C42; border-radius: 0 8px 8px 0; }
+        .recommendation h3 { color: #0066CC; margin: 0 0 10px 0; font-size: 16px; }
+        .recommendation p { margin: 5px 0; color: #4a5568; font-size: 14px; }
+        .cta-section { text-align: center; background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fc 100%); padding: 30px; margin: 25px 0; border-radius: 12px; }
+        .cta-button { display: inline-block; background: linear-gradient(135deg, #FF8C42 0%, #FF6B20 100%); color: white; padding: 16px 35px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 8px; box-shadow: 0 4px 15px rgba(255,140,66,0.3); }
+        .secondary-button { background: linear-gradient(135deg, #0066CC 0%, #004499 100%); box-shadow: 0 4px 15px rgba(0,102,204,0.3); }
+        .footer { background: #1a1a2e; padding: 25px 30px; text-align: center; color: #94a3b8; }
+        .footer a { color: #FF8C42; text-decoration: none; }
+        .footer-logo { color: white; font-weight: 600; font-size: 18px; margin-bottom: 10px; }
+        .footer-logo span { color: #FF8C42; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Digital Presence Assessment Results</h1>
-        <h2>${data.businessName}</h2>
-        <div class="score-circle">
-            <div>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Business<span>Blueprint</span></div>
+            <h1 style="margin: 0 0 10px 0; font-size: 24px; font-weight: 600;">Digital IQ Assessment Results</h1>
+            <h2 style="margin: 0; font-weight: 400; opacity: 0.9; font-size: 18px;">${data.businessName}</h2>
+            <div class="score-container">
                 <div class="score-value">${data.digitalScore}</div>
-                <div style="font-size: 14px;">out of 140</div>
+                <div class="score-label">Digital IQ Score (out of 140)</div>
             </div>
         </div>
-    </div>
-    
-    <div class="content">
-        <div class="section">
-            <h2>Executive Summary</h2>
-            <p>${data.summary}</p>
+        
+        <div class="content">
+            <div class="section">
+                <h2>Executive Summary</h2>
+                <p style="color: #4a5568;">${data.summary}</p>
+            </div>
+            
+            <div class="section">
+                <h2>Priority Recommendations</h2>
+                ${highPriorityRecs.map(rec => `
+                    <div class="recommendation">
+                        <h3>${rec.title}</h3>
+                        <p>${rec.description}</p>
+                        <p><strong style="color: #0066CC;">Impact:</strong> ${rec.estimatedImpact} | <strong style="color: #0066CC;">Effort:</strong> ${rec.estimatedEffort}</p>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div class="cta-section">
+                <h2 style="color: #0066CC; margin-top: 0;">Ready to Grow Your Business?</h2>
+                <p style="color: #4a5568; margin-bottom: 20px;">Choose the path that fits your needs:</p>
+                
+                <a href="${baseUrl}/dashboard/${data.assessmentId}?path=diy" class="cta-button">
+                    DIY Growth Path
+                </a>
+                
+                <a href="${baseUrl}/dashboard/${data.assessmentId}?path=msp" class="cta-button secondary-button">
+                    Managed Services
+                </a>
+                
+                <p style="margin-top: 20px; font-size: 14px;">
+                    <a href="${baseUrl}/dashboard/${data.assessmentId}" style="color: #0066CC; text-decoration: underline;">View Your Complete Report</a>
+                </p>
+            </div>
         </div>
         
-        <div class="section">
-            <h2>Priority Recommendations</h2>
-            ${highPriorityRecs.map(rec => `
-                <div class="recommendation">
-                    <h3>${rec.title}</h3>
-                    <p>${rec.description}</p>
-                    <p><strong>Estimated Impact:</strong> ${rec.estimatedImpact}</p>
-                    <p><strong>Estimated Effort:</strong> ${rec.estimatedEffort}</p>
-                </div>
-            `).join('')}
+        <div class="footer">
+            <div class="footer-logo">Business<span>Blueprint</span></div>
+            <p>Powered by AI-driven business intelligence</p>
+            <p>Questions? <a href="mailto:support@businessblueprint.io">Contact our support team</a></p>
+            <p style="font-size: 12px; margin-top: 15px;">&copy; 2025 BusinessBlueprint.io - All rights reserved</p>
         </div>
-        
-        <div class="section" style="text-align: center;">
-            <h2>Choose Your Path Forward</h2>
-            <p>Ready to improve your digital presence? We offer two paths to success:</p>
-            
-            <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}?path=diy" class="cta-button">
-                🛠️ DIY Path - $49/month
-            </a>
-            
-            <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}?path=msp" class="cta-button secondary-button">
-                🎯 Managed Services - $299/month
-            </a>
-            
-            <p style="margin-top: 20px;">
-                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}">View Full Report</a>
-            </p>
-        </div>
-    </div>
-    
-    <div class="footer">
-        <p>This assessment was powered by Google Business Intelligence and AI analysis.</p>
-        <p>Questions? Reply to this email or visit our support center.</p>
-        <p><small>© 2024 businessblueprint.io</small></p>
     </div>
 </body>
 </html>`;

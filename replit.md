@@ -206,4 +206,39 @@ npm run db:push
 
 ---
 
+## 🤖 Multi-AI Provider System (Jan 2026)
+
+**Purpose:** Enable switching between Claude, OpenAI, and DeepSeek providers via admin panel to optimize costs while maintaining quality.
+
+### Architecture
+- **Unified AI Provider** (`server/services/ai-provider.ts`) - Abstraction layer with automatic fallback chain
+- **AI Settings Service** (`server/services/ai-settings.ts`) - Database-driven provider selection per feature
+- **Admin Panel** (`client/src/components/admin/ai-settings-panel.tsx`) - UI for changing providers
+
+### Default Configuration
+| Feature | Default Provider | Reasoning |
+|---------|-----------------|-----------|
+| Assessment Analysis | DeepSeek | 90% cost reduction for high-volume operations |
+| Prescription Generation | DeepSeek | 90% cost reduction for structured output |
+| Coach Blue Coaching | Claude | Premium quality for customer-facing interactions |
+
+### Cost Estimates (per 1K tokens)
+- DeepSeek: $0.0014 (Good quality)
+- Claude: $0.015 (Premium quality)
+- OpenAI: $0.030 (Premium quality)
+
+### API Keys Required (in Replit Secrets)
+- `ANTHROPIC_API_KEY` - For Claude provider
+- `OPENAI_API_KEY` - For OpenAI provider
+- `DEEPSEEK_API_KEY` - For DeepSeek provider
+
+### Key Files
+- `server/services/ai-provider.ts` - Unified provider with fallback support
+- `server/services/ai-settings.ts` - Settings management
+- `server/services/openai.ts` - Business analysis service (uses unified provider)
+- `server/services/aiCoach.ts` - Coach Blue service (uses unified provider)
+- `shared/schema.ts` - Contains `aiSettings` table definition
+
+---
+
 **Remember:** This file governs **how we work together**. For **what we're building**, see the technical docs referenced above.

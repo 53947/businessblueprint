@@ -827,6 +827,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ========================================
+  // ADMIN - AI Settings
+  // ========================================
+
+  // Get all AI settings
+  app.get("/api/admin/ai-settings", isAuthenticated, async (req, res) => {
+    try {
+      const { aiSettingsService } = await import('./services/ai-settings');
+      const settings = await aiSettingsService.getAllSettings();
+      
+      const providers = ['claude', 'openai', 'deepseek'];
+      const features = [
+        { id: 'assessment', name: 'Business Assessment', description: 'AI analysis for Digital IQ assessments' },
+        { id: 'prescription', name: 'Prescriptions', description: 'AI-generated business recommendations' },
+        { id: 'coach_blue', name: 'Coach Blue', description: 'AI coaching conversations (premium quality)' },
+      ];
+
+      res.json({
+        settings,
+        providers,
+        features,
+        costEstimates: {
+          claude: { per1kTokens: 0.015, quality: 'Premium' },
+          openai: { per1kTokens: 0.030, quality: 'Premium' },
+          deepseek: { per1kTokens: 0.0014, quality: 'Good' },
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching AI settings:", error);
+      res.status(500).json({ message: "Failed to fetch AI settings" });
+    }
+  });
+
+  // Update AI provider for a feature
+  app.patch("/api/admin/ai-settings/:feature", isAuthenticated, async (req, res) => {
+    try {
+      const feature = req.params.feature as 'assessment' | 'prescription' | 'coach_blue';
+      const { provider } = req.body;
+
+      if (!['assessment', 'prescription', 'coach_blue'].includes(feature)) {
+        return res.status(400).json({ message: "Invalid feature" });
+      }
+
+      if (!['claude', 'openai', 'deepseek'].includes(provider)) {
+        return res.status(400).json({ message: "Invalid provider" });
+      }
+
+      const { aiSettingsService } = await import('./services/ai-settings');
+      await aiSettingsService.updateProvider(feature, provider);
+
+      res.json({ success: true, feature, provider });
+    } catch (error) {
+      console.error("Error updating AI settings:", error);
+      res.status(500).json({ message: "Failed to update AI settings" });
+    }
+  });
+
+  // Test AI provider connectivity (direct test, no fallback)
+  app.post("/api/admin/ai-settings/test", isAuthenticated, async (req, res) => {
+    try {
+      const { provider } = req.body;
+
+      if (!['claude', 'openai', 'deepseek'].includes(provider)) {
+        return res.status(400).json({ message: "Invalid provider" });
+      }
+
+      const { unifiedAI } = await import('./services/ai-provider');
+      const result = await unifiedAI.testProvider(provider);
+
+      if (result.success) {
+        res.json({
+          success: true,
+          provider,
+          message: result.message,
+          tokensUsed: result.tokensUsed,
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          provider,
+          error: result.message,
+        });
+      }
+    } catch (error: any) {
+      console.error(`Error testing ${req.body.provider}:`, error);
+      res.status(500).json({
+        success: false,
+        provider: req.body.provider,
+        error: error.message || 'Failed to connect to provider',
+      });
+    }
+  });
+
   // Verify Magic Link Token and Issue JWT (must be before /api/clients/:id)
   app.get("/api/clients/verify-magic-link", async (req, res) => {
     try {
@@ -3549,6 +3642,35 @@ async function processAssessmentAsync(
         estimatedImpact: rec.estimatedImpact || "moderate",
         estimatedEffort: rec.estimatedEffort || "low",
       });
+    }
+
+    // Create prescription in prescriptions table
+    const highPriorityCount = enhancedAnalysis.recommendations.filter(
+      (r: any) => r.priority === 'high'
+    ).length;
+    
+    const prescriptionSummary = `
+Based on your Digital IQ Score of ${presenceScan.overall.digitalIQScore}/140, we've identified ${enhancedAnalysis.recommendations.length} key opportunities to improve your online presence.
+
+${enhancedAnalysis.summary}
+
+Focus on the ${highPriorityCount} high-priority recommendations first for maximum impact.
+`.trim();
+
+    try {
+      const [prescription] = await db.insert(prescriptions).values({
+        clientId: null,
+        assessmentId: assessmentId,
+        title: `Digital Growth Prescription for ${assessment.businessName}`,
+        summary: prescriptionSummary,
+        status: 'delivered',
+        implementationProgress: 0,
+        deliveredAt: new Date(),
+      }).returning();
+
+      console.log(`[Assessment] Created prescription ID ${prescription.id} for assessment ${assessmentId}`);
+    } catch (prescriptionError) {
+      console.error("[Assessment] Error creating prescription:", prescriptionError);
     }
 
     // Send email report with enhanced data

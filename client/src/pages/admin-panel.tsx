@@ -68,6 +68,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { format, formatDistanceToNow } from "date-fns";
 import { EmailManagement } from "@/components/admin/email-management";
+import { AISettingsPanel } from "@/components/admin/ai-settings-panel";
 
 interface Client {
   id: number;
@@ -1465,6 +1466,8 @@ export default function AdminPanel() {
                     </div>
                   </CardContent>
                 </Card>
+
+                <AISettingsPanel />
 
                 <Card className="lg:col-span-2">
                   <CardHeader>

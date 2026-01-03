@@ -2921,6 +2921,16 @@ export const emailTemplates = pgTable("email_templates", {
   index("idx_email_templates_trigger").on(table.triggerType),
 ]);
 
+// AI Settings - configures which AI provider to use for each feature
+export const aiSettings = pgTable("ai_settings", {
+  id: serial("id").primaryKey(),
+  feature: text("feature").notNull().unique(), // 'assessment', 'prescription', 'coach_blue'
+  provider: text("provider").notNull(), // 'claude', 'openai', 'deepseek'
+  isActive: boolean("is_active").default(true).notNull(),
+  lastUpdated: timestamp("last_updated").defaultNow().notNull(),
+  updatedBy: integer("updated_by").references(() => clients.id),
+});
+
 // Insert schemas
 export const insertSupportTicketSchema = createInsertSchema(supportTickets).omit({
   id: true,
@@ -2998,3 +3008,7 @@ export type InsertEmailLog = z.infer<typeof insertEmailLogSchema>;
 export type EmailTemplate = typeof emailTemplates.$inferSelect;
 export type InsertEmailTemplate = z.infer<typeof insertEmailTemplateSchema>;
 export type UpdateEmailTemplate = z.infer<typeof updateEmailTemplateSchema>;
+
+// AI Settings Types
+export type AISettings = typeof aiSettings.$inferSelect;
+export type InsertAISettings = typeof aiSettings.$inferInsert;
