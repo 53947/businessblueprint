@@ -2800,6 +2800,9 @@ export const prescriptions = pgTable("prescriptions", {
   title: varchar("title", { length: 255 }).notNull(),
   summary: text("summary"),
   
+  // Access token for email link access (allows viewing without login)
+  accessToken: varchar("access_token", { length: 64 }).unique(),
+  
   // AI-generated content
   recommendations: jsonb("recommendations"), // Array of recommendation objects
   actionItems: jsonb("action_items"), // Prioritized action items
@@ -2809,7 +2812,7 @@ export const prescriptions = pgTable("prescriptions", {
   status: varchar("status", { length: 30 }).default("pending_review"), // pending_review, approved, delivered, in_progress, completed
   
   // Review workflow
-  reviewedById: integer("reviewed_by_id").references(() => clients.id),
+  reviewedBy: text("reviewed_by"),
   reviewedAt: timestamp("reviewed_at"),
   reviewNotes: text("review_notes"),
   
@@ -2825,6 +2828,7 @@ export const prescriptions = pgTable("prescriptions", {
 }, (table) => [
   index("idx_prescription_client").on(table.clientId),
   index("idx_prescription_status").on(table.status),
+  index("idx_prescription_token").on(table.accessToken),
 ]);
 
 // Admin activity log

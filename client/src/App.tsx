@@ -48,6 +48,7 @@ import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import DataDeletion from "@/pages/data-deletion";
 import PortalTestAccess from "@/pages/portal-test-access";
+import PortalPrescriptions from "@/pages/portal-prescriptions";
 import FindResults from "@/pages/find-results";
 import Relationships from "@/pages/relationships";
 import ApiDocs from "@/pages/api-docs";
@@ -67,6 +68,9 @@ function Router() {
       <Route path="/portal/test" component={PortalTestAccess} />
       <Route path="/portal/dashboard" component={ClientPortal} />
       <Route path="/portal/inbox" component={InboxPage} />
+      <Route path="/portal/prescriptions/:id" component={PortalPrescriptions} />
+      <Route path="/portal/prescriptions" component={PortalPrescriptions} />
+      <Route path="/portal/prescription/:token" component={PortalPrescriptions} />
       <Route path="/portal" component={ClientPortal} />
       <Route path="/contact" component={Contact} />
       <Route path="/about" component={About} />

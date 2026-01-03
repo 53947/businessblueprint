@@ -920,6 +920,273 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ========================================
+  // PORTAL - Prescriptions (Public + Client Access)
+  // ========================================
+
+  // Get prescription by access token (for email links - no auth required)
+  app.get("/api/portal/prescriptions/token/:token", async (req, res) => {
+    try {
+      const { token } = req.params;
+
+      if (!token || token.length !== 64) {
+        return res.status(400).json({ message: "Invalid prescription token" });
+      }
+
+      // Find prescription by access token
+      const [prescription] = await db
+        .select()
+        .from(prescriptions)
+        .where(eq(prescriptions.accessToken, token))
+        .limit(1);
+
+      if (!prescription) {
+        return res.status(404).json({ message: "Prescription not found" });
+      }
+
+      // Get associated assessment data for Digital IQ score
+      const assessment = prescription.assessmentId 
+        ? await storage.getAssessment(prescription.assessmentId)
+        : null;
+
+      // Get recommendations from recommendations table
+      const recommendations = prescription.assessmentId
+        ? await storage.getRecommendationsByAssessmentId(prescription.assessmentId)
+        : [];
+
+      // Mark as viewed if not already
+      if (!prescription.viewedAt) {
+        await db
+          .update(prescriptions)
+          .set({ viewedAt: new Date(), updatedAt: new Date() })
+          .where(eq(prescriptions.id, prescription.id));
+      }
+
+      res.json({
+        prescription: {
+          id: prescription.id,
+          title: prescription.title,
+          summary: prescription.summary,
+          status: prescription.status,
+          implementationProgress: prescription.implementationProgress,
+          deliveredAt: prescription.deliveredAt,
+          createdAt: prescription.createdAt,
+        },
+        assessment: assessment ? {
+          id: assessment.id,
+          businessName: assessment.businessName,
+          digitalScore: assessment.digitalScore,
+          industry: assessment.industry,
+          createdAt: assessment.createdAt,
+        } : null,
+        recommendations,
+      });
+    } catch (error) {
+      console.error("Error fetching prescription by token:", error);
+      res.status(500).json({ message: "Failed to fetch prescription" });
+    }
+  });
+
+  // Get all prescriptions for current client (requires client auth)
+  app.get("/api/portal/prescriptions", requireClientPortalAccess, async (req: any, res) => {
+    try {
+      const clientEmail = req.clientEmail;
+
+      // Find client by email
+      const [client] = await db
+        .select()
+        .from(clients)
+        .where(eq(clients.email, clientEmail))
+        .limit(1);
+
+      if (!client) {
+        return res.json({ prescriptions: [] });
+      }
+
+      // Get prescriptions by client ID or by assessments matching client email
+      const clientPrescriptions = await db
+        .select({
+          prescription: prescriptions,
+        })
+        .from(prescriptions)
+        .where(eq(prescriptions.clientId, client.id))
+        .orderBy(desc(prescriptions.createdAt));
+
+      // Also get prescriptions from assessments with matching email (for prescriptions created before account)
+      const { assessments: assessmentsTable } = await import('@shared/schema');
+      const assessmentPrescriptions = await db
+        .select({
+          prescription: prescriptions,
+          assessment: assessmentsTable,
+        })
+        .from(prescriptions)
+        .innerJoin(assessmentsTable, eq(prescriptions.assessmentId, assessmentsTable.id))
+        .where(eq(assessmentsTable.email, clientEmail))
+        .orderBy(desc(prescriptions.createdAt));
+
+      // Combine and deduplicate
+      const allPrescriptions = [
+        ...clientPrescriptions.map(p => p.prescription),
+        ...assessmentPrescriptions.map(p => p.prescription),
+      ];
+      
+      const uniquePrescriptions = allPrescriptions.filter((p, index, self) => 
+        index === self.findIndex(t => t.id === p.id)
+      );
+
+      res.json({ prescriptions: uniquePrescriptions });
+    } catch (error) {
+      console.error("Error fetching client prescriptions:", error);
+      res.status(500).json({ message: "Failed to fetch prescriptions" });
+    }
+  });
+
+  // Get single prescription with full details (requires client auth)
+  app.get("/api/portal/prescriptions/:id", requireClientPortalAccess, async (req: any, res) => {
+    try {
+      const prescriptionId = parseInt(req.params.id);
+      const clientEmail = req.clientEmail;
+
+      if (isNaN(prescriptionId)) {
+        return res.status(400).json({ message: "Invalid prescription ID" });
+      }
+
+      // Find prescription
+      const [prescription] = await db
+        .select()
+        .from(prescriptions)
+        .where(eq(prescriptions.id, prescriptionId))
+        .limit(1);
+
+      if (!prescription) {
+        return res.status(404).json({ message: "Prescription not found" });
+      }
+
+      // Verify client has access (either owns it or assessment email matches)
+      let hasAccess = false;
+
+      // Check if client owns the prescription
+      const [client] = await db
+        .select()
+        .from(clients)
+        .where(eq(clients.email, clientEmail))
+        .limit(1);
+
+      if (client && prescription.clientId === client.id) {
+        hasAccess = true;
+      }
+
+      // Check if assessment email matches
+      if (!hasAccess && prescription.assessmentId) {
+        const assessment = await storage.getAssessment(prescription.assessmentId);
+        if (assessment && assessment.email === clientEmail) {
+          hasAccess = true;
+        }
+      }
+
+      if (!hasAccess) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      // Get associated assessment data
+      const assessment = prescription.assessmentId 
+        ? await storage.getAssessment(prescription.assessmentId)
+        : null;
+
+      // Get recommendations
+      const recommendations = prescription.assessmentId
+        ? await storage.getRecommendationsByAssessmentId(prescription.assessmentId)
+        : [];
+
+      // Mark as viewed
+      if (!prescription.viewedAt) {
+        await db
+          .update(prescriptions)
+          .set({ viewedAt: new Date(), updatedAt: new Date() })
+          .where(eq(prescriptions.id, prescription.id));
+      }
+
+      res.json({
+        prescription,
+        assessment: assessment ? {
+          id: assessment.id,
+          businessName: assessment.businessName,
+          digitalScore: assessment.digitalScore,
+          industry: assessment.industry,
+          analysisResults: assessment.analysisResults,
+          createdAt: assessment.createdAt,
+        } : null,
+        recommendations,
+      });
+    } catch (error) {
+      console.error("Error fetching prescription:", error);
+      res.status(500).json({ message: "Failed to fetch prescription" });
+    }
+  });
+
+  // Update implementation progress (client can track their progress)
+  app.patch("/api/portal/prescriptions/:id/progress", requireClientPortalAccess, async (req: any, res) => {
+    try {
+      const prescriptionId = parseInt(req.params.id);
+      const { implementationProgress } = req.body;
+      const clientEmail = req.clientEmail;
+
+      if (isNaN(prescriptionId)) {
+        return res.status(400).json({ message: "Invalid prescription ID" });
+      }
+
+      if (typeof implementationProgress !== 'number' || implementationProgress < 0 || implementationProgress > 100) {
+        return res.status(400).json({ message: "Progress must be a number between 0 and 100" });
+      }
+
+      // Find prescription and verify access
+      const [prescription] = await db
+        .select()
+        .from(prescriptions)
+        .where(eq(prescriptions.id, prescriptionId))
+        .limit(1);
+
+      if (!prescription) {
+        return res.status(404).json({ message: "Prescription not found" });
+      }
+
+      // Verify client has access
+      let hasAccess = false;
+      const [client] = await db.select().from(clients).where(eq(clients.email, clientEmail)).limit(1);
+      
+      if (client && prescription.clientId === client.id) {
+        hasAccess = true;
+      }
+
+      if (!hasAccess && prescription.assessmentId) {
+        const assessment = await storage.getAssessment(prescription.assessmentId);
+        if (assessment && assessment.email === clientEmail) {
+          hasAccess = true;
+        }
+      }
+
+      if (!hasAccess) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      // Update progress
+      const [updated] = await db
+        .update(prescriptions)
+        .set({ 
+          implementationProgress, 
+          status: implementationProgress === 100 ? 'completed' : 'in_progress',
+          updatedAt: new Date() 
+        })
+        .where(eq(prescriptions.id, prescriptionId))
+        .returning();
+
+      res.json(updated);
+    } catch (error) {
+      console.error("Error updating prescription progress:", error);
+      res.status(500).json({ message: "Failed to update progress" });
+    }
+  });
+
   // Verify Magic Link Token and Issue JWT (must be before /api/clients/:id)
   app.get("/api/clients/verify-magic-link", async (req, res) => {
     try {
@@ -3658,17 +3925,19 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
 `.trim();
 
     try {
+      const accessToken = randomBytes(32).toString('hex');
       const [prescription] = await db.insert(prescriptions).values({
         clientId: null,
         assessmentId: assessmentId,
         title: `Digital Growth Prescription for ${assessment.businessName}`,
         summary: prescriptionSummary,
+        accessToken: accessToken,
         status: 'delivered',
         implementationProgress: 0,
         deliveredAt: new Date(),
       }).returning();
 
-      console.log(`[Assessment] Created prescription ID ${prescription.id} for assessment ${assessmentId}`);
+      console.log(`[Assessment] Created prescription ID ${prescription.id} with token ${accessToken.substring(0, 8)}... for assessment ${assessmentId}`);
     } catch (prescriptionError) {
       console.error("[Assessment] Error creating prescription:", prescriptionError);
     }
