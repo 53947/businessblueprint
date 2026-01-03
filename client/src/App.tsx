@@ -48,6 +48,7 @@ import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import DataDeletion from "@/pages/data-deletion";
 import PortalTestAccess from "@/pages/portal-test-access";
+import AssessmentConfirmation from "@/pages/assessment-confirmation";
 import FindResults from "@/pages/find-results";
 import Relationships from "@/pages/relationships";
 import ApiDocs from "@/pages/api-docs";
@@ -64,6 +65,8 @@ function Router() {
       <Route path="/portal/login" component={ClientLogin} />
       <Route path="/portal/verify" component={VerifyMagicLink} />
       <Route path="/portal/test" component={PortalTestAccess} />
+      <Route path="/portal/assessment/confirmation" component={AssessmentConfirmation} />
+      <Route path="/portal/assessments" component={ClientPortal} />
       <Route path="/portal/dashboard" component={ClientPortal} />
       <Route path="/portal/inbox" component={InboxPage} />
       <Route path="/portal" component={ClientPortal} />
