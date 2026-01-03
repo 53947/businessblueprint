@@ -9,6 +9,7 @@ import { CheckCircle2, Clock, Mail, ArrowRight, FileText } from 'lucide-react';
 export default function AssessmentConfirmation() {
   const [, setLocation] = useLocation();
   const [assessmentId, setAssessmentId] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const id = sessionStorage.getItem('lastAssessmentId');
@@ -16,6 +17,10 @@ export default function AssessmentConfirmation() {
       setAssessmentId(id);
       sessionStorage.removeItem('lastAssessmentId');
     }
+    
+    // Check if user is authenticated (has clientId in sessionStorage)
+    const clientId = sessionStorage.getItem('clientId');
+    setIsAuthenticated(!!clientId);
   }, []);
 
   return (
@@ -106,7 +111,7 @@ export default function AssessmentConfirmation() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             size="lg"
-            onClick={() => setLocation('/portal/assessments')}
+            onClick={() => setLocation('/find-results')}
             className="flex items-center gap-2"
             data-testid="button-view-status"
           >
@@ -115,14 +120,16 @@ export default function AssessmentConfirmation() {
             <ArrowRight className="w-4 h-4" />
           </Button>
           
-          <Button
-            size="lg"
-            variant="outline"
-            onClick={() => setLocation('/portal/dashboard')}
-            data-testid="button-view-dashboard"
-          >
-            Go to Dashboard
-          </Button>
+          {isAuthenticated && (
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => setLocation('/portal/dashboard')}
+              data-testid="button-view-dashboard"
+            >
+              Go to Dashboard
+            </Button>
+          )}
         </div>
 
         <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">

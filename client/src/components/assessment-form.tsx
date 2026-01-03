@@ -13,6 +13,7 @@ import { insertAssessmentSchema, type InsertAssessment } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { ArrowRight, ArrowLeft, Lock, Mail, CheckCircle } from "lucide-react";
 import { useLocation } from "wouter";
+import { nanoid } from "nanoid";
 
 const steps = [
   { title: "Business Basics", description: "Tell us about your business" },
@@ -54,7 +55,16 @@ export function AssessmentForm() {
         title: "Assessment Received!",
         description: "Check your email for confirmation. We're analyzing your business now.",
       });
+      
+      // Generate temporary access token with 15-minute expiration
+      const accessToken = nanoid();
+      const expiryTime = Date.now() + (15 * 60 * 1000); // 15 minutes from now
+      
       sessionStorage.setItem('lastAssessmentId', String(data.assessmentId));
+      sessionStorage.setItem('assessmentAccessToken', accessToken);
+      sessionStorage.setItem('assessmentAccessExpiry', String(expiryTime));
+      sessionStorage.setItem('assessmentId', String(data.assessmentId));
+      
       setLocation('/portal/assessment/confirmation');
     },
     onError: (error) => {
