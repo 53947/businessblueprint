@@ -40,7 +40,7 @@ import {
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
-import { ResendEmailService } from "./services/resend-email";
+import { EmailService as ResendEmailService } from "./services/email";
 import { inboxEmailService } from "./services/inbox-email";
 import { aiCoachService } from "./services/aiCoach";
 import { PricingEngine } from "./services/pricing";
