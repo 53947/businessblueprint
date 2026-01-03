@@ -49,6 +49,7 @@ import { productRecommendationService } from "./services/productRecommendations"
 import { reviewAI } from "./services/reviewAI";
 import { jwtService } from "./services/jwt";
 import { presenceScannerService } from "./services/presenceScanner";
+import { sendAssessmentConfirmationEmail, sendAdminNotification } from "./services/assessment-emails";
 import { dashboardAccess } from "@shared/schema";
 import { eq, desc, and, or, lte } from "drizzle-orm";
 import { db } from "./db";
@@ -265,15 +266,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Don't fail the assessment if CRM creation fails
       }
 
-      // Send welcome email immediately
+      // Send assessment confirmation email immediately
       try {
-        await emailService.sendWelcomeEmail(validatedData.email, {
+        const emailResult = await sendAssessmentConfirmationEmail({
+          id: assessment.id,
+          email: validatedData.email,
           businessName: validatedData.businessName,
-          assessmentId: assessment.id,
+          industry: validatedData.industry,
         });
-        console.log(`[Assessment] Welcome email sent to ${validatedData.email}`);
+        if (emailResult.success) {
+          console.log(`[Assessment] Confirmation email sent to ${validatedData.email}`);
+        } else {
+          console.warn(`[Assessment] Confirmation email failed: ${emailResult.error}`);
+        }
+        // Also notify admin of new submission
+        sendAdminNotification({
+          id: assessment.id,
+          email: validatedData.email,
+          businessName: validatedData.businessName,
+          industry: validatedData.industry,
+        }).catch(err => console.error('[Assessment] Admin notification failed:', err));
       } catch (emailError) {
-        console.error("[Assessment] Failed to send welcome email:", emailError);
+        console.error("[Assessment] Failed to send confirmation email:", emailError);
         // Don't fail the assessment if email fails
       }
 
@@ -694,8 +708,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         clientId,
         subject,
         description,
-        category,
-        priority,
+        category: category ?? undefined,
+        priority: priority ?? undefined,
       });
 
       res.json(newTicket);
@@ -755,7 +769,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const newComment = await storage.addTicketComment(ticketId, {
         content,
-        isInternal,
+        isInternal: isInternal ?? undefined,
         authorType: "admin",
       });
 
@@ -3607,7 +3621,8 @@ async function registerInboxRoutes(app: Express) {
                 pageUrl: validatedData.pageUrl,
                 pageTitle: validatedData.pageTitle,
               },
-              source: "livechat",
+              sourceApp: "livechat",
+              occurredAt: new Date(),
             });
           } else {
             // Create new contact from livechat visitor
@@ -3640,7 +3655,8 @@ async function registerInboxRoutes(app: Express) {
               title: "Contact created from live chat",
               description: `New contact created when ${validatedData.visitorName} started a live chat session`,
               metadata: { sessionId: session.sessionId },
-              source: "livechat",
+              sourceApp: "livechat",
+              occurredAt: new Date(),
             });
           }
         } catch (crmError) {

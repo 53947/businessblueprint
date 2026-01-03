@@ -51,15 +51,16 @@ export function AssessmentForm() {
     },
     onSuccess: (data) => {
       toast({
-        title: "Digital IQ Analysis Started!",
-        description: "We're calculating your Digital IQ Score. You'll receive results via email within 2-3 minutes.",
+        title: "Assessment Received!",
+        description: "Check your email for confirmation. We're analyzing your business now.",
       });
-      setLocation(`/dashboard/${data.assessmentId}`);
+      sessionStorage.setItem('lastAssessmentId', String(data.assessmentId));
+      setLocation('/portal/assessment/confirmation');
     },
     onError: (error) => {
       toast({
-        title: "Error",
-        description: "Failed to start Digital IQ analysis. Please try again.",
+        title: "Submission Failed",
+        description: "Please try again or contact support.",
         variant: "destructive",
       });
     },
