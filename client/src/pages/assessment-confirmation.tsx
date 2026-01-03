@@ -4,7 +4,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle2, Clock, Mail, ArrowRight, FileText, Home } from 'lucide-react';
+import { CheckCircle2, Clock, Mail, ArrowRight, FileText } from 'lucide-react';
 
 export default function AssessmentConfirmation() {
   const [, setLocation] = useLocation();
@@ -106,23 +106,22 @@ export default function AssessmentConfirmation() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             size="lg"
-            onClick={() => setLocation('/portal/dashboard')}
+            onClick={() => setLocation('/portal/assessments')}
             className="flex items-center gap-2"
-            data-testid="button-view-dashboard"
+            data-testid="button-view-status"
           >
             <FileText className="w-5 h-5" />
-            Go to Dashboard
+            View Assessment Status
             <ArrowRight className="w-4 h-4" />
           </Button>
           
           <Button
             size="lg"
             variant="outline"
-            onClick={() => setLocation('/')}
-            data-testid="button-go-home"
+            onClick={() => setLocation('/portal/dashboard')}
+            data-testid="button-view-dashboard"
           >
-            <Home className="w-5 h-5 mr-2" />
-            Return Home
+            Go to Dashboard
           </Button>
         </div>
 

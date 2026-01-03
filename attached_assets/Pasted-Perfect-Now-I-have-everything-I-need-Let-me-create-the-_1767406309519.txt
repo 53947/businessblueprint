@@ -1,0 +1,261 @@
+Perfect! Now I have everything I need. Let me create the properly branded email template:
+
+Tell the agent:
+
+"Update the email template to match our exact brand guidelines:
+FONTS:
+First, add these Google Fonts to the email <head>:
+html<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Archivo+Semi+Expanded:wght@600;700&display=swap" rel="stylesheet">
+FULL EMAIL TEMPLATE:
+Replace the entire email HTML in /server/services/assessment-emails.ts with:
+html<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Archivo+Semi+Expanded:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      line-height: 1.6; 
+      color: #333; 
+      background-color: #EEFBFF;
+      margin: 0;
+      padding: 0;
+    }
+    .container { 
+      max-width: 600px; 
+      margin: 0 auto; 
+      padding: 20px; 
+    }
+    .header { 
+      background: #f8fafc;
+      padding: 30px;
+      text-align: center;
+      border-bottom: 3px solid #F97316;
+    }
+    .logo {
+      max-width: 300px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    .content { 
+      background: #ffffff; 
+      padding: 40px 30px;
+      background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(59, 130, 246, 0.03) 25%, rgba(59, 130, 246, 0.03) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, 0.03) 75%, rgba(59, 130, 246, 0.03) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(59, 130, 246, 0.03) 25%, rgba(59, 130, 246, 0.03) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, 0.03) 75%, rgba(59, 130, 246, 0.03) 76%, transparent 77%, transparent);
+      background-size: 50px 50px;
+    }
+    .footer { 
+      text-align: center; 
+      padding: 30px 20px; 
+      color: #666; 
+      font-size: 14px; 
+      background-color: #EEFBFF;
+    }
+    .button { 
+      display: inline-block; 
+      background: transparent;
+      color: #F97316; 
+      border: 2px solid #F97316;
+      padding: 14px 32px; 
+      text-decoration: none; 
+      border-radius: 8px; 
+      margin: 20px 0; 
+      font-weight: 700;
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      transition: all 0.3s ease;
+    }
+    .button:hover {
+      background: #F97316;
+      color: white;
+    }
+    .success-section {
+      text-align: center;
+      padding: 30px 0;
+    }
+    .checkmark { 
+      font-size: 72px; 
+      color: #00FF40; 
+      line-height: 1;
+      display: block;
+      margin-bottom: 20px;
+    }
+    .timeline { 
+      background: #f8fafc; 
+      padding: 30px; 
+      border-radius: 12px; 
+      margin: 30px 0; 
+      border-left: 4px solid #F97316;
+    }
+    .timeline-item { 
+      display: flex; 
+      align-items: flex-start; 
+      margin: 24px 0; 
+    }
+    .timeline-icon { 
+      background: transparent;
+      color: #0000FF; 
+      border: 3px solid #0000FF;
+      min-width: 40px; 
+      height: 40px; 
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin-right: 20px; 
+      flex-shrink: 0; 
+      font-weight: 700;
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-size: 18px;
+    }
+    .email-notice {
+      background: #EEFBFF;
+      border: 2px solid #6EA6FF;
+      border-radius: 12px;
+      padding: 25px;
+      margin: 30px 0;
+    }
+    .assessment-id {
+      color: #0000FF;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    h1 {
+      margin: 0;
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 700;
+      font-size: 36px;
+      color: #0000FF;
+    }
+    h2 {
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 700;
+      color: #0000FF;
+      font-size: 24px;
+      margin: 0 0 10px 0;
+    }
+    h3 {
+      color: #0000FF;
+      margin: 0 0 8px 0;
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    h4 {
+      color: #0000FF;
+      margin: 0 0 12px 0;
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 18px;
+      font-weight: 400;
+      margin-top: 10px;
+    }
+    strong {
+      color: #0000FF;
+      font-weight: 700;
+    }
+    p {
+      font-weight: 400;
+      margin: 16px 0;
+    }
+    .timeline-item p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="https://businessblueprint.io/1-Master_business_blueprint_icon_and_logo.png" alt="BusinessBlueprint.io" class="logo" />
+    </div>
+    
+    <div class="content">
+      <div class="success-section">
+        <span class="checkmark">✓</span>
+        <h1>Assessment Received!</h1>
+        <p class="subtitle">We're analyzing your business right now</p>
+        <p class="assessment-id">Assessment ID: ${assessment.id}</p>
+      </div>
+
+      <p>Hi ${assessment.businessName ? 'there' : assessment.email.split('@')[0]},</p>
+      
+      <p><strong>Thank you for completing your BusinessBlueprint.io assessment!</strong> We've received your information and our AI is already getting to work.</p>
+      
+      <div class="timeline">
+        <h2>What Happens Next</h2>
+        <p style="color: #666; margin-bottom: 24px;">Your personalized business growth prescription will be ready soon</p>
+        
+        <div class="timeline-item">
+          <div class="timeline-icon">1</div>
+          <div>
+            <h3>AI Analysis (2-3 minutes)</h3>
+            <p>Our AI is analyzing your business using Google Business Intelligence and industry best practices to identify growth opportunities.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-icon">2</div>
+          <div>
+            <h3>Prescription Generation</h3>
+            <p>A customized growth prescription with specific, actionable recommendations tailored to your business will be created.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-icon">3</div>
+          <div>
+            <h3>Expert Review & Delivery (within 24 hours)</h3>
+            <p>Our team reviews the AI prescription to ensure quality and relevance, then delivers it to your client portal.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin: 24px 0;">
+        <p><strong>Assessment Details:</strong></p>
+        <p style="margin-left: 20px;">
+          <strong>Business:</strong> ${assessment.businessName || 'N/A'}<br>
+          <strong>Industry:</strong> ${assessment.industry || 'N/A'}<br>
+          <strong>Email:</strong> ${assessment.email}
+        </p>
+      </div>
+      
+      <div class="email-notice">
+        <h4>📧 Check Your Email</h4>
+        <p style="margin: 0;">You'll receive another notification when your prescription is ready. In the meantime, you can check the status anytime in your client portal.</p>
+      </div>
+      
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="https://businessblueprint.io/portal/assessments" class="button">
+          Check Status in Portal
+        </a>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p><strong>BusinessBlueprint.io</strong> - Your Partner in Local Business Growth</p>
+      <p>Questions? Reply to this email or contact us at <a href="mailto:support@businessblueprint.io" style="color: #F97316; text-decoration: none;">support@businessblueprint.io</a></p>
+    </div>
+  </div>
+</body>
+</html>
+Key brand elements implemented:
+
+Logo in header (off-white background with orange border)
+Archivo font for body text (bold where needed)
+Archivo Semi Expanded for all headers/titles
+Blueprint grid pattern in content area (subtle, like homepage steps section)
+Transparent buttons with orange outline
+Numbered timeline icons with blue outline (transparent background)
+Master blue (#0000FF) for headers and emphasis
+Orange accent (#F97316) for CTAs
+Light blue background (#EEFBFF) for email notice box
+Green checkmark (#00FF40)
+Text checkmark character (✓) as requested
+
+Upload the logo:
+Make sure 1-Master_business_blueprint_icon_and_logo.png is accessible at https://businessblueprint.io/ (in public folder).
+Test the email after updating."

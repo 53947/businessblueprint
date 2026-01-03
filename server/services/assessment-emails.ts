@@ -92,85 +92,233 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Assessment Received</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Archivo+Semi+Expanded:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-    .content { background: #ffffff; padding: 30px; border: 1px solid #e0e0e0; border-top: none; }
-    .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; background: #f9fafb; border-radius: 0 0 8px 8px; }
-    .button { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: bold; }
-    .checkmark { font-size: 48px; }
-    .timeline { background: #f9fafb; padding: 20px; border-radius: 6px; margin: 20px 0; }
-    .timeline-item { display: flex; align-items: flex-start; margin: 15px 0; }
-    .timeline-icon { background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; flex-shrink: 0; font-weight: bold; font-size: 14px; }
-    .timeline-text { flex: 1; }
-    .timeline-text strong { display: block; margin-bottom: 4px; }
-    .info-box { background: #f0f9ff; border-left: 4px solid #667eea; padding: 15px; margin: 20px 0; border-radius: 0 6px 6px 0; }
-    .note { color: #666; font-size: 14px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; }
+    body { 
+      font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      line-height: 1.6; 
+      color: #333; 
+      background-color: #EEFBFF;
+      margin: 0;
+      padding: 0;
+    }
+    .container { 
+      max-width: 600px; 
+      margin: 0 auto; 
+      padding: 20px; 
+    }
+    .header { 
+      background: #f8fafc;
+      padding: 30px;
+      text-align: center;
+      border-bottom: 3px solid #F97316;
+    }
+    .logo {
+      max-width: 300px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    .content { 
+      background: #ffffff; 
+      padding: 40px 30px;
+      background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(59, 130, 246, 0.03) 25%, rgba(59, 130, 246, 0.03) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, 0.03) 75%, rgba(59, 130, 246, 0.03) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(59, 130, 246, 0.03) 25%, rgba(59, 130, 246, 0.03) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, 0.03) 75%, rgba(59, 130, 246, 0.03) 76%, transparent 77%, transparent);
+      background-size: 50px 50px;
+    }
+    .footer { 
+      text-align: center; 
+      padding: 30px 20px; 
+      color: #666; 
+      font-size: 14px; 
+      background-color: #EEFBFF;
+    }
+    .button { 
+      display: inline-block; 
+      background: transparent;
+      color: #F97316; 
+      border: 2px solid #F97316;
+      padding: 14px 32px; 
+      text-decoration: none; 
+      border-radius: 8px; 
+      margin: 20px 0; 
+      font-weight: 700;
+      font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
+      transition: all 0.3s ease;
+    }
+    .button:hover {
+      background: #F97316;
+      color: white;
+    }
+    .success-section {
+      text-align: center;
+      padding: 30px 0;
+    }
+    .checkmark { 
+      font-size: 72px; 
+      color: #00FF40; 
+      line-height: 1;
+      display: block;
+      margin-bottom: 20px;
+    }
+    .timeline { 
+      background: #f8fafc; 
+      padding: 30px; 
+      border-radius: 12px; 
+      margin: 30px 0; 
+      border-left: 4px solid #F97316;
+    }
+    .timeline-item { 
+      display: flex; 
+      align-items: flex-start; 
+      margin: 24px 0; 
+    }
+    .timeline-icon { 
+      background: transparent;
+      color: #0000FF; 
+      border: 3px solid #0000FF;
+      min-width: 40px; 
+      height: 40px; 
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin-right: 20px; 
+      flex-shrink: 0; 
+      font-weight: 700;
+      font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
+      font-size: 18px;
+    }
+    .email-notice {
+      background: #EEFBFF;
+      border: 2px solid #6EA6FF;
+      border-radius: 12px;
+      padding: 25px;
+      margin: 30px 0;
+    }
+    .assessment-id {
+      color: #0000FF;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    h1 {
+      margin: 0;
+      font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
+      font-weight: 700;
+      font-size: 36px;
+      color: #0000FF;
+    }
+    h2 {
+      font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
+      font-weight: 700;
+      color: #0000FF;
+      font-size: 24px;
+      margin: 0 0 10px 0;
+    }
+    h3 {
+      color: #0000FF;
+      margin: 0 0 8px 0;
+      font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    h4 {
+      color: #0000FF;
+      margin: 0 0 12px 0;
+      font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 18px;
+      font-weight: 400;
+      margin-top: 10px;
+    }
+    strong {
+      color: #0000FF;
+      font-weight: 700;
+    }
+    p {
+      font-weight: 400;
+      margin: 16px 0;
+    }
+    .timeline-item p {
+      margin: 0;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <div class="checkmark">✓</div>
-      <h1 style="margin: 10px 0; font-size: 28px;">Assessment Received!</h1>
-      <p style="margin: 0; opacity: 0.9;">We're analyzing your business right now</p>
+      <img src="https://businessblueprint.io/1-Master_business_blueprint_icon_and_logo.png" alt="BusinessBlueprint.io" class="logo" />
     </div>
     
     <div class="content">
+      <div class="success-section">
+        <span class="checkmark">✓</span>
+        <h1>Assessment Received!</h1>
+        <p class="subtitle">We're analyzing your business right now</p>
+        <p class="assessment-id">Assessment ID: ${assessment.id}</p>
+      </div>
+
       <p>Hi ${displayName},</p>
       
-      <p>Thank you for completing your BusinessBlueprint.io assessment! We've received your information and our AI is already getting to work.</p>
+      <p><strong>Thank you for completing your BusinessBlueprint.io assessment!</strong> We've received your information and our AI is already getting to work.</p>
       
       <div class="timeline">
-        <h3 style="margin-top: 0; margin-bottom: 15px;">What happens next:</h3>
+        <h2>What Happens Next</h2>
+        <p style="color: #666; margin-bottom: 24px;">Your personalized business growth prescription will be ready soon</p>
         
         <div class="timeline-item">
           <div class="timeline-icon">1</div>
-          <div class="timeline-text">
-            <strong>AI Analysis (2-3 minutes)</strong>
-            Our AI is analyzing your business using Google Business Intelligence and industry best practices
+          <div>
+            <h3>AI Analysis (2-3 minutes)</h3>
+            <p>Our AI is analyzing your business using Google Business Intelligence and industry best practices to identify growth opportunities.</p>
           </div>
         </div>
         
         <div class="timeline-item">
           <div class="timeline-icon">2</div>
-          <div class="timeline-text">
-            <strong>Prescription Generation</strong>
-            You'll receive a customized growth prescription with specific action items tailored to your business
+          <div>
+            <h3>Prescription Generation</h3>
+            <p>A customized growth prescription with specific, actionable recommendations tailored to your business will be created.</p>
           </div>
         </div>
         
         <div class="timeline-item">
           <div class="timeline-icon">3</div>
-          <div class="timeline-text">
-            <strong>Review & Delivery (within 24 hours)</strong>
-            Our team reviews the AI prescription to ensure quality, then delivers it to your portal
+          <div>
+            <h3>Expert Review & Delivery (within 24 hours)</h3>
+            <p>Our team reviews the AI prescription to ensure quality and relevance, then delivers it to your client portal.</p>
           </div>
         </div>
       </div>
       
-      <div class="info-box">
-        <p style="margin: 0;"><strong>Assessment ID:</strong> ${assessment.id}</p>
-        <p style="margin: 5px 0 0 0;"><strong>Business:</strong> ${assessment.businessName || 'N/A'}</p>
-        <p style="margin: 5px 0 0 0;"><strong>Industry:</strong> ${assessment.industry || 'N/A'}</p>
+      <div style="margin: 24px 0;">
+        <p><strong>Assessment Details:</strong></p>
+        <p style="margin-left: 20px;">
+          <strong>Business:</strong> ${assessment.businessName || 'N/A'}<br>
+          <strong>Industry:</strong> ${assessment.industry || 'N/A'}<br>
+          <strong>Email:</strong> ${assessment.email}
+        </p>
       </div>
       
-      <div style="text-align: center;">
+      <div class="email-notice">
+        <h4>📧 Check Your Email</h4>
+        <p style="margin: 0;">You'll receive another notification when your prescription is ready. In the meantime, you can check the status anytime in your client portal.</p>
+      </div>
+      
+      <div style="text-align: center; margin: 30px 0;">
         <a href="https://businessblueprint.io/portal/assessments" class="button">
           Check Status in Portal
         </a>
       </div>
-      
-      <p class="note">
-        <strong>Note:</strong> You'll receive another email when your prescription is ready. In the meantime, you can check the status anytime in your client portal.
-      </p>
     </div>
     
     <div class="footer">
-      <p style="margin: 0 0 10px 0;"><strong>BusinessBlueprint.io</strong></p>
-      <p style="margin: 0;">Your Partner in Local Business Growth</p>
-      <p style="margin: 10px 0 0 0; font-size: 12px;">Questions? Reply to this email or contact us at support@businessblueprint.io</p>
+      <p><strong>BusinessBlueprint.io</strong> - Your Partner in Local Business Growth</p>
+      <p>Questions? Reply to this email or contact us at <a href="mailto:support@businessblueprint.io" style="color: #F97316; text-decoration: none;">support@businessblueprint.io</a></p>
     </div>
   </div>
 </body>
