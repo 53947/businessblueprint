@@ -8,23 +8,14 @@ async function getCredentials() {
     ? 'depl ' + process.env.WEB_REPL_RENEWAL 
     : null;
 
-  if (!xReplitToken) {
-    throw new Error('X_REPLIT_TOKEN not found');
-  }
+  if (!xReplitToken) throw new Error('X_REPLIT_TOKEN not found');
 
   const connectionSettings = await fetch(
     'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=agentmail',
-    {
-      headers: {
-        'Accept': 'application/json',
-        'X_REPLIT_TOKEN': xReplitToken
-      }
-    }
+    { headers: { 'Accept': 'application/json', 'X_REPLIT_TOKEN': xReplitToken } }
   ).then(res => res.json()).then(data => data.items?.[0]);
 
-  if (!connectionSettings || !connectionSettings.settings.api_key) {
-    throw new Error('AgentMail not connected');
-  }
+  if (!connectionSettings?.settings?.api_key) throw new Error('AgentMail not connected');
   return { apiKey: connectionSettings.settings.api_key };
 }
 
@@ -33,17 +24,20 @@ async function main() {
   const client = new AgentMailClient({ apiKey });
 
   const inboxId = "agents@agentmail.triadblue.com";
-  const messageId = "PDAxMDAwMTliODJiZjUyYWQtZDQzM2FiNDYtNWI5OC00OWIxLWEwNzgtMWJiZTQwZDhkNGU1LTAwMDAwMEBlbWFpbC5hbWF6b25zZXMuY29tPg";
+  const messagesResponse = await client.inboxes.messages.list(inboxId);
   
-  // Get full message
-  const message = await client.inboxes.messages.get(inboxId, messageId);
-  console.log("=== FULL EMAIL ===\n");
-  console.log("From:", message.from);
-  console.log("To:", message.to);
-  console.log("Subject:", message.subject);
-  console.log("Date:", message.timestamp);
-  console.log("\n--- TEXT CONTENT ---\n");
-  console.log(message.text || "(no text version)");
+  console.log("=== ALL MESSAGES IN INBOX ===\n");
+  console.log(`Total messages: ${messagesResponse.count}\n`);
+  
+  if (messagesResponse.messages) {
+    for (const msg of messagesResponse.messages) {
+      console.log(`--- ${msg.subject} ---`);
+      console.log(`From: ${msg.from}`);
+      console.log(`Date: ${msg.timestamp}`);
+      console.log(`Preview: ${msg.preview?.substring(0, 100)}...`);
+      console.log("");
+    }
+  }
 }
 
 main().catch(console.error);
