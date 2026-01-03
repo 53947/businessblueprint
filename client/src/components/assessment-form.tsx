@@ -117,6 +117,15 @@ export function AssessmentForm() {
 
   const progressPercentage = ((currentStep + 1) / steps.length) * 100;
 
+  // Prevent Enter key from submitting form unless on the final Review step
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && currentStep < steps.length - 1) {
+      e.preventDefault();
+      // Optionally advance to next step when Enter is pressed
+      handleNext();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       {/* Header */}
@@ -148,7 +157,7 @@ export function AssessmentForm() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <Card className="shadow-xl border border-gray-100">
           <CardContent className="p-8">
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form onSubmit={form.handleSubmit(onSubmit)} onKeyDown={handleKeyDown}>
               {/* Step 1: Business Basics */}
               {currentStep === 0 && (
                 <div className="space-y-6">
