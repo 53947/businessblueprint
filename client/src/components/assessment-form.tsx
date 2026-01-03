@@ -54,12 +54,7 @@ export function AssessmentForm() {
         title: "Digital IQ Analysis Started!",
         description: "We're calculating your Digital IQ Score. You'll receive results via email within 2-3 minutes.",
       });
-      
-      sessionStorage.setItem('lastAssessmentId', String(data.assessmentId));
-      sessionStorage.setItem('lastBusinessName', form.getValues('businessName'));
-      sessionStorage.setItem('lastAssessmentEmail', form.getValues('email'));
-      
-      setLocation('/portal/assessment/confirmation');
+      setLocation(`/dashboard/${data.assessmentId}`);
     },
     onError: (error) => {
       toast({
