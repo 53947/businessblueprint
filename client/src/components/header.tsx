@@ -1284,6 +1284,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
+                      {isAuthenticated && (
+                        <DropdownMenuItem asChild>
+                          <a href="/admin" className="flex items-center gap-2 cursor-pointer text-blue-600" data-testid="menu-item-admin">
+                            <Settings className="w-4 h-4" />
+                            <span>Admin Panel</span>
+                          </a>
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuItem asChild>
                         <a href="/portal/dashboard" className="flex items-center gap-2 cursor-pointer" data-testid="menu-item-dashboard">
                           <ClipboardCheck className="w-4 h-4" />
