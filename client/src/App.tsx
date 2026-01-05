@@ -53,6 +53,7 @@ import FindResults from "@/pages/find-results";
 import Relationships from "@/pages/relationships";
 import ApiDocs from "@/pages/api-docs";
 import AssessmentConfirmation from "@/pages/assessment-confirmation";
+import KnowledgeBase from "@/pages/knowledge-base";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -110,6 +111,7 @@ function Router() {
       <Route path="/relationships" component={Relationships} />
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/portal/assessment/confirmation" component={AssessmentConfirmation} />
+      <Route path="/knowledge-base" component={KnowledgeBase} />
       <Route component={NotFound} />
     </Switch>
   );

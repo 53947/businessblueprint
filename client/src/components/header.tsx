@@ -973,6 +973,19 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                               </a>
                             </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/knowledge-base"
+                                data-testid="link-resources-knowledge-base"
+                              >
+                                <img src={bookOpenIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">Knowledge Base</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">How our platform works</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
                           </div>
 
                           {/* Platforms Column */}
@@ -1780,6 +1793,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <a href="/biif" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
                                       <div className="font-bold">Video Tutorials</div>
                                       <p className="text-xs text-gray-600">Step-by-step walkthroughs</p>
+                                    </a>
+                                    <a href="/knowledge-base" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm" data-testid="mobile-link-knowledge-base">
+                                      <div className="font-bold">Knowledge Base</div>
+                                      <p className="text-xs text-gray-600">How our platform works</p>
                                     </a>
                                   </div>
                                 </div>
