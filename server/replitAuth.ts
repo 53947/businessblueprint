@@ -23,24 +23,25 @@ const getOidcConfig = memoize(
 );
 
 export function getSession() {
-  const sessionTtl = 7 * 24 * 60 * 60 * 1000;
+  const sessionTtlSeconds = 7 * 24 * 60 * 60; // 7 days in seconds
   const pgStore = connectPg(session);
   const sessionStore = new pgStore({
     conString: process.env.DATABASE_URL,
-    createTableIfMissing: false,
-    ttl: sessionTtl,
+    createTableIfMissing: true,
+    ttl: sessionTtlSeconds,
     tableName: "sessions",
   });
   return session({
     secret: process.env.SESSION_SECRET!,
     store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
+    rolling: true,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production' || process.env.REPLIT_DOMAINS !== undefined,
       sameSite: 'lax',
-      // NO maxAge - this makes it a session cookie that expires when tab/browser closes
+      maxAge: sessionTtlSeconds * 1000,
     },
   });
 }
@@ -110,9 +111,28 @@ export async function setupAuth(app: Express) {
   });
 
   app.get("/api/callback", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, {
-      successReturnToOrRedirect: "/",
-      failureRedirect: "/api/login",
+    passport.authenticate(`replitauth:${req.hostname}`, (err: any, user: any) => {
+      if (err) {
+        console.error('[Auth] Callback error:', err);
+        return res.redirect("/api/login");
+      }
+      if (!user) {
+        console.error('[Auth] No user returned from callback');
+        return res.redirect("/api/login");
+      }
+      req.logIn(user, (loginErr) => {
+        if (loginErr) {
+          console.error('[Auth] Login error:', loginErr);
+          return res.redirect("/api/login");
+        }
+        req.session.save((saveErr) => {
+          if (saveErr) {
+            console.error('[Auth] Session save error:', saveErr);
+          }
+          console.log('[Auth] User logged in successfully:', user.claims?.email);
+          return res.redirect("/");
+        });
+      });
     })(req, res, next);
   });
 

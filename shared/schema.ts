@@ -2754,8 +2754,7 @@ export const supportTickets = pgTable("support_tickets", {
   priority: varchar("priority", { length: 20 }).default("medium"), // low, medium, high, urgent
   
   // Assignment
-  assignedToId: integer("assigned_to_id").references(() => clients.id),
-  assignedAt: timestamp("assigned_at"),
+  assignedTo: varchar("assigned_to", { length: 100 }),
   
   // Resolution
   resolution: text("resolution"),
