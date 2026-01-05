@@ -104,6 +104,12 @@ export async function setupAuth(app: Express) {
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
 
   app.get("/api/login", (req, res, next) => {
+    // Store intended redirect destination in session (validate to prevent open redirect)
+    const redirect = req.query.redirect as string;
+    if (redirect && redirect.startsWith('/') && !redirect.startsWith('//')) {
+      // Only allow relative paths starting with / (not protocol-relative URLs)
+      (req.session as any).loginRedirect = redirect;
+    }
     passport.authenticate(`replitauth:${req.hostname}`, {
       prompt: "login consent",
       scope: ["openid", "email", "profile", "offline_access"],
@@ -130,7 +136,10 @@ export async function setupAuth(app: Express) {
             console.error('[Auth] Session save error:', saveErr);
           }
           console.log('[Auth] User logged in successfully:', user.claims?.email);
-          return res.redirect("/");
+          // Redirect to stored destination or default to /admin
+          const redirectTo = (req.session as any).loginRedirect || "/admin";
+          delete (req.session as any).loginRedirect;
+          return res.redirect(redirectTo);
         });
       });
     })(req, res, next);

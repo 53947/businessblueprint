@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { SideNav } from "@/components/side-nav";
 import { BrandLogo } from "@/components/brand-logo";
+import { Header } from "@/components/header";
 import ContentManagement from "@/pages/content-management";
 import { 
   BarChart3, 
@@ -206,7 +207,11 @@ export default function ClientPortal() {
   if (!clientData) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Main Navigation Header */}
+      <Header showNavigation={true} />
+      
+      <div className="flex flex-1">
       {/* Side Navigation */}
       <SideNav 
         activeTab={activeTab} 
@@ -1124,6 +1129,7 @@ export default function ClientPortal() {
             )}
           </TabsContent>
         </Tabs>
+      </div>
       </div>
       </div>
     </div>

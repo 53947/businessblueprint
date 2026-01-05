@@ -1199,7 +1199,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <NavigationMenuLink asChild>
                                 <a
                                   className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                  href="/api/login"
+                                  href="/api/login?redirect=/admin"
                                   data-testid="link-resources-admin-login"
                                 >
                                   <img src={logInIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
@@ -1884,7 +1884,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   {/* Administration */}
                                   <div className="border-t border-gray-200 pt-2 mt-2">
                                     <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Administration</h4>
-                                    <a href="/api/login" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                    <a href="/api/login?redirect=/admin" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
                                       <div className="font-bold">Admin Login</div>
                                       <p className="text-xs text-gray-600">Owner & staff access</p>
                                     </a>
