@@ -1,0 +1,593 @@
+# PROMPT: Implement Dual Knowledge Base System
+
+---
+
+## ⚠️ MANDATORY FIRST STEPS ⚠️
+
+**STOP. Before doing ANYTHING, you MUST:**
+
+1. **Read ALL required TriadBlue documentation:**
+   - `/docs/AI_OPERATIONS_GUIDE.md` (includes External Agents section)
+   - `/docs/TEAM_PROTOCOL.md` (task management rules)
+   - `/docs/replit.md` (workflow and standards)
+   - `/docs/TRIAD_BLUE_STANDARDS.md` (branding requirements)
+   - `/docs/_constants.md` (technical constants)
+   - This implementation prompt completely
+
+2. **Confirm to Dean that you have finished reading**
+   - List which documents you reviewed
+   - Note any unclear areas
+
+3. **Put yourself in PLAN mode** (if available)
+
+4. **Create a detailed implementation plan:**
+   - Step-by-step approach
+   - Files to create/modify
+   - Order of implementation
+   - Testing strategy
+
+5. **Present your plan to Dean for approval**
+
+6. **WAIT for Dean's explicit approval** ("Approved" or "Proceed")
+
+7. **Only then begin implementation**
+
+**DO NOT write any code until Dean approves your plan.**
+
+**This workflow is mandatory per the External Agents section of AI_OPERATIONS_GUIDE.md**
+
+---
+
+## 📋 OBJECTIVE
+
+Create a dual knowledge base system for BusinessBlueprint.io:
+
+1. **Public Knowledge Base** - Simplified, user-friendly explanation at `/knowledge-base`
+2. **Internal System Knowledge Base** - Complete technical documentation for AI agents and team at `/docs/SYSTEM_KNOWLEDGE_BASE.md`
+
+---
+
+## 🎯 REQUIREMENTS
+
+### Public Knowledge Base (`/knowledge-base` route)
+
+**Purpose:** Help users understand how the system works, what their Digital IQ means, and how to use their prescriptions.
+
+**Content:** PUBLIC_KNOWLEDGE_BASE.md (provided)
+
+**Requirements:**
+- Beautiful, branded design (master blue `#0000FF`, orange accents `#F97316`)
+- Archivo fonts throughout
+- Mobile responsive
+- Clean, scannable layout
+- Table of contents with anchor links
+- Accessible to anyone (no login required)
+- SEO optimized (this is a valuable content page)
+
+**Design Inspiration:**
+- Similar to the homepage 5-step guide section
+- Light blue background `#EEFBFF` for main content
+- Dark blue blueprint sections for key callouts
+- Use custom icons where appropriate
+
+---
+
+### Internal System Knowledge Base (documentation file)
+
+**Purpose:** Complete technical reference for AI agents, developers, and team members.
+
+**Content:** BUSINESSBLUEPRINT_SYSTEM_KNOWLEDGE_BASE.md (provided)
+
+**Requirements:**
+- Stored at `/docs/SYSTEM_KNOWLEDGE_BASE.md` in the codebase
+- Markdown format (easily readable by AI agents)
+- Referenced in prompts for AI agents
+- Accessible to team via codebase
+- Version controlled in git
+- Not publicly accessible (internal use only)
+
+---
+
+## 📁 FILES PROVIDED
+
+You've been given two complete markdown files:
+
+1. **PUBLIC_KNOWLEDGE_BASE.md**
+   - Simplified, user-friendly version
+   - ~2,500 words
+   - Explains Digital IQ, prescriptions, Coach Blue, the process
+   - Written for business owners, not technical people
+
+2. **BUSINESSBLUEPRINT_SYSTEM_KNOWLEDGE_BASE.md**
+   - Complete technical documentation
+   - ~8,000 words
+   - Includes scoring calculations, AI instructions, technical architecture
+   - Written for AI agents and developers
+
+---
+
+## 🔨 IMPLEMENTATION TASKS
+
+### Task 1: Add Internal Knowledge Base to Docs
+
+**Action:** Move BUSINESSBLUEPRINT_SYSTEM_KNOWLEDGE_BASE.md to codebase
+
+**Steps:**
+1. Copy file to `/docs/SYSTEM_KNOWLEDGE_BASE.md`
+2. Update `/docs/README.md` to reference it
+3. Commit to git with message: "Add complete system knowledge base for AI agents and team"
+
+**Verification:**
+- File exists at `/docs/SYSTEM_KNOWLEDGE_BASE.md`
+- Properly formatted markdown
+- All sections readable
+
+---
+
+### Task 2: Create Public Knowledge Base Route
+
+**Action:** Create `/knowledge-base` page in the client application
+
+**Files to Create/Modify:**
+
+**`/client/src/pages/knowledge-base.tsx`** (NEW FILE)
+
+```typescript
+import { useEffect } from 'react';
+import { Link } from 'wouter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { 
+  Brain, 
+  Target, 
+  TrendingUp, 
+  CheckCircle2, 
+  ArrowRight,
+  BarChart3,
+  MessageSquare,
+  Zap
+} from 'lucide-react';
+
+export default function KnowledgeBase() {
+  useEffect(() => {
+    document.title = 'How BusinessBlueprint.io Works | Knowledge Base';
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#EEFBFF] to-white">
+      {/* Header */}
+      <header className="bg-white border-b-2 border-[#F97316]">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center justify-between">
+            <Link href="/">
+              <img 
+                src="/1-Master_business_blueprint_icon_and_logo.png" 
+                alt="BusinessBlueprint.io" 
+                className="h-12"
+              />
+            </Link>
+            <Link href="/assessment">
+              <Button className="bg-[#F97316] hover:bg-[#ea580c] text-white">
+                Take Assessment
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4 max-w-4xl text-center">
+          <h1 className="text-5xl font-bold text-[#0000FF] mb-4" style={{ fontFamily: 'Archivo Semi Expanded' }}>
+            How BusinessBlueprint.io Works
+          </h1>
+          <p className="text-xl text-gray-700 mb-8">
+            Your guide to understanding our Digital Intelligence Platform
+          </p>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-4 max-w-4xl pb-16">
+        
+        {/* Table of Contents */}
+        <Card className="mb-12 border-2 border-[#6EA6FF]">
+          <CardContent className="pt-6">
+            <h2 className="text-2xl font-bold text-[#0000FF] mb-4" style={{ fontFamily: 'Archivo Semi Expanded' }}>
+              Quick Navigation
+            </h2>
+            <div className="grid md:grid-cols-2 gap-3">
+              <a href="#what-we-do" className="text-[#0000FF] hover:text-[#F97316] hover:underline">
+                → What We Do
+              </a>
+              <a href="#digital-iq" className="text-[#0000FF] hover:text-[#F97316] hover:underline">
+                → Your Digital IQ Score
+              </a>
+              <a href="#prescription" className="text-[#0000FF] hover:text-[#F97316] hover:underline">
+                → Your Custom Prescription
+              </a>
+              <a href="#coach-blue" className="text-[#0000FF] hover:text-[#F97316] hover:underline">
+                → Meet Coach Blue
+              </a>
+              <a href="#how-it-works" className="text-[#0000FF] hover:text-[#F97316] hover:underline">
+                → How The Process Works
+              </a>
+              <a href="#why-it-works" className="text-[#0000FF] hover:text-[#F97316] hover:underline">
+                → Why This Approach Works
+              </a>
+              <a href="#perfect-prescriptions" className="text-[#0000FF] hover:text-[#F97316] hover:underline">
+                → What Makes Prescriptions "Perfect"
+              </a>
+              <a href="#faq" className="text-[#0000FF] hover:text-[#F97316] hover:underline">
+                → Frequently Asked Questions
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* What We Do Section */}
+        <section id="what-we-do" className="mb-16">
+          <h2 className="text-3xl font-bold text-[#0000FF] mb-6" style={{ fontFamily: 'Archivo Semi Expanded' }}>
+            🎯 What We Do
+          </h2>
+          
+          <p className="text-lg text-gray-700 mb-6">
+            BusinessBlueprint.io helps local businesses improve their online presence and grow revenue through:
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <Card className="border-2 border-[#0000FF] hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6">
+                <BarChart3 className="w-12 h-12 text-[#0000FF] mb-4" />
+                <h3 className="text-xl font-bold text-[#0000FF] mb-2">Digital IQ Assessment</h3>
+                <p className="text-gray-600">
+                  We measure your online presence across 9 critical areas
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-[#F97316] hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6">
+                <Target className="w-12 h-12 text-[#F97316] mb-4" />
+                <h3 className="text-xl font-bold text-[#0000FF] mb-2">Custom Prescription</h3>
+                <p className="text-gray-600">
+                  You get a personalized growth plan based on your results
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-[#8000FF] hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6">
+                <MessageSquare className="w-12 h-12 text-[#8000FF] mb-4" />
+                <h3 className="text-xl font-bold text-[#0000FF] mb-2">Coach Blue</h3>
+                <p className="text-gray-600">
+                  Our AI business coach guides you through implementation
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="bg-[#EEFBFF] border-2 border-[#6EA6FF]">
+            <CardContent className="pt-6">
+              <p className="text-lg font-semibold text-[#0000FF]">
+                <CheckCircle2 className="inline w-6 h-6 mr-2 text-[#00FF40]" />
+                Our Promise: We deliver prescriptions that are concise, timely, and accurate.
+              </p>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Digital IQ Section */}
+        <section id="digital-iq" className="mb-16">
+          <h2 className="text-3xl font-bold text-[#0000FF] mb-6" style={{ fontFamily: 'Archivo Semi Expanded' }}>
+            📊 Your Digital IQ Score
+          </h2>
+
+          <Card className="mb-6 border-2 border-[#0000FF]">
+            <CardContent className="pt-6">
+              <h3 className="text-2xl font-bold text-[#0000FF] mb-4">What Is It?</h3>
+              <p className="text-lg text-gray-700">
+                Your Digital IQ Score (0-140 points) measures how effectively your business shows up online and converts visitors into customers.
+              </p>
+            </CardContent>
+          </Card>
+
+          <h3 className="text-2xl font-bold text-[#0000FF] mb-4">The 9 Areas We Measure</h3>
+          
+          <div className="space-y-4">
+            {[
+              { number: 1, title: 'Website & SEO Fundamentals', points: 20, desc: 'Is your website fast, secure, and mobile-friendly? Can people find you on Google?' },
+              { number: 2, title: 'Business Listings & Citations', points: 18, desc: 'Are you listed on Google, Yelp, and other directories? Is your information consistent everywhere?' },
+              { number: 3, title: 'Google Business Profile', points: 16, desc: 'Is your profile complete and optimized? Do you post updates and photos regularly?' },
+              { number: 4, title: 'Reputation Management', points: 16, desc: 'Do you respond to reviews? Are you actively managing your online reputation?' },
+              { number: 5, title: 'Review Quality & Quantity', points: 15, desc: 'How many reviews do you have? What\'s your average rating?' },
+              { number: 6, title: 'Customer Response & Timing', points: 15, desc: 'How quickly do you respond to inquiries? Do you have systems to capture every lead?' },
+              { number: 7, title: 'Email & SMS Marketing', points: 15, desc: 'Do you have a customer email list? Do you send regular campaigns?' },
+              { number: 8, title: 'Social Media Content', points: 13, desc: 'Are you active on social media? Do you post regularly?' },
+              { number: 9, title: 'CRM & Organization', points: 12, desc: 'Do you track customer relationships? Are you organized and systematic?' },
+            ].map((area) => (
+              <Card key={area.number} className="border-l-4 border-[#F97316]">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#0000FF] text-white flex items-center justify-center font-bold">
+                      {area.number}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-lg font-bold text-[#0000FF] mb-1">
+                        {area.title} <span className="text-[#F97316]">({area.points} points)</span>
+                      </h4>
+                      <p className="text-gray-600">{area.desc}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* Score Understanding Section */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-[#0000FF] mb-6" style={{ fontFamily: 'Archivo Semi Expanded' }}>
+            📈 Understanding Your Score
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              { grade: 'A+', range: '126-140', label: 'Excellent', color: 'bg-[#00FF40]' },
+              { grade: 'A', range: '112-125', label: 'Strong', color: 'bg-[#00FF40]' },
+              { grade: 'B+', range: '98-111', label: 'Good', color: 'bg-[#6EA6FF]' },
+              { grade: 'B', range: '84-97', label: 'Above Average', color: 'bg-[#6EA6FF]' },
+              { grade: 'C+', range: '70-83', label: 'Average', color: 'bg-[#F97316]' },
+              { grade: 'C', range: '56-69', label: 'Below Average', color: 'bg-[#F97316]' },
+              { grade: 'D+', range: '42-55', label: 'Needs Work', color: 'bg-[#FF0040]' },
+              { grade: 'D', range: '28-41', label: 'Poor', color: 'bg-[#FF0040]' },
+              { grade: 'F', range: '0-27', label: 'Critical', color: 'bg-[#FF0040]' },
+            ].map((grade) => (
+              <Card key={grade.grade} className="text-center">
+                <CardContent className="pt-6">
+                  <div className={`inline-block px-4 py-2 rounded-full text-white font-bold text-2xl mb-2 ${grade.color}`}>
+                    {grade.grade}
+                  </div>
+                  <p className="text-sm text-gray-600">{grade.range} points</p>
+                  <p className="text-lg font-semibold text-[#0000FF]">{grade.label}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* REST OF THE CONTENT - Continue building out sections from PUBLIC_KNOWLEDGE_BASE.md */}
+        {/* ... (I'll spare you the full implementation here, but you'd continue with all sections) ... */}
+
+        {/* CTA Section */}
+        <section className="mt-16">
+          <Card className="bg-gradient-to-r from-[#0000FF] to-[#3B82F6] text-white border-0">
+            <CardContent className="pt-8 pb-8 text-center">
+              <Brain className="w-16 h-16 mx-auto mb-4" />
+              <h2 className="text-3xl font-bold mb-4" style={{ fontFamily: 'Archivo Semi Expanded' }}>
+                Ready to Get Started?
+              </h2>
+              <p className="text-xl mb-6">
+                Take your free Digital IQ Assessment and get your custom prescription in minutes.
+              </p>
+              <Link href="/assessment">
+                <Button size="lg" className="bg-[#F97316] hover:bg-[#ea580c] text-white text-lg px-8 py-6">
+                  Take Free Assessment
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </section>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-white border-t-2 border-[#0000FF] py-8">
+        <div className="container mx-auto px-4 text-center text-gray-600">
+          <p className="mb-2">
+            <strong className="text-[#0000FF]">BusinessBlueprint.io</strong> - We Assess. We Prescribe. You Grow.
+          </p>
+          <p className="text-sm">Last Updated: January 2026</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+```
+
+**Notes:**
+- This is a starter template showing the structure
+- You'll need to complete all sections from PUBLIC_KNOWLEDGE_BASE.md
+- Use the same design pattern throughout
+- Keep it clean, scannable, and mobile-responsive
+
+---
+
+### Task 3: Add Navigation Links
+
+**Update navigation to include Knowledge Base link:**
+
+**`/client/src/components/header.tsx`** (or wherever main nav is)
+
+Add link to Knowledge Base:
+```typescript
+<Link href="/knowledge-base">
+  <Button variant="ghost">How It Works</Button>
+</Link>
+```
+
+**`/client/src/pages/portal/dashboard.tsx`** (client dashboard)
+
+Add help/knowledge base link in sidebar or help section
+
+---
+
+### Task 4: SEO Optimization
+
+**Add meta tags to knowledge base page:**
+
+```typescript
+<head>
+  <title>How BusinessBlueprint.io Works | Knowledge Base</title>
+  <meta name="description" content="Learn how BusinessBlueprint.io's Digital IQ Assessment measures your online presence across 9 areas and creates custom prescriptions to grow your business." />
+  <meta name="keywords" content="digital iq assessment, online presence measurement, business prescription, local business marketing" />
+  <meta property="og:title" content="How BusinessBlueprint.io Works" />
+  <meta property="og:description" content="Understand how our Digital Intelligence Platform helps local businesses improve their online presence and generate revenue." />
+  <meta property="og:type" content="website" />
+</head>
+```
+
+---
+
+### Task 5: Update AI Agent Prompts
+
+**Action:** Ensure all AI agent prompts reference the System Knowledge Base
+
+**Files to Update:**
+
+**`/server/services/ai-provider.ts`** (if prompts are here)
+
+Add to system prompts:
+```typescript
+const systemPrompt = `You are an AI assistant for BusinessBlueprint.io.
+
+CRITICAL: Before generating any prescription or advice, you should be familiar with our complete system knowledge base located at /docs/SYSTEM_KNOWLEDGE_BASE.md
+
+Key points:
+- Digital IQ Score: 0-140 points across 9 areas
+- Four business scenarios: New+Cash, New+Setup, Established+Cash, Established+Setup
+- Three-phase delivery: Foundation, Engagement, Growth
+- Perfect prescriptions = Concise, Timely, Accurate
+
+${additionalPromptContent}`;
+```
+
+**Any other files where AI prompts are constructed:**
+- Ensure they reference the knowledge base
+- Include the scenario-based prioritization
+- Follow the "perfect prescription" criteria
+
+---
+
+## ✅ ACCEPTANCE CRITERIA
+
+**Task 1 - Internal Knowledge Base:**
+- [ ] File exists at `/docs/SYSTEM_KNOWLEDGE_BASE.md`
+- [ ] Properly formatted markdown
+- [ ] Referenced in `/docs/README.md`
+- [ ] Committed to git
+
+**Task 2 - Public Knowledge Base:**
+- [ ] Route `/knowledge-base` works
+- [ ] All sections from PUBLIC_KNOWLEDGE_BASE.md included
+- [ ] Branded correctly (blue/orange, Archivo fonts)
+- [ ] Mobile responsive
+- [ ] Table of contents with working anchor links
+- [ ] CTA buttons link to `/assessment`
+
+**Task 3 - Navigation:**
+- [ ] "How It Works" link in main navigation
+- [ ] Link in client portal help section
+- [ ] Links work from all pages
+
+**Task 4 - SEO:**
+- [ ] Meta tags present
+- [ ] Proper heading hierarchy (H1, H2, H3)
+- [ ] Alt text on images
+- [ ] Clean URL structure
+
+**Task 5 - AI Integration:**
+- [ ] AI prompts reference System Knowledge Base
+- [ ] Scenario-based logic implemented
+- [ ] Phase prioritization working
+- [ ] Perfect prescription criteria followed
+
+---
+
+## 🧪 TESTING INSTRUCTIONS
+
+**Test 1: Public Access**
+1. Navigate to `/knowledge-base` (not logged in)
+2. Verify page loads and is fully readable
+3. Click all anchor links - verify they work
+4. Test on mobile device
+5. Check "Take Assessment" CTA works
+
+**Test 2: Content Accuracy**
+1. Compare rendered content to PUBLIC_KNOWLEDGE_BASE.md
+2. Verify all 9 areas listed correctly
+3. Verify grade ranges accurate
+4. Verify Coach Blue description matches
+
+**Test 3: Branding**
+1. Verify colors match standards (blue `#0000FF`, orange `#F97316`)
+2. Verify Archivo fonts loading
+3. Verify logo displays correctly
+4. Verify custom icons match brand
+
+**Test 4: AI Integration**
+1. Submit test assessment
+2. Verify prescription references correct scenario logic
+3. Verify phase prioritization makes sense
+4. Ask Coach Blue a question - verify it references user's Digital IQ
+
+**Test 5: Internal Access**
+1. Open `/docs/SYSTEM_KNOWLEDGE_BASE.md` in code editor
+2. Verify all sections present
+3. Verify markdown renders correctly
+4. Verify references to this file work in AI prompts
+
+---
+
+## 📝 POST-IMPLEMENTATION CHECKLIST
+
+After agent completes implementation:
+
+- [ ] Both knowledge bases exist and are accessible
+- [ ] Public KB has beautiful, branded design
+- [ ] Internal KB is comprehensive and referenced by AI
+- [ ] Navigation links work everywhere
+- [ ] SEO tags are in place
+- [ ] Mobile responsive verified
+- [ ] No TypeScript errors
+- [ ] Content matches provided markdown files
+- [ ] AI agents can reference System KB in their prompts
+- [ ] Users can learn how the system works
+
+---
+
+## 🎯 SUCCESS METRICS
+
+**Public Knowledge Base:**
+- Page views tracked
+- Time on page > 3 minutes (users actually reading)
+- Conversion rate to assessment > 10%
+- Bounce rate < 40%
+
+**Internal Knowledge Base:**
+- AI agents produce scenario-appropriate prescriptions
+- Prescription quality improves (concise, timely, accurate)
+- AI can catch when something doesn't match system logic
+- Team can reference for onboarding
+
+---
+
+## 📞 QUESTIONS OR ISSUES?
+
+If during implementation you discover:
+- Content that doesn't match current system behavior
+- Branding inconsistencies
+- Technical limitations
+- Missing information
+
+**STOP and ask Dean before proceeding.**
+
+Remember: You're not just implementing - you're a quality check for the entire system.
+
+---
+
+**END OF IMPLEMENTATION PROMPT**
+
+**Estimated Time:** 6-8 hours  
+**Complexity:** Medium-High  
+**Priority:** HIGH (foundational documentation)
