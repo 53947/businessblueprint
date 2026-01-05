@@ -149,9 +149,18 @@ export async function setupAuth(app: Express) {
 }
 
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
+  const session = req.session as any;
+  
+  // Check for client portal admin session first
+  if (session?.clientId && session?.isAdmin) {
+    console.log('[Auth] Client portal admin session found:', session.clientId);
+    return next();
+  }
+  
+  // Fall back to Replit OIDC authentication
   const user = req.user as any;
 
-  if (!req.isAuthenticated() || !user.expires_at) {
+  if (!req.isAuthenticated() || !user?.expires_at) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 

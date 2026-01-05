@@ -1358,7 +1358,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Set session for portal access
       (req.session as any).clientId = client.id;
       (req.session as any).email = client.email;
-      console.log("[Magic Link Verify] Session set for client ID:", client.id);
+      (req.session as any).isAdmin = client.isAdmin || false;
+      console.log("[Magic Link Verify] Session set for client ID:", client.id, "isAdmin:", client.isAdmin);
 
       // Mark token as used ONLY after everything succeeded
       // This prevents tokens from being consumed when downstream operations fail
