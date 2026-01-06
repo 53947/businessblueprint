@@ -3823,25 +3823,75 @@ async function processAssessmentAsync(
       address: assessment.address,
     });
 
+    // Calculate operational score from self-reported questions (0-70 points)
+    const operationalScore = presenceScannerService.calculateOperationalScore({
+      collectsEmails: assessment.collectsEmails,
+      lastEmailCampaign: assessment.lastEmailCampaign,
+      emailListSize: assessment.emailListSize,
+      sendsSMS: assessment.sendsSMS,
+      lastSMSCampaign: assessment.lastSMSCampaign,
+      lastSocialPost: assessment.lastSocialPost,
+      socialPostFrequency: assessment.socialPostFrequency,
+      socialContentCreator: assessment.socialContentCreator,
+      lastReviewResponse: assessment.lastReviewResponse,
+      reviewResponseRate: assessment.reviewResponseRate,
+      lastNewReview: assessment.lastNewReview,
+      inquiryResponseTime: assessment.inquiryResponseTime,
+      hasUnifiedInbox: assessment.hasUnifiedInbox,
+      missedInquiries: assessment.missedInquiries,
+      hasLiveChat: assessment.hasLiveChat,
+      lastChatConversation: assessment.lastChatConversation,
+      chatResponseTime: assessment.chatResponseTime,
+      lastListingUpdate: assessment.lastListingUpdate,
+      listingConsistency: assessment.listingConsistency,
+      lastGBPPost: assessment.lastGBPPost,
+      lastGBPPhoto: assessment.lastGBPPhoto,
+      lastWebsiteUpdate: assessment.lastWebsiteUpdate,
+      hasBlog: assessment.hasBlog,
+      usesCRM: assessment.usesCRM,
+      crmPlatform: assessment.crmPlatform,
+      lastCRMFollowup: assessment.lastCRMFollowup,
+      hasAutomation: assessment.hasAutomation,
+    });
+
+    // Calculate combined Digital IQ score (scan 0-70 + operational 0-70 = 0-140)
+    const scanScore = presenceScan.overall.digitalIQScore; // Returns 0-70
+    const combinedDigitalIQ = presenceScannerService.calculateCombinedDigitalIQ(scanScore, operationalScore);
+    console.log(`📊 Final Digital IQ: Scan=${scanScore}/70 + Operational=${operationalScore}/70 = ${combinedDigitalIQ}/140`);
+
+    // Update presenceScan with proper score breakdown for storage
+    // This ensures downstream consumers get the correct 0-140 total
+    const enhancedPresenceScan = {
+      ...presenceScan,
+      overall: {
+        ...presenceScan.overall,
+        digitalIQScore: combinedDigitalIQ, // Combined 0-140 score for backward compatibility
+        scanScore: scanScore, // Scan-only 0-70
+        operationalScore: operationalScore, // Operational-only 0-70
+      }
+    };
+
     // Get Google Business data (still used for detailed GBP info)
     const googleData = await googleService.searchBusiness(
       assessment.businessName,
       assessment.address,
     );
 
-    // Calculate presence score using our independent scanner
+    // Calculate presence score using our independent scanner + operational data
     const presenceScore = {
-      overallScore: presenceScan.overall.digitalIQScore,
+      overallScore: combinedDigitalIQ, // Use combined score (scan + operational)
+      scanScore: scanScore, // Scan-only score (0-70)
+      operationalScore: operationalScore, // Operational-only score (0-70)
       scores: {
         visibility: Math.round(
-          presenceScan.directories.score * 0.7 +
-            presenceScan.website.score * 0.3,
+          enhancedPresenceScan.directories.score * 0.7 +
+            enhancedPresenceScan.website.score * 0.3,
         ),
-        reviews: presenceScan.reviews.score,
-        completeness: presenceScan.overall.completeness,
-        engagement: presenceScan.socialMedia.score,
+        reviews: enhancedPresenceScan.reviews.score,
+        completeness: enhancedPresenceScan.overall.completeness,
+        engagement: enhancedPresenceScan.socialMedia.score,
       },
-      insights: presenceScan.recommendations,
+      insights: enhancedPresenceScan.recommendations,
     };
 
     // Generate product recommendations based on scores
@@ -3875,12 +3925,14 @@ async function processAssessmentAsync(
     // Combine AI analysis with our independent scan data
     const enhancedAnalysis = {
       ...analysisResult,
-      digitalScore: presenceScan.overall.digitalIQScore, // Use our independent score
-      presenceScan: presenceScan, // Include complete scan results
-      scanDate: presenceScan.overall.lastScanned,
+      digitalScore: combinedDigitalIQ, // Use combined score (scan + operational)
+      scanScore: scanScore, // Scan-only score (0-70)
+      operationalScore: operationalScore, // Operational-only score (0-70)
+      presenceScan: enhancedPresenceScan, // Include complete scan results with proper scores
+      scanDate: enhancedPresenceScan.overall.lastScanned,
       recommendations: [
         ...analysisResult.recommendations,
-        ...presenceScan.recommendations.map((rec) => ({
+        ...enhancedPresenceScan.recommendations.map((rec) => ({
           category: "digital_presence",
           title: rec,
           description: rec,
@@ -3895,7 +3947,7 @@ async function processAssessmentAsync(
     await storage.updateAssessment(assessmentId, {
       googleBusinessData: googleData,
       analysisResults: enhancedAnalysis,
-      digitalScore: presenceScan.overall.digitalIQScore,
+      digitalScore: combinedDigitalIQ, // Use combined score (scan + operational)
       status: "completed",
     });
 
@@ -3918,7 +3970,7 @@ async function processAssessmentAsync(
     ).length;
     
     const prescriptionSummary = `
-Based on your Digital IQ Score of ${presenceScan.overall.digitalIQScore}/140, we've identified ${enhancedAnalysis.recommendations.length} key opportunities to improve your online presence.
+Based on your Digital IQ Score of ${combinedDigitalIQ}/140 (Scan: ${scanScore}/70, Operations: ${operationalScore}/70), we've identified ${enhancedAnalysis.recommendations.length} key opportunities to improve your online presence.
 
 ${enhancedAnalysis.summary}
 

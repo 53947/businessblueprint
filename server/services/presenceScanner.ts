@@ -695,11 +695,16 @@ export class PresenceScannerService {
   }
 
   /**
-   * Calculate overall Digital IQ score (0-140)
+   * Calculate scan-based Digital IQ score (0-70)
    * 
-   * NOTE: Until social/directory/review scanning is implemented, scores are weighted heavily
-   * toward website analysis. Neutral (50/100) scores are used for unimplemented features
-   * to avoid penalizing businesses unfairly.
+   * This returns just the scan component. Use calculateCombinedDigitalIQ() 
+   * to get the full 0-140 score with operational data included.
+   * 
+   * Weight distribution for scans:
+   * - Website: 30% (21 points)
+   * - Directories: 30% (21 points)
+   * - Reviews: 25% (17.5 points)
+   * - Social Media: 15% (10.5 points)
    */
   private calculateDigitalIQ(data: {
     website: WebsiteScan;
@@ -707,22 +712,293 @@ export class PresenceScannerService {
     directories: DirectoryScan;
     reviews: ReviewScan;
   }): number {
-    // Weight distribution (will be accurate once all scanners are implemented):
-    // Website: 30% (42 points) - IMPLEMENTED
-    // Directories: 30% (42 points) - NOT YET IMPLEMENTED (using neutral 50 score)
-    // Reviews: 25% (35 points) - NOT YET IMPLEMENTED (using neutral 50 score)
-    // Social Media: 15% (21 points) - NOT YET IMPLEMENTED (using neutral 50 score)
-    
-    const websitePoints = (data.website.score / 100) * 42;
-    const directoriesPoints = (data.directories.score / 100) * 42;
-    const reviewsPoints = (data.reviews.score / 100) * 35;
-    const socialPoints = (data.socialMedia.score / 100) * 21;
+    const websitePoints = (data.website.score / 100) * 21;
+    const directoriesPoints = (data.directories.score / 100) * 21;
+    const reviewsPoints = (data.reviews.score / 100) * 17.5;
+    const socialPoints = (data.socialMedia.score / 100) * 10.5;
 
-    const total = Math.round(websitePoints + directoriesPoints + reviewsPoints + socialPoints);
+    const scanTotal = Math.round(websitePoints + directoriesPoints + reviewsPoints + socialPoints);
     
-    console.log(`📊 Digital IQ Breakdown: Website=${websitePoints.toFixed(1)}, Directories=${directoriesPoints.toFixed(1)}, Reviews=${reviewsPoints.toFixed(1)}, Social=${socialPoints.toFixed(1)}, Total=${total}`);
+    console.log(`📊 Digital IQ Scan Breakdown: Website=${websitePoints.toFixed(1)}, Directories=${directoriesPoints.toFixed(1)}, Reviews=${reviewsPoints.toFixed(1)}, Social=${socialPoints.toFixed(1)}, Scan Total=${scanTotal}/70`);
     
-    return Math.min(140, Math.max(0, total));
+    return Math.min(70, Math.max(0, scanTotal));
+  }
+
+  /**
+   * Calculate operational score from self-reported assessment questions (0-70 points)
+   * 
+   * 9 categories × ~3 questions each = 27 questions total
+   * Each category contributes a proportional share of 70 points
+   */
+  calculateOperationalScore(operationalData: {
+    // Email & SMS Marketing (Q1-Q5)
+    collectsEmails?: string | null;
+    lastEmailCampaign?: string | null;
+    emailListSize?: string | null;
+    sendsSMS?: string | null;
+    lastSMSCampaign?: string | null;
+    // Social Media Content (Q6-Q8)
+    lastSocialPost?: string | null;
+    socialPostFrequency?: string | null;
+    socialContentCreator?: string | null;
+    // Reputation Management (Q9-Q11)
+    lastReviewResponse?: string | null;
+    reviewResponseRate?: string | null;
+    lastNewReview?: string | null;
+    // Customer Response & Timing (Q12-Q14)
+    inquiryResponseTime?: string | null;
+    hasUnifiedInbox?: string | null;
+    missedInquiries?: string | null;
+    // Live Chat (Q15-Q17)
+    hasLiveChat?: string | null;
+    lastChatConversation?: string | null;
+    chatResponseTime?: string | null;
+    // Business Listings (Q18-Q19)
+    lastListingUpdate?: string | null;
+    listingConsistency?: string | null;
+    // Google Business Profile (Q20-Q21)
+    lastGBPPost?: string | null;
+    lastGBPPhoto?: string | null;
+    // Website & SEO (Q22-Q23)
+    lastWebsiteUpdate?: string | null;
+    hasBlog?: string | null;
+    // CRM (Q24-Q27)
+    usesCRM?: string | null;
+    crmPlatform?: string | null;
+    lastCRMFollowup?: string | null;
+    hasAutomation?: string | null;
+  }): number {
+    // Define scoring tables: maps answer values to points (0-10 per question, normalized at end)
+    // IMPORTANT: Values must match exactly what the form produces
+    const recencyScores: Record<string, number> = {
+      'past_week': 10,
+      'past_month': 8,
+      'past_3_months': 5,
+      'past_6_months': 3,
+      '6_months_plus': 1,     // Email/GBP photo
+      '3_months_plus': 2,     // SMS/social/reputation/chat/GBP post/CRM
+      'past_year': 2,         // Listings
+      'year_plus': 1,         // Listings
+      'never': 0,             // General
+      'never_none': 0,        // Live chat
+      'never_no_crm': 0,      // CRM followup
+    };
+
+    const emailCollectionScores: Record<string, number> = {
+      'yes_active': 10,
+      'yes_not_organized': 5,
+      'no': 0,
+      'dont_know': 2,
+    };
+
+    const listSizeScores: Record<string, number> = {
+      '1000_plus': 10,
+      '501_1000': 8,
+      '201_500': 6,
+      '51_200': 4,
+      '0_50': 2,
+      'no_list': 0,
+    };
+
+    const smsScores: Record<string, number> = {
+      'yes_regularly': 10,
+      'yes_occasionally': 6,
+      'no_interested': 3,
+      'no_not_interested': 0,
+    };
+
+    const frequencyScores: Record<string, number> = {
+      'daily': 10,
+      '3_5_week': 8,
+      '1_2_week': 6,
+      'few_month': 4,
+      'rarely': 2,
+      'never': 0,
+    };
+
+    const creatorScores: Record<string, number> = {
+      'agency': 10,
+      'staff': 8,
+      'owner': 6,
+      'inconsistent': 3,
+      'no_one': 0,
+    };
+
+    const responseRateScores: Record<string, number> = {
+      '90_100': 10,
+      '50_89': 7,
+      '10_49': 4,
+      'under_10': 2,
+      '0': 0,
+    };
+
+    const responseTimeScores: Record<string, number> = {
+      '15_min': 10,
+      '1_hour': 8,
+      '4_hours': 6,
+      '24_hours': 4,
+      '24_hours_plus': 2,
+      'inconsistent': 3,
+      '1_min': 10,
+      '5_min': 8,
+      '15_plus': 4,
+      'no_chat': 0,
+    };
+
+    const unifiedInboxScores: Record<string, number> = {
+      'yes_unified': 10,
+      'partial': 6,
+      'no_scattered': 2,
+      'dont_know': 3,
+    };
+
+    const missedInquiriesScores: Record<string, number> = {
+      'never': 10,
+      'past_week': 4,
+      'past_month': 6,
+      'regularly': 2,
+      'dont_track': 3,
+    };
+
+    const liveChatScores: Record<string, number> = {
+      'yes_monitored': 10,
+      'yes_not_monitored': 5,
+      'yes_unsure': 4,
+      'no': 2,
+      'no_website': 0,
+    };
+
+    const listingConsistencyScores: Record<string, number> = {
+      'yes_consistent': 10,
+      'pretty_sure': 7,
+      'not_sure': 4,
+      'know_inconsistent': 2,
+      'never_checked': 3,
+    };
+
+    const blogScores: Record<string, number> = {
+      'yes_weekly': 10,
+      'yes_monthly': 7,
+      'yes_inconsistent': 4,
+      'no_planning': 2,
+      'no_not_interested': 0,
+    };
+
+    const crmScores: Record<string, number> = {
+      'yes_daily': 10,
+      'yes_underutilized': 6,
+      'yes_not_setup': 4,
+      'no_planning': 2,
+      'manual_tracking': 3,
+      'no_dont_track': 0,
+    };
+
+    const crmPlatformScores: Record<string, number> = {
+      'salesforce': 10,
+      'hubspot': 10,
+      'zoho': 8,
+      'monday': 7,
+      'pipedrive': 8,
+      'sheets_excel': 3,
+      'other': 5,
+      'none': 0,
+    };
+
+    const automationScores: Record<string, number> = {
+      'yes_full': 10,
+      'yes_partial': 6,
+      'no_manual': 2,
+      'dont_know': 3,
+    };
+
+    // Helper to get score with fallback
+    const getScore = (value: string | null | undefined, scoreTable: Record<string, number>): number => {
+      if (!value) return 0;
+      return scoreTable[value] ?? 0;
+    };
+
+    // Calculate scores by category (each category is worth 7.78 points for 9 categories = 70 total)
+    
+    // Email & SMS Marketing (5 questions) - 7.78 points max
+    const emailSmsRaw = (
+      getScore(operationalData.collectsEmails, emailCollectionScores) +
+      getScore(operationalData.lastEmailCampaign, recencyScores) +
+      getScore(operationalData.emailListSize, listSizeScores) +
+      getScore(operationalData.sendsSMS, smsScores) +
+      getScore(operationalData.lastSMSCampaign, recencyScores)
+    ) / 50 * 7.78;
+
+    // Social Media Content (3 questions) - 7.78 points max
+    const socialRaw = (
+      getScore(operationalData.lastSocialPost, recencyScores) +
+      getScore(operationalData.socialPostFrequency, frequencyScores) +
+      getScore(operationalData.socialContentCreator, creatorScores)
+    ) / 30 * 7.78;
+
+    // Reputation Management (3 questions) - 7.78 points max
+    const reputationRaw = (
+      getScore(operationalData.lastReviewResponse, recencyScores) +
+      getScore(operationalData.reviewResponseRate, responseRateScores) +
+      getScore(operationalData.lastNewReview, recencyScores)
+    ) / 30 * 7.78;
+
+    // Customer Response & Timing (3 questions) - 7.78 points max
+    const responseRaw = (
+      getScore(operationalData.inquiryResponseTime, responseTimeScores) +
+      getScore(operationalData.hasUnifiedInbox, unifiedInboxScores) +
+      getScore(operationalData.missedInquiries, missedInquiriesScores)
+    ) / 30 * 7.78;
+
+    // Live Chat (3 questions) - 7.78 points max
+    const chatRaw = (
+      getScore(operationalData.hasLiveChat, liveChatScores) +
+      getScore(operationalData.lastChatConversation, recencyScores) +
+      getScore(operationalData.chatResponseTime, responseTimeScores)
+    ) / 30 * 7.78;
+
+    // Business Listings (2 questions) - 7.78 points max
+    const listingsRaw = (
+      getScore(operationalData.lastListingUpdate, recencyScores) +
+      getScore(operationalData.listingConsistency, listingConsistencyScores)
+    ) / 20 * 7.78;
+
+    // Google Business Profile (2 questions) - 7.78 points max
+    const gbpRaw = (
+      getScore(operationalData.lastGBPPost, recencyScores) +
+      getScore(operationalData.lastGBPPhoto, recencyScores)
+    ) / 20 * 7.78;
+
+    // Website & SEO (2 questions) - 7.78 points max
+    const websiteRaw = (
+      getScore(operationalData.lastWebsiteUpdate, recencyScores) +
+      getScore(operationalData.hasBlog, blogScores)
+    ) / 20 * 7.78;
+
+    // CRM (4 questions) - 7.78 points max
+    const crmRaw = (
+      getScore(operationalData.usesCRM, crmScores) +
+      getScore(operationalData.crmPlatform, crmPlatformScores) +
+      getScore(operationalData.lastCRMFollowup, recencyScores) +
+      getScore(operationalData.hasAutomation, automationScores)
+    ) / 40 * 7.78;
+
+    const operationalTotal = Math.round(
+      emailSmsRaw + socialRaw + reputationRaw + responseRaw + 
+      chatRaw + listingsRaw + gbpRaw + websiteRaw + crmRaw
+    );
+
+    console.log(`📊 Operational Score Breakdown: Email/SMS=${emailSmsRaw.toFixed(1)}, Social=${socialRaw.toFixed(1)}, Reputation=${reputationRaw.toFixed(1)}, Response=${responseRaw.toFixed(1)}, Chat=${chatRaw.toFixed(1)}, Listings=${listingsRaw.toFixed(1)}, GBP=${gbpRaw.toFixed(1)}, Website=${websiteRaw.toFixed(1)}, CRM=${crmRaw.toFixed(1)}, Total=${operationalTotal}/70`);
+
+    return Math.min(70, Math.max(0, operationalTotal));
+  }
+
+  /**
+   * Calculate combined Digital IQ score (scan + operational)
+   */
+  calculateCombinedDigitalIQ(scanScore: number, operationalScore: number): number {
+    const combined = scanScore + operationalScore;
+    console.log(`📊 Combined Digital IQ: Scan=${scanScore}/70 + Operational=${operationalScore}/70 = ${combined}/140`);
+    return Math.min(140, Math.max(0, combined));
   }
 
   /**

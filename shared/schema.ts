@@ -77,6 +77,55 @@ export const assessments = pgTable("assessments", {
   // Pathway selection (DIY-only platform)
   selectedPathway: varchar("selected_pathway", { length: 20 }), // diy, none
   
+  // ============================================================================
+  // OPERATIONAL ASSESSMENT QUESTIONS (27 questions across 9 areas)
+  // ============================================================================
+  
+  // Email & SMS Marketing (Q1-Q5)
+  collectsEmails: varchar("collects_emails", { length: 50 }), // yes_active, yes_not_organized, no, dont_know
+  lastEmailCampaign: varchar("last_email_campaign", { length: 50 }), // past_week, past_month, past_3_months, past_6_months, 6_months_plus, never
+  emailListSize: varchar("email_list_size", { length: 50 }), // 0_50, 51_200, 201_500, 501_1000, 1000_plus, no_list
+  sendsSMS: varchar("sends_sms", { length: 50 }), // yes_regularly, yes_occasionally, no_interested, no_not_interested
+  lastSMSCampaign: varchar("last_sms_campaign", { length: 50 }), // past_week, past_month, past_3_months, 3_months_plus, never
+  
+  // Social Media Content (Q6-Q8)
+  lastSocialPost: varchar("last_social_post", { length: 50 }), // past_week, past_month, past_3_months, 3_months_plus, never
+  socialPostFrequency: varchar("social_post_frequency", { length: 50 }), // daily, 3_5_week, 1_2_week, few_month, rarely, never
+  socialContentCreator: varchar("social_content_creator", { length: 50 }), // owner, staff, agency, no_one, inconsistent
+  
+  // Reputation Management (Q9-Q11)
+  lastReviewResponse: varchar("last_review_response", { length: 50 }), // past_week, past_month, past_3_months, 3_months_plus, never
+  reviewResponseRate: varchar("review_response_rate", { length: 50 }), // 90_100, 50_89, 10_49, under_10, 0
+  lastNewReview: varchar("last_new_review", { length: 50 }), // past_week, past_month, past_3_months, 3_months_plus, never
+  
+  // Customer Response & Timing (Q12-Q14)
+  inquiryResponseTime: varchar("inquiry_response_time", { length: 50 }), // 15_min, 1_hour, 4_hours, 24_hours, 24_hours_plus, inconsistent
+  hasUnifiedInbox: varchar("has_unified_inbox", { length: 50 }), // yes_unified, partial, no_scattered, dont_know
+  missedInquiries: varchar("missed_inquiries", { length: 50 }), // never, past_week, past_month, regularly, dont_track
+  
+  // Live Chat (Q15-Q17)
+  hasLiveChat: varchar("has_live_chat", { length: 50 }), // yes_monitored, yes_not_monitored, yes_unsure, no, no_website
+  lastChatConversation: varchar("last_chat_conversation", { length: 50 }), // past_week, past_month, past_3_months, 3_months_plus, never_none
+  chatResponseTime: varchar("chat_response_time", { length: 50 }), // 1_min, 5_min, 15_min, 15_plus, no_chat
+  
+  // Business Listings (Q18-Q19)
+  lastListingUpdate: varchar("last_listing_update", { length: 50 }), // past_month, past_3_months, past_6_months, past_year, year_plus, never
+  listingConsistency: varchar("listing_consistency", { length: 50 }), // yes_consistent, pretty_sure, not_sure, know_inconsistent, never_checked
+  
+  // Google Business Profile (Q20-Q21)
+  lastGBPPost: varchar("last_gbp_post", { length: 50 }), // past_week, past_month, past_3_months, 3_months_plus, never
+  lastGBPPhoto: varchar("last_gbp_photo", { length: 50 }), // past_month, past_3_months, past_6_months, 6_months_plus, never
+  
+  // Website & SEO (Q22-Q23)
+  lastWebsiteUpdate: varchar("last_website_update", { length: 50 }), // past_week, past_month, past_3_months, past_6_months, 6_months_plus, never
+  hasBlog: varchar("has_blog", { length: 50 }), // yes_weekly, yes_monthly, yes_inconsistent, no_planning, no_not_interested
+  
+  // CRM (Q24-Q27)
+  usesCRM: varchar("uses_crm", { length: 50 }), // yes_daily, yes_underutilized, yes_not_setup, no_planning, manual_tracking, no_dont_track
+  crmPlatform: varchar("crm_platform", { length: 50 }), // salesforce, hubspot, zoho, monday, pipedrive, sheets_excel, other, none
+  lastCRMFollowup: varchar("last_crm_followup", { length: 50 }), // past_week, past_month, past_3_months, 3_months_plus, never_no_crm
+  hasAutomation: varchar("has_automation", { length: 50 }), // yes_full, yes_partial, no_manual, dont_know
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -232,6 +281,34 @@ export const insertAssessmentSchema = createInsertSchema(assessments).pick({
   phone: true,
   email: true,
   website: true,
+  // Operational assessment questions
+  collectsEmails: true,
+  lastEmailCampaign: true,
+  emailListSize: true,
+  sendsSMS: true,
+  lastSMSCampaign: true,
+  lastSocialPost: true,
+  socialPostFrequency: true,
+  socialContentCreator: true,
+  lastReviewResponse: true,
+  reviewResponseRate: true,
+  lastNewReview: true,
+  inquiryResponseTime: true,
+  hasUnifiedInbox: true,
+  missedInquiries: true,
+  hasLiveChat: true,
+  lastChatConversation: true,
+  chatResponseTime: true,
+  lastListingUpdate: true,
+  listingConsistency: true,
+  lastGBPPost: true,
+  lastGBPPhoto: true,
+  lastWebsiteUpdate: true,
+  hasBlog: true,
+  usesCRM: true,
+  crmPlatform: true,
+  lastCRMFollowup: true,
+  hasAutomation: true,
 });
 
 export const insertRecommendationSchema = createInsertSchema(recommendations).pick({

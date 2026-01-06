@@ -520,10 +520,10 @@ export class EmailService {
     assessmentId: number;
     digitalScore?: number;
   }): string {
-    const dashboardUrl = `${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}`;
+    const portalUrl = `${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/portal/prescriptions`;
     const scoreSection = data.digitalScore ? `
-            <div style="background: rgba(255,255,255,0.2); display: inline-block; padding: 15px 30px; border-radius: 25px; margin: 15px 0;">
-                <div style="font-size: 36px; font-weight: bold;">${data.digitalScore}</div>
+            <div style="background: rgba(255,255,255,0.2); display: inline-block; padding: 15px 30px; border-radius: 25px; margin: 15px 0; border: 2px solid rgba(255,255,255,0.3);">
+                <div style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; font-size: 36px; font-weight: bold;">${data.digitalScore}</div>
                 <div style="font-size: 14px;">Your Digital IQ Score</div>
             </div>` : '';
     
@@ -534,24 +534,42 @@ export class EmailService {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Business Blueprint</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Semi+Expanded:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
-        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #0057FF, #8B5CF6); color: white; padding: 40px; text-align: center; }
-        .content { padding: 40px; }
-        .cta-button { display: inline-block; background: #0057FF; color: white; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 20px 0; }
-        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-        .feature-list { list-style: none; padding: 0; margin: 25px 0; }
-        .feature-list li { padding: 12px 0; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; }
+        body { font-family: 'Archivo', Arial, sans-serif; line-height: 1.6; color: #09080E; max-width: 600px; margin: 0 auto; background: #EEFBFF; }
+        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 2px solid #09080E; }
+        .header { 
+            background: #0000FF; 
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: white; 
+            padding: 40px; 
+            text-align: center; 
+        }
+        .content { 
+            padding: 40px;
+            background: #EEFBFF;
+            background-image: 
+                linear-gradient(rgba(0,0,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,255,0.02) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .cta-button { display: inline-block; background: #F97316; color: white; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 20px 0; box-shadow: 0 4px 15px rgba(249,115,22,0.3); }
+        .footer { background: #09080E; padding: 20px; text-align: center; color: #94a3b8; font-size: 14px; }
+        .footer a { color: #F97316; text-decoration: none; }
+        .feature-list { list-style: none; padding: 0; margin: 25px 0; background: white; border-radius: 8px; }
+        .feature-list li { padding: 12px 15px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; color: #09080E; }
         .feature-list li:last-child { border-bottom: none; }
         .feature-icon { margin-right: 15px; font-size: 20px; }
-        .next-steps { background: #E0F2FE; border-left: 4px solid #0284C7; padding: 20px; margin: 25px 0; border-radius: 4px; }
+        .next-steps { background: white; border-left: 4px solid #0000FF; padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎉 Welcome to Business Blueprint!</h1>
+            <h1 style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; margin: 0 0 10px 0;">Welcome to Business Blueprint!</h1>
             <p style="font-size: 20px; margin-top: 10px;">${data.businessName}</p>
             ${scoreSection}
         </div>
@@ -569,9 +587,9 @@ export class EmailService {
             </ul>
             
             <div class="next-steps">
-                <h3 style="color: #0284C7; margin-top: 0;">🚀 Your Next Steps:</h3>
-                <ol style="margin: 10px 0; padding-left: 20px;">
-                    <li>Access your personalized dashboard</li>
+                <h3 style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; color: #0000FF; margin-top: 0;">Your Next Steps:</h3>
+                <ol style="margin: 10px 0; padding-left: 20px; color: #09080E;">
+                    <li>Access your personalized prescription</li>
                     <li>Review your Digital IQ breakdown</li>
                     <li>Explore your recommended growth pathway</li>
                     <li>Start implementing your action plan</li>
@@ -579,20 +597,20 @@ export class EmailService {
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
-                <a href="${dashboardUrl}" class="cta-button">
-                    Access Your Dashboard
+                <a href="${portalUrl}" class="cta-button">
+                    View My Prescription
                 </a>
             </div>
             
-            <p style="font-size: 14px; color: #666; text-align: center;">
-                Bookmark this link to easily return to your dashboard anytime.
+            <p style="font-size: 14px; color: #09080E; text-align: center;">
+                Bookmark this link to easily return to your portal anytime.
             </p>
         </div>
         
         <div class="footer">
             <p>Questions? Reply to this email or visit our support center.</p>
             <p>We're here to help you succeed!</p>
-            <p><small>© 2024 businessblueprint.io</small></p>
+            <p><small>© 2025 businessblueprint.io</small></p>
         </div>
     </div>
 </body>
@@ -610,36 +628,52 @@ export class EmailService {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Digital IQ Assessment Results - BusinessBlueprint</title>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Semi+Expanded:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Archivo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1a1a2e; max-width: 600px; margin: 0 auto; background: #f5f7fa; }
-        .container { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 20px; }
-        .header { background: linear-gradient(135deg, #0066CC 0%, #004499 100%); color: white; padding: 40px 30px; text-align: center; }
-        .logo { font-size: 28px; font-weight: 700; margin-bottom: 15px; }
-        .logo span { color: #FF8C42; }
-        .score-container { display: inline-block; background: rgba(255,255,255,0.15); border-radius: 16px; padding: 25px 40px; margin: 20px 0; }
-        .score-value { font-size: 56px; font-weight: 700; color: #fff; line-height: 1; }
+        body { font-family: 'Archivo', Arial, sans-serif; line-height: 1.6; color: #09080E; max-width: 600px; margin: 0 auto; background: #EEFBFF; }
+        .container { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 20px; border: 2px solid #09080E; }
+        .header { 
+            background: #0000FF; 
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: white; 
+            padding: 40px 30px; 
+            text-align: center; 
+        }
+        .logo { font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; font-size: 28px; font-weight: 700; margin-bottom: 15px; }
+        .logo span { color: #F97316; }
+        .score-container { display: inline-block; background: rgba(255,255,255,0.15); border-radius: 16px; padding: 25px 40px; margin: 20px 0; border: 2px solid rgba(255,255,255,0.3); }
+        .score-value { font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; font-size: 56px; font-weight: 700; color: #fff; line-height: 1; }
         .score-label { font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 5px; }
-        .content { padding: 35px 30px; }
+        .content { 
+            padding: 35px 30px; 
+            background: #EEFBFF;
+            background-image: 
+                linear-gradient(rgba(0,0,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,255,0.02) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
         .section { margin: 30px 0; }
-        .section h2 { color: #0066CC; font-size: 20px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #FF8C42; padding-bottom: 8px; display: inline-block; }
-        .recommendation { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 20px; margin: 15px 0; border-left: 4px solid #FF8C42; border-radius: 0 8px 8px 0; }
-        .recommendation h3 { color: #0066CC; margin: 0 0 10px 0; font-size: 16px; }
-        .recommendation p { margin: 5px 0; color: #4a5568; font-size: 14px; }
-        .cta-section { text-align: center; background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fc 100%); padding: 30px; margin: 25px 0; border-radius: 12px; }
-        .cta-button { display: inline-block; background: linear-gradient(135deg, #FF8C42 0%, #FF6B20 100%); color: white; padding: 16px 35px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 8px; box-shadow: 0 4px 15px rgba(255,140,66,0.3); }
-        .secondary-button { background: linear-gradient(135deg, #0066CC 0%, #004499 100%); box-shadow: 0 4px 15px rgba(0,102,204,0.3); }
-        .footer { background: #1a1a2e; padding: 25px 30px; text-align: center; color: #94a3b8; }
-        .footer a { color: #FF8C42; text-decoration: none; }
-        .footer-logo { color: white; font-weight: 600; font-size: 18px; margin-bottom: 10px; }
-        .footer-logo span { color: #FF8C42; }
+        .section h2 { font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; color: #0000FF; font-size: 20px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #F97316; padding-bottom: 8px; display: inline-block; }
+        .recommendation { background: white; padding: 20px; margin: 15px 0; border-left: 4px solid #F97316; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .recommendation h3 { font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; color: #0000FF; margin: 0 0 10px 0; font-size: 16px; }
+        .recommendation p { margin: 5px 0; color: #09080E; font-size: 14px; }
+        .cta-section { text-align: center; background: white; padding: 30px; margin: 25px 0; border-radius: 12px; border: 2px solid #0000FF; }
+        .cta-button { display: inline-block; background: #F97316; color: white; padding: 16px 35px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 8px; box-shadow: 0 4px 15px rgba(249,115,22,0.3); }
+        .secondary-button { background: #0000FF; box-shadow: 0 4px 15px rgba(0,0,255,0.3); }
+        .footer { background: #09080E; padding: 25px 30px; text-align: center; color: #94a3b8; }
+        .footer a { color: #F97316; text-decoration: none; }
+        .footer-logo { font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; color: white; font-weight: 600; font-size: 18px; margin-bottom: 10px; }
+        .footer-logo span { color: #F97316; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo">Business<span>Blueprint</span></div>
-            <h1 style="margin: 0 0 10px 0; font-size: 24px; font-weight: 600;">Digital IQ Assessment Results</h1>
+            <h1 style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; margin: 0 0 10px 0; font-size: 24px; font-weight: 600;">Digital IQ Assessment Results</h1>
             <h2 style="margin: 0; font-weight: 400; opacity: 0.9; font-size: 18px;">${data.businessName}</h2>
             <div class="score-container">
                 <div class="score-value">${data.digitalScore}</div>
@@ -650,7 +684,7 @@ export class EmailService {
         <div class="content">
             <div class="section">
                 <h2>Executive Summary</h2>
-                <p style="color: #4a5568;">${data.summary}</p>
+                <p style="color: #09080E;">${data.summary}</p>
             </div>
             
             <div class="section">
@@ -659,25 +693,25 @@ export class EmailService {
                     <div class="recommendation">
                         <h3>${rec.title}</h3>
                         <p>${rec.description}</p>
-                        <p><strong style="color: #0066CC;">Impact:</strong> ${rec.estimatedImpact} | <strong style="color: #0066CC;">Effort:</strong> ${rec.estimatedEffort}</p>
+                        <p><strong style="color: #0000FF;">Impact:</strong> ${rec.estimatedImpact} | <strong style="color: #0000FF;">Effort:</strong> ${rec.estimatedEffort}</p>
                     </div>
                 `).join('')}
             </div>
             
             <div class="cta-section">
-                <h2 style="color: #0066CC; margin-top: 0;">Ready to Grow Your Business?</h2>
-                <p style="color: #4a5568; margin-bottom: 20px;">Choose the path that fits your needs:</p>
+                <h2 style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; color: #0000FF; margin-top: 0;">View Your Complete Prescription</h2>
+                <p style="color: #09080E; margin-bottom: 20px;">Access your personalized growth plan and recommendations:</p>
                 
-                <a href="${baseUrl}/dashboard/${data.assessmentId}?path=diy" class="cta-button">
-                    DIY Growth Path
+                <a href="${baseUrl}/portal/prescriptions" class="cta-button">
+                    View My Prescription
                 </a>
                 
-                <a href="${baseUrl}/dashboard/${data.assessmentId}?path=msp" class="cta-button secondary-button">
-                    Managed Services
+                <a href="${baseUrl}/ai-coach" class="cta-button secondary-button">
+                    Talk to Coach Blue
                 </a>
                 
                 <p style="margin-top: 20px; font-size: 14px;">
-                    <a href="${baseUrl}/dashboard/${data.assessmentId}" style="color: #0066CC; text-decoration: underline;">View Your Complete Report</a>
+                    <a href="${baseUrl}/portal/dashboard" style="color: #0000FF; text-decoration: underline;">Access Client Portal</a>
                 </p>
             </div>
         </div>
