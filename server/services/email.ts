@@ -1132,46 +1132,85 @@ export class EmailService {
     businessName: string;
     assessmentId: number;
   }): string {
+    const baseUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
+    const coachBlueIcon = `${baseUrl}/assets/approved%20icons%20and%20logos/Additional%20Apps/4-AI_Business_Coach_-_Coach_Blue.png`;
+    
     return `
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meet Coach Blue</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }
-        .container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { background: linear-gradient(135deg, #8B5CF6, #0057FF); color: white; padding: 40px; text-align: center; }
-        .content { padding: 40px; }
-        .cta-button { display: inline-block; background: #8B5CF6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 15px 0; }
-        .footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
-    </style>
+    <title>Meet Coach Blue - Your AI Business Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Semi+Expanded:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🤖 Meet Coach Blue</h1>
-            <p>Your AI Guide to Digital Success</p>
+<body style="font-family: 'Archivo', Arial, sans-serif; line-height: 1.6; color: #09080E; max-width: 600px; margin: 0 auto; background: #EEFBFF; padding: 0;">
+    <div style="background: white; margin: 20px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border: 2px solid #09080E;">
+        
+        <!-- Header with gradient -->
+        <div style="background: linear-gradient(315deg, #EEFBFF 0%, #6EA6FF 50%, #0000FF 100%); color: white; padding: 40px; text-align: center;">
+            <div style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 15px;">
+                Business<span style="color: #F97316;">Blueprint</span>
+            </div>
+            <img src="${coachBlueIcon}" alt="Coach Blue - AI Business Coach" style="width: 100px; height: 100px; margin: 15px auto; display: block; border-radius: 20px;">
+            <h1 style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; margin: 15px 0 5px 0; font-size: 28px; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">Meet Coach Blue</h1>
+            <p style="margin: 0; font-size: 16px; opacity: 0.95;">Your 24/7 AI Business Guide</p>
         </div>
         
-        <div class="content">
-            <p>Hi ${data.businessName},</p>
+        <!-- Main Content -->
+        <div style="padding: 40px; background: #EEFBFF;">
+            <p style="font-size: 18px; margin-bottom: 20px;">Hi <strong>${data.businessName}</strong>,</p>
             
-            <p>Thank you for completing your Digital IQ Assessment! We're excited to introduce you to Coach Blue, your personal AI business coach.</p>
+            <p style="margin-bottom: 25px;">Thank you for completing your Digital IQ Assessment! Your personalized prescription is ready, and I'm here to help you implement it.</p>
             
-            <p>Coach Blue is here to help you navigate your digital growth journey with personalized guidance and actionable insights.</p>
+            <!-- What Coach Blue Does -->
+            <div style="background: white; border-radius: 12px; padding: 25px; margin: 25px 0; border-left: 4px solid #0000FF;">
+                <h2 style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; color: #0000FF; margin: 0 0 15px 0; font-size: 18px;">What I Can Help You With:</h2>
+                <ul style="margin: 0; padding-left: 20px; color: #09080E;">
+                    <li style="margin-bottom: 10px;"><strong>Understand your prescription</strong> — I'll explain each recommendation and why it matters</li>
+                    <li style="margin-bottom: 10px;"><strong>Create action plans</strong> — Step-by-step guidance tailored to YOUR business</li>
+                    <li style="margin-bottom: 10px;"><strong>Learn the platform</strong> — I'll teach you how to use each tool effectively</li>
+                    <li style="margin-bottom: 10px;"><strong>Answer questions anytime</strong> — Available 24/7, whenever you need guidance</li>
+                </ul>
+            </div>
             
-            <div style="text-align: center; margin: 40px 0;">
-                <a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}" class="cta-button">
-                    Start Your Journey with Coach Blue
+            <!-- 3-Step Action Plan -->
+            <div style="background: white; border-radius: 12px; padding: 25px; margin: 25px 0; border: 2px solid #F97316;">
+                <h2 style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; color: #F97316; margin: 0 0 20px 0; font-size: 18px;">Your Next Steps:</h2>
+                <div style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+                    <div style="background: #0000FF; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: bold; margin-right: 15px; flex-shrink: 0;">1</div>
+                    <div><strong>View Your Prescription</strong><br><span style="color: #666; font-size: 14px;">See your personalized recommendations and Digital IQ breakdown</span></div>
+                </div>
+                <div style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+                    <div style="background: #0000FF; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: bold; margin-right: 15px; flex-shrink: 0;">2</div>
+                    <div><strong>Chat with Me</strong><br><span style="color: #666; font-size: 14px;">Ask questions about your prescription or how to get started</span></div>
+                </div>
+                <div style="display: flex; align-items: flex-start;">
+                    <div style="background: #0000FF; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: bold; margin-right: 15px; flex-shrink: 0;">3</div>
+                    <div><strong>Start Implementing</strong><br><span style="color: #666; font-size: 14px;">I'll guide you through each step of your digital growth journey</span></div>
+                </div>
+            </div>
+            
+            <!-- CTA Buttons -->
+            <div style="text-align: center; margin: 35px 0;">
+                <a href="${baseUrl}/ai-coach" style="display: inline-block; background: #F97316; color: white; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 15px rgba(249,115,22,0.3); margin: 10px;">
+                    Talk to Coach Blue
+                </a>
+                <br>
+                <a href="${baseUrl}/portal/prescriptions" style="display: inline-block; background: #0000FF; color: white; padding: 14px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,255,0.2); margin: 10px;">
+                    View My Prescription
                 </a>
             </div>
         </div>
         
-        <div class="footer">
-            <p>Questions? Reply to this email or visit our support center.</p>
-            <p><small>© 2024 businessblueprint.io</small></p>
+        <!-- Footer -->
+        <div style="background: #09080E; padding: 25px 30px; text-align: center; color: #94a3b8;">
+            <div style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; color: white; font-weight: 600; font-size: 16px; margin-bottom: 10px;">
+                Business<span style="color: #F97316;">Blueprint</span>
+            </div>
+            <p style="margin: 10px 0; font-size: 14px;">Powered by AI-driven business intelligence</p>
+            <p style="margin: 10px 0; font-size: 14px;">Questions? <a href="mailto:support@businessblueprint.io" style="color: #F97316; text-decoration: none;">Contact our support team</a></p>
+            <p style="font-size: 12px; margin-top: 15px; color: #64748b;">&copy; 2025 BusinessBlueprint.io - All rights reserved</p>
         </div>
     </div>
 </body>
