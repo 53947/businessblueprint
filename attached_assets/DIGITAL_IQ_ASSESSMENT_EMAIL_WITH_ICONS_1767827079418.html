@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Digital IQ Assessment Results</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Archivo+Semi+Expanded:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      font-family: 'Archivo', sans-serif;
+      line-height: 1.6;
+      color: #09080E;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #EEFBFF;
+    }
+    .email-outline {
+      border: 2px solid #09080E;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      background: #09080E;
+      color: #EEFBFF;
+      padding: 40px 30px;
+      text-align: center;
+      border-bottom: 4px solid #F97316;
+    }
+    .header h1 {
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      margin: 0 0 10px 0;
+      color: #EEFBFF;
+    }
+    .header .score {
+      font-size: 48px;
+      font-weight: 700;
+      color: #F97316;
+      margin: 20px 0 10px 0;
+    }
+    .header .score-label {
+      font-size: 16px;
+      color: #EEFBFF;
+      opacity: 0.9;
+    }
+    .content {
+      background: #EEFBFF;
+      padding: 40px 30px;
+      background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(0, 0, 255, 0.03) 25%, rgba(0, 0, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.03) 75%, rgba(0, 0, 255, 0.03) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(0, 0, 255, 0.03) 25%, rgba(0, 0, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.03) 75%, rgba(0, 0, 255, 0.03) 76%, transparent 77%, transparent);
+      background-size: 50px 50px;
+    }
+    .content p {
+      font-size: 16px;
+      color: #09080E;
+      margin: 16px 0;
+    }
+    .content h2 {
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      color: #0000FF;
+      margin: 30px 0 15px 0;
+    }
+    .content h3 {
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 600;
+      font-size: 18px;
+      color: #09080E;
+      margin: 20px 0 10px 0;
+    }
+    .summary-box {
+      background: #ffffff;
+      border-left: 4px solid #F97316;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 4px;
+    }
+    .recommendation {
+      background: #ffffff;
+      border: 2px solid #0000FF;
+      border-radius: 8px;
+      padding: 25px;
+      margin: 25px 0;
+    }
+    .recommendation-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .recommendation-header img {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+    }
+    .recommendation-header h3 {
+      margin: 0;
+      color: #0000FF;
+      font-size: 20px;
+    }
+    .product-name {
+      color: #F97316;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .recommendation ul {
+      margin: 15px 0;
+      padding-left: 20px;
+    }
+    .recommendation li {
+      margin: 8px 0;
+      color: #09080E;
+    }
+    .bundle-callout {
+      background: #ffffff;
+      border: 2px solid #0000FF;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .bundle-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 15px 0;
+    }
+    .bundle-item img {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+    .bundle-item p {
+      margin: 0;
+      font-size: 15px;
+    }
+    .bundle-callout strong {
+      color: #0000FF;
+    }
+    .cta-button {
+      display: inline-block;
+      background: #F97316;
+      color: #EEFBFF;
+      padding: 16px 32px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-size: 16px;
+      margin: 20px 10px 20px 0;
+      border: 2px solid #F97316;
+    }
+    .cta-button.secondary {
+      background: #0000FF;
+      border: 2px solid #0000FF;
+    }
+    .footer {
+      background: #09080E;
+      color: #EEFBFF;
+      padding: 30px;
+      text-align: center;
+      border-top: 4px solid #F97316;
+    }
+    .footer p {
+      font-size: 14px;
+      color: #EEFBFF;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-outline">
+      <!-- HEADER -->
+      <div class="header">
+        <h1>Your Digital IQ Assessment Results</h1>
+        <div class="score">{{DIGITAL_IQ_SCORE}}<span style="font-size: 24px; opacity: 0.8;">/140</span></div>
+        <div class="score-label">Digital IQ Score</div>
+      </div>
+      
+      <!-- CONTENT -->
+      <div class="content">
+        <p><strong>Hi {{BUSINESS_NAME}},</strong></p>
+        
+        <p>Thank you for completing your Digital IQ Assessment! We've analyzed your complete digital presence across 9 critical areas, and your personalized growth prescription is ready.</p>
+        
+        <!-- EXECUTIVE SUMMARY -->
+        <div class="summary-box">
+          <h3 style="margin-top: 0; color: #0000FF;">What This Score Means</h3>
+          <p>Your Digital IQ score of {{DIGITAL_IQ_SCORE}}/140 reveals significant untapped potential. The good news? Every point represents a specific, actionable opportunity to increase visibility, attract more customers, and grow revenue.</p>
+          <p><strong>The opportunity:</strong> Businesses that implement foundational digital tools typically see 20-40% revenue growth within the first year.</p>
+        </div>
+        
+        <h2>Your Priority Recommendations</h2>
+        <p>Based on your assessment, here are the specific tools that will have the biggest impact on your business:</p>
+        
+        <!-- RECOMMENDATION 1: EMAIL & SMS (SEND) -->
+        <div class="recommendation">
+          <div class="recommendation-header">
+            <img src="{{SITE_URL}}/__send.png" alt="Send - Email & SMS Marketing" />
+            <h3>Build Customer Relationships with Email & SMS</h3>
+          </div>
+          
+          <p><strong>You need:</strong> A systematic way to stay connected with your customers and drive repeat business.</p>
+          
+          <p><strong>Why it matters:</strong> Without email or SMS marketing, you're missing opportunities to retain customers and generate repeat sales. Email marketing delivers an average ROI of $42 for every $1 spent, and 90% of consumers check email daily.</p>
+          
+          <p><strong>Our recommendation: <span class="product-name">Send</span></strong></p>
+          <p>Send is our email and SMS marketing platform built for local businesses:</p>
+          <ul>
+            <li><strong>Easy List Building:</strong> Automated capture forms get you started fast</li>
+            <li><strong>Professional Campaigns:</strong> Create emails in minutes with our templates</li>
+            <li><strong>SMS Integration:</strong> Reach customers instantly when email isn't enough</li>
+            <li><strong>Smart Automation:</strong> Welcome series and win-back campaigns run themselves</li>
+            <li><strong>Track Results:</strong> See exactly what's working and what's not</li>
+          </ul>
+          
+          <p><strong>Expected impact:</strong> 20-30% increase in repeat customer revenue</p>
+        </div>
+        
+        <!-- RECOMMENDATION 2: SOCIAL MEDIA (CONTENT) -->
+        <div class="recommendation">
+          <div class="recommendation-header">
+            <img src="{{SITE_URL}}/__content.png" alt="Content - Social Media Management" />
+            <h3>Maintain Consistent Social Media Presence</h3>
+          </div>
+          
+          <p><strong>You need:</strong> Active social media to stay visible and engage with your audience.</p>
+          
+          <p><strong>Why it matters:</strong> Consistent social media presence increases brand awareness by 40% and drives discovery of new customers. Your competitors are posting daily—if you're not, you're invisible.</p>
+          
+          <p><strong>Our recommendation: <span class="product-name">Content</span></strong></p>
+          <p>Content makes social media management effortless:</p>
+          <ul>
+            <li><strong>Schedule Posts:</strong> Plan your content calendar weeks in advance</li>
+            <li><strong>AI Assistance:</strong> Generate engaging content ideas and captions</li>
+            <li><strong>Multi-Platform:</strong> Post to all channels from one dashboard</li>
+            <li><strong>Track Engagement:</strong> See what content resonates with your audience</li>
+            <li><strong>Respond Quickly:</strong> Manage comments and DMs in one place</li>
+          </ul>
+          
+          <p><strong>Expected impact:</strong> 40% increase in brand awareness and customer engagement</p>
+        </div>
+        
+        <!-- RECOMMENDATION 3: REPUTATION -->
+        <div class="recommendation">
+          <div class="recommendation-header">
+            <img src="{{SITE_URL}}/__reputation.png" alt="Reputation - Review Management" />
+            <h3>Build Trust Through Review Management</h3>
+          </div>
+          
+          <p><strong>You need:</strong> A system to collect, monitor, and respond to customer reviews.</p>
+          
+          <p><strong>Why it matters:</strong> 88% of consumers trust online reviews as much as personal recommendations. Without reviews, you're missing the social proof that drives purchase decisions.</p>
+          
+          <p><strong>Our recommendation: <span class="product-name">Reputation</span></strong></p>
+          <p>Reputation helps you build credibility:</p>
+          <ul>
+            <li><strong>Monitor All Platforms:</strong> Track reviews from Google, Facebook, Yelp, and more</li>
+            <li><strong>Automated Requests:</strong> Send review requests to satisfied customers automatically</li>
+            <li><strong>Quick Responses:</strong> Respond to reviews from one dashboard</li>
+            <li><strong>Showcase Reviews:</strong> Display your best reviews on your website</li>
+            <li><strong>Sentiment Analysis:</strong> Understand trends in customer feedback</li>
+          </ul>
+          
+          <p><strong>Expected impact:</strong> 25% increase in conversion rate from improved credibility</p>
+        </div>
+        
+        <!-- BUNDLE ADVANTAGE -->
+        <div class="bundle-callout">
+          <div style="margin-bottom: 20px;">
+            <strong style="font-size: 18px; color: #0000FF;">💡 Smart Move: Save with Bundles</strong>
+          </div>
+          
+          <div class="bundle-item">
+            <img src="{{SITE_URL}}/__commverse.png" alt="CommVerse Bundle" />
+            <p><strong>CommVerse Bundle ($99/mo):</strong> Includes Send, Content, Inbox (unified communications), and LiveChat (website chat widget)—all four tools in one integrated platform. Save money and manage everything from one dashboard.</p>
+          </div>
+          
+          <div class="bundle-item">
+            <img src="{{SITE_URL}}/__localblue.png" alt="LocalBlue Bundle" />
+            <p><strong>LocalBlue Bundle ($59/mo):</strong> Includes Reputation, business Listings management, and Google Business Profile optimization for complete local SEO dominance.</p>
+          </div>
+        </div>
+        
+        <h2>Next Steps</h2>
+        <p>You've got the diagnosis—now it's time to take action. Here's what to do:</p>
+        
+        <div style="text-align: center; margin: 40px 0;">
+          <a href="{{PRESCRIPTION_URL}}" class="cta-button">
+            View Your Complete Prescription
+          </a>
+          <br>
+          <a href="{{TOUR_URL}}" class="cta-button secondary">
+            Take the Free Platform Tour
+          </a>
+        </div>
+        
+        <p style="margin-top: 40px;">Your complete prescription includes detailed implementation steps, product comparisons, and a prioritized action plan. Plus, you'll receive a welcome from Coach Blue—our AI mentor who offers a free guided tour of the platform (ongoing mentorship available as optional $99/mo upgrade).</p>
+        
+        <p><strong>Questions?</strong> Just reply to this email—we're here to help!</p>
+      </div>
+      
+      <!-- FOOTER -->
+      <div class="footer">
+        <p><strong>BusinessBlueprint.io</strong></p>
+        <p>Your AI-Powered Partner in Digital Growth</p>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">
+          This assessment was powered by our Business IQ Scanner using advanced AI analysis and real-time digital presence monitoring.
+        </p>
+        <p style="font-size: 12px; opacity: 0.8;">© 2026 BusinessBlueprint.io</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -621,133 +621,293 @@ export class EmailService {
     const highPriorityRecs = data.recommendations.filter(r => r.priority === 'high').slice(0, 3);
     const baseUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
     
+    const getProductIcon = (productId: string | undefined): string => {
+      const iconMap: Record<string, string> = {
+        'send': '__send.png',
+        'inbox': '__inbox.png', 
+        'content': '__content.png',
+        'livechat': '__livechat.png',
+        'reputation': '__reputation.png',
+        'listings': '__listings.png',
+        'localblue': '__localblue.png',
+        'commverse': '__commverse.png',
+      };
+      return productId ? `${baseUrl}/${iconMap[productId] || '__send.png'}` : `${baseUrl}/__send.png`;
+    };
+    
     return `
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Digital IQ Assessment Results - BusinessBlueprint</title>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Semi+Expanded:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Archivo', Arial, sans-serif; line-height: 1.6; color: #09080E; max-width: 600px; margin: 0 auto; background: #EEFBFF; }
-        .container { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 20px; border: 2px solid #09080E; }
-        .header { 
-            background: #0000FF; 
-            background-image: 
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 20px 20px;
-            color: white; 
-            padding: 40px 30px; 
-            text-align: center; 
-        }
-        .logo { font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; font-size: 28px; font-weight: 700; margin-bottom: 15px; }
-        .logo span { color: #F97316; }
-        .score-container { display: inline-block; background: rgba(255,255,255,0.15); border-radius: 16px; padding: 25px 40px; margin: 20px 0; border: 2px solid rgba(255,255,255,0.3); }
-        .score-value { font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; font-size: 56px; font-weight: 700; color: #fff; line-height: 1; }
-        .score-label { font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 5px; }
-        .content { 
-            padding: 35px 30px; 
-            background: #EEFBFF;
-            background-image: 
-                linear-gradient(rgba(0,0,255,0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,0,255,0.02) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-        .section { margin: 30px 0; }
-        .section h2 { font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; color: #0000FF; font-size: 20px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #F97316; padding-bottom: 8px; display: inline-block; }
-        .recommendation { background: white; padding: 20px; margin: 15px 0; border-left: 4px solid #F97316; border-radius: 0 8px 8px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .recommendation h3 { font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; color: #0000FF; margin: 0 0 10px 0; font-size: 16px; }
-        .recommendation p { margin: 5px 0; color: #09080E; font-size: 14px; }
-        .cta-section { text-align: center; background: white; padding: 30px; margin: 25px 0; border-radius: 12px; border: 2px solid #0000FF; }
-        .cta-button { display: inline-block; background: #F97316; color: white; padding: 16px 35px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 8px; box-shadow: 0 4px 15px rgba(249,115,22,0.3); }
-        .secondary-button { background: #0000FF; box-shadow: 0 4px 15px rgba(0,0,255,0.3); }
-        .footer { background: #09080E; padding: 25px 30px; text-align: center; color: #94a3b8; }
-        .footer a { color: #F97316; text-decoration: none; }
-        .footer-logo { font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; color: white; font-weight: 600; font-size: 18px; margin-bottom: 10px; }
-        .footer-logo span { color: #F97316; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Digital IQ Assessment Results</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Archivo+Semi+Expanded:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      font-family: 'Archivo', sans-serif;
+      line-height: 1.6;
+      color: #09080E;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #EEFBFF;
+    }
+    .email-outline {
+      border: 2px solid #09080E;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      background: #09080E;
+      color: #EEFBFF;
+      padding: 40px 30px;
+      text-align: center;
+      border-bottom: 4px solid #F97316;
+    }
+    .header h1 {
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      margin: 0 0 10px 0;
+      color: #EEFBFF;
+    }
+    .header .score {
+      font-size: 48px;
+      font-weight: 700;
+      color: #F97316;
+      margin: 20px 0 10px 0;
+    }
+    .header .score-label {
+      font-size: 16px;
+      color: #EEFBFF;
+      opacity: 0.9;
+    }
+    .content {
+      background: #EEFBFF;
+      padding: 40px 30px;
+      background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(0, 0, 255, 0.03) 25%, rgba(0, 0, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.03) 75%, rgba(0, 0, 255, 0.03) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(0, 0, 255, 0.03) 25%, rgba(0, 0, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.03) 75%, rgba(0, 0, 255, 0.03) 76%, transparent 77%, transparent);
+      background-size: 50px 50px;
+    }
+    .content p {
+      font-size: 16px;
+      color: #09080E;
+      margin: 16px 0;
+    }
+    .content h2 {
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      color: #0000FF;
+      margin: 30px 0 15px 0;
+    }
+    .content h3 {
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 600;
+      font-size: 18px;
+      color: #09080E;
+      margin: 20px 0 10px 0;
+    }
+    .summary-box {
+      background: #ffffff;
+      border-left: 4px solid #F97316;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 4px;
+    }
+    .recommendation {
+      background: #ffffff;
+      border: 2px solid #0000FF;
+      border-radius: 8px;
+      padding: 25px;
+      margin: 25px 0;
+    }
+    .recommendation-header {
+      margin-bottom: 15px;
+    }
+    .recommendation-header img {
+      width: 48px;
+      height: 48px;
+      vertical-align: middle;
+      margin-right: 15px;
+    }
+    .recommendation-header h3 {
+      display: inline;
+      vertical-align: middle;
+      margin: 0;
+      color: #0000FF;
+      font-size: 20px;
+    }
+    .product-name {
+      color: #F97316;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .recommendation ul {
+      margin: 15px 0;
+      padding-left: 20px;
+    }
+    .recommendation li {
+      margin: 8px 0;
+      color: #09080E;
+    }
+    .bundle-callout {
+      background: #ffffff;
+      border: 2px solid #0000FF;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .bundle-item {
+      margin: 15px 0;
+    }
+    .bundle-item img {
+      width: 40px;
+      height: 40px;
+      vertical-align: middle;
+      margin-right: 12px;
+    }
+    .bundle-item p {
+      display: inline;
+      margin: 0;
+      font-size: 15px;
+      vertical-align: middle;
+    }
+    .bundle-callout strong {
+      color: #0000FF;
+    }
+    .cta-button {
+      display: inline-block;
+      background: #F97316;
+      color: #EEFBFF;
+      padding: 16px 32px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-size: 16px;
+      margin: 20px 10px 20px 0;
+      border: 2px solid #F97316;
+    }
+    .cta-button.secondary {
+      background: #0000FF;
+      border: 2px solid #0000FF;
+    }
+    .footer {
+      background: #09080E;
+      color: #EEFBFF;
+      padding: 30px;
+      text-align: center;
+      border-top: 4px solid #F97316;
+    }
+    .footer p {
+      font-size: 14px;
+      color: #EEFBFF;
+      margin: 10px 0;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">Business<span>Blueprint</span></div>
-            <h1 style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; margin: 0 0 10px 0; font-size: 24px; font-weight: 600;">Digital IQ Assessment Results</h1>
-            <h2 style="margin: 0; font-weight: 400; opacity: 0.9; font-size: 18px;">${data.businessName}</h2>
-            <div class="score-container">
-                <div class="score-value">${data.digitalScore}</div>
-                <div class="score-label">Digital IQ Score (out of 140)</div>
-            </div>
+  <div class="email-container">
+    <div class="email-outline">
+      <!-- HEADER -->
+      <div class="header">
+        <h1>Your Digital IQ Assessment Results</h1>
+        <div class="score">${data.digitalScore}<span style="font-size: 24px; opacity: 0.8;">/140</span></div>
+        <div class="score-label">Digital IQ Score</div>
+      </div>
+      
+      <!-- CONTENT -->
+      <div class="content">
+        <p><strong>Hi ${data.businessName},</strong></p>
+        
+        <p>Thank you for completing your Digital IQ Assessment! We've analyzed your complete digital presence across 9 critical areas, and your personalized growth prescription is ready.</p>
+        
+        <!-- EXECUTIVE SUMMARY -->
+        <div class="summary-box">
+          <h3 style="margin-top: 0; color: #0000FF;">What This Score Means</h3>
+          <p>${data.summary}</p>
+          <p><strong>The opportunity:</strong> Businesses that implement foundational digital tools typically see 20-40% revenue growth within the first year.</p>
         </div>
         
-        <div class="content">
-            <div class="section">
-                <h2>Executive Summary</h2>
-                <p style="color: #09080E;">${data.summary}</p>
-            </div>
-            
-            <div class="section">
-                <h2>Priority Recommendations</h2>
-                ${highPriorityRecs.map(rec => `
-                    <div class="recommendation">
-                        <h3>${rec.title}</h3>
-                        <p>${rec.description}</p>
-                        ${rec.productId ? `<p style="color: #F97316; font-weight: 600; margin-top: 10px;">Recommended Solution: ${rec.productId.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}</p>` : ''}
-                        ${rec.productBenefits && rec.productBenefits.length > 0 ? `
-                        <ul style="margin: 10px 0; padding-left: 20px; font-size: 13px; color: #09080E;">
-                            ${rec.productBenefits.slice(0, 2).map((benefit: string) => `<li>${benefit}</li>`).join('')}
-                        </ul>` : ''}
-                        <p><strong style="color: #0000FF;">Impact:</strong> ${rec.estimatedImpact} | <strong style="color: #0000FF;">Effort:</strong> ${rec.estimatedEffort}</p>
-                    </div>
-                `).join('')}
-            </div>
-            
-            <div class="section" style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #0000FF; margin-top: 20px;">
-                <h2 style="text-align: center; border-bottom: none; display: block;">Your Recommended Products</h2>
-                <div style="display: grid; gap: 15px; margin-top: 15px;">
-                    <div style="display: flex; align-items: center; padding: 15px; background: #EEFBFF; border-radius: 8px; border-left: 4px solid #0000FF;">
-                        <div>
-                            <h4 style="margin: 0 0 5px 0; color: #0000FF; font-family: 'Archivo Semi Expanded', Arial, sans-serif;">CommVerse Bundle</h4>
-                            <p style="margin: 0; font-size: 14px; color: #09080E;">Complete communication suite: /send, /inbox, /content, /livechat</p>
-                            <p style="margin: 5px 0 0 0; font-size: 14px; font-weight: 600; color: #F97316;">$99/month - Save $37</p>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; padding: 15px; background: #EEFBFF; border-radius: 8px; border-left: 4px solid #F97316;">
-                        <div>
-                            <h4 style="margin: 0 0 5px 0; color: #0000FF; font-family: 'Archivo Semi Expanded', Arial, sans-serif;">LocalBlue Bundle</h4>
-                            <p style="margin: 0; font-size: 14px; color: #09080E;">Local SEO control: /localblue, /listings, /reputation</p>
-                            <p style="margin: 5px 0 0 0; font-size: 14px; font-weight: 600; color: #F97316;">$59/month - Save $19</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="cta-section">
-                <h2 style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; color: #0000FF; margin-top: 0;">View Your Complete Prescription</h2>
-                <p style="color: #09080E; margin-bottom: 20px;">Access your personalized growth plan and recommendations:</p>
-                
-                <a href="${baseUrl}/portal/prescriptions" class="cta-button">
-                    View My Prescription
-                </a>
-                
-                <a href="${baseUrl}/ai-coach" class="cta-button secondary-button">
-                    Talk to Coach Blue
-                </a>
-                
-                <p style="margin-top: 20px; font-size: 14px;">
-                    <a href="${baseUrl}/portal/dashboard" style="color: #0000FF; text-decoration: underline;">Access Client Portal</a>
-                </p>
-            </div>
+        <h2>Your Priority Recommendations</h2>
+        <p>Based on your assessment, here are the specific tools that will have the biggest impact on your business:</p>
+        
+        ${highPriorityRecs.map(rec => `
+        <!-- RECOMMENDATION: ${rec.title} -->
+        <div class="recommendation">
+          <div class="recommendation-header">
+            <img src="${getProductIcon(rec.productId)}" alt="${rec.productId || 'Product'}" />
+            <h3>${rec.title}</h3>
+          </div>
+          
+          <p><strong>You need:</strong> ${rec.description}</p>
+          
+          <p><strong>Why it matters:</strong> ${rec.estimatedImpact}</p>
+          
+          ${rec.productId ? `<p><strong>Our recommendation: <span class="product-name">${rec.productId.charAt(0).toUpperCase() + rec.productId.slice(1)}</span></strong></p>` : ''}
+          
+          ${rec.productBenefits && rec.productBenefits.length > 0 ? `
+          <ul>
+            ${rec.productBenefits.map((benefit: string) => `<li><strong>${benefit.split(':')[0]}:</strong>${benefit.includes(':') ? benefit.split(':').slice(1).join(':') : ''}</li>`).join('')}
+          </ul>` : ''}
+          
+          <p><strong>Expected impact:</strong> ${rec.estimatedEffort}</p>
+        </div>
+        `).join('')}
+        
+        <!-- BUNDLE ADVANTAGE -->
+        <div class="bundle-callout">
+          <div style="margin-bottom: 20px;">
+            <strong style="font-size: 18px; color: #0000FF;">💡 Smart Move: Save with Bundles</strong>
+          </div>
+          
+          <div class="bundle-item">
+            <img src="${baseUrl}/__commverse.png" alt="CommVerse Bundle" />
+            <p><strong>CommVerse Bundle ($99/mo):</strong> Includes Send, Content, Inbox (unified communications), and LiveChat (website chat widget)—all four tools in one integrated platform. Save money and manage everything from one dashboard.</p>
+          </div>
+          
+          <div class="bundle-item" style="margin-top: 20px;">
+            <img src="${baseUrl}/__localblue.png" alt="LocalBlue Bundle" />
+            <p><strong>LocalBlue Bundle ($59/mo):</strong> Includes Reputation, business Listings management, and Google Business Profile optimization for complete local SEO dominance.</p>
+          </div>
         </div>
         
-        <div class="footer">
-            <div class="footer-logo">Business<span>Blueprint</span></div>
-            <p>Powered by AI-driven business intelligence</p>
-            <p>Questions? <a href="mailto:support@businessblueprint.io">Contact our support team</a></p>
-            <p style="font-size: 12px; margin-top: 15px;">&copy; 2025 BusinessBlueprint.io - All rights reserved</p>
+        <h2>Next Steps</h2>
+        <p>You've got the diagnosis—now it's time to take action. Here's what to do:</p>
+        
+        <div style="text-align: center; margin: 40px 0;">
+          <a href="${baseUrl}/portal/prescriptions" class="cta-button">
+            View Your Complete Prescription
+          </a>
+          <br>
+          <a href="${baseUrl}/tour" class="cta-button secondary">
+            Take the Free Platform Tour
+          </a>
         </div>
+        
+        <p style="margin-top: 40px;">Your complete prescription includes detailed implementation steps, product comparisons, and a prioritized action plan. Plus, you'll receive a welcome from Coach Blue—our AI mentor who offers a free guided tour of the platform (ongoing mentorship available as optional $99/mo upgrade).</p>
+        
+        <p><strong>Questions?</strong> Just reply to this email—we're here to help!</p>
+      </div>
+      
+      <!-- FOOTER -->
+      <div class="footer">
+        <p><strong>BusinessBlueprint.io</strong></p>
+        <p>Your AI-Powered Partner in Digital Growth</p>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">
+          This assessment was powered by our Business IQ Scanner using advanced AI analysis and real-time digital presence monitoring.
+        </p>
+        <p style="font-size: 12px; opacity: 0.8;">© 2026 BusinessBlueprint.io</p>
+      </div>
     </div>
+  </div>
 </body>
 </html>`;
   }
