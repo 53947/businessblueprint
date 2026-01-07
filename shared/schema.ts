@@ -360,6 +360,8 @@ export const insertRecommendationSchema = createInsertSchema(recommendations).pi
   priority: true,
   estimatedImpact: true,
   estimatedEffort: true,
+  productId: true,
+  bundleId: true,
 });
 
 export const insertClientSchema = createInsertSchema(clients).pick({
@@ -537,7 +539,7 @@ export const products = pgTable("products", {
 export const assessmentProductRecommendations = pgTable("assessment_product_recommendations", {
   id: serial("id").primaryKey(),
   assessmentId: integer("assessment_id").references(() => assessments.id),
-  productId: integer("product_id").references(() => products.id),
+  productId: varchar("product_id", { length: 50 }), // String ID matching PRODUCTS catalog (inbox, send, etc.)
   
   // Why this product is recommended
   reason: text("reason").notNull(), // AI-generated explanation

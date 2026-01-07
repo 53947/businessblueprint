@@ -11,7 +11,7 @@ interface AssessmentScores {
 }
 
 interface ProductRecommendation {
-  productId: number;
+  productId: string; // String ID matching PRODUCTS catalog (inbox, send, etc.)
   productName: string;
   reason: string;
   priority: 'critical' | 'high' | 'medium' | 'low';
@@ -81,7 +81,7 @@ export class ProductRecommendationService {
         const projectedScore = Math.min(100, weakCat.score + improvement);
 
         recommendations.push({
-          productId: product.id,
+          productId: product.productId!, // Use string product ID from catalog
           productName: product.name,
           reason: this.generateReason(product.name, weakCat.category, weakCat.score),
           priority: weakCat.priority as 'critical' | 'high' | 'medium' | 'low',
@@ -180,7 +180,7 @@ export class ProductRecommendationService {
         isPurchased: assessmentProductRecommendations.isPurchased
       })
       .from(assessmentProductRecommendations)
-      .innerJoin(products, eq(assessmentProductRecommendations.productId, products.id))
+      .innerJoin(products, eq(assessmentProductRecommendations.productId, products.productId))
       .where(eq(assessmentProductRecommendations.assessmentId, assessmentId));
 
     return recs;

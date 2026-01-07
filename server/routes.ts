@@ -2805,7 +2805,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Flatten the nested product structure for frontend
       const recommendations = recs.map((rec) => ({
-        productId: rec.product.id,
+        productId: rec.product.productId, // Use string product ID from catalog
         productName: rec.product.name,
         reason: rec.reason,
         priority: rec.priority,
@@ -3954,7 +3954,7 @@ async function processAssessmentAsync(
       status: "completed",
     });
 
-    // Save recommendations
+    // Save recommendations with product IDs
     for (const rec of enhancedAnalysis.recommendations) {
       await storage.createRecommendation({
         assessmentId,
@@ -3964,6 +3964,8 @@ async function processAssessmentAsync(
         priority: rec.priority,
         estimatedImpact: rec.estimatedImpact || "moderate",
         estimatedEffort: rec.estimatedEffort || "low",
+        productId: (rec as any).productId || null, // String product ID from catalog (inbox, send, etc.)
+        bundleId: (rec as any).bundleId || null, // String bundle ID if applicable (commverse, localblue)
       });
     }
 
