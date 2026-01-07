@@ -135,9 +135,10 @@ export class ProductRecommendationService {
       'send': { engagement: 25, visibility: 15 },
       'content': { engagement: 18, visibility: 12 },
       'livechat': { engagement: 20, visibility: 15 },
+      'commverse': { engagement: 35, visibility: 25 },
       'listings': { visibility: 25, completeness: 20 },
       'reputation': { reviews: 30, engagement: 15 },
-      'localblue': { visibility: 25, reviews: 20, completeness: 25 },
+      'localblue': { visibility: 30, reviews: 25, completeness: 30 },
       'relationships': { engagement: 20, completeness: 15 },
       'hostsBlue': { completeness: 25, visibility: 15 },
       'swipesBlue': { engagement: 15 }

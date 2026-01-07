@@ -476,7 +476,7 @@ When recommending Website & SEO improvements:
 
   private validateRecommendation(rec: any, rejectedCount?: { count: number; products: string[] }): any | null {
     const VALID_PRODUCT_IDS = [
-      'inbox', 'send', 'content', 'livechat',
+      'inbox', 'send', 'content', 'livechat', 'commverse',
       'listings', 'reputation', 'localblue',
       'relationships',
       'hostsBlue', 'swipesBlue'

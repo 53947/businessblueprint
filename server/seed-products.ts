@@ -5,6 +5,27 @@ import { products } from "@shared/schema";
 // DO NOT add products not in the official catalog
 const authorizedProducts = [
   {
+    productId: "commverse",
+    name: "CommVerse Bundle",
+    description: "Complete Communications Universe - All 4 communication tools (Inbox, Send, Content, LiveChat) in one integrated platform",
+    category: "bundle",
+    improvesCategory: ["engagement", "visibility"],
+    diyPrice: "99.00",
+    setupFee: "0.00",
+    billingCycle: "monthly",
+    features: JSON.stringify([
+      "All 4 communication tools in one platform",
+      "Unified dashboard for all customer communications",
+      "Save $37/month vs buying apps separately",
+      "Perfect sync between email, SMS, social, and chat",
+      "One login, one bill, complete control"
+    ]),
+    deliveryMethod: ["diy"],
+    estimatedImpact: "+40-60 points",
+    displayOrder: 0,
+    isActive: true
+  },
+  {
     productId: "inbox",
     name: "Inbox",
     description: "Unified Communication Hub - Consolidates email, SMS, social messages, live chat into ONE inbox",
@@ -132,8 +153,8 @@ const authorizedProducts = [
   },
   {
     productId: "localblue",
-    name: "LocalBlue Complete",
-    description: "Full Local SEO Package - Includes Listings + Reputation + GBP optimization",
+    name: "LocalBlue Bundle",
+    description: "Complete Local Presence Package - Listings + Reputation bundled together",
     category: "bundle",
     improvesCategory: ["visibility", "reviews", "completeness"],
     diyPrice: "59.00",
@@ -220,7 +241,7 @@ const authorizedProducts = [
 async function seedProducts() {
   try {
     console.log("Seeding AUTHORIZED products only...");
-    console.log("Products: inbox, send, content, livechat, listings, reputation, localblue, relationships, hostsBlue, swipesBlue");
+    console.log("Products: commverse, inbox, send, content, livechat, listings, reputation, localblue, relationships, hostsBlue, swipesBlue");
     
     for (const product of authorizedProducts) {
       await db.insert(products).values(product).onConflictDoNothing();
