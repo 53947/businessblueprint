@@ -181,15 +181,18 @@ GOOGLE BUSINESS DATA:
 ${JSON.stringify(input.googleData, null, 2)}
 
 Generate 12-18 PRODUCT-FOCUSED recommendations across these 9 areas:
-1. Email & SMS Marketing → Recommend: Send (bundle: CommVerse)
-2. Social Media Content → Recommend: Content (bundle: CommVerse)
-3. Reputation Management → Recommend: Reputation (bundle: LocalBlue)
-4. Customer Response & Timing → Recommend: Inbox (bundle: CommVerse)
-5. Live Chat → Recommend: LiveChat (bundle: CommVerse)
-6. Business Listings → Recommend: Listings (bundle: LocalBlue)
-7. Google Business Profile → Recommend: LocalBlue Complete
+1. Email & SMS Marketing → Recommend: Send OR CommVerse Bundle (if multiple comm needs)
+2. Social Media Content → Recommend: Content OR CommVerse Bundle (if multiple comm needs)
+3. Reputation Management → Recommend: Reputation OR LocalBlue Bundle (if also needs Listings)
+4. Customer Response & Timing → Recommend: Inbox OR CommVerse Bundle (if multiple comm needs)
+5. Live Chat → Recommend: LiveChat OR CommVerse Bundle (if multiple comm needs)
+6. Business Listings → Recommend: Listings OR LocalBlue Bundle (if also needs Reputation)
+7. Google Business Profile → Recommend: LocalBlue Bundle
 8. Website & SEO → Recommend: HostsBlue.com
 9. CRM Systems → Recommend: Relationships
+
+★ BUNDLE PRIORITY: If a business has weaknesses in 2+ communication areas, recommend CommVerse Bundle (productId: "commverse").
+★ BUNDLE PRIORITY: If a business has weaknesses in BOTH listings AND reputation, recommend LocalBlue Bundle (productId: "localblue").
 
 RESPOND WITH VALID JSON:
 {
@@ -216,7 +219,7 @@ RESPOND WITH VALID JSON:
       "priority": "high" | "medium" | "low",
       "estimatedImpact": "High ROI" | "Medium ROI" | "Long-term benefit",
       "estimatedEffort": "Quick setup" | "1-2 days" | "1-2 weeks" | "Ongoing",
-      "productId": "send" | "inbox" | "content" | "livechat" | "listings" | "reputation" | "localblue" | "relationships" | "hostsBlue" | "swipesBlue",
+      "productId": "commverse" | "localblue" | "send" | "inbox" | "content" | "livechat" | "listings" | "reputation" | "relationships" | "hostsBlue" | "swipesBlue",
       "bundleId": "commverse" | "localblue" | null,
       "productBenefits": ["benefit 1", "benefit 2", "benefit 3"],
       "bundleAdvantage": "Save with CommVerse bundle..." or null
@@ -236,7 +239,13 @@ RESPOND WITH VALID JSON:
 
 You may ONLY recommend products with these EXACT productId values:
 
-COMMUNICATION TOOLS (CommVerse Bundle - bundleId: "commverse"):
+★★★ BUNDLES (PRIORITIZE THESE - BEST VALUE) ★★★
+| productId   | Display Name      | Price   | Includes                              | Savings        |
+|-------------|-------------------|---------|---------------------------------------|----------------|
+| commverse   | CommVerse Bundle  | $99/mo  | Inbox + Send + Content + LiveChat     | Save $37/month |
+| localblue   | LocalBlue Bundle  | $59/mo  | Listings + Reputation                 | Save $19/month |
+
+COMMUNICATION TOOLS (Individual apps - recommend CommVerse Bundle instead when 2+ needed):
 | productId   | Display Name | Price    | Use For                              |
 |-------------|--------------|----------|--------------------------------------|
 | inbox       | Inbox        | $34/mo   | Unified inbox, message consolidation |
@@ -244,12 +253,11 @@ COMMUNICATION TOOLS (CommVerse Bundle - bundleId: "commverse"):
 | content     | Content      | $34/mo   | Social media scheduling & creation   |
 | livechat    | LiveChat     | $34/mo   | Website chat widget, lead capture    |
 
-LOCAL PRESENCE TOOLS (LocalBlue Bundle - bundleId: "localblue"):
+LOCAL PRESENCE TOOLS (Individual apps - recommend LocalBlue Bundle instead when both needed):
 | productId   | Display Name | Price    | Use For                              |
 |-------------|--------------|----------|--------------------------------------|
 | listings    | Listings     | $39/mo   | Directory sync, NAP consistency      |
 | reputation  | Reputation   | $39/mo   | Review monitoring & response         |
-| localblue   | LocalBlue    | $59/mo   | Complete local SEO package           |
 
 BUSINESS OPERATIONS:
 | productId      | Display Name      | Price    | Use For                    |
@@ -262,11 +270,11 @@ PARTNER SERVICES:
 | hostsBlue     | HostsBlue.com  | Varies    | Web hosting, domains, SSL      |
 | swipesBlue    | SwipesBlue.com | 2.9%+30¢  | Payment processing             |
 
-BUNDLES (use bundleId, not productId):
-| bundleId   | Display Name         | Products Included                    |
-|------------|---------------------|--------------------------------------|
-| commverse  | (CommVerse Bundle)  | inbox, send, content, livechat       |
-| localblue  | (LocalBlue Bundle)  | listings, reputation                 |
+★★★ BUNDLE RECOMMENDATION RULES ★★★
+- If business needs 2+ communication tools → recommend "commverse" (CommVerse Bundle)
+- If business needs both listings AND reputation → recommend "localblue" (LocalBlue Bundle)
+- Bundles ARE products - use productId "commverse" or "localblue" directly
+- Always mention bundle savings in description when recommending bundles
 
 ═══════════════════════════════════════════════════════════════════════════════
 🚫 FORBIDDEN - DO NOT DO ANY OF THESE:
