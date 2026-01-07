@@ -3808,8 +3808,10 @@ async function processAssessmentAsync(
   emailService: ResendEmailService,
   storage: any,
 ) {
+  console.log(`[Assessment Pipeline] ▶️ STARTING background processing for assessment ID: ${assessmentId}`);
   try {
     // Update status to analyzing
+    console.log(`[Assessment Pipeline] Step 1: Updating status to 'analyzing'...`);
     await storage.updateAssessment(assessmentId, { status: "analyzing" });
 
     const assessment = await storage.getAssessment(assessmentId);
