@@ -140,8 +140,49 @@ export const recommendations = pgTable("recommendations", {
   priority: varchar("priority", { length: 20 }).notNull(), // high, medium, low
   estimatedImpact: varchar("estimated_impact", { length: 50 }),
   estimatedEffort: varchar("estimated_effort", { length: 50 }),
+  productId: varchar("product_id", { length: 50 }), // Reference to product in catalog
+  bundleId: varchar("bundle_id", { length: 50 }), // Reference to bundle if applicable
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+// SiteInspector website analysis results
+export const siteInspectorResults = pgTable("site_inspector_results", {
+  id: serial("id").primaryKey(),
+  assessmentId: integer("assessment_id").references(() => assessments.id),
+  url: text("url").notNull(),
+  
+  // Fast Check Results
+  overallScore: integer("overall_score"), // 0-100
+  
+  // SSL
+  sslPresent: boolean("ssl_present"),
+  sslValid: boolean("ssl_valid"),
+  sslIssuer: text("ssl_issuer"),
+  sslExpiresIn: integer("ssl_expires_in"), // days
+  
+  // Performance
+  loadTime: decimal("load_time", { precision: 5, scale: 2 }), // seconds
+  performanceScore: integer("performance_score"), // 0-100
+  
+  // Mobile
+  mobileOptimized: boolean("mobile_optimized"),
+  mobileScore: integer("mobile_score"), // 0-100
+  
+  // Issues (JSON array)
+  criticalIssues: text("critical_issues"), // JSON string
+  
+  // Full Report (if requested)
+  fullReportId: text("full_report_id"),
+  fullReportUrl: text("full_report_url"),
+  fullReportStatus: varchar("full_report_status", { length: 20 }), // queued, processing, completed
+  
+  // Metadata
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow()
+});
+
+export type SiteInspectorResult = typeof siteInspectorResults.$inferSelect;
+export type NewSiteInspectorResult = typeof siteInspectorResults.$inferInsert;
 
 // Client data
 export const clients = pgTable("clients", {

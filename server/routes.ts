@@ -49,6 +49,7 @@ import { productRecommendationService } from "./services/productRecommendations"
 import { reviewAI } from "./services/reviewAI";
 import { jwtService } from "./services/jwt";
 import { presenceScannerService } from "./services/presenceScanner";
+import { siteInspectorService } from "./services/siteinspector";
 import { sendAssessmentConfirmationEmail, sendAdminNotification } from "./services/assessment-emails";
 import { dashboardAccess } from "@shared/schema";
 import { eq, desc, and, or, lte } from "drizzle-orm";
@@ -4308,4 +4309,101 @@ async function registerInboxRoutes(app: Express) {
       }
     },
   );
+
+  // ============================================================================
+  // SITEINSPECTOR INTEGRATION ROUTES
+  // ============================================================================
+
+  // Get SiteInspector results for an assessment
+  app.get('/api/siteinspector/results/:assessmentId', async (req, res) => {
+    try {
+      const assessmentId = parseInt(req.params.assessmentId);
+      
+      if (isNaN(assessmentId)) {
+        return res.status(400).json({ error: 'Invalid assessment ID' });
+      }
+      
+      const results = await siteInspectorService.getResults(assessmentId);
+      
+      if (!results) {
+        return res.status(404).json({ error: 'No SiteInspector results found' });
+      }
+      
+      res.json(results);
+      
+    } catch (error) {
+      console.error('Error fetching SiteInspector results:', error);
+      res.status(500).json({ error: 'Failed to fetch results' });
+    }
+  });
+
+  // Request Full Report (user-initiated)
+  app.post('/api/siteinspector/request-report', async (req, res) => {
+    try {
+      const { url, assessmentId, email } = req.body;
+      
+      if (!url) {
+        return res.status(400).json({ error: 'URL required' });
+      }
+      
+      const result = await siteInspectorService.requestFullReport(
+        url,
+        email,
+        assessmentId
+      );
+      
+      if (!result) {
+        return res.status(500).json({ error: 'Failed to queue report' });
+      }
+      
+      res.json(result);
+      
+    } catch (error) {
+      console.error('Error requesting full report:', error);
+      res.status(500).json({ error: 'Failed to request report' });
+    }
+  });
+
+  // Webhook endpoint for SiteInspector Full Report completion
+  app.post('/api/siteinspector-webhook', async (req, res) => {
+    try {
+      const { reportId, status, url, summary, assessmentId } = req.body;
+      
+      console.log(`[Webhook] SiteInspector report ${reportId} status: ${status}`);
+      
+      if (status === 'completed' && assessmentId) {
+        await siteInspectorService.updateFullReportStatus(
+          assessmentId,
+          reportId,
+          `https://siteinspector.dev/reports/${reportId}`,
+          status
+        );
+      }
+      
+      res.json({ success: true, received: true });
+      
+    } catch (error) {
+      console.error('[Webhook] Error processing SiteInspector webhook:', error);
+      res.status(500).json({ success: false, error: 'Webhook processing failed' });
+    }
+  });
+
+  // Coach Blue triggers Auditor (internal use for technical analysis)
+  app.post('/api/coach-blue/technical-analysis', async (req, res) => {
+    try {
+      const { message, context } = req.body;
+      
+      const result = await siteInspectorService.chatWithAuditor(message, context);
+      
+      if (!result) {
+        return res.status(500).json({ error: 'Analysis failed' });
+      }
+      
+      res.json(result);
+      
+    } catch (error) {
+      console.error('Error in technical analysis:', error);
+      res.status(500).json({ error: 'Analysis failed' });
+    }
+  });
 }
