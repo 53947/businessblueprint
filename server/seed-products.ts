@@ -1,22 +1,24 @@
 import { db } from "./db";
 import { products } from "@shared/schema";
 
-const individualProducts = [
+// AUTHORIZED PRODUCTS ONLY - Based on shared/products.ts catalog
+// DO NOT add products not in the official catalog
+const authorizedProducts = [
   {
-    productId: "business-listings",
-    name: "Business Listings Management",
-    description: "Distribute and sync your business information across 100+ directories including Google, Bing, Facebook, Yelp, and more",
+    productId: "inbox",
+    name: "Inbox",
+    description: "Unified Communication Hub - Consolidates email, SMS, social messages, live chat into ONE inbox",
     category: "core",
-    improvesCategory: ["visibility", "completeness"],
-    diyPrice: "29.99",
+    improvesCategory: ["engagement", "visibility"],
+    diyPrice: "34.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
-      "100+ directory distribution",
-      "Real-time data synchronization",
-      "Centralized management dashboard",
-      "Duplicate listing cleanup",
-      "NAP consistency monitoring"
+      "Consolidates all messages into ONE inbox",
+      "Never miss a customer message again",
+      "Respond faster, close more deals",
+      "Track response times and conversation history",
+      "Works across email, SMS, social, and chat"
     ]),
     deliveryMethod: ["diy"],
     estimatedImpact: "+15-25 points",
@@ -24,43 +26,41 @@ const individualProducts = [
     isActive: true
   },
   {
-    productId: "review-management",
-    name: "Review & Reputation Management",
-    description: "Monitor, respond to, and generate reviews across multiple platforms with AI-powered assistance",
+    productId: "send",
+    name: "Send",
+    description: "Email & SMS Marketing Platform - Build and segment your customer list, create campaigns",
     category: "core",
-    improvesCategory: ["reviews", "engagement"],
-    diyPrice: "39.99",
+    improvesCategory: ["engagement", "visibility"],
+    diyPrice: "34.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
-      "Multi-platform review monitoring",
-      "AI-powered review responses",
-      "Review generation campaigns",
-      "Email/SMS review requests",
-      "Sentiment analysis"
+      "Build and segment your customer list",
+      "Create professional email campaigns in minutes",
+      "Send targeted SMS messages",
+      "Automated drip campaigns that run themselves",
+      "Track open rates, clicks, and conversions"
     ]),
     deliveryMethod: ["diy"],
-    estimatedImpact: "+20-30 points",
+    estimatedImpact: "+15-25 points",
     displayOrder: 2,
     isActive: true
   },
   {
-    productId: "social-media-management",
-    name: "Content Management Platform",
-    description: "/content - Create, schedule, and publish social media content with AI assistance across multiple platforms",
+    productId: "content",
+    name: "Content",
+    description: "Social Media Management - Schedule posts, create content with AI, track engagement",
     category: "core",
     improvesCategory: ["engagement", "visibility"],
-    diyPrice: "49.99",
+    diyPrice: "34.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
-      "3 platforms (FB, IG, LinkedIn, X, Google Business) - pick your favorites",
-      "AI caption generator with tone control",
-      "Smart hashtag suggestions",
-      "Visual content calendar with drag-drop scheduling",
-      "Media library with cloud storage",
-      "Post analytics & performance tracking",
-      "Template library for quick posting"
+      "Schedule posts across all platforms",
+      "Create engaging content with AI assistance",
+      "Track engagement and performance",
+      "Respond to comments and DMs",
+      "Content calendar and planning tools"
     ]),
     deliveryMethod: ["diy"],
     estimatedImpact: "+15-20 points",
@@ -68,143 +68,166 @@ const individualProducts = [
     isActive: true
   },
   {
-    productId: "local-seo",
-    name: "Local SEO & Rank Tracking",
-    description: "Track local search rankings, keywords, and improve your visibility in local search results",
+    productId: "livechat",
+    name: "LiveChat",
+    description: "Website Chat Widget - Real-time customer support and lead capture",
     category: "core",
-    improvesCategory: ["visibility"],
-    diyPrice: "59.99",
+    improvesCategory: ["engagement", "visibility"],
+    diyPrice: "34.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
-      "Local map & search rank tracking",
-      "Keyword monitoring",
-      "Hyper-local grid view rankings",
-      "Competitor analysis",
-      "Performance analytics (90-day history)"
+      "Real-time customer support",
+      "Proactive chat invitations",
+      "Mobile app for on-the-go responses",
+      "Chat transcripts and history",
+      "Lead capture and qualification"
     ]),
     deliveryMethod: ["diy"],
-    estimatedImpact: "+10-15 points",
+    estimatedImpact: "+10-20 points",
     displayOrder: 4,
     isActive: true
   },
   {
-    productId: "google-business-setup",
-    name: "Google Business Profile Setup",
-    description: "Professional setup and optimization of your Google Business Profile",
+    productId: "listings",
+    name: "Listings",
+    description: "Business Listings Management - Manage 50+ directory listings from one dashboard",
     category: "core",
-    improvesCategory: ["completeness", "visibility"],
-    diyPrice: "99.00",
+    improvesCategory: ["visibility", "completeness"],
+    diyPrice: "39.00",
     setupFee: "0.00",
-    billingCycle: "one_time",
+    billingCycle: "monthly",
     features: JSON.stringify([
-      "Complete profile setup",
-      "Business verification",
-      "Photo optimization (3+ photos)",
-      "Category selection",
-      "Hours & attributes setup"
+      "Manage 50+ directory listings from one dashboard",
+      "Ensure NAP (Name, Address, Phone) consistency",
+      "Update hours, services, photos across all platforms",
+      "Monitor listing performance",
+      "Fix duplicate and incorrect listings"
     ]),
     deliveryMethod: ["diy"],
-    estimatedImpact: "+25-35 points",
+    estimatedImpact: "+20-30 points",
     displayOrder: 5,
     isActive: true
   },
   {
-    productId: "store-locator",
-    name: "Store Locator & Pages",
-    description: "Interactive store locator with dedicated landing pages for each location",
+    productId: "reputation",
+    name: "Reputation",
+    description: "Ratings & Review Management - Monitor and respond to reviews across all platforms",
     category: "core",
-    improvesCategory: ["visibility", "completeness"],
-    diyPrice: "69.99",
-    setupFee: "99.00",
+    improvesCategory: ["reviews", "engagement"],
+    diyPrice: "39.00",
+    setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
-      "Interactive map locator",
-      "Dedicated location pages",
-      "Mobile-responsive design",
-      "Search by address/zip",
-      "Directions integration"
+      "Monitor reviews across all platforms",
+      "Automated review request campaigns",
+      "Respond to reviews from one dashboard",
+      "Sentiment analysis and trending",
+      "Showcase positive reviews on your website"
     ]),
     deliveryMethod: ["diy"],
-    estimatedImpact: "+10-15 points",
+    estimatedImpact: "+20-30 points",
     displayOrder: 6,
     isActive: true
   },
   {
-    productId: "website-builder",
-    name: "Website Builder",
-    description: "Create and manage a professional website for your business",
-    category: "core",
-    improvesCategory: ["completeness"],
-    diyPrice: "29.99",
+    productId: "localblue",
+    name: "LocalBlue Complete",
+    description: "Full Local SEO Package - Includes Listings + Reputation + GBP optimization",
+    category: "bundle",
+    improvesCategory: ["visibility", "reviews", "completeness"],
+    diyPrice: "59.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
-      "Drag-and-drop builder",
-      "Mobile responsive templates",
-      "SEO optimization",
-      "SSL certificate included",
-      "Custom domain support"
+      "Includes Listings + Reputation management",
+      "Google Business Profile optimization",
+      "Local keyword tracking",
+      "Competitor analysis",
+      "Monthly performance reports"
     ]),
     deliveryMethod: ["diy"],
-    estimatedImpact: "+15-20 points",
+    estimatedImpact: "+30-50 points",
     displayOrder: 7,
     isActive: true
   },
   {
-    productId: "ai-business-coach",
-    name: "AI Business Coach",
-    description: "Personalized AI guidance for your digital marketing journey",
-    category: "solution",
-    improvesCategory: ["visibility", "reviews", "completeness", "engagement"],
-    diyPrice: "99.00",
+    productId: "relationships",
+    name: "Relationships CRM",
+    description: "The Truth Center - Centralized customer database and sales pipeline",
+    category: "core",
+    improvesCategory: ["engagement", "completeness"],
+    diyPrice: "29.00",
     setupFee: "0.00",
     billingCycle: "monthly",
     features: JSON.stringify([
-      "Personalized business guidance",
-      "Step-by-step task breakdown",
-      "Progress tracking & analytics",
-      "Real-time help & support",
-      "Team training support"
+      "Centralized customer database (single source of truth)",
+      "Track every interaction across all channels",
+      "Sales pipeline and opportunity tracking",
+      "Automated follow-ups and reminders",
+      "Seamless integration with all CommVerse and LocalBlue tools"
     ]),
     deliveryMethod: ["diy"],
-    estimatedImpact: "Accelerates all improvements",
+    estimatedImpact: "+15-25 points",
     displayOrder: 8,
     isActive: true
   },
   {
-    productId: "captaining-journey",
-    name: "Captaining Your Journey",
-    description: "8 weeks of personal oversight during your digital launch phase",
-    category: "solution",
-    improvesCategory: ["visibility", "reviews", "completeness", "engagement"],
-    diyPrice: "249.00",
+    productId: "hostsBlue",
+    name: "HostsBlue.com",
+    description: "Complete Web Services - Domain, hosting, email, website builder",
+    category: "partner",
+    improvesCategory: ["completeness", "visibility"],
+    diyPrice: "0.00",
     setupFee: "0.00",
-    billingCycle: "monthly",
+    billingCycle: "varies",
     features: JSON.stringify([
-      "Personal oversight (8 weeks)",
-      "Blueprint implementation guidance",
-      "Configuration verification",
-      "Challenge navigation support",
-      "Smooth transition to independence"
+      "Domain registration and transfer",
+      "Professional email hosting (@yourbusiness.com)",
+      "SSL certificates and trust badges",
+      "Website builder (drag-and-drop)",
+      "One-click WordPress install",
+      "99.9% uptime guarantee"
     ]),
-    deliveryMethod: ["diy"],
-    estimatedImpact: "Ensures successful implementation",
+    deliveryMethod: ["partner"],
+    estimatedImpact: "+20-30 points",
     displayOrder: 9,
+    isActive: true
+  },
+  {
+    productId: "swipesBlue",
+    name: "SwipesBlue.com",
+    description: "Payment Processing and E-commerce - Integrated payment gateway",
+    category: "partner",
+    improvesCategory: ["engagement"],
+    diyPrice: "0.00",
+    setupFee: "0.00",
+    billingCycle: "transaction",
+    features: JSON.stringify([
+      "Integrated payment gateway",
+      "Shopping cart and checkout",
+      "Secure payment processing",
+      "All features included free",
+      "Transaction-fee model only (2.9% + 30¢)"
+    ]),
+    deliveryMethod: ["partner"],
+    estimatedImpact: "+10-15 points",
+    displayOrder: 10,
     isActive: true
   }
 ];
 
 async function seedProducts() {
   try {
-    console.log("Seeding individual products...");
+    console.log("Seeding AUTHORIZED products only...");
+    console.log("Products: inbox, send, content, livechat, listings, reputation, localblue, relationships, hostsBlue, swipesBlue");
     
-    for (const product of individualProducts) {
+    for (const product of authorizedProducts) {
       await db.insert(products).values(product).onConflictDoNothing();
-      console.log(`✓ Seeded: ${product.name}`);
+      console.log(`✓ Seeded: ${product.name} (${product.productId})`);
     }
     
-    console.log("\nProducts seeded successfully!");
+    console.log("\nAuthorized products seeded successfully!");
     process.exit(0);
   } catch (error) {
     console.error("Error seeding products:", error);

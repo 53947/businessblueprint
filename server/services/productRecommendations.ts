@@ -129,15 +129,18 @@ export class ProductRecommendationService {
    * Calculate estimated improvement for a product
    */
   private calculateImprovement(productId: string, category: string): number {
-    // Improvement estimates based on product type and category
+    // Improvement estimates based on AUTHORIZED product catalog only
     const improvements: Record<string, Record<string, number>> = {
-      'business-listings': { visibility: 20, completeness: 15 },
-      'review-management': { reviews: 25, engagement: 15 },
-      'social-media-management': { engagement: 18, visibility: 12 },
-      'local-seo': { visibility: 15 },
-      'google-business-setup': { completeness: 30, visibility: 20 },
-      'store-locator': { visibility: 12, completeness: 10 },
-      'website-builder': { completeness: 18 }
+      'inbox': { engagement: 20, visibility: 10 },
+      'send': { engagement: 25, visibility: 15 },
+      'content': { engagement: 18, visibility: 12 },
+      'livechat': { engagement: 20, visibility: 15 },
+      'listings': { visibility: 25, completeness: 20 },
+      'reputation': { reviews: 30, engagement: 15 },
+      'localblue': { visibility: 25, reviews: 20, completeness: 25 },
+      'relationships': { engagement: 20, completeness: 15 },
+      'hostsBlue': { completeness: 25, visibility: 15 },
+      'swipesBlue': { engagement: 15 }
     };
 
     return improvements[productId]?.[category] || 10;
