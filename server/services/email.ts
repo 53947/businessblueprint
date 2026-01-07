@@ -693,9 +693,34 @@ export class EmailService {
                     <div class="recommendation">
                         <h3>${rec.title}</h3>
                         <p>${rec.description}</p>
+                        ${rec.productId ? `<p style="color: #F97316; font-weight: 600; margin-top: 10px;">Recommended Solution: ${rec.productId.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}</p>` : ''}
+                        ${rec.productBenefits && rec.productBenefits.length > 0 ? `
+                        <ul style="margin: 10px 0; padding-left: 20px; font-size: 13px; color: #09080E;">
+                            ${rec.productBenefits.slice(0, 2).map((benefit: string) => `<li>${benefit}</li>`).join('')}
+                        </ul>` : ''}
                         <p><strong style="color: #0000FF;">Impact:</strong> ${rec.estimatedImpact} | <strong style="color: #0000FF;">Effort:</strong> ${rec.estimatedEffort}</p>
                     </div>
                 `).join('')}
+            </div>
+            
+            <div class="section" style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #0000FF; margin-top: 20px;">
+                <h2 style="text-align: center; border-bottom: none; display: block;">Your Recommended Products</h2>
+                <div style="display: grid; gap: 15px; margin-top: 15px;">
+                    <div style="display: flex; align-items: center; padding: 15px; background: #EEFBFF; border-radius: 8px; border-left: 4px solid #0000FF;">
+                        <div>
+                            <h4 style="margin: 0 0 5px 0; color: #0000FF; font-family: 'Archivo Semi Expanded', Arial, sans-serif;">CommVerse Bundle</h4>
+                            <p style="margin: 0; font-size: 14px; color: #09080E;">Complete communication suite: /send, /inbox, /content, /livechat</p>
+                            <p style="margin: 5px 0 0 0; font-size: 14px; font-weight: 600; color: #F97316;">$99/month - Save $37</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; padding: 15px; background: #EEFBFF; border-radius: 8px; border-left: 4px solid #F97316;">
+                        <div>
+                            <h4 style="margin: 0 0 5px 0; color: #0000FF; font-family: 'Archivo Semi Expanded', Arial, sans-serif;">LocalBlue Bundle</h4>
+                            <p style="margin: 0; font-size: 14px; color: #09080E;">Local SEO control: /localblue, /listings, /reputation</p>
+                            <p style="margin: 5px 0 0 0; font-size: 14px; font-weight: 600; color: #F97316;">$59/month - Save $19</p>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="cta-section">
