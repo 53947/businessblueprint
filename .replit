@@ -65,3 +65,6 @@ integrations = ["javascript_log_in_with_replit:1.0.0", "agentmail:1.0.0", "javas
 
 [userenv.shared]
 SITEINSPECTOR_API_URL = "https://siteinspector.dev/api/businessblueprint"
+
+[objectStorage]
+defaultBucketID = "replit-objstore-5c049a1d-0f1c-4b2d-bf62-fc64a78e0c20"
