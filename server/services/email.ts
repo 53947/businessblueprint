@@ -431,7 +431,7 @@ export class EmailService {
     businessName: string;
     assessmentId: number;
   }): Promise<boolean> {
-    const subject = `Meet Coach Blue - Your AI Guide to Digital Success`;
+    const subject = `Welcome to BusinessBlueprint – Begin Your Free Guided Tour`;
     const htmlContent = this.generateThankYouIntroductionHTML(data);
     
     try {
@@ -1141,7 +1141,7 @@ export class EmailService {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meet Coach Blue - Your AI Business Guide</title>
+    <title>Welcome to BusinessBlueprint - Your Free Platform Tour Awaits</title>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Semi+Expanded:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body style="font-family: 'Archivo', Arial, sans-serif; line-height: 1.6; color: #09080E; max-width: 600px; margin: 0 auto; background: #EEFBFF; padding: 0;">
@@ -1152,53 +1152,68 @@ export class EmailService {
             <div style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 15px;">
                 Business<span style="color: #F97316;">Blueprint</span>
             </div>
-            <img src="${coachBlueIcon}" alt="Coach Blue - AI Business Coach" style="width: 100px; height: 100px; margin: 15px auto; display: block; border-radius: 20px;">
-            <h1 style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; margin: 15px 0 5px 0; font-size: 28px; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">Meet Coach Blue</h1>
-            <p style="margin: 0; font-size: 16px; opacity: 0.95;">Your 24/7 AI Business Guide</p>
+            <h1 style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; margin: 15px 0 5px 0; font-size: 28px; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">Welcome to BusinessBlueprint!</h1>
+            <p style="margin: 0; font-size: 16px; opacity: 0.95;">Step 1 Complete: Digital IQ Assessment</p>
         </div>
         
         <!-- Main Content -->
         <div style="padding: 40px; background: #EEFBFF;">
-            <p style="font-size: 18px; margin-bottom: 20px;">Hi <strong>${data.businessName}</strong>,</p>
+            <p style="font-size: 18px; margin-bottom: 20px;">Congratulations <strong>${data.businessName}</strong>!</p>
             
-            <p style="margin-bottom: 25px;">Thank you for completing your Digital IQ Assessment! Your personalized prescription is ready, and I'm here to help you implement it.</p>
+            <p style="margin-bottom: 25px;">You've completed <strong>Step 1</strong> of your digital transformation journey. Your personalized prescription is ready, and we've created a <strong>FREE guided tour</strong> to help you understand exactly how to use it.</p>
             
-            <!-- What Coach Blue Does -->
-            <div style="background: white; border-radius: 12px; padding: 25px; margin: 25px 0; border-left: 4px solid #0000FF;">
-                <h2 style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; color: #0000FF; margin: 0 0 15px 0; font-size: 18px;">What I Can Help You With:</h2>
-                <ul style="margin: 0; padding-left: 20px; color: #09080E;">
-                    <li style="margin-bottom: 10px;"><strong>Understand your prescription</strong> — I'll explain each recommendation and why it matters</li>
-                    <li style="margin-bottom: 10px;"><strong>Create action plans</strong> — Step-by-step guidance tailored to YOUR business</li>
-                    <li style="margin-bottom: 10px;"><strong>Learn the platform</strong> — I'll teach you how to use each tool effectively</li>
-                    <li style="margin-bottom: 10px;"><strong>Answer questions anytime</strong> — Available 24/7, whenever you need guidance</li>
-                </ul>
+            <!-- Free Tour Highlight -->
+            <div style="background: white; border-radius: 12px; padding: 25px; margin: 25px 0; border: 3px solid #0000FF; text-align: center;">
+                <h2 style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; color: #0000FF; margin: 0 0 15px 0; font-size: 22px;">Your FREE Platform Tour</h2>
+                <p style="color: #09080E; margin: 0 0 15px 0; font-size: 16px;">A 5-step interactive walkthrough covering:</p>
+                <div style="text-align: left; max-width: 350px; margin: 0 auto;">
+                    <div style="padding: 8px 0; border-bottom: 1px solid #E5E7EB;">✓ How to read your prescription</div>
+                    <div style="padding: 8px 0; border-bottom: 1px solid #E5E7EB;">✓ LocalBlue tools for local visibility</div>
+                    <div style="padding: 8px 0; border-bottom: 1px solid #E5E7EB;">✓ Coach Blue AI mentorship overview</div>
+                    <div style="padding: 8px 0;">✓ CommVerse communication suite</div>
+                </div>
+                <p style="color: #666; font-size: 14px; margin: 20px 0 0 0;"><strong>100% Free</strong> • Unlimited Replays • No Credit Card Required</p>
             </div>
             
-            <!-- 3-Step Action Plan -->
-            <div style="background: white; border-radius: 12px; padding: 25px; margin: 25px 0; border: 2px solid #F97316;">
-                <h2 style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; color: #F97316; margin: 0 0 20px 0; font-size: 18px;">Your Next Steps:</h2>
-                <div style="display: flex; align-items: flex-start; margin-bottom: 15px;">
-                    <div style="background: #0000FF; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: bold; margin-right: 15px; flex-shrink: 0;">1</div>
-                    <div><strong>View Your Prescription</strong><br><span style="color: #666; font-size: 14px;">See your personalized recommendations and Digital IQ breakdown</span></div>
+            <!-- 5-Step Journey -->
+            <div style="background: white; border-radius: 12px; padding: 25px; margin: 25px 0; border-left: 4px solid #F97316;">
+                <h2 style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; color: #F97316; margin: 0 0 20px 0; font-size: 18px;">Your 5-Step Journey:</h2>
+                <div style="margin-bottom: 12px;">
+                    <span style="background: #22C55E; color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;">COMPLETE</span>
+                    <strong style="margin-left: 8px;">Step 1:</strong> Digital IQ Assessment
                 </div>
-                <div style="display: flex; align-items: flex-start; margin-bottom: 15px;">
-                    <div style="background: #0000FF; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: bold; margin-right: 15px; flex-shrink: 0;">2</div>
-                    <div><strong>Chat with Me</strong><br><span style="color: #666; font-size: 14px;">Ask questions about your prescription or how to get started</span></div>
+                <div style="margin-bottom: 12px; color: #666;">
+                    <span style="background: #0000FF; color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;">NEXT</span>
+                    <strong style="margin-left: 8px;">Step 2:</strong> Your Prescribed Blueprint
                 </div>
-                <div style="display: flex; align-items: flex-start;">
-                    <div style="background: #0000FF; color: white; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: bold; margin-right: 15px; flex-shrink: 0;">3</div>
-                    <div><strong>Start Implementing</strong><br><span style="color: #666; font-size: 14px;">I'll guide you through each step of your digital growth journey</span></div>
+                <div style="margin-bottom: 12px; color: #999;">
+                    <strong style="margin-left: 40px;">Step 3:</strong> LocalBlue (Listings + Reputation)
                 </div>
+                <div style="margin-bottom: 12px; color: #999;">
+                    <strong style="margin-left: 40px;">Step 4:</strong> Coach Blue AI Mentorship
+                </div>
+                <div style="color: #999;">
+                    <strong style="margin-left: 40px;">Step 5:</strong> CommVerse Communication Suite
+                </div>
+            </div>
+            
+            <!-- Coach Blue Preview -->
+            <div style="background: white; border-radius: 12px; padding: 25px; margin: 25px 0; border: 1px solid #E5E7EB;">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <img src="${coachBlueIcon}" alt="Coach Blue - AI Business Coach" style="width: 60px; height: 60px; border-radius: 12px;">
+                </div>
+                <h3 style="font-family: 'Archivo Semi Expanded', Arial, sans-serif; color: #0000FF; margin: 0 0 10px 0; font-size: 16px; text-align: center;">Meet Coach Blue</h3>
+                <p style="color: #666; font-size: 14px; text-align: center; margin: 0;">Your 24/7 AI business mentor is introduced in Step 4 of the tour. The tour is free — ongoing mentorship is available for <strong style="color: #F97316;">$99/month</strong> if you choose to subscribe.</p>
             </div>
             
             <!-- CTA Buttons -->
             <div style="text-align: center; margin: 35px 0;">
-                <a href="${baseUrl}/ai-coach" style="display: inline-block; background: #F97316; color: white; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 15px rgba(249,115,22,0.3); margin: 10px;">
-                    Talk to Coach Blue
+                <a href="${baseUrl}/tour?assessmentId=${data.assessmentId}" style="display: inline-block; background: #F97316; color: white; padding: 18px 40px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 15px rgba(249,115,22,0.3); margin: 10px;">
+                    Begin Your Free Tour
                 </a>
                 <br>
                 <a href="${baseUrl}/portal/prescriptions" style="display: inline-block; background: #0000FF; color: white; padding: 14px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 15px rgba(0,0,255,0.2); margin: 10px;">
-                    View My Prescription
+                    Skip to Prescription
                 </a>
             </div>
         </div>
