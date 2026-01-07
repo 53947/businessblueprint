@@ -292,14 +292,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Don't fail the assessment if email fails
       }
 
-      // Start background analysis
+      // Start background analysis (fire-and-forget with error logging)
       processAssessmentAsync(
         assessment.id,
         googleService,
         aiService,
         emailService,
         storage,
-      );
+      ).catch(err => {
+        console.error(`[Assessment] Background processing FAILED for ID ${assessment.id}:`, err);
+      });
 
       res.json({
         success: true,
@@ -3980,18 +3982,24 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
 
     try {
       const accessToken = randomBytes(32).toString('hex');
-      const [prescription] = await db.insert(prescriptions).values({
-        clientId: null,
-        assessmentId: assessmentId,
-        title: `Digital Growth Prescription for ${assessment.businessName}`,
-        summary: prescriptionSummary,
-        accessToken: accessToken,
-        status: 'delivered',
-        implementationProgress: 0,
-        deliveredAt: new Date(),
-      }).returning();
+      const client = await storage.getClientByEmail(assessment.email);
+      
+      if (!client) {
+        console.error(`[Assessment] Cannot create prescription - client not found for ${assessment.email}`);
+      } else {
+        const [prescription] = await db.insert(prescriptions).values({
+          clientId: client.id,
+          assessmentId: assessmentId,
+          title: `Digital Growth Prescription for ${assessment.businessName}`,
+          summary: prescriptionSummary,
+          accessToken: accessToken,
+          status: 'delivered',
+          implementationProgress: 0,
+          deliveredAt: new Date(),
+        }).returning();
 
-      console.log(`[Assessment] Created prescription ID ${prescription.id} with token ${accessToken.substring(0, 8)}... for assessment ${assessmentId}`);
+        console.log(`[Assessment] Created prescription ID ${prescription.id} with token ${accessToken.substring(0, 8)}... for assessment ${assessmentId}`);
+      }
     } catch (prescriptionError) {
       console.error("[Assessment] Error creating prescription:", prescriptionError);
     }

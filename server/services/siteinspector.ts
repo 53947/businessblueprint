@@ -84,6 +84,9 @@ export class SiteInspectorService {
     try {
       console.log(`[SiteInspector] Running Fast Check for: ${url}`);
       
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 30000);
+      
       const response = await fetch(`${this.baseUrl}/fast-check`, {
         method: 'POST',
         headers: {
@@ -93,8 +96,11 @@ export class SiteInspectorService {
         body: JSON.stringify({
           url,
           checks: ['comprehensive']
-        })
+        }),
+        signal: controller.signal
       });
+      
+      clearTimeout(timeout);
       
       if (!response.ok) {
         throw new Error(`SiteInspector API error: ${response.status} ${response.statusText}`);

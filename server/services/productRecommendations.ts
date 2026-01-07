@@ -114,9 +114,9 @@ export class ProductRecommendationService {
       productId: rec.productId,
       reason: rec.reason,
       priority: rec.priority,
-      currentScore: rec.currentScore,
-      projectedScore: rec.projectedScore,
-      scoreImprovement: rec.scoreImprovement,
+      currentScore: Math.round(rec.currentScore),
+      projectedScore: Math.round(rec.projectedScore),
+      scoreImprovement: Math.round(rec.scoreImprovement),
       categoryAffected: rec.categoryAffected
     }));
 

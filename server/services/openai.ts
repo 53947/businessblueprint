@@ -118,11 +118,23 @@ export class OpenAIAnalysisService {
 
       console.log(`[Business Analysis] ${provider} analysis complete. Tokens used: ${response.tokensUsed}`);
       
-      const result = JSON.parse(response.content || "{}");
+      let result;
+      try {
+        result = JSON.parse(response.content || "{}");
+      } catch (parseError) {
+        console.warn('[Business Analysis] JSON parse failed, attempting repair');
+        const cleanedContent = this.repairJSON(response.content || "{}");
+        try {
+          result = JSON.parse(cleanedContent);
+        } catch (retryError) {
+          console.error('[Business Analysis] JSON repair failed, using fallback');
+          result = this.createFallbackResult(input.businessInfo.name, input.presenceScore.overallScore);
+        }
+      }
       return this.validateAndFormatResult(result, input.presenceScore.overallScore);
     } catch (error) {
       console.error("Error analyzing business presence:", error);
-      throw new Error("Failed to analyze business presence");
+      return this.createFallbackResult(input.businessInfo.name, input.presenceScore.overallScore);
     }
   }
 
@@ -338,6 +350,64 @@ When recommending Website & SEO improvements:
 2. Recommend SiteInspector Full Report for complete analysis
 3. Recommend HostsBlue to fix infrastructure issues
 4. Then recommend LiveChat to capture leads from improved site`;
+  }
+
+  private repairJSON(content: string): string {
+    let cleaned = content
+      .replace(/[\x00-\x1F\x7F]/g, ' ')
+      .replace(/,\s*}/g, '}')
+      .replace(/,\s*]/g, ']');
+    
+    const openBraces = (cleaned.match(/{/g) || []).length;
+    const closeBraces = (cleaned.match(/}/g) || []).length;
+    if (openBraces > closeBraces) {
+      cleaned += '}'.repeat(openBraces - closeBraces);
+    }
+    
+    const openBrackets = (cleaned.match(/\[/g) || []).length;
+    const closeBrackets = (cleaned.match(/]/g) || []).length;
+    if (openBrackets > closeBrackets) {
+      cleaned += ']'.repeat(openBrackets - closeBrackets);
+    }
+    
+    return cleaned;
+  }
+
+  private createFallbackResult(businessName: string, score: number): any {
+    return {
+      digitalScore: score,
+      summary: `${businessName} has opportunities to strengthen their digital presence with our BusinessBlueprint suite of tools.`,
+      strengths: ['Business is taking steps to improve digital presence'],
+      weaknesses: ['Needs comprehensive digital strategy'],
+      recommendations: [
+        {
+          category: 'Email & SMS Marketing',
+          title: 'Start Building Your Customer Database',
+          description: 'Use Send to collect emails and SMS subscribers for direct marketing.',
+          priority: 'high',
+          productId: 'send',
+          bundleId: 'commverse'
+        },
+        {
+          category: 'Reputation Management',
+          title: 'Improve Online Reviews',
+          description: 'Use Reputation to monitor and respond to customer reviews.',
+          priority: 'high',
+          productId: 'reputation',
+          bundleId: 'localblue'
+        },
+        {
+          category: 'Business Listings',
+          title: 'Sync Business Information',
+          description: 'Use Listings to ensure consistent NAP across directories.',
+          priority: 'medium',
+          productId: 'listings',
+          bundleId: 'localblue'
+        }
+      ],
+      competitorInsights: [],
+      nextSteps: ['Complete your BusinessBlueprint assessment', 'Review product recommendations']
+    };
   }
 
   private validateAndFormatResult(result: any, baseScore: number): AnalysisResult {
