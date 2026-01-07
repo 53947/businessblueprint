@@ -191,8 +191,8 @@ Generate 12-18 PRODUCT-FOCUSED recommendations across these 9 areas:
 8. Website & SEO → Recommend: HostsBlue.com
 9. CRM Systems → Recommend: Relationships
 
-★ BUNDLE PRIORITY: If a business has weaknesses in 2+ communication areas, recommend CommVerse Bundle (productId: "commverse").
-★ BUNDLE PRIORITY: If a business has weaknesses in BOTH listings AND reputation, recommend LocalBlue Bundle (productId: "localblue").
+★ BUNDLE RULE: ONLY recommend CommVerse Bundle (productId: "commverse") if business needs ALL 4 communication tools.
+★ BUNDLE RULE: ONLY recommend LocalBlue Bundle (productId: "localblue") if business needs BOTH Listings AND Reputation.
 
 RESPOND WITH VALID JSON:
 {
@@ -271,8 +271,9 @@ PARTNER SERVICES:
 | swipesBlue    | SwipesBlue.com | 2.9%+30¢  | Payment processing             |
 
 ★★★ BUNDLE RECOMMENDATION RULES ★★★
-- If business needs 2+ communication tools → recommend "commverse" (CommVerse Bundle)
-- If business needs both listings AND reputation → recommend "localblue" (LocalBlue Bundle)
+- ONLY recommend "commverse" (CommVerse Bundle) if business needs ALL 4 communication tools (Inbox, Send, Content, LiveChat)
+- ONLY recommend "localblue" (LocalBlue Bundle) if business needs BOTH Listings AND Reputation
+- If only 1-3 communication tools needed, recommend individual apps instead
 - Bundles ARE products - use productId "commverse" or "localblue" directly
 - Always mention bundle savings in description when recommending bundles
 
