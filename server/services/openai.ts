@@ -188,7 +188,7 @@ Generate 12-18 PRODUCT-FOCUSED recommendations across these 9 areas:
 5. Live Chat → Recommend: LiveChat OR CommVerse Bundle (if multiple comm needs)
 6. Business Listings → Recommend: Listings OR LocalBlue Bundle (if also needs Reputation)
 7. Google Business Profile → Recommend: LocalBlue Bundle
-8. Website & SEO → Recommend: HostsBlue.com
+8. Website & SEO → Recommend: hostsblue (HostsBlue.com)
 9. CRM Systems → Recommend: Relationships
 
 ★ BUNDLE RULE: ONLY recommend CommVerse Bundle (productId: "commverse") if business needs ALL 4 communication tools.
@@ -267,8 +267,8 @@ BUSINESS OPERATIONS:
 PARTNER SERVICES:
 | productId     | Display Name   | Price     | Use For                        |
 |---------------|----------------|-----------|--------------------------------|
-| hostsBlue     | HostsBlue.com  | Varies    | Web hosting, domains, SSL      |
-| swipesBlue    | SwipesBlue.com | 2.9%+30¢  | Payment processing             |
+| hostsblue     | HostsBlue.com  | Varies    | Web hosting, domains, SSL      |
+| swipesblue    | SwipesBlue.com | 2.9%+30¢  | Payment processing             |
 
 ★★★ BUNDLE RECOMMENDATION RULES ★★★
 - ONLY recommend "commverse" (CommVerse Bundle) if business needs ALL 4 communication tools (Inbox, Send, Content, LiveChat)

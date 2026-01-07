@@ -3783,6 +3783,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Payment Processing Routes
   registerPaymentRoutes(app);
 
+  // Test Email Endpoint (Admin only - for reviewing email templates)
+  app.post("/api/admin/test-emails", async (req, res) => {
+    try {
+      const { email, assessmentId } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ error: "Email address is required" });
+      }
+      
+      // Get a real assessment for realistic data, or use defaults
+      let testData = {
+        businessName: "Demo Business",
+        digitalScore: 65,
+        assessmentId: assessmentId || 1,
+        summary: "Your business shows strong potential but has room for improvement in digital presence.",
+        recommendations: [
+          { category: "Email & SMS Marketing", title: "Start email campaigns", description: "Begin collecting emails and sending regular newsletters", priority: "high", productId: "send" },
+          { category: "Social Media Content", title: "Increase posting frequency", description: "Post 3-5 times per week on social media", priority: "high", productId: "content" },
+          { category: "Reputation Management", title: "Respond to reviews", description: "Reply to all customer reviews within 24 hours", priority: "medium", productId: "reputation" },
+        ]
+      };
+      
+      if (assessmentId) {
+        const assessment = await storage.getAssessment(Number(assessmentId));
+        if (assessment) {
+          testData = {
+            businessName: assessment.businessName,
+            digitalScore: assessment.digitalScore || 65,
+            assessmentId: assessment.id,
+            summary: (assessment.analysisResults as any)?.summary || testData.summary,
+            recommendations: (assessment.analysisResults as any)?.recommendations || testData.recommendations,
+          };
+        }
+      }
+      
+      console.log(`[Test Email] Sending test emails to ${email}...`);
+      
+      // Send Assessment Report email
+      const reportSent = await emailService.sendAssessmentReport(email, testData);
+      console.log(`[Test Email] Assessment Report: ${reportSent ? 'SENT' : 'FAILED'}`);
+      
+      // Send Coach Blue Introduction email
+      const coachSent = await emailService.sendThankYouIntroduction(email, {
+        businessName: testData.businessName,
+        assessmentId: testData.assessmentId,
+      });
+      console.log(`[Test Email] Coach Blue Intro: ${coachSent ? 'SENT' : 'FAILED'}`);
+      
+      res.json({
+        success: true,
+        results: {
+          assessmentReport: reportSent,
+          coachBlueIntro: coachSent,
+        },
+        message: `Test emails sent to ${email}`,
+      });
+    } catch (error) {
+      console.error("[Test Email] Error:", error);
+      res.status(500).json({ error: "Failed to send test emails" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

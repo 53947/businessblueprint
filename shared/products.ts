@@ -160,8 +160,8 @@ export const PRODUCTS: Record<string, Product> = {
     icon: '/assets/approved icons and logos/Additional Apps/approved-apps-relationship-icon.png',
     url: '/products/relationships'
   },
-  coachBlue: {
-    id: 'coachBlue',
+  coachblue: {
+    id: 'coachblue',
     name: 'Coach Blue',
     description: 'Your 24/7 AI Business Guide - Personalized guidance based on YOUR business',
     price: '$99/mo',
@@ -175,9 +175,9 @@ export const PRODUCTS: Record<string, Product> = {
     ],
     url: '/products/coach-blue'
   },
-  hostsBlue: {
-    id: 'hostsBlue',
-    name: 'HostsBlue',
+  hostsblue: {
+    id: 'hostsblue',
+    name: 'HostsBlue.com',
     description: 'Complete Web Services - Domain, hosting, email, website builder',
     price: 'Varies',
     priceValue: 0,
@@ -192,9 +192,9 @@ export const PRODUCTS: Record<string, Product> = {
     url: 'https://hostsblue.com',
     isPartner: true
   },
-  swipesBlue: {
-    id: 'swipesBlue',
-    name: 'SwipesBlue',
+  swipesblue: {
+    id: 'swipesblue',
+    name: 'SwipesBlue.com',
     description: 'Payment Processing and E-commerce - Integrated payment gateway',
     price: '2.9% + 30¢',
     priceValue: 0,
@@ -208,8 +208,8 @@ export const PRODUCTS: Record<string, Product> = {
     url: 'https://swipesblue.com',
     isPartner: true
   },
-  siteInspector: {
-    id: 'siteInspector',
+  siteinspector: {
+    id: 'siteinspector',
     name: 'SiteInspector',
     description: 'Website Analysis Tool - Professional-grade website audits',
     price: 'Free',
@@ -273,7 +273,7 @@ export const CATEGORY_PRODUCT_MAP: Record<string, { primary: string; bundle?: st
   'Live Chat': { primary: 'livechat', bundle: 'commverse' },
   'Business Listings': { primary: 'listings', bundle: 'localblue' },
   'Google Business Profile': { primary: 'localblue', bundle: 'localblue' },
-  'Website & SEO': { primary: 'hostsBlue', secondary: ['siteInspector', 'livechat'] },
+  'Website & SEO': { primary: 'hostsblue', secondary: ['siteinspector', 'livechat'] },
   'CRM Systems': { primary: 'relationships' }
 };
 
