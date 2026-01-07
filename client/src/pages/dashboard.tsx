@@ -9,6 +9,9 @@ import { useToast } from "@/hooks/use-toast";
 import { DigitalBlueprint } from "@/components/digital-blueprint";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { SiteInspectorResults } from "@/components/siteinspector-results";
+import { ProductCategorySection } from "@/components/product-recommendation-card";
+import { CoachBlueCTA } from "@/components/coach-blue-cta";
 import { 
   BarChart3, 
   Star, 
@@ -40,8 +43,57 @@ export default function Dashboard() {
     enabled: !!assessmentId
   });
 
+  const { data: siteInspectorData } = useQuery({
+    queryKey: [`/api/siteinspector/results/${assessmentId}`],
+    enabled: !!assessmentId && !!(data as any)?.assessment
+  });
+
   const selectPathway = (pathway: string) => {
     window.location.href = `/assessment-checkout?id=${assessmentId}&pathway=${pathway}`;
+  };
+
+  const normalizeCategory = (category: string): string => {
+    const categoryMap: Record<string, string> = {
+      'WEBSITE & SEO': 'Website & SEO',
+      'WEBSITE_AND_SEO': 'Website & SEO',
+      'GOOGLE BUSINESS PROFILE': 'Google Business Profile',
+      'GOOGLE_BUSINESS_PROFILE': 'Google Business Profile',
+      'BUSINESS LISTINGS': 'Business Listings',
+      'BUSINESS_LISTINGS': 'Business Listings',
+      'REPUTATION MANAGEMENT': 'Reputation Management',
+      'REPUTATION_MANAGEMENT': 'Reputation Management',
+      'EMAIL & SMS MARKETING': 'Email & SMS Marketing',
+      'EMAIL_AND_SMS_MARKETING': 'Email & SMS Marketing',
+      'SOCIAL MEDIA CONTENT': 'Social Media Content',
+      'SOCIAL_MEDIA_CONTENT': 'Social Media Content',
+      'CUSTOMER RESPONSE & TIMING': 'Customer Response & Timing',
+      'CUSTOMER_RESPONSE_AND_TIMING': 'Customer Response & Timing',
+      'LIVE CHAT': 'Live Chat',
+      'LIVE_CHAT': 'Live Chat',
+      'ANALYTICS & TRACKING': 'Analytics & Tracking',
+      'ANALYTICS_AND_TRACKING': 'Analytics & Tracking',
+    };
+    return categoryMap[category] || category;
+  };
+
+  const groupRecommendationsByCategory = (recs: any[]) => {
+    const grouped: Record<string, any[]> = {};
+    recs.forEach(rec => {
+      const category = normalizeCategory(rec.category || 'General');
+      if (!grouped[category]) grouped[category] = [];
+      grouped[category].push(rec);
+    });
+    return grouped;
+  };
+
+  const getBundleAdvantage = (category: string): string | null => {
+    if (['Email & SMS Marketing', 'Social Media Content', 'Customer Response & Timing', 'Live Chat'].includes(category)) {
+      return 'Get all communication tools in the CommVerse bundle for $99/month - that\'s all four apps in one integrated platform. Save $37 compared to buying separately.';
+    }
+    if (['Business Listings', 'Reputation Management', 'Google Business Profile'].includes(category)) {
+      return 'Get complete local SEO control with LocalBlue for $59/month - includes listings management, reputation monitoring, and Google Business Profile optimization. Save $19/month.';
+    }
+    return null;
   };
 
 
@@ -383,12 +435,49 @@ export default function Dashboard() {
               </Card>
             )}
 
+            {/* SiteInspector Technical Results */}
+            {siteInspectorData && (
+              <SiteInspectorResults 
+                results={siteInspectorData as any}
+                websiteUrl={assessment.website}
+              />
+            )}
+
             {/* Digital Blueprint */}
             <DigitalBlueprint 
               assessment={assessment}
               recommendations={recommendations}
               onSelectPathway={selectPathway}
             />
+
+            {/* Product Recommendations by Category */}
+            {recommendations.length > 0 && (
+              <Card className="mt-6" data-testid="product-recommendations-section">
+                <CardHeader className="bg-gradient-to-r from-[#09080E] to-[#0000FF] text-white rounded-t-lg">
+                  <CardTitle style={{ fontFamily: 'Archivo, sans-serif' }}>
+                    Your Personalized Prescription
+                  </CardTitle>
+                  <p className="text-[#EEFBFF] text-sm">
+                    Product recommendations tailored to your Digital IQ assessment
+                  </p>
+                </CardHeader>
+                <CardContent className="pt-6 bg-[#EEFBFF]/30">
+                  {Object.entries(groupRecommendationsByCategory(recommendations)).map(([category, recs]) => (
+                    <ProductCategorySection
+                      key={category}
+                      category={category}
+                      recommendations={recs}
+                      bundleAdvantage={getBundleAdvantage(category) || undefined}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Coach Blue CTA */}
+            <div className="mt-6">
+              <CoachBlueCTA />
+            </div>
           </div>
 
           {/* Sidebar */}
