@@ -1,5 +1,6 @@
 import { unifiedAI } from './ai-provider';
 import { aiSettingsService } from './ai-settings';
+import { siteInspectorService } from './siteinspector';
 
 interface CoachingContext {
   businessInfo: {
@@ -37,8 +38,37 @@ interface CoachingResponse {
 }
 
 export class AICoachService {
+  private getProductKnowledgeContext(): string {
+    return `
+BUSINESSBLUEPRINT PRODUCT CATALOG (recommend these products when relevant):
+
+COMMVERSE BUNDLE ($99/mo - Save $37 vs buying separately):
+- /send: Email & SMS marketing with automation and analytics - for businesses needing email campaigns
+- /inbox: Unified inbox for email, SMS, social, chat - never miss a message
+- /content: Social media scheduling, AI content creation, engagement tracking
+- /livechat: Website chat widget for real-time support and lead capture
+
+LOCALBLUE BUNDLE ($59/mo - Complete local SEO):
+- /listings: Manage 50+ directory listings, NAP consistency - for businesses with inconsistent listings
+- /reputation: Review monitoring, automated requests, response management - for review problems
+- /localblue: Complete package including GBP optimization
+
+STANDALONE:
+- /relationships: CRM for customer tracking, pipelines, follow-ups ($29/mo, free tier available)
+
+PARTNERS:
+- HostsBlue (hostsblue.com): Web hosting, domains, website builder, SSL - for website issues
+- SwipesBlue (swipesblue.com): Payment processing, shopping cart
+- SiteInspector (siteinspector.dev): Website technical analysis, speed/mobile/SEO audits
+
+When giving advice, naturally mention relevant products that solve the user's problem.
+Example: "To improve your review response rate, I'd recommend using our Reputation tool at /reputation - it automates review requests and helps you respond faster."
+`;
+  }
+
   async getPersonalizedGuidance(context: CoachingContext): Promise<CoachingResponse> {
     const prompt = this.buildCoachingPrompt(context);
+    const productKnowledge = this.getProductKnowledgeContext();
     
     try {
       const provider = await aiSettingsService.getProvider('coach_blue');
@@ -48,15 +78,16 @@ export class AICoachService {
         messages: [
           {
             role: "system",
-            content: `You are Coach Blue, an expert digital marketing coach specializing in helping small businesses improve their online presence. You provide encouraging, actionable, and personalized guidance based on their current situation and experience level.
+            content: `You are Coach Blue, an expert digital marketing coach for BusinessBlueprint.io. You help small businesses improve their online presence with encouraging, actionable guidance.
 
 Key principles:
 - Be supportive and motivational
 - Break down complex tasks into simple steps
 - Consider their time constraints and experience
-- Focus on high-impact, low-cost strategies for DIY users
-- Provide specific, actionable advice
-- Celebrate their progress and acknowledge challenges`
+- When recommending solutions, suggest BusinessBlueprint products that solve their specific problem
+- Celebrate their progress and acknowledge challenges
+
+${productKnowledge}`
           },
           {
             role: "user",
@@ -75,6 +106,67 @@ Key principles:
     } catch (error) {
       console.error("Error getting AI coaching:", error);
       return this.getFallbackGuidance(context);
+    }
+  }
+
+  async getTechnicalWebsiteHelp(question: string, websiteUrl?: string): Promise<{
+    answer: string;
+    technicalDetails?: string;
+    recommendedProducts: string[];
+  }> {
+    try {
+      const provider = await aiSettingsService.getProvider('coach_blue');
+      
+      let technicalContext = '';
+      if (websiteUrl) {
+        const auditorResponse = await siteInspectorService.chatWithAuditor(question, { url: websiteUrl });
+        if (auditorResponse) {
+          technicalContext = `\n\nTechnical Analysis from SiteInspector:\n${auditorResponse.response}`;
+        }
+      }
+      
+      const response = await unifiedAI.getCompletion(provider, {
+        messages: [
+          {
+            role: "system",
+            content: `You are Coach Blue helping with technical website questions. Provide helpful, non-technical explanations. When relevant, recommend BusinessBlueprint products:
+- HostsBlue (hostsblue.com) for hosting, domains, SSL issues
+- SiteInspector (siteinspector.dev) for detailed technical audits
+- /livechat for adding live chat to capture leads`
+          },
+          {
+            role: "user",
+            content: `Question: ${question}${technicalContext}`
+          }
+        ],
+        temperature: 0.5,
+        maxTokens: 1000
+      });
+
+      const products: string[] = [];
+      const content = response.content || '';
+      
+      if (content.toLowerCase().includes('hostsblue') || content.toLowerCase().includes('hosting')) {
+        products.push('hostsBlue');
+      }
+      if (content.toLowerCase().includes('siteinspector') || content.toLowerCase().includes('audit')) {
+        products.push('siteInspector');
+      }
+      if (content.toLowerCase().includes('livechat') || content.toLowerCase().includes('chat')) {
+        products.push('livechat');
+      }
+
+      return {
+        answer: content,
+        technicalDetails: technicalContext || undefined,
+        recommendedProducts: products
+      };
+    } catch (error) {
+      console.error('[Coach Blue] Technical help error:', error);
+      return {
+        answer: 'I can help with website questions! For detailed technical analysis, I recommend running a SiteInspector audit at siteinspector.dev.',
+        recommendedProducts: ['siteInspector']
+      };
     }
   }
 

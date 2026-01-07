@@ -17,6 +17,24 @@ import * as https from 'https';
 import * as ipaddr from 'ipaddr.js';
 import { googlePlacesService } from './googlePlaces';
 import { yelpApiService } from './yelpApi';
+import { siteInspectorService } from './siteinspector';
+
+interface SiteInspectorFastCheck {
+  overallScore: number;
+  sslPresent: boolean;
+  sslValid: boolean;
+  loadTime: number;
+  performanceScore: number;
+  mobileOptimized: boolean;
+  mobileScore: number;
+  criticalIssues: Array<{
+    type: string;
+    severity: string;
+    issue: string;
+    impact: string;
+    recommendation: string;
+  }>;
+}
 
 interface ScanResult {
   overall: {
@@ -29,6 +47,7 @@ interface ScanResult {
   directories: DirectoryScan;
   reviews: ReviewScan;
   recommendations: string[];
+  siteInspector?: SiteInspectorFastCheck;
 }
 
 interface WebsiteScan {
@@ -138,7 +157,7 @@ export class PresenceScannerService {
   }): Promise<ScanResult> {
     console.log(`🔍 Starting presence scan for: ${params.businessName}`);
 
-    const [website, socialMedia, directories, reviews] = await Promise.all([
+    const [website, socialMedia, directories, reviews, siteInspectorData] = await Promise.all([
       this.scanWebsite(params.website),
       this.scanSocialMedia(params.businessName),
       this.scanDirectories(params),
@@ -147,6 +166,7 @@ export class PresenceScannerService {
         address: params.address,
         phone: params.phone,
       }),
+      this.runSiteInspectorFastCheck(params.website),
     ]);
 
     const digitalIQScore = this.calculateDigitalIQ({
@@ -154,6 +174,7 @@ export class PresenceScannerService {
       socialMedia,
       directories,
       reviews,
+      siteInspector: siteInspectorData,
     });
 
     const recommendations = this.generateRecommendations({
@@ -174,7 +195,42 @@ export class PresenceScannerService {
       directories,
       reviews,
       recommendations,
+      siteInspector: siteInspectorData || undefined,
     };
+  }
+
+  private async runSiteInspectorFastCheck(websiteUrl?: string): Promise<SiteInspectorFastCheck | null> {
+    if (!websiteUrl) {
+      console.log('[SiteInspector] No website URL provided, skipping Fast Check');
+      return null;
+    }
+
+    try {
+      console.log(`[SiteInspector] Running Fast Check for: ${websiteUrl}`);
+      const result = await siteInspectorService.runFastCheck(websiteUrl);
+      
+      if (!result || !result.results) {
+        console.log('[SiteInspector] Fast Check returned no results');
+        return null;
+      }
+
+      const overallScore = result.results.summary?.overallScore || 0;
+      console.log(`[SiteInspector] Fast Check complete - Score: ${overallScore}/100`);
+      
+      return {
+        overallScore,
+        sslPresent: result.results.ssl?.present || false,
+        sslValid: result.results.ssl?.valid || false,
+        loadTime: result.results.performance?.loadTime || 0,
+        performanceScore: result.results.performance?.score || 0,
+        mobileOptimized: result.results.mobile?.optimized || false,
+        mobileScore: result.results.mobile?.score || 0,
+        criticalIssues: result.results.criticalIssues || [],
+      };
+    } catch (error) {
+      console.error('[SiteInspector] Fast Check error:', error);
+      return null;
+    }
   }
 
   /**
@@ -711,15 +767,22 @@ export class PresenceScannerService {
     socialMedia: SocialMediaScan;
     directories: DirectoryScan;
     reviews: ReviewScan;
+    siteInspector?: SiteInspectorFastCheck | null;
   }): number {
-    const websitePoints = (data.website.score / 100) * 21;
-    const directoriesPoints = (data.directories.score / 100) * 21;
-    const reviewsPoints = (data.reviews.score / 100) * 17.5;
-    const socialPoints = (data.socialMedia.score / 100) * 10.5;
-
-    const scanTotal = Math.round(websitePoints + directoriesPoints + reviewsPoints + socialPoints);
+    const websitePoints = (data.website.score / 100) * 18;
+    const directoriesPoints = (data.directories.score / 100) * 18;
+    const reviewsPoints = (data.reviews.score / 100) * 16;
+    const socialPoints = (data.socialMedia.score / 100) * 8;
     
-    console.log(`📊 Digital IQ Scan Breakdown: Website=${websitePoints.toFixed(1)}, Directories=${directoriesPoints.toFixed(1)}, Reviews=${reviewsPoints.toFixed(1)}, Social=${socialPoints.toFixed(1)}, Scan Total=${scanTotal}/70`);
+    let siteInspectorPoints = 0;
+    if (data.siteInspector) {
+      siteInspectorPoints = Math.min(10, (data.siteInspector.overallScore / 100) * 10);
+      console.log(`[SiteInspector] Technical points: ${siteInspectorPoints.toFixed(1)}/10`);
+    }
+
+    const scanTotal = Math.round(websitePoints + directoriesPoints + reviewsPoints + socialPoints + siteInspectorPoints);
+    
+    console.log(`📊 Digital IQ Scan Breakdown: Website=${websitePoints.toFixed(1)}/18, Directories=${directoriesPoints.toFixed(1)}/18, Reviews=${reviewsPoints.toFixed(1)}/16, Social=${socialPoints.toFixed(1)}/8, SiteInspector=${siteInspectorPoints.toFixed(1)}/10, Scan Total=${scanTotal}/70`);
     
     return Math.min(70, Math.max(0, scanTotal));
   }
