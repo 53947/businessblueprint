@@ -112,7 +112,7 @@ export class OpenAIAnalysisService {
           }
         ],
         responseFormat: 'json',
-        temperature: 0.7,
+        temperature: 0.2,
         maxTokens: 3000
       });
 
@@ -188,7 +188,7 @@ Generate 12-18 PRODUCT-FOCUSED recommendations across these 9 areas:
 5. Live Chat → Recommend: LiveChat (bundle: CommVerse)
 6. Business Listings → Recommend: Listings (bundle: LocalBlue)
 7. Google Business Profile → Recommend: LocalBlue Complete
-8. Website & SEO → Recommend: HostsBlue + SiteInspector
+8. Website & SEO → Recommend: HostsBlue.com
 9. CRM Systems → Recommend: Relationships
 
 RESPOND WITH VALID JSON:
@@ -216,7 +216,7 @@ RESPOND WITH VALID JSON:
       "priority": "high" | "medium" | "low",
       "estimatedImpact": "High ROI" | "Medium ROI" | "Long-term benefit",
       "estimatedEffort": "Quick setup" | "1-2 days" | "1-2 weeks" | "Ongoing",
-      "productId": "send" | "inbox" | "content" | "livechat" | "listings" | "reputation" | "localblue" | "relationships" | "hostsBlue" | "siteInspector",
+      "productId": "send" | "inbox" | "content" | "livechat" | "listings" | "reputation" | "localblue" | "relationships" | "hostsBlue" | "swipesBlue",
       "bundleId": "commverse" | "localblue" | null,
       "productBenefits": ["benefit 1", "benefit 2", "benefit 3"],
       "bundleAdvantage": "Save with CommVerse bundle..." or null
@@ -230,26 +230,56 @@ RESPOND WITH VALID JSON:
 
   private buildProductCatalogContext(): string {
     return `
-BUSINESSBLUEPRINT PRODUCT CATALOG:
+═══════════════════════════════════════════════════════════════════════════════
+⚠️ CRITICAL: AUTHORIZED PRODUCTS WHITELIST - NO EXCEPTIONS ⚠️
+═══════════════════════════════════════════════════════════════════════════════
 
-COMMVERSE BUNDLE ($99/mo - Save $37 vs buying separately):
-- inbox: Unified inbox for email, SMS, social, chat - never miss a message
-- send: Email & SMS marketing with automation and analytics
-- content: Social media scheduling, AI content creation, engagement tracking
-- livechat: Website chat widget for real-time support and lead capture
+You may ONLY recommend products with these EXACT productId values:
 
-LOCALBLUE BUNDLE ($59/mo - Complete local SEO):
-- listings: Manage 50+ directory listings, NAP consistency
-- reputation: Review monitoring, automated requests, response management
-- localblue: Complete package including GBP optimization
+COMMUNICATION TOOLS (CommVerse Bundle - bundleId: "commverse"):
+| productId   | Display Name | Price    | Use For                              |
+|-------------|--------------|----------|--------------------------------------|
+| inbox       | Inbox        | $34/mo   | Unified inbox, message consolidation |
+| send        | Send         | $34/mo   | Email & SMS marketing                |
+| content     | Content      | $34/mo   | Social media scheduling & creation   |
+| livechat    | LiveChat     | $34/mo   | Website chat widget, lead capture    |
 
-STANDALONE:
-- relationships: CRM for customer tracking, pipelines, follow-ups ($29/mo, free tier available)
+LOCAL PRESENCE TOOLS (LocalBlue Bundle - bundleId: "localblue"):
+| productId   | Display Name | Price    | Use For                              |
+|-------------|--------------|----------|--------------------------------------|
+| listings    | Listings     | $39/mo   | Directory sync, NAP consistency      |
+| reputation  | Reputation   | $39/mo   | Review monitoring & response         |
+| localblue   | LocalBlue    | $59/mo   | Complete local SEO package           |
 
-PARTNERS (recommend when appropriate):
-- hostsBlue: Web hosting, domains, website builder, SSL (hostsblue.com)
-- swipesBlue: Payment processing, shopping cart (swipesblue.com)
-- siteInspector: Website technical analysis, speed/mobile/SEO audits (siteinspector.dev)
+BUSINESS OPERATIONS:
+| productId      | Display Name      | Price    | Use For                    |
+|----------------|-------------------|----------|----------------------------|
+| relationships  | Relationships CRM | $29/mo   | Customer tracking, pipeline |
+
+PARTNER SERVICES:
+| productId     | Display Name   | Price     | Use For                        |
+|---------------|----------------|-----------|--------------------------------|
+| hostsBlue     | HostsBlue.com  | Varies    | Web hosting, domains, SSL      |
+| swipesBlue    | SwipesBlue.com | 2.9%+30¢  | Payment processing             |
+
+BUNDLES (use bundleId, not productId):
+| bundleId   | Display Name         | Products Included                    |
+|------------|---------------------|--------------------------------------|
+| commverse  | (CommVerse Bundle)  | inbox, send, content, livechat       |
+| localblue  | (LocalBlue Bundle)  | listings, reputation                 |
+
+═══════════════════════════════════════════════════════════════════════════════
+🚫 FORBIDDEN - DO NOT DO ANY OF THESE:
+═══════════════════════════════════════════════════════════════════════════════
+- DO NOT invent products that don't exist in the table above
+- DO NOT use product names like "Store Locator", "Captaining Journey", etc.
+- DO NOT recommend competitors (Mailchimp, HubSpot, etc.)
+- DO NOT create generic/fake productIds
+- DO NOT recommend products without a valid productId from the table above
+
+EVERY recommendation MUST have a productId from the whitelist above.
+If you can't find a matching product, DO NOT create a fake one.
+═══════════════════════════════════════════════════════════════════════════════
 `;
   }
 
@@ -347,9 +377,8 @@ ${issues.slice(0, 5).map(i => `- [${i.severity.toUpperCase()}] ${i.issue}: ${i.i
 
 When recommending Website & SEO improvements:
 1. Reference these SPECIFIC technical issues
-2. Recommend SiteInspector Full Report for complete analysis
-3. Recommend HostsBlue to fix infrastructure issues
-4. Then recommend LiveChat to capture leads from improved site`;
+2. Recommend HostsBlue.com to fix infrastructure issues (hosting, SSL, performance)
+3. Then recommend LiveChat to capture leads from improved site`;
   }
 
   private repairJSON(content: string): string {
@@ -411,24 +440,49 @@ When recommending Website & SEO improvements:
   }
 
   private validateAndFormatResult(result: any, baseScore: number): AnalysisResult {
+    const rawRecommendations = Array.isArray(result.recommendations) ? result.recommendations : [];
+    const validatedRecommendations: any[] = [];
+    const rejectedCount = { count: 0, products: [] as string[] };
+    
+    for (const rec of rawRecommendations) {
+      const validated = this.validateRecommendation(rec, rejectedCount);
+      if (validated !== null) {
+        validatedRecommendations.push(validated);
+      }
+    }
+    
+    console.log(`[Product Validation] ${validatedRecommendations.length}/${rawRecommendations.length} recommendations passed validation`);
+    
+    if (rejectedCount.count > 0) {
+      console.error(`[PRODUCT HALLUCINATION SUMMARY] ${rejectedCount.count} invalid products rejected: ${rejectedCount.products.join(', ')}`);
+    }
+    
+    if (validatedRecommendations.length === 0 && rawRecommendations.length > 0) {
+      console.error('[CRITICAL] ALL AI recommendations were hallucinations - using fallback recommendations');
+      throw new Error('AI returned 100% hallucinated products - analysis failed');
+    }
+    
     return {
       digitalScore: result.digitalScore || baseScore,
       summary: result.summary || "Your business has significant potential for digital growth with our BusinessBlueprint tools.",
       strengths: Array.isArray(result.strengths) ? result.strengths : [],
       weaknesses: Array.isArray(result.weaknesses) ? result.weaknesses : [],
-      recommendations: Array.isArray(result.recommendations) 
-        ? result.recommendations.map(this.validateRecommendation)
-        : [],
+      recommendations: validatedRecommendations,
       competitorInsights: Array.isArray(result.competitorInsights) ? result.competitorInsights : [],
       nextSteps: Array.isArray(result.nextSteps) ? result.nextSteps : [],
       areaScores: result.areaScores || undefined
     };
   }
 
-  private validateRecommendation(rec: any): any {
-    const validProducts = ['send', 'inbox', 'content', 'livechat', 'listings', 'reputation', 'localblue', 'relationships', 'hostsBlue', 'siteInspector', 'swipesBlue', 'coachBlue'];
-    const validBundles = ['commverse', 'localblue'];
-    const validCategories = [
+  private validateRecommendation(rec: any, rejectedCount?: { count: number; products: string[] }): any | null {
+    const VALID_PRODUCT_IDS = [
+      'inbox', 'send', 'content', 'livechat',
+      'listings', 'reputation', 'localblue',
+      'relationships',
+      'hostsBlue', 'swipesBlue'
+    ];
+    const VALID_BUNDLE_IDS = ['commverse', 'localblue'];
+    const VALID_CATEGORIES = [
       'Email & SMS Marketing',
       'Social Media Content', 
       'Reputation Management',
@@ -440,15 +494,32 @@ When recommending Website & SEO improvements:
       'CRM Systems'
     ];
     
+    const productId = rec.productId;
+    
+    if (!productId || !VALID_PRODUCT_IDS.includes(productId)) {
+      console.error(`[PRODUCT HALLUCINATION DETECTED] AI attempted to recommend invalid product: "${productId}" - REJECTED`);
+      console.error(`[PRODUCT HALLUCINATION DETAILS] Title: "${rec.title}", Category: "${rec.category}"`);
+      if (rejectedCount) {
+        rejectedCount.count++;
+        rejectedCount.products.push(productId || 'undefined');
+      }
+      return null;
+    }
+    
+    const bundleId = rec.bundleId;
+    if (bundleId && !VALID_BUNDLE_IDS.includes(bundleId)) {
+      console.warn(`[BUNDLE VALIDATION] Invalid bundleId "${bundleId}" stripped from recommendation`);
+    }
+    
     return {
-      category: validCategories.includes(rec.category) ? rec.category : 'general',
+      category: VALID_CATEGORIES.includes(rec.category) ? rec.category : 'general',
       title: rec.title || "Improve Digital Presence",
       description: rec.description || "Work on improving your online visibility with our tools",
       priority: ["high", "medium", "low"].includes(rec.priority) ? rec.priority : "medium",
       estimatedImpact: rec.estimatedImpact || "Medium ROI",
       estimatedEffort: rec.estimatedEffort || "1-2 weeks",
-      productId: validProducts.includes(rec.productId) ? rec.productId : undefined,
-      bundleId: validBundles.includes(rec.bundleId) ? rec.bundleId : undefined,
+      productId: productId,
+      bundleId: VALID_BUNDLE_IDS.includes(bundleId) ? bundleId : undefined,
       productBenefits: Array.isArray(rec.productBenefits) ? rec.productBenefits : [],
       bundleAdvantage: rec.bundleAdvantage || undefined
     };
