@@ -204,11 +204,14 @@ export class DatabaseStorage implements IStorage {
 
   async createAssessment(assessmentData: InsertAssessment): Promise<Assessment> {
     // Compute legacy location field from city and state for backwards compatibility
+    // Fall back to address if city/state not provided, or "Not specified" as last resort
+    const computedLocation = assessmentData.city && assessmentData.state 
+      ? `${assessmentData.city}, ${assessmentData.state}`
+      : (assessmentData.address || "Not specified");
+      
     const dataWithLocation = {
       ...assessmentData,
-      location: assessmentData.city && assessmentData.state 
-        ? `${assessmentData.city}, ${assessmentData.state}` 
-        : undefined,
+      location: computedLocation,
     };
     
     const [assessment] = await db

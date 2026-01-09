@@ -463,12 +463,45 @@ When recommending Website & SEO improvements:
     console.log(`[Product Validation] ${validatedRecommendations.length}/${rawRecommendations.length} recommendations passed validation`);
     
     if (rejectedCount.count > 0) {
-      console.error(`[PRODUCT HALLUCINATION SUMMARY] ${rejectedCount.count} invalid products rejected: ${rejectedCount.products.join(', ')}`);
+      console.warn(`[PRODUCT VALIDATION SUMMARY] ${rejectedCount.count} invalid products filtered out: ${rejectedCount.products.join(', ')}`);
     }
     
+    // If all recommendations were invalid, use fallback instead of throwing
     if (validatedRecommendations.length === 0 && rawRecommendations.length > 0) {
-      console.error('[CRITICAL] ALL AI recommendations were hallucinations - using fallback recommendations');
-      throw new Error('AI returned 100% hallucinated products - analysis failed');
+      console.warn('[PRODUCT VALIDATION] All AI recommendations had invalid products - using fallback recommendations');
+      validatedRecommendations.push(
+        {
+          category: 'Email & SMS Marketing',
+          title: 'Build Your Email List',
+          description: 'Start collecting customer emails to build relationships and drive repeat business.',
+          priority: 'high',
+          estimatedImpact: 'High ROI',
+          estimatedEffort: '1-2 weeks',
+          productId: 'send',
+          productBenefits: ['Automated campaigns', 'Customer retention', 'Revenue growth']
+        },
+        {
+          category: 'Social Media Content',
+          title: 'Consistent Content Creation',
+          description: 'Post regularly on social media to stay top of mind with your audience.',
+          priority: 'medium',
+          estimatedImpact: 'Medium ROI',
+          estimatedEffort: '2-4 weeks',
+          productId: 'content',
+          productBenefits: ['Brand awareness', 'Engagement', 'Lead generation']
+        },
+        {
+          category: 'Reputation Management',
+          title: 'Monitor and Respond to Reviews',
+          description: 'Build trust by responding to customer reviews promptly.',
+          priority: 'medium',
+          estimatedImpact: 'High trust-building',
+          estimatedEffort: '1 week',
+          productId: 'reputation',
+          bundleId: 'localblue',
+          productBenefits: ['Customer trust', 'SEO benefits', 'Insight gathering']
+        }
+      );
     }
     
     return {
@@ -484,11 +517,12 @@ When recommending Website & SEO improvements:
   }
 
   private validateRecommendation(rec: any, rejectedCount?: { count: number; products: string[] }): any | null {
+    // All product IDs are lowercase for case-insensitive matching
     const VALID_PRODUCT_IDS = [
       'inbox', 'send', 'content', 'livechat', 'commverse',
       'listings', 'reputation', 'localblue',
       'relationships',
-      'hostsBlue', 'swipesBlue'
+      'hostsblue', 'swipesblue'  // Lowercase for consistent matching
     ];
     const VALID_BUNDLE_IDS = ['commverse', 'localblue'];
     const VALID_CATEGORIES = [
@@ -503,21 +537,24 @@ When recommending Website & SEO improvements:
       'CRM Systems'
     ];
     
-    const productId = rec.productId;
+    // Normalize product ID to lowercase for comparison
+    const rawProductId = rec.productId;
+    const productId = rawProductId?.toLowerCase?.() || rawProductId;
     
     if (!productId || !VALID_PRODUCT_IDS.includes(productId)) {
-      console.error(`[PRODUCT HALLUCINATION DETECTED] AI attempted to recommend invalid product: "${productId}" - REJECTED`);
-      console.error(`[PRODUCT HALLUCINATION DETAILS] Title: "${rec.title}", Category: "${rec.category}"`);
+      console.warn(`[PRODUCT VALIDATION] Invalid product: "${rawProductId}" - filtering out recommendation`);
       if (rejectedCount) {
         rejectedCount.count++;
-        rejectedCount.products.push(productId || 'undefined');
+        rejectedCount.products.push(rawProductId || 'undefined');
       }
       return null;
     }
     
-    const bundleId = rec.bundleId;
-    if (bundleId && !VALID_BUNDLE_IDS.includes(bundleId)) {
-      console.warn(`[BUNDLE VALIDATION] Invalid bundleId "${bundleId}" stripped from recommendation`);
+    // Normalize bundle ID to lowercase
+    const rawBundleId = rec.bundleId;
+    const bundleId = rawBundleId?.toLowerCase?.() || rawBundleId;
+    if (rawBundleId && !VALID_BUNDLE_IDS.includes(bundleId)) {
+      console.warn(`[BUNDLE VALIDATION] Invalid bundleId "${rawBundleId}" stripped from recommendation`);
     }
     
     return {

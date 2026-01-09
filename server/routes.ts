@@ -3988,39 +3988,97 @@ async function processAssessmentAsync(
       productRecommendations,
     );
 
-    // Get AI analysis (enhanced with our scan data)
+    // Get AI analysis (enhanced with our scan data) - with fallback on failure
     logStep("Step 5", "🤖 Starting AI analysis (this may take 30-60 seconds)...");
-    const analysisResult = await aiService.analyzeBusinessPresence({
-      businessInfo: {
-        name: assessment.businessName,
-        industry: assessment.industry,
-        location: assessment.location,
-        website: assessment.website || undefined,
-      },
-      googleData,
-      presenceScore,
-    });
-    logStep("Step 5", `✅ AI analysis complete - summary length: ${analysisResult.summary?.length || 0} chars`);
+    let analysisResult: any = null;
+    let aiAnalysisFailed = false;
+    
+    try {
+      analysisResult = await aiService.analyzeBusinessPresence({
+        businessInfo: {
+          name: assessment.businessName,
+          industry: assessment.industry,
+          location: assessment.location,
+          website: assessment.website || undefined,
+        },
+        googleData,
+        presenceScore,
+      });
+      logStep("Step 5", `✅ AI analysis complete - summary length: ${analysisResult.summary?.length || 0} chars`);
+    } catch (aiError) {
+      aiAnalysisFailed = true;
+      logStep("Step 5", `⚠️ AI analysis failed - using fallback data. Error: ${aiError}`);
+      console.error("[Assessment Pipeline] AI analysis error (using fallback):", aiError);
+      
+      // Create fallback analysis from scan data - normalize productIds to lowercase
+      analysisResult = {
+        summary: `Based on our automated scan of ${assessment.businessName}, we identified ${productRecommendations.length} opportunities to improve your digital presence. Your Digital IQ Score is ${combinedDigitalIQ}/140.`,
+        recommendations: productRecommendations.map((rec: any) => ({
+          category: rec.category || "digital_presence",
+          title: rec.title || rec.productName || "Recommendation",
+          description: rec.description || rec.reason || "Improve your digital presence",
+          priority: rec.priority || "medium",
+          estimatedImpact: rec.impact || "moderate",
+          estimatedEffort: "medium",
+          productId: rec.productId?.toLowerCase?.() || rec.productId, // Normalize to lowercase
+          bundleId: rec.bundleId?.toLowerCase?.() || rec.bundleId,
+        })),
+        strengths: [],
+        weaknesses: enhancedPresenceScan.recommendations || [], // Keep as string array
+      };
+    }
 
     // Combine AI analysis with our independent scan data
+    // Deduplicate recommendations by productId or title to avoid DB constraint violations
+    // Guard against undefined recommendations from malformed AI response
+    const aiRecs = Array.isArray(analysisResult?.recommendations) ? analysisResult.recommendations : [];
+    const scanRecs = Array.isArray(enhancedPresenceScan?.recommendations) ? enhancedPresenceScan.recommendations : [];
+    
+    const allRecs = [
+      ...aiRecs,
+      ...scanRecs.map((rec: string) => ({
+        category: "digital_presence",
+        title: rec,
+        description: rec,
+        priority: "medium" as const,
+        estimatedImpact: "moderate",
+        estimatedEffort: "low",
+      })),
+    ];
+    
+    const seenProductIds = new Set<string>();
+    const seenTitles = new Set<string>();
+    const dedupedRecommendations = allRecs.filter((rec: any) => {
+      // Dedupe by productId if present - normalize to lowercase for consistent matching
+      if (rec.productId) {
+        const normalizedId = rec.productId.toLowerCase();
+        if (seenProductIds.has(normalizedId)) return false;
+        seenProductIds.add(normalizedId);
+        // Also normalize the productId on the object for downstream consistency
+        rec.productId = normalizedId;
+      }
+      // Also normalize bundleId
+      if (rec.bundleId) {
+        rec.bundleId = rec.bundleId.toLowerCase();
+      }
+      // Also dedupe by title to avoid duplicate scan recommendations
+      const titleKey = rec.title?.toLowerCase();
+      if (titleKey) {
+        if (seenTitles.has(titleKey)) return false;
+        seenTitles.add(titleKey);
+      }
+      return true;
+    });
+    
     const enhancedAnalysis = {
       ...analysisResult,
+      aiAnalysisFailed, // Flag to indicate if we used fallback
       digitalScore: combinedDigitalIQ, // Use combined score (scan + operational)
       scanScore: scanScore, // Scan-only score (0-70)
       operationalScore: operationalScore, // Operational-only score (0-70)
       presenceScan: enhancedPresenceScan, // Include complete scan results with proper scores
       scanDate: enhancedPresenceScan.overall.lastScanned,
-      recommendations: [
-        ...analysisResult.recommendations,
-        ...enhancedPresenceScan.recommendations.map((rec) => ({
-          category: "digital_presence",
-          title: rec,
-          description: rec,
-          priority: "medium" as const,
-          estimatedImpact: "moderate",
-          estimatedEffort: "low",
-        })),
-      ],
+      recommendations: dedupedRecommendations,
     };
 
     // Update assessment with results
@@ -4119,7 +4177,68 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
   } catch (error) {
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
     console.error(`[Assessment Pipeline] [${elapsed}s] ❌ FATAL ERROR processing assessment ${assessmentId}:`, error);
-    await storage.updateAssessment(assessmentId, { status: "failed" });
+    
+    // Even if the main pipeline fails, try to send a fallback email so the customer isn't left waiting
+    let reportSent = false;
+    let coachSent = false;
+    
+    try {
+      const assessment = await storage.getAssessment(assessmentId);
+      if (assessment && assessment.email) {
+        console.log(`[Assessment Pipeline] Attempting fallback emails to ${assessment.email}...`);
+        
+        // Try to send a simplified report - sendAssessmentReport returns boolean, won't throw
+        try {
+          reportSent = await emailService.sendAssessmentReport(
+            assessment.email,
+            {
+              businessName: assessment.businessName,
+              digitalScore: assessment.digitalScore || 50,
+              summary: `We've completed your Digital IQ Assessment for ${assessment.businessName}. Due to high demand, some advanced analysis features are still processing. You'll receive a follow-up with additional insights shortly.`,
+              recommendations: [
+                { category: 'Email Marketing', title: 'Build Your Email List', description: 'Start collecting customer emails to build relationships.', priority: 'high', productId: 'send' },
+                { category: 'Reputation', title: 'Monitor Reviews', description: 'Respond to customer reviews to build trust.', priority: 'medium', productId: 'reputation' },
+                { category: 'Content', title: 'Create Regular Content', description: 'Post consistently on social media.', priority: 'medium', productId: 'content' },
+              ],
+              assessmentId,
+            },
+          );
+          console.log(`[Assessment Pipeline] Fallback report email: ${reportSent ? 'SENT' : 'FAILED'}`);
+        } catch (reportError) {
+          console.error(`[Assessment Pipeline] Fallback report email threw:`, reportError);
+        }
+        
+        // Always try to send Coach Blue email, regardless of report email result
+        try {
+          coachSent = await emailService.sendThankYouIntroduction(assessment.email, {
+            businessName: assessment.businessName,
+            assessmentId,
+          });
+          console.log(`[Assessment Pipeline] Fallback Coach Blue email: ${coachSent ? 'SENT' : 'FAILED'}`);
+        } catch (coachError) {
+          console.error(`[Assessment Pipeline] Fallback Coach Blue email threw:`, coachError);
+        }
+        
+        // Update status based on what we sent
+        if (reportSent || coachSent) {
+          await storage.updateAssessment(assessmentId, { 
+            emailSent: reportSent, 
+            status: "partial" 
+          });
+        } else {
+          await storage.updateAssessment(assessmentId, { status: "failed" });
+        }
+      } else {
+        await storage.updateAssessment(assessmentId, { status: "failed" });
+      }
+    } catch (fallbackError) {
+      console.error(`[Assessment Pipeline] Fallback process failed:`, fallbackError);
+      try {
+        await storage.updateAssessment(assessmentId, { status: "failed" });
+      } catch (updateError) {
+        console.error(`[Assessment Pipeline] Could not update status to failed:`, updateError);
+      }
+    }
   }
 }
 
