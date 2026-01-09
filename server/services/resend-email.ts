@@ -303,6 +303,170 @@ export class ResendEmailService {
     }
   }
 
+  async sendSiteInspectorFullReport(email: string, data: {
+    businessName: string;
+    websiteUrl: string;
+    assessmentId: number;
+    reportData: any;
+  }): Promise<boolean> {
+    console.log(`[ResendEmailService] sendSiteInspectorFullReport called for ${email}`);
+    try {
+      const resendClient = await getResendClient();
+      if (!resendClient) {
+        console.error('[ResendEmailService] sendSiteInspectorFullReport FAILED - Resend client not available');
+        return false;
+      }
+      console.log(`[ResendEmailService] Generating Full Report HTML...`);
+      const htmlContent = this.generateSiteInspectorFullReportHTML(data);
+      console.log(`[ResendEmailService] Sending Full Report email to ${email}...`);
+      const result = await resendClient.client.emails.send({
+        from: resendClient.fromEmail,
+        to: email,
+        subject: `Your SiteInspector Full Report is Ready - ${data.businessName}`,
+        html: htmlContent,
+      });
+      console.log(`[ResendEmailService] Full Report email SENT to ${email}, Resend ID: ${(result as any).data?.id || 'unknown'}`);
+      return true;
+    } catch (error) {
+      console.error('[ResendEmailService] Error sending Full Report email:', error);
+      return false;
+    }
+  }
+
+  private generateSiteInspectorFullReportHTML(data: {
+    businessName: string;
+    websiteUrl: string;
+    assessmentId: number;
+    reportData: any;
+  }): string {
+    const baseUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
+    const dashboardUrl = `${baseUrl}/dashboard/${data.assessmentId}`;
+    
+    const report = data.reportData || {};
+    const overallScore = report.overallScore || 65;
+    const securityScore = report.securityScore || 70;
+    const performanceScore = report.performanceScore || 60;
+    const seoScore = report.seoScore || 55;
+    const mobileScore = report.mobileScore || 75;
+    
+    const getScoreColor = (score: number): string => {
+      if (score >= 80) return '#10B981';
+      if (score >= 60) return '#F59E0B';
+      return '#EF4444';
+    };
+    
+    const issues = report.issues || [];
+    const recommendations = report.recommendations || [];
+    
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiteInspector Full Report - ${data.businessName}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body style="font-family: 'Archivo', Arial, sans-serif; line-height: 1.6; color: #09080E; background-color: #f5f5f5; margin: 0; padding: 0;">
+  <div style="max-width: 600px; margin: 0 auto; background: #EEFBFF;">
+    <!-- Header -->
+    <div style="background: linear-gradient(315deg, #EEFBFF 0%, #6EA6FF 50%, #0000FF 100%); padding: 30px 20px; text-align: center;">
+      <h1 style="margin: 0; color: white; font-size: 28px; font-weight: 700;">SiteInspector</h1>
+      <p style="margin: 10px 0 0; color: rgba(255,255,255,0.9); font-size: 16px;">Full Website Analysis Report</p>
+    </div>
+    
+    <!-- Main Content -->
+    <div style="padding: 30px 25px; background: white;">
+      <p style="font-size: 16px; margin-bottom: 20px;">
+        Great news, <strong>${data.businessName}</strong>! Your comprehensive website analysis is complete.
+      </p>
+      
+      <div style="text-align: center; padding: 20px; background: #f9fafb; border-radius: 12px; margin-bottom: 25px;">
+        <p style="margin: 0 0 5px; color: #6B7280; font-size: 14px;">Website Analyzed</p>
+        <p style="margin: 0; font-size: 16px; font-weight: 600; color: #0000FF; word-break: break-all;">${data.websiteUrl}</p>
+      </div>
+      
+      <!-- Overall Score -->
+      <div style="text-align: center; padding: 25px; background: linear-gradient(135deg, #0000FF08, #0000FF15); border-radius: 12px; margin-bottom: 25px; border: 2px solid #0000FF20;">
+        <p style="margin: 0 0 10px; color: #6B7280; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Overall Score</p>
+        <div style="font-size: 64px; font-weight: 700; color: ${getScoreColor(overallScore)}; line-height: 1;">${overallScore}</div>
+        <p style="margin: 5px 0 0; color: #6B7280; font-size: 14px;">out of 100</p>
+      </div>
+      
+      <!-- Category Scores -->
+      <h2 style="font-size: 18px; font-weight: 700; margin: 0 0 15px; color: #09080E;">Category Breakdown</h2>
+      <div style="display: grid; gap: 10px; margin-bottom: 25px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #f9fafb; border-radius: 8px;">
+          <span style="font-weight: 600;">🔒 Security</span>
+          <span style="font-size: 18px; font-weight: 700; color: ${getScoreColor(securityScore)};">${securityScore}/100</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #f9fafb; border-radius: 8px;">
+          <span style="font-weight: 600;">⚡ Performance</span>
+          <span style="font-size: 18px; font-weight: 700; color: ${getScoreColor(performanceScore)};">${performanceScore}/100</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #f9fafb; border-radius: 8px;">
+          <span style="font-weight: 600;">🔍 SEO</span>
+          <span style="font-size: 18px; font-weight: 700; color: ${getScoreColor(seoScore)};">${seoScore}/100</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #f9fafb; border-radius: 8px;">
+          <span style="font-weight: 600;">📱 Mobile</span>
+          <span style="font-size: 18px; font-weight: 700; color: ${getScoreColor(mobileScore)};">${mobileScore}/100</span>
+        </div>
+      </div>
+      
+      ${issues.length > 0 ? `
+      <!-- Critical Issues -->
+      <h2 style="font-size: 18px; font-weight: 700; margin: 0 0 15px; color: #09080E;">⚠️ Issues Found</h2>
+      <div style="margin-bottom: 25px;">
+        ${issues.slice(0, 5).map((issue: any) => `
+        <div style="padding: 12px 15px; background: #FEF2F2; border-left: 4px solid #EF4444; border-radius: 0 8px 8px 0; margin-bottom: 10px;">
+          <p style="margin: 0; font-weight: 600; color: #B91C1C;">${issue.title || issue}</p>
+          ${issue.description ? `<p style="margin: 5px 0 0; font-size: 14px; color: #6B7280;">${issue.description}</p>` : ''}
+        </div>
+        `).join('')}
+      </div>
+      ` : ''}
+      
+      ${recommendations.length > 0 ? `
+      <!-- Recommendations -->
+      <h2 style="font-size: 18px; font-weight: 700; margin: 0 0 15px; color: #09080E;">💡 Top Recommendations</h2>
+      <div style="margin-bottom: 25px;">
+        ${recommendations.slice(0, 5).map((rec: any, index: number) => `
+        <div style="padding: 12px 15px; background: #F0FDF4; border-left: 4px solid #10B981; border-radius: 0 8px 8px 0; margin-bottom: 10px;">
+          <p style="margin: 0; font-weight: 600; color: #047857;">${index + 1}. ${rec.title || rec}</p>
+          ${rec.impact ? `<p style="margin: 5px 0 0; font-size: 14px; color: #6B7280;">Impact: ${rec.impact}</p>` : ''}
+        </div>
+        `).join('')}
+      </div>
+      ` : ''}
+      
+      <!-- CTA Button -->
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${dashboardUrl}" style="display: inline-block; background: #0000FF; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px;">
+          View Full Dashboard
+        </a>
+      </div>
+      
+      <p style="color: #6B7280; font-size: 14px; text-align: center;">
+        Need help implementing these recommendations? Our team is here to help.
+      </p>
+    </div>
+    
+    <!-- Footer -->
+    <div style="background: #f2f4f6; padding: 25px; text-align: center;">
+      <p style="margin: 0 0 10px; color: #6B7280; font-size: 14px;">
+        Powered by <strong>BusinessBlueprint.io</strong>
+      </p>
+      <p style="margin: 0; color: #9CA3AF; font-size: 12px;">
+        © ${new Date().getFullYear()} TriadBlue • All rights reserved
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+`;
+  }
+
   private generateReportHTML(data: EmailReportData): string {
     const highPriorityRecs = data.recommendations.filter(r => r.priority === 'high').slice(0, 3);
     const baseUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
@@ -592,6 +756,39 @@ export class ResendEmailService {
         <p style="margin-top: 40px;">Your complete prescription includes detailed implementation steps, product comparisons, and a prioritized action plan. Plus, you'll receive a welcome from Coach Blue—our AI mentor who offers a free guided tour of the platform (ongoing mentorship available as optional $99/mo upgrade).</p>
         
         <p><strong>Questions?</strong> Just reply to this email—we're here to help!</p>
+        
+        <!-- SITEINSPECTOR FULL REPORT UPSELL -->
+        <div style="background: #ffffff; border: 2px solid #0000FF; border-radius: 8px; padding: 25px; margin: 25px 0;">
+          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+            <img src="${baseUrl}/Site_Inspection.png" alt="SiteInspector" style="width: 48px; height: 48px;" />
+            <h3 style="margin: 0; color: #0000FF; font-family: 'Archivo Semi Expanded', sans-serif;">Want a Complete Website Audit?</h3>
+          </div>
+          
+          <p style="margin: 0 0 15px 0;">Your Digital IQ Assessment included a quick scan of your website. For a <strong>comprehensive technical analysis</strong> with actionable insights:</p>
+          
+          <ul style="margin: 15px 0; padding-left: 20px;">
+            <li><strong>Performance Analysis:</strong> Page speed, loading times, Core Web Vitals, optimization opportunities</li>
+            <li><strong>SEO Deep Dive:</strong> Meta tags, structured data, indexability, mobile SEO, local SEO factors</li>
+            <li><strong>Security Audit:</strong> SSL configuration, vulnerabilities, security headers, best practices</li>
+            <li><strong>Mobile Optimization:</strong> Responsive design, mobile usability, touch targets, viewport</li>
+            <li><strong>Code Quality:</strong> HTML validation, accessibility (WCAG) compliance, best practices</li>
+            <li><strong>Competitive Analysis:</strong> How your site compares to industry standards</li>
+          </ul>
+          
+          <p style="font-size: 18px; color: #09080E; margin: 20px 0;">
+            <strong>Get your complete SiteInspector Report for just $10</strong>
+          </p>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <a href="${baseUrl}/siteinspector/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #0000FF; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #0000FF;">
+              Get Full Website Audit - $10
+            </a>
+          </div>
+          
+          <p style="font-size: 14px; color: #09080E; opacity: 0.8; text-align: center; margin-top: 15px;">
+            <em>Report delivered within 5 minutes of payment • Detailed PDF included</em>
+          </p>
+        </div>
       </div>
       
       <!-- FOOTER -->

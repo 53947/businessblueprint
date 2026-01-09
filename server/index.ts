@@ -2,8 +2,15 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { setupWebSocket } from "./websocket";
+import { handleStripeWebhook } from "./routes/stripe-webhook";
 
 const app = express();
+
+app.post('/api/stripe/webhook', 
+  express.raw({ type: 'application/json' }),
+  handleStripeWebhook
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

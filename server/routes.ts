@@ -37,6 +37,7 @@ import {
   insertTicketCommentSchema,
   updateSupportTicketSchema,
   updatePrescriptionSchema,
+  siteInspectorPurchases,
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
@@ -4588,7 +4589,7 @@ async function registerInboxRoutes(app: Express) {
   // Webhook endpoint for SiteInspector Full Report completion
   app.post('/api/siteinspector-webhook', async (req, res) => {
     try {
-      const { reportId, status, url, summary, assessmentId } = req.body;
+      const { reportId, status, url, summary, assessmentId, reportData } = req.body;
       
       console.log(`[Webhook] SiteInspector report ${reportId} status: ${status}`);
       
@@ -4599,6 +4600,34 @@ async function registerInboxRoutes(app: Express) {
           `https://siteinspector.dev/reports/${reportId}`,
           status
         );
+        
+        const parsedAssessmentId = parseInt(assessmentId);
+        const assessment = await storage.getAssessment(parsedAssessmentId);
+        
+        if (assessment) {
+          const purchase = await db.query.siteInspectorPurchases?.findFirst({
+            where: (purchases: any, { eq }: any) => eq(purchases.assessmentId, parsedAssessmentId)
+          });
+          
+          const customerEmail = purchase?.email || assessment.email;
+          
+          if (customerEmail) {
+            console.log(`[Webhook] Sending full report email to ${customerEmail}`);
+            const emailService = new ResendEmailService();
+            await emailService.sendSiteInspectorFullReport(customerEmail, {
+              businessName: assessment.businessName,
+              websiteUrl: url || assessment.website || '',
+              assessmentId: parsedAssessmentId,
+              reportData: reportData || summary || {}
+            });
+            
+            if (purchase) {
+              await db.update(siteInspectorPurchases)
+                .set({ reportDeliveredAt: new Date() })
+                .where(eq(siteInspectorPurchases.id, purchase.id));
+            }
+          }
+        }
       }
       
       res.json({ success: true, received: true });

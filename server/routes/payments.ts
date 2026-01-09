@@ -250,5 +250,108 @@ export function registerPaymentRoutes(app: Express) {
     }
   });
 
+  /**
+   * Create SiteInspector Full Report checkout session
+   * POST /api/siteinspector/checkout
+   */
+  app.post("/api/siteinspector/checkout", async (req, res) => {
+    try {
+      const { assessmentId, email } = req.body;
+
+      if (!assessmentId) {
+        return res.status(400).json({
+          success: false,
+          error: "assessmentId is required"
+        });
+      }
+
+      // Get the assessment to verify it exists and get the website URL
+      const assessment = await db.query.assessments.findFirst({
+        where: (assessments, { eq }) => eq(assessments.id, parseInt(assessmentId))
+      });
+
+      if (!assessment) {
+        return res.status(404).json({
+          success: false,
+          error: "Assessment not found"
+        });
+      }
+
+      const customerEmail = email || assessment.email;
+      const baseUrl = process.env.APP_URL || `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`;
+
+      // Create Stripe checkout session using StripeProvider
+      const result = await paymentService.createCheckoutSession({
+        priceInCents: 1000, // $10.00
+        productName: 'SiteInspector Full Report',
+        productDescription: `Comprehensive website analysis for ${assessment.websiteUrl || 'your business'}`,
+        customerEmail,
+        successUrl: `${baseUrl}/siteinspector/success?session_id={CHECKOUT_SESSION_ID}&assessment=${assessmentId}`,
+        cancelUrl: `${baseUrl}/siteinspector/purchase?assessment=${assessmentId}&cancelled=true`,
+        metadata: {
+          type: 'siteinspector_full_report',
+          assessmentId: assessmentId.toString(),
+          websiteUrl: assessment.websiteUrl || ''
+        }
+      });
+
+      if (!result.success) {
+        return res.status(500).json(result);
+      }
+
+      res.json({
+        success: true,
+        sessionId: result.sessionId,
+        url: result.url
+      });
+    } catch (error: any) {
+      console.error('[SiteInspector Checkout] Error:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+
+  /**
+   * Verify SiteInspector checkout session
+   * GET /api/siteinspector/verify-session
+   */
+  app.get("/api/siteinspector/verify-session", async (req, res) => {
+    try {
+      const { session_id } = req.query;
+
+      if (!session_id || typeof session_id !== 'string') {
+        return res.status(400).json({
+          success: false,
+          error: "session_id is required"
+        });
+      }
+
+      const result = await paymentService.retrieveCheckoutSession(session_id);
+
+      if (!result.success) {
+        return res.status(400).json(result);
+      }
+
+      const session = result.session;
+      res.json({
+        success: true,
+        paid: session.payment_status === 'paid',
+        assessmentId: session.metadata?.assessmentId,
+        customerEmail: session.customer_email,
+        paymentIntentId: typeof session.payment_intent === 'string' 
+          ? session.payment_intent 
+          : session.payment_intent?.id
+      });
+    } catch (error: any) {
+      console.error('[SiteInspector Verify] Error:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+
   console.log('[PAYMENT ROUTES] Routes registered successfully!');
 }

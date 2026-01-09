@@ -55,6 +55,8 @@ import ApiDocs from "@/pages/api-docs";
 import AssessmentConfirmation from "@/pages/assessment-confirmation";
 import KnowledgeBase from "@/pages/knowledge-base";
 import Tour from "@/pages/tour";
+import SiteInspectorPurchase from "@/pages/siteinspector-purchase";
+import SiteInspectorSuccess from "@/pages/siteinspector-success";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -114,6 +116,8 @@ function Router() {
       <Route path="/portal/assessment/confirmation" component={AssessmentConfirmation} />
       <Route path="/knowledge-base" component={KnowledgeBase} />
       <Route path="/tour" component={Tour} />
+      <Route path="/siteinspector/purchase" component={SiteInspectorPurchase} />
+      <Route path="/siteinspector/success" component={SiteInspectorSuccess} />
       <Route component={NotFound} />
     </Switch>
   );

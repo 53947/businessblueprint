@@ -151,6 +151,12 @@ export const siteInspectorResults = pgTable("site_inspector_results", {
   assessmentId: integer("assessment_id").references(() => assessments.id),
   url: text("url").notNull(),
   
+  // Report type: 'fast_check' or 'full_report'
+  type: varchar("type", { length: 20 }).default("fast_check").notNull(),
+  
+  // Processing status: 'processing', 'completed', 'failed'
+  status: varchar("status", { length: 20 }).default("completed"),
+  
   // Fast Check Results
   overallScore: integer("overall_score"), // 0-100
   
@@ -171,10 +177,17 @@ export const siteInspectorResults = pgTable("site_inspector_results", {
   // Issues (JSON array)
   criticalIssues: text("critical_issues"), // JSON string
   
-  // Full Report (if requested)
+  // Full Report data (JSON for comprehensive results)
+  fullReportData: text("full_report_data"), // JSON string for full report
+  
+  // Full Report (if requested) - legacy fields
   fullReportId: text("full_report_id"),
   fullReportUrl: text("full_report_url"),
   fullReportStatus: varchar("full_report_status", { length: 20 }), // queued, processing, completed
+  
+  // Timing
+  requestedAt: timestamp("requested_at").defaultNow(),
+  completedAt: timestamp("completed_at"),
   
   // Metadata
   createdAt: timestamp("created_at").defaultNow(),
@@ -183,6 +196,24 @@ export const siteInspectorResults = pgTable("site_inspector_results", {
 
 export type SiteInspectorResult = typeof siteInspectorResults.$inferSelect;
 export type NewSiteInspectorResult = typeof siteInspectorResults.$inferInsert;
+
+// SiteInspector purchases - tracks $10 full report payments
+export const siteInspectorPurchases = pgTable("site_inspector_purchases", {
+  id: serial("id").primaryKey(),
+  assessmentId: integer("assessment_id").notNull().references(() => assessments.id),
+  stripeSessionId: text("stripe_session_id").notNull().unique(),
+  stripePaymentIntentId: text("stripe_payment_intent_id"),
+  amount: integer("amount").notNull(), // in cents (1000 = $10.00)
+  status: varchar("status", { length: 20 }).notNull().default("pending"), // pending, paid, refunded, failed
+  purchasedAt: timestamp("purchased_at").defaultNow(),
+  reportDeliveredAt: timestamp("report_delivered_at"),
+  email: text("email"), // Customer email for delivery
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type SiteInspectorPurchase = typeof siteInspectorPurchases.$inferSelect;
+export type NewSiteInspectorPurchase = typeof siteInspectorPurchases.$inferInsert;
+export const insertSiteInspectorPurchaseSchema = createInsertSchema(siteInspectorPurchases).omit({ id: true, createdAt: true });
 
 // Client data
 export const clients = pgTable("clients", {

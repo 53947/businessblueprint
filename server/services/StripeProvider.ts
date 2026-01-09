@@ -255,4 +255,86 @@ export class StripeProvider {
       };
     }
   }
+
+  /**
+   * Create a Stripe Checkout Session
+   * Used for one-time purchases with hosted checkout
+   */
+  async createCheckoutSession(params: {
+    priceInCents: number;
+    productName: string;
+    productDescription?: string;
+    customerEmail?: string;
+    successUrl: string;
+    cancelUrl: string;
+    metadata?: Record<string, string>;
+  }) {
+    try {
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              product_data: {
+                name: params.productName,
+                description: params.productDescription,
+              },
+              unit_amount: params.priceInCents,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: params.successUrl,
+        cancel_url: params.cancelUrl,
+        customer_email: params.customerEmail,
+        metadata: params.metadata || {},
+      });
+
+      return {
+        success: true,
+        sessionId: session.id,
+        url: session.url,
+        provider: this.name,
+        raw: session
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: `Stripe checkout session creation failed: ${error.message}`,
+        provider: this.name
+      };
+    }
+  }
+
+  /**
+   * Verify and retrieve a checkout session
+   */
+  async retrieveCheckoutSession(sessionId: string) {
+    try {
+      const session = await this.stripe.checkout.sessions.retrieve(sessionId, {
+        expand: ['payment_intent']
+      });
+
+      return {
+        success: true,
+        session,
+        provider: this.name
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: `Stripe session retrieval failed: ${error.message}`,
+        provider: this.name
+      };
+    }
+  }
+
+  /**
+   * Construct and verify webhook event
+   */
+  constructWebhookEvent(payload: string | Buffer, signature: string, webhookSecret: string) {
+    return this.stripe.webhooks.constructEvent(payload, signature, webhookSecret);
+  }
 }

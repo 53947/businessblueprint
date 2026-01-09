@@ -90,6 +90,28 @@ class PaymentService {
   }) {
     return await this.provider.createPaymentIntent(params);
   }
+
+  /**
+   * Create a Stripe Checkout Session
+   */
+  async createCheckoutSession(params: {
+    priceInCents: number;
+    productName: string;
+    productDescription?: string;
+    customerEmail?: string;
+    successUrl: string;
+    cancelUrl: string;
+    metadata?: Record<string, string>;
+  }) {
+    return await this.provider.createCheckoutSession(params);
+  }
+
+  /**
+   * Retrieve a checkout session
+   */
+  async retrieveCheckoutSession(sessionId: string) {
+    return await this.provider.retrieveCheckoutSession(sessionId);
+  }
 }
 
 // Export singleton instance
