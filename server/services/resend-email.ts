@@ -291,7 +291,308 @@ export class ResendEmailService {
 
   private generateReportHTML(data: EmailReportData): string {
     const highPriorityRecs = data.recommendations.filter(r => r.priority === 'high').slice(0, 3);
-    return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Your Digital Presence Assessment Results</title><style>body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; }.header { background: linear-gradient(135deg, #FF6B35, #8B5CF6); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }.score-circle { display: inline-block; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin: 20px 0; }.content { background: white; padding: 30px; border: 1px solid #e0e0e0; }.score-value { font-size: 48px; font-weight: bold; color: #fff; }.section { margin: 30px 0; }.recommendation { background: #f8f9fa; padding: 20px; margin: 15px 0; border-left: 4px solid #FF6B35; border-radius: 4px; }.cta-button { display: inline-block; background: #FF6B35; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 5px; }.secondary-button { background: #8B5CF6; }.footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; border-radius: 0 0 8px 8px; }</style></head><body><div class="header"><h1>Digital Presence Assessment Results</h1><h2>${data.businessName}</h2><div class="score-circle"><div><div class="score-value">${data.digitalScore}</div><div style="font-size: 14px;">out of 140</div></div></div></div><div class="content"><div class="section"><h2>Executive Summary</h2><p>${data.summary}</p></div><div class="section"><h2>Priority Recommendations</h2>${highPriorityRecs.map(rec => `<div class="recommendation"><h3>${rec.title}</h3><p>${rec.description}</p><p><strong>Estimated Impact:</strong> ${rec.estimatedImpact}</p><p><strong>Estimated Effort:</strong> ${rec.estimatedEffort}</p></div>`).join('')}</div><div class="section" style="text-align: center;"><h2>Choose Your Path Forward</h2><p>Ready to improve your digital presence? We offer two paths to success:</p><a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}?path=diy" class="cta-button">🛠️ DIY Path - $49/month</a><a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}?path=msp" class="cta-button secondary-button">🎯 Managed Services - $299/month</a><p style="margin-top: 20px;"><a href="${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/dashboard/${data.assessmentId}">View Full Report</a></p></div></div><div class="footer"><p>This assessment was powered by Google Business Intelligence and AI analysis.</p><p>Questions? Reply to this email or visit our support center.</p><p><small>© 2024 businessblueprint.io</small></p></div></body></html>`;
+    const baseUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
+    
+    const getProductIcon = (productId: string | undefined): string => {
+      const iconMap: Record<string, string> = {
+        'send': 'send.png',
+        'inbox': 'inbox.png', 
+        'content': 'content.png',
+        'livechat': 'livechat.png',
+        'reputation': 'reputation.png',
+        'listings': 'listings.png',
+        'localblue': 'localblue.png',
+        'commverse': 'commverse.png',
+      };
+      return productId ? `${baseUrl}/${iconMap[productId] || 'send.png'}` : `${baseUrl}/send.png`;
+    };
+    
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Digital IQ Assessment Results</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Archivo+Semi+Expanded:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      font-family: 'Archivo', sans-serif;
+      line-height: 1.6;
+      color: #09080E;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #EEFBFF;
+    }
+    .email-outline {
+      border: 2px solid #09080E;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      background: #f2f4f6;
+      background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent);
+      background-size: 50px 50px;
+      background-color: #f2f4f6;
+      color: #09080E;
+      padding: 40px 30px;
+      text-align: center;
+      border-bottom: 4px solid #F97316;
+    }
+    .header h1 {
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      margin: 0 0 10px 0;
+      color: #09080E;
+    }
+    .header .score {
+      font-size: 48px;
+      font-weight: 700;
+      color: #F97316;
+      margin: 20px 0 10px 0;
+    }
+    .header .score-label {
+      font-size: 16px;
+      color: #09080E;
+      opacity: 0.9;
+    }
+    .content {
+      background: #EEFBFF;
+      padding: 40px 30px;
+      background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent);
+      background-size: 50px 50px;
+      background-color: #EEFBFF;
+    }
+    .content p {
+      font-size: 16px;
+      color: #09080E;
+      margin: 16px 0;
+    }
+    .content h2 {
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      color: #0000FF;
+      margin: 30px 0 15px 0;
+    }
+    .content h3 {
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-weight: 600;
+      font-size: 18px;
+      color: #09080E;
+      margin: 20px 0 10px 0;
+    }
+    .summary-box {
+      background: #ffffff;
+      border-left: 4px solid #F97316;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 4px;
+    }
+    .recommendation {
+      background: #ffffff;
+      border: 2px solid #0000FF;
+      border-radius: 8px;
+      padding: 25px;
+      margin: 25px 0;
+    }
+    .recommendation-header {
+      margin-bottom: 15px;
+    }
+    .recommendation-header img {
+      width: 48px;
+      height: 48px;
+      vertical-align: middle;
+      margin-right: 15px;
+    }
+    .recommendation-header h3 {
+      display: inline;
+      vertical-align: middle;
+      margin: 0;
+      color: #0000FF;
+      font-size: 20px;
+    }
+    .product-name {
+      color: #F97316;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .recommendation ul {
+      margin: 15px 0;
+      padding-left: 20px;
+    }
+    .recommendation li {
+      margin: 8px 0;
+      color: #09080E;
+    }
+    .bundle-callout {
+      background: #ffffff;
+      border: 2px solid #0000FF;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .bundle-item {
+      margin: 15px 0;
+    }
+    .bundle-item img {
+      width: 40px;
+      height: 40px;
+      vertical-align: middle;
+      margin-right: 12px;
+    }
+    .bundle-item p {
+      display: inline;
+      margin: 0;
+      font-size: 15px;
+      vertical-align: middle;
+    }
+    .bundle-callout strong {
+      color: #0000FF;
+    }
+    .cta-button {
+      display: inline-block;
+      background: #F97316;
+      color: #EEFBFF;
+      padding: 16px 32px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-size: 16px;
+      margin: 20px 10px 20px 0;
+      border: 2px solid #F97316;
+    }
+    .cta-button.secondary {
+      background: #0000FF;
+      border: 2px solid #0000FF;
+    }
+    .footer {
+      background: #f2f4f6;
+      background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent);
+      background-size: 50px 50px;
+      background-color: #f2f4f6;
+      color: #09080E;
+      padding: 30px;
+      text-align: center;
+      border-top: 4px solid #F97316;
+    }
+    .footer p {
+      font-size: 14px;
+      color: #09080E;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-outline">
+      <!-- HEADER -->
+      <div class="header">
+        <h1>Your Digital IQ Assessment Results</h1>
+        <div class="score">${data.digitalScore}<span style="font-size: 24px; opacity: 0.8;">/140</span></div>
+        <div class="score-label">Digital IQ Score</div>
+      </div>
+      
+      <!-- CONTENT -->
+      <div class="content">
+        <p><strong>Hi ${data.businessName},</strong></p>
+        
+        <p>Thank you for completing your Digital IQ Assessment! We've analyzed your complete digital presence across 9 critical areas, and your personalized growth prescription is ready.</p>
+        
+        <!-- EXECUTIVE SUMMARY -->
+        <div class="summary-box">
+          <h3 style="margin-top: 0; color: #0000FF;">What This Score Means</h3>
+          <p>${data.summary}</p>
+          <p><strong>The opportunity:</strong> Businesses that implement foundational digital tools typically see 20-40% revenue growth within the first year.</p>
+        </div>
+        
+        <h2>Your Priority Recommendations</h2>
+        <p>Based on your assessment, here are the specific tools that will have the biggest impact on your business:</p>
+        
+        ${highPriorityRecs.map(rec => `
+        <!-- RECOMMENDATION: ${rec.title} -->
+        <div class="recommendation">
+          <div class="recommendation-header">
+            <img src="${getProductIcon(rec.productId)}" alt="${rec.productId || 'Product'}" />
+            <h3>${rec.title}</h3>
+          </div>
+          
+          <p><strong>You need:</strong> ${rec.description}</p>
+          
+          <p><strong>Why it matters:</strong> ${rec.estimatedImpact}</p>
+          
+          ${rec.productId ? `<p><strong>Our recommendation: <span class="product-name">${rec.productId.charAt(0).toUpperCase() + rec.productId.slice(1)}</span></strong></p>` : ''}
+          
+          ${rec.productBenefits && rec.productBenefits.length > 0 ? `
+          <ul>
+            ${rec.productBenefits.map((benefit: string) => `<li><strong>${benefit.split(':')[0]}:</strong>${benefit.includes(':') ? benefit.split(':').slice(1).join(':') : ''}</li>`).join('')}
+          </ul>` : ''}
+          
+          <p><strong>Expected impact:</strong> ${rec.estimatedEffort}</p>
+        </div>
+        `).join('')}
+        
+        <!-- BUNDLE ADVANTAGE -->
+        <div class="bundle-callout">
+          <div style="margin-bottom: 20px;">
+            <strong style="font-size: 18px; color: #0000FF;">💡 Smart Move: Save with Bundles</strong>
+          </div>
+          
+          <div class="bundle-item">
+            <img src="${baseUrl}/commverse.png" alt="CommVerse Bundle" />
+            <p><strong>CommVerse Bundle ($99/mo):</strong> Includes Send, Content, Inbox (unified communications), and LiveChat (website chat widget)—all four tools in one integrated platform. Save money and manage everything from one dashboard.</p>
+          </div>
+          
+          <div class="bundle-item" style="margin-top: 20px;">
+            <img src="${baseUrl}/localblue.png" alt="LocalBlue Bundle" />
+            <p><strong>LocalBlue Bundle ($59/mo):</strong> Includes Reputation, business Listings management, and Google Business Profile optimization for complete local SEO dominance.</p>
+          </div>
+        </div>
+        
+        <h2>Next Steps</h2>
+        <p>You've got the diagnosis—now it's time to take action. Here's what to do:</p>
+        
+        <div style="text-align: center; margin: 40px 0;">
+          <a href="${baseUrl}/portal/prescriptions" class="cta-button">
+            View Your Complete Prescription
+          </a>
+          <br>
+          <a href="${baseUrl}/tour" class="cta-button secondary">
+            Take the Free Platform Tour
+          </a>
+        </div>
+        
+        <p style="margin-top: 40px;">Your complete prescription includes detailed implementation steps, product comparisons, and a prioritized action plan. Plus, you'll receive a welcome from Coach Blue—our AI mentor who offers a free guided tour of the platform (ongoing mentorship available as optional $99/mo upgrade).</p>
+        
+        <p><strong>Questions?</strong> Just reply to this email—we're here to help!</p>
+      </div>
+      
+      <!-- FOOTER -->
+      <div class="footer">
+        <p><strong>BusinessBlueprint.io</strong></p>
+        <p>Your AI-Powered Partner in Digital Growth</p>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">
+          This assessment was powered by our Business IQ Scanner using advanced AI analysis and real-time digital presence monitoring.
+        </p>
+        <p style="font-size: 12px; opacity: 0.8;">© 2026 BusinessBlueprint.io</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
   }
 
   private generateVerificationEmailHTML(companyName: string, verificationCode: string): string {
