@@ -142,19 +142,26 @@ export class ResendEmailService {
   }
 
   async sendAssessmentReport(email: string, data: EmailReportData): Promise<boolean> {
+    console.log(`[ResendEmailService] sendAssessmentReport called for ${email}`);
     try {
       const resendClient = await getResendClient();
-      if (!resendClient) return false;
+      if (!resendClient) {
+        console.error('[ResendEmailService] sendAssessmentReport FAILED - Resend client not available');
+        return false;
+      }
+      console.log(`[ResendEmailService] Generating Digital IQ Report HTML...`);
       const htmlContent = this.generateReportHTML(data);
-      await resendClient.client.emails.send({
+      console.log(`[ResendEmailService] Sending Digital IQ Report to ${email}...`);
+      const result = await resendClient.client.emails.send({
         from: resendClient.fromEmail,
         to: email,
-        subject: `Your Digital Presence Assessment Results - Score: ${data.digitalScore}`,
+        subject: `Your Digital IQ Results: Here's Your Growth Blueprint`,
         html: htmlContent,
       });
+      console.log(`[ResendEmailService] Digital IQ Report SENT to ${email}, Resend ID: ${(result as any).data?.id || 'unknown'}`);
       return true;
     } catch (error) {
-      console.error('Error sending assessment report:', error);
+      console.error('[ResendEmailService] Error sending assessment report:', error);
       return false;
     }
   }
@@ -272,19 +279,26 @@ export class ResendEmailService {
     businessName: string;
     assessmentId: number;
   }): Promise<boolean> {
+    console.log(`[ResendEmailService] sendThankYouIntroduction called for ${email}`);
     try {
       const resendClient = await getResendClient();
-      if (!resendClient) return false;
+      if (!resendClient) {
+        console.error('[ResendEmailService] sendThankYouIntroduction FAILED - Resend client not available');
+        return false;
+      }
+      console.log(`[ResendEmailService] Generating Coach Blue HTML...`);
       const htmlContent = this.generateThankYouIntroductionHTML(data);
-      await resendClient.client.emails.send({
+      console.log(`[ResendEmailService] Sending Coach Blue email to ${email}...`);
+      const result = await resendClient.client.emails.send({
         from: resendClient.fromEmail,
         to: email,
         subject: `Meet Coach Blue 🤖 - Your AI Guide to Digital Success`,
         html: htmlContent,
       });
+      console.log(`[ResendEmailService] Coach Blue email SENT to ${email}, Resend ID: ${(result as any).data?.id || 'unknown'}`);
       return true;
     } catch (error) {
-      console.error('Error sending thank you introduction:', error);
+      console.error('[ResendEmailService] Error sending Coach Blue email:', error);
       return false;
     }
   }
