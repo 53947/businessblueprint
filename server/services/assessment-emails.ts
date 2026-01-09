@@ -97,21 +97,27 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
     body { 
       font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
       line-height: 1.6; 
-      color: #333; 
-      background-color: #EEFBFF;
+      color: #09080E; 
+      background-color: #f5f5f5;
       margin: 0;
       padding: 0;
     }
-    .container { 
-      max-width: 600px; 
-      margin: 0 auto; 
-      padding: 20px; 
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #EEFBFF;
+    }
+    .email-outline {
+      border: 2px solid #09080E;
+      border-radius: 8px;
+      overflow: hidden;
     }
     .header { 
-      background: #f8fafc;
-      padding: 30px;
+      background: #f2f4f6;
+      color: #09080E;
+      padding: 40px 30px;
       text-align: center;
-      border-bottom: 3px solid #F97316;
+      border-bottom: 4px solid #F97316;
     }
     .logo {
       max-width: 300px;
@@ -119,19 +125,21 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       margin-bottom: 20px;
     }
     .content { 
-      background: #ffffff; 
+      background: #EEFBFF; 
       padding: 40px 30px;
       background-image: 
-        linear-gradient(0deg, transparent 24%, rgba(59, 130, 246, 0.03) 25%, rgba(59, 130, 246, 0.03) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, 0.03) 75%, rgba(59, 130, 246, 0.03) 76%, transparent 77%, transparent),
-        linear-gradient(90deg, transparent 24%, rgba(59, 130, 246, 0.03) 25%, rgba(59, 130, 246, 0.03) 26%, transparent 27%, transparent 74%, rgba(59, 130, 246, 0.03) 75%, rgba(59, 130, 246, 0.03) 76%, transparent 77%, transparent);
+        linear-gradient(0deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent);
       background-size: 50px 50px;
+      background-color: #EEFBFF;
     }
     .footer { 
+      background: #f2f4f6;
+      color: #09080E;
       text-align: center; 
       padding: 30px 20px; 
-      color: #666; 
       font-size: 14px; 
-      background-color: #EEFBFF;
+      border-top: 4px solid #F97316;
     }
     .button { 
       display: inline-block; 
@@ -249,12 +257,13 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <img src="https://businessblueprint.io/1-Master_business_blueprint_icon_and_logo.png" alt="BusinessBlueprint.io" class="logo" />
-    </div>
-    
-    <div class="content">
+  <div class="email-container">
+    <div class="email-outline">
+      <div class="header">
+        <img src="https://businessblueprint.io/1-Master_business_blueprint_icon_and_logo.png" alt="BusinessBlueprint.io" class="logo" />
+      </div>
+      
+      <div class="content">
       <div class="success-section">
         <span class="checkmark">✓</span>
         <h1>Assessment Received!</h1>
@@ -314,11 +323,13 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
           Check Status in Portal
         </a>
       </div>
-    </div>
-    
-    <div class="footer">
-      <p><strong>BusinessBlueprint.io</strong> - Your Partner in Local Business Growth</p>
-      <p>Questions? Reply to this email or contact us at <a href="mailto:support@businessblueprint.io" style="color: #F97316; text-decoration: none;">support@businessblueprint.io</a></p>
+      </div>
+      
+      <div class="footer">
+        <p><strong>BusinessBlueprint.io</strong></p>
+        <p>Your Partner in Local Business Growth</p>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.7;">© 2026 BusinessBlueprint.io</p>
+      </div>
     </div>
   </div>
 </body>
@@ -326,7 +337,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
 }
 
 export async function sendAssessmentConfirmationEmail(assessment: AssessmentData): Promise<{ success: boolean; error?: string }> {
-  const subject = `✓ Assessment Received - BusinessBlueprint.io`;
+  const subject = `Assessment Received - We're Analyzing Your Business`;
   const htmlBody = generateAssessmentConfirmationHTML(assessment);
   
   try {

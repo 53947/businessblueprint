@@ -500,7 +500,7 @@ export function AssessmentForm() {
               {currentStep === 2 && (
                 <div className="bg-white p-6 rounded-lg border-2 border-[#0000FF]/20">
                   <div className="flex items-center gap-3 mb-6">
-                    <img src="/icon-send.png" alt="Email & SMS" className="w-10 h-10" />
+                    <img src="/send.png" alt="Email & SMS" className="w-10 h-10" />
                     <h3 className="text-xl font-bold text-[#0000FF]" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }}>
                       Email & SMS Marketing
                     </h3>
@@ -554,7 +554,7 @@ export function AssessmentForm() {
                   {/* Social Media Content */}
                   <div className="bg-white p-6 rounded-lg border-2 border-[#0000FF]/20">
                     <div className="flex items-center gap-3 mb-6">
-                      <img src="/icon-content.png" alt="Social Media" className="w-10 h-10" />
+                      <img src="/content.png" alt="Social Media" className="w-10 h-10" />
                       <h3 className="text-xl font-bold text-[#0000FF]" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }}>
                         Social Media Content
                       </h3>
@@ -589,7 +589,7 @@ export function AssessmentForm() {
                   {/* Reputation Management */}
                   <div className="bg-white p-6 rounded-lg border-2 border-[#0000FF]/20">
                     <div className="flex items-center gap-3 mb-6">
-                      <img src="/icon-reputation.png" alt="Reputation" className="w-10 h-10" />
+                      <img src="/reputation.png" alt="Reputation" className="w-10 h-10" />
                       <h3 className="text-xl font-bold text-[#0000FF]" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }}>
                         Reputation Management
                       </h3>
@@ -628,7 +628,7 @@ export function AssessmentForm() {
                   {/* Customer Response & Timing */}
                   <div className="bg-white p-6 rounded-lg border-2 border-[#0000FF]/20">
                     <div className="flex items-center gap-3 mb-6">
-                      <img src="/icon-inbox.png" alt="Response" className="w-10 h-10" />
+                      <img src="/inbox.png" alt="Response" className="w-10 h-10" />
                       <h3 className="text-xl font-bold text-[#0000FF]" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }}>
                         Customer Response & Timing
                       </h3>
@@ -662,7 +662,7 @@ export function AssessmentForm() {
                   {/* Live Chat */}
                   <div className="bg-white p-6 rounded-lg border-2 border-[#0000FF]/20">
                     <div className="flex items-center gap-3 mb-6">
-                      <img src="/icon-livechat.png" alt="Live Chat" className="w-10 h-10" />
+                      <img src="/livechat.png" alt="Live Chat" className="w-10 h-10" />
                       <h3 className="text-xl font-bold text-[#0000FF]" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }}>
                         Live Chat
                       </h3>
@@ -701,7 +701,7 @@ export function AssessmentForm() {
                   {/* Business Listings */}
                   <div className="bg-white p-6 rounded-lg border-2 border-[#0000FF]/20">
                     <div className="flex items-center gap-3 mb-6">
-                      <img src="/icon-listings.png" alt="Listings" className="w-10 h-10" />
+                      <img src="/listings.png" alt="Listings" className="w-10 h-10" />
                       <h3 className="text-xl font-bold text-[#0000FF]" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }}>
                         Business Listings
                       </h3>
@@ -728,7 +728,7 @@ export function AssessmentForm() {
                   {/* Google Business Profile */}
                   <div className="bg-white p-6 rounded-lg border-2 border-[#0000FF]/20">
                     <div className="flex items-center gap-3 mb-6">
-                      <img src="/icon-localblue.png" alt="Google Business" className="w-10 h-10" />
+                      <img src="/localblue.png" alt="Google Business" className="w-10 h-10" />
                       <h3 className="text-xl font-bold text-[#0000FF]" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }}>
                         Google Business Profile
                       </h3>
