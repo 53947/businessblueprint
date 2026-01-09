@@ -38,6 +38,7 @@ import {
   updateSupportTicketSchema,
   updatePrescriptionSchema,
   siteInspectorPurchases,
+  siteInspectorResults,
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
@@ -3889,6 +3890,46 @@ async function processAssessmentAsync(
     if (!assessment) throw new Error("Assessment not found");
     
     logStep("Step 1", `✅ Assessment loaded: ${assessment.businessName} (${assessment.email})`);
+
+    // Run SiteInspector Fast Check in parallel (non-blocking, max 10 seconds)
+    // This populates the fast_check results for the prescription page
+    if (assessment.website) {
+      logStep("Step 1.5", `🔍 Starting SiteInspector Fast Check for ${assessment.website}...`);
+      
+      // Fire-and-forget with 10 second timeout - don't block the pipeline
+      (async () => {
+        try {
+          const fastCheckResult = await siteInspectorService.runFastCheck(assessment.website);
+          
+          if (fastCheckResult && fastCheckResult.success) {
+            const r = fastCheckResult.results;
+            // Store Fast Check results in database using individual columns
+            await db.insert(siteInspectorResults).values({
+              assessmentId: assessmentId,
+              url: assessment.website,
+              type: 'fast_check',
+              status: 'completed',
+              overallScore: r.summary?.overallScore || 0,
+              sslPresent: r.ssl?.present || false,
+              sslValid: r.ssl?.valid || false,
+              sslIssuer: r.ssl?.issuer || null,
+              sslExpiresIn: r.ssl?.expiresIn || null,
+              loadTime: String(r.performance?.loadTime || 0),
+              performanceScore: r.performance?.score || 0,
+              mobileOptimized: r.mobile?.optimized || false,
+              mobileScore: r.mobile?.score || 0,
+              criticalIssues: r.criticalIssues ? JSON.stringify(r.criticalIssues) : null,
+              requestedAt: new Date(),
+              completedAt: new Date()
+            });
+            console.log(`[SiteInspector] Fast Check completed and saved for assessment ${assessmentId}`);
+          }
+        } catch (error) {
+          // Don't fail assessment if Fast Check fails
+          console.error('[SiteInspector] Fast Check error (non-blocking):', error);
+        }
+      })();
+    }
 
     // Run comprehensive presence scan
     logStep("Step 2", `🔍 Starting presence scan for ${assessment.businessName}...`);

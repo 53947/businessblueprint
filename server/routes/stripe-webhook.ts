@@ -1,7 +1,8 @@
 /**
- * Stripe Webhook Handler
+ * Payment Webhook Handler
  * 
- * Handles Stripe webhook events for SiteInspector Full Report payments
+ * Handles webhook events for SiteInspector Full Report payments
+ * Uses payment service abstraction for provider-agnostic verification
  */
 
 import { Request, Response } from "express";
@@ -10,40 +11,28 @@ import { db } from "../db";
 import { siteInspectorPurchases, siteInspectorResults } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import { SiteInspectorService } from "../services/siteinspector";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2025-12-15.clover"
-});
+import { paymentService } from "../services/payment-service";
 
 const siteInspectorService = new SiteInspectorService();
 
 export async function handleStripeWebhook(req: Request, res: Response) {
-  const sig = req.headers["stripe-signature"];
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  const sig = req.headers["stripe-signature"] as string;
 
   if (!sig) {
-    console.error("[Stripe Webhook] No signature provided");
+    console.error("[Payment Webhook] No signature provided");
     return res.status(400).json({ error: "No signature" });
-  }
-
-  if (!webhookSecret) {
-    console.warn("[Stripe Webhook] No webhook secret configured, processing without verification");
   }
 
   let event: Stripe.Event;
 
   try {
-    if (webhookSecret) {
-      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-    } else {
-      event = JSON.parse(req.body.toString());
-    }
+    event = paymentService.verifyWebhook(req.body, sig);
   } catch (err: any) {
-    console.error("[Stripe Webhook] Signature verification failed:", err.message);
+    console.error("[Payment Webhook] Signature verification failed:", err.message);
     return res.status(400).json({ error: "Webhook signature verification failed" });
   }
 
-  console.log(`[Stripe Webhook] Received event: ${event.type}`);
+  console.log(`[Payment Webhook] Received event: ${event.type}`);
 
   try {
     switch (event.type) {
@@ -55,24 +44,24 @@ export async function handleStripeWebhook(req: Request, res: Response) {
 
       case "payment_intent.succeeded": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        console.log(`[Stripe Webhook] Payment succeeded: ${paymentIntent.id}`);
+        console.log(`[Payment Webhook] Payment succeeded: ${paymentIntent.id}`);
         break;
       }
 
       case "payment_intent.payment_failed": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        console.log(`[Stripe Webhook] Payment failed: ${paymentIntent.id}`);
+        console.log(`[Payment Webhook] Payment failed: ${paymentIntent.id}`);
         await handlePaymentFailed(paymentIntent);
         break;
       }
 
       default:
-        console.log(`[Stripe Webhook] Unhandled event type: ${event.type}`);
+        console.log(`[Payment Webhook] Unhandled event type: ${event.type}`);
     }
 
     res.json({ received: true });
   } catch (error: any) {
-    console.error("[Stripe Webhook] Error processing event:", error);
+    console.error("[Payment Webhook] Error processing event:", error);
     res.status(500).json({ error: "Webhook processing failed" });
   }
 }
@@ -81,17 +70,17 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const { metadata } = session;
   
   if (!metadata?.type || metadata.type !== "siteinspector_full_report") {
-    console.log("[Stripe Webhook] Not a SiteInspector purchase, skipping");
+    console.log("[Payment Webhook] Not a SiteInspector purchase, skipping");
     return;
   }
 
   const assessmentId = metadata.assessmentId ? parseInt(metadata.assessmentId) : null;
   const websiteUrl = metadata.websiteUrl || "";
   
-  console.log(`[Stripe Webhook] Processing SiteInspector Full Report purchase for assessment ${assessmentId}`);
+  console.log(`[Payment Webhook] Processing SiteInspector Full Report purchase for assessment ${assessmentId}`);
 
   if (!assessmentId) {
-    console.error("[Stripe Webhook] No assessmentId in metadata");
+    console.error("[Payment Webhook] No assessmentId in metadata");
     return;
   }
 
@@ -101,7 +90,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     });
 
     if (existingPurchase) {
-      console.log(`[Stripe Webhook] Purchase already recorded for session ${session.id}`);
+      console.log(`[Payment Webhook] Purchase already recorded for session ${session.id}`);
       return;
     }
 
@@ -117,14 +106,14 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       purchasedAt: new Date()
     });
 
-    console.log(`[Stripe Webhook] Purchase recorded for assessment ${assessmentId}`);
+    console.log(`[Payment Webhook] Purchase recorded for assessment ${assessmentId}`);
 
     const assessment = await db.query.assessments.findFirst({
       where: (assessments, { eq }) => eq(assessments.id, assessmentId)
     });
 
     if (!assessment) {
-      console.error(`[Stripe Webhook] Assessment ${assessmentId} not found`);
+      console.error(`[Payment Webhook] Assessment ${assessmentId} not found`);
       return;
     }
 
@@ -132,7 +121,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     const customerEmail = session.customer_email || assessment.email;
 
     if (!targetUrl) {
-      console.error("[Stripe Webhook] No website URL available for full report");
+      console.error("[Payment Webhook] No website URL available for full report");
       return;
     }
 
@@ -144,7 +133,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       requestedAt: new Date()
     });
 
-    console.log(`[Stripe Webhook] Requesting full report for ${targetUrl}`);
+    console.log(`[Payment Webhook] Requesting full report for ${targetUrl}`);
 
     const reportResult = await siteInspectorService.requestFullReport(
       targetUrl,
@@ -153,37 +142,40 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     );
 
     if (reportResult) {
-      console.log(`[Stripe Webhook] Full report queued: ${reportResult.reportId}`);
+      console.log(`[Payment Webhook] Full report queued: ${reportResult.reportId}`);
 
       setTimeout(async () => {
         try {
           await checkAndDeliverReport(assessmentId, customerEmail || undefined, targetUrl);
         } catch (error) {
-          console.error("[Stripe Webhook] Error in delayed report check:", error);
+          console.error("[Payment Webhook] Error in delayed report check:", error);
         }
       }, 3 * 60 * 1000);
     }
 
   } catch (error) {
-    console.error("[Stripe Webhook] Error handling checkout completed:", error);
+    console.error("[Payment Webhook] Error handling checkout completed:", error);
     throw error;
   }
 }
 
 async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
-  console.log(`[Stripe Webhook] Payment failed for ${paymentIntent.id}`);
+  console.log(`[Payment Webhook] Payment failed for ${paymentIntent.id}`);
 
-  const sessions = await stripe.checkout.sessions.list({
-    payment_intent: paymentIntent.id,
-    limit: 1
-  });
+  try {
+    const existingPurchase = await db.query.siteInspectorPurchases?.findFirst({
+      where: (purchases, { eq }) => eq(purchases.stripePaymentIntentId, paymentIntent.id)
+    });
 
-  if (sessions.data.length > 0) {
-    const session = sessions.data[0];
-    
-    await db.update(siteInspectorPurchases)
-      .set({ status: "failed" })
-      .where(eq(siteInspectorPurchases.stripeSessionId, session.id));
+    if (existingPurchase) {
+      await db.update(siteInspectorPurchases)
+        .set({ status: "failed" })
+        .where(eq(siteInspectorPurchases.id, existingPurchase.id));
+      
+      console.log(`[Payment Webhook] Updated purchase ${existingPurchase.id} to failed status`);
+    }
+  } catch (error) {
+    console.error("[Payment Webhook] Error updating failed payment:", error);
   }
 }
 
@@ -201,7 +193,7 @@ async function checkAndDeliverReport(
     });
 
     if (result && result.status === "completed" && email) {
-      console.log(`[Stripe Webhook] Sending full report email to ${email}`);
+      console.log(`[Payment Webhook] Sending full report email to ${email}`);
       
       const purchase = await db.query.siteInspectorPurchases?.findFirst({
         where: (purchases, { eq }) => eq(purchases.assessmentId, assessmentId)
@@ -214,6 +206,6 @@ async function checkAndDeliverReport(
       }
     }
   } catch (error) {
-    console.error("[Stripe Webhook] Error checking/delivering report:", error);
+    console.error("[Payment Webhook] Error checking/delivering report:", error);
   }
 }

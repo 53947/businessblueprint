@@ -631,6 +631,11 @@ export class EmailService {
         'listings': 'listings.png',
         'localblue': 'localblue.png',
         'commverse': 'commverse.png',
+        'relationships': 'relationships.png',
+        'website': 'Website-SEO.png',
+        'seo': 'Website-SEO.png',
+        'hostsblue': 'hostsblue.png',
+        'swipesblue': 'swipesblue.png',
       };
       return productId ? `${baseUrl}/${iconMap[productId] || 'send.png'}` : `${baseUrl}/send.png`;
     };
@@ -878,6 +883,39 @@ export class EmailService {
             <img src="${baseUrl}/localblue.png" alt="LocalBlue Bundle" />
             <p><strong>LocalBlue Bundle ($59/mo):</strong> Includes Reputation, business Listings management, and Google Business Profile optimization for complete local SEO dominance.</p>
           </div>
+        </div>
+        
+        <!-- SITEINSPECTOR FULL REPORT UPSELL -->
+        <div style="background: #ffffff; border: 2px solid #0000FF; border-radius: 8px; padding: 25px; margin: 25px 0;">
+          <div style="margin-bottom: 15px;">
+            <img src="${baseUrl}/Site_Inspection.png" alt="SiteInspector" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
+            <h3 style="display: inline; vertical-align: middle; margin: 0; color: #0000FF; font-family: 'Archivo Semi Expanded', sans-serif;">Want a Complete Website Audit?</h3>
+          </div>
+          
+          <p style="color: #09080E;">Your Digital IQ Assessment included a quick scan of your website. For a <strong>comprehensive technical analysis</strong> with actionable insights:</p>
+          
+          <ul style="margin: 15px 0; padding-left: 20px; color: #09080E;">
+            <li><strong>Performance Analysis:</strong> Page speed, loading times, Core Web Vitals, optimization opportunities</li>
+            <li><strong>SEO Deep Dive:</strong> Meta tags, structured data, indexability, mobile SEO, local SEO factors</li>
+            <li><strong>Security Audit:</strong> SSL configuration, vulnerabilities, security headers, best practices</li>
+            <li><strong>Mobile Optimization:</strong> Responsive design, mobile usability, touch targets, viewport</li>
+            <li><strong>Code Quality:</strong> HTML validation, accessibility (WCAG) compliance, best practices</li>
+            <li><strong>Competitive Analysis:</strong> How your site compares to industry standards</li>
+          </ul>
+          
+          <p style="font-size: 18px; color: #09080E; margin: 20px 0;">
+            <strong>Get your complete SiteInspector Report for just $10</strong>
+          </p>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <a href="${baseUrl}/siteinspector/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #0000FF; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #0000FF;">
+              Get Full Website Audit - $10
+            </a>
+          </div>
+          
+          <p style="font-size: 14px; color: #09080E; opacity: 0.8; text-align: center; margin-top: 15px;">
+            <em>Report delivered within 5 minutes of payment • Detailed analysis included</em>
+          </p>
         </div>
         
         <h2>Next Steps</h2>
