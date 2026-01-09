@@ -3871,24 +3871,33 @@ async function processAssessmentAsync(
   storage: any,
 ) {
   console.log(`[Assessment Pipeline] ▶️ STARTING background processing for assessment ID: ${assessmentId}`);
+  const startTime = Date.now();
+  
+  // Helper function to log with timing
+  const logStep = (step: string, message: string) => {
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    console.log(`[Assessment Pipeline] [${elapsed}s] ${step}: ${message}`);
+  };
+  
   try {
     // Update status to analyzing
-    console.log(`[Assessment Pipeline] Step 1: Updating status to 'analyzing'...`);
+    logStep("Step 1", "Updating status to 'analyzing'...");
     await storage.updateAssessment(assessmentId, { status: "analyzing" });
 
     const assessment = await storage.getAssessment(assessmentId);
     if (!assessment) throw new Error("Assessment not found");
+    
+    logStep("Step 1", `✅ Assessment loaded: ${assessment.businessName} (${assessment.email})`);
 
     // Run comprehensive presence scan
-    console.log(
-      `🔍 Running independent presence scan for ${assessment.businessName}`,
-    );
+    logStep("Step 2", `🔍 Starting presence scan for ${assessment.businessName}...`);
     const presenceScan = await presenceScannerService.scanBusiness({
       businessName: assessment.businessName,
       website: assessment.website || undefined,
       phone: assessment.phone,
       address: assessment.address,
     });
+    logStep("Step 2", `✅ Presence scan complete`);
 
     // Calculate operational score from self-reported questions (0-70 points)
     const operationalScore = presenceScannerService.calculateOperationalScore({
@@ -3962,6 +3971,7 @@ async function processAssessmentAsync(
     };
 
     // Generate product recommendations based on scores
+    logStep("Step 4", "Generating product recommendations...");
     const productRecommendations =
       await productRecommendationService.generateRecommendations(assessmentId, {
         visibility: presenceScore.scores.visibility,
@@ -3970,6 +3980,7 @@ async function processAssessmentAsync(
         engagement: presenceScore.scores.engagement,
         overall: presenceScore.overallScore,
       });
+    logStep("Step 4", `✅ Generated ${productRecommendations.length} product recommendations`);
 
     // Save product recommendations to database
     await productRecommendationService.saveRecommendations(
@@ -3978,6 +3989,7 @@ async function processAssessmentAsync(
     );
 
     // Get AI analysis (enhanced with our scan data)
+    logStep("Step 5", "🤖 Starting AI analysis (this may take 30-60 seconds)...");
     const analysisResult = await aiService.analyzeBusinessPresence({
       businessInfo: {
         name: assessment.businessName,
@@ -3988,6 +4000,7 @@ async function processAssessmentAsync(
       googleData,
       presenceScore,
     });
+    logStep("Step 5", `✅ AI analysis complete - summary length: ${analysisResult.summary?.length || 0} chars`);
 
     // Combine AI analysis with our independent scan data
     const enhancedAnalysis = {
@@ -4071,26 +4084,41 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
     }
 
     // Send email report with enhanced data
-    const emailSent = await emailService.sendAssessmentReport(
-      assessment.email,
-      {
-        businessName: assessment.businessName,
-        digitalScore: presenceScan.overall.digitalIQScore,
-        summary: `Your Digital IQ Score: ${presenceScan.overall.digitalIQScore}/140. ${enhancedAnalysis.summary}`,
-        recommendations: enhancedAnalysis.recommendations,
-        assessmentId,
-      },
-    );
+    logStep("Step 7", `📧 Sending Digital IQ Report email to ${assessment.email}...`);
+    try {
+      const emailSent = await emailService.sendAssessmentReport(
+        assessment.email,
+        {
+          businessName: assessment.businessName,
+          digitalScore: presenceScan.overall.digitalIQScore,
+          summary: `Your Digital IQ Score: ${presenceScan.overall.digitalIQScore}/140. ${enhancedAnalysis.summary}`,
+          recommendations: enhancedAnalysis.recommendations,
+          assessmentId,
+        },
+      );
 
-    await storage.updateAssessment(assessmentId, { emailSent });
+      await storage.updateAssessment(assessmentId, { emailSent });
+      logStep("Step 7", `✅ Digital IQ Report email ${emailSent ? 'SENT' : 'FAILED'}`);
+    } catch (emailError) {
+      logStep("Step 7", `❌ Digital IQ Report email ERROR: ${emailError}`);
+    }
 
     // Send thank you and introduction email
-    await emailService.sendThankYouIntroduction(assessment.email, {
-      businessName: assessment.businessName,
-      assessmentId,
-    });
+    logStep("Step 8", `📧 Sending Coach Blue email to ${assessment.email}...`);
+    try {
+      const coachSent = await emailService.sendThankYouIntroduction(assessment.email, {
+        businessName: assessment.businessName,
+        assessmentId,
+      });
+      logStep("Step 8", `✅ Coach Blue email ${coachSent ? 'SENT' : 'FAILED'}`);
+    } catch (coachEmailError) {
+      logStep("Step 8", `❌ Coach Blue email ERROR: ${coachEmailError}`);
+    }
+    
+    logStep("COMPLETE", `✅ Assessment ${assessmentId} fully processed!`);
   } catch (error) {
-    console.error("Error processing assessment:", error);
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    console.error(`[Assessment Pipeline] [${elapsed}s] ❌ FATAL ERROR processing assessment ${assessmentId}:`, error);
     await storage.updateAssessment(assessmentId, { status: "failed" });
   }
 }
