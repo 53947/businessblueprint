@@ -322,7 +322,184 @@ export class ResendEmailService {
     return `<!DOCTYPE html><html><body><p>Click the link to login: <a href="${magicLink}">${magicLink}</a></p></body></html>`;
   }
 
-  private generateThankYouIntroductionHTML(data: any): string {
-    return `<!DOCTYPE html><html><body><p>Thank you for completing your assessment, ${data.businessName}!</p></body></html>`;
+  private generateThankYouIntroductionHTML(data: { businessName: string; assessmentId: number }): string {
+    const baseUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
+    const coachBlueIcon = `${baseUrl}/4-AI_Business_Coach_-_Coach_Blue.png`;
+    const tourUrl = `${baseUrl}/tour?assessmentId=${data.assessmentId}`;
+    const prescriptionUrl = `${baseUrl}/portal/prescriptions`;
+    
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meet Coach Blue</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Archivo+Semi+Expanded:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      font-family: 'Archivo', sans-serif;
+      line-height: 1.6;
+      color: #09080E;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #EEFBFF;
+    }
+    .email-outline {
+      border: 2px solid #09080E;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      background: #f2f4f6;
+      background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent);
+      background-size: 50px 50px;
+      background-color: #f2f4f6;
+      color: #09080E;
+      padding: 40px 30px;
+      text-align: center;
+      border-bottom: 4px solid #F97316;
+    }
+    .content {
+      background: #EEFBFF;
+      padding: 40px 30px;
+      background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent);
+      background-size: 50px 50px;
+      background-color: #EEFBFF;
+    }
+    .footer {
+      background: #f2f4f6;
+      background-image: 
+        linear-gradient(0deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(0, 0, 255, 0.08) 25%, rgba(0, 0, 255, 0.08) 26%, transparent 27%, transparent 74%, rgba(0, 0, 255, 0.08) 75%, rgba(0, 0, 255, 0.08) 76%, transparent 77%, transparent);
+      background-size: 50px 50px;
+      background-color: #f2f4f6;
+      color: #09080E;
+      padding: 30px;
+      text-align: center;
+      border-top: 4px solid #F97316;
+    }
+    .cta-button {
+      display: inline-block;
+      background: #F97316;
+      color: #EEFBFF;
+      padding: 16px 32px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-family: 'Archivo Semi Expanded', sans-serif;
+      font-size: 16px;
+      margin: 20px 10px 20px 0;
+      border: 2px solid #F97316;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-outline">
+      <!-- HEADER -->
+      <div class="header">
+        <img src="${coachBlueIcon}" alt="Coach Blue" style="width: 80px; height: 80px; margin-bottom: 15px;" />
+        <h1 style="font-family: 'Archivo Semi Expanded', sans-serif; font-size: 28px; color: #09080E; margin: 0;">
+          Meet Coach Blue 🤖
+        </h1>
+        <p style="font-size: 18px; color: #09080E; margin-top: 10px;">Your AI Guide to Digital Success</p>
+      </div>
+      
+      <!-- CONTENT -->
+      <div class="content">
+        <p><strong>Hi ${data.businessName},</strong></p>
+        
+        <p>Congratulations on completing your Digital IQ Assessment! 🎉</p>
+        
+        <p>I'm <strong>Coach Blue</strong>, your AI business mentor here at BusinessBlueprint. Think of me as your personal guide to digital growth—available 24/7 to help you navigate the world of digital marketing and implement your prescription recommendations.</p>
+        
+        <h2 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #0000FF; margin-top: 30px;">Your Free Platform Tour</h2>
+        
+        <p>Before we dive in, let me give you a <strong>FREE guided tour</strong> of BusinessBlueprint. I'll walk you through:</p>
+        
+        <ul style="margin: 20px 0; padding-left: 20px;">
+          <li><strong>Your Prescription:</strong> How to read and prioritize your recommendations</li>
+          <li><strong>The 5-Step Journey:</strong> Assessment → Prescription → LocalBlue → Coach Blue → CommVerse</li>
+          <li><strong>Our Tools:</strong> A complete overview of all 9 apps and what they do</li>
+          <li><strong>Getting Started:</strong> Which tools to implement first for maximum impact</li>
+        </ul>
+        
+        <div style="text-align: center; margin: 40px 0;">
+          <a href="${tourUrl}" class="cta-button">
+            Start Your Free Tour
+          </a>
+        </div>
+        
+        <p style="font-size: 14px; color: #09080E; opacity: 0.8; text-align: center;">
+          <em>The tour is completely free and you can replay it as many times as you want!</em>
+        </p>
+        
+        <div style="border-top: 2px solid #0000FF; border-bottom: 2px solid #0000FF; padding: 20px; margin: 40px 0; background: #ffffff;">
+          <h3 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #0000FF; margin-top: 0;">Want Me as Your Personal Mentor?</h3>
+          
+          <p>The platform tour is just the beginning. If you want <strong>ongoing, personalized guidance</strong> as you grow your business, I'm available as a premium subscription.</p>
+          
+          <p><strong>With Coach Blue Premium ($99/mo), I'll help you:</strong></p>
+          <ul>
+            <li>Implement your prescription step-by-step</li>
+            <li>Troubleshoot technical issues</li>
+            <li>Answer questions about any of our tools</li>
+            <li>Provide strategic advice tailored to your business</li>
+            <li>Keep you motivated and on track</li>
+          </ul>
+          
+          <p style="margin-bottom: 0;">Think of it like having a business consultant available 24/7—but for a fraction of the cost.</p>
+        </div>
+        
+        <h2 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #0000FF;">What's Next?</h2>
+        
+        <p>Here's what I recommend:</p>
+        
+        <ol style="margin: 20px 0; padding-left: 20px;">
+          <li><strong>Take the free tour</strong> (10-15 minutes) to get oriented</li>
+          <li><strong>Review your prescription</strong> to see what we recommend</li>
+          <li><strong>Pick one tool to start with</strong> (I can help you choose!)</li>
+          <li><strong>Implement and see results</strong></li>
+        </ol>
+        
+        <p>Ready to get started? I'm here whenever you need me!</p>
+        
+        <div style="text-align: center; margin: 40px 0;">
+          <a href="${tourUrl}" class="cta-button">
+            Begin Free Tour
+          </a>
+          <br>
+          <a href="${prescriptionUrl}" class="cta-button" style="background: #0000FF; border: 2px solid #0000FF;">
+            View My Prescription
+          </a>
+        </div>
+        
+        <p style="margin-top: 40px;"><strong>Questions?</strong> Just reply to this email—I'm here to help!</p>
+        
+        <p>To your digital success,<br>
+        <strong>Coach Blue 🤖</strong><br>
+        <em>Your AI Business Mentor</em></p>
+      </div>
+      
+      <!-- FOOTER -->
+      <div class="footer">
+        <p><strong>BusinessBlueprint.io</strong></p>
+        <p>Your AI-Powered Partner in Digital Growth</p>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.7;">© 2026 BusinessBlueprint.io</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
   }
 }
