@@ -4183,9 +4183,37 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
       console.error("[Assessment] Error creating prescription:", prescriptionError);
     }
 
-    // Send email report with enhanced data
+    // Send email report with enhanced data (including Fast Check results if available)
     logStep("Step 7", `📧 Sending Digital IQ Report email to ${assessment.email}...`);
     try {
+      // Retrieve Fast Check results if they exist
+      let fastCheckData: any = undefined;
+      try {
+        const fastCheckResult = await db.query.siteInspectorResults?.findFirst({
+          where: (results, { eq, and }) => and(
+            eq(results.assessmentId, assessmentId),
+            eq(results.type, 'fast_check'),
+            eq(results.status, 'completed')
+          )
+        });
+        
+        if (fastCheckResult) {
+          fastCheckData = {
+            overallScore: fastCheckResult.overallScore || 0,
+            performanceScore: fastCheckResult.performanceScore || 0,
+            mobileScore: fastCheckResult.mobileScore || 0,
+            sslPresent: fastCheckResult.sslPresent || false,
+            sslValid: fastCheckResult.sslValid || false,
+            criticalIssues: fastCheckResult.criticalIssues 
+              ? JSON.parse(fastCheckResult.criticalIssues) 
+              : undefined,
+          };
+          logStep("Step 7", `✅ Fast Check data found for email (score: ${fastCheckData.overallScore})`);
+        }
+      } catch (fastCheckError) {
+        logStep("Step 7", `⚠️ Could not retrieve Fast Check data: ${fastCheckError}`);
+      }
+      
       const emailSent = await emailService.sendAssessmentReport(
         assessment.email,
         {
@@ -4194,6 +4222,7 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
           summary: `Your Digital IQ Score: ${presenceScan.overall.digitalIQScore}/140. ${enhancedAnalysis.summary}`,
           recommendations: enhancedAnalysis.recommendations,
           assessmentId,
+          fastCheck: fastCheckData,
         },
       );
 

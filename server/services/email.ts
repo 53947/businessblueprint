@@ -9,6 +9,15 @@ interface EmailReportData {
   summary: string;
   recommendations: any[];
   assessmentId: number;
+  // SiteInspector Fast Check results (optional)
+  fastCheck?: {
+    overallScore: number;
+    performanceScore: number;
+    mobileScore: number;
+    sslPresent: boolean;
+    sslValid: boolean;
+    criticalIssues?: Array<{ issue: string; severity: string }>;
+  };
 }
 
 interface ReviewAlertData {
@@ -885,22 +894,93 @@ export class EmailService {
           </div>
         </div>
         
-        <!-- SITEINSPECTOR FULL REPORT UPSELL -->
+        <!-- SITEINSPECTOR FAST CHECK RESULTS (if available) -->
+        ${data.fastCheck ? `
+        <div style="background: #ffffff; border: 2px solid #0000FF; border-radius: 8px; padding: 25px; margin: 25px 0;">
+          <div style="margin-bottom: 15px;">
+            <img src="${baseUrl}/Site_Inspection.png" alt="SiteInspector" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
+            <h3 style="display: inline; vertical-align: middle; margin: 0; color: #0000FF; font-family: 'Archivo Semi Expanded', sans-serif;">Website Technical Analysis</h3>
+          </div>
+          
+          <p style="color: #09080E;">We ran a quick technical analysis of your website. Here's what we found:</p>
+          
+          <!-- Score Grid -->
+          <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <tr>
+              <td style="width: 25%; padding: 15px; background: #EEFBFF; border-radius: 8px; text-align: center;">
+                <div style="font-size: 32px; font-weight: 700; color: ${data.fastCheck.overallScore >= 80 ? '#22C55E' : data.fastCheck.overallScore >= 60 ? '#F97316' : '#DC2626'};">
+                  ${data.fastCheck.overallScore}
+                </div>
+                <div style="font-size: 14px; color: #09080E;">Overall Score</div>
+              </td>
+              <td style="width: 25%; padding: 15px; background: #EEFBFF; border-radius: 8px; text-align: center;">
+                <div style="font-size: 32px; font-weight: 700; color: ${data.fastCheck.performanceScore >= 80 ? '#22C55E' : data.fastCheck.performanceScore >= 60 ? '#F97316' : '#DC2626'};">
+                  ${data.fastCheck.performanceScore}
+                </div>
+                <div style="font-size: 14px; color: #09080E;">Performance</div>
+              </td>
+              <td style="width: 25%; padding: 15px; background: #EEFBFF; border-radius: 8px; text-align: center;">
+                <div style="font-size: 32px; font-weight: 700; color: ${data.fastCheck.mobileScore >= 80 ? '#22C55E' : data.fastCheck.mobileScore >= 60 ? '#F97316' : '#DC2626'};">
+                  ${data.fastCheck.mobileScore}
+                </div>
+                <div style="font-size: 14px; color: #09080E;">Mobile</div>
+              </td>
+              <td style="width: 25%; padding: 15px; background: #EEFBFF; border-radius: 8px; text-align: center;">
+                <div style="font-size: 32px; font-weight: 700; color: ${data.fastCheck.sslPresent && data.fastCheck.sslValid ? '#22C55E' : '#DC2626'};">
+                  ${data.fastCheck.sslPresent && data.fastCheck.sslValid ? '✓' : '✗'}
+                </div>
+                <div style="font-size: 14px; color: #09080E;">SSL</div>
+              </td>
+            </tr>
+          </table>
+          
+          ${data.fastCheck.criticalIssues && data.fastCheck.criticalIssues.length > 0 ? `
+          <div style="background: #FEE2E2; border-left: 4px solid #DC2626; padding: 15px; margin: 15px 0; border-radius: 4px;">
+            <p style="font-weight: 600; color: #991B1B; margin: 0 0 10px 0;">⚠️ Issues Detected</p>
+            <ul style="margin: 0; padding-left: 20px; color: #09080E;">
+              ${data.fastCheck.criticalIssues.slice(0, 3).map(issue => `<li style="margin: 5px 0;">${issue.issue}</li>`).join('')}
+            </ul>
+          </div>
+          ` : `
+          <div style="background: #DCFCE7; border-left: 4px solid #22C55E; padding: 15px; margin: 15px 0; border-radius: 4px;">
+            <p style="font-weight: 600; color: #166534; margin: 0;">✓ No critical issues detected</p>
+          </div>
+          `}
+          
+          <!-- UPSELL to Full Report -->
+          <div style="background: #DBEAFE; border-left: 4px solid #0000FF; padding: 15px; margin: 20px 0; border-radius: 4px;">
+            <p style="font-weight: 600; color: #09080E; margin: 0 0 10px 0;">Want the Complete Picture?</p>
+            <p style="color: #09080E; margin: 0 0 10px 0; font-size: 14px;">
+              This quick scan revealed your scores. Get a <strong>comprehensive technical analysis</strong> with detailed recommendations, prioritized task list, and actionable fixes.
+            </p>
+          </div>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <a href="${baseUrl}/siteinspector/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #0000FF; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #0000FF;">
+              Get Full Website Audit - $10
+            </a>
+          </div>
+          
+          <p style="font-size: 14px; color: #09080E; opacity: 0.8; text-align: center; margin-top: 15px;">
+            <em>Report delivered within 5 minutes of payment • 50+ checks included</em>
+          </p>
+        </div>
+        ` : `
+        <!-- SITEINSPECTOR FULL REPORT UPSELL (no Fast Check data available) -->
         <div style="background: #ffffff; border: 2px solid #0000FF; border-radius: 8px; padding: 25px; margin: 25px 0;">
           <div style="margin-bottom: 15px;">
             <img src="${baseUrl}/Site_Inspection.png" alt="SiteInspector" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
             <h3 style="display: inline; vertical-align: middle; margin: 0; color: #0000FF; font-family: 'Archivo Semi Expanded', sans-serif;">Want a Complete Website Audit?</h3>
           </div>
           
-          <p style="color: #09080E;">Your Digital IQ Assessment included a quick scan of your website. For a <strong>comprehensive technical analysis</strong> with actionable insights:</p>
+          <p style="color: #09080E;">Get a <strong>comprehensive technical analysis</strong> of your website with actionable insights:</p>
           
           <ul style="margin: 15px 0; padding-left: 20px; color: #09080E;">
-            <li><strong>Performance Analysis:</strong> Page speed, loading times, Core Web Vitals, optimization opportunities</li>
-            <li><strong>SEO Deep Dive:</strong> Meta tags, structured data, indexability, mobile SEO, local SEO factors</li>
-            <li><strong>Security Audit:</strong> SSL configuration, vulnerabilities, security headers, best practices</li>
-            <li><strong>Mobile Optimization:</strong> Responsive design, mobile usability, touch targets, viewport</li>
-            <li><strong>Code Quality:</strong> HTML validation, accessibility (WCAG) compliance, best practices</li>
-            <li><strong>Competitive Analysis:</strong> How your site compares to industry standards</li>
+            <li><strong>Performance Analysis:</strong> Page speed, loading times, Core Web Vitals</li>
+            <li><strong>SEO Deep Dive:</strong> Meta tags, structured data, indexability</li>
+            <li><strong>Security Audit:</strong> SSL configuration, vulnerabilities, best practices</li>
+            <li><strong>Mobile Optimization:</strong> Responsive design, mobile usability</li>
+            <li><strong>Accessibility:</strong> WCAG compliance, code quality</li>
           </ul>
           
           <p style="font-size: 18px; color: #09080E; margin: 20px 0;">
@@ -914,9 +994,10 @@ export class EmailService {
           </div>
           
           <p style="font-size: 14px; color: #09080E; opacity: 0.8; text-align: center; margin-top: 15px;">
-            <em>Report delivered within 5 minutes of payment • Detailed analysis included</em>
+            <em>Report delivered within 5 minutes of payment • 50+ checks included</em>
           </p>
         </div>
+        `}
         
         <h2>Next Steps</h2>
         <p>You've got the diagnosis—now it's time to take action. Here's what to do:</p>

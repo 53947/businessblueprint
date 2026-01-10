@@ -89,6 +89,15 @@ interface EmailReportData {
   summary: string;
   recommendations: any[];
   assessmentId: number;
+  // SiteInspector Fast Check results (optional)
+  fastCheck?: {
+    overallScore: number;
+    performanceScore: number;
+    mobileScore: number;
+    sslPresent: boolean;
+    sslValid: boolean;
+    criticalIssues?: Array<{ issue: string; severity: string }>;
+  };
 }
 
 interface ReviewAlertData {
