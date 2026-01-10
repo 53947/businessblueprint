@@ -86,7 +86,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
   try {
     const existingPurchase = await db.query.siteInspectorPurchases?.findFirst({
-      where: (purchases, { eq }) => eq(purchases.stripeSessionId, session.id)
+      where: (purchases, { eq }) => eq(purchases.transactionId, session.id)
     });
 
     if (existingPurchase) {
@@ -96,8 +96,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
     await db.insert(siteInspectorPurchases).values({
       assessmentId: assessmentId,
-      stripeSessionId: session.id,
-      stripePaymentIntentId: typeof session.payment_intent === "string" 
+      paymentProvider: "stripe",
+      transactionId: session.id,
+      paymentIntentId: typeof session.payment_intent === "string" 
         ? session.payment_intent 
         : session.payment_intent?.id || null,
       amount: session.amount_total || 1000,
@@ -164,7 +165,7 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
 
   try {
     const existingPurchase = await db.query.siteInspectorPurchases?.findFirst({
-      where: (purchases, { eq }) => eq(purchases.stripePaymentIntentId, paymentIntent.id)
+      where: (purchases, { eq }) => eq(purchases.paymentIntentId, paymentIntent.id)
     });
 
     if (existingPurchase) {

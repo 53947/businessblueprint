@@ -198,11 +198,16 @@ export type SiteInspectorResult = typeof siteInspectorResults.$inferSelect;
 export type NewSiteInspectorResult = typeof siteInspectorResults.$inferInsert;
 
 // SiteInspector purchases - tracks $10 full report payments
+// Provider-agnostic schema supports Stripe and SwipesBlue
 export const siteInspectorPurchases = pgTable("site_inspector_purchases", {
   id: serial("id").primaryKey(),
   assessmentId: integer("assessment_id").notNull().references(() => assessments.id),
-  stripeSessionId: text("stripe_session_id").notNull().unique(),
-  stripePaymentIntentId: text("stripe_payment_intent_id"),
+  
+  // Provider-agnostic payment fields
+  paymentProvider: varchar("payment_provider", { length: 20 }).notNull().default("stripe"), // 'stripe' or 'swipesblue'
+  transactionId: text("transaction_id").notNull().unique(), // Stripe session ID or SwipesBlue transaction ID
+  paymentIntentId: text("payment_intent_id"), // Provider-specific payment reference
+  
   amount: integer("amount").notNull(), // in cents (1000 = $10.00)
   status: varchar("status", { length: 20 }).notNull().default("pending"), // pending, paid, refunded, failed
   purchasedAt: timestamp("purchased_at").defaultNow(),
