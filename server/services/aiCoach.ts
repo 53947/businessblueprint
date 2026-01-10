@@ -59,7 +59,7 @@ STANDALONE:
 PARTNERS:
 - HostsBlue (hostsblue.com): Web hosting, domains, website builder, SSL - for website issues
 - SwipesBlue (swipesblue.com): Payment processing, shopping cart
-- SiteInspector (siteinspector.dev): Website technical analysis, speed/mobile/SEO audits
+- ScansBlue (scansblue.com): Website technical analysis, speed/mobile/SEO audits
 
 When giving advice, naturally mention relevant products that solve the user's problem.
 Example: "To improve your review response rate, I'd recommend using our Reputation tool at /reputation - it automates review requests and helps you respond faster."
@@ -121,7 +121,7 @@ ${productKnowledge}`
       if (websiteUrl) {
         const auditorResponse = await siteInspectorService.chatWithAuditor(question, { url: websiteUrl });
         if (auditorResponse) {
-          technicalContext = `\n\nTechnical Analysis from SiteInspector:\n${auditorResponse.response}`;
+          technicalContext = `\n\nTechnical Analysis from ScansBlue:\n${auditorResponse.response}`;
         }
       }
       
@@ -131,7 +131,7 @@ ${productKnowledge}`
             role: "system",
             content: `You are Coach Blue helping with technical website questions. Provide helpful, non-technical explanations. When relevant, recommend BusinessBlueprint products:
 - HostsBlue (hostsblue.com) for hosting, domains, SSL issues
-- SiteInspector (siteinspector.dev) for detailed technical audits
+- ScansBlue (scansblue.com) for detailed technical audits
 - /livechat for adding live chat to capture leads`
           },
           {
@@ -149,7 +149,7 @@ ${productKnowledge}`
       if (content.toLowerCase().includes('hostsblue') || content.toLowerCase().includes('hosting')) {
         products.push('hostsBlue');
       }
-      if (content.toLowerCase().includes('siteinspector') || content.toLowerCase().includes('audit')) {
+      if (content.toLowerCase().includes('scansblue') || content.toLowerCase().includes('audit')) {
         products.push('siteInspector');
       }
       if (content.toLowerCase().includes('livechat') || content.toLowerCase().includes('chat')) {
@@ -164,7 +164,7 @@ ${productKnowledge}`
     } catch (error) {
       console.error('[Coach Blue] Technical help error:', error);
       return {
-        answer: 'I can help with website questions! For detailed technical analysis, I recommend running a SiteInspector audit at siteinspector.dev.',
+        answer: 'I can help with website questions! For detailed technical analysis, I recommend running a ScansBlue audit at scansblue.com.',
         recommendedProducts: ['siteInspector']
       };
     }

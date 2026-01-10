@@ -833,9 +833,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="#siteinspector" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#0000FF' }} data-testid="link-solution-siteinspector">
-                                <img src={siteInspectorIcon} alt="SiteInspector" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">SiteInspector</div>
+                              <a href="#scansblue" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#0000FF' }} data-testid="link-solution-scansblue">
+                                <img src={siteInspectorIcon} alt="ScansBlue" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">ScansBlue</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Site Analysis</p>
                               </a>
                             </NavigationMenuLink>
@@ -1057,14 +1057,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="#siteinspector"
-                                data-testid="link-resources-siteinspector"
+                                href="#scansblue"
+                                data-testid="link-resources-scansblue"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={siteInspectorIcon} alt="SiteInspector" className="w-full h-full object-contain" />
+                                  <img src={siteInspectorIcon} alt="ScansBlue" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">SiteInspector</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">ScansBlue</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Site analysis tool</p>
                                 </div>
                               </a>
@@ -1726,9 +1726,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-xs text-gray-600 text-center">Admin Console</p>
                                   </a>
 
-                                  {/* SiteInspector */}
-                                  <a href="#siteinspector" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#0000FF' }} data-testid="mobile-link-siteinspector">
-                                    <p className="text-xs font-bold text-gray-900 text-center">SiteInspector</p>
+                                  {/* ScansBlue */}
+                                  <a href="#scansblue" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#0000FF' }} data-testid="mobile-link-scansblue">
+                                    <p className="text-xs font-bold text-gray-900 text-center">ScansBlue</p>
                                     <p className="text-xs text-gray-600 text-center">Site Analysis</p>
                                   </a>
 
@@ -1829,8 +1829,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       <div className="font-bold">ConsoleBlue</div>
                                       <p className="text-xs text-gray-600">Admin console</p>
                                     </a>
-                                    <a href="#siteinspector" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">SiteInspector</div>
+                                    <a href="#scansblue" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">ScansBlue</div>
                                       <p className="text-xs text-gray-600">Site analysis tool</p>
                                     </a>
                                   </div>

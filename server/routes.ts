@@ -4656,18 +4656,18 @@ async function registerInboxRoutes(app: Express) {
     }
   });
 
-  // Webhook endpoint for SiteInspector Full Report completion
+  // Webhook endpoint for ScansBlue Full Report completion
   app.post('/api/siteinspector-webhook', async (req, res) => {
     try {
       const { reportId, status, url, summary, assessmentId, reportData } = req.body;
       
-      console.log(`[Webhook] SiteInspector report ${reportId} status: ${status}`);
+      console.log(`[Webhook] ScansBlue report ${reportId} status: ${status}`);
       
       if (status === 'completed' && assessmentId) {
         await siteInspectorService.updateFullReportStatus(
           assessmentId,
           reportId,
-          `https://siteinspector.dev/reports/${reportId}`,
+          `https://scansblue.com/reports/${reportId}`,
           status
         );
         

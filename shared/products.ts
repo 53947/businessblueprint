@@ -210,7 +210,7 @@ export const PRODUCTS: Record<string, Product> = {
   },
   siteinspector: {
     id: 'siteinspector',
-    name: 'SiteInspector',
+    name: 'ScansBlue',
     description: 'Website Analysis Tool - Professional-grade website audits',
     price: 'Free',
     priceValue: 0,
@@ -221,7 +221,7 @@ export const PRODUCTS: Record<string, Product> = {
       'Professional-grade analysis without agency fees',
       'Prioritized by impact so you fix what matters first'
     ],
-    url: 'https://siteinspector.dev',
+    url: 'https://scansblue.com',
     isPartner: true
   }
 };
