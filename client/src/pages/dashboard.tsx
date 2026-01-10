@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { DigitalBlueprint } from "@/components/digital-blueprint";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { SiteInspectorResults } from "@/components/siteinspector-results";
+import { ScansBlueResults } from "@/components/scansblue-results";
 import { ProductCategorySection } from "@/components/product-recommendation-card";
 import { CoachBlueCTA } from "@/components/coach-blue-cta";
 import { 
@@ -43,8 +43,8 @@ export default function Dashboard() {
     enabled: !!assessmentId
   });
 
-  const { data: siteInspectorData } = useQuery({
-    queryKey: [`/api/siteinspector/results/${assessmentId}`],
+  const { data: scansBlueData } = useQuery({
+    queryKey: [`/api/scansblue/results/${assessmentId}`],
     enabled: !!assessmentId && !!(data as any)?.assessment
   });
 
@@ -435,10 +435,10 @@ export default function Dashboard() {
               </Card>
             )}
 
-            {/* SiteInspector Technical Results */}
-            {siteInspectorData && (
-              <SiteInspectorResults 
-                results={siteInspectorData as any}
+            {/* ScansBlue Technical Results */}
+            {scansBlueData && (
+              <ScansBlueResults 
+                results={scansBlueData as any}
                 websiteUrl={assessment.website}
                 assessmentId={assessmentId}
               />

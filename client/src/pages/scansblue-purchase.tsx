@@ -46,7 +46,7 @@ const reportFeatures = [
   }
 ];
 
-export default function SiteInspectorPurchasePage() {
+export default function ScansBluePurchasePage() {
   const [, setLocation] = useLocation();
   const searchString = useSearch();
   const { toast } = useToast();
@@ -98,7 +98,7 @@ export default function SiteInspectorPurchasePage() {
     setIsLoading(true);
 
     try {
-      const response = await apiRequest('POST', '/api/siteinspector/checkout', {
+      const response = await apiRequest('POST', '/api/scansblue/checkout', {
         assessmentId,
         email: assessmentData?.email
       });

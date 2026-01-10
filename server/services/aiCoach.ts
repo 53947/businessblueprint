@@ -1,6 +1,6 @@
 import { unifiedAI } from './ai-provider';
 import { aiSettingsService } from './ai-settings';
-import { siteInspectorService } from './siteinspector';
+import { scansBlueService } from './scansblue';
 
 interface CoachingContext {
   businessInfo: {
@@ -119,7 +119,7 @@ ${productKnowledge}`
       
       let technicalContext = '';
       if (websiteUrl) {
-        const auditorResponse = await siteInspectorService.chatWithAuditor(question, { url: websiteUrl });
+        const auditorResponse = await scansBlueService.chatWithAuditor(question, { url: websiteUrl });
         if (auditorResponse) {
           technicalContext = `\n\nTechnical Analysis from ScansBlue:\n${auditorResponse.response}`;
         }
@@ -150,7 +150,7 @@ ${productKnowledge}`
         products.push('hostsBlue');
       }
       if (content.toLowerCase().includes('scansblue') || content.toLowerCase().includes('audit')) {
-        products.push('siteInspector');
+        products.push('scansBlue');
       }
       if (content.toLowerCase().includes('livechat') || content.toLowerCase().includes('chat')) {
         products.push('livechat');
@@ -165,7 +165,7 @@ ${productKnowledge}`
       console.error('[Coach Blue] Technical help error:', error);
       return {
         answer: 'I can help with website questions! For detailed technical analysis, I recommend running a ScansBlue audit at scansblue.com.',
-        recommendedProducts: ['siteInspector']
+        recommendedProducts: ['scansBlue']
       };
     }
   }

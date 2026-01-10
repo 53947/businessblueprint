@@ -251,10 +251,10 @@ export function registerPaymentRoutes(app: Express) {
   });
 
   /**
-   * Create SiteInspector Full Report checkout session
-   * POST /api/siteinspector/checkout
+   * Create ScansBlue Full Report checkout session
+   * POST /api/scansblue/checkout
    */
-  app.post("/api/siteinspector/checkout", async (req, res) => {
+  app.post("/api/scansblue/checkout", async (req, res) => {
     try {
       const { assessmentId, email } = req.body;
 
@@ -286,10 +286,10 @@ export function registerPaymentRoutes(app: Express) {
         productName: 'ScansBlue Full Report',
         productDescription: `Comprehensive website analysis for ${assessment.website || 'your business'}`,
         customerEmail,
-        successUrl: `${baseUrl}/siteinspector/success?session_id={CHECKOUT_SESSION_ID}&assessment=${assessmentId}`,
-        cancelUrl: `${baseUrl}/siteinspector/purchase?assessment=${assessmentId}&cancelled=true`,
+        successUrl: `${baseUrl}/scansblue/success?session_id={CHECKOUT_SESSION_ID}&assessment=${assessmentId}`,
+        cancelUrl: `${baseUrl}/scansblue/purchase?assessment=${assessmentId}&cancelled=true`,
         metadata: {
-          type: 'siteinspector_full_report',
+          type: 'scansblue_full_report',
           assessmentId: assessmentId.toString(),
           websiteUrl: assessment.website || ''
         }
@@ -305,7 +305,7 @@ export function registerPaymentRoutes(app: Express) {
         url: result.url
       });
     } catch (error: any) {
-      console.error('[SiteInspector Checkout] Error:', error);
+      console.error('[ScansBlue Checkout] Error:', error);
       res.status(500).json({
         success: false,
         error: error.message
@@ -314,10 +314,10 @@ export function registerPaymentRoutes(app: Express) {
   });
 
   /**
-   * Verify SiteInspector checkout session
-   * GET /api/siteinspector/verify-session
+   * Verify ScansBlue checkout session
+   * GET /api/scansblue/verify-session
    */
-  app.get("/api/siteinspector/verify-session", async (req, res) => {
+  app.get("/api/scansblue/verify-session", async (req, res) => {
     try {
       const { session_id } = req.query;
 
@@ -345,7 +345,7 @@ export function registerPaymentRoutes(app: Express) {
           : session.payment_intent?.id
       });
     } catch (error: any) {
-      console.error('[SiteInspector Verify] Error:', error);
+      console.error('[ScansBlue Verify] Error:', error);
       res.status(500).json({
         success: false,
         error: error.message

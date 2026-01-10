@@ -15,7 +15,7 @@ import {
   ArrowRight
 } from "lucide-react";
 
-export default function SiteInspectorSuccessPage() {
+export default function ScansBlueSuccessPage() {
   const [, setLocation] = useLocation();
   const searchString = useSearch();
   const { toast } = useToast();
@@ -36,7 +36,7 @@ export default function SiteInspectorSuccessPage() {
       }
 
       try {
-        const response = await fetch(`/api/siteinspector/verify-session?session_id=${sessionId}`);
+        const response = await fetch(`/api/scansblue/verify-session?session_id=${sessionId}`);
         const data = await response.json();
 
         if (data.success && data.paid) {
@@ -84,7 +84,7 @@ export default function SiteInspectorSuccessPage() {
           <div className="space-x-4">
             <Button 
               variant="outline" 
-              onClick={() => setLocation(assessmentId ? `/siteinspector/purchase?assessment=${assessmentId}` : '/assessment')}
+              onClick={() => setLocation(assessmentId ? `/scansblue/purchase?assessment=${assessmentId}` : '/assessment')}
             >
               Try Again
             </Button>

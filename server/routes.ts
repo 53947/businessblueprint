@@ -37,8 +37,8 @@ import {
   insertTicketCommentSchema,
   updateSupportTicketSchema,
   updatePrescriptionSchema,
-  siteInspectorPurchases,
-  siteInspectorResults,
+  scansBluePurchases,
+  scansBlueResults,
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
@@ -51,7 +51,7 @@ import { productRecommendationService } from "./services/productRecommendations"
 import { reviewAI } from "./services/reviewAI";
 import { jwtService } from "./services/jwt";
 import { presenceScannerService } from "./services/presenceScanner";
-import { siteInspectorService } from "./services/siteinspector";
+import { scansBlueService } from "./services/scansblue";
 import { sendAssessmentConfirmationEmail, sendAdminNotification } from "./services/assessment-emails";
 import { dashboardAccess } from "@shared/schema";
 import { eq, desc, and, or, lte } from "drizzle-orm";
@@ -3891,20 +3891,20 @@ async function processAssessmentAsync(
     
     logStep("Step 1", `✅ Assessment loaded: ${assessment.businessName} (${assessment.email})`);
 
-    // Run SiteInspector Fast Check in parallel (non-blocking, max 10 seconds)
+    // Run ScansBlue Fast Check in parallel (non-blocking, max 10 seconds)
     // This populates the fast_check results for the prescription page
     if (assessment.website) {
-      logStep("Step 1.5", `🔍 Starting SiteInspector Fast Check for ${assessment.website}...`);
+      logStep("Step 1.5", `🔍 Starting ScansBlue Fast Check for ${assessment.website}...`);
       
       // Fire-and-forget with 10 second timeout - don't block the pipeline
       (async () => {
         try {
-          const fastCheckResult = await siteInspectorService.runFastCheck(assessment.website);
+          const fastCheckResult = await scansBlueService.runFastCheck(assessment.website);
           
           if (fastCheckResult && fastCheckResult.success) {
             const r = fastCheckResult.results;
             // Store Fast Check results in database using individual columns
-            await db.insert(siteInspectorResults).values({
+            await db.insert(scansBlueResults).values({
               assessmentId: assessmentId,
               url: assessment.website,
               type: 'fast_check',
@@ -3922,11 +3922,11 @@ async function processAssessmentAsync(
               requestedAt: new Date(),
               completedAt: new Date()
             });
-            console.log(`[SiteInspector] Fast Check completed and saved for assessment ${assessmentId}`);
+            console.log(`[ScansBlue] Fast Check completed and saved for assessment ${assessmentId}`);
           }
         } catch (error) {
           // Don't fail assessment if Fast Check fails
-          console.error('[SiteInspector] Fast Check error (non-blocking):', error);
+          console.error('[ScansBlue] Fast Check error (non-blocking):', error);
         }
       })();
     }
@@ -4189,7 +4189,7 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
       // Retrieve Fast Check results if they exist
       let fastCheckData: any = undefined;
       try {
-        const fastCheckResult = await db.query.siteInspectorResults?.findFirst({
+        const fastCheckResult = await db.query.scansBlueResults?.findFirst({
           where: (results, { eq, and }) => and(
             eq(results.assessmentId, assessmentId),
             eq(results.type, 'fast_check'),
@@ -4603,11 +4603,11 @@ async function registerInboxRoutes(app: Express) {
   );
 
   // ============================================================================
-  // SITEINSPECTOR INTEGRATION ROUTES
+  // SCANSBLUE INTEGRATION ROUTES
   // ============================================================================
 
-  // Get SiteInspector results for an assessment
-  app.get('/api/siteinspector/results/:assessmentId', async (req, res) => {
+  // Get ScansBlue results for an assessment
+  app.get('/api/scansblue/results/:assessmentId', async (req, res) => {
     try {
       const assessmentId = parseInt(req.params.assessmentId);
       
@@ -4615,22 +4615,22 @@ async function registerInboxRoutes(app: Express) {
         return res.status(400).json({ error: 'Invalid assessment ID' });
       }
       
-      const results = await siteInspectorService.getResults(assessmentId);
+      const results = await scansBlueService.getResults(assessmentId);
       
       if (!results) {
-        return res.status(404).json({ error: 'No SiteInspector results found' });
+        return res.status(404).json({ error: 'No ScansBlue results found' });
       }
       
       res.json(results);
       
     } catch (error) {
-      console.error('Error fetching SiteInspector results:', error);
+      console.error('Error fetching ScansBlue results:', error);
       res.status(500).json({ error: 'Failed to fetch results' });
     }
   });
 
   // Request Full Report (user-initiated)
-  app.post('/api/siteinspector/request-report', async (req, res) => {
+  app.post('/api/scansblue/request-report', async (req, res) => {
     try {
       const { url, assessmentId, email } = req.body;
       
@@ -4638,7 +4638,7 @@ async function registerInboxRoutes(app: Express) {
         return res.status(400).json({ error: 'URL required' });
       }
       
-      const result = await siteInspectorService.requestFullReport(
+      const result = await scansBlueService.requestFullReport(
         url,
         email,
         assessmentId
@@ -4657,14 +4657,14 @@ async function registerInboxRoutes(app: Express) {
   });
 
   // Webhook endpoint for ScansBlue Full Report completion
-  app.post('/api/siteinspector-webhook', async (req, res) => {
+  app.post('/api/scansblue-webhook', async (req, res) => {
     try {
       const { reportId, status, url, summary, assessmentId, reportData } = req.body;
       
       console.log(`[Webhook] ScansBlue report ${reportId} status: ${status}`);
       
       if (status === 'completed' && assessmentId) {
-        await siteInspectorService.updateFullReportStatus(
+        await scansBlueService.updateFullReportStatus(
           assessmentId,
           reportId,
           `https://scansblue.com/reports/${reportId}`,
@@ -4675,7 +4675,7 @@ async function registerInboxRoutes(app: Express) {
         const assessment = await storage.getAssessment(parsedAssessmentId);
         
         if (assessment) {
-          const purchase = await db.query.siteInspectorPurchases?.findFirst({
+          const purchase = await db.query.scansBluePurchases?.findFirst({
             where: (purchases: any, { eq }: any) => eq(purchases.assessmentId, parsedAssessmentId)
           });
           
@@ -4684,7 +4684,7 @@ async function registerInboxRoutes(app: Express) {
           if (customerEmail) {
             console.log(`[Webhook] Sending full report email to ${customerEmail}`);
             const emailService = new ResendEmailService();
-            await emailService.sendSiteInspectorFullReport(customerEmail, {
+            await emailService.sendScansBlueFullReport(customerEmail, {
               businessName: assessment.businessName,
               websiteUrl: url || assessment.website || '',
               assessmentId: parsedAssessmentId,
@@ -4692,9 +4692,9 @@ async function registerInboxRoutes(app: Express) {
             });
             
             if (purchase) {
-              await db.update(siteInspectorPurchases)
+              await db.update(scansBluePurchases)
                 .set({ reportDeliveredAt: new Date() })
-                .where(eq(siteInspectorPurchases.id, purchase.id));
+                .where(eq(scansBluePurchases.id, purchase.id));
             }
           }
         }
@@ -4703,7 +4703,7 @@ async function registerInboxRoutes(app: Express) {
       res.json({ success: true, received: true });
       
     } catch (error) {
-      console.error('[Webhook] Error processing SiteInspector webhook:', error);
+      console.error('[Webhook] Error processing ScansBlue webhook:', error);
       res.status(500).json({ success: false, error: 'Webhook processing failed' });
     }
   });
@@ -4713,7 +4713,7 @@ async function registerInboxRoutes(app: Express) {
     try {
       const { message, context } = req.body;
       
-      const result = await siteInspectorService.chatWithAuditor(message, context);
+      const result = await scansBlueService.chatWithAuditor(message, context);
       
       if (!result) {
         return res.status(500).json({ error: 'Analysis failed' });

@@ -145,8 +145,8 @@ export const recommendations = pgTable("recommendations", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// SiteInspector website analysis results
-export const siteInspectorResults = pgTable("site_inspector_results", {
+// ScansBlue website analysis results
+export const scansBlueResults = pgTable("scans_blue_results", {
   id: serial("id").primaryKey(),
   assessmentId: integer("assessment_id").references(() => assessments.id),
   url: text("url").notNull(),
@@ -194,12 +194,12 @@ export const siteInspectorResults = pgTable("site_inspector_results", {
   updatedAt: timestamp("updated_at").defaultNow()
 });
 
-export type SiteInspectorResult = typeof siteInspectorResults.$inferSelect;
-export type NewSiteInspectorResult = typeof siteInspectorResults.$inferInsert;
+export type ScansBlueResult = typeof scansBlueResults.$inferSelect;
+export type NewScansBlueResult = typeof scansBlueResults.$inferInsert;
 
-// SiteInspector purchases - tracks $10 full report payments
+// ScansBlue purchases - tracks $10 full report payments
 // Provider-agnostic schema supports Stripe and SwipesBlue
-export const siteInspectorPurchases = pgTable("site_inspector_purchases", {
+export const scansBluePurchases = pgTable("scans_blue_purchases", {
   id: serial("id").primaryKey(),
   assessmentId: integer("assessment_id").notNull().references(() => assessments.id),
   
@@ -216,9 +216,9 @@ export const siteInspectorPurchases = pgTable("site_inspector_purchases", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export type SiteInspectorPurchase = typeof siteInspectorPurchases.$inferSelect;
-export type NewSiteInspectorPurchase = typeof siteInspectorPurchases.$inferInsert;
-export const insertSiteInspectorPurchaseSchema = createInsertSchema(siteInspectorPurchases).omit({ id: true, createdAt: true });
+export type ScansBluePurchase = typeof scansBluePurchases.$inferSelect;
+export type NewScansBluePurchase = typeof scansBluePurchases.$inferInsert;
+export const insertScansBluePurchaseSchema = createInsertSchema(scansBluePurchases).omit({ id: true, createdAt: true });
 
 // Client data
 export const clients = pgTable("clients", {

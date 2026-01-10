@@ -1,5 +1,5 @@
 import { db } from '../db';
-import { siteInspectorResults } from '../../shared/schema';
+import { scansBlueResults } from '../../shared/schema';
 import { eq } from 'drizzle-orm';
 
 interface FastCheckResult {
@@ -52,7 +52,7 @@ interface AuditorResult {
   tokensUsed: number;
 }
 
-export class SiteInspectorService {
+export class ScansBlueService {
   private apiKey: string;
   private baseUrl: string;
   private enabled: boolean;
@@ -132,7 +132,7 @@ export class SiteInspectorService {
     try {
       console.log(`[ScansBlue] Requesting Full Report for: ${url}`);
       
-      const webhookUrl = `${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/api/siteinspector-webhook`;
+      const webhookUrl = `${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/api/scansblue-webhook`;
       
       const response = await fetch(`${this.baseUrl}/full-report`, {
         method: 'POST',
@@ -223,7 +223,7 @@ export class SiteInspectorService {
   
   async saveFastCheckResults(assessmentId: number, url: string, results: FastCheckResult): Promise<void> {
     try {
-      await db.insert(siteInspectorResults).values({
+      await db.insert(scansBlueResults).values({
         assessmentId,
         url,
         overallScore: results.results.summary.overallScore,
@@ -246,25 +246,25 @@ export class SiteInspectorService {
   
   async updateFullReportStatus(assessmentId: number, reportId: string, reportUrl: string, status: string): Promise<void> {
     try {
-      await db.update(siteInspectorResults)
+      await db.update(scansBlueResults)
         .set({
           fullReportId: reportId,
           fullReportUrl: reportUrl,
           fullReportStatus: status,
           updatedAt: new Date()
         })
-        .where(eq(siteInspectorResults.assessmentId, assessmentId));
+        .where(eq(scansBlueResults.assessmentId, assessmentId));
       
-      console.log(`[SiteInspector] Full Report status updated: ${status}`);
+      console.log(`[ScansBlue] Full Report status updated: ${status}`);
     } catch (error) {
-      console.error('[SiteInspector] Error updating report status:', error);
+      console.error('[ScansBlue] Error updating report status:', error);
     }
   }
   
   async getResults(assessmentId: number): Promise<any> {
     try {
-      const results = await db.query.siteInspectorResults.findFirst({
-        where: eq(siteInspectorResults.assessmentId, assessmentId)
+      const results = await db.query.scansBlueResults?.findFirst({
+        where: eq(scansBlueResults.assessmentId, assessmentId)
       });
       
       if (results && results.criticalIssues) {
@@ -276,7 +276,7 @@ export class SiteInspectorService {
       
       return results;
     } catch (error) {
-      console.error('[SiteInspector] Error getting results:', error);
+      console.error('[ScansBlue] Error getting results:', error);
       return null;
     }
   }
@@ -306,4 +306,4 @@ export class SiteInspectorService {
   }
 }
 
-export const siteInspectorService = new SiteInspectorService();
+export const scansBlueService = new ScansBlueService();

@@ -56,7 +56,7 @@ const PRODUCT_INFO: Record<string, { name: string; url: string; color: string }>
   'localblue': { name: 'LocalBlue', url: '/localblue', color: '#0000FF' },
   'relationships': { name: 'Relationships', url: '/relationships', color: '#22C55E' },
   'hostsBlue': { name: 'HostsBlue', url: 'https://hostsblue.com', color: '#F97316' },
-  'siteInspector': { name: 'ScansBlue', url: 'https://scansblue.com', color: '#0000FF' },
+  'scansBlue': { name: 'ScansBlue', url: 'https://scansblue.com', color: '#0000FF' },
   'swipesBlue': { name: 'SwipesBlue', url: 'https://swipesblue.com', color: '#F97316' },
 };
 

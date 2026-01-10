@@ -1,19 +1,19 @@
 /**
  * Payment Webhook Handler
  * 
- * Handles webhook events for SiteInspector Full Report payments
+ * Handles webhook events for ScansBlue Full Report payments
  * Uses payment service abstraction for provider-agnostic verification
  */
 
 import { Request, Response } from "express";
 import Stripe from "stripe";
 import { db } from "../db";
-import { siteInspectorPurchases, siteInspectorResults } from "@shared/schema";
+import { scansBluePurchases, scansBlueResults } from "@shared/schema";
 import { eq } from "drizzle-orm";
-import { SiteInspectorService } from "../services/siteinspector";
+import { ScansBlueService } from "../services/scansblue";
 import { paymentService } from "../services/payment-service";
 
-const siteInspectorService = new SiteInspectorService();
+const scansBlueService = new ScansBlueService();
 
 export async function handleStripeWebhook(req: Request, res: Response) {
   const sig = req.headers["stripe-signature"] as string;
@@ -69,15 +69,15 @@ export async function handleStripeWebhook(req: Request, res: Response) {
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const { metadata } = session;
   
-  if (!metadata?.type || metadata.type !== "siteinspector_full_report") {
-    console.log("[Payment Webhook] Not a SiteInspector purchase, skipping");
+  if (!metadata?.type || metadata.type !== "scansblue_full_report") {
+    console.log("[Payment Webhook] Not a ScansBlue purchase, skipping");
     return;
   }
 
   const assessmentId = metadata.assessmentId ? parseInt(metadata.assessmentId) : null;
   const websiteUrl = metadata.websiteUrl || "";
   
-  console.log(`[Payment Webhook] Processing SiteInspector Full Report purchase for assessment ${assessmentId}`);
+  console.log(`[Payment Webhook] Processing ScansBlue Full Report purchase for assessment ${assessmentId}`);
 
   if (!assessmentId) {
     console.error("[Payment Webhook] No assessmentId in metadata");
@@ -85,7 +85,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   }
 
   try {
-    const existingPurchase = await db.query.siteInspectorPurchases?.findFirst({
+    const existingPurchase = await db.query.scansBluePurchases?.findFirst({
       where: (purchases, { eq }) => eq(purchases.transactionId, session.id)
     });
 
@@ -94,7 +94,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       return;
     }
 
-    await db.insert(siteInspectorPurchases).values({
+    await db.insert(scansBluePurchases).values({
       assessmentId: assessmentId,
       paymentProvider: "stripe",
       transactionId: session.id,
@@ -126,7 +126,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       return;
     }
 
-    await db.insert(siteInspectorResults).values({
+    await db.insert(scansBlueResults).values({
       assessmentId: assessmentId,
       url: targetUrl,
       type: "full_report",
@@ -136,7 +136,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
     console.log(`[Payment Webhook] Requesting full report for ${targetUrl}`);
 
-    const reportResult = await siteInspectorService.requestFullReport(
+    const reportResult = await scansBlueService.requestFullReport(
       targetUrl,
       customerEmail || undefined,
       assessmentId
@@ -164,14 +164,14 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
   console.log(`[Payment Webhook] Payment failed for ${paymentIntent.id}`);
 
   try {
-    const existingPurchase = await db.query.siteInspectorPurchases?.findFirst({
+    const existingPurchase = await db.query.scansBluePurchases?.findFirst({
       where: (purchases, { eq }) => eq(purchases.paymentIntentId, paymentIntent.id)
     });
 
     if (existingPurchase) {
-      await db.update(siteInspectorPurchases)
+      await db.update(scansBluePurchases)
         .set({ status: "failed" })
-        .where(eq(siteInspectorPurchases.id, existingPurchase.id));
+        .where(eq(scansBluePurchases.id, existingPurchase.id));
       
       console.log(`[Payment Webhook] Updated purchase ${existingPurchase.id} to failed status`);
     }
@@ -186,7 +186,7 @@ async function checkAndDeliverReport(
   websiteUrl: string
 ) {
   try {
-    const result = await db.query.siteInspectorResults?.findFirst({
+    const result = await db.query.scansBlueResults?.findFirst({
       where: (results, { eq, and }) => and(
         eq(results.assessmentId, assessmentId),
         eq(results.type, "full_report")
@@ -196,14 +196,14 @@ async function checkAndDeliverReport(
     if (result && result.status === "completed" && email) {
       console.log(`[Payment Webhook] Sending full report email to ${email}`);
       
-      const purchase = await db.query.siteInspectorPurchases?.findFirst({
+      const purchase = await db.query.scansBluePurchases?.findFirst({
         where: (purchases, { eq }) => eq(purchases.assessmentId, assessmentId)
       });
 
       if (purchase) {
-        await db.update(siteInspectorPurchases)
+        await db.update(scansBluePurchases)
           .set({ reportDeliveredAt: new Date() })
-          .where(eq(siteInspectorPurchases.id, purchase.id));
+          .where(eq(scansBluePurchases.id, purchase.id));
       }
     }
   } catch (error) {

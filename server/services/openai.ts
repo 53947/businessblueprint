@@ -50,7 +50,7 @@ interface BusinessAnalysisInput {
     lastCRMFollowup?: string;
     hasAutomation?: string;
   };
-  siteInspectorData?: {
+  scansBlueData?: {
     overallScore?: number;
     sslPresent?: boolean;
     sslValid?: boolean;
@@ -141,7 +141,7 @@ export class OpenAIAnalysisService {
   private buildAnalysisPrompt(input: BusinessAnalysisInput): string {
     const productCatalog = this.buildProductCatalogContext();
     const operationalContext = this.buildOperationalContext(input.operationalData);
-    const siteInspectorContext = this.buildSiteInspectorContext(input.siteInspectorData);
+    const scansBlueContext = this.buildScansBlueContext(input.scansBlueData);
     
     return `
 You are a digital marketing expert for BusinessBlueprint.io. Your job is to analyze this business's digital presence and recommend OUR PRODUCTS to solve their problems.
@@ -175,7 +175,7 @@ ${input.presenceScore.insights.join('\n')}
 
 ${operationalContext}
 
-${siteInspectorContext}
+${scansBlueContext}
 
 GOOGLE BUSINESS DATA:
 ${JSON.stringify(input.googleData, null, 2)}
@@ -365,14 +365,14 @@ If you can't find a matching product, DO NOT create a fake one.
       : 'OPERATIONAL DATA: Minimal data provided';
   }
 
-  private buildSiteInspectorContext(data?: BusinessAnalysisInput['siteInspectorData']): string {
+  private buildScansBlueContext(data?: BusinessAnalysisInput['scansBlueData']): string {
     if (!data) return 'TECHNICAL WEBSITE ANALYSIS: Not available';
     
     const issues = data.criticalIssues || [];
     const criticalCount = issues.filter(i => i.severity === 'critical').length;
     const highCount = issues.filter(i => i.severity === 'high').length;
     
-    return `TECHNICAL WEBSITE ANALYSIS (from SiteInspector):
+    return `TECHNICAL WEBSITE ANALYSIS (from ScansBlue):
 - Overall Technical Score: ${data.overallScore || 'N/A'}/100
 - SSL Certificate: ${data.sslPresent ? (data.sslValid ? 'Valid' : 'Present but Invalid') : 'MISSING'}
 - Load Time: ${data.loadTime || 'N/A'}s (target: <2s)

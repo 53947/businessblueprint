@@ -894,11 +894,11 @@ export class EmailService {
           </div>
         </div>
         
-        <!-- SITEINSPECTOR FAST CHECK RESULTS (if available) -->
+        <!-- SCANSBLUE FAST CHECK RESULTS (if available) -->
         ${data.fastCheck ? `
         <div style="background: #ffffff; border: 2px solid #0000FF; border-radius: 8px; padding: 25px; margin: 25px 0;">
           <div style="margin-bottom: 15px;">
-            <img src="${baseUrl}/Site_Inspection.png" alt="SiteInspector" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
+            <img src="${baseUrl}/scansblue-icon.png" alt="ScansBlue" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
             <h3 style="display: inline; vertical-align: middle; margin: 0; color: #0000FF; font-family: 'Archivo Semi Expanded', sans-serif;">Website Technical Analysis</h3>
           </div>
           
@@ -956,7 +956,7 @@ export class EmailService {
           </div>
           
           <div style="text-align: center; margin: 20px 0;">
-            <a href="${baseUrl}/siteinspector/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #0000FF; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #0000FF;">
+            <a href="${baseUrl}/scansblue/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #0000FF; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #0000FF;">
               Get Full Website Audit - $10
             </a>
           </div>
@@ -966,10 +966,10 @@ export class EmailService {
           </p>
         </div>
         ` : `
-        <!-- SITEINSPECTOR FULL REPORT UPSELL (no Fast Check data available) -->
+        <!-- SCANSBLUE FULL REPORT UPSELL (no Fast Check data available) -->
         <div style="background: #ffffff; border: 2px solid #0000FF; border-radius: 8px; padding: 25px; margin: 25px 0;">
           <div style="margin-bottom: 15px;">
-            <img src="${baseUrl}/Site_Inspection.png" alt="SiteInspector" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
+            <img src="${baseUrl}/scansblue-icon.png" alt="ScansBlue" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 15px;" />
             <h3 style="display: inline; vertical-align: middle; margin: 0; color: #0000FF; font-family: 'Archivo Semi Expanded', sans-serif;">Want a Complete Website Audit?</h3>
           </div>
           
@@ -984,11 +984,11 @@ export class EmailService {
           </ul>
           
           <p style="font-size: 18px; color: #09080E; margin: 20px 0;">
-            <strong>Get your complete SiteInspector Report for just $10</strong>
+            <strong>Get your complete ScansBlue Report for just $10</strong>
           </p>
           
           <div style="text-align: center; margin: 20px 0;">
-            <a href="${baseUrl}/siteinspector/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #0000FF; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #0000FF;">
+            <a href="${baseUrl}/scansblue/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #0000FF; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #0000FF;">
               Get Full Website Audit - $10
             </a>
           </div>

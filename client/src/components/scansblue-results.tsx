@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-interface SiteInspectorResultsProps {
+interface ScansBlueResultsProps {
   results: {
     overallScore?: number;
     sslPresent?: boolean;
@@ -44,7 +44,7 @@ interface SiteInspectorResultsProps {
   onRequestFullReport?: () => void;
 }
 
-export function SiteInspectorResults({ results, websiteUrl, assessmentId, onRequestFullReport }: SiteInspectorResultsProps) {
+export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestFullReport }: ScansBlueResultsProps) {
   const [isPurchasing, setIsPurchasing] = useState(false);
   const { toast } = useToast();
 
@@ -62,7 +62,7 @@ export function SiteInspectorResults({ results, websiteUrl, assessmentId, onRequ
 
     setIsPurchasing(true);
     try {
-      const response = await fetch('/api/siteinspector/checkout', {
+      const response = await fetch('/api/scansblue/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ assessmentId })
@@ -115,7 +115,7 @@ export function SiteInspectorResults({ results, websiteUrl, assessmentId, onRequ
   const highCount = results.criticalIssues?.filter(i => i.severity === 'high').length || 0;
 
   return (
-    <Card className="border-2 border-[#0000FF] bg-white" data-testid="siteinspector-results">
+    <Card className="border-2 border-[#0000FF] bg-white" data-testid="scansblue-results">
       <CardHeader className="bg-[#09080E] text-white rounded-t-lg">
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">

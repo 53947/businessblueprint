@@ -312,7 +312,7 @@ export class ResendEmailService {
     }
   }
 
-  async sendSiteInspectorFullReport(email: string, data: {
+  async sendScansBlueFullReport(email: string, data: {
     businessName: string;
     websiteUrl: string;
     assessmentId: number;
@@ -326,7 +326,7 @@ export class ResendEmailService {
         return false;
       }
       console.log(`[ResendEmailService] Generating Full Report HTML...`);
-      const htmlContent = this.generateSiteInspectorFullReportHTML(data);
+      const htmlContent = this.generateScansBlueFullReportHTML(data);
       console.log(`[ResendEmailService] Sending Full Report email to ${email}...`);
       const result = await resendClient.client.emails.send({
         from: resendClient.fromEmail,
@@ -342,7 +342,7 @@ export class ResendEmailService {
     }
   }
 
-  private generateSiteInspectorFullReportHTML(data: {
+  private generateScansBlueFullReportHTML(data: {
     businessName: string;
     websiteUrl: string;
     assessmentId: number;
@@ -789,7 +789,7 @@ export class ResendEmailService {
           </p>
           
           <div style="text-align: center; margin: 20px 0;">
-            <a href="${baseUrl}/siteinspector/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #0000FF; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #0000FF;">
+            <a href="${baseUrl}/scansblue/purchase?assessment=${data.assessmentId}" style="display: inline-block; background: #0000FF; color: #EEFBFF; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-family: 'Archivo Semi Expanded', sans-serif; font-size: 16px; border: 2px solid #0000FF;">
               Get Full Website Audit - $10
             </a>
           </div>
