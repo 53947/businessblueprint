@@ -118,7 +118,7 @@ export default function SiteInspectorSuccessPage() {
           <CardContent className="space-y-6">
             <div className="text-center">
               <p className="text-lg text-gray-600">
-                Thank you for purchasing the SiteInspector Full Report.
+                Thank you for purchasing the ScansBlue Full Report.
               </p>
             </div>
 

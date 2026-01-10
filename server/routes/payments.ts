@@ -283,7 +283,7 @@ export function registerPaymentRoutes(app: Express) {
       // Create Stripe checkout session using StripeProvider
       const result = await paymentService.createCheckoutSession({
         priceInCents: 1000, // $10.00
-        productName: 'SiteInspector Full Report',
+        productName: 'ScansBlue Full Report',
         productDescription: `Comprehensive website analysis for ${assessment.website || 'your business'}`,
         customerEmail,
         successUrl: `${baseUrl}/siteinspector/success?session_id={CHECKOUT_SESSION_ID}&assessment=${assessmentId}`,

@@ -58,16 +58,17 @@ export class SiteInspectorService {
   private enabled: boolean;
   
   constructor() {
+    // Support both new SCANSBLUE_* and legacy SITEINSPECTOR_* env vars
     this.apiKey = process.env.NODE_ENV === 'production' 
-      ? process.env.SITEINSPECTOR_API_KEY || ''
-      : process.env.SITEINSPECTOR_TEST_KEY || process.env.SITEINSPECTOR_API_KEY || '';
-    this.baseUrl = process.env.SITEINSPECTOR_API_URL || 'https://siteinspector.dev/api/businessblueprint';
+      ? process.env.SCANSBLUE_API_KEY || process.env.SITEINSPECTOR_API_KEY || ''
+      : process.env.SCANSBLUE_TEST_KEY || process.env.SCANSBLUE_API_KEY || process.env.SITEINSPECTOR_TEST_KEY || process.env.SITEINSPECTOR_API_KEY || '';
+    this.baseUrl = process.env.SCANSBLUE_API_URL || process.env.SITEINSPECTOR_API_URL || 'https://scansblue.com/api/businessblueprint';
     this.enabled = !!this.apiKey;
     
     if (!this.enabled) {
-      console.log('[SiteInspector] No API key configured - service disabled');
+      console.log('[ScansBlue] No API key configured - service disabled');
     } else {
-      console.log('[SiteInspector] Service initialized');
+      console.log('[ScansBlue] Service initialized');
     }
   }
   
@@ -77,12 +78,12 @@ export class SiteInspectorService {
   
   async runFastCheck(url: string): Promise<FastCheckResult | null> {
     if (!this.enabled) {
-      console.log('[SiteInspector] Service disabled - skipping Fast Check');
+      console.log('[ScansBlue] Service disabled - skipping Fast Check');
       return null;
     }
     
     try {
-      console.log(`[SiteInspector] Running Fast Check for: ${url}`);
+      console.log(`[ScansBlue] Running Fast Check for: ${url}`);
       
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 30000);
@@ -103,33 +104,33 @@ export class SiteInspectorService {
       clearTimeout(timeout);
       
       if (!response.ok) {
-        throw new Error(`SiteInspector API error: ${response.status} ${response.statusText}`);
+        throw new Error(`ScansBlue API error: ${response.status} ${response.statusText}`);
       }
       
       const data = await response.json();
       
       if (!data.success) {
-        throw new Error(data.error || 'SiteInspector analysis failed');
+        throw new Error(data.error || 'ScansBlue analysis failed');
       }
       
-      console.log(`[SiteInspector] Fast Check completed. Overall score: ${data.results.summary.overallScore}`);
+      console.log(`[ScansBlue] Fast Check completed. Overall score: ${data.results.summary.overallScore}`);
       
       return data;
       
     } catch (error) {
-      console.error('[SiteInspector] Fast Check error:', error);
+      console.error('[ScansBlue] Fast Check error:', error);
       return null;
     }
   }
   
   async requestFullReport(url: string, email?: string, assessmentId?: number): Promise<FullReportResult | null> {
     if (!this.enabled) {
-      console.log('[SiteInspector] Service disabled - skipping Full Report request');
+      console.log('[ScansBlue] Service disabled - skipping Full Report request');
       return null;
     }
     
     try {
-      console.log(`[SiteInspector] Requesting Full Report for: ${url}`);
+      console.log(`[ScansBlue] Requesting Full Report for: ${url}`);
       
       const webhookUrl = `${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/api/siteinspector-webhook`;
       
@@ -148,7 +149,7 @@ export class SiteInspectorService {
       });
       
       if (!response.ok) {
-        throw new Error(`SiteInspector API error: ${response.status}`);
+        throw new Error(`ScansBlue API error: ${response.status}`);
       }
       
       const data = await response.json();
@@ -157,12 +158,12 @@ export class SiteInspectorService {
         throw new Error(data.error || 'Failed to queue report');
       }
       
-      console.log(`[SiteInspector] Full Report queued: ${data.reportId}`);
+      console.log(`[ScansBlue] Full Report queued: ${data.reportId}`);
       
       return data;
       
     } catch (error) {
-      console.error('[SiteInspector] Full Report error:', error);
+      console.error('[ScansBlue] Full Report error:', error);
       return null;
     }
   }
@@ -175,12 +176,12 @@ export class SiteInspectorService {
     conversationId?: string;
   }): Promise<AuditorResult | null> {
     if (!this.enabled) {
-      console.log('[SiteInspector] Service disabled - skipping Auditor chat');
+      console.log('[ScansBlue] Service disabled - skipping Auditor chat');
       return null;
     }
     
     try {
-      console.log(`[SiteInspector] Auditor chat: ${message.substring(0, 50)}...`);
+      console.log(`[ScansBlue] Auditor chat: ${message.substring(0, 50)}...`);
       
       const response = await fetch(`${this.baseUrl}/auditor`, {
         method: 'POST',
@@ -201,7 +202,7 @@ export class SiteInspectorService {
       });
       
       if (!response.ok) {
-        throw new Error(`SiteInspector API error: ${response.status}`);
+        throw new Error(`ScansBlue API error: ${response.status}`);
       }
       
       const data = await response.json();
@@ -210,12 +211,12 @@ export class SiteInspectorService {
         throw new Error(data.error || 'Auditor chat failed');
       }
       
-      console.log(`[SiteInspector] Auditor response received. Tokens: ${data.tokensUsed}`);
+      console.log(`[ScansBlue] Auditor response received. Tokens: ${data.tokensUsed}`);
       
       return data;
       
     } catch (error) {
-      console.error('[SiteInspector] Auditor error:', error);
+      console.error('[ScansBlue] Auditor error:', error);
       return null;
     }
   }
@@ -237,9 +238,9 @@ export class SiteInspectorService {
         criticalIssues: JSON.stringify(results.results.criticalIssues)
       });
       
-      console.log(`[SiteInspector] Results saved for assessment ${assessmentId}`);
+      console.log(`[ScansBlue] Results saved for assessment ${assessmentId}`);
     } catch (error) {
-      console.error('[SiteInspector] Error saving results:', error);
+      console.error('[ScansBlue] Error saving results:', error);
     }
   }
   

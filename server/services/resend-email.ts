@@ -318,11 +318,11 @@ export class ResendEmailService {
     assessmentId: number;
     reportData: any;
   }): Promise<boolean> {
-    console.log(`[ResendEmailService] sendSiteInspectorFullReport called for ${email}`);
+    console.log(`[ResendEmailService] sendScansBlueFullReport called for ${email}`);
     try {
       const resendClient = await getResendClient();
       if (!resendClient) {
-        console.error('[ResendEmailService] sendSiteInspectorFullReport FAILED - Resend client not available');
+        console.error('[ResendEmailService] sendScansBlueFullReport FAILED - Resend client not available');
         return false;
       }
       console.log(`[ResendEmailService] Generating Full Report HTML...`);
@@ -331,7 +331,7 @@ export class ResendEmailService {
       const result = await resendClient.client.emails.send({
         from: resendClient.fromEmail,
         to: email,
-        subject: `Your SiteInspector Full Report is Ready - ${data.businessName}`,
+        subject: `Your ScansBlue Full Report is Ready - ${data.businessName}`,
         html: htmlContent,
       });
       console.log(`[ResendEmailService] Full Report email SENT to ${email}, Resend ID: ${(result as any).data?.id || 'unknown'}`);
@@ -373,14 +373,14 @@ export class ResendEmailService {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SiteInspector Full Report - ${data.businessName}</title>
+  <title>ScansBlue Full Report - ${data.businessName}</title>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body style="font-family: 'Archivo', Arial, sans-serif; line-height: 1.6; color: #09080E; background-color: #f5f5f5; margin: 0; padding: 0;">
   <div style="max-width: 600px; margin: 0 auto; background: #EEFBFF;">
     <!-- Header -->
     <div style="background: linear-gradient(315deg, #EEFBFF 0%, #6EA6FF 50%, #0000FF 100%); padding: 30px 20px; text-align: center;">
-      <h1 style="margin: 0; color: white; font-size: 28px; font-weight: 700;">SiteInspector</h1>
+      <h1 style="margin: 0; color: white; font-size: 28px; font-weight: 700;">ScansBlue</h1>
       <p style="margin: 10px 0 0; color: rgba(255,255,255,0.9); font-size: 16px;">Full Website Analysis Report</p>
     </div>
     
@@ -766,10 +766,10 @@ export class ResendEmailService {
         
         <p><strong>Questions?</strong> Just reply to this email—we're here to help!</p>
         
-        <!-- SITEINSPECTOR FULL REPORT UPSELL -->
+        <!-- SCANSBLUE FULL REPORT UPSELL -->
         <div style="background: #ffffff; border: 2px solid #0000FF; border-radius: 8px; padding: 25px; margin: 25px 0;">
           <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-            <img src="${baseUrl}/Site_Inspection.png" alt="SiteInspector" style="width: 48px; height: 48px;" />
+            <img src="${baseUrl}/scansblue assets/scansblue icon.png" alt="ScansBlue" style="width: 48px; height: 48px;" />
             <h3 style="margin: 0; color: #0000FF; font-family: 'Archivo Semi Expanded', sans-serif;">Want a Complete Website Audit?</h3>
           </div>
           
@@ -785,7 +785,7 @@ export class ResendEmailService {
           </ul>
           
           <p style="font-size: 18px; color: #09080E; margin: 20px 0;">
-            <strong>Get your complete SiteInspector Report for just $10</strong>
+            <strong>Get your complete ScansBlue Report for just $10</strong>
           </p>
           
           <div style="text-align: center; margin: 20px 0;">

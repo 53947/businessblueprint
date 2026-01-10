@@ -129,7 +129,7 @@ export default function SiteInspectorPurchasePage() {
           <AlertTriangle className="w-16 h-16 mx-auto text-amber-500 mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Assessment Required</h2>
           <p className="text-gray-600 mb-6">
-            To purchase a SiteInspector Full Report, you need to complete a Digital IQ Assessment first.
+            To purchase a ScansBlue Full Report, you need to complete a Digital IQ Assessment first.
           </p>
           <Button onClick={() => setLocation('/assessment')} className="bg-[#0000FF] hover:bg-blue-700">
             Take Assessment
@@ -148,7 +148,7 @@ export default function SiteInspectorPurchasePage() {
         <div className="text-center mb-10">
           <Badge className="bg-[#F97316] text-white mb-4">Unlock Full Analysis</Badge>
           <h1 className="text-3xl md:text-4xl font-bold text-[#09080E] mb-4 font-archivo">
-            SiteInspector Full Report
+            ScansBlue Full Report
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Get a comprehensive 50+ point analysis of your website with actionable recommendations
