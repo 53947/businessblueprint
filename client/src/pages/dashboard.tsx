@@ -440,6 +440,7 @@ export default function Dashboard() {
               <SiteInspectorResults 
                 results={siteInspectorData as any}
                 websiteUrl={assessment.website}
+                assessmentId={assessmentId}
               />
             )}
 

@@ -96,6 +96,16 @@ class PaymentService {
   }
 
   /**
+   * Get supported payment methods for the provider
+   */
+  getSupportedMethods(): string[] {
+    if (this.providerType === 'stripe') {
+      return ['card', 'apple_pay', 'google_pay'];
+    }
+    return ['card'];
+  }
+
+  /**
    * Process a charge
    */
   async charge(params: ChargeParams) {

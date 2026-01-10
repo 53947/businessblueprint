@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,8 +12,12 @@ import {
   AlertTriangle,
   CheckCircle,
   ExternalLink,
-  Zap
+  Zap,
+  CreditCard,
+  Loader2,
+  FileText
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface SiteInspectorResultsProps {
   results: {
@@ -31,13 +36,68 @@ interface SiteInspectorResultsProps {
       recommendation: string;
     }>;
     fullReportUrl?: string;
+    fullReportPurchased?: boolean;
+    fullReportData?: any;
   };
   websiteUrl?: string;
+  assessmentId?: number | string;
   onRequestFullReport?: () => void;
 }
 
-export function SiteInspectorResults({ results, websiteUrl, onRequestFullReport }: SiteInspectorResultsProps) {
+export function SiteInspectorResults({ results, websiteUrl, assessmentId, onRequestFullReport }: SiteInspectorResultsProps) {
+  const [isPurchasing, setIsPurchasing] = useState(false);
+  const { toast } = useToast();
+
   if (!results) return null;
+
+  const handlePurchaseFullReport = async () => {
+    if (!assessmentId) {
+      toast({
+        title: "Error",
+        description: "Assessment ID is required to purchase the full report.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsPurchasing(true);
+    try {
+      const response = await fetch('/api/siteinspector/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assessmentId })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        let errorMessage = 'Failed to create checkout session';
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.error || errorMessage;
+        } catch {
+          errorMessage = errorText || errorMessage;
+        }
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+
+      if (data.success && data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+    } catch (error: any) {
+      console.error('Purchase error:', error);
+      toast({
+        title: "Purchase Error",
+        description: error.message || "Failed to initiate checkout. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsPurchasing(false);
+    }
+  };
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-green-600";
@@ -154,7 +214,7 @@ export function SiteInspectorResults({ results, websiteUrl, onRequestFullReport 
           </div>
         )}
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           {results.fullReportUrl ? (
             <Button
               className="bg-[#0000FF] hover:bg-[#0000FF]/90 text-white"
@@ -164,21 +224,28 @@ export function SiteInspectorResults({ results, websiteUrl, onRequestFullReport 
               <ExternalLink className="w-4 h-4 mr-2" />
               View Full Technical Report
             </Button>
+          ) : results.fullReportPurchased ? (
+            <Button
+              className="bg-green-600 hover:bg-green-700 text-white"
+              disabled
+              data-testid="report-processing"
+            >
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              Full Report Processing...
+            </Button>
           ) : (
             <Button
-              variant="outline"
-              className="border-[#0000FF] text-[#0000FF] hover:bg-[#0000FF] hover:text-white"
-              onClick={() => {
-                if (onRequestFullReport) {
-                  onRequestFullReport();
-                } else if (websiteUrl) {
-                  window.open(`https://siteinspector.dev?url=${encodeURIComponent(websiteUrl)}`, '_blank');
-                }
-              }}
-              data-testid="request-full-report"
+              className="bg-gradient-to-r from-[#0000FF] to-[#F97316] hover:opacity-90 text-white shadow-lg"
+              onClick={handlePurchaseFullReport}
+              disabled={isPurchasing}
+              data-testid="purchase-full-report"
             >
-              <ExternalLink className="w-4 h-4 mr-2" />
-              Run Complete Site Analysis
+              {isPurchasing ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <CreditCard className="w-4 h-4 mr-2" />
+              )}
+              Get Full Report - $10
             </Button>
           )}
           
@@ -191,6 +258,22 @@ export function SiteInspectorResults({ results, websiteUrl, onRequestFullReport 
             Fix Issues with HostsBlue →
           </Button>
         </div>
+        
+        {!results.fullReportUrl && !results.fullReportPurchased && (
+          <div className="mt-4 p-4 bg-gradient-to-r from-[#0000FF]/5 to-[#F97316]/5 rounded-lg border border-[#0000FF]/20">
+            <div className="flex items-start gap-3">
+              <FileText className="w-5 h-5 text-[#0000FF] mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="font-semibold text-[#09080E]">Upgrade to Full Report</p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Get a comprehensive 50+ point analysis including SEO audit, accessibility check, 
+                  Core Web Vitals breakdown, security scan, and prioritized fix recommendations. 
+                  Delivered via email within minutes.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

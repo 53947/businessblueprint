@@ -40,7 +40,7 @@ export function registerPaymentRoutes(app: Express) {
    */
   app.get("/api/payments/methods", async (req, res) => {
     try {
-      const methods = paymentService.getSupportedMethods?.() ?? [];
+      const methods = paymentService.getSupportedMethods();
       res.json({
         success: true,
         methods
@@ -284,14 +284,14 @@ export function registerPaymentRoutes(app: Express) {
       const result = await paymentService.createCheckoutSession({
         priceInCents: 1000, // $10.00
         productName: 'SiteInspector Full Report',
-        productDescription: `Comprehensive website analysis for ${assessment.websiteUrl || 'your business'}`,
+        productDescription: `Comprehensive website analysis for ${assessment.website || 'your business'}`,
         customerEmail,
         successUrl: `${baseUrl}/siteinspector/success?session_id={CHECKOUT_SESSION_ID}&assessment=${assessmentId}`,
         cancelUrl: `${baseUrl}/siteinspector/purchase?assessment=${assessmentId}&cancelled=true`,
         metadata: {
           type: 'siteinspector_full_report',
           assessmentId: assessmentId.toString(),
-          websiteUrl: assessment.websiteUrl || ''
+          websiteUrl: assessment.website || ''
         }
       });
 
