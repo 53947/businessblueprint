@@ -4,15 +4,14 @@ import {
   Server,
 } from "@modelcontextprotocol/sdk/server/index.js";
 import {
-  SSEServerTransport,
-} from "@modelcontextprotocol/sdk/server/sse.js";
+  StdioServerTransport,
+} from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
   ListToolsRequestSchema,
   CallToolRequestSchema,
   ListResourcesRequestSchema,
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import http from "http";
 
 // Initialize the server
 const server = new Server({
@@ -360,73 +359,14 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
   throw new Error(`Unknown resource: ${uri}`);
 });
 
-// Create HTTP server with SSE support
-const PORT = parseInt(process.env.PORT || "3000", 10);
-const HOST = "0.0.0.0";
+// Start the server via stdio
+async function main() {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+  console.error("MCP server connected via stdio");
+}
 
-const httpServer = http.createServer(async (req, res) => {
-  // Handle SSE endpoint
-  if (req.url === "/sse" && req.method === "GET") {
-    res.writeHead(200, {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-      "Access-Control-Allow-Headers": "Content-Type",
-    });
-
-    try {
-      const transport = new SSEServerTransport(req.url, res);
-      await server.connect(transport);
-    } catch (error) {
-      console.error("SSE connection error:", error);
-      res.end();
-    }
-  } else if (req.method === "OPTIONS") {
-    // Handle CORS preflight
-    res.writeHead(200, {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-      "Access-Control-Allow-Headers": "Content-Type",
-    });
-    res.end();
-  } else if (req.url === "/" && req.method === "GET") {
-    // Health check endpoint
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("MCP Server is running\n");
-  } else {
-    res.writeHead(404, { "Content-Type": "text/plain" });
-    res.end("Not found");
-  }
-});
-
-// Start server
-httpServer.listen(PORT, HOST, () => {
-  console.log(`MCP server listening on http://${HOST}:${PORT}`);
-  console.log(`SSE endpoint: http://${HOST}:${PORT}/sse`);
-  console.log(`Health check: http://${HOST}:${PORT}/`);
-});
-
-// Handle graceful shutdown
-process.on("SIGTERM", () => {
-  console.log("SIGTERM received, shutting down gracefully");
-  httpServer.close(() => {
-    console.log("Server closed");
-    process.exit(0);
-  });
-});
-
-process.on("SIGINT", () => {
-  console.log("SIGINT received, shutting down gracefully");
-  httpServer.close(() => {
-    console.log("Server closed");
-    process.exit(0);
-  });
-});
-
-// Handle uncaught exceptions
-process.on("uncaughtException", (error) => {
-  console.error("Uncaught exception:", error);
+main().catch((error) => {
+  console.error("Fatal error:", error);
   process.exit(1);
 });
