@@ -4,14 +4,16 @@ import {
   Server,
 } from "@modelcontextprotocol/sdk/server/index.js";
 import {
-  StdioServerTransport,
-} from "@modelcontextprotocol/sdk/server/stdio.js";
+  SSEServerTransport,
+} from "@modelcontextprotocol/sdk/server/sse.js";
 import {
   ListToolsRequestSchema,
   CallToolRequestSchema,
   ListResourcesRequestSchema,
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
+import http from "http";
+import url from "url";
 
 // Initialize the server
 const server = new Server({
@@ -359,14 +361,37 @@ server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
   throw new Error(`Unknown resource: ${uri}`);
 });
 
-// Start the server
-async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  console.error("MCP server started and listening on stdio");
-}
+// Create HTTP server with SSE support
+const PORT = process.env.PORT || 3000;
 
-main().catch((error) => {
-  console.error("Fatal error:", error);
-  process.exit(1);
+const httpServer = http.createServer(async (req, res) => {
+  const parsedUrl = url.parse(req.url || "", true);
+  const pathname = parsedUrl.pathname;
+
+  if (pathname === "/sse" && req.method === "GET") {
+    res.writeHead(200, {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+      "Access-Control-Allow-Origin": "*",
+    });
+
+    const transport = new SSEServerTransport(pathname, res);
+    await server.connect(transport);
+  } else if (req.method === "POST" && pathname === "/messages") {
+    const chunks: Buffer[] = [];
+    req.on("data", (chunk) => chunks.push(chunk));
+    req.on("end", async () => {
+      const transport = new SSEServerTransport(pathname, res);
+      await server.connect(transport);
+    });
+  } else {
+    res.writeHead(404, { "Content-Type": "text/plain" });
+    res.end("Not found");
+  }
+});
+
+httpServer.listen(PORT, () => {
+  console.log(`MCP server listening on http://localhost:${PORT}`);
+  console.log(`SSE endpoint: http://localhost:${PORT}/sse`);
 });
