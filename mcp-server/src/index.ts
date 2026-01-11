@@ -13,14 +13,10 @@ import {
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
-// Initialize the server with capabilities declared
+// Initialize the server
 const server = new Server({
   name: "replit-agents-mcp",
   version: "1.0.0",
-  capabilities: {
-    tools: {},
-    resources: {},
-  },
 });
 
 // Mock data for agents
