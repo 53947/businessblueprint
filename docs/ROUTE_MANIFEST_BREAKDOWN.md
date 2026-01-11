@@ -7,18 +7,18 @@
 
 | Metric | Count |
 |--------|-------|
-| **Total Pages** | 56 |
-| **Live** | 29 |
+| **Total Pages** | 57 |
+| **Live** | 30 |
 | **Built** | 12 |
-| **Auth Required** | 9 |
+| **Auth Required** | 10 |
 | **Admin Only** | 3 |
 | **Dynamic** | 3 |
-| **In Navigation** | 30 |
+| **In Navigation** | 31 |
 
 ---
 
 ## CATEGORY: PUBLIC (Marketing & Information)
-**Total routes: 11**
+**Total routes: 10**
 
 | Route | Name | Status | In Nav | Auth | Notes |
 |-------|------|--------|--------|------|-------|
@@ -32,7 +32,6 @@
 | `/journey` | Success Journey | LIVE | Yes | No | 5-step success process |
 | `/tour` | Platform Tour | BUILT | No | No | Interactive tour (not linked) |
 | `/biif` | BIIF | LIVE | Yes | No | Business Innovation Framework |
-| `/relationships` | Relationships | LIVE | Yes | No | Business relationships landing |
 
 ---
 
@@ -89,7 +88,7 @@
 | `/content-landing` | Content Landing | LIVE | Yes | No | Content creation overview |
 | `/content` | Content Dashboard | AUTH | No | **Yes** | Manage content calendar (requires auth) |
 
-**✓ Includes both bundle landing page AND individual app routes**
+**Pattern:** Landing page (public) + Dashboard (`-app` suffix, requires auth)
 
 ---
 
@@ -104,7 +103,19 @@
 | `/reputation-landing` | Reputation Landing | LIVE | Yes | No | Reputation management overview |
 | `/reputation-app` | Reputation Dashboard | AUTH | No | **Yes** | Manage reviews (requires auth) |
 
-**✓ Includes both bundle landing page AND individual app routes**
+**Pattern:** Landing page (public) + Dashboard (`-app` suffix, requires auth)
+
+---
+
+## CATEGORY: RELATIONSHIPS (CRM)
+**Total routes: 2**
+
+| Route | Name | Status | In Nav | Auth | Notes |
+|-------|------|--------|--------|------|-------|
+| `/relationships` | Relationships Landing | LIVE | Yes | No | CRM overview and pricing |
+| `/relationships-app` | Relationships Dashboard | AUTH | No | **Yes** | CRM contacts, companies, deals, tasks (requires auth) |
+
+**Pattern:** Landing page (public) + Dashboard (`-app` suffix, requires auth)
 
 ---
 
@@ -161,11 +172,11 @@
 
 | App | Landing Page | Status | Dashboard | Status |
 |-----|--------------|--------|-----------|--------|
-| **Relationships** | `/relationships` | LIVE ✓ | ❌ No dashboard | N/A |
+| **Relationships** | `/relationships` | LIVE ✓ | `/relationships-app` | AUTH ✓ |
 | **Send** | `/send` | LIVE ✓ | `/send-app` | AUTH ✓ |
 | **Content** | `/content-landing` | LIVE ✓ | `/content` | AUTH ✓ |
 | **Inbox** | `/inbox` | LIVE ✓ | `/inbox-app` | AUTH ✓ |
-| **LiveChat** | `/livechat` | LIVE ✓ | ❌ No dashboard | N/A |
+| **LiveChat** | `/livechat` | LIVE ✓ | `/livechat-demo` | BUILT (demo only) |
 | **Listings** | `/listings-landing` | LIVE ✓ | `/listings-app` | AUTH ✓ |
 | **Reputation** | `/reputation-landing` | LIVE ✓ | `/reputation-app` | AUTH ✓ |
 | **Commverse** | `/commverse` | LIVE ✓ | N/A (bundle) | N/A |
@@ -195,13 +206,16 @@
 **Answer:** `/commverse` and `/localblue` are **landing pages only**. They describe the bundle and link to individual apps. Dashboard functionality is in the individual app dashboards (`/send-app`, `/inbox-app`, `/content`, `/listings-app`, `/reputation-app`).
 
 ### 2. How are individual apps organized?
-**Answer:** Apps are grouped under their bundle category:
+**Answer:** Apps are organized by category:
 - **Commverse** category: `/send`, `/inbox`, `/livechat`, `/content-landing` (+ their `-app` dashboards)
 - **LocalBlue** category: `/listings-landing`, `/reputation-landing` (+ their `-app` dashboards)
+- **Relationships** category: `/relationships` (landing) + `/relationships-app` (dashboard)
 - **Portal** category: User's authenticated dashboard, inbox, prescriptions
 
 ### 3. Is `/relationships` a separate app or bundled?
-**Answer:** `/relationships` is listed as a **standalone Public page**, not part of a bundle. It has no associated dashboard route.
+**Answer:** `/relationships` is a **standalone app** with its own category. It follows the same pattern as other apps:
+- `/relationships` = Public landing page (pricing, features)
+- `/relationships-app` = Authenticated CRM dashboard (contacts, companies, deals, tasks)
 
 ### 4. What routes exist but are NOT linked in navigation?
 **Not linked (surfacedInNav: false):**
@@ -218,11 +232,27 @@
 - All admin routes
 
 ### 5. What routes are broken or incomplete?
-**Potentially incomplete:**
-- `/relationships` - Has landing but no dashboard (may be intentional)
-- `/livechat` - Has landing and demo but no authenticated dashboard
-- `/livechat-demo` - Demo page (may be intentional demo-only)
+**All routes are functional.** Notes:
+- `/livechat` has landing and demo but no authenticated dashboard (may be intentional - widget install only)
 - ScansBlue routes are for Stripe purchase flow, not standalone pages
+
+---
+
+## APP NAMING PATTERN
+
+All apps follow a consistent pattern:
+- **Landing page:** `/app-name` or `/app-name-landing` (public, describes features/pricing)
+- **Dashboard:** `/app-name-app` or `/app-name` (authenticated, actual functionality)
+
+| App | Landing Route | Dashboard Route |
+|-----|---------------|-----------------|
+| Send | `/send` | `/send-app` |
+| Inbox | `/inbox` | `/inbox-app` |
+| LiveChat | `/livechat` | `/livechat-demo` (demo only) |
+| Content | `/content-landing` | `/content` |
+| Listings | `/listings-landing` | `/listings-app` |
+| Reputation | `/reputation-landing` | `/reputation-app` |
+| Relationships | `/relationships` | `/relationships-app` |
 
 ---
 
@@ -242,7 +272,7 @@
 
 The route manifest is defined in: `shared/routes.ts`
 
-This file serves as the single source of truth for all 56 application routes and is imported by the sitemap page at `/sitemap`.
+This file serves as the single source of truth for all 57 application routes and is imported by the sitemap page at `/sitemap`.
 
 ---
 

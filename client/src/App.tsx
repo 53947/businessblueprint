@@ -50,7 +50,8 @@ import DataDeletion from "@/pages/data-deletion";
 import PortalTestAccess from "@/pages/portal-test-access";
 import PortalPrescriptions from "@/pages/portal-prescriptions";
 import FindResults from "@/pages/find-results";
-import Relationships from "@/pages/relationships";
+import RelationshipsLanding from "@/pages/relationships-landing";
+import RelationshipsDashboard from "@/pages/relationships";
 import ApiDocs from "@/pages/api-docs";
 import AssessmentConfirmation from "@/pages/assessment-confirmation";
 import KnowledgeBase from "@/pages/knowledge-base";
@@ -111,7 +112,8 @@ function Router() {
       <Route path="/terms" component={Terms} />
       <Route path="/data-deletion" component={DataDeletion} />
       <Route path="/find-results" component={FindResults} />
-      <Route path="/relationships" component={Relationships} />
+      <Route path="/relationships" component={RelationshipsLanding} />
+      <Route path="/relationships-app" component={RelationshipsDashboard} />
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/portal/assessment/confirmation" component={AssessmentConfirmation} />
       <Route path="/knowledge-base" component={KnowledgeBase} />

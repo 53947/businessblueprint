@@ -28,7 +28,6 @@ export const routeManifest: RouteDefinition[] = [
   { path: "/journey", name: "Success Journey", description: "5-step success process", category: "Public", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
   { path: "/tour", name: "Platform Tour", description: "Interactive tour", category: "Public", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: false },
   { path: "/biif", name: "BIIF", description: "Business Innovation Framework", category: "Public", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
-  { path: "/relationships", name: "Relationships", description: "Business relationships", category: "Public", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
   
   // Assessment Flow
   { path: "/assessment", name: "Digital IQ Assessment", description: "Free 27-question assessment", category: "Assessment", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true, badge: "Free" },
@@ -67,6 +66,10 @@ export const routeManifest: RouteDefinition[] = [
   { path: "/listings-app", name: "Listings Dashboard", description: "Manage business listings", category: "LocalBlue", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
   { path: "/reputation-landing", name: "Reputation Landing", description: "Reputation management overview", category: "LocalBlue", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
   { path: "/reputation-app", name: "Reputation Dashboard", description: "Manage reviews", category: "LocalBlue", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
+  
+  // Relationships CRM
+  { path: "/relationships", name: "Relationships Landing", description: "CRM overview and pricing", category: "Relationships", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
+  { path: "/relationships-app", name: "Relationships Dashboard", description: "CRM contacts, companies, deals, tasks", category: "Relationships", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
   
   // Client Portal
   { path: "/portal/login", name: "Portal Login", description: "Sign in to portal", category: "Portal", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
