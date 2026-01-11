@@ -1,8 +1,75 @@
-run = "cd mcp-server && npm install && npm run build && npm start"
-modules = ["nodejs-20"]
+modules = ["nodejs-20", "web", "postgresql-16"]
+run = "npm run dev"
+hidden = [".config", ".git", "generated-icon.png", "node_modules"]
 
 [nix]
-channel = "unstable"
+channel = "stable-24_05"
+packages = ["unzip"]
 
-[env]
-npm_config_yes = "true"
+[mcp.replit-agents-mcp]
+command = "node"
+args = ["mcp-server/build/index.js"]
+
+[deployment]
+deploymentTarget = "autoscale"
+build = ["sh", "-c", "npm run build"]
+run = ["sh", "-c", "NODE_ENV=production node dist/index.js"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Production"
+author = 44626126
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run start"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[rules]
+
+[rules.formatter]
+
+[rules.formatter.fileExtensions]
+
+[rules.formatter.fileExtensions.".html"]
+id = "module:nodejs-20/formatter:prettier"
+
+[agent]
+integrations = ["javascript_log_in_with_replit:1.0.0", "agentmail:1.0.0", "javascript_object_storage:1.0.0", "javascript_stripe:1.0.0", "resend:1.0.0"]
+
+[userenv]
+
+[userenv.shared]
+PAYMENT_PROVIDER = "stripe"
+SCANSBLUE_API_URL = "https://scansblue.com/api/businessblueprint"
+
+[objectStorage]
+defaultBucketID = "replit-objstore-5c049a1d-0f1c-4b2d-bf62-fc64a78e0c20"
