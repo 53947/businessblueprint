@@ -49,7 +49,7 @@ export default function ContentLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/content">Get Started with /content</a>
+                <a href="/content/dashboard">Get Started with /content</a>
               </Button>
               <Button 
                 size="lg" 
@@ -296,7 +296,7 @@ export default function ContentLanding() {
               asChild
               data-testid="button-explore-platform"
             >
-              <a href="/content">Explore /content Platform</a>
+              <a href="/content/dashboard">Explore /content Platform</a>
             </Button>
           </div>
           <p className="text-sm text-gray-500 mt-6">

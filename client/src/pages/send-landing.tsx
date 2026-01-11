@@ -48,7 +48,7 @@ export default function SendLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/send-app">Get Started with /send</a>
+                <a href="/send/dashboard">Get Started with /send</a>
               </Button>
               <Button 
                 size="lg" 
@@ -296,7 +296,7 @@ export default function SendLanding() {
               asChild
               data-testid="button-explore-platform"
             >
-              <a href="/send-app">Explore /send Platform</a>
+              <a href="/send/dashboard">Explore /send Platform</a>
             </Button>
           </div>
           <p className="text-sm text-gray-500 mt-6">

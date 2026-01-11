@@ -90,30 +90,31 @@ function Router() {
       <Route path="/journey" component={Journey} />
       <Route path="/logo-preview" component={LogoPreview} />
       <Route path="/send" component={SendLanding} />
-      <Route path="/send-app" component={SendDashboard} />
+      <Route path="/send/dashboard" component={SendDashboard} />
       <Route path="/inbox" component={InboxLanding} />
-      <Route path="/inbox-app" component={InboxPage} />
+      <Route path="/inbox/dashboard" component={InboxPage} />
       <Route path="/livechat" component={LivechatLanding} />
+      <Route path="/livechat/dashboard" component={LiveChatDemo} />
       <Route path="/livechat-demo" component={LiveChatDemo} />
       <Route path="/livechat-install" component={LiveChatInstall} />
-      <Route path="/content-landing" component={ContentLanding} />
+      <Route path="/content" component={ContentLanding} />
+      <Route path="/content/dashboard" component={ContentManagement} />
       <Route path="/commverse" component={CommverseLanding} />
       <Route path="/commverse-pricing" component={CommversePricing} />
       <Route path="/biif" component={BIIF} />
       <Route path="/admin" component={AdminPanel} />
       <Route path="/brand-studio" component={BrandStudio} />
-      <Route path="/content" component={ContentManagement} />
       <Route path="/localblue" component={LocalBlueLanding} />
-      <Route path="/listings-landing" component={ListingsLanding} />
-      <Route path="/reputation-landing" component={ReputationLanding} />
-      <Route path="/reputation-app" component={ReputationManagement} />
-      <Route path="/listings-app" component={ListingsManagement} />
+      <Route path="/listings" component={ListingsLanding} />
+      <Route path="/listings/dashboard" component={ListingsManagement} />
+      <Route path="/reputation" component={ReputationLanding} />
+      <Route path="/reputation/dashboard" component={ReputationManagement} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
       <Route path="/data-deletion" component={DataDeletion} />
       <Route path="/find-results" component={FindResults} />
       <Route path="/relationships" component={RelationshipsLanding} />
-      <Route path="/relationships-app" component={RelationshipsDashboard} />
+      <Route path="/relationships/dashboard" component={RelationshipsDashboard} />
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/portal/assessment/confirmation" component={AssessmentConfirmation} />
       <Route path="/knowledge-base" component={KnowledgeBase} />

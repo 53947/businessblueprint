@@ -51,25 +51,26 @@ export const routeManifest: RouteDefinition[] = [
   { path: "/commverse", name: "Commverse Bundle", description: "Complete communication suite", category: "Commverse", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
   { path: "/commverse-pricing", name: "Commverse Pricing", description: "Communication tools pricing", category: "Commverse", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: false },
   { path: "/send", name: "Send Landing", description: "Email and SMS marketing", category: "Commverse", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
-  { path: "/send-app", name: "Send Dashboard", description: "Manage Send campaigns", category: "Commverse", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
+  { path: "/send/dashboard", name: "Send Dashboard", description: "Manage Send campaigns", category: "Commverse", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
   { path: "/inbox", name: "Inbox Landing", description: "Unified inbox overview", category: "Commverse", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
-  { path: "/inbox-app", name: "Inbox Dashboard", description: "Manage unified inbox", category: "Commverse", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
+  { path: "/inbox/dashboard", name: "Inbox Dashboard", description: "Manage unified inbox", category: "Commverse", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
   { path: "/livechat", name: "LiveChat Landing", description: "Real-time chat overview", category: "Commverse", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
+  { path: "/livechat/dashboard", name: "LiveChat Dashboard", description: "Manage live chat conversations", category: "Commverse", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
   { path: "/livechat-demo", name: "LiveChat Demo", description: "Try live chat widget", category: "Commverse", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: false },
   { path: "/livechat-install", name: "LiveChat Install", description: "Install LiveChat widget", category: "Commverse", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
-  { path: "/content-landing", name: "Content Landing", description: "Content creation overview", category: "Commverse", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
-  { path: "/content", name: "Content Dashboard", description: "Manage content calendar", category: "Commverse", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
+  { path: "/content", name: "Content Landing", description: "Content creation overview", category: "Commverse", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
+  { path: "/content/dashboard", name: "Content Dashboard", description: "Manage content calendar", category: "Commverse", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
   
   // LocalBlue Apps
   { path: "/localblue", name: "LocalBlue Bundle", description: "Local business presence", category: "LocalBlue", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
-  { path: "/listings-landing", name: "Listings Landing", description: "Directory sync overview", category: "LocalBlue", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
-  { path: "/listings-app", name: "Listings Dashboard", description: "Manage business listings", category: "LocalBlue", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
-  { path: "/reputation-landing", name: "Reputation Landing", description: "Reputation management overview", category: "LocalBlue", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
-  { path: "/reputation-app", name: "Reputation Dashboard", description: "Manage reviews", category: "LocalBlue", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
+  { path: "/listings", name: "Listings Landing", description: "Directory sync overview", category: "LocalBlue", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
+  { path: "/listings/dashboard", name: "Listings Dashboard", description: "Manage business listings", category: "LocalBlue", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
+  { path: "/reputation", name: "Reputation Landing", description: "Reputation management overview", category: "LocalBlue", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
+  { path: "/reputation/dashboard", name: "Reputation Dashboard", description: "Manage reviews", category: "LocalBlue", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
   
   // Relationships CRM
   { path: "/relationships", name: "Relationships Landing", description: "CRM overview and pricing", category: "Relationships", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },
-  { path: "/relationships-app", name: "Relationships Dashboard", description: "CRM contacts, companies, deals, tasks", category: "Relationships", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
+  { path: "/relationships/dashboard", name: "Relationships Dashboard", description: "CRM contacts, companies, deals, tasks", category: "Relationships", requiresAuth: true, isAdmin: false, isDynamic: false, surfacedInNav: false },
   
   // Client Portal
   { path: "/portal/login", name: "Portal Login", description: "Sign in to portal", category: "Portal", requiresAuth: false, isAdmin: false, isDynamic: false, surfacedInNav: true },

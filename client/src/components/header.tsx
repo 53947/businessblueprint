@@ -892,7 +892,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="/content-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#E91EBC' }} data-testid="link-solution-content">
+                              <a href="/content" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#E91EBC' }} data-testid="link-solution-content">
                                 <img src={contentIcon} alt="/content" className="h-12 w-12 object-contain mb-2" />
                                 <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/content</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Social Media</p>
@@ -900,19 +900,27 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="/listings-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF0040' }} data-testid="link-solution-listings">
+                              <a href="/listings" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF0040' }} data-testid="link-solution-listings">
                                 <img src={listingsIcon} alt="/listings" className="h-12 w-12 object-contain mb-2" />
                                 <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/listings</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Directory Sync</p>
                               </a>
                             </NavigationMenuLink>
 
-                            {/* Row 5: Last App */}
+                            {/* Row 5: Last Apps */}
                             <NavigationMenuLink asChild>
-                              <a href="/reputation-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#D59600' }} data-testid="link-solution-reputation">
+                              <a href="/reputation" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#D59600' }} data-testid="link-solution-reputation">
                                 <img src={reputationIcon} alt="/reputation" className="h-12 w-12 object-contain mb-2" />
                                 <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/reputation</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Review Mgmt</p>
+                              </a>
+                            </NavigationMenuLink>
+
+                            <NavigationMenuLink asChild>
+                              <a href="/relationships" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#22C55E' }} data-testid="link-solution-relationships">
+                                <img src={relationshipsIcon} alt="/relationships" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/relationships</div>
+                                <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Customer CRM</p>
                               </a>
                             </NavigationMenuLink>
                           </div>
@@ -1066,6 +1074,111 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div>
                                   <div className="text-sm font-medium text-gray-900 dark:text-white">ScansBlue</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Site analysis tool</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/relationships"
+                                data-testid="link-resources-relationships"
+                              >
+                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
+                                  <img src={relationshipsIcon} alt="/relationships" className="w-full h-full object-contain" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/relationships</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Customer CRM</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/send"
+                                data-testid="link-resources-send"
+                              >
+                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
+                                  <img src={sendIcon} alt="/send" className="w-full h-full object-contain" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/send</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Email & SMS marketing</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/inbox"
+                                data-testid="link-resources-inbox"
+                              >
+                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
+                                  <img src={inboxIcon} alt="/inbox" className="w-full h-full object-contain" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/inbox</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Unified communications</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/livechat"
+                                data-testid="link-resources-livechat"
+                              >
+                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
+                                  <img src={livechatIcon} alt="/livechat" className="w-full h-full object-contain" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/livechat</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Live chat widget</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/content"
+                                data-testid="link-resources-content"
+                              >
+                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
+                                  <img src={contentIcon} alt="/content" className="w-full h-full object-contain" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/content</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Social media management</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/listings"
+                                data-testid="link-resources-listings"
+                              >
+                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
+                                  <img src={listingsIcon} alt="/listings" className="w-full h-full object-contain" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/listings</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Directory sync</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+                            <NavigationMenuLink asChild>
+                              <a
+                                className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                href="/reputation"
+                                data-testid="link-resources-reputation"
+                              >
+                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
+                                  <img src={reputationIcon} alt="/reputation" className="w-full h-full object-contain" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/reputation</div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-400">Review management</p>
                                 </div>
                               </a>
                             </NavigationMenuLink>
@@ -1763,21 +1876,27 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   </a>
 
                                   {/* /content */}
-                                  <a href="/content-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E91EBC' }} data-testid="mobile-link-content-app">
+                                  <a href="/content" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E91EBC' }} data-testid="mobile-link-content-app">
                                     <p className="text-xs font-bold text-gray-900 text-center">/content</p>
                                     <p className="text-xs text-gray-600 text-center">Social Media</p>
                                   </a>
 
                                   {/* /listings */}
-                                  <a href="/listings-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }} data-testid="mobile-link-listings-app">
+                                  <a href="/listings" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }} data-testid="mobile-link-listings-app">
                                     <p className="text-xs font-bold text-gray-900 text-center">/listings</p>
                                     <p className="text-xs text-gray-600 text-center">Directory Sync</p>
                                   </a>
 
                                   {/* /reputation */}
-                                  <a href="/reputation-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }} data-testid="mobile-link-reputation-app">
+                                  <a href="/reputation" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }} data-testid="mobile-link-reputation-app">
                                     <p className="text-xs font-bold text-gray-900 text-center">/reputation</p>
                                     <p className="text-xs text-gray-600 text-center">Review Mgmt</p>
+                                  </a>
+
+                                  {/* /relationships */}
+                                  <a href="/relationships" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#22C55E' }} data-testid="mobile-link-relationships">
+                                    <p className="text-xs font-bold text-gray-900 text-center">/relationships</p>
+                                    <p className="text-xs text-gray-600 text-center">Customer CRM</p>
                                   </a>
                                 </div>
                               </div>
@@ -1832,6 +1951,34 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <a href="#scansblue" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
                                       <div className="font-bold">ScansBlue</div>
                                       <p className="text-xs text-gray-600">Site analysis tool</p>
+                                    </a>
+                                    <a href="/relationships" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/relationships</div>
+                                      <p className="text-xs text-gray-600">Customer CRM</p>
+                                    </a>
+                                    <a href="/send" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/send</div>
+                                      <p className="text-xs text-gray-600">Email & SMS marketing</p>
+                                    </a>
+                                    <a href="/inbox" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/inbox</div>
+                                      <p className="text-xs text-gray-600">Unified communications</p>
+                                    </a>
+                                    <a href="/livechat" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/livechat</div>
+                                      <p className="text-xs text-gray-600">Live chat widget</p>
+                                    </a>
+                                    <a href="/content" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/content</div>
+                                      <p className="text-xs text-gray-600">Social media management</p>
+                                    </a>
+                                    <a href="/listings" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/listings</div>
+                                      <p className="text-xs text-gray-600">Directory sync</p>
+                                    </a>
+                                    <a href="/reputation" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/reputation</div>
+                                      <p className="text-xs text-gray-600">Review management</p>
                                     </a>
                                   </div>
                                 </div>

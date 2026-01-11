@@ -47,7 +47,7 @@ export default function RelationshipsLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/relationships-app">Open Dashboard</a>
+                <a href="/relationships/dashboard">Open Dashboard</a>
               </Button>
               <Button 
                 size="lg" 
@@ -292,7 +292,7 @@ export default function RelationshipsLanding() {
               style={{ backgroundColor: '#0000FF' }}
               asChild
             >
-              <a href="/relationships-app">Start Free Today</a>
+              <a href="/relationships/dashboard">Start Free Today</a>
             </Button>
             <Button 
               size="lg" 

@@ -148,11 +148,96 @@ digitalIQScore
 
 ## 🛣️ ROUTING PATTERNS
 
+### **App Route Structure**
+
+**Every app follows this three-page pattern:**
+
+**1. Landing Page:** `/ appname`
+```typescript
+// Examples:
+/send              // Marketing page for /send
+/inbox             // Marketing page for /inbox  
+/content           // Marketing page for /content
+/relationships     // Marketing page for /relationships
+/commverse         // Bundle landing page
+/localblue         // Bundle landing page
+```
+- Public access (no authentication)
+- Marketing/information page
+- Includes pricing, features, benefits
+
+**2. Dashboard:** `/ appname/dashboard`
+```typescript
+// Examples:
+/send/dashboard              // Authenticated /send app
+/inbox/dashboard             // Authenticated /inbox app
+/content/dashboard           // Authenticated /content app
+/relationships/dashboard     // Authenticated /relationships CRM
+```
+- Requires authentication
+- Main application interface
+- User's working environment
+
+**3. Setup:** `/ appname/setup`
+```typescript
+// Examples:
+/send/setup              // Initial /send configuration
+/inbox/setup             // Initial /inbox configuration
+/content/setup           // Initial /content configuration
+/relationships/setup     // Initial /relationships setup
+```
+- Requires authentication
+- First-time setup wizard
+- Configuration and onboarding
+
+### **Display Text vs Route URLs**
+
+**CRITICAL:** There's a difference between how we display app names and the actual route URLs.
+
+**Display Text (UI/Navigation):**
+```typescript
+// ✅ ALWAYS include space between / and word
+"/ send"
+"/ inbox"
+"/ content"
+"/ relationships"
+"/ commverse"
+"/ localblue"
+
+// ❌ NEVER display without space
+"/send"
+"/inbox"
+```
+
+**Route URLs (Actual Paths):**
+```typescript
+// ✅ NO space in actual URLs
+/send
+/inbox
+/content
+/relationships
+
+// ❌ NEVER use space in URLs
+/ send     // This would be URL-encoded as /%20send
+```
+
+**Example Implementation:**
+```typescript
+// Display text
+<div className="text-sm font-bold">
+  <span style={{ color: '#09080E' }}>/</span>
+  <span style={{ color: '#FFFF00' }}>send</span>
+</div>
+
+// Route URL
+<a href="/send">Visit /send</a>
+```
+
 ### **Route Naming Standards**
 
 **All routes:** lowercase, no trailing slashes
 ```typescript
-// ✅ CORRECT
+// ✅ CORRECT - Landing pages
 /send
 /inbox
 /content
@@ -160,10 +245,22 @@ digitalIQScore
 /commverse
 /localblue
 
+// ✅ CORRECT - Dashboards
+/send/dashboard
+/inbox/dashboard
+/content/dashboard
+/relationships/dashboard
+
+// ✅ CORRECT - Setup pages
+/send/setup
+/inbox/setup
+/content/setup
+
 // ❌ INCORRECT
-/Send
-/content-landing    // Don't use -landing suffix
-/relationships/     // No trailing slash
+/Send                    // No uppercase
+/content-landing         // Don't use -landing suffix
+/send-app               // Don't use -app suffix  
+/relationships/         // No trailing slash
 ```
 
 ### **Route Organization**

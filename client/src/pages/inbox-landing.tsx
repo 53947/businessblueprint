@@ -49,7 +49,7 @@ export default function InboxLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/inbox-app">Launch /inbox</a>
+                <a href="/inbox/dashboard">Launch /inbox</a>
               </Button>
               <Button 
                 size="lg" 
@@ -300,7 +300,7 @@ export default function InboxLanding() {
               asChild
               data-testid="button-explore-platform"
             >
-              <a href="/inbox-app">Explore /inbox Platform</a>
+              <a href="/inbox/dashboard">Explore /inbox Platform</a>
             </Button>
           </div>
           <p className="text-sm text-gray-500 mt-6">

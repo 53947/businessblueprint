@@ -204,7 +204,7 @@ export default function CommversePricing() {
                   data-testid="button-content-individual"
                   asChild
                 >
-                  <a href="/content-management">Select</a>
+                  <a href="/content/dashboard">Select</a>
                 </Button>
               </CardContent>
             </Card>
