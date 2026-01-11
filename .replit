@@ -6,6 +6,10 @@ hidden = [".config", ".git", "generated-icon.png", "node_modules"]
 channel = "stable-24_05"
 packages = ["unzip"]
 
+[mcp.replit-agents-mcp]
+command = "node"
+args = ["mcp-server/build/index.js"]
+
 [deployment]
 deploymentTarget = "autoscale"
 build = ["sh", "-c", "npm run build"]
