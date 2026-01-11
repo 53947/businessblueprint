@@ -421,6 +421,104 @@ import sendLogo from "@assets/send_1762930219634.png";
 
 ---
 
+## 📱 MOBILE DEVELOPMENT STANDARDS
+
+### **Mobile-First Requirement**
+
+**CRITICAL:** Every component and navigation element MUST have both desktop and mobile implementations.
+
+### **Mobile Navigation Pattern**
+
+**Header Structure:**
+```
+Desktop: Horizontal mega menu with dropdowns
+Mobile: Accordion menu with +/- toggles
+```
+
+**Mobile Menu Location:**
+- Lives in same `header.tsx` file
+- Wrapped in `{isMobileMenuOpen && ...}` conditional
+- Uses accordion pattern with `openAccordion` state
+- Must match desktop menu structure exactly
+
+### **Mobile Accordion Pattern**
+
+```typescript
+// Mobile accordion header
+<button
+  onClick={() => setOpenAccordion(isOpen ? null : item.label)}
+  className="w-full flex items-center justify-between p-4"
+>
+  <div className="text-left">
+    <div className="font-bold">{item.label}</div>
+    <div className="text-xs text-gray-600">{item.description}</div>
+  </div>
+  {isOpen ? <Minus className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+</button>
+
+// Mobile accordion content
+{isOpen && (
+  <div className="p-4 border-t space-y-3">
+    {/* Content here - must match desktop */}
+  </div>
+)}
+```
+
+### **Mobile Menu Sections Must Match Desktop**
+
+**How It Works:**
+- Mobile accordion → Desktop dropdown
+- Same 5 steps, same links
+
+**Products:**
+- Mobile inline cards → Desktop mega menu
+- Same pricing, same items, same bundles
+
+**Solutions:**
+- Mobile 2-column grid → Desktop 3-column grid
+- ALL items must be present (14 total)
+
+**Resources:**
+- Mobile 4 sections → Desktop 4 columns
+- Same links in each section
+
+### **Mobile Testing Checklist**
+
+Before reporting complete:
+
+- [ ] Tested at 375px width (iPhone SE)
+- [ ] Tested at 390px width (iPhone 12/13/14)
+- [ ] Tested at 428px width (iPhone 14 Pro Max)
+- [ ] All accordion sections open/close correctly
+- [ ] All links work on mobile
+- [ ] No horizontal scroll
+- [ ] Touch targets are 44px minimum
+- [ ] No desktop-only content visible on mobile
+- [ ] Mobile cart button visible and functional
+- [ ] Mobile footer buttons work
+
+### **Common Mobile Mistakes**
+
+**❌ DON'T:**
+1. Update desktop without updating mobile
+2. Use `hidden lg:block` without mobile alternative
+3. Skip mobile testing
+4. Assume mobile "just works"
+5. Report complete without mobile screenshots
+6. Use mouse-only interactions (hover)
+7. Create touch targets smaller than 44px
+
+**✅ DO:**
+1. Update both desktop AND mobile together
+2. Test on actual mobile viewport
+3. Provide mobile screenshots
+4. Use touch-friendly interactions
+5. Maintain parity between desktop/mobile
+6. Check responsive breakpoints
+7. Verify accordion content matches dropdowns
+
+---
+
 ## 🔗 NAVIGATION PATTERNS
 
 ### **Dropdown Menu Structure**

@@ -1895,7 +1895,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                                   {/* /relationships */}
                                   <a href="/relationships" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#22C55E' }} data-testid="mobile-link-relationships">
-                                    <p className="text-xs font-bold text-gray-900 text-center">/relationships</p>
+                                    <p className="text-xs font-bold text-gray-900 text-center">
+                                      <span style={{ color: '#09080E' }}>/</span>
+                                      <span style={{ color: '#22C55E' }}>relationships</span>
+                                    </p>
                                     <p className="text-xs text-gray-600 text-center">Customer CRM</p>
                                   </a>
                                 </div>
@@ -1953,32 +1956,67 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       <p className="text-xs text-gray-600">Site analysis tool</p>
                                     </a>
                                     <a href="/relationships" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">/relationships</div>
+                                      <div className="font-bold">
+                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#22C55E' }}>relationships</span>
+                                      </div>
                                       <p className="text-xs text-gray-600">Customer CRM</p>
                                     </a>
                                     <a href="/send" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">/send</div>
+                                      <div className="font-bold">
+                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#FF6B00' }}>send</span>
+                                      </div>
                                       <p className="text-xs text-gray-600">Email & SMS marketing</p>
                                     </a>
                                     <a href="/inbox" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">/inbox</div>
+                                      <div className="font-bold">
+                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#0080FF' }}>inbox</span>
+                                      </div>
                                       <p className="text-xs text-gray-600">Unified communications</p>
                                     </a>
                                     <a href="/livechat" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">/livechat</div>
+                                      <div className="font-bold">
+                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#8000FF' }}>livechat</span>
+                                      </div>
                                       <p className="text-xs text-gray-600">Live chat widget</p>
                                     </a>
                                     <a href="/content" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">/content</div>
+                                      <div className="font-bold">
+                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#E91EBC' }}>content</span>
+                                      </div>
                                       <p className="text-xs text-gray-600">Social media management</p>
                                     </a>
                                     <a href="/listings" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">/listings</div>
+                                      <div className="font-bold">
+                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#FF0040' }}>listings</span>
+                                      </div>
                                       <p className="text-xs text-gray-600">Directory sync</p>
                                     </a>
                                     <a href="/reputation" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">/reputation</div>
+                                      <div className="font-bold">
+                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#D59600' }}>reputation</span>
+                                      </div>
                                       <p className="text-xs text-gray-600">Review management</p>
+                                    </a>
+                                    <a href="/commverse" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">
+                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#FF6B00' }}>commverse</span>
+                                      </div>
+                                      <p className="text-xs text-gray-600">Communication bundle</p>
+                                    </a>
+                                    <a href="/localblue" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">
+                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#6EA6FF' }}>localblue</span>
+                                      </div>
+                                      <p className="text-xs text-gray-600">Local business bundle</p>
                                     </a>
                                   </div>
                                 </div>
