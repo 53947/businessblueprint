@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, Calendar, Image, TrendingUp, BarChart3, Zap, Users, Clock } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import contentIcon from "@assets/native icons and favicons/: content app icon.png";
+import contentIcon from "@assets/:_content_1768176946216.png";
 import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
 
 export default function ContentLanding() {

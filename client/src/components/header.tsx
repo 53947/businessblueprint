@@ -48,7 +48,7 @@ import settingsIcon from "@assets/native icons and favicons/settings.png";
 import { BrandLogo, BrandIcon } from "@/components/brand-logo";
 import bbAvatar from "@assets/Blueprint_Favicon_1762489845363.png";
 import bbIcon from "@assets/Blueprint_Favicon_1762489845363.png";
-import contentIcon from "@assets/native icons and favicons/: content app icon.png";
+import contentIcon from "@assets/:_content_1768176946216.png";
 import contentLogo from "@assets/content_1762930219626.png";
 import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
 import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";

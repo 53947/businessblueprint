@@ -25,7 +25,7 @@ import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
 import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
 import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
 import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
-import contentIcon from "@assets/native icons and favicons/: content app icon.png";
+import contentIcon from "@assets/:_content_1768176946216.png";
 import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
 import commverseBundle from "@assets/_ commverse bundle logo_1762731789054.png";
 import commverseIcon from "@assets/Commverse_1762731195351.png";
