@@ -479,7 +479,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <img src={relationshipsIcon} alt="" className="w-6 h-6 rounded" />
                                     <div>
                                       <p className="text-sm font-bold text-gray-900">
-                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#09080E' }}>/ </span>
                                         <span style={{ color: '#22C55E' }}>relationships</span>
                                       </p>
                                       <p className="text-xs text-gray-500">Starter</p>
@@ -511,7 +511,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <img src={relationshipsIcon} alt="" className="w-6 h-6 rounded" />
                                     <div>
                                       <p className="text-sm font-bold text-gray-900">
-                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#09080E' }}>/ </span>
                                         <span style={{ color: '#22C55E' }}>relationships</span>
                                       </p>
                                       <p className="text-xs text-gray-500">Performance</p>
@@ -919,7 +919,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a href="/relationships" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#22C55E' }} data-testid="link-solution-relationships">
                                 <img src={relationshipsIcon} alt="/relationships" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/relationships</div>
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/ relationships</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Customer CRM</p>
                               </a>
                             </NavigationMenuLink>
@@ -1087,7 +1087,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={relationshipsIcon} alt="/relationships" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/relationships</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ relationships</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Customer CRM</p>
                                 </div>
                               </a>
@@ -1679,6 +1679,43 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   </div>
                                 </div>
 
+                                {/* CUSTOMER RELATIONSHIPS */}
+                                <div className="border-t pt-3">
+                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Customer Relationships</h4>
+                                  <div className="grid grid-cols-2 gap-2">
+                                    {/* /relationships Starter - FREE */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#22C55E' }}>
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div>
+                                          <p className="text-xs font-bold text-gray-900">
+                                            <span style={{ color: '#09080E' }}>/ </span>
+                                            <span style={{ color: '#22C55E' }}>relationships</span>
+                                          </p>
+                                          <p className="text-xs text-gray-500">Starter</p>
+                                        </div>
+                                      </div>
+                                      <div className="text-xs font-extrabold" style={{ color: '#22C55E' }}>Free</div>
+                                      <a href="/relationships" className="text-xs font-bold text-blue-600 hover:underline">Get Started →</a>
+                                    </div>
+
+                                    {/* /relationships Performance - $29/mo */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#22C55E' }}>
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div>
+                                          <p className="text-xs font-bold text-gray-900">
+                                            <span style={{ color: '#09080E' }}>/ </span>
+                                            <span style={{ color: '#22C55E' }}>relationships</span>
+                                          </p>
+                                          <p className="text-xs text-gray-500">Performance</p>
+                                        </div>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#22C55E' }} data-testid="mobile-add-relationships" title="Add to Cart">+</button>
+                                      </div>
+                                      <div className="text-xs font-extrabold" style={{ color: '#22C55E' }}>$29/mo</div>
+                                      <a href="/relationships" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                    </div>
+                                  </div>
+                                </div>
+
                                 {/* LOCALBLUE BUNDLE */}
                                 <div className="border-t pt-3">
                                   <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">LocalBlue Bundle</h4>
@@ -1896,7 +1933,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   {/* /relationships */}
                                   <a href="/relationships" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#22C55E' }} data-testid="mobile-link-relationships">
                                     <p className="text-xs font-bold text-gray-900 text-center">
-                                      <span style={{ color: '#09080E' }}>/</span>
+                                      <span style={{ color: '#09080E' }}>/ </span>
                                       <span style={{ color: '#22C55E' }}>relationships</span>
                                     </p>
                                     <p className="text-xs text-gray-600 text-center">Customer CRM</p>
@@ -1957,7 +1994,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     </a>
                                     <a href="/relationships" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
                                       <div className="font-bold">
-                                        <span style={{ color: '#09080E' }}>/</span>
+                                        <span style={{ color: '#09080E' }}>/ </span>
                                         <span style={{ color: '#22C55E' }}>relationships</span>
                                       </div>
                                       <p className="text-xs text-gray-600">Customer CRM</p>
