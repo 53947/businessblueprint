@@ -480,7 +480,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="Social Media" className="w-8 h-8" />
+                <img src="/attached_assets/:_content_1768176946216.png" alt="Social Media" className="w-8 h-8" />
                 <div className="text-center">
                   <div className="grid grid-cols-3 gap-2 text-xs">
                     <div>
@@ -502,7 +502,7 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="Social Media" className="w-16 h-16" />
+                  <img src="/attached_assets/:_content_1768176946216.png" alt="Social Media" className="w-16 h-16" />
                 </div>
                 <div className="flex justify-center">
                   <img src="/attached_assets/logos and wordmarks/: content app logo.png" alt="/content" className="h-6" />
@@ -514,17 +514,17 @@ export default function ClientPortal() {
               {clientData.socialMedia?.isSetup ? (
                 <div className="grid grid-cols-2 gap-2">
                   <Button size="sm" variant="outline" className="flex items-center justify-center gap-1" onClick={() => setActiveTab("social")} data-testid="button-schedule-social">
-                    <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="" className="w-4 h-4" />
+                    <img src="/attached_assets/:_content_1768176946216.png" alt="" className="w-4 h-4" />
                     <span className="text-xs">Schedule</span>
                   </Button>
                   <Button size="sm" variant="outline" className="flex items-center justify-center gap-1" onClick={() => setActiveTab("social")} data-testid="button-respond-social">
-                    <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="" className="w-4 h-4" />
+                    <img src="/attached_assets/:_content_1768176946216.png" alt="" className="w-4 h-4" />
                     <span className="text-xs">Respond</span>
                   </Button>
                 </div>
               ) : (
                 <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("social")} data-testid="button-setup-social">
-                  <img src="/attached_assets/native icons and favicons/: content app icon.png" alt="" className="w-4 h-4" />
+                  <img src="/attached_assets/:_content_1768176946216.png" alt="" className="w-4 h-4" />
                   <span>Setup</span>
                 </Button>
               )}

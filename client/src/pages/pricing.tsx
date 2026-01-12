@@ -9,7 +9,7 @@ import digitalAssessmentImg from '@assets/native icons and favicons/11-05-2025 U
 import digitalPathImg from '@assets/native icons and favicons/digital path.png';
 import localSeoImg from '@assets/native icons and favicons/LOCAL SEO_1762239599463.png';
 import sendAppImg from '@assets/native icons and favicons/: send app icon.png';
-import contentImg from '@assets/native icons and favicons/: content app icon.png';
+import contentImg from '@assets/:_content_1768176946216.png';
 import livechatImg from '@assets/native icons and favicons/: livechat app icon.png';
 import inboxImg from '@assets/native icons and favicons/: inbox app icon.png';
 import commverseImg from '@assets/native icons and favicons/: commverse.png';

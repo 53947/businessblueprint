@@ -21,7 +21,7 @@ import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
 import localSeoIcon from "@assets/native icons and favicons/LOCAL SEO_1762239599463.png";
 import sendIcon from "@assets/native icons and favicons/: send app icon.png";
 import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
-import socialMediaIcon from "@assets/native icons and favicons/: content app icon.png";
+import socialMediaIcon from "@assets/:_content_1768176946216.png";
 import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
 import listingsIcon from "@assets/listings app_1762804610311.png";
 import listingsLogo from "@assets/: listings color triad black and FF0040_1762806224294.png";
