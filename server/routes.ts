@@ -13,6 +13,7 @@ import { crmRouter } from "./routes/crm";
 import { publicApiRouter } from "./routes/api";
 import { registerPaymentRoutes } from "./routes/payments";
 import { listingDistributionRouter } from "./routes/listing-distribution";
+import { chatRouter } from "./routes/chat";
 import {
   insertAssessmentSchema,
   subscriptionPlans,
@@ -3976,6 +3977,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // CRM (/relationships) Routes
   app.use("/api/crm", crmRouter);
+
+  // / chat Routes (Live Chat SaaS)
+  app.use("/api/chat", chatRouter);
 
   // Public API v1 Routes (external integrations)
   app.use("/api/v1", publicApiRouter);
