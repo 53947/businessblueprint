@@ -101,6 +101,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     );
   });
 
+  // Serve / chat widget script (for embedding on customer websites)
+  app.get("/chat/widget.js", (req, res) => {
+    res.setHeader("Content-Type", "application/javascript");
+    res.setHeader("Cache-Control", "public, max-age=3600");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.sendFile(path.resolve(process.cwd(), "client/public/chat-widget.js"));
+  });
+
   app.get("/api/auth/user", async (req: any, res) => {
     try {
       // Return null if not authenticated instead of 401
