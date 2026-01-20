@@ -65,21 +65,22 @@ export default function ChatDashboard() {
   const [copiedEmbed, setCopiedEmbed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
-  const clientId = 1;
+  const storedClientId = sessionStorage.getItem("clientId") || localStorage.getItem("clientId");
+  const clientId = storedClientId ? parseInt(storedClientId) : 1;
 
   const { data: conversationsData, isLoading: conversationsLoading, refetch: refetchConversations } = useQuery<{ conversations: Conversation[] }>({
-    queryKey: ["/api/chat/dashboard/conversations", clientId],
+    queryKey: [`/api/chat/dashboard/conversations/${clientId}`],
     refetchInterval: 10000,
   });
 
   const { data: conversationDetail, isLoading: detailLoading } = useQuery<ConversationDetail>({
-    queryKey: ["/api/chat/dashboard/conversations", clientId, selectedConversation],
+    queryKey: [`/api/chat/dashboard/conversations/${clientId}/${selectedConversation}`],
     enabled: !!selectedConversation,
     refetchInterval: 5000,
   });
 
   const { data: embedData } = useQuery<{ embedCode: string; clientId: number }>({
-    queryKey: ["/api/chat/embed", clientId],
+    queryKey: [`/api/chat/embed/${clientId}`],
     enabled: activeTab === "installation",
   });
 
@@ -89,7 +90,7 @@ export default function ChatDashboard() {
     totalMessages: number; 
     widgetOpens: number; 
   }>({
-    queryKey: ["/api/chat/analytics", clientId],
+    queryKey: [`/api/chat/analytics/${clientId}`],
     enabled: activeTab === "analytics",
   });
 
@@ -104,7 +105,7 @@ export default function ChatDashboard() {
     onSuccess: () => {
       setNewMessage("");
       queryClientRef.invalidateQueries({ 
-        queryKey: ["/api/chat/dashboard/conversations", clientId, selectedConversation] 
+        queryKey: [`/api/chat/dashboard/conversations/${clientId}/${selectedConversation}`] 
       });
     },
     onError: () => {

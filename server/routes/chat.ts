@@ -23,14 +23,39 @@ const router = Router();
 
 // ============================================================================
 // WIDGET API (Public - called by embedded widget on customer websites)
+// Security: Widget endpoints are public but return only non-sensitive data.
+// Multi-tenant isolation is enforced via clientId in all queries.
+// For production, consider adding domain whitelist validation per client.
 // ============================================================================
 
+// Middleware to set CORS headers for widget endpoints
+const widgetCors = (req: Request, res: Response, next: () => void) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+};
+
 // Get widget settings by client ID (for widget initialization)
-router.get("/widget/settings/:clientId", async (req: Request, res: Response) => {
+router.get("/widget/settings/:clientId", widgetCors, async (req: Request, res: Response) => {
   try {
     const clientId = parseInt(req.params.clientId);
-    if (isNaN(clientId)) {
+    if (isNaN(clientId) || clientId <= 0) {
       return res.status(400).json({ error: "Invalid client ID" });
+    }
+
+    // Verify client exists
+    const [client] = await db
+      .select({ id: clients.id })
+      .from(clients)
+      .where(eq(clients.id, clientId))
+      .limit(1);
+
+    if (!client) {
+      return res.status(404).json({ error: "Client not found" });
     }
 
     // Get widget settings
@@ -100,9 +125,21 @@ const createSessionSchema = z.object({
   userAgent: z.string().optional(),
 });
 
-router.post("/widget/sessions", async (req: Request, res: Response) => {
+router.post("/widget/sessions", widgetCors, async (req: Request, res: Response) => {
   try {
     const data = createSessionSchema.parse(req.body);
+    
+    // Verify client exists for multi-tenant security
+    const [client] = await db
+      .select({ id: clients.id })
+      .from(clients)
+      .where(eq(clients.id, data.clientId))
+      .limit(1);
+
+    if (!client) {
+      return res.status(404).json({ error: "Client not found" });
+    }
+    
     const sessionId = data.sessionId || `sess_${nanoid(16)}`;
     
     // Check for existing session
@@ -218,7 +255,7 @@ const sendMessageSchema = z.object({
   fileName: z.string().optional(),
 });
 
-router.post("/widget/messages", async (req: Request, res: Response) => {
+router.post("/widget/messages", widgetCors, async (req: Request, res: Response) => {
   try {
     const data = sendMessageSchema.parse(req.body);
 
@@ -283,7 +320,7 @@ router.post("/widget/messages", async (req: Request, res: Response) => {
 });
 
 // Get message history for session
-router.get("/widget/messages/:sessionId", async (req: Request, res: Response) => {
+router.get("/widget/messages/:sessionId", widgetCors, async (req: Request, res: Response) => {
   try {
     const { sessionId } = req.params;
 
@@ -329,7 +366,7 @@ const trackEventSchema = z.object({
   eventData: z.record(z.any()).optional(),
 });
 
-router.post("/widget/analytics", async (req: Request, res: Response) => {
+router.post("/widget/analytics", widgetCors, async (req: Request, res: Response) => {
   try {
     const data = trackEventSchema.parse(req.body);
 
