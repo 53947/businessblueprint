@@ -3171,3 +3171,89 @@ export type UpdateEmailTemplate = z.infer<typeof updateEmailTemplateSchema>;
 // AI Settings Types
 export type AISettings = typeof aiSettings.$inferSelect;
 export type InsertAISettings = typeof aiSettings.$inferInsert;
+
+// ===== Business Listings Tables =====
+
+export const businessListings = pgTable("business_listings", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  platform: varchar("platform", { length: 100 }).notNull(), // 'google_business', 'yelp', 'facebook', 'bing_places', 'apple_maps', 'manual'
+  platformId: varchar("platform_id", { length: 255 }),
+  name: varchar("name", { length: 255 }).notNull(),
+  address: text("address"),
+  phone: varchar("phone", { length: 30 }),
+  website: varchar("website", { length: 500 }),
+  hours: text("hours"),
+  status: varchar("status", { length: 20 }).default("pending"), // 'active', 'pending', 'error'
+  url: varchar("url", { length: 500 }),
+  rating: decimal("rating", { precision: 2, scale: 1 }),
+  reviewCount: integer("review_count").default(0),
+  source: varchar("source", { length: 20 }).default("manual"), // 'sync' or 'manual'
+  lastSyncedAt: timestamp("last_synced_at"),
+  syncStatus: varchar("sync_status", { length: 20 }).default("none"),
+  syncError: text("sync_error"),
+  platformData: jsonb("platform_data"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_business_listings_client").on(table.clientId),
+  index("idx_business_listings_platform").on(table.platform),
+  index("idx_business_listings_status").on(table.status),
+]);
+
+export const listingSyncLogs = pgTable("listing_sync_logs", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  syncType: varchar("sync_type", { length: 20 }).notNull(), // 'discovery', 'refresh'
+  status: varchar("status", { length: 20 }).notNull(), // 'started', 'completed', 'failed'
+  platformsScanned: text("platforms_scanned").array(),
+  listingsFound: integer("listings_found").default(0),
+  listingsCreated: integer("listings_created").default(0),
+  listingsUpdated: integer("listings_updated").default(0),
+  errors: jsonb("errors"),
+  startedAt: timestamp("started_at").defaultNow(),
+  completedAt: timestamp("completed_at"),
+});
+
+export const listingMetricsSnapshots = pgTable("listing_metrics_snapshots", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  listingId: integer("listing_id").references(() => businessListings.id),
+  views: integer("views").default(0),
+  clicks: integer("clicks").default(0),
+  calls: integer("calls").default(0),
+  periodStart: timestamp("period_start").notNull(),
+  periodEnd: timestamp("period_end").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Business Listings Schemas
+export const insertBusinessListingSchema = createInsertSchema(businessListings).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const updateBusinessListingSchema = z.object({
+  name: z.string().optional(),
+  address: z.string().optional(),
+  phone: z.string().optional(),
+  website: z.string().optional(),
+  hours: z.string().optional(),
+  status: z.enum(["active", "pending", "error"]).optional(),
+  url: z.string().optional(),
+  rating: z.string().optional(),
+  reviewCount: z.number().optional(),
+});
+
+export const insertListingSyncLogSchema = createInsertSchema(listingSyncLogs).omit({
+  id: true,
+  startedAt: true,
+});
+
+// Business Listings Types
+export type BusinessListing = typeof businessListings.$inferSelect;
+export type InsertBusinessListing = z.infer<typeof insertBusinessListingSchema>;
+export type UpdateBusinessListing = z.infer<typeof updateBusinessListingSchema>;
+export type ListingSyncLog = typeof listingSyncLogs.$inferSelect;
+export type ListingMetricsSnapshot = typeof listingMetricsSnapshots.$inferSelect;

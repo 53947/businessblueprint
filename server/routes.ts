@@ -39,6 +39,11 @@ import {
   updatePrescriptionSchema,
   scansBluePurchases,
   scansBlueResults,
+  businessListings,
+  listingSyncLogs,
+  listingMetricsSnapshots,
+  updateBusinessListingSchema,
+  insertBusinessListingSchema,
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
@@ -51,15 +56,35 @@ import { productRecommendationService } from "./services/productRecommendations"
 import { reviewAI } from "./services/reviewAI";
 import { jwtService } from "./services/jwt";
 import { presenceScannerService } from "./services/presenceScanner";
+import { listingSyncService } from "./services/listingSync";
 import { scansBlueService } from "./services/scansblue";
 import { sendAssessmentConfirmationEmail, sendAdminNotification } from "./services/assessment-emails";
 import { dashboardAccess } from "@shared/schema";
-import { eq, desc, and, or, lte } from "drizzle-orm";
+import { eq, desc, and, or, lte, sql, count, avg } from "drizzle-orm";
 import { db } from "./db";
 import { z } from "zod";
 import { requireAuth, type AuthenticatedRequest } from "./middleware/auth";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { requireClientPortalAccess } from "./middleware/clientPortalAuth";
+
+// Listing platform display name mappings
+const platformDisplayNames: Record<string, string> = {
+  google_business: "Google Business",
+  yelp: "Yelp",
+  facebook: "Facebook",
+  bing_places: "Bing Places",
+  apple_maps: "Apple Maps",
+  manual: "Manual",
+};
+
+function platformDisplayName(code: string): string {
+  return platformDisplayNames[code] || code;
+}
+
+function platformInternalName(display: string): string {
+  const entry = Object.entries(platformDisplayNames).find(([, v]) => v === display);
+  return entry ? entry[0] : display.toLowerCase().replace(/\s+/g, "_");
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
@@ -1779,20 +1804,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Client not found" });
       }
 
-      // Mock data - native listings implementation coming soon
-      const listings = {
-        total: 45,
-        verified: 38,
-        pending: 7,
-        platforms: [
-          { name: "Google Business", status: "verified", url: "#" },
-          { name: "Yelp", status: "verified", url: "#" },
-          { name: "Facebook", status: "pending", url: "#" },
-          { name: "Apple Maps", status: "verified", url: "#" },
-        ],
-      };
+      const rows = await db
+        .select()
+        .from(businessListings)
+        .where(eq(businessListings.clientId, clientId));
 
-      res.json(listings);
+      const total = rows.length;
+      const verified = rows.filter((r) => r.status === "active").length;
+      const pending = rows.filter((r) => r.status === "pending").length;
+      const platforms = rows.map((r) => ({
+        name: platformDisplayName(r.platform),
+        status: r.status === "active" ? "verified" : r.status,
+        url: r.url || "#",
+      }));
+
+      res.json({ total, verified, pending, platforms });
     } catch (error) {
       console.error("Client listings error:", error);
       res.status(500).json({ error: "Failed to load listings data" });
@@ -1816,33 +1842,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(404).json({ error: "Client not found" });
         }
 
-        // Mock listings data
-        const listings = [
-          {
-            id: 1,
-            platform: "Google Business",
-            status: "active",
-            name: client.companyName || "Business Name",
-            address: client.address || "123 Main St, City, ST 12345",
-            phone: client.phone || "(555) 123-4567",
-            website: client.website || "https://example.com",
-            hours: "Mon-Fri 9AM-5PM",
-            lastUpdated: new Date().toISOString(),
-            url: "https://g.page/example",
-          },
-          {
-            id: 2,
-            platform: "Yelp",
-            status: "active",
-            name: client.companyName || "Business Name",
-            address: client.address || "123 Main St, City, ST 12345",
-            phone: client.phone || "(555) 123-4567",
-            website: client.website || "https://example.com",
-            hours: "Mon-Fri 9AM-5PM",
-            lastUpdated: new Date(Date.now() - 86400000).toISOString(),
-            url: "https://yelp.com/biz/example",
-          },
-        ];
+        const rows = await db
+          .select()
+          .from(businessListings)
+          .where(eq(businessListings.clientId, clientId))
+          .orderBy(desc(businessListings.updatedAt));
+
+        const listings = rows.map((r) => ({
+          id: r.id,
+          platform: platformDisplayName(r.platform),
+          status: r.status,
+          name: r.name,
+          address: r.address,
+          phone: r.phone,
+          website: r.website,
+          hours: r.hours,
+          lastUpdated: r.updatedAt?.toISOString() || r.createdAt?.toISOString(),
+          url: r.url,
+          rating: r.rating ? parseFloat(r.rating) : null,
+        }));
 
         res.json(listings);
       } catch (error) {
@@ -1869,18 +1887,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(404).json({ error: "Client not found" });
         }
 
-        // Mock metrics - will be replaced with real data
-        const metrics = {
-          totalListings: 12,
-          activeListings: 10,
-          pendingListings: 1,
-          errorListings: 1,
-          totalViews: 4523,
-          totalClicks: 892,
-          avgRating: 4.6,
-        };
+        // Count listings by status
+        const rows = await db
+          .select()
+          .from(businessListings)
+          .where(eq(businessListings.clientId, clientId));
 
-        res.json(metrics);
+        const totalListings = rows.length;
+        const activeListings = rows.filter((r) => r.status === "active").length;
+        const pendingListings = rows.filter((r) => r.status === "pending").length;
+        const errorListings = rows.filter((r) => r.status === "error").length;
+
+        // Average rating from listings that have a rating
+        const ratingsWithValues = rows
+          .filter((r) => r.rating !== null)
+          .map((r) => parseFloat(r.rating!));
+        const avgRating =
+          ratingsWithValues.length > 0
+            ? parseFloat(
+                (ratingsWithValues.reduce((a, b) => a + b, 0) / ratingsWithValues.length).toFixed(1),
+              )
+            : 0;
+
+        // Aggregate views/clicks from metrics snapshots (last 30 days)
+        const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        const metricsRows = await db
+          .select()
+          .from(listingMetricsSnapshots)
+          .where(
+            and(
+              eq(listingMetricsSnapshots.clientId, clientId),
+              lte(sql`${listingMetricsSnapshots.periodStart}`, new Date()),
+            ),
+          );
+
+        const recentMetrics = metricsRows.filter(
+          (m) => m.periodStart >= thirtyDaysAgo,
+        );
+        const totalViews = recentMetrics.reduce((sum, m) => sum + (m.views || 0), 0);
+        const totalClicks = recentMetrics.reduce((sum, m) => sum + (m.clicks || 0), 0);
+
+        res.json({
+          totalListings,
+          activeListings,
+          pendingListings,
+          errorListings,
+          totalViews,
+          totalClicks,
+          avgRating,
+        });
       } catch (error) {
         console.error("Error fetching listing metrics:", error);
         res.status(500).json({ error: "Failed to fetch listing metrics" });
@@ -2031,6 +2086,124 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create a manual business listing
+  app.post("/api/clients/:id/listings", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+
+      if (isNaN(clientId)) {
+        return res.status(400).json({ error: "Invalid client ID" });
+      }
+
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+
+      const { platform, name, address, phone, website, hours, url } = req.body;
+
+      if (!platform || !name) {
+        return res.status(400).json({ error: "Platform and name are required" });
+      }
+
+      const [listing] = await db
+        .insert(businessListings)
+        .values({
+          clientId,
+          platform: platformInternalName(platform),
+          name,
+          address: address || null,
+          phone: phone || null,
+          website: website || null,
+          hours: hours || null,
+          url: url || null,
+          source: "manual",
+          status: "pending",
+        })
+        .returning();
+
+      res.json({
+        success: true,
+        listing: {
+          id: listing.id,
+          platform: platformDisplayName(listing.platform),
+          status: listing.status,
+          name: listing.name,
+          address: listing.address,
+          phone: listing.phone,
+          website: listing.website,
+          hours: listing.hours,
+          lastUpdated: listing.createdAt?.toISOString(),
+          url: listing.url,
+        },
+      });
+    } catch (error) {
+      console.error("Error creating listing:", error);
+      res.status(500).json({ error: "Failed to create listing" });
+    }
+  });
+
+  // Sync/discover business listings from Google Places + Yelp
+  app.post("/api/clients/:id/listings/sync", async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+
+      if (isNaN(clientId)) {
+        return res.status(400).json({ error: "Invalid client ID" });
+      }
+
+      const client = await storage.getClient(clientId);
+      if (!client) {
+        return res.status(404).json({ error: "Client not found" });
+      }
+
+      const businessName = client.companyName || client.name;
+      if (!businessName) {
+        return res.status(400).json({ error: "Client has no business name set" });
+      }
+
+      // Log sync start
+      const [syncLog] = await db
+        .insert(listingSyncLogs)
+        .values({
+          clientId,
+          syncType: "discovery",
+          status: "started",
+          platformsScanned: ["google_business", "yelp"],
+        })
+        .returning();
+
+      // Run sync
+      const result = await listingSyncService.syncClientListings(
+        clientId,
+        businessName,
+        client.address || undefined,
+        client.phone || undefined,
+      );
+
+      // Update sync log
+      await db
+        .update(listingSyncLogs)
+        .set({
+          status: result.errors.length > 0 && result.found === 0 ? "failed" : "completed",
+          listingsFound: result.found,
+          listingsCreated: result.created,
+          listingsUpdated: result.updated,
+          errors: result.errors.length > 0 ? result.errors : null,
+          completedAt: new Date(),
+        })
+        .where(eq(listingSyncLogs.id, syncLog.id));
+
+      res.json({
+        success: true,
+        ...result,
+      });
+    } catch (error) {
+      console.error("Error syncing listings:", error);
+      res.status(500).json({ error: "Failed to sync listings" });
+    }
+  });
+
   // Update a business listing
   app.patch("/api/clients/:id/listings/:listingId", async (req, res) => {
     try {
@@ -2048,8 +2221,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Client not found" });
       }
 
-      // In production, this would update the listing via API
-      // For now, just return success
+      // Verify listing belongs to this client
+      const [existing] = await db
+        .select()
+        .from(businessListings)
+        .where(
+          and(
+            eq(businessListings.id, listingId),
+            eq(businessListings.clientId, clientId),
+          ),
+        )
+        .limit(1);
+
+      if (!existing) {
+        return res.status(404).json({ error: "Listing not found" });
+      }
+
+      const parsed = updateBusinessListingSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(400).json({ error: "Invalid update data", details: parsed.error.issues });
+      }
+
+      const updates: Record<string, any> = { ...parsed.data, updatedAt: new Date() };
+
+      await db
+        .update(businessListings)
+        .set(updates)
+        .where(eq(businessListings.id, listingId));
+
       res.json({
         success: true,
         message: "Listing updated successfully",
