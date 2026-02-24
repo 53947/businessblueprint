@@ -3314,6 +3314,9 @@ export const canonicalBusinessProfiles = pgTable("canonical_business_profiles", 
   amenities: text("amenities").array(),
   serviceArea: jsonb("service_area"),
 
+  // PIN protection
+  editPin: varchar("edit_pin", { length: 255 }), // bcrypt hash of 4-6 digit PIN
+
   // Versioning
   dataVersion: integer("data_version").notNull().default(1),
   lastModifiedFields: text("last_modified_fields").array(),
@@ -3426,6 +3429,10 @@ export const updateCanonicalProfileSchema = z.object({
   amenities: z.array(z.string()).nullable().optional(),
   serviceArea: z.any().nullable().optional(),
 });
+
+// PIN schemas
+export const setPinSchema = z.object({ pin: z.string().min(4).max(6).regex(/^\d+$/) });
+export const verifyPinSchema = z.object({ pin: z.string().min(4).max(6) });
 
 // Distribution Types
 export type CanonicalBusinessProfile = typeof canonicalBusinessProfiles.$inferSelect;

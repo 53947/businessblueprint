@@ -111,6 +111,7 @@ export class AcxiomAdapter extends BaseListingAdapter {
     return [
       "Epsilon", "Oracle Data Cloud", "TransUnion", "Equifax",
       "Experian", "LiveRamp", "Acxiom AbiliTec", "Acxiom InfoBase",
+      "Nielsen", "Dun & Bradstreet", "Verisk", "CoreLogic",
     ];
   }
 

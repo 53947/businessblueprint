@@ -108,6 +108,7 @@ export class DataAxleAdapter extends BaseListingAdapter {
       "Cylex", "eLocal", "iGlobal", "ShowMeLocal", "Tupalo",
       "ChamberofCommerce.com", "USCity.net", "FindOpen",
       "Data Axle Reference Solutions", "Credibility.com",
+      "MapQuest Business", "Loc8NearMe", "BizVotes", "MyLocalServices", "Opendi", "Company.com", "YellowBot",
     ];
   }
 

@@ -7,11 +7,15 @@ import {
   distributionLogs,
   insertCanonicalProfileSchema,
   updateCanonicalProfileSchema,
+  setPinSchema,
+  verifyPinSchema,
 } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 import { listingDistributionService } from "../services/listing-distribution/distributionService";
 import { getAdapter, getDirectoryCoverage, getTotalDirectoryCount } from "../services/listing-distribution/listingAdapterFactory";
 import { seedDistributionTargets } from "../services/listing-distribution/seedTargets";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export const listingDistributionRouter = Router();
 
@@ -70,9 +74,99 @@ listingDistributionRouter.post("/clients/:id/distribution/profile", async (req, 
   }
 });
 
+// ─── PIN Protection ──────────────────────────────────────────────────
+
+const PROFILE_UNLOCK_SECRET = process.env.JWT_SECRET || "fallback-secret-key";
+
+/**
+ * GET /api/clients/:id/distribution/profile/has-pin
+ * Check if a PIN is set on the profile (returns boolean, never the hash).
+ */
+listingDistributionRouter.get("/clients/:id/distribution/profile/has-pin", async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.id);
+    if (isNaN(clientId)) return res.status(400).json({ error: "Invalid client ID" });
+
+    const profile = await listingDistributionService.getProfile(clientId);
+    if (!profile) return res.status(404).json({ error: "No profile found" });
+
+    res.json({ success: true, hasPin: !!profile.editPin });
+  } catch (error: any) {
+    console.error("Error checking PIN:", error);
+    res.status(500).json({ error: "Failed to check PIN status" });
+  }
+});
+
+/**
+ * POST /api/clients/:id/distribution/profile/set-pin
+ * Set or update the 4-6 digit edit PIN (bcrypt hashed).
+ */
+listingDistributionRouter.post("/clients/:id/distribution/profile/set-pin", async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.id);
+    if (isNaN(clientId)) return res.status(400).json({ error: "Invalid client ID" });
+
+    const { pin } = setPinSchema.parse(req.body);
+
+    const profile = await listingDistributionService.getProfile(clientId);
+    if (!profile) return res.status(404).json({ error: "No profile found" });
+
+    const hash = await bcrypt.hash(pin, 10);
+    await db.update(canonicalBusinessProfiles)
+      .set({ editPin: hash })
+      .where(eq(canonicalBusinessProfiles.id, profile.id));
+
+    res.json({ success: true, message: "PIN set successfully" });
+  } catch (error: any) {
+    if (error.name === "ZodError") {
+      return res.status(400).json({ error: "PIN must be 4-6 digits", details: error.errors });
+    }
+    console.error("Error setting PIN:", error);
+    res.status(500).json({ error: "Failed to set PIN" });
+  }
+});
+
+/**
+ * POST /api/clients/:id/distribution/profile/verify-pin
+ * Verify PIN and return a 15-minute JWT unlock token.
+ */
+listingDistributionRouter.post("/clients/:id/distribution/profile/verify-pin", async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.id);
+    if (isNaN(clientId)) return res.status(400).json({ error: "Invalid client ID" });
+
+    const { pin } = verifyPinSchema.parse(req.body);
+
+    const profile = await listingDistributionService.getProfile(clientId);
+    if (!profile || !profile.editPin) {
+      return res.status(404).json({ error: "No PIN set for this profile" });
+    }
+
+    const match = await bcrypt.compare(pin, profile.editPin);
+    if (!match) {
+      return res.status(401).json({ error: "Invalid PIN" });
+    }
+
+    const unlockToken = jwt.sign(
+      { clientId, profileId: profile.id, purpose: "profile-unlock" },
+      PROFILE_UNLOCK_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    res.json({ success: true, unlockToken });
+  } catch (error: any) {
+    if (error.name === "ZodError") {
+      return res.status(400).json({ error: "Invalid PIN format" });
+    }
+    console.error("Error verifying PIN:", error);
+    res.status(500).json({ error: "Failed to verify PIN" });
+  }
+});
+
 /**
  * PATCH /api/clients/:id/distribution/profile
  * Partial update — bumps dataVersion and flags resyncs on active submissions.
+ * If profile has a PIN set, requires X-Profile-Unlock-Token header.
  */
 listingDistributionRouter.patch("/clients/:id/distribution/profile", async (req, res) => {
   try {
@@ -82,6 +176,22 @@ listingDistributionRouter.patch("/clients/:id/distribution/profile", async (req,
     const existing = await listingDistributionService.getProfile(clientId);
     if (!existing) {
       return res.status(404).json({ error: "No canonical profile found for this client" });
+    }
+
+    // If PIN is set, require unlock token
+    if (existing.editPin) {
+      const unlockToken = req.headers["x-profile-unlock-token"] as string;
+      if (!unlockToken) {
+        return res.status(403).json({ error: "Profile is locked. Provide X-Profile-Unlock-Token header." });
+      }
+      try {
+        const decoded = jwt.verify(unlockToken, PROFILE_UNLOCK_SECRET) as any;
+        if (decoded.clientId !== clientId || decoded.purpose !== "profile-unlock") {
+          return res.status(403).json({ error: "Invalid unlock token" });
+        }
+      } catch {
+        return res.status(403).json({ error: "Unlock token expired or invalid" });
+      }
     }
 
     const validated = updateCanonicalProfileSchema.parse(req.body);

@@ -125,7 +125,7 @@ export class GbpListingAdapter extends BaseListingAdapter {
   }
 
   getDownstreamDirectories(): string[] {
-    return ["Google Business Profile", "Google Maps", "Google Search Local Pack"];
+    return ["Google Business Profile", "Google Maps", "Google Search Local Pack", "Google Hotels", "Google Shopping Local"];
   }
 
   private mapToGbpFormat(data: ListingData) {

@@ -25,8 +25,9 @@ const TARGET_SEEDS: TargetSeed[] = [
       "TripAdvisor", "Waze", "OpenTable", "Zillow", "Booking.com",
       "MapQuest", "TomTom", "Navmii", "Audi", "BMW", "Mercedes",
       "GasBuddy", "Pitney Bowes",
+      "Skyscanner", "Trivago", "Moovit", "Citymapper", "Scout GPS", "Sygic", "Swarm",
     ],
-    description: "Foursquare/Factual data aggregator — feeds Apple Maps, Uber, TripAdvisor, Waze, and 14+ other directories",
+    description: "Foursquare/Factual data aggregator — feeds Apple Maps, Uber, TripAdvisor, Waze, and 21+ other directories",
     estimatedProcessingTime: "1-4 weeks",
   },
   {
@@ -40,8 +41,9 @@ const TARGET_SEEDS: TargetSeed[] = [
       "Local.com", "YellowPages.com", "WhitePages", "AnyWho",
       "Switchboard", "InfoSpace", "DogPile", "Addresses.com",
       "Where To?", "USSearch", "PeopleSmart", "Neustar Localeze",
+      "YellowBot", "n49.com", "EZLocal", "Judy's Book", "Cybo", "iBegin",
     ],
-    description: "Neustar/Localeze aggregator — feeds Bing, Yahoo, Superpages, YellowPages, and 13+ other directories",
+    description: "Neustar/Localeze aggregator — feeds Bing, Yahoo, Superpages, YellowPages, and 19+ other directories",
     estimatedProcessingTime: "2-6 weeks",
   },
   {
@@ -55,8 +57,9 @@ const TARGET_SEEDS: TargetSeed[] = [
       "Cylex", "eLocal", "iGlobal", "ShowMeLocal", "Tupalo",
       "ChamberofCommerce.com", "USCity.net", "FindOpen",
       "Data Axle Reference Solutions", "Credibility.com",
+      "MapQuest Business", "Loc8NearMe", "BizVotes", "MyLocalServices", "Opendi", "Company.com", "YellowBot",
     ],
-    description: "Data Axle/Infogroup aggregator — feeds 411.com, Manta, MerchantCircle, and 12+ other directories",
+    description: "Data Axle/Infogroup aggregator — feeds 411.com, Manta, MerchantCircle, and 19+ other directories",
     estimatedProcessingTime: "2-4 weeks",
   },
   {
@@ -68,8 +71,9 @@ const TARGET_SEEDS: TargetSeed[] = [
     feedsDirectories: [
       "Epsilon", "Oracle Data Cloud", "TransUnion", "Equifax",
       "Experian", "LiveRamp", "Acxiom AbiliTec", "Acxiom InfoBase",
+      "Nielsen", "Dun & Bradstreet", "Verisk", "CoreLogic",
     ],
-    description: "Acxiom consumer data aggregator — feeds Epsilon, Oracle Data Cloud, credit bureaus, and identity networks",
+    description: "Acxiom consumer data aggregator — feeds Epsilon, Oracle Data Cloud, Nielsen, D&B, credit bureaus, and identity networks",
     estimatedProcessingTime: "3-6 weeks",
   },
   {
@@ -78,8 +82,8 @@ const TARGET_SEEDS: TargetSeed[] = [
     type: "direct_api",
     adapterKey: "gbp",
     requiredEnvVars: ["GOOGLE_PLACES_API_KEY"],
-    feedsDirectories: ["Google Business Profile", "Google Maps", "Google Search Local Pack"],
-    description: "Direct Google Business Profile API — manages your listing on Google Maps and Search",
+    feedsDirectories: ["Google Business Profile", "Google Maps", "Google Search Local Pack", "Google Hotels", "Google Shopping Local"],
+    description: "Direct Google Business Profile API — manages your listing on Google Maps, Search, Hotels, and Shopping",
     estimatedProcessingTime: "1-7 days",
   },
   {
@@ -88,8 +92,8 @@ const TARGET_SEEDS: TargetSeed[] = [
     type: "direct_api",
     adapterKey: "facebook",
     requiredEnvVars: ["FACEBOOK_PAGE_ACCESS_TOKEN"],
-    feedsDirectories: ["Facebook Business", "Facebook Marketplace", "Instagram Location"],
-    description: "Facebook Business location management — updates your business page and Instagram location data",
+    feedsDirectories: ["Facebook Business", "Facebook Marketplace", "Instagram Location", "WhatsApp Business", "Threads"],
+    description: "Facebook/Meta Business location management — updates your business page, Instagram, WhatsApp, and Threads",
     estimatedProcessingTime: "1-3 days",
   },
   {
@@ -98,8 +102,8 @@ const TARGET_SEEDS: TargetSeed[] = [
     type: "direct_api",
     adapterKey: "bing",
     requiredEnvVars: ["BING_PLACES_API_KEY"],
-    feedsDirectories: ["Bing Places", "Bing Maps", "Cortana", "MSN Local"],
-    description: "Bing Places for Business API — manages your listing on Bing Maps, Cortana, and MSN",
+    feedsDirectories: ["Bing Places", "Bing Maps", "Cortana", "MSN Local", "Microsoft Edge Local", "Outlook Local"],
+    description: "Bing Places for Business API — manages your listing on Bing Maps, Cortana, MSN, Edge, and Outlook",
     estimatedProcessingTime: "1-2 weeks",
   },
   {
@@ -108,8 +112,8 @@ const TARGET_SEEDS: TargetSeed[] = [
     type: "direct_api",
     adapterKey: "apple",
     requiredEnvVars: ["APPLE_BUSINESS_CONNECT_TOKEN"],
-    feedsDirectories: ["Apple Maps", "Apple Wallet", "Siri", "Safari Suggestions"],
-    description: "Apple Business Connect API — manages your listing on Apple Maps, Siri, and Safari",
+    feedsDirectories: ["Apple Maps", "Apple Wallet", "Siri", "Safari Suggestions", "Apple Business Chat", "CarPlay POI"],
+    description: "Apple Business Connect API — manages your listing on Apple Maps, Siri, Safari, Business Chat, and CarPlay",
     estimatedProcessingTime: "1-2 weeks",
   },
 ];

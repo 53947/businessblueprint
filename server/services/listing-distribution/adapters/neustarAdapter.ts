@@ -108,6 +108,7 @@ export class NeustarAdapter extends BaseListingAdapter {
       "Local.com", "YellowPages.com", "WhitePages", "AnyWho",
       "Switchboard", "InfoSpace", "DogPile", "Addresses.com",
       "Where To?", "USSearch", "PeopleSmart", "Neustar Localeze",
+      "YellowBot", "n49.com", "EZLocal", "Judy's Book", "Cybo", "iBegin",
     ];
   }
 
