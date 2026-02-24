@@ -3257,3 +3257,176 @@ export type InsertBusinessListing = z.infer<typeof insertBusinessListingSchema>;
 export type UpdateBusinessListing = z.infer<typeof updateBusinessListingSchema>;
 export type ListingSyncLog = typeof listingSyncLogs.$inferSelect;
 export type ListingMetricsSnapshot = typeof listingMetricsSnapshots.$inferSelect;
+
+// ============================================================================
+// LISTING DISTRIBUTION SYSTEM — Push to 100+ Directories
+// ============================================================================
+
+// Canonical Business Profiles — Single source of truth per client
+export const canonicalBusinessProfiles = pgTable("canonical_business_profiles", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull().unique(),
+
+  // Core NAP (Name, Address, Phone)
+  businessName: varchar("business_name", { length: 255 }).notNull(),
+  address1: text("address1").notNull(),
+  address2: text("address2"),
+  city: varchar("city", { length: 100 }).notNull(),
+  state: varchar("state", { length: 100 }).notNull(),
+  zip: varchar("zip", { length: 20 }).notNull(),
+  country: varchar("country", { length: 100 }).notNull().default("US"),
+  phone: varchar("phone", { length: 30 }).notNull(),
+
+  // Extended contact
+  website: varchar("website", { length: 500 }),
+  email: varchar("email", { length: 255 }),
+  fax: varchar("fax", { length: 30 }),
+
+  // Metadata
+  categories: text("categories").array(),
+  description: text("description"),
+  shortDescription: varchar("short_description", { length: 255 }),
+  yearEstablished: integer("year_established"),
+  employeeCount: integer("employee_count"),
+
+  // Hours
+  hours: jsonb("hours"), // {monday: {open: "09:00", close: "17:00"}, ...}
+  specialHours: jsonb("special_hours"),
+
+  // Media
+  logoUrl: varchar("logo_url", { length: 500 }),
+  coverPhotoUrl: varchar("cover_photo_url", { length: 500 }),
+  photoUrls: text("photo_urls").array(),
+
+  // Social
+  facebookUrl: varchar("facebook_url", { length: 500 }),
+  instagramUrl: varchar("instagram_url", { length: 500 }),
+  linkedinUrl: varchar("linkedin_url", { length: 500 }),
+  twitterUrl: varchar("twitter_url", { length: 500 }),
+  youtubeUrl: varchar("youtube_url", { length: 500 }),
+
+  // Extra
+  paymentMethods: text("payment_methods").array(),
+  amenities: text("amenities").array(),
+  serviceArea: jsonb("service_area"),
+
+  // Versioning
+  dataVersion: integer("data_version").notNull().default(1),
+  lastModifiedFields: text("last_modified_fields").array(),
+
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_canonical_profiles_client").on(table.clientId),
+]);
+
+// Distribution Targets — Registry of all supported aggregators/platforms
+export const distributionTargets = pgTable("distribution_targets", {
+  id: serial("id").primaryKey(),
+  slug: varchar("slug", { length: 50 }).notNull().unique(),
+  displayName: varchar("display_name", { length: 100 }).notNull(),
+  type: varchar("type", { length: 20 }).notNull(), // 'aggregator' | 'direct_api'
+  adapterKey: varchar("adapter_key", { length: 50 }).notNull(),
+  requiredEnvVars: text("required_env_vars").array(),
+  isEnabled: boolean("is_enabled").default(false),
+  feedsDirectories: text("feeds_directories").array(),
+  description: text("description"),
+  estimatedProcessingTime: varchar("estimated_processing_time", { length: 50 }),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Distribution Submissions — Per-client per-target tracking
+export const distributionSubmissions = pgTable("distribution_submissions", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  targetId: integer("target_id").references(() => distributionTargets.id).notNull(),
+  profileId: integer("profile_id").references(() => canonicalBusinessProfiles.id).notNull(),
+  status: varchar("status", { length: 20 }).notNull().default("pending"), // pending, submitting, submitted, processing, verified, active, error, rejected
+  externalId: varchar("external_id", { length: 255 }),
+  externalUrl: varchar("external_url", { length: 500 }),
+  submittedDataVersion: integer("submitted_data_version"),
+  lastSubmittedAt: timestamp("last_submitted_at"),
+  lastVerifiedAt: timestamp("last_verified_at"),
+  needsResync: boolean("needs_resync").default(false),
+  lastError: text("last_error"),
+  errorCount: integer("error_count").default(0),
+  nextRetryAt: timestamp("next_retry_at"),
+  platformResponse: jsonb("platform_response"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_dist_submissions_client").on(table.clientId),
+  index("idx_dist_submissions_target").on(table.targetId),
+  index("idx_dist_submissions_status").on(table.status),
+  index("idx_dist_submissions_resync").on(table.needsResync),
+  unique("uq_dist_submissions_client_target").on(table.clientId, table.targetId),
+]);
+
+// Distribution Logs — Audit trail of every API call
+export const distributionLogs = pgTable("distribution_logs", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  submissionId: integer("submission_id").references(() => distributionSubmissions.id),
+  targetSlug: varchar("target_slug", { length: 50 }).notNull(),
+  action: varchar("action", { length: 20 }).notNull(), // 'submit', 'update', 'verify', 'error', 'retry'
+  status: varchar("status", { length: 20 }).notNull(), // 'success', 'failure', 'skipped'
+  requestPayload: jsonb("request_payload"),
+  responsePayload: jsonb("response_payload"),
+  errorMessage: text("error_message"),
+  durationMs: integer("duration_ms"),
+  dataVersion: integer("data_version"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_dist_logs_client").on(table.clientId),
+  index("idx_dist_logs_submission").on(table.submissionId),
+  index("idx_dist_logs_target").on(table.targetSlug),
+]);
+
+// Distribution Schemas
+export const insertCanonicalProfileSchema = createInsertSchema(canonicalBusinessProfiles).omit({
+  id: true,
+  dataVersion: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const updateCanonicalProfileSchema = z.object({
+  businessName: z.string().optional(),
+  address1: z.string().optional(),
+  address2: z.string().nullable().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zip: z.string().optional(),
+  country: z.string().optional(),
+  phone: z.string().optional(),
+  website: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  fax: z.string().nullable().optional(),
+  categories: z.array(z.string()).nullable().optional(),
+  description: z.string().nullable().optional(),
+  shortDescription: z.string().nullable().optional(),
+  yearEstablished: z.number().nullable().optional(),
+  employeeCount: z.number().nullable().optional(),
+  hours: z.any().nullable().optional(),
+  specialHours: z.any().nullable().optional(),
+  logoUrl: z.string().nullable().optional(),
+  coverPhotoUrl: z.string().nullable().optional(),
+  photoUrls: z.array(z.string()).nullable().optional(),
+  facebookUrl: z.string().nullable().optional(),
+  instagramUrl: z.string().nullable().optional(),
+  linkedinUrl: z.string().nullable().optional(),
+  twitterUrl: z.string().nullable().optional(),
+  youtubeUrl: z.string().nullable().optional(),
+  paymentMethods: z.array(z.string()).nullable().optional(),
+  amenities: z.array(z.string()).nullable().optional(),
+  serviceArea: z.any().nullable().optional(),
+});
+
+// Distribution Types
+export type CanonicalBusinessProfile = typeof canonicalBusinessProfiles.$inferSelect;
+export type InsertCanonicalProfile = z.infer<typeof insertCanonicalProfileSchema>;
+export type UpdateCanonicalProfile = z.infer<typeof updateCanonicalProfileSchema>;
+export type DistributionTarget = typeof distributionTargets.$inferSelect;
+export type DistributionSubmission = typeof distributionSubmissions.$inferSelect;
+export type DistributionLog = typeof distributionLogs.$inferSelect;

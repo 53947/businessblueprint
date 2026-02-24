@@ -12,6 +12,7 @@ import { registerEmailAdminRoutes } from "./routes/email-admin";
 import { crmRouter } from "./routes/crm";
 import { publicApiRouter } from "./routes/api";
 import { registerPaymentRoutes } from "./routes/payments";
+import { listingDistributionRouter } from "./routes/listing-distribution";
 import {
   insertAssessmentSchema,
   subscriptionPlans,
@@ -3983,6 +3984,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Payment Processing Routes
   registerPaymentRoutes(app);
+
+  // Listing Distribution Routes (push to 100+ directories)
+  app.use("/api", listingDistributionRouter);
 
   // Test Email Endpoint (Admin only - for reviewing email templates)
   app.post("/api/admin/test-emails", async (req, res) => {
