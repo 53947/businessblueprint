@@ -2952,8 +2952,9 @@ export const prescriptions = pgTable("prescriptions", {
   assessmentId: integer("assessment_id").references(() => assessments.id),
   
   // Prescription details
-  title: varchar("title", { length: 255 }).notNull(),
+  title: text("title").notNull(),
   summary: text("summary"),
+  fullContent: text("full_content"),
   
   // Access token for email link access (allows viewing without login)
   accessToken: varchar("access_token", { length: 64 }).unique(),
@@ -2963,8 +2964,11 @@ export const prescriptions = pgTable("prescriptions", {
   actionItems: jsonb("action_items"), // Prioritized action items
   timeline: jsonb("timeline"), // Implementation timeline
   
+  // Priority
+  priority: varchar("priority", { length: 20 }),
+
   // Status workflow
-  status: varchar("status", { length: 30 }).default("pending_review"), // pending_review, approved, delivered, in_progress, completed
+  status: varchar("status", { length: 50 }).default("pending_review"), // pending_review, approved, delivered, in_progress, completed
   
   // Review workflow
   reviewedBy: text("reviewed_by"),
@@ -3430,3 +3434,143 @@ export type UpdateCanonicalProfile = z.infer<typeof updateCanonicalProfileSchema
 export type DistributionTarget = typeof distributionTargets.$inferSelect;
 export type DistributionSubmission = typeof distributionSubmissions.$inferSelect;
 export type DistributionLog = typeof distributionLogs.$inferSelect;
+
+// ─── Chat Widget Product Tables ─────────────────────────────────────────────
+
+/**
+ * Chat Widget Settings — Server-side configuration for the embeddable chat widget.
+ * Each client gets one widget config that controls appearance and behavior
+ * when embedded on their website (WordPress, HTML, etc.).
+ */
+export const chatWidgetSettings = pgTable("chat_widget_settings", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull().unique(),
+
+  // Appearance
+  primaryColor: varchar("primary_color", { length: 20 }).default("#007bff"),
+  position: varchar("position", { length: 20 }).default("bottom-right"), // bottom-right, bottom-left, top-right, top-left
+  welcomeMessage: text("welcome_message").default("Hi! How can we help you today?"),
+  offlineMessage: text("offline_message").default("We're currently offline. Leave a message and we'll get back to you."),
+  companyName: varchar("company_name", { length: 255 }),
+  logoUrl: text("logo_url"),
+
+  // Behavior
+  requireEmail: boolean("require_email").default(false),
+  enableSound: boolean("enable_sound").default(true),
+  autoOpen: boolean("auto_open").default(false),
+  autoOpenDelay: integer("auto_open_delay").default(0), // seconds before auto-open, 0 = disabled
+
+  // Business hours awareness
+  showOfflineForm: boolean("show_offline_form").default(true),
+  timezone: varchar("timezone", { length: 50 }).default("America/New_York"),
+
+  // Allowed domains (security — only load widget on these domains)
+  allowedDomains: text("allowed_domains").array(),
+
+  // Custom CSS override
+  customCss: text("custom_css"),
+
+  // Feature flags
+  enableFileUpload: boolean("enable_file_upload").default(false),
+  enableEmoji: boolean("enable_emoji").default(true),
+  enablePreChatForm: boolean("enable_pre_chat_form").default(true),
+
+  isActive: boolean("is_active").default(true),
+
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+/**
+ * Chat Agents — Operators who handle chat conversations for the widget product.
+ * Separate from the clients table — these are the support agents/staff
+ * assigned to answer chats for a given client's widget.
+ */
+export const chatAgents = pgTable("chat_agents", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+
+  // Agent identity
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  avatarUrl: text("avatar_url"),
+  displayName: varchar("display_name", { length: 255 }), // shown to visitors in chat
+
+  // Role and permissions
+  role: varchar("role", { length: 20 }).default("agent"), // admin, agent, viewer
+  canTransfer: boolean("can_transfer").default(true),
+  canCloseConversations: boolean("can_close_conversations").default(true),
+  maxConcurrentChats: integer("max_concurrent_chats").default(5),
+
+  // Availability
+  isOnline: boolean("is_online").default(false),
+  lastSeenAt: timestamp("last_seen_at"),
+  statusMessage: varchar("status_message", { length: 255 }),
+
+  // Notification preferences
+  notifyEmail: boolean("notify_email").default(true),
+  notifySound: boolean("notify_sound").default(true),
+  notifyDesktop: boolean("notify_desktop").default(true),
+
+  // Performance tracking
+  totalChatsHandled: integer("total_chats_handled").default(0),
+  avgResponseTimeSec: integer("avg_response_time_sec"),
+  rating: integer("rating"), // 1-5 aggregate
+
+  isActive: boolean("is_active").default(true),
+
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_chat_agent_client").on(table.clientId),
+  index("idx_chat_agent_email").on(table.email),
+]);
+
+/**
+ * Chat Analytics Events — Tracks widget interactions, session metrics, and conversions.
+ * Powers the Analytics tab in the /chat app dashboard.
+ */
+export const chatAnalyticsEvents = pgTable("chat_analytics_events", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+
+  // Event identification
+  eventType: varchar("event_type", { length: 50 }).notNull(), // widget_loaded, widget_opened, chat_started, message_sent, message_received, chat_ended, pre_chat_form_submitted, rating_submitted, file_uploaded, agent_assigned, agent_transferred
+  visitorId: varchar("visitor_id", { length: 100 }),
+  sessionId: varchar("session_id", { length: 100 }),
+  conversationId: integer("conversation_id").references(() => inboxConversations.id),
+  agentId: integer("agent_id").references(() => chatAgents.id),
+
+  // Event data
+  metadata: jsonb("metadata"), // event-specific payload
+
+  // Visitor context
+  pageUrl: text("page_url"),
+  referrer: text("referrer"),
+  userAgent: text("user_agent"),
+  country: varchar("country", { length: 100 }),
+  city: varchar("city", { length: 100 }),
+
+  // Timing
+  durationMs: integer("duration_ms"), // for timed events like chat_ended
+
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_chat_analytics_client").on(table.clientId),
+  index("idx_chat_analytics_event_type").on(table.eventType),
+  index("idx_chat_analytics_session").on(table.sessionId),
+  index("idx_chat_analytics_created").on(table.createdAt),
+]);
+
+// Chat Widget Schemas
+export const insertChatWidgetSettingsSchema = createInsertSchema(chatWidgetSettings);
+export const insertChatAgentSchema = createInsertSchema(chatAgents);
+export const insertChatAnalyticsEventSchema = createInsertSchema(chatAnalyticsEvents);
+
+// Chat Widget Types
+export type ChatWidgetSettings = typeof chatWidgetSettings.$inferSelect;
+export type InsertChatWidgetSettings = z.infer<typeof insertChatWidgetSettingsSchema>;
+export type ChatAgent = typeof chatAgents.$inferSelect;
+export type InsertChatAgent = z.infer<typeof insertChatAgentSchema>;
+export type ChatAnalyticsEvent = typeof chatAnalyticsEvents.$inferSelect;
+export type InsertChatAnalyticsEvent = z.infer<typeof insertChatAnalyticsEventSchema>;
