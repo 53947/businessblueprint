@@ -3564,12 +3564,14 @@ export const chatAnalyticsEvents = pgTable("chat_analytics_events", {
 
 // Chat Widget Schemas
 export const insertChatWidgetSettingsSchema = createInsertSchema(chatWidgetSettings);
+export const updateChatWidgetSettingsSchema = insertChatWidgetSettingsSchema.partial().omit({ id: true, clientId: true, createdAt: true });
 export const insertChatAgentSchema = createInsertSchema(chatAgents);
 export const insertChatAnalyticsEventSchema = createInsertSchema(chatAnalyticsEvents);
 
 // Chat Widget Types
 export type ChatWidgetSettings = typeof chatWidgetSettings.$inferSelect;
 export type InsertChatWidgetSettings = z.infer<typeof insertChatWidgetSettingsSchema>;
+export type UpdateChatWidgetSettings = z.infer<typeof updateChatWidgetSettingsSchema>;
 export type ChatAgent = typeof chatAgents.$inferSelect;
 export type InsertChatAgent = z.infer<typeof insertChatAgentSchema>;
 export type ChatAnalyticsEvent = typeof chatAnalyticsEvents.$inferSelect;
