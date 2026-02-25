@@ -51,17 +51,6 @@ export class NMIService {
   }
   
   /**
-   * Log NMI configuration status at startup
-   */
-  static logConfigStatus(): void {
-    console.log('NMI Payment Gateway:', {
-      configured: !!this.API_KEY,
-      apiKeyPresent: !!this.API_KEY,
-      baseUrl: this.BASE_URL
-    });
-  }
-
-  /**
    * Create a recurring subscription with NMI
    */
   static async createSubscription(request: SubscriptionRequest): Promise<NMISubscriptionResponse> {
