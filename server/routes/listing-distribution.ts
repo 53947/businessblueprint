@@ -14,10 +14,24 @@ import { eq, desc } from "drizzle-orm";
 import { listingDistributionService } from "../services/listing-distribution/distributionService";
 import { getAdapter, getDirectoryCoverage, getTotalDirectoryCount } from "../services/listing-distribution/listingAdapterFactory";
 import { seedDistributionTargets } from "../services/listing-distribution/seedTargets";
-import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import jwt from "jsonwebtoken";
 
 export const listingDistributionRouter = Router();
+
+// ─── PIN Hashing Helpers (using Node built-in crypto) ────────────────
+
+function hashPin(pin: string): string {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.scryptSync(pin, salt, 64).toString("hex");
+  return `${salt}:${hash}`;
+}
+
+function verifyPin(pin: string, stored: string): boolean {
+  const [salt, hash] = stored.split(":");
+  const test = crypto.scryptSync(pin, salt, 64).toString("hex");
+  return hash === test;
+}
 
 // ─── Canonical Profile CRUD ──────────────────────────────────────────
 
@@ -111,7 +125,7 @@ listingDistributionRouter.post("/clients/:id/distribution/profile/set-pin", asyn
     const profile = await listingDistributionService.getProfile(clientId);
     if (!profile) return res.status(404).json({ error: "No profile found" });
 
-    const hash = await bcrypt.hash(pin, 10);
+    const hash = hashPin(pin);
     await db.update(canonicalBusinessProfiles)
       .set({ editPin: hash })
       .where(eq(canonicalBusinessProfiles.id, profile.id));
@@ -142,7 +156,7 @@ listingDistributionRouter.post("/clients/:id/distribution/profile/verify-pin", a
       return res.status(404).json({ error: "No PIN set for this profile" });
     }
 
-    const match = await bcrypt.compare(pin, profile.editPin);
+    const match = verifyPin(pin, profile.editPin);
     if (!match) {
       return res.status(401).json({ error: "Invalid PIN" });
     }
