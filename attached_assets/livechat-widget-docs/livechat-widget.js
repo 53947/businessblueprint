@@ -96,7 +96,7 @@
         <div class="bb-header">
           <div class="bb-header-title">
             <span class="bb-header-status"></span>
-            <span>${escapeHtml(config.companyName)}</span>
+            <span id="bb-company-name"></span>
           </div>
           <div class="bb-header-actions">
             <button class="bb-header-btn" id="bb-minimize" title="Minimize">
@@ -118,6 +118,7 @@
         </div>
       </div>
     `;
+    container.querySelector('#bb-company-name').textContent = config.companyName;
     document.body.appendChild(container);
     bindEvents();
     showWelcomeForm();
