@@ -194,7 +194,8 @@
     } else {
       content.innerHTML = '<div class="bb-messages" id="bb-messages">' + 
         messages.map(function(msg) {
-          return `<div class="bb-message ${msg.direction}">
+          var safeDirection = escapeHtml(msg.direction);
+          return `<div class="bb-message ${safeDirection}">
             ${msg.direction === 'outbound' ? '<div class="bb-message-sender">' + escapeHtml(msg.fromName) + '</div>' : ''}
             <div>${escapeHtml(msg.content)}</div>
             <div class="bb-message-meta">${formatTime(msg.timestamp)}</div>
