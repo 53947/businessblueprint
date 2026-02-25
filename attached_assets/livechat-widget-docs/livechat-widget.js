@@ -189,19 +189,36 @@
 
   function showMessages() {
     var content = document.getElementById('bb-content');
+    content.innerHTML = '';
     if (messages.length === 0) {
-      content.innerHTML = '<div class="bb-empty">Send a message to start the conversation</div>';
+      var empty = document.createElement('div');
+      empty.className = 'bb-empty';
+      empty.textContent = 'Send a message to start the conversation';
+      content.appendChild(empty);
     } else {
-      content.innerHTML = '<div class="bb-messages" id="bb-messages">' + 
-        messages.map(function(msg) {
-          var safeDirection = escapeHtml(msg.direction);
-          return '<div class="bb-message ' + safeDirection + '">' +
-            (msg.direction === 'outbound' ? '<div class="bb-message-sender">' + escapeHtml(msg.fromName) + '</div>' : '') +
-            '<div>' + escapeHtml(msg.content) + '</div>' +
-            '<div class="bb-message-meta">' + formatTime(msg.timestamp) + '</div>' +
-            '</div>';
-        }).join('') + 
-      '</div>';
+      var container = document.createElement('div');
+      container.className = 'bb-messages';
+      container.id = 'bb-messages';
+      messages.forEach(function(msg) {
+        var direction = (typeof msg.direction === 'string') ? msg.direction : '';
+        var msgEl = document.createElement('div');
+        msgEl.className = 'bb-message ' + direction;
+        if (direction === 'outbound') {
+          var sender = document.createElement('div');
+          sender.className = 'bb-message-sender';
+          sender.textContent = msg.fromName;
+          msgEl.appendChild(sender);
+        }
+        var body = document.createElement('div');
+        body.textContent = msg.content;
+        msgEl.appendChild(body);
+        var meta = document.createElement('div');
+        meta.className = 'bb-message-meta';
+        meta.textContent = formatTime(msg.timestamp);
+        msgEl.appendChild(meta);
+        container.appendChild(msgEl);
+      });
+      content.appendChild(container);
       content.scrollTop = content.scrollHeight;
     }
   }
