@@ -141,7 +141,7 @@
         <div class="bb-chat-header">
           <div class="bb-chat-header-title">
             <span class="bb-chat-header-status"></span>
-            <span>${escapeHtml(config.companyName)}</span>
+            <span id="bb-chat-company-name"></span>
           </div>
           <div class="bb-chat-header-actions">
             <button class="bb-chat-header-btn" id="bb-chat-minimize" title="Minimize">
@@ -167,6 +167,7 @@
       </div>
     `;
     document.body.appendChild(container);
+    document.getElementById('bb-chat-company-name').textContent = config.companyName;
     bindEvents();
     
     if (sessionId) {
@@ -183,7 +184,7 @@
     content.innerHTML = `
       <div class="bb-chat-welcome">
         <h3>Welcome! 👋</h3>
-        <p>${escapeHtml(config.welcomeMessage)}</p>
+        <p id="bb-chat-welcome-message"></p>
         ${nameRequired ? `
         <div class="bb-chat-input-group">
           <input type="text" class="bb-chat-input" id="bb-chat-name" placeholder="Your name${nameRequired ? ' *' : ''}" ${nameRequired ? 'required' : ''}>
@@ -195,6 +196,7 @@
         <button class="bb-chat-btn" id="bb-chat-start" ${nameRequired ? 'disabled' : ''}>Start Chat</button>
       </div>
     `;
+    document.getElementById('bb-chat-welcome-message').textContent = config.welcomeMessage;
     
     var nameInput = document.getElementById('bb-chat-name');
     var emailInput = document.getElementById('bb-chat-email');
