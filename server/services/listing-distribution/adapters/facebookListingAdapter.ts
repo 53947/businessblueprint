@@ -105,7 +105,7 @@ export class FacebookListingAdapter extends BaseListingAdapter {
   }
 
   getDownstreamDirectories(): string[] {
-    return ["Facebook Business", "Facebook Marketplace", "Instagram Location"];
+    return ["Facebook Business", "Facebook Marketplace", "Instagram Location", "WhatsApp Business", "Threads"];
   }
 
   private mapToFacebookFormat(data: ListingData) {

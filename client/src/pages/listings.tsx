@@ -8,9 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { 
-  MapPin, 
-  TrendingUp, 
+import {
+  MapPin,
+  TrendingUp,
   Settings,
   BarChart3,
   Plus,
@@ -23,13 +23,20 @@ import {
   Globe,
   Calendar,
   Link2,
-  Building2
+  Building2,
+  Shield,
+  Network
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import listingsIcon from "@assets/logos and wordmarks/: listings app logo.png";
 import { CrmEmptyState, CRM_EMPTY_CONFIGS } from "@/components/crm-empty-state";
 import { useCrmPresence } from "@/hooks/use-crm-presence";
+import { ProfileView } from "@/components/distribution/ProfileView";
+import { ProfileEditDialog } from "@/components/distribution/ProfileEditDialog";
+import { PinGateDialog } from "@/components/distribution/PinGateDialog";
+import { CoverageGrid } from "@/components/distribution/CoverageGrid";
+import type { CanonicalBusinessProfile } from "@shared/schema";
 
 interface BusinessListing {
   id: number;
@@ -59,6 +66,11 @@ export default function ListingsManagement() {
   const [activeTab, setActiveTab] = useState('overview');
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [selectedListing, setSelectedListing] = useState<BusinessListing | null>(null);
+
+  // Profile tab state
+  const [showPinDialog, setShowPinDialog] = useState(false);
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
+  const [unlockToken, setUnlockToken] = useState<string | null>(null);
   
   const crmPresence = useCrmPresence();
 
@@ -76,6 +88,45 @@ export default function ListingsManagement() {
     queryKey: [`/api/clients/${clientId}/listings`],
     enabled: !!clientId,
   });
+
+  // Fetch canonical profile for Profile tab
+  const { data: profileData } = useQuery<{ profile: CanonicalBusinessProfile }>({
+    queryKey: [`/api/clients/${clientId}/distribution/profile`],
+    enabled: !!clientId,
+  });
+
+  // Check if PIN is set
+  const { data: pinData } = useQuery<{ hasPin: boolean }>({
+    queryKey: [`/api/clients/${clientId}/distribution/profile/has-pin`],
+    enabled: !!clientId,
+  });
+
+  const profile = profileData?.profile;
+  const hasPin = pinData?.hasPin ?? false;
+  const isUnlocked = !!unlockToken;
+
+  const handleEditProfileClick = () => {
+    if (!hasPin || isUnlocked) {
+      if (!hasPin) {
+        // No PIN set, open PIN creation first
+        setShowPinDialog(true);
+      } else {
+        // Already unlocked, open edit directly
+        setShowProfileEdit(true);
+      }
+    } else {
+      // PIN set but locked, open PIN entry
+      setShowPinDialog(true);
+    }
+  };
+
+  const handlePinUnlocked = (token: string) => {
+    setUnlockToken(token);
+    setShowPinDialog(false);
+    // Refresh PIN status in case it was just created
+    queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/distribution/profile/has-pin`] });
+    setShowProfileEdit(true);
+  };
 
   // Use shared CRM data from hook (avoids duplicate queries)
   const crmCompany = crmPresence.companies?.[0]; // Get primary company
@@ -227,12 +278,26 @@ export default function ListingsManagement() {
             onClick: () => setActiveTab('listings'),
             testId: 'tab-listings'
           },
-          { 
-            label: 'Analytics', 
-            icon: TrendingUp, 
+          {
+            label: 'Analytics',
+            icon: TrendingUp,
             active: activeTab === 'analytics',
             onClick: () => setActiveTab('analytics'),
             testId: 'tab-analytics'
+          },
+          {
+            label: 'Profile',
+            icon: Shield,
+            active: activeTab === 'profile',
+            onClick: () => setActiveTab('profile'),
+            testId: 'tab-profile'
+          },
+          {
+            label: 'Coverage',
+            icon: Network,
+            active: activeTab === 'coverage',
+            onClick: () => setActiveTab('coverage'),
+            testId: 'tab-coverage'
           }
         ]}
         actions={
@@ -554,8 +619,66 @@ export default function ListingsManagement() {
               <p className="text-gray-600">Detailed listing analytics and performance metrics will be available here.</p>
             </div>
           </TabsContent>
+
+          {/* Profile Tab */}
+          <TabsContent value="profile">
+            {profile ? (
+              <ProfileView
+                profile={profile}
+                isUnlocked={isUnlocked}
+                onEditClick={handleEditProfileClick}
+              />
+            ) : clientId ? (
+              <div className="text-center py-12">
+                <Shield className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <h3 className="text-xl font-semibold mb-2">Loading Profile...</h3>
+                <p className="text-gray-600">Your canonical business profile is being loaded.</p>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Shield className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <h3 className="text-xl font-semibold mb-2">No Profile Available</h3>
+                <p className="text-gray-600">Log in to view your business profile.</p>
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Coverage Tab */}
+          <TabsContent value="coverage">
+            {clientId ? (
+              <CoverageGrid clientId={clientId} />
+            ) : (
+              <div className="text-center py-12">
+                <Network className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <h3 className="text-xl font-semibold mb-2">Coverage Dashboard</h3>
+                <p className="text-gray-600">Log in to view your directory coverage across 100+ directories.</p>
+              </div>
+            )}
+          </TabsContent>
         </Tabs>
       </div>
+
+      {/* PIN Gate Dialog */}
+      {clientId && (
+        <PinGateDialog
+          open={showPinDialog}
+          onOpenChange={setShowPinDialog}
+          clientId={clientId}
+          mode={hasPin ? "enter" : "create"}
+          onUnlocked={handlePinUnlocked}
+        />
+      )}
+
+      {/* Profile Edit Dialog */}
+      {clientId && profile && unlockToken && (
+        <ProfileEditDialog
+          open={showProfileEdit}
+          onOpenChange={setShowProfileEdit}
+          profile={profile}
+          clientId={clientId}
+          unlockToken={unlockToken}
+        />
+      )}
 
       {/* Edit Listing Dialog */}
       {showEditDialog && selectedListing && (

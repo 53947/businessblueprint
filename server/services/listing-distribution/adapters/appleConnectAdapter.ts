@@ -101,7 +101,7 @@ export class AppleConnectAdapter extends BaseListingAdapter {
   }
 
   getDownstreamDirectories(): string[] {
-    return ["Apple Maps", "Apple Wallet", "Siri", "Safari Suggestions"];
+    return ["Apple Maps", "Apple Wallet", "Siri", "Safari Suggestions", "Apple Business Chat", "CarPlay POI"];
   }
 
   private mapToAppleFormat(data: ListingData) {

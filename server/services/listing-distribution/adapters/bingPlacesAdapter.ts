@@ -102,7 +102,7 @@ export class BingPlacesAdapter extends BaseListingAdapter {
   }
 
   getDownstreamDirectories(): string[] {
-    return ["Bing Places", "Bing Maps", "Cortana", "MSN Local"];
+    return ["Bing Places", "Bing Maps", "Cortana", "MSN Local", "Microsoft Edge Local", "Outlook Local"];
   }
 
   private mapToBingFormat(data: ListingData) {

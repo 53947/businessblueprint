@@ -110,6 +110,7 @@ export class FoursquareAdapter extends BaseListingAdapter {
       "TripAdvisor", "Waze", "OpenTable", "Zillow", "Booking.com",
       "MapQuest", "TomTom", "Navmii", "Audi", "BMW", "Mercedes",
       "GasBuddy", "Pitney Bowes",
+      "Skyscanner", "Trivago", "Moovit", "Citymapper", "Scout GPS", "Sygic", "Swarm",
     ];
   }
 
