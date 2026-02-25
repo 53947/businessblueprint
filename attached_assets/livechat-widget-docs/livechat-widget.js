@@ -129,24 +129,25 @@
     content.innerHTML = `
       <div class="bb-welcome">
         <h3>Welcome! 👋</h3>
-        <p>${escapeHtml(config.welcomeMessage)}</p>
+        <p id="bb-welcome-msg"></p>
         <div class="bb-input-group">
           <input type="text" class="bb-input" id="bb-name-input" placeholder="Your name *" required>
         </div>
-        ${config.requireEmail ? `
         <div class="bb-input-group">
-          <input type="email" class="bb-input" id="bb-email-input" placeholder="Your email *" required>
+          <input type="email" class="bb-input" id="bb-email-input">
         </div>
-        ` : `
-        <div class="bb-input-group">
-          <input type="email" class="bb-input" id="bb-email-input" placeholder="Your email (optional)">
-        </div>
-        `}
         <button class="bb-btn" id="bb-start-chat" disabled>Start Chat</button>
       </div>
     `;
+    content.querySelector('#bb-welcome-msg').textContent = config.welcomeMessage;
     var nameInput = document.getElementById('bb-name-input');
     var emailInput = document.getElementById('bb-email-input');
+    if (config.requireEmail) {
+      emailInput.setAttribute('placeholder', 'Your email *');
+      emailInput.setAttribute('required', '');
+    } else {
+      emailInput.setAttribute('placeholder', 'Your email (optional)');
+    }
     var startBtn = document.getElementById('bb-start-chat');
 
     function validateForm() {
