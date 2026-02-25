@@ -303,7 +303,7 @@ export function LiveChatWidget({ clientId, companyName, primaryColor = '#007bff'
               <div className="flex items-center gap-2">
                 <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'}`} />
                 <CardTitle className="text-lg font-semibold" data-testid="text-company-name">
-                  {companyName} Chat
+                  {companyName}
                 </CardTitle>
               </div>
             </div>
