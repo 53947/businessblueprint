@@ -96,7 +96,7 @@
         <div class="bb-header">
           <div class="bb-header-title">
             <span class="bb-header-status"></span>
-            <span>${config.companyName}</span>
+            <span id="bb-company-name"></span>
           </div>
           <div class="bb-header-actions">
             <button class="bb-header-btn" id="bb-minimize" title="Minimize">
@@ -118,6 +118,7 @@
         </div>
       </div>
     `;
+    document.getElementById('bb-company-name').textContent = config.companyName;
     document.body.appendChild(container);
     bindEvents();
     showWelcomeForm();
@@ -128,7 +129,7 @@
     content.innerHTML = `
       <div class="bb-welcome">
         <h3>Welcome! 👋</h3>
-        <p>${config.welcomeMessage}</p>
+        <p id="bb-welcome-message"></p>
         <div class="bb-input-group">
           <input type="text" class="bb-input" id="bb-name-input" placeholder="Your name *" required>
         </div>
@@ -144,6 +145,7 @@
         <button class="bb-btn" id="bb-start-chat" disabled>Start Chat</button>
       </div>
     `;
+    document.getElementById('bb-welcome-message').textContent = config.welcomeMessage;
     var nameInput = document.getElementById('bb-name-input');
     var emailInput = document.getElementById('bb-email-input');
     var startBtn = document.getElementById('bb-start-chat');
