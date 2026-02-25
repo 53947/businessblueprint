@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { useToast } from "@/hooks/use-toast";
-import { Search, FileSearch, ArrowRight, Clock, CheckCircle, AlertTriangle, Lock, UserPlus } from "lucide-react";
+import { Search, FileSearch, ArrowRight, Clock, CheckCircle, AlertTriangle, UserPlus } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 
@@ -24,56 +24,41 @@ export default function FindResults() {
   const [results, setResults] = useState<AssessmentResult[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [hasValidToken, setHasValidToken] = useState(false);
-  const [tokenExpired, setTokenExpired] = useState(false);
   const [isCheckingToken, setIsCheckingToken] = useState(true);
   const { toast } = useToast();
   const [, setLocation] = useLocation();
 
-  // Check for valid temporary access token on mount
+  // Check for navigation state passed from assessment form (no sessionStorage)
   useEffect(() => {
-    const checkTemporaryAccess = async () => {
-      const token = sessionStorage.getItem('assessmentAccessToken');
-      const expiryStr = sessionStorage.getItem('assessmentAccessExpiry');
-      const assessmentId = sessionStorage.getItem('assessmentId');
-      
-      if (token && expiryStr && assessmentId) {
-        const expiry = parseInt(expiryStr, 10);
-        
-        if (Date.now() < expiry) {
-          // Token is still valid - fetch assessment data
-          setHasValidToken(true);
-          try {
-            const response = await fetch(`/api/assessments/${assessmentId}`);
-            if (response.ok) {
-              const data = await response.json();
-              // API returns { assessment: {...}, recommendations: [...] }
-              const assessment = data.assessment;
-              if (assessment) {
-                setResults([{
-                  id: assessment.id,
-                  businessName: assessment.businessName || 'Unknown Business',
-                  status: assessment.status || 'pending',
-                  digitalScore: assessment.digitalScore,
-                  createdAt: assessment.createdAt
-                }]);
-              }
+    const checkNavigationAccess = async () => {
+      const navState = window.history.state as { assessmentId?: number; granted?: boolean } | null;
+
+      if (navState?.granted && navState?.assessmentId) {
+        setHasValidToken(true);
+        try {
+          const response = await fetch(`/api/assessments/${navState.assessmentId}`);
+          if (response.ok) {
+            const data = await response.json();
+            const assessment = data.assessment;
+            if (assessment) {
+              setResults([{
+                id: assessment.id,
+                businessName: assessment.businessName || 'Unknown Business',
+                status: assessment.status || 'pending',
+                digitalScore: assessment.digitalScore,
+                createdAt: assessment.createdAt
+              }]);
             }
-          } catch (err) {
-            console.error('Error fetching assessment:', err);
           }
-        } else {
-          // Token expired - clear sessionStorage and show login prompt
-          sessionStorage.removeItem('assessmentAccessToken');
-          sessionStorage.removeItem('assessmentAccessExpiry');
-          sessionStorage.removeItem('assessmentId');
-          setTokenExpired(true);
+        } catch (err) {
+          console.error('Error fetching assessment:', err);
         }
       }
-      
+
       setIsCheckingToken(false);
     };
-    
-    checkTemporaryAccess();
+
+    checkNavigationAccess();
   }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -163,44 +148,6 @@ export default function FindResults() {
       
       <main className="flex-1 py-12">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Token Expired - Show Login Prompt */}
-          {tokenExpired && (
-            <div className="mb-8">
-              <Card className="shadow-lg border-orange-200 bg-orange-50">
-                <CardContent className="p-6">
-                  <div className="text-center">
-                    <Lock className="w-16 h-16 text-orange-500 mx-auto mb-4" />
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2" data-testid="text-token-expired">
-                      Your Temporary Access Has Expired
-                    </h2>
-                    <p className="text-gray-600 mb-6">
-                      Your 15-minute viewing window has ended. Create an account or log in to access your assessment results anytime.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                      <Button
-                        size="lg"
-                        onClick={() => setLocation('/auth/signup')}
-                        className="flex items-center gap-2"
-                        data-testid="button-create-account"
-                      >
-                        <UserPlus className="w-5 h-5" />
-                        Create Account
-                      </Button>
-                      <Button
-                        size="lg"
-                        variant="outline"
-                        onClick={() => setLocation('/auth/login')}
-                        data-testid="button-login"
-                      >
-                        Log In
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
           {/* Valid Token - Show Results Directly */}
           {hasValidToken && results && results.length > 0 && (
             <div className="mb-8">
