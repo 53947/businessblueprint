@@ -96,7 +96,7 @@
         <div class="bb-header">
           <div class="bb-header-title">
             <span class="bb-header-status"></span>
-            <span>${config.companyName}</span>
+            <span>${escapeHtml(config.companyName)}</span>
           </div>
           <div class="bb-header-actions">
             <button class="bb-header-btn" id="bb-minimize" title="Minimize">
@@ -128,7 +128,7 @@
     content.innerHTML = `
       <div class="bb-welcome">
         <h3>Welcome! 👋</h3>
-        <p>${config.welcomeMessage}</p>
+        <p>${escapeHtml(config.welcomeMessage)}</p>
         <div class="bb-input-group">
           <input type="text" class="bb-input" id="bb-name-input" placeholder="Your name *" required>
         </div>
