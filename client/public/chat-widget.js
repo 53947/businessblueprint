@@ -280,18 +280,35 @@
 
   function showMessages() {
     var content = document.getElementById('bb-chat-content');
+    content.innerHTML = '';
     if (messages.length === 0) {
-      content.innerHTML = '<div class="bb-chat-empty">Send a message to start the conversation</div>';
+      var empty = document.createElement('div');
+      empty.className = 'bb-chat-empty';
+      empty.textContent = 'Send a message to start the conversation';
+      content.appendChild(empty);
     } else {
-      content.innerHTML = '<div class="bb-chat-messages" id="bb-chat-messages">' + 
-        messages.map(function(msg) {
-          return '<div class="bb-chat-message ' + escapeHtml(msg.direction) + '">' +
-            (msg.direction === 'outbound' ? '<div class="bb-chat-message-sender">' + escapeHtml(msg.fromName || 'Support') + '</div>' : '') +
-            '<div>' + escapeHtml(msg.content) + '</div>' +
-            '<div class="bb-chat-message-meta">' + formatTime(msg.timestamp) + '</div>' +
-          '</div>';
-        }).join('') + 
-      '</div>';
+      var container = document.createElement('div');
+      container.className = 'bb-chat-messages';
+      container.id = 'bb-chat-messages';
+      messages.forEach(function(msg) {
+        var msgEl = document.createElement('div');
+        msgEl.className = 'bb-chat-message ' + (msg.direction === 'outbound' ? 'outbound' : 'inbound');
+        if (msg.direction === 'outbound') {
+          var sender = document.createElement('div');
+          sender.className = 'bb-chat-message-sender';
+          sender.textContent = msg.fromName || 'Support';
+          msgEl.appendChild(sender);
+        }
+        var body = document.createElement('div');
+        body.textContent = msg.content;
+        msgEl.appendChild(body);
+        var meta = document.createElement('div');
+        meta.className = 'bb-chat-message-meta';
+        meta.textContent = formatTime(msg.timestamp);
+        msgEl.appendChild(meta);
+        container.appendChild(msgEl);
+      });
+      content.appendChild(container);
       content.scrollTop = content.scrollHeight;
     }
   }
