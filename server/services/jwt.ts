@@ -38,7 +38,6 @@ export class JWTService {
     this.algorithm = hasValidRSAKeys ? 'RS256' : 'HS256';
     if (this.algorithm === 'HS256') {
       const hasSecret = !!process.env.JWT_SECRET;
-      console.log(`[JWT Service] JWT_SECRET configured: ${hasSecret}`);
       if (!hasSecret) {
         console.warn('[JWT Service] WARNING: No JWT_SECRET set, using fallback key');
       }
