@@ -285,11 +285,11 @@
     } else {
       content.innerHTML = '<div class="bb-chat-messages" id="bb-chat-messages">' + 
         messages.map(function(msg) {
-          return `<div class="bb-chat-message ${msg.direction}">
-            ${msg.direction === 'outbound' ? '<div class="bb-chat-message-sender">' + escapeHtml(msg.fromName || 'Support') + '</div>' : ''}
-            <div>${escapeHtml(msg.content)}</div>
-            <div class="bb-chat-message-meta">${formatTime(msg.timestamp)}</div>
-          </div>`;
+          return '<div class="bb-chat-message ' + escapeHtml(msg.direction) + '">' +
+            (msg.direction === 'outbound' ? '<div class="bb-chat-message-sender">' + escapeHtml(msg.fromName || 'Support') + '</div>' : '') +
+            '<div>' + escapeHtml(msg.content) + '</div>' +
+            '<div class="bb-chat-message-meta">' + formatTime(msg.timestamp) + '</div>' +
+          '</div>';
         }).join('') + 
       '</div>';
       content.scrollTop = content.scrollHeight;
