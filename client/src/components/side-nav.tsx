@@ -2,14 +2,15 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { 
-  LayoutDashboard, 
+import {
+  LayoutDashboard,
   CheckSquare,
   LogOut,
   ChevronLeft,
   ChevronRight,
   Menu,
-  CreditCard
+  CreditCard,
+  Lock
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import bbIcon from "@assets/Blueprint_Favicon_1762489845363.png";
@@ -39,6 +40,7 @@ interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   onTabChange?: (tab: string) => void;
   onSignOut?: () => void;
   className?: string;
+  enabledFeatures?: string; // Comma-separated feature codes: "RS,LC,SE,PO,LI,RE,AC"
 }
 
 interface NavItem {
@@ -53,12 +55,19 @@ interface NavItem {
   isDivider?: boolean;
   isHeading?: boolean; // Non-clickable section heading
   hasSpaceBefore?: boolean;
+  featureCode?: string; // Maps to enabledFeatures codes: RS, LC, SE, PO, LI, RE, AC
 }
 
-export function SideNav({ activeTab = "list", onTabChange, onSignOut, className, ...props }: SideNavProps) {
+export function SideNav({ activeTab = "list", onTabChange, onSignOut, className, enabledFeatures, ...props }: SideNavProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [, setLocation] = useLocation();
+
+  // Parse enabled features into a set for quick lookup
+  const enabledSet = new Set(
+    enabledFeatures ? enabledFeatures.split(",").map((f) => f.trim()) : []
+  );
+  const hasFeatureGating = enabledFeatures !== undefined && enabledFeatures !== "";
 
   const navItems: NavItem[] = [
     {
@@ -68,16 +77,18 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       icon: <img src={inboxIcon} alt="/respond" className="w-7 h-7 object-contain" />,
       logo: inboxLogo,
       external: true,
-      href: "/respond"
+      href: "/respond",
+      featureCode: "RS",
     },
-    { 
-      id: "livechat", 
+    {
+      id: "livechat",
       label: "livechat",
       hoverLabel: "Live Chat Widget",
       icon: <img src={livechatIcon} alt="/livechat" className="w-7 h-7 object-contain" />,
       logo: livechatLogo,
-      external: true, 
-      href: "/livechat" 
+      external: true,
+      href: "/livechat",
+      featureCode: "LC",
     },
     { 
       id: "tasks", 
@@ -95,14 +106,15 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       icon: null, 
       isDivider: true 
     },
-    { 
-      id: "send", 
+    {
+      id: "send",
       label: "send",
       hoverLabel: "Email + SMS Marketing",
       icon: <img src={sendIcon} alt="/send" className="w-7 h-7 object-contain" />,
       logo: sendLogo,
       external: true,
-      href: "/send"
+      href: "/send",
+      featureCode: "SE",
     },
     {
       id: "post",
@@ -111,7 +123,8 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       icon: <img src={socialMediaIcon} alt="/post" className="w-7 h-7 object-contain" />,
       logo: contentLogo,
       external: true,
-      href: "/post"
+      href: "/post",
+      featureCode: "PO",
     },
     { 
       id: "divider-2", 
@@ -132,7 +145,8 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       icon: <img src={listingsIcon} alt="/list" className="w-7 h-7 object-contain" />,
       logo: listingsLogo,
       external: true,
-      href: "/list"
+      href: "/list",
+      featureCode: "LI",
     },
     {
       id: "review",
@@ -141,7 +155,8 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       icon: <img src={reputationIcon} alt="/review" className="w-7 h-7 object-contain" />,
       logo: reputationLogo,
       external: true,
-      href: "/review"
+      href: "/review",
+      featureCode: "RE",
     },
     { 
       id: "divider-3", 
@@ -149,12 +164,13 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       icon: null, 
       isDivider: true 
     },
-    { 
-      id: "ai-coach", 
+    {
+      id: "ai-coach",
       label: "AI Coach Blue",
       icon: <img src={aiCoachIcon} alt="AI Coach Blue" className="w-7 h-7 object-contain" />,
       external: true,
-      href: "/ai-coach"
+      href: "/ai-coach",
+      featureCode: "AC",
     },
     { 
       id: "settings", 
@@ -185,11 +201,25 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
     },
   ];
 
+  const isFeatureEnabled = (item: NavItem) => {
+    // If no feature gating, all features are accessible
+    if (!hasFeatureGating) return true;
+    // Items without a feature code are always accessible (dividers, headings, settings, billing, etc.)
+    if (!item.featureCode) return true;
+    return enabledSet.has(item.featureCode);
+  };
+
   const handleNavClick = (item: NavItem, closeMobile: boolean = false) => {
     if (closeMobile) {
       setIsMobileOpen(false);
     }
-    
+
+    // Block navigation for locked features
+    if (!isFeatureEnabled(item)) {
+      setLocation('/subscribe');
+      return;
+    }
+
     if (item.external && item.href) {
       // Check if it's an absolute URL (external site)
       if (item.href.startsWith('http://') || item.href.startsWith('https://')) {
@@ -229,6 +259,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
         }
         
         // Render regular nav item
+        const locked = !isFeatureEnabled(item);
         return (
           <button
             key={item.id}
@@ -236,32 +267,35 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
             className={cn(
               "w-full flex items-center gap-3 px-4 rounded-lg transition-all duration-200 text-left group",
               isMobile ? "h-12" : "h-9",
-              activeTab === item.id 
-                ? "bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-600 dark:text-blue-400 font-semibold shadow-sm" 
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-sm",
+              locked
+                ? "text-gray-400 dark:text-gray-600 opacity-60"
+                : activeTab === item.id
+                  ? "bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 text-blue-600 dark:text-blue-400 font-semibold shadow-sm"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:shadow-sm",
               item.hasSpaceBefore ? "mt-4" : ""
             )}
-            title={item.hoverLabel || undefined}
+            title={locked ? `Upgrade to unlock ${item.hoverLabel || item.label}` : item.hoverLabel || undefined}
             data-testid={`nav-item-${item.id}`}
           >
             {item.icon && (
               <span className={cn(
                 "flex-shrink-0 transition-transform duration-200",
-                activeTab === item.id ? "scale-110" : "group-hover:scale-105"
+                locked ? "" : activeTab === item.id ? "scale-110" : "group-hover:scale-105"
               )}>
                 {item.icon}
               </span>
             )}
             {!collapsed && (
               item.logo ? (
-                <img 
-                  src={item.logo} 
-                  alt={item.label} 
+                <img
+                  src={item.logo}
+                  alt={item.label}
                   className={cn(
                     "flex-1 object-contain object-left",
-                    item.id === "hostsblue" || item.id === "swipesblue" ? "h-7" : "h-5"
+                    item.id === "hostsblue" || item.id === "swipesblue" ? "h-7" : "h-5",
+                    locked ? "grayscale" : ""
                   )}
-                  data-testid={`logo-nav-${item.id}`} 
+                  data-testid={`logo-nav-${item.id}`}
                 />
               ) : (
                 <span className="flex-1 text-base leading-7" data-testid={`text-nav-${item.id}`}>
@@ -269,7 +303,10 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
                 </span>
               )
             )}
-            {!collapsed && item.badge && (
+            {!collapsed && locked && (
+              <Lock className="flex-shrink-0 w-3.5 h-3.5 text-gray-400" />
+            )}
+            {!collapsed && !locked && item.badge && (
               <span className="flex-shrink-0 bg-red-500 text-white text-xs font-semibold rounded-full px-2.5 py-1 shadow-sm" data-testid={`badge-${item.id}`}>
                 {item.badge}
               </span>

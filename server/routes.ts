@@ -46,6 +46,7 @@ import {
   listingMetricsSnapshots,
   updateBusinessListingSchema,
   insertBusinessListingSchema,
+  subscriptionAddonSelections,
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
@@ -2483,9 +2484,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Log successful order (could save to database if needed)
-      console.log("✅ Marketplace order successful:", {
+      // Provision client account for marketplace purchase
+      let client = await storage.getClientByEmail(customerInfo.email);
+      if (!client) {
+        client = await storage.createClient({
+          companyName: `${customerInfo.firstName} ${customerInfo.lastName}`,
+          email: customerInfo.email,
+          phone: customerInfo.phone || null,
+          accountStatus: "active",
+        });
+      }
+
+      // Map purchased app items to feature codes
+      const featureCodeMap: Record<string, string> = {
+        respond: "RS", livechat: "LC", send: "SE", post: "PO",
+        list: "LI", review: "RE", "ai-coach": "AC",
+      };
+      const purchasedCodes = items
+        .filter((item) => item.type === "app")
+        .map((item) => featureCodeMap[item.id])
+        .filter(Boolean);
+
+      // Merge with any existing enabled features
+      const existingCodes = (client.enabledFeatures || "").split(",").filter(Boolean);
+      const allCodes = [...new Set([...existingCodes, ...purchasedCodes])];
+      await storage.updateClient(client.id, { enabledFeatures: allCodes.join(",") });
+
+      console.log("Marketplace order successful:", {
         subscriptionId: nmiResult.subscription_id,
+        clientId: client.id,
         customerEmail: customerInfo.email,
         items: items.length,
         total: calculatedTotal,
@@ -2495,6 +2522,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: true,
         message: "Order processed successfully",
         subscriptionId: nmiResult.subscription_id,
+        clientId: client.id,
         items: items.map((item) => item.name),
       });
     } catch (error) {
@@ -2990,9 +3018,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      // Provision client account: find existing or create new
+      let client = await storage.getClientByEmail(customerInfo.email);
+      if (!client) {
+        client = await storage.createClient({
+          companyName: `${customerInfo.firstName} ${customerInfo.lastName}`,
+          email: customerInfo.email,
+          phone: customerInfo.phone || null,
+          address: [customerInfo.address, customerInfo.city, customerInfo.state, customerInfo.zip]
+            .filter(Boolean)
+            .join(", ") || null,
+          accountStatus: "active",
+        });
+      }
+
+      // All plans include all core apps; map plan features to enabledFeatures codes
+      const coreFeatures = "RS,LC,SE,PO,LI,RE"; // respond, livechat, send, post, list, review
+      const hasAiCoach = selectedAddons.some(
+        (addon) => addons.find((a) => a.addonId === addon.addonId)?.category === "coaching",
+      );
+      const enabledFeatures = hasAiCoach ? `${coreFeatures},AC` : coreFeatures;
+
+      await storage.updateClient(client.id, { enabledFeatures });
+
       // Create local subscription record with proper separated amounts
       const subscriptionData = {
         nmiSubscriptionId: nmiResult.subscription_id,
+        clientId: client.id,
         planId: plan[0].id,
         status: isTrialEligible ? "trial" : "active",
         baseAmount: pricing.basePrice.toFixed(2),
@@ -3018,10 +3070,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .values(subscriptionData)
         .returning();
 
+      // Save addon selections
+      for (const addon of selectedAddons) {
+        const addonRecord = addons.find((a) => a.addonId === addon.addonId);
+        if (addonRecord) {
+          await db.insert(subscriptionAddonSelections).values({
+            subscriptionId: newSubscription.id,
+            addonId: addonRecord.id,
+          });
+        }
+      }
+
       res.json({
         success: true,
         subscription: newSubscription,
         nmiSubscriptionId: nmiResult.subscription_id,
+        clientId: client.id,
         message: "Subscription created successfully",
       });
     } catch (error) {

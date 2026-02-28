@@ -162,14 +162,20 @@ export default function SubscriptionPage() {
       };
 
       const response = await apiRequest('POST', '/api/subscriptions', subscriptionData);
-      
+      const result = await response.json();
+
+      // Store client session for portal access
+      if (result.clientId) {
+        sessionStorage.setItem('clientId', result.clientId.toString());
+      }
+
       toast({
         title: 'Subscription Created Successfully!',
         description: `Welcome to businessblueprint.io ${selectedPlan.name}! Your account is now active.`,
       });
 
-      // Redirect to dashboard or confirmation page
-      setLocation('/dashboard');
+      // Redirect to client portal
+      setLocation('/portal');
       
     } catch (error) {
       console.error('Subscription creation failed:', error);

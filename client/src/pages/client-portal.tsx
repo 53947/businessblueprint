@@ -213,10 +213,11 @@ export default function ClientPortal() {
       
       <div className="flex flex-1">
       {/* Side Navigation */}
-      <SideNav 
-        activeTab={activeTab} 
-        onTabChange={setActiveTab} 
+      <SideNav
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
         onSignOut={handleSignOut}
+        enabledFeatures={dashboardData?.client?.enabledFeatures}
         data-testid="portal-side-nav"
       />
 
