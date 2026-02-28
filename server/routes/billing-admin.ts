@@ -179,25 +179,6 @@ export function registerBillingAdminRoutes(router: Router) {
     }
   });
   
-  // GET /api/subscription-plans - Get all available subscription plans (public)
-  router.get('/api/subscription-plans', async (req, res) => {
-    try {
-      const plans = await storage.getAllSubscriptionPlans();
-      res.json({ plans });
-    } catch (error) {
-      console.error('Error fetching subscription plans:', error);
-      res.status(500).json({ error: 'Failed to fetch subscription plans' });
-    }
-  });
-  
-  // GET /api/subscription-addons - Get all available subscription addons (public)
-  router.get('/api/subscription-addons', async (req, res) => {
-    try {
-      const addons = await storage.getAllSubscriptionAddons();
-      res.json({ addons });
-    } catch (error) {
-      console.error('Error fetching subscription addons:', error);
-      res.status(500).json({ error: 'Failed to fetch subscription addons' });
-    }
-  });
+  // NOTE: /api/subscription-plans and /api/subscription-addons are registered
+  // in server/routes/subscriptions.ts (canonical version with richer data transforms)
 }

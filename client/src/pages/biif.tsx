@@ -382,7 +382,7 @@ export default function BIIF() {
               Your business information has been submitted and is being synced to 200+ directories.
             </p>
             <p className="text-sm text-gray-500">
-              More steps (photos, Google/Facebook connections) coming soon...
+              You can manage your listings, connect Google and Facebook, and upload photos from your dashboard.
             </p>
           </Card>
         )}
