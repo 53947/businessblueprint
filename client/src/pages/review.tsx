@@ -3,31 +3,28 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { SectionHeader } from "@/components/section-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Star, 
-  TrendingUp, 
-  MessageSquare, 
+import {
+  Star,
+  TrendingUp,
+  MessageSquare,
   Settings,
   BarChart3,
-  Plus,
   Sparkles,
   ThumbsUp,
   ThumbsDown,
   MinusCircle,
-  AlertCircle,
   CheckCircle2,
-  Clock,
-  ExternalLink,
-  Link2,
-  UserCheck
+  UserCheck,
+  RefreshCw,
+  Loader2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { format } from "date-fns";
-import reputationIcon from "@assets/logos and wordmarks/: reputation app logo.png";
+
 import { CrmEmptyState, CRM_EMPTY_CONFIGS } from "@/components/crm-empty-state";
 import { useCrmPresence } from "@/hooks/use-crm-presence";
 
@@ -41,7 +38,8 @@ interface Review {
   response?: string;
   responseDate?: string;
   sentiment: 'positive' | 'negative' | 'neutral';
-  synupReviewId?: string;
+  reviewUrl?: string;
+  isAIGenerated?: boolean;
 }
 
 interface ReputationMetrics {
@@ -189,56 +187,42 @@ export default function ReputationManagement() {
     return <Badge className={colors[sentiment as keyof typeof colors]}>{sentiment}</Badge>;
   };
 
-  // Mock data for development
-  const mockMetrics = {
-    averageRating: 4.6,
-    totalReviews: 347,
-    positiveCount: 289,
-    negativeCount: 23,
-    neutralCount: 35,
-    responseRate: 87.5,
-    platformBreakdown: {
-      google: 198,
-      yelp: 124,
-      facebook: 25
-    }
+  // Sync reviews mutation
+  const syncMutation = useMutation({
+    mutationFn: async () => {
+      return await apiRequest('POST', `/api/clients/${clientId}/reviews/sync`);
+    },
+    onSuccess: async (res) => {
+      const data = await res.json();
+      queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/reviews`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/reviews/analytics`] });
+      toast({
+        title: 'Reviews Synced',
+        description: `Found ${data.found} reviews: ${data.created} new, ${data.updated} updated`,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Sync Failed',
+        description: error.message || 'Failed to sync reviews',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const emptyMetrics: ReputationMetrics = {
+    averageRating: 0,
+    totalReviews: 0,
+    positiveCount: 0,
+    negativeCount: 0,
+    neutralCount: 0,
+    responseRate: 0,
+    platformBreakdown: { google: 0, yelp: 0, facebook: 0 },
   };
 
-  const mockReviews: Review[] = [
-    {
-      id: 1,
-      platform: 'Google',
-      rating: 5,
-      reviewText: 'Excellent service! The team was professional and delivered beyond expectations.',
-      reviewerName: 'Sarah J.',
-      reviewDate: new Date().toISOString(),
-      sentiment: 'positive',
-    },
-    {
-      id: 2,
-      platform: 'Yelp',
-      rating: 2,
-      reviewText: 'Service was slow and the staff seemed uninterested. Not what I expected.',
-      reviewerName: 'Mike T.',
-      reviewDate: new Date(Date.now() - 86400000).toISOString(),
-      sentiment: 'negative',
-    },
-    {
-      id: 3,
-      platform: 'Facebook',
-      rating: 4,
-      reviewText: 'Good experience overall. A few minor issues but nothing major.',
-      reviewerName: 'Jennifer L.',
-      reviewDate: new Date(Date.now() - 172800000).toISOString(),
-      response: 'Thank you for your feedback! We appreciate your business.',
-      responseDate: new Date(Date.now() - 86400000).toISOString(),
-      sentiment: 'positive',
-    }
-  ];
-
-  // Only show mock data if we have a valid clientId - otherwise show empty state
-  const displayMetrics = metrics || (clientId ? mockMetrics : { averageRating: 0, totalReviews: 0, positiveCount: 0, negativeCount: 0, neutralCount: 0, responseRate: 0, platformBreakdown: { google: 0, yelp: 0, facebook: 0 } });
-  const displayReviews = reviews || (clientId ? mockReviews : []);
+  const displayMetrics = metrics || emptyMetrics;
+  const displayReviews = reviews || [];
+  const isLoading = metricsLoading || reviewsLoading;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
@@ -270,13 +254,27 @@ export default function ReputationManagement() {
         ]}
         actions={
           <>
-            <Button 
-              onClick={() => toast({ title: 'Settings', description: 'Settings panel coming soon' })} 
-              variant="ghost" 
+            <Button
+              onClick={() => syncMutation.mutate()}
+              variant="outline"
+              size="sm"
+              disabled={syncMutation.isPending || !clientId}
+              data-testid="button-sync-reviews"
+            >
+              {syncMutation.isPending ? (
+                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+              ) : (
+                <RefreshCw className="h-4 w-4 mr-1" />
+              )}
+              {syncMutation.isPending ? 'Syncing...' : 'Sync Reviews'}
+            </Button>
+            <Button
+              onClick={() => toast({ title: 'Settings', description: 'Settings panel coming soon' })}
+              variant="ghost"
               size="sm"
               data-testid="button-settings"
             >
-              <Settings className="h-4 h-4" />
+              <Settings className="h-4 w-4" />
             </Button>
           </>
         }
@@ -368,8 +366,8 @@ export default function ReputationManagement() {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className="bg-blue-600 h-2 rounded-full" 
-                        style={{ width: `${(displayMetrics.platformBreakdown.google / displayMetrics.totalReviews) * 100}%` }}
+                        className="bg-blue-600 h-2 rounded-full"
+                        style={{ width: `${displayMetrics.totalReviews > 0 ? (displayMetrics.platformBreakdown.google / displayMetrics.totalReviews) * 100 : 0}%` }}
                       ></div>
                     </div>
                   </div>
@@ -380,8 +378,8 @@ export default function ReputationManagement() {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className="bg-red-600 h-2 rounded-full" 
-                        style={{ width: `${(displayMetrics.platformBreakdown.yelp / displayMetrics.totalReviews) * 100}%` }}
+                        className="bg-red-600 h-2 rounded-full"
+                        style={{ width: `${displayMetrics.totalReviews > 0 ? (displayMetrics.platformBreakdown.yelp / displayMetrics.totalReviews) * 100 : 0}%` }}
                       ></div>
                     </div>
                   </div>
@@ -392,8 +390,8 @@ export default function ReputationManagement() {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className="bg-blue-500 h-2 rounded-full" 
-                        style={{ width: `${(displayMetrics.platformBreakdown.facebook / displayMetrics.totalReviews) * 100}%` }}
+                        className="bg-blue-500 h-2 rounded-full"
+                        style={{ width: `${displayMetrics.totalReviews > 0 ? (displayMetrics.platformBreakdown.facebook / displayMetrics.totalReviews) * 100 : 0}%` }}
                       ></div>
                     </div>
                   </div>
@@ -461,8 +459,18 @@ export default function ReputationManagement() {
                   ))}
                   {displayReviews.filter(r => !r.response).length === 0 && (
                     <div className="text-center py-8 text-gray-500">
-                      <CheckCircle2 className="w-12 h-12 mx-auto mb-2 text-green-600" />
-                      <p>All caught up! No reviews need responses.</p>
+                      {displayReviews.length === 0 ? (
+                        <>
+                          <RefreshCw className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                          <p className="font-medium mb-1">No reviews synced yet</p>
+                          <p className="text-sm">Click "Sync Reviews" to pull in reviews from Google and Yelp.</p>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle2 className="w-12 h-12 mx-auto mb-2 text-green-600" />
+                          <p>All caught up! No reviews need responses.</p>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
@@ -478,6 +486,25 @@ export default function ReputationManagement() {
                 <CardDescription>Manage and respond to all customer reviews</CardDescription>
               </CardHeader>
               <CardContent>
+                {displayReviews.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500">
+                    <Star className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                    <p className="font-medium mb-1">No reviews yet</p>
+                    <p className="text-sm mb-4">Sync your reviews from Google and Yelp to get started.</p>
+                    <Button
+                      onClick={() => syncMutation.mutate()}
+                      disabled={syncMutation.isPending || !clientId}
+                      size="sm"
+                    >
+                      {syncMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                      ) : (
+                        <RefreshCw className="h-4 w-4 mr-1" />
+                      )}
+                      Sync Reviews
+                    </Button>
+                  </div>
+                ) : (
                 <div className="space-y-4">
                   {displayReviews.map((review) => (
                     <div key={review.id} className="border rounded-lg p-4" data-testid={`review-${review.id}`}>
@@ -552,6 +579,7 @@ export default function ReputationManagement() {
                     </div>
                   ))}
                 </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

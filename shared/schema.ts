@@ -3267,6 +3267,30 @@ export type ListingSyncLog = typeof listingSyncLogs.$inferSelect;
 export type ListingMetricsSnapshot = typeof listingMetricsSnapshots.$inferSelect;
 
 // ============================================================================
+// BUSINESS REVIEWS — Aggregated from Google, Yelp, Facebook
+// ============================================================================
+
+export const businessReviews = pgTable("business_reviews", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  platform: varchar("platform", { length: 50 }).notNull(), // 'google', 'yelp', 'facebook'
+  platformReviewId: varchar("platform_review_id", { length: 255 }),
+  reviewerName: varchar("reviewer_name", { length: 255 }).notNull(),
+  rating: integer("rating").notNull(), // 1-5
+  reviewText: text("review_text"),
+  reviewDate: timestamp("review_date").notNull(),
+  response: text("response"),
+  responseDate: timestamp("response_date"),
+  isAIGenerated: boolean("is_ai_generated").default(false),
+  sentiment: varchar("sentiment", { length: 20 }).default("neutral"), // 'positive', 'negative', 'neutral'
+  reviewUrl: varchar("review_url", { length: 500 }),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export type BusinessReview = typeof businessReviews.$inferSelect;
+
+// ============================================================================
 // LISTING DISTRIBUTION SYSTEM — Push to 100+ Directories
 // ============================================================================
 

@@ -59,6 +59,7 @@ import { reviewAI } from "./services/reviewAI";
 import { jwtService } from "./services/jwt";
 import { presenceScannerService } from "./services/presenceScanner";
 import { listingSyncService } from "./services/listingSync";
+import { reviewSyncService } from "./services/reviewSync";
 import { scansBlueService } from "./services/scansblue";
 import { sendAssessmentConfirmationEmail, sendAdminNotification } from "./services/assessment-emails";
 import { dashboardAccess } from "@shared/schema";
@@ -1970,44 +1971,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(404).json({ error: "Client not found" });
         }
 
-        // Mock reviews data
-        const reviews = [
-          {
-            id: 1,
-            platform: "Google",
-            rating: 5,
-            reviewText:
-              "Excellent service! The team was professional and delivered beyond expectations.",
-            reviewerName: "Sarah J.",
-            reviewDate: new Date().toISOString(),
-            sentiment: "positive",
-          },
-          {
-            id: 2,
-            platform: "Yelp",
-            rating: 2,
-            reviewText:
-              "Service was slow and the staff seemed uninterested. Not what I expected.",
-            reviewerName: "Mike T.",
-            reviewDate: new Date(Date.now() - 86400000).toISOString(),
-            sentiment: "negative",
-          },
-          {
-            id: 3,
-            platform: "Facebook",
-            rating: 4,
-            reviewText:
-              "Good experience overall. A few minor issues but nothing major.",
-            reviewerName: "Jennifer L.",
-            reviewDate: new Date(Date.now() - 172800000).toISOString(),
-            response:
-              "Thank you for your feedback! We appreciate your business.",
-            responseDate: new Date(Date.now() - 86400000).toISOString(),
-            sentiment: "positive",
-          },
-        ];
+        const reviews = await reviewSyncService.getClientReviews(clientId);
 
-        res.json(reviews);
+        res.json(
+          reviews.map((r) => ({
+            id: r.id,
+            platform: r.platform.charAt(0).toUpperCase() + r.platform.slice(1),
+            rating: r.rating,
+            reviewText: r.reviewText || "",
+            reviewerName: r.reviewerName,
+            reviewDate: r.reviewDate.toISOString(),
+            response: r.response || undefined,
+            responseDate: r.responseDate?.toISOString() || undefined,
+            sentiment: r.sentiment || "neutral",
+          })),
+        );
       } catch (error) {
         console.error("Error fetching client reviews:", error);
         res.status(500).json({ error: "Failed to fetch reviews" });
@@ -2032,20 +2010,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(404).json({ error: "Client not found" });
         }
 
-        // Mock analytics - will be replaced with real data
-        const analytics = {
-          averageRating: 4.6,
-          totalReviews: 347,
-          positiveCount: 289,
-          negativeCount: 23,
-          neutralCount: 35,
-          responseRate: 87.5,
-          platformBreakdown: {
-            google: 198,
-            yelp: 124,
-            facebook: 25,
-          },
-        };
+        const analytics = await reviewSyncService.getClientReviewAnalytics(clientId);
 
         res.json(analytics);
       } catch (error) {
@@ -2074,17 +2039,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       let reviewResponse = response;
+      let isAI = false;
 
       // If AI response requested, generate using ReviewAI service
       if (useAI && !response) {
-        // This would call the ReviewAI service to generate a response
-        // For now, return success with mock response
-        reviewResponse =
-          "Thank you for your feedback! We truly appreciate your business and are committed to providing excellent service.";
+        try {
+          const { reviewAIService } = await import("./services/reviewAI");
+          reviewResponse = await reviewAIService.generateResponse(
+            client.companyName || "our business",
+            response || "Thank you for your review.",
+          );
+          isAI = true;
+        } catch {
+          reviewResponse =
+            "Thank you for your feedback! We truly appreciate your business and are committed to providing excellent service.";
+          isAI = true;
+        }
       }
 
-      // In production, this would post the response to the review platform
-      // For now, just return success
+      // Save response to database
+      await reviewSyncService.respondToReview(reviewId, reviewResponse, isAI);
+
       res.json({
         success: true,
         response: reviewResponse,
@@ -2096,8 +2071,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Sync reviews from Google + Yelp
+  app.post(
+    "/api/clients/:id/reviews/sync",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
+        }
+
+        const client = await storage.getClient(clientId);
+        if (!client) {
+          return res.status(404).json({ error: "Client not found" });
+        }
+
+        const businessName = client.companyName || "";
+        if (!businessName) {
+          return res.status(400).json({ error: "Client has no business name set" });
+        }
+
+        const result = await reviewSyncService.syncClientReviews(
+          clientId,
+          businessName,
+          client.address || undefined,
+          client.phone || undefined,
+        );
+
+        res.json({
+          success: true,
+          ...result,
+        });
+      } catch (error) {
+        console.error("Error syncing reviews:", error);
+        res.status(500).json({ error: "Failed to sync reviews" });
+      }
+    },
+  );
+
   // Create a manual business listing
-  app.post("/api/clients/:id/listings", async (req, res) => {
+  app.post("/api/clients/:id/list", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
 
@@ -2154,7 +2168,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Sync/discover business listings from Google Places + Yelp
-  app.post("/api/clients/:id/listings/sync", async (req, res) => {
+  app.post("/api/clients/:id/list/sync", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
 
@@ -2190,6 +2204,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         client.address || undefined,
         client.phone || undefined,
       );
+
+      // Also sync reviews alongside listings
+      try {
+        await reviewSyncService.syncClientReviews(
+          clientId,
+          businessName,
+          client.address || undefined,
+          client.phone || undefined,
+        );
+      } catch (reviewErr) {
+        console.error("Review sync error (non-blocking):", reviewErr);
+      }
 
       // Update sync log
       await db

@@ -19,17 +19,16 @@ import {
   Clock,
   ExternalLink,
   Phone,
-  Mail,
   Globe,
   Calendar,
-  Link2,
   Building2,
   Shield,
-  Network
+  Network,
+  RefreshCw,
+  Loader2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import listingsIcon from "@assets/logos and wordmarks/: listings app logo.png";
 import { CrmEmptyState, CRM_EMPTY_CONFIGS } from "@/components/crm-empty-state";
 import { useCrmPresence } from "@/hooks/use-crm-presence";
 import { ProfileView } from "@/components/distribution/ProfileView";
@@ -194,69 +193,41 @@ export default function ListingsManagement() {
     }
   };
 
-  // Mock data for development
-  const mockMetrics = {
-    totalListings: 12,
-    activeListings: 10,
-    pendingListings: 1,
-    errorListings: 1,
-    totalViews: 4523,
-    totalClicks: 892,
-    avgRating: 4.6
+  // Sync listings mutation
+  const syncMutation = useMutation({
+    mutationFn: async () => {
+      return await apiRequest('POST', `/api/clients/${clientId}/list/sync`);
+    },
+    onSuccess: async (res) => {
+      const data = await res.json();
+      queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/list`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/list/metrics`] });
+      toast({
+        title: 'Listings Synced',
+        description: `Found ${data.found} listings: ${data.created} new, ${data.updated} updated`,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Sync Failed',
+        description: error.message || 'Failed to sync listings',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const emptyMetrics: ListingsMetrics = {
+    totalListings: 0,
+    activeListings: 0,
+    pendingListings: 0,
+    errorListings: 0,
+    totalViews: 0,
+    totalClicks: 0,
+    avgRating: 0,
   };
 
-  const mockListings: BusinessListing[] = [
-    {
-      id: 1,
-      platform: 'Google Business',
-      status: 'active',
-      name: 'ABC Services',
-      address: '123 Main St, City, ST 12345',
-      phone: '(555) 123-4567',
-      website: 'https://abcservices.com',
-      hours: 'Mon-Fri 9AM-5PM',
-      lastUpdated: new Date().toISOString(),
-      url: 'https://g.page/abc-services'
-    },
-    {
-      id: 2,
-      platform: 'Yelp',
-      status: 'active',
-      name: 'ABC Services',
-      address: '123 Main St, City, ST 12345',
-      phone: '(555) 123-4567',
-      website: 'https://abcservices.com',
-      hours: 'Mon-Fri 9AM-5PM',
-      lastUpdated: new Date(Date.now() - 86400000).toISOString(),
-      url: 'https://yelp.com/biz/abc-services'
-    },
-    {
-      id: 3,
-      platform: 'Facebook',
-      status: 'pending',
-      name: 'ABC Services',
-      address: '123 Main St, City, ST 12345',
-      phone: '(555) 123-4567',
-      website: 'https://abcservices.com',
-      hours: 'Mon-Fri 9AM-5PM',
-      lastUpdated: new Date(Date.now() - 172800000).toISOString(),
-    },
-    {
-      id: 4,
-      platform: 'Bing Places',
-      status: 'error',
-      name: 'ABC Services',
-      address: '123 Main St, City, ST 12345',
-      phone: '(555) 123-4567',
-      website: 'https://abcservices.com',
-      hours: 'Mon-Fri 9AM-5PM',
-      lastUpdated: new Date(Date.now() - 259200000).toISOString(),
-    }
-  ];
-
-  // Only show mock data if we have a valid clientId - otherwise show empty state
-  const displayMetrics = metrics || (clientId ? mockMetrics : { totalListings: 0, activeListings: 0, pendingListings: 0, errorListings: 0, totalViews: 0, totalClicks: 0, avgRating: 0 });
-  const displayListings = listings || (clientId ? mockListings : []);
+  const displayMetrics = metrics || emptyMetrics;
+  const displayListings = listings || [];
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
@@ -302,16 +273,30 @@ export default function ListingsManagement() {
         ]}
         actions={
           <>
-            <Button 
-              onClick={() => toast({ title: 'Settings', description: 'Settings panel coming soon' })} 
-              variant="ghost" 
+            <Button
+              onClick={() => syncMutation.mutate()}
+              variant="outline"
+              size="sm"
+              disabled={syncMutation.isPending || !clientId}
+              data-testid="button-sync-listings"
+            >
+              {syncMutation.isPending ? (
+                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+              ) : (
+                <RefreshCw className="h-4 w-4 mr-1" />
+              )}
+              {syncMutation.isPending ? 'Syncing...' : 'Sync Listings'}
+            </Button>
+            <Button
+              onClick={() => toast({ title: 'Settings', description: 'Settings panel coming soon' })}
+              variant="ghost"
               size="sm"
               data-testid="button-settings"
             >
               <Settings className="h-4 w-4" />
             </Button>
-            <Button 
-              onClick={() => toast({ title: 'Add Listing', description: 'Add listing form coming soon' })} 
+            <Button
+              onClick={() => toast({ title: 'Add Listing', description: 'Add listing form coming soon' })}
               size="sm"
               className="bg-blue-600 hover:bg-blue-700 text-white"
               data-testid="button-add-listing"
@@ -541,6 +526,25 @@ export default function ListingsManagement() {
                 <CardDescription>Manage your business information across all platforms</CardDescription>
               </CardHeader>
               <CardContent>
+                {displayListings.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500">
+                    <MapPin className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                    <p className="font-medium mb-1">No listings synced yet</p>
+                    <p className="text-sm mb-4">Sync your business listings from Google and Yelp to get started.</p>
+                    <Button
+                      onClick={() => syncMutation.mutate()}
+                      disabled={syncMutation.isPending || !clientId}
+                      size="sm"
+                    >
+                      {syncMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                      ) : (
+                        <RefreshCw className="h-4 w-4 mr-1" />
+                      )}
+                      Sync Listings
+                    </Button>
+                  </div>
+                ) : (
                 <div className="space-y-4">
                   {displayListings.map((listing) => (
                     <div key={listing.id} className="border rounded-lg p-6" data-testid={`listing-${listing.id}`}>
@@ -607,6 +611,7 @@ export default function ListingsManagement() {
                     </div>
                   ))}
                 </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

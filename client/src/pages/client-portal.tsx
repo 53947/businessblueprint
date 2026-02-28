@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { SideNav } from "@/components/side-nav";
 import { BrandLogo } from "@/components/brand-logo";
 import { Header } from "@/components/header";
-import ContentManagement from "@/pages/content-management";
+import ContentManagement from "@/pages/post-management";
 import { 
   BarChart3, 
   Star, 
