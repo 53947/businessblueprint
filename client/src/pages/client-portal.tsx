@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { format } from "date-fns";
 import { useLocation } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -84,6 +85,30 @@ export default function ClientPortal() {
     enabled: !!clientId,
   });
 
+  // Fetch CRM tasks
+  const queryClient = useQueryClient();
+  const tasksQueryKey = `/api/crm/tasks?clientId=${clientId}`;
+  const { data: tasksData } = useQuery<any>({
+    queryKey: [tasksQueryKey],
+    enabled: !!clientId,
+  });
+
+  const createTaskMutation = useMutation({
+    mutationFn: (data: any) => apiRequest("POST", "/api/crm/tasks", data).then(r => r.json()),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: [tasksQueryKey] }); toast({ title: "Task created" }); setShowTaskDialog(false); },
+  });
+
+  const deleteTaskMutation = useMutation({
+    mutationFn: (id: number) => apiRequest("DELETE", `/api/crm/tasks/${id}`),
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: [tasksQueryKey] }); toast({ title: "Task deleted" }); },
+  });
+
+  const toggleTaskMutation = useMutation({
+    mutationFn: ({ id, status }: { id: number; status: string }) =>
+      apiRequest("PATCH", `/api/crm/tasks/${id}`, { status }).then(r => r.json()),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [tasksQueryKey] }),
+  });
+
   const handleSignOut = () => {
     // Clear all session data including JWT token
     sessionStorage.removeItem("clientId");
@@ -110,24 +135,14 @@ export default function ClientPortal() {
       });
     } else {
       toast({
-        title: "Coming Soon",
-        description: platform + " management integration is being developed."
+        title: platform,
+        description: "Open the Listings Manager to manage this platform."
       });
     }
   };
 
-  const handleCompleteTask = (taskTitle: string) => {
-    toast({
-      title: "Task Completed!",
-      description: `"${taskTitle}" has been marked as complete.`
-    });
-  };
-
   const handleViewMessages = () => {
-    toast({
-      title: "Messages",
-      description: "Message management interface is being developed. Check back soon!"
-    });
+    setLocation("/respond");
   };
 
   const navigateToTab = (tab: string) => {
@@ -672,7 +687,7 @@ export default function ClientPortal() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-sm text-gray-500">Due today</span>
-                      <Button size="sm" onClick={() => handleCompleteTask("Sync latest business data")}>
+                      <Button size="sm" onClick={() => setActiveTab("tasks")}>
                         Mark Complete
                       </Button>
                     </div>
@@ -684,7 +699,7 @@ export default function ClientPortal() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-sm text-gray-500">Due this week</span>
-                      <Button size="sm" onClick={() => handleCompleteTask("Update business hours")}>
+                      <Button size="sm" onClick={() => setActiveTab("tasks")}>
                         Mark Complete
                       </Button>
                     </div>
@@ -803,14 +818,9 @@ export default function ClientPortal() {
                   <CardTitle>Task Management</CardTitle>
                   <CardDescription>Track and manage your business tasks</CardDescription>
                 </div>
-                <Button 
+                <Button
                   data-testid="button-create-task"
-                  onClick={() => {
-                    toast({
-                      title: "Create Task",
-                      description: "Task creation dialog will open here. Connect to backend API to save tasks to database.",
-                    });
-                  }}
+                  onClick={() => setShowTaskDialog(true)}
                 >
                   <CheckSquare className="h-4 w-4 mr-2" />
                   Create Task
@@ -856,110 +866,81 @@ export default function ClientPortal() {
 
                   {/* Task List */}
                   <div className="space-y-3">
-                    {/* High Priority Task */}
-                    <div className="flex items-center justify-between p-4 border-l-4 border-red-500 bg-red-50 rounded-lg">
-                      <div className="flex items-center gap-4 flex-1">
-                        <input type="checkbox" className="h-5 w-5" data-testid="checkbox-task-1" />
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">Respond to urgent customer reviews</p>
-                            <Badge variant="destructive" data-testid="badge-priority-high">High</Badge>
+                    {(() => {
+                      const tasks = (tasksData?.tasks || []) as any[];
+                      const filtered = tasks.filter((t: any) => {
+                        if (taskFilter === "all") return true;
+                        if (taskFilter === "active") return t.status === "pending";
+                        if (taskFilter === "completed") return t.status === "completed";
+                        if (taskFilter === "overdue") return t.status === "pending" && t.dueDate && new Date(t.dueDate) < new Date();
+                        return true;
+                      });
+                      if (filtered.length === 0) {
+                        return <p className="text-center text-gray-500 py-8">No tasks found. Create one to get started.</p>;
+                      }
+                      return filtered.map((task: any) => {
+                        const priorityColors: Record<string, string> = { urgent: "border-red-500 bg-red-50", high: "border-red-500 bg-red-50", medium: "border-yellow-500 bg-yellow-50", low: "border-blue-500 bg-blue-50" };
+                        const borderClass = priorityColors[task.priority] || "border-gray-300";
+                        const isCompleted = task.status === "completed";
+                        return (
+                          <div key={task.id} className={`flex items-center justify-between p-4 border-l-4 ${borderClass} rounded-lg ${isCompleted ? "opacity-60" : ""}`}>
+                            <div className="flex items-center gap-4 flex-1">
+                              <input type="checkbox" className="h-5 w-5" checked={isCompleted}
+                                onChange={() => toggleTaskMutation.mutate({ id: task.id, status: isCompleted ? "pending" : "completed" })} />
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <p className={`font-medium ${isCompleted ? "line-through" : ""}`}>{task.title}</p>
+                                  <Badge variant={task.priority === "high" || task.priority === "urgent" ? "destructive" : "secondary"}>
+                                    {task.priority}
+                                  </Badge>
+                                </div>
+                                {task.description && <p className="text-sm text-gray-600 mt-1">{task.description}</p>}
+                                <div className="flex items-center gap-4 mt-2">
+                                  {task.dueDate && <span className="text-xs text-gray-500">Due: {format(new Date(task.dueDate), "MMM d, yyyy")}</span>}
+                                  {task.taskType && <span className="text-xs text-gray-500">{task.taskType}</span>}
+                                </div>
+                              </div>
+                            </div>
+                            {!isCompleted && (
+                              <Button variant="ghost" size="sm" onClick={() => deleteTaskMutation.mutate(task.id)}>Delete</Button>
+                            )}
                           </div>
-                          <p className="text-sm text-gray-600 mt-1">3 negative reviews need immediate attention</p>
-                          <div className="flex items-center gap-4 mt-2">
-                            <span className="text-xs text-gray-500">Due: Today</span>
-                            <span className="text-xs text-gray-500">Reviews</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          data-testid="button-edit-task-1"
-                          onClick={() => toast({ title: "Edit Task", description: "Edit dialog will open. Backend API integration needed." })}
-                        >
-                          Edit
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          data-testid="button-delete-task-1"
-                          onClick={() => toast({ title: "Delete Task", description: "Task deleted. Backend API integration needed for persistence." })}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Medium Priority Task */}
-                    <div className="flex items-center justify-between p-4 border-l-4 border-yellow-500 bg-yellow-50 rounded-lg">
-                      <div className="flex items-center gap-4 flex-1">
-                        <input type="checkbox" className="h-5 w-5" data-testid="checkbox-task-2" />
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">Update business hours on all listings</p>
-                            <Badge variant="secondary" data-testid="badge-priority-medium">Medium</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 mt-1">Sync holiday hours across 50+ directories</p>
-                          <div className="flex items-center gap-4 mt-2">
-                            <span className="text-xs text-gray-500">Due: This Week</span>
-                            <span className="text-xs text-gray-500">Listings</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" data-testid="button-edit-task-2">Edit</Button>
-                        <Button variant="ghost" size="sm" data-testid="button-delete-task-2">Delete</Button>
-                      </div>
-                    </div>
-
-                    {/* Low Priority Task */}
-                    <div className="flex items-center justify-between p-4 border-l-4 border-blue-500 bg-blue-50 rounded-lg">
-                      <div className="flex items-center gap-4 flex-1">
-                        <input type="checkbox" className="h-5 w-5" data-testid="checkbox-task-3" />
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium">Review analytics and performance metrics</p>
-                            <Badge variant="outline" data-testid="badge-priority-low">Low</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 mt-1">Monthly performance review</p>
-                          <div className="flex items-center gap-4 mt-2">
-                            <span className="text-xs text-gray-500">Due: Next Week</span>
-                            <span className="text-xs text-gray-500">Analytics</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" data-testid="button-edit-task-3">Edit</Button>
-                        <Button variant="ghost" size="sm" data-testid="button-delete-task-3">Delete</Button>
-                      </div>
-                    </div>
-
-                    {/* Completed Task */}
-                    <div className="flex items-center justify-between p-4 border rounded-lg bg-gray-50 opacity-60">
-                      <div className="flex items-center gap-4 flex-1">
-                        <input type="checkbox" className="h-5 w-5" checked disabled data-testid="checkbox-task-4" />
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <p className="font-medium line-through">Set up email integration</p>
-                            <Badge variant="outline" data-testid="badge-status-completed">Completed</Badge>
-                          </div>
-                          <p className="text-sm text-gray-500 mt-1">Connected Gmail and Outlook accounts</p>
-                          <div className="flex items-center gap-4 mt-2">
-                            <span className="text-xs text-gray-500">Completed: Yesterday</span>
-                            <span className="text-xs text-gray-500">Setup</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                        );
+                      });
+                    })()}
                   </div>
 
-                  <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-blue-900">
-                      <strong>Task Categories:</strong> Reviews, Listings, Campaigns, Setup, Analytics, Social Media, Messages
-                    </p>
-                  </div>
+                  {/* Create Task Dialog */}
+                  {showTaskDialog && (
+                    <div className="mt-4 p-4 border rounded-lg bg-gray-50 space-y-3">
+                      <h4 className="font-medium">New Task</h4>
+                      <input id="new-task-title" placeholder="Task title" className="w-full border rounded px-3 py-2 text-sm" />
+                      <input id="new-task-desc" placeholder="Description (optional)" className="w-full border rounded px-3 py-2 text-sm" />
+                      <div className="flex gap-3">
+                        <select id="new-task-priority" className="border rounded px-3 py-2 text-sm">
+                          <option value="low">Low</option>
+                          <option value="medium" selected>Medium</option>
+                          <option value="high">High</option>
+                          <option value="urgent">Urgent</option>
+                        </select>
+                        <input id="new-task-due" type="date" className="border rounded px-3 py-2 text-sm" />
+                      </div>
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={() => {
+                          const title = (document.getElementById("new-task-title") as HTMLInputElement)?.value;
+                          if (!title) { toast({ title: "Title required" }); return; }
+                          createTaskMutation.mutate({
+                            clientId: parseInt(clientId!),
+                            title,
+                            description: (document.getElementById("new-task-desc") as HTMLInputElement)?.value || undefined,
+                            priority: (document.getElementById("new-task-priority") as HTMLSelectElement)?.value || "medium",
+                            dueDate: (document.getElementById("new-task-due") as HTMLInputElement)?.value ? new Date((document.getElementById("new-task-due") as HTMLInputElement).value).toISOString() : undefined,
+                          });
+                        }}>Save Task</Button>
+                        <Button size="sm" variant="outline" onClick={() => setShowTaskDialog(false)}>Cancel</Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

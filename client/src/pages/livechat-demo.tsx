@@ -35,30 +35,24 @@ export default function LiveChatDemo() {
             },
             testId: 'tab-installation'
           },
-          { 
-            label: 'Conversations', 
-            icon: Users, 
-            active: activeTab === 'conversations',
-            onClick: () => {
-              setActiveTab('conversations');
-              toast({ title: 'Conversations', description: 'Conversation history coming soon' });
-            },
+          {
+            label: 'Conversations',
+            icon: Users,
+            active: false,
+            onClick: () => setLocation('/livechat/dashboard'),
             testId: 'tab-conversations'
           },
-          { 
-            label: 'Analytics', 
-            icon: BarChart3, 
-            active: activeTab === 'analytics',
-            onClick: () => {
-              setActiveTab('analytics');
-              toast({ title: 'Analytics', description: 'Chat analytics coming soon' });
-            },
+          {
+            label: 'Analytics',
+            icon: BarChart3,
+            active: false,
+            onClick: () => setLocation('/livechat/dashboard'),
             testId: 'tab-analytics'
           }
         ]}
         actions={
           <Button 
-            onClick={() => toast({ title: 'Settings', description: 'Widget settings coming soon' })} 
+            onClick={() => setLocation('/livechat/dashboard')}
             variant="ghost" 
             size="sm"
             data-testid="button-settings"
