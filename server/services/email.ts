@@ -1522,12 +1522,12 @@ export class EmailService {
         <p style="font-size: 14px; color: #09080E; opacity: 0.8; text-align: center;">
           <em>The tour is completely free and you can replay it as many times as you want!</em>
         </p>
-        
+
         <div style="border-top: 2px solid #0000FF; border-bottom: 2px solid #0000FF; padding: 20px; margin: 40px 0; background: #ffffff;">
           <h3 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #0000FF; margin-top: 0;">Want Me as Your Personal Mentor?</h3>
-          
+
           <p>The platform tour is just the beginning. If you want <strong>ongoing, personalized guidance</strong> as you grow your business, I'm available as a premium subscription.</p>
-          
+
           <p><strong>With Coach Blue Premium ($99/mo), I'll help you:</strong></p>
           <ul>
             <li>Implement your prescription step-by-step</li>
@@ -1536,8 +1536,8 @@ export class EmailService {
             <li>Provide strategic advice tailored to your business</li>
             <li>Keep you motivated and on track</li>
           </ul>
-          
-          <p style="margin-bottom: 0;">Think of it like having a business consultant available 24/7—but for a fraction of the cost.</p>
+
+          <p style="margin-bottom: 0;">Think of it like having a business consultant available 24/7--but for a fraction of the cost.</p>
         </div>
         
         <h2 style="font-family: 'Archivo Semi Expanded', sans-serif; color: #0000FF;">What's Next?</h2>

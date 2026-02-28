@@ -25,7 +25,7 @@ const diyPlans: PricingPlan[] = [
       'Digital IQ Assessment',
       'Personalized Blueprint',
       '/send Email & SMS Marketing',
-      '/inbox Unified Communications',
+      '/respond Unified Communications',
       '/livechat Widget',
       'Basic Analytics',
       'Community Support'

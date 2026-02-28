@@ -77,7 +77,7 @@ export default function SendLanding() {
               <span className="text-white text-xl">for all 3 Commverse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /send + /livechat + /inbox = Complete communication ecosystem
+              /send + /livechat + /respond = Complete communication ecosystem
             </p>
           </div>
         </div>
@@ -226,7 +226,7 @@ export default function SendLanding() {
                   Works Autonomously & Together
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  /send functions powerfully on its own for email and SMS campaigns. But when integrated with /livechat and /inbox as part of the Commverse ecosystem, 
+                  /send functions powerfully on its own for email and SMS campaigns. But when integrated with /livechat and /respond as part of the Commverse ecosystem,
                   it shares customer insights and analytics to create smarter, more effective marketing automation.
                 </p>
 
@@ -237,7 +237,7 @@ export default function SendLanding() {
                   No Hidden Costs, No Surprises
                 </h3>
                 <p className="text-gray-600">
-                  Standalone at $35/mo or bundled with /livechat + /inbox for $75/mo. No per-message fees, no contact limits, 
+                  Standalone at $35/mo or bundled with /livechat + /respond for $75/mo. No per-message fees, no contact limits, 
                   no "premium features" upsells. What you see is what you get.
                 </p>
               </div>

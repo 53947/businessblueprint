@@ -24,7 +24,7 @@ export default function LivechatLanding() {
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
               The live chat widget that feels natural, remembers everything, and integrates perfectly 
-              with your /inbox. Because every visitor is a potential customer.
+              with your /respond. Because every visitor is a potential customer.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -77,7 +77,7 @@ export default function LivechatLanding() {
               <span className="text-white text-xl">for all 4 Commverse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /send + /livechat + /inbox + /content = Complete communication ecosystem
+              /send + /livechat + /respond + /post = Complete communication ecosystem
             </p>
           </div>
         </div>
@@ -131,9 +131,9 @@ export default function LivechatLanding() {
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#8000FF' }}>
                     <Users className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-unified-title">Unified in /inbox</h3>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-unified-title">Unified in /respond</h3>
                   <p className="text-gray-600" data-testid="text-feature-unified-description">
-                    Live chat flows directly into /inbox alongside email, SMS, and social messages. One interface for everything.
+                    Live chat flows directly into /respond alongside email, SMS, and social messages. One interface for everything.
                   </p>
                 </div>
               </CardContent>
@@ -223,7 +223,7 @@ export default function LivechatLanding() {
                   Works Autonomously & Together
                 </h3>
                 <p className="text-purple-50 mb-6">
-                  /livechat functions perfectly on its own, but gains superpowers when integrated with /send and /inbox—
+                  /livechat functions perfectly on its own, but gains superpowers when integrated with /send and /respond—
                   connecting your Digital Blueprint, customer insights, and marketing automation for smarter conversations.
                 </p>
 
@@ -252,7 +252,7 @@ export default function LivechatLanding() {
                   No Per-Chat or Per-Agent Fees
                 </h3>
                 <p className="text-purple-50">
-                  Standalone at $35/mo or bundled with /send + /inbox for $75/mo. Unlimited chats, unlimited agents, 
+                  Standalone at $35/mo or bundled with /send + /respond for $75/mo. Unlimited chats, unlimited agents, 
                   unlimited websites. Transparent, predictable pricing.
                 </p>
               </div>

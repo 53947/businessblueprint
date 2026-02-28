@@ -103,9 +103,9 @@ export default function About() {
                   <li>• Personalized coaching</li>
                   <li>• Client portal dashboard</li>
                   <li>• /send - Email & SMS Marketing</li>
-                  <li>• /inbox - Unified Communications</li>
+                  <li>• /respond - Unified Communications</li>
                   <li>• /livechat - Live Chat Widget</li>
-                  <li>• /content - Social Media Mgmt</li>
+                  <li>• /post - Social Media Mgmt</li>
                 </ul>
               </CardContent>
             </Card>

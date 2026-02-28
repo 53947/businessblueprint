@@ -167,8 +167,8 @@ export default function MarketplacePage() {
       ]
     },
     {
-      id: 'inbox-addon',
-      name: '/inbox',
+      id: 'respond-addon',
+      name: '/respond',
       icon: MessageSquare,
       emoji: '📥',
       price: 35,
@@ -197,8 +197,8 @@ export default function MarketplacePage() {
       ]
     },
     {
-      id: 'content-addon',
-      name: '/content',
+      id: 'post-addon',
+      name: '/post',
       icon: MessageSquare,
       emoji: '📱',
       price: 35,
@@ -402,7 +402,7 @@ export default function MarketplacePage() {
               <div>
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8000FF] to-[#B566FF] text-white flex items-center justify-center font-black text-xl mb-4">2</div>
                 <h4 className="font-black text-lg mb-2" style={{ color: '#09080E' }}>Add Commverse Apps</h4>
-                <p className="text-sm text-gray-600">Then add Commverse - the /send, /inbox, /livechat, /content Bundle (ALL or individually). Save money by bundling!</p>
+                <p className="text-sm text-gray-600">Then add Commverse - the /send, /respond, /livechat, /post Bundle (ALL or individually). Save money by bundling!</p>
               </div>
               <div>
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00FF40] to-[#7DFFB2] text-white flex items-center justify-center font-black text-xl mb-4">3</div>
@@ -520,7 +520,7 @@ export default function MarketplacePage() {
                   <span className="text-white">Commverse Bundle</span>
                 </div>
                 <div className="text-6xl font-black mb-3 text-white">$119/mo</div>
-                <div className="text-xl text-white/90 mb-4">All 4 apps: /send + /inbox + /livechat + /content</div>
+                <div className="text-xl text-white/90 mb-4">All 4 apps: /send + /respond + /livechat + /post</div>
                 <div className="text-3xl font-black mb-8" style={{ color: '#00FF40' }}>💰 Save $21/month!</div>
                 <Button 
                   onClick={() => addToCart({ id: 'bundle', name: 'Commverse Bundle', price: 119, icon: MessageSquare, description: 'All 4 apps', features: [], accentColor: 'purple', emoji: '📦' }, 'addon')}

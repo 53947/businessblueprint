@@ -7,7 +7,7 @@ const authorizedProducts = [
   {
     productId: "commverse",
     name: "CommVerse Bundle",
-    description: "Complete Communications Universe - All 4 communication tools (Inbox, Send, Content, LiveChat) in one integrated platform",
+    description: "Complete Communications Universe - All 4 communication tools (Respond, Send, Post, LiveChat) in one integrated platform",
     category: "bundle",
     improvesCategory: ["engagement", "visibility"],
     diyPrice: "99.00",
@@ -68,8 +68,8 @@ const authorizedProducts = [
     isActive: true
   },
   {
-    productId: "content",
-    name: "Content",
+    productId: "post",
+    name: "Post",
     description: "Social Media Management - Schedule posts, create content with AI, track engagement",
     category: "core",
     improvesCategory: ["engagement", "visibility"],

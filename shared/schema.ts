@@ -252,7 +252,10 @@ export const clients = pgTable("clients", {
   suspensionReason: text("suspension_reason"), // Reason if suspended
   statusChangedAt: timestamp("status_changed_at"),
   statusChangedBy: integer("status_changed_by"), // Admin ID who changed status
-  
+
+  // External dashboard URL (legacy Vendasta integration)
+  vendastaDashboardUrl: text("vendasta_dashboard_url"),
+
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -1875,6 +1878,7 @@ export const contentPosts = pgTable("content_posts", {
   
   // Post content
   caption: text("caption").notNull(), // Main text
+  fullContent: text("full_content"), // Full post content (longer form)
   hashtags: text("hashtags").array(), // Extracted hashtags
   mediaIds: integer("media_ids").array(), // References to contentMedia
   

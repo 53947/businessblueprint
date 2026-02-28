@@ -79,13 +79,13 @@ export default function ListingsManagement() {
 
   // Fetch listings metrics
   const { data: metrics, isLoading: metricsLoading } = useQuery<ListingsMetrics>({
-    queryKey: [`/api/clients/${clientId}/listings/metrics`],
+    queryKey: [`/api/clients/${clientId}/list/metrics`],
     enabled: !!clientId,
   });
 
   // Fetch business listings
   const { data: listings, isLoading: listingsLoading } = useQuery<BusinessListing[]>({
-    queryKey: [`/api/clients/${clientId}/listings`],
+    queryKey: [`/api/clients/${clientId}/list`],
     enabled: !!clientId,
   });
 
@@ -139,13 +139,13 @@ export default function ListingsManagement() {
     mutationFn: async (data: { id: number; [key: string]: any }) => {
       return await apiRequest(
         'PATCH',
-        `/api/clients/${clientId}/listings/${data.id}`,
+        `/api/clients/${clientId}/list/${data.id}`,
         data
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/listings`] });
-      queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/listings/metrics`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/list`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/list/metrics`] });
       toast({ title: 'Success', description: 'Listing updated successfully' });
       setShowEditDialog(false);
       setSelectedListing(null);
@@ -261,7 +261,7 @@ export default function ListingsManagement() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <SectionHeader 
-        title="/listings - Directory Sync & Consistency"
+        title="/list - Directory Sync & Consistency"
         subtitle="Keep your business information accurate and identical across 50+ directories and platforms"
         tabs={[
           { 
@@ -272,11 +272,11 @@ export default function ListingsManagement() {
             testId: 'tab-overview'
           },
           { 
-            label: 'Listings', 
-            icon: MapPin, 
-            active: activeTab === 'listings',
-            onClick: () => setActiveTab('listings'),
-            testId: 'tab-listings'
+            label: 'Listings',
+            icon: MapPin,
+            active: activeTab === 'list',
+            onClick: () => setActiveTab('list'),
+            testId: 'tab-list'
           },
           {
             label: 'Analytics',
@@ -329,7 +329,7 @@ export default function ListingsManagement() {
         {/* CRM Empty State - Show when no company data or no clientId */}
         {showCrmEmptyState && (
           <div className="mb-6">
-            <CrmEmptyState {...CRM_EMPTY_CONFIGS.listings} variant="compact" />
+            <CrmEmptyState {...CRM_EMPTY_CONFIGS.list} variant="compact" />
           </div>
         )}
 
@@ -534,7 +534,7 @@ export default function ListingsManagement() {
           </TabsContent>
 
           {/* Listings Tab */}
-          <TabsContent value="listings">
+          <TabsContent value="list">
             <Card data-testid="card-all-listings">
               <CardHeader>
                 <CardTitle>All Business Listings</CardTitle>
@@ -616,7 +616,7 @@ export default function ListingsManagement() {
             <div className="text-center py-12">
               <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
               <h3 className="text-xl font-semibold mb-2">Analytics Dashboard Coming Soon</h3>
-              <p className="text-gray-600">Detailed listing analytics and performance metrics will be available here.</p>
+              <p className="text-gray-600">Detailed list analytics and performance metrics will be available here.</p>
             </div>
           </TabsContent>
 

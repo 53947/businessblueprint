@@ -243,7 +243,7 @@ export default function ReputationManagement() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <SectionHeader 
-        title="/reputation - Review Response & Reputation"
+        title="/review - Review Response & Reputation"
         subtitle="Respond to reviews instantly (AI-powered or manual), monitor ratings, and manage your online reputation"
         tabs={[
           { 
@@ -288,7 +288,7 @@ export default function ReputationManagement() {
         {/* CRM Empty State - Show when no contacts or no clientId */}
         {showCrmEmptyState && (
           <div className="mb-6">
-            <CrmEmptyState {...CRM_EMPTY_CONFIGS.reputation} variant="compact" />
+            <CrmEmptyState {...CRM_EMPTY_CONFIGS.review} variant="compact" />
           </div>
         )}
 
@@ -561,7 +561,7 @@ export default function ReputationManagement() {
             <div className="text-center py-12">
               <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
               <h3 className="text-xl font-semibold mb-2">Analytics Dashboard Coming Soon</h3>
-              <p className="text-gray-600">Detailed reputation analytics and trends will be available here.</p>
+              <p className="text-gray-600">Detailed review analytics and trends will be available here.</p>
             </div>
           </TabsContent>
         </Tabs>

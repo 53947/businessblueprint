@@ -25,9 +25,9 @@ const systemIcons = [
   { img: digitalPathImg, label: 'Digital Path' },
   { img: localSeoImg, label: 'Local SEO' },
   { img: sendAppImg, label: '/Send' },
-  { img: contentImg, label: '/Content' },
+  { img: contentImg, label: '/Post' },
   { img: livechatImg, label: '/LiveChat' },
-  { img: inboxImg, label: '/Inbox' },
+  { img: inboxImg, label: '/Respond' },
   { img: commverseImg, label: 'Commverse' },
   { img: coachBlueImg, label: 'Coach Blue' },
   { img: captainImg, label: "Captain's Chair" },
@@ -75,9 +75,9 @@ const executionStyles = [
 
 const apps = [
   { id: 'send', img: sendAppImg, title: '/Send', description: 'SMS & Email Marketing / CRM', price: 35 },
-  { id: 'content', img: contentImg, title: '/Content', description: 'Social Media Management', price: 35 },
+  { id: 'post', img: contentImg, title: '/Post', description: 'Social Media Management', price: 35 },
   { id: 'livechat', img: livechatImg, title: '/LiveChat', description: 'Real-time website chat widget', price: 35 },
-  { id: 'inbox', img: inboxImg, title: '/Inbox', description: 'Unified communications hub', price: 35 }
+  { id: 'respond', img: inboxImg, title: '/Respond', description: 'Unified communications hub', price: 35 }
 ];
 
 export default function PricingPage() {
@@ -240,7 +240,7 @@ export default function PricingPage() {
               <img src={commverseImg} alt="Commverse" className="w-12 h-12 rounded-lg object-contain" />
               <div className="flex-1">
                 <div className="font-bold text-lg">Commverse Bundle</div>
-                <div className="text-sm text-gray-400">/Send + /Content + /LiveChat + /Inbox</div>
+                <div className="text-sm text-gray-400">/Send + /Post + /LiveChat + /Respond</div>
               </div>
               <div className="text-2xl font-bold">$100</div>
             </div>
@@ -322,7 +322,7 @@ export default function PricingPage() {
   "stage_3": "Execution: diy|msp|alc",
   "rules": ["ALC incompatible with Scale"],
   "addons": {
-    "apps": ["/send","/content","/livechat","/inbox"],
+    "apps": ["/send","/post","/livechat","/respond"],
     "bundle": "commverse",
     "coaching": ["coach_blue","captains_chair"]
   },

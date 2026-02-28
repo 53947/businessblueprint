@@ -140,20 +140,20 @@ export function BrandLogo({
     );
   }
 
-  // /inbox uses new icon and logo
+  // /respond uses new icon and logo
   if (brand === 'inbox') {
     return (
       <div className={`flex items-center gap-3 ${className}`}>
         {showIcon && (
-          <img 
-            src={inboxIcon} 
-            alt="/inbox icon" 
+          <img
+            src={inboxIcon}
+            alt="/respond icon"
             className={`${iconSize} object-contain`}
           />
         )}
-        <img 
-          src={inboxLogo} 
-          alt="/inbox" 
+        <img
+          src={inboxLogo}
+          alt="/respond"
           className={`${logoSize} object-contain`}
         />
       </div>

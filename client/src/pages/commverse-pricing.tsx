@@ -121,10 +121,10 @@ export default function CommversePricing() {
               </CardContent>
             </Card>
 
-            {/* /inbox Individual */}
+            {/* /respond Individual */}
             <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#0080FF' }}>
               <CardHeader>
-                <CardTitle className="text-2xl" style={{ color: '#0080FF' }}>/inbox</CardTitle>
+                <CardTitle className="text-2xl" style={{ color: '#0080FF' }}>/respond</CardTitle>
                 <CardDescription>Unified Communications</CardDescription>
               </CardHeader>
               <CardContent>
@@ -157,18 +157,18 @@ export default function CommversePricing() {
                 <Button 
                   className="w-full text-white"
                   style={{ backgroundColor: '#0080FF' }}
-                  data-testid="button-inbox-individual"
+                  data-testid="button-respond-individual"
                   asChild
                 >
-                  <a href="/inbox">Select</a>
+                  <a href="/respond">Select</a>
                 </Button>
               </CardContent>
             </Card>
 
-            {/* /content Individual */}
+            {/* /post Individual */}
             <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#EF4444' }}>
               <CardHeader>
-                <CardTitle className="text-2xl" style={{ color: '#EF4444' }}>/content</CardTitle>
+                <CardTitle className="text-2xl" style={{ color: '#EF4444' }}>/post</CardTitle>
                 <CardDescription>Social Media Management</CardDescription>
               </CardHeader>
               <CardContent>
@@ -201,7 +201,7 @@ export default function CommversePricing() {
                 <Button 
                   className="w-full text-white"
                   style={{ backgroundColor: '#EF4444' }}
-                  data-testid="button-content-individual"
+                  data-testid="button-post-individual"
                   asChild
                 >
                   <a href="/content/dashboard">Select</a>
@@ -276,8 +276,8 @@ export default function CommversePricing() {
                   <th className="text-left py-4 px-4 font-bold text-gray-900">Feature</th>
                   <th className="text-center py-4 px-4 font-bold" style={{ color: '#E6B747' }}>/send</th>
                   <th className="text-center py-4 px-4 font-bold" style={{ color: '#8000FF' }}>/livechat</th>
-                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#0080FF' }}>/inbox</th>
-                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#EF4444' }}>/content</th>
+                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#0080FF' }}>/respond</th>
+                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#EF4444' }}>/post</th>
                   <th className="text-center py-4 px-4 font-bold" style={{ color: '#FC6ACD' }}>Bundle</th>
                 </tr>
               </thead>
@@ -384,7 +384,7 @@ export default function CommversePricing() {
             <div>
               <h3 className="text-xl font-bold mb-2 text-gray-900">How does the bundle ecosystem work?</h3>
               <p className="text-gray-600">
-                When you have all four apps, they share customer data and analytics. For example, /inbox knows about email campaigns from /send, /livechat conversations flow into /inbox, and /content posts are tracked—creating smarter automation.
+                When you have all four apps, they share customer data and analytics. For example, /respond knows about email campaigns from /send, /livechat conversations flow into /respond, and /post posts are tracked—creating smarter automation.
               </p>
             </div>
 

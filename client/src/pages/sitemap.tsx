@@ -134,7 +134,7 @@ const routeIcons: Record<string, any> = {
 export default function Sitemap() {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set(Object.keys(categoryConfig)));
   const [viewMode, setViewMode] = useState<"tree" | "table">("tree");
-  
+
   const toggleCategory = (category: string) => {
     setExpandedCategories(prev => {
       const next = new Set(prev);

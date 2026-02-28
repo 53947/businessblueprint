@@ -1,5 +1,5 @@
 /**
- * Content Management API Routes
+ * Post Management API Routes
  * Handles posts, media, platforms, scheduling, analytics, and AI assistance
  */
 
@@ -30,7 +30,7 @@ const router = Router();
 const mediaStorage = new MediaStorageService();
 
 /**
- * Middleware: Check if client has Content Management access
+ * Middleware: Check if client has Post Management access
  * Demo accounts get full access without subscription checks
  */
 async function requireContentAccess(req: Request, res: Response, next: Function) {
@@ -60,14 +60,14 @@ async function requireContentAccess(req: Request, res: Response, next: Function)
       .where(
         and(
           eq(subscriptions.clientId, clientId),
-          sql`${subscriptionAddons.name} LIKE '%Content Management%'`
+          sql`${subscriptionAddons.name} LIKE '%Post Management%'`
         )
       )
       .limit(1);
 
     if (hasAccess.length === 0) {
       return res.status(403).json({ 
-        message: 'Content Management not available. Please upgrade your subscription.' 
+        message: 'Post Management not available. Please upgrade your subscription.'
       });
     }
 
@@ -96,7 +96,7 @@ async function getPlatformLimits(clientId: number): Promise<{ maxPlatforms: numb
     .where(
       and(
         eq(subscriptions.clientId, clientId),
-        sql`${subscriptionAddons.name} LIKE '%Content Management%'`
+        sql`${subscriptionAddons.name} LIKE '%Post Management%'`
       )
     )
     .limit(1);
@@ -112,7 +112,7 @@ async function getPlatformLimits(clientId: number): Promise<{ maxPlatforms: numb
 // ===== POSTS ROUTES =====
 
 /**
- * GET /api/content/:clientId/posts
+ * GET /api/post/:clientId/posts
  * List all posts for a client
  */
 router.get('/:clientId/posts', requireContentAccess, async (req: Request, res: Response) => {
@@ -143,7 +143,7 @@ router.get('/:clientId/posts', requireContentAccess, async (req: Request, res: R
 });
 
 /**
- * GET /api/content/:clientId/posts/:postId
+ * GET /api/post/:clientId/posts/:postId
  * Get a single post
  */
 router.get('/:clientId/posts/:postId', requireContentAccess, async (req: Request, res: Response) => {
@@ -171,7 +171,7 @@ router.get('/:clientId/posts/:postId', requireContentAccess, async (req: Request
 });
 
 /**
- * POST /api/content/:clientId/posts
+ * POST /api/post/:clientId/posts
  * Create a new post
  */
 router.post('/:clientId/posts', requireContentAccess, async (req: Request, res: Response) => {
@@ -216,7 +216,7 @@ router.post('/:clientId/posts', requireContentAccess, async (req: Request, res: 
 });
 
 /**
- * PUT /api/content/:clientId/posts/:postId
+ * PUT /api/post/:clientId/posts/:postId
  * Update a post
  */
 router.put('/:clientId/posts/:postId', requireContentAccess, async (req: Request, res: Response) => {
@@ -267,7 +267,7 @@ router.put('/:clientId/posts/:postId', requireContentAccess, async (req: Request
 });
 
 /**
- * DELETE /api/content/:clientId/posts/:postId
+ * DELETE /api/post/:clientId/posts/:postId
  * Delete a post
  */
 router.delete('/:clientId/posts/:postId', requireContentAccess, async (req: Request, res: Response) => {
@@ -295,7 +295,7 @@ router.delete('/:clientId/posts/:postId', requireContentAccess, async (req: Requ
 });
 
 /**
- * POST /api/content/:clientId/posts/:postId/publish
+ * POST /api/post/:clientId/posts/:postId/publish
  * Publish a post immediately or schedule it
  */
 router.post('/:clientId/posts/:postId/publish', requireContentAccess, async (req: Request, res: Response) => {
@@ -366,7 +366,7 @@ router.post('/:clientId/posts/:postId/publish', requireContentAccess, async (req
 // ===== SCHEDULING ROUTES =====
 
 /**
- * GET /api/content/:clientId/schedule
+ * GET /api/post/:clientId/schedule
  * Get all scheduled posts
  */
 router.get('/:clientId/schedule', requireContentAccess, async (req: Request, res: Response) => {
@@ -390,7 +390,7 @@ router.get('/:clientId/schedule', requireContentAccess, async (req: Request, res
 });
 
 /**
- * PUT /api/content/:clientId/schedule/:postId
+ * PUT /api/post/:clientId/schedule/:postId
  * Update schedule time for a post
  */
 router.put('/:clientId/schedule/:postId', requireContentAccess, async (req: Request, res: Response) => {
@@ -449,7 +449,7 @@ router.put('/:clientId/schedule/:postId', requireContentAccess, async (req: Requ
 });
 
 /**
- * DELETE /api/content/:clientId/schedule/:postId
+ * DELETE /api/post/:clientId/schedule/:postId
  * Cancel a scheduled post
  */
 router.delete('/:clientId/schedule/:postId', requireContentAccess, async (req: Request, res: Response) => {
@@ -501,7 +501,7 @@ router.delete('/:clientId/schedule/:postId', requireContentAccess, async (req: R
 // ===== MEDIA ROUTES =====
 
 /**
- * GET /api/content/:clientId/media
+ * GET /api/post/:clientId/media
  * List all media for a client
  */
 router.get('/:clientId/media', requireContentAccess, async (req: Request, res: Response) => {
@@ -532,7 +532,7 @@ router.get('/:clientId/media', requireContentAccess, async (req: Request, res: R
 });
 
 /**
- * POST /api/content/:clientId/media
+ * POST /api/post/:clientId/media
  * Upload media file
  */
 router.post('/:clientId/media', requireContentAccess, async (req: Request, res: Response) => {
@@ -565,7 +565,7 @@ router.post('/:clientId/media', requireContentAccess, async (req: Request, res: 
 });
 
 /**
- * DELETE /api/content/:clientId/media/:mediaId
+ * DELETE /api/post/:clientId/media/:mediaId
  * Delete media
  */
 router.delete('/:clientId/media/:mediaId', requireContentAccess, async (req: Request, res: Response) => {
@@ -589,7 +589,7 @@ router.delete('/:clientId/media/:mediaId', requireContentAccess, async (req: Req
 // ===== PLATFORM ACCOUNTS ROUTES =====
 
 /**
- * GET /api/content/:clientId/platforms
+ * GET /api/post/:clientId/platforms
  * List connected social media accounts
  */
 router.get('/:clientId/platforms', requireContentAccess, async (req: Request, res: Response) => {
@@ -616,7 +616,7 @@ router.get('/:clientId/platforms', requireContentAccess, async (req: Request, re
 });
 
 /**
- * POST /api/content/:clientId/platforms
+ * POST /api/post/:clientId/platforms
  * Connect a new social media account
  */
 router.post('/:clientId/platforms', requireContentAccess, async (req: Request, res: Response) => {
@@ -682,7 +682,7 @@ router.post('/:clientId/platforms', requireContentAccess, async (req: Request, r
 });
 
 /**
- * DELETE /api/content/:clientId/platforms/:accountId
+ * DELETE /api/post/:clientId/platforms/:accountId
  * Disconnect a social media account
  */
 router.delete('/:clientId/platforms/:accountId', requireContentAccess, async (req: Request, res: Response) => {
@@ -712,7 +712,7 @@ router.delete('/:clientId/platforms/:accountId', requireContentAccess, async (re
 // ===== ANALYTICS ROUTES =====
 
 /**
- * GET /api/content/:clientId/analytics
+ * GET /api/post/:clientId/analytics
  * Get analytics summary
  */
 router.get('/:clientId/analytics', requireContentAccess, async (req: Request, res: Response) => {
@@ -752,7 +752,7 @@ router.get('/:clientId/analytics', requireContentAccess, async (req: Request, re
 // ===== AI ASSISTANCE ROUTES =====
 
 /**
- * POST /api/content/:clientId/ai/suggest
+ * POST /api/post/:clientId/ai/suggest
  * Generate AI-powered caption suggestions for social posts
  */
 router.post('/:clientId/ai/suggest', requireContentAccess, async (req: Request, res: Response) => {
@@ -775,7 +775,7 @@ router.post('/:clientId/ai/suggest', requireContentAccess, async (req: Request, 
 });
 
 /**
- * POST /api/content/:clientId/ai/caption
+ * POST /api/post/:clientId/ai/caption
  * Generate AI caption for a post
  */
 router.post('/:clientId/ai/caption', requireContentAccess, async (req: Request, res: Response) => {
@@ -797,7 +797,7 @@ router.post('/:clientId/ai/caption', requireContentAccess, async (req: Request, 
 });
 
 /**
- * POST /api/content/:clientId/ai/hashtags
+ * POST /api/post/:clientId/ai/hashtags
  * Generate relevant hashtags
  */
 router.post('/:clientId/ai/hashtags', requireContentAccess, async (req: Request, res: Response) => {

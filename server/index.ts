@@ -56,7 +56,7 @@ app.use((req, res, next) => {
   // Export io for use in routes (via global) - available before server starts listening
   (global as any).io = io;
   
-  // Start database-backed scheduler for Content Management
+  // Start database-backed scheduler for Post Management
   try {
     const { startScheduler } = await import('./services/scheduler');
     startScheduler();

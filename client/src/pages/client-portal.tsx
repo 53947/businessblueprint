@@ -385,12 +385,12 @@ export default function ClientPortal() {
 
         {/* 5 Service Boxes - Official Order */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-          {/* 1. Local SEO Management - /listings */}
+          {/* 1. Local SEO Management - /list */}
           <Card className="hover:shadow-lg transition-shadow" data-testid="card-local-seo">
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/listings app_1762804610311.png" alt="/listings" className="w-8 h-8" />
+                <img src="/attached_assets/listings app_1762804610311.png" alt="/list" className="w-8 h-8" />
                 <div className="text-center">
                   <div className="flex gap-3">
                     <div>
@@ -409,10 +409,10 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/listings app_1762804610311.png" alt="/listings" className="w-16 h-16" />
+                  <img src="/attached_assets/listings app_1762804610311.png" alt="/list" className="w-16 h-16" />
                 </div>
                 <div className="flex justify-center mb-2">
-                  <img src="/attached_assets/: listings color triad black and FF0040_1762806224294.png" alt="/listings" className="h-5" />
+                  <img src="/attached_assets/: listings color triad black and FF0040_1762806224294.png" alt="/list" className="h-5" />
                 </div>
                 <p className="text-xs text-gray-600">Directory sync & consistency</p>
               </div>
@@ -505,7 +505,7 @@ export default function ClientPortal() {
                   <img src="/attached_assets/:_content_1768176946216.png" alt="Social Media" className="w-16 h-16" />
                 </div>
                 <div className="flex justify-center">
-                  <img src="/attached_assets/logos and wordmarks/: content app logo.png" alt="/content" className="h-6" />
+                  <img src="/attached_assets/logos and wordmarks/: content app logo.png" alt="/post" className="h-6" />
                 </div>
                 <p className="text-xs text-gray-600">Social Media Management</p>
               </div>
@@ -531,12 +531,12 @@ export default function ClientPortal() {
             </CardContent>
           </Card>
 
-          {/* 4. Reputation Management - /reputation */}
+          {/* 4. Reputation Management - /review */}
           <Card className="hover:shadow-lg transition-shadow" data-testid="card-reputation">
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/reputation" className="w-8 h-8" />
+                <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/review" className="w-8 h-8" />
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">{clientData.reviews.average}</div>
                   <p className="text-[10px] text-gray-600">Review Ratings</p>
@@ -546,10 +546,10 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/reputation" className="w-16 h-16" />
+                  <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/review" className="w-16 h-16" />
                 </div>
                 <div className="flex justify-center mb-2">
-                  <img src="/attached_assets/: reputation color triad black and D59600_1762806224295.png" alt="/reputation" className="h-5" />
+                  <img src="/attached_assets/: reputation color triad black and D59600_1762806224295.png" alt="/review" className="h-5" />
                 </div>
                 <p className="text-xs text-gray-600">Review response & reputation management</p>
               </div>

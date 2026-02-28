@@ -154,7 +154,7 @@ export default function InboxPage() {
       toast({
         variant: 'destructive',
         title: 'Authentication Required',
-        description: 'Please log in to access the inbox.',
+        description: 'Please log in to access respond.',
       });
       setLocation("/portal/login");
       return;
@@ -166,13 +166,13 @@ export default function InboxPage() {
 
   // Fetch conversations (only when authenticated)
   const { data: conversations = [], isLoading: conversationsLoading } = useQuery<Conversation[]>({
-    queryKey: ['/api/inbox/conversations'],
+    queryKey: ['/api/respond/conversations'],
     enabled: !!authToken && !!clientId,
   });
 
   // Fetch messages for selected conversation (only when authenticated)
   const { data: messages = [], isLoading: messagesLoading } = useQuery<Message[]>({
-    queryKey: ['/api/inbox/conversations', selectedConversation, 'messages'],
+    queryKey: ['/api/respond/conversations', selectedConversation, 'messages'],
     enabled: !!selectedConversation && !!authToken && !!clientId,
   });
 
@@ -202,11 +202,11 @@ export default function InboxPage() {
   // Send message mutation
   const sendMessageMutation = useMutation({
     mutationFn: async (data: { conversationId: number; message: string }) => {
-      return apiRequest('POST', '/api/inbox/send-message', data);
+      return apiRequest('POST', '/api/respond/send-message', data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/inbox/conversations', selectedConversation, 'messages'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/inbox/conversations'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/respond/conversations', selectedConversation, 'messages'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/respond/conversations'] });
       setMessageInput('');
     },
     onError: async (error: any) => {
@@ -248,7 +248,7 @@ export default function InboxPage() {
     });
 
     socketInstance.on('connect', () => {
-      console.log('Inbox WebSocket connected');
+      console.log('Respond WebSocket connected');
       
       // Join all conversation rooms
       conversations.forEach(conv => {
@@ -258,8 +258,8 @@ export default function InboxPage() {
 
     socketInstance.on('message:new', (data: Message) => {
       // Update messages list
-      queryClient.invalidateQueries({ queryKey: ['/api/inbox/conversations', data.conversationId, 'messages'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/inbox/conversations'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/respond/conversations', data.conversationId, 'messages'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/respond/conversations'] });
       
       // Show notification if not viewing this conversation
       if (selectedConversation !== data.conversationId && data.direction === 'inbound') {
@@ -375,18 +375,18 @@ export default function InboxPage() {
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
-      {/* Section Header - Inbox Navigation */}
-      <SectionHeader 
-        title="Inbox" 
+      {/* Section Header - Respond Navigation */}
+      <SectionHeader
+        title="Respond"
         tabs={inboxTabs}
         actions={
           <Button 
             variant="outline" 
             size="sm" 
-            data-testid="button-inbox-settings"
-            onClick={() => toast({ 
-              title: "Inbox Settings", 
-              description: "Configure email accounts (Gmail, Outlook), SMS, and social media messaging channels here." 
+            data-testid="button-respond-settings"
+            onClick={() => toast({
+              title: "Respond Settings",
+              description: "Configure email accounts (Gmail, Outlook), SMS, and social media messaging channels here."
             })}
           >
             <Settings className="h-4 w-4" />
@@ -411,7 +411,7 @@ export default function InboxPage() {
                 </p>
               ) : showCrmEmptyState ? (
                 <CrmEmptyState 
-                  {...CRM_EMPTY_CONFIGS.inbox} 
+                  {...CRM_EMPTY_CONFIGS.respond} 
                   variant="compact" 
                 />
               ) : (

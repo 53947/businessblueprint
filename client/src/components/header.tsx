@@ -343,7 +343,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <img src={commverseBundle} alt="commverse" className="h-5" />
                                   </div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">
-                                    Complete communication suite: /send, /inbox, /livechat, /content.
+                                    Complete communication suite: /send, /respond, /livechat, /post.
                                   </p>
                                 </div>
                               </div>
@@ -589,18 +589,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                             {/* 2 Apps in a Row */}
                             <div className="grid grid-cols-2 gap-2">
-                              {/* /listings */}
+                              {/* /list */}
                               <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }}>
                                 <div className="flex items-start justify-between mb-1">
                                   <div className="flex items-center gap-1.5">
                                     <img src={listingsIcon} alt="" className="w-5 h-5" />
-                                    <img src={listingsWordmark} alt="/listings" className="h-4" />
+                                    <img src={listingsWordmark} alt="/list" className="h-4" />
                                   </div>
                                   <button
-                                    onClick={() => handleAddToCart('listings-addon', '/listings', 40, 'addon')}
+                                    onClick={() => handleAddToCart('list-addon', '/list', 40, 'addon')}
                                     className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0"
                                     style={{ backgroundColor: '#FF0040' }}
-                                    data-testid="button-add-listings"
+                                    data-testid="button-add-list"
                                     title="Add to Cart"
                                   >
                                     +
@@ -608,24 +608,24 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                                 <div className="border-t pt-1">
                                   <div className="text-xs font-extrabold mb-0.5" style={{ color: '#FF0040' }}>
-                                    {getItemPrice('listings-addon', 40).displayPrice}
+                                    {getItemPrice('list-addon', 40).displayPrice}
                                   </div>
-                                  <a href="/listings" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                  <a href="/list" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                 </div>
                               </div>
 
-                              {/* /reputation */}
+                              {/* /review */}
                               <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }}>
                                 <div className="flex items-start justify-between mb-1">
                                   <div className="flex items-center gap-1.5">
                                     <img src={reputationIcon} alt="" className="w-5 h-5" />
-                                    <img src={reputationWordmark} alt="/reputation" className="h-4" />
+                                    <img src={reputationWordmark} alt="/review" className="h-4" />
                                   </div>
                                   <button
-                                    onClick={() => handleAddToCart('reputation-management', '/reputation', 40, 'addon')}
+                                    onClick={() => handleAddToCart('review-addon', '/review', 40, 'addon')}
                                     className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0"
                                     style={{ backgroundColor: '#D59600' }}
-                                    data-testid="button-add-reputation"
+                                    data-testid="button-add-review"
                                     title="Add to Cart"
                                   >
                                     +
@@ -633,9 +633,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                                 <div className="border-t pt-1">
                                   <div className="text-xs font-extrabold mb-0.5" style={{ color: '#D59600' }}>
-                                    {getItemPrice('reputation-management', 40).displayPrice}
+                                    {getItemPrice('review-addon', 40).displayPrice}
                                   </div>
-                                  <a href="/reputation" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                  <a href="/review" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                 </div>
                               </div>
                             </div>
@@ -709,18 +709,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
 
-                            {/* /inbox */}
+                            {/* /respond */}
                             <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#0080FF' }}>
                               <div className="flex items-start justify-between mb-1">
                                 <div className="flex items-center gap-1.5">
                                   <img src={inboxIcon} alt="" className="w-5 h-5" />
-                                  <img src={inboxWordmark} alt="/inbox" className="h-4" />
+                                  <img src={inboxWordmark} alt="/respond" className="h-4" />
                                 </div>
                                 <button
-                                  onClick={() => handleAddToCart('inbox-addon', '/inbox', 35, 'addon')}
+                                  onClick={() => handleAddToCart('respond-addon', '/respond', 35, 'addon')}
                                   className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0"
                                   style={{ backgroundColor: '#0080FF' }}
-                                  data-testid="button-add-inbox"
+                                  data-testid="button-add-respond"
                                   title="Add to Cart"
                                 >
                                   +
@@ -728,9 +728,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                               <div className="border-t pt-1">
                                 <div className="text-xs font-extrabold mb-0.5" style={{ color: '#0080FF' }}>
-                                  {getItemPrice('inbox-addon', 35).displayPrice}
+                                  {getItemPrice('respond-addon', 35).displayPrice}
                                 </div>
-                                <a href="/inbox" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                <a href="/respond" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
                             </div>
 
@@ -759,18 +759,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
 
-                            {/* /content */}
+                            {/* /post */}
                             <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E91EBC' }}>
                               <div className="flex items-start justify-between mb-1">
                                 <div className="flex items-center gap-1.5">
                                   <img src={contentIcon} alt="" className="w-5 h-5" />
-                                  <img src={contentWordmark} alt="/content" className="h-4" />
+                                  <img src={contentWordmark} alt="/post" className="h-4" />
                                 </div>
                                 <button
-                                  onClick={() => handleAddToCart('content-addon', '/content', 35, 'addon')}
+                                  onClick={() => handleAddToCart('post-addon', '/post', 35, 'addon')}
                                   className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0"
                                   style={{ backgroundColor: '#E91EBC' }}
-                                  data-testid="button-add-content"
+                                  data-testid="button-add-post"
                                   title="Add to Cart"
                                 >
                                   +
@@ -778,9 +778,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                               <div className="border-t pt-1">
                                 <div className="text-xs font-extrabold mb-0.5" style={{ color: '#E91EBC' }}>
-                                  {getItemPrice('content-addon', 35).displayPrice}
+                                  {getItemPrice('post-addon', 35).displayPrice}
                                 </div>
-                                <a href="/content" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                <a href="/post" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
                             </div>
                           </div>
@@ -883,9 +883,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="/inbox" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#0080FF' }} data-testid="link-solution-inbox">
-                                <img src={inboxIcon} alt="/inbox" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/ inbox</div>
+                              <a href="/respond" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#0080FF' }} data-testid="link-solution-respond">
+                                <img src={inboxIcon} alt="/respond" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/respond</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Unified Comms</p>
                               </a>
                             </NavigationMenuLink>
@@ -900,26 +900,26 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="/content" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#E91EBC' }} data-testid="link-solution-content">
-                                <img src={contentIcon} alt="/content" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/ content</div>
+                              <a href="/post-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#E91EBC' }} data-testid="link-solution-post">
+                                <img src={contentIcon} alt="/post" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/post</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Social Media</p>
                               </a>
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="/listings" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF0040' }} data-testid="link-solution-listings">
-                                <img src={listingsIcon} alt="/listings" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/ listings</div>
+                              <a href="/list-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF0040' }} data-testid="link-solution-list">
+                                <img src={listingsIcon} alt="/list" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/list</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Directory Sync</p>
                               </a>
                             </NavigationMenuLink>
 
                             {/* Row 5: Last Apps */}
                             <NavigationMenuLink asChild>
-                              <a href="/reputation" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#D59600' }} data-testid="link-solution-reputation">
-                                <img src={reputationIcon} alt="/reputation" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/ reputation</div>
+                              <a href="/review-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#D59600' }} data-testid="link-solution-review">
+                                <img src={reputationIcon} alt="/review" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/review</div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Review Mgmt</p>
                               </a>
                             </NavigationMenuLink>
@@ -1206,12 +1206,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="/inbox-api-docs"
-                                data-testid="link-resources-inbox-api"
+                                href="/respond-api-docs"
+                                data-testid="link-resources-respond-api"
                               >
                                 <img src={fileTextIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/inbox API Docs</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/respond API Docs</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Unified communications API</p>
                                 </div>
                               </a>
@@ -1219,12 +1219,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="/content-api-docs"
-                                data-testid="link-resources-content-api"
+                                href="/post-api-docs"
+                                data-testid="link-resources-post-api"
                               >
                                 <img src={fileTextIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/content API Docs</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/post API Docs</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Social media posting API</p>
                                 </div>
                               </a>
@@ -1436,7 +1436,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         </a>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem 
+                      <DropdownMenuItem
                         onClick={handleSignOut}
                         className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
                         data-testid="menu-item-sign-out"
@@ -1467,11 +1467,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   </a>
                 )}
 
-                {/* Inbox Button - Always visible; requires login first if not authenticated */}
+                {/* Respond Button - Always visible; requires login first if not authenticated */}
                 <a
-                  href={isLoggedIn ? "/portal/inbox" : "/portal/login?redirect=/portal/inbox"}
+                  href={isLoggedIn ? "/portal/respond" : "/portal/login?redirect=/portal/respond"}
                   className="flex items-center px-2 py-1.5 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs transition-colors"
-                  data-testid="button-quick-inbox"
+                  data-testid="button-quick-respond"
                 >
                   Inbox
                 </a>
@@ -1507,8 +1507,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
         <div className="lg:hidden flex items-center justify-between gap-2 h-16 border-t border-gray-200 flex-wrap p-2">
           {showNavigation && (
             <>
-              {/* Inbox - Always visible; requires login first if not authenticated */}
-              <a href={isLoggedIn ? "/portal/inbox" : "/portal/login?redirect=/portal/inbox"} className="flex-1 px-2 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs text-center transition-colors" data-testid="button-inbox-mobile">
+              {/* Respond - Always visible; requires login first if not authenticated */}
+              <a href={isLoggedIn ? "/portal/respond" : "/portal/login?redirect=/portal/respond"} className="flex-1 px-2 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs text-center transition-colors" data-testid="button-respond-mobile">
                 Inbox
               </a>
 
@@ -1569,7 +1569,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
         {/* Mobile Menu - Mobile-First Redesign
             NOTE: This menu must stay in sync with NAV_ITEMS order and labels from navigation-config.ts.
             Main nav sections: How It Works → Products → Solutions → Resources
-            Action items: Cart → Inbox → Dashboard → Digital IQ */}
+            Action items: Cart → Respond → Dashboard → Digital IQ */}
         {isMobileMenuOpen && showNavigation && (
           <div className="lg:hidden fixed inset-0 lg:top-20 top-32 z-40 bg-white flex flex-col">
             {/* Scrollable Content */}
@@ -1740,30 +1740,30 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                                   {/* 2 Apps */}
                                   <div className="grid grid-cols-2 gap-2">
-                                    {/* /listings */}
+                                    {/* /list */}
                                     <div className="p-2 rounded-lg border-2" style={{ borderColor: '#FF0040' }}>
                                       <div className="flex items-start justify-between mb-2">
                                         <div>
-                                          <p className="text-xs font-bold text-gray-900">/listings</p>
+                                          <p className="text-xs font-bold text-gray-900">/list</p>
                                           <p className="text-xs text-gray-500">Directory</p>
                                         </div>
-                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#FF0040' }} data-testid="mobile-add-listings" title="Add to Cart">+</button>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#FF0040' }} data-testid="mobile-add-list" title="Add to Cart">+</button>
                                       </div>
                                       <div className="text-xs font-extrabold" style={{ color: '#FF0040' }}>$40/mo</div>
-                                      <a href="/listings" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                      <a href="/list" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
 
-                                    {/* /reputation */}
+                                    {/* /review */}
                                     <div className="p-2 rounded-lg border-2" style={{ borderColor: '#D59600' }}>
                                       <div className="flex items-start justify-between mb-2">
                                         <div>
-                                          <p className="text-xs font-bold text-gray-900">/reputation</p>
+                                          <p className="text-xs font-bold text-gray-900">/review</p>
                                           <p className="text-xs text-gray-500">Reviews</p>
                                         </div>
-                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#D59600' }} data-testid="mobile-add-reputation" title="Add to Cart">+</button>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#D59600' }} data-testid="mobile-add-review" title="Add to Cart">+</button>
                                       </div>
                                       <div className="text-xs font-extrabold" style={{ color: '#D59600' }}>$40/mo</div>
-                                      <a href="/reputation" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                      <a href="/review" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
                                   </div>
                                 </div>
@@ -1805,17 +1805,17 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       <a href="/send" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
 
-                                    {/* /inbox */}
+                                    {/* /respond */}
                                     <div className="p-2 rounded-lg border-2" style={{ borderColor: '#0080FF' }}>
                                       <div className="flex items-start justify-between mb-2">
                                         <div>
-                                          <p className="text-xs font-bold text-gray-900">/inbox</p>
+                                          <p className="text-xs font-bold text-gray-900">/respond</p>
                                           <p className="text-xs text-gray-500">Comms Hub</p>
                                         </div>
-                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#0080FF' }} data-testid="mobile-add-inbox" title="Add to Cart">+</button>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#0080FF' }} data-testid="mobile-add-respond" title="Add to Cart">+</button>
                                       </div>
                                       <div className="text-xs font-extrabold" style={{ color: '#0080FF' }}>$35/mo</div>
-                                      <a href="/inbox" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                      <a href="/respond" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
 
                                     {/* /livechat */}
@@ -1831,17 +1831,17 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       <a href="/livechat" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
 
-                                    {/* /content */}
+                                    {/* /post */}
                                     <div className="p-2 rounded-lg border-2" style={{ borderColor: '#E91EBC' }}>
                                       <div className="flex items-start justify-between mb-2">
                                         <div>
-                                          <p className="text-xs font-bold text-gray-900">/content</p>
+                                          <p className="text-xs font-bold text-gray-900">/post</p>
                                           <p className="text-xs text-gray-500">Social Media</p>
                                         </div>
-                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#E91EBC' }} data-testid="mobile-add-content" title="Add to Cart">+</button>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#E91EBC' }} data-testid="mobile-add-post" title="Add to Cart">+</button>
                                       </div>
                                       <div className="text-xs font-extrabold" style={{ color: '#E91EBC' }}>$35/mo</div>
-                                      <a href="/content" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                      <a href="/post" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
                                   </div>
                                 </div>
@@ -1909,9 +1909,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-xs text-gray-600 text-center">Email & SMS</p>
                                   </a>
 
-                                  {/* /inbox */}
-                                  <a href="/inbox" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#0080FF' }} data-testid="mobile-link-inbox-app">
-                                    <p className="text-xs font-bold text-gray-900 text-center">/ inbox</p>
+                                  {/* /respond */}
+                                  <a href="/respond" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#0080FF' }} data-testid="mobile-link-respond-app">
+                                    <p className="text-xs font-bold text-gray-900 text-center">/respond</p>
                                     <p className="text-xs text-gray-600 text-center">Unified Comms</p>
                                   </a>
 
@@ -1921,21 +1921,21 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-xs text-gray-600 text-center">Live Chat</p>
                                   </a>
 
-                                  {/* /content */}
-                                  <a href="/content" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E91EBC' }} data-testid="mobile-link-content-app">
-                                    <p className="text-xs font-bold text-gray-900 text-center">/ content</p>
+                                  {/* /post */}
+                                  <a href="/post-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E91EBC' }} data-testid="mobile-link-post-app">
+                                    <p className="text-xs font-bold text-gray-900 text-center">/post</p>
                                     <p className="text-xs text-gray-600 text-center">Social Media</p>
                                   </a>
 
-                                  {/* /listings */}
-                                  <a href="/listings" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }} data-testid="mobile-link-listings-app">
-                                    <p className="text-xs font-bold text-gray-900 text-center">/ listings</p>
+                                  {/* /list */}
+                                  <a href="/list-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }} data-testid="mobile-link-list-app">
+                                    <p className="text-xs font-bold text-gray-900 text-center">/list</p>
                                     <p className="text-xs text-gray-600 text-center">Directory Sync</p>
                                   </a>
 
-                                  {/* /reputation */}
-                                  <a href="/reputation" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }} data-testid="mobile-link-reputation-app">
-                                    <p className="text-xs font-bold text-gray-900 text-center">/ reputation</p>
+                                  {/* /review */}
+                                  <a href="/review-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }} data-testid="mobile-link-review-app">
+                                    <p className="text-xs font-bold text-gray-900 text-center">/review</p>
                                     <p className="text-xs text-gray-600 text-center">Review Mgmt</p>
                                   </a>
                                 </div>
@@ -2066,12 +2066,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       <div className="font-bold">/send API Docs</div>
                                       <p className="text-xs text-gray-600">Email & SMS API reference</p>
                                     </a>
-                                    <a href="/inbox-api-docs" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">/inbox API Docs</div>
+                                    <a href="/respond-api-docs" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/respond API Docs</div>
                                       <p className="text-xs text-gray-600">Unified communications API</p>
                                     </a>
-                                    <a href="/content-api-docs" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">/content API Docs</div>
+                                    <a href="/post-api-docs" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/post API Docs</div>
                                       <p className="text-xs text-gray-600">Social media posting API</p>
                                     </a>
                                     <a href="/livechat-install" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">

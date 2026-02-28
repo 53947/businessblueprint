@@ -21,13 +21,12 @@ import Journey from "@/pages/journey";
 import LogoPreview from "@/pages/logo-preview";
 import SendLanding from "@/pages/send-landing";
 import SendDashboard from "@/pages/send-dashboard";
-import InboxLanding from "@/pages/inbox-landing";
-import InboxPage from "@/pages/inbox";
+import RespondLanding from "@/pages/respond-landing";
+import RespondPage from "@/pages/respond";
 import LivechatLanding from "@/pages/livechat-landing";
 import LiveChatDemo from "@/pages/livechat-demo";
 import LiveChatInstall from "@/pages/livechat-install";
-import ChatDashboard from "@/pages/chat-dashboard";
-import ContentLanding from "@/pages/content-landing";
+import PostLanding from "@/pages/post-landing";
 import CommverseLanding from "@/pages/commverse-landing";
 import CommversePricing from "@/pages/commverse-pricing";
 import PathwaysPage from "@/pages/pathways";
@@ -39,12 +38,12 @@ import CheckoutPage from "@/pages/checkout";
 import BIIF from "@/pages/biif";
 import AdminPanel from "@/pages/admin-panel";
 import BrandStudio from "@/pages/brand-studio";
-import ContentManagement from "@/pages/content-management";
-import ReputationManagement from "@/pages/reputation";
-import ListingsManagement from "@/pages/listings";
+import PostManagement from "@/pages/post-management";
+import ReviewManagement from "@/pages/review";
+import ListManagement from "@/pages/list";
 import LocalBlueLanding from "@/pages/localblue-landing";
-import ListingsLanding from "@/pages/listings-landing";
-import ReputationLanding from "@/pages/reputation-landing";
+import ListLanding from "@/pages/list-landing";
+import ReviewLanding from "@/pages/review-landing";
 import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import DataDeletion from "@/pages/data-deletion";
@@ -73,7 +72,7 @@ function Router() {
       <Route path="/portal/verify" component={VerifyMagicLink} />
       <Route path="/portal/test" component={PortalTestAccess} />
       <Route path="/portal/dashboard" component={ClientPortal} />
-      <Route path="/portal/inbox" component={InboxPage} />
+      <Route path="/portal/respond" component={RespondPage} />
       <Route path="/portal/prescriptions/:id" component={PortalPrescriptions} />
       <Route path="/portal/prescriptions" component={PortalPrescriptions} />
       <Route path="/portal/prescription/:token" component={PortalPrescriptions} />
@@ -91,27 +90,25 @@ function Router() {
       <Route path="/journey" component={Journey} />
       <Route path="/logo-preview" component={LogoPreview} />
       <Route path="/send" component={SendLanding} />
-      <Route path="/send/dashboard" component={SendDashboard} />
-      <Route path="/inbox" component={InboxLanding} />
-      <Route path="/inbox/dashboard" component={InboxPage} />
+      <Route path="/send-app" component={SendDashboard} />
+      <Route path="/respond" component={RespondLanding} />
+      <Route path="/respond-app" component={RespondPage} />
       <Route path="/livechat" component={LivechatLanding} />
       <Route path="/livechat/dashboard" component={LiveChatDemo} />
       <Route path="/livechat-demo" component={LiveChatDemo} />
       <Route path="/livechat-install" component={LiveChatInstall} />
-      <Route path="/chat" component={ChatDashboard} />
-      <Route path="/chat/dashboard" component={ChatDashboard} />
-      <Route path="/content" component={ContentLanding} />
-      <Route path="/content/dashboard" component={ContentManagement} />
+      <Route path="/post-landing" component={PostLanding} />
       <Route path="/commverse" component={CommverseLanding} />
       <Route path="/commverse-pricing" component={CommversePricing} />
       <Route path="/biif" component={BIIF} />
       <Route path="/admin" component={AdminPanel} />
       <Route path="/brand-studio" component={BrandStudio} />
+      <Route path="/post" component={PostManagement} />
       <Route path="/localblue" component={LocalBlueLanding} />
-      <Route path="/listings" component={ListingsLanding} />
-      <Route path="/listings/dashboard" component={ListingsManagement} />
-      <Route path="/reputation" component={ReputationLanding} />
-      <Route path="/reputation/dashboard" component={ReputationManagement} />
+      <Route path="/list-landing" component={ListLanding} />
+      <Route path="/review-landing" component={ReviewLanding} />
+      <Route path="/review-app" component={ReviewManagement} />
+      <Route path="/list-app" component={ListManagement} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
       <Route path="/data-deletion" component={DataDeletion} />

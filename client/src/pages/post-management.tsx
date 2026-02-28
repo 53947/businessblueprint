@@ -87,19 +87,19 @@ export default function ContentManagement() {
 
   // Fetch connected platforms
   const { data: platformsData, isLoading: platformsLoading } = useQuery<any>({
-    queryKey: [`/api/content/${clientId}/platforms`],
+    queryKey: [`/api/post/${clientId}/platforms`],
     enabled: !!clientId,
   });
 
   // Fetch posts
   const { data: postsData, isLoading: postsLoading } = useQuery<any>({
-    queryKey: [`/api/content/${clientId}/posts`],
+    queryKey: [`/api/post/${clientId}/posts`],
     enabled: !!clientId && activeTab !== "composer",
   });
 
   // Fetch media
   const { data: mediaData, isLoading: mediaLoading } = useQuery<any>({
-    queryKey: [`/api/content/${clientId}/media`],
+    queryKey: [`/api/post/${clientId}/media`],
     enabled: !!clientId,
   });
 
@@ -115,10 +115,10 @@ export default function ContentManagement() {
   // Create post mutation
   const createPostMutation = useMutation({
     mutationFn: async (postData: any) => {
-      return await apiRequest("POST", `/api/content/${clientId}/posts`, postData);
+      return await apiRequest("POST", `/api/post/${clientId}/posts`, postData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/content/${clientId}/posts`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/post/${clientId}/posts`] });
       toast({
         title: "Post Created!",
         description: isScheduled ? "Your post has been scheduled." : "Your post has been published.",
@@ -137,7 +137,7 @@ export default function ContentManagement() {
   // AI suggestions mutation
   const aiSuggestMutation = useMutation({
     mutationFn: async (prompt: string) => {
-      return await apiRequest("POST", `/api/content/${clientId}/ai/suggest`, { prompt, type: "caption" });
+      return await apiRequest("POST", `/api/post/${clientId}/ai/suggest`, { prompt, type: "caption" });
     },
     onSuccess: (data: any) => {
       if (data.suggestions && data.suggestions.length > 0) {
@@ -149,10 +149,10 @@ export default function ContentManagement() {
   // Delete media mutation
   const deleteMediaMutation = useMutation({
     mutationFn: async (mediaId: number) => {
-      return await apiRequest("DELETE", `/api/content/${clientId}/media/${mediaId}`);
+      return await apiRequest("DELETE", `/api/post/${clientId}/media/${mediaId}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/content/${clientId}/media`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/post/${clientId}/media`] });
       toast({
         title: "Media Deleted",
         description: "Media file has been removed",
@@ -218,14 +218,14 @@ export default function ContentManagement() {
       formData.append("file", file);
 
       try {
-        const response = await apiRequest("POST", `/api/content/${clientId}/media`, formData);
+        const response = await apiRequest("POST", `/api/post/${clientId}/media`, formData);
         const uploadedMedia = await response.json();
         
         // Add newly uploaded media to selected media IDs for composer
         setSelectedMediaIds(prev => [...prev, uploadedMedia.id]);
         
         // Invalidate media query to refetch
-        queryClient.invalidateQueries({ queryKey: [`/api/content/${clientId}/media`] });
+        queryClient.invalidateQueries({ queryKey: [`/api/post/${clientId}/media`] });
         
         toast({
           title: "Media Uploaded",
@@ -314,14 +314,14 @@ export default function ContentManagement() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#E91E8C] to-[#FF66CC] bg-clip-text text-transparent" data-testid="heading-content-management">Content Management</h1>
-          <p className="text-gray-600 mt-2">Create, schedule, and manage your social media content</p>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#E91E8C] to-[#FF66CC] bg-clip-text text-transparent" data-testid="heading-post-management">Post Management</h1>
+          <p className="text-gray-600 mt-2">Create, schedule, and manage your social media posts</p>
         </div>
 
         {/* CRM Empty State - Show when no audience segments */}
         {showCrmEmptyState && (
           <div className="mb-6">
-            <CrmEmptyState {...CRM_EMPTY_CONFIGS.content} variant="compact" />
+            <CrmEmptyState {...CRM_EMPTY_CONFIGS.post} variant="compact" />
           </div>
         )}
 
@@ -950,7 +950,7 @@ export default function ContentManagement() {
                           <th className="text-center py-2 px-4">Text Posts</th>
                           <th className="text-center py-2 px-4">Images</th>
                           <th className="text-center py-2 px-4">Videos</th>
-                          <th className="text-center py-2 px-4">DMs → /inbox</th>
+                          <th className="text-center py-2 px-4">DMs → /respond</th>
                           <th className="text-center py-2 px-4">Character Limit</th>
                         </tr>
                       </thead>

@@ -5,7 +5,7 @@ import { eq, and } from "drizzle-orm";
 import crypto from "crypto";
 
 /**
- * Meta (Facebook/Instagram/WhatsApp) Integration for /inbox
+ * Meta (Facebook/Instagram/WhatsApp) Integration for /respond
  * Handles webhooks for receiving DMs and comments from Meta platforms
  */
 
@@ -49,10 +49,10 @@ const VALID_PLATFORMS: MetaPlatform[] = ["facebook", "instagram"];
 
 // Allowed redirect paths (whitelist to prevent open redirect)
 const ALLOWED_RETURN_PATHS = [
-  "/portal/inbox",
+  "/portal/respond",
   "/portal/dashboard",
-  "/content",
-  "/inbox",
+  "/post",
+  "/respond",
 ];
 
 // Scopes required for each platform
@@ -150,7 +150,7 @@ router.get("/oauth/start", (req: Request, res: Response) => {
       : "facebook";
 
     // Validate return URL is safe (default if invalid/missing)
-    const safeReturnUrl = isValidReturnPath(returnUrl) ? returnUrl : "/portal/inbox";
+    const safeReturnUrl = isValidReturnPath(returnUrl) ? returnUrl : "/portal/respond";
 
     // Build and sign state parameter for CSRF protection
     const stateData = {
@@ -270,7 +270,7 @@ router.get("/oauth/callback", async (req: Request, res: Response) => {
         : "facebook";
       const returnUrl: string = isValidReturnPath(stateResult.data.returnUrl) 
         ? stateResult.data.returnUrl 
-        : "/portal/inbox";
+        : "/portal/respond";
 
       // Exchange code for access token
       const tokenResponse = await fetch(
@@ -371,7 +371,7 @@ router.get("/oauth/callback", async (req: Request, res: Response) => {
 
     } catch (error) {
       console.error("OAuth callback error:", error);
-      res.redirect("/portal/inbox?oauth=error");
+      res.redirect("/portal/respond?oauth=error");
     }
   });
 

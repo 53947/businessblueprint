@@ -117,7 +117,7 @@ export class InboxEmailService {
         <div class="message">${content}</div>
     </div>
     <div class="footer">
-        <p>This message was sent from Business Blueprint Inbox</p>
+        <p>This message was sent from Business Blueprint Respond</p>
     </div>
 </body>
 </html>

@@ -291,13 +291,13 @@ export default function PathwaysPage() {
               </CardContent>
             </Card>
 
-            {/* /inbox */}
+            {/* /respond */}
             <Card className="border-2 border-blue-200 hover:border-blue-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
                   <img
                     src={inboxIcon}
-                    alt="/inbox"
+                    alt="/respond"
                     className="h-16 w-16 object-contain"
                   />
                 </div>
@@ -306,7 +306,7 @@ export default function PathwaysPage() {
                   style={{ fontWeight: 600 }}
                 >
                   <span style={{ color: "#09080E" }}>/</span>
-                  <span style={{ color: "#0080FF" }}>inbox</span>
+                  <span style={{ color: "#0080FF" }}>respond</span>
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 text-center">
                   Unified Communications Hub
@@ -365,13 +365,13 @@ export default function PathwaysPage() {
               </CardContent>
             </Card>
 
-            {/* /content */}
+            {/* /post */}
             <Card className="border-2 border-pink-200 hover:border-pink-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
                   <img
                     src={commverseIcon}
-                    alt="/content"
+                    alt="/post"
                     className="h-16 w-16 object-contain"
                   />
                 </div>
@@ -380,7 +380,7 @@ export default function PathwaysPage() {
                   style={{ fontWeight: 600 }}
                 >
                   <span style={{ color: "#09080E" }}>/</span>
-                  <span style={{ color: "#E91EBC" }}>content</span>
+                  <span style={{ color: "#E91EBC" }}>post</span>
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 text-center">
                   Social Media Management

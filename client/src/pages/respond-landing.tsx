@@ -17,14 +17,14 @@ export default function InboxLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={inboxIcon} alt="/inbox icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <img src={inboxLogo} alt="/inbox" className="h-16 object-contain drop-shadow-md" />
+              <img src={inboxIcon} alt="/respond icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <img src={inboxLogo} alt="/respond" className="h-16 object-contain drop-shadow-md" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Every Customer Message.<br />One Powerful Inbox.
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Stop juggling 8 different apps for customer messages. /inbox unifies email, live chat, 
+              Stop juggling 8 different apps for customer messages. /respond unifies email, live chat,
               SMS, WhatsApp, Facebook, Instagram, X, and TikTok into one real-time command center.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -34,7 +34,7 @@ export default function InboxLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'inbox-addon', name: '/inbox', price: 35, type: 'addon' }
+                    detail: { sku: 'respond-addon', name: '/respond', price: 35, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -49,7 +49,7 @@ export default function InboxLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/inbox/dashboard">Launch /inbox</a>
+                <a href="/respond-app">Launch /respond</a>
               </Button>
               <Button 
                 size="lg" 
@@ -78,7 +78,7 @@ export default function InboxLanding() {
               <span className="text-white text-xl">for all 4 Commverse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /send + /livechat + /inbox + /content = Complete communication ecosystem
+              /send + /livechat + /respond + /post = Complete communication ecosystem
             </p>
           </div>
         </div>
@@ -92,7 +92,7 @@ export default function InboxLanding() {
               All Your Channels. One Interface.
             </h2>
             <p className="text-xl text-gray-600">
-              /inbox connects to every platform your customers use to reach you
+              /respond connects to every platform your customers use to reach you
             </p>
           </div>
 
@@ -228,7 +228,7 @@ export default function InboxLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #0080FF, #FC6ACD)' }}>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Why /inbox Changes Everything
+              Why /respond Changes Everything
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
@@ -238,7 +238,7 @@ export default function InboxLanding() {
                 </h3>
                 <p className="text-blue-50 mb-6">
                   Your team wastes hours every day switching between Facebook, Instagram, email, WhatsApp, and more. 
-                  /inbox gives you one interface for everything. Faster responses. Happier customers.
+                  /respond gives you one interface for everything. Faster responses. Happier customers.
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -246,7 +246,7 @@ export default function InboxLanding() {
                   Works Autonomously & Together
                 </h3>
                 <p className="text-blue-50">
-                  /inbox works powerfully on its own, but when integrated with /send and /livechat, it becomes a Commverse ecosystem—
+                  /respond works powerfully on its own, but when integrated with /send and /livechat, it becomes a Commverse ecosystem—
                   sharing analytics across apps to deliver context-aware communication that drives better outcomes.
                 </p>
               </div>
@@ -257,7 +257,7 @@ export default function InboxLanding() {
                   Built for Local Business Realities
                 </h3>
                 <p className="text-blue-50 mb-6">
-                  Enterprise tools are too complex. Basic tools miss features you need. /inbox is built specifically 
+                  Enterprise tools are too complex. Basic tools miss features you need. /respond is built specifically
                   for local businesses managing customer relationships across multiple channels.
                 </p>
 
@@ -266,7 +266,7 @@ export default function InboxLanding() {
                   No Per-Seat Pricing Games
                 </h3>
                 <p className="text-blue-50">
-                  Standalone at $35/mo or bundled with /send + /livechat for $75/mo. Unlimited team members, unlimited messages, 
+                  Standalone at $35/mo or bundled with /send + /livechat for $75/mo. Unlimited team members, unlimited messages,
                   all channels included. No surprises, no upsells.
                 </p>
               </div>
@@ -300,11 +300,11 @@ export default function InboxLanding() {
               asChild
               data-testid="button-explore-platform"
             >
-              <a href="/inbox/dashboard">Explore /inbox Platform</a>
+              <a href="/respond-app">Explore /respond Platform</a>
             </Button>
           </div>
           <p className="text-sm text-gray-500 mt-6">
-            /inbox is included in all subscription tiers • Real-time WebSocket messaging • No per-seat fees
+            /respond is included in all subscription tiers • Real-time WebSocket messaging • No per-seat fees
           </p>
         </div>
       </section>

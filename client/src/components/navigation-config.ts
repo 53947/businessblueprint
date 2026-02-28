@@ -71,9 +71,9 @@ export const ACTION_ITEMS: NavItem[] = [
     type: 'action',
   },
   {
-    label: 'Inbox',
-    href: '/portal/inbox',
-    testId: 'button-quick-inbox',
+    label: 'Respond',
+    href: '/portal/respond',
+    testId: 'button-quick-respond',
     type: 'action',
   },
   {
@@ -131,7 +131,7 @@ export const HOW_IT_WORKS_STEPS: Step[] = [
   {
     number: 5,
     title: 'Commverse Bundle',
-    description: 'Complete communication suite: /send, /inbox, /livechat, /content.',
+    description: 'Complete communication suite: /send, /respond, /livechat, /post.',
     href: '/pricing?addon=commverse',
     testId: 'link-step5',
     icon: 'badge5',

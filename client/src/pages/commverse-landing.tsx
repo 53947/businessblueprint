@@ -124,8 +124,8 @@ export default function CommverseLanding() {
             <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#0080FF' }}>
               <CardContent className="pt-8">
                 <div className="text-center">
-                  <img src={inboxIcon} alt="/inbox" className="h-16 w-16 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold mb-3 text-gray-900">/inbox</h3>
+                  <img src={inboxIcon} alt="/respond" className="h-16 w-16 mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold mb-3 text-gray-900">/respond</h3>
                   <p className="text-sm mb-4" style={{ color: '#0080FF' }}>Unified Communications</p>
                   <p className="text-gray-600 mb-4">
                     8 channels in one inbox: Email, SMS, WhatsApp, Facebook, Instagram, X, TikTok, and live chat.
@@ -136,7 +136,7 @@ export default function CommverseLanding() {
                     style={{ borderColor: '#0080FF', color: '#0080FF' }}
                     asChild
                   >
-                    <a href="/inbox">Learn More →</a>
+                    <a href="/respond">Learn More →</a>
                   </Button>
                 </div>
               </CardContent>
@@ -167,7 +167,7 @@ export default function CommverseLanding() {
               <div>
                 <h3 className="text-xl font-bold mb-2">Cross-App Analytics</h3>
                 <p className="text-gray-600">
-                  /send knows what customers clicked in /livechat. /inbox sees email campaign engagement. Smarter messaging across all channels.
+                  /send knows what customers clicked in /livechat. /respond sees email campaign engagement. Smarter messaging across all channels.
                 </p>
               </div>
             </div>

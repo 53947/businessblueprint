@@ -9,9 +9,9 @@ import { tasksRouter } from "./routes/tasks";
 import brandColorsRoutes from "./routes/brand-colors";
 import { registerBillingAdminRoutes } from "./routes/billing-admin";
 import { registerEmailAdminRoutes } from "./routes/email-admin";
+import { registerPaymentRoutes } from "./routes/payments";
 import { crmRouter } from "./routes/crm";
 import { publicApiRouter } from "./routes/api";
-import { registerPaymentRoutes } from "./routes/payments";
 import { listingDistributionRouter } from "./routes/listing-distribution";
 import { chatRouter } from "./routes/chat";
 import {
@@ -1805,7 +1805,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/client/listings/:clientId", async (req, res) => {
+  app.get("/api/client/list/:clientId", async (req, res) => {
     try {
       const clientId = parseInt(req.params.clientId);
       const client = await storage.getClient(clientId);
@@ -1830,14 +1830,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({ total, verified, pending, platforms });
     } catch (error) {
-      console.error("Client listings error:", error);
-      res.status(500).json({ error: "Failed to load listings data" });
+      console.error("Client list error:", error);
+      res.status(500).json({ error: "Failed to load list data" });
     }
   });
 
   // Get all business listings for a client
   app.get(
-    "/api/clients/:id/listings",
+    "/api/clients/:id/list",
     requireClientPortalAccess,
     async (req: any, res) => {
       try {
@@ -1875,14 +1875,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         res.json(listings);
       } catch (error) {
         console.error("Error fetching client listings:", error);
-        res.status(500).json({ error: "Failed to fetch listings" });
+        res.status(500).json({ error: "Failed to fetch list" });
       }
     },
   );
 
   // Get listing metrics for a client
   app.get(
-    "/api/clients/:id/listings/metrics",
+    "/api/clients/:id/list/metrics",
     requireClientPortalAccess,
     async (req: any, res) => {
       try {
@@ -2215,7 +2215,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Update a business listing
-  app.patch("/api/clients/:id/listings/:listingId", async (req, res) => {
+  app.patch("/api/clients/:id/list/:listingId", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
       const listingId = parseInt(req.params.listingId);
@@ -3964,11 +3964,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Register inbox routes
+  // Register respond routes
   await registerInboxRoutes(app);
 
-  // Content Management Routes
-  app.use("/api/content", contentRoutes);
+  // Post Management Routes
+  app.use('/api/post', contentRoutes);
 
   // Meta (Facebook/Instagram/WhatsApp) Integration Routes
   app.use("/api/meta", metaRoutes);
@@ -3982,6 +3982,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Billing & Account Management Routes
   registerBillingAdminRoutes(app);
   registerEmailAdminRoutes(app);
+
+  // Payment Routes
+  registerPaymentRoutes(app);
 
   // CRM (/relationships) Routes
   app.use("/api/crm", crmRouter);
@@ -4529,13 +4532,13 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
 }
 
 // ========================================
-// UNIFIED INBOX API ROUTES (Added to registerRoutes)
+// UNIFIED RESPOND API ROUTES (Added to registerRoutes)
 // ========================================
 
 async function registerInboxRoutes(app: Express) {
   // Create livechat session (public - for customer-facing chat widget)
   // Also auto-creates CRM contact if email is provided (Performance tier feature)
-  app.post("/api/inbox/livechat/session", async (req, res) => {
+  app.post("/api/respond/livechat/session", async (req, res) => {
     try {
       const validatedData = insertLivechatSessionSchema.parse(req.body);
 
@@ -4643,9 +4646,9 @@ async function registerInboxRoutes(app: Express) {
     }
   });
 
-  // Get all conversations for inbox (REQUIRES AUTHENTICATION)
+  // Get all conversations for respond (REQUIRES AUTHENTICATION)
   app.get(
-    "/api/inbox/conversations",
+    "/api/respond/conversations",
     requireAuth,
     async (req: AuthenticatedRequest, res) => {
       try {
@@ -4692,7 +4695,7 @@ async function registerInboxRoutes(app: Express) {
 
   // Get messages for a conversation (REQUIRES AUTHENTICATION)
   app.get(
-    "/api/inbox/conversations/:conversationId/messages",
+    "/api/respond/conversations/:conversationId/messages",
     requireAuth,
     async (req: AuthenticatedRequest, res) => {
       try {
@@ -4733,7 +4736,7 @@ async function registerInboxRoutes(app: Express) {
 
   // Send a message (REQUIRES AUTHENTICATION)
   app.post(
-    "/api/inbox/send-message",
+    "/api/respond/send-message",
     requireAuth,
     async (req: AuthenticatedRequest, res) => {
       try {

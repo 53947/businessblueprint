@@ -55,20 +55,20 @@ interface NavItem {
   hasSpaceBefore?: boolean;
 }
 
-export function SideNav({ activeTab = "listings", onTabChange, onSignOut, className, ...props }: SideNavProps) {
+export function SideNav({ activeTab = "list", onTabChange, onSignOut, className, ...props }: SideNavProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [, setLocation] = useLocation();
 
   const navItems: NavItem[] = [
-    { 
-      id: "inbox", 
-      label: "inbox",
+    {
+      id: "respond",
+      label: "respond",
       hoverLabel: "Unified Communications",
-      icon: <img src={inboxIcon} alt="/inbox" className="w-7 h-7 object-contain" />,
+      icon: <img src={inboxIcon} alt="/respond" className="w-7 h-7 object-contain" />,
       logo: inboxLogo,
-      external: true, 
-      href: "/inbox"
+      external: true,
+      href: "/respond"
     },
     { 
       id: "livechat", 
@@ -104,14 +104,14 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       external: true,
       href: "/send"
     },
-    { 
-      id: "content", 
-      label: "content",
+    {
+      id: "post",
+      label: "post",
       hoverLabel: "Social Media Management",
-      icon: <img src={socialMediaIcon} alt="/content" className="w-7 h-7 object-contain" />,
+      icon: <img src={socialMediaIcon} alt="/post" className="w-7 h-7 object-contain" />,
       logo: contentLogo,
       external: true,
-      href: "/content"
+      href: "/post"
     },
     { 
       id: "divider-2", 
@@ -125,23 +125,23 @@ export function SideNav({ activeTab = "listings", onTabChange, onSignOut, classN
       icon: null,
       isHeading: true
     },
-    { 
-      id: "listings", 
-      label: "listings",
+    {
+      id: "list",
+      label: "list",
       hoverLabel: "Directory Sync & Consistency",
-      icon: <img src={listingsIcon} alt="/listings" className="w-7 h-7 object-contain" />,
+      icon: <img src={listingsIcon} alt="/list" className="w-7 h-7 object-contain" />,
       logo: listingsLogo,
       external: true,
-      href: "/listings"
+      href: "/list"
     },
-    { 
-      id: "reputation", 
-      label: "reputation",
+    {
+      id: "review",
+      label: "review",
       hoverLabel: "Review Response & Reputation Management",
-      icon: <img src={reputationIcon} alt="/reputation" className="w-7 h-7 object-contain" />,
+      icon: <img src={reputationIcon} alt="/review" className="w-7 h-7 object-contain" />,
       logo: reputationLogo,
       external: true,
-      href: "/reputation"
+      href: "/review"
     },
     { 
       id: "divider-3", 

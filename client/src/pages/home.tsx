@@ -182,7 +182,7 @@ export default function Home() {
                         <img src={commverseBundle} alt="CommVerse" className="h-5" />
                       </div>
                       <p className="text-xs text-gray-600">
-                        Complete communication suite: /send, /inbox, /livechat, /content.
+                        Complete communication suite: /send, /respond, /livechat, /post.
                       </p>
                     </div>
                   </div>
@@ -338,7 +338,7 @@ export default function Home() {
                   <img src={commverseBundle} alt="commverse" className="h-8 inline-block" /> Apps + Paths
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  Which apps you need (/send, /inbox, /livechat, /content) and SPECIFIC PATHS tailored to your business type.
+                  Which apps you need (/send, /respond, /livechat, /post) and SPECIFIC PATHS tailored to your business type.
                 </p>
               </CardContent>
             </Card>
@@ -424,11 +424,11 @@ export default function Home() {
                 </CardContent>
               </Card>
 
-              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-inbox-app">
+              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-respond-app">
                 <CardContent className="p-4 flex items-center gap-4">
-                  <img src={inboxIcon} alt="/inbox icon" className="w-12 h-12 rounded-lg" />
+                  <img src={inboxIcon} alt="/respond icon" className="w-12 h-12 rounded-lg" />
                   <div className="flex-1">
-                    <img src={inboxLogo} alt="/inbox" className="h-6 mb-2" />
+                    <img src={inboxLogo} alt="/respond" className="h-6 mb-2" />
                     <p className="text-sm text-gray-600">Manage customer responses</p>
                   </div>
                   <div className="text-right">
@@ -452,11 +452,11 @@ export default function Home() {
                 </CardContent>
               </Card>
 
-              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-content-app">
+              <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-post-app">
                 <CardContent className="p-4 flex items-center gap-4">
-                  <img src={contentIcon} alt="/content icon" className="w-12 h-12 rounded-lg" />
+                  <img src={contentIcon} alt="/post icon" className="w-12 h-12 rounded-lg" />
                   <div className="flex-1">
-                    <img src={contentLogo} alt="/content" className="h-6 mb-2" />
+                    <img src={contentLogo} alt="/post" className="h-6 mb-2" />
                     <p className="text-sm text-gray-600">Create and publish content</p>
                   </div>
                   <div className="text-right">
@@ -725,12 +725,12 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            {/* /inbox */}
+            {/* /respond */}
             <Card className="border-2 border-blue-200 hover:shadow-xl transition-all hover:border-blue-400">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <img src={inboxIcon} alt="/inbox icon" className="h-16 w-16 object-contain mr-3" />
-                  <img src={inboxLogo} alt="/inbox" className="h-10 object-contain" />
+                  <img src={inboxIcon} alt="/respond icon" className="h-16 w-16 object-contain mr-3" />
+                  <img src={inboxLogo} alt="/respond" className="h-10 object-contain" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Unified Communications</h3>
                 <p className="text-gray-600 text-sm mb-4">Manage email, chat, and social DMs from one central inbox.</p>
@@ -767,12 +767,12 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            {/* /content */}
+            {/* /post */}
             <Card className="border-2 border-pink-200 hover:shadow-xl transition-all hover:border-pink-400">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <img src={contentIcon} alt="/content icon" className="h-16 w-16 object-contain mr-3" />
-                  <img src={contentLogo} alt="/content" className="h-10 object-contain" />
+                  <img src={contentIcon} alt="/post icon" className="h-16 w-16 object-contain mr-3" />
+                  <img src={contentLogo} alt="/post" className="h-10 object-contain" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Social Media Management</h3>
                 <p className="text-gray-600 text-sm mb-4">Schedule and manage content across all your social platforms.</p>
@@ -828,9 +828,9 @@ export default function Home() {
                   <li>• Personalized coaching</li>
                   <li>• Client portal dashboard</li>
                   <li>• /send - Email & SMS Marketing</li>
-                  <li>• /inbox - Unified Communications</li>
+                  <li>• /respond - Unified Communications</li>
                   <li>• /livechat - Live Chat Widget</li>
-                  <li>• /content - Social Media Mgmt</li>
+                  <li>• /post - Social Media Mgmt</li>
                 </ul>
                 <Button className="w-full border-2 border-[#FF6B00] text-[#FF6B00] bg-transparent hover:bg-[#FF6B00] hover:text-white transition-all mt-auto">
                   Start Digital IQ Assessment

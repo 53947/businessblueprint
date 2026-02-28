@@ -17,8 +17,8 @@ export default function ContentLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={contentIcon} alt="/content icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <img src={contentLogo} alt="/content" className="h-16 object-contain drop-shadow-lg" />
+              <img src={contentIcon} alt="/post icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <img src={contentLogo} alt="/post" className="h-16 object-contain drop-shadow-lg" />
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#09080E' }}>
               Social Media Management<br />That Actually Works
@@ -34,7 +34,7 @@ export default function ContentLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'content-addon', name: '/content', price: 35, type: 'addon' }
+                    detail: { sku: 'post-addon', name: '/post', price: 35, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -49,7 +49,7 @@ export default function ContentLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/content/dashboard">Get Started with /content</a>
+                <a href="/post">Get Started with /post</a>
               </Button>
               <Button 
                 size="lg" 
@@ -78,21 +78,21 @@ export default function ContentLanding() {
               <span className="text-white text-xl">for all 4 Commverse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /send + /livechat + /inbox + /content = Complete communication ecosystem
+              /send + /livechat + /respond + /post = Complete communication ecosystem
             </p>
           </div>
         </div>
       </section>
 
-      {/* The /content Difference */}
+      {/* The /post Difference */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why We Built /content
+              Why We Built /post
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Social media shouldn't feel like a second full-time job. /content makes it simple to maintain 
+              Social media shouldn't feel like a second full-time job. /post makes it simple to maintain
               a consistent presence across all platforms without burning out your team.
             </p>
           </div>
@@ -215,7 +215,7 @@ export default function ContentLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-8 md:p-12 border border-gray-200 shadow-xl bg-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
-              What Makes /content Different?
+              What Makes /post Different?
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
@@ -226,7 +226,7 @@ export default function ContentLanding() {
                   Works Autonomously & Together
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  /content functions perfectly on its own for social media management. But when integrated with /send, /livechat, and /inbox as part of Commverse, 
+                  /post functions perfectly on its own for social media management. But when integrated with /send, /livechat, and /respond as part of Commverse,
                   it shares customer insights and content performance to create smarter, more cohesive marketing.
                 </p>
 
@@ -250,7 +250,7 @@ export default function ContentLanding() {
                   Built for Local Business Reality
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Enterprise tools are too complex. Free tools lack scheduling and analytics. /content hits the sweet spot—
+                  Enterprise tools are too complex. Free tools lack scheduling and analytics. /post hits the sweet spot—
                   powerful enough to be effective, simple enough to actually use.
                 </p>
 
@@ -296,11 +296,11 @@ export default function ContentLanding() {
               asChild
               data-testid="button-explore-platform"
             >
-              <a href="/content/dashboard">Explore /content Platform</a>
+              <a href="/post">Explore /post Platform</a>
             </Button>
           </div>
           <p className="text-sm text-gray-500 mt-6">
-            /content is included in all subscription tiers • No setup fees • No long-term contracts
+            /post is included in all subscription tiers • No setup fees • No long-term contracts
           </p>
         </div>
       </section>
