@@ -276,7 +276,6 @@ class AnalyticsSyncService {
       topPosts,
     };
   }
-}
 
   /**
    * Sync analytics for all clients with connected platforms

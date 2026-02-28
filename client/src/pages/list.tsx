@@ -64,6 +64,7 @@ export default function ListingsManagement() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showAddDialog, setShowAddDialog] = useState(false);
   const [selectedListing, setSelectedListing] = useState<BusinessListing | null>(null);
 
   // Profile tab state
@@ -155,6 +156,21 @@ export default function ListingsManagement() {
         description: error.message || 'Failed to update listing',
         variant: 'destructive' 
       });
+    }
+  });
+
+  const addListingMutation = useMutation({
+    mutationFn: async (data: { platform: string; name: string; address?: string; phone?: string; website?: string; hours?: string; url?: string }) => {
+      return await apiRequest('POST', `/api/clients/${clientId}/list`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/list`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/list/metrics`] });
+      toast({ title: 'Success', description: 'Listing added successfully' });
+      setShowAddDialog(false);
+    },
+    onError: (error: any) => {
+      toast({ title: 'Error', description: error.message || 'Failed to add listing', variant: 'destructive' });
     }
   });
 
@@ -288,7 +304,7 @@ export default function ListingsManagement() {
               {syncMutation.isPending ? 'Syncing...' : 'Sync Listings'}
             </Button>
             <Button
-              onClick={() => toast({ title: 'Settings', description: 'Settings panel coming soon' })}
+              onClick={() => setActiveTab('profile')}
               variant="ghost"
               size="sm"
               data-testid="button-settings"
@@ -296,7 +312,7 @@ export default function ListingsManagement() {
               <Settings className="h-4 w-4" />
             </Button>
             <Button
-              onClick={() => toast({ title: 'Add Listing', description: 'Add listing form coming soon' })}
+              onClick={() => setShowAddDialog(true)}
               size="sm"
               className="bg-blue-600 hover:bg-blue-700 text-white"
               data-testid="button-add-listing"
@@ -856,12 +872,113 @@ export default function ListingsManagement() {
                 >
                   Cancel
                 </Button>
-                <Button 
-                  onClick={() => toast({ title: 'Coming Soon', description: 'Listing updates will be available soon' })}
+                <Button
+                  onClick={() => {
+                    const name = (document.getElementById('name') as HTMLInputElement)?.value;
+                    const address = (document.getElementById('address') as HTMLInputElement)?.value;
+                    const phone = (document.getElementById('phone') as HTMLInputElement)?.value;
+                    const website = (document.getElementById('website') as HTMLInputElement)?.value;
+                    const hours = (document.getElementById('hours') as HTMLInputElement)?.value;
+                    updateListingMutation.mutate({
+                      id: selectedListing.id,
+                      name, address, phone, website, hours,
+                    });
+                  }}
                   disabled={updateListingMutation.isPending}
                   data-testid="button-save-listing"
                 >
                   {updateListingMutation.isPending ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Add Listing Dialog */}
+      {showAddDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowAddDialog(false)}>
+          <Card className="w-full max-w-2xl m-4 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <CardHeader>
+              <CardTitle>Add New Listing</CardTitle>
+              <CardDescription>
+                Manually add a business listing to track
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="add-platform">Platform *</Label>
+                <select
+                  id="add-platform"
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  defaultValue=""
+                  data-testid="select-platform"
+                >
+                  <option value="" disabled>Select platform...</option>
+                  <option value="google_business">Google Business</option>
+                  <option value="yelp">Yelp</option>
+                  <option value="facebook">Facebook</option>
+                  <option value="bing_places">Bing Places</option>
+                  <option value="apple_maps">Apple Maps</option>
+                </select>
+              </div>
+              <div>
+                <Label htmlFor="add-name">Business Name *</Label>
+                <Input id="add-name" placeholder="Your business name" data-testid="input-add-name" />
+              </div>
+              <div>
+                <Label htmlFor="add-address">Address</Label>
+                <Input id="add-address" placeholder="123 Main St, City, State" data-testid="input-add-address" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="add-phone">Phone</Label>
+                  <Input id="add-phone" placeholder="(555) 123-4567" data-testid="input-add-phone" />
+                </div>
+                <div>
+                  <Label htmlFor="add-website">Website</Label>
+                  <Input id="add-website" placeholder="https://..." data-testid="input-add-website" />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="add-hours">Hours</Label>
+                <Input id="add-hours" placeholder="Mon-Fri 9am-5pm" data-testid="input-add-hours" />
+              </div>
+              <div>
+                <Label htmlFor="add-url">Listing URL</Label>
+                <Input id="add-url" placeholder="Direct link to your listing page" data-testid="input-add-url" />
+              </div>
+              <div className="flex justify-end gap-2 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowAddDialog(false)}
+                  data-testid="button-cancel-add"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => {
+                    const platform = (document.getElementById('add-platform') as HTMLSelectElement)?.value;
+                    const name = (document.getElementById('add-name') as HTMLInputElement)?.value;
+                    if (!platform || !name) {
+                      toast({ title: 'Required', description: 'Platform and business name are required', variant: 'destructive' });
+                      return;
+                    }
+                    addListingMutation.mutate({
+                      platform,
+                      name,
+                      address: (document.getElementById('add-address') as HTMLInputElement)?.value || undefined,
+                      phone: (document.getElementById('add-phone') as HTMLInputElement)?.value || undefined,
+                      website: (document.getElementById('add-website') as HTMLInputElement)?.value || undefined,
+                      hours: (document.getElementById('add-hours') as HTMLInputElement)?.value || undefined,
+                      url: (document.getElementById('add-url') as HTMLInputElement)?.value || undefined,
+                    });
+                  }}
+                  disabled={addListingMutation.isPending}
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  data-testid="button-submit-add"
+                >
+                  {addListingMutation.isPending ? 'Adding...' : 'Add Listing'}
                 </Button>
               </div>
             </CardContent>

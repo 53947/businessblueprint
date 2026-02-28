@@ -269,7 +269,7 @@ export default function ReputationManagement() {
               {syncMutation.isPending ? 'Syncing...' : 'Sync Reviews'}
             </Button>
             <Button
-              onClick={() => toast({ title: 'Settings', description: 'Settings panel coming soon' })}
+              onClick={() => setActiveTab('overview')}
               variant="ghost"
               size="sm"
               data-testid="button-settings"

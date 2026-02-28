@@ -4,6 +4,8 @@ import { SectionHeader } from "@/components/section-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -54,6 +56,92 @@ interface ConversationDetail {
     ipAddress: string;
   };
   messages: Message[];
+}
+
+function ChatSettingsPanel({ clientId }: { clientId: number }) {
+  const { toast } = useToast();
+  const { data: settings, isLoading } = useQuery<any>({
+    queryKey: [`/api/chat/settings/${clientId}`],
+  });
+
+  const [companyName, setCompanyName] = useState("");
+  const [welcomeMessage, setWelcomeMessage] = useState("");
+  const [primaryColor, setPrimaryColor] = useState("#0000FF");
+  const [position, setPosition] = useState("bottom-right");
+  const [offlineMessage, setOfflineMessage] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (settings) {
+      setCompanyName(settings.companyName || "");
+      setWelcomeMessage(settings.welcomeMessage || "");
+      setPrimaryColor(settings.primaryColor || "#0000FF");
+      setPosition(settings.position || "bottom-right");
+      setOfflineMessage(settings.offlineMessage || "");
+    }
+  }, [settings]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await apiRequest("PUT", `/api/chat/settings/${clientId}`, {
+        companyName, welcomeMessage, primaryColor, position, offlineMessage,
+      });
+      queryClient.invalidateQueries({ queryKey: [`/api/chat/settings/${clientId}`] });
+      toast({ title: "Settings saved" });
+    } catch {
+      toast({ title: "Error", description: "Failed to save settings", variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return <div className="max-w-2xl mx-auto"><Card><CardContent className="pt-6"><p className="text-gray-500">Loading settings...</p></CardContent></Card></div>;
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Widget Appearance</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Company Name</Label>
+            <Input value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Your company name" data-testid="input-company-name" />
+          </div>
+          <div className="space-y-2">
+            <Label>Welcome Message</Label>
+            <Textarea value={welcomeMessage} onChange={(e) => setWelcomeMessage(e.target.value)} placeholder="Hi! How can we help?" rows={2} data-testid="input-welcome-message" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Primary Color</Label>
+              <div className="flex items-center gap-2">
+                <input type="color" value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} className="h-10 w-10 rounded border cursor-pointer" />
+                <Input value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} className="flex-1" data-testid="input-primary-color" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Widget Position</Label>
+              <select value={position} onChange={(e) => setPosition(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" data-testid="select-position">
+                <option value="bottom-right">Bottom Right</option>
+                <option value="bottom-left">Bottom Left</option>
+              </select>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Offline Message</Label>
+            <Textarea value={offlineMessage} onChange={(e) => setOfflineMessage(e.target.value)} placeholder="We're offline. Leave a message!" rows={2} data-testid="input-offline-message" />
+          </div>
+          <Button onClick={handleSave} disabled={saving} className="w-full" data-testid="button-save-settings">
+            {saving ? "Saving..." : "Save Settings"}
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
 
 export default function ChatDashboard() {
@@ -432,16 +520,7 @@ export default function ChatDashboard() {
         )}
 
         {activeTab === "settings" && (
-          <div className="max-w-2xl mx-auto">
-            <Card>
-              <CardHeader>
-                <CardTitle>Widget Settings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-500">Settings panel coming soon. Configure your widget appearance, behavior, and integrations.</p>
-              </CardContent>
-            </Card>
-          </div>
+          <ChatSettingsPanel clientId={clientId} />
         )}
       </main>
     </div>

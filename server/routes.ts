@@ -3495,8 +3495,14 @@ async function registerInboxRoutes(app: Express) {
             .json({ error: "Conversation not found or access denied" });
         }
 
-        const agentName = "Agent"; // TODO: Get from client profile
-        const agentEmail = "agent@businessblueprint.io"; // TODO: Get from client profile
+        // Look up client profile for agent name/email
+        const [client] = await db
+          .select({ companyName: clients.companyName, email: clients.email })
+          .from(clients)
+          .where(eq(clients.id, clientId))
+          .limit(1);
+        const agentName = client?.companyName || "Support";
+        const agentEmail = client?.email || "support@businessblueprint.io";
 
         // Send via appropriate channel
         let deliveryStatus = "sent";

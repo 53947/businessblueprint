@@ -721,10 +721,13 @@ export default function ClientPortal() {
               <CardContent>
                 <div className="text-center py-12">
                   <Globe className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Native Listings Management Coming Soon</h3>
-                  <p className="text-gray-600 max-w-md mx-auto">
-                    We're building a powerful, 100% autonomous listings platform. Check back soon for updates!
+                  <h3 className="text-lg font-semibold mb-2">Listings Management</h3>
+                  <p className="text-gray-600 max-w-md mx-auto mb-4">
+                    Manage your business listings across Google, Yelp, Facebook, and more.
                   </p>
+                  <a href="/list-app" className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
+                    Open Listings Manager
+                  </a>
                 </div>
               </CardContent>
             </Card>
@@ -743,10 +746,13 @@ export default function ClientPortal() {
               <CardContent>
                 <div className="text-center py-12">
                   <MessageSquare className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Native Review Management Coming Soon</h3>
-                  <p className="text-gray-600 max-w-md mx-auto">
-                    We're building a powerful, 100% autonomous review platform. Check back soon for updates!
+                  <h3 className="text-lg font-semibold mb-2">Review & Reputation Management</h3>
+                  <p className="text-gray-600 max-w-md mx-auto mb-4">
+                    Monitor and respond to reviews across Google, Yelp, and Facebook.
                   </p>
+                  <a href="/review-app" className="inline-flex items-center justify-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md text-sm font-medium transition-colors">
+                    Open Review Manager
+                  </a>
                 </div>
               </CardContent>
             </Card>
@@ -774,9 +780,11 @@ export default function ClientPortal() {
                     <p className="text-sm text-gray-600">Monthly Reach</p>
                   </div>
                 </div>
-                <div className="text-center py-8 text-gray-500">
-                  <p>Campaign management interface coming soon...</p>
-                  <p className="text-sm mt-2">Your campaigns will be managed through this dashboard.</p>
+                <div className="text-center py-8">
+                  <p className="text-gray-600 mb-4">Create and manage email & SMS campaigns with detailed analytics.</p>
+                  <a href="/send-app" className="inline-flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm font-medium transition-colors">
+                    Open Campaign Manager
+                  </a>
                 </div>
               </CardContent>
             </Card>
