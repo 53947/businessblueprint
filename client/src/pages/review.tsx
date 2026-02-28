@@ -586,11 +586,120 @@ export default function ReputationManagement() {
 
           {/* Analytics Tab */}
           <TabsContent value="analytics">
-            <div className="text-center py-12">
-              <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-              <h3 className="text-xl font-semibold mb-2">Analytics Dashboard Coming Soon</h3>
-              <p className="text-gray-600">Detailed review analytics and trends will be available here.</p>
-            </div>
+            {displayMetrics.totalReviews === 0 ? (
+              <div className="text-center py-12">
+                <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <h3 className="text-xl font-semibold mb-2">No Analytics Data Yet</h3>
+                <p className="text-gray-600">Sync your reviews to see analytics and trends.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Rating Distribution */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Rating Distribution</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {[5, 4, 3, 2, 1].map((stars) => {
+                        const count = displayReviews.filter((r) => r.rating === stars).length;
+                        const pct = displayMetrics.totalReviews > 0 ? (count / displayMetrics.totalReviews) * 100 : 0;
+                        return (
+                          <div key={stars} className="flex items-center gap-3">
+                            <span className="text-sm font-medium w-8">{stars} <Star className="w-3 h-3 inline text-yellow-500 fill-yellow-500" /></span>
+                            <div className="flex-1 bg-gray-200 rounded-full h-2.5">
+                              <div className="bg-yellow-500 h-2.5 rounded-full" style={{ width: `${pct}%` }} />
+                            </div>
+                            <span className="text-sm text-gray-600 w-12 text-right">{count}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Sentiment Breakdown */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Sentiment Breakdown</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium text-green-700">Positive</span>
+                          <span className="text-sm text-gray-600">{displayMetrics.positiveCount} ({displayMetrics.totalReviews > 0 ? Math.round((displayMetrics.positiveCount / displayMetrics.totalReviews) * 100) : 0}%)</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div className="bg-green-500 h-3 rounded-full" style={{ width: `${displayMetrics.totalReviews > 0 ? (displayMetrics.positiveCount / displayMetrics.totalReviews) * 100 : 0}%` }} />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium text-gray-700">Neutral</span>
+                          <span className="text-sm text-gray-600">{displayMetrics.neutralCount} ({displayMetrics.totalReviews > 0 ? Math.round((displayMetrics.neutralCount / displayMetrics.totalReviews) * 100) : 0}%)</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div className="bg-gray-400 h-3 rounded-full" style={{ width: `${displayMetrics.totalReviews > 0 ? (displayMetrics.neutralCount / displayMetrics.totalReviews) * 100 : 0}%` }} />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium text-red-700">Negative</span>
+                          <span className="text-sm text-gray-600">{displayMetrics.negativeCount} ({displayMetrics.totalReviews > 0 ? Math.round((displayMetrics.negativeCount / displayMetrics.totalReviews) * 100) : 0}%)</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div className="bg-red-500 h-3 rounded-full" style={{ width: `${displayMetrics.totalReviews > 0 ? (displayMetrics.negativeCount / displayMetrics.totalReviews) * 100 : 0}%` }} />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Platform Comparison */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Platform Comparison</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {Object.entries(displayMetrics.platformBreakdown).map(([platform, count]) => (
+                        <div key={platform} className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-3 h-3 rounded-full ${platform === 'google' ? 'bg-blue-600' : platform === 'yelp' ? 'bg-red-600' : 'bg-blue-500'}`} />
+                            <span className="text-sm font-medium capitalize">{platform}</span>
+                          </div>
+                          <span className="text-sm text-gray-600">{count} reviews</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Response Rate Card */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Response Performance</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center">
+                      <div className="text-4xl font-bold text-blue-600 mb-2">{displayMetrics.responseRate}%</div>
+                      <p className="text-sm text-gray-600 mb-4">Response Rate</p>
+                      <div className="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                          <div className="text-2xl font-bold">{displayReviews.filter((r) => r.response).length}</div>
+                          <p className="text-xs text-gray-500">Responded</p>
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold">{displayReviews.filter((r) => !r.response).length}</div>
+                          <p className="text-xs text-gray-500">Awaiting</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>

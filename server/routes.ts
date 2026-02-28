@@ -61,6 +61,7 @@ import { jwtService } from "./services/jwt";
 import { presenceScannerService } from "./services/presenceScanner";
 import { listingSyncService } from "./services/listingSync";
 import { reviewSyncService } from "./services/reviewSync";
+import { analyticsSyncService } from "./services/analyticsSync";
 import { scansBlueService } from "./services/scansblue";
 import { sendAssessmentConfirmationEmail, sendAdminNotification } from "./services/assessment-emails";
 import { dashboardAccess } from "@shared/schema";
@@ -632,23 +633,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
           client,
           digitalScore: 75, // Could be calculated from various factors
           lastUpdated: client.updatedAt,
-          listings: {
-            total: client.enabledFeatures
-              ? client.enabledFeatures.split(",").length
-              : 0,
-            verified: client.enabledFeatures
-              ? client.enabledFeatures.split(",").length - 1
-              : 0,
-            pending: 1,
-            citations: 12, // Placeholder for citations count
-            platforms: ["Google Business", "Yelp", "Facebook", "Apple Maps"],
-          },
-          reviews: {
-            average: 4.3,
-            total: 156,
-            recent: 12,
-            response_rate: 85,
-          },
+          listings: await (async () => {
+            try {
+              const allListings = await db
+                .select()
+                .from(businessListings)
+                .where(eq(businessListings.clientId, clientId));
+              const activeCount = allListings.filter((l) => l.status === "active").length;
+              const pendingCount = allListings.filter((l) => l.status === "pending").length;
+              const platforms = [...new Set(allListings.map((l) => l.platform))];
+              return {
+                total: allListings.length,
+                verified: activeCount,
+                pending: pendingCount,
+                citations: allListings.length,
+                platforms,
+              };
+            } catch {
+              return { total: 0, verified: 0, pending: 0, citations: 0, platforms: [] };
+            }
+          })(),
+          reviews: await (async () => {
+            try {
+              const analytics = await reviewSyncService.getClientReviewAnalytics(clientId);
+              return {
+                average: analytics.averageRating,
+                total: analytics.totalReviews,
+                recent: analytics.totalReviews, // All reviews are "recent" for now
+                response_rate: analytics.responseRate,
+              };
+            } catch {
+              return { average: 0, total: 0, recent: 0, response_rate: 0 };
+            }
+          })(),
           campaigns: {
             active: campaigns.filter((c: any) => c.status === "active").length,
             pending: campaigns.filter((c: any) => c.status === "draft").length,
@@ -2107,6 +2124,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } catch (error) {
         console.error("Error syncing reviews:", error);
         res.status(500).json({ error: "Failed to sync reviews" });
+      }
+    },
+  );
+
+  // Sync content analytics from connected platforms
+  app.post(
+    "/api/clients/:id/analytics/sync",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
+        }
+
+        const result = await analyticsSyncService.syncClientAnalytics(clientId);
+        res.json({ success: true, ...result });
+      } catch (error) {
+        console.error("Error syncing analytics:", error);
+        res.status(500).json({ error: "Failed to sync analytics" });
+      }
+    },
+  );
+
+  // Get aggregated analytics summary for a client
+  app.get(
+    "/api/clients/:id/analytics/summary",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
+        }
+
+        const summary =
+          await analyticsSyncService.getClientAnalyticsSummary(clientId);
+        res.json(summary);
+      } catch (error) {
+        console.error("Error fetching analytics summary:", error);
+        res.status(500).json({ error: "Failed to fetch analytics" });
       }
     },
   );

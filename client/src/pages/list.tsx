@@ -618,11 +618,137 @@ export default function ListingsManagement() {
 
           {/* Analytics Tab */}
           <TabsContent value="analytics">
-            <div className="text-center py-12">
-              <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-              <h3 className="text-xl font-semibold mb-2">Analytics Dashboard Coming Soon</h3>
-              <p className="text-gray-600">Detailed list analytics and performance metrics will be available here.</p>
-            </div>
+            {displayListings.length === 0 ? (
+              <div className="text-center py-12">
+                <BarChart3 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                <h3 className="text-xl font-semibold mb-2">No Analytics Data Yet</h3>
+                <p className="text-gray-600">Sync your listings to see analytics and performance metrics.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Listing Health */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Listing Health</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium text-green-700">Active</span>
+                          <span className="text-sm text-gray-600">{displayMetrics.activeListings} of {displayMetrics.totalListings}</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div className="bg-green-500 h-3 rounded-full" style={{ width: `${displayMetrics.totalListings > 0 ? (displayMetrics.activeListings / displayMetrics.totalListings) * 100 : 0}%` }} />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium text-yellow-700">Pending</span>
+                          <span className="text-sm text-gray-600">{displayMetrics.pendingListings}</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div className="bg-yellow-500 h-3 rounded-full" style={{ width: `${displayMetrics.totalListings > 0 ? (displayMetrics.pendingListings / displayMetrics.totalListings) * 100 : 0}%` }} />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium text-red-700">Errors</span>
+                          <span className="text-sm text-gray-600">{displayMetrics.errorListings}</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-3">
+                          <div className="bg-red-500 h-3 rounded-full" style={{ width: `${displayMetrics.totalListings > 0 ? (displayMetrics.errorListings / displayMetrics.totalListings) * 100 : 0}%` }} />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Platform Coverage */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Platform Coverage</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {(() => {
+                        const platformCounts: Record<string, number> = {};
+                        displayListings.forEach((l) => {
+                          platformCounts[l.platform] = (platformCounts[l.platform] || 0) + 1;
+                        });
+                        return Object.entries(platformCounts).map(([platform, count]) => (
+                          <div key={platform} className="flex items-center justify-between p-2 border rounded">
+                            <span className="text-sm font-medium">{platform}</span>
+                            <Badge variant="outline">{count} listing{count !== 1 ? 's' : ''}</Badge>
+                          </div>
+                        ));
+                      })()}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Engagement Metrics */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Engagement Overview</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-4 text-center">
+                      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <div className="text-2xl font-bold text-blue-600">{displayMetrics.totalViews.toLocaleString()}</div>
+                        <p className="text-xs text-gray-500 mt-1">Total Views</p>
+                      </div>
+                      <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        <div className="text-2xl font-bold text-green-600">{displayMetrics.totalClicks.toLocaleString()}</div>
+                        <p className="text-xs text-gray-500 mt-1">Total Clicks</p>
+                      </div>
+                      <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                        <div className="text-2xl font-bold text-yellow-600">{displayMetrics.avgRating}</div>
+                        <p className="text-xs text-gray-500 mt-1">Avg Rating</p>
+                      </div>
+                      <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                        <div className="text-2xl font-bold text-purple-600">
+                          {displayMetrics.totalViews > 0 ? ((displayMetrics.totalClicks / displayMetrics.totalViews) * 100).toFixed(1) : 0}%
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">Click Rate</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Status Summary */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Status Summary</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-green-600" />
+                          <span className="text-sm">Active Listings</span>
+                        </div>
+                        <span className="text-sm font-bold">{displayMetrics.activeListings}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-yellow-600" />
+                          <span className="text-sm">Pending Verification</span>
+                        </div>
+                        <span className="text-sm font-bold">{displayMetrics.pendingListings}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <AlertCircle className="w-4 h-4 text-red-600" />
+                          <span className="text-sm">Needs Attention</span>
+                        </div>
+                        <span className="text-sm font-bold">{displayMetrics.errorListings}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </TabsContent>
 
           {/* Profile Tab */}
