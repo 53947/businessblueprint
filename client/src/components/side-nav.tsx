@@ -216,7 +216,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
 
     // Block navigation for locked features
     if (!isFeatureEnabled(item)) {
-      setLocation('/subscribe');
+      setLocation('/subscription');
       return;
     }
 

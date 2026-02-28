@@ -117,49 +117,40 @@ export default function SendDashboard() {
             onClick: () => setActiveTab('overview'),
             testId: 'tab-overview'
           },
-          { 
-            label: 'Campaigns', 
-            icon: Mail, 
+          {
+            label: 'Campaigns',
+            icon: Mail,
             active: activeTab === 'campaigns',
-            onClick: () => {
-              setActiveTab('campaigns');
-              toast({ title: 'Campaigns', description: 'Campaign management coming soon' });
-            },
+            onClick: () => setActiveTab('campaigns'),
             testId: 'tab-campaigns'
           },
-          { 
-            label: 'Contacts', 
-            icon: Users, 
+          {
+            label: 'Contacts',
+            icon: Users,
             active: activeTab === 'contacts',
-            onClick: () => {
-              setActiveTab('contacts');
-              toast({ title: 'Contacts', description: 'Contact management coming soon' });
-            },
+            onClick: () => setActiveTab('contacts'),
             testId: 'tab-contacts'
           },
-          { 
-            label: 'Analytics', 
-            icon: TrendingUp, 
+          {
+            label: 'Analytics',
+            icon: TrendingUp,
             active: activeTab === 'analytics',
-            onClick: () => {
-              setActiveTab('analytics');
-              toast({ title: 'Analytics', description: 'Analytics dashboard coming soon' });
-            },
+            onClick: () => setActiveTab('analytics'),
             testId: 'tab-analytics'
           }
         ]}
         actions={
           <>
-            <Button 
-              onClick={() => toast({ title: 'Settings', description: 'Settings panel coming soon' })} 
-              variant="ghost" 
+            <Button
+              onClick={() => setActiveTab('overview')}
+              variant="ghost"
               size="sm"
               data-testid="button-settings"
             >
               <Settings className="h-4 w-4" />
             </Button>
-            <Button 
-              onClick={() => toast({ title: 'New Campaign', description: 'Campaign creation coming soon' })} 
+            <Button
+              onClick={() => setLocation('/send/campaigns/new')}
               size="sm"
               className="bg-[#E6B747] hover:bg-[#d1a440] text-white"
               data-testid="button-new-campaign"
@@ -264,7 +255,7 @@ export default function SendDashboard() {
         )}
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="overview" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList>
             <TabsTrigger value="overview" data-testid="tab-overview">Overview</TabsTrigger>
             <TabsTrigger value="contacts" data-testid="tab-contacts-list">Contacts</TabsTrigger>
@@ -629,29 +620,158 @@ export default function SendDashboard() {
           </TabsContent>
 
           {/* Campaigns Tab */}
-          <TabsContent value="campaigns">
+          <TabsContent value="campaigns" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Campaigns</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">View and manage your email and SMS campaigns</p>
+              </div>
+              <Button
+                onClick={() => setLocation('/send/campaigns/new')}
+                size="sm"
+                className="bg-[#E6B747] hover:bg-[#d1a440] text-white"
+                data-testid="button-new-campaign-tab"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                New Campaign
+              </Button>
+            </div>
             <Card>
-              <CardHeader>
-                <CardTitle>Recent Campaigns</CardTitle>
-                <CardDescription>View and manage your email and SMS campaigns</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-500 dark:text-gray-400">Campaign list coming soon...</p>
+              <CardContent className="pt-6">
+                {campaignsLoading ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4 mb-2"></div>
+                        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-1/2"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : displayActivity.length > 0 ? (
+                  <div className="space-y-3">
+                    {displayActivity.filter((a) => a.type === 'campaign').map((campaign) => (
+                      <div key={campaign.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg" data-testid={`campaign-row-${campaign.id}`}>
+                        <div className="flex items-center gap-3">
+                          <Send className="w-5 h-5 text-[#E5A100]" />
+                          <div>
+                            <p className="font-medium text-gray-900 dark:text-white">{campaign.name}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{campaign.time}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          {campaign.recipients && (
+                            <span className="text-sm text-gray-600 dark:text-gray-400">
+                              {campaign.recipients.toLocaleString()} recipients
+                            </span>
+                          )}
+                          <Badge variant={campaign.status === 'sent' ? 'default' : 'secondary'}>
+                            {campaign.status}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                    {displayActivity.filter((a) => a.type !== 'campaign').length > 0 && displayActivity.filter((a) => a.type === 'campaign').length === 0 && (
+                      <div className="text-center py-8">
+                        <Mail className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500 dark:text-gray-400 mb-4">No campaigns created yet</p>
+                        <Button onClick={() => setLocation('/send/campaigns/new')} data-testid="button-first-campaign">
+                          Create Your First Campaign
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Mail className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500 dark:text-gray-400 mb-4">No campaigns created yet</p>
+                    <Button onClick={() => setLocation('/send/campaigns/new')} data-testid="button-first-campaign">
+                      Create Your First Campaign
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
 
           {/* Analytics Tab */}
-          <TabsContent value="analytics">
+          <TabsContent value="analytics" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Advanced Analytics</CardTitle>
-                <CardDescription>Deep dive into performance metrics and trends</CardDescription>
+                <CardTitle>Campaign Performance</CardTitle>
+                <CardDescription>Email and SMS delivery metrics for the last 30 days</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-500 dark:text-gray-400">Analytics dashboard coming soon...</p>
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Open Rate</p>
+                    <p className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="analytics-open-rate">
+                      {displayMetrics.avgOpenRate}%
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">Industry avg: 21.5%</p>
+                  </div>
+                  <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Click Rate</p>
+                    <p className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="analytics-click-rate">
+                      {displayMetrics.avgClickRate}%
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">Industry avg: 2.6%</p>
+                  </div>
+                  <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Deliverability</p>
+                    <p className="text-3xl font-bold text-green-600 dark:text-green-400" data-testid="analytics-deliverability">
+                      {displayMetrics.avgDeliverability}%
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">Excellent</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Email Breakdown</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Sent</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{displayMetrics.emailsSent.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Delivered</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{displayMetrics.emailsDelivered.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Opened</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{displayMetrics.emailsOpened.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Clicked</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{displayMetrics.emailsClicked.toLocaleString()}</span>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">SMS Breakdown</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Sent</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{displayMetrics.smsSent.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Delivered</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{displayMetrics.smsDelivered.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Delivery Rate</span>
+                    <span className="font-medium text-green-600 dark:text-green-400">
+                      {displayMetrics.smsSent > 0 ? ((displayMetrics.smsDelivered / displayMetrics.smsSent) * 100).toFixed(1) : '0.0'}%
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

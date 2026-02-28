@@ -25,6 +25,7 @@ import RespondLanding from "@/pages/respond-landing";
 import RespondPage from "@/pages/respond";
 import LivechatLanding from "@/pages/livechat-landing";
 import LiveChatDemo from "@/pages/livechat-demo";
+import ChatDashboard from "@/pages/chat-dashboard";
 import LiveChatInstall from "@/pages/livechat-install";
 import PostLanding from "@/pages/post-landing";
 import CommverseLanding from "@/pages/commverse-landing";
@@ -94,7 +95,7 @@ function Router() {
       <Route path="/respond" component={RespondLanding} />
       <Route path="/respond-app" component={RespondPage} />
       <Route path="/livechat" component={LivechatLanding} />
-      <Route path="/livechat/dashboard" component={LiveChatDemo} />
+      <Route path="/livechat/dashboard" component={ChatDashboard} />
       <Route path="/livechat-demo" component={LiveChatDemo} />
       <Route path="/livechat-install" component={LiveChatInstall} />
       <Route path="/post-landing" component={PostLanding} />

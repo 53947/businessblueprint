@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import { requireAuth, type AuthenticatedRequest } from "../middleware/auth";
 import { db } from "../db";
 import { 
   chatWidgetSettings, 
@@ -382,9 +383,12 @@ router.post("/widget/analytics", widgetCors, async (req: Request, res: Response)
 // ============================================================================
 
 // Get all conversations for a client
-router.get("/dashboard/conversations/:clientId", async (req: Request, res: Response) => {
+router.get("/dashboard/conversations/:clientId", requireAuth, async (req: Request, res: Response) => {
   try {
     const clientId = parseInt(req.params.clientId);
+    if (clientId !== (req as AuthenticatedRequest).clientId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
     const status = req.query.status as string || "open";
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
@@ -418,9 +422,12 @@ router.get("/dashboard/conversations/:clientId", async (req: Request, res: Respo
 });
 
 // Get single conversation with messages
-router.get("/dashboard/conversations/:clientId/:conversationId", async (req: Request, res: Response) => {
+router.get("/dashboard/conversations/:clientId/:conversationId", requireAuth, async (req: Request, res: Response) => {
   try {
     const clientId = parseInt(req.params.clientId);
+    if (clientId !== (req as AuthenticatedRequest).clientId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
     const conversationId = parseInt(req.params.conversationId);
 
     const [conversation] = await db
@@ -483,9 +490,12 @@ const agentMessageSchema = z.object({
   agentName: z.string().optional(),
 });
 
-router.post("/dashboard/messages/:clientId", async (req: Request, res: Response) => {
+router.post("/dashboard/messages/:clientId", requireAuth, async (req: Request, res: Response) => {
   try {
     const clientId = parseInt(req.params.clientId);
+    if (clientId !== (req as AuthenticatedRequest).clientId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
     const data = agentMessageSchema.parse(req.body);
 
     // Verify conversation belongs to client
@@ -547,9 +557,12 @@ router.post("/dashboard/messages/:clientId", async (req: Request, res: Response)
 });
 
 // Close conversation
-router.put("/dashboard/conversations/:clientId/:conversationId/close", async (req: Request, res: Response) => {
+router.put("/dashboard/conversations/:clientId/:conversationId/close", requireAuth, async (req: Request, res: Response) => {
   try {
     const clientId = parseInt(req.params.clientId);
+    if (clientId !== (req as AuthenticatedRequest).clientId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
     const conversationId = parseInt(req.params.conversationId);
 
     await db
@@ -581,9 +594,12 @@ router.put("/dashboard/conversations/:clientId/:conversationId/close", async (re
 // ============================================================================
 
 // Get widget settings for client
-router.get("/settings/:clientId", async (req: Request, res: Response) => {
+router.get("/settings/:clientId", requireAuth, async (req: Request, res: Response) => {
   try {
     const clientId = parseInt(req.params.clientId);
+    if (clientId !== (req as AuthenticatedRequest).clientId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
 
     const [settings] = await db
       .select()
@@ -592,7 +608,7 @@ router.get("/settings/:clientId", async (req: Request, res: Response) => {
       .limit(1);
 
     if (!settings) {
-      // Return defaults
+      // Return defaults matching actual schema columns
       return res.json({
         clientId,
         companyName: "Support",
@@ -600,15 +616,10 @@ router.get("/settings/:clientId", async (req: Request, res: Response) => {
         primaryColor: "#0000FF",
         position: "bottom-right",
         requireEmail: false,
-        requireName: false,
-        customFields: [],
         enableSound: true,
         offlineMessage: "We're offline. Leave a message and we'll get back to you!",
-        gdprEnabled: false,
-        fileUploadsEnabled: true,
-        maxFileSize: 5242880,
-        rateLimit: 10,
-        crmSyncEnabled: true,
+        enableFileUpload: true,
+        enableEmoji: true,
       });
     }
 
@@ -620,9 +631,12 @@ router.get("/settings/:clientId", async (req: Request, res: Response) => {
 });
 
 // Update widget settings
-router.put("/settings/:clientId", async (req: Request, res: Response) => {
+router.put("/settings/:clientId", requireAuth, async (req: Request, res: Response) => {
   try {
     const clientId = parseInt(req.params.clientId);
+    if (clientId !== (req as AuthenticatedRequest).clientId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
     const updates = updateChatWidgetSettingsSchema.parse(req.body);
 
     // Check if settings exist
