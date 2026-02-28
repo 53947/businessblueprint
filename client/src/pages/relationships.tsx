@@ -4888,7 +4888,7 @@ function AutomationsView() {
   
   // Fetch steps when editing
   const { data: automationDetail } = useQuery<{ automation: CrmAutomation; steps: CrmAutomationStep[] }>({
-    queryKey: ["/api/crm/automations", selectedAutomation?.id],
+    queryKey: [`/api/crm/automations/${selectedAutomation?.id}`],
     enabled: !!selectedAutomation && showStepsDialog,
   });
 

@@ -172,7 +172,7 @@ export default function InboxPage() {
 
   // Fetch messages for selected conversation (only when authenticated)
   const { data: messages = [], isLoading: messagesLoading } = useQuery<Message[]>({
-    queryKey: ['/api/respond/conversations', selectedConversation, 'messages'],
+    queryKey: [`/api/respond/conversations/${selectedConversation}/messages`],
     enabled: !!selectedConversation && !!authToken && !!clientId,
   });
 
@@ -205,7 +205,7 @@ export default function InboxPage() {
       return apiRequest('POST', '/api/respond/send-message', data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/respond/conversations', selectedConversation, 'messages'] });
+      queryClient.invalidateQueries({ queryKey: [`/api/respond/conversations/${selectedConversation}/messages`] });
       queryClient.invalidateQueries({ queryKey: ['/api/respond/conversations'] });
       setMessageInput('');
     },
@@ -258,7 +258,7 @@ export default function InboxPage() {
 
     socketInstance.on('message:new', (data: Message) => {
       // Update messages list
-      queryClient.invalidateQueries({ queryKey: ['/api/respond/conversations', data.conversationId, 'messages'] });
+      queryClient.invalidateQueries({ queryKey: [`/api/respond/conversations/${data.conversationId}/messages`] });
       queryClient.invalidateQueries({ queryKey: ['/api/respond/conversations'] });
       
       // Show notification if not viewing this conversation
