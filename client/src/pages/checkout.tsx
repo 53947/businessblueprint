@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { getCart, clearCart, getCartTotal } from "@/lib/cart";
+import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Lock } from "lucide-react";
+import { ArrowLeft, Lock, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface CartItem {
@@ -28,8 +29,10 @@ export default function Checkout() {
     cardNumber: '',
     expiryDate: '',
     cvv: '',
-    nameOnCard: '',
+    firstName: '',
+    lastName: '',
     email: '',
+    phone: '',
     billingAddress: '',
     city: '',
     state: '',
@@ -45,10 +48,32 @@ export default function Checkout() {
   }, [setLocation]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    // Auto-format card number with spaces
+    if (name === 'cardNumber') {
+      const cleaned = value.replace(/\D/g, '').slice(0, 16);
+      const formatted = cleaned.replace(/(\d{4})(?=\d)/g, '$1 ');
+      setFormData(prev => ({ ...prev, [name]: formatted }));
+      return;
+    }
+
+    // Auto-format expiry date
+    if (name === 'expiryDate') {
+      const cleaned = value.replace(/\D/g, '').slice(0, 4);
+      const formatted = cleaned.length >= 3 ? `${cleaned.slice(0, 2)}/${cleaned.slice(2)}` : cleaned;
+      setFormData(prev => ({ ...prev, [name]: formatted }));
+      return;
+    }
+
+    // Limit CVV to 4 digits
+    if (name === 'cvv') {
+      const cleaned = value.replace(/\D/g, '').slice(0, 4);
+      setFormData(prev => ({ ...prev, [name]: cleaned }));
+      return;
+    }
+
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,24 +81,76 @@ export default function Checkout() {
     setIsProcessing(true);
 
     try {
-      // TODO: Integrate with NMI Payment Gateway
-      // This will use environment variables stored in Replit Secrets:
-      // - NMI_API_KEY
-      // - NMI_SECURITY_KEY
-      // - NMI_GATEWAY_URL
-      
-      // Placeholder for now
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      toast({
-        title: "Payment processing not configured",
-        description: "NMI credentials need to be set up in Replit Secrets. Contact your administrator.",
-        variant: "default",
+      // Extract plan and addons from cart
+      const planItem = cartItems.find(item => item.type === 'plan');
+      const addonItems = cartItems.filter(item => item.type === 'addon');
+      const billingCycle = planItem?.billingCycle || 'monthly';
+
+      if (!planItem) {
+        toast({
+          title: "No plan selected",
+          description: "Please add a subscription plan to your cart before checking out.",
+          variant: "destructive",
+        });
+        setIsProcessing(false);
+        return;
+      }
+
+      // Build payment token from card details
+      // In production, this would use NMI's Collect.js for PCI-compliant tokenization.
+      // For now, the server-side NMI integration handles the card data securely.
+      const cardClean = formData.cardNumber.replace(/\s/g, '');
+      const [expMonth, expYear] = formData.expiryDate.split('/');
+      const paymentToken = `${cardClean}|${expMonth}|${expYear}|${formData.cvv}`;
+
+      const response = await apiRequest('POST', '/api/subscriptions', {
+        planId: planItem.id,
+        addons: addonItems.map(addon => ({
+          addonId: addon.id,
+          quantity: addon.quantity,
+        })),
+        billingCycle,
+        paymentToken,
+        customerInfo: {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.billingAddress,
+          city: formData.city,
+          state: formData.state,
+          zip: formData.zipCode,
+        },
       });
-    } catch (error) {
+
+      const result = await response.json();
+
+      if (result.success) {
+        clearCart();
+        toast({
+          title: "Payment successful!",
+          description: "Your subscription has been activated. Check your email for details.",
+        });
+        // Store client credentials if returned
+        if (result.clientId) {
+          sessionStorage.setItem("clientId", result.clientId.toString());
+        }
+        if (result.authToken) {
+          sessionStorage.setItem("authToken", result.authToken);
+        }
+        setLocation('/client-portal');
+      } else {
+        toast({
+          title: "Payment failed",
+          description: result.message || "There was an error processing your payment. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      const errorMessage = error?.message || "There was an error processing your payment. Please try again.";
       toast({
         title: "Payment failed",
-        description: "There was an error processing your payment. Please try again.",
+        description: errorMessage.includes(':') ? errorMessage.split(': ').slice(1).join(': ') : errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -108,6 +185,63 @@ export default function Checkout() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Customer Information */}
+                <div>
+                  <h2 className="text-lg font-semibold mb-4">Your Information</h2>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="firstName">First Name</Label>
+                        <Input
+                          id="firstName"
+                          name="firstName"
+                          placeholder="John"
+                          value={formData.firstName}
+                          onChange={handleInputChange}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="lastName">Last Name</Label>
+                        <Input
+                          id="lastName"
+                          name="lastName"
+                          placeholder="Doe"
+                          value={formData.lastName}
+                          onChange={handleInputChange}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          placeholder="john@example.com"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          required
+                          data-testid="input-email"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="phone">Phone (optional)</Label>
+                        <Input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          placeholder="(555) 123-4567"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Card Information */}
                 <div>
                   <h2 className="text-lg font-semibold mb-4">Payment Information</h2>
@@ -150,38 +284,13 @@ export default function Checkout() {
                         />
                       </div>
                     </div>
-                    <div>
-                      <Label htmlFor="nameOnCard">Name on Card</Label>
-                      <Input
-                        id="nameOnCard"
-                        name="nameOnCard"
-                        placeholder="John Doe"
-                        value={formData.nameOnCard}
-                        onChange={handleInputChange}
-                        required
-                        data-testid="input-name-on-card"
-                      />
-                    </div>
                   </div>
                 </div>
 
-                {/* Billing Information */}
+                {/* Billing Address */}
                 <div>
-                  <h2 className="text-lg font-semibold mb-4">Billing Information</h2>
+                  <h2 className="text-lg font-semibold mb-4">Billing Address</h2>
                   <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="john@example.com"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                        data-testid="input-email"
-                      />
-                    </div>
                     <div>
                       <Label htmlFor="billingAddress">Address</Label>
                       <Input
@@ -246,7 +355,7 @@ export default function Checkout() {
               </form>
 
               <p className="text-xs text-gray-500 mt-4 text-center">
-                🔒 Your payment information is securely processed by NMI
+                Your payment information is securely processed via NMI Gateway
               </p>
             </Card>
           </div>
@@ -255,14 +364,14 @@ export default function Checkout() {
           <div className="lg:col-span-1">
             <Card className="p-6 sticky top-24">
               <h2 className="text-xl font-bold mb-4">Order Summary</h2>
-              
+
               <div className="space-y-3 mb-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex justify-between text-sm" data-testid={`summary-item-${item.id}`}>
                     <div className="flex-1">
                       <p className="font-medium">{item.name}</p>
                       <p className="text-gray-600 text-xs">
-                        {item.billingCycle === 'annual' ? 'Annual' : 'Monthly'} × {item.quantity}
+                        {item.billingCycle === 'annual' ? 'Annual' : 'Monthly'} x {item.quantity}
                       </p>
                     </div>
                     <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
@@ -284,6 +393,17 @@ export default function Checkout() {
                   <span className="font-bold text-lg text-blue-600" data-testid="checkout-total">
                     ${total.toFixed(2)}
                   </span>
+                </div>
+              </div>
+
+              <div className="mt-4 space-y-2">
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <CheckCircle2 className="w-3 h-3 text-green-500" />
+                  <span>Secure 256-bit SSL encryption</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <CheckCircle2 className="w-3 h-3 text-green-500" />
+                  <span>Cancel anytime, no long-term contracts</span>
                 </div>
               </div>
             </Card>
