@@ -45,6 +45,9 @@ import {
   listingMetricsSnapshots,
   updateBusinessListingSchema,
   insertBusinessListingSchema,
+  socialMediaAccounts,
+  sendCampaigns,
+  chatWidgetSettings,
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
@@ -667,35 +670,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
             pending: campaigns.filter((c: any) => c.status === "draft").length,
             total: campaigns.length,
             performance: {
-              reach: 2340,
-              clicks: 89,
-              conversions: 12,
+              reach: campaigns.reduce((sum: number, c: any) => sum + (c.sentCount || 0), 0),
+              clicks: campaigns.reduce((sum: number, c: any) => sum + (c.clickCount || 0), 0),
+              conversions: campaigns.reduce((sum: number, c: any) => sum + (c.conversionCount || 0), 0),
             },
             latest: latestCampaign
               ? {
                   name: latestCampaign.name || "Recent Campaign",
                   status: latestCampaign.status || "active",
-                  unsubscribes: 3, // Placeholder - will be from analytics
-                  clickThroughs: 47, // Placeholder
-                  purchases: 8, // Placeholder
-                  sent: 250, // Placeholder - will be from campaign analytics
+                  unsubscribes: (latestCampaign as any).unsubscribeCount || 0,
+                  clickThroughs: (latestCampaign as any).clickCount || 0,
+                  purchases: (latestCampaign as any).conversionCount || 0,
+                  sent: (latestCampaign as any).sentCount || 0,
                 }
               : null,
           },
-          socialMedia: {
-            isSetup: false, // Placeholder - check if profiles connected
-            newLikes: 24,
-            newComments: 8,
-            newMessages: 5,
-            connectedProfiles: 0,
-          },
-          livechat: {
-            isSetup: false, // Placeholder - check if widget installed
-            participationRating: 4.8,
-            inQueue: 2,
-            totalChats: 145,
-            avgResponseTime: "2.3 min",
-          },
+          socialMedia: await (async () => {
+            try {
+              const accounts = await db.select().from(socialMediaAccounts)
+                .where(and(eq(socialMediaAccounts.clientId, clientId), eq(socialMediaAccounts.isActive, true)));
+              return {
+                isSetup: accounts.length > 0,
+                connectedProfiles: accounts.length,
+                newLikes: 0,
+                newComments: 0,
+                newMessages: 0,
+              };
+            } catch {
+              return { isSetup: false, connectedProfiles: 0, newLikes: 0, newComments: 0, newMessages: 0 };
+            }
+          })(),
+          livechat: await (async () => {
+            try {
+              const [widgetSettings] = await db.select().from(chatWidgetSettings)
+                .where(eq(chatWidgetSettings.clientId, clientId)).limit(1);
+              const sessions = await db.select().from(livechatSessions)
+                .where(eq(livechatSessions.clientId, clientId));
+              const activeSessions = sessions.filter((s: any) => s.status === "active" || s.status === "waiting");
+              return {
+                isSetup: !!widgetSettings,
+                participationRating: 0,
+                inQueue: activeSessions.length,
+                totalChats: sessions.length,
+                avgResponseTime: "N/A",
+              };
+            } catch {
+              return { isSetup: false, participationRating: 0, inQueue: 0, totalChats: 0, avgResponseTime: "N/A" };
+            }
+          })(),
           messages: {
             unread: messages.filter((m: any) => !m.isRead).length,
             total: messages.length,
