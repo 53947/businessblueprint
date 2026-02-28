@@ -5,7 +5,14 @@
 
 import type { Express } from "express";
 import { storage } from "../storage";
-import { insertSendContactSchema, insertSendListSchema } from "@shared/schema";
+import { db } from "../db";
+import {
+  insertSendContactSchema,
+  insertSendListSchema,
+  sendContacts,
+  sendCampaigns,
+} from "@shared/schema";
+import { eq, desc, sql, and } from "drizzle-orm";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth";
 
 export function registerSendRoutes(app: Express) {
@@ -614,6 +621,398 @@ export function registerSendRoutes(app: Express) {
         res.status(500).json({
           success: false,
           message: "Failed to fetch list contacts",
+        });
+      }
+    },
+  );
+
+  // Get send dashboard metrics for authenticated client
+  app.get(
+    "/api/send/metrics",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+
+        // Count total contacts
+        const [contactCount] = await db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(sendContacts)
+          .where(eq(sendContacts.clientId, clientId));
+
+        // Aggregate campaign stats
+        const [campaignStats] = await db
+          .select({
+            emailsSent: sql<number>`coalesce(sum(${sendCampaigns.emailsSent}), 0)::int`,
+            emailsOpened: sql<number>`coalesce(sum(${sendCampaigns.emailsOpened}), 0)::int`,
+            emailsClicked: sql<number>`coalesce(sum(${sendCampaigns.emailsClicked}), 0)::int`,
+            emailsBounced: sql<number>`coalesce(sum(${sendCampaigns.emailsBounced}), 0)::int`,
+            smsSent: sql<number>`coalesce(sum(${sendCampaigns.smsSent}), 0)::int`,
+            smsDelivered: sql<number>`coalesce(sum(${sendCampaigns.smsDelivered}), 0)::int`,
+          })
+          .from(sendCampaigns)
+          .where(eq(sendCampaigns.clientId, clientId));
+
+        const totalContacts = contactCount?.count ?? 0;
+        const emailsSent = campaignStats?.emailsSent ?? 0;
+        const emailsOpened = campaignStats?.emailsOpened ?? 0;
+        const emailsClicked = campaignStats?.emailsClicked ?? 0;
+        const emailsBounced = campaignStats?.emailsBounced ?? 0;
+        const smsSent = campaignStats?.smsSent ?? 0;
+        const smsDelivered = campaignStats?.smsDelivered ?? 0;
+
+        const emailsDelivered = emailsSent - emailsBounced;
+        const avgOpenRate =
+          emailsDelivered > 0 ? (emailsOpened / emailsDelivered) * 100 : 0;
+        const avgClickRate =
+          emailsOpened > 0 ? (emailsClicked / emailsOpened) * 100 : 0;
+        const avgDeliverability =
+          emailsSent > 0 ? (emailsDelivered / emailsSent) * 100 : 0;
+
+        res.json({
+          totalContacts,
+          contactsGrowth: 0,
+          emailsSent,
+          emailsDelivered,
+          emailsOpened,
+          emailsClicked,
+          smsSent,
+          smsDelivered,
+          avgOpenRate: Math.round(avgOpenRate * 10) / 10,
+          avgClickRate: Math.round(avgClickRate * 10) / 10,
+          avgDeliverability: Math.round(avgDeliverability * 10) / 10,
+        });
+      } catch (error) {
+        console.error("Error fetching send metrics:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch send metrics",
+        });
+      }
+    },
+  );
+
+  // Get recent campaigns for authenticated client
+  app.get(
+    "/api/send/campaigns/recent",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const limit = Math.min(
+          parseInt(req.query.limit as string) || 10,
+          50,
+        );
+
+        const campaigns = await db
+          .select()
+          .from(sendCampaigns)
+          .where(eq(sendCampaigns.clientId, clientId))
+          .orderBy(desc(sendCampaigns.createdAt))
+          .limit(limit);
+
+        const activityItems = campaigns.map((c) => ({
+          id: c.id,
+          type: "campaign" as const,
+          name: c.name,
+          status: c.status ?? "draft",
+          time: c.createdAt?.toISOString() ?? new Date().toISOString(),
+          recipients: c.totalRecipients ?? 0,
+        }));
+
+        res.json(activityItems);
+      } catch (error) {
+        console.error("Error fetching recent campaigns:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch recent campaigns",
+        });
+      }
+    },
+  );
+
+  // Get all campaigns for authenticated client (with pagination)
+  app.get(
+    "/api/send/campaigns",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const limit = Math.min(
+          parseInt(req.query.limit as string) || 50,
+          200,
+        );
+        const offset = parseInt(req.query.offset as string) || 0;
+        const status = req.query.status as string | undefined;
+
+        let query = db
+          .select()
+          .from(sendCampaigns)
+          .where(
+            status
+              ? and(
+                  eq(sendCampaigns.clientId, clientId),
+                  eq(sendCampaigns.status, status),
+                )
+              : eq(sendCampaigns.clientId, clientId),
+          )
+          .orderBy(desc(sendCampaigns.createdAt))
+          .limit(limit)
+          .offset(offset);
+
+        const campaigns = await query;
+
+        // Get total count
+        const [countResult] = await db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(sendCampaigns)
+          .where(
+            status
+              ? and(
+                  eq(sendCampaigns.clientId, clientId),
+                  eq(sendCampaigns.status, status),
+                )
+              : eq(sendCampaigns.clientId, clientId),
+          );
+
+        res.json({
+          success: true,
+          campaigns,
+          pagination: {
+            total: countResult?.count ?? 0,
+            limit,
+            offset,
+            hasMore: offset + limit < (countResult?.count ?? 0),
+          },
+        });
+      } catch (error) {
+        console.error("Error fetching campaigns:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch campaigns",
+        });
+      }
+    },
+  );
+
+  // Create a new campaign
+  app.post(
+    "/api/send/campaigns",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const {
+          name,
+          description,
+          campaignType,
+          emailSubject,
+          emailHtml,
+          emailText,
+          smsBody,
+        } = req.body;
+
+        if (!name || !campaignType) {
+          return res.status(400).json({
+            success: false,
+            message: "Campaign name and type are required",
+          });
+        }
+
+        if (!["email", "sms", "both"].includes(campaignType)) {
+          return res.status(400).json({
+            success: false,
+            message: "Campaign type must be email, sms, or both",
+          });
+        }
+
+        const [campaign] = await db
+          .insert(sendCampaigns)
+          .values({
+            clientId,
+            name,
+            description: description || null,
+            campaignType,
+            status: "draft",
+            emailSubject: emailSubject || null,
+            emailHtml: emailHtml || null,
+            emailText: emailText || null,
+            smsBody: smsBody || null,
+          })
+          .returning();
+
+        res.json({ success: true, campaign });
+      } catch (error) {
+        console.error("Error creating campaign:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to create campaign",
+        });
+      }
+    },
+  );
+
+  // Get single campaign (with client ownership validation)
+  app.get(
+    "/api/send/campaigns/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid campaign ID",
+          });
+        }
+
+        const [campaign] = await db
+          .select()
+          .from(sendCampaigns)
+          .where(
+            and(
+              eq(sendCampaigns.id, id),
+              eq(sendCampaigns.clientId, clientId),
+            ),
+          );
+
+        if (!campaign) {
+          return res.status(404).json({
+            success: false,
+            message: "Campaign not found",
+          });
+        }
+
+        res.json({ success: true, campaign });
+      } catch (error) {
+        console.error("Error fetching campaign:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch campaign",
+        });
+      }
+    },
+  );
+
+  // Update campaign (with client ownership validation)
+  app.patch(
+    "/api/send/campaigns/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid campaign ID",
+          });
+        }
+
+        // Verify campaign exists and belongs to client
+        const [existing] = await db
+          .select()
+          .from(sendCampaigns)
+          .where(
+            and(
+              eq(sendCampaigns.id, id),
+              eq(sendCampaigns.clientId, clientId),
+            ),
+          );
+
+        if (!existing) {
+          return res.status(404).json({
+            success: false,
+            message: "Campaign not found",
+          });
+        }
+
+        // Only allow editing draft campaigns
+        if (existing.status !== "draft") {
+          return res.status(400).json({
+            success: false,
+            message: "Only draft campaigns can be edited",
+          });
+        }
+
+        const updateData = { ...req.body, updatedAt: new Date() };
+        // Prevent clientId and id tampering
+        delete updateData.clientId;
+        delete updateData.id;
+
+        const [campaign] = await db
+          .update(sendCampaigns)
+          .set(updateData)
+          .where(eq(sendCampaigns.id, id))
+          .returning();
+
+        res.json({ success: true, campaign });
+      } catch (error) {
+        console.error("Error updating campaign:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to update campaign",
+        });
+      }
+    },
+  );
+
+  // Delete campaign (with client ownership validation, draft only)
+  app.delete(
+    "/api/send/campaigns/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid campaign ID",
+          });
+        }
+
+        // Verify campaign exists and belongs to client
+        const [existing] = await db
+          .select()
+          .from(sendCampaigns)
+          .where(
+            and(
+              eq(sendCampaigns.id, id),
+              eq(sendCampaigns.clientId, clientId),
+            ),
+          );
+
+        if (!existing) {
+          return res.status(404).json({
+            success: false,
+            message: "Campaign not found",
+          });
+        }
+
+        // Only allow deleting draft campaigns
+        if (existing.status !== "draft") {
+          return res.status(400).json({
+            success: false,
+            message: "Only draft campaigns can be deleted",
+          });
+        }
+
+        await db.delete(sendCampaigns).where(eq(sendCampaigns.id, id));
+
+        res.json({
+          success: true,
+          message: "Campaign deleted successfully",
+        });
+      } catch (error) {
+        console.error("Error deleting campaign:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to delete campaign",
         });
       }
     },

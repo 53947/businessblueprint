@@ -92,19 +92,13 @@ router.get("/widget/settings/:clientId", widgetCors, async (req: Request, res: R
       primaryColor: settings.primaryColor,
       position: settings.position,
       requireEmail: settings.requireEmail,
-      requireName: settings.requireName,
-      customFields: settings.customFields,
       enableSound: settings.enableSound,
       offlineMessage: settings.offlineMessage,
-      gdprEnabled: settings.gdprEnabled,
-      gdprText: settings.gdprText,
-      gdprPrivacyUrl: settings.gdprPrivacyUrl,
       autoOpenDelay: settings.autoOpenDelay,
-      proactiveMessage: settings.proactiveMessage,
-      proactiveDelay: settings.proactiveDelay,
-      fileUploadsEnabled: settings.fileUploadsEnabled,
-      maxFileSize: settings.maxFileSize,
-      rateLimit: settings.rateLimit,
+      enableFileUpload: settings.enableFileUpload,
+      enableEmoji: settings.enableEmoji,
+      enablePreChatForm: settings.enablePreChatForm,
+      isActive: settings.isActive,
     });
   } catch (error) {
     console.error("Error fetching widget settings:", error);
@@ -225,7 +219,7 @@ router.post("/widget/sessions", widgetCors, async (req: Request, res: Response) 
     await db.insert(chatAnalyticsEvents).values({
       clientId: data.clientId,
       eventType: "conversation_started",
-      eventData: {
+      metadata: {
         pageUrl: data.pageUrl,
         referrer: data.referrer,
       },
@@ -303,7 +297,7 @@ router.post("/widget/messages", widgetCors, async (req: Request, res: Response) 
     await db.insert(chatAnalyticsEvents).values({
       clientId: session.clientId,
       eventType: "message_sent",
-      eventData: { direction: "inbound" },
+      metadata: { direction: "inbound" },
     });
 
     res.json({
@@ -373,7 +367,7 @@ router.post("/widget/analytics", widgetCors, async (req: Request, res: Response)
     await db.insert(chatAnalyticsEvents).values({
       clientId: data.clientId,
       eventType: data.eventType,
-      eventData: data.eventData || {},
+      metadata: data.eventData || {},
     });
 
     res.json({ success: true });

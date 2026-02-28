@@ -42,11 +42,11 @@ class ReviewSyncService {
       if (google.exists && google.reviews) {
         for (const review of google.reviews) {
           result.found++;
-          const platformReviewId = `google_${review.authorName}_${review.time}`;
+          const platformReviewId = `google_${review.author}_${review.time}`;
           const upserted = await this.upsertReview(clientId, {
             platform: "google",
             platformReviewId,
-            reviewerName: review.authorName || "Google User",
+            reviewerName: review.author || "Google User",
             rating: review.rating,
             reviewText: review.text || "",
             reviewDate: new Date(review.time * 1000),

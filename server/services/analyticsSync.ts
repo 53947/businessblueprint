@@ -46,7 +46,7 @@ class AnalyticsSyncService {
 
         try {
           // Get the platform adapter
-          const adapter = PlatformFactory.getAdapter(platform, {
+          const adapter = PlatformFactory.createAdapter(platform as any, {
             accessToken: pr.accessToken || "",
           });
           if (!adapter) continue;
@@ -182,7 +182,7 @@ class AnalyticsSyncService {
     > = {};
 
     const allRecords: any[] = [];
-    for (const records of analyticsMap.values()) {
+    for (const records of Array.from(analyticsMap.values())) {
       for (const r of records) {
         allRecords.push(r);
         totalImpressions += r.impressions || 0;
@@ -223,7 +223,7 @@ class AnalyticsSyncService {
       );
     }
 
-    const topPostIds = [...postEngagement.entries()]
+    const topPostIds = Array.from(postEngagement.entries())
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
       .map(([id]) => id);

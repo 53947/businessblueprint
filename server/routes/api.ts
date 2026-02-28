@@ -514,19 +514,15 @@ publicApiRouter.post("/tasks", authenticateApiKey, requireScope("write:tasks", "
 
 publicApiRouter.get("/pipelines", authenticateApiKey, requireScope("read:pipelines", "*"), async (req: AuthenticatedRequest, res) => {
   try {
-    let pipelinesQuery = db.select().from(crmPipelines);
-    
     // Tenant isolation - only return pipelines for the API key's client, or global ones
-    if (req.apiKey?.clientId) {
-      pipelinesQuery = db.select().from(crmPipelines).where(
-        or(
-          eq(crmPipelines.clientId, req.apiKey.clientId),
-          isNull(crmPipelines.clientId)
-        )
-      );
-    }
-    
-    const pipelines = await pipelinesQuery.orderBy(asc(crmPipelines.id));
+    const pipelines = req.apiKey?.clientId
+      ? await db.select().from(crmPipelines).where(
+          or(
+            eq(crmPipelines.clientId, req.apiKey.clientId),
+            isNull(crmPipelines.clientId)
+          )
+        ).orderBy(asc(crmPipelines.id))
+      : await db.select().from(crmPipelines).orderBy(asc(crmPipelines.id));
 
     const pipelinesWithStages = await Promise.all(
       pipelines.map(async (pipeline) => {

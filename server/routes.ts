@@ -975,6 +975,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ========================================
+  // PORTAL - Subscription & Billing (Client Access)
+  // ========================================
+
+  // Get current client's subscription details
+  app.get("/api/portal/subscription", requireClientPortalAccess, async (req: any, res) => {
+    try {
+      const clientId = req.clientId;
+      const subView = await storage.getClientSubscription(clientId);
+
+      if (!subView) {
+        return res.json({ subscription: null });
+      }
+
+      // Shape response to match what the client portal billing tab expects
+      res.json({
+        subscription: {
+          id: subView.subscription.id,
+          status: subView.subscription.status,
+          billingCycle: subView.subscription.billingCycle,
+          totalAmount: subView.subscription.totalAmount,
+          nextBillingDate: subView.nextBillingDate,
+          lastPaymentDate: subView.lastPaymentDate,
+          plan: {
+            id: subView.plan.id,
+            name: subView.plan.name,
+            pathway: subView.plan.pathway,
+            tierLevel: subView.plan.tierLevel,
+          },
+          addons: subView.addons.map((a) => ({
+            id: a.addon.id,
+            name: a.addon.name,
+            price: a.unitPrice,
+            quantity: a.quantity,
+          })),
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching portal subscription:", error);
+      res.status(500).json({ message: "Failed to fetch subscription" });
+    }
+  });
+
+  // Get current client's billing history
+  app.get("/api/portal/billing-history", requireClientPortalAccess, async (req: any, res) => {
+    try {
+      const clientId = req.clientId;
+      const history = await storage.getClientBillingHistory(clientId, 24);
+
+      res.json({
+        billingHistory: history.map((tx) => ({
+          id: tx.id,
+          amount: tx.amount,
+          status: tx.status,
+          billingDate: tx.billingDate,
+          paidDate: tx.paidDate,
+          invoiceNumber: tx.invoiceNumber,
+        })),
+      });
+    } catch (error) {
+      console.error("Error fetching portal billing history:", error);
+      res.status(500).json({ message: "Failed to fetch billing history" });
+    }
+  });
+
+  // ========================================
   // PORTAL - Prescriptions (Public + Client Access)
   // ========================================
 

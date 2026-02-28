@@ -1680,7 +1680,7 @@ crmRouter.get("/integration/lookup", async (req, res) => {
         lastName: contact.lastName,
         email: contact.email,
         phone: contact.phone,
-        title: contact.title,
+        jobTitle: contact.jobTitle,
         lifecycleStage: contact.lifecycleStage,
         leadSource: contact.leadSource,
         customFields: contact.customFields,
@@ -1754,7 +1754,7 @@ crmRouter.get("/integration/context/:id", async (req, res) => {
         lastName: contact.lastName,
         email: contact.email,
         phone: contact.phone,
-        title: contact.title,
+        jobTitle: contact.jobTitle,
         lifecycleStage: contact.lifecycleStage,
         leadSource: contact.leadSource,
         customFields: contact.customFields,
@@ -1768,9 +1768,9 @@ crmRouter.get("/integration/context/:id", async (req, res) => {
       } : null,
       deals: deals.map(d => ({
         id: d.id,
-        title: d.title,
-        value: d.value,
-        stage: d.stage,
+        name: d.name,
+        amount: d.amount,
+        stageId: d.stageId,
         probability: d.probability,
       })),
       recentActivity: recentActivity.map(a => ({
@@ -1782,7 +1782,7 @@ crmRouter.get("/integration/context/:id", async (req, res) => {
         occurredAt: a.occurredAt,
       })),
       tags: contactTags,
-      totalDealValue: deals.reduce((sum, d) => sum + (Number(d.value) || 0), 0),
+      totalDealValue: deals.reduce((sum, d) => sum + (Number(d.amount) || 0), 0),
     });
   } catch (error) {
     console.error("[CRM] Integration context error:", error);
