@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { db } from "../db";
-import { inboxChannelConnections, inboxConversations, inboxMessages2 } from "@shared/schema";
+import { inboxChannelConnections, inboxConversations, inboxMessages2, socialMediaAccounts } from "@shared/schema";
 import { eq, and } from "drizzle-orm";
 import crypto from "crypto";
 
@@ -359,6 +359,43 @@ router.get("/oauth/callback", async (req: Request, res: Response) => {
           }
 
           console.log(`✅ Connected ${platform} page: ${page.name}`);
+
+          // Also store in socialMediaAccounts for /post publishing
+          const [existingSocial] = await db.select()
+            .from(socialMediaAccounts)
+            .where(
+              and(
+                eq(socialMediaAccounts.clientId, clientId),
+                eq(socialMediaAccounts.platform, platform),
+                eq(socialMediaAccounts.platformAccountId, page.id)
+              )
+            );
+
+          if (existingSocial) {
+            await db.update(socialMediaAccounts)
+              .set({
+                accessToken: page.access_token,
+                platformAccountName: page.name,
+                isActive: true,
+                lastSyncedAt: new Date(),
+                updatedAt: new Date(),
+                metadata: { pageCategory: page.category, userAccessToken },
+              })
+              .where(eq(socialMediaAccounts.id, existingSocial.id));
+          } else {
+            await db.insert(socialMediaAccounts).values({
+              clientId,
+              platform,
+              platformAccountId: page.id,
+              platformAccountName: page.name,
+              accessToken: page.access_token,
+              accountType: "page",
+              permissions: PLATFORM_SCOPES[platform],
+              isActive: true,
+              lastSyncedAt: new Date(),
+              metadata: { pageCategory: page.category, userAccessToken },
+            });
+          }
         }
       }
 

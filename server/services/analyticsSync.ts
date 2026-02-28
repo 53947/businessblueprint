@@ -7,8 +7,8 @@
  */
 
 import { db } from "../db";
-import { contentAnalytics, contentPosts } from "@shared/schema";
-import { eq, and, desc } from "drizzle-orm";
+import { contentAnalytics, contentPosts, socialMediaAccounts, clients } from "@shared/schema";
+import { eq, and, desc, isNotNull } from "drizzle-orm";
 import { PlatformFactory } from "./platforms/platformFactory";
 import type { PlatformAnalytics } from "./platforms/basePlatformAdapter";
 
@@ -36,6 +36,27 @@ class AnalyticsSyncService {
       )
       .orderBy(desc(contentPosts.publishedAt));
 
+    // Load all connected social accounts for credential lookup
+    const accounts = await db
+      .select()
+      .from(socialMediaAccounts)
+      .where(
+        and(
+          eq(socialMediaAccounts.clientId, clientId),
+          eq(socialMediaAccounts.isActive, true),
+        ),
+      );
+
+    // Build credential map by platform
+    const credentialMap = new Map<string, { accessToken: string; refreshToken?: string; platformAccountId: string }>();
+    for (const account of accounts) {
+      credentialMap.set(account.platform, {
+        accessToken: account.accessToken || "",
+        refreshToken: account.refreshToken || undefined,
+        platformAccountId: account.platformAccountId,
+      });
+    }
+
     for (const post of posts) {
       // Parse publish results to find platform post IDs
       const publishResults = (post.publishResults as any) || {};
@@ -45,9 +66,15 @@ class AnalyticsSyncService {
         if (!pr?.postId) continue;
 
         try {
+          // Get credentials from connected accounts
+          const creds = credentialMap.get(platform);
+          if (!creds?.accessToken) continue;
+
           // Get the platform adapter
           const adapter = PlatformFactory.createAdapter(platform as any, {
-            accessToken: pr.accessToken || "",
+            accessToken: creds.accessToken,
+            refreshToken: creds.refreshToken,
+            platformAccountId: creds.platformAccountId,
           });
           if (!adapter) continue;
 
@@ -248,6 +275,78 @@ class AnalyticsSyncService {
       platformBreakdown: platformTotals,
       topPosts,
     };
+  }
+}
+
+  /**
+   * Sync analytics for all clients with connected platforms
+   * Designed to be called periodically (e.g., every 6 hours)
+   */
+  async syncAllClients(): Promise<{ total: number; synced: number; errors: number }> {
+    const summary = { total: 0, synced: 0, errors: 0 };
+
+    try {
+      // Find all clients with active social media accounts
+      const activeAccounts = await db
+        .select({ clientId: socialMediaAccounts.clientId })
+        .from(socialMediaAccounts)
+        .where(eq(socialMediaAccounts.isActive, true))
+        .groupBy(socialMediaAccounts.clientId);
+
+      summary.total = activeAccounts.length;
+
+      for (const { clientId } of activeAccounts) {
+        if (!clientId) continue;
+
+        try {
+          const result = await this.syncClientAnalytics(clientId);
+          summary.synced += result.synced;
+          summary.errors += result.errors.length;
+        } catch (error: any) {
+          console.error(`Analytics sync failed for client ${clientId}:`, error.message);
+          summary.errors++;
+        }
+      }
+
+      console.log(
+        `Analytics sync complete: ${summary.total} clients, ${summary.synced} posts synced, ${summary.errors} errors`,
+      );
+    } catch (error) {
+      console.error("Analytics sync all failed:", error);
+    }
+
+    return summary;
+  }
+
+  /**
+   * Start periodic analytics sync (every 6 hours)
+   */
+  private syncInterval: ReturnType<typeof setInterval> | null = null;
+
+  startScheduledSync(intervalMs: number = 6 * 60 * 60 * 1000) {
+    if (this.syncInterval) {
+      clearInterval(this.syncInterval);
+    }
+
+    console.log(`Starting analytics sync scheduler (every ${intervalMs / 3600000}h)`);
+
+    this.syncInterval = setInterval(async () => {
+      try {
+        await this.syncAllClients();
+      } catch (error) {
+        console.error("Scheduled analytics sync error:", error);
+      }
+    }, intervalMs);
+
+    // Run initial sync after 30 seconds (let server fully start)
+    setTimeout(() => this.syncAllClients().catch(console.error), 30_000);
+  }
+
+  stopScheduledSync() {
+    if (this.syncInterval) {
+      clearInterval(this.syncInterval);
+      this.syncInterval = null;
+    }
   }
 }
 

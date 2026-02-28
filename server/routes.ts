@@ -5,6 +5,7 @@ import { storage } from "./storage";
 import { randomBytes } from "crypto";
 import contentRoutes from "./routes/content";
 import metaRoutes from "./routes/meta";
+import googleRoutes from "./routes/google";
 import { tasksRouter } from "./routes/tasks";
 import brandColorsRoutes from "./routes/brand-colors";
 import { registerBillingAdminRoutes } from "./routes/billing-admin";
@@ -2702,6 +2703,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Meta (Facebook/Instagram/WhatsApp) Integration Routes
   app.use("/api/meta", metaRoutes);
+  app.use("/api/google", googleRoutes);
 
   // Task Management Routes (protected by authentication)
   app.use("/api/tasks", isAuthenticated, tasksRouter);

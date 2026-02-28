@@ -3,6 +3,7 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { setupWebSocket } from "./websocket";
 import { handleStripeWebhook } from "./routes/stripe-webhook";
+import { analyticsSyncService } from "./services/analyticsSync";
 
 const app = express();
 
@@ -91,5 +92,8 @@ app.use((req, res, next) => {
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
+
+    // Start analytics sync scheduler (every 6 hours)
+    analyticsSyncService.startScheduledSync();
   });
 })();

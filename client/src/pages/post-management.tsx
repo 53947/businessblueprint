@@ -79,6 +79,31 @@ export default function ContentManagement() {
     setClientId(storedClientId);
   }, [setLocation]);
 
+  // Handle OAuth redirect callback
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const oauthStatus = urlParams.get("oauth");
+    const platform = urlParams.get("platform");
+
+    if (oauthStatus === "success" && platform) {
+      toast({
+        title: "Platform Connected",
+        description: `${platform.replace("_", " ")} has been connected successfully.`,
+      });
+      queryClient.invalidateQueries({ queryKey: [`/api/post/${clientId}/platforms`] });
+      setActiveTab("platforms");
+      // Clean URL
+      window.history.replaceState({}, "", "/post");
+    } else if (oauthStatus === "error") {
+      toast({
+        title: "Connection Failed",
+        description: "Failed to connect platform. Please try again.",
+        variant: "destructive",
+      });
+      window.history.replaceState({}, "", "/post");
+    }
+  }, [clientId]);
+
   // Fetch client data to determine tier and limits
   const { data: clientData } = useQuery<any>({
     queryKey: [`/api/clients/${clientId}`],
@@ -757,6 +782,12 @@ export default function ContentManagement() {
                                 variant="outline"
                                 size="sm"
                                 className="flex-1"
+                                onClick={() => {
+                                  const oauthUrl = platform.platform === 'google_business'
+                                    ? `/api/google/oauth/start?clientId=${clientId}&returnUrl=/post`
+                                    : `/api/meta/oauth/start?platform=${platform.platform}&clientId=${clientId}&returnUrl=/post`;
+                                  window.location.href = oauthUrl;
+                                }}
                                 data-testid={`button-refresh-${platform.platform}`}
                               >
                                 Refresh
@@ -765,6 +796,15 @@ export default function ContentManagement() {
                                 variant="outline"
                                 size="sm"
                                 className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                onClick={async () => {
+                                  try {
+                                    await apiRequest("DELETE", `/api/post/${clientId}/platforms/${platform.id}`);
+                                    queryClient.invalidateQueries({ queryKey: [`/api/post/${clientId}/platforms`] });
+                                    toast({ title: "Disconnected", description: `${platform.platformAccountName || platform.platform} has been disconnected.` });
+                                  } catch {
+                                    toast({ title: "Error", description: "Failed to disconnect platform", variant: "destructive" });
+                                  }
+                                }}
                                 data-testid={`button-disconnect-${platform.platform}`}
                               >
                                 Disconnect
@@ -804,7 +844,7 @@ export default function ContentManagement() {
                         <Button
                           className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                           disabled={connectedPlatforms.some((p: any) => p.platform === 'facebook')}
-                          onClick={() => window.location.href = `/api/meta/auth/facebook?clientId=${clientId}`}
+                          onClick={() => window.location.href = `/api/meta/oauth/start?platform=facebook&clientId=${clientId}&returnUrl=/post`}
                           data-testid="button-connect-facebook"
                         >
                           {connectedPlatforms.some((p: any) => p.platform === 'facebook') ? 'Connected' : 'Connect Facebook'}
@@ -828,7 +868,7 @@ export default function ContentManagement() {
                         <Button
                           className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
                           disabled={connectedPlatforms.some((p: any) => p.platform === 'instagram')}
-                          onClick={() => window.location.href = `/api/meta/auth/instagram?clientId=${clientId}`}
+                          onClick={() => window.location.href = `/api/meta/oauth/start?platform=instagram&clientId=${clientId}&returnUrl=/post`}
                           data-testid="button-connect-instagram"
                         >
                           {connectedPlatforms.some((p: any) => p.platform === 'instagram') ? 'Connected' : 'Connect Instagram'}
@@ -900,7 +940,7 @@ export default function ContentManagement() {
                         <Button
                           className="w-full bg-red-600 hover:bg-red-700 text-white"
                           disabled={connectedPlatforms.some((p: any) => p.platform === 'google_business')}
-                          onClick={() => toast({ title: "Coming Soon", description: "Google Business integration will be available once API credentials are configured." })}
+                          onClick={() => window.location.href = `/api/google/oauth/start?clientId=${clientId}&returnUrl=/post`}
                           data-testid="button-connect-google"
                         >
                           {connectedPlatforms.some((p: any) => p.platform === 'google_business') ? 'Connected' : 'Connect Google'}
