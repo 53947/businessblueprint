@@ -73,7 +73,9 @@ export default function SendDashboard() {
   // Use shared CRM data from hook (avoids duplicate queries)
   const crmContacts = crmPresence.contacts;
   const crmSegments = crmPresence.segments;
-  
+  const crmContactsLoading = crmPresence.state === 'loading';
+  const crmSegmentsLoading = crmPresence.state === 'loading';
+
   // Show CRM empty state for unauthenticated users or when CRM has no data
   const showCrmEmptyState = crmPresence.state === 'unauthenticated' || crmPresence.state === 'empty';
 

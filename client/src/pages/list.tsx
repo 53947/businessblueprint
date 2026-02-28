@@ -374,7 +374,7 @@ export default function ListingsManagement() {
               <Card className="mb-8" data-testid="card-crm-company">
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-base">
-                    <Link2 className="h-4 w-4 text-green-600" />
+                    <Globe className="h-4 w-4 text-green-600" />
                     CRM Business Data
                     <Badge className="bg-green-100 text-green-700 text-xs">Performance</Badge>
                   </CardTitle>

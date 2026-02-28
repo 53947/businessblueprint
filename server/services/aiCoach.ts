@@ -1,6 +1,9 @@
 import { unifiedAI } from './ai-provider';
 import { aiSettingsService } from './ai-settings';
 import { scansBlueService } from './scansblue';
+import { db } from "../db";
+import { aiCoachConversations, aiCoachMessages } from "@shared/schema";
+import { eq, desc } from "drizzle-orm";
 
 interface CoachingContext {
   businessInfo: {
@@ -414,6 +417,122 @@ Format as JSON with actionItems array containing task, priority, estimatedTime, 
         "Increased confidence in the process"
       ]
     };
+  }
+  // ---- Conversation History Persistence ----
+
+  /**
+   * Create a new conversation for a client
+   */
+  async createConversation(clientId: number, title?: string) {
+    const [conversation] = await db
+      .insert(aiCoachConversations)
+      .values({ clientId, title: title || "New Conversation" })
+      .returning();
+    return conversation;
+  }
+
+  /**
+   * Get all conversations for a client
+   */
+  async getConversations(clientId: number) {
+    return db
+      .select()
+      .from(aiCoachConversations)
+      .where(eq(aiCoachConversations.clientId, clientId))
+      .orderBy(desc(aiCoachConversations.updatedAt));
+  }
+
+  /**
+   * Get all messages in a conversation
+   */
+  async getMessages(conversationId: number) {
+    return db
+      .select()
+      .from(aiCoachMessages)
+      .where(eq(aiCoachMessages.conversationId, conversationId))
+      .orderBy(aiCoachMessages.createdAt);
+  }
+
+  /**
+   * Send a message in a conversation and get AI response
+   */
+  async chat(
+    clientId: number,
+    conversationId: number,
+    userMessage: string,
+    context?: CoachingContext,
+  ) {
+    // Save user message
+    await db.insert(aiCoachMessages).values({
+      conversationId,
+      role: "user",
+      content: userMessage,
+      messageType: "guidance",
+    });
+
+    // Get conversation history for context
+    const history = await this.getMessages(conversationId);
+    const chatHistory = history.map((m) => ({
+      role: m.role as "user" | "assistant",
+      content: m.content,
+    }));
+
+    // Build the AI request with history
+    const productKnowledge = this.getProductKnowledgeContext();
+    const contextInfo = context
+      ? `\n\nBusiness Context:\n- Business: ${context.businessInfo.name} (${context.businessInfo.industry})\n- Digital Score: ${context.businessInfo.digitalScore}/100\n- Experience: ${context.userProgress.experience}`
+      : "";
+
+    try {
+      const provider = await aiSettingsService.getProvider("coach_blue");
+      const response = await unifiedAI.getCompletion(provider, {
+        messages: [
+          {
+            role: "system",
+            content: `You are Coach Blue, an expert digital marketing coach for BusinessBlueprint.io. You help small businesses improve their online presence with encouraging, actionable guidance. Be conversational and helpful.${contextInfo}\n\n${productKnowledge}`,
+          },
+          ...chatHistory,
+        ],
+        temperature: 0.7,
+        maxTokens: 1500,
+      });
+
+      const aiMessage = response.content || "I'm having trouble responding right now. Please try again.";
+
+      // Save AI response
+      await db.insert(aiCoachMessages).values({
+        conversationId,
+        role: "assistant",
+        content: aiMessage,
+        messageType: "guidance",
+      });
+
+      // Update conversation title from first user message
+      if (history.length <= 1) {
+        const title = userMessage.length > 60 ? userMessage.substring(0, 57) + "..." : userMessage;
+        await db
+          .update(aiCoachConversations)
+          .set({ title, updatedAt: new Date() })
+          .where(eq(aiCoachConversations.id, conversationId));
+      } else {
+        await db
+          .update(aiCoachConversations)
+          .set({ updatedAt: new Date() })
+          .where(eq(aiCoachConversations.id, conversationId));
+      }
+
+      return { role: "assistant" as const, content: aiMessage };
+    } catch (error) {
+      console.error("Error in AI Coach chat:", error);
+      const fallback = "I'm having trouble connecting right now. Please try again in a moment.";
+      await db.insert(aiCoachMessages).values({
+        conversationId,
+        role: "assistant",
+        content: fallback,
+        messageType: "guidance",
+      });
+      return { role: "assistant" as const, content: fallback };
+    }
   }
 }
 

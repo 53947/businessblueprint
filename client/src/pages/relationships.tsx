@@ -112,11 +112,14 @@ interface CrmContact {
 interface CrmTask {
   id: number;
   title: string;
+  description: string | null;
   taskType: string;
   status: string;
   priority: string;
   dueDate: string | null;
   contactId: number | null;
+  companyId: number | null;
+  dealId: number | null;
   completedAt: string | null;
   createdAt: string;
 }

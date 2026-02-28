@@ -161,6 +161,15 @@ export const CRM_EMPTY_CONFIGS = {
       "Connect reviews to customer records"
     ]
   },
+  list: {
+    appName: "List",
+    description: "Add your business to the CRM to sync your presence across directories.",
+    benefits: [
+      "Keep business info consistent everywhere",
+      "Track which listings drive contacts",
+      "Connect reviews to customer records"
+    ]
+  },
   reputation: {
     appName: "Reputation",
     description: "Link reviews to customer records for personalized response strategies.",
@@ -168,6 +177,33 @@ export const CRM_EMPTY_CONFIGS = {
       "Match reviews to existing customers",
       "Track reviewer sentiment over time",
       "Respond with customer context"
+    ]
+  },
+  review: {
+    appName: "Review",
+    description: "Link reviews to customer records for personalized response strategies.",
+    benefits: [
+      "Match reviews to existing customers",
+      "Track reviewer sentiment over time",
+      "Respond with customer context"
+    ]
+  },
+  post: {
+    appName: "Post",
+    description: "Connect your audience data to publish content that reaches the right people.",
+    benefits: [
+      "Target posts to customer segments",
+      "Track engagement by audience type",
+      "Personalize content for different groups"
+    ]
+  },
+  respond: {
+    appName: "Respond",
+    description: "Import your contacts to see customer context when conversations arrive.",
+    benefits: [
+      "View customer history in conversations",
+      "Auto-link messages to contact records",
+      "Track all interactions in one timeline"
     ]
   }
 };

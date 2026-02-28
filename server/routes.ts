@@ -14,6 +14,7 @@ import { crmRouter } from "./routes/crm";
 import { publicApiRouter } from "./routes/api";
 import { listingDistributionRouter } from "./routes/listing-distribution";
 import { chatRouter } from "./routes/chat";
+import { aiCoachRouter } from "./routes/ai-coach";
 import {
   insertAssessmentSchema,
   subscriptionPlans,
@@ -641,7 +642,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 .where(eq(businessListings.clientId, clientId));
               const activeCount = allListings.filter((l) => l.status === "active").length;
               const pendingCount = allListings.filter((l) => l.status === "pending").length;
-              const platforms = [...new Set(allListings.map((l) => l.platform))];
+              const platforms = Array.from(new Set(allListings.map((l) => l.platform)));
               return {
                 total: allListings.length,
                 verified: activeCount,
@@ -2062,11 +2063,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // If AI response requested, generate using ReviewAI service
       if (useAI && !response) {
         try {
-          const { reviewAIService } = await import("./services/reviewAI");
-          reviewResponse = await reviewAIService.generateResponse(
-            client.companyName || "our business",
-            response || "Thank you for your review.",
-          );
+          const { reviewAI } = await import("./services/reviewAI");
+          reviewResponse = await reviewAI.generateReviewResponse({
+            reviewText: response || "",
+            rating: 5,
+            platform: "google",
+            businessName: client.companyName || "our business",
+          });
           isAI = true;
         } catch {
           reviewResponse =
@@ -2240,7 +2243,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Client not found" });
       }
 
-      const businessName = client.companyName || client.name;
+      const businessName = client.companyName || "";
       if (!businessName) {
         return res.status(400).json({ error: "Client has no business name set" });
       }
@@ -2565,7 +2568,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Merge with any existing enabled features
       const existingCodes = (client.enabledFeatures || "").split(",").filter(Boolean);
-      const allCodes = [...new Set([...existingCodes, ...purchasedCodes])];
+      const allCodes = Array.from(new Set([...existingCodes, ...purchasedCodes]));
       await storage.updateClient(client.id, { enabledFeatures: allCodes.join(",") });
 
       console.log("Marketplace order successful:", {
@@ -3132,9 +3135,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       for (const addon of selectedAddons) {
         const addonRecord = addons.find((a) => a.addonId === addon.addonId);
         if (addonRecord) {
+          const price = addonRecord.price ? String(addonRecord.price) : "0.00";
           await db.insert(subscriptionAddonSelections).values({
             subscriptionId: newSubscription.id,
             addonId: addonRecord.id,
+            unitPrice: price,
+            totalPrice: price,
           });
         }
       }
@@ -4143,10 +4149,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Public API v1 Routes (external integrations)
   app.use("/api/v1", publicApiRouter);
 
-  app.use("/api/v1", publicApiRouter);
-
-  // Payment Processing Routes
-  registerPaymentRoutes(app);
+  // AI Coach Routes (conversation history)
+  app.use(aiCoachRouter);
 
   // Listing Distribution Routes (push to 100+ directories)
   app.use("/api", listingDistributionRouter);

@@ -2051,6 +2051,27 @@ export type ContentTemplate = typeof contentTemplates.$inferSelect;
 export type InsertContentTemplate = z.infer<typeof insertContentTemplateSchema>;
 
 // ========================================
+// AI COACH CONVERSATION HISTORY
+// ========================================
+
+export const aiCoachConversations = pgTable("ai_coach_conversations", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  title: text("title"), // Auto-generated from first message
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const aiCoachMessages = pgTable("ai_coach_messages", {
+  id: serial("id").primaryKey(),
+  conversationId: integer("conversation_id").references(() => aiCoachConversations.id).notNull(),
+  role: varchar("role", { length: 20 }).notNull(), // "user" | "assistant"
+  content: text("content").notNull(),
+  messageType: varchar("message_type", { length: 30 }), // "guidance" | "help" | "progress"
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// ========================================
 // TASK MANAGEMENT SYSTEM
 // ========================================
 
