@@ -21,6 +21,8 @@ import Journey from "@/pages/journey";
 import LogoPreview from "@/pages/logo-preview";
 import SendLanding from "@/pages/send-landing";
 import SendDashboard from "@/pages/send-dashboard";
+import SendCampaignEditor from "@/pages/send-campaign-editor";
+import SendTemplates from "@/pages/send-templates";
 import RespondLanding from "@/pages/respond-landing";
 import RespondPage from "@/pages/respond";
 import LivechatLanding from "@/pages/livechat-landing";
@@ -92,6 +94,9 @@ function Router() {
       <Route path="/logo-preview" component={LogoPreview} />
       <Route path="/send" component={SendLanding} />
       <Route path="/send-app" component={SendDashboard} />
+      <Route path="/send/campaigns/new" component={SendCampaignEditor} />
+      <Route path="/send/campaigns/:id/edit" component={SendCampaignEditor} />
+      <Route path="/send/templates" component={SendTemplates} />
       <Route path="/respond" component={RespondLanding} />
       <Route path="/respond-app" component={RespondPage} />
       <Route path="/livechat" component={LivechatLanding} />

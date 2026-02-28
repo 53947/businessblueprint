@@ -11,6 +11,7 @@ import {
   insertSendListSchema,
   sendContacts,
   sendCampaigns,
+  sendTemplates,
 } from "@shared/schema";
 import { eq, desc, sql, and } from "drizzle-orm";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth";
@@ -1014,6 +1015,213 @@ export function registerSendRoutes(app: Express) {
           success: false,
           message: "Failed to delete campaign",
         });
+      }
+    },
+  );
+
+  // ============================================================================
+  // TEMPLATE CRUD
+  // ============================================================================
+
+  // List all templates for authenticated client
+  app.get(
+    "/api/send/templates",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const type = req.query.type as string | undefined;
+
+        let query = db
+          .select()
+          .from(sendTemplates)
+          .where(eq(sendTemplates.clientId, clientId))
+          .orderBy(desc(sendTemplates.updatedAt));
+
+        const templates = await (type
+          ? db
+              .select()
+              .from(sendTemplates)
+              .where(
+                and(
+                  eq(sendTemplates.clientId, clientId),
+                  eq(sendTemplates.templateType, type),
+                ),
+              )
+              .orderBy(desc(sendTemplates.updatedAt))
+          : query);
+
+        res.json({ success: true, templates });
+      } catch (error) {
+        console.error("Error fetching templates:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to fetch templates",
+        });
+      }
+    },
+  );
+
+  // Create a new template
+  app.post(
+    "/api/send/templates",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const { name, description, templateType, emailSubject, emailHtml, emailText, smsBody, category } = req.body;
+
+        if (!name || !templateType) {
+          return res.status(400).json({
+            success: false,
+            message: "Template name and type are required",
+          });
+        }
+
+        if (!["email", "sms"].includes(templateType)) {
+          return res.status(400).json({
+            success: false,
+            message: "Template type must be email or sms",
+          });
+        }
+
+        const [template] = await db
+          .insert(sendTemplates)
+          .values({
+            clientId,
+            name,
+            description: description || null,
+            templateType,
+            emailSubject: emailSubject || null,
+            emailHtml: emailHtml || null,
+            emailText: emailText || null,
+            smsBody: smsBody || null,
+            category: category || null,
+          })
+          .returning();
+
+        res.json({ success: true, template });
+      } catch (error) {
+        console.error("Error creating template:", error);
+        res.status(500).json({
+          success: false,
+          message: "Failed to create template",
+        });
+      }
+    },
+  );
+
+  // Get single template
+  app.get(
+    "/api/send/templates/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+          return res.status(400).json({ success: false, message: "Invalid template ID" });
+        }
+
+        const [template] = await db
+          .select()
+          .from(sendTemplates)
+          .where(
+            and(eq(sendTemplates.id, id), eq(sendTemplates.clientId, clientId)),
+          );
+
+        if (!template) {
+          return res.status(404).json({ success: false, message: "Template not found" });
+        }
+
+        res.json({ success: true, template });
+      } catch (error) {
+        console.error("Error fetching template:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch template" });
+      }
+    },
+  );
+
+  // Update template
+  app.patch(
+    "/api/send/templates/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+          return res.status(400).json({ success: false, message: "Invalid template ID" });
+        }
+
+        const [existing] = await db
+          .select()
+          .from(sendTemplates)
+          .where(
+            and(eq(sendTemplates.id, id), eq(sendTemplates.clientId, clientId)),
+          );
+
+        if (!existing) {
+          return res.status(404).json({ success: false, message: "Template not found" });
+        }
+
+        const updateData = { ...req.body, updatedAt: new Date() };
+        delete updateData.clientId;
+        delete updateData.id;
+
+        const [template] = await db
+          .update(sendTemplates)
+          .set(updateData)
+          .where(eq(sendTemplates.id, id))
+          .returning();
+
+        res.json({ success: true, template });
+      } catch (error) {
+        console.error("Error updating template:", error);
+        res.status(500).json({ success: false, message: "Failed to update template" });
+      }
+    },
+  );
+
+  // Delete template
+  app.delete(
+    "/api/send/templates/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+          return res.status(400).json({ success: false, message: "Invalid template ID" });
+        }
+
+        const [existing] = await db
+          .select()
+          .from(sendTemplates)
+          .where(
+            and(eq(sendTemplates.id, id), eq(sendTemplates.clientId, clientId)),
+          );
+
+        if (!existing) {
+          return res.status(404).json({ success: false, message: "Template not found" });
+        }
+
+        if (existing.isSystem) {
+          return res.status(400).json({
+            success: false,
+            message: "System templates cannot be deleted",
+          });
+        }
+
+        await db.delete(sendTemplates).where(eq(sendTemplates.id, id));
+
+        res.json({ success: true, message: "Template deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting template:", error);
+        res.status(500).json({ success: false, message: "Failed to delete template" });
       }
     },
   );
