@@ -8,7 +8,7 @@ console.log('[PAYMENT ROUTES] File loaded!');
 
 import type { Express } from "express";
 import { db } from "../db";
-import { users } from "@shared/schema";
+import { users, billingHistory } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import { paymentService } from "../services/payment-service";
 
@@ -160,10 +160,16 @@ export function registerPaymentRoutes(app: Express) {
         metadata: metadata || {}
       });
 
-      // If successful, you might want to record the transaction
-      if (result.success) {
-        // TODO: Save transaction to database
-        // await db.insert(transactions).values({...});
+      // Record transaction in billing history
+      if (result.success && result.transactionId) {
+        await db.insert(billingHistory).values({
+          nmiTransactionId: result.transactionId,
+          amount: String(result.amount || amount),
+          status: "paid",
+          billingDate: new Date(),
+          paidDate: new Date(),
+          paymentMethod: { provider: result.provider, paymentMethodId },
+        });
       }
 
       res.json(result);

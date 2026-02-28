@@ -18,6 +18,9 @@ import * as ipaddr from 'ipaddr.js';
 import { googlePlacesService } from './googlePlaces';
 import { yelpApiService } from './yelpApi';
 import { scansBlueService } from './scansblue';
+import { db } from '../db';
+import { socialMediaAccounts } from '@shared/schema';
+import { eq, and } from 'drizzle-orm';
 
 interface ScansBluesFastCheck {
   overallScore: number;
@@ -654,9 +657,19 @@ export class PresenceScannerService {
     const totalListings = Object.values(platforms).filter(p => p.exists).length;
     const claimedListings = Object.values(platforms).filter(p => p.claimed).length;
     
-    // Consistency check (compare business info across platforms)
-    const consistency = 100; // TODO: Implement NAP consistency check
-    
+    // NAP consistency check — compare name/address/phone across platforms
+    const napEntries: { name?: string; address?: string; phone?: string }[] = [];
+    if (params.businessName) {
+      napEntries.push({ name: params.businessName, address: params.address, phone: params.phone });
+    }
+    if (googleResult.exists) {
+      napEntries.push({ name: googleResult.name, address: googleResult.address, phone: googleResult.phone });
+    }
+    if (yelpResult.exists) {
+      napEntries.push({ name: yelpResult.name, address: yelpResult.address, phone: yelpResult.phone });
+    }
+    const consistency = this.calculateNapConsistency(napEntries);
+
     // Score based on platforms we ACTUALLY check (Google + Yelp = 2)
     // Don't penalize businesses for platforms we don't check yet
     const SUPPORTED_PLATFORMS = 2; // Google + Yelp (we check these)
@@ -734,7 +747,11 @@ export class PresenceScannerService {
       ? ratingsWithCounts.reduce((sum, p) => sum + (p.rating * p.count), 0) / totalReviews
       : 0;
 
-    const responseRate = 0; // TODO: Calculate based on review responses
+    // Calculate aggregate response rate from platforms that report it
+    const platformsWithReviews = [platforms.google, platforms.yelp].filter(p => p.reviewCount > 0);
+    const responseRate = platformsWithReviews.length > 0
+      ? platformsWithReviews.reduce((sum, p) => sum + p.responseRate, 0) / platformsWithReviews.length
+      : 0;
 
     // Calculate score
     const score = this.calculateReviewScore({ totalReviews, averageRating, responseRate });
@@ -1195,6 +1212,47 @@ export class PresenceScannerService {
     score += (data.responseRate / 100) * 20;
 
     return Math.min(100, score);
+  }
+
+  /**
+   * Calculate NAP (Name, Address, Phone) consistency across platforms
+   * Returns 0-100 score
+   */
+  private calculateNapConsistency(entries: { name?: string; address?: string; phone?: string }[]): number {
+    if (entries.length < 2) return 100; // Can't compare with fewer than 2 sources
+
+    const normalize = (val?: string) => (val || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    let matches = 0;
+    let comparisons = 0;
+
+    // Compare each field across all pairs
+    for (let i = 0; i < entries.length; i++) {
+      for (let j = i + 1; j < entries.length; j++) {
+        // Name comparison (fuzzy — check if one contains the other)
+        const n1 = normalize(entries[i].name);
+        const n2 = normalize(entries[j].name);
+        if (n1 && n2) {
+          comparisons++;
+          if (n1 === n2 || n1.includes(n2) || n2.includes(n1)) matches++;
+        }
+        // Phone comparison (digits only)
+        const p1 = (entries[i].phone || '').replace(/\D/g, '').slice(-10);
+        const p2 = (entries[j].phone || '').replace(/\D/g, '').slice(-10);
+        if (p1 && p2) {
+          comparisons++;
+          if (p1 === p2) matches++;
+        }
+        // Address comparison (normalized)
+        const a1 = normalize(entries[i].address);
+        const a2 = normalize(entries[j].address);
+        if (a1 && a2) {
+          comparisons++;
+          if (a1 === a2 || a1.includes(a2) || a2.includes(a1)) matches++;
+        }
+      }
+    }
+
+    return comparisons > 0 ? Math.round((matches / comparisons) * 100) : 100;
   }
 
   /**

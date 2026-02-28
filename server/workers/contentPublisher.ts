@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { contentPosts, socialMediaAccounts } from '@shared/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, inArray } from 'drizzle-orm';
 import { PlatformFactory, SupportedPlatform } from '../services/platforms/platformFactory';
 
 // Standalone publish function that can be called by scheduler
@@ -93,7 +93,7 @@ export async function publishPost(post: typeof contentPosts.$inferSelect) {
         const media = await db
           .select()
           .from(contentMedia)
-          .where(eq(contentMedia.id, post.mediaIds[0])); // TODO: Handle multiple media
+          .where(inArray(contentMedia.id, post.mediaIds));
         mediaUrls = media.map(m => m.storageUrl).filter(Boolean) as string[];
       }
       

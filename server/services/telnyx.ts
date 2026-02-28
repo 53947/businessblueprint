@@ -84,15 +84,30 @@ class TelnyxService {
    * Send bulk SMS (for campaigns)
    */
   async sendBulkSms(messages: TelnyxSendSmsParams[]): Promise<TelnyxSmsResponse[]> {
-    // Telnyx doesn't have a bulk endpoint, so we send individually
-    // TODO: Implement rate limiting and queue management
-    const results = await Promise.allSettled(
-      messages.map(msg => this.sendSms(msg))
-    );
+    // Send in batches of 10 with 500ms delay between batches to avoid rate limits
+    const BATCH_SIZE = 10;
+    const BATCH_DELAY_MS = 500;
+    const allResults: TelnyxSmsResponse[] = [];
 
-    return results
-      .filter((r): r is PromiseFulfilledResult<TelnyxSmsResponse> => r.status === 'fulfilled')
-      .map(r => r.value);
+    for (let i = 0; i < messages.length; i += BATCH_SIZE) {
+      const batch = messages.slice(i, i + BATCH_SIZE);
+      const results = await Promise.allSettled(
+        batch.map(msg => this.sendSms(msg))
+      );
+
+      allResults.push(
+        ...results
+          .filter((r): r is PromiseFulfilledResult<TelnyxSmsResponse> => r.status === 'fulfilled')
+          .map(r => r.value)
+      );
+
+      // Delay between batches (skip after last batch)
+      if (i + BATCH_SIZE < messages.length) {
+        await new Promise(resolve => setTimeout(resolve, BATCH_DELAY_MS));
+      }
+    }
+
+    return allResults;
   }
 
   /**
