@@ -136,6 +136,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const demoAccounts = [
         {
+          companyName: "TriadBlue Inc.",
+          email: "53947@triadblue.com",
+          accountStatus: "active" as const,
+          isAdmin: true,
+        },
+        {
+          companyName: "BusinessBlueprint User",
+          email: "53947@businessblueprint.io",
+          accountStatus: "active" as const,
+        },
+        {
           companyName: "Demo Restaurant",
           email: "demo@businessblueprint.io",
           accountStatus: "active" as const,
@@ -1353,6 +1364,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Check if token has been used (allow demo accounts to reuse tokens)
       const isDemoEmail = [
+        "53947@triadblue.com",
+        "53947@businessblueprint.io",
         "demo@businessblueprint.io",
         "test@businessblueprint.io",
         "agency@businessblueprint.io",
@@ -1762,26 +1775,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const normalizedEmail = email.toLowerCase().trim();
 
-      // Auto-create demo accounts on first login attempt
-      const demoAccounts: Record<string, string> = {
-        "demo@businessblueprint.io": "Demo Restaurant",
-        "test@businessblueprint.io": "Test Business",
-        "agency@businessblueprint.io": "Social Media Agency",
+      // Auto-create known accounts on first login attempt
+      const autoAccounts: Record<string, { companyName: string; isAdmin?: boolean }> = {
+        "53947@triadblue.com": { companyName: "TriadBlue Inc.", isAdmin: true },
+        "53947@businessblueprint.io": { companyName: "BusinessBlueprint User" },
+        "demo@businessblueprint.io": { companyName: "Demo Restaurant" },
+        "test@businessblueprint.io": { companyName: "Test Business" },
+        "agency@businessblueprint.io": { companyName: "Social Media Agency" },
       };
 
       // Find client by email (case-insensitive, trimmed)
       let client = await storage.getClientByEmail(normalizedEmail);
 
-      // Auto-create demo account if it doesn't exist
-      if (!client && demoAccounts[normalizedEmail]) {
+      // Auto-create account if it doesn't exist
+      if (!client && autoAccounts[normalizedEmail]) {
+        const acct = autoAccounts[normalizedEmail];
         client = await storage.createClient({
-          companyName: demoAccounts[normalizedEmail],
+          companyName: acct.companyName,
           email: normalizedEmail,
           accountStatus: "active" as const,
+          ...(acct.isAdmin && { isAdmin: true }),
         });
         console.log(
-          `[Login] Auto-created demo account: ${normalizedEmail} (ID: ${client.id})`,
+          `[Login] Auto-created account: ${normalizedEmail} (ID: ${client.id}, admin: ${!!acct.isAdmin})`,
         );
+      }
+
+      // Ensure admin flag is always set for hardcoded admin accounts
+      if (client && autoAccounts[normalizedEmail]?.isAdmin && !client.isAdmin) {
+        await db.update(clients).set({ isAdmin: true }).where(eq(clients.id, client.id));
+        client = { ...client, isAdmin: true };
       }
 
       if (!client) {
@@ -1798,6 +1821,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Token expires in 24 hours for demo accounts, 15 minutes for others
       const expiresAt = new Date();
       const isDemoAccount = [
+        "53947@triadblue.com",
+        "53947@businessblueprint.io",
         "demo@businessblueprint.io",
         "test@businessblueprint.io",
         "agency@businessblueprint.io",
