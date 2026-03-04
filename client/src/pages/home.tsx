@@ -72,7 +72,7 @@ export default function Home() {
                   data-testid="button-start-assessment"
                 >
                   <img src={heroAssessmentIcon} alt="" className="w-6 h-6 mr-2" />
-                  Start Free Blueprint to Your Growth
+                  Start Here
                 </Button>
                 <Link href="/ai-coach">
                   <Button 
