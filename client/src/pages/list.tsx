@@ -395,7 +395,7 @@ export default function ListingsManagement() {
                     <Badge className="bg-green-100 text-green-700 text-xs">Performance</Badge>
                   </CardTitle>
                   <CardDescription className="text-xs">
-                    Linked from /relationships company records
+                    Linked from / connect company records
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -436,8 +436,8 @@ export default function ListingsManagement() {
                     )}
                   </div>
                   <div className="mt-3 pt-3 border-t flex justify-end">
-                    <Button variant="ghost" size="sm" className="text-xs" onClick={() => window.location.href = '/relationships'} data-testid="button-view-crm">
-                      View in /relationships
+                    <Button variant="ghost" size="sm" className="text-xs" onClick={() => window.location.href = '/connect'} data-testid="button-view-crm">
+                      View in / connect
                     </Button>
                   </div>
                 </CardContent>

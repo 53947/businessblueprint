@@ -15,8 +15,8 @@ export default function RelationshipsLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={relationshipsIcon} alt="/relationships icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">/relationships</h1>
+              <img src={relationshipsIcon} alt="/ connect icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">/ connect</h1>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
               Your Complete CRM Command Center
@@ -32,7 +32,7 @@ export default function RelationshipsLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'relationships-addon', name: '/relationships', price: 29, type: 'addon' }
+                    detail: { sku: 'relationships-addon', name: '/ connect', price: 29, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -47,7 +47,7 @@ export default function RelationshipsLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/relationships/dashboard">Open Dashboard</a>
+                <a href="/connect/dashboard">Open Dashboard</a>
               </Button>
               <Button 
                 size="lg" 
@@ -216,7 +216,7 @@ export default function RelationshipsLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-8 md:p-12 border border-gray-200 shadow-xl bg-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
-              Why Choose /relationships?
+              Why Choose / connect?
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
@@ -241,7 +241,7 @@ export default function RelationshipsLanding() {
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <span>Integrates with /send, /inbox, and /content</span>
+                    <span>Integrates with / promote, / respond, and / post</span>
                   </li>
                 </ul>
               </div>
@@ -292,7 +292,7 @@ export default function RelationshipsLanding() {
               style={{ backgroundColor: '#0000FF' }}
               asChild
             >
-              <a href="/relationships/dashboard">Start Free Today</a>
+              <a href="/connect/dashboard">Start Free Today</a>
             </Button>
             <Button 
               size="lg" 

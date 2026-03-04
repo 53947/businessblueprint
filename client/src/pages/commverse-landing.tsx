@@ -82,8 +82,8 @@ export default function CommverseLanding() {
             <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#E6B747' }}>
               <CardContent className="pt-8">
                 <div className="text-center">
-                  <img src={sendIcon} alt="/send" className="h-16 w-16 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold mb-3 text-gray-900">/send</h3>
+                  <img src={sendIcon} alt="/ promote" className="h-16 w-16 mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold mb-3 text-gray-900">/ promote</h3>
                   <p className="text-sm mb-4" style={{ color: '#E6B747' }}>Email & SMS Marketing</p>
                   <p className="text-gray-600 mb-4">
                     Create unified campaigns, manage contacts, and own your customer data. GDPR and CAN-SPAM compliant.
@@ -94,7 +94,7 @@ export default function CommverseLanding() {
                     style={{ borderColor: '#E6B747', color: '#E6B747' }}
                     asChild
                   >
-                    <a href="/send">Learn More →</a>
+                    <a href="/promote">Learn More →</a>
                   </Button>
                 </div>
               </CardContent>
@@ -103,8 +103,8 @@ export default function CommverseLanding() {
             <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#8000FF' }}>
               <CardContent className="pt-8">
                 <div className="text-center">
-                  <img src={livechatIcon} alt="/livechat" className="h-16 w-16 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold mb-3 text-gray-900">/livechat</h3>
+                  <img src={livechatIcon} alt="/ engage" className="h-16 w-16 mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold mb-3 text-gray-900">/ engage</h3>
                   <p className="text-sm mb-4" style={{ color: '#8000FF' }}>Website Live Chat</p>
                   <p className="text-gray-600 mb-4">
                     Turn visitors into conversations. Real-time chat with session persistence and conversation history.
@@ -115,7 +115,7 @@ export default function CommverseLanding() {
                     style={{ borderColor: '#8000FF', color: '#8000FF' }}
                     asChild
                   >
-                    <a href="/livechat">Learn More →</a>
+                    <a href="/engage">Learn More →</a>
                   </Button>
                 </div>
               </CardContent>
@@ -124,8 +124,8 @@ export default function CommverseLanding() {
             <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#0080FF' }}>
               <CardContent className="pt-8">
                 <div className="text-center">
-                  <img src={inboxIcon} alt="/respond" className="h-16 w-16 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold mb-3 text-gray-900">/respond</h3>
+                  <img src={inboxIcon} alt="/ respond" className="h-16 w-16 mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold mb-3 text-gray-900">/ respond</h3>
                   <p className="text-sm mb-4" style={{ color: '#0080FF' }}>Unified Communications</p>
                   <p className="text-gray-600 mb-4">
                     8 channels in one inbox: Email, SMS, WhatsApp, Facebook, Instagram, X, TikTok, and live chat.
@@ -167,7 +167,7 @@ export default function CommverseLanding() {
               <div>
                 <h3 className="text-xl font-bold mb-2">Cross-App Analytics</h3>
                 <p className="text-gray-600">
-                  /send knows what customers clicked in /livechat. /respond sees email campaign engagement. Smarter messaging across all channels.
+                  / promote knows what customers clicked in / engage. / respond sees email campaign engagement. Smarter messaging across all channels.
                 </p>
               </div>
             </div>

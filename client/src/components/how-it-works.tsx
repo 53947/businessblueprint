@@ -63,7 +63,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
               <img src={badge5} alt="CommVerse" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">CommVerse</h3>
-            <p className="text-xs text-gray-600">Complete communication suite: /send, /respond, /livechat, /post.</p>
+            <p className="text-xs text-gray-600">Complete communication suite: / promote, / respond, / engage, / post.</p>
           </div>
         </div>
 

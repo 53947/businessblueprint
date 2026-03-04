@@ -74,7 +74,7 @@ export function SendIcon({ className = "w-16 h-16" }: PathwayIconProps) {
     <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <img 
         src={sendIcon} 
-        alt="/send - Email + SMS Marketing" 
+        alt="/ promote - Email + SMS Marketing" 
         style={{ objectFit: 'contain', maxWidth: '90%', maxHeight: '90%' }}
       />
     </div>

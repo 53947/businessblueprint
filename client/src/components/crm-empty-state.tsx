@@ -35,7 +35,7 @@ export function CrmEmptyState({
             {description}
           </p>
         </div>
-        <Link href="/relationships">
+        <Link href="/connect">
           <Button size="sm" className="bg-[#22C55E] hover:bg-[#16A34A]" data-testid="btn-inline-add-contacts">
             Add Contacts
             <ArrowRight className="w-4 h-4 ml-1" />
@@ -60,7 +60,7 @@ export function CrmEmptyState({
               {description}
             </p>
           </div>
-          <Link href="/relationships">
+          <Link href="/connect">
             <Button className="bg-[#22C55E] hover:bg-[#16A34A]" data-testid="btn-compact-add-contacts">
               Open CRM Hub
               <ArrowRight className="w-4 h-4 ml-2" />
@@ -107,7 +107,7 @@ export function CrmEmptyState({
           )}
           
           <div className="flex flex-col gap-2 pt-4">
-            <Link href="/relationships">
+            <Link href="/connect">
               <Button className="w-full bg-[#22C55E] hover:bg-[#16A34A]" data-testid="btn-full-add-contacts">
                 <Users className="w-4 h-4 mr-2" />
                 Open CRM Hub

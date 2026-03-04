@@ -688,11 +688,11 @@ export default function InboxPage() {
                   className="w-full" 
                   variant="outline" 
                   size="sm"
-                  onClick={() => setLocation('/relationships')}
+                  onClick={() => setLocation('/connect')}
                   data-testid="button-view-crm"
                 >
                   <ExternalLink className="w-3 h-3 mr-2" />
-                  View in /relationships
+                  View in / connect
                 </Button>
               </div>
             ) : (
@@ -704,7 +704,7 @@ export default function InboxPage() {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  onClick={() => setLocation('/relationships')}
+                  onClick={() => setLocation('/connect')}
                   data-testid="button-create-crm-contact"
                 >
                   Create Contact

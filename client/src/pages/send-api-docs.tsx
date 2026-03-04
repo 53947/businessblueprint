@@ -109,7 +109,7 @@ $contact = $client->createContact([
           <div className="inline-flex items-center gap-2 mb-4">
             <Code className="w-8 h-8 text-[#E6B747]" />
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white">
-              /send API Documentation
+              / promote API Documentation
             </h1>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
@@ -192,7 +192,7 @@ $contact = $client->createContact([
           <TabsContent value="overview" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>What is /send?</CardTitle>
+                <CardTitle>What is / promote?</CardTitle>
                 <CardDescription>
                   A unified email and SMS marketing platform with complete API access
                 </CardDescription>
@@ -311,7 +311,7 @@ $contact = $client->createContact([
                   <div>
                     <h3 className="font-semibold mb-2">Start Building</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                      Use our code examples to integrate /send into your application
+                      Use our code examples to integrate / promote into your application
                     </p>
                     <Button 
                       size="sm" 
@@ -439,7 +439,7 @@ $contact = $client->createContact([
             <div className="grid md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>/send Standalone</CardTitle>
+                  <CardTitle>/ promote Standalone</CardTitle>
                   <CardDescription>Full API access for email & SMS</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -471,7 +471,7 @@ $contact = $client->createContact([
               <Card>
                 <CardHeader>
                   <CardTitle>Commverse Bundle</CardTitle>
-                  <CardDescription>/send + /livechat + /inbox</CardDescription>
+                  <CardDescription>/ promote + / engage + / respond</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="text-4xl font-bold mb-4">$119<span className="text-lg text-gray-600">/mo</span></div>

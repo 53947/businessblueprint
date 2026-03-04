@@ -456,7 +456,7 @@ export default function ApiDocsPage() {
         <section className="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 py-16">
           <div className="container max-w-6xl mx-auto px-4">
             <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-              <Link href="/relationships" className="hover:text-blue-600" data-testid="link-breadcrumb-relationships">Relationships CRM</Link>
+              <Link href="/connect" className="hover:text-blue-600" data-testid="link-breadcrumb-relationships">/ connect CRM</Link>
               <span>/</span>
               <span>API Documentation</span>
             </div>
@@ -903,7 +903,7 @@ export default function ApiDocsPage() {
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
                       Generate your API key and start integrating with the CRM API today.
                     </p>
-                    <Link href="/relationships" data-testid="link-go-to-crm">
+                    <Link href="/connect" data-testid="link-go-to-crm">
                       <Button size="lg" data-testid="button-go-to-crm">
                         <Terminal className="h-4 w-4 mr-2" />
                         Go to CRM Settings

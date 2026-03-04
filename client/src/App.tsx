@@ -92,17 +92,17 @@ function Router() {
       <Route path="/sitemap" component={Sitemap} />
       <Route path="/journey" component={Journey} />
       <Route path="/logo-preview" component={LogoPreview} />
-      <Route path="/send" component={SendLanding} />
-      <Route path="/send-app" component={SendDashboard} />
-      <Route path="/send/campaigns/new" component={SendCampaignEditor} />
-      <Route path="/send/campaigns/:id/edit" component={SendCampaignEditor} />
-      <Route path="/send/templates" component={SendTemplates} />
+      <Route path="/promote" component={SendLanding} />
+      <Route path="/promote-app" component={SendDashboard} />
+      <Route path="/promote/campaigns/new" component={SendCampaignEditor} />
+      <Route path="/promote/campaigns/:id/edit" component={SendCampaignEditor} />
+      <Route path="/promote/templates" component={SendTemplates} />
       <Route path="/respond" component={RespondLanding} />
       <Route path="/respond-app" component={RespondPage} />
-      <Route path="/livechat" component={LivechatLanding} />
-      <Route path="/livechat/dashboard" component={ChatDashboard} />
-      <Route path="/livechat-demo" component={LiveChatDemo} />
-      <Route path="/livechat-install" component={LiveChatInstall} />
+      <Route path="/engage" component={LivechatLanding} />
+      <Route path="/engage/dashboard" component={ChatDashboard} />
+      <Route path="/engage-demo" component={LiveChatDemo} />
+      <Route path="/engage-install" component={LiveChatInstall} />
       <Route path="/post-landing" component={PostLanding} />
       <Route path="/commverse" component={CommverseLanding} />
       <Route path="/commverse-pricing" component={CommversePricing} />
@@ -111,16 +111,16 @@ function Router() {
       <Route path="/brand-studio" component={BrandStudio} />
       <Route path="/post" component={PostManagement} />
       <Route path="/localblue" component={LocalBlueLanding} />
-      <Route path="/list-landing" component={ListLanding} />
-      <Route path="/review-landing" component={ReviewLanding} />
-      <Route path="/review-app" component={ReviewManagement} />
-      <Route path="/list-app" component={ListManagement} />
+      <Route path="/publish-landing" component={ListLanding} />
+      <Route path="/elevate-landing" component={ReviewLanding} />
+      <Route path="/elevate-app" component={ReviewManagement} />
+      <Route path="/publish-app" component={ListManagement} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
       <Route path="/data-deletion" component={DataDeletion} />
       <Route path="/find-results" component={FindResults} />
-      <Route path="/relationships" component={RelationshipsLanding} />
-      <Route path="/relationships/dashboard" component={RelationshipsDashboard} />
+      <Route path="/connect" component={RelationshipsLanding} />
+      <Route path="/connect/dashboard" component={RelationshipsDashboard} />
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/portal/assessment/confirmation" component={AssessmentConfirmation} />
       <Route path="/knowledge-base" component={KnowledgeBase} />

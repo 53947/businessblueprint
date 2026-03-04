@@ -610,7 +610,7 @@ export default function ContentManagement() {
                         <Badge className="bg-green-100 text-green-700 text-xs">Performance</Badge>
                       </CardTitle>
                       <CardDescription className="text-xs">
-                        Target your content to CRM segments from /relationships
+                        Target your content to CRM segments from / connect
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="pt-2">
@@ -650,10 +650,10 @@ export default function ContentManagement() {
                           variant="ghost"
                           size="sm"
                           className="w-full mt-2 text-xs"
-                          onClick={() => setLocation('/relationships')}
+                          onClick={() => setLocation('/connect')}
                           data-testid="button-view-crm"
                         >
-                          View all segments in /relationships
+                          View all segments in / connect
                         </Button>
                       </div>
                     </CardContent>

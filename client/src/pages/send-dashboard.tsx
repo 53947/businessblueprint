@@ -108,7 +108,7 @@ export default function SendDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <SectionHeader 
-        title="/send - Email + SMS Marketing"
+        title="/ promote - Email + SMS Marketing"
         tabs={[
           { 
             label: 'Overview', 
@@ -387,7 +387,7 @@ export default function SendDashboard() {
                       <Link2 className="w-5 h-5 text-green-600" />
                       <CardTitle className="text-base">CRM Integration</CardTitle>
                     </div>
-                    <CardDescription>Pull contacts from /relationships</CardDescription>
+                    <CardDescription>Pull contacts from / connect</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     {crmContactsLoading ? (
@@ -411,11 +411,11 @@ export default function SendDashboard() {
                     <Button 
                       className="w-full justify-center mt-2" 
                       variant="outline"
-                      onClick={() => setLocation('/relationships')}
+                      onClick={() => setLocation('/connect')}
                       data-testid="button-manage-crm"
                     >
                       <ExternalLink className="w-4 h-4 mr-2" />
-                      Manage in /relationships
+                      Manage in / connect
                     </Button>
                   </CardContent>
                 </Card>
@@ -488,7 +488,7 @@ export default function SendDashboard() {
                     <div className="flex items-center justify-between">
                       <div>
                         <CardTitle>CRM Contacts</CardTitle>
-                        <CardDescription>Contacts synced from /relationships</CardDescription>
+                        <CardDescription>Contacts synced from / connect</CardDescription>
                       </div>
                       <Badge className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
                         <Link2 className="w-3 h-3 mr-1" />
@@ -538,8 +538,8 @@ export default function SendDashboard() {
                       <div className="text-center py-8">
                         <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                         <p className="text-gray-500 dark:text-gray-400 mb-4">No contacts in CRM yet</p>
-                        <Button onClick={() => setLocation('/relationships')} data-testid="button-add-crm-contacts">
-                          Add Contacts in /relationships
+                        <Button onClick={() => setLocation('/connect')} data-testid="button-add-crm-contacts">
+                          Add Contacts in / connect
                         </Button>
                       </div>
                     )}
@@ -582,7 +582,7 @@ export default function SendDashboard() {
                       <div className="text-center py-6">
                         <Filter className="w-10 h-10 text-gray-400 mx-auto mb-3" />
                         <p className="text-gray-500 dark:text-gray-400 text-sm mb-3">No segments created yet</p>
-                        <Button variant="outline" size="sm" onClick={() => setLocation('/relationships')} data-testid="button-create-segment">
+                        <Button variant="outline" size="sm" onClick={() => setLocation('/connect')} data-testid="button-create-segment">
                           Create Segment
                         </Button>
                       </div>
@@ -598,11 +598,11 @@ export default function SendDashboard() {
                     <Button 
                       className="w-full justify-start" 
                       variant="outline"
-                      onClick={() => setLocation('/relationships')}
+                      onClick={() => setLocation('/connect')}
                       data-testid="button-go-to-crm"
                     >
                       <ExternalLink className="w-4 h-4 mr-2" />
-                      Open /relationships CRM
+                      Open / connect CRM
                     </Button>
                     <Button 
                       className="w-full justify-start" 

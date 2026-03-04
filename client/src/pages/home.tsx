@@ -182,7 +182,7 @@ export default function Home() {
                         <img src={commverseBundle} alt="CommVerse" className="h-5" />
                       </div>
                       <p className="text-xs text-gray-600">
-                        Complete communication suite: /send, /respond, /livechat, /post.
+                        Complete communication suite: / promote, / respond, / engage, / post.
                       </p>
                     </div>
                   </div>
@@ -338,7 +338,7 @@ export default function Home() {
                   <img src={commverseBundle} alt="commverse" className="h-8 inline-block" /> Apps + Paths
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  Which apps you need (/send, /respond, /livechat, /post) and SPECIFIC PATHS tailored to your business type.
+                  Which apps you need (/ promote, / respond, / engage, / post) and SPECIFIC PATHS tailored to your business type.
                 </p>
               </CardContent>
             </Card>
@@ -412,9 +412,9 @@ export default function Home() {
               
               <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-send-app">
                 <CardContent className="p-4 flex items-center gap-4">
-                  <img src={sendIcon} alt="/send icon" className="w-12 h-12 rounded-lg" />
+                  <img src={sendIcon} alt="/ promote icon" className="w-12 h-12 rounded-lg" />
                   <div className="flex-1">
-                    <img src={sendLogo} alt="/send" className="h-6 mb-2" />
+                    <img src={sendLogo} alt="/ promote" className="h-6 mb-2" />
                     <p className="text-sm text-gray-600">Broadcast messages to customers</p>
                   </div>
                   <div className="text-right">
@@ -440,9 +440,9 @@ export default function Home() {
 
               <Card className="border-2 border-purple-200 hover:shadow-lg transition-all" data-testid="card-livechat-app">
                 <CardContent className="p-4 flex items-center gap-4">
-                  <img src={livechatIcon} alt="/livechat icon" className="w-12 h-12 rounded-lg" />
+                  <img src={livechatIcon} alt="/ engage icon" className="w-12 h-12 rounded-lg" />
                   <div className="flex-1">
-                    <img src={livechatLogo} alt="/livechat" className="h-6 mb-2" />
+                    <img src={livechatLogo} alt="/ engage" className="h-6 mb-2" />
                     <p className="text-sm text-gray-600">Real-time customer chat</p>
                   </div>
                   <div className="text-right">
@@ -698,18 +698,18 @@ export default function Home() {
             </p>
             <div className="bg-orange-50 border-2 border-orange-200 rounded-xl p-6 max-w-2xl mx-auto">
               <p className="text-orange-900 font-semibold">
-                💡 Example: Not just "/send" - but "/send with Quick Campaign Launch path" prescribed specifically for your business type
+                💡 Example: Not just "/ promote" - but "/ promote with Quick Campaign Launch path" prescribed specifically for your business type
               </p>
             </div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* /send */}
+            {/* / promote */}
             <Card className="border-2 border-yellow-200 hover:shadow-xl transition-all hover:border-yellow-400">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <img src={sendIcon} alt="/send icon" className="h-16 w-16 object-contain mr-3" />
-                  <img src={sendLogo} alt="/send" className="h-10 object-contain" />
+                  <img src={sendIcon} alt="/ promote icon" className="h-16 w-16 object-contain mr-3" />
+                  <img src={sendLogo} alt="/ promote" className="h-10 object-contain" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Email & SMS Marketing</h3>
                 <p className="text-gray-600 text-sm mb-4">Send targeted campaigns to your customers via email and text messaging.</p>
@@ -746,12 +746,12 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            {/* /livechat */}
+            {/* / engage */}
             <Card className="border-2 border-purple-200 hover:shadow-xl transition-all hover:border-purple-400">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <img src={livechatIcon} alt="/livechat icon" className="h-16 w-16 object-contain mr-3" />
-                  <img src={livechatLogo} alt="/livechat" className="h-10 object-contain" />
+                  <img src={livechatIcon} alt="/ engage icon" className="h-16 w-16 object-contain mr-3" />
+                  <img src={livechatLogo} alt="/ engage" className="h-10 object-contain" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">Live Chat Widget</h3>
                 <p className="text-gray-600 text-sm mb-4">Add real-time chat to your website for instant customer support.</p>
@@ -827,9 +827,9 @@ export default function Home() {
                   <li>• AI-powered business analysis</li>
                   <li>• Personalized coaching</li>
                   <li>• Client portal dashboard</li>
-                  <li>• /send - Email & SMS Marketing</li>
-                  <li>• /respond - Unified Communications</li>
-                  <li>• /livechat - Live Chat Widget</li>
+                  <li>• / promote - Email & SMS Marketing</li>
+                  <li>• / respond - Unified Communications</li>
+                  <li>• / engage - Live Chat Widget</li>
                   <li>• /post - Social Media Mgmt</li>
                 </ul>
                 <Button className="w-full border-2 border-[#FF6B00] text-[#FF6B00] bg-transparent hover:bg-[#FF6B00] hover:text-white transition-all mt-auto">

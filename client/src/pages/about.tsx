@@ -102,10 +102,10 @@ export default function About() {
                   <li>• AI-powered business analysis</li>
                   <li>• Personalized coaching</li>
                   <li>• Client portal dashboard</li>
-                  <li>• /send - Email & SMS Marketing</li>
-                  <li>• /respond - Unified Communications</li>
-                  <li>• /livechat - Live Chat Widget</li>
-                  <li>• /post - Social Media Mgmt</li>
+                  <li>• / promote - Email & SMS Marketing</li>
+                  <li>• / respond - Unified Communications</li>
+                  <li>• / engage - Live Chat Widget</li>
+                  <li>• / post - Social Media Mgmt</li>
                 </ul>
               </CardContent>
             </Card>

@@ -16,8 +16,8 @@ export default function ListingsLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={listingsIcon} alt="/list icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <img src={listingsLogo} alt="/list" className="h-16 object-contain drop-shadow-lg" />
+              <img src={listingsIcon} alt="/ publish icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <img src={listingsLogo} alt="/ publish" className="h-16 object-contain drop-shadow-lg" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Be Found Everywhere
@@ -33,7 +33,7 @@ export default function ListingsLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'list-addon', name: '/list', price: 40, type: 'addon' }
+                    detail: { sku: 'list-addon', name: '/ publish', price: 40, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -77,13 +77,13 @@ export default function ListingsLanding() {
               <span className="text-white text-xl">for all LocalBlue apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /list + /review = Complete local presence management
+              / publish + / elevate = Complete local presence management
             </p>
           </div>
         </div>
       </section>
 
-      {/* The /list Difference */}
+      {/* The / publish Difference */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -92,7 +92,7 @@ export default function ListingsLanding() {
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Inconsistent business information across directories costs you customers. When your hours, phone, or address 
-              don't match, search engines lose trust and customers lose patience. /list keeps everything synchronized.
+              don't match, search engines lose trust and customers lose patience. / publish keeps everything synchronized.
             </p>
           </div>
 

@@ -131,7 +131,7 @@ export const HOW_IT_WORKS_STEPS: Step[] = [
   {
     number: 5,
     title: 'Commverse Bundle',
-    description: 'Complete communication suite: /send, /respond, /livechat, /post.',
+    description: 'Complete communication suite: / promote, / respond, / engage, / post.',
     href: '/pricing?addon=commverse',
     testId: 'link-step5',
     icon: 'badge5',

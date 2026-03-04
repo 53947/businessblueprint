@@ -335,7 +335,7 @@ export default function ClientPortal() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">/relationships</h3>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">/ connect</h3>
                     <Badge className="bg-green-500 text-white">CRM</Badge>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -367,7 +367,7 @@ export default function ClientPortal() {
                 <Button 
                   variant="outline" 
                   className="border-green-500 text-green-700 hover:bg-green-100 dark:text-green-400 dark:hover:bg-green-900"
-                  onClick={() => setLocation("/relationships")}
+                  onClick={() => setLocation("/connect")}
                   data-testid="button-open-crm"
                 >
                   <Users className="w-4 h-4 mr-2" />
@@ -375,7 +375,7 @@ export default function ClientPortal() {
                 </Button>
                 <Button 
                   className="bg-green-600 hover:bg-green-700 text-white"
-                  onClick={() => setLocation("/relationships")}
+                  onClick={() => setLocation("/connect")}
                   data-testid="button-add-contact"
                 >
                   <Sparkles className="w-4 h-4 mr-2" />
@@ -406,7 +406,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/listings app_1762804610311.png" alt="/list" className="w-8 h-8" />
+                <img src="/attached_assets/listings app_1762804610311.png" alt="/ publish" className="w-8 h-8" />
                 <div className="text-center">
                   <div className="flex gap-3">
                     <div>
@@ -425,10 +425,10 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/listings app_1762804610311.png" alt="/list" className="w-16 h-16" />
+                  <img src="/attached_assets/listings app_1762804610311.png" alt="/ publish" className="w-16 h-16" />
                 </div>
                 <div className="flex justify-center mb-2">
-                  <img src="/attached_assets/: listings color triad black and FF0040_1762806224294.png" alt="/list" className="h-5" />
+                  <img src="/attached_assets/: listings color triad black and FF0040_1762806224294.png" alt="/ publish" className="h-5" />
                 </div>
                 <p className="text-xs text-gray-600">Directory sync & consistency</p>
               </div>
@@ -441,12 +441,12 @@ export default function ClientPortal() {
             </CardContent>
           </Card>
 
-          {/* 2. /send */}
+          {/* 2. / promote */}
           <Card className="hover:shadow-lg transition-shadow" data-testid="card-send">
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/native icons and favicons/: send app icon.png" alt="/send" className="w-8 h-8" />
+                <img src="/attached_assets/native icons and favicons/: send app icon.png" alt="/ promote" className="w-8 h-8" />
                 <div className="text-center w-full">
                   {clientData.campaigns.latest ? (
                     <>
@@ -475,10 +475,10 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/native icons and favicons/: send app icon.png" alt="/send" className="w-16 h-16" />
+                  <img src="/attached_assets/native icons and favicons/: send app icon.png" alt="/ promote" className="w-16 h-16" />
                 </div>
                 <div className="flex justify-center">
-                  <img src="/attached_assets/logos and wordmarks/: send app logo.png" alt="/send" className="h-6" />
+                  <img src="/attached_assets/logos and wordmarks/: send app logo.png" alt="/ promote" className="h-6" />
                 </div>
                 <p className="text-xs text-gray-600">Email & SMS campaigns</p>
               </div>
@@ -552,7 +552,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/review" className="w-8 h-8" />
+                <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/ elevate" className="w-8 h-8" />
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">{clientData.reviews.average}</div>
                   <p className="text-[10px] text-gray-600">Review Ratings</p>
@@ -562,10 +562,10 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/review" className="w-16 h-16" />
+                  <img src="/attached_assets/reputation app triad blue and repoutation gold_1762804622669.png" alt="/ elevate" className="w-16 h-16" />
                 </div>
                 <div className="flex justify-center mb-2">
-                  <img src="/attached_assets/: reputation color triad black and D59600_1762806224295.png" alt="/review" className="h-5" />
+                  <img src="/attached_assets/: reputation color triad black and D59600_1762806224295.png" alt="/ elevate" className="h-5" />
                 </div>
                 <p className="text-xs text-gray-600">Review response & reputation management</p>
               </div>
@@ -583,7 +583,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="/livechat" className="w-8 h-8" />
+                <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="/ engage" className="w-8 h-8" />
                 <div className="text-center">
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
@@ -601,10 +601,10 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="/livechat" className="w-16 h-16" />
+                  <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="/ engage" className="w-16 h-16" />
                 </div>
                 <div className="flex justify-center">
-                  <img src="/attached_assets/logos and wordmarks/: livechat app logo.png" alt="/livechat" className="h-6" />
+                  <img src="/attached_assets/logos and wordmarks/: livechat app logo.png" alt="/ engage" className="h-6" />
                 </div>
                 <p className="text-xs text-gray-600">
                   <span className="inline-flex items-center gap-1">
@@ -616,12 +616,12 @@ export default function ClientPortal() {
               
               {/* Action Button (BOTTOM) - Conditional */}
               {clientData.livechat?.isSetup ? (
-                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/livechat-demo")} data-testid="button-engage-livechat">
+                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/engage-demo")} data-testid="button-engage-livechat">
                   <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="" className="w-4 h-4" />
                   <span>Engage</span>
                 </Button>
               ) : (
-                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/livechat-demo")} data-testid="button-setup-livechat">
+                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/engage-demo")} data-testid="button-setup-livechat">
                   <img src="/attached_assets/native icons and favicons/: livechat app icon.png" alt="" className="w-4 h-4" />
                   <span>Setup Widget</span>
                 </Button>
@@ -740,7 +740,7 @@ export default function ClientPortal() {
                   <p className="text-gray-600 max-w-md mx-auto mb-4">
                     Manage your business listings across Google, Yelp, Facebook, and more.
                   </p>
-                  <a href="/list-app" className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
+                  <a href="/publish-app" className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
                     Open Listings Manager
                   </a>
                 </div>
@@ -765,7 +765,7 @@ export default function ClientPortal() {
                   <p className="text-gray-600 max-w-md mx-auto mb-4">
                     Monitor and respond to reviews across Google, Yelp, and Facebook.
                   </p>
-                  <a href="/review-app" className="inline-flex items-center justify-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md text-sm font-medium transition-colors">
+                  <a href="/elevate-app" className="inline-flex items-center justify-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md text-sm font-medium transition-colors">
                     Open Review Manager
                   </a>
                 </div>
@@ -797,7 +797,7 @@ export default function ClientPortal() {
                 </div>
                 <div className="text-center py-8">
                   <p className="text-gray-600 mb-4">Create and manage email & SMS campaigns with detailed analytics.</p>
-                  <a href="/send-app" className="inline-flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm font-medium transition-colors">
+                  <a href="/promote-app" className="inline-flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm font-medium transition-colors">
                     Open Campaign Manager
                   </a>
                 </div>

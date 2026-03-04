@@ -16,8 +16,8 @@ export default function ReputationLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={reputationIcon} alt="/review icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <img src={reputationLogo} alt="/review" className="h-16 object-contain drop-shadow-lg" />
+              <img src={reputationIcon} alt="/ elevate icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <img src={reputationLogo} alt="/ elevate" className="h-16 object-contain drop-shadow-lg" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Build Trust with Every Review
@@ -33,7 +33,7 @@ export default function ReputationLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'review-management', name: '/review', price: 40, type: 'addon' }
+                    detail: { sku: 'review-management', name: '/ elevate', price: 40, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -77,13 +77,13 @@ export default function ReputationLanding() {
               <span className="text-white text-xl">for all LocalBlue apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /review + /list = Complete local presence management
+              / elevate + / publish = Complete local presence management
             </p>
           </div>
         </div>
       </section>
 
-      {/* The /review Difference */}
+      {/* The / elevate Difference */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -92,7 +92,7 @@ export default function ReputationLanding() {
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               93% of consumers read online reviews before making a purchase. Your reputation online directly impacts revenue. 
-              /review helps you monitor, respond, and build trust at scale.
+              / elevate helps you monitor, respond, and build trust at scale.
             </p>
           </div>
 

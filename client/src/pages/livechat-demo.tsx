@@ -17,7 +17,7 @@ export default function LiveChatDemo() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <SectionHeader 
-        title="/livechat - Website Chat Widget"
+        title="/ engage - Website Chat Widget"
         tabs={[
           { 
             label: 'Demo', 
@@ -31,7 +31,7 @@ export default function LiveChatDemo() {
             icon: Code, 
             active: activeTab === 'installation',
             onClick: () => {
-              setLocation('/livechat-install');
+              setLocation('/engage-install');
             },
             testId: 'tab-installation'
           },
@@ -39,20 +39,20 @@ export default function LiveChatDemo() {
             label: 'Conversations',
             icon: Users,
             active: false,
-            onClick: () => setLocation('/livechat/dashboard'),
+            onClick: () => setLocation('/engage/dashboard'),
             testId: 'tab-conversations'
           },
           {
             label: 'Analytics',
             icon: BarChart3,
             active: false,
-            onClick: () => setLocation('/livechat/dashboard'),
+            onClick: () => setLocation('/engage/dashboard'),
             testId: 'tab-analytics'
           }
         ]}
         actions={
           <Button 
-            onClick={() => setLocation('/livechat/dashboard')}
+            onClick={() => setLocation('/engage/dashboard')}
             variant="ghost" 
             size="sm"
             data-testid="button-settings"

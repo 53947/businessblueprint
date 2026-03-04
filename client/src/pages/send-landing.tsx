@@ -16,8 +16,8 @@ export default function SendLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={sendIcon} alt="/send icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <img src={sendLogo} alt="/send" className="h-16 object-contain drop-shadow-lg" />
+              <img src={sendIcon} alt="/ promote icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <img src={sendLogo} alt="/ promote" className="h-16 object-contain drop-shadow-lg" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Own Your Customer Relationships
@@ -33,7 +33,7 @@ export default function SendLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'send-addon', name: '/send', price: 35, type: 'addon' }
+                    detail: { sku: 'send-addon', name: '/ promote', price: 35, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -48,7 +48,7 @@ export default function SendLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/send/dashboard">Get Started with /send</a>
+                <a href="/promote-app">Get Started with / promote</a>
               </Button>
               <Button 
                 size="lg" 
@@ -77,21 +77,21 @@ export default function SendLanding() {
               <span className="text-white text-xl">for all 3 Commverse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /send + /livechat + /respond = Complete communication ecosystem
+              / promote + / engage + / respond = Complete communication ecosystem
             </p>
           </div>
         </div>
       </section>
 
-      {/* The /send Difference */}
+      {/* The / promote Difference */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why We Built /send
+              Why We Built / promote
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Your customer data is your most valuable asset. We created /send so you maintain complete control 
+              Your customer data is your most valuable asset. We created / promote so you maintain complete control 
               over your customer relationships, contact information, and engagement history—without depending on 
               third-party platforms that limit access to your own data.
             </p>
@@ -215,7 +215,7 @@ export default function SendLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-8 md:p-12 border border-gray-200 shadow-xl bg-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
-              What Makes /send Different?
+              What Makes / promote Different?
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
@@ -226,7 +226,7 @@ export default function SendLanding() {
                   Works Autonomously & Together
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  /send functions powerfully on its own for email and SMS campaigns. But when integrated with /livechat and /respond as part of the Commverse ecosystem,
+                  / promote functions powerfully on its own for email and SMS campaigns. But when integrated with / engage and / respond as part of the Commverse ecosystem,
                   it shares customer insights and analytics to create smarter, more effective marketing automation.
                 </p>
 
@@ -237,7 +237,7 @@ export default function SendLanding() {
                   No Hidden Costs, No Surprises
                 </h3>
                 <p className="text-gray-600">
-                  Standalone at $35/mo or bundled with /livechat + /respond for $75/mo. No per-message fees, no contact limits, 
+                  Standalone at $35/mo or bundled with / engage + / respond for $75/mo. No per-message fees, no contact limits,
                   no "premium features" upsells. What you see is what you get.
                 </p>
               </div>
@@ -251,7 +251,7 @@ export default function SendLanding() {
                 </h3>
                 <p className="text-gray-600 mb-6">
                   Other platforms force you into their ecosystem. Generic email tools are too complex. 
-                  /send hits the sweet spot: powerful enough for growth, simple enough to actually use.
+                  / promote hits the sweet spot: powerful enough for growth, simple enough to actually use.
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
@@ -296,11 +296,11 @@ export default function SendLanding() {
               asChild
               data-testid="button-explore-platform"
             >
-              <a href="/send/dashboard">Explore /send Platform</a>
+              <a href="/promote-app">Explore / promote Platform</a>
             </Button>
           </div>
           <p className="text-sm text-gray-500 mt-6">
-            /send is included in all subscription tiers • No setup fees • No long-term contracts
+            / promote is included in all subscription tiers • No setup fees • No long-term contracts
           </p>
         </div>
       </section>

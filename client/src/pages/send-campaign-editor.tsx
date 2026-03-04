@@ -40,7 +40,7 @@ interface Campaign {
 
 export default function SendCampaignEditor() {
   const [, setLocation] = useLocation();
-  const [, routeParams] = useRoute("/send/campaigns/:id/edit");
+  const [, routeParams] = useRoute("/promote/campaigns/:id/edit");
   const campaignId = routeParams?.id ? parseInt(routeParams.id) : null;
   const isEditMode = campaignId !== null;
   const { toast } = useToast();
@@ -115,7 +115,7 @@ export default function SendCampaignEditor() {
 
       queryClient.invalidateQueries({ queryKey: ["/api/send/campaigns"] });
       queryClient.invalidateQueries({ queryKey: ["/api/send/campaigns/recent"] });
-      setLocation("/send-app");
+      setLocation("/promote-app");
     } catch (err: any) {
       const message = err?.message || "Failed to save campaign";
       setError(message);
@@ -146,7 +146,7 @@ export default function SendCampaignEditor() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setLocation("/send-app")}
+              onClick={() => setLocation("/promote-app")}
               data-testid="button-back"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -394,7 +394,7 @@ export default function SendCampaignEditor() {
         <div className="flex justify-between items-center pt-4 border-t">
           <Button
             variant="ghost"
-            onClick={() => setLocation("/send-app")}
+            onClick={() => setLocation("/promote-app")}
             data-testid="button-cancel"
           >
             Cancel

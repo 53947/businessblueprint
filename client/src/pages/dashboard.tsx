@@ -334,11 +334,11 @@ export default function Dashboard() {
                   Welcome to your Digital Blueprint!
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  You've been added to our Customer Relationship Manager (/relationships). 
+                  You've been added to our Customer Relationship Manager (/ connect).
                   This is your home base for managing your digital presence journey.
                 </p>
                 <div className="grid sm:grid-cols-3 gap-3">
-                  <Link href="/relationships">
+                  <Link href="/connect">
                     <Button 
                       variant="outline" 
                       className="w-full justify-start border-[#22C55E]/30 hover:bg-[#22C55E]/5 hover:border-[#22C55E]"
@@ -348,7 +348,7 @@ export default function Dashboard() {
                       View Your Profile
                     </Button>
                   </Link>
-                  <Link href="/relationships?view=tasks">
+                  <Link href="/connect?view=tasks">
                     <Button 
                       variant="outline" 
                       className="w-full justify-start border-[#22C55E]/30 hover:bg-[#22C55E]/5 hover:border-[#22C55E]"

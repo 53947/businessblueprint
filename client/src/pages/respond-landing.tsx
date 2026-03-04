@@ -78,7 +78,7 @@ export default function InboxLanding() {
               <span className="text-white text-xl">for all 4 Commverse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /send + /livechat + /respond + /post = Complete communication ecosystem
+              / promote + / engage + /respond + / post = Complete communication ecosystem
             </p>
           </div>
         </div>
@@ -246,7 +246,7 @@ export default function InboxLanding() {
                   Works Autonomously & Together
                 </h3>
                 <p className="text-blue-50">
-                  /respond works powerfully on its own, but when integrated with /send and /livechat, it becomes a Commverse ecosystem—
+                  /respond works powerfully on its own, but when integrated with / promote and / engage, it becomes a Commverse ecosystem—
                   sharing analytics across apps to deliver context-aware communication that drives better outcomes.
                 </p>
               </div>
@@ -266,7 +266,7 @@ export default function InboxLanding() {
                   No Per-Seat Pricing Games
                 </h3>
                 <p className="text-blue-50">
-                  Standalone at $35/mo or bundled with /send + /livechat for $75/mo. Unlimited team members, unlimited messages,
+                  Standalone at $35/mo or bundled with / promote + / engage for $75/mo. Unlimited team members, unlimited messages,
                   all channels included. No surprises, no upsells.
                 </p>
               </div>

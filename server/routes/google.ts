@@ -27,8 +27,8 @@ const GOOGLE_SCOPES = [
 const ALLOWED_RETURN_PATHS = [
   "/post",
   "/portal/dashboard",
-  "/list-app",
-  "/review-app",
+  "/publish-app",
+  "/elevate-app",
 ];
 
 /**

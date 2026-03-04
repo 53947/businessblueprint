@@ -16,15 +16,15 @@ export default function LivechatLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={livechatIcon} alt="/livechat icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <img src={livechatLogo} alt="/livechat" className="h-16 object-contain drop-shadow-md" />
+              <img src={livechatIcon} alt="/ engage icon" className="h-20 w-20 object-contain drop-shadow-lg" />
+              <img src={livechatLogo} alt="/ engage" className="h-16 object-contain drop-shadow-md" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Turn Website Visitors<br />Into Conversations.
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
               The live chat widget that feels natural, remembers everything, and integrates perfectly 
-              with your /respond. Because every visitor is a potential customer.
+              with your / respond. Because every visitor is a potential customer.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -33,7 +33,7 @@ export default function LivechatLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'livechat-addon', name: '/livechat', price: 35, type: 'addon' }
+                    detail: { sku: 'livechat-addon', name: '/ engage', price: 35, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -48,7 +48,7 @@ export default function LivechatLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/livechat-demo">Get Started with /livechat</a>
+                <a href="/engage-demo">Get Started with / engage</a>
               </Button>
               <Button 
                 size="lg" 
@@ -77,7 +77,7 @@ export default function LivechatLanding() {
               <span className="text-white text-xl">for all 4 Commverse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /send + /livechat + /respond + /post = Complete communication ecosystem
+              / promote + / engage + / respond + / post = Complete communication ecosystem
             </p>
           </div>
         </div>
@@ -88,11 +88,11 @@ export default function LivechatLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why /livechat Was Built
+              Why / engage Was Built
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Standalone chat widgets are disconnected islands. They don't know about your customer data, 
-              marketing campaigns, or business insights. /livechat changes that.
+              marketing campaigns, or business insights. / engage changes that.
             </p>
           </div>
 
@@ -131,9 +131,9 @@ export default function LivechatLanding() {
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#8000FF' }}>
                     <Users className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-unified-title">Unified in /respond</h3>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-unified-title">Unified in / respond</h3>
                   <p className="text-gray-600" data-testid="text-feature-unified-description">
-                    Live chat flows directly into /respond alongside email, SMS, and social messages. One interface for everything.
+                    Live chat flows directly into / respond alongside email, SMS, and social messages. One interface for everything.
                   </p>
                 </div>
               </CardContent>
@@ -214,7 +214,7 @@ export default function LivechatLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #8000FF, #A020F0)' }}>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              What Makes /livechat Different?
+              What Makes / engage Different?
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
@@ -223,7 +223,7 @@ export default function LivechatLanding() {
                   Works Autonomously & Together
                 </h3>
                 <p className="text-purple-50 mb-6">
-                  /livechat functions perfectly on its own, but gains superpowers when integrated with /send and /respond—
+                  / engage functions perfectly on its own, but gains superpowers when integrated with / promote and / respond—
                   connecting your Digital Blueprint, customer insights, and marketing automation for smarter conversations.
                 </p>
 
@@ -244,7 +244,7 @@ export default function LivechatLanding() {
                 </h3>
                 <p className="text-purple-50 mb-6">
                   Enterprise chat tools are overkill. Free tools lack features and reliability. 
-                  /livechat hits the sweet spot for growing local businesses.
+                  / engage hits the sweet spot for growing local businesses.
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -252,7 +252,7 @@ export default function LivechatLanding() {
                   No Per-Chat or Per-Agent Fees
                 </h3>
                 <p className="text-purple-50">
-                  Standalone at $35/mo or bundled with /send + /respond for $75/mo. Unlimited chats, unlimited agents, 
+                  Standalone at $35/mo or bundled with / promote + / respond for $75/mo. Unlimited chats, unlimited agents,
                   unlimited websites. Transparent, predictable pricing.
                 </p>
               </div>
@@ -286,11 +286,11 @@ export default function LivechatLanding() {
               asChild
               data-testid="button-try-demo"
             >
-              <a href="/livechat-demo">Try Live Demo</a>
+              <a href="/engage-demo">Try Live Demo</a>
             </Button>
           </div>
           <p className="text-sm text-gray-500 mt-6">
-            /livechat is included in all subscription tiers • Session persistence • Unlimited chats
+            / engage is included in all subscription tiers • Session persistence • Unlimited chats
           </p>
         </div>
       </section>

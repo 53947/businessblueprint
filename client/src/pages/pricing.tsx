@@ -24,10 +24,10 @@ const systemIcons = [
   { img: digitalAssessmentImg, label: 'Digital Assessment' },
   { img: digitalPathImg, label: 'Digital Path' },
   { img: localSeoImg, label: 'Local SEO' },
-  { img: sendAppImg, label: '/Send' },
-  { img: contentImg, label: '/Post' },
-  { img: livechatImg, label: '/LiveChat' },
-  { img: inboxImg, label: '/Respond' },
+  { img: sendAppImg, label: '/ promote' },
+  { img: contentImg, label: '/ post' },
+  { img: livechatImg, label: '/ engage' },
+  { img: inboxImg, label: '/ respond' },
   { img: commverseImg, label: 'Commverse' },
   { img: coachBlueImg, label: 'Coach Blue' },
   { img: captainImg, label: "Captain's Chair" },
@@ -74,10 +74,10 @@ const executionStyles = [
 ];
 
 const apps = [
-  { id: 'send', img: sendAppImg, title: '/Send', description: 'SMS & Email Marketing / CRM', price: 35 },
-  { id: 'post', img: contentImg, title: '/Post', description: 'Social Media Management', price: 35 },
-  { id: 'livechat', img: livechatImg, title: '/LiveChat', description: 'Real-time website chat widget', price: 35 },
-  { id: 'respond', img: inboxImg, title: '/Respond', description: 'Unified communications hub', price: 35 }
+  { id: 'promote', img: sendAppImg, title: '/ promote', description: 'SMS & Email Marketing / CRM', price: 35 },
+  { id: 'post', img: contentImg, title: '/ post', description: 'Social Media Management', price: 35 },
+  { id: 'engage', img: livechatImg, title: '/ engage', description: 'Real-time website chat widget', price: 35 },
+  { id: 'respond', img: inboxImg, title: '/ respond', description: 'Unified communications hub', price: 35 }
 ];
 
 export default function PricingPage() {
@@ -322,7 +322,7 @@ export default function PricingPage() {
   "stage_3": "Execution: diy|msp|alc",
   "rules": ["ALC incompatible with Scale"],
   "addons": {
-    "apps": ["/send","/post","/livechat","/respond"],
+    "apps": ["/ promote","/ post","/ engage","/ respond"],
     "bundle": "commverse",
     "coaching": ["coach_blue","captains_chair"]
   },

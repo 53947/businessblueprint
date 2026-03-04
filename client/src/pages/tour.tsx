@@ -193,7 +193,7 @@ export default function Tour() {
                 <div className="flex items-center gap-3">
                   <MapPin className="w-8 h-8 text-[#FF0040]" />
                   <div>
-                    <h4 className="font-bold text-white">/listings</h4>
+                    <h4 className="font-bold text-white">/ publish</h4>
                     <p className="text-sm text-gray-400">Directory Sync</p>
                   </div>
                 </div>
@@ -348,7 +348,7 @@ export default function Tour() {
                 <div className="flex items-center gap-3 mb-3">
                   <Mail className="w-8 h-8 text-[#0000FF]" />
                   <div>
-                    <h4 className="font-bold">/send</h4>
+                    <h4 className="font-bold">/ promote</h4>
                     <p className="text-xs text-gray-500">Email Campaigns</p>
                   </div>
                 </div>
@@ -361,7 +361,7 @@ export default function Tour() {
                 <div className="flex items-center gap-3 mb-3">
                   <MessageSquare className="w-8 h-8 text-[#0000FF]" />
                   <div>
-                    <h4 className="font-bold">/inbox</h4>
+                    <h4 className="font-bold">/ respond</h4>
                     <p className="text-xs text-gray-500">Unified Messaging</p>
                   </div>
                 </div>
@@ -374,7 +374,7 @@ export default function Tour() {
                 <div className="flex items-center gap-3 mb-3">
                   <FileText className="w-8 h-8 text-[#0000FF]" />
                   <div>
-                    <h4 className="font-bold">/content</h4>
+                    <h4 className="font-bold">/ post</h4>
                     <p className="text-xs text-gray-500">Content Management</p>
                   </div>
                 </div>
@@ -387,7 +387,7 @@ export default function Tour() {
                 <div className="flex items-center gap-3 mb-3">
                   <Users className="w-8 h-8 text-[#0000FF]" />
                   <div>
-                    <h4 className="font-bold">/livechat</h4>
+                    <h4 className="font-bold">/ engage</h4>
                     <p className="text-xs text-gray-500">Live Chat Widget</p>
                   </div>
                 </div>

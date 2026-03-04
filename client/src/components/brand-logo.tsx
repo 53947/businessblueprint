@@ -108,13 +108,13 @@ export function BrandLogo({
         {showIcon && (
           <img 
             src={sendIcon} 
-            alt="/send icon" 
+            alt="/ promote icon"
             className={`${iconSize} object-contain`}
           />
         )}
-        <img 
-          src={sendLogo} 
-          alt="/send" 
+        <img
+          src={sendLogo}
+          alt="/ promote" 
           className={`${logoSize} object-contain`}
         />
       </div>
@@ -160,20 +160,20 @@ export function BrandLogo({
     );
   }
 
-  // /livechat uses new icon and logo
+  // / engage uses new icon and logo
   if (brand === 'livechat') {
     return (
       <div className={`flex items-center gap-3 ${className}`}>
         {showIcon && (
-          <img 
-            src={livechatIcon} 
-            alt="/livechat icon" 
+          <img
+            src={livechatIcon}
+            alt="/ engage icon"
             className={`${iconSize} object-contain`}
           />
         )}
-        <img 
-          src={livechatLogo} 
-          alt="/livechat" 
+        <img
+          src={livechatLogo}
+          alt="/ engage" 
           className={`${logoSize} object-contain`}
         />
       </div>

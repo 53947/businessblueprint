@@ -254,22 +254,22 @@ export default function PathwaysPage() {
           </div>
 
           <div className="grid md:grid-cols-4 gap-6">
-            {/* /send */}
+            {/* / promote */}
             <Card className="border-2 border-yellow-200 hover:border-yellow-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
                   <img
                     src={sendIcon}
-                    alt="/send"
+                    alt="/ promote"
                     className="h-16 w-16 object-contain"
                   />
                 </div>
                 <h3
-                  className="text-xl font-bold text-gray-900 mb-2 text-center"
+                  className="text-xl font-bold text-gray-900 mb-2 text-center font-['Archivo_Semi_Expanded']"
                   style={{ fontWeight: 600 }}
                 >
-                  <span style={{ color: "#09080E" }}>/</span>
-                  <span style={{ color: "#FFD700" }}>send</span>
+                  <span style={{ color: "#09080E" }}>/</span>{' '}
+                  <span style={{ color: "#FFEF45", textShadow: "0 0 1px #000" }}>promote</span>
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 text-center">
                   Email & SMS Marketing Platform
@@ -328,22 +328,22 @@ export default function PathwaysPage() {
               </CardContent>
             </Card>
 
-            {/* /livechat */}
+            {/* / engage */}
             <Card className="border-2 border-purple-200 hover:border-purple-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
                   <img
                     src={livechatIcon}
-                    alt="/livechat"
+                    alt="/ engage"
                     className="h-16 w-16 object-contain"
                   />
                 </div>
                 <h3
-                  className="text-xl font-bold text-gray-900 mb-2 text-center"
+                  className="text-xl font-bold text-gray-900 mb-2 text-center font-['Archivo_Semi_Expanded']"
                   style={{ fontWeight: 600 }}
                 >
-                  <span style={{ color: "#09080E" }}>/</span>
-                  <span style={{ color: "#8000FF" }}>livechat</span>
+                  <span style={{ color: "#09080E" }}>/</span>{' '}
+                  <span style={{ color: "#8000FF" }}>engage</span>
                 </h3>
                 <p className="text-sm text-gray-600 mb-4 text-center">
                   Website Live Chat Widget

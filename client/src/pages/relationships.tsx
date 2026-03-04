@@ -249,12 +249,12 @@ export default function RelationshipsPage() {
       <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
         {/* Logo */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <Link href="/relationships">
+          <Link href="/connect">
             <div className="flex items-center gap-2">
-              <img src={relationshipsIcon} alt="/relationships" className="w-8 h-8" />
+              <img src={relationshipsIcon} alt="/ connect" className="w-8 h-8" />
               <div className="flex items-center">
                 <span className="text-lg font-bold text-[#09080E] dark:text-white">/</span>
-                <span className="text-lg font-bold text-[#22C55E]">relationships</span>
+                <span className="text-lg font-bold text-[#008060]"> connect</span>
               </div>
             </div>
           </Link>
@@ -576,7 +576,7 @@ function DashboardView({
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                Welcome to /relationships
+                Welcome to / connect
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                 Your single source of truth for all customer data. Get started by importing contacts or creating your first customer record.
@@ -5797,7 +5797,7 @@ function SettingsView() {
       <Card>
         <CardHeader>
           <CardTitle>CRM Settings</CardTitle>
-          <CardDescription>Manage your /relationships configuration</CardDescription>
+          <CardDescription>Manage your / connect configuration</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -5817,7 +5817,7 @@ function SettingsView() {
           <div className="flex items-center justify-between p-4 border rounded-lg">
             <div>
               <h3 className="font-medium">App Integrations</h3>
-              <p className="text-sm text-gray-500">Connect /relationships with other apps</p>
+              <p className="text-sm text-gray-500">Connect / connect with other apps</p>
             </div>
             <Badge className="bg-[#22C55E]/10 text-[#22C55E]">Performance</Badge>
           </div>

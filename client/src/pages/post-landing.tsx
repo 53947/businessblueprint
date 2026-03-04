@@ -78,7 +78,7 @@ export default function ContentLanding() {
               <span className="text-white text-xl">for all 4 Commverse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              /send + /livechat + /respond + /post = Complete communication ecosystem
+              / promote + / engage + / respond + /post = Complete communication ecosystem
             </p>
           </div>
         </div>
@@ -226,7 +226,7 @@ export default function ContentLanding() {
                   Works Autonomously & Together
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  /post functions perfectly on its own for social media management. But when integrated with /send, /livechat, and /respond as part of Commverse,
+                  /post functions perfectly on its own for social media management. But when integrated with / promote, / engage, and / respond as part of Commverse,
                   it shares customer insights and content performance to create smarter, more cohesive marketing.
                 </p>
 

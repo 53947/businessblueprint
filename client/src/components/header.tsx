@@ -343,7 +343,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <img src={commverseBundle} alt="commverse" className="h-5" />
                                   </div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">
-                                    Complete communication suite: /send, /respond, /livechat, /post.
+                                    Complete communication suite: / promote, / respond, / engage, / post.
                                   </p>
                                 </div>
                               </div>
@@ -472,15 +472,15 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               CUSTOMER RELATIONSHIPS
                             </h4>
                             <div className="grid grid-cols-2 gap-2">
-                              {/* /relationships Starter - FREE */}
-                              <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#22C55E' }} data-testid="card-relationships-starter">
+                              {/* / connect Starter - FREE */}
+                              <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#008060' }} data-testid="card-connect-starter">
                                 <div className="flex items-start justify-between mb-1">
                                   <div className="flex items-center gap-1.5">
                                     <img src={relationshipsIcon} alt="" className="w-6 h-6 rounded" />
                                     <div>
-                                      <p className="text-sm font-bold text-gray-900">
-                                        <span style={{ color: '#09080E' }}>/ </span>
-                                        <span style={{ color: '#22C55E' }}>relationships</span>
+                                      <p className="text-sm font-bold font-['Archivo_Semi_Expanded']">
+                                        <span style={{ color: '#09080E' }}>/</span>{' '}
+                                        <span style={{ color: '#008060' }}>connect</span>
                                       </p>
                                       <p className="text-xs text-gray-500">Starter</p>
                                     </div>
@@ -488,56 +488,56 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                                 <div className="flex items-end justify-between">
                                   <div>
-                                    <div className="text-lg font-extrabold mb-1" style={{ color: '#22C55E' }}>
+                                    <div className="text-lg font-extrabold mb-1" style={{ color: '#008060' }}>
                                       Free
                                     </div>
                                     <p className="text-xs text-gray-600">Contacts, companies, scheduler</p>
                                   </div>
-                                  <a 
-                                    href="/relationships" 
+                                  <a
+                                    href="/connect"
                                     className="px-3 py-1.5 rounded text-sm font-bold text-white hover:opacity-90 transition-opacity"
-                                    style={{ backgroundColor: '#22C55E' }}
-                                    data-testid="button-start-relationships"
+                                    style={{ backgroundColor: '#008060' }}
+                                    data-testid="button-start-connect"
                                   >
                                     Get Started →
                                   </a>
                                 </div>
                               </div>
 
-                              {/* /relationships Performance - $29/mo */}
-                              <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#22C55E' }} data-testid="card-relationships-performance">
+                              {/* / connect Performance - $29/mo */}
+                              <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#008060' }} data-testid="card-connect-performance">
                                 <div className="flex items-start justify-between mb-1">
                                   <div className="flex items-center gap-1.5">
                                     <img src={relationshipsIcon} alt="" className="w-6 h-6 rounded" />
                                     <div>
-                                      <p className="text-sm font-bold text-gray-900">
-                                        <span style={{ color: '#09080E' }}>/ </span>
-                                        <span style={{ color: '#22C55E' }}>relationships</span>
+                                      <p className="text-sm font-bold font-['Archivo_Semi_Expanded']">
+                                        <span style={{ color: '#09080E' }}>/</span>{' '}
+                                        <span style={{ color: '#008060' }}>connect</span>
                                       </p>
                                       <p className="text-xs text-gray-500">Performance</p>
                                     </div>
                                   </div>
                                   <button
-                                    onClick={() => toggleItemBilling('relationships-performance')}
+                                    onClick={() => toggleItemBilling('connect-performance')}
                                     className="text-xs font-bold px-3 py-1 rounded border-2 hover:bg-green-50"
-                                    style={{ borderColor: '#22C55E' }}
-                                    data-testid="toggle-relationships-performance"
+                                    style={{ borderColor: '#008060' }}
+                                    data-testid="toggle-connect-performance"
                                   >
-                                    {getItemBillingCycle('relationships-performance') === 'monthly' ? 'Mo' : 'Yr'}
+                                    {getItemBillingCycle('connect-performance') === 'monthly' ? 'Mo' : 'Yr'}
                                   </button>
                                 </div>
                                 <div className="flex items-end justify-between">
                                   <div>
-                                    <div className="text-lg font-extrabold mb-1" style={{ color: '#22C55E' }}>
-                                      {getItemPrice('relationships-performance', 29).displayPrice}
+                                    <div className="text-lg font-extrabold mb-1" style={{ color: '#008060' }}>
+                                      {getItemPrice('connect-performance', 29).displayPrice}
                                     </div>
-                                    <a href="/relationships" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                    <a href="/connect" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                   </div>
                                   <button
-                                    onClick={() => handleAddToCart('relationships-performance', '/relationships Performance', 29, 'addon')}
+                                    onClick={() => handleAddToCart('connect-performance', '/ connect Performance', 29, 'addon')}
                                     className="text-lg font-bold w-8 h-8 rounded-full text-white flex items-center justify-center"
-                                    style={{ backgroundColor: '#22C55E' }}
-                                    data-testid="button-add-relationships"
+                                    style={{ backgroundColor: '#008060' }}
+                                    data-testid="button-add-connect"
                                     title="Add to Cart"
                                   >
                                     +
@@ -589,53 +589,53 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                             {/* 2 Apps in a Row */}
                             <div className="grid grid-cols-2 gap-2">
-                              {/* /list */}
-                              <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }}>
+                              {/* / publish */}
+                              <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E00420' }}>
                                 <div className="flex items-start justify-between mb-1">
                                   <div className="flex items-center gap-1.5">
                                     <img src={listingsIcon} alt="" className="w-5 h-5" />
-                                    <img src={listingsWordmark} alt="/list" className="h-4" />
+                                    <img src={listingsWordmark} alt="/ publish" className="h-4" />
                                   </div>
                                   <button
-                                    onClick={() => handleAddToCart('list-addon', '/list', 40, 'addon')}
+                                    onClick={() => handleAddToCart('publish-addon', '/ publish', 40, 'addon')}
                                     className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0"
-                                    style={{ backgroundColor: '#FF0040' }}
-                                    data-testid="button-add-list"
+                                    style={{ backgroundColor: '#E00420' }}
+                                    data-testid="button-add-publish"
                                     title="Add to Cart"
                                   >
                                     +
                                   </button>
                                 </div>
                                 <div className="border-t pt-1">
-                                  <div className="text-xs font-extrabold mb-0.5" style={{ color: '#FF0040' }}>
-                                    {getItemPrice('list-addon', 40).displayPrice}
+                                  <div className="text-xs font-extrabold mb-0.5" style={{ color: '#E00420' }}>
+                                    {getItemPrice('publish-addon', 40).displayPrice}
                                   </div>
-                                  <a href="/list" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                  <a href="/publish-landing" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                 </div>
                               </div>
 
-                              {/* /review */}
-                              <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }}>
+                              {/* / elevate */}
+                              <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FFD700' }}>
                                 <div className="flex items-start justify-between mb-1">
                                   <div className="flex items-center gap-1.5">
                                     <img src={reputationIcon} alt="" className="w-5 h-5" />
-                                    <img src={reputationWordmark} alt="/review" className="h-4" />
+                                    <img src={reputationWordmark} alt="/ elevate" className="h-4" />
                                   </div>
                                   <button
-                                    onClick={() => handleAddToCart('review-addon', '/review', 40, 'addon')}
+                                    onClick={() => handleAddToCart('elevate-addon', '/ elevate', 40, 'addon')}
                                     className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0"
-                                    style={{ backgroundColor: '#D59600' }}
-                                    data-testid="button-add-review"
+                                    style={{ backgroundColor: '#FFD700' }}
+                                    data-testid="button-add-elevate"
                                     title="Add to Cart"
                                   >
                                     +
                                   </button>
                                 </div>
                                 <div className="border-t pt-1">
-                                  <div className="text-xs font-extrabold mb-0.5" style={{ color: '#D59600' }}>
-                                    {getItemPrice('review-addon', 40).displayPrice}
+                                  <div className="text-xs font-extrabold mb-0.5" style={{ color: '#FFD700' }}>
+                                    {getItemPrice('elevate-addon', 40).displayPrice}
                                   </div>
-                                  <a href="/review" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                  <a href="/elevate-landing" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                 </div>
                               </div>
                             </div>
@@ -684,18 +684,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                               {/* 4 Apps in a Row */}
                               <div className="grid grid-cols-4 gap-2">
-                                {/* /send */}
-                                <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FFFF00', boxShadow: '0 0 0 1px #000000' }}>
+                                {/* / promote */}
+                                <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FFEF45', boxShadow: '0 0 0 1px #000000' }}>
                               <div className="flex items-start justify-between mb-1">
                                 <div className="flex items-center gap-1.5">
                                   <img src={sendIcon} alt="" className="w-5 h-5" />
-                                  <img src={sendWordmark} alt="/send" className="h-3.5" />
+                                  <img src={sendWordmark} alt="/ promote" className="h-3.5" />
                                 </div>
                                 <button
-                                  onClick={() => handleAddToCart('send-addon', '/send', 35, 'addon')}
+                                  onClick={() => handleAddToCart('promote-addon', '/ promote', 35, 'addon')}
                                   className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0"
                                   style={{ backgroundColor: '#FF6B00' }}
-                                  data-testid="button-add-send"
+                                  data-testid="button-add-promote"
                                   title="Add to Cart"
                                 >
                                   +
@@ -703,9 +703,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                               <div className="border-t pt-1">
                                 <div className="text-xs font-extrabold mb-0.5" style={{ color: '#FF6B00' }}>
-                                  {getItemPrice('send-addon', 35).displayPrice}
+                                  {getItemPrice('promote-addon', 35).displayPrice}
                                 </div>
-                                <a href="/send" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                <a href="/promote" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
                             </div>
 
@@ -734,18 +734,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
 
-                            {/* /livechat */}
+                            {/* / engage */}
                             <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#8000FF' }}>
                               <div className="flex items-start justify-between mb-1">
                                 <div className="flex items-center gap-1.5">
                                   <img src={livechatIcon} alt="" className="w-5 h-5" />
-                                  <img src={livechatWordmark} alt="/livechat" className="h-4" />
+                                  <img src={livechatWordmark} alt="/ engage" className="h-4" />
                                 </div>
                                 <button
-                                  onClick={() => handleAddToCart('livechat-addon', '/livechat', 35, 'addon')}
+                                  onClick={() => handleAddToCart('engage-addon', '/ engage', 35, 'addon')}
                                   className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0"
                                   style={{ backgroundColor: '#8000FF' }}
-                                  data-testid="button-add-livechat"
+                                  data-testid="button-add-engage"
                                   title="Add to Cart"
                                 >
                                   +
@@ -753,9 +753,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                               <div className="border-t pt-1">
                                 <div className="text-xs font-extrabold mb-0.5" style={{ color: '#8000FF' }}>
-                                  {getItemPrice('livechat-addon', 35).displayPrice}
+                                  {getItemPrice('engage-addon', 35).displayPrice}
                                 </div>
-                                <a href="/livechat" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                <a href="/engage" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
                             </div>
 
@@ -867,17 +867,17 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="/relationships" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#22C55E' }} data-testid="link-solution-relationships">
-                                <img src={relationshipsIcon} alt="/relationships" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/ relationships</div>
+                              <a href="/connect" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#008060' }} data-testid="link-solution-connect">
+                                <img src={relationshipsIcon} alt="/ connect" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#008060' }}>connect</span></div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Customer CRM</p>
                               </a>
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="/send" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF6B00' }} data-testid="link-solution-send">
-                                <img src={sendIcon} alt="/send" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/ send</div>
+                              <a href="/promote" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FFEF45', boxShadow: '0 0 0 1px #000' }} data-testid="link-solution-promote">
+                                <img src={sendIcon} alt="/ promote" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#FFEF45', textShadow: '0 0 1px #000' }}>promote</span></div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Email & SMS</p>
                               </a>
                             </NavigationMenuLink>
@@ -892,9 +892,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                             {/* Row 4: More Apps */}
                             <NavigationMenuLink asChild>
-                              <a href="/livechat" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#8000FF' }} data-testid="link-solution-livechat">
-                                <img src={livechatIcon} alt="/livechat" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/ livechat</div>
+                              <a href="/engage" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#8000FF' }} data-testid="link-solution-engage">
+                                <img src={livechatIcon} alt="/ engage" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#8000FF' }}>engage</span></div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Live Chat</p>
                               </a>
                             </NavigationMenuLink>
@@ -908,18 +908,18 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="/list-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF0040' }} data-testid="link-solution-list">
-                                <img src={listingsIcon} alt="/list" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/list</div>
+                              <a href="/publish-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#E00420' }} data-testid="link-solution-publish">
+                                <img src={listingsIcon} alt="/ publish" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#E00420' }}>publish</span></div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Directory Sync</p>
                               </a>
                             </NavigationMenuLink>
 
                             {/* Row 5: Last Apps */}
                             <NavigationMenuLink asChild>
-                              <a href="/review-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#D59600' }} data-testid="link-solution-review">
-                                <img src={reputationIcon} alt="/review" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/review</div>
+                              <a href="/elevate-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FFD700' }} data-testid="link-solution-elevate">
+                                <img src={reputationIcon} alt="/ elevate" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#FFD700', textShadow: '0 0 1px #000' }}>elevate</span></div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Review Mgmt</p>
                               </a>
                             </NavigationMenuLink>
@@ -1080,14 +1080,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="/relationships"
-                                data-testid="link-resources-relationships"
+                                href="/connect"
+                                data-testid="link-resources-connect"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={relationshipsIcon} alt="/relationships" className="w-full h-full object-contain" />
+                                  <img src={relationshipsIcon} alt="/ connect" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ relationships</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ connect</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Customer CRM</p>
                                 </div>
                               </a>
@@ -1095,14 +1095,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="/send"
-                                data-testid="link-resources-send"
+                                href="/promote"
+                                data-testid="link-resources-promote"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={sendIcon} alt="/send" className="w-full h-full object-contain" />
+                                  <img src={sendIcon} alt="/ promote" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ send</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ promote</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Email & SMS marketing</p>
                                 </div>
                               </a>
@@ -1110,14 +1110,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="/inbox"
-                                data-testid="link-resources-inbox"
+                                href="/respond"
+                                data-testid="link-resources-respond"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={inboxIcon} alt="/inbox" className="w-full h-full object-contain" />
+                                  <img src={inboxIcon} alt="/ respond" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ inbox</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ respond</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Unified communications</p>
                                 </div>
                               </a>
@@ -1125,14 +1125,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="/livechat"
-                                data-testid="link-resources-livechat"
+                                href="/engage"
+                                data-testid="link-resources-engage"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={livechatIcon} alt="/livechat" className="w-full h-full object-contain" />
+                                  <img src={livechatIcon} alt="/ engage" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ livechat</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ engage</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Live chat widget</p>
                                 </div>
                               </a>
@@ -1140,14 +1140,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="/content"
-                                data-testid="link-resources-content"
+                                href="/post-landing"
+                                data-testid="link-resources-post"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={contentIcon} alt="/content" className="w-full h-full object-contain" />
+                                  <img src={contentIcon} alt="/ post" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ content</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ post</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Social media management</p>
                                 </div>
                               </a>
@@ -1155,14 +1155,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="/listings"
-                                data-testid="link-resources-listings"
+                                href="/publish-landing"
+                                data-testid="link-resources-publish"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={listingsIcon} alt="/listings" className="w-full h-full object-contain" />
+                                  <img src={listingsIcon} alt="/ publish" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ listings</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ publish</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Directory sync</p>
                                 </div>
                               </a>
@@ -1170,14 +1170,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="/reputation"
-                                data-testid="link-resources-reputation"
+                                href="/elevate-landing"
+                                data-testid="link-resources-elevate"
                               >
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={reputationIcon} alt="/reputation" className="w-full h-full object-contain" />
+                                  <img src={reputationIcon} alt="/ elevate" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ reputation</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ elevate</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Review management</p>
                                 </div>
                               </a>
@@ -1193,12 +1193,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="/send-api-docs"
+                                href="/promote-api-docs"
                                 data-testid="link-resources-api"
                               >
                                 <img src={fileTextIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/send API Docs</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ promote API Docs</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Email & SMS API reference</p>
                                 </div>
                               </a>
@@ -1232,12 +1232,12 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="/livechat-install"
-                                data-testid="link-resources-livechat-install"
+                                href="/engage-install"
+                                data-testid="link-resources-engage-install"
                               >
                                 <img src={codeIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">LiveChat Installation</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ engage Installation</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Widget integration guide</p>
                                 </div>
                               </a>
@@ -1279,7 +1279,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a
                                 className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                href="/livechat-demo"
+                                href="/engage-demo"
                                 data-testid="link-resources-demo"
                               >
                                 <img src={messageSquareIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
@@ -1683,35 +1683,35 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="border-t pt-3">
                                   <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Customer Relationships</h4>
                                   <div className="grid grid-cols-2 gap-2">
-                                    {/* /relationships Starter - FREE */}
-                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#22C55E' }}>
+                                    {/* / connect Starter - FREE */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#008060' }}>
                                       <div className="flex items-start justify-between mb-2">
                                         <div>
-                                          <p className="text-xs font-bold text-gray-900">
-                                            <span style={{ color: '#09080E' }}>/ </span>
-                                            <span style={{ color: '#22C55E' }}>relationships</span>
+                                          <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900">
+                                            <span style={{ color: '#09080E' }}>/</span>{' '}
+                                            <span style={{ color: '#008060' }}>connect</span>
                                           </p>
                                           <p className="text-xs text-gray-500">Starter</p>
                                         </div>
                                       </div>
-                                      <div className="text-xs font-extrabold" style={{ color: '#22C55E' }}>Free</div>
-                                      <a href="/relationships" className="text-xs font-bold text-blue-600 hover:underline">Get Started →</a>
+                                      <div className="text-xs font-extrabold" style={{ color: '#008060' }}>Free</div>
+                                      <a href="/connect" className="text-xs font-bold text-blue-600 hover:underline">Get Started →</a>
                                     </div>
 
-                                    {/* /relationships Performance - $29/mo */}
-                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#22C55E' }}>
+                                    {/* / connect Performance - $29/mo */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#008060' }}>
                                       <div className="flex items-start justify-between mb-2">
                                         <div>
-                                          <p className="text-xs font-bold text-gray-900">
-                                            <span style={{ color: '#09080E' }}>/ </span>
-                                            <span style={{ color: '#22C55E' }}>relationships</span>
+                                          <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900">
+                                            <span style={{ color: '#09080E' }}>/</span>{' '}
+                                            <span style={{ color: '#008060' }}>connect</span>
                                           </p>
                                           <p className="text-xs text-gray-500">Performance</p>
                                         </div>
-                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#22C55E' }} data-testid="mobile-add-relationships" title="Add to Cart">+</button>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#008060' }} data-testid="mobile-add-connect" title="Add to Cart">+</button>
                                       </div>
-                                      <div className="text-xs font-extrabold" style={{ color: '#22C55E' }}>$29/mo</div>
-                                      <a href="/relationships" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                      <div className="text-xs font-extrabold" style={{ color: '#008060' }}>$29/mo</div>
+                                      <a href="/connect" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
                                   </div>
                                 </div>
@@ -1740,30 +1740,30 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                                   {/* 2 Apps */}
                                   <div className="grid grid-cols-2 gap-2">
-                                    {/* /list */}
-                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#FF0040' }}>
+                                    {/* / publish */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#E00420' }}>
                                       <div className="flex items-start justify-between mb-2">
                                         <div>
-                                          <p className="text-xs font-bold text-gray-900">/list</p>
+                                          <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#E00420' }}>publish</span></p>
                                           <p className="text-xs text-gray-500">Directory</p>
                                         </div>
-                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#FF0040' }} data-testid="mobile-add-list" title="Add to Cart">+</button>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#E00420' }} data-testid="mobile-add-publish" title="Add to Cart">+</button>
                                       </div>
-                                      <div className="text-xs font-extrabold" style={{ color: '#FF0040' }}>$40/mo</div>
-                                      <a href="/list" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                      <div className="text-xs font-extrabold" style={{ color: '#E00420' }}>$40/mo</div>
+                                      <a href="/publish-landing" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
 
-                                    {/* /review */}
-                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#D59600' }}>
+                                    {/* / elevate */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#FFD700' }}>
                                       <div className="flex items-start justify-between mb-2">
                                         <div>
-                                          <p className="text-xs font-bold text-gray-900">/review</p>
+                                          <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#FFD700' }}>elevate</span></p>
                                           <p className="text-xs text-gray-500">Reviews</p>
                                         </div>
-                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#D59600' }} data-testid="mobile-add-review" title="Add to Cart">+</button>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#FFD700' }} data-testid="mobile-add-elevate" title="Add to Cart">+</button>
                                       </div>
-                                      <div className="text-xs font-extrabold" style={{ color: '#D59600' }}>$40/mo</div>
-                                      <a href="/review" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                      <div className="text-xs font-extrabold" style={{ color: '#FFD700' }}>$40/mo</div>
+                                      <a href="/elevate-landing" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
                                   </div>
                                 </div>
@@ -1792,43 +1792,43 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                                   {/* 4 Apps */}
                                   <div className="grid grid-cols-2 gap-2">
-                                    {/* /send */}
-                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#FFFF00', boxShadow: '0 0 0 1px #000000' }}>
+                                    {/* / promote */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#FFEF45', boxShadow: '0 0 0 1px #000000' }}>
                                       <div className="flex items-start justify-between mb-2">
                                         <div>
-                                          <p className="text-xs font-bold text-gray-900">/send</p>
+                                          <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#FFEF45', textShadow: '0 0 1px #000' }}>promote</span></p>
                                           <p className="text-xs text-gray-500">Email & SMS</p>
                                         </div>
-                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#FF6B00' }} data-testid="mobile-add-send" title="Add to Cart">+</button>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#FF6B00' }} data-testid="mobile-add-promote" title="Add to Cart">+</button>
                                       </div>
                                       <div className="text-xs font-extrabold" style={{ color: '#FF6B00' }}>$35/mo</div>
-                                      <a href="/send" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                      <a href="/promote" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
 
-                                    {/* /respond */}
-                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#0080FF' }}>
+                                    {/* / respond */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#6EA6FF' }}>
                                       <div className="flex items-start justify-between mb-2">
                                         <div>
-                                          <p className="text-xs font-bold text-gray-900">/respond</p>
+                                          <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#6EA6FF' }}>respond</span></p>
                                           <p className="text-xs text-gray-500">Comms Hub</p>
                                         </div>
-                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#0080FF' }} data-testid="mobile-add-respond" title="Add to Cart">+</button>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#6EA6FF' }} data-testid="mobile-add-respond" title="Add to Cart">+</button>
                                       </div>
-                                      <div className="text-xs font-extrabold" style={{ color: '#0080FF' }}>$35/mo</div>
+                                      <div className="text-xs font-extrabold" style={{ color: '#6EA6FF' }}>$35/mo</div>
                                       <a href="/respond" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
 
-                                    {/* /livechat */}
+                                    {/* / engage */}
                                     <div className="p-2 rounded-lg border-2" style={{ borderColor: '#8000FF' }}>
                                       <div className="flex items-start justify-between mb-2">
                                         <div>
-                                          <p className="text-xs font-bold text-gray-900">/livechat</p>
+                                          <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#8000FF' }}>engage</span></p>
                                           <p className="text-xs text-gray-500">Chat Widget</p>
                                         </div>
-                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#8000FF' }} data-testid="mobile-add-livechat" title="Add to Cart">+</button>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#8000FF' }} data-testid="mobile-add-engage" title="Add to Cart">+</button>
                                       </div>
                                       <div className="text-xs font-extrabold" style={{ color: '#8000FF' }}>$35/mo</div>
-                                      <a href="/livechat" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                      <a href="/engage" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
 
                                     {/* /post */}
@@ -1894,48 +1894,48 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <p className="text-xs text-gray-600 text-center">Business Assessment</p>
                                   </a>
 
-                                  {/* /relationships - moved after IQ Scanner */}
-                                  <a href="/relationships" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#22C55E' }} data-testid="mobile-link-relationships">
-                                    <p className="text-xs font-bold text-gray-900 text-center">
-                                      <span style={{ color: '#09080E' }}>/ </span>
-                                      <span style={{ color: '#22C55E' }}>relationships</span>
+                                  {/* / connect */}
+                                  <a href="/connect" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#008060' }} data-testid="mobile-link-connect">
+                                    <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900 text-center">
+                                      <span style={{ color: '#09080E' }}>/</span>{' '}
+                                      <span style={{ color: '#008060' }}>connect</span>
                                     </p>
                                     <p className="text-xs text-gray-600 text-center">Customer CRM</p>
                                   </a>
 
-                                  {/* /send */}
-                                  <a href="/send" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF6B00' }} data-testid="mobile-link-send-app">
-                                    <p className="text-xs font-bold text-gray-900 text-center">/ send</p>
+                                  {/* / promote */}
+                                  <a href="/promote" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FFEF45', boxShadow: '0 0 0 1px #000' }} data-testid="mobile-link-promote-app">
+                                    <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900 text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#FFEF45', textShadow: '0 0 1px #000' }}>promote</span></p>
                                     <p className="text-xs text-gray-600 text-center">Email & SMS</p>
                                   </a>
 
-                                  {/* /respond */}
-                                  <a href="/respond" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#0080FF' }} data-testid="mobile-link-respond-app">
-                                    <p className="text-xs font-bold text-gray-900 text-center">/respond</p>
+                                  {/* / respond */}
+                                  <a href="/respond" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#6EA6FF' }} data-testid="mobile-link-respond-app">
+                                    <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900 text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#6EA6FF' }}>respond</span></p>
                                     <p className="text-xs text-gray-600 text-center">Unified Comms</p>
                                   </a>
 
-                                  {/* /livechat */}
-                                  <a href="/livechat" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#8000FF' }} data-testid="mobile-link-livechat-app">
-                                    <p className="text-xs font-bold text-gray-900 text-center">/ livechat</p>
+                                  {/* / engage */}
+                                  <a href="/engage" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#8000FF' }} data-testid="mobile-link-engage-app">
+                                    <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900 text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#8000FF' }}>engage</span></p>
                                     <p className="text-xs text-gray-600 text-center">Live Chat</p>
                                   </a>
 
-                                  {/* /post */}
-                                  <a href="/post-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E91EBC' }} data-testid="mobile-link-post-app">
-                                    <p className="text-xs font-bold text-gray-900 text-center">/post</p>
+                                  {/* / post */}
+                                  <a href="/post-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF44CC' }} data-testid="mobile-link-post-app">
+                                    <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900 text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#FF44CC' }}>post</span></p>
                                     <p className="text-xs text-gray-600 text-center">Social Media</p>
                                   </a>
 
-                                  {/* /list */}
-                                  <a href="/list-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF0040' }} data-testid="mobile-link-list-app">
-                                    <p className="text-xs font-bold text-gray-900 text-center">/list</p>
+                                  {/* / publish */}
+                                  <a href="/publish-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E00420' }} data-testid="mobile-link-publish-app">
+                                    <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900 text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#E00420' }}>publish</span></p>
                                     <p className="text-xs text-gray-600 text-center">Directory Sync</p>
                                   </a>
 
-                                  {/* /review */}
-                                  <a href="/review-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#D59600' }} data-testid="mobile-link-review-app">
-                                    <p className="text-xs font-bold text-gray-900 text-center">/review</p>
+                                  {/* / elevate */}
+                                  <a href="/elevate-landing" className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FFD700' }} data-testid="mobile-link-elevate-app">
+                                    <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900 text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#FFD700', textShadow: '0 0 1px #000' }}>elevate</span></p>
                                     <p className="text-xs text-gray-600 text-center">Review Mgmt</p>
                                   </a>
                                 </div>
@@ -1992,52 +1992,52 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       <div className="font-bold">ScansBlue</div>
                                       <p className="text-xs text-gray-600">Site analysis tool</p>
                                     </a>
-                                    <a href="/relationships" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">
-                                        <span style={{ color: '#09080E' }}>/ </span>
-                                        <span style={{ color: '#22C55E' }}>relationships</span>
+                                    <a href="/connect" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold font-['Archivo_Semi_Expanded']">
+                                        <span style={{ color: '#09080E' }}>/</span>{' '}
+                                        <span style={{ color: '#008060' }}>connect</span>
                                       </div>
                                       <p className="text-xs text-gray-600">Customer CRM</p>
                                     </a>
-                                    <a href="/send" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">
-                                        <span style={{ color: '#09080E' }}>/ </span>
-                                        <span style={{ color: '#FF6B00' }}>send</span>
+                                    <a href="/promote" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold font-['Archivo_Semi_Expanded']">
+                                        <span style={{ color: '#09080E' }}>/</span>{' '}
+                                        <span style={{ color: '#FFEF45', textShadow: '0 0 1px #000' }}>promote</span>
                                       </div>
                                       <p className="text-xs text-gray-600">Email & SMS marketing</p>
                                     </a>
-                                    <a href="/inbox" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">
-                                        <span style={{ color: '#09080E' }}>/ </span>
-                                        <span style={{ color: '#0080FF' }}>inbox</span>
+                                    <a href="/respond" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold font-['Archivo_Semi_Expanded']">
+                                        <span style={{ color: '#09080E' }}>/</span>{' '}
+                                        <span style={{ color: '#6EA6FF' }}>respond</span>
                                       </div>
                                       <p className="text-xs text-gray-600">Unified communications</p>
                                     </a>
-                                    <a href="/livechat" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">
-                                        <span style={{ color: '#09080E' }}>/ </span>
-                                        <span style={{ color: '#8000FF' }}>livechat</span>
+                                    <a href="/engage" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold font-['Archivo_Semi_Expanded']">
+                                        <span style={{ color: '#09080E' }}>/</span>{' '}
+                                        <span style={{ color: '#8000FF' }}>engage</span>
                                       </div>
                                       <p className="text-xs text-gray-600">Live chat widget</p>
                                     </a>
-                                    <a href="/content" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">
-                                        <span style={{ color: '#09080E' }}>/ </span>
-                                        <span style={{ color: '#E91EBC' }}>content</span>
+                                    <a href="/post-landing" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold font-['Archivo_Semi_Expanded']">
+                                        <span style={{ color: '#09080E' }}>/</span>{' '}
+                                        <span style={{ color: '#FF44CC' }}>post</span>
                                       </div>
                                       <p className="text-xs text-gray-600">Social media management</p>
                                     </a>
-                                    <a href="/listings" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">
-                                        <span style={{ color: '#09080E' }}>/ </span>
-                                        <span style={{ color: '#FF0040' }}>listings</span>
+                                    <a href="/publish-landing" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold font-['Archivo_Semi_Expanded']">
+                                        <span style={{ color: '#09080E' }}>/</span>{' '}
+                                        <span style={{ color: '#E00420' }}>publish</span>
                                       </div>
                                       <p className="text-xs text-gray-600">Directory sync</p>
                                     </a>
-                                    <a href="/reputation" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">
-                                        <span style={{ color: '#09080E' }}>/ </span>
-                                        <span style={{ color: '#D59600' }}>reputation</span>
+                                    <a href="/elevate-landing" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold font-['Archivo_Semi_Expanded']">
+                                        <span style={{ color: '#09080E' }}>/</span>{' '}
+                                        <span style={{ color: '#FFD700', textShadow: '0 0 1px #000' }}>elevate</span>
                                       </div>
                                       <p className="text-xs text-gray-600">Review management</p>
                                     </a>
@@ -2062,8 +2062,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 <div className="border-t pt-3">
                                   <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Developers</h4>
                                   <div className="space-y-2">
-                                    <a href="/send-api-docs" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">/send API Docs</div>
+                                    <a href="/promote-api-docs" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/ promote API Docs</div>
                                       <p className="text-xs text-gray-600">Email & SMS API reference</p>
                                     </a>
                                     <a href="/respond-api-docs" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
@@ -2074,8 +2074,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       <div className="font-bold">/post API Docs</div>
                                       <p className="text-xs text-gray-600">Social media posting API</p>
                                     </a>
-                                    <a href="/livechat-install" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <div className="font-bold">LiveChat Installation</div>
+                                    <a href="/engage-install" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                      <div className="font-bold">/ engage Installation</div>
                                       <p className="text-xs text-gray-600">Widget integration guide</p>
                                     </a>
                                     <a href="/sitemap" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
@@ -2093,7 +2093,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       <div className="font-bold">Help Center</div>
                                       <p className="text-xs text-gray-600">Get answers & support</p>
                                     </a>
-                                    <a href="/livechat-demo" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                    <a href="/engage-demo" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
                                       <div className="font-bold">Live Demo</div>
                                       <p className="text-xs text-gray-600">Try our live chat</p>
                                     </a>

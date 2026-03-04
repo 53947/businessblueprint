@@ -137,7 +137,7 @@ add_action('wp_footer', 'bb_livechat_widget');
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <SectionHeader 
-        title="/livechat - Installation & Setup"
+        title="/ engage - Installation & Setup"
         tabs={[
           { 
             label: 'Installation', 
