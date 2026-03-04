@@ -569,7 +569,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                               <div className="flex items-end justify-between">
                                 <div>
-                                  <p className="text-xs text-gray-600 mb-1">Includes both applications below</p>
+                                  <p className="text-xs text-gray-600 mb-1">Includes all 3 applications below</p>
                                   <div className="text-lg font-extrabold mb-1" style={{ color: '#6EA6FF' }}>
                                     {getItemPrice('localblue-bundle', 60).displayPrice}
                                   </div>
@@ -587,8 +587,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
 
-                            {/* 2 Apps in a Row */}
-                            <div className="grid grid-cols-2 gap-2">
+                            {/* 3 Apps in a Row */}
+                            <div className="grid grid-cols-3 gap-2">
                               {/* / publish */}
                               <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E00420' }}>
                                 <div className="flex items-start justify-between mb-1">
@@ -636,6 +636,31 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     {getItemPrice('elevate-addon', 40).displayPrice}
                                   </div>
                                   <a href="/elevate-landing" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                </div>
+                              </div>
+
+                              {/* / optimize */}
+                              <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#374151' }}>
+                                <div className="flex items-start justify-between mb-1">
+                                  <div className="flex items-center gap-1.5">
+                                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#374151" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                                    <span className="text-xs font-bold" style={{ color: '#374151' }}>/ optimize</span>
+                                  </div>
+                                  <button
+                                    onClick={() => handleAddToCart('optimize-addon', '/ optimize', 29, 'addon')}
+                                    className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0"
+                                    style={{ backgroundColor: '#374151' }}
+                                    data-testid="button-add-optimize"
+                                    title="Add to Cart"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                                <div className="border-t pt-1">
+                                  <div className="text-xs font-extrabold mb-0.5" style={{ color: '#374151' }}>
+                                    {getItemPrice('optimize-addon', 29).displayPrice}
+                                  </div>
+                                  <a href="/optimize" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                 </div>
                               </div>
                             </div>
@@ -1725,21 +1750,21 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     <div className="flex items-center justify-between mb-2">
                                       <div>
                                         <p className="text-sm font-bold text-gray-900">LocalBlue Bundle</p>
-                                        <p className="text-xs text-gray-500">Listings + Reputation</p>
+                                        <p className="text-xs text-gray-500">Listings + Reputation + SEO</p>
                                       </div>
                                     </div>
                                     <div className="flex items-center justify-between">
                                       <div>
-                                        <p className="text-xs text-gray-600 mb-1">Includes both apps below</p>
-                                        <div className="text-lg font-extrabold" style={{ color: '#6EA6FF' }}>$60/mo</div>
+                                        <p className="text-xs text-gray-600 mb-1">Includes all 3 apps below</p>
+                                        <div className="text-lg font-extrabold" style={{ color: '#6EA6FF' }}>$49.50/mo</div>
                                         <a href="/localblue" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                       </div>
                                       <button className="text-lg font-bold w-6 h-6 rounded-full text-white flex items-center justify-center" style={{ backgroundColor: '#6EA6FF' }} data-testid="mobile-add-localblue" title="Add to Cart">+</button>
                                     </div>
                                   </div>
 
-                                  {/* 2 Apps */}
-                                  <div className="grid grid-cols-2 gap-2">
+                                  {/* 3 Apps */}
+                                  <div className="grid grid-cols-3 gap-2">
                                     {/* / publish */}
                                     <div className="p-2 rounded-lg border-2" style={{ borderColor: '#E00420' }}>
                                       <div className="flex items-start justify-between mb-2">
@@ -1764,6 +1789,19 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       </div>
                                       <div className="text-xs font-extrabold" style={{ color: '#FFD700' }}>$40/mo</div>
                                       <a href="/elevate-landing" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                    </div>
+
+                                    {/* / optimize */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#374151' }}>
+                                      <div className="flex items-start justify-between mb-2">
+                                        <div>
+                                          <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#374151' }}>optimize</span></p>
+                                          <p className="text-xs text-gray-500">SEO</p>
+                                        </div>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#374151' }} data-testid="mobile-add-optimize" title="Add to Cart" onClick={() => handleAddToCart('optimize-addon', '/ optimize', 29, 'addon')}>+</button>
+                                      </div>
+                                      <div className="text-xs font-extrabold" style={{ color: '#374151' }}>$29/mo</div>
+                                      <a href="/optimize" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
                                   </div>
                                 </div>

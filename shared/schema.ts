@@ -3632,3 +3632,251 @@ export type ChatAgent = typeof chatAgents.$inferSelect;
 export type InsertChatAgent = z.infer<typeof insertChatAgentSchema>;
 export type ChatAnalyticsEvent = typeof chatAnalyticsEvents.$inferSelect;
 export type InsertChatAnalyticsEvent = z.infer<typeof insertChatAnalyticsEventSchema>;
+
+// ==========================================
+// SEO OPTIMIZATION (/ optimize) TABLES
+// ==========================================
+
+/**
+ * SEO Profiles — Main SEO profile per client with domain, target keywords, competitors.
+ */
+export const seoProfiles = pgTable("seo_profiles", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  domain: varchar("domain", { length: 500 }).notNull(),
+  businessName: varchar("business_name", { length: 255 }),
+  industry: varchar("industry", { length: 100 }),
+  location: varchar("location", { length: 255 }),
+  targetKeywords: jsonb("target_keywords"), // string[]
+  competitors: jsonb("competitors"), // string[]
+  localEnabled: boolean("local_enabled").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_profile_client").on(table.clientId),
+]);
+
+/**
+ * SEO Scans — Scan results from site crawls and audits.
+ */
+export const seoScans = pgTable("seo_scans", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  scanType: varchar("scan_type", { length: 50 }).default("full"), // full, quick, technical, on-page
+  overallScore: integer("overall_score"),
+  performanceScore: integer("performance_score"),
+  seoScore: integer("seo_score"),
+  accessibilityScore: integer("accessibility_score"),
+  metrics: jsonb("metrics"),
+  issues: jsonb("issues"),
+  recommendations: jsonb("recommendations"),
+  status: varchar("status", { length: 20 }).default("pending"), // pending, running, completed, failed
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_scan_profile").on(table.profileId),
+  index("idx_seo_scan_status").on(table.status),
+]);
+
+/**
+ * SEO Keywords — Tracked keywords for a profile.
+ */
+export const seoKeywords = pgTable("seo_keywords", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  keyword: varchar("keyword", { length: 500 }).notNull(),
+  searchVolume: integer("search_volume"),
+  difficulty: integer("difficulty"),
+  currentRank: integer("current_rank"),
+  status: varchar("status", { length: 20 }).default("tracking"), // tracking, paused, removed
+  source: varchar("source", { length: 50 }).default("manual"), // manual, ai-suggested, imported
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_keyword_profile").on(table.profileId),
+]);
+
+/**
+ * SEO Keyword Rankings — Daily rank history for tracked keywords.
+ */
+export const seoKeywordRankings = pgTable("seo_keyword_rankings", {
+  id: serial("id").primaryKey(),
+  keywordId: integer("keyword_id").references(() => seoKeywords.id).notNull(),
+  rank: integer("rank"),
+  url: text("url"),
+  date: timestamp("date").defaultNow(),
+}, (table) => [
+  index("idx_seo_ranking_keyword").on(table.keywordId),
+  index("idx_seo_ranking_date").on(table.date),
+]);
+
+/**
+ * SEO Pages — Page-level SEO data and analysis.
+ */
+export const seoPages = pgTable("seo_pages", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  url: text("url").notNull(),
+  title: varchar("title", { length: 500 }),
+  metaDescription: text("meta_description"),
+  h1: varchar("h1", { length: 500 }),
+  wordCount: integer("word_count"),
+  score: integer("score"),
+  issues: jsonb("issues"),
+  suggestions: jsonb("suggestions"),
+  lastAnalyzed: timestamp("last_analyzed"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_page_profile").on(table.profileId),
+]);
+
+/**
+ * SEO Technical Issues — Technical issues found during audits.
+ */
+export const seoTechnicalIssues = pgTable("seo_technical_issues", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  scanId: integer("scan_id").references(() => seoScans.id),
+  type: varchar("type", { length: 50 }).notNull(), // broken-link, missing-meta, slow-page, no-ssl, etc.
+  severity: varchar("severity", { length: 20 }).default("medium"), // critical, high, medium, low
+  url: text("url"),
+  description: text("description"),
+  howToFix: text("how_to_fix"),
+  status: varchar("status", { length: 20 }).default("open"), // open, resolved, dismissed
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_issue_profile").on(table.profileId),
+  index("idx_seo_issue_severity").on(table.severity),
+]);
+
+/**
+ * SEO Backlinks — Backlink tracking (shell/placeholder).
+ */
+export const seoBacklinks = pgTable("seo_backlinks", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  sourceUrl: text("source_url"),
+  targetUrl: text("target_url"),
+  anchorText: varchar("anchor_text", { length: 500 }),
+  domainAuthority: integer("domain_authority"),
+  status: varchar("status", { length: 20 }).default("active"),
+  firstSeen: timestamp("first_seen").defaultNow(),
+  lastSeen: timestamp("last_seen"),
+}, (table) => [
+  index("idx_seo_backlink_profile").on(table.profileId),
+]);
+
+/**
+ * SEO Content Briefs — AI-generated content briefs.
+ */
+export const seoContentBriefs = pgTable("seo_content_briefs", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  targetKeyword: varchar("target_keyword", { length: 500 }).notNull(),
+  title: varchar("title", { length: 500 }),
+  outline: jsonb("outline"),
+  suggestions: jsonb("suggestions"),
+  wordCountTarget: integer("word_count_target"),
+  status: varchar("status", { length: 20 }).default("draft"), // draft, in-progress, completed
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_brief_profile").on(table.profileId),
+]);
+
+/**
+ * SEO Action Items — AI-generated prioritized action items.
+ */
+export const seoActionItems = pgTable("seo_action_items", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 50 }), // technical, content, keywords, on-page, local
+  priority: varchar("priority", { length: 20 }).default("medium"), // critical, high, medium, low
+  impact: varchar("impact", { length: 20 }).default("medium"), // high, medium, low
+  effort: varchar("effort", { length: 20 }).default("medium"), // high, medium, low
+  status: varchar("status", { length: 20 }).default("pending"), // pending, in-progress, completed, dismissed
+  dueDate: timestamp("due_date"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_action_profile").on(table.profileId),
+  index("idx_seo_action_status").on(table.status),
+]);
+
+/**
+ * SEO Reports — Report snapshots (shell/placeholder).
+ */
+export const seoReports = pgTable("seo_reports", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  type: varchar("type", { length: 50 }).default("monthly"),
+  period: varchar("period", { length: 50 }),
+  data: jsonb("data"),
+  generatedAt: timestamp("generated_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_report_profile").on(table.profileId),
+]);
+
+/**
+ * SEO Competitors — Competitor tracking (shell/placeholder).
+ */
+export const seoCompetitors = pgTable("seo_competitors", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  domain: varchar("domain", { length: 500 }).notNull(),
+  name: varchar("name", { length: 255 }),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_competitor_profile").on(table.profileId),
+]);
+
+/**
+ * SEO Competitor Data — Competitor metrics (shell/placeholder).
+ */
+export const seoCompetitorData = pgTable("seo_competitor_data", {
+  id: serial("id").primaryKey(),
+  competitorId: integer("competitor_id").references(() => seoCompetitors.id).notNull(),
+  metric: varchar("metric", { length: 100 }),
+  value: text("value"),
+  date: timestamp("date").defaultNow(),
+}, (table) => [
+  index("idx_seo_comp_data_competitor").on(table.competitorId),
+]);
+
+// SEO Optimization Schemas
+export const insertSeoProfileSchema = createInsertSchema(seoProfiles);
+export const insertSeoScanSchema = createInsertSchema(seoScans);
+export const insertSeoKeywordSchema = createInsertSchema(seoKeywords);
+export const insertSeoKeywordRankingSchema = createInsertSchema(seoKeywordRankings);
+export const insertSeoPageSchema = createInsertSchema(seoPages);
+export const insertSeoTechnicalIssueSchema = createInsertSchema(seoTechnicalIssues);
+export const insertSeoBacklinkSchema = createInsertSchema(seoBacklinks);
+export const insertSeoContentBriefSchema = createInsertSchema(seoContentBriefs);
+export const insertSeoActionItemSchema = createInsertSchema(seoActionItems);
+export const insertSeoReportSchema = createInsertSchema(seoReports);
+export const insertSeoCompetitorSchema = createInsertSchema(seoCompetitors);
+export const insertSeoCompetitorDataSchema = createInsertSchema(seoCompetitorData);
+
+// SEO Optimization Types
+export type SeoProfile = typeof seoProfiles.$inferSelect;
+export type InsertSeoProfile = z.infer<typeof insertSeoProfileSchema>;
+export type SeoScan = typeof seoScans.$inferSelect;
+export type InsertSeoScan = z.infer<typeof insertSeoScanSchema>;
+export type SeoKeyword = typeof seoKeywords.$inferSelect;
+export type InsertSeoKeyword = z.infer<typeof insertSeoKeywordSchema>;
+export type SeoKeywordRanking = typeof seoKeywordRankings.$inferSelect;
+export type InsertSeoKeywordRanking = z.infer<typeof insertSeoKeywordRankingSchema>;
+export type SeoPage = typeof seoPages.$inferSelect;
+export type InsertSeoPage = z.infer<typeof insertSeoPageSchema>;
+export type SeoTechnicalIssue = typeof seoTechnicalIssues.$inferSelect;
+export type InsertSeoTechnicalIssue = z.infer<typeof insertSeoTechnicalIssueSchema>;
+export type SeoBacklink = typeof seoBacklinks.$inferSelect;
+export type InsertSeoBacklink = z.infer<typeof insertSeoBacklinkSchema>;
+export type SeoContentBrief = typeof seoContentBriefs.$inferSelect;
+export type InsertSeoContentBrief = z.infer<typeof insertSeoContentBriefSchema>;
+export type SeoActionItem = typeof seoActionItems.$inferSelect;
+export type InsertSeoActionItem = z.infer<typeof insertSeoActionItemSchema>;
+export type SeoReport = typeof seoReports.$inferSelect;
+export type InsertSeoReport = z.infer<typeof insertSeoReportSchema>;
+export type SeoCompetitor = typeof seoCompetitors.$inferSelect;
+export type InsertSeoCompetitor = z.infer<typeof insertSeoCompetitorSchema>;
+export type SeoCompetitorData = typeof seoCompetitorData.$inferSelect;
+export type InsertSeoCompetitorData = z.infer<typeof insertSeoCompetitorDataSchema>;

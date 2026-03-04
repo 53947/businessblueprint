@@ -61,6 +61,9 @@ import KnowledgeBase from "@/pages/knowledge-base";
 import Tour from "@/pages/tour";
 import ScansBluePurchase from "@/pages/scansblue-purchase";
 import ScansBlueSuccess from "@/pages/scansblue-success";
+import OptimizeLanding from "@/pages/optimize-landing";
+import OptimizeSetup from "@/pages/optimize-setup";
+import OptimizeDashboard from "@/pages/optimize";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -114,6 +117,9 @@ function Router() {
       <Route path="/publish-landing" component={ListLanding} />
       <Route path="/elevate-landing" component={ReviewLanding} />
       <Route path="/elevate-app" component={ReviewManagement} />
+      <Route path="/optimize" component={OptimizeLanding} />
+      <Route path="/optimize/setup" component={OptimizeSetup} />
+      <Route path="/optimize/dashboard" component={OptimizeDashboard} />
       <Route path="/publish-app" component={ListManagement} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />

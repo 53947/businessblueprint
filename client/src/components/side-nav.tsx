@@ -10,7 +10,8 @@ import {
   ChevronRight,
   Menu,
   CreditCard,
-  Lock
+  Lock,
+  Target
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import bbIcon from "@assets/Blueprint_Favicon_1762489845363.png";
@@ -158,11 +159,20 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       href: "/elevate-landing",
       featureCode: "RE",
     },
-    { 
-      id: "divider-3", 
-      label: "", 
-      icon: null, 
-      isDivider: true 
+    {
+      id: "optimize",
+      label: "optimize",
+      hoverLabel: "SEO Optimization Suite",
+      icon: <Target className="w-7 h-7" style={{ color: '#374151' }} />,
+      external: true,
+      href: "/optimize",
+      featureCode: "OP",
+    },
+    {
+      id: "divider-3",
+      label: "",
+      icon: null,
+      isDivider: true
     },
     {
       id: "ai-coach",
