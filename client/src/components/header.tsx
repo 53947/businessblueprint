@@ -709,17 +709,17 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
 
-                            {/* /respond */}
-                            <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#0080FF' }}>
+                            {/* / respond */}
+                            <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#6EA6FF' }}>
                               <div className="flex items-start justify-between mb-1">
                                 <div className="flex items-center gap-1.5">
                                   <img src={inboxIcon} alt="" className="w-5 h-5" />
-                                  <img src={inboxWordmark} alt="/respond" className="h-4" />
+                                  <img src={inboxWordmark} alt="/ respond" className="h-4" />
                                 </div>
                                 <button
-                                  onClick={() => handleAddToCart('respond-addon', '/respond', 35, 'addon')}
+                                  onClick={() => handleAddToCart('respond-addon', '/ respond', 35, 'addon')}
                                   className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0"
-                                  style={{ backgroundColor: '#0080FF' }}
+                                  style={{ backgroundColor: '#6EA6FF' }}
                                   data-testid="button-add-respond"
                                   title="Add to Cart"
                                 >
@@ -727,7 +727,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </button>
                               </div>
                               <div className="border-t pt-1">
-                                <div className="text-xs font-extrabold mb-0.5" style={{ color: '#0080FF' }}>
+                                <div className="text-xs font-extrabold mb-0.5" style={{ color: '#6EA6FF' }}>
                                   {getItemPrice('respond-addon', 35).displayPrice}
                                 </div>
                                 <a href="/respond" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
@@ -759,17 +759,17 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               </div>
                             </div>
 
-                            {/* /post */}
-                            <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#E91EBC' }}>
+                            {/* / post */}
+                            <div className="p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: '#FF44CC' }}>
                               <div className="flex items-start justify-between mb-1">
                                 <div className="flex items-center gap-1.5">
                                   <img src={contentIcon} alt="" className="w-5 h-5" />
-                                  <img src={contentWordmark} alt="/post" className="h-4" />
+                                  <img src={contentWordmark} alt="/ post" className="h-4" />
                                 </div>
                                 <button
-                                  onClick={() => handleAddToCart('post-addon', '/post', 35, 'addon')}
+                                  onClick={() => handleAddToCart('post-addon', '/ post', 35, 'addon')}
                                   className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0"
-                                  style={{ backgroundColor: '#E91EBC' }}
+                                  style={{ backgroundColor: '#FF44CC' }}
                                   data-testid="button-add-post"
                                   title="Add to Cart"
                                 >
@@ -777,10 +777,10 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </button>
                               </div>
                               <div className="border-t pt-1">
-                                <div className="text-xs font-extrabold mb-0.5" style={{ color: '#E91EBC' }}>
+                                <div className="text-xs font-extrabold mb-0.5" style={{ color: '#FF44CC' }}>
                                   {getItemPrice('post-addon', 35).displayPrice}
                                 </div>
-                                <a href="/post" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
+                                <a href="/post-landing" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                               </div>
                             </div>
                           </div>
@@ -883,9 +883,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="/respond" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#0080FF' }} data-testid="link-solution-respond">
-                                <img src={inboxIcon} alt="/respond" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/respond</div>
+                              <a href="/respond" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#6EA6FF' }} data-testid="link-solution-respond">
+                                <img src={inboxIcon} alt="/ respond" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#6EA6FF' }}>respond</span></div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Unified Comms</p>
                               </a>
                             </NavigationMenuLink>
@@ -900,9 +900,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </NavigationMenuLink>
 
                             <NavigationMenuLink asChild>
-                              <a href="/post-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#E91EBC' }} data-testid="link-solution-post">
-                                <img src={contentIcon} alt="/post" className="h-12 w-12 object-contain mb-2" />
-                                <div className="text-sm font-bold text-gray-900 dark:text-white text-center">/post</div>
+                              <a href="/post-landing" className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: '#FF44CC' }} data-testid="link-solution-post">
+                                <img src={contentIcon} alt="/ post" className="h-12 w-12 object-contain mb-2" />
+                                <div className="text-sm font-bold font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white text-center"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#FF44CC' }}>post</span></div>
                                 <p className="text-xs text-gray-600 dark:text-gray-400 text-center">Social Media</p>
                               </a>
                             </NavigationMenuLink>
@@ -1087,7 +1087,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={relationshipsIcon} alt="/ connect" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ connect</div>
+                                  <div className="text-sm font-medium font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#008060' }}>connect</span></div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Customer CRM</p>
                                 </div>
                               </a>
@@ -1102,7 +1102,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={sendIcon} alt="/ promote" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ promote</div>
+                                  <div className="text-sm font-medium font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#FFEF45', textShadow: '0 0 1px #000' }}>promote</span></div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Email & SMS marketing</p>
                                 </div>
                               </a>
@@ -1117,7 +1117,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={inboxIcon} alt="/ respond" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ respond</div>
+                                  <div className="text-sm font-medium font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#6EA6FF' }}>respond</span></div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Unified communications</p>
                                 </div>
                               </a>
@@ -1132,7 +1132,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={livechatIcon} alt="/ engage" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ engage</div>
+                                  <div className="text-sm font-medium font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#8000FF' }}>engage</span></div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Live chat widget</p>
                                 </div>
                               </a>
@@ -1147,7 +1147,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={contentIcon} alt="/ post" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ post</div>
+                                  <div className="text-sm font-medium font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#FF44CC' }}>post</span></div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Social media management</p>
                                 </div>
                               </a>
@@ -1162,7 +1162,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={listingsIcon} alt="/ publish" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ publish</div>
+                                  <div className="text-sm font-medium font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#E00420' }}>publish</span></div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Directory sync</p>
                                 </div>
                               </a>
@@ -1177,7 +1177,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <img src={reputationIcon} alt="/ elevate" className="w-full h-full object-contain" />
                                 </div>
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ elevate</div>
+                                  <div className="text-sm font-medium font-['Archivo_Semi_Expanded'] text-gray-900 dark:text-white"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#FFD700', textShadow: '0 0 1px #000' }}>elevate</span></div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Review management</p>
                                 </div>
                               </a>
@@ -1211,7 +1211,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               >
                                 <img src={fileTextIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/respond API Docs</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ respond API Docs</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Unified communications API</p>
                                 </div>
                               </a>
@@ -1224,7 +1224,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               >
                                 <img src={fileTextIcon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: 'invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)' }} />
                                 <div>
-                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/post API Docs</div>
+                                  <div className="text-sm font-medium text-gray-900 dark:text-white">/ post API Docs</div>
                                   <p className="text-xs text-gray-600 dark:text-gray-400">Social media posting API</p>
                                 </div>
                               </a>
@@ -1831,16 +1831,16 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                       <a href="/engage" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
 
-                                    {/* /post */}
-                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#E91EBC' }}>
+                                    {/* / post */}
+                                    <div className="p-2 rounded-lg border-2" style={{ borderColor: '#FF44CC' }}>
                                       <div className="flex items-start justify-between mb-2">
                                         <div>
-                                          <p className="text-xs font-bold text-gray-900">/post</p>
+                                          <p className="text-xs font-bold font-['Archivo_Semi_Expanded'] text-gray-900"><span style={{ color: '#09080E' }}>/</span> <span style={{ color: '#FF44CC' }}>post</span></p>
                                           <p className="text-xs text-gray-500">Social Media</p>
                                         </div>
-                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#E91EBC' }} data-testid="mobile-add-post" title="Add to Cart">+</button>
+                                        <button className="text-base font-bold w-5 h-5 rounded-full text-white flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#FF44CC' }} data-testid="mobile-add-post" title="Add to Cart">+</button>
                                       </div>
-                                      <div className="text-xs font-extrabold" style={{ color: '#E91EBC' }}>$35/mo</div>
+                                      <div className="text-xs font-extrabold" style={{ color: '#FF44CC' }}>$35/mo</div>
                                       <a href="/post" className="text-xs font-bold text-blue-600 hover:underline">Learn More →</a>
                                     </div>
                                   </div>
