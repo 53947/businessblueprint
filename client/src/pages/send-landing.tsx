@@ -3,21 +3,24 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, Mail, MessageSquare, Users, BarChart3, Shield, Zap } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import sendIcon from "@assets/native icons and favicons/: send app icon.png";
-import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
+import { AppName } from "@/components/app-name";
+import { getAppById, getAppsByBundle, getBundlePrice } from "@/config/app-registry";
 
 export default function SendLanding() {
+  const app = getAppById("promote")!;
+  const bundlePrice = getBundlePrice("commverse");
+  const bundleApps = getAppsByBundle("commverse");
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={sendIcon} alt="/ promote icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <img src={sendLogo} alt="/ promote" className="h-16 object-contain drop-shadow-lg" />
+              <AppName appId="promote" size="lg" iconSize={64} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Own Your Customer Relationships
@@ -33,7 +36,7 @@ export default function SendLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'send-addon', name: '/ promote', price: 35, type: 'addon' }
+                    detail: { sku: 'send-addon', name: '/ promote', price: app.standalonePrice, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -44,7 +47,7 @@ export default function SendLanding() {
               <Button 
                 size="lg" 
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity"
-                style={{ backgroundColor: '#E6B747', color: '#000' }}
+                style={{ backgroundColor: '#1844A6', color: '#000' }}
                 asChild
                 data-testid="button-get-started"
               >
@@ -53,8 +56,8 @@ export default function SendLanding() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 py-6 shadow-md hover:bg-[#E6B747]/10 transition-colors"
-                style={{ borderColor: '#E6B747', color: '#000' }}
+                className="text-lg px-8 py-6 shadow-md hover:bg-[#1844A6]/10 transition-colors"
+                style={{ borderColor: '#1844A6', color: '#000' }}
                 asChild
                 data-testid="button-view-pricing"
               >
@@ -70,14 +73,14 @@ export default function SendLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#E6B747' }}>$35/mo</div>
+              <div className="text-4xl font-bold" style={{ color: '#1844A6' }}>${app.standalonePrice}/mo</div>
               <span className="text-white text-xl">standalone</span>
               <span className="text-gray-400 text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">$75/mo</div>
-              <span className="text-white text-xl">for all 3 Commverse apps</span>
+              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
+              <span className="text-white text-xl">for all {bundleApps.length} CommVerse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              / promote + / engage + / respond = Complete communication ecosystem
+              / promote + / respond + / engage + / post = Complete communication ecosystem
             </p>
           </div>
         </div>
@@ -101,7 +104,7 @@ export default function SendLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#E6B747' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1844A6' }}>
                     <Mail className="w-8 h-8 text-black" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-unified-title">Complete Data Ownership</h3>
@@ -115,7 +118,7 @@ export default function SendLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#E6B747' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1844A6' }}>
                     <Shield className="w-8 h-8 text-black" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-compliant-title">Privacy-First Design</h3>
@@ -129,7 +132,7 @@ export default function SendLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#E6B747' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1844A6' }}>
                     <MessageSquare className="w-8 h-8 text-black" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-channels-title">Unified Multi-Channel</h3>
@@ -153,7 +156,7 @@ export default function SendLanding() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#E6B747' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#1844A6' }}>
                   <Users className="w-6 h-6 text-black" />
                 </div>
               </div>
@@ -167,7 +170,7 @@ export default function SendLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#E6B747' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#1844A6' }}>
                   <Zap className="w-6 h-6 text-black" />
                 </div>
               </div>
@@ -181,7 +184,7 @@ export default function SendLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#E6B747' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#1844A6' }}>
                   <BarChart3 className="w-6 h-6 text-black" />
                 </div>
               </div>
@@ -195,7 +198,7 @@ export default function SendLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#E6B747' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#1844A6' }}>
                   <Check className="w-6 h-6 text-black" />
                 </div>
               </div>
@@ -220,7 +223,7 @@ export default function SendLanding() {
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
-                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#E6B747' }}>
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#1844A6' }}>
                     <Check className="w-4 h-4 text-black" />
                   </div>
                   Works Autonomously & Together
@@ -231,20 +234,20 @@ export default function SendLanding() {
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
-                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#E6B747' }}>
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#1844A6' }}>
                     <Check className="w-4 h-4 text-black" />
                   </div>
                   No Hidden Costs, No Surprises
                 </h3>
                 <p className="text-gray-600">
-                  Standalone at $35/mo or bundled with / engage + / respond for $75/mo. No per-message fees, no contact limits,
+                  Standalone at ${app.standalonePrice}/mo or bundled in CommVerse for ${bundlePrice}/mo. No per-message fees, no contact limits,
                   no "premium features" upsells. What you see is what you get.
                 </p>
               </div>
 
               <div>
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
-                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#E6B747' }}>
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#1844A6' }}>
                     <Check className="w-4 h-4 text-black" />
                   </div>
                   Purpose-Built for Local Businesses
@@ -255,7 +258,7 @@ export default function SendLanding() {
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
-                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#E6B747' }}>
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#1844A6' }}>
                     <Check className="w-4 h-4 text-black" />
                   </div>
                   Compliance You Can Trust
@@ -283,7 +286,7 @@ export default function SendLanding() {
             <Button 
               size="lg" 
               className="text-lg px-8 py-6 shadow-lg"
-              style={{ backgroundColor: '#E6B747', color: '#000' }}
+              style={{ backgroundColor: '#1844A6', color: '#000' }}
               asChild
               data-testid="button-start-free"
             >

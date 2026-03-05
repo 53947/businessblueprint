@@ -45,3 +45,23 @@ Updated `home.tsx`, `pricing.tsx`, and `how-it-works.tsx` to consume `app-regist
   - Section 6: Pricing rules text block.
 
 Files modified: `home.tsx`, `pricing.tsx`, `how-it-works.tsx`.
+
+## 2026-03-05 — Prompt 4 of 5: Landing Pages
+
+Audited and fixed all 11 landing pages to consume `app-registry.ts`:
+
+- **send-landing.tsx** (/ promote) — Removed `sendIcon`/`sendLogo` imports. Added `AppName appId="promote"` in hero. Color: #E6B747→#1844A6. Price: $35→$39 standalone, $75→$99 bundle. Bundle text: "3 apps"→"4 apps". AddToCart price from registry.
+- **respond-landing.tsx** (/ respond) — Removed `inboxIcon`/`inboxLogo` imports. Added `AppName appId="respond"` in hero. Color: #0080FF→#6EA6FF. Price: $35→$39, $100→$99 bundle.
+- **livechat-landing.tsx** (/ engage) — Removed `livechatIcon`/`livechatLogo` imports. Added `AppName appId="engage"` in hero. Color #8000FF correct (kept). Price: $35→$39, $100→$99 bundle.
+- **post-landing.tsx** (/ post) — Removed `contentIcon`/`contentLogo` imports. Added `AppName appId="post"` in hero. Color: #FC6ACD→#FF44CC. Price: $35→$39, $75→$99 bundle.
+- **list-landing.tsx** (/ publish) — Removed `listingsIcon`/`listingsLogo` imports. Added `AppName appId="publish"` in hero. Color: #FF0040→#064A6C. Price: $40→$49, $60→$99 bundle. Bundle text: "2 apps"→"3 apps".
+- **review-landing.tsx** (/ elevate) — Removed `reputationIcon`/`reputationLogo` imports. Added `AppName appId="elevate"` in hero. Color: #D59600→#E9B307. Price: $40→$49, $60→$99 bundle. Bundle text: "2 apps"→"3 apps".
+- **optimize-landing.tsx** (/ optimize) — Added `AppName appId="optimize"` in hero (replacing lucide Target icon + inline text). Price: FREE/$29→$59/$99 bundle. Pricing callout shows standalone + LocalBlue bundle pricing.
+- **relationships-landing.tsx** (/ connect) — Removed `relationshipsIcon` import. Added `AppName appId="connect"` in hero. Color: #0000FF→#008060. AddToCart price from `CONNECT_CRM.tiers[1].price`.
+- **localblue-landing.tsx** — Removed `badge3`/`localBlueLogo` imports. Added `BundleHeader bundleId="localblue"` in hero. Bundle price: $49.50→$99. Standalone range: $29-40→$49-59.
+- **commverse-landing.tsx** — Removed `sendIcon`/`inboxIcon`/`livechatIcon` imports. Added `BundleHeader bundleId="commverse"` in hero. App grid now uses `getAppsByBundle("commverse").map()` with `AppName` — shows all 4 apps (was 3, missing /post). Color: #0080FF→#F97316. Price: $35→$39, $75→$99. Text: "Three"→"Four", savings computed from registry.
+- **ai-coach.tsx** — Complete rewrite from 32-line stub to full landing page. Hero with Coach Blue icon + name from `COACH_BLUE`. Loyalty pricing section ($99/$59/FREE). Features grid (6 items). Gradient "How Pricing Works" section with bundle integration info. CTA section. Color: #A855F7 from registry. AddToCart price from `COACH_BLUE.standalonePrice`.
+
+All pages: `AppName`/`BundleHeader` components for product names, prices from registry constants, colors from registry, no hardcoded old imports.
+
+Files modified: `send-landing.tsx`, `respond-landing.tsx`, `livechat-landing.tsx`, `post-landing.tsx`, `list-landing.tsx`, `review-landing.tsx`, `optimize-landing.tsx`, `relationships-landing.tsx`, `localblue-landing.tsx`, `commverse-landing.tsx`, `ai-coach.tsx`.

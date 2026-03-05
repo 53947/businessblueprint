@@ -3,21 +3,24 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, MapPin, RefreshCw, BarChart3, Shield, Zap } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import listingsIcon from "@assets/listings app_1762804610311.png";
-import listingsLogo from "@assets/listings_1762930219632.png";
+import { AppName } from "@/components/app-name";
+import { getAppById, getAppsByBundle, getBundlePrice } from "@/config/app-registry";
 
 export default function ListingsLanding() {
+  const app = getAppById("publish")!;
+  const bundlePrice = getBundlePrice("localblue");
+  const bundleApps = getAppsByBundle("localblue");
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={listingsIcon} alt="/ publish icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <img src={listingsLogo} alt="/ publish" className="h-16 object-contain drop-shadow-lg" />
+              <AppName appId="publish" size="lg" iconSize={64} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Be Found Everywhere
@@ -33,7 +36,7 @@ export default function ListingsLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'list-addon', name: '/ publish', price: 40, type: 'addon' }
+                    detail: { sku: 'list-addon', name: '/ publish', price: app.standalonePrice, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -44,7 +47,7 @@ export default function ListingsLanding() {
               <Button 
                 size="lg" 
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity"
-                style={{ backgroundColor: '#FF0040', color: '#FFF' }}
+                style={{ backgroundColor: '#064A6C', color: '#FFF' }}
                 asChild
                 data-testid="button-get-started"
               >
@@ -54,7 +57,7 @@ export default function ListingsLanding() {
                 size="lg" 
                 variant="outline" 
                 className="text-lg px-8 py-6 shadow-md hover:bg-red-50 transition-colors"
-                style={{ borderColor: '#FF0040', color: '#FF0040' }}
+                style={{ borderColor: '#064A6C', color: '#064A6C' }}
                 asChild
                 data-testid="button-view-pricing"
               >
@@ -70,14 +73,14 @@ export default function ListingsLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#FF0040' }}>$40/mo</div>
+              <div className="text-4xl font-bold" style={{ color: '#064A6C' }}>${app.standalonePrice}/mo</div>
               <span className="text-white text-xl">standalone</span>
               <span className="text-gray-400 text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">$60/mo</div>
-              <span className="text-white text-xl">for all LocalBlue apps</span>
+              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
+              <span className="text-white text-xl">for all {bundleApps.length} LocalBlue apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              / publish + / elevate = Complete local presence management
+              / publish + / elevate + / optimize = Complete local presence + SEO management
             </p>
           </div>
         </div>
@@ -100,7 +103,7 @@ export default function ListingsLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#FF0040' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#064A6C' }}>
                     <MapPin className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-sync-title">100+ Directory Sync</h3>
@@ -114,7 +117,7 @@ export default function ListingsLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#FF0040' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#064A6C' }}>
                     <RefreshCw className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-update-title">Instant Updates</h3>
@@ -128,7 +131,7 @@ export default function ListingsLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#FF0040' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#064A6C' }}>
                     <BarChart3 className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-analytics-title">Listing Analytics</h3>
@@ -152,7 +155,7 @@ export default function ListingsLanding() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#FF0040' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#064A6C' }}>
                   <MapPin className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -166,7 +169,7 @@ export default function ListingsLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#FF0040' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#064A6C' }}>
                   <Shield className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -180,7 +183,7 @@ export default function ListingsLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#FF0040' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#064A6C' }}>
                   <BarChart3 className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -194,7 +197,7 @@ export default function ListingsLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#FF0040' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#064A6C' }}>
                   <Zap className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -222,7 +225,7 @@ export default function ListingsLanding() {
             <Button 
               size="lg" 
               className="text-lg px-8 py-6"
-              style={{ backgroundColor: '#FF0040', color: '#FFF' }}
+              style={{ backgroundColor: '#064A6C', color: '#FFF' }}
               asChild
               data-testid="button-cta-assessment"
             >
@@ -232,7 +235,7 @@ export default function ListingsLanding() {
               size="lg" 
               variant="outline"
               className="text-lg px-8 py-6"
-              style={{ borderColor: '#FF0040', color: '#FF0040' }}
+              style={{ borderColor: '#064A6C', color: '#064A6C' }}
               asChild
               data-testid="button-cta-pricing"
             >

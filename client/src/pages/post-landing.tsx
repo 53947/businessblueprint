@@ -4,21 +4,24 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, Calendar, Image, TrendingUp, BarChart3, Zap, Users, Clock } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import contentIcon from "@assets/:_content_1768176946216.png";
-import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
+import { AppName } from "@/components/app-name";
+import { getAppById, getAppsByBundle, getBundlePrice } from "@/config/app-registry";
 
 export default function ContentLanding() {
+  const app = getAppById("post")!;
+  const bundlePrice = getBundlePrice("commverse");
+  const bundleApps = getAppsByBundle("commverse");
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={contentIcon} alt="/post icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <img src={contentLogo} alt="/post" className="h-16 object-contain drop-shadow-lg" />
+              <AppName appId="post" size="lg" iconSize={64} />
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#09080E' }}>
               Social Media Management<br />That Actually Works
@@ -34,7 +37,7 @@ export default function ContentLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'post-addon', name: '/post', price: 35, type: 'addon' }
+                    detail: { sku: 'post-addon', name: '/post', price: app.standalonePrice, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -45,7 +48,7 @@ export default function ContentLanding() {
               <Button 
                 size="lg" 
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white"
-                style={{ backgroundColor: '#FC6ACD' }}
+                style={{ backgroundColor: '#FF44CC' }}
                 asChild
                 data-testid="button-get-started"
               >
@@ -54,8 +57,8 @@ export default function ContentLanding() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 py-6 shadow-md hover:bg-[#FC6ACD]/10 transition-colors"
-                style={{ borderColor: '#FC6ACD', color: '#FC6ACD' }}
+                className="text-lg px-8 py-6 shadow-md hover:bg-[#FF44CC]/10 transition-colors"
+                style={{ borderColor: '#FF44CC', color: '#FF44CC' }}
                 asChild
                 data-testid="button-view-pricing"
               >
@@ -71,14 +74,14 @@ export default function ContentLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#FC6ACD' }}>$35/mo</div>
+              <div className="text-4xl font-bold" style={{ color: '#FF44CC' }}>${app.standalonePrice}/mo</div>
               <span className="text-white text-xl">standalone</span>
               <span className="text-gray-400 text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">$75/mo</div>
-              <span className="text-white text-xl">for all 4 Commverse apps</span>
+              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
+              <span className="text-white text-xl">for all {bundleApps.length} CommVerse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              / promote + / engage + / respond + /post = Complete communication ecosystem
+              / promote + / respond + / engage + / post = Complete communication ecosystem
             </p>
           </div>
         </div>
@@ -101,7 +104,7 @@ export default function ContentLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#FC6ACD' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#FF44CC' }}>
                     <Calendar className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-schedule-title">Plan Ahead, Stay Consistent</h3>
@@ -115,7 +118,7 @@ export default function ContentLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#FC6ACD' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#FF44CC' }}>
                     <Users className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-multi-title">Multi-Platform Publishing</h3>
@@ -129,7 +132,7 @@ export default function ContentLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#FC6ACD' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#FF44CC' }}>
                     <Zap className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-ai-title">AI-Powered Suggestions</h3>
@@ -153,7 +156,7 @@ export default function ContentLanding() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#FC6ACD' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#FF44CC' }}>
                   <Image className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -167,7 +170,7 @@ export default function ContentLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#FC6ACD' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#FF44CC' }}>
                   <Clock className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -181,7 +184,7 @@ export default function ContentLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#FC6ACD' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#FF44CC' }}>
                   <BarChart3 className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -195,7 +198,7 @@ export default function ContentLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#FC6ACD' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#FF44CC' }}>
                   <TrendingUp className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -220,7 +223,7 @@ export default function ContentLanding() {
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
-                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#FC6ACD' }}>
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#FF44CC' }}>
                     <Check className="w-4 h-4 text-white" />
                   </div>
                   Works Autonomously & Together
@@ -231,20 +234,20 @@ export default function ContentLanding() {
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
-                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#FC6ACD' }}>
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#FF44CC' }}>
                     <Check className="w-4 h-4 text-white" />
                   </div>
                   No Platform Limits or Hidden Fees
                 </h3>
                 <p className="text-gray-600">
-                  Standalone at $35/mo or bundled with all Commverse apps for $75/mo. Connect unlimited social accounts, 
+                  Standalone at ${app.standalonePrice}/mo or bundled in CommVerse for ${bundlePrice}/mo. Connect unlimited social accounts,
                   schedule unlimited posts. What you see is what you pay.
                 </p>
               </div>
 
               <div>
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
-                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#FC6ACD' }}>
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#FF44CC' }}>
                     <Check className="w-4 h-4 text-white" />
                   </div>
                   Built for Local Business Reality
@@ -255,7 +258,7 @@ export default function ContentLanding() {
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
-                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#FC6ACD' }}>
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#FF44CC' }}>
                     <Check className="w-4 h-4 text-white" />
                   </div>
                   AI That Actually Helps
@@ -283,7 +286,7 @@ export default function ContentLanding() {
             <Button 
               size="lg" 
               className="text-lg px-8 py-6 shadow-lg text-white"
-              style={{ backgroundColor: '#FC6ACD' }}
+              style={{ backgroundColor: '#FF44CC' }}
               asChild
               data-testid="button-start-free"
             >

@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, Target, Search, FileText, Wrench, PenTool, Link2, MapPin, Code2, Sparkles, BarChart3, ArrowRight } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { AppName } from "@/components/app-name";
+import { getAppById, getBundlePrice } from "@/config/app-registry";
 
 const OPTIMIZE_COLOR = '#374151';
 
@@ -20,6 +22,9 @@ const modules = [
 ];
 
 export default function OptimizeLanding() {
+  const app = getAppById("optimize")!;
+  const bundlePrice = getBundlePrice("localblue");
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
@@ -29,13 +34,7 @@ export default function OptimizeLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="w-20 h-20 rounded-2xl flex items-center justify-center" style={{ backgroundColor: OPTIMIZE_COLOR }}>
-                <Target className="w-10 h-10 text-white" />
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-                <span style={{ color: '#09080E' }}>/ </span>
-                <span style={{ color: OPTIMIZE_COLOR }}>optimize</span>
-              </h1>
+              <AppName appId="optimize" size="lg" iconSize={64} />
             </div>
             <p className="text-xl md:text-2xl font-semibold text-gray-700 mb-4">
               Your Complete SEO Command Center
@@ -51,13 +50,13 @@ export default function OptimizeLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', {
-                    detail: { sku: 'optimize-addon', name: '/ optimize', price: 29, type: 'addon' }
+                    detail: { sku: 'optimize-addon', name: '/ optimize', price: app.standalonePrice, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
                 data-testid="button-add-to-cart"
               >
-                Add to Cart - $29/mo
+                Add to Cart - ${app.standalonePrice}/mo
               </Button>
               <Button
                 size="lg"
@@ -89,13 +88,13 @@ export default function OptimizeLanding() {
           <div className="text-center">
             <div className="inline-flex items-center gap-6">
               <div>
-                <span className="text-sm text-gray-400 uppercase tracking-wide">FREE</span>
-                <p className="text-white font-bold text-lg">Starter Plan</p>
+                <span className="text-3xl font-extrabold" style={{ color: OPTIMIZE_COLOR }}>${app.standalonePrice}<span className="text-lg font-normal text-gray-300">/mo</span></span>
+                <p className="text-gray-300 text-sm">standalone</p>
               </div>
               <span className="text-gray-500 text-2xl">|</span>
               <div>
-                <span className="text-3xl font-extrabold text-white">$29<span className="text-lg font-normal text-gray-300">/mo</span></span>
-                <p className="text-gray-300 text-sm">Performance Plan</p>
+                <span className="text-3xl font-extrabold text-white">${bundlePrice}<span className="text-lg font-normal text-gray-300">/mo</span></span>
+                <p className="text-gray-300 text-sm">LocalBlue bundle</p>
               </div>
             </div>
           </div>
@@ -272,13 +271,13 @@ export default function OptimizeLanding() {
               style={{ backgroundColor: '#FF6B00' }}
               onClick={() => {
                 const event = new CustomEvent('addToCart', {
-                  detail: { sku: 'optimize-addon', name: '/ optimize', price: 29, type: 'addon' }
+                  detail: { sku: 'optimize-addon', name: '/ optimize', price: app.standalonePrice, type: 'addon' }
                 });
                 window.dispatchEvent(event);
               }}
               data-testid="button-cta-add-to-cart"
             >
-              Add to Cart - $29/mo
+              Add to Cart - ${app.standalonePrice}/mo
             </Button>
             <Button
               size="lg"

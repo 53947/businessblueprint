@@ -4,21 +4,24 @@ import { Check, Mail, MessageSquare, Facebook, Instagram, Twitter, MessageCircle
 import { SiWhatsapp, SiTiktok } from "react-icons/si";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
-import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
+import { AppName } from "@/components/app-name";
+import { getAppById, getAppsByBundle, getBundlePrice } from "@/config/app-registry";
 
 export default function InboxLanding() {
+  const app = getAppById("respond")!;
+  const bundlePrice = getBundlePrice("commverse");
+  const bundleApps = getAppsByBundle("commverse");
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={inboxIcon} alt="/respond icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <img src={inboxLogo} alt="/respond" className="h-16 object-contain drop-shadow-md" />
+              <AppName appId="respond" size="lg" iconSize={64} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Every Customer Message.<br />One Powerful Inbox.
@@ -34,7 +37,7 @@ export default function InboxLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'respond-addon', name: '/respond', price: 35, type: 'addon' }
+                    detail: { sku: 'respond-addon', name: '/respond', price: app.standalonePrice, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -45,7 +48,7 @@ export default function InboxLanding() {
               <Button 
                 size="lg" 
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white"
-                style={{ backgroundColor: '#0080FF' }}
+                style={{ backgroundColor: '#6EA6FF' }}
                 asChild
                 data-testid="button-get-started"
               >
@@ -54,8 +57,8 @@ export default function InboxLanding() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 py-6 shadow-md hover:bg-[#0080FF]/10 transition-colors"
-                style={{ borderColor: '#0080FF', color: '#0080FF' }}
+                className="text-lg px-8 py-6 shadow-md hover:bg-[#6EA6FF]/10 transition-colors"
+                style={{ borderColor: '#6EA6FF', color: '#6EA6FF' }}
                 asChild
                 data-testid="button-view-pricing"
               >
@@ -71,14 +74,14 @@ export default function InboxLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#0080FF' }}>$35/mo</div>
+              <div className="text-4xl font-bold" style={{ color: '#6EA6FF' }}>${app.standalonePrice}/mo</div>
               <span className="text-white text-xl">standalone</span>
               <span className="text-gray-400 text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">$100/mo</div>
-              <span className="text-white text-xl">for all 4 Commverse apps</span>
+              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
+              <span className="text-white text-xl">for all {bundleApps.length} CommVerse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              / promote + / engage + /respond + / post = Complete communication ecosystem
+              / promote + / respond + / engage + / post = Complete communication ecosystem
             </p>
           </div>
         </div>
@@ -99,7 +102,7 @@ export default function InboxLanding() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Mail className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#0080FF' }} />
+                <Mail className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#6EA6FF' }} />
                 <h3 className="font-bold text-gray-900" data-testid="text-channel-email">Email</h3>
               </CardContent>
             </Card>
@@ -113,7 +116,7 @@ export default function InboxLanding() {
 
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Phone className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#0080FF' }} />
+                <Phone className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#6EA6FF' }} />
                 <h3 className="font-bold text-gray-900" data-testid="text-channel-sms">SMS</h3>
               </CardContent>
             </Card>
@@ -127,7 +130,7 @@ export default function InboxLanding() {
 
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Facebook className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#0080FF' }} />
+                <Facebook className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#6EA6FF' }} />
                 <h3 className="font-bold text-gray-900" data-testid="text-channel-facebook">Facebook</h3>
               </CardContent>
             </Card>
@@ -141,7 +144,7 @@ export default function InboxLanding() {
 
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6 text-center">
-                <Twitter className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#0080FF' }} />
+                <Twitter className="w-12 h-12 mx-auto mb-3 drop-shadow" style={{ color: '#6EA6FF' }} />
                 <h3 className="font-bold text-gray-900" data-testid="text-channel-x">X (Twitter)</h3>
               </CardContent>
             </Card>
@@ -166,7 +169,7 @@ export default function InboxLanding() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0080FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#6EA6FF' }}>
                   <Zap className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -194,7 +197,7 @@ export default function InboxLanding() {
 
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0080FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#6EA6FF' }}>
                   <Check className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -226,7 +229,7 @@ export default function InboxLanding() {
       {/* The Point of Difference */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #0080FF, #FC6ACD)' }}>
+          <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #6EA6FF, #FC6ACD)' }}>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               Why /respond Changes Everything
             </h2>
@@ -266,7 +269,7 @@ export default function InboxLanding() {
                   No Per-Seat Pricing Games
                 </h3>
                 <p className="text-blue-50">
-                  Standalone at $35/mo or bundled with / promote + / engage for $75/mo. Unlimited team members, unlimited messages,
+                  Standalone at ${app.standalonePrice}/mo or bundled in CommVerse for ${bundlePrice}/mo. Unlimited team members, unlimited messages,
                   all channels included. No surprises, no upsells.
                 </p>
               </div>

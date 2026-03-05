@@ -3,7 +3,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, Users, Building2, Target, BarChart3, Kanban, Clock, Zap } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import relationshipsIcon from "@assets/__relationships_1766748093805.png";
+import { AppName } from "@/components/app-name";
+import { CONNECT_CRM } from "@/config/app-registry";
 
 export default function RelationshipsLanding() {
   return (
@@ -15,8 +16,7 @@ export default function RelationshipsLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={relationshipsIcon} alt="/ connect icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">/ connect</h1>
+              <AppName appId="connect" size="lg" iconSize={64} />
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
               Your Complete CRM Command Center
@@ -32,7 +32,7 @@ export default function RelationshipsLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'relationships-addon', name: '/ connect', price: 29, type: 'addon' }
+                    detail: { sku: 'relationships-addon', name: '/ connect', price: CONNECT_CRM.tiers[1].price, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -43,7 +43,7 @@ export default function RelationshipsLanding() {
               <Button 
                 size="lg" 
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity"
-                style={{ backgroundColor: '#0000FF', color: '#fff' }}
+                style={{ backgroundColor: '#008060', color: '#fff' }}
                 asChild
                 data-testid="button-get-started"
               >
@@ -53,7 +53,7 @@ export default function RelationshipsLanding() {
                 size="lg" 
                 variant="outline" 
                 className="text-lg px-8 py-6 shadow-md hover:bg-blue-50 transition-colors"
-                style={{ borderColor: '#0000FF', color: '#0000FF' }}
+                style={{ borderColor: '#008060', color: '#008060' }}
                 asChild
                 data-testid="button-view-pricing"
               >
@@ -69,7 +69,7 @@ export default function RelationshipsLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#0000FF' }}>FREE</div>
+              <div className="text-4xl font-bold" style={{ color: '#008060' }}>FREE</div>
               <span className="text-white text-xl">Starter Plan</span>
               <span className="text-gray-400 text-2xl">|</span>
               <div className="text-4xl font-bold text-white">$29/mo</div>
@@ -99,7 +99,7 @@ export default function RelationshipsLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#0000FF' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#008060' }}>
                     <Users className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Contact Management</h3>
@@ -114,7 +114,7 @@ export default function RelationshipsLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#0000FF' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#008060' }}>
                     <Building2 className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Company Profiles</h3>
@@ -129,7 +129,7 @@ export default function RelationshipsLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#0000FF' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#008060' }}>
                     <Target className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Deal Pipeline</h3>
@@ -154,7 +154,7 @@ export default function RelationshipsLanding() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#0000FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#008060' }}>
                   <Kanban className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -168,7 +168,7 @@ export default function RelationshipsLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#0000FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#008060' }}>
                   <Clock className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -182,7 +182,7 @@ export default function RelationshipsLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#0000FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#008060' }}>
                   <BarChart3 className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -196,7 +196,7 @@ export default function RelationshipsLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#0000FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#008060' }}>
                   <Zap className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -221,7 +221,7 @@ export default function RelationshipsLanding() {
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
-                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#0000FF' }}>
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#008060' }}>
                     <Check className="w-4 h-4 text-white" />
                   </div>
                   Built for Your Business
@@ -247,7 +247,7 @@ export default function RelationshipsLanding() {
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
-                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#0000FF' }}>
+                  <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: '#008060' }}>
                     <Check className="w-4 h-4 text-white" />
                   </div>
                   Simple, Transparent Pricing
@@ -289,7 +289,7 @@ export default function RelationshipsLanding() {
             <Button 
               size="lg" 
               className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white font-bold"
-              style={{ backgroundColor: '#0000FF' }}
+              style={{ backgroundColor: '#008060' }}
               asChild
             >
               <a href="/connect/dashboard">Start Free Today</a>

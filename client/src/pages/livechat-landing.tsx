@@ -3,21 +3,24 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, MessageCircle, Clock, Users, BarChart3, Globe, Zap } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
-import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
+import { AppName } from "@/components/app-name";
+import { getAppById, getAppsByBundle, getBundlePrice } from "@/config/app-registry";
 
 export default function LivechatLanding() {
+  const app = getAppById("engage")!;
+  const bundlePrice = getBundlePrice("commverse");
+  const bundleApps = getAppsByBundle("commverse");
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={livechatIcon} alt="/ engage icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <img src={livechatLogo} alt="/ engage" className="h-16 object-contain drop-shadow-md" />
+              <AppName appId="engage" size="lg" iconSize={64} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Turn Website Visitors<br />Into Conversations.
@@ -33,7 +36,7 @@ export default function LivechatLanding() {
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
                   const event = new CustomEvent('addToCart', { 
-                    detail: { sku: 'livechat-addon', name: '/ engage', price: 35, type: 'addon' }
+                    detail: { sku: 'livechat-addon', name: '/ engage', price: app.standalonePrice, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
@@ -70,14 +73,14 @@ export default function LivechatLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#8000FF' }}>$35/mo</div>
+              <div className="text-4xl font-bold" style={{ color: '#8000FF' }}>${app.standalonePrice}/mo</div>
               <span className="text-white text-xl">standalone</span>
               <span className="text-gray-400 text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">$100/mo</div>
-              <span className="text-white text-xl">for all 4 Commverse apps</span>
+              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
+              <span className="text-white text-xl">for all {bundleApps.length} CommVerse apps</span>
             </div>
             <p className="text-gray-300 text-sm">
-              / promote + / engage + / respond + / post = Complete communication ecosystem
+              / promote + / respond + / engage + / post = Complete communication ecosystem
             </p>
           </div>
         </div>
@@ -252,7 +255,7 @@ export default function LivechatLanding() {
                   No Per-Chat or Per-Agent Fees
                 </h3>
                 <p className="text-purple-50">
-                  Standalone at $35/mo or bundled with / promote + / respond for $75/mo. Unlimited chats, unlimited agents,
+                  Standalone at ${app.standalonePrice}/mo or bundled in CommVerse for ${bundlePrice}/mo. Unlimited chats, unlimited agents,
                   unlimited websites. Transparent, predictable pricing.
                 </p>
               </div>

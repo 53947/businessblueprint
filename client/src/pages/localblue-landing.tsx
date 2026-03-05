@@ -3,21 +3,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Check, MapPin, Star, TrendingUp, Shield, Zap } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import badge3 from "@assets/LocalBlue Bundle (3)_1763874287091.png";
-import localBlueLogo from "@assets/localblue-logo.png";
+import { BundleHeader } from "@/components/app-name";
+import { getAppsByBundle, getBundlePrice } from "@/config/app-registry";
 
 export default function LocalBlueLanding() {
+  const bundlePrice = getBundlePrice("localblue");
+  const bundleApps = getAppsByBundle("localblue");
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img src={badge3} alt="LocalBlue icon" className="h-20 w-20 object-contain drop-shadow-lg" />
-              <img src={localBlueLogo} alt="LocalBlue" className="h-16 object-contain drop-shadow-lg" />
+              <BundleHeader bundleId="localblue" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Dominate Your Local Market
@@ -56,10 +58,10 @@ export default function LocalBlueLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#0000FF' }}>$49.50/mo</div>
-              <span className="text-white text-xl">for all 3 LocalBlue apps</span>
+              <div className="text-4xl font-bold" style={{ color: '#0000FF' }}>${bundlePrice}/mo</div>
+              <span className="text-white text-xl">for all {bundleApps.length} LocalBlue apps</span>
               <span className="text-gray-400 text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">$29-40/mo</div>
+              <div className="text-4xl font-bold text-white">$49-59/mo</div>
               <span className="text-white text-xl">each standalone</span>
             </div>
             <p className="text-gray-300 text-sm">
