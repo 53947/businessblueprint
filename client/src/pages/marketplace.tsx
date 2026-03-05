@@ -19,7 +19,8 @@ import {
   Star,
   MessageSquare,
   Wrench,
-  Paperclip
+  Paperclip,
+  Target
 } from "lucide-react";
 import { useLocation } from "wouter";
 import commverseBundle from "@assets/logos and wordmarks/: commverse bundle logo.png";
@@ -209,6 +210,21 @@ export default function MarketplacePage() {
         'Content calendar',
         'AI caption suggestions',
         'Analytics dashboard'
+      ]
+    },
+    {
+      id: 'optimize-addon',
+      name: '/ optimize',
+      icon: Target,
+      emoji: '🎯',
+      price: 29,
+      description: 'SEO optimization suite',
+      accentColor: 'gray',
+      features: [
+        'SEO health monitoring',
+        'Keyword rank tracking',
+        'Technical SEO audits',
+        'AI action plans'
       ]
     }
   ];

@@ -144,6 +144,23 @@ export const PRODUCTS: Record<string, Product> = {
     url: '/products/localblue',
     bundle: 'localblue'
   },
+  optimize: {
+    id: 'optimize',
+    name: '/ optimize',
+    description: 'SEO Optimization Suite - Complete SEO health monitoring, keyword tracking, and AI-powered optimization',
+    price: '$29/mo',
+    priceValue: 29,
+    benefits: [
+      'Real-time SEO health score and monitoring',
+      'AI-powered keyword research and rank tracking',
+      'On-page SEO analysis with actionable suggestions',
+      'Technical SEO audit with fix instructions',
+      'AI content briefs and optimization',
+      'Prioritized action plans'
+    ],
+    url: '/optimize',
+    bundle: 'localblue'
+  },
   relationships: {
     id: 'relationships',
     name: 'Relationships CRM',
@@ -248,16 +265,17 @@ export const BUNDLES: Record<string, Bundle> = {
   localblue: {
     id: 'localblue',
     name: 'LocalBlue Bundle',
-    description: 'Complete Local SEO Package - Listings + Reputation + GBP optimization',
-    price: '$59/mo',
-    priceValue: 59,
-    savings: 'Save $19/month vs buying separately',
-    products: ['listings', 'reputation'],
+    description: 'Complete Local SEO Package - Listings + Reputation + SEO Optimization',
+    price: '$49.50/mo',
+    priceValue: 49.50,
+    savings: 'Save $58.50/month vs buying separately',
+    products: ['listings', 'reputation', 'optimize'],
     benefits: [
       'Complete control of your local presence',
-      'Listings management + Reputation monitoring',
+      'Listings management + Reputation monitoring + SEO optimization',
       'Google Business Profile optimization',
-      'Save vs buying Listings + Reputation separately',
+      'AI-powered SEO health monitoring and keyword tracking',
+      'Save vs buying all 3 apps separately',
       'Dominate local search results'
     ],
     icon: '/assets/approved icons and logos/Additional Apps/icon-localblue.png',
@@ -273,7 +291,8 @@ export const CATEGORY_PRODUCT_MAP: Record<string, { primary: string; bundle?: st
   'Live Chat': { primary: 'livechat', bundle: 'commverse' },
   'Business Listings': { primary: 'listings', bundle: 'localblue' },
   'Google Business Profile': { primary: 'localblue', bundle: 'localblue' },
-  'Website & SEO': { primary: 'hostsblue', secondary: ['siteinspector', 'livechat'] },
+  'SEO Optimization': { primary: 'optimize', bundle: 'localblue' },
+  'Website & SEO': { primary: 'hostsblue', secondary: ['siteinspector', 'livechat', 'optimize'] },
   'CRM Systems': { primary: 'relationships' }
 };
 
@@ -340,7 +359,7 @@ export function getBundleAdvantageMessage(category: string): string | null {
     return 'Get all communication tools in the CommVerse bundle for $99/month - that\'s all four apps in one integrated platform. Save compared to buying separately.';
   }
   if (['Business Listings', 'Reputation Management', 'Google Business Profile'].includes(category)) {
-    return 'Get complete local SEO control with LocalBlue for $59/month - includes listings management, reputation monitoring, and Google Business Profile optimization.';
+    return 'Get complete local SEO control with LocalBlue for $49.50/month - includes listings management, reputation monitoring, SEO optimization, and Google Business Profile tools.';
   }
   return null;
 }
