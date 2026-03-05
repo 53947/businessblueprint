@@ -1,10 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import badge1 from "@assets/digital iq assessment_1764056639965.png";
-import badge2 from "@assets/Get Your Prescribed Blueprint (2)_1763874287090.png";
-import badge3 from "@assets/LocalBlue Bundle (3)_1763874287091.png";
-import badge4 from "@assets/Coach Blue as Blue(4)_1763874287091.png";
-import badge5 from "@assets/Commverse (5)_1763874287091.png";
+import { HOW_IT_WORKS_STEPS } from "@/config/app-registry";
 
 interface HowItWorksProps {
   onStartAssessment: () => void;
@@ -24,7 +20,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 1 - Complete Your Digital IQ Assessment */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={badge1} alt="Complete Your Digital IQ Assessment" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <img src={HOW_IT_WORKS_STEPS[0].icon} alt="Complete Your Digital IQ Assessment" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">Complete Your Digital IQ Assessment</h3>
             <p className="text-xs text-gray-600">You start with a quick assessment, and we generate your custom blueprint.</p>
@@ -33,7 +29,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 2 - Prescribed Blueprint */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={badge2} alt="Prescribed Blueprint" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <img src={HOW_IT_WORKS_STEPS[1].icon} alt="Prescribed Blueprint" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">Prescribed Blueprint</h3>
             <p className="text-xs text-gray-600">Your custom action plan with SEO, content strategy, and revenue-focused steps.</p>
@@ -42,7 +38,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 3 - LocalBlue */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={badge3} alt="LocalBlue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <img src={HOW_IT_WORKS_STEPS[2].icon} alt="LocalBlue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">LocalBlue</h3>
             <p className="text-xs text-gray-600">Listings management + reputation building for stronger local visibility.</p>
@@ -51,7 +47,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 4 - Coach Blue */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={badge4} alt="Coach Blue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <img src={HOW_IT_WORKS_STEPS[3].icon} alt="Coach Blue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">Coach Blue</h3>
             <p className="text-xs text-gray-600">24/7 AI business coach guiding you through every step of your growth journey.</p>
@@ -60,7 +56,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 5 - CommVerse */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={badge5} alt="CommVerse" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <img src={HOW_IT_WORKS_STEPS[4].icon} alt="CommVerse" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">CommVerse</h3>
             <p className="text-xs text-gray-600">Complete communication suite: / promote, / respond, / engage, / post.</p>
@@ -72,7 +68,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 1 - Digital IQ Assessment */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={badge1} alt="Digital IQ Assessment" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <img src={HOW_IT_WORKS_STEPS[0].icon} alt="Digital IQ Assessment" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">Digital IQ Assessment</h3>
             <p className="text-xs text-gray-600">Quick assessment → instant blueprint.</p>
@@ -81,7 +77,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 2 - Prescribed Blueprint */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={badge2} alt="Prescribed Blueprint" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <img src={HOW_IT_WORKS_STEPS[1].icon} alt="Prescribed Blueprint" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">Prescribed Blueprint</h3>
             <p className="text-xs text-gray-600">Your clear action plan to grow.</p>
@@ -90,7 +86,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 3 - LocalBlue */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={badge3} alt="LocalBlue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <img src={HOW_IT_WORKS_STEPS[2].icon} alt="LocalBlue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">LocalBlue</h3>
             <p className="text-xs text-gray-600">Boost local visibility & reviews.</p>
@@ -99,7 +95,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 4 - Coach Blue */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={badge4} alt="Coach Blue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <img src={HOW_IT_WORKS_STEPS[3].icon} alt="Coach Blue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">Coach Blue</h3>
             <p className="text-xs text-gray-600">Your 24/7 AI business coach.</p>
@@ -108,7 +104,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 5 - CommVerse */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={badge5} alt="CommVerse" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <img src={HOW_IT_WORKS_STEPS[4].icon} alt="CommVerse" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">CommVerse</h3>
             <p className="text-xs text-gray-600">Messaging, chat, email, content.</p>

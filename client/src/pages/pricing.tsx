@@ -1,335 +1,333 @@
-import { useState } from 'react';
-import { Header } from '@/components/header';
-import { Footer } from '@/components/footer';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Check } from 'lucide-react';
+import { Link } from "wouter";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { AppName, BundleHeader } from "@/components/app-name";
+import {
+  APP_REGISTRY,
+  BUNDLE_REGISTRY,
+  CONNECT_CRM,
+  COACH_BLUE,
+  DIGITAL_IQ,
+  HOW_IT_WORKS_STEPS,
+  getAppsByBundle,
+} from "@/config/app-registry";
 
-import digitalAssessmentImg from '@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png';
-import digitalPathImg from '@assets/native icons and favicons/digital path.png';
-import localSeoImg from '@assets/native icons and favicons/LOCAL SEO_1762239599463.png';
-import sendAppImg from '@assets/native icons and favicons/: send app icon.png';
-import contentImg from '@assets/:_content_1768176946216.png';
-import livechatImg from '@assets/native icons and favicons/: livechat app icon.png';
-import inboxImg from '@assets/native icons and favicons/: inbox app icon.png';
-import commverseImg from '@assets/native icons and favicons/: commverse.png';
-import coachBlueImg from '@assets/native icons and favicons/AI Business Coach Blue icon.png';
-import captainImg from '@assets/native icons and favicons/Captaining Icon.png';
-import swipesblueImg from '@assets/swipesblue/swipesblue brandmark.png';
-import hostsblueImg from '@assets/hostsblue assets/Hosts Blue Brandmark.png';
-import diyImg from '@assets/native icons and favicons/diy.png';
-import alcImg from '@assets/native icons and favicons/A LA CARTE.png';
-
-const systemIcons = [
-  { img: digitalAssessmentImg, label: 'Digital Assessment' },
-  { img: digitalPathImg, label: 'Digital Path' },
-  { img: localSeoImg, label: 'Local SEO' },
-  { img: sendAppImg, label: '/ promote' },
-  { img: contentImg, label: '/ post' },
-  { img: livechatImg, label: '/ engage' },
-  { img: inboxImg, label: '/ respond' },
-  { img: commverseImg, label: 'Commverse' },
-  { img: coachBlueImg, label: 'Coach Blue' },
-  { img: captainImg, label: "Captain's Chair" },
-  { img: swipesblueImg, label: 'SwipesBlue' },
-  { img: hostsblueImg, label: 'HostsBlue' },
-];
-
-const basePlans = [
-  {
-    id: 'start',
-    title: 'Start',
-    subtitle: 'Primary / Hero',
-    price: 99,
-    description: 'Start — lay the foundation',
-    details: 'Blueprint set includes: assessment, Digital IQ, core listings (~50 doors), starter SEO, and prescription.',
-    gradient: 'linear-gradient(315deg, #FF5F00 0%, #F79248 100%)',
-    badgeText: '315° #FF5F00 → #F79248'
-  },
-  {
-    id: 'advanced',
-    title: 'Advanced',
-    subtitle: 'Supportive / Balanced',
-    price: 299,
-    description: 'Advanced — build out your framework',
-    details: 'Deeper plan set: extended listings (~150 doors), automation, review flow, content scaffolding, and upgraded prescription.',
-    gradient: 'linear-gradient(315deg, #0000FF 0%, #8000FF 100%)',
-    badgeText: '315° #0000FF → #8000FF'
-  },
-  {
-    id: 'scale',
-    title: 'Scale',
-    subtitle: 'Prestige / Future Tier',
-    price: 999,
-    description: 'Scale — full build & systems',
-    details: 'Complete spec sheet: multi-location controls, advanced automations, and executive dashboards.',
-    gradient: 'linear-gradient(315deg, #00FF40 0%, #0090FF 100%)',
-    badgeText: '315° #00FF40 → #0090FF',
-    note: 'Note: ALC and Scale do not combine.'
-  }
-];
-
-const executionStyles = [
-  { id: 'diy', img: diyImg, label: 'DIY', description: '100% do-it-yourself platform' }
-];
-
-const apps = [
-  { id: 'promote', img: sendAppImg, title: '/ promote', description: 'SMS & Email Marketing / CRM', price: 35 },
-  { id: 'post', img: contentImg, title: '/ post', description: 'Social Media Management', price: 35 },
-  { id: 'engage', img: livechatImg, title: '/ engage', description: 'Real-time website chat widget', price: 35 },
-  { id: 'respond', img: inboxImg, title: '/ respond', description: 'Unified communications hub', price: 35 }
-];
+const FONT_FAMILY = "Archivo Semi Expanded, Archivo, sans-serif";
 
 export default function PricingPage() {
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [selectedExecution, setSelectedExecution] = useState<string | null>(null);
-  const [selectedApps, setSelectedApps] = useState<string[]>([]);
+  const localblueApps = getAppsByBundle("localblue");
+  const commverseApps = getAppsByBundle("commverse");
 
-  const handleAppToggle = (appId: string) => {
-    setSelectedApps(prev =>
-      prev.includes(appId) ? prev.filter(id => id !== appId) : [...prev, appId]
-    );
-  };
+  const allStandaloneTotal =
+    APP_REGISTRY.reduce((sum, app) => sum + app.standalonePrice, 0) +
+    CONNECT_CRM.tiers[1].price +
+    COACH_BLUE.standalonePrice;
+
+  const bothBundlesTotal =
+    BUNDLE_REGISTRY[0].price +
+    BUNDLE_REGISTRY[1].price +
+    CONNECT_CRM.tiers[1].price +
+    COACH_BLUE.withBothBundlesPrice;
+
+  const savings = allStandaloneTotal - bothBundlesTotal;
+  const savingsPercent = Math.round((savings / allStandaloneTotal) * 100);
 
   return (
-    <div className="min-h-screen bg-[#0A0B10] text-white">
+    <div className="min-h-screen bg-white flex flex-col">
       <Header />
-      
-      <main className="container mx-auto px-4 py-12 max-w-7xl">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}>
-            BusinessBlueprint
-          </h1>
-          <p className="text-lg text-gray-300">Get Found, Get Customers, Get Business</p>
-        </div>
 
-        {/* Architectural Framing Note */}
-        <div className="max-w-4xl mx-auto mb-12 p-4 rounded-2xl border border-white/10 bg-gradient-to-br from-blue-500/5 to-purple-500/5">
-          <p className="text-sm text-gray-300">
-            <strong className="text-white">Blueprint Overview — Your Journey:</strong><br />
-            Digital IQ Assessment → Blueprint Prescription → LocalBlue → Coach Blue → CommVerse Bundle → Dashboard
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Page Header */}
+        <div className="text-center mb-12">
+          <h1
+            className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"
+            style={{ fontFamily: FONT_FAMILY }}
+          >
+            Pricing
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            All pricing from app registry. Mix standalone apps or save with bundles.
           </p>
         </div>
 
-        {/* System Icons Grid */}
+        {/* Section 1: Digital IQ Assessment — FREE */}
         <section className="mb-16">
-          <div className="mb-6">
-            <p className="text-sm text-gray-400"><strong className="text-white">System Icons — Flat Grid:</strong> embedded visual language for assessment → pathway → SEO, apps, coaching and platform.</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {systemIcons.map((icon, idx) => (
-              <div
-                key={idx}
-                className="bg-[#0E1225] border border-white/10 rounded-2xl p-4 text-center hover:border-blue-500/50 transition-all"
-                data-testid={`icon-tile-${icon.label.toLowerCase().replace(/\s+/g, '-')}`}
-              >
-                <img src={icon.img} alt={icon.label} className="w-14 h-14 object-contain mx-auto mb-2" />
-                <div className="text-xs text-gray-400">{icon.label}</div>
+          <Card className="border-2 border-red-200 bg-gradient-to-r from-red-50 to-white">
+            <CardContent className="p-8">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <img
+                  src={DIGITAL_IQ.icon}
+                  alt="Digital IQ"
+                  className="w-20 h-20 object-contain rounded-lg"
+                />
+                <div className="flex-1 text-center md:text-left">
+                  <h2
+                    className="text-2xl font-bold text-gray-900 mb-2"
+                    style={{ fontFamily: FONT_FAMILY }}
+                  >
+                    Digital IQ Assessment
+                  </h2>
+                  <p className="text-gray-600 mb-4">Your starting point — completely free.</p>
+                  <div className="flex flex-wrap items-center gap-3 justify-center md:justify-start mb-4">
+                    {HOW_IT_WORKS_STEPS.map((step) => (
+                      <div key={step.step} className="flex items-center gap-1 text-xs text-gray-500">
+                        <img src={step.icon} alt={step.title} className="w-6 h-6 object-contain" />
+                        <span>{step.title}</span>
+                        {step.step < 5 && <span className="ml-1 text-gray-300">→</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-green-600 mb-2">FREE</div>
+                  <Link href="/assessment">
+                    <Button className="bg-[#A00028] text-white hover:bg-[#800020]">
+                      Start Your Assessment →
+                    </Button>
+                  </Link>
+                </div>
               </div>
-            ))}
-          </div>
+            </CardContent>
+          </Card>
         </section>
 
-        {/* Base Plans */}
+        {/* Section 2: / connect CRM + Coach Blue */}
         <section className="mb-16">
-          <h2 className="text-2xl font-bold mb-6 text-center">Choose Your Foundation</h2>
-          <div className="grid md:grid-cols-3 gap-6 mb-6">
-            {basePlans.map((plan) => (
-              <Card
-                key={plan.id}
-                className={`bg-[#0E1020] border-white/10 overflow-hidden cursor-pointer transition-all ${
-                  selectedPlan === plan.id ? 'ring-2 ring-blue-500 shadow-lg shadow-blue-500/25' : ''
-                }`}
-                onClick={() => setSelectedPlan(plan.id)}
-                data-testid={`plan-${plan.id}`}
-              >
-                <div
-                  className="p-6 text-white"
-                  style={{ background: plan.gradient, fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Connect CRM */}
+            <div>
+              <div className="mb-4">
+                <AppName appId="connect" size="lg" showDesc />
+              </div>
+              <div className="space-y-4">
+                {CONNECT_CRM.tiers.map((tier) => (
+                  <Card key={tier.name} className="border-2 border-gray-200 hover:shadow-md transition-all">
+                    <CardContent className="p-6 flex items-center justify-between">
+                      <div>
+                        <h4 className="font-bold text-gray-900">{tier.name}</h4>
+                        <p className="text-sm text-gray-500">
+                          {tier.contactLimit
+                            ? `${tier.contactLimit} contacts, 1 user`
+                            : "Unlimited contacts & users"}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-gray-900">
+                          {tier.price === 0 ? "Free" : `$${tier.price}/mo`}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Coach Blue */}
+            <div>
+              <div className="mb-4 flex items-center gap-2">
+                <img
+                  src={COACH_BLUE.icon}
+                  alt="Coach Blue"
+                  className="w-8 h-8 rounded-md object-contain"
+                />
+                <span
+                  className="font-semibold text-lg"
+                  style={{ fontFamily: FONT_FAMILY, color: COACH_BLUE.color }}
                 >
-                  <div className="text-sm opacity-90">{plan.subtitle}</div>
-                  <div className="text-4xl font-extrabold my-2">
-                    ${plan.price}<span className="text-sm font-normal"> / mo</span>
-                  </div>
-                  <div className="text-sm opacity-90">{plan.description}</div>
-                </div>
-                <CardContent className="p-6">
-                  <p className="text-sm text-gray-400 mb-3">{plan.details}</p>
-                  <div className="inline-block text-xs px-3 py-1.5 rounded-full border border-white/30">
-                    {plan.badgeText}
-                  </div>
-                  {plan.note && (
-                    <p className="text-xs text-gray-500 mt-3 opacity-80">{plan.note}</p>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <div className="max-w-4xl mx-auto p-4 rounded-2xl border border-white/10 bg-blue-500/5">
-            <p className="text-sm text-gray-300">
-              <strong className="text-white">Plan context:</strong> each Base Plan is a different <em>plan set</em>. Choose the structural depth you want before selecting your build method.
-            </p>
-          </div>
-        </section>
-
-        {/* Execution Style */}
-        <section className="mb-16">
-          <div className="mb-6">
-            <p className="text-sm text-gray-400 text-center">
-              <strong className="text-white">Build Method:</strong> 100% DIY (Do-It-Yourself) platform with AI guidance and tools
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-4 justify-center">
-            {executionStyles.map((style) => (
-              <button
-                key={style.id}
-                onClick={() => setSelectedExecution(style.id)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-full border transition-all ${
-                  selectedExecution === style.id
-                    ? 'bg-blue-500/20 border-blue-500 shadow-lg shadow-blue-500/25'
-                    : 'bg-white/5 border-white/10 hover:border-white/20'
-                }`}
-                data-testid={`execution-${style.id}`}
-              >
-                <img src={style.img} alt={style.label} className="w-6 h-6 rounded" />
-                <span className="font-semibold">{style.label}</span>
-                <span className="text-sm text-gray-400">— {style.description}</span>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* Native Apps */}
-        <section className="mb-16">
-          <div className="mb-6">
-            <p className="text-sm text-gray-400 text-center">
-              <strong className="text-white">Native Apps — Fixtures & Systems:</strong> Add individual utilities or take the Commverse bundle.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            {apps.map((app) => (
-              <div
-                key={app.id}
-                onClick={() => handleAppToggle(app.id)}
-                className={`flex gap-3 items-center p-4 rounded-2xl border cursor-pointer transition-all ${
-                  selectedApps.includes(app.id)
-                    ? 'bg-blue-500/10 border-blue-500'
-                    : 'bg-[#0E1225] border-white/10 hover:border-white/20'
-                }`}
-                data-testid={`app-${app.id}`}
-              >
-                <img src={app.img} alt={app.title} className="w-11 h-11 rounded-lg object-contain" />
-                <div className="flex-1">
-                  <div className="font-bold text-sm">{app.title}</div>
-                  <div className="text-xs text-gray-400">{app.description}</div>
-                </div>
-                <div className="text-lg font-bold">${app.price}</div>
+                  {COACH_BLUE.name}
+                </span>
+                <span className="text-sm text-gray-400">— {COACH_BLUE.description}</span>
               </div>
-            ))}
-          </div>
-
-          {/* Commverse Bundle */}
-          <div className="max-w-4xl mx-auto mb-4">
-            <p className="text-sm text-gray-400 text-center mb-4">
-              <strong className="text-white">Commverse Bundle:</strong> all four native apps for $100. Best value, minimal wiring.
-            </p>
-          </div>
-          <div className="max-w-4xl mx-auto">
-            <div className="flex gap-4 items-center p-5 rounded-2xl border-2 border-blue-500 bg-gradient-to-br from-blue-500/10 to-purple-500/10">
-              <img src={commverseImg} alt="Commverse" className="w-12 h-12 rounded-lg object-contain" />
-              <div className="flex-1">
-                <div className="font-bold text-lg">Commverse Bundle</div>
-                <div className="text-sm text-gray-400">/Send + /Post + /LiveChat + /Respond</div>
+              <div className="space-y-4">
+                <Card className="border-2 border-purple-200 hover:shadow-md transition-all">
+                  <CardContent className="p-6 flex items-center justify-between">
+                    <div>
+                      <h4 className="font-bold text-gray-900">Standalone</h4>
+                      <p className="text-sm text-gray-500">Without any bundle</p>
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">
+                      ${COACH_BLUE.standalonePrice}/mo
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="border-2 border-purple-200 hover:shadow-md transition-all">
+                  <CardContent className="p-6 flex items-center justify-between">
+                    <div>
+                      <h4 className="font-bold text-gray-900">With 1 Bundle</h4>
+                      <p className="text-sm text-gray-500">LocalBlue or CommVerse</p>
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">
+                      ${COACH_BLUE.withOneBundlePrice}/mo
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="border-2 border-green-300 bg-green-50 hover:shadow-md transition-all">
+                  <CardContent className="p-6 flex items-center justify-between">
+                    <div>
+                      <h4 className="font-bold text-gray-900">With Both Bundles</h4>
+                      <p className="text-sm text-gray-500">LocalBlue + CommVerse</p>
+                    </div>
+                    <div className="text-2xl font-bold text-green-600">FREE</div>
+                  </CardContent>
+                </Card>
               </div>
-              <div className="text-2xl font-bold">$100</div>
             </div>
           </div>
         </section>
 
-        {/* Coaching */}
+        {/* Section 3: / localblue Bundle — $99/mo */}
         <section className="mb-16">
-          <div className="mb-6">
-            <p className="text-sm text-gray-400 text-center">
-              <strong className="text-white">Inspections & Punch List — Coaching:</strong> keep the build on-spec with AI or hands-on guidance.
-            </p>
+          <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+            <BundleHeader bundleId="localblue" showPrice />
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            <Card className="bg-[#0E1122] border-white/10">
-              <CardContent className="p-6">
-                <div className="flex gap-3 items-center mb-3">
-                  <img src={coachBlueImg} alt="Coach Blue" className="w-12 h-12 rounded-lg" />
-                  <div className="flex-1">
-                    <div className="font-bold">AI Business Coach — Coach Blue</div>
-                    <div className="text-sm text-gray-400">Blueprint guidance, automation tips, checklists.</div>
-                  </div>
-                  <div className="text-xl font-bold">$99</div>
+            {localblueApps.map((app) => (
+              <Link key={app.id} href={app.landingRoute}>
+                <Card className="border-2 border-blue-200 hover:shadow-lg hover:border-blue-400 transition-all cursor-pointer h-full">
+                  <CardContent className="p-6">
+                    <div className="mb-3">
+                      <AppName appId={app.id} size="md" />
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">{app.description}</p>
+                    <div className="flex items-center gap-4 text-sm">
+                      <span className="text-gray-500">
+                        <span className="font-semibold text-gray-700">${app.standalonePrice}</span>{" "}
+                        standalone
+                      </span>
+                      <span className="text-blue-600 font-semibold">
+                        ${app.bundlePrice} in bundle
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Section 4: / commverse Bundle — $99/mo */}
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+            <BundleHeader bundleId="commverse" showPrice />
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {commverseApps.map((app) => (
+              <Link key={app.id} href={app.landingRoute}>
+                <Card className="border-2 border-orange-200 hover:shadow-lg hover:border-orange-400 transition-all cursor-pointer h-full">
+                  <CardContent className="p-6">
+                    <div className="mb-3">
+                      <AppName appId={app.id} size="md" />
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">{app.description}</p>
+                    <div className="flex items-center gap-4 text-sm">
+                      <span className="text-gray-500">
+                        <span className="font-semibold text-gray-700">${app.standalonePrice}</span>{" "}
+                        standalone
+                      </span>
+                      <span className="text-orange-600 font-semibold">
+                        ${app.bundlePrice} in bundle
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Section 5: The Full Picture */}
+        <section className="mb-16">
+          <h2
+            className="text-3xl font-bold text-gray-900 text-center mb-8"
+            style={{ fontFamily: FONT_FAMILY }}
+          >
+            The Full Picture
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="border-2 border-gray-200">
+              <CardContent className="p-8 text-center">
+                <h3 className="text-lg font-bold text-gray-900 mb-2">All Standalone</h3>
+                <p className="text-sm text-gray-500 mb-4">Every app at individual pricing</p>
+                <div className="text-4xl font-bold text-gray-400 line-through">
+                  ${allStandaloneTotal}/mo
                 </div>
-                <div className="text-xs text-gray-500">DIY: $99 · ALC: $99</div>
               </CardContent>
             </Card>
 
-            <Card className="bg-[#0E1122] border-white/10">
-              <CardContent className="p-6">
-                <div className="flex gap-3 items-center">
-                  <img src={captainImg} alt="Captain's Chair" className="w-12 h-12 rounded-lg" />
-                  <div className="flex-1">
-                    <div className="font-bold">Captain's Chair</div>
-                    <div className="text-sm text-gray-400">Personal coaching by our CEO (max 2 months).</div>
-                  </div>
-                  <div className="text-xl font-bold">$499</div>
-                </div>
+            <Card className="border-4 border-green-400 bg-green-50 shadow-lg">
+              <CardContent className="p-8 text-center">
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Both Bundles + CRM</h3>
+                <p className="text-sm text-gray-500 mb-4">
+                  LocalBlue $99 + CommVerse $99 + CRM $29 + Coach Blue FREE
+                </p>
+                <div className="text-4xl font-bold text-green-600">${bothBundlesTotal}/mo</div>
               </CardContent>
             </Card>
 
-            <Card className="bg-[#0E1122] border-white/10">
-              <CardContent className="p-6">
-                <div className="flex gap-3 items-center">
-                  <img src={swipesblueImg} alt="SwipesBlue" className="w-12 h-12 rounded-lg" />
-                  <div className="flex-1">
-                    <div className="font-bold">Checkout — SwipesBlue</div>
-                    <div className="text-sm text-gray-400">Secure payment — plug your path directly into the gateway.</div>
-                  </div>
-                  <div className="text-xl font-bold">→</div>
+            <Card className="border-2 border-green-300">
+              <CardContent className="p-8 text-center">
+                <h3 className="text-lg font-bold text-gray-900 mb-2">You Save</h3>
+                <p className="text-sm text-gray-500 mb-4">
+                  Bundle discount vs all standalone
+                </p>
+                <div className="text-4xl font-bold text-green-600">
+                  ${savings} ({savingsPercent}%)
                 </div>
               </CardContent>
             </Card>
           </div>
         </section>
 
-        {/* CTA */}
-        <div className="text-center mb-16">
-          <Button 
-            size="lg" 
-            className="text-lg px-8 py-6 rounded-full font-bold"
-            style={{
-              background: 'linear-gradient(315deg, #0000FF 0%, #8000FF 100%)',
-              fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif'
-            }}
-            data-testid="button-start-blueprint"
-          >
-            Start Your Blueprint
-          </Button>
-        </div>
+        {/* Section 6: Rules */}
+        <section className="mb-16">
+          <Card className="border border-gray-200 bg-gray-50">
+            <CardContent className="p-8">
+              <h3
+                className="text-xl font-bold text-gray-900 mb-4"
+                style={{ fontFamily: FONT_FAMILY }}
+              >
+                Pricing Rules
+              </h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 mt-1">•</span>
+                  <span>
+                    Bundles don't cross-discount each other — LocalBlue and CommVerse are independent
+                    bundles at $99/mo each.
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 mt-1">•</span>
+                  <span>
+                    <span style={{ color: '#008060', fontWeight: 600 }}>/ connect</span> is always
+                    standalone — Free (100 contacts) or $29/mo (unlimited).
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 mt-1">•</span>
+                  <span>
+                    <span style={{ color: COACH_BLUE.color, fontWeight: 600 }}>Coach Blue</span>:{" "}
+                    $99/mo standalone → $59/mo with 1 bundle → FREE with both bundles.
+                  </span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+        </section>
 
-        {/* Dev Schema */}
-        <div className="max-w-4xl mx-auto p-6 rounded-xl bg-[#0A0C18] border border-white/10">
-          <pre className="text-xs text-blue-200 font-mono overflow-x-auto">
-{`// Purchase Schema (use as implementation spec)
-{
-  "stage_1": "AI Assessment → Digital IQ Score",
-  "stage_2": "Base Plan: start|advanced|scale",
-  "stage_3": "Execution: diy|msp|alc",
-  "rules": ["ALC incompatible with Scale"],
-  "addons": {
-    "apps": ["/ promote","/ post","/ engage","/ respond"],
-    "bundle": "commverse",
-    "coaching": ["coach_blue","captains_chair"]
-  },
-  "checkout": "SwipesBlue embedded",
-  "post_purchase": "Dashboard → manage blueprint"
-}`}
-          </pre>
+        {/* CTA */}
+        <div className="text-center mb-8">
+          <Link href="/assessment">
+            <Button
+              size="lg"
+              className="text-lg px-8 py-6 rounded-full font-bold bg-[#A00028] text-white hover:bg-[#800020]"
+              style={{ fontFamily: FONT_FAMILY }}
+            >
+              Start Your Free Assessment →
+            </Button>
+          </Link>
         </div>
       </main>
 
