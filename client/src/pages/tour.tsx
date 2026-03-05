@@ -213,7 +213,7 @@ export default function Tour() {
                 <div className="flex items-center gap-3">
                   <Award className="w-8 h-8 text-[#D59600]" />
                   <div>
-                    <h4 className="font-bold text-white">/reputation</h4>
+                    <h4 className="font-bold text-white">/ elevate</h4>
                     <p className="text-sm text-gray-400">Review Management</p>
                   </div>
                 </div>
@@ -400,7 +400,7 @@ export default function Tour() {
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
                 <h4 className="font-bold text-[#09080E]">CommVerse Bundle</h4>
-                <p className="text-sm text-gray-600">All 4 apps: Send + Inbox + Content + LiveChat</p>
+                <p className="text-sm text-gray-600">All 4 apps: / promote + / respond + / post + / engage</p>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold text-[#0000FF]">$99<span className="text-sm font-normal text-gray-500">/mo</span></div>

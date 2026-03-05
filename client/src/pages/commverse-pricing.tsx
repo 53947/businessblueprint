@@ -16,10 +16,10 @@ export default function CommversePricing() {
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
               <span style={{ color: '#09080E' }}>Commverse </span>
-              <span style={{ color: '#00FF40' }}>Pricing</span>
+              <span style={{ color: '#F97316' }}>Pricing</span>
             </h1>
             <p className="text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
-              Choose individual apps at $35/month each, or get all four for $119/month
+              Choose individual apps at $39/month each, or get all four for $99/month
             </p>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
               No hidden fees • No per-message charges • No contact limits • Cancel anytime
@@ -34,41 +34,41 @@ export default function CommversePricing() {
           <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
             
             {/* / promote Individual */}
-            <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#E6B747' }}>
+            <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#1844A6' }}>
               <CardHeader>
-                <CardTitle className="text-2xl" style={{ color: '#E6B747' }}>/ promote</CardTitle>
+                <CardTitle className="text-2xl" style={{ color: '#1844A6' }}>/ promote</CardTitle>
                 <CardDescription>Email & SMS Marketing</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900">$35</span>
+                  <span className="text-4xl font-bold text-gray-900">$39</span>
                   <span className="text-gray-600">/month</span>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#E6B747' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#1844A6' }} />
                     <span className="text-sm text-gray-600">Unlimited email campaigns</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#E6B747' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#1844A6' }} />
                     <span className="text-sm text-gray-600">SMS messaging included</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#E6B747' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#1844A6' }} />
                     <span className="text-sm text-gray-600">Contact management</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#E6B747' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#1844A6' }} />
                     <span className="text-sm text-gray-600">Campaign analytics</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#E6B747' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#1844A6' }} />
                     <span className="text-sm text-gray-600">GDPR & CAN-SPAM compliant</span>
                   </li>
                 </ul>
                 <Button 
                   className="w-full text-white"
-                  style={{ backgroundColor: '#E6B747' }}
+                  style={{ backgroundColor: '#1844A6' }}
                   data-testid="button-send-individual"
                   asChild
                 >
@@ -85,7 +85,7 @@ export default function CommversePricing() {
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900">$35</span>
+                  <span className="text-4xl font-bold text-gray-900">$39</span>
                   <span className="text-gray-600">/month</span>
                 </div>
                 <ul className="space-y-3 mb-6">
@@ -122,41 +122,41 @@ export default function CommversePricing() {
             </Card>
 
             {/* / respond Individual */}
-            <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#0080FF' }}>
+            <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#6EA6FF' }}>
               <CardHeader>
-                <CardTitle className="text-2xl" style={{ color: '#0080FF' }}>/ respond</CardTitle>
+                <CardTitle className="text-2xl" style={{ color: '#6EA6FF' }}>/ respond</CardTitle>
                 <CardDescription>Unified Communications</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900">$35</span>
+                  <span className="text-4xl font-bold text-gray-900">$39</span>
                   <span className="text-gray-600">/month</span>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#0080FF' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#6EA6FF' }} />
                     <span className="text-sm text-gray-600">8 channels unified</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#0080FF' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#6EA6FF' }} />
                     <span className="text-sm text-gray-600">Real-time WebSocket sync</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#0080FF' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#6EA6FF' }} />
                     <span className="text-sm text-gray-600">Team assignment</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#0080FF' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#6EA6FF' }} />
                     <span className="text-sm text-gray-600">Smart filters & search</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#0080FF' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#6EA6FF' }} />
                     <span className="text-sm text-gray-600">AI-powered responses</span>
                   </li>
                 </ul>
                 <Button 
                   className="w-full text-white"
-                  style={{ backgroundColor: '#0080FF' }}
+                  style={{ backgroundColor: '#6EA6FF' }}
                   data-testid="button-respond-individual"
                   asChild
                 >
@@ -166,91 +166,91 @@ export default function CommversePricing() {
             </Card>
 
             {/* / post Individual */}
-            <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#EF4444' }}>
+            <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#FF44CC' }}>
               <CardHeader>
-                <CardTitle className="text-2xl" style={{ color: '#EF4444' }}>/ post</CardTitle>
+                <CardTitle className="text-2xl" style={{ color: '#FF44CC' }}>/ post</CardTitle>
                 <CardDescription>Social Media Management</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900">$35</span>
+                  <span className="text-4xl font-bold text-gray-900">$39</span>
                   <span className="text-gray-600">/month</span>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#EF4444' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FF44CC' }} />
                     <span className="text-sm text-gray-600">Multi-platform posting</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#EF4444' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FF44CC' }} />
                     <span className="text-sm text-gray-600">Content scheduling</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#EF4444' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FF44CC' }} />
                     <span className="text-sm text-gray-600">Analytics dashboard</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#EF4444' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FF44CC' }} />
                     <span className="text-sm text-gray-600">Media library</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#EF4444' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FF44CC' }} />
                     <span className="text-sm text-gray-600">Team collaboration</span>
                   </li>
                 </ul>
                 <Button 
                   className="w-full text-white"
-                  style={{ backgroundColor: '#EF4444' }}
+                  style={{ backgroundColor: '#FF44CC' }}
                   data-testid="button-post-individual"
                   asChild
                 >
-                  <a href="/content/dashboard">Select</a>
+                  <a href="/post-landing">Select</a>
                 </Button>
               </CardContent>
             </Card>
 
             {/* Bundle - Most Popular */}
-            <Card className="border-4 shadow-2xl hover:shadow-3xl transition-shadow bg-white relative" style={{ borderColor: '#FC6ACD' }}>
+            <Card className="border-4 shadow-2xl hover:shadow-3xl transition-shadow bg-white relative" style={{ borderColor: '#F97316' }}>
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="text-white text-sm font-bold px-4 py-1 rounded-full" style={{ backgroundColor: '#FC6ACD' }}>
+                <span className="text-white text-sm font-bold px-4 py-1 rounded-full" style={{ backgroundColor: '#F97316' }}>
                   BEST VALUE
                 </span>
               </div>
               <CardHeader className="pt-8">
-                <CardTitle className="text-2xl" style={{ color: '#FC6ACD' }}>Complete Bundle</CardTitle>
+                <CardTitle className="text-2xl" style={{ color: '#F97316' }}>Complete Bundle</CardTitle>
                 <CardDescription>All 4 Commverse Apps</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900">$119</span>
+                  <span className="text-4xl font-bold text-gray-900">$99</span>
                   <span className="text-gray-600">/month</span>
-                  <p className="text-sm mt-1" style={{ color: '#FC6ACD' }}>Save $21/month</p>
+                  <p className="text-sm mt-1" style={{ color: '#F97316' }}>Save $57/month</p>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FC6ACD' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#F97316' }} />
                     <span className="text-sm text-gray-600">Everything in all 4 apps</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FC6ACD' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#F97316' }} />
                     <span className="text-sm text-gray-600">Cross-app analytics</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FC6ACD' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#F97316' }} />
                     <span className="text-sm text-gray-600">Unified customer profiles</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FC6ACD' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#F97316' }} />
                     <span className="text-sm text-gray-600">Conversation continuity</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#FC6ACD' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#F97316' }} />
                     <span className="text-sm text-gray-600">Intelligent automation</span>
                   </li>
                 </ul>
                 <Button 
                   className="w-full text-white"
-                  style={{ backgroundColor: '#FC6ACD' }}
+                  style={{ backgroundColor: '#F97316' }}
                   data-testid="button-bundle"
                   asChild
                 >
@@ -274,29 +274,29 @@ export default function CommversePricing() {
               <thead>
                 <tr className="border-b-2 border-gray-200">
                   <th className="text-left py-4 px-4 font-bold text-gray-900">Feature</th>
-                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#E6B747' }}>/ promote</th>
+                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#1844A6' }}>/ promote</th>
                   <th className="text-center py-4 px-4 font-bold" style={{ color: '#8000FF' }}>/ engage</th>
-                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#0080FF' }}>/ respond</th>
-                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#EF4444' }}>/ post</th>
-                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#FC6ACD' }}>Bundle</th>
+                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#6EA6FF' }}>/ respond</th>
+                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#FF44CC' }}>/ post</th>
+                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#F97316' }}>Bundle</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">Email Marketing</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#E6B747' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#1844A6' }} /></td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FC6ACD' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">SMS Campaigns</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#E6B747' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#1844A6' }} /></td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FC6ACD' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">Website Live Chat</td>
@@ -304,23 +304,23 @@ export default function CommversePricing() {
                   <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#8000FF' }} /></td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FC6ACD' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">Unified Inbox (8 channels)</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#0080FF' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#6EA6FF' }} /></td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FC6ACD' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">Social Media Management</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#EF4444' }} /></td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FC6ACD' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FF44CC' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">Cross-App Analytics</td>
@@ -328,7 +328,7 @@ export default function CommversePricing() {
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FC6ACD' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <td className="py-3 px-4 text-gray-600">Unified Customer Profiles</td>
@@ -336,15 +336,15 @@ export default function CommversePricing() {
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#FC6ACD' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
                 </tr>
                 <tr className="border-b-2 border-gray-200">
                   <td className="py-3 px-4 font-bold text-gray-900">Monthly Price</td>
-                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#E6B747' }}>$35</td>
-                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#8000FF' }}>$35</td>
-                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#0080FF' }}>$35</td>
-                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#EF4444' }}>$35</td>
-                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#FC6ACD' }}>$119</td>
+                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#1844A6' }}>$39</td>
+                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#8000FF' }}>$39</td>
+                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#6EA6FF' }}>$39</td>
+                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#FF44CC' }}>$39</td>
+                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#F97316' }}>$99</td>
                 </tr>
               </tbody>
             </table>
@@ -411,11 +411,11 @@ export default function CommversePricing() {
             <Button 
               size="lg" 
               className="text-lg px-8 py-6 shadow-lg text-white"
-              style={{ backgroundColor: '#FC6ACD' }}
+              style={{ backgroundColor: '#F97316' }}
               asChild
               data-testid="button-get-bundle"
             >
-              <a href="/assessment">Get Bundle ($119/mo)</a>
+              <a href="/assessment">Get Bundle ($99/mo)</a>
             </Button>
             <Button 
               size="lg" 

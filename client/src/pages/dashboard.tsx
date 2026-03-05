@@ -91,7 +91,7 @@ export default function Dashboard() {
       return 'Get all communication tools in the CommVerse bundle for $99/month - that\'s all four apps in one integrated platform. Save $37 compared to buying separately.';
     }
     if (['Business Listings', 'Reputation Management', 'Google Business Profile'].includes(category)) {
-      return 'Get complete local SEO control with LocalBlue for $59/month - includes listings management, reputation monitoring, and Google Business Profile optimization. Save $19/month.';
+      return 'Get complete local SEO control with LocalBlue for $99/month - includes listings management, reputation monitoring, and Google Business Profile optimization.';
     }
     return null;
   };

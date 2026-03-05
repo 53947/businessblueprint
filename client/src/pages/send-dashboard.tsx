@@ -150,7 +150,7 @@ export default function SendDashboard() {
               <Settings className="h-4 w-4" />
             </Button>
             <Button
-              onClick={() => setLocation('/send/campaigns/new')}
+              onClick={() => setLocation('/promote/campaigns/new')}
               size="sm"
               className="bg-[#E6B747] hover:bg-[#d1a440] text-white"
               data-testid="button-new-campaign"
@@ -335,7 +335,7 @@ export default function SendDashboard() {
                     <Button 
                       className="w-full justify-start" 
                       variant="outline"
-                      onClick={() => setLocation('/send/campaigns/new')}
+                      onClick={() => setLocation('/promote/campaigns/new')}
                       data-testid="button-create-campaign"
                     >
                       <Mail className="w-4 h-4 mr-2" />
@@ -344,7 +344,7 @@ export default function SendDashboard() {
                     <Button 
                       className="w-full justify-start" 
                       variant="outline"
-                      onClick={() => setLocation('/send/campaigns/new?type=sms')}
+                      onClick={() => setLocation('/promote/campaigns/new?type=sms')}
                       data-testid="button-create-sms"
                     >
                       <MessageSquare className="w-4 h-4 mr-2" />
@@ -353,7 +353,7 @@ export default function SendDashboard() {
                     <Button 
                       className="w-full justify-start" 
                       variant="outline"
-                      onClick={() => setLocation('/send/contacts/import')}
+                      onClick={() => setLocation('/promote/contacts/import')}
                       data-testid="button-import-contacts"
                     >
                       <Users className="w-4 h-4 mr-2" />
@@ -362,7 +362,7 @@ export default function SendDashboard() {
                     <Button 
                       className="w-full justify-start" 
                       variant="outline"
-                      onClick={() => setLocation('/send/templates')}
+                      onClick={() => setLocation('/promote/templates')}
                       data-testid="button-templates"
                     >
                       <FileText className="w-4 h-4 mr-2" />
@@ -371,7 +371,7 @@ export default function SendDashboard() {
                     <Button 
                       className="w-full justify-start" 
                       variant="outline"
-                      onClick={() => setLocation('/send/automations')}
+                      onClick={() => setLocation('/promote/automations')}
                       data-testid="button-automations"
                     >
                       <Activity className="w-4 h-4 mr-2" />
@@ -627,7 +627,7 @@ export default function SendDashboard() {
                 <p className="text-sm text-gray-500 dark:text-gray-400">View and manage your email and SMS campaigns</p>
               </div>
               <Button
-                onClick={() => setLocation('/send/campaigns/new')}
+                onClick={() => setLocation('/promote/campaigns/new')}
                 size="sm"
                 className="bg-[#E6B747] hover:bg-[#d1a440] text-white"
                 data-testid="button-new-campaign-tab"
@@ -674,7 +674,7 @@ export default function SendDashboard() {
                       <div className="text-center py-8">
                         <Mail className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                         <p className="text-gray-500 dark:text-gray-400 mb-4">No campaigns created yet</p>
-                        <Button onClick={() => setLocation('/send/campaigns/new')} data-testid="button-first-campaign">
+                        <Button onClick={() => setLocation('/promote/campaigns/new')} data-testid="button-first-campaign">
                           Create Your First Campaign
                         </Button>
                       </div>
@@ -684,7 +684,7 @@ export default function SendDashboard() {
                   <div className="text-center py-8">
                     <Mail className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-500 dark:text-gray-400 mb-4">No campaigns created yet</p>
-                    <Button onClick={() => setLocation('/send/campaigns/new')} data-testid="button-first-campaign">
+                    <Button onClick={() => setLocation('/promote/campaigns/new')} data-testid="button-first-campaign">
                       Create Your First Campaign
                     </Button>
                   </div>

@@ -65,3 +65,79 @@ Audited and fixed all 11 landing pages to consume `app-registry.ts`:
 All pages: `AppName`/`BundleHeader` components for product names, prices from registry constants, colors from registry, no hardcoded old imports.
 
 Files modified: `send-landing.tsx`, `respond-landing.tsx`, `livechat-landing.tsx`, `post-landing.tsx`, `list-landing.tsx`, `review-landing.tsx`, `optimize-landing.tsx`, `relationships-landing.tsx`, `localblue-landing.tsx`, `commverse-landing.tsx`, `ai-coach.tsx`.
+
+## 2026-03-05 — Prompt 5 of 5: Global Cleanup + Continuity Updates
+
+### Part A: Global Find/Replace
+
+Searched entire client codebase for old app names in user-facing strings. Fixed:
+
+- **tour.tsx** — `/reputation` → `/ elevate` (line 216); "Send + Inbox + Content + LiveChat" → "/ promote + / respond + / post + / engage" (line 403)
+- **chat-dashboard.tsx** — `/ chat - Live Chat Dashboard` → `/ engage - Live Chat Dashboard` (line 242)
+- **send-dashboard.tsx** — All `/send/` navigation routes → `/promote/` (campaigns/new, campaigns/new?type=sms, contacts/import, templates, automations — 6 occurrences)
+- **dashboard.tsx** — LocalBlue price `$59/month` → `$99/month` (line 94)
+- **send-api-docs.tsx** — CommVerse bundle description updated to include / post; price `$119` → `$99`; "Everything in /send" → "Everything in / promote"
+- **commverse-pricing.tsx** — All individual app prices `$35` → `$39`; bundle price `$119` → `$99`; savings `$21` → `$57`; / promote color `#E6B747` → `#1844A6`; / respond color `#0080FF` → `#6EA6FF`; / post color `#EF4444` → `#FF44CC`; bundle color `#FC6ACD` → `#F97316`; hero accent `#00FF40` → `#F97316`; broken `/content/dashboard` link → `/post-landing`
+- **marketplace.tsx** — All CommVerse app prices `$35` → `$39`; / optimize price `$29` → `$59`; CommVerse bundle price `$119` → `$99`; savings `$21` → `$57`
+
+### Part B: Route Verification
+
+All routes in App.tsx verified against registry — no mismatches found. Key routes confirmed:
+- `/promote` → SendLanding, `/promote-app` → SendDashboard
+- `/respond` → RespondLanding, `/respond-app` → RespondPage
+- `/engage` → LivechatLanding, `/engage/dashboard` → ChatDashboard
+- `/post-landing` → PostLanding, `/post` → PostManagement
+- `/publish-landing` → ListLanding, `/publish-app` → ListManagement
+- `/elevate-landing` → ReviewLanding, `/elevate-app` → ReviewManagement
+- `/optimize` → OptimizeLanding, `/optimize/dashboard` → OptimizeDashboard
+- `/connect` → RelationshipsLanding, `/connect/dashboard` → RelationshipsDashboard
+- `/ai-coach` → AICoachPage, `/assessment` → Assessment
+- `/localblue` → LocalBlueLanding, `/commverse` → CommverseLanding
+
+### Part C: Continuity Files
+
+- **Created** `docs/continuity/ECOSYSTEM_DECISIONS.md` — Brand rules, app colors, pricing, / optimize details
+- **Created** `docs/continuity/CURRENT_STATE.md` — Full status of all work across Prompts 1-5
+- **Updated** `docs/continuity/DECISIONS.md` — Added decisions 5-9 (live text rendering, tier rename, loyalty pricing, bundle prices, color values)
+- **Updated** `docs/continuity/SESSION_LOG.md` — This entry
+
+### Complete File List (All 5 Prompts)
+
+**Prompt 1 — Created:**
+- `client/src/config/app-registry.ts`
+- `client/src/components/app-name.tsx`
+
+**Prompt 2 — Modified:**
+- `client/src/components/header.tsx`
+- `client/src/components/navigation-config.ts`
+
+**Prompt 3 — Modified:**
+- `client/src/pages/home.tsx`
+- `client/src/pages/pricing.tsx`
+- `client/src/pages/how-it-works.tsx`
+
+**Prompt 4 — Modified:**
+- `client/src/pages/send-landing.tsx`
+- `client/src/pages/respond-landing.tsx`
+- `client/src/pages/livechat-landing.tsx`
+- `client/src/pages/post-landing.tsx`
+- `client/src/pages/list-landing.tsx`
+- `client/src/pages/review-landing.tsx`
+- `client/src/pages/optimize-landing.tsx`
+- `client/src/pages/relationships-landing.tsx`
+- `client/src/pages/localblue-landing.tsx`
+- `client/src/pages/commverse-landing.tsx`
+- `client/src/pages/ai-coach.tsx`
+
+**Prompt 5 — Modified:**
+- `client/src/pages/tour.tsx`
+- `client/src/pages/chat-dashboard.tsx`
+- `client/src/pages/send-dashboard.tsx`
+- `client/src/pages/dashboard.tsx`
+- `client/src/pages/send-api-docs.tsx`
+- `client/src/pages/commverse-pricing.tsx`
+- `client/src/pages/marketplace.tsx`
+- `docs/continuity/ECOSYSTEM_DECISIONS.md` (created)
+- `docs/continuity/CURRENT_STATE.md` (created)
+- `docs/continuity/DECISIONS.md` (updated)
+- `docs/continuity/SESSION_LOG.md` (updated)

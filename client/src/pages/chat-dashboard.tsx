@@ -239,7 +239,7 @@ export default function ChatDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <SectionHeader 
-        title="/ chat - Live Chat Dashboard"
+        title="/ engage - Live Chat Dashboard"
         tabs={[
           { 
             label: 'Conversations', 

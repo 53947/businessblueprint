@@ -157,7 +157,7 @@ export default function MarketplacePage() {
       name: '/ promote',
       icon: MessageSquare,
       emoji: '📧',
-      price: 35,
+      price: 39,
       description: 'Email & SMS marketing automation',
       accentColor: 'blue',
       features: [
@@ -172,7 +172,7 @@ export default function MarketplacePage() {
       name: '/ respond',
       icon: MessageSquare,
       emoji: '📥',
-      price: 35,
+      price: 39,
       description: 'Unified communications hub',
       accentColor: 'blue',
       features: [
@@ -187,7 +187,7 @@ export default function MarketplacePage() {
       name: '/ engage',
       icon: MessageSquare,
       emoji: '💬',
-      price: 35,
+      price: 39,
       description: 'Website live chat widget',
       accentColor: 'purple',
       features: [
@@ -202,7 +202,7 @@ export default function MarketplacePage() {
       name: '/ post',
       icon: MessageSquare,
       emoji: '📱',
-      price: 35,
+      price: 39,
       description: 'Social content management',
       accentColor: 'pink',
       features: [
@@ -217,7 +217,7 @@ export default function MarketplacePage() {
       name: '/ optimize',
       icon: Target,
       emoji: '🎯',
-      price: 29,
+      price: 59,
       description: 'SEO optimization suite',
       accentColor: 'gray',
       features: [
@@ -520,7 +520,7 @@ export default function MarketplacePage() {
               Commverse: Native Communication Apps
             </h2>
             <p className="text-lg text-gray-600 max-w-4xl">
-              Bundle all 4 Commverse apps for <span className="font-black" style={{ color: '#00FF40' }}>$119/mo and SAVE $21</span>, or purchase individually. These work with or without a base plan.
+              Bundle all 4 Commverse apps for <span className="font-black" style={{ color: '#00FF40' }}>$99/mo and SAVE $57</span>, or purchase individually. These work with or without a base plan.
             </p>
           </div>
 
@@ -535,7 +535,7 @@ export default function MarketplacePage() {
                 <div className="inline-flex items-center gap-3 text-2xl font-black px-6 py-3 rounded-full bg-white/20 backdrop-blur-sm mb-6">
                   <span className="text-white">Commverse Bundle</span>
                 </div>
-                <div className="text-6xl font-black mb-3 text-white">$119/mo</div>
+                <div className="text-6xl font-black mb-3 text-white">$99/mo</div>
                 <div className="text-xl text-white/90 mb-4">All 4 apps: / promote + / respond + / engage + / post</div>
                 <div className="text-3xl font-black mb-8" style={{ color: '#00FF40' }}>💰 Save $21/month!</div>
                 <Button 
