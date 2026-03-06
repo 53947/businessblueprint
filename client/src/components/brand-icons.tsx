@@ -1,8 +1,8 @@
 // Brand Icons - Official brand assets
-import coachBlueIcon from "@assets/Coach Blue as Blue_1762721690836.png";
-import commverseIcon from "@assets/Commverse_1762731195351.png";
-import digitalIQIcon from "@assets/Digital IQ_1762535930956.png";
-import digitalAssessmentIcon from "@assets/digital-iq-assessment-icon.png";
+import coachBlueIcon from "@assets/brand/coach-blue-icon.png";
+import commverseIcon from "@assets/brand/commverse-icon-old.png";
+import digitalIQIcon from "@assets/brand/digital-iq-icon-old.png";
+import digitalAssessmentIcon from "@assets/brand/digital-iq-assessment-icon.png";
 
 interface BrandIconProps {
   className?: string;

@@ -1,9 +1,9 @@
-import diyIcon from "@assets/native icons and favicons/diy.png";
-import mspIcon from "@assets/native icons and favicons/managed-services.png";
-import aiCoachIcon from "@assets/Coach Blue as Blue_1762721690836.png";
-import alcIcon from "@assets/native icons and favicons/A LA CARTE.png";
-import captainingIcon from "@assets/native icons and favicons/Captaining Icon.png";
-import sendIcon from "@assets/native icons and favicons/: send app icon.png";
+import diyIcon from "@assets/app-icons/diy.png";
+import mspIcon from "@assets/app-icons/managed-services.png";
+import aiCoachIcon from "@assets/brand/coach-blue-icon.png";
+import alcIcon from "@assets/app-icons/a-la-carte.png";
+import captainingIcon from "@assets/app-icons/captaining.png";
+import sendIcon from "@assets/app-icons/send-icon.png";
 
 interface PathwayIconProps {
   className?: string;

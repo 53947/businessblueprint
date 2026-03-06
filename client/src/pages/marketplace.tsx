@@ -23,7 +23,7 @@ import {
   Target
 } from "lucide-react";
 import { useLocation } from "wouter";
-import commverseBundle from "@assets/logos and wordmarks/: commverse bundle logo.png";
+import commverseBundle from "@assets/app-icons/commverse-bundle-logo.png";
 
 interface CartItem {
   id: string;

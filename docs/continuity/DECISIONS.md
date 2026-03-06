@@ -44,3 +44,22 @@ Every app color is defined in `app-registry.ts` and must not be hardcoded in pag
 - / publish: #064A6C (was #FF0040)
 - / elevate: #E9B307 (was #D59600)
 - CommVerse bundle: #F97316 (was #FC6ACD or #00FF40)
+
+## 10. menu-config.ts defines menu STRUCTURE, app-registry.ts defines DATA
+
+`client/src/config/menu-config.ts` owns all menu layout: nav items, How It Works steps text, Solutions grid, Resources columns. Product data (names, colors, prices, icons) comes exclusively from `app-registry.ts` via imports. This separation means menu restructuring never touches product data, and product changes never touch menu layout.
+
+## 11. PricingLayout is the shared pricing component
+
+`client/src/components/pricing-layout.tsx` renders the full pricing grid (Digital IQ → Connect + Coach Blue → LocalBlue → CommVerse → Full Picture). Used by both the Products mega menu (`variant="menu"`) and `/pricing` page (`variant="page"`). All data from registry, all names via `AppName`/`BundleHeader`.
+
+## 12. Image asset organization
+
+Active images live in `attached_assets/` subdirectories:
+- `icons/` — SVG utility icons for menus/UI
+- `brand/` — BusinessBlueprint logos, favicons, Coach Blue icon
+- `platforms/` — HostsBlue, SwipesBlue, ConsoleBlue, ScansBlue assets
+- `app-icons/` — Old app icons/logos still used by non-registry components
+- `new logos and wordmarks/` — Current app icons imported by app-registry.ts (DO NOT MOVE)
+
+Unused images archived in `attached_assets/archived_2026_03/`.

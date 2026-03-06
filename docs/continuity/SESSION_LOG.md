@@ -141,3 +141,49 @@ All routes in App.tsx verified against registry — no mismatches found. Key rou
 - `docs/continuity/CURRENT_STATE.md` (created)
 - `docs/continuity/DECISIONS.md` (updated)
 - `docs/continuity/SESSION_LOG.md` (updated)
+
+## 2026-03-05 — Menu + Pricing + Image Cleanup
+
+### Part 1: menu-config.ts
+Created `client/src/config/menu-config.ts` — single source of truth for all menu structure. Defines `NAV_ITEMS`, `HOW_IT_WORKS_MENU`, `SOLUTIONS_MENU`, `RESOURCES_MENU`. Imports all product data from app-registry.ts; imports platform icons (BusinessBlueprint, HostsBlue, SwipesBlue, ConsoleBlue, ScansBlue) and SVG utility icons. Re-exports registry items for header convenience.
+
+### Part 2: pricing-layout.tsx + header.tsx rewrite
+- Created `client/src/components/pricing-layout.tsx` — shared pricing component with `variant: "menu" | "page"`. Exact layout: Digital IQ → Connect + Coach Blue (50/50) → LocalBlue bundle (3 apps) → CommVerse bundle (4 apps) → Full Picture totals. All data from registry, all names via `<AppName>`/`<BundleHeader>`, white bg, Archivo Semi Expanded font.
+- Rewrote `client/src/components/header.tsx` (~500 lines, down from ~1740) to consume menu-config.ts. Products mega menu uses `<PricingLayout variant="menu" />`.
+- Simplified `client/src/pages/pricing.tsx` to minimal wrapper around `<PricingLayout variant="page" />`.
+
+### Part 3: Image Cleanup
+- Archived 237 unreferenced images to `attached_assets/archived_2026_03/`
+- Reorganized all remaining active assets into clean directories:
+  - `icons/` — 16 SVG utility icons (unchanged)
+  - `brand/` — bb-favicon, bb-header-logo, bb-logo-only, coach-blue-icon, relationships-icon, etc.
+  - `platforms/` — hostsblue-brandmark, hostsblue-url, hostsblue-lockup, swipesblue-brandmark, swipesblue-lockup, consoleblue-favicon, scansblue-icon, business-iq-scanner
+  - `app-icons/` — send/inbox/livechat/content/listings/reputation icons & logos, diy, managed-services, a-la-carte, captaining, settings, digital-path, digital-success, etc.
+  - `new logos and wordmarks/` — untouched (used by app-registry.ts)
+- Updated ALL import paths across 14 source files
+- Updated runtime `/attached_assets/` paths in client-portal.tsx (10 path replacements, 25 occurrences)
+- Removed dead file `client/src/components/navigation-config.ts`
+
+### Files created:
+- `client/src/config/menu-config.ts`
+- `client/src/components/pricing-layout.tsx`
+
+### Files modified:
+- `client/src/components/header.tsx` (rewritten)
+- `client/src/pages/pricing.tsx` (simplified)
+- `client/src/components/side-nav.tsx` (21 import paths)
+- `client/src/components/brand-logo.tsx` (16 import paths)
+- `client/src/components/brand-icons.tsx` (4 import paths)
+- `client/src/components/ai-coach-pricing.tsx` (1 import path)
+- `client/src/components/pathway-icons.tsx` (6 import paths)
+- `client/src/components/digital-blueprint.tsx` (1 import path)
+- `client/src/pages/journey.tsx` (6 import paths)
+- `client/src/pages/home.tsx` (4 import paths)
+- `client/src/pages/marketplace.tsx` (1 import path)
+- `client/src/pages/marketplace-checkout.tsx` (1 import path)
+- `client/src/pages/pathways.tsx` (4 import paths)
+- `client/src/pages/relationships.tsx` (2 import paths)
+- `client/src/pages/client-portal.tsx` (10 runtime path replacements)
+
+### Files deleted:
+- `client/src/components/navigation-config.ts` (dead code)

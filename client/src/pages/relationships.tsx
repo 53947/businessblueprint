@@ -78,8 +78,8 @@ import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import relationshipsIcon from "@assets/__relationships_1766748093805.png";
-import bbLogo from "@assets/1-Master_business_blueprint_logo_only_1767324548364.png";
+import relationshipsIcon from "@assets/brand/relationships-icon.png";
+import bbLogo from "@assets/brand/bb-logo-only.png";
 
 interface CrmStats {
   contacts: number;

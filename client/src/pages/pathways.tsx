@@ -17,10 +17,10 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { DIYIcon, ALCIcon } from "@/components/pathway-icons";
-import sendIcon from "@assets/native icons and favicons/: send app icon.png";
-import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
-import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
-import commverseIcon from "@assets/logos and wordmarks/: commverse bundle logo.png";
+import sendIcon from "@assets/app-icons/send-icon.png";
+import inboxIcon from "@assets/app-icons/inbox-icon.png";
+import livechatIcon from "@assets/app-icons/livechat-icon.png";
+import commverseIcon from "@assets/app-icons/commverse-bundle-logo.png";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 

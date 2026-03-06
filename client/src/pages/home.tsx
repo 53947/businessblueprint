@@ -9,11 +9,11 @@ import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
 import { ClipboardCheck, FileText, Layers, Wrench, Rocket } from "lucide-react";
 import { DigitalAssessmentIcon, DigitalIQIcon, CommverseIcon, CoachBlueIcon, BasePlanIcon, ActionPlanIcon, BuildMethodIcon } from "@/components/brand-icons";
-import bbIcon from "@assets/Blueprint_Favicon_1762489845363.png";
-import bbLogo from "@assets/Blueprint_Favicon_1762489845363.png";
-import webhostedIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
-import webhostedLogo from "@assets/hostsblue assets/hostsblue URL.png";
-import airswipedLogo from "@assets/swipesblue/swipesblue brandmark.png";
+import bbIcon from "@assets/brand/bb-favicon.png";
+import bbLogo from "@assets/brand/bb-favicon.png";
+import webhostedIcon from "@assets/platforms/hostsblue-brandmark.png";
+import webhostedLogo from "@assets/platforms/hostsblue-url.png";
+import airswipedLogo from "@assets/platforms/swipesblue-brandmark.png";
 import { AppName, BundleHeader } from "@/components/app-name";
 import {
   APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, COACH_BLUE, DIGITAL_IQ,

@@ -14,27 +14,27 @@ import {
   Target
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import bbIcon from "@assets/Blueprint_Favicon_1762489845363.png";
-import bbLockup from "@assets/1-Master_business_blueprint_logo_only_1767324548364.png";
-import inboxIcon from "@assets/native icons and favicons/: inbox app icon.png";
-import inboxLogo from "@assets/logos and wordmarks/: inbox app logo.png";
-import livechatIcon from "@assets/native icons and favicons/: livechat app icon.png";
-import livechatLogo from "@assets/logos and wordmarks/: livechat app logo.png";
-import localSeoIcon from "@assets/native icons and favicons/LOCAL SEO_1762239599463.png";
-import sendIcon from "@assets/native icons and favicons/: send app icon.png";
-import sendLogo from "@assets/logos and wordmarks/: send app logo.png";
-import socialMediaIcon from "@assets/:_content_1768176946216.png";
-import contentLogo from "@assets/logos and wordmarks/: content app logo.png";
-import listingsIcon from "@assets/listings app_1762804610311.png";
-import listingsLogo from "@assets/: listings color triad black and FF0040_1762806224294.png";
-import reputationIcon from "@assets/reputation app triad blue and repoutation gold_1762804622669.png";
-import reputationLogo from "@assets/: reputation color triad black and D59600_1762806224295.png";
-import settingsIcon from "@assets/native icons and favicons/settings.png";
-import aiCoachIcon from "@assets/Coach Blue as Blue_1762721690836.png";
-import hostsBlueIcon from "@assets/hostsblue assets/Hosts Blue Brandmark.png";
-import hostsBlueWordmark from "@assets/Hosts Blue Lockup_1762931589296.png";
-import swipesBlueIcon from "@assets/swipesblue/swipesblue brandmark.png";
-import swipesBlueWordmark from "@assets/Swipes Blue Lockup_1762931589297.png";
+import bbIcon from "@assets/brand/bb-favicon.png";
+import bbLockup from "@assets/brand/bb-logo-only.png";
+import inboxIcon from "@assets/app-icons/inbox-icon.png";
+import inboxLogo from "@assets/app-icons/inbox-logo.png";
+import livechatIcon from "@assets/app-icons/livechat-icon.png";
+import livechatLogo from "@assets/app-icons/livechat-logo.png";
+import localSeoIcon from "@assets/app-icons/local-seo-icon.png";
+import sendIcon from "@assets/app-icons/send-icon.png";
+import sendLogo from "@assets/app-icons/send-logo.png";
+import socialMediaIcon from "@assets/app-icons/content-icon.png";
+import contentLogo from "@assets/app-icons/content-logo.png";
+import listingsIcon from "@assets/app-icons/listings-icon.png";
+import listingsLogo from "@assets/app-icons/listings-logo.png";
+import reputationIcon from "@assets/app-icons/reputation-icon.png";
+import reputationLogo from "@assets/app-icons/reputation-logo.png";
+import settingsIcon from "@assets/app-icons/settings.png";
+import aiCoachIcon from "@assets/brand/coach-blue-icon.png";
+import hostsBlueIcon from "@assets/platforms/hostsblue-brandmark.png";
+import hostsBlueWordmark from "@assets/platforms/hostsblue-lockup.png";
+import swipesBlueIcon from "@assets/platforms/swipesblue-brandmark.png";
+import swipesBlueWordmark from "@assets/platforms/swipesblue-lockup.png";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;

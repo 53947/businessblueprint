@@ -17,13 +17,13 @@ import {
   Settings,
   Compass
 } from "lucide-react";
-import aiCoachIcon from "@assets/Coach Blue as Blue_1762721690836.png";
+import aiCoachIcon from "@assets/brand/coach-blue-icon.png";
 import { BrandLogo } from "@/components/brand-logo";
-import blueprintIcon from "@assets/Blueprint_Favicon_1762489845363.png";
-import digitalSuccessIcon from "@assets/native icons and favicons/digital success accellerated revenue.png";
-import digitalAssessmentIcon from "@assets/native icons and favicons/11-05-2025 Updated or New Images/1-Complete your digital assessment.png";
-import digitalPathIcon from "@assets/native icons and favicons/digital path.png";
-import digitalJourneyIcon from "@assets/native icons and favicons/digital path.png";
+import blueprintIcon from "@assets/brand/bb-favicon.png";
+import digitalSuccessIcon from "@assets/app-icons/digital-success.png";
+import digitalAssessmentIcon from "@assets/app-icons/digital-assessment-step.png";
+import digitalPathIcon from "@assets/app-icons/digital-path.png";
+import digitalJourneyIcon from "@assets/app-icons/digital-path.png";
 
 export default function Journey() {
   const journeySteps = [
