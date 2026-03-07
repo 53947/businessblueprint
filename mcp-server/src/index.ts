@@ -1,380 +1,347 @@
 #!/usr/bin/env node
 
-import {
-  Server,
-} from "@modelcontextprotocol/sdk/server/index.js";
-import {
-  StdioServerTransport,
-} from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  ListToolsRequestSchema,
-  CallToolRequestSchema,
-  ListResourcesRequestSchema,
-  ReadResourceRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+import express from "express";
+import crypto from "crypto";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { z } from "zod";
 
-// Initialize the server
-const server = new Server(
-  {
-    name: "replit-agents-mcp",
-    version: "1.0.0",
-  },
-  {
-    capabilities: {
-      tools: {},
-      resources: {},
-    },
-  },
-);
+const app = express();
+const PORT = process.env.PORT || 3000;
+const GITHUB_ORG = process.env.GITHUB_ORG || "TRIADBLUE";
+const GITHUB_API = "https://api.github.com";
 
-// Mock data for agents
-interface Agent {
-  id: string;
-  name: string;
-  status: "running" | "paused" | "stopped";
-  lastActive: Date;
-  logs: string[];
-}
-
-const agentDatabase: Map<string, Agent> = new Map([
-  [
-    "agent-1",
-    {
-      id: "agent-1",
-      name: "BusinessBlueprint Agent",
-      status: "running",
-      lastActive: new Date(),
-      logs: ["Agent started", "Processing business rules", "Sync completed"],
-    },
-  ],
-  [
-    "agent-2",
-    {
-      id: "agent-2",
-      name: "Analysis Agent",
-      status: "paused",
-      lastActive: new Date(Date.now() - 3600000),
-      logs: ["Agent initialized", "Waiting for input"],
-    },
-  ],
-]);
-
-// Define tools
-server.setRequestHandler(ListToolsRequestSchema, async () => {
-  return {
-    tools: [
-      {
-        name: "list_agents",
-        description: "List all registered agents and their current status",
-        inputSchema: {
-          type: "object" as const,
-          properties: {},
-          required: [],
-        },
-      },
-      {
-        name: "get_agent_status",
-        description: "Get detailed status and logs for a specific agent",
-        inputSchema: {
-          type: "object" as const,
-          properties: {
-            agent_id: {
-              type: "string",
-              description: "The ID of the agent to query",
-            },
-          },
-          required: ["agent_id"],
-        },
-      },
-      {
-        name: "control_agent",
-        description: "Control an agent (start, pause, stop)",
-        inputSchema: {
-          type: "object" as const,
-          properties: {
-            agent_id: {
-              type: "string",
-              description: "The ID of the agent to control",
-            },
-            action: {
-              type: "string",
-              enum: ["start", "pause", "stop"],
-              description: "The action to perform",
-            },
-          },
-          required: ["agent_id", "action"],
-        },
-      },
-      {
-        name: "add_agent_log",
-        description: "Add a log entry to an agent",
-        inputSchema: {
-          type: "object" as const,
-          properties: {
-            agent_id: {
-              type: "string",
-              description: "The ID of the agent",
-            },
-            message: {
-              type: "string",
-              description: "The log message to add",
-            },
-          },
-          required: ["agent_id", "message"],
-        },
-      },
-    ],
-  };
+// --- CORS middleware ---
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, x-api-key, Authorization, mcp-session-id, Mcp-Session-Id, Last-Event-ID, MCP-Protocol-Version");
+  res.setHeader("Access-Control-Expose-Headers", "mcp-session-id, Mcp-Session-Id, MCP-Protocol-Version");
+  if (req.method === "OPTIONS") {
+    res.sendStatus(204);
+    return;
+  }
+  next();
 });
 
-// Handle tool calls
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params;
+app.use(express.json());
+
+// --- GitHub API helper ---
+function ghHeaders(): Record<string, string> {
+  const h: Record<string, string> = {
+    Accept: "application/vnd.github+json",
+    "User-Agent": "triadblue-mcp-server/1.0",
+  };
+  if (process.env.GITHUB_TOKEN) {
+    h["Authorization"] = `Bearer ${process.env.GITHUB_TOKEN}`;
+  }
+  return h;
+}
+
+async function ghFetch(path: string): Promise<any> {
+  const url = `${GITHUB_API}${path}`;
+  const res = await fetch(url, { headers: ghHeaders() });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`GitHub API ${res.status}: ${body}`);
+  }
+  return res.json();
+}
+
+// --- In-memory event store for session resumability ---
+class InMemoryEventStore {
+  private events = new Map<string, { streamId: string; message: any }>();
+
+  async storeEvent(streamId: string, message: any): Promise<string> {
+    const eventId = `${streamId}_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+    this.events.set(eventId, { streamId, message });
+    if (this.events.size > 1000) {
+      const keys = [...this.events.keys()];
+      for (let i = 0; i < keys.length - 1000; i++) {
+        this.events.delete(keys[i]);
+      }
+    }
+    return eventId;
+  }
+
+  async replayEventsAfter(lastEventId: string, { send }: { send: (eventId: string, message: any) => Promise<void> }): Promise<string> {
+    if (!lastEventId || !this.events.has(lastEventId)) return "";
+    const parts = lastEventId.split("_");
+    const streamId = parts.length > 0 ? parts[0] : "";
+    if (!streamId) return "";
+    let foundLast = false;
+    const sorted = [...this.events.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+    for (const [eventId, { streamId: sid, message }] of sorted) {
+      if (sid !== streamId) continue;
+      if (eventId === lastEventId) { foundLast = true; continue; }
+      if (foundLast) await send(eventId, message);
+    }
+    return streamId;
+  }
+}
+
+// --- MCP Server setup ---
+function createMcpServer(): McpServer {
+  const server = new McpServer({
+    name: "triadblue-github",
+    version: "1.0.0",
+  });
+
+  server.tool("list_repos", "List all repositories in the TRIADBLUE org", {}, async () => {
+    const repos = await ghFetch(`/orgs/${GITHUB_ORG}/repos?per_page=100`);
+    const summary = repos.map((r: any) => ({
+      name: r.name,
+      description: r.description,
+      language: r.language,
+      updated_at: r.updated_at,
+      html_url: r.html_url,
+      default_branch: r.default_branch,
+      private: r.private,
+    }));
+    return { content: [{ type: "text" as const, text: JSON.stringify(summary, null, 2) }] };
+  });
+
+  // @ts-ignore - MCP SDK type depth issue with zod
+  server.tool("get_repo", "Get details about a specific repo", {
+    repo: z.string().describe("Repository name"),
+  }, async ({ repo }: { repo: string }) => {
+    const data = await ghFetch(`/repos/${GITHUB_ORG}/${repo}`);
+    return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+  });
+
+  server.tool("list_files", "List files and directories in a repo path", {
+    repo: z.string().describe("Repository name"),
+    path: z.string().optional().describe("Directory path (empty for root)"),
+  }, async ({ repo, path }) => {
+    const p = path || "";
+    const data = await ghFetch(`/repos/${GITHUB_ORG}/${repo}/contents/${p}`);
+    const listing = Array.isArray(data)
+      ? data.map((f: any) => ({ name: f.name, type: f.type, size: f.size, path: f.path }))
+      : [{ name: data.name, type: data.type, size: data.size, path: data.path }];
+    return { content: [{ type: "text" as const, text: JSON.stringify(listing, null, 2) }] };
+  });
+
+  server.tool("read_file", "Read the contents of a file in a repo", {
+    repo: z.string().describe("Repository name"),
+    path: z.string().describe("File path"),
+  }, async ({ repo, path }) => {
+    const data = await ghFetch(`/repos/${GITHUB_ORG}/${repo}/contents/${path}`);
+    if (data.type !== "file") {
+      return { content: [{ type: "text" as const, text: `Error: ${path} is a ${data.type}, not a file` }], isError: true };
+    }
+    const content = Buffer.from(data.content, "base64").toString("utf-8");
+    return { content: [{ type: "text" as const, text: content }] };
+  });
+
+  server.tool("list_branches", "List branches of a repo", {
+    repo: z.string().describe("Repository name"),
+  }, async ({ repo }) => {
+    const data = await ghFetch(`/repos/${GITHUB_ORG}/${repo}/branches?per_page=100`);
+    const branches = data.map((b: any) => ({ name: b.name, sha: b.commit.sha }));
+    return { content: [{ type: "text" as const, text: JSON.stringify(branches, null, 2) }] };
+  });
+
+  // @ts-ignore - MCP SDK type depth issue with zod
+  server.tool("list_issues", "List open issues for a repo", {
+    repo: z.string().describe("Repository name"),
+    state: z.enum(["open", "closed", "all"]).optional().describe("Issue state filter"),
+  }, async ({ repo, state }: { repo: string; state?: string }) => {
+    const s = state || "open";
+    const data = await ghFetch(`/repos/${GITHUB_ORG}/${repo}/issues?state=${s}&per_page=50`);
+    const issues = data.map((i: any) => ({
+      number: i.number,
+      title: i.title,
+      state: i.state,
+      user: i.user.login,
+      created_at: i.created_at,
+      labels: i.labels.map((l: any) => l.name),
+    }));
+    return { content: [{ type: "text" as const, text: JSON.stringify(issues, null, 2) }] };
+  });
+
+  server.tool("list_pulls", "List pull requests for a repo", {
+    repo: z.string().describe("Repository name"),
+    state: z.enum(["open", "closed", "all"]).optional().describe("PR state filter"),
+  }, async ({ repo, state }) => {
+    const s = state || "open";
+    const data = await ghFetch(`/repos/${GITHUB_ORG}/${repo}/pulls?state=${s}&per_page=50`);
+    const prs = data.map((p: any) => ({
+      number: p.number,
+      title: p.title,
+      state: p.state,
+      user: p.user.login,
+      created_at: p.created_at,
+      head: p.head.ref,
+      base: p.base.ref,
+    }));
+    return { content: [{ type: "text" as const, text: JSON.stringify(prs, null, 2) }] };
+  });
+
+  server.tool("search_code", "Search for code across all TRIADBLUE repos", {
+    query: z.string().describe("Search query (code, filename, etc.)"),
+  }, async ({ query }) => {
+    const data = await ghFetch(`/search/code?q=${encodeURIComponent(query)}+org:${GITHUB_ORG}&per_page=20`);
+    const results = data.items.map((i: any) => ({
+      repo: i.repository.full_name,
+      file: i.path,
+      url: i.html_url,
+    }));
+    return { content: [{ type: "text" as const, text: JSON.stringify(results, null, 2) }] };
+  });
+
+  server.tool("list_commits", "List recent commits for a repo", {
+    repo: z.string().describe("Repository name"),
+    branch: z.string().optional().describe("Branch name (defaults to main)"),
+  }, async ({ repo, branch }) => {
+    const b = branch ? `&sha=${branch}` : "";
+    const data = await ghFetch(`/repos/${GITHUB_ORG}/${repo}/commits?per_page=20${b}`);
+    const commits = data.map((c: any) => ({
+      sha: c.sha.slice(0, 7),
+      message: c.commit.message.split("\n")[0],
+      author: c.commit.author.name,
+      date: c.commit.author.date,
+    }));
+    return { content: [{ type: "text" as const, text: JSON.stringify(commits, null, 2) }] };
+  });
+
+  return server;
+}
+
+// --- MCP session management ---
+const sessions = new Map<string, { server: McpServer; transport: StreamableHTTPServerTransport; createdAt: number }>();
+const eventStore = new InMemoryEventStore();
+
+function isInitializeRequest(body: any): boolean {
+  if (Array.isArray(body)) return body.some((m) => m.method === "initialize");
+  return body?.method === "initialize";
+}
+
+function getSessionId(req: express.Request): string | undefined {
+  return (req.headers["mcp-session-id"] || req.headers["Mcp-Session-Id"]) as string | undefined;
+}
+
+async function handleMcpPost(req: express.Request, res: express.Response): Promise<void> {
+  const ts = new Date().toISOString();
+  const method = Array.isArray(req.body) ? req.body.map((m: any) => m.method).join(",") : req.body?.method;
+  const sessionId = getSessionId(req);
+  console.log(`[${ts}] MCP POST method=${method} session=${sessionId || "none"}`);
 
   try {
-    switch (name) {
-      case "list_agents": {
-        const agents = Array.from(agentDatabase.values()).map((agent) => ({
-          id: agent.id,
-          name: agent.name,
-          status: agent.status,
-          lastActive: agent.lastActive.toISOString(),
-        }));
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(agents, null, 2),
-            },
-          ],
-        };
-      }
-
-      case "get_agent_status": {
-        const agentId = (args as { agent_id: string }).agent_id;
-        const agent = agentDatabase.get(agentId);
-
-        if (!agent) {
-          return {
-            content: [
-              {
-                type: "text",
-                text: `Agent with ID ${agentId} not found`,
-              },
-            ],
-            isError: true,
-          };
-        }
-
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(
-                {
-                  id: agent.id,
-                  name: agent.name,
-                  status: agent.status,
-                  lastActive: agent.lastActive.toISOString(),
-                  logs: agent.logs,
-                },
-                null,
-                2
-              ),
-            },
-          ],
-        };
-      }
-
-      case "control_agent": {
-        const { agent_id, action } = args as {
-          agent_id: string;
-          action: string;
-        };
-        const agent = agentDatabase.get(agent_id);
-
-        if (!agent) {
-          return {
-            content: [
-              {
-                type: "text",
-                text: `Agent with ID ${agent_id} not found`,
-              },
-            ],
-            isError: true,
-          };
-        }
-
-        const validActions = ["start", "pause", "stop"];
-        if (!validActions.includes(action)) {
-          return {
-            content: [
-              {
-                type: "text",
-                text: `Invalid action: ${action}. Must be one of: ${validActions.join(", ")}`,
-              },
-            ],
-            isError: true,
-          };
-        }
-
-        agent.status = action as "running" | "paused" | "stopped";
-        agent.lastActive = new Date();
-        agent.logs.push(`Agent ${action}ed by MCP server`);
-
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Agent ${agent_id} has been ${action}ed successfully`,
-            },
-          ],
-        };
-      }
-
-      case "add_agent_log": {
-        const { agent_id, message } = args as {
-          agent_id: string;
-          message: string;
-        };
-        const agent = agentDatabase.get(agent_id);
-
-        if (!agent) {
-          return {
-            content: [
-              {
-                type: "text",
-                text: `Agent with ID ${agent_id} not found`,
-              },
-            ],
-            isError: true,
-          };
-        }
-
-        agent.logs.push(message);
-        agent.lastActive = new Date();
-
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Log added to agent ${agent_id}`,
-            },
-          ],
-        };
-      }
-
-      default:
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Unknown tool: ${name}`,
-            },
-          ],
-          isError: true,
-        };
-    }
-  } catch (error) {
-    return {
-      content: [
-        {
-          type: "text",
-          text: `Error executing tool: ${error instanceof Error ? error.message : String(error)}`,
-        },
-      ],
-      isError: true,
-    };
-  }
-});
-
-// Define resources
-server.setRequestHandler(ListResourcesRequestSchema, async () => {
-  const agents = Array.from(agentDatabase.keys());
-  return {
-    resources: [
-      {
-        uri: "agents://list",
-        name: "All Agents",
-        description: "List of all registered agents",
-        mimeType: "application/json",
-      },
-      ...agents.map((agentId) => ({
-        uri: `agents://${agentId}`,
-        name: `Agent: ${agentDatabase.get(agentId)?.name || agentId}`,
-        description: `Details and logs for agent ${agentId}`,
-        mimeType: "application/json",
-      })),
-    ],
-  };
-});
-
-// Handle resource reads
-server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-  const { uri } = request.params;
-
-  if (uri === "agents://list") {
-    return {
-      contents: [
-        {
-          uri,
-          mimeType: "application/json",
-          text: JSON.stringify(
-            Array.from(agentDatabase.values()).map((agent) => ({
-              id: agent.id,
-              name: agent.name,
-              status: agent.status,
-              lastActive: agent.lastActive.toISOString(),
-            })),
-            null,
-            2
-          ),
-        },
-      ],
-    };
-  }
-
-  const match = uri.match(/^agents:\/\/(.+)$/);
-  if (match) {
-    const agentId = match[1];
-    const agent = agentDatabase.get(agentId);
-
-    if (!agent) {
-      throw new Error(`Agent ${agentId} not found`);
+    // Existing session — forward request
+    if (sessionId && sessions.has(sessionId)) {
+      console.log(`[${ts}] MCP → reusing session ${sessionId}`);
+      const { transport } = sessions.get(sessionId)!;
+      await transport.handleRequest(req, res, req.body);
+      return;
     }
 
-    return {
-      contents: [
-        {
-          uri,
-          mimeType: "application/json",
-          text: JSON.stringify(
-            {
-              id: agent.id,
-              name: agent.name,
-              status: agent.status,
-              lastActive: agent.lastActive.toISOString(),
-              logs: agent.logs,
-            },
-            null,
-            2
-          ),
+    // New session — initialize
+    if (!sessionId && isInitializeRequest(req.body)) {
+      const transport = new StreamableHTTPServerTransport({
+        sessionIdGenerator: () => crypto.randomUUID(),
+        eventStore,
+        enableJsonResponse: true,
+        onsessioninitialized: (sid: string) => {
+          sessions.set(sid, { server, transport, createdAt: Date.now() });
+          console.log(`[${ts}] MCP session created: ${sid} (total: ${sessions.size})`);
         },
-      ],
-    };
+        onsessionclosed: (sid: string) => {
+          sessions.delete(sid);
+          console.log(`[${ts}] MCP session explicitly closed: ${sid}`);
+        },
+      });
+      const server = createMcpServer();
+
+      await server.connect(transport);
+      await transport.handleRequest(req, res, req.body);
+      return;
+    }
+
+    // Session not found
+    console.log(`[${ts}] MCP → session not found: ${sessionId}, active: [${[...sessions.keys()].join(", ")}]`);
+    res.status(400).json({
+      jsonrpc: "2.0",
+      error: { code: -32000, message: "Bad request — missing or invalid session" },
+      id: null,
+    });
+  } catch (err) {
+    console.error(`[${ts}] MCP POST error:`, err);
+    if (!res.headersSent) {
+      res.status(500).json({ jsonrpc: "2.0", error: { code: -32603, message: "Internal error" }, id: null });
+    }
   }
-
-  throw new Error(`Unknown resource: ${uri}`);
-});
-
-// Start the server via stdio
-async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  console.error("MCP server connected via stdio");
 }
 
-main().catch((error) => {
-  console.error("Fatal error:", error);
-  process.exit(1);
+async function handleMcpGet(req: express.Request, res: express.Response): Promise<void> {
+  const ts = new Date().toISOString();
+  const sessionId = getSessionId(req);
+  console.log(`[${ts}] MCP GET session=${sessionId || "none"}`);
+
+  if (sessionId && sessions.has(sessionId)) {
+    const { transport } = sessions.get(sessionId)!;
+    await transport.handleRequest(req, res);
+    return;
+  }
+
+  res.setHeader("Allow", "POST, HEAD");
+  res.status(405).json({
+    jsonrpc: "2.0",
+    error: { code: -32000, message: "Method not allowed — use POST" },
+    id: null,
+  });
+}
+
+async function handleMcpDelete(req: express.Request, res: express.Response): Promise<void> {
+  const ts = new Date().toISOString();
+  const sessionId = getSessionId(req);
+  console.log(`[${ts}] MCP DELETE session=${sessionId || "none"}`);
+
+  if (sessionId && sessions.has(sessionId)) {
+    const { transport } = sessions.get(sessionId)!;
+    await transport.handleRequest(req, res);
+    return;
+  }
+
+  res.status(404).json({
+    jsonrpc: "2.0",
+    error: { code: -32001, message: "Session not found" },
+    id: null,
+  });
+}
+
+function handleMcpHead(_req: express.Request, res: express.Response): void {
+  res.setHeader("MCP-Protocol-Version", "2025-11-25");
+  res.setHeader("Content-Type", "application/json");
+  res.sendStatus(200);
+}
+
+// --- Mount MCP on /mcp ---
+app.head("/mcp", handleMcpHead);
+app.post("/mcp", handleMcpPost);
+app.get("/mcp", handleMcpGet);
+app.delete("/mcp", handleMcpDelete);
+
+// --- Mount MCP on root / too (Claude.ai may use root path) ---
+app.head("/", handleMcpHead);
+app.post("/", handleMcpPost);
+app.delete("/", handleMcpDelete);
+
+// --- Health check ---
+app.get("/", (_req, res) => {
+  const sessionId = getSessionId(_req);
+  if (sessionId && sessions.has(sessionId)) {
+    handleMcpGet(_req, res);
+    return;
+  }
+  res.json({
+    status: "ok",
+    service: "triadblue-mcp-server",
+    version: "1.0.0",
+    mcp: "/mcp",
+    activeSessions: sessions.size,
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`MCP server running on port ${PORT}`);
 });
