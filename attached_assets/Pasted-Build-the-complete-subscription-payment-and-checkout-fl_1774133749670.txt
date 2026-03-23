@@ -1,0 +1,76 @@
+Build the complete subscription payment and checkout flow for businessblueprint.io. This is the highest priority — nothing works until clients can pay.
+
+PAYMENT PROCESSOR: Stripe. Use Stripe for all subscription billing. The existing Stripe integration already handles the $10 ScansBlue report — do NOT touch that. Build the subscription flow alongside it using the same Stripe account and keys already in the environment.
+
+STRIPE PRICE IDs — use these exactly, do not create new ones:
+  Compass Bundle ($99/mo):       price_1TDY3rHiV6Rr7W7DUDuIr3VD
+  Anchor Bundle ($79/mo):        price_1TDY3rHiV6Rr7W7DiMFRGy5e
+  / promote standalone ($29/mo): price_1TDY3sHiV6Rr7W7DA1c88iYX
+  / respond standalone ($29/mo): price_1TDY3sHiV6Rr7W7DHlVkCPQR
+  / engage standalone ($29/mo):  price_1TDY3sHiV6Rr7W7DjMnaogLa
+  / post standalone ($29/mo):    price_1TDY3tHiV6Rr7W7DXkYJ6sby
+  / list standalone ($29/mo):    price_1TDY3tHiV6Rr7W7DoWhxnoAD
+  / review standalone ($29/mo):  price_1TDY3tHiV6Rr7W7DPZhtZn0o
+  / amplify standalone ($29/mo): price_1TDY3uHiV6Rr7W7DojREILne
+  / connect Performance ($29/mo):price_1TDY3uHiV6Rr7W7D0Hng7teX
+
+WHAT TO BUILD:
+
+1. PLAN SELECTION PAGE (/pricing or /plans)
+   - Display all available plans with pricing
+   - Compass Bundle: $99/mo — includes / promote, / respond, / engage, / post
+   - Anchor Bundle: $79/mo — includes / list, / review, / amplify
+   - Individual apps: $29/mo each standalone
+   - / connect CRM: FREE Starter or $29/mo Performance (always shown separately, never bundled)
+   - Each plan card shows: name, price, included apps, features list
+   - "Get Started" button on each plan leads to checkout
+
+2. CHECKOUT PAGE (/checkout)
+   - Order summary (plan selected, price, billing cycle)
+   - Ability to add / connect CRM Performance ($29/mo) if not already included
+   - Customer billing info form (name, email, company, address)
+   - Payment form: use Stripe Elements for card input (number, expiration, CVV)
+   - On submit: create Stripe Customer, then create Stripe Subscription with the correct Price ID from the list above
+   - On success: redirect to /dashboard with plan activated
+   - On failure: show Stripe error message, keep form data intact
+
+3. SUBSCRIPTION ACTIVATION
+   - On successful Stripe payment, activate the purchased plan in the database
+   - Mark all included apps as "purchased" for the user account
+   - Compass Bundle activates: / promote, / respond, / engage, / post
+   - Anchor Bundle activates: / list, / review, / amplify
+   - Standalone activates that single app only
+   - / connect CRM FREE Starter is always active — Performance activates if purchased
+   - Set subscription status, stripe_customer_id, stripe_subscription_id, start date, next billing date
+   - Trigger confirmation email via Resend with:
+     * Receipt with amount charged
+     * List of every app now active in their account
+     * Link to dashboard to begin setup
+
+4. RECURRING BILLING
+   - Stripe handles recurring billing automatically via the Subscription object
+   - Listen for Stripe webhook events to keep the database in sync:
+     * invoice.payment_succeeded — mark subscription active, update next_billing_date, send receipt email
+     * invoice.payment_failed — mark subscription past_due, send warning email
+     * invoice.payment_failed (second attempt) — mark subscription suspended, send suspension email
+     * customer.subscription.deleted — mark subscription cancelled in database
+
+5. SUBSCRIPTION MANAGEMENT (inside /dashboard or /account)
+   - Show current plan name, status, next billing date, amount
+   - Show payment method on file (last 4 digits, expiration) — pull from Stripe Customer
+   - Update payment method: use Stripe SetupIntent to collect new card
+   - Cancel subscription: call Stripe API to cancel, confirm in modal first
+   - Invoice history: pull from Stripe API, list past invoices with download link
+
+6. WEBHOOK HANDLER
+   - Create POST /api/webhooks/stripe endpoint
+   - Verify webhook signature using STRIPE_WEBHOOK_SECRET environment variable
+   - Handle all events listed in step 4
+   - Log all webhook events to a webhooks_log table
+
+DATABASE:
+   - Use the existing subscriptions table
+   - Ensure these fields exist: status, stripe_customer_id, stripe_subscription_id, plan_type, next_billing_date
+   - Add any missing fields via migration
+
+DO NOT touch: the existing $10 ScansBlue Stripe checkout, / connect CRM, any app pages, or the auth system.
