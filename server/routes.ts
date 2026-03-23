@@ -70,6 +70,7 @@ import { db } from "./db";
 import { z } from "zod";
 import { requireAuth, type AuthenticatedRequest } from "./middleware/auth";
 import { setupAuth, isAuthenticated } from "./replitAuth";
+import { authRouter } from "./routes/auth";
 import { requireClientPortalAccess } from "./middleware/clientPortalAuth";
 
 // Listing platform display name mappings
@@ -94,6 +95,9 @@ function platformInternalName(display: string): string {
 export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
 
+  // Register credential/magic-link auth routes (for production login)
+  app.use(authRouter);
+
   // Serve favicon.ico from attached_assets
   app.get("/favicon.ico", (req, res) => {
     res.sendFile(
@@ -114,14 +118,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/auth/user", async (req: any, res) => {
     try {
-      // Return null if not authenticated instead of 401
+      // Dev mode: return synthetic dev user if not otherwise authenticated
+      if (process.env.NODE_ENV !== 'production') {
+        if (req.isAuthenticated && req.isAuthenticated()) {
+          const userId = req.user.claims.sub;
+          const user = await storage.getUser(userId);
+          return res.json({ user: user || { id: 'dev-user', email: 'dev@localhost', firstName: 'Dev', lastName: 'User' } });
+        }
+        // Return dev user so frontend auth checks pass
+        return res.json({
+          user: { id: 'dev-user', email: 'dev@localhost', firstName: 'Dev', lastName: 'User' }
+        });
+      }
+
+      // Production: check credential session
+      const session = req.session as any;
+      if (session?.userId) {
+        const user = await storage.getUser(session.userId);
+        if (user) {
+          return res.json({ user });
+        }
+      }
+
+      // Check Replit OIDC session
       if (!req.isAuthenticated || !req.isAuthenticated()) {
         return res.json({ user: null });
       }
 
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      res.json(user);
+      res.json({ user: user || null });
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });

@@ -62,10 +62,13 @@ import {
   BarChart3,
   PieChart,
   Target,
-  Zap
+  Zap,
+  KeyRound
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/hooks/useAuth";
 import { format, formatDistanceToNow } from "date-fns";
 import { EmailManagement } from "@/components/admin/email-management";
 import { AISettingsPanel } from "@/components/admin/ai-settings-panel";
@@ -159,6 +162,99 @@ interface SubscriptionWithDetails {
 
 type AdminTab = 'dashboard' | 'clients' | 'assessments' | 'billing' | 'tickets' | 'prescriptions' | 'emails' | 'settings';
 
+function AdminPasswordCard() {
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwError, setPwError] = useState("");
+  const [pwSuccess, setPwSuccess] = useState("");
+  const [pwLoading, setPwLoading] = useState(false);
+
+  const handleSetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwError("");
+    setPwSuccess("");
+
+    if (newPassword.length < 8) {
+      setPwError("Password must be at least 8 characters.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPwError("Passwords do not match.");
+      return;
+    }
+
+    setPwLoading(true);
+    try {
+      const response = await fetch("/api/auth/set-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: newPassword }),
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setPwSuccess("Password updated successfully.");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        setPwError(data.message || "Failed to update password.");
+      }
+    } catch {
+      setPwError("Connection error. Please try again.");
+    } finally {
+      setPwLoading(false);
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <KeyRound className="h-5 w-5" />
+          Admin Password
+        </CardTitle>
+        <CardDescription>
+          Set or change your login password for credential-based sign in.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSetPassword} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="new-password">New Password</Label>
+            <Input
+              id="new-password"
+              type="password"
+              placeholder="Minimum 8 characters"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              disabled={pwLoading}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="confirm-password">Confirm Password</Label>
+            <Input
+              id="confirm-password"
+              type="password"
+              placeholder="Re-enter password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={pwLoading}
+            />
+          </div>
+          {pwError && (
+            <p className="text-sm text-red-600">{pwError}</p>
+          )}
+          {pwSuccess && (
+            <p className="text-sm text-green-600">{pwSuccess}</p>
+          )}
+          <Button type="submit" disabled={pwLoading} className="w-full">
+            {pwLoading ? "Saving..." : "Set Password"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
   const [searchQuery, setSearchQuery] = useState("");
@@ -170,6 +266,13 @@ export default function AdminPanel() {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+
+  // Redirect to login if not authenticated (production)
+  if (!authLoading && !isAuthenticated) {
+    window.location.href = "/login";
+    return null;
+  }
 
   // Fetch all clients
   const { data: clients, isLoading } = useQuery<Client[]>({
@@ -1425,6 +1528,8 @@ export default function AdminPanel() {
                     </div>
                   </CardContent>
                 </Card>
+
+                <AdminPasswordCard />
 
                 <Card>
                   <CardHeader>

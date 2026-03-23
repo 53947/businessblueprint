@@ -20,6 +20,13 @@ import { eq } from 'drizzle-orm';
  */
 export async function requireClientPortalAccess(req: any, res: Response, next: NextFunction) {
   try {
+    // DEV MODE BYPASS: allow free access to client portal
+    if (process.env.NODE_ENV !== 'production') {
+      req.clientId = parseInt((req.session as any).clientId || '1');
+      req.client = { id: req.clientId, accountStatus: 'active', companyName: 'Dev Client', email: 'dev@localhost' };
+      return next();
+    }
+
     // Extract clientId from session
     const sessionClientId = parseInt((req.session as any).clientId || '0');
     

@@ -64,6 +64,8 @@ import ScansBlueSuccess from "@/pages/scansblue-success";
 import OptimizeLanding from "@/pages/optimize-landing";
 import OptimizeSetup from "@/pages/optimize-setup";
 import OptimizeDashboard from "@/pages/optimize";
+import AdminLogin from "@/pages/login";
+import VerifyAdminMagicLink from "@/pages/verify-admin-magic-link";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -74,6 +76,8 @@ function Router() {
       <Route path="/dashboard/:id" component={Dashboard} />
       <Route path="/assessment-checkout" component={AssessmentCheckout} />
       <Route path="/ai-coach" component={AICoachPage} />
+      <Route path="/login" component={AdminLogin} />
+      <Route path="/auth/verify" component={VerifyAdminMagicLink} />
       <Route path="/portal/login" component={ClientLogin} />
       <Route path="/portal/verify" component={VerifyMagicLink} />
       <Route path="/portal/test" component={PortalTestAccess} />
