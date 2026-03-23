@@ -53,7 +53,7 @@ const PRODUCT_INFO: Record<string, { name: string; url: string; color: string }>
   'livechat': { name: '/ engage', url: '/engage', color: '#8000FF' },
   'listings': { name: '/ publish', url: '/publish-landing', color: '#E00420' },
   'reputation': { name: '/ elevate', url: '/elevate-landing', color: '#FFD700' },
-  'localblue': { name: 'LocalBlue', url: '/localblue', color: '#0000FF' },
+  'anchor': { name: 'Anchor Suite', url: '/anchor', color: '#0000FF' },
   'relationships': { name: '/ connect', url: '/connect', color: '#008060' },
   'hostsBlue': { name: 'HostsBlue', url: 'https://hostsblue.com', color: '#F97316' },
   'scansBlue': { name: 'ScansBlue', url: 'https://scansblue.com', color: '#0000FF' },
@@ -61,13 +61,13 @@ const PRODUCT_INFO: Record<string, { name: string; url: string; color: string }>
 };
 
 const BUNDLE_INFO: Record<string, { name: string; savings: string; products: string[] }> = {
-  'commverse': {
-    name: 'CommVerse Bundle',
+  'compass': {
+    name: 'Compass Suite',
     savings: 'Save $37/month',
     products: ['/ promote', '/ respond', '/ post', '/ engage']
   },
-  'localblue': {
-    name: 'LocalBlue Bundle',
+  'anchor': {
+    name: 'Anchor Suite',
     savings: 'Save $19/month',
     products: ['/ publish', '/ elevate', 'GBP Optimization']
   },

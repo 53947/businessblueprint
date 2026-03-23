@@ -21,7 +21,6 @@ interface AppNameProps {
 
 const FONT_SIZES = { sm: 15, md: 18, lg: 22 } as const;
 const TRIAD_BLACK = "#09080E";
-const DESC_COLOR = "#9CA3AF";
 const FONT_FAMILY = "Archivo Semi Expanded, Archivo, sans-serif";
 
 function lookupApp(id: string): {
@@ -62,6 +61,51 @@ export function AppName({
 
   const fontSize = FONT_SIZES[size];
 
+  // Large size: stack name + description vertically
+  if (size === "lg") {
+    return (
+      <div className={className} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            fontFamily: FONT_FAMILY,
+            fontWeight: 600,
+            fontSize,
+            lineHeight: 1,
+          }}
+        >
+          <img
+            src={app.icon}
+            alt={app.name}
+            width={iconSize}
+            height={iconSize}
+            style={{ borderRadius: 5, objectFit: "contain" }}
+          />
+          {app.isSlashApp && (
+            <span style={{ color: TRIAD_BLACK }}>/</span>
+          )}
+          {app.isSlashApp && " "}
+          <span style={{ color: app.color }}>{app.name}</span>
+        </span>
+        <span
+          style={{
+            color: app.color,
+            fontSize: 13,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            fontWeight: 500,
+            fontFamily: FONT_FAMILY,
+          }}
+        >
+          {app.description}
+        </span>
+      </div>
+    );
+  }
+
+  // Small and medium: inline layout
   return (
     <span
       className={className}
@@ -88,7 +132,7 @@ export function AppName({
       {app.isSlashApp && " "}
       <span style={{ color: app.color }}>{app.name}</span>
       {showDesc && (
-        <span style={{ color: DESC_COLOR, fontSize: 11, fontWeight: 400 }}>
+        <span style={{ color: app.color, fontSize: 11, fontWeight: 400 }}>
           {" "}
           — {app.description}
         </span>
@@ -106,6 +150,8 @@ interface BundleHeaderProps {
   showPrice?: boolean;
   className?: string;
 }
+
+const DESC_COLOR = "#9CA3AF";
 
 export function BundleHeader({
   bundleId,
@@ -137,7 +183,6 @@ export function BundleHeader({
         height={34}
         style={{ borderRadius: 5, objectFit: "contain" }}
       />
-      <span style={{ color: TRIAD_BLACK }}>/</span>
       <span style={{ color: bundle.color }}>{bundle.name}</span>
       <span style={{ color: DESC_COLOR, fontSize: 11, fontWeight: 400 }}>
         — BUNDLE — {appCount} apps

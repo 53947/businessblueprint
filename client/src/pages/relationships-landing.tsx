@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Users, Building2, Target, BarChart3, Kanban, Clock, Zap } from "lucide-react";
+import { Check, Users, Building2, Target, BarChart3, Kanban, Clock, Zap, ArrowRight } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AppName } from "@/components/app-name";
@@ -10,28 +10,28 @@ export default function RelationshipsLanding() {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="bg-white py-20 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <AppName appId="connect" size="lg" iconSize={64} />
+              <AppName appId="connect" size="lg" iconSize={36} />
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
               Your Complete CRM Command Center
             </h2>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Manage contacts, companies, deals, and tasks in one powerful platform. 
+              Manage contacts, companies, deals, and tasks in one powerful platform.
               Built for businesses that demand complete control over their customer relationships.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white font-bold"
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
-                  const event = new CustomEvent('addToCart', { 
+                  const event = new CustomEvent('addToCart', {
                     detail: { sku: 'relationships-addon', name: '/ connect', price: CONNECT_CRM.tiers[1].price, type: 'addon' }
                   });
                   window.dispatchEvent(event);
@@ -40,8 +40,8 @@ export default function RelationshipsLanding() {
               >
                 Add to Cart - $29/mo
               </Button>
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity"
                 style={{ backgroundColor: '#008060', color: '#fff' }}
                 asChild
@@ -49,9 +49,9 @@ export default function RelationshipsLanding() {
               >
                 <a href="/connect/dashboard">Open Dashboard</a>
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
+              <Button
+                size="lg"
+                variant="outline"
                 className="text-lg px-8 py-6 shadow-md hover:bg-blue-50 transition-colors"
                 style={{ borderColor: '#008060', color: '#008060' }}
                 asChild
@@ -69,11 +69,11 @@ export default function RelationshipsLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#008060' }}>FREE</div>
+              <div className="text-4xl font-bold text-white">FREE</div>
               <span className="text-white text-xl">Starter Plan</span>
-              <span className="text-gray-400 text-2xl">|</span>
+              <span className="text-white text-2xl">|</span>
               <div className="text-4xl font-bold text-white">$29/mo</div>
-              <span className="text-white text-xl">Performance Plan</span>
+              <span className="text-white text-xl">Unlimited Plan</span>
             </div>
             <p className="text-gray-300 text-sm">
               Start free with up to 250 contacts. Scale to unlimited with Performance.
@@ -90,7 +90,7 @@ export default function RelationshipsLanding() {
               Everything You Need to Manage Relationships
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              A complete CRM solution designed for growing businesses. Track contacts, close deals, 
+              A complete CRM solution designed for growing businesses. Track contacts, close deals,
               and build lasting customer relationships.
             </p>
           </div>
@@ -104,7 +104,7 @@ export default function RelationshipsLanding() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Contact Management</h3>
                   <p className="text-gray-600">
-                    Store and organize all your contacts with custom fields, tags, and lifecycle stages. 
+                    Store and organize all your contacts with custom fields, tags, and lifecycle stages.
                     Import from CSV or add manually.
                   </p>
                 </div>
@@ -119,7 +119,7 @@ export default function RelationshipsLanding() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Company Profiles</h3>
                   <p className="text-gray-600">
-                    Link contacts to companies. Track company size, industry, and revenue potential 
+                    Link contacts to companies. Track company size, industry, and revenue potential
                     for better B2B relationship management.
                   </p>
                 </div>
@@ -134,7 +134,7 @@ export default function RelationshipsLanding() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Deal Pipeline</h3>
                   <p className="text-gray-600">
-                    Visualize your sales pipeline with customizable stages. Track deal values, 
+                    Visualize your sales pipeline with customizable stages. Track deal values,
                     close dates, and probability to forecast revenue.
                   </p>
                 </div>
@@ -211,8 +211,78 @@ export default function RelationshipsLanding() {
         </div>
       </section>
 
-      {/* Comparison Section */}
+      {/* The Hub Every App Flows Through */}
       <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              The Hub Every App Flows Through
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Every app in Business Blueprint feeds data into /connect. Your contacts, conversations, reviews,
+              campaigns, and social interactions all live here — giving you one unified view of every customer relationship.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <div className="grid grid-cols-3 gap-4 items-center">
+              {/* Left column - apps flowing in */}
+              <div className="space-y-4">
+                {[
+                  { name: "/publish", desc: "Listings" },
+                  { name: "/elevate", desc: "Reviews" },
+                  { name: "/optimize", desc: "SEO" },
+                  { name: "/promote", desc: "Email" },
+                ].map((app) => (
+                  <div key={app.name} className="flex items-center gap-2 justify-end">
+                    <div className="text-right">
+                      <div className="font-bold text-gray-900 text-sm">{app.name}</div>
+                      <div className="text-xs text-gray-500">{app.desc}</div>
+                    </div>
+                    <ArrowRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Center - /connect hub */}
+              <div className="flex flex-col items-center">
+                <div
+                  className="w-32 h-32 rounded-2xl flex flex-col items-center justify-center shadow-xl border-4"
+                  style={{ backgroundColor: '#008060', borderColor: '#006B4F' }}
+                >
+                  <Users className="w-10 h-10 text-white mb-1" />
+                  <span className="text-white font-bold text-lg">/connect</span>
+                  <span className="text-green-200 text-xs">CRM Hub</span>
+                </div>
+                <p className="text-sm text-gray-500 mt-3 text-center font-medium">
+                  All data flows here
+                </p>
+              </div>
+
+              {/* Right column - apps flowing in */}
+              <div className="space-y-4">
+                {[
+                  { name: "/respond", desc: "Messaging" },
+                  { name: "/engage", desc: "Live Chat" },
+                  { name: "/post", desc: "Social" },
+                  { name: "/coach-blue", desc: "AI Coach" },
+                ].map((app) => (
+                  <div key={app.name} className="flex items-center gap-2">
+                    <ArrowRight className="w-5 h-5 text-gray-400 flex-shrink-0 rotate-180" />
+                    <div>
+                      <div className="font-bold text-gray-900 text-sm">{app.name}</div>
+                      <div className="text-xs text-gray-500">{app.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Comparison Section */}
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-8 md:p-12 border border-gray-200 shadow-xl bg-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
@@ -286,17 +356,17 @@ export default function RelationshipsLanding() {
             Start with our free Starter plan today. No credit card required.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white font-bold"
               style={{ backgroundColor: '#008060' }}
               asChild
             >
               <a href="/connect/dashboard">Start Free Today</a>
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
+            <Button
+              size="lg"
+              variant="outline"
               className="text-lg px-8 py-6 shadow-md"
               asChild
             >

@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Brain, Sparkles, TrendingUp, BarChart3, Zap, MessageSquare, Shield } from "lucide-react";
+import { Check, Brain, Sparkles, TrendingUp, BarChart3, Zap, MessageSquare, Shield, Compass, Bell, HelpCircle } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { COACH_BLUE, BUNDLE_REGISTRY } from "@/config/app-registry";
+import { AppName } from "@/components/app-name";
+import { COACH_BLUE } from "@/config/app-registry";
 
 const COACH_COLOR = COACH_BLUE.color;
 const FONT_FAMILY = "Archivo Semi Expanded, Archivo, sans-serif";
@@ -18,21 +19,8 @@ export default function AICoachPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <img
-                src={COACH_BLUE.icon}
-                alt="Coach Blue"
-                className="h-20 w-20 object-contain drop-shadow-lg rounded-xl"
-              />
-              <h1
-                className="text-4xl md:text-5xl font-bold"
-                style={{ fontFamily: FONT_FAMILY, color: COACH_COLOR }}
-              >
-                {COACH_BLUE.name}
-              </h1>
+              <AppName appId="coachblue" size="lg" iconSize={36} />
             </div>
-            <p className="text-sm font-semibold uppercase tracking-wider mb-4" style={{ color: COACH_COLOR }}>
-              {COACH_BLUE.description}
-            </p>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
               Your 24/7 AI Business Coach
             </h2>
@@ -79,40 +67,135 @@ export default function AICoachPage() {
         </div>
       </section>
 
-      {/* Loyalty Pricing */}
+      {/* Dark Band Pricing */}
       <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-6">
-            <h3 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: FONT_FAMILY }}>
-              Loyalty Pricing — The More You Use, The Less You Pay
-            </h3>
+          <div className="text-center">
+            <div className="inline-flex items-center gap-4 mb-4">
+              <div className="text-4xl font-bold text-white">$99/mo</div>
+              <span className="text-white text-2xl">|</span>
+              <span className="text-white text-xl">Free with Anchor + Compass Suites</span>
+            </div>
           </div>
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <Card className="bg-gray-800 border-gray-700 text-center">
-              <CardContent className="p-6">
-                <h4 className="text-white font-bold mb-1">Standalone</h4>
-                <p className="text-gray-400 text-sm mb-3">Without any bundle</p>
-                <div className="text-4xl font-bold" style={{ color: COACH_COLOR }}>
-                  ${COACH_BLUE.standalonePrice}<span className="text-lg text-gray-400">/mo</span>
+        </div>
+      </section>
+
+      {/* The 4 Modes of Coach Blue */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: FONT_FAMILY }}>
+              The 4 Modes of Coach Blue
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Coach Blue adapts to what you need, when you need it.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: COACH_COLOR }}>
+                    <Compass className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">Guided</h3>
+                  <p className="text-gray-600">
+                    Step-by-step setup for every app, in the right order. Coach Blue walks you through
+                    each tool so nothing gets missed and everything connects.
+                  </p>
                 </div>
               </CardContent>
             </Card>
-            <Card className="bg-gray-800 border-gray-700 text-center">
-              <CardContent className="p-6">
-                <h4 className="text-white font-bold mb-1">With 1 Bundle</h4>
-                <p className="text-gray-400 text-sm mb-3">LocalBlue or CommVerse</p>
-                <div className="text-4xl font-bold text-white">
-                  ${COACH_BLUE.withOneBundlePrice}<span className="text-lg text-gray-400">/mo</span>
+
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: COACH_COLOR }}>
+                    <TrendingUp className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">Advisory</h3>
+                  <p className="text-gray-600">
+                    Proactive insights from your app data, surfaced before you ask. Coach Blue spots
+                    trends and opportunities so you can act on them early.
+                  </p>
                 </div>
               </CardContent>
             </Card>
-            <Card className="bg-green-900 border-green-700 text-center">
-              <CardContent className="p-6">
-                <h4 className="text-white font-bold mb-1">With Both Bundles</h4>
-                <p className="text-gray-400 text-sm mb-3">LocalBlue + CommVerse</p>
-                <div className="text-4xl font-bold text-green-400">FREE</div>
+
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: COACH_COLOR }}>
+                    <HelpCircle className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">Responsive</h3>
+                  <p className="text-gray-600">
+                    Ask anything, get answers specific to your business. Coach Blue pulls from your
+                    data across every app to give context-aware guidance.
+                  </p>
+                </div>
               </CardContent>
             </Card>
+
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: COACH_COLOR }}>
+                    <Bell className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">Alert</h3>
+                  <p className="text-gray-600">
+                    Urgent flags delivered the moment something needs attention. A bad review, a missed
+                    follow-up, a listing error — Coach Blue catches it first.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Your Setup Order */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: FONT_FAMILY }}>
+              Your Setup Order
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Coach Blue guides you through each app in the right sequence. Here is the cadence it follows.
+            </p>
+          </div>
+
+          <div className="max-w-2xl mx-auto space-y-4">
+            {[
+              { num: 1, app: "/connect", desc: "Your CRM foundation, every app flows through it" },
+              { num: 2, app: "/publish", desc: "Get listed on every directory that matters" },
+              { num: 3, app: "/elevate", desc: "Start managing reviews from day one" },
+              { num: 4, app: "/optimize", desc: "Monitor your SEO health baseline" },
+              { num: 5, app: "/promote", desc: "Launch your first email campaign" },
+              { num: 6, app: "/respond", desc: "Connect your messaging channels" },
+              { num: 7, app: "/engage", desc: "Add live chat to your website" },
+              { num: 8, app: "/post", desc: "Schedule your social media content" },
+            ].map((step) => (
+              <div
+                key={step.num}
+                className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-lg"
+                  style={{ backgroundColor: COACH_COLOR }}
+                >
+                  {step.num}
+                </div>
+                <div>
+                  <span className="font-bold text-gray-900">{step.app}</span>
+                  <span className="text-gray-500 mx-2">—</span>
+                  <span className="text-gray-600">{step.desc}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -246,61 +329,8 @@ export default function AICoachPage() {
         </div>
       </section>
 
-      {/* How Pricing Works */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: `linear-gradient(to bottom right, ${COACH_COLOR}, #7C3AED)` }}>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ fontFamily: FONT_FAMILY }}>
-              How Coach Blue Pricing Works
-            </h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Check className="w-6 h-6" />
-                  Loyalty Rewards
-                </h3>
-                <p className="text-purple-100 mb-6">
-                  The more Business Blueprint tools you use, the less Coach Blue costs.
-                  With both bundles, Coach Blue is completely free — our way of rewarding loyalty.
-                </p>
-
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Check className="w-6 h-6" />
-                  No Hidden Costs
-                </h3>
-                <p className="text-purple-100">
-                  Unlimited conversations, unlimited questions, no per-message fees.
-                  Your price is your price — simple and predictable.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Check className="w-6 h-6" />
-                  Works With Everything
-                </h3>
-                <p className="text-purple-100 mb-6">
-                  Coach Blue integrates with your Digital IQ results, your{" "}
-                  <span style={{ color: BUNDLE_REGISTRY[0].color }}>/ {BUNDLE_REGISTRY[0].name}</span> apps, and your{" "}
-                  <span style={{ color: BUNDLE_REGISTRY[1].color }}>/ {BUNDLE_REGISTRY[1].name}</span> apps for context-aware coaching.
-                </p>
-
-                <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                  <Check className="w-6 h-6" />
-                  Built for Local Business
-                </h3>
-                <p className="text-purple-100">
-                  Enterprise consulting is too expensive. Generic AI chatbots lack business expertise.
-                  Coach Blue is the sweet spot — expert-level guidance at a fraction of the cost.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6" style={{ fontFamily: FONT_FAMILY }}>
             Ready to Unlock Your Business Potential?
@@ -329,9 +359,6 @@ export default function AICoachPage() {
               <a href="/pricing">View Pricing</a>
             </Button>
           </div>
-          <p className="text-sm text-gray-500 mt-6">
-            ${COACH_BLUE.standalonePrice}/mo standalone · ${COACH_BLUE.withOneBundlePrice}/mo with 1 bundle · FREE with both bundles
-          </p>
         </div>
       </section>
 

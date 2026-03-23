@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Target, Search, FileText, Wrench, PenTool, Link2, MapPin, Code2, Sparkles, BarChart3, ArrowRight } from "lucide-react";
+import { Check, Target, Search, FileText, Wrench, PenTool, MapPin, Sparkles, BarChart3, ArrowRight, TrendingDown, Bell, ArrowUp, ArrowDown } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AppName } from "@/components/app-name";
@@ -8,22 +8,9 @@ import { getAppById, getBundlePrice } from "@/config/app-registry";
 
 const OPTIMIZE_COLOR = '#374151';
 
-const modules = [
-  { name: 'SEO Health Dashboard', icon: Target, status: 'Active', desc: 'Overall SEO score and health monitoring' },
-  { name: 'Keyword Intelligence', icon: Search, status: 'Active', desc: 'Keyword research and rank tracking' },
-  { name: 'On-Page SEO Analyzer', icon: FileText, status: 'Active', desc: 'Page-by-page SEO analysis and suggestions' },
-  { name: 'Technical SEO Monitor', icon: Wrench, status: 'Active', desc: 'Technical issues detection and fixes' },
-  { name: 'Content Optimizer', icon: PenTool, status: 'Active', desc: 'AI content briefs and optimization' },
-  { name: 'Backlink Monitor', icon: Link2, status: 'Coming Soon', desc: 'Track and analyze your backlink profile' },
-  { name: 'Local SEO Optimizer', icon: MapPin, status: 'Coming Soon', desc: 'Local search optimization tools' },
-  { name: 'Schema Markup Generator', icon: Code2, status: 'Coming Soon', desc: 'Structured data creation wizard' },
-  { name: 'AI SEO Action Plan', icon: Sparkles, status: 'Active', desc: 'AI-prioritized optimization tasks' },
-  { name: 'Reporting & Insights', icon: BarChart3, status: 'Coming Soon', desc: 'Performance reports and analytics' },
-];
-
 export default function OptimizeLanding() {
   const app = getAppById("optimize")!;
-  const bundlePrice = getBundlePrice("localblue");
+  const bundlePrice = getBundlePrice("anchor");
 
   return (
     <div className="min-h-screen bg-white">
@@ -34,12 +21,12 @@ export default function OptimizeLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <AppName appId="optimize" size="lg" iconSize={64} />
+              <AppName appId="optimize" size="lg" iconSize={36} />
             </div>
-            <p className="text-xl md:text-2xl font-semibold text-gray-700 mb-4">
-              Your Complete SEO Command Center
-            </p>
-            <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+              Know Exactly Where You Stand on Google
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
               Monitor your SEO health, track keyword rankings, analyze pages, fix technical issues,
               and get AI-powered optimization recommendations — all in one dashboard.
             </p>
@@ -56,7 +43,7 @@ export default function OptimizeLanding() {
                 }}
                 data-testid="button-add-to-cart"
               >
-                Add to Cart - ${app.standalonePrice}/mo
+                Add to Cart — ${app.standalonePrice}/mo
               </Button>
               <Button
                 size="lg"
@@ -83,20 +70,135 @@ export default function OptimizeLanding() {
       </section>
 
       {/* Pricing Callout */}
-      <section className="py-8 bg-gradient-to-r from-gray-900 to-gray-800">
+      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-6">
-              <div>
-                <span className="text-3xl font-extrabold" style={{ color: OPTIMIZE_COLOR }}>${app.standalonePrice}<span className="text-lg font-normal text-gray-300">/mo</span></span>
-                <p className="text-gray-300 text-sm">standalone</p>
-              </div>
-              <span className="text-gray-500 text-2xl">|</span>
-              <div>
-                <span className="text-3xl font-extrabold text-white">${bundlePrice}<span className="text-lg font-normal text-gray-300">/mo</span></span>
-                <p className="text-gray-300 text-sm">LocalBlue bundle</p>
-              </div>
+            <div className="inline-flex items-center gap-4 mb-4">
+              <div className="text-4xl font-bold text-white">${app.standalonePrice}/mo</div>
+              <span className="text-white text-xl">standalone</span>
+              <span className="text-white text-2xl">|</span>
+              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
+              <span className="text-white text-xl">Anchor Suite</span>
             </div>
+            <p className="text-white text-sm">
+              / publish + / elevate + / optimize = Complete local presence + SEO management
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Your SEO Health Score */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Your SEO Health Score
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Four categories scored independently so you know exactly where to focus your effort.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6 text-center">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: OPTIMIZE_COLOR }}>
+                  <Wrench className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Technical SEO</h3>
+                <p className="text-gray-600 text-sm">
+                  Page speed, mobile usability, SSL, broken links, crawl errors, and structured data validation.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6 text-center">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: OPTIMIZE_COLOR }}>
+                  <FileText className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">On-Page SEO</h3>
+                <p className="text-gray-600 text-sm">
+                  Title tags, meta descriptions, heading structure, keyword density, and internal linking.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6 text-center">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: OPTIMIZE_COLOR }}>
+                  <MapPin className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Local SEO</h3>
+                <p className="text-gray-600 text-sm">
+                  NAP consistency, Google Business Profile optimization, local citations, and geo-targeted content.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6 text-center">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: OPTIMIZE_COLOR }}>
+                  <PenTool className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Content</h3>
+                <p className="text-gray-600 text-sm">
+                  Content quality, word count, readability, keyword targeting, freshness, and topical authority.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Keyword Rankings That Matter */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Keyword Rankings That Matter
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Track the local-intent keywords your customers actually search for — not vanity metrics.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6 text-center">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: OPTIMIZE_COLOR }}>
+                  <Search className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Local-Intent Keywords</h3>
+                <p className="text-gray-600 text-sm">
+                  Focus on "near me" searches, city-specific terms, and service-area keywords that drive real foot traffic and calls.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6 text-center">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: OPTIMIZE_COLOR }}>
+                  <BarChart3 className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Weekly Rank Movement</h3>
+                <p className="text-gray-600 text-sm">
+                  See exactly how your positions change week over week. Identify trends and measure the impact of your optimizations.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6 text-center">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: OPTIMIZE_COLOR }}>
+                  <Bell className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Drop Alerts</h3>
+                <p className="text-gray-600 text-sm">
+                  Get notified immediately when a tracked keyword drops in position so you can investigate and respond fast.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -163,33 +265,8 @@ export default function OptimizeLanding() {
         </div>
       </section>
 
-      {/* Module Preview Grid */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">10 Modules. One Dashboard.</h2>
-          <p className="text-gray-600 text-center mb-10 max-w-2xl mx-auto">
-            Every aspect of SEO covered — from technical health to content strategy.
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {modules.map((mod, i) => (
-              <Card key={i} className="border border-gray-200 bg-white hover:shadow-md transition-shadow">
-                <CardContent className="p-4 text-center">
-                  <mod.icon className="w-8 h-8 mx-auto mb-2" style={{ color: OPTIMIZE_COLOR }} />
-                  <h4 className="text-sm font-bold text-gray-900 mb-1">{mod.name}</h4>
-                  <span className={`inline-block text-xs px-2 py-0.5 rounded-full font-medium ${
-                    mod.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
-                  }`}>
-                    {mod.status}
-                  </span>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Why Choose */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-10 text-center">Why Choose / optimize</h2>
           <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
@@ -221,7 +298,7 @@ export default function OptimizeLanding() {
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3 mb-3">
                   <span className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                    <span className="text-red-500 text-xs font-bold">✕</span>
+                    <span className="text-red-500 text-xs font-bold">&#x2715;</span>
                   </span>
                   <span className="text-gray-500">{item}</span>
                 </div>
@@ -232,7 +309,7 @@ export default function OptimizeLanding() {
       </section>
 
       {/* Integration */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Works With Your Stack</h2>
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
@@ -277,7 +354,7 @@ export default function OptimizeLanding() {
               }}
               data-testid="button-cta-add-to-cart"
             >
-              Add to Cart - ${app.standalonePrice}/mo
+              Add to Cart — ${app.standalonePrice}/mo
             </Button>
             <Button
               size="lg"

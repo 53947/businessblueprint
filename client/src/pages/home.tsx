@@ -139,7 +139,7 @@ export default function Home() {
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
                         <span>Step 3 —</span>
-                        <span style={{ color: '#0000FF', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ localblue</span>
+                        <span style={{ color: '#0000FF', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ anchor</span>
                       </div>
                       <p className="text-xs text-gray-600">
                         Listings management + reputation building for stronger local visibility. ($99/mo bundle — SEO, listings, reviews)
@@ -166,7 +166,7 @@ export default function Home() {
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
                         <span>Step 5 —</span>
-                        <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ commverse</span>
+                        <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ compass</span>
                       </div>
                       <p className="text-xs text-gray-600">
                         Complete communication suite ($99/mo bundle)
@@ -208,7 +208,7 @@ export default function Home() {
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
                         <span>Step 3 —</span>
-                        <span style={{ color: '#0000FF', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ localblue</span>
+                        <span style={{ color: '#0000FF', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ anchor</span>
                       </div>
                       <p className="text-xs text-gray-600">
                         Boost local visibility & reviews.
@@ -235,7 +235,7 @@ export default function Home() {
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
                         <span>Step 5 —</span>
-                        <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ commverse</span>
+                        <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ compass</span>
                       </div>
                       <p className="text-xs text-gray-600">
                         Messaging, chat, email, content.
@@ -316,15 +316,15 @@ export default function Home() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-purple-200 hover:shadow-xl transition-all" data-testid="card-commverse">
+            <Card className="border-2 border-purple-200 hover:shadow-xl transition-all" data-testid="card-compass">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
                   <CommverseIcon size={64} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center justify-center gap-2">
-                  <span style={{ color: '#0000FF', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}>/ localblue</span>
+                  <span style={{ color: '#0000FF', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}>/ anchor</span>
                   {" + "}
-                  <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}>/ commverse</span>
+                  <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}>/ compass</span>
                   {" Apps"}
                 </h3>
                 <p className="text-gray-600 text-sm">
@@ -380,7 +380,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CommVerse Bundle - Featured Section */}
+      {/* Compass Suite Bundle - Featured Section */}
       <section className="bg-gradient-to-br from-purple-50 via-blue-50 to-purple-50 py-20 border-y border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -388,7 +388,7 @@ export default function Home() {
               💬 COMPLETE COMMUNICATIONS SUITE
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 flex items-center justify-center gap-3 flex-wrap">
-              Talk to the Universe with <BundleHeader bundleId="commverse" />
+              Talk to the Universe with <BundleHeader bundleId="compass" />
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Get all 4 communication apps together and save $57/month. A complete suite to connect with your customers anywhere, anytime.
@@ -400,7 +400,7 @@ export default function Home() {
             <div className="space-y-4">
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Individual Apps ($39/mo each)</h3>
 
-              {getAppsByBundle("commverse").map((app) => (
+              {getAppsByBundle("compass").map((app) => (
                 <Link key={app.id} href={app.landingRoute}>
                   <Card className="border-2 border-purple-200 hover:shadow-lg transition-all cursor-pointer" data-testid={`card-${app.id}-app`}>
                     <CardContent className="p-4 flex items-center gap-4">
@@ -425,14 +425,14 @@ export default function Home() {
 
             {/* Bundle Offer */}
             <div>
-              <Card className="border-4 shadow-2xl bg-gradient-to-br from-white to-orange-50" style={{ borderColor: '#F97316' }} data-testid="card-commverse-bundle">
+              <Card className="border-4 shadow-2xl bg-gradient-to-br from-white to-orange-50" style={{ borderColor: '#F97316' }} data-testid="card-compass-bundle">
                 <CardContent className="p-8">
                   <div className="text-center mb-6">
                     <div className="inline-block bg-green-500 text-white px-4 py-2 rounded-full text-sm font-bold mb-4 animate-pulse">
                       SAVE $57/MONTH
                     </div>
                     <div className="flex items-center justify-center mb-4">
-                      <BundleHeader bundleId="commverse" />
+                      <BundleHeader bundleId="compass" />
                     </div>
                     <p className="text-gray-600 mb-6">All 4 communication apps included</p>
                     <p className="text-sm text-gray-500">/ promote + / respond + / engage + / post</p>
@@ -449,7 +449,7 @@ export default function Home() {
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center text-sm">
                       <span className="text-green-500 mr-2">✓</span>
-                      <span className="text-gray-700">All 4 commverse apps</span>
+                      <span className="text-gray-700">All 4 Compass Suite apps</span>
                     </div>
                     <div className="flex items-center text-sm">
                       <span className="text-green-500 mr-2">✓</span>
@@ -465,8 +465,8 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <Button className="w-full border-2 text-white transition-all text-lg py-6 flex items-center justify-center gap-2" style={{ borderColor: '#F97316', backgroundColor: '#F97316' }} data-testid="button-get-commverse-bundle">
-                    Get CommVerse Bundle
+                  <Button className="w-full border-2 text-white transition-all text-lg py-6 flex items-center justify-center gap-2" style={{ borderColor: '#F97316', backgroundColor: '#F97316' }} data-testid="button-get-compass-bundle">
+                    Get Compass Suite
                   </Button>
                   <p className="text-center text-xs text-gray-500 mt-3">
                     Prescribed based on your business needs
@@ -478,7 +478,7 @@ export default function Home() {
 
           <div className="text-center">
             <p className="text-lg text-gray-700 italic flex items-center justify-center gap-2 flex-wrap">
-              "A complete communications suite that lets you talk to the universe with <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600, fontStyle: 'normal' }}>/ commverse</span>"
+              "A complete communications suite that lets you talk to the universe with <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600, fontStyle: 'normal' }}>/ compass</span>"
             </p>
           </div>
         </div>
@@ -495,7 +495,7 @@ export default function Home() {
               Three Plans. <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>One Prescription</span>.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto flex items-center justify-center gap-2 flex-wrap">
-              Choose your base plan based on business size. <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ commverse</span> and <span style={{ color: '#0000FF', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ localblue</span> apps are prescribed separately and available in our marketplace.
+              Choose your base plan based on business size. <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ compass</span> and <span style={{ color: '#0000FF', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ anchor</span> apps are prescribed separately and available in our marketplace.
             </p>
           </div>
 
@@ -637,13 +637,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-block bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-              🚀 COMMVERSE APPS
+              🚀 COMPASS SUITE APPS
             </div>
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
               Not Just Apps. <span className="text-shadow-strong" style={{ color: '#FF6B00' }}>Prescribed Paths</span>.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 flex items-center justify-center gap-2 flex-wrap">
-              Based on your Digital IQ, we prescribe which <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ commverse</span> apps you need AND the specific paths within each app. Available a la carte or as bundles in our marketplace.
+              Based on your Digital IQ, we prescribe which <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ compass</span> apps you need AND the specific paths within each app. Available a la carte or as bundles in our marketplace.
             </p>
             <div className="bg-orange-50 border-2 border-orange-200 rounded-xl p-6 max-w-2xl mx-auto">
               <p className="text-orange-900 font-semibold">
@@ -746,7 +746,7 @@ export default function Home() {
             <p className="text-gray-600 mb-6">
               Your prescription will tell you which apps and which paths are right for YOUR business
             </p>
-            <Link href="/commverse">
+            <Link href="/compass">
               <Button size="lg" className="border-2 border-purple-600 text-purple-600 bg-transparent hover:bg-purple-600 hover:text-white transition-all" data-testid="button-explore-applications">
                 Explore All Applications
               </Button>

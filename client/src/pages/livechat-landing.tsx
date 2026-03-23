@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, MessageCircle, Clock, Users, BarChart3, Globe, Zap } from "lucide-react";
+import { Check, MessageCircle, Clock, Users, BarChart3, Globe, Zap, Palette, MessageSquare, Bot, Settings } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AppName } from "@/components/app-name";
@@ -8,8 +8,8 @@ import { getAppById, getAppsByBundle, getBundlePrice } from "@/config/app-regist
 
 export default function LivechatLanding() {
   const app = getAppById("engage")!;
-  const bundlePrice = getBundlePrice("commverse");
-  const bundleApps = getAppsByBundle("commverse");
+  const bundlePrice = getBundlePrice("compass");
+  const bundleApps = getAppsByBundle("compass");
 
   return (
     <div className="min-h-screen bg-white">
@@ -20,66 +20,66 @@ export default function LivechatLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <AppName appId="engage" size="lg" iconSize={64} />
+              <AppName appId="engage" size="lg" iconSize={36} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Turn Website Visitors<br />Into Conversations.
+              Turn Website Visitors<br />Into Conversations
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              The live chat widget that feels natural, remembers everything, and integrates perfectly 
+              The live chat widget that feels natural, remembers everything, and integrates perfectly
               with your / respond. Because every visitor is a potential customer.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white font-bold"
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
-                  const event = new CustomEvent('addToCart', { 
+                  const event = new CustomEvent('addToCart', {
                     detail: { sku: 'livechat-addon', name: '/ engage', price: app.standalonePrice, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
                 data-testid="button-add-to-cart"
               >
-                Add to Cart
+                Add to Cart — $29/mo
               </Button>
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white"
-                style={{ backgroundColor: '#8000FF' }}
+                style={{ backgroundColor: '#660099' }}
                 asChild
                 data-testid="button-get-started"
               >
                 <a href="/engage-demo">Get Started with / engage</a>
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="text-lg px-8 py-6 shadow-md hover:bg-[#8000FF]/10 transition-colors"
-                style={{ borderColor: '#8000FF', color: '#8000FF' }}
+              <Button
+                size="lg"
+                variant="outline"
+                className="text-lg px-8 py-6 shadow-md hover:bg-[#660099]/10 transition-colors"
+                style={{ borderColor: '#660099', color: '#660099' }}
                 asChild
                 data-testid="button-view-pricing"
               >
-                <a href="/commverse-pricing">View Pricing</a>
+                <a href="/compass-pricing">View All Pricing</a>
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Pricing Callout */}
+      {/* Pricing Callout — Dark Band */}
       <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#8000FF' }}>${app.standalonePrice}/mo</div>
+              <div className="text-4xl font-bold text-white">${app.standalonePrice}/mo</div>
               <span className="text-white text-xl">standalone</span>
-              <span className="text-gray-400 text-2xl">|</span>
+              <span className="text-white text-2xl">|</span>
               <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
-              <span className="text-white text-xl">for all {bundleApps.length} CommVerse apps</span>
+              <span className="text-white text-xl">Compass Suite</span>
             </div>
-            <p className="text-gray-300 text-sm">
+            <p className="text-white text-sm">
               / promote + / respond + / engage + / post = Complete communication ecosystem
             </p>
           </div>
@@ -94,7 +94,7 @@ export default function LivechatLanding() {
               Why / engage Was Built
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Standalone chat widgets are disconnected islands. They don't know about your customer data, 
+              Standalone chat widgets are disconnected islands. They don't know about your customer data,
               marketing campaigns, or business insights. / engage changes that.
             </p>
           </div>
@@ -103,7 +103,7 @@ export default function LivechatLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#8000FF' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#660099' }}>
                     <MessageCircle className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-instant-title">Instant Engagement</h3>
@@ -117,7 +117,7 @@ export default function LivechatLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#8000FF' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#660099' }}>
                     <Clock className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-persistence-title">Session Persistence</h3>
@@ -131,7 +131,7 @@ export default function LivechatLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#8000FF' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#660099' }}>
                     <Users className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-unified-title">Unified in / respond</h3>
@@ -155,7 +155,7 @@ export default function LivechatLanding() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#8000FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#660099' }}>
                   <Zap className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -169,7 +169,7 @@ export default function LivechatLanding() {
 
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#8000FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#660099' }}>
                   <Globe className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -183,7 +183,7 @@ export default function LivechatLanding() {
 
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#8000FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#660099' }}>
                   <BarChart3 className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -197,7 +197,7 @@ export default function LivechatLanding() {
 
             <div className="flex gap-4">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#8000FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#660099' }}>
                   <Check className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -212,10 +212,131 @@ export default function LivechatLanding() {
         </div>
       </section>
 
+      {/* Three Steps to Live */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Three Steps to Live
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Get your live chat widget running in under five minutes. No developer required.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold" style={{ backgroundColor: '#660099' }}>
+                1
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Customize Your Widget</h3>
+              <p className="text-gray-600">
+                Pick your brand colors, set your greeting message, and configure offline behavior.
+                Preview it in real time before it goes live.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold" style={{ backgroundColor: '#660099' }}>
+                2
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Copy One Line of Code</h3>
+              <p className="text-gray-600">
+                A single script tag is all it takes. Paste it into your website header and the widget
+                appears instantly on every page.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold" style={{ backgroundColor: '#660099' }}>
+                3
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Start Receiving Chats</h3>
+              <p className="text-gray-600">
+                Incoming chats appear in / respond immediately. Reply from desktop or mobile.
+                No separate dashboard needed.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What You Can Customize */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              What You Can Customize
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Make the chat widget yours. Every detail can be tailored to match your brand and workflow.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#660099' }}>
+                    <Palette className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-2 text-gray-900">Widget Color</h3>
+                  <p className="text-gray-600 text-sm">
+                    Match your brand perfectly. Pick any color and the entire widget adapts — buttons, headers, and accents.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#660099' }}>
+                    <MessageSquare className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-2 text-gray-900">Greeting Message</h3>
+                  <p className="text-gray-600 text-sm">
+                    Set the first thing visitors see. A warm welcome that invites conversation and sets expectations.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#660099' }}>
+                    <Clock className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-2 text-gray-900">Offline Message</h3>
+                  <p className="text-gray-600 text-sm">
+                    When you're away, visitors can still leave a message. Customize what they see and collect their contact info.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#660099' }}>
+                    <Bot className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-lg font-bold mb-2 text-gray-900">Auto-Responses</h3>
+                  <p className="text-gray-600 text-sm">
+                    Set automatic replies for common questions like hours, location, and pricing. Instant answers, no wait.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* The Point of Difference */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #8000FF, #A020F0)' }}>
+          <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #660099, #8B00CC)' }}>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               What Makes / engage Different?
             </h2>
@@ -226,7 +347,7 @@ export default function LivechatLanding() {
                   Works Autonomously & Together
                 </h3>
                 <p className="text-purple-50 mb-6">
-                  / engage functions perfectly on its own, but gains superpowers when integrated with / promote and / respond—
+                  / engage functions perfectly on its own, but gains superpowers when integrated with / promote and / respond —
                   connecting your Digital Blueprint, customer insights, and marketing automation for smarter conversations.
                 </p>
 
@@ -235,8 +356,8 @@ export default function LivechatLanding() {
                   Conversation Continuity
                 </h3>
                 <p className="text-purple-50">
-                  Visitors can start on live chat, continue via email, and follow up on WhatsApp. 
-                  One conversation thread, multiple channels. That's the Commverse integration.
+                  Visitors can start on live chat, continue via email, and follow up on WhatsApp.
+                  One conversation thread, multiple channels. That's the Compass Suite integration.
                 </p>
               </div>
 
@@ -246,7 +367,7 @@ export default function LivechatLanding() {
                   Built for Local Business Scale
                 </h3>
                 <p className="text-purple-50 mb-6">
-                  Enterprise chat tools are overkill. Free tools lack features and reliability. 
+                  Enterprise chat tools are overkill. Free tools lack features and reliability.
                   / engage hits the sweet spot for growing local businesses.
                 </p>
 
@@ -255,7 +376,7 @@ export default function LivechatLanding() {
                   No Per-Chat or Per-Agent Fees
                 </h3>
                 <p className="text-purple-50">
-                  Standalone at ${app.standalonePrice}/mo or bundled in CommVerse for ${bundlePrice}/mo. Unlimited chats, unlimited agents,
+                  Standalone at ${app.standalonePrice}/mo or bundled in Compass Suite for ${bundlePrice}/mo. Unlimited chats, unlimited agents,
                   unlimited websites. Transparent, predictable pricing.
                 </p>
               </div>
@@ -274,18 +395,20 @@ export default function LivechatLanding() {
             Join businesses turning website visitors into conversations and conversations into customers.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-teal-600 hover:bg-teal-700 text-lg px-8 py-6"
+            <Button
+              size="lg"
+              className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white"
+              style={{ backgroundColor: '#660099' }}
               asChild
               data-testid="button-start-free"
             >
               <a href="/assessment">Start Your Digital Assessment</a>
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
+            <Button
+              size="lg"
+              variant="outline"
               className="text-lg px-8 py-6"
+              style={{ borderColor: '#660099', color: '#660099' }}
               asChild
               data-testid="button-try-demo"
             >

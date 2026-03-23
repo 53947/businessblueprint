@@ -26,10 +26,10 @@ export function PricingLayout({ variant }: PricingLayoutProps) {
   const pad = isPage ? "p-5" : "p-3";
   const padInner = isPage ? "p-4" : "p-2";
 
-  const localblueBundle = BUNDLE_REGISTRY.find((b) => b.id === "localblue")!;
-  const commverseBundle = BUNDLE_REGISTRY.find((b) => b.id === "commverse")!;
-  const localblueApps = getAppsByBundle("localblue");
-  const commverseApps = getAppsByBundle("commverse");
+  const anchorBundle = BUNDLE_REGISTRY.find((b) => b.id === "anchor")!;
+  const compassBundle = BUNDLE_REGISTRY.find((b) => b.id === "compass")!;
+  const anchorApps = getAppsByBundle("anchor");
+  const compassApps = getAppsByBundle("compass");
 
   // Compute totals
   const allStandaloneTotal =
@@ -38,8 +38,8 @@ export function PricingLayout({ variant }: PricingLayoutProps) {
     COACH_BLUE.standalonePrice;
 
   const bothBundlesTotal =
-    localblueBundle.price +
-    commverseBundle.price +
+    anchorBundle.price +
+    compassBundle.price +
     CONNECT_CRM.tiers[1].price +
     COACH_BLUE.withBothBundlesPrice;
 
@@ -141,19 +141,19 @@ export function PricingLayout({ variant }: PricingLayoutProps) {
         </div>
       </div>
 
-      {/* ─── LOCALBLUE BUNDLE ─── */}
+      {/* ─── ANCHOR SUITE BUNDLE ─── */}
       <BundleSection
-        bundle={localblueBundle}
-        apps={localblueApps}
+        bundle={anchorBundle}
+        apps={anchorApps}
         columns={3}
         pad={pad}
         padInner={padInner}
       />
 
-      {/* ─── COMMVERSE BUNDLE ─── */}
+      {/* ─── COMPASS SUITE BUNDLE ─── */}
       <BundleSection
-        bundle={commverseBundle}
-        apps={commverseApps}
+        bundle={compassBundle}
+        apps={compassApps}
         columns={4}
         pad={pad}
         padInner={padInner}
@@ -198,7 +198,7 @@ export function PricingLayout({ variant }: PricingLayoutProps) {
           </p>
           <p>
             <span className="text-blue-600">→</span> $
-            {localblueBundle.price} bundles — clean, round, ~37% savings
+            {anchorBundle.price} bundles — clean, round, ~37% savings
           </p>
         </div>
       </div>
@@ -206,7 +206,7 @@ export function PricingLayout({ variant }: PricingLayoutProps) {
   );
 }
 
-// ─── Bundle Section (reused for LocalBlue + CommVerse) ───
+// ─── Bundle Section (reused for Anchor Suite + Compass Suite) ───
 
 function BundleSection({
   bundle,

@@ -12,8 +12,8 @@ import postIcon from "@assets/new logos and wordmarks/: post icon.png";
 import connectIcon from "@assets/new logos and wordmarks/: connect icon.png";
 
 // ── Bundle Icons ──
-import localblueIcon from "@assets/new logos and wordmarks/localblue Brandmark icon.png";
-import commverseIcon from "@assets/new logos and wordmarks/: commverse icon.png";
+import anchorIcon from "@assets/new logos and wordmarks/localblue Brandmark icon.png";
+import compassIcon from "@assets/new logos and wordmarks/: commverse icon.png";
 
 // ── Other Product Icons ──
 import coachBlueIcon from "@assets/new logos and wordmarks/4step-AI Business Coach step- Coach Blue.png";
@@ -41,7 +41,7 @@ export interface SlashApp {
   dashboardRoute: string;
   standalonePrice: number;
   bundlePrice: number;
-  bundleId: "localblue" | "commverse";
+  bundleId: "anchor" | "compass";
   isSlashApp: true;
 }
 
@@ -109,110 +109,110 @@ export const APP_REGISTRY: SlashApp[] = [
     id: "publish",
     name: "publish",
     color: "#064A6C",
-    description: "Directory Sync",
+    description: "Business Listings Manager",
     icon: publishIcon,
     landingRoute: "/publish-landing",
     dashboardRoute: "/publish-app",
-    standalonePrice: 49,
-    bundlePrice: 39,
-    bundleId: "localblue",
+    standalonePrice: 29,
+    bundlePrice: 24.75,
+    bundleId: "anchor",
     isSlashApp: true,
   },
   {
     id: "elevate",
     name: "elevate",
     color: "#E9B307",
-    description: "Review Mgmt",
+    description: "Reputation & Reviews Manager",
     icon: elevateIcon,
     landingRoute: "/elevate-landing",
     dashboardRoute: "/elevate-app",
-    standalonePrice: 49,
-    bundlePrice: 39,
-    bundleId: "localblue",
+    standalonePrice: 29,
+    bundlePrice: 24.75,
+    bundleId: "anchor",
     isSlashApp: true,
   },
   {
     id: "optimize",
     name: "optimize",
     color: "#374151",
-    description: "SEO Tools",
+    description: "SEO Health Monitor",
     icon: optimizeIcon,
     landingRoute: "/optimize",
     dashboardRoute: "/optimize/dashboard",
-    standalonePrice: 59,
-    bundlePrice: 39,
-    bundleId: "localblue",
+    standalonePrice: 29,
+    bundlePrice: 24.75,
+    bundleId: "anchor",
     isSlashApp: true,
   },
   {
     id: "promote",
     name: "promote",
     color: "#1844A6",
-    description: "Email & SMS",
+    description: "Email Campaign Manager",
     icon: promoteIcon,
     landingRoute: "/promote",
     dashboardRoute: "/promote-app",
-    standalonePrice: 39,
-    bundlePrice: 29,
-    bundleId: "commverse",
+    standalonePrice: 29,
+    bundlePrice: 24.75,
+    bundleId: "compass",
     isSlashApp: true,
   },
   {
     id: "respond",
     name: "respond",
-    color: "#6EA6FF",
-    description: "Unified Inbox",
+    color: "#001882",
+    description: "Unified Multi-Channel Inbox",
     icon: respondIcon,
     landingRoute: "/respond",
     dashboardRoute: "/respond-app",
-    standalonePrice: 39,
-    bundlePrice: 29,
-    bundleId: "commverse",
+    standalonePrice: 29,
+    bundlePrice: 24.75,
+    bundleId: "compass",
     isSlashApp: true,
   },
   {
     id: "engage",
     name: "engage",
-    color: "#8000FF",
-    description: "Live Chat",
+    color: "#660099",
+    description: "Live Chat Widget",
     icon: engageIcon,
     landingRoute: "/engage",
     dashboardRoute: "/engage/dashboard",
-    standalonePrice: 39,
-    bundlePrice: 29,
-    bundleId: "commverse",
+    standalonePrice: 29,
+    bundlePrice: 24.75,
+    bundleId: "compass",
     isSlashApp: true,
   },
   {
     id: "post",
     name: "post",
     color: "#FF44CC",
-    description: "Social Media",
+    description: "Social Media Manager",
     icon: postIcon,
     landingRoute: "/post-landing",
     dashboardRoute: "/post",
-    standalonePrice: 39,
-    bundlePrice: 29,
-    bundleId: "commverse",
+    standalonePrice: 29,
+    bundlePrice: 24.75,
+    bundleId: "compass",
     isSlashApp: true,
   },
 ];
 
 export const BUNDLE_REGISTRY: BundleConfig[] = [
   {
-    id: "localblue",
-    name: "localblue",
+    id: "anchor",
+    name: "Anchor Suite",
     color: "#0000FF",
-    icon: localblueIcon,
+    icon: anchorIcon,
     price: 99,
     appIds: ["publish", "elevate", "optimize"],
     description: "Local SEO & Reputation Bundle",
   },
   {
-    id: "commverse",
-    name: "commverse",
+    id: "compass",
+    name: "Compass Suite",
     color: "#F97316",
-    icon: commverseIcon,
+    icon: compassIcon,
     price: 99,
     appIds: ["promote", "respond", "engage", "post"],
     description: "Communication & Marketing Bundle",
@@ -226,22 +226,22 @@ export const CONNECT_CRM: ConnectConfig = {
   icon: connectIcon,
   isSlashApp: true,
   tiers: [
-    { name: "Starter", price: 0, contactLimit: 100 },
+    { name: "Starter", price: 0, contactLimit: 250 },
     { name: "Unlimited", price: 29, contactLimit: null },
   ],
-  description: "CRM & Relationships",
+  description: "Customer Relationship Management Tool",
 };
 
 export const COACH_BLUE: CoachBlueConfig = {
   id: "coachblue",
   name: "Coach Blue",
-  color: "#A855F7",
+  color: "#0000FF",
   icon: coachBlueIcon,
   isSlashApp: false,
   standalonePrice: 99,
   withOneBundlePrice: 59,
   withBothBundlesPrice: 0,
-  description: "AI Business Coach",
+  description: "Personal AI Business Coach",
 };
 
 export const DIGITAL_IQ: DigitalIQConfig = {
@@ -252,15 +252,15 @@ export const DIGITAL_IQ: DigitalIQConfig = {
   isSlashApp: false,
   route: "/assessment",
   price: 0,
-  description: "Free Digital Assessment",
+  description: "Digital IQ Assessment Tool",
 };
 
 export const HOW_IT_WORKS_STEPS: HowItWorksStep[] = [
   { step: 1, title: "Assessment", icon: step1Icon },
   { step: 2, title: "Prescription", icon: step2Icon },
-  { step: 3, title: "LocalBlue", icon: step3Icon },
+  { step: 3, title: "Anchor Suite", icon: step3Icon },
   { step: 4, title: "Coach Blue", icon: step4Icon },
-  { step: 5, title: "CommVerse", icon: step5Icon },
+  { step: 5, title: "Compass Suite", icon: step5Icon },
 ];
 
 export const SCANNING_TOOL: ScanningToolConfig = {

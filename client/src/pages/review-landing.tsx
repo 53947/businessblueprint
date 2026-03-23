@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Star, MessageSquare, TrendingUp, Shield, Zap } from "lucide-react";
+import { Check, Star, MessageSquare, TrendingUp, Shield, Zap, Mail, Phone, ArrowRight, Bell, Send } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AppName } from "@/components/app-name";
@@ -8,8 +8,8 @@ import { getAppById, getAppsByBundle, getBundlePrice } from "@/config/app-regist
 
 export default function ReputationLanding() {
   const app = getAppById("elevate")!;
-  const bundlePrice = getBundlePrice("localblue");
-  const bundleApps = getAppsByBundle("localblue");
+  const bundlePrice = getBundlePrice("anchor");
+  const bundleApps = getAppsByBundle("anchor");
 
   return (
     <div className="min-h-screen bg-white">
@@ -20,48 +20,48 @@ export default function ReputationLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <AppName appId="elevate" size="lg" iconSize={64} />
+              <AppName appId="elevate" size="lg" iconSize={36} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Build Trust with Every Review
+              Your Reputation. Managed.
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              AI-powered review monitoring and response management across all platforms. 
+              AI-powered review monitoring and response management across all platforms.
               Never miss a review, respond professionally, and build the reputation that drives revenue.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white font-bold"
                 style={{ backgroundColor: '#FF6B00' }}
                 onClick={() => {
-                  const event = new CustomEvent('addToCart', { 
+                  const event = new CustomEvent('addToCart', {
                     detail: { sku: 'review-management', name: '/ elevate', price: app.standalonePrice, type: 'addon' }
                   });
                   window.dispatchEvent(event);
                 }}
                 data-testid="button-add-to-cart"
               >
-                Add to Cart
+                Add to Cart — ${app.standalonePrice}/mo
               </Button>
-              <Button 
-                size="lg" 
-                className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity"
-                style={{ backgroundColor: '#E9B307', color: '#FFF' }}
+              <Button
+                size="lg"
+                className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity font-bold"
+                style={{ backgroundColor: '#E9B307', color: '#09080E' }}
                 asChild
                 data-testid="button-get-started"
               >
                 <a href="/assessment">Start Digital IQ Assessment</a>
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
+              <Button
+                size="lg"
+                variant="outline"
                 className="text-lg px-8 py-6 shadow-md hover:bg-amber-50 transition-colors"
                 style={{ borderColor: '#E9B307', color: '#E9B307' }}
                 asChild
                 data-testid="button-view-pricing"
               >
-                <a href="/pricing">View Pricing</a>
+                <a href="/pricing">View All Pricing</a>
               </Button>
             </div>
           </div>
@@ -73,29 +73,28 @@ export default function ReputationLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#E9B307' }}>${app.standalonePrice}/mo</div>
+              <div className="text-4xl font-bold text-white">${app.standalonePrice}/mo</div>
               <span className="text-white text-xl">standalone</span>
-              <span className="text-gray-400 text-2xl">|</span>
+              <span className="text-white text-2xl">|</span>
               <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
-              <span className="text-white text-xl">for all {bundleApps.length} LocalBlue apps</span>
+              <span className="text-white text-xl">Anchor Suite</span>
             </div>
-            <p className="text-gray-300 text-sm">
+            <p className="text-white text-sm">
               / publish + / elevate + / optimize = Complete local presence + SEO management
             </p>
           </div>
         </div>
       </section>
 
-      {/* The / elevate Difference */}
+      {/* Where We Pull Reviews */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why Review Management Matters
+              Where We Pull Reviews
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              93% of consumers read online reviews before making a purchase. Your reputation online directly impacts revenue. 
-              / elevate helps you monitor, respond, and build trust at scale.
+              Every review from the platforms that matter most, aggregated into a single dashboard.
             </p>
           </div>
 
@@ -106,10 +105,13 @@ export default function ReputationLanding() {
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#E9B307' }}>
                     <Star className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-monitor-title">Multi-Platform Monitoring</h3>
-                  <p className="text-gray-600" data-testid="text-feature-monitor-description">
-                    Track reviews from Google, Yelp, Facebook, TripAdvisor, and 20+ platforms in one unified dashboard.
-                  </p>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">Google Reviews</h3>
+                  <ul className="text-gray-600 text-sm text-left space-y-2">
+                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Star ratings and review text</li>
+                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Reviewer name and photo</li>
+                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Response status tracking</li>
+                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Direct reply integration</li>
+                  </ul>
                 </div>
               </CardContent>
             </Card>
@@ -118,12 +120,15 @@ export default function ReputationLanding() {
               <CardContent className="pt-6">
                 <div className="text-center">
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#E9B307' }}>
-                    <MessageSquare className="w-8 h-8 text-white" />
+                    <Star className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-ai-title">AI Response Generation</h3>
-                  <p className="text-gray-600" data-testid="text-feature-ai-description">
-                    Let AI draft professional, empathetic responses to reviews — positive or negative. You review, we respond.
-                  </p>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">Yelp Reviews</h3>
+                  <ul className="text-gray-600 text-sm text-left space-y-2">
+                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Full review content</li>
+                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Sentiment analysis</li>
+                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Rating trend tracking</li>
+                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> New review alerts</li>
+                  </ul>
                 </div>
               </CardContent>
             </Card>
@@ -132,12 +137,15 @@ export default function ReputationLanding() {
               <CardContent className="pt-6">
                 <div className="text-center">
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#E9B307' }}>
-                    <TrendingUp className="w-8 h-8 text-white" />
+                    <Star className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-sentiment-title">Sentiment Analysis</h3>
-                  <p className="text-gray-600" data-testid="text-feature-sentiment-description">
-                    Track trends in positive, neutral, and negative reviews. Spot issues before they become reputation crises.
-                  </p>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">Facebook Reviews</h3>
+                  <ul className="text-gray-600 text-sm text-left space-y-2">
+                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Recommendations and ratings</li>
+                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Comment monitoring</li>
+                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Page engagement data</li>
+                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Response management</li>
+                  </ul>
                 </div>
               </CardContent>
             </Card>
@@ -145,75 +153,99 @@ export default function ReputationLanding() {
         </div>
       </section>
 
-      {/* Key Features */}
+      {/* Automated Response */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
-            Complete Reputation Control
-          </h2>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Automated Response Workflow
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              AI reads every review, drafts a professional response, and lets you approve it — or auto-publishes on your behalf.
+            </p>
+          </div>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#E9B307' }}>
-                  <Star className="w-6 h-6 text-white" />
-                </div>
+          <div className="max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="border-2 border-gray-200 shadow-md bg-white relative">
+                <CardContent className="pt-8 pb-6 text-center">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: '#E9B307' }}>1</div>
+                  <Bell className="w-10 h-10 mx-auto mb-4" style={{ color: '#E9B307' }} />
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">New Review Detected</h3>
+                  <p className="text-gray-600 text-sm">AI reads the incoming review, identifies sentiment, and determines priority level.</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-gray-200 shadow-md bg-white relative">
+                <CardContent className="pt-8 pb-6 text-center">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: '#E9B307' }}>2</div>
+                  <MessageSquare className="w-10 h-10 mx-auto mb-4" style={{ color: '#E9B307' }} />
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">AI Drafts Response</h3>
+                  <p className="text-gray-600 text-sm">A professional, empathetic response is generated matching your brand voice and the review context.</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-gray-200 shadow-md bg-white relative">
+                <CardContent className="pt-8 pb-6 text-center">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: '#E9B307' }}>3</div>
+                  <Send className="w-10 h-10 mx-auto mb-4" style={{ color: '#E9B307' }} />
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Approve or Auto-Publish</h3>
+                  <p className="text-gray-600 text-sm">Review and edit the draft before posting, or enable auto-publish for hands-free reputation management.</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Review Request Campaigns */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Review Request Campaigns
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Turn happy customers into 5-star reviews. After a transaction, automatically request feedback via email or SMS.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#E9B307' }}>
+                <Zap className="w-8 h-8 text-white" />
               </div>
-              <div>
-                <h3 className="text-xl font-bold mb-2 text-gray-900">Unified Review Dashboard</h3>
-                <p className="text-gray-600">
-                  See all your reviews from Google, Yelp, Facebook, TripAdvisor, and more in one place. Never miss a review again.
-                </p>
-              </div>
+              <h3 className="text-xl font-bold mb-2 text-gray-900">Triggered After Transaction</h3>
+              <p className="text-gray-600 text-sm">
+                Automatically send a review request after a purchase, appointment, or service completion.
+              </p>
             </div>
 
-            <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#E9B307' }}>
-                  <MessageSquare className="w-6 h-6 text-white" />
-                </div>
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#E9B307' }}>
+                <Mail className="w-8 h-8 text-white" />
               </div>
-              <div>
-                <h3 className="text-xl font-bold mb-2 text-gray-900">AI-Powered Responses</h3>
-                <p className="text-gray-600">
-                  Generate professional, empathetic responses to reviews automatically. Customize tone and approve before posting.
-                </p>
-              </div>
+              <h3 className="text-xl font-bold mb-2 text-gray-900">Email & SMS Delivery</h3>
+              <p className="text-gray-600 text-sm">
+                Reach customers where they are. Choose email, SMS, or both to maximize response rates.
+              </p>
             </div>
 
-            <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#E9B307' }}>
-                  <Shield className="w-6 h-6 text-white" />
-                </div>
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#E9B307' }}>
+                <TrendingUp className="w-8 h-8 text-white" />
               </div>
-              <div>
-                <h3 className="text-xl font-bold mb-2 text-gray-900">Reputation Alerts</h3>
-                <p className="text-gray-600">
-                  Get instant notifications when new reviews arrive — especially negative ones that need immediate attention.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#E9B307' }}>
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-2 text-gray-900">Sentiment Tracking</h3>
-                <p className="text-gray-600">
-                  Monitor trends in customer feedback. Identify recurring issues and measure the impact of improvements over time.
-                </p>
-              </div>
+              <h3 className="text-xl font-bold mb-2 text-gray-900">Conversion Tracking</h3>
+              <p className="text-gray-600 text-sm">
+                Track how many requests are sent, opened, and converted into published reviews.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
             Ready to Protect Your Reputation?
@@ -222,24 +254,24 @@ export default function ReputationLanding() {
             Start with a free Digital IQ Assessment to see how your business is reviewed across the web.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="text-lg px-8 py-6"
-              style={{ backgroundColor: '#E9B307', color: '#FFF' }}
+            <Button
+              size="lg"
+              className="text-lg px-8 py-6 font-bold"
+              style={{ backgroundColor: '#E9B307', color: '#09080E' }}
               asChild
               data-testid="button-cta-assessment"
             >
               <a href="/assessment">Get Your Digital IQ Score</a>
             </Button>
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="outline"
               className="text-lg px-8 py-6"
               style={{ borderColor: '#E9B307', color: '#E9B307' }}
               asChild
               data-testid="button-cta-pricing"
             >
-              <a href="/pricing">View Pricing</a>
+              <a href="/pricing">View All Pricing</a>
             </Button>
           </div>
         </div>
