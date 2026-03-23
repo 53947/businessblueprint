@@ -107,7 +107,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
     if (isAuthenticated) {
       window.location.href = "/api/logout";
     } else {
-      window.location.href = "/portal/login";
+      window.location.href = "/login";
     }
   };
 
@@ -412,19 +412,19 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (
-                  <a href="/portal/login" className="flex items-center px-2 py-1.5 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium transition-colors" data-testid="button-login">
+                  <a href="/login" className="flex items-center px-2 py-1.5 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium transition-colors" data-testid="button-login">
                     Login
                   </a>
                 )}
 
                 {isLoggedIn && (
-                  <a href="/portal/dashboard" className="flex items-center px-2 py-1.5 bg-gray-900 hover:bg-gray-800 text-white rounded-md text-xs font-medium transition-colors" data-testid="button-dashboard">
+                  <a href={isAuthenticated ? "/admin" : "/portal/dashboard"} className="flex items-center px-2 py-1.5 bg-gray-900 hover:bg-gray-800 text-white rounded-md text-xs font-medium transition-colors" data-testid="button-dashboard">
                     Dashboard
                   </a>
                 )}
 
                 <a
-                  href={isLoggedIn ? "/portal/respond" : "/portal/login?redirect=/portal/respond"}
+                  href={isLoggedIn ? "/portal/respond" : "/login?redirect=/portal/respond"}
                   className="flex items-center px-2 py-1.5 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs transition-colors"
                   data-testid="button-quick-respond"
                 >
@@ -432,7 +432,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 </a>
 
                 <a
-                  href={isLoggedIn ? "/assessment" : "/portal/login?redirect=/assessment"}
+                  href={isLoggedIn ? "/assessment" : "/login?redirect=/assessment"}
                   className="flex items-center px-2 py-1.5 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs font-bold transition-all whitespace-nowrap"
                   data-testid="button-digital-iq"
                 >
@@ -456,7 +456,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
         <div className="lg:hidden flex items-center justify-between gap-2 h-16 border-t border-gray-200 flex-wrap p-2">
           {showNavigation && (
             <>
-              <a href={isLoggedIn ? "/portal/respond" : "/portal/login?redirect=/portal/respond"} className="flex-1 px-2 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs text-center transition-colors" data-testid="button-respond-mobile">
+              <a href={isLoggedIn ? "/portal/respond" : "/login?redirect=/portal/respond"} className="flex-1 px-2 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs text-center transition-colors" data-testid="button-respond-mobile">
                 Inbox
               </a>
               {isLoggedIn ? (
@@ -485,11 +485,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <a href="/portal/login" className="flex-1 px-2 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium text-center transition-colors" data-testid="button-login-mobile">
+                <a href="/login" className="flex-1 px-2 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium text-center transition-colors" data-testid="button-login-mobile">
                   Login
                 </a>
               )}
-              <a href={isLoggedIn ? "/assessment" : "/portal/login?redirect=/assessment"} className="flex-1 px-2 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs font-bold text-center transition-all" data-testid="button-digital-iq-mobile">
+              <a href={isLoggedIn ? "/assessment" : "/login?redirect=/assessment"} className="flex-1 px-2 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs font-bold text-center transition-all" data-testid="button-digital-iq-mobile">
                 Digital IQ
               </a>
             </>
@@ -645,11 +645,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
             {/* Sticky Footer */}
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-lg">
               {isLoggedIn ? (
-                <a href="/portal/dashboard" className="flex items-center justify-center gap-3 w-full p-4 border-2 border-gray-900 text-gray-900 rounded-lg font-bold text-lg active:bg-gray-50 transition-colors" data-testid="mobile-dashboard-btn">
+                <a href={isAuthenticated ? "/admin" : "/portal/dashboard"} className="flex items-center justify-center gap-3 w-full p-4 border-2 border-gray-900 text-gray-900 rounded-lg font-bold text-lg active:bg-gray-50 transition-colors" data-testid="mobile-dashboard-btn">
                   Dashboard
                 </a>
               ) : (
-                <a href="/portal/login" className="flex items-center justify-center gap-3 w-full p-4 border-2 border-gray-900 text-gray-900 rounded-lg font-bold text-lg active:bg-gray-50 transition-colors" data-testid="mobile-login-btn">
+                <a href="/login" className="flex items-center justify-center gap-3 w-full p-4 border-2 border-gray-900 text-gray-900 rounded-lg font-bold text-lg active:bg-gray-50 transition-colors" data-testid="mobile-login-btn">
                   Login
                 </a>
               )}
