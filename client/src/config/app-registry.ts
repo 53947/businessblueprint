@@ -10,8 +10,7 @@ import respondIcon from "@assets/new logos and wordmarks/: respond icon.png";
 import engageIcon from "@assets/new logos and wordmarks/: engage icon.png";
 import postIcon from "@assets/new logos and wordmarks/: post icon.png";
 import connectIcon from "@assets/new logos and wordmarks/: connect icon.png";
-// TODO: Replace with actual amplify icon when available
-import amplifyIcon from "@assets/new logos and wordmarks/: promote icon.png";
+import amplifyIcon from "@assets/new logos and wordmarks/: amplify icon.png";
 
 // ── Bundle Icons ──
 import anchorIcon from "@assets/new logos and wordmarks/localblue Brandmark icon.png";
