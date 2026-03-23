@@ -3881,3 +3881,151 @@ export type SeoCompetitor = typeof seoCompetitors.$inferSelect;
 export type InsertSeoCompetitor = z.infer<typeof insertSeoCompetitorSchema>;
 export type SeoCompetitorData = typeof seoCompetitorData.$inferSelect;
 export type InsertSeoCompetitorData = z.infer<typeof insertSeoCompetitorDataSchema>;
+
+// ============================================================
+// /amplify - Ad Account Connections & Campaign Management
+// ============================================================
+
+export const adAccountConnections = pgTable("ad_account_connections", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  platform: text("platform"), // meta, google, microsoft, reddit, tiktok, linkedin, snapchat, pinterest
+  accountId: text("account_id"),
+  accountName: text("account_name"),
+  accessToken: text("access_token"), // encrypted
+  refreshToken: text("refresh_token"), // encrypted
+  tokenExpiresAt: timestamp("token_expires_at"),
+  status: text("status").default("active"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const amplifyCampaigns = pgTable("amplify_campaigns", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  platform: text("platform"),
+  externalCampaignId: text("external_campaign_id"),
+  name: text("name").notNull(),
+  objective: text("objective"),
+  status: text("status").default("draft"),
+  dailyBudget: decimal("daily_budget"),
+  lifetimeBudget: decimal("lifetime_budget"),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
+  spendToDate: decimal("spend_to_date").default("0"),
+  impressions: integer("impressions").default(0),
+  clicks: integer("clicks").default(0),
+  conversions: integer("conversions").default(0),
+  roas: decimal("roas"),
+  redditPixelInstalled: boolean("reddit_pixel_installed"),
+  redditEngagementScore: integer("reddit_engagement_score"),
+  redditCommentCount: integer("reddit_comment_count").default(0),
+  redditUpvoteRatio: decimal("reddit_upvote_ratio"),
+  redditSentiment: text("reddit_sentiment"),
+  redditLastSentimentCheck: timestamp("reddit_last_sentiment_check"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const amplifyAdSets = pgTable("amplify_ad_sets", {
+  id: serial("id").primaryKey(),
+  campaignId: integer("campaign_id").references(() => amplifyCampaigns.id),
+  externalAdSetId: text("external_ad_set_id"),
+  name: text("name").notNull(),
+  targetingSummary: jsonb("targeting_summary"),
+  budget: decimal("budget"),
+  status: text("status").default("active"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const amplifyAds = pgTable("amplify_ads", {
+  id: serial("id").primaryKey(),
+  adSetId: integer("ad_set_id").references(() => amplifyAdSets.id),
+  externalAdId: text("external_ad_id"),
+  name: text("name"),
+  headline: text("headline"),
+  body: text("body"),
+  mediaUrl: text("media_url"),
+  cta: text("cta"),
+  status: text("status").default("active"),
+  impressions: integer("impressions").default(0),
+  clicks: integer("clicks").default(0),
+  spend: decimal("spend").default("0"),
+  conversions: integer("conversions").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const amplifyAudiences = pgTable("amplify_audiences", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  platform: text("platform"),
+  audienceName: text("audience_name").notNull(),
+  audienceType: text("audience_type"),
+  externalAudienceId: text("external_audience_id"),
+  sizeEstimate: integer("size_estimate"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const amplifyBudgetAllocations = pgTable("amplify_budget_allocations", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  month: text("month").notNull(),
+  totalBudget: decimal("total_budget").notNull(),
+  metaAllocation: decimal("meta_allocation").default("0"),
+  googleAllocation: decimal("google_allocation").default("0"),
+  microsoftAllocation: decimal("microsoft_allocation").default("0"),
+  redditAllocation: decimal("reddit_allocation").default("0"),
+  otherAllocations: jsonb("other_allocations"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const amplifySpendAlerts = pgTable("amplify_spend_alerts", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  platform: text("platform"),
+  thresholdAmount: decimal("threshold_amount").notNull(),
+  thresholdType: text("threshold_type").notNull(),
+  notificationSent: boolean("notification_sent").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const redditAdComments = pgTable("reddit_ad_comments", {
+  id: serial("id").primaryKey(),
+  campaignId: integer("campaign_id").references(() => amplifyCampaigns.id),
+  externalCommentId: text("external_comment_id"),
+  authorUsername: text("author_username"),
+  commentText: text("comment_text"),
+  sentiment: text("sentiment"),
+  suggestedResponse: text("suggested_response"),
+  responded: boolean("responded").default(false),
+  respondedAt: timestamp("responded_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Amplify Insert Schemas
+export const insertAdAccountConnectionSchema = createInsertSchema(adAccountConnections);
+export const insertAmplifyCampaignSchema = createInsertSchema(amplifyCampaigns);
+export const insertAmplifyAdSetSchema = createInsertSchema(amplifyAdSets);
+export const insertAmplifyAdSchema = createInsertSchema(amplifyAds);
+export const insertAmplifyAudienceSchema = createInsertSchema(amplifyAudiences);
+export const insertAmplifyBudgetAllocationSchema = createInsertSchema(amplifyBudgetAllocations);
+export const insertAmplifySpendAlertSchema = createInsertSchema(amplifySpendAlerts);
+export const insertRedditAdCommentSchema = createInsertSchema(redditAdComments);
+
+// Amplify Types
+export type AdAccountConnection = typeof adAccountConnections.$inferSelect;
+export type InsertAdAccountConnection = z.infer<typeof insertAdAccountConnectionSchema>;
+export type AmplifyCampaign = typeof amplifyCampaigns.$inferSelect;
+export type InsertAmplifyCampaign = z.infer<typeof insertAmplifyCampaignSchema>;
+export type AmplifyAdSet = typeof amplifyAdSets.$inferSelect;
+export type InsertAmplifyAdSet = z.infer<typeof insertAmplifyAdSetSchema>;
+export type AmplifyAd = typeof amplifyAds.$inferSelect;
+export type InsertAmplifyAd = z.infer<typeof insertAmplifyAdSchema>;
+export type AmplifyAudience = typeof amplifyAudiences.$inferSelect;
+export type InsertAmplifyAudience = z.infer<typeof insertAmplifyAudienceSchema>;
+export type AmplifyBudgetAllocation = typeof amplifyBudgetAllocations.$inferSelect;
+export type InsertAmplifyBudgetAllocation = z.infer<typeof insertAmplifyBudgetAllocationSchema>;
+export type AmplifySpendAlert = typeof amplifySpendAlerts.$inferSelect;
+export type InsertAmplifySpendAlert = z.infer<typeof insertAmplifySpendAlertSchema>;
+export type RedditAdComment = typeof redditAdComments.$inferSelect;
+export type InsertRedditAdComment = z.infer<typeof insertRedditAdCommentSchema>;

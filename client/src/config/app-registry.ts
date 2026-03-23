@@ -10,6 +10,8 @@ import respondIcon from "@assets/new logos and wordmarks/: respond icon.png";
 import engageIcon from "@assets/new logos and wordmarks/: engage icon.png";
 import postIcon from "@assets/new logos and wordmarks/: post icon.png";
 import connectIcon from "@assets/new logos and wordmarks/: connect icon.png";
+// TODO: Replace with actual amplify icon when available
+import amplifyIcon from "@assets/new logos and wordmarks/: promote icon.png";
 
 // ── Bundle Icons ──
 import anchorIcon from "@assets/new logos and wordmarks/localblue Brandmark icon.png";
@@ -196,6 +198,19 @@ export const APP_REGISTRY: SlashApp[] = [
     bundleId: "compass",
     isSlashApp: true,
   },
+  {
+    id: "amplify",
+    name: "amplify",
+    color: "#6EA6FF",
+    description: "Advertising Platform",
+    icon: amplifyIcon,
+    landingRoute: "/amplify-landing",
+    dashboardRoute: "/amplify",
+    standalonePrice: 29,
+    bundlePrice: 24.75,
+    bundleId: "anchor",
+    isSlashApp: true,
+  },
 ];
 
 export const BUNDLE_REGISTRY: BundleConfig[] = [
@@ -205,7 +220,7 @@ export const BUNDLE_REGISTRY: BundleConfig[] = [
     color: "#0000FF",
     icon: anchorIcon,
     price: 99,
-    appIds: ["publish", "elevate", "optimize"],
+    appIds: ["publish", "elevate", "optimize", "amplify"],
     description: "Local SEO & Reputation Bundle",
   },
   {

@@ -11,7 +11,8 @@ import {
   Menu,
   CreditCard,
   Lock,
-  Target
+  Target,
+  Megaphone
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import bbIcon from "@assets/brand/bb-favicon.png";
@@ -167,6 +168,15 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       external: true,
       href: "/optimize",
       featureCode: "OP",
+    },
+    {
+      id: "amplify",
+      label: "amplify",
+      hoverLabel: "Advertising Platform",
+      icon: <Megaphone className="w-7 h-7" style={{ color: '#6EA6FF' }} />,
+      external: true,
+      href: "/amplify",
+      featureCode: "AM",
     },
     {
       id: "divider-3",

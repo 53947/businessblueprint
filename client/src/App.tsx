@@ -47,6 +47,8 @@ import ListManagement from "@/pages/list";
 import LocalBlueLanding from "@/pages/localblue-landing";
 import ListLanding from "@/pages/list-landing";
 import ReviewLanding from "@/pages/review-landing";
+import AmplifyLanding from "@/pages/amplify-landing";
+import AmplifyDashboard from "@/pages/amplify-dashboard";
 import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import DataDeletion from "@/pages/data-deletion";
@@ -124,6 +126,8 @@ function Router() {
       <Route path="/optimize" component={OptimizeLanding} />
       <Route path="/optimize/setup" component={OptimizeSetup} />
       <Route path="/optimize/dashboard" component={OptimizeDashboard} />
+      <Route path="/amplify-landing" component={AmplifyLanding} />
+      <Route path="/amplify" component={AmplifyDashboard} />
       <Route path="/publish-app" component={ListManagement} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />

@@ -18,6 +18,7 @@ import { chatRouter } from "./routes/chat";
 import { aiCoachRouter } from "./routes/ai-coach";
 import { registerSendRoutes } from "./routes/send";
 import { registerOptimizeRoutes } from "./routes/optimize";
+import { amplifyRouter } from "./routes/amplify";
 import { registerSubscriptionRoutes } from "./routes/subscriptions";
 import {
   insertAssessmentSchema,
@@ -2532,6 +2533,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // SEO Optimization routes (extracted to server/routes/optimize.ts)
   registerOptimizeRoutes(app);
+
+  // Amplify paid advertising routes (extracted to server/routes/amplify.ts)
+  app.use(amplifyRouter);
 
   // ============================================================================
   // Brand Studio API Routes - Asset Management
