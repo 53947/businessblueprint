@@ -17,7 +17,7 @@ import anchorIcon from "@assets/new logos and wordmarks/localblue Brandmark icon
 import compassIcon from "@assets/new logos and wordmarks/: commverse icon.png";
 
 // ── Other Product Icons ──
-import coachBlueIcon from "@assets/new logos and wordmarks/4step-AI Business Coach step- Coach Blue.png";
+import coachBlueIcon from "@assets/brand/coach-blue-icon.png";
 import digitalIQIcon from "@assets/new logos and wordmarks/Digitla IQ.png";
 import scanningToolIcon from "@assets/new logos and wordmarks/scanning tool.png";
 
@@ -25,7 +25,7 @@ import scanningToolIcon from "@assets/new logos and wordmarks/scanning tool.png"
 import step1Icon from "@assets/new logos and wordmarks/1step-Assessment.png";
 import step2Icon from "@assets/new logos and wordmarks/2step-Prescription.png";
 import step3Icon from "@assets/new logos and wordmarks/3step-localblue.png";
-import step4Icon from "@assets/new logos and wordmarks/4step-AI Business Coach step- Coach Blue.png";
+import step4Icon from "@assets/brand/coach-blue-icon.png";
 import step5Icon from "@assets/new logos and wordmarks/5step-commverse.png";
 
 // ─────────────────────────────────────────────
