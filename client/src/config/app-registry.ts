@@ -1,32 +1,9 @@
 // App Registry — Single source of truth for all product data
 // Every menu, page, card, and landing page should reference this file.
+// Icons use Lucide React icon name strings. Rendered via AppIcon component.
 
-// ── Slash App Icons ──
-import publishIcon from "@assets/new logos and wordmarks/: publish icon.png";
-import elevateIcon from "@assets/new logos and wordmarks/: elevate icon.png";
-import optimizeIcon from "@assets/new logos and wordmarks/: optimize icon.png";
-import promoteIcon from "@assets/new logos and wordmarks/: promote icon.png";
-import respondIcon from "@assets/new logos and wordmarks/: respond icon.png";
-import engageIcon from "@assets/new logos and wordmarks/: engage icon.png";
-import postIcon from "@assets/new logos and wordmarks/: post icon.png";
-import connectIcon from "@assets/new logos and wordmarks/: connect icon.png";
-import amplifyIcon from "@assets/new logos and wordmarks/: amplify icon.png";
-
-// ── Bundle Icons ──
-import anchorIcon from "@assets/new logos and wordmarks/localblue Brandmark icon.png";
-import compassIcon from "@assets/new logos and wordmarks/: commverse icon.png";
-
-// ── Other Product Icons ──
+// Coach Blue keeps his custom PNG icon
 import coachBlueIcon from "@assets/brand/coach-blue-icon.png";
-import digitalIQIcon from "@assets/new logos and wordmarks/Digitla IQ.png";
-import scanningToolIcon from "@assets/new logos and wordmarks/scanning tool.png";
-
-// ── How It Works Step Icons ──
-import step1Icon from "@assets/new logos and wordmarks/1step-Assessment.png";
-import step2Icon from "@assets/new logos and wordmarks/2step-Prescription.png";
-import step3Icon from "@assets/new logos and wordmarks/3step-localblue.png";
-import step4Icon from "@assets/brand/coach-blue-icon.png";
-import step5Icon from "@assets/new logos and wordmarks/5step-commverse.png";
 
 // ─────────────────────────────────────────────
 // Types
@@ -62,6 +39,7 @@ export interface CoachBlueConfig {
   color: string;
   icon: string;
   isSlashApp: false;
+  isPngIcon: true;
   standalonePrice: number;
   withOneBundlePrice: number;
   withBothBundlesPrice: number;
@@ -111,7 +89,7 @@ export const APP_REGISTRY: SlashApp[] = [
     name: "publish",
     color: "#064A6C",
     description: "Business Listings Manager",
-    icon: publishIcon,
+    icon: "BookOpen",
     landingRoute: "/publish-landing",
     dashboardRoute: "/publish-app",
     standalonePrice: 29,
@@ -124,7 +102,7 @@ export const APP_REGISTRY: SlashApp[] = [
     name: "elevate",
     color: "#E9B307",
     description: "Reputation & Reviews Manager",
-    icon: elevateIcon,
+    icon: "Star",
     landingRoute: "/elevate-landing",
     dashboardRoute: "/elevate-app",
     standalonePrice: 29,
@@ -137,7 +115,7 @@ export const APP_REGISTRY: SlashApp[] = [
     name: "optimize",
     color: "#374151",
     description: "SEO Health Monitor",
-    icon: optimizeIcon,
+    icon: "Target",
     landingRoute: "/optimize",
     dashboardRoute: "/optimize/dashboard",
     standalonePrice: 29,
@@ -150,7 +128,7 @@ export const APP_REGISTRY: SlashApp[] = [
     name: "promote",
     color: "#1844A6",
     description: "Email Campaign Manager",
-    icon: promoteIcon,
+    icon: "Mail",
     landingRoute: "/promote",
     dashboardRoute: "/promote-app",
     standalonePrice: 29,
@@ -163,7 +141,7 @@ export const APP_REGISTRY: SlashApp[] = [
     name: "respond",
     color: "#001882",
     description: "Unified Multi-Channel Inbox",
-    icon: respondIcon,
+    icon: "Inbox",
     landingRoute: "/respond",
     dashboardRoute: "/respond-app",
     standalonePrice: 29,
@@ -176,7 +154,7 @@ export const APP_REGISTRY: SlashApp[] = [
     name: "engage",
     color: "#660099",
     description: "Live Chat Widget",
-    icon: engageIcon,
+    icon: "MessageCircle",
     landingRoute: "/engage",
     dashboardRoute: "/engage/dashboard",
     standalonePrice: 29,
@@ -189,7 +167,7 @@ export const APP_REGISTRY: SlashApp[] = [
     name: "post",
     color: "#FF44CC",
     description: "Social Media Manager",
-    icon: postIcon,
+    icon: "Share2",
     landingRoute: "/post-landing",
     dashboardRoute: "/post",
     standalonePrice: 29,
@@ -202,7 +180,7 @@ export const APP_REGISTRY: SlashApp[] = [
     name: "amplify",
     color: "#6EA6FF",
     description: "Advertising Platform",
-    icon: amplifyIcon,
+    icon: "Megaphone",
     landingRoute: "/amplify-landing",
     dashboardRoute: "/amplify",
     standalonePrice: 29,
@@ -217,7 +195,7 @@ export const BUNDLE_REGISTRY: BundleConfig[] = [
     id: "anchor",
     name: "Anchor Suite",
     color: "#0000FF",
-    icon: anchorIcon,
+    icon: "Anchor",
     price: 99,
     appIds: ["publish", "elevate", "optimize", "amplify"],
     description: "Local SEO & Reputation Bundle",
@@ -226,7 +204,7 @@ export const BUNDLE_REGISTRY: BundleConfig[] = [
     id: "compass",
     name: "Compass Suite",
     color: "#F97316",
-    icon: compassIcon,
+    icon: "Compass",
     price: 99,
     appIds: ["promote", "respond", "engage", "post"],
     description: "Communication & Marketing Bundle",
@@ -237,7 +215,7 @@ export const CONNECT_CRM: ConnectConfig = {
   id: "connect",
   name: "connect",
   color: "#008060",
-  icon: connectIcon,
+  icon: "Users",
   isSlashApp: true,
   tiers: [
     { name: "Starter", price: 0, contactLimit: 250 },
@@ -252,6 +230,7 @@ export const COACH_BLUE: CoachBlueConfig = {
   color: "#0000FF",
   icon: coachBlueIcon,
   isSlashApp: false,
+  isPngIcon: true,
   standalonePrice: 99,
   withOneBundlePrice: 59,
   withBothBundlesPrice: 0,
@@ -262,7 +241,7 @@ export const DIGITAL_IQ: DigitalIQConfig = {
   id: "digitaliq",
   name: "Digital IQ",
   color: "#A00028",
-  icon: digitalIQIcon,
+  icon: "BarChart3",
   isSlashApp: false,
   route: "/assessment",
   price: 0,
@@ -270,17 +249,17 @@ export const DIGITAL_IQ: DigitalIQConfig = {
 };
 
 export const HOW_IT_WORKS_STEPS: HowItWorksStep[] = [
-  { step: 1, title: "Assessment", icon: step1Icon },
-  { step: 2, title: "Prescription", icon: step2Icon },
-  { step: 3, title: "Anchor Suite", icon: step3Icon },
-  { step: 4, title: "Coach Blue", icon: step4Icon },
-  { step: 5, title: "Compass Suite", icon: step5Icon },
+  { step: 1, title: "Assessment", icon: "ClipboardCheck" },
+  { step: 2, title: "Prescription", icon: "FileText" },
+  { step: 3, title: "Anchor Suite", icon: "Anchor" },
+  { step: 4, title: "Coach Blue", icon: "GraduationCap" },
+  { step: 5, title: "Compass Suite", icon: "Compass" },
 ];
 
 export const SCANNING_TOOL: ScanningToolConfig = {
   id: "scansblue",
   name: "ScansBlue",
-  icon: scanningToolIcon,
+  icon: "ScanLine",
 };
 
 // ─────────────────────────────────────────────

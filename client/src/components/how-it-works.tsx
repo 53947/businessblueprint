@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { HOW_IT_WORKS_STEPS } from "@/config/app-registry";
+import { AppIcon } from "@/components/app-name";
 
 interface HowItWorksProps {
   onStartAssessment: () => void;
@@ -20,7 +21,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 1 - Complete Your Digital IQ Assessment */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={HOW_IT_WORKS_STEPS[0].icon} alt="Complete Your Digital IQ Assessment" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <AppIcon name={HOW_IT_WORKS_STEPS[0].icon} size={48} color="#A00028" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">Complete Your Digital IQ Assessment</h3>
             <p className="text-xs text-gray-600">You start with a quick assessment, and we generate your custom blueprint.</p>
@@ -29,36 +30,36 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 2 - Prescribed Blueprint */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={HOW_IT_WORKS_STEPS[1].icon} alt="Prescribed Blueprint" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <AppIcon name={HOW_IT_WORKS_STEPS[1].icon} size={48} color="#FFC107" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">Prescribed Blueprint</h3>
             <p className="text-xs text-gray-600">Your custom action plan with SEO, content strategy, and revenue-focused steps.</p>
           </div>
 
-          {/* Step 3 - LocalBlue */}
+          {/* Step 3 - Anchor Suite */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={HOW_IT_WORKS_STEPS[2].icon} alt="LocalBlue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <AppIcon name={HOW_IT_WORKS_STEPS[2].icon} size={48} color="#064A6C" />
             </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">LocalBlue</h3>
+            <h3 className="text-sm font-bold text-gray-900 mb-1">Anchor Suite</h3>
             <p className="text-xs text-gray-600">Listings management + reputation building for stronger local visibility.</p>
           </div>
 
           {/* Step 4 - Coach Blue */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={HOW_IT_WORKS_STEPS[3].icon} alt="Coach Blue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <AppIcon name={HOW_IT_WORKS_STEPS[3].icon} size={48} color="#0000FF" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">Coach Blue</h3>
             <p className="text-xs text-gray-600">24/7 AI business coach guiding you through every step of your growth journey.</p>
           </div>
 
-          {/* Step 5 - CommVerse */}
+          {/* Step 5 - Compass Suite */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={HOW_IT_WORKS_STEPS[4].icon} alt="CommVerse" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <AppIcon name={HOW_IT_WORKS_STEPS[4].icon} size={48} color="#F97316" />
             </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">CommVerse</h3>
+            <h3 className="text-sm font-bold text-gray-900 mb-1">Compass Suite</h3>
             <p className="text-xs text-gray-600">Complete communication suite: / promote, / respond, / engage, / post.</p>
           </div>
         </div>
@@ -68,7 +69,7 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 1 - Digital IQ Assessment */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={HOW_IT_WORKS_STEPS[0].icon} alt="Digital IQ Assessment" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <AppIcon name={HOW_IT_WORKS_STEPS[0].icon} size={48} color="#A00028" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">Digital IQ Assessment</h3>
             <p className="text-xs text-gray-600">Quick assessment → instant blueprint.</p>
@@ -77,36 +78,36 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
           {/* Step 2 - Prescribed Blueprint */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={HOW_IT_WORKS_STEPS[1].icon} alt="Prescribed Blueprint" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <AppIcon name={HOW_IT_WORKS_STEPS[1].icon} size={48} color="#FFC107" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">Prescribed Blueprint</h3>
             <p className="text-xs text-gray-600">Your clear action plan to grow.</p>
           </div>
 
-          {/* Step 3 - LocalBlue */}
+          {/* Step 3 - Anchor Suite */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={HOW_IT_WORKS_STEPS[2].icon} alt="LocalBlue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <AppIcon name={HOW_IT_WORKS_STEPS[2].icon} size={48} color="#064A6C" />
             </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">LocalBlue</h3>
+            <h3 className="text-sm font-bold text-gray-900 mb-1">Anchor Suite</h3>
             <p className="text-xs text-gray-600">Boost local visibility & reviews.</p>
           </div>
 
           {/* Step 4 - Coach Blue */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={HOW_IT_WORKS_STEPS[3].icon} alt="Coach Blue" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <AppIcon name={HOW_IT_WORKS_STEPS[3].icon} size={48} color="#0000FF" />
             </div>
             <h3 className="text-sm font-bold text-gray-900 mb-1">Coach Blue</h3>
             <p className="text-xs text-gray-600">Your 24/7 AI business coach.</p>
           </div>
 
-          {/* Step 5 - CommVerse */}
+          {/* Step 5 - Compass Suite */}
           <div className="text-center group">
             <div className="flex items-center justify-center mx-auto mb-2">
-              <img src={HOW_IT_WORKS_STEPS[4].icon} alt="CommVerse" className="w-12 h-12 object-contain transition-transform group-hover:scale-110 duration-300" />
+              <AppIcon name={HOW_IT_WORKS_STEPS[4].icon} size={48} color="#F97316" />
             </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">CommVerse</h3>
+            <h3 className="text-sm font-bold text-gray-900 mb-1">Compass Suite</h3>
             <p className="text-xs text-gray-600">Messaging, chat, email, content.</p>
           </div>
         </div>

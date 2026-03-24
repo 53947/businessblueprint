@@ -2,7 +2,7 @@
 // All data from app-registry.ts. All names via <AppName> / <BundleHeader>.
 
 import { Link } from "wouter";
-import { AppName, BundleHeader } from "@/components/app-name";
+import { AppName, BundleHeader, AppIcon } from "@/components/app-name";
 import {
   APP_REGISTRY,
   BUNDLE_REGISTRY,
@@ -66,13 +66,13 @@ export function PricingLayout({ variant }: PricingLayoutProps) {
           <span className="text-emerald-600 text-2xl font-bold">Free</span>
         </div>
         <div className="flex items-center gap-2 flex-wrap text-xs text-gray-500">
-          <img src={HOW_IT_WORKS_STEPS[0].icon} alt="" className="w-5 h-5" />
+          <AppIcon name={HOW_IT_WORKS_STEPS[0].icon} size={20} color="#A00028" />
           <span>Complete assessment</span>
           <span className="text-blue-600">→</span>
           <img src={SCANNING_TOOL.icon} alt="" className="w-5 h-5" />
           <span>We scan your presence</span>
           <span className="text-blue-600">→</span>
-          <img src={HOW_IT_WORKS_STEPS[1].icon} alt="" className="w-5 h-5" />
+          <AppIcon name={HOW_IT_WORKS_STEPS[1].icon} size={20} color="#FFC107" />
           <span>Get your blueprint</span>
           <span className="text-blue-600">→</span>
           <span className="font-bold text-blue-600">Choose your apps below ↓</span>

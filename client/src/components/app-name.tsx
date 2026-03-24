@@ -1,3 +1,4 @@
+import * as LucideIcons from "lucide-react";
 import {
   APP_REGISTRY,
   BUNDLE_REGISTRY,
@@ -6,6 +7,32 @@ import {
   DIGITAL_IQ,
   type SlashApp,
 } from "@/config/app-registry";
+
+// ─────────────────────────────────────────────
+// AppIcon — renders Lucide icon in a colored rounded square
+// ─────────────────────────────────────────────
+
+function AppIcon({ name, size, color }: { name: string; size: number; color: string }) {
+  const Icon = (LucideIcons as any)[name];
+  if (!Icon) return null;
+  const iconSize = Math.max(Math.round(size * 0.55), 10);
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        backgroundColor: color,
+        borderRadius: Math.round(size * 0.2),
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0,
+      }}
+    >
+      <Icon size={iconSize} color="white" strokeWidth={2} />
+    </div>
+  );
+}
 
 // ─────────────────────────────────────────────
 // AppName
@@ -29,6 +56,7 @@ function lookupApp(id: string): {
   icon: string;
   isSlashApp: boolean;
   description: string;
+  isPngIcon?: boolean;
 } | null {
   // Slash apps
   const slashApp = APP_REGISTRY.find((a) => a.id === id);
@@ -38,9 +66,9 @@ function lookupApp(id: string): {
   if (id === CONNECT_CRM.id)
     return { ...CONNECT_CRM, isSlashApp: CONNECT_CRM.isSlashApp };
 
-  // Coach Blue
+  // Coach Blue (keeps PNG icon)
   if (id === COACH_BLUE.id)
-    return { ...COACH_BLUE, isSlashApp: COACH_BLUE.isSlashApp };
+    return { ...COACH_BLUE, isSlashApp: COACH_BLUE.isSlashApp, isPngIcon: true };
 
   // Digital IQ
   if (id === DIGITAL_IQ.id)
@@ -61,6 +89,18 @@ export function AppName({
 
   const fontSize = FONT_SIZES[size];
 
+  const iconElement = app.isPngIcon ? (
+    <img
+      src={app.icon}
+      alt={app.name}
+      width={iconSize}
+      height={iconSize}
+      style={{ borderRadius: 5, objectFit: "contain" }}
+    />
+  ) : (
+    <AppIcon name={app.icon} size={iconSize} color={app.color} />
+  );
+
   // Large size: stack name + description vertically
   if (size === "lg") {
     return (
@@ -76,13 +116,7 @@ export function AppName({
             lineHeight: 1,
           }}
         >
-          <img
-            src={app.icon}
-            alt={app.name}
-            width={iconSize}
-            height={iconSize}
-            style={{ borderRadius: 5, objectFit: "contain" }}
-          />
+          {iconElement}
           {app.isSlashApp && (
             <span style={{ color: TRIAD_BLACK }}>/</span>
           )}
@@ -119,13 +153,7 @@ export function AppName({
         lineHeight: 1,
       }}
     >
-      <img
-        src={app.icon}
-        alt={app.name}
-        width={iconSize}
-        height={iconSize}
-        style={{ borderRadius: 5, objectFit: "contain" }}
-      />
+      {iconElement}
       {app.isSlashApp && (
         <span style={{ color: TRIAD_BLACK }}>/</span>
       )}
@@ -176,13 +204,7 @@ export function BundleHeader({
         lineHeight: 1,
       }}
     >
-      <img
-        src={bundle.icon}
-        alt={bundle.name}
-        width={34}
-        height={34}
-        style={{ borderRadius: 5, objectFit: "contain" }}
-      />
+      <AppIcon name={bundle.icon} size={34} color={bundle.color} />
       <span style={{ color: bundle.color }}>{bundle.name}</span>
       <span style={{ color: DESC_COLOR, fontSize: 11, fontWeight: 400 }}>
         — BUNDLE — {appCount} apps
@@ -196,3 +218,8 @@ export function BundleHeader({
     </span>
   );
 }
+
+// ─────────────────────────────────────────────
+// Exported AppIcon for use in other components
+// ─────────────────────────────────────────────
+export { AppIcon };

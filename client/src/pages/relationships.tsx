@@ -78,7 +78,6 @@ import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import relationshipsIcon from "@assets/brand/relationships-icon.png";
 import bbLogo from "@assets/brand/bb-logo-only.png";
 
 interface CrmStats {
@@ -251,7 +250,7 @@ export default function RelationshipsPage() {
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <Link href="/connect">
             <div className="flex items-center gap-2">
-              <img src={relationshipsIcon} alt="/ connect" className="w-8 h-8" />
+              <Users className="w-8 h-8" style={{ color: '#008060' }} />
               <div className="flex items-center">
                 <span className="text-lg font-bold text-[#09080E] dark:text-white">/</span>
                 <span className="text-lg font-bold text-[#008060]"> connect</span>

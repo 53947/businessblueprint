@@ -14,7 +14,7 @@ import bbLogo from "@assets/brand/bb-favicon.png";
 import webhostedIcon from "@assets/platforms/hostsblue-brandmark.png";
 import webhostedLogo from "@assets/platforms/hostsblue-url.png";
 import airswipedLogo from "@assets/platforms/swipesblue-brandmark.png";
-import { AppName, BundleHeader } from "@/components/app-name";
+import { AppName, AppIcon, BundleHeader } from "@/components/app-name";
 import {
   APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, COACH_BLUE, DIGITAL_IQ,
   HOW_IT_WORKS_STEPS, getAppsByBundle,
@@ -110,7 +110,7 @@ export default function Home() {
                 <div className="hidden md:block space-y-3 relative z-10">
                   <div className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: '#A00028' }}>
                     <div className="flex-shrink-0 -mt-2">
-                      <img src={HOW_IT_WORKS_STEPS[0].icon} alt="Step 1" className="w-10 h-10 object-contain" />
+                      <AppIcon name={HOW_IT_WORKS_STEPS[0].icon} size={40} color="#A00028" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900">Step 1 — Complete Your Digital IQ Assessment</div>
@@ -122,7 +122,7 @@ export default function Home() {
 
                   <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-yellow-500">
                     <div className="flex-shrink-0 -mt-2">
-                      <img src={HOW_IT_WORKS_STEPS[1].icon} alt="Step 2" className="w-10 h-10 object-contain" />
+                      <AppIcon name={HOW_IT_WORKS_STEPS[1].icon} size={40} color="#FFC107" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900">Step 2 — Prescribed Blueprint</div>
@@ -134,7 +134,7 @@ export default function Home() {
 
                   <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-blue-500">
                     <div className="flex-shrink-0 -mt-2">
-                      <img src={HOW_IT_WORKS_STEPS[2].icon} alt="Step 3" className="w-10 h-10 object-contain" />
+                      <AppIcon name={HOW_IT_WORKS_STEPS[2].icon} size={40} color="#064A6C" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
@@ -149,7 +149,7 @@ export default function Home() {
 
                   <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-purple-500">
                     <div className="flex-shrink-0 -mt-2">
-                      <img src={HOW_IT_WORKS_STEPS[3].icon} alt="Step 4" className="w-10 h-10 object-contain" />
+                      <AppIcon name={HOW_IT_WORKS_STEPS[3].icon} size={40} color="#0000FF" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900">Step 4 — Coach Blue</div>
@@ -161,7 +161,7 @@ export default function Home() {
 
                   <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-green-500">
                     <div className="flex-shrink-0 -mt-2">
-                      <img src={HOW_IT_WORKS_STEPS[4].icon} alt="Step 5" className="w-10 h-10 object-contain" />
+                      <AppIcon name={HOW_IT_WORKS_STEPS[4].icon} size={40} color="#F97316" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
@@ -179,7 +179,7 @@ export default function Home() {
                 <div className="block md:hidden space-y-3 relative z-10">
                   <div className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: '#A00028' }}>
                     <div className="flex-shrink-0 -mt-2">
-                      <img src={HOW_IT_WORKS_STEPS[0].icon} alt="Step 1" className="w-10 h-10 object-contain" />
+                      <AppIcon name={HOW_IT_WORKS_STEPS[0].icon} size={40} color="#A00028" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900">Step 1 — Digital IQ Assessment</div>
@@ -191,7 +191,7 @@ export default function Home() {
 
                   <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-yellow-500">
                     <div className="flex-shrink-0 -mt-2">
-                      <img src={HOW_IT_WORKS_STEPS[1].icon} alt="Step 2" className="w-10 h-10 object-contain" />
+                      <AppIcon name={HOW_IT_WORKS_STEPS[1].icon} size={40} color="#FFC107" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900">Step 2 — Prescribed Blueprint</div>
@@ -203,7 +203,7 @@ export default function Home() {
 
                   <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-blue-500">
                     <div className="flex-shrink-0 -mt-2">
-                      <img src={HOW_IT_WORKS_STEPS[2].icon} alt="Step 3" className="w-10 h-10 object-contain" />
+                      <AppIcon name={HOW_IT_WORKS_STEPS[2].icon} size={40} color="#064A6C" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
@@ -218,7 +218,7 @@ export default function Home() {
 
                   <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-purple-500">
                     <div className="flex-shrink-0 -mt-2">
-                      <img src={HOW_IT_WORKS_STEPS[3].icon} alt="Step 4" className="w-10 h-10 object-contain" />
+                      <AppIcon name={HOW_IT_WORKS_STEPS[3].icon} size={40} color="#0000FF" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900">Step 4 — Coach Blue</div>
@@ -230,7 +230,7 @@ export default function Home() {
 
                   <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-green-500">
                     <div className="flex-shrink-0 -mt-2">
-                      <img src={HOW_IT_WORKS_STEPS[4].icon} alt="Step 5" className="w-10 h-10 object-contain" />
+                      <AppIcon name={HOW_IT_WORKS_STEPS[4].icon} size={40} color="#F97316" />
                     </div>
                     <div className="text-left">
                       <div className="font-bold text-sm text-gray-900 flex items-center gap-2">

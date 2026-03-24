@@ -12,29 +12,20 @@ import {
   CreditCard,
   Lock,
   Target,
-  Megaphone
+  Megaphone,
+  Inbox,
+  MessageCircle,
+  Mail,
+  Share2,
+  BookOpen,
+  Star
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import bbIcon from "@assets/brand/bb-favicon.png";
 import bbLockup from "@assets/brand/bb-logo-only.png";
-import inboxIcon from "@assets/app-icons/inbox-icon.png";
-import inboxLogo from "@assets/app-icons/inbox-logo.png";
-import livechatIcon from "@assets/app-icons/livechat-icon.png";
-import livechatLogo from "@assets/app-icons/livechat-logo.png";
-import localSeoIcon from "@assets/app-icons/local-seo-icon.png";
-import sendIcon from "@assets/app-icons/send-icon.png";
-import sendLogo from "@assets/app-icons/send-logo.png";
-import socialMediaIcon from "@assets/app-icons/content-icon.png";
-import contentLogo from "@assets/app-icons/content-logo.png";
-import listingsIcon from "@assets/app-icons/listings-icon.png";
-import listingsLogo from "@assets/app-icons/listings-logo.png";
-import reputationIcon from "@assets/app-icons/reputation-icon.png";
-import reputationLogo from "@assets/app-icons/reputation-logo.png";
 import settingsIcon from "@assets/app-icons/settings.png";
 import aiCoachIcon from "@assets/brand/coach-blue-icon.png";
-import hostsBlueIcon from "@assets/platforms/hostsblue-brandmark.png";
 import hostsBlueWordmark from "@assets/platforms/hostsblue-lockup.png";
-import swipesBlueIcon from "@assets/platforms/swipesblue-brandmark.png";
 import swipesBlueWordmark from "@assets/platforms/swipesblue-lockup.png";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -76,8 +67,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       id: "respond",
       label: "respond",
       hoverLabel: "Unified Communications",
-      icon: <img src={inboxIcon} alt="/respond" className="w-7 h-7 object-contain" />,
-      logo: inboxLogo,
+      icon: <Inbox className="w-7 h-7" style={{ color: '#001882' }} />,
       external: true,
       href: "/respond",
       featureCode: "RS",
@@ -86,8 +76,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       id: "engage",
       label: "engage",
       hoverLabel: "Live Chat Widget",
-      icon: <img src={livechatIcon} alt="/ engage" className="w-7 h-7 object-contain" />,
-      logo: livechatLogo,
+      icon: <MessageCircle className="w-7 h-7" style={{ color: '#660099' }} />,
       external: true,
       href: "/engage",
       featureCode: "LC",
@@ -112,8 +101,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       id: "promote",
       label: "promote",
       hoverLabel: "Email + SMS Marketing",
-      icon: <img src={sendIcon} alt="/ promote" className="w-7 h-7 object-contain" />,
-      logo: sendLogo,
+      icon: <Mail className="w-7 h-7" style={{ color: '#1844A6' }} />,
       external: true,
       href: "/promote",
       featureCode: "SE",
@@ -122,8 +110,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       id: "post",
       label: "post",
       hoverLabel: "Social Media Management",
-      icon: <img src={socialMediaIcon} alt="/post" className="w-7 h-7 object-contain" />,
-      logo: contentLogo,
+      icon: <Share2 className="w-7 h-7" style={{ color: '#FF44CC' }} />,
       external: true,
       href: "/post",
       featureCode: "PO",
@@ -144,8 +131,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       id: "publish",
       label: "publish",
       hoverLabel: "Directory Sync & Consistency",
-      icon: <img src={listingsIcon} alt="/ publish" className="w-7 h-7 object-contain" />,
-      logo: listingsLogo,
+      icon: <BookOpen className="w-7 h-7" style={{ color: '#064A6C' }} />,
       external: true,
       href: "/publish-landing",
       featureCode: "LI",
@@ -154,8 +140,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       id: "elevate",
       label: "elevate",
       hoverLabel: "Review Response & Reputation Management",
-      icon: <img src={reputationIcon} alt="/ elevate" className="w-7 h-7 object-contain" />,
-      logo: reputationLogo,
+      icon: <Star className="w-7 h-7" style={{ color: '#E9B307' }} />,
       external: true,
       href: "/elevate-landing",
       featureCode: "RE",
