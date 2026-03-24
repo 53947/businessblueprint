@@ -104,7 +104,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(
       path.resolve(
         process.cwd(),
-        "attached_assets/Blueprint_Favicon_1762489845363.ico",
+        "attached_assets/brand/bb-favicon.png",
       ),
     );
   });
