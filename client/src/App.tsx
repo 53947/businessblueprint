@@ -49,6 +49,7 @@ import ListLanding from "@/pages/list-landing";
 import ReviewLanding from "@/pages/review-landing";
 import AmplifyLanding from "@/pages/amplify-landing";
 import AmplifyDashboard from "@/pages/amplify-dashboard";
+import AmplifyRedditWizard from "@/pages/amplify-reddit-wizard";
 import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import DataDeletion from "@/pages/data-deletion";
@@ -128,6 +129,7 @@ function Router() {
       <Route path="/optimize/dashboard" component={OptimizeDashboard} />
       <Route path="/amplify-landing" component={AmplifyLanding} />
       <Route path="/amplify" component={AmplifyDashboard} />
+      <Route path="/amplify/reddit/new" component={AmplifyRedditWizard} />
       <Route path="/publish-app" component={ListManagement} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
