@@ -99,8 +99,8 @@ export default function Checkout() {
       }
 
       // Build payment token from card details
-      // In production, this would use NMI's Collect.js for PCI-compliant tokenization.
-      // For now, the server-side NMI integration handles the card data securely.
+      // In production, this uses SwipesBlue's Collect.js for PCI-compliant tokenization.
+      // For now, the server-side SwipesBlue integration handles the card data securely.
       const cardClean = formData.cardNumber.replace(/\s/g, '');
       const [expMonth, expYear] = formData.expiryDate.split('/');
       const paymentToken = `${cardClean}|${expMonth}|${expYear}|${formData.cvv}`;
@@ -358,7 +358,7 @@ export default function Checkout() {
               </form>
 
               <p className="text-xs text-gray-500 mt-4 text-center">
-                Your payment information is securely processed via NMI Gateway
+                Your payment information is securely processed via SwipesBlue
               </p>
             </Card>
           </div>

@@ -209,7 +209,7 @@ export default function Cart() {
               </Button>
 
               <p className="text-xs text-gray-500 mt-4 text-center">
-                Secure payment powered by NMI
+                Secure payment powered by SwipesBlue
               </p>
             </Card>
           </div>

@@ -2,15 +2,20 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { setupWebSocket } from "./websocket";
-import { handleStripeWebhook } from "./routes/stripe-webhook";
+import { paymentWebhookRouter } from "./routes/payment-webhook";
+import { handleScansBlueStripeWebhook } from "./routes/scansblue-webhook";
 import { analyticsSyncService } from "./services/analyticsSync";
 
 const app = express();
 
-app.post('/api/stripe/webhook', 
+// ScansBlue Stripe webhook needs raw body (before express.json)
+app.post('/api/scansblue/stripe-webhook',
   express.raw({ type: 'application/json' }),
-  handleStripeWebhook
+  handleScansBlueStripeWebhook
 );
+
+// SwipesBlue webhook for subscription events
+app.use(paymentWebhookRouter);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

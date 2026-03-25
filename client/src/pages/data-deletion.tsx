@@ -95,7 +95,7 @@ export default function DataDeletion() {
           <ul className="list-disc pl-6 mb-4">
             <li><strong>Social Media:</strong> Posts published to Facebook, Instagram, LinkedIn, X, etc., remain on those platforms</li>
             <li><strong>Synup:</strong> Listings data managed through Synup may require separate deletion</li>
-            <li><strong>Payment Processors:</strong> Swipes Blue/NMI may retain transaction records</li>
+            <li><strong>Payment Processors:</strong> SwipesBlue may retain transaction records</li>
           </ul>
           <p className="mb-6">
             You must separately contact these platforms to delete data stored with them.

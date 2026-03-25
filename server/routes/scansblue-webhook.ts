@@ -1,8 +1,8 @@
 /**
- * Payment Webhook Handler
- * 
- * Handles webhook events for ScansBlue Full Report payments
- * Uses payment service abstraction for provider-agnostic verification
+ * ScansBlue Stripe Webhook Handler
+ *
+ * Handles Stripe webhook events exclusively for ScansBlue $10 Full Report purchases.
+ * This is the ONLY Stripe webhook in the app -- isolated to the ScansBlue checkout flow.
  */
 
 import { Request, Response } from "express";
@@ -11,28 +11,36 @@ import { db } from "../db";
 import { scansBluePurchases, scansBlueResults } from "@shared/schema";
 import { eq } from "drizzle-orm";
 import { ScansBlueService } from "../services/scansblue";
-import { paymentService } from "../services/payment-service";
 
 const scansBlueService = new ScansBlueService();
 
-export async function handleStripeWebhook(req: Request, res: Response) {
+export async function handleScansBlueStripeWebhook(req: Request, res: Response) {
   const sig = req.headers["stripe-signature"] as string;
 
   if (!sig) {
-    console.error("[Payment Webhook] No signature provided");
+    console.error("[ScansBlue Webhook] No signature provided");
     return res.status(400).json({ error: "No signature" });
   }
 
+  const stripeKey = process.env.STRIPE_SECRET_KEY;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!stripeKey || !webhookSecret) {
+    console.error("[ScansBlue Webhook] Missing Stripe configuration");
+    return res.status(500).json({ error: "Webhook not configured" });
+  }
+
+  const stripe = new Stripe(stripeKey);
   let event: Stripe.Event;
 
   try {
-    event = paymentService.verifyWebhook(req.body, sig);
+    event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
   } catch (err: any) {
-    console.error("[Payment Webhook] Signature verification failed:", err.message);
+    console.error("[ScansBlue Webhook] Signature verification failed:", err.message);
     return res.status(400).json({ error: "Webhook signature verification failed" });
   }
 
-  console.log(`[Payment Webhook] Received event: ${event.type}`);
+  console.log(`[ScansBlue Webhook] Received event: ${event.type}`);
 
   try {
     switch (event.type) {
@@ -44,43 +52,43 @@ export async function handleStripeWebhook(req: Request, res: Response) {
 
       case "payment_intent.succeeded": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        console.log(`[Payment Webhook] Payment succeeded: ${paymentIntent.id}`);
+        console.log(`[ScansBlue Webhook] Payment succeeded: ${paymentIntent.id}`);
         break;
       }
 
       case "payment_intent.payment_failed": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        console.log(`[Payment Webhook] Payment failed: ${paymentIntent.id}`);
+        console.log(`[ScansBlue Webhook] Payment failed: ${paymentIntent.id}`);
         await handlePaymentFailed(paymentIntent);
         break;
       }
 
       default:
-        console.log(`[Payment Webhook] Unhandled event type: ${event.type}`);
+        console.log(`[ScansBlue Webhook] Unhandled event type: ${event.type}`);
     }
 
     res.json({ received: true });
   } catch (error: any) {
-    console.error("[Payment Webhook] Error processing event:", error);
+    console.error("[ScansBlue Webhook] Error processing event:", error);
     res.status(500).json({ error: "Webhook processing failed" });
   }
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const { metadata } = session;
-  
+
   if (!metadata?.type || metadata.type !== "scansblue_full_report") {
-    console.log("[Payment Webhook] Not a ScansBlue purchase, skipping");
+    console.log("[ScansBlue Webhook] Not a ScansBlue purchase, skipping");
     return;
   }
 
   const assessmentId = metadata.assessmentId ? parseInt(metadata.assessmentId) : null;
   const websiteUrl = metadata.websiteUrl || "";
-  
-  console.log(`[Payment Webhook] Processing ScansBlue Full Report purchase for assessment ${assessmentId}`);
+
+  console.log(`[ScansBlue Webhook] Processing ScansBlue Full Report purchase for assessment ${assessmentId}`);
 
   if (!assessmentId) {
-    console.error("[Payment Webhook] No assessmentId in metadata");
+    console.error("[ScansBlue Webhook] No assessmentId in metadata");
     return;
   }
 
@@ -90,7 +98,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     });
 
     if (existingPurchase) {
-      console.log(`[Payment Webhook] Purchase already recorded for session ${session.id}`);
+      console.log(`[ScansBlue Webhook] Purchase already recorded for session ${session.id}`);
       return;
     }
 
@@ -98,8 +106,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       assessmentId: assessmentId,
       paymentProvider: "stripe",
       transactionId: session.id,
-      paymentIntentId: typeof session.payment_intent === "string" 
-        ? session.payment_intent 
+      paymentIntentId: typeof session.payment_intent === "string"
+        ? session.payment_intent
         : session.payment_intent?.id || null,
       amount: session.amount_total || 1000,
       status: "paid",
@@ -107,14 +115,14 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       purchasedAt: new Date()
     });
 
-    console.log(`[Payment Webhook] Purchase recorded for assessment ${assessmentId}`);
+    console.log(`[ScansBlue Webhook] Purchase recorded for assessment ${assessmentId}`);
 
     const assessment = await db.query.assessments.findFirst({
       where: (assessments, { eq }) => eq(assessments.id, assessmentId)
     });
 
     if (!assessment) {
-      console.error(`[Payment Webhook] Assessment ${assessmentId} not found`);
+      console.error(`[ScansBlue Webhook] Assessment ${assessmentId} not found`);
       return;
     }
 
@@ -122,7 +130,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     const customerEmail = session.customer_email || assessment.email;
 
     if (!targetUrl) {
-      console.error("[Payment Webhook] No website URL available for full report");
+      console.error("[ScansBlue Webhook] No website URL available for full report");
       return;
     }
 
@@ -134,7 +142,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       requestedAt: new Date()
     });
 
-    console.log(`[Payment Webhook] Requesting full report for ${targetUrl}`);
+    console.log(`[ScansBlue Webhook] Requesting full report for ${targetUrl}`);
 
     const reportResult = await scansBlueService.requestFullReport(
       targetUrl,
@@ -143,25 +151,25 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     );
 
     if (reportResult) {
-      console.log(`[Payment Webhook] Full report queued: ${reportResult.reportId}`);
+      console.log(`[ScansBlue Webhook] Full report queued: ${reportResult.reportId}`);
 
       setTimeout(async () => {
         try {
           await checkAndDeliverReport(assessmentId, customerEmail || undefined, targetUrl);
         } catch (error) {
-          console.error("[Payment Webhook] Error in delayed report check:", error);
+          console.error("[ScansBlue Webhook] Error in delayed report check:", error);
         }
       }, 3 * 60 * 1000);
     }
 
   } catch (error) {
-    console.error("[Payment Webhook] Error handling checkout completed:", error);
+    console.error("[ScansBlue Webhook] Error handling checkout completed:", error);
     throw error;
   }
 }
 
 async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
-  console.log(`[Payment Webhook] Payment failed for ${paymentIntent.id}`);
+  console.log(`[ScansBlue Webhook] Payment failed for ${paymentIntent.id}`);
 
   try {
     const existingPurchase = await db.query.scansBluePurchases?.findFirst({
@@ -172,17 +180,17 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
       await db.update(scansBluePurchases)
         .set({ status: "failed" })
         .where(eq(scansBluePurchases.id, existingPurchase.id));
-      
-      console.log(`[Payment Webhook] Updated purchase ${existingPurchase.id} to failed status`);
+
+      console.log(`[ScansBlue Webhook] Updated purchase ${existingPurchase.id} to failed status`);
     }
   } catch (error) {
-    console.error("[Payment Webhook] Error updating failed payment:", error);
+    console.error("[ScansBlue Webhook] Error updating failed payment:", error);
   }
 }
 
 async function checkAndDeliverReport(
-  assessmentId: number, 
-  email: string | undefined, 
+  assessmentId: number,
+  email: string | undefined,
   websiteUrl: string
 ) {
   try {
@@ -194,8 +202,8 @@ async function checkAndDeliverReport(
     });
 
     if (result && result.status === "completed" && email) {
-      console.log(`[Payment Webhook] Sending full report email to ${email}`);
-      
+      console.log(`[ScansBlue Webhook] Sending full report email to ${email}`);
+
       const purchase = await db.query.scansBluePurchases?.findFirst({
         where: (purchases, { eq }) => eq(purchases.assessmentId, assessmentId)
       });
@@ -207,6 +215,6 @@ async function checkAndDeliverReport(
       }
     }
   } catch (error) {
-    console.error("[Payment Webhook] Error checking/delivering report:", error);
+    console.error("[ScansBlue Webhook] Error checking/delivering report:", error);
   }
 }

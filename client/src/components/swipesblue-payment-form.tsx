@@ -24,7 +24,7 @@ export interface PaymentFormProps {
   disabled?: boolean;
 }
 
-// Extend Window interface for NMI Collect.js
+// Extend Window interface for SwipesBlue Collect.js
 declare global {
   interface Window {
     CollectJS?: {
@@ -35,7 +35,7 @@ declare global {
   }
 }
 
-export function NMIPaymentForm({
+export function SwipesBluePaymentForm({
   onPaymentToken,
   onError,
   amount,
@@ -60,11 +60,11 @@ export function NMIPaymentForm({
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
   
-  // Load NMI Collect.js script
+  // Load SwipesBlue Collect.js script
   useEffect(() => {
     const loadCollectJS = () => {
       // Validate tokenization key is present
-      const tokenizationKey = import.meta.env.VITE_NMI_TOKENIZATION_KEY;
+      const tokenizationKey = import.meta.env.VITE_SWIPESBLUE_TOKENIZATION_KEY;
       if (!tokenizationKey) {
         onError('Payment system configuration missing. Please contact support.');
         return;
@@ -78,7 +78,7 @@ export function NMIPaymentForm({
       }
       
       const script = document.createElement('script');
-      script.src = 'https://secure.nmi.com/token/Collect.js';
+      script.src = 'https://swipesblue.com/collect.js';
       script.setAttribute('data-tokenization-key', tokenizationKey);
       script.setAttribute('data-variant', 'inline');
       
@@ -98,7 +98,7 @@ export function NMIPaymentForm({
     
     return () => {
       // Cleanup script if component unmounts
-      const existingScript = document.querySelector('script[src="https://secure.nmi.com/token/Collect.js"]');
+      const existingScript = document.querySelector('script[src="https://swipesblue.com/collect.js"]');
       if (existingScript) {
         document.head.removeChild(existingScript);
       }
@@ -320,7 +320,7 @@ export function NMIPaymentForm({
             />
           </div>
           
-          {/* Payment Fields - NMI Collect.js will inject here */}
+          {/* Payment Fields - SwipesBlue Collect.js will inject here */}
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">

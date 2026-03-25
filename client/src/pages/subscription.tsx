@@ -13,7 +13,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { NMIPaymentForm, PaymentFormData } from '@/components/nmi-payment-form';
+import { SwipesBluePaymentForm, PaymentFormData } from '@/components/swipesblue-payment-form';
 import { SubscriptionPlan, SubscriptionAddon } from '@shared/schema';
 import { 
   Check, 
@@ -490,7 +490,7 @@ export default function SubscriptionPage() {
                       </div>
                     </div>
                   ) : (
-                    <NMIPaymentForm
+                    <SwipesBluePaymentForm
                       onPaymentToken={handlePaymentToken}
                       onError={handlePaymentError}
                       amount={pricing.total}

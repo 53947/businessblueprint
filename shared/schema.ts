@@ -508,7 +508,7 @@ export const subscriptionAddons = pgTable("subscription_addons", {
 // Customer subscriptions
 export const subscriptions = pgTable("subscriptions", {
   id: serial("id").primaryKey(),
-  nmiSubscriptionId: varchar("nmi_subscription_id", { length: 100 }).unique(), // NMI subscription ID
+  swipesblueSubscriptionId: varchar("swipesblue_subscription_id", { length: 100 }).unique(),
   assessmentId: integer("assessment_id").references(() => assessments.id),
   clientId: integer("client_id").references(() => clients.id),
   planId: integer("plan_id").references(() => subscriptionPlans.id),
@@ -601,7 +601,7 @@ export const assessmentProductRecommendations = pgTable("assessment_product_reco
 export const billingHistory = pgTable("billing_history", {
   id: serial("id").primaryKey(),
   subscriptionId: integer("subscription_id").references(() => subscriptions.id),
-  nmiTransactionId: varchar("nmi_transaction_id", { length: 100 }),
+  swipesblueTransactionId: varchar("swipesblue_transaction_id", { length: 100 }),
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
   status: varchar("status", { length: 30 }).notNull(), // paid, failed, pending, refunded
   billingDate: timestamp("billing_date").notNull(),
@@ -638,7 +638,7 @@ export const insertSubscriptionAddonSchema = createInsertSchema(subscriptionAddo
 });
 
 export const insertSubscriptionSchema = createInsertSchema(subscriptions).pick({
-  nmiSubscriptionId: true,
+  swipesblueSubscriptionId: true,
   assessmentId: true,
   clientId: true,
   planId: true,
@@ -655,7 +655,7 @@ export const insertSubscriptionSchema = createInsertSchema(subscriptions).pick({
 
 export const insertBillingHistorySchema = createInsertSchema(billingHistory).pick({
   subscriptionId: true,
-  nmiTransactionId: true,
+  swipesblueTransactionId: true,
   amount: true,
   status: true,
   billingDate: true,

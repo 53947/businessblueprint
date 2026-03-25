@@ -11,7 +11,7 @@ import {
   subscriptionAddonSelections,
 } from "@shared/schema";
 import { PricingEngine } from "../services/pricing";
-import { NMIService } from "../services/nmi";
+import { SwipesBlueService } from "../services/swipesblue";
 import { productRecommendationService } from "../services/productRecommendations";
 import { ResendEmailService } from "../services/resend-email";
 import { eq } from "drizzle-orm";
@@ -158,29 +158,30 @@ export function registerSubscriptionRoutes(
         });
       }
 
-      const nmiRequest = {
-        planId: "marketplace-order-" + Date.now(),
-        customerData: {
-          firstName: customerInfo.firstName,
-          lastName: customerInfo.lastName,
-          email: customerInfo.email,
-          phone: customerInfo.phone || "",
-          address: customerInfo.address || "",
-          city: customerInfo.city || "",
-          state: customerInfo.state || "",
-          zip: customerInfo.zip || "",
-        },
-        paymentToken,
+      // Create customer in SwipesBlue
+      const customerResult = await SwipesBlueService.createCustomer({
+        firstName: customerInfo.firstName,
+        lastName: customerInfo.lastName,
+        email: customerInfo.email,
+        phone: customerInfo.phone || undefined,
+        address: customerInfo.address || undefined,
+        city: customerInfo.city || undefined,
+        state: customerInfo.state || undefined,
+        zip: customerInfo.zip || undefined,
+      });
+
+      const swipesblueResult = await SwipesBlueService.createSubscription({
+        customerId: customerResult.customerId,
         planAmount: calculatedTotal.toFixed(2),
-        billingCycle: "monthly" as const,
-      };
+        billingCycle: "monthly",
+        paymentToken,
+        planId: "marketplace-order-" + Date.now(),
+      });
 
-      const nmiResult = await NMIService.createSubscription(nmiRequest);
-
-      if (nmiResult.response !== "1") {
+      if (!swipesblueResult.success) {
         return res.status(400).json({
           success: false,
-          message: nmiResult.responsetext || "Payment processing failed",
+          message: swipesblueResult.message || "Payment processing failed",
         });
       }
 
@@ -221,7 +222,7 @@ export function registerSubscriptionRoutes(
       });
 
       console.log("Marketplace order successful:", {
-        subscriptionId: nmiResult.subscription_id,
+        subscriptionId: swipesblueResult.subscriptionId,
         clientId: client.id,
         customerEmail: customerInfo.email,
         items: items.length,
@@ -231,7 +232,7 @@ export function registerSubscriptionRoutes(
       res.json({
         success: true,
         message: "Order processed successfully",
-        subscriptionId: nmiResult.subscription_id,
+        subscriptionId: swipesblueResult.subscriptionId,
         clientId: client.id,
         items: items.map((item) => item.name),
       });
@@ -653,17 +654,17 @@ export function registerSubscriptionRoutes(
 
       let setupTransactionResult = null;
       if (pricing.setupFee > 0) {
-        setupTransactionResult = await NMIService.processTransaction(
+        setupTransactionResult = await SwipesBlueService.processTransaction({
           paymentToken,
-          pricing.oneTimeTotal.toFixed(2),
-          `${plan[0].name} Setup Fee`,
-        );
+          amount: pricing.oneTimeTotal.toFixed(2),
+          description: `${plan[0].name} Setup Fee`,
+        });
 
-        if (setupTransactionResult.response !== "1") {
+        if (!setupTransactionResult.success) {
           return res.status(400).json({
             success: false,
             message:
-              setupTransactionResult.responsetext ||
+              setupTransactionResult.message ||
               "Setup fee payment failed",
           });
         }
@@ -681,32 +682,34 @@ export function registerSubscriptionRoutes(
         : null;
 
       const recurringAmount = pricing.recurringTotal.toFixed(2);
-      const nmiRequest = {
-        planId: plan[0].planId,
-        customerData: {
-          firstName: customerInfo.firstName,
-          lastName: customerInfo.lastName,
-          email: customerInfo.email,
-          phone: customerInfo.phone || "",
-          address: customerInfo.address || "",
-          city: customerInfo.city || "",
-          state: customerInfo.state || "",
-          zip: customerInfo.zip || "",
-        },
-        paymentToken,
+
+      // Create customer in SwipesBlue
+      const swipesblueCustomer = await SwipesBlueService.createCustomer({
+        firstName: customerInfo.firstName,
+        lastName: customerInfo.lastName,
+        email: customerInfo.email,
+        phone: customerInfo.phone || undefined,
+        address: customerInfo.address || undefined,
+        city: customerInfo.city || undefined,
+        state: customerInfo.state || undefined,
+        zip: customerInfo.zip || undefined,
+      });
+
+      const swipesblueResult = await SwipesBlueService.createSubscription({
+        customerId: swipesblueCustomer.customerId,
         planAmount: recurringAmount,
         billingCycle,
+        paymentToken,
+        planId: plan[0].planId,
         startDate: trialPeriodEnd
           ? trialPeriodEnd.toISOString().split("T")[0]
           : undefined,
-      };
+      });
 
-      const nmiResult = await NMIService.createSubscription(nmiRequest);
-
-      if (nmiResult.response !== "1") {
+      if (!swipesblueResult.success) {
         return res.status(400).json({
           success: false,
-          message: nmiResult.responsetext || "Subscription creation failed",
+          message: swipesblueResult.message || "Subscription creation failed",
         });
       }
 
@@ -742,7 +745,7 @@ export function registerSubscriptionRoutes(
       await storage.updateClient(client.id, { enabledFeatures });
 
       const subscriptionData = {
-        nmiSubscriptionId: nmiResult.subscription_id,
+        swipesblueSubscriptionId: swipesblueResult.subscriptionId,
         clientId: client.id,
         planId: plan[0].id,
         status: isTrialEligible ? "trial" : "active",
@@ -788,7 +791,7 @@ export function registerSubscriptionRoutes(
       res.json({
         success: true,
         subscription: newSubscription,
-        nmiSubscriptionId: nmiResult.subscription_id,
+        swipesblueSubscriptionId: swipesblueResult.subscriptionId,
         clientId: client.id,
         message: "Subscription created successfully",
       });
