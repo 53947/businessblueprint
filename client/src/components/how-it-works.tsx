@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { AppIcon } from "@/components/app-name";
+import coachBlueIcon from "@assets/brand/coach-blue-icon.png";
 
 interface HowItWorksProps {
   onStartAssessment: () => void;
@@ -51,7 +52,7 @@ const STEPS = [
     title: "Never Grow Alone — Coach Blue",
     description: "Your 24/7 AI business coach guides your setup, monitors your data, and tells you exactly what to do next. Always on.",
     shortDesc: "Your 24/7 AI business coach.",
-    icon: "GraduationCap",
+    icon: "coachblue-png",
     color: "#0000FF",
   },
 ];
@@ -74,7 +75,11 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
               style={{ borderLeft: `4px solid ${step.color}` }}
             >
               <div className="flex items-center gap-3 mb-2">
-                <AppIcon name={step.icon} size={36} color={step.color} />
+                {step.icon === "coachblue-png" ? (
+                  <img src={coachBlueIcon} alt="Coach Blue" width={36} height={36} style={{ borderRadius: 7, objectFit: "contain" }} />
+                ) : (
+                  <AppIcon name={step.icon} size={36} color={step.color} />
+                )}
                 <span className="text-sm font-bold text-gray-900">Step {step.number}</span>
               </div>
               <h3 className="text-sm font-bold text-gray-900 mb-1">{step.title}</h3>
@@ -91,7 +96,11 @@ export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
               className="flex items-start gap-3 p-3 rounded-lg"
               style={{ borderLeft: `4px solid ${step.color}` }}
             >
-              <AppIcon name={step.icon} size={32} color={step.color} />
+              {step.icon === "coachblue-png" ? (
+                <img src={coachBlueIcon} alt="Coach Blue" width={32} height={32} style={{ borderRadius: 6, objectFit: "contain" }} />
+              ) : (
+                <AppIcon name={step.icon} size={32} color={step.color} />
+              )}
               <div>
                 <h3 className="text-sm font-bold text-gray-900">{step.title}</h3>
                 <p className="text-xs text-gray-600">{step.shortDesc}</p>

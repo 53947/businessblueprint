@@ -249,11 +249,12 @@ export const DIGITAL_IQ: DigitalIQConfig = {
 };
 
 export const HOW_IT_WORKS_STEPS: HowItWorksStep[] = [
-  { step: 1, title: "Assessment", icon: "ClipboardCheck" },
-  { step: 2, title: "Prescription", icon: "FileText" },
-  { step: 3, title: "Anchor Suite", icon: "Anchor" },
-  { step: 4, title: "Coach Blue", icon: "GraduationCap" },
-  { step: 5, title: "Compass Suite", icon: "Compass" },
+  { step: 1, title: "Scan Your Digital Presence", icon: "ClipboardCheck" },
+  { step: 2, title: "Get Your Custom Blueprint", icon: "FileText" },
+  { step: 3, title: "Build Your Foundation", icon: "Users" },
+  { step: 4, title: "Own Your Local Presence", icon: "Anchor" },
+  { step: 5, title: "Activate Your Communications", icon: "Compass" },
+  { step: 6, title: "Never Grow Alone", icon: "coachblue-png" },
 ];
 
 export const SCANNING_TOOL: ScanningToolConfig = {

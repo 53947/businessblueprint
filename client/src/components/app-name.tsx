@@ -1,19 +1,33 @@
-import * as LucideIcons from "lucide-react";
+import {
+  BookOpen, Star, Target, Mail, Inbox, MessageCircle, Share2, Megaphone,
+  Anchor, Compass, Users, BarChart3, ScanLine, ClipboardCheck, FileText,
+  GraduationCap, TrendingUp,
+  type LucideIcon,
+} from "lucide-react";
 import {
   APP_REGISTRY,
   BUNDLE_REGISTRY,
   CONNECT_CRM,
   COACH_BLUE,
   DIGITAL_IQ,
-  type SlashApp,
 } from "@/config/app-registry";
+
+// ─────────────────────────────────────────────
+// Icon lookup map — explicit imports for tree-shaking
+// ─────────────────────────────────────────────
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  BookOpen, Star, Target, Mail, Inbox, MessageCircle, Share2, Megaphone,
+  Anchor, Compass, Users, BarChart3, ScanLine, ClipboardCheck, FileText,
+  GraduationCap, TrendingUp,
+};
 
 // ─────────────────────────────────────────────
 // AppIcon — renders Lucide icon in a colored rounded square
 // ─────────────────────────────────────────────
 
-function AppIcon({ name, size, color }: { name: string; size: number; color: string }) {
-  const Icon = (LucideIcons as any)[name];
+export function AppIcon({ name, size, color }: { name: string; size: number; color: string }) {
+  const Icon = ICON_MAP[name];
   if (!Icon) return null;
   const iconSize = Math.max(Math.round(size * 0.55), 10);
   return (
@@ -58,19 +72,16 @@ function lookupApp(id: string): {
   description: string;
   isPngIcon?: boolean;
 } | null {
-  // Slash apps
   const slashApp = APP_REGISTRY.find((a) => a.id === id);
   if (slashApp) return slashApp;
 
-  // Connect CRM
   if (id === CONNECT_CRM.id)
     return { ...CONNECT_CRM, isSlashApp: CONNECT_CRM.isSlashApp };
 
-  // Coach Blue (keeps PNG icon)
+  // Coach Blue keeps PNG icon
   if (id === COACH_BLUE.id)
     return { ...COACH_BLUE, isSlashApp: COACH_BLUE.isSlashApp, isPngIcon: true };
 
-  // Digital IQ
   if (id === DIGITAL_IQ.id)
     return { ...DIGITAL_IQ, isSlashApp: DIGITAL_IQ.isSlashApp };
 
@@ -218,8 +229,3 @@ export function BundleHeader({
     </span>
   );
 }
-
-// ─────────────────────────────────────────────
-// Exported AppIcon for use in other components
-// ─────────────────────────────────────────────
-export { AppIcon };

@@ -4,7 +4,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { ArrowRight } from "lucide-react";
 import { AppIcon } from "@/components/app-name";
-import { AppName } from "@/components/app-name";
+import coachBlueIcon from "@assets/brand/coach-blue-icon.png";
 
 export default function Journey() {
   return (
@@ -221,7 +221,7 @@ export default function Journey() {
           <div className="flex items-start gap-6 mb-6">
             <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#0000FF" }}>6</div>
             <div className="flex items-center gap-3">
-              <AppIcon name="GraduationCap" size={40} color="#0000FF" />
+              <img src={coachBlueIcon} alt="Coach Blue" width={40} height={40} style={{ borderRadius: 8, objectFit: "contain" }} />
               <h2 className="text-3xl font-bold text-gray-900">Never Grow Alone — Coach Blue</h2>
             </div>
           </div>

@@ -148,7 +148,7 @@ export const HOW_IT_WORKS_MENU: {
       description: "Coach Blue — Your 24/7 AI business coach. Guides setup, monitors progress, alerts you before problems grow.",
       href: "/coach-blue",
       testId: "link-step6",
-      icon: HOW_IT_WORKS_STEPS[3].icon,
+      icon: HOW_IT_WORKS_STEPS[5].icon,
       borderColor: "#0000FF",
     },
   ],

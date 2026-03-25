@@ -15,6 +15,7 @@ import webhostedIcon from "@assets/platforms/hostsblue-brandmark.png";
 import webhostedLogo from "@assets/platforms/hostsblue-url.png";
 import airswipedLogo from "@assets/platforms/swipesblue-brandmark.png";
 import { AppName, AppIcon, BundleHeader } from "@/components/app-name";
+import coachBlueStepIcon from "@assets/brand/coach-blue-icon.png";
 import {
   APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, COACH_BLUE, DIGITAL_IQ,
   HOW_IT_WORKS_STEPS, getAppsByBundle,
@@ -106,142 +107,30 @@ export default function Home() {
                 <p className="text-xs text-gray-600 mb-4 relative z-10">
                   Custom digital growth plan built from AI analysis of your business.
                 </p>
-                {/* Desktop Version - Full Text */}
-                <div className="hidden md:block space-y-3 relative z-10">
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: '#A00028' }}>
-                    <div className="flex-shrink-0 -mt-2">
-                      <AppIcon name={HOW_IT_WORKS_STEPS[0].icon} size={40} color="#A00028" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 1 — Complete Your Digital IQ Assessment</div>
-                      <p className="text-xs text-gray-600">
-                        You start with a quick assessment, and we generate your custom blueprint.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-yellow-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <AppIcon name={HOW_IT_WORKS_STEPS[1].icon} size={40} color="#FFC107" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 2 — Prescribed Blueprint</div>
-                      <p className="text-xs text-gray-600">
-                        Your custom action plan with SEO, content strategy, and revenue-focused steps.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-blue-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <AppIcon name={HOW_IT_WORKS_STEPS[2].icon} size={40} color="#064A6C" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
-                        <span>Step 3 —</span>
-                        <span style={{ color: '#0000FF', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ anchor</span>
+                {/* All 6 steps — data-driven */}
+                <div className="space-y-3 relative z-10">
+                  {[
+                    { title: "Scan Your Digital Presence", desc: "Free. We analyze your Google Business listing, reviews, website, and local SEO.", color: "#A00028" },
+                    { title: "Get Your Custom Blueprint", desc: "AI-prescribed growth plan specific to your scores, your market, and your gaps.", color: "#FFC107" },
+                    { title: "Build Your Foundation — / connect", desc: "Your CRM goes in first. Every app flows data through / connect automatically.", color: "#008060" },
+                    { title: "Own Your Local Presence — / anchor suite", desc: "Google listing, D&B DUNS, directories, reviews, SEO, and advertising.", color: "#064A6C" },
+                    { title: "Activate Your Communications — / compass suite", desc: "Email, live chat, unified inbox, and social media. All connected.", color: "#F97316" },
+                    { title: "Never Grow Alone — Coach Blue", desc: "Your 24/7 AI business coach. Guides setup, monitors progress, alerts you.", color: "#0000FF", isPng: true },
+                  ].map((step, i) => (
+                    <div key={i} className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: step.color }}>
+                      <div className="flex-shrink-0 -mt-2">
+                        {step.isPng ? (
+                          <img src={coachBlueStepIcon} alt="Coach Blue" width={40} height={40} style={{ borderRadius: 8, objectFit: "contain" }} />
+                        ) : (
+                          <AppIcon name={HOW_IT_WORKS_STEPS[i].icon} size={40} color={step.color} />
+                        )}
                       </div>
-                      <p className="text-xs text-gray-600">
-                        Listings management + reputation building for stronger local visibility. ($99/mo bundle — SEO, listings, reviews)
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-purple-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <AppIcon name={HOW_IT_WORKS_STEPS[3].icon} size={40} color="#0000FF" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 4 — Coach Blue</div>
-                      <p className="text-xs text-gray-600">
-                        24/7 AI business coach guiding you through every step of your growth journey.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-green-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <AppIcon name={HOW_IT_WORKS_STEPS[4].icon} size={40} color="#F97316" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
-                        <span>Step 5 —</span>
-                        <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ compass</span>
+                      <div className="text-left">
+                        <div className="font-bold text-sm text-gray-900">Step {i + 1} — {step.title}</div>
+                        <p className="text-xs text-gray-600">{step.desc}</p>
                       </div>
-                      <p className="text-xs text-gray-600">
-                        Complete communication suite ($99/mo bundle)
-                      </p>
                     </div>
-                  </div>
-                </div>
-
-                {/* Mobile Version - Short Text */}
-                <div className="block md:hidden space-y-3 relative z-10">
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: '#A00028' }}>
-                    <div className="flex-shrink-0 -mt-2">
-                      <AppIcon name={HOW_IT_WORKS_STEPS[0].icon} size={40} color="#A00028" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 1 — Digital IQ Assessment</div>
-                      <p className="text-xs text-gray-600">
-                        Quick assessment → instant blueprint.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-yellow-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <AppIcon name={HOW_IT_WORKS_STEPS[1].icon} size={40} color="#FFC107" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 2 — Prescribed Blueprint</div>
-                      <p className="text-xs text-gray-600">
-                        Your clear action plan to grow.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-blue-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <AppIcon name={HOW_IT_WORKS_STEPS[2].icon} size={40} color="#064A6C" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
-                        <span>Step 3 —</span>
-                        <span style={{ color: '#0000FF', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ anchor</span>
-                      </div>
-                      <p className="text-xs text-gray-600">
-                        Boost local visibility & reviews.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-purple-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <AppIcon name={HOW_IT_WORKS_STEPS[3].icon} size={40} color="#0000FF" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900">Step 4 — Coach Blue</div>
-                      <p className="text-xs text-gray-600">
-                        Your 24/7 AI business coach.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2 p-2 rounded-lg border-l-4 border-green-500">
-                    <div className="flex-shrink-0 -mt-2">
-                      <AppIcon name={HOW_IT_WORKS_STEPS[4].icon} size={40} color="#F97316" />
-                    </div>
-                    <div className="text-left">
-                      <div className="font-bold text-sm text-gray-900 flex items-center gap-2">
-                        <span>Step 5 —</span>
-                        <span style={{ color: '#F97316', fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600 }}>/ compass</span>
-                      </div>
-                      <p className="text-xs text-gray-600">
-                        Messaging, chat, email, content.
-                      </p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
