@@ -14,7 +14,7 @@ import webhostedIcon from "@assets/images_logos/hostsblue-brandmark.png";
 import webhostedLogo from "@assets/images_logos/hostsblue-url.png";
 import airswipedLogo from "@assets/images_logos/swipesblue-brandmark.png";
 import { AppName, AppIcon, BundleHeader } from "@/components/app-name";
-import coachBlueStepIcon from "@assets/images_logos/coachblue256.png";
+import coachBlueStepIcon from "@assets/images_logos/coachblue48.png";
 import {
   APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, COACH_BLUE, DIGITAL_IQ,
   HOW_IT_WORKS_STEPS, getAppsByBundle,

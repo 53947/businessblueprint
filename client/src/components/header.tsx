@@ -50,7 +50,7 @@ import {
 // Shared pricing component
 import { PricingLayout } from "@/components/pricing-layout";
 import { AppName, AppIcon } from "@/components/app-name";
-import coachBlueIcon from "@assets/images_logos/coachblue256.png";
+import coachBlueIcon from "@assets/images_logos/coachblue48.png";
 
 interface HeaderProps {
   showNavigation?: boolean;

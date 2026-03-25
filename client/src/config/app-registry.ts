@@ -3,7 +3,7 @@
 // Icons use Lucide React icon name strings. Rendered via AppIcon component.
 
 // Coach Blue keeps his custom PNG icon
-import coachBlueIcon from "@assets/images_logos/coachblue256.png";
+import coachBlueIcon from "@assets/images_logos/coachblue48.png";
 
 // ─────────────────────────────────────────────
 // Types
