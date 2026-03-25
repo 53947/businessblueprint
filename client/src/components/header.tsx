@@ -145,7 +145,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   className="flex items-start gap-2 p-2 rounded-lg border-l-4 hover:bg-gray-50 transition-colors cursor-pointer"
                                   style={{ borderColor: step.borderColor }}
                                 >
-                                  {step.icon === "GraduationCap" ? (
+                                  {step.icon === "coachblue-png" ? (
                                     <img src={coachBlueIcon} alt="Coach Blue" className="w-10 h-10 object-contain -mt-2 flex-shrink-0" style={{ borderRadius: 4 }} />
                                   ) : (
                                     <div className="-mt-2 flex-shrink-0"><AppIcon name={step.icon} size={40} color={step.borderColor} /></div>
