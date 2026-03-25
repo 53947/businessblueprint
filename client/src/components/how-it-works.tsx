@@ -1,131 +1,116 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { HOW_IT_WORKS_STEPS } from "@/config/app-registry";
 import { AppIcon } from "@/components/app-name";
 
 interface HowItWorksProps {
   onStartAssessment: () => void;
 }
 
+const STEPS = [
+  {
+    number: 1,
+    title: "Scan Your Digital Presence",
+    description: "Free. Our scanner analyzes your Google Business listing, website, reviews, social presence, and local SEO — and scores every category.",
+    shortDesc: "Free scan of your entire digital footprint.",
+    icon: "ClipboardCheck",
+    color: "#A00028",
+  },
+  {
+    number: 2,
+    title: "Get Your Custom Blueprint",
+    description: "AI reads your scores and prescribes exactly which apps you need, in what order, specific to your business and your market.",
+    shortDesc: "AI-prescribed plan for your business.",
+    icon: "FileText",
+    color: "#FFC107",
+  },
+  {
+    number: 3,
+    title: "Build Your Foundation with / connect",
+    description: "Your CRM goes in first. Every app you activate flows data through / connect automatically — contacts, deals, tasks, all in one place.",
+    shortDesc: "CRM foundation — everything flows through it.",
+    icon: "Users",
+    color: "#008060",
+  },
+  {
+    number: 4,
+    title: "Own Your Local Presence — / anchor suite",
+    description: "Claim your Google Business listing and D&B DUNS number. Get listed on 80+ directories. Manage reviews. Monitor SEO. Run local advertising.",
+    shortDesc: "Listings, reviews, SEO, and ads.",
+    icon: "Anchor",
+    color: "#064A6C",
+  },
+  {
+    number: 5,
+    title: "Activate Your Communications — / compass suite",
+    description: "Email campaigns, live chat, a unified inbox for every message channel, and social media management — all connected through / connect.",
+    shortDesc: "Email, chat, inbox, and social media.",
+    icon: "Compass",
+    color: "#F97316",
+  },
+  {
+    number: 6,
+    title: "Never Grow Alone — Coach Blue",
+    description: "Your 24/7 AI business coach guides your setup, monitors your data, and tells you exactly what to do next. Always on.",
+    shortDesc: "Your 24/7 AI business coach.",
+    icon: "GraduationCap",
+    color: "#0000FF",
+  },
+];
+
 export function HowItWorks({ onStartAssessment }: HowItWorksProps) {
   return (
     <section id="how-it-works" className="bg-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">How It Works</h2>
-          <p className="text-lg text-gray-600">Your 5-step journey to digital growth</p>
+          <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">A Blueprint to Your Growth</h2>
+          <p className="text-lg text-gray-600">Custom digital growth plan built from AI analysis of your business.</p>
         </div>
 
-        {/* Desktop Version - Full Text */}
-        <div className="hidden md:grid grid-cols-5 gap-4 mb-12">
-          {/* Step 1 - Complete Your Digital IQ Assessment */}
-          <div className="text-center group">
-            <div className="flex items-center justify-center mx-auto mb-2">
-              <AppIcon name={HOW_IT_WORKS_STEPS[0].icon} size={48} color="#A00028" />
-            </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Complete Your Digital IQ Assessment</h3>
-            <p className="text-xs text-gray-600">You start with a quick assessment, and we generate your custom blueprint.</p>
-          </div>
-
-          {/* Step 2 - Prescribed Blueprint */}
-          <div className="text-center group">
-            <div className="flex items-center justify-center mx-auto mb-2">
-              <AppIcon name={HOW_IT_WORKS_STEPS[1].icon} size={48} color="#FFC107" />
-            </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Prescribed Blueprint</h3>
-            <p className="text-xs text-gray-600">Your custom action plan with SEO, content strategy, and revenue-focused steps.</p>
-          </div>
-
-          {/* Step 3 - Anchor Suite */}
-          <div className="text-center group">
-            <div className="flex items-center justify-center mx-auto mb-2">
-              <AppIcon name={HOW_IT_WORKS_STEPS[2].icon} size={48} color="#064A6C" />
-            </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Anchor Suite</h3>
-            <p className="text-xs text-gray-600">Listings management + reputation building for stronger local visibility.</p>
-          </div>
-
-          {/* Step 4 - Coach Blue */}
-          <div className="text-center group">
-            <div className="flex items-center justify-center mx-auto mb-2">
-              <AppIcon name={HOW_IT_WORKS_STEPS[3].icon} size={48} color="#0000FF" />
-            </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Coach Blue</h3>
-            <p className="text-xs text-gray-600">24/7 AI business coach guiding you through every step of your growth journey.</p>
-          </div>
-
-          {/* Step 5 - Compass Suite */}
-          <div className="text-center group">
-            <div className="flex items-center justify-center mx-auto mb-2">
-              <AppIcon name={HOW_IT_WORKS_STEPS[4].icon} size={48} color="#F97316" />
-            </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Compass Suite</h3>
-            <p className="text-xs text-gray-600">Complete communication suite: / promote, / respond, / engage, / post.</p>
-          </div>
-        </div>
-
-        {/* Mobile Version - Short Text */}
-        <div className="block md:hidden grid grid-cols-1 gap-4 mb-12">
-          {/* Step 1 - Digital IQ Assessment */}
-          <div className="text-center group">
-            <div className="flex items-center justify-center mx-auto mb-2">
-              <AppIcon name={HOW_IT_WORKS_STEPS[0].icon} size={48} color="#A00028" />
-            </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Digital IQ Assessment</h3>
-            <p className="text-xs text-gray-600">Quick assessment → instant blueprint.</p>
-          </div>
-
-          {/* Step 2 - Prescribed Blueprint */}
-          <div className="text-center group">
-            <div className="flex items-center justify-center mx-auto mb-2">
-              <AppIcon name={HOW_IT_WORKS_STEPS[1].icon} size={48} color="#FFC107" />
-            </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Prescribed Blueprint</h3>
-            <p className="text-xs text-gray-600">Your clear action plan to grow.</p>
-          </div>
-
-          {/* Step 3 - Anchor Suite */}
-          <div className="text-center group">
-            <div className="flex items-center justify-center mx-auto mb-2">
-              <AppIcon name={HOW_IT_WORKS_STEPS[2].icon} size={48} color="#064A6C" />
-            </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Anchor Suite</h3>
-            <p className="text-xs text-gray-600">Boost local visibility & reviews.</p>
-          </div>
-
-          {/* Step 4 - Coach Blue */}
-          <div className="text-center group">
-            <div className="flex items-center justify-center mx-auto mb-2">
-              <AppIcon name={HOW_IT_WORKS_STEPS[3].icon} size={48} color="#0000FF" />
-            </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Coach Blue</h3>
-            <p className="text-xs text-gray-600">Your 24/7 AI business coach.</p>
-          </div>
-
-          {/* Step 5 - Compass Suite */}
-          <div className="text-center group">
-            <div className="flex items-center justify-center mx-auto mb-2">
-              <AppIcon name={HOW_IT_WORKS_STEPS[4].icon} size={48} color="#F97316" />
-            </div>
-            <h3 className="text-sm font-bold text-gray-900 mb-1">Compass Suite</h3>
-            <p className="text-xs text-gray-600">Messaging, chat, email, content.</p>
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <Card className="bg-gradient-to-r from-primary via-secondary to-blue-600 text-white text-center">
-          <CardContent className="p-6">
-            <h3 className="text-xl font-bold mb-3">Ready to See Your Digital IQ Score?</h3>
-            <p className="text-base mb-5 opacity-90">Join 10,000+ businesses who've improved their online presence</p>
-            <Button 
-              onClick={onStartAssessment}
-              className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-primary transition-all font-medium"
-              data-testid="button-get-digital-iq"
+        {/* Desktop — 6 steps as bordered cards */}
+        <div className="hidden md:grid grid-cols-3 gap-4 mb-12">
+          {STEPS.map((step) => (
+            <div
+              key={step.number}
+              className="p-4 rounded-lg"
+              style={{ borderLeft: `4px solid ${step.color}` }}
             >
-              Get Your Digital IQ Score
-            </Button>
-          </CardContent>
-        </Card>
+              <div className="flex items-center gap-3 mb-2">
+                <AppIcon name={step.icon} size={36} color={step.color} />
+                <span className="text-sm font-bold text-gray-900">Step {step.number}</span>
+              </div>
+              <h3 className="text-sm font-bold text-gray-900 mb-1">{step.title}</h3>
+              <p className="text-xs text-gray-600">{step.description}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile — stacked list */}
+        <div className="block md:hidden space-y-3 mb-12">
+          {STEPS.map((step) => (
+            <div
+              key={step.number}
+              className="flex items-start gap-3 p-3 rounded-lg"
+              style={{ borderLeft: `4px solid ${step.color}` }}
+            >
+              <AppIcon name={step.icon} size={32} color={step.color} />
+              <div>
+                <h3 className="text-sm font-bold text-gray-900">{step.title}</h3>
+                <p className="text-xs text-gray-600">{step.shortDesc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="text-center">
+          <Button
+            onClick={onStartAssessment}
+            className="text-white font-bold px-8 py-3"
+            style={{ backgroundColor: "#A00028" }}
+            data-testid="button-get-digital-iq"
+          >
+            Start Your Blueprint Assessment →
+          </Button>
+        </div>
       </div>
     </section>
   );
