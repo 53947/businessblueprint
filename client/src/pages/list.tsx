@@ -609,7 +609,7 @@ export default function ListingsManagement() {
                         </div>
                         <div className="flex items-center gap-2">
                           <Globe className="w-4 h-4 text-gray-500" />
-                          <a href={listing.website} className="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">
+                          <a href={listing.website} className="text-blue-600 underline" target="_blank" rel="noopener noreferrer">
                             {listing.website}
                           </a>
                         </div>

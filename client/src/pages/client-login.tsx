@@ -231,7 +231,7 @@ export default function ClientLogin() {
 
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-600 mb-4">
-                  Don't have an account? <a href="/contact" className="text-purple-600 hover:underline">Contact us</a> to get started.
+                  Don't have an account? <a href="/contact" className="text-purple-600 underline">Contact us</a> to get started.
                 </p>
                 <div className="border-t pt-4">
                   <p className="text-xs text-gray-500">

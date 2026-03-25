@@ -321,7 +321,7 @@ export default function Sitemap() {
                           <tr key={route.path} className="hover:bg-gray-50">
                             <td className="p-4">
                               <Link href={route.isDynamic ? "#" : route.path}>
-                                <code className="text-sm text-blue-600 hover:underline font-mono">{displayPath}</code>
+                                <code className="text-sm text-blue-600 underline font-mono">{displayPath}</code>
                               </Link>
                             </td>
                             <td className="p-4 font-medium text-gray-900">

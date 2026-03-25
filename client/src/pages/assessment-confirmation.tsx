@@ -137,7 +137,7 @@ export default function AssessmentConfirmation() {
             Questions? Contact us at{' '}
             <a 
               href="mailto:support@businessblueprint.io" 
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-blue-600 dark:text-blue-400 underline"
               data-testid="link-support-email"
             >
               support@businessblueprint.io

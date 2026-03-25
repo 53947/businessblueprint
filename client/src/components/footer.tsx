@@ -26,13 +26,13 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Services</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="/assessment" className="text-black font-bold hover:text-white transition-colors">Digital IQ Assessment</a></li>
-              <li><a href="/find-results" className="text-black font-bold hover:text-white transition-colors">Find My Results</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Website Development</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">SEO Optimization</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Reputation Management</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Social Media Marketing</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Email Campaigns</a></li>
+              <li><a href="/assessment" className="text-black font-bold hover:text-white transition-colors underline">Digital IQ Assessment</a></li>
+              <li><a href="/find-results" className="text-black font-bold hover:text-white transition-colors underline">Find My Results</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Website Development</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">SEO Optimization</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Reputation Management</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Social Media Marketing</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Email Campaigns</a></li>
             </ul>
           </div>
 
@@ -40,11 +40,11 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Solutions</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="/subscription" className="text-black font-bold hover:text-white transition-colors">DIY Platform</a></li>
-              <li><a href="/ai-coach" className="text-black font-bold hover:text-white transition-colors">AI Coach</a></li>
-              <li><a href="/portal" className="text-black font-bold hover:text-white transition-colors">Client Portal</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Analytics Dashboard</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Hosting Solutions</a></li>
+              <li><a href="/subscription" className="text-black font-bold hover:text-white transition-colors underline">DIY Platform</a></li>
+              <li><a href="/ai-coach" className="text-black font-bold hover:text-white transition-colors underline">AI Coach</a></li>
+              <li><a href="/portal" className="text-black font-bold hover:text-white transition-colors underline">Client Portal</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Analytics Dashboard</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Hosting Solutions</a></li>
             </ul>
           </div>
 
@@ -52,12 +52,12 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Company</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="/about" className="text-black font-bold hover:text-white transition-colors">About Us</a></li>
-              <li><a href="/contact" className="text-black font-bold hover:text-white transition-colors">Contact</a></li>
-              <li><a href="/sitemap" className="text-black font-bold hover:text-white transition-colors">Site Map</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Careers</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Press</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Partners</a></li>
+              <li><a href="/about" className="text-black font-bold hover:text-white transition-colors underline">About Us</a></li>
+              <li><a href="/contact" className="text-black font-bold hover:text-white transition-colors underline">Contact</a></li>
+              <li><a href="/sitemap" className="text-black font-bold hover:text-white transition-colors underline">Site Map</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Careers</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Press</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Partners</a></li>
             </ul>
           </div>
 
@@ -65,12 +65,12 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Support</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Help Center</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Documentation</a></li>
-              <li><a href="/contact" className="text-black font-bold hover:text-white transition-colors">Contact Support</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Live Chat</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Training Videos</a></li>
-              <li><a href="#" className="text-black font-bold hover:text-white transition-colors">Community Forum</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Help Center</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Documentation</a></li>
+              <li><a href="/contact" className="text-black font-bold hover:text-white transition-colors underline">Contact Support</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Live Chat</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Training Videos</a></li>
+              <li><a href="#" className="text-black font-bold hover:text-white transition-colors underline">Community Forum</a></li>
             </ul>
           </div>
         </div>
@@ -82,9 +82,9 @@ export function Footer() {
               © {currentYear} Triad Blue Inc. All rights reserved.
             </div>
             <div className="flex items-center space-x-6 text-sm">
-              <a href="/privacy" className="text-black font-bold hover:text-white transition-colors">Privacy Policy</a>
-              <a href="/terms" className="text-black font-bold hover:text-white transition-colors">Terms of Service</a>
-              <a href="/data-deletion" className="text-black font-bold hover:text-white transition-colors">Data Deletion</a>
+              <a href="/privacy" className="text-black font-bold hover:text-white transition-colors underline">Privacy Policy</a>
+              <a href="/terms" className="text-black font-bold hover:text-white transition-colors underline">Terms of Service</a>
+              <a href="/data-deletion" className="text-black font-bold hover:text-white transition-colors underline">Data Deletion</a>
             </div>
           </div>
         </div>

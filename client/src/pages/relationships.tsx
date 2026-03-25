@@ -900,7 +900,7 @@ function ContactDetailView({ contactId, onBack }: { contactId: number; onBack: (
               {contact.email && (
                 <div className="flex items-center gap-3" data-testid="contact-email">
                   <Mail className="w-4 h-4 text-gray-400" />
-                  <a href={`mailto:${contact.email}`} className="text-sm text-[#22C55E] hover:underline">
+                  <a href={`mailto:${contact.email}`} className="text-sm text-[#22C55E] underline">
                     {contact.email}
                   </a>
                 </div>
@@ -908,7 +908,7 @@ function ContactDetailView({ contactId, onBack }: { contactId: number; onBack: (
               {contact.phone && (
                 <div className="flex items-center gap-3" data-testid="contact-phone">
                   <Phone className="w-4 h-4 text-gray-400" />
-                  <a href={`tel:${contact.phone}`} className="text-sm text-gray-700 dark:text-gray-300">
+                  <a href={`tel:${contact.phone}`} className="text-sm text-gray-700 dark:text-gray-300 underline">
                     {contact.phone}
                   </a>
                 </div>
@@ -930,7 +930,7 @@ function ContactDetailView({ contactId, onBack }: { contactId: number; onBack: (
               {contact.linkedinUrl && (
                 <div className="flex items-center gap-3">
                   <Globe className="w-4 h-4 text-gray-400" />
-                  <a href={contact.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-[#22C55E] hover:underline">
+                  <a href={contact.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-[#22C55E] underline">
                     LinkedIn Profile
                   </a>
                 </div>
@@ -938,7 +938,7 @@ function ContactDetailView({ contactId, onBack }: { contactId: number; onBack: (
               {contact.websiteUrl && (
                 <div className="flex items-center gap-3">
                   <Globe className="w-4 h-4 text-gray-400" />
-                  <a href={contact.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-[#22C55E] hover:underline">
+                  <a href={contact.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-[#22C55E] underline">
                     Website
                   </a>
                 </div>
@@ -2187,7 +2187,7 @@ function CompanyDetailView({ companyId, onBack }: { companyId: number; onBack: (
                 {company.size && <span>{company.size} employees</span>}
                 {company.domain && (
                   <a href={`https://${company.domain}`} target="_blank" rel="noopener noreferrer" 
-                     className="text-[#22C55E] hover:underline flex items-center gap-1">
+                     className="text-[#22C55E] underline flex items-center gap-1">
                     <Globe className="w-3 h-3" />
                     {company.domain}
                   </a>
@@ -2216,7 +2216,7 @@ function CompanyDetailView({ companyId, onBack }: { companyId: number; onBack: (
               {company.email && (
                 <div className="flex items-center gap-3">
                   <Mail className="w-4 h-4 text-gray-400" />
-                  <a href={`mailto:${company.email}`} className="text-sm text-[#22C55E] hover:underline">
+                  <a href={`mailto:${company.email}`} className="text-sm text-[#22C55E] underline">
                     {company.email}
                   </a>
                 </div>
@@ -2231,7 +2231,7 @@ function CompanyDetailView({ companyId, onBack }: { companyId: number; onBack: (
                 <div className="flex items-center gap-3">
                   <Globe className="w-4 h-4 text-gray-400" />
                   <a href={company.website.startsWith("http") ? company.website : `https://${company.website}`} 
-                     target="_blank" rel="noopener noreferrer" className="text-sm text-[#22C55E] hover:underline">
+                     target="_blank" rel="noopener noreferrer" className="text-sm text-[#22C55E] underline">
                     {company.website}
                   </a>
                 </div>
@@ -2247,7 +2247,7 @@ function CompanyDetailView({ companyId, onBack }: { companyId: number; onBack: (
               {company.linkedinUrl && (
                 <div className="flex items-center gap-3">
                   <Linkedin className="w-4 h-4 text-gray-400" />
-                  <a href={company.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-[#22C55E] hover:underline">
+                  <a href={company.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-[#22C55E] underline">
                     LinkedIn
                   </a>
                 </div>
@@ -4614,7 +4614,7 @@ function SchedulerView() {
                 {selectedAppointment.meetingUrl && (
                   <div>
                     <Label className="text-sm text-gray-500">Meeting Link</Label>
-                    <a href={selectedAppointment.meetingUrl} target="_blank" rel="noopener noreferrer" className="mt-1 flex items-center gap-2 text-[#22C55E] hover:underline">
+                    <a href={selectedAppointment.meetingUrl} target="_blank" rel="noopener noreferrer" className="mt-1 flex items-center gap-2 text-[#22C55E] underline">
                       <Globe className="w-4 h-4" />
                       Join Meeting
                     </a>

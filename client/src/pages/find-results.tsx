@@ -353,7 +353,7 @@ export default function FindResults() {
           <div className="mt-8 text-center text-sm text-gray-500">
             <p>
               Need help?{" "}
-              <a href="/contact" className="text-blue-600 hover:underline">
+              <a href="/contact" className="text-blue-600 underline">
                 Contact our support team
               </a>
             </p>

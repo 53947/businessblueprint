@@ -527,7 +527,7 @@ export default function Dashboard() {
                       <label className="text-sm font-medium text-gray-500">Website</label>
                       <p className="text-sm break-words">
                         <a href={assessment.website} target="_blank" rel="noopener noreferrer" 
-                           className="text-blue-600 hover:underline break-all">
+                           className="text-blue-600 underline break-all">
                           {assessment.website}
                         </a>
                       </p>

@@ -108,7 +108,7 @@ export function PricingLayout({ variant }: PricingLayoutProps) {
               <span className="font-bold text-sm">${CONNECT_CRM.tiers[1].price}/mo</span>
             </div>
           </div>
-          <a href="/connect" className="text-xs font-bold text-blue-600 hover:underline mt-2 inline-block">
+          <a href="/connect" className="text-xs font-bold text-blue-600 underline mt-2 inline-block">
             Learn More →
           </a>
         </div>
@@ -135,7 +135,7 @@ export function PricingLayout({ variant }: PricingLayoutProps) {
               <span className="font-bold text-emerald-600">FREE</span>
             </div>
           </div>
-          <a href="/ai-coach" className="text-xs font-bold text-blue-600 hover:underline mt-2 inline-block">
+          <a href="/ai-coach" className="text-xs font-bold text-blue-600 underline mt-2 inline-block">
             Learn More →
           </a>
         </div>

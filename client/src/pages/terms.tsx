@@ -139,7 +139,7 @@ export default function Terms() {
           <p className="mb-4">
             <strong>Business Blueprint</strong><br />
             Email: legal@businessblueprint.io<br />
-            Website: <a href="https://businessblueprint.io" className="text-blue-600 hover:underline">businessblueprint.io</a>
+            Website: <a href="https://businessblueprint.io" className="text-blue-600 underline">businessblueprint.io</a>
           </p>
         </div>
       </div>

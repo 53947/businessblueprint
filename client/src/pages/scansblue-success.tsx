@@ -196,7 +196,7 @@ export default function ScansBlueSuccessPage() {
 
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-500">
-            Need help? <button className="text-[#0000FF] hover:underline" onClick={() => setLocation('/contact')}>Contact our support team</button>
+            Need help? <button className="text-[#0000FF] underline" onClick={() => setLocation('/contact')}>Contact our support team</button>
           </p>
         </div>
       </div>

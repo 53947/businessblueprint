@@ -81,7 +81,7 @@ export default function Privacy() {
             <li>Opt-out of marketing communications</li>
             <li>Disconnect social media accounts at any time</li>
             <li>Request a copy of your data</li>
-            <li>Request data deletion (see our <Link href="/data-deletion" className="text-blue-600 hover:underline">Data Deletion Instructions</Link>)</li>
+            <li>Request data deletion (see our <Link href="/data-deletion" className="text-blue-600 underline">Data Deletion Instructions</Link>)</li>
           </ul>
 
           <h2 className="text-2xl font-bold mt-8 mb-4">7. Cookies and Tracking</h2>
@@ -111,7 +111,7 @@ export default function Privacy() {
           <p className="mb-4">
             <strong>Business Blueprint</strong><br />
             Email: privacy@businessblueprint.io<br />
-            Website: <a href="https://businessblueprint.io" className="text-blue-600 hover:underline">businessblueprint.io</a>
+            Website: <a href="https://businessblueprint.io" className="text-blue-600 underline">businessblueprint.io</a>
           </p>
         </div>
       </div>

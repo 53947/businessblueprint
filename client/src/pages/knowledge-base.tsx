@@ -112,28 +112,28 @@ export default function KnowledgeBase() {
               Quick Navigation
             </h2>
             <div className="grid md:grid-cols-2 gap-3">
-              <a href="#what-we-do" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-what-we-do">
+              <a href="#what-we-do" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-what-we-do">
                 → What We Do
               </a>
-              <a href="#digital-iq" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-digital-iq">
+              <a href="#digital-iq" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-digital-iq">
                 → Your Digital IQ Score
               </a>
-              <a href="#understanding-score" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-understanding">
+              <a href="#understanding-score" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-understanding">
                 → Understanding Your Score
               </a>
-              <a href="#prescription" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-prescription">
+              <a href="#prescription" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-prescription">
                 → Your Custom Prescription
               </a>
-              <a href="#coach-blue" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-coach-blue">
+              <a href="#coach-blue" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-coach-blue">
                 → Meet Coach Blue
               </a>
-              <a href="#how-it-works" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-how-it-works">
+              <a href="#how-it-works" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-how-it-works">
                 → How The Process Works
               </a>
-              <a href="#why-it-works" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-why-it-works">
+              <a href="#why-it-works" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-why-it-works">
                 → Why This Approach Works
               </a>
-              <a href="#faq" className="text-[#0000FF] hover:text-[#FF6B00] hover:underline" data-testid="link-toc-faq">
+              <a href="#faq" className="text-[#0000FF] hover:text-[#FF6B00] underline" data-testid="link-toc-faq">
                 → Frequently Asked Questions
               </a>
             </div>

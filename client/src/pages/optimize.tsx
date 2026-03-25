@@ -525,7 +525,7 @@ function OnPageTab() {
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm truncate">{page.title || 'Untitled'}</p>
-                      <a href={page.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline truncate block">
+                      <a href={page.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline truncate block">
                         {page.url} <ExternalLink className="w-3 h-3 inline" />
                       </a>
                     </div>

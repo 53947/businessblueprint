@@ -308,7 +308,7 @@ export default function ClientPortal() {
                 <div className="flex items-center gap-2">
                   <Globe className="h-3.5 w-3.5 text-gray-500" />
                   <a href={clientData.client.website} target="_blank" rel="noopener noreferrer" 
-                     className="text-sm text-blue-600 hover:text-blue-800 break-all">
+                     className="text-sm text-blue-600 hover:text-blue-800 break-all underline">
                     {clientData.client.website}
                   </a>
                 </div>

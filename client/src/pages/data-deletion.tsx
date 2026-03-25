@@ -123,12 +123,12 @@ export default function DataDeletion() {
           <p className="mb-4">
             <strong>Business Blueprint</strong><br />
             Email: privacy@businessblueprint.io<br />
-            Website: <a href="https://businessblueprint.io" className="text-blue-600 hover:underline">businessblueprint.io</a>
+            Website: <a href="https://businessblueprint.io" className="text-blue-600 underline">businessblueprint.io</a>
           </p>
 
           <div className="bg-gray-100 border border-gray-300 rounded-lg p-6 mt-8">
             <p className="text-sm text-gray-700">
-              <strong>Related:</strong> See our <Link href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</Link> and <Link href="/terms" className="text-blue-600 hover:underline">Terms of Service</Link> for more information.
+              <strong>Related:</strong> See our <Link href="/privacy" className="text-blue-600 underline">Privacy Policy</Link> and <Link href="/terms" className="text-blue-600 underline">Terms of Service</Link> for more information.
             </p>
           </div>
         </div>

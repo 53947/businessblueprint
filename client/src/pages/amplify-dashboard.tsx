@@ -1182,7 +1182,7 @@ function RedditBaseTab() {
                                   href={post.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-xs hover:underline truncate block"
+                                  className="text-xs underline truncate block"
                                   style={{ color: AMPLIFY_COLOR }}
                                 >
                                   {post.title}
