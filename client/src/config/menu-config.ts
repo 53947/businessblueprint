@@ -9,29 +9,28 @@ import {
 } from "@/config/app-registry";
 
 // ── Platform icons (non-registry) ──
-import blueprintIcon from "@assets/brand/bb-favicon.png";
-import hostsBlueIcon from "@assets/platforms/hostsblue-brandmark.png";
-import swipesBlueIcon from "@assets/platforms/swipesblue-brandmark.png";
-import consoleBlueIcon from "@assets/platforms/consoleblue-favicon.png";
-import scansBlueIcon from "@assets/platforms/scansblue-icon.png";
-import businessIQScannerIcon from "@assets/platforms/business-iq-scanner.png";
+import blueprintIcon from "@assets/images_logos/bb-favicon.png";
+import hostsBlueIcon from "@assets/images_logos/hostsblue-brandmark.png";
+import swipesBlueIcon from "@assets/images_logos/swipesblue-brandmark.png";
+import consoleBlueIcon from "@assets/images_logos/consoleblue-favicon.png";
+import scansBlueIcon from "@assets/images_logos/scansblue-icon.png";
+import businessIQScannerIcon from "@assets/images_logos/business-iq-scanner.png";
 
-// ── SVG utility icons ──
-import compassIcon from "@assets/icons/layers.svg";
-import bookOpenIcon from "@assets/icons/book-open.svg";
-import shoppingBasketIcon from "@assets/icons/shopping-basket.svg";
-import lightbulbIcon from "@assets/icons/lightbulb.svg";
-import graduationCapIcon from "@assets/icons/graduation-cap.svg";
-import codeIcon from "@assets/icons/code.svg";
-import helpCircleIcon from "@assets/icons/help-circle.svg";
-import fileTextIcon from "@assets/icons/file-text.svg";
-import videoIcon from "@assets/icons/video.svg";
-import usersIcon from "@assets/icons/users.svg";
-import messageSquareIcon from "@assets/icons/message-square.svg";
-import trendingUpIcon from "@assets/icons/trending-up.svg";
-import logInIcon from "@assets/icons/log-in.svg";
-// settingsIcon now uses Lucide Settings icon (no PNG import needed)
-const settingsIcon = "Settings"; // Lucide icon name string for consumers
+// ── Lucide icon name strings (rendered via ICON_MAP in app-name.tsx) ──
+const compassIcon = "Layers";
+const bookOpenIcon = "BookOpen";
+const shoppingBasketIcon = "ShoppingBasket";
+const lightbulbIcon = "Lightbulb";
+const graduationCapIcon = "GraduationCap";
+const codeIcon = "Code";
+const helpCircleIcon = "HelpCircle";
+const fileTextIcon = "FileText";
+const videoIcon = "Video";
+const usersIcon = "Users";
+const messageSquareIcon = "MessageSquare";
+const trendingUpIcon = "TrendingUp";
+const logInIcon = "LogIn";
+const settingsIcon = "Settings";
 
 // ─────────────────────────────────────────────
 // Types
@@ -184,8 +183,6 @@ export const SOLUTIONS_MENU = {
 // RESOURCES MENU
 // ─────────────────────────────────────────────
 
-const GRAY_FILTER = "invert(50%) sepia(10%) saturate(100%) hue-rotate(180deg) brightness(90%) contrast(90%)";
-
 export const RESOURCES_MENU: {
   columns: ResourceColumn[];
   cta: { label: string; description: string; href: string };
@@ -233,4 +230,3 @@ export const RESOURCES_MENU: {
 // Re-export for convenience
 export { APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, COACH_BLUE, DIGITAL_IQ, SCANNING_TOOL, getAppsByBundle };
 export { blueprintIcon, hostsBlueIcon, swipesBlueIcon, consoleBlueIcon, scansBlueIcon, settingsIcon };
-export { GRAY_FILTER };

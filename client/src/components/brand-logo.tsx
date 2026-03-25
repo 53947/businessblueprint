@@ -1,18 +1,18 @@
 // Reusable brand logo components using OFFICIAL Business Blueprint brandmarks
 import { Mail, Inbox, MessageCircle } from "lucide-react";
-import bbHeaderLogo from "@assets/brand/bb-header-logo.png";
-import bbFaviconPng from "@assets/brand/bb-favicon.png";
+import bbHeaderLogo from "@assets/images_logos/bb-header-logo.png";
+import bbFaviconPng from "@assets/images_logos/bb-favicon.png";
 const bbAvatar = bbFaviconPng; // Lightbulb icon for Client Portal
 const bbFavicon = '/brand-assets/Blueprint_Favicon.png';
 const bbIcon = bbFaviconPng;
-import bbLockup from "@assets/brand/bb-header-logo.png";
-import webhostedLogo from "@assets/platforms/hostsblue-url.png";
-import webhostedIcon from "@assets/platforms/hostsblue-brandmark.png";
-import airswipedLogo from "@assets/platforms/swipesblue-brandmark.png";
-import hostsBlueIcon from "@assets/platforms/hostsblue-brandmark.png";
-import hostsBlueWordmark from "@assets/platforms/hostsblue-lockup.png";
-import swipesBlueIcon from "@assets/platforms/swipesblue-brandmark.png";
-import swipesBlueWordmark from "@assets/platforms/swipesblue-lockup.png";
+import bbLockup from "@assets/images_logos/bb-header-logo.png";
+import webhostedLogo from "@assets/images_logos/hostsblue-url.png";
+import webhostedIcon from "@assets/images_logos/hostsblue-brandmark.png";
+import airswipedLogo from "@assets/images_logos/swipesblue-brandmark.png";
+import hostsBlueIcon from "@assets/images_logos/hostsblue-brandmark.png";
+import hostsBlueWordmark from "@assets/images_logos/hostsblue-lockup.png";
+import swipesBlueIcon from "@assets/images_logos/swipesblue-brandmark.png";
+import swipesBlueWordmark from "@assets/images_logos/swipesblue-lockup.png";
 
 // App color constants
 const SEND_COLOR = "#1844A6";

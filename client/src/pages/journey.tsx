@@ -4,7 +4,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { ArrowRight } from "lucide-react";
 import { AppIcon } from "@/components/app-name";
-import coachBlueIcon from "@assets/new logos and wordmarks/coachblue256.png";
+import coachBlueIcon from "@assets/images_logos/coachblue256.png";
 
 export default function Journey() {
   return (

@@ -23,7 +23,7 @@ import {
   Wrench,
   CheckCircle2
 } from "lucide-react";
-import blueprintIcon from "@assets/brand/bb-favicon.png";
+import blueprintIcon from "@assets/images_logos/bb-favicon.png";
 
 // The 11 strategic digital blueprint steps - logical order for beginners
 const digitalBlueprintSteps = [

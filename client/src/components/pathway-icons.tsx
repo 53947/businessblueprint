@@ -1,5 +1,5 @@
 import { Wrench, Headphones, ShoppingCart, Ship, Mail } from "lucide-react";
-import aiCoachIcon from "@assets/new logos and wordmarks/coachblue256.png";
+import aiCoachIcon from "@assets/images_logos/coachblue256.png";
 
 interface PathwayIconProps {
   className?: string;

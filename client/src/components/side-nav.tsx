@@ -22,11 +22,11 @@ import {
   Settings
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import bbIcon from "@assets/brand/bb-favicon.png";
-import bbLockup from "@assets/brand/bb-logo-only.png";
-import aiCoachIcon from "@assets/new logos and wordmarks/coachblue256.png";
-import hostsBlueWordmark from "@assets/platforms/hostsblue-lockup.png";
-import swipesBlueWordmark from "@assets/platforms/swipesblue-lockup.png";
+import bbIcon from "@assets/images_logos/bb-favicon.png";
+import bbLockup from "@assets/images_logos/bb-logo-only.png";
+import aiCoachIcon from "@assets/images_logos/coachblue256.png";
+import hostsBlueWordmark from "@assets/images_logos/hostsblue-lockup.png";
+import swipesBlueWordmark from "@assets/images_logos/swipesblue-lockup.png";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;

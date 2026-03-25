@@ -78,7 +78,7 @@ import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import bbLogo from "@assets/brand/bb-logo-only.png";
+import bbLogo from "@assets/images_logos/bb-logo-only.png";
 
 interface CrmStats {
   contacts: number;

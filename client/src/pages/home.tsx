@@ -2,20 +2,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocation, Link } from "wouter";
 import { AICoachIcon } from "@/components/pathway-icons";
-import compassIcon from "@assets/icons/compass.svg";
 import { HowItWorks } from "@/components/how-it-works";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
 import { ClipboardCheck, FileText, Layers, Wrench, Rocket } from "lucide-react";
 import { DigitalAssessmentIcon, DigitalIQIcon, CommverseIcon, CoachBlueIcon, BasePlanIcon, ActionPlanIcon, BuildMethodIcon } from "@/components/brand-icons";
-import bbIcon from "@assets/brand/bb-favicon.png";
-import bbLogo from "@assets/brand/bb-favicon.png";
-import webhostedIcon from "@assets/platforms/hostsblue-brandmark.png";
-import webhostedLogo from "@assets/platforms/hostsblue-url.png";
-import airswipedLogo from "@assets/platforms/swipesblue-brandmark.png";
+import bbIcon from "@assets/images_logos/bb-favicon.png";
+import bbLogo from "@assets/images_logos/bb-favicon.png";
+import webhostedIcon from "@assets/images_logos/hostsblue-brandmark.png";
+import webhostedLogo from "@assets/images_logos/hostsblue-url.png";
+import airswipedLogo from "@assets/images_logos/swipesblue-brandmark.png";
 import { AppName, AppIcon, BundleHeader } from "@/components/app-name";
-import coachBlueStepIcon from "@assets/new logos and wordmarks/coachblue256.png";
+import coachBlueStepIcon from "@assets/images_logos/coachblue256.png";
 import {
   APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, COACH_BLUE, DIGITAL_IQ,
   HOW_IT_WORKS_STEPS, getAppsByBundle,

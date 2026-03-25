@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { addToCart, getCartCount, getCartTotal } from "@/lib/cart";
-import { ShoppingCart, ClipboardCheck, User, Settings, CreditCard, LogOut, ChevronDown } from "lucide-react";
+import { ShoppingCart, ClipboardCheck, User, Settings, CreditCard, LogOut, ChevronDown, Menu, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,8 +25,7 @@ import { Plus, Minus } from "lucide-react";
 
 // Brand
 import { BrandLogo } from "@/components/brand-logo";
-import menuIconSvg from "@assets/icons/menu.svg";
-import xIconSvg from "@assets/icons/x.svg";
+import { ICON_MAP } from "@/components/app-name";
 
 // Menu config — single source of truth for menu structure
 import {
@@ -34,7 +33,6 @@ import {
   HOW_IT_WORKS_MENU,
   SOLUTIONS_MENU,
   RESOURCES_MENU,
-  GRAY_FILTER,
   APP_REGISTRY,
   BUNDLE_REGISTRY,
   CONNECT_CRM,
@@ -52,7 +50,7 @@ import {
 // Shared pricing component
 import { PricingLayout } from "@/components/pricing-layout";
 import { AppName, AppIcon } from "@/components/app-name";
-import coachBlueIcon from "@assets/new logos and wordmarks/coachblue256.png";
+import coachBlueIcon from "@assets/images_logos/coachblue256.png";
 
 interface HeaderProps {
   showNavigation?: boolean;
@@ -131,7 +129,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     {/* ── How It Works ── */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid={NAV_ITEMS[0].testId}>
-                        <img src={NAV_ITEMS[0].icon} alt="" className="w-4 h-4" />
+                        {(() => { const Icon = ICON_MAP[NAV_ITEMS[0].icon]; return Icon ? <Icon className="w-4 h-4" /> : null; })()}
                         <span>{NAV_ITEMS[0].label}</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
@@ -180,7 +178,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     {/* ── Products (PricingLayout) ── */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid={NAV_ITEMS[1].testId}>
-                        <img src={NAV_ITEMS[1].icon} alt="" className="w-4 h-4" />
+                        {(() => { const Icon = ICON_MAP[NAV_ITEMS[1].icon]; return Icon ? <Icon className="w-4 h-4" /> : null; })()}
                         <span>{NAV_ITEMS[1].label}</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
@@ -193,7 +191,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     {/* ── Solutions ── */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid={NAV_ITEMS[2].testId}>
-                        <img src={NAV_ITEMS[2].icon} alt="" className="w-4 h-4" />
+                        {(() => { const Icon = ICON_MAP[NAV_ITEMS[2].icon]; return Icon ? <Icon className="w-4 h-4" /> : null; })()}
                         <span>{NAV_ITEMS[2].label}</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
@@ -241,7 +239,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     {/* ── Resources ── */}
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="flex items-center space-x-1 bg-gray-100" data-testid={NAV_ITEMS[3].testId}>
-                        <img src={NAV_ITEMS[3].icon} alt="" className="w-4 h-4" />
+                        {(() => { const Icon = ICON_MAP[NAV_ITEMS[3].icon]; return Icon ? <Icon className="w-4 h-4" /> : null; })()}
                         <span>{NAV_ITEMS[3].label}</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
@@ -252,7 +250,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* Platforms column (rendered separately — includes registry apps) */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2 mb-2">
-                              <img src={NAV_ITEMS[2].icon} alt="" className="w-4 h-4" style={{ filter: "invert(55%) sepia(89%) saturate(1787%) hue-rotate(359deg) brightness(102%) contrast(101%)" }} />
+                              {(() => { const Icon = ICON_MAP[NAV_ITEMS[2].icon]; return Icon ? <Icon className="w-4 h-4 text-orange-500" /> : null; })()}
                               <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide">Platforms</h4>
                             </div>
                             {SOLUTIONS_MENU.platforms.map((p) => (
@@ -331,9 +329,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   data-testid="button-mobile-menu"
                 >
                   {isMobileMenuOpen ? (
-                    <img src={xIconSvg} alt="" className="w-5 h-5" />
+                    <X className="w-5 h-5" />
                   ) : (
-                    <img src={menuIconSvg} alt="" className="w-5 h-5" />
+                    <Menu className="w-5 h-5" />
                   )}
                 </button>
 
@@ -669,23 +667,27 @@ export function Header({ showNavigation = true }: HeaderProps) {
 // ─── Helper: Resource Column (desktop) ───
 
 function ResourceColumn({ column }: { column: (typeof RESOURCES_MENU.columns)[number] }) {
+  const ColIcon = ICON_MAP[column.icon];
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 mb-2">
-        <img src={column.icon} alt="" className="w-4 h-4" style={{ filter: GRAY_FILTER }} />
+        {ColIcon && <ColIcon className="w-4 h-4 text-gray-500" />}
         <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide">{column.title}</h4>
       </div>
-      {column.items.map((link) => (
-        <NavigationMenuLink key={link.testId} asChild>
-          <a className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent" href={link.href} data-testid={link.testId}>
-            <img src={link.icon} alt="" className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ filter: GRAY_FILTER }} />
-            <div>
-              <div className="text-sm font-medium text-gray-900">{link.label}</div>
-              <p className="text-xs text-gray-600">{link.description}</p>
-            </div>
-          </a>
-        </NavigationMenuLink>
-      ))}
+      {column.items.map((link) => {
+        const LinkIcon = ICON_MAP[link.icon];
+        return (
+          <NavigationMenuLink key={link.testId} asChild>
+            <a className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent" href={link.href} data-testid={link.testId}>
+              {LinkIcon && <LinkIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-gray-500" />}
+              <div>
+                <div className="text-sm font-medium text-gray-900">{link.label}</div>
+                <p className="text-xs text-gray-600">{link.description}</p>
+              </div>
+            </a>
+          </NavigationMenuLink>
+        );
+      })}
     </div>
   );
 }

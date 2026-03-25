@@ -1,7 +1,8 @@
 import {
   BookOpen, Star, Target, Mail, Inbox, MessageCircle, Share2, Megaphone,
   Anchor, Compass, Users, BarChart3, ScanLine, ClipboardCheck, FileText,
-  GraduationCap, TrendingUp,
+  GraduationCap, TrendingUp, Layers, ShoppingBasket, Lightbulb, Code,
+  HelpCircle, Video, MessageSquare, LogIn, Settings,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -16,10 +17,11 @@ import {
 // Icon lookup map — explicit imports for tree-shaking
 // ─────────────────────────────────────────────
 
-const ICON_MAP: Record<string, LucideIcon> = {
+export const ICON_MAP: Record<string, LucideIcon> = {
   BookOpen, Star, Target, Mail, Inbox, MessageCircle, Share2, Megaphone,
   Anchor, Compass, Users, BarChart3, ScanLine, ClipboardCheck, FileText,
-  GraduationCap, TrendingUp,
+  GraduationCap, TrendingUp, Layers, ShoppingBasket, Lightbulb, Code,
+  HelpCircle, Video, MessageSquare, LogIn, Settings,
 };
 
 // ─────────────────────────────────────────────
