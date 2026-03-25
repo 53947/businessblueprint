@@ -100,7 +100,7 @@ export const HOW_IT_WORKS_MENU: {
     {
       number: 1,
       title: "Scan Your Digital Presence",
-      description: "Free — Takes 5 minutes. We analyze your Google Business listing, reviews, website, and local SEO.",
+      description: "See what the internet sees.",
       href: "/assessment",
       testId: "link-step1",
       icon: HOW_IT_WORKS_STEPS[0].icon,
@@ -109,7 +109,7 @@ export const HOW_IT_WORKS_MENU: {
     {
       number: 2,
       title: "Get Your Custom Blueprint",
-      description: "AI-prescribed growth plan specific to your scores, your market, and your gaps.",
+      description: "Your prescription. Not a template.",
       href: "#",
       testId: "link-step2",
       icon: HOW_IT_WORKS_STEPS[1].icon,
@@ -118,7 +118,7 @@ export const HOW_IT_WORKS_MENU: {
     {
       number: 3,
       title: "Build Your Foundation",
-      description: "/ connect CRM — the hub every app flows through. Your contacts and business data, all in one place.",
+      description: "Everything connects through here.",
       href: "/connect",
       testId: "link-step3",
       icon: HOW_IT_WORKS_STEPS[2].icon,
@@ -127,7 +127,7 @@ export const HOW_IT_WORKS_MENU: {
     {
       number: 4,
       title: "Own Your Local Presence",
-      description: "/ anchor suite — Google listing, D&B DUNS, directories, reviews, SEO, and advertising.",
+      description: "Google. D&B. Every directory.",
       href: "/anchor",
       testId: "link-step4",
       icon: HOW_IT_WORKS_STEPS[3].icon,
@@ -136,7 +136,7 @@ export const HOW_IT_WORKS_MENU: {
     {
       number: 5,
       title: "Activate Your Communications",
-      description: "/ compass suite — Email, live chat, unified inbox, and social media. All connected.",
+      description: "Every channel. One inbox.",
       href: "/compass",
       testId: "link-step5",
       icon: HOW_IT_WORKS_STEPS[4].icon,
@@ -145,7 +145,7 @@ export const HOW_IT_WORKS_MENU: {
     {
       number: 6,
       title: "Never Grow Alone",
-      description: "Coach Blue — Your 24/7 AI business coach. Guides setup, monitors progress, alerts you before problems grow.",
+      description: "Your coach. Always on.",
       href: "/coach-blue",
       testId: "link-step6",
       icon: HOW_IT_WORKS_STEPS[5].icon,

@@ -20,6 +20,7 @@ export default function Journey() {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             Six steps. One platform. Everything your local business needs to get found, get trusted, and get customers — in the right order.
           </p>
+          <p className="text-gray-400 text-sm text-center mt-3">12 minute read — worth every one of them.</p>
           <Link href="/assessment">
             <Button className="text-white font-bold px-8 py-3 text-lg" style={{ backgroundColor: "#A00028" }}>
               Start Free with Your Digital IQ Assessment →
@@ -39,8 +40,12 @@ export default function Journey() {
             </div>
           </div>
           <p className="text-gray-600 mb-6 leading-relaxed">
-            Most local businesses don't know where they actually stand online. They assume they have a presence. They don't know their Google Business listing has wrong hours. They don't know three competitors are outranking them for their own service category. They don't know their website is invisible on mobile. The Digital IQ Assessment changes that in 5 minutes. Our scanner analyzes your entire digital footprint using Google Business Intelligence: your listing accuracy, review volume and rating, website performance, social media presence, local SEO positioning, and citation consistency across directories. Every category is scored. You get a Digital IQ Score and a breakdown showing exactly where you're strong and where you're losing ground to competitors.
+            Most local businesses don't know where they actually stand online. They assume they have a presence. They don't know their website is losing customers on mobile. They don't know their reviews have gone unanswered for months. They don't know their business name, address, and phone number are listed differently across a dozen directories — and that inconsistency alone is enough to push them off the first page of local search results. They don't know three competitors are outranking them for their own service category. They don't know their website is invisible on mobile. The Digital IQ Assessment changes that in 5 minutes. Our scanner analyzes your entire digital footprint using Google Business Intelligence: your listing accuracy, review volume and rating, website performance, social media presence, local SEO positioning, and citation consistency across directories. Every category is scored. You get a Digital IQ Score and a breakdown showing exactly where you're strong and where you're losing ground to competitors.
           </p>
+          <div className="bg-white border-l-4 p-6 rounded-lg shadow-sm mb-6" style={{ borderColor: "#A00028" }}>
+            <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: "#A00028" }}>WHAT THIS MEANS FOR YOUR BUSINESS</p>
+            <p className="text-gray-900 text-base leading-relaxed">You've spent years building a reputation in your community. The internet either confirms that reputation or contradicts it — and most business owners have no idea which. The Digital IQ Assessment is the first honest look at what a potential customer sees when they search for you.</p>
+          </div>
           <div className="bg-gray-100 rounded-lg p-4 mb-6 italic text-gray-600 text-sm">
             Your scores feed directly into Step 2 — the AI uses every category result to build your custom blueprint.
           </div>
@@ -65,6 +70,10 @@ export default function Journey() {
           <p className="text-gray-600 mb-6 leading-relaxed">
             Generic marketing advice is useless. A restaurant in Phoenix with 12 reviews and no Google listing has completely different needs than a law firm in Nashville with 200 reviews but no email list. Your blueprint is built from your scores — not a template. Our AI reads every category of your Digital IQ Assessment and prescribes a specific set of apps, in a specific order, with a specific explanation of why each one matters for your business right now. If your local SEO score is critically low, you go to the Anchor Suite first. If your communications are the gap, you go to Compass first. The blueprint tells you exactly what to do and in what sequence. It is not a PDF. It is a live action plan inside your dashboard that updates as your scores improve.
           </p>
+          <div className="bg-white border-l-4 p-6 rounded-lg shadow-sm mb-6" style={{ borderColor: "#FFC107" }}>
+            <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: "#FFC107" }}>WHAT THIS MEANS FOR YOUR BUSINESS</p>
+            <p className="text-gray-900 text-base leading-relaxed">A plumber with 8 reviews and no Google listing needs a completely different plan than a dentist with 200 reviews and no email list. Generic advice wastes your time and your money. Your blueprint is built from your actual scores — it tells you what to fix, in what order, and why it matters for your specific business.</p>
+          </div>
           <div className="bg-gray-100 rounded-lg p-4 italic text-gray-600 text-sm">
             The blueprint always recommends / connect first — because every app requires a data foundation to work properly.
           </div>
@@ -84,6 +93,10 @@ export default function Journey() {
           <p className="text-gray-600 mb-6 leading-relaxed">
             Every app in businessblueprint pulls from and pushes to / connect. Your contacts, companies, deals, and tasks live here. When a customer chats with you through / engage, that conversation logs in / connect. When / elevate surfaces a new review from a known contact, it links to their record. When / promote sends a campaign, it draws from your / connect lists. This is why / connect comes before everything else — it is the hub the entire platform is built around. / connect starts free for up to 250 contacts. When you're ready for unlimited contacts and full CRM capabilities, the Performance plan is $29/mo.
           </p>
+          <div className="bg-white border-l-4 p-6 rounded-lg shadow-sm mb-6" style={{ borderColor: "#008060" }}>
+            <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: "#008060" }}>WHAT THIS MEANS FOR YOUR BUSINESS</p>
+            <p className="text-gray-900 text-base leading-relaxed">Every customer you've ever served, every conversation you've ever had — it all belongs in one place. / connect is that place. Once it's set up, every other app feeds into it automatically. You'll never lose track of a customer again.</p>
+          </div>
           <div className="bg-gray-100 rounded-lg p-4 mb-6 italic text-gray-600 text-sm">
             Every app activated in Steps 4 and 5 flows data automatically into / connect. Set it up once. It connects everything.
           </div>
@@ -149,6 +162,10 @@ export default function Journey() {
             </p>
           </div>
 
+          <div className="bg-white border-l-4 p-6 rounded-lg shadow-sm mb-6" style={{ borderColor: "#064A6C" }}>
+            <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: "#064A6C" }}>WHAT THIS MEANS FOR YOUR BUSINESS</p>
+            <p className="text-gray-900 text-base leading-relaxed">Most business owners assume their Google listing is fine. It's usually not. Hours wrong, photos missing, categories mismatched — and anyone on the internet can submit an edit. / publish fixes all of it, locks your listing down, and makes sure the information people find about your business is accurate everywhere they look.</p>
+          </div>
           <div className="bg-gray-100 rounded-lg p-4 italic text-gray-600 text-sm">
             All four Anchor apps share data through / connect. Listing hours from / publish pause / amplify ads when you're closed. / optimize reads from / publish and / elevate. Review data from / elevate improves / amplify ad copy automatically.
           </div>
@@ -209,6 +226,10 @@ export default function Journey() {
             </p>
           </div>
 
+          <div className="bg-white border-l-4 p-6 rounded-lg shadow-sm mb-6" style={{ borderColor: "#F97316" }}>
+            <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: "#F97316" }}>WHAT THIS MEANS FOR YOUR BUSINESS</p>
+            <p className="text-gray-900 text-base leading-relaxed">Your customers don't all reach out the same way. Some text. Some use Facebook. Some fill out your website form. If those messages are scattered across different apps, some of them don't get answered. Unanswered messages become lost customers. The Compass Suite puts every message in one place.</p>
+          </div>
           <div className="bg-gray-100 rounded-lg p-4 italic text-gray-600 text-sm">
             Every Compass app routes through / respond and logs into / connect. / promote draws lists from / connect contacts. / engage conversations link to / connect records.
           </div>
@@ -228,6 +249,10 @@ export default function Journey() {
           <p className="text-gray-600 mb-6 leading-relaxed">
             Coach Blue is not a help widget. He is an AI business coach built into every page of businessblueprint — persistent, proactive, and always watching your data. He guides your setup in the exact order that produces results. He walks you through each app step by step and picks up exactly where you left off every time you return. When your Google listing gets an unauthorized edit, Coach Blue alerts you. When your average review response time exceeds 10 minutes, he tells you. When your / engage widget has been live for a week with no conversations, he suggests exactly what to change. Coach Blue is $99/mo standalone. With one suite active, $59/mo. With both Anchor and Compass suites active, Coach Blue is free.
           </p>
+          <div className="bg-white border-l-4 p-6 rounded-lg shadow-sm mb-6" style={{ borderColor: "#0000FF" }}>
+            <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: "#0000FF" }}>WHAT THIS MEANS FOR YOUR BUSINESS</p>
+            <p className="text-gray-900 text-base leading-relaxed">There's a difference between having information and knowing what to do with it. Coach Blue watches all your data — your scores, your apps, your activity — and tells you specifically what to act on today. Not a dashboard. A coach.</p>
+          </div>
           <div className="bg-gray-100 rounded-lg p-4 mb-6 italic text-gray-600 text-sm">
             Coach Blue reads data from every app and uses all of it to give you advice specific to your business.
           </div>
@@ -242,6 +267,7 @@ export default function Journey() {
       {/* ═══ FINAL CTA ═══ */}
       <section className="bg-gray-900 py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="text-gray-400 text-xs uppercase tracking-widest mb-4 block text-center">YOU'VE READ THE STEPS</span>
           <h2 className="text-3xl font-bold text-white mb-4">Ready to Start?</h2>
           <p className="text-lg text-white mb-8">
             Take your free Digital IQ Assessment. It takes 5 minutes and shows you exactly where your business stands.
