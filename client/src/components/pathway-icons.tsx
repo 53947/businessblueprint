@@ -1,9 +1,5 @@
-import diyIcon from "@assets/app-icons/diy.png";
-import mspIcon from "@assets/app-icons/managed-services.png";
+import { Wrench, Headphones, ShoppingCart, Ship, Mail } from "lucide-react";
 import aiCoachIcon from "@assets/new logos and wordmarks/coachblue256.png";
-import alcIcon from "@assets/app-icons/a-la-carte.png";
-import captainingIcon from "@assets/app-icons/captaining.png";
-import sendIcon from "@assets/app-icons/send-icon.png";
 
 interface PathwayIconProps {
   className?: string;
@@ -12,11 +8,7 @@ interface PathwayIconProps {
 export function DIYIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
     <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <img 
-        src={diyIcon} 
-        alt="Do It Yourself (DIY)" 
-        style={{ objectFit: 'contain', maxWidth: '90%', maxHeight: '90%' }}
-      />
+      <Wrench style={{ width: '90%', height: '90%', color: '#FFA500' }} />
     </div>
   );
 }
@@ -24,11 +16,7 @@ export function DIYIcon({ className = "w-16 h-16" }: PathwayIconProps) {
 export function MSPIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
     <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <img 
-        src={mspIcon} 
-        alt="Managed Services Provided (MSP)" 
-        style={{ objectFit: 'contain', maxWidth: '90%', maxHeight: '90%' }}
-      />
+      <Headphones style={{ width: '90%', height: '90%', color: '#1844A6' }} />
     </div>
   );
 }
@@ -36,9 +24,9 @@ export function MSPIcon({ className = "w-16 h-16" }: PathwayIconProps) {
 export function AICoachIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
     <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <img 
-        src={aiCoachIcon} 
-        alt="AI Business Coach" 
+      <img
+        src={aiCoachIcon}
+        alt="AI Business Coach"
         style={{ objectFit: 'contain', maxWidth: '90%', maxHeight: '90%' }}
       />
     </div>
@@ -48,11 +36,7 @@ export function AICoachIcon({ className = "w-16 h-16" }: PathwayIconProps) {
 export function ALCIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
     <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <img 
-        src={alcIcon} 
-        alt="À La Carte (ALC)" 
-        style={{ objectFit: 'contain', maxWidth: '90%', maxHeight: '90%' }}
-      />
+      <ShoppingCart style={{ width: '90%', height: '90%', color: '#00FF40' }} />
     </div>
   );
 }
@@ -60,11 +44,7 @@ export function ALCIcon({ className = "w-16 h-16" }: PathwayIconProps) {
 export function CaptainIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
     <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <img 
-        src={captainingIcon} 
-        alt="Captaining Your Journey" 
-        style={{ objectFit: 'contain', maxWidth: '90%', maxHeight: '90%' }}
-      />
+      <Ship style={{ width: '90%', height: '90%', color: '#F97316' }} />
     </div>
   );
 }
@@ -72,11 +52,7 @@ export function CaptainIcon({ className = "w-16 h-16" }: PathwayIconProps) {
 export function SendIcon({ className = "w-16 h-16" }: PathwayIconProps) {
   return (
     <div className={className} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <img 
-        src={sendIcon} 
-        alt="/ promote - Email + SMS Marketing" 
-        style={{ objectFit: 'contain', maxWidth: '90%', maxHeight: '90%' }}
-      />
+      <Mail style={{ width: '90%', height: '90%', color: '#1844A6' }} />
     </div>
   );
 }

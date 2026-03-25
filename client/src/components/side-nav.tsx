@@ -18,12 +18,12 @@ import {
   Mail,
   Share2,
   BookOpen,
-  Star
+  Star,
+  Settings
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import bbIcon from "@assets/brand/bb-favicon.png";
 import bbLockup from "@assets/brand/bb-logo-only.png";
-import settingsIcon from "@assets/app-icons/settings.png";
 import aiCoachIcon from "@assets/new logos and wordmarks/coachblue256.png";
 import hostsBlueWordmark from "@assets/platforms/hostsblue-lockup.png";
 import swipesBlueWordmark from "@assets/platforms/swipesblue-lockup.png";
@@ -180,7 +180,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
     { 
       id: "settings", 
       label: "Settings", 
-      icon: <img src={settingsIcon} alt="Settings" className="w-7 h-7 object-contain" /> 
+      icon: <Settings className="w-7 h-7" /> 
     },
     { 
       id: "divider-4", 

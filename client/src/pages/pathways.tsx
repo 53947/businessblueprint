@@ -17,10 +17,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { DIYIcon, ALCIcon } from "@/components/pathway-icons";
-import sendIcon from "@assets/app-icons/send-icon.png";
-import inboxIcon from "@assets/app-icons/inbox-icon.png";
-import livechatIcon from "@assets/app-icons/livechat-icon.png";
-import commverseIcon from "@assets/app-icons/commverse-bundle-logo.png";
+import { AppIcon } from "@/components/app-name";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -258,11 +255,7 @@ export default function PathwaysPage() {
             <Card className="border-2 border-yellow-200 hover:border-yellow-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <img
-                    src={sendIcon}
-                    alt="/ promote"
-                    className="h-16 w-16 object-contain"
-                  />
+                  <AppIcon name="Mail" size={64} color="#1844A6" />
                 </div>
                 <h3
                   className="text-xl font-bold text-gray-900 mb-2 text-center font-['Archivo_Semi_Expanded']"
@@ -295,11 +288,7 @@ export default function PathwaysPage() {
             <Card className="border-2 border-blue-200 hover:border-blue-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <img
-                    src={inboxIcon}
-                    alt="/respond"
-                    className="h-16 w-16 object-contain"
-                  />
+                  <AppIcon name="Inbox" size={64} color="#001882" />
                 </div>
                 <h3
                   className="text-xl font-bold text-gray-900 mb-2 text-center"
@@ -332,11 +321,7 @@ export default function PathwaysPage() {
             <Card className="border-2 border-purple-200 hover:border-purple-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <img
-                    src={livechatIcon}
-                    alt="/ engage"
-                    className="h-16 w-16 object-contain"
-                  />
+                  <AppIcon name="MessageCircle" size={64} color="#660099" />
                 </div>
                 <h3
                   className="text-xl font-bold text-gray-900 mb-2 text-center font-['Archivo_Semi_Expanded']"
@@ -369,11 +354,7 @@ export default function PathwaysPage() {
             <Card className="border-2 border-pink-200 hover:border-pink-400 hover:shadow-xl transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <img
-                    src={commverseIcon}
-                    alt="/post"
-                    className="h-16 w-16 object-contain"
-                  />
+                  <AppIcon name="Share2" size={64} color="#FF44CC" />
                 </div>
                 <h3
                   className="text-xl font-bold text-gray-900 mb-2 text-center"

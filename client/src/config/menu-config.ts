@@ -30,7 +30,8 @@ import usersIcon from "@assets/icons/users.svg";
 import messageSquareIcon from "@assets/icons/message-square.svg";
 import trendingUpIcon from "@assets/icons/trending-up.svg";
 import logInIcon from "@assets/icons/log-in.svg";
-import settingsIcon from "@assets/app-icons/settings.png";
+// settingsIcon now uses Lucide Settings icon (no PNG import needed)
+const settingsIcon = "Settings"; // Lucide icon name string for consumers
 
 // ─────────────────────────────────────────────
 // Types

@@ -12,6 +12,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { SideNav } from "@/components/side-nav";
 import { BrandLogo } from "@/components/brand-logo";
+import { AppIcon } from "@/components/app-name";
 import { Header } from "@/components/header";
 import ContentManagement from "@/pages/post-management";
 import { 
@@ -406,7 +407,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/app-icons/listings-icon.png" alt="/ publish" className="w-8 h-8" />
+                <AppIcon name="BookOpen" size={32} color="#064A6C" />
                 <div className="text-center">
                   <div className="flex gap-3">
                     <div>
@@ -425,17 +426,17 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/app-icons/listings-icon.png" alt="/ publish" className="w-16 h-16" />
+                  <AppIcon name="BookOpen" size={64} color="#064A6C" />
                 </div>
                 <div className="flex justify-center mb-2">
-                  <img src="/attached_assets/app-icons/listings-logo.png" alt="/ publish" className="h-5" />
+                  <span style={{ color: '#064A6C', fontWeight: 600, fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><span style={{ color: '#09080E' }}>/</span> publish</span>
                 </div>
                 <p className="text-xs text-gray-600">Directory sync & consistency</p>
               </div>
               
               {/* Action Button (BOTTOM) */}
               <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("listings")} data-testid="button-manage-local-seo">
-                <img src="/attached_assets/app-icons/listings-icon.png" alt="" className="w-4 h-4" />
+                <AppIcon name="BookOpen" size={16} color="#064A6C" />
                 <span>Manage</span>
               </Button>
             </CardContent>
@@ -446,7 +447,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/app-icons/send-icon.png" alt="/ promote" className="w-8 h-8" />
+                <AppIcon name="Mail" size={32} color="#1844A6" />
                 <div className="text-center w-full">
                   {clientData.campaigns.latest ? (
                     <>
@@ -475,17 +476,17 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/app-icons/send-icon.png" alt="/ promote" className="w-16 h-16" />
+                  <AppIcon name="Mail" size={64} color="#1844A6" />
                 </div>
                 <div className="flex justify-center">
-                  <img src="/attached_assets/app-icons/send-logo.png" alt="/ promote" className="h-6" />
+                  <span style={{ color: '#1844A6', fontWeight: 600, fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><span style={{ color: '#09080E' }}>/</span> promote</span>
                 </div>
                 <p className="text-xs text-gray-600">Email & SMS campaigns</p>
               </div>
               
               {/* Action Button (BOTTOM) */}
               <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("campaigns")} data-testid="button-schedule-campaign">
-                <img src="/attached_assets/app-icons/send-icon.png" alt="" className="w-4 h-4" />
+                <AppIcon name="Mail" size={16} color="#1844A6" />
                 <span>Schedule</span>
               </Button>
             </CardContent>
@@ -496,7 +497,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/app-icons/content-icon.png" alt="Social Media" className="w-8 h-8" />
+                <AppIcon name="Share2" size={32} color="#FF44CC" />
                 <div className="text-center">
                   <div className="grid grid-cols-3 gap-2 text-xs">
                     <div>
@@ -518,10 +519,10 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/app-icons/content-icon.png" alt="Social Media" className="w-16 h-16" />
+                  <AppIcon name="Share2" size={64} color="#FF44CC" />
                 </div>
                 <div className="flex justify-center">
-                  <img src="/attached_assets/app-icons/content-logo.png" alt="/post" className="h-6" />
+                  <span style={{ color: '#FF44CC', fontWeight: 600, fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><span style={{ color: '#09080E' }}>/</span> post</span>
                 </div>
                 <p className="text-xs text-gray-600">Social Media Management</p>
               </div>
@@ -530,17 +531,17 @@ export default function ClientPortal() {
               {clientData.socialMedia?.isSetup ? (
                 <div className="grid grid-cols-2 gap-2">
                   <Button size="sm" variant="outline" className="flex items-center justify-center gap-1" onClick={() => setActiveTab("social")} data-testid="button-schedule-social">
-                    <img src="/attached_assets/app-icons/content-icon.png" alt="" className="w-4 h-4" />
+                    <AppIcon name="Share2" size={16} color="#FF44CC" />
                     <span className="text-xs">Schedule</span>
                   </Button>
                   <Button size="sm" variant="outline" className="flex items-center justify-center gap-1" onClick={() => setActiveTab("social")} data-testid="button-respond-social">
-                    <img src="/attached_assets/app-icons/content-icon.png" alt="" className="w-4 h-4" />
+                    <AppIcon name="Share2" size={16} color="#FF44CC" />
                     <span className="text-xs">Respond</span>
                   </Button>
                 </div>
               ) : (
                 <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("social")} data-testid="button-setup-social">
-                  <img src="/attached_assets/app-icons/content-icon.png" alt="" className="w-4 h-4" />
+                  <AppIcon name="Share2" size={16} color="#FF44CC" />
                   <span>Setup</span>
                 </Button>
               )}
@@ -552,7 +553,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/app-icons/reputation-icon.png" alt="/ elevate" className="w-8 h-8" />
+                <AppIcon name="Star" size={32} color="#E9B307" />
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">{clientData.reviews.average}</div>
                   <p className="text-[10px] text-gray-600">Review Ratings</p>
@@ -562,17 +563,17 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/app-icons/reputation-icon.png" alt="/ elevate" className="w-16 h-16" />
+                  <AppIcon name="Star" size={64} color="#E9B307" />
                 </div>
                 <div className="flex justify-center mb-2">
-                  <img src="/attached_assets/app-icons/reputation-logo.png" alt="/ elevate" className="h-5" />
+                  <span style={{ color: '#E9B307', fontWeight: 600, fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><span style={{ color: '#09080E' }}>/</span> elevate</span>
                 </div>
                 <p className="text-xs text-gray-600">Review response & reputation management</p>
               </div>
               
               {/* Action Button (BOTTOM) */}
               <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("reviews")} data-testid="button-respond-reviews">
-                <img src="/attached_assets/app-icons/reputation-icon.png" alt="" className="w-4 h-4" />
+                <AppIcon name="Star" size={16} color="#E9B307" />
                 <span>Respond</span>
               </Button>
             </CardContent>
@@ -583,7 +584,7 @@ export default function ClientPortal() {
             <CardContent className="p-6">
               {/* Results Section (TOP) */}
               <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <img src="/attached_assets/app-icons/livechat-icon.png" alt="/ engage" className="w-8 h-8" />
+                <AppIcon name="MessageCircle" size={32} color="#660099" />
                 <div className="text-center">
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
@@ -601,10 +602,10 @@ export default function ClientPortal() {
               {/* Icon & Content (MIDDLE) */}
               <div className="text-center mb-4">
                 <div className="flex justify-center mb-3">
-                  <img src="/attached_assets/app-icons/livechat-icon.png" alt="/ engage" className="w-16 h-16" />
+                  <AppIcon name="MessageCircle" size={64} color="#660099" />
                 </div>
                 <div className="flex justify-center">
-                  <img src="/attached_assets/app-icons/livechat-logo.png" alt="/ engage" className="h-6" />
+                  <span style={{ color: '#660099', fontWeight: 600, fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><span style={{ color: '#09080E' }}>/</span> engage</span>
                 </div>
                 <p className="text-xs text-gray-600">
                   <span className="inline-flex items-center gap-1">
@@ -617,12 +618,12 @@ export default function ClientPortal() {
               {/* Action Button (BOTTOM) - Conditional */}
               {clientData.livechat?.isSetup ? (
                 <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/engage-demo")} data-testid="button-engage-livechat">
-                  <img src="/attached_assets/app-icons/livechat-icon.png" alt="" className="w-4 h-4" />
+                  <AppIcon name="MessageCircle" size={16} color="#660099" />
                   <span>Engage</span>
                 </Button>
               ) : (
                 <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/engage-demo")} data-testid="button-setup-livechat">
-                  <img src="/attached_assets/app-icons/livechat-icon.png" alt="" className="w-4 h-4" />
+                  <AppIcon name="MessageCircle" size={16} color="#660099" />
                   <span>Setup Widget</span>
                 </Button>
               )}
