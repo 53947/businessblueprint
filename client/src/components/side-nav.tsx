@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 import bbIcon from "@assets/brand/bb-favicon.png";
 import bbLockup from "@assets/brand/bb-logo-only.png";
 import settingsIcon from "@assets/app-icons/settings.png";
-import aiCoachIcon from "@assets/brand/coach-blue-icon.png";
+import aiCoachIcon from "@assets/new logos and wordmarks/coachblue256.png";
 import hostsBlueWordmark from "@assets/platforms/hostsblue-lockup.png";
 import swipesBlueWordmark from "@assets/platforms/swipesblue-lockup.png";
 

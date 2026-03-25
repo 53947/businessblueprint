@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { AppIcon } from "@/components/app-name";
-import coachBlueIcon from "@assets/brand/coach-blue-icon.png";
+import coachBlueIcon from "@assets/new logos and wordmarks/coachblue256.png";
 
 interface HowItWorksProps {
   onStartAssessment: () => void;

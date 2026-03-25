@@ -1,6 +1,6 @@
 import diyIcon from "@assets/app-icons/diy.png";
 import mspIcon from "@assets/app-icons/managed-services.png";
-import aiCoachIcon from "@assets/brand/coach-blue-icon.png";
+import aiCoachIcon from "@assets/new logos and wordmarks/coachblue256.png";
 import alcIcon from "@assets/app-icons/a-la-carte.png";
 import captainingIcon from "@assets/app-icons/captaining.png";
 import sendIcon from "@assets/app-icons/send-icon.png";

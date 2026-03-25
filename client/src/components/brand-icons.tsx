@@ -1,5 +1,5 @@
 // Brand Icons - Official brand assets
-import coachBlueIcon from "@assets/brand/coach-blue-icon.png";
+import coachBlueIcon from "@assets/new logos and wordmarks/coachblue256.png";
 import commverseIcon from "@assets/brand/commverse-icon-old.png";
 import digitalIQIcon from "@assets/brand/digital-iq-icon-old.png";
 import digitalAssessmentIcon from "@assets/brand/digital-iq-assessment-icon.png";
