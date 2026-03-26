@@ -194,7 +194,7 @@ export const BUNDLE_REGISTRY: BundleConfig[] = [
   {
     id: "anchor",
     name: "Anchor Suite",
-    color: "#0000FF",
+    color: "#2073E3",
     icon: "Anchor",
     price: 99,
     appIds: ["publish", "elevate", "optimize", "amplify"],
@@ -218,7 +218,7 @@ export const CONNECT_CRM: ConnectConfig = {
   icon: "Users",
   isSlashApp: true,
   tiers: [
-    { name: "Starter", price: 0, contactLimit: 250 },
+    { name: "Starter", price: 0, contactLimit: 100 },
     { name: "Unlimited", price: 29, contactLimit: null },
   ],
   description: "Customer Relationship Management Tool",
