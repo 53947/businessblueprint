@@ -1,7 +1,9 @@
 import bbLogo from "@assets/images_logos/bb-header-logo.png";
+import triadblueEcosystem from "@assets/images_logos/triadblue-ecosystem-logo.png";
 import swipesLogo from "@assets/images_logos/swipesblue_logo_image_and_text_as_url.png";
 import hostsLogo from "@assets/images_logos/hostsblue_logo_image_and_text_as_url.png";
 import scansLogo from "@assets/images_logos/scansblue_logo_image_and_text_as_url.png";
+import builderLogo from "@assets/images_logos/builderblue2-logo-url.png";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -18,41 +20,27 @@ export function Footer() {
             <img src={bbLogo} alt="businessblueprint.io" style={{ height: 32, objectFit: 'contain' }} />
             <p className="text-sm text-gray-500 mt-2 mb-6">We Assess. We Prescribe. You Grow.</p>
 
-            <p className="text-xs uppercase tracking-widest text-gray-400 font-medium mb-4">TRIADBLUE ECOSYSTEM</p>
+            <img src={triadblueEcosystem} alt="TRIADBLUE.COM ECOSYSTEM" style={{ height: 24, objectFit: 'contain' }} className="mb-5" />
 
-            <div className="space-y-5">
-              <div className="flex items-center gap-3">
-                <img src={swipesLogo} alt="swipesblue.com" style={{ height: 28, objectFit: 'contain' }} />
-                <div>
-                  <p className="text-sm font-medium text-gray-700">swipesblue.com</p>
-                  <p className="text-xs text-gray-400">Proprietary payment processing for the ecosystem</p>
-                </div>
+            <div className="space-y-4">
+              <div>
+                <img src={swipesLogo} alt="swipesblue.com" style={{ height: 22, objectFit: 'contain' }} />
+                <p className="text-xs text-gray-400 mt-1">Proprietary payment processing for the ecosystem</p>
               </div>
 
-              <div className="flex items-center gap-3">
-                <img src={hostsLogo} alt="hostsblue.com" style={{ height: 28, objectFit: 'contain' }} />
-                <div>
-                  <p className="text-sm font-medium text-gray-700">hostsblue.com</p>
-                  <p className="text-xs text-gray-400">Domains, hosting, email, and website builder</p>
-                </div>
+              <div>
+                <img src={hostsLogo} alt="hostsblue.com" style={{ height: 22, objectFit: 'contain' }} />
+                <p className="text-xs text-gray-400 mt-1">Domains, hosting, email, and website builder</p>
               </div>
 
-              <div className="flex items-center gap-3">
-                <img src={scansLogo} alt="scansblue.com" style={{ height: 28, objectFit: 'contain' }} />
-                <div>
-                  <p className="text-sm font-medium text-gray-700">scansblue.com</p>
-                  <p className="text-xs text-gray-400">Website auditing and digital presence scanning</p>
-                </div>
+              <div>
+                <img src={scansLogo} alt="scansblue.com" style={{ height: 22, objectFit: 'contain' }} />
+                <p className="text-xs text-gray-400 mt-1">Website auditing and digital presence scanning</p>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div style={{ width: 28, height: 28, backgroundColor: '#09080E', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <span style={{ color: 'white', fontSize: 10, fontWeight: 700 }}>B2</span>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-700">BUILDERBLUE2.COM</p>
-                  <p className="text-xs text-gray-400">AI-powered vibe coding platform</p>
-                </div>
+              <div>
+                <img src={builderLogo} alt="BUILDERBLUE2.COM" style={{ height: 22, objectFit: 'contain' }} />
+                <p className="text-xs text-gray-400 mt-1">AI-powered vibe coding platform</p>
               </div>
             </div>
           </div>
