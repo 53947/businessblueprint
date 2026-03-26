@@ -1,11 +1,9 @@
 /**
  * Migrate 53947@ demo accounts to demo@ emails.
- * Removes any existing demo@ records first to avoid conflicts.
+ * Uses raw SQL to handle the massive number of FK references.
  * Run on Replit: npx tsx scripts/migrate-demo-emails.ts
  */
-import { db } from "../server/db";
-import { clients, dashboardAccess, clientAssessments } from "../shared/schema";
-import { eq } from "drizzle-orm";
+import { pool } from "../server/db";
 
 const migrations = [
   { from: "53947@businessblueprint.io", to: "demo@businessblueprint.io" },
@@ -15,64 +13,94 @@ const migrations = [
 ];
 
 async function migrate() {
-  for (const { from, to } of migrations) {
-    // Remove any existing demo@ record that would conflict
-    const [existingDemo] = await db
-      .select()
-      .from(clients)
-      .where(eq(clients.email, to));
+  const client = await pool.connect();
+  try {
+    for (const { from, to } of migrations) {
+      // Check if 53947@ record exists
+      const sourceRes = await client.query(
+        `SELECT id FROM clients WHERE email = $1`, [from]
+      );
 
-    if (existingDemo) {
-      // Clean up foreign key references first
-      await db.delete(dashboardAccess).where(eq(dashboardAccess.clientId, existingDemo.id));
-      await db.delete(clientAssessments).where(eq(clientAssessments.clientId, existingDemo.id));
-      await db.delete(clients).where(eq(clients.id, existingDemo.id));
-      console.log(`[REMOVED] old ${to} (id: ${existingDemo.id}) + related records`);
+      if (sourceRes.rows.length > 0) {
+        // Check if demo@ already exists
+        const demoRes = await client.query(
+          `SELECT id FROM clients WHERE email = $1`, [to]
+        );
+
+        if (demoRes.rows.length > 0) {
+          // Reassign all FK references from old demo@ to 53947@ record, then delete old
+          const oldId = demoRes.rows[0].id;
+          const newId = sourceRes.rows[0].id;
+
+          // Update all tables that reference the old demo client to point to the 53947 client
+          const fkTables = await client.query(`
+            SELECT tc.table_name, kcu.column_name
+            FROM information_schema.table_constraints tc
+            JOIN information_schema.key_column_usage kcu ON tc.constraint_name = kcu.constraint_name
+            JOIN information_schema.constraint_column_usage ccu ON tc.constraint_name = ccu.constraint_name
+            WHERE tc.constraint_type = 'FOREIGN KEY'
+              AND ccu.table_name = 'clients'
+              AND ccu.column_name = 'id'
+          `);
+
+          for (const row of fkTables.rows) {
+            await client.query(
+              `UPDATE "${row.table_name}" SET "${row.column_name}" = $1 WHERE "${row.column_name}" = $2`,
+              [newId, oldId]
+            );
+          }
+
+          // Now safe to delete old demo@ record
+          await client.query(`DELETE FROM clients WHERE id = $1`, [oldId]);
+          console.log(`[MERGED] old demo record (id: ${oldId}) into 53947 record (id: ${newId})`);
+        }
+
+        // Rename 53947@ → demo@ and ensure admin
+        await client.query(`
+          UPDATE clients SET
+            email = $1,
+            is_admin = true,
+            is_protected = true,
+            is_email_verified = true,
+            enabled_features = 'CO,VI,SP,RE,SO,RI',
+            account_status = 'active'
+          WHERE email = $2
+        `, [to, from]);
+        console.log(`[UPDATED] ${from} → ${to}`);
+
+      } else {
+        // No 53947@ record — check if demo@ exists and just update it
+        const demoRes = await client.query(
+          `SELECT id FROM clients WHERE email = $1`, [to]
+        );
+
+        if (demoRes.rows.length > 0) {
+          await client.query(`
+            UPDATE clients SET
+              is_admin = true,
+              is_protected = true,
+              is_email_verified = true,
+              enabled_features = 'CO,VI,SP,RE,SO,RI',
+              account_status = 'active'
+            WHERE email = $1
+          `, [to]);
+          console.log(`[UPDATED] ${to} — already exists, set to admin`);
+        } else {
+          // Create fresh
+          await client.query(`
+            INSERT INTO clients (email, company_name, enabled_features, is_admin, is_protected, is_email_verified, account_status)
+            VALUES ($1, $2, 'CO,VI,SP,RE,SO,RI', true, true, true, 'active')
+          `, [to, to.split("@")[1]]);
+          console.log(`[CREATED] ${to}`);
+        }
+      }
     }
 
-    // Find the 53947@ record
-    const [source] = await db
-      .select()
-      .from(clients)
-      .where(eq(clients.email, from));
-
-    if (!source) {
-      // No 53947@ record — create a fresh demo@ record
-      const [created] = await db
-        .insert(clients)
-        .values({
-          email: to,
-          companyName: to.split("@")[1],
-          enabledFeatures: "CO,VI,SP,RE,SO,RI",
-          isAdmin: true,
-          isProtected: true,
-          isEmailVerified: true,
-          accountStatus: "active",
-        })
-        .returning();
-      console.log(`[CREATED] ${created.email} (id: ${created.id})`);
-      continue;
-    }
-
-    // Rename 53947@ → demo@ and ensure admin + protected
-    const [updated] = await db
-      .update(clients)
-      .set({
-        email: to,
-        isAdmin: true,
-        isProtected: true,
-        isEmailVerified: true,
-        enabledFeatures: "CO,VI,SP,RE,SO,RI",
-        accountStatus: "active",
-      })
-      .where(eq(clients.id, source.id))
-      .returning();
-
-    console.log(`[UPDATED] ${from} → ${updated.email} (id: ${updated.id})`);
+    console.log("\nDone. demo@ accounts are admin/protected. 53947@ emails are free.");
+  } finally {
+    client.release();
+    process.exit(0);
   }
-
-  console.log("\nDone. demo@ accounts are admin/protected. 53947@ emails are free.");
-  process.exit(0);
 }
 
 migrate().catch((err) => {
