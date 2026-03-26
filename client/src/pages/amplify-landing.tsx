@@ -37,7 +37,7 @@ export default function AmplifyLanding() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-white py-20 border-b border-gray-200">
+      <section className="bg-white py-20 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
@@ -90,7 +90,7 @@ export default function AmplifyLanding() {
       </section>
 
       {/* Dark Band - Pricing Callout */}
-      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
+      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
@@ -105,7 +105,7 @@ export default function AmplifyLanding() {
       </section>
 
       {/* Unique Section 1: Two Bases. One Dashboard. */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -193,7 +193,7 @@ export default function AmplifyLanding() {
       </section>
 
       {/* Unique Section 2: Reddit: The Platform Others Ignore */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -290,7 +290,7 @@ export default function AmplifyLanding() {
       </section>
 
       {/* Unique Section 3: Built Into Your Ecosystem */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -415,7 +415,7 @@ export default function AmplifyLanding() {
       </section>
 
       {/* Feature Section: What Sets /amplify Apart */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
             What Sets /amplify Apart

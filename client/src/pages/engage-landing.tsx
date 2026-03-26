@@ -16,7 +16,7 @@ export default function EngageLanding() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-white py-20 border-b border-gray-200">
+      <section className="bg-white py-20 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
@@ -68,7 +68,7 @@ export default function EngageLanding() {
       </section>
 
       {/* Pricing Callout — Dark Band */}
-      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
+      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-white text-xl">
@@ -79,7 +79,7 @@ export default function EngageLanding() {
       </section>
 
       {/* The Problem We Solve */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -140,7 +140,7 @@ export default function EngageLanding() {
       </section>
 
       {/* Key Features */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
             Everything You Need for Great Conversations
@@ -207,7 +207,7 @@ export default function EngageLanding() {
       </section>
 
       {/* Three Steps to Live */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -256,7 +256,7 @@ export default function EngageLanding() {
       </section>
 
       {/* What You Can Customize */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -328,7 +328,7 @@ export default function EngageLanding() {
       </section>
 
       {/* The Point of Difference */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #660099, #8B00CC)' }}>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
@@ -380,7 +380,7 @@ export default function EngageLanding() {
       </section>
 
       {/* What This Means */}
-      <section className="py-4 bg-white">
+      <section className="py-4 bg-white border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-[#660099] text-white rounded-xl p-8 my-12">
             <h3 className="text-white font-bold text-xl mb-4">The Conversation That Starts on Your Website Ends in a Sale</h3>

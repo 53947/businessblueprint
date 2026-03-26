@@ -12,7 +12,7 @@ export default function ConnectLanding() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-white py-20 border-b border-gray-200">
+      <section className="bg-white py-20 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
@@ -64,7 +64,7 @@ export default function ConnectLanding() {
       </section>
 
       {/* Pricing Callout */}
-      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
+      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-white text-xl">
@@ -75,7 +75,7 @@ export default function ConnectLanding() {
       </section>
 
       {/* Key Features */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -133,7 +133,7 @@ export default function ConnectLanding() {
       </section>
 
       {/* More Features */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
             The Tools That Keep Nothing From Falling Through
@@ -200,7 +200,7 @@ export default function ConnectLanding() {
       </section>
 
       {/* The Hub Every App Flows Through */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -280,7 +280,7 @@ export default function ConnectLanding() {
       </section>
 
       {/* Comparison Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-8 md:p-12 border border-gray-200 shadow-xl bg-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">

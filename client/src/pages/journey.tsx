@@ -12,7 +12,7 @@ export default function Journey() {
       <Header showNavigation={true} />
 
       {/* Hero Section */}
-      <section className="bg-white py-20">
+      <section className="bg-white py-20 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
             From Invisible to Unstoppable
@@ -30,7 +30,7 @@ export default function Journey() {
       </section>
 
       {/* ═══ STEP 1 ═══ */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-16 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-start gap-6 mb-6">
             <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#A00028" }}>1</div>
@@ -58,7 +58,7 @@ export default function Journey() {
       </section>
 
       {/* ═══ STEP 2 ═══ */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 py-16 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-start gap-6 mb-6">
             <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#FFC107" }}>2</div>
@@ -81,7 +81,7 @@ export default function Journey() {
       </section>
 
       {/* ═══ STEP 3 ═══ */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-16 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-start gap-6 mb-6">
             <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#008060" }}>3</div>
@@ -109,7 +109,7 @@ export default function Journey() {
       </section>
 
       {/* ═══ STEP 4 ═══ */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 py-16 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-start gap-6 mb-6">
             <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#064A6C" }}>4</div>
@@ -173,7 +173,7 @@ export default function Journey() {
       </section>
 
       {/* ═══ STEP 5 ═══ */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-16 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-start gap-6 mb-6">
             <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#F97316" }}>5</div>
@@ -237,7 +237,7 @@ export default function Journey() {
       </section>
 
       {/* ═══ STEP 6 ═══ */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 py-16 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-start gap-6 mb-6">
             <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#0000FF" }}>6</div>

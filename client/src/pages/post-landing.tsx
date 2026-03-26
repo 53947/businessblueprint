@@ -16,7 +16,7 @@ export default function ContentLanding() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-white py-20 border-b border-gray-200">
+      <section className="bg-white py-20 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
@@ -68,7 +68,7 @@ export default function ContentLanding() {
       </section>
 
       {/* Pricing Callout — Dark Band */}
-      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
+      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-white text-xl">
@@ -79,7 +79,7 @@ export default function ContentLanding() {
       </section>
 
       {/* The /post Difference */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -140,7 +140,7 @@ export default function ContentLanding() {
       </section>
 
       {/* Key Features */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
             Everything You Need to Master Social Media
@@ -207,7 +207,7 @@ export default function ContentLanding() {
       </section>
 
       {/* Platforms Connected */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -293,7 +293,7 @@ export default function ContentLanding() {
       </section>
 
       {/* Schedule and Forget */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -360,7 +360,7 @@ export default function ContentLanding() {
       </section>
 
       {/* The Point of Difference */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-8 md:p-12 border border-gray-200 shadow-xl bg-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
@@ -420,7 +420,7 @@ export default function ContentLanding() {
       </section>
 
       {/* What This Means */}
-      <section className="py-4 bg-gray-50">
+      <section className="py-4 bg-gray-50 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-[#FF44CC] rounded-xl p-8 my-12">
             <h3 className="text-[#09080E] font-bold text-xl mb-4">Visibility Is Not an Accident</h3>

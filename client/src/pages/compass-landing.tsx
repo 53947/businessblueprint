@@ -15,7 +15,7 @@ export default function CompassLanding() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-white py-20 border-b border-gray-200">
+      <section className="bg-white py-20 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center mb-6">
@@ -54,7 +54,7 @@ export default function CompassLanding() {
       </section>
 
       {/* Pricing Callout */}
-      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
+      <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
@@ -72,7 +72,7 @@ export default function CompassLanding() {
       </section>
 
       {/* The Three Apps */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -184,7 +184,7 @@ export default function CompassLanding() {
       </section>
 
       {/* Value Proposition */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #F97316, #8000FF, #FC6ACD)' }}>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
