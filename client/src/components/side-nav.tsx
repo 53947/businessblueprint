@@ -3,7 +3,6 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import {
-  LayoutDashboard,
   CheckSquare,
   LogOut,
   ChevronLeft,
@@ -11,22 +10,17 @@ import {
   Menu,
   CreditCard,
   Lock,
-  Target,
-  Megaphone,
-  Inbox,
-  MessageCircle,
-  Mail,
-  Share2,
-  BookOpen,
-  Star,
   Settings
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { APP_REGISTRY, BUNDLE_REGISTRY } from "@/config/app-registry";
+import { ICON_MAP } from "@/components/app-name";
 import bbIcon from "@assets/images_logos/bb-favicon.png";
 import bbLockup from "@assets/images_logos/bb-logo-only.png";
 import aiCoachIcon from "@assets/images_logos/coachblue48.png";
-import hostsBlueWordmark from "@assets/images_logos/hostsblue-lockup.png";
-import swipesBlueWordmark from "@assets/images_logos/swipesblue-lockup.png";
+import hostsBlueWordmark from "@assets/images_logos/hostsblue_logo_image_and_text_as_url.png";
+import swipesBlueWordmark from "@assets/images_logos/swipesblue_logo_image_and_text_as_url.png";
+import builderBlueWordmark from "@assets/images_logos/builderblue2-logo-image-and-text-as-url-for-header.png";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;
@@ -49,6 +43,8 @@ interface NavItem {
   isHeading?: boolean; // Non-clickable section heading
   hasSpaceBefore?: boolean;
   featureCode?: string; // Maps to enabledFeatures codes: RS, LC, SE, PO, LI, RE, AC
+  isSlashApp?: boolean; // Renders with "/ appname" protocol
+  appColor?: string; // App brand color for label
 }
 
 export function SideNav({ activeTab = "list", onTabChange, onSignOut, className, enabledFeatures, ...props }: SideNavProps) {
@@ -62,113 +58,44 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
   );
   const hasFeatureGating = enabledFeatures !== undefined && enabledFeatures !== "";
 
+  // Feature code mapping (app id → enabledFeatures code)
+  const FEATURE_CODES: Record<string, string> = {
+    respond: "RS", engage: "LC", promote: "SE", post: "PO",
+    publish: "LI", elevate: "RE", optimize: "OP", amplify: "AM",
+  };
+
+  // Build app nav items from registry
+  const buildAppNavItem = (appId: string): NavItem => {
+    const app = APP_REGISTRY.find(a => a.id === appId)!;
+    const Icon = ICON_MAP[app.icon];
+    return {
+      id: app.id,
+      label: app.name,
+      hoverLabel: app.description,
+      icon: Icon ? <Icon className="w-7 h-7" style={{ color: app.color }} /> : null,
+      external: true,
+      href: app.dashboardRoute,
+      featureCode: FEATURE_CODES[app.id],
+      isSlashApp: true,
+      appColor: app.color,
+    };
+  };
+
+  const compassBundle = BUNDLE_REGISTRY.find(b => b.id === "compass")!;
+  const anchorBundle = BUNDLE_REGISTRY.find(b => b.id === "anchor")!;
+
   const navItems: NavItem[] = [
-    {
-      id: "respond",
-      label: "respond",
-      hoverLabel: "Unified Communications",
-      icon: <Inbox className="w-7 h-7" style={{ color: '#001882' }} />,
-      external: true,
-      href: "/respond/dashboard",
-      featureCode: "RS",
-    },
-    {
-      id: "engage",
-      label: "engage",
-      hoverLabel: "Live Chat Widget",
-      icon: <MessageCircle className="w-7 h-7" style={{ color: '#660099' }} />,
-      external: true,
-      href: "/engage/dashboard",
-      featureCode: "LC",
-    },
-    { 
-      id: "tasks", 
-      label: "Tasks", 
-      icon: <CheckSquare className="w-7 h-7" /> 
-    },
-    { 
-      id: "billing", 
-      label: "Billing", 
-      icon: <CreditCard className="w-7 h-7" /> 
-    },
-    { 
-      id: "divider-1", 
-      label: "", 
-      icon: null, 
-      isDivider: true 
-    },
-    {
-      id: "promote",
-      label: "promote",
-      hoverLabel: "Email + SMS Marketing",
-      icon: <Mail className="w-7 h-7" style={{ color: '#1844A6' }} />,
-      external: true,
-      href: "/promote/dashboard",
-      featureCode: "SE",
-    },
-    {
-      id: "post",
-      label: "post",
-      hoverLabel: "Social Media Management",
-      icon: <Share2 className="w-7 h-7" style={{ color: '#FF44CC' }} />,
-      external: true,
-      href: "/post/dashboard",
-      featureCode: "PO",
-    },
-    { 
-      id: "divider-2", 
-      label: "", 
-      icon: null, 
-      isDivider: true 
-    },
-    { 
-      id: "local-seo-heading", 
-      label: "Local SEO Mgmt", 
-      icon: null,
-      isHeading: true
-    },
-    {
-      id: "publish",
-      label: "publish",
-      hoverLabel: "Directory Sync & Consistency",
-      icon: <BookOpen className="w-7 h-7" style={{ color: '#064A6C' }} />,
-      external: true,
-      href: "/publish/dashboard",
-      featureCode: "LI",
-    },
-    {
-      id: "elevate",
-      label: "elevate",
-      hoverLabel: "Review Response & Reputation Management",
-      icon: <Star className="w-7 h-7" style={{ color: '#E9B307' }} />,
-      external: true,
-      href: "/elevate/dashboard",
-      featureCode: "RE",
-    },
-    {
-      id: "optimize",
-      label: "optimize",
-      hoverLabel: "SEO Optimization Suite",
-      icon: <Target className="w-7 h-7" style={{ color: '#374151' }} />,
-      external: true,
-      href: "/optimize/dashboard",
-      featureCode: "OP",
-    },
-    {
-      id: "amplify",
-      label: "amplify",
-      hoverLabel: "Advertising Platform",
-      icon: <Megaphone className="w-7 h-7" style={{ color: '#97ACCA' }} />,
-      external: true,
-      href: "/amplify/dashboard",
-      featureCode: "AM",
-    },
-    {
-      id: "divider-3",
-      label: "",
-      icon: null,
-      isDivider: true
-    },
+    // Compass Suite
+    { id: "compass-heading", label: "Compass Suite", icon: null, isHeading: true },
+    ...compassBundle.appIds.map(buildAppNavItem),
+    { id: "divider-1", label: "", icon: null, isDivider: true },
+    { id: "tasks", label: "Tasks", icon: <CheckSquare className="w-7 h-7" /> },
+    { id: "billing", label: "Billing", icon: <CreditCard className="w-7 h-7" /> },
+    { id: "divider-2", label: "", icon: null, isDivider: true },
+    // Anchor Suite
+    { id: "anchor-heading", label: "Anchor Suite", icon: null, isHeading: true },
+    ...anchorBundle.appIds.map(buildAppNavItem),
+    { id: "divider-3", label: "", icon: null, isDivider: true },
     {
       id: "ai-coach",
       label: "Coach Blue",
@@ -177,32 +104,31 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       href: "/coach-blue",
       featureCode: "AC",
     },
-    { 
-      id: "settings", 
-      label: "Settings", 
-      icon: <Settings className="w-7 h-7" /> 
-    },
-    { 
-      id: "divider-4", 
-      label: "", 
-      icon: null, 
-      isDivider: true 
-    },
-    { 
-      id: "hostsblue", 
-      label: "hostsblue",
+    { id: "settings", label: "Settings", icon: <Settings className="w-7 h-7" /> },
+    { id: "divider-4", label: "", icon: null, isDivider: true },
+    {
+      id: "hostsblue",
+      label: "hostsblue.com",
       icon: null,
       logo: hostsBlueWordmark,
       external: true,
-      href: "https://hostsblue.com"
+      href: "https://hostsblue.com",
     },
-    { 
-      id: "swipesblue", 
-      label: "swipesblue",
+    {
+      id: "swipesblue",
+      label: "swipesblue.com",
       icon: null,
       logo: swipesBlueWordmark,
       external: true,
-      href: "https://swipesblue.com"
+      href: "https://swipesblue.com",
+    },
+    {
+      id: "builderblue2",
+      label: "builderblue2.com",
+      icon: null,
+      logo: builderBlueWordmark,
+      external: true,
+      href: "https://builderblue2.com",
     },
   ];
 
@@ -297,14 +223,15 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
                   alt={item.label}
                   className={cn(
                     "flex-1 object-contain object-left",
-                    item.id === "hostsblue" || item.id === "swipesblue" ? "h-7" : "h-5",
+                    item.id === "hostsblue" || item.id === "swipesblue" || item.id === "builderblue2" ? "h-7" : "h-5",
                     locked ? "grayscale" : ""
                   )}
                   data-testid={`logo-nav-${item.id}`}
                 />
               ) : (
-                <span className="flex-1 text-base leading-7" data-testid={`text-nav-${item.id}`}>
-                  {item.label}
+                <span className="flex-1 text-base leading-7" style={{ fontFamily: item.isSlashApp ? 'Archivo Semi Expanded, Archivo, sans-serif' : undefined, fontWeight: item.isSlashApp ? 600 : undefined }} data-testid={`text-nav-${item.id}`}>
+                  {item.isSlashApp && <span style={{ color: '#09080E' }}>/ </span>}
+                  {item.isSlashApp ? <span style={{ color: item.appColor }}>{item.label}</span> : item.label}
                 </span>
               )
             )}

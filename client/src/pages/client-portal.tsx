@@ -239,17 +239,44 @@ export default function ClientPortal() {
       <div className="px-4 sm:px-6 lg:px-8 py-8">
         {/* Digital IQ + Business Info Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Digital IQ - Half Size */}
+          {/* Digital IQ */}
           <Card className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
             <CardContent className="p-4">
-              <div className="text-center">
+              <div className="text-center mb-3">
                 <h2 className="text-lg font-bold mb-1">Digital IQ</h2>
                 <div className="text-4xl font-bold mb-1">{clientData.digitalScore}</div>
                 <p className="text-xs text-blue-100">Updated {new Date(clientData.lastUpdated).toLocaleDateString()}</p>
-                <div className="flex items-center justify-center gap-2 mt-2">
-                  <Brain className="h-4 w-4" />
-                  <span className="text-xs">Powered by businessblueprint AI</span>
-                </div>
+              </div>
+              {/* Score improvement insights */}
+              <div className="space-y-2 mt-3 pt-3 border-t border-white/20">
+                {!clientData.listings?.verified && (
+                  <div className="flex items-center gap-2 text-xs text-blue-100">
+                    <Sparkles className="h-3 w-3 flex-shrink-0" />
+                    <span>Set up <strong>/ publish</strong> to add +15 pts (directory listings)</span>
+                  </div>
+                )}
+                {!clientData.reviews?.average && (
+                  <div className="flex items-center gap-2 text-xs text-blue-100">
+                    <Sparkles className="h-3 w-3 flex-shrink-0" />
+                    <span>Activate <strong>/ elevate</strong> to add +10 pts (reputation mgmt)</span>
+                  </div>
+                )}
+                {!clientData.socialMedia?.isSetup && (
+                  <div className="flex items-center gap-2 text-xs text-blue-100">
+                    <Sparkles className="h-3 w-3 flex-shrink-0" />
+                    <span>Connect <strong>/ post</strong> to add +10 pts (social presence)</span>
+                  </div>
+                )}
+                {!clientData.campaigns?.active && (
+                  <div className="flex items-center gap-2 text-xs text-blue-100">
+                    <Sparkles className="h-3 w-3 flex-shrink-0" />
+                    <span>Launch a <strong>/ promote</strong> campaign to add +10 pts</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center justify-center gap-2 mt-3">
+                <Brain className="h-4 w-4" />
+                <span className="text-xs">Powered by businessblueprint AI</span>
               </div>
             </CardContent>
           </Card>
@@ -264,21 +291,25 @@ export default function ClientPortal() {
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="flex items-center gap-2">
+                <Users className="h-3.5 w-3.5 text-gray-500" />
+                <span className="text-sm font-semibold">{clientData.client.companyName}</span>
+              </div>
+              <div className="flex items-center gap-2">
                 <Mail className="h-3.5 w-3.5 text-gray-500" />
                 <span className="text-sm">{clientData.client.email}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="h-3.5 w-3.5 text-gray-500" />
-                <span className="text-sm">{clientData.client.phone}</span>
+                <span className="text-sm">{clientData.client.phone || "Not set"}</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-3.5 w-3.5 text-gray-500" />
-                <span className="text-sm">{clientData.client.address}</span>
+                <span className="text-sm">{clientData.client.address || "Not set"}</span>
               </div>
               {clientData.client.website && (
                 <div className="flex items-center gap-2">
                   <Globe className="h-3.5 w-3.5 text-gray-500" />
-                  <a href={clientData.client.website} target="_blank" rel="noopener noreferrer" 
+                  <a href={clientData.client.website} target="_blank" rel="noopener noreferrer"
                      className="text-sm text-blue-600 hover:text-blue-800 break-all underline">
                     {clientData.client.website}
                   </a>
