@@ -1,3 +1,4 @@
+import { AppName } from "@/components/app-name";
 import bbLogo from "@assets/images_logos/bb-header-logo.png";
 import triadblueEcosystem from "@assets/images_logos/triadblue-ecosystem-logo.png";
 import swipesLogo from "@assets/images_logos/swipesblue_logo_image_and_text_as_url.png";
@@ -49,16 +50,16 @@ export function Footer() {
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-4">Platform</h3>
             <ul className="space-y-2 text-sm">
-              <li><a href="/assessment" className="text-gray-600 hover:text-gray-900 transition-colors">/ assess</a></li>
-              <li><a href="/connect" className="text-gray-600 hover:text-gray-900 transition-colors">/ connect</a></li>
-              <li><a href="/publish" className="text-gray-600 hover:text-gray-900 transition-colors">/ publish</a></li>
-              <li><a href="/elevate" className="text-gray-600 hover:text-gray-900 transition-colors">/ elevate</a></li>
-              <li><a href="/optimize" className="text-gray-600 hover:text-gray-900 transition-colors">/ optimize</a></li>
-              <li><a href="/amplify" className="text-gray-600 hover:text-gray-900 transition-colors">/ amplify</a></li>
-              <li><a href="/respond" className="text-gray-600 hover:text-gray-900 transition-colors">/ respond</a></li>
-              <li><a href="/engage" className="text-gray-600 hover:text-gray-900 transition-colors">/ engage</a></li>
-              <li><a href="/post" className="text-gray-600 hover:text-gray-900 transition-colors">/ post</a></li>
-              <li><a href="/promote" className="text-gray-600 hover:text-gray-900 transition-colors">/ promote</a></li>
+              <li><a href="/assessment"><span style={{ color: '#09080E' }}>/ </span><span style={{ color: '#A00028' }}>assess</span></a></li>
+              <li><a href="/connect"><AppName appId="connect" size="sm" iconSize={0} /></a></li>
+              <li><a href="/publish"><AppName appId="publish" size="sm" iconSize={0} /></a></li>
+              <li><a href="/elevate"><AppName appId="elevate" size="sm" iconSize={0} /></a></li>
+              <li><a href="/optimize"><AppName appId="optimize" size="sm" iconSize={0} /></a></li>
+              <li><a href="/amplify"><AppName appId="amplify" size="sm" iconSize={0} /></a></li>
+              <li><a href="/respond"><AppName appId="respond" size="sm" iconSize={0} /></a></li>
+              <li><a href="/engage"><AppName appId="engage" size="sm" iconSize={0} /></a></li>
+              <li><a href="/post"><AppName appId="post" size="sm" iconSize={0} /></a></li>
+              <li><a href="/promote"><AppName appId="promote" size="sm" iconSize={0} /></a></li>
             </ul>
           </div>
 
