@@ -3,7 +3,7 @@
 
   var config = window.bbLiveChatConfig || {
     clientId: '1',
-    companyName: 'Business Blueprint',
+    companyName: 'businessblueprint.io',
     primaryColor: '#F97316',
     position: 'bottom-right',
     welcomeMessage: 'Hi! How can we help you today?',
