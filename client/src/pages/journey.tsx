@@ -153,9 +153,9 @@ export default function Journey() {
           </div>
 
           {/* / amplify */}
-          <div className="mb-8 pl-6 border-l-4" style={{ borderColor: "#6EA6FF" }}>
+          <div className="mb-8 pl-6 border-l-4" style={{ borderColor: "#97ACCA" }}>
             <h3 className="text-xl font-bold text-gray-900 mb-2 flex items-center gap-2">
-              <AppIcon name="Megaphone" size={24} color="#6EA6FF" /> / amplify
+              <AppIcon name="Megaphone" size={24} color="#97ACCA" /> / amplify
             </h3>
             <p className="text-gray-600 leading-relaxed">
               / amplify runs paid advertising across Meta, Google, and Microsoft. It is the last Anchor app for a reason — you never run ads on a weak local presence. By the time you reach / amplify, your listings are clean, your reviews are managed, and your SEO baseline is set. / amplify syncs your business hours from / publish into ad scheduling automatically and injects your / elevate rating into ad copy in real time.

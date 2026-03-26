@@ -253,7 +253,7 @@ export default function Tour() {
       color: "#8B5CF6",
       content: (
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-[#0000FF] via-[#6EA6FF] to-[#8B5CF6] rounded-xl p-6 text-white text-center">
+          <div className="bg-gradient-to-r from-[#0000FF] via-[#97ACCA] to-[#8B5CF6] rounded-xl p-6 text-white text-center">
             <img 
               src="/assets/approved%20icons%20and%20logos/Additional%20Apps/4-AI_Business_Coach_-_Coach_Blue.png" 
               alt="Coach Blue"
@@ -337,7 +337,7 @@ export default function Tour() {
       color: "#0000FF",
       content: (
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-[#0000FF] to-[#6EA6FF] rounded-xl p-6 text-white">
+          <div className="bg-gradient-to-r from-[#0000FF] to-[#97ACCA] rounded-xl p-6 text-white">
             <h3 className="text-2xl font-bold mb-2">Compass Suite</h3>
             <p className="opacity-90">All four communication tools working together seamlessly.</p>
           </div>

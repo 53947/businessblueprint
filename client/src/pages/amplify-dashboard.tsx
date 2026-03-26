@@ -43,7 +43,7 @@ import {
 import { SectionHeader } from "@/components/section-header";
 import { apiRequest } from "@/lib/queryClient";
 
-const AMPLIFY_COLOR = "#6EA6FF";
+const AMPLIFY_COLOR = "#97ACCA";
 
 const TABS = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -1158,7 +1158,7 @@ function RedditBaseTab() {
                       </CardTitle>
                       <Badge
                         style={{
-                          backgroundColor: sr.activity === "very_active" ? "#22c55e" : "#6EA6FF",
+                          backgroundColor: sr.activity === "very_active" ? "#22c55e" : "#97ACCA",
                           color: "#fff",
                         }}
                       >
@@ -1902,7 +1902,7 @@ function BudgetTab() {
                     max={100}
                     value={alloc.percentage}
                     onChange={(e) => updateAllocation(i, Number(e.target.value))}
-                    className="flex-1 accent-[#6EA6FF]"
+                    className="flex-1 accent-[#97ACCA]"
                   />
                   <span className="text-sm font-medium w-12 text-right">{alloc.percentage}%</span>
                 </div>

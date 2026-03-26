@@ -68,7 +68,7 @@ export default function AmplifyLanding() {
               <Button
                 size="lg"
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white"
-                style={{ backgroundColor: '#6EA6FF', color: '#ffffff' }}
+                style={{ backgroundColor: '#97ACCA', color: '#ffffff' }}
                 asChild
                 data-testid="button-open-dashboard"
               >
@@ -77,8 +77,8 @@ export default function AmplifyLanding() {
               <Button
                 size="lg"
                 variant="outline"
-                className="text-lg px-8 py-6 shadow-md hover:bg-[#6EA6FF]/10 transition-colors"
-                style={{ borderColor: '#6EA6FF', color: '#6EA6FF' }}
+                className="text-lg px-8 py-6 shadow-md hover:bg-[#97ACCA]/10 transition-colors"
+                style={{ borderColor: '#97ACCA', color: '#97ACCA' }}
                 asChild
                 data-testid="button-view-pricing"
               >
@@ -119,10 +119,10 @@ export default function AmplifyLanding() {
 
           {/* Unified Layer on top */}
           <div className="max-w-4xl mx-auto mb-8">
-            <Card className="border-2 shadow-lg bg-white" style={{ borderColor: '#6EA6FF' }}>
+            <Card className="border-2 shadow-lg bg-white" style={{ borderColor: '#97ACCA' }}>
               <CardContent className="pt-6 pb-6">
                 <div className="text-center mb-4">
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#6EA6FF' }}>
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#97ACCA' }}>
                     <Layers className="w-7 h-7 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Unified Reporting Layer</h3>
@@ -216,7 +216,7 @@ export default function AmplifyLanding() {
             ].map((step, i) => (
               <div key={step.label} className="flex items-center gap-2">
                 <div className="flex flex-col items-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: '#6EA6FF' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: '#97ACCA' }}>
                     <step.icon className="w-8 h-8 text-white" />
                   </div>
                   <span className="font-bold text-gray-900">{step.label}</span>
@@ -233,7 +233,7 @@ export default function AmplifyLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#6EA6FF' }}>
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#97ACCA' }}>
                     <Search className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 text-gray-900">Subreddit Intelligence Scan</h3>
@@ -247,7 +247,7 @@ export default function AmplifyLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#6EA6FF' }}>
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#97ACCA' }}>
                     <PenTool className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 text-gray-900">Reddit-Native Creative Drafting</h3>
@@ -261,7 +261,7 @@ export default function AmplifyLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#6EA6FF' }}>
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#97ACCA' }}>
                     <Activity className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 text-gray-900">Sentiment Monitoring</h3>
@@ -275,7 +275,7 @@ export default function AmplifyLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#6EA6FF' }}>
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#97ACCA' }}>
                     <MessageCircle className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 text-gray-900">Comment Engagement Assistant</h3>
@@ -307,7 +307,7 @@ export default function AmplifyLanding() {
               <CardContent className="pt-6">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#6EA6FF' }}>
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#97ACCA' }}>
                       <LayoutGrid className="w-6 h-6 text-white" />
                     </div>
                   </div>
@@ -325,7 +325,7 @@ export default function AmplifyLanding() {
               <CardContent className="pt-6">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#6EA6FF' }}>
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#97ACCA' }}>
                       <Star className="w-6 h-6 text-white" />
                     </div>
                   </div>
@@ -343,7 +343,7 @@ export default function AmplifyLanding() {
               <CardContent className="pt-6">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#6EA6FF' }}>
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#97ACCA' }}>
                       <Users className="w-6 h-6 text-white" />
                     </div>
                   </div>
@@ -361,7 +361,7 @@ export default function AmplifyLanding() {
               <CardContent className="pt-6">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#6EA6FF' }}>
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#97ACCA' }}>
                       <ScanLine className="w-6 h-6 text-white" />
                     </div>
                   </div>
@@ -379,7 +379,7 @@ export default function AmplifyLanding() {
               <CardContent className="pt-6">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#6EA6FF' }}>
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#97ACCA' }}>
                       <MessageCircle className="w-6 h-6 text-white" />
                     </div>
                   </div>
@@ -397,7 +397,7 @@ export default function AmplifyLanding() {
               <CardContent className="pt-6">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#6EA6FF' }}>
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#97ACCA' }}>
                       <BotMessageSquare className="w-6 h-6 text-white" />
                     </div>
                   </div>
@@ -425,7 +425,7 @@ export default function AmplifyLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#6EA6FF' }}>
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#97ACCA' }}>
                     <Layers className="w-7 h-7 text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 text-gray-900">Dual-Base Architecture</h3>
@@ -439,7 +439,7 @@ export default function AmplifyLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#6EA6FF' }}>
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#97ACCA' }}>
                     <PenTool className="w-7 h-7 text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 text-gray-900">AI Creative Drafting</h3>
@@ -453,7 +453,7 @@ export default function AmplifyLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#6EA6FF' }}>
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#97ACCA' }}>
                     <DollarSign className="w-7 h-7 text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 text-gray-900">Budget Controller</h3>
@@ -467,7 +467,7 @@ export default function AmplifyLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#6EA6FF' }}>
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#97ACCA' }}>
                     <Eye className="w-7 h-7 text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 text-gray-900">Reddit Sentiment Monitoring</h3>
@@ -481,7 +481,7 @@ export default function AmplifyLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#6EA6FF' }}>
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#97ACCA' }}>
                     <Clock className="w-7 h-7 text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 text-gray-900">Business Hours Sync</h3>
@@ -495,7 +495,7 @@ export default function AmplifyLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#6EA6FF' }}>
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#97ACCA' }}>
                     <Users className="w-7 h-7 text-white" />
                   </div>
                   <h3 className="text-lg font-bold mb-2 text-gray-900">CRM-Powered Audiences</h3>
@@ -522,7 +522,7 @@ export default function AmplifyLanding() {
             <Button
               size="lg"
               className="text-lg px-8 py-6 shadow-lg text-white"
-              style={{ backgroundColor: '#6EA6FF', color: '#ffffff' }}
+              style={{ backgroundColor: '#97ACCA', color: '#ffffff' }}
               asChild
               data-testid="button-get-started"
             >

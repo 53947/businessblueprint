@@ -59,7 +59,7 @@ import {
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
-const AMPLIFY_COLOR = "#6EA6FF";
+const AMPLIFY_COLOR = "#97ACCA";
 
 // ─── Types ───────────────────────────────────────
 

@@ -106,7 +106,7 @@ export default function KnowledgeBase() {
 
       <div className="container mx-auto px-4 max-w-4xl pb-16">
         
-        <Card className="mb-12 border-2 border-[#6EA6FF]" data-testid="card-toc">
+        <Card className="mb-12 border-2 border-[#97ACCA]" data-testid="card-toc">
           <CardContent className="pt-6">
             <h2 className="text-2xl font-bold text-[#0000FF] mb-4" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }}>
               Quick Navigation
@@ -181,7 +181,7 @@ export default function KnowledgeBase() {
             </Card>
           </div>
 
-          <Card className="bg-[#EEFBFF] border-2 border-[#6EA6FF]">
+          <Card className="bg-[#EEFBFF] border-2 border-[#97ACCA]">
             <CardContent className="pt-6">
               <p className="text-lg font-semibold text-[#0000FF]">
                 <CheckCircle2 className="inline w-6 h-6 mr-2 text-green-500" />
@@ -324,7 +324,7 @@ export default function KnowledgeBase() {
             </Card>
           </div>
 
-          <Card className="mt-6 bg-[#EEFBFF] border-2 border-[#6EA6FF]">
+          <Card className="mt-6 bg-[#EEFBFF] border-2 border-[#97ACCA]">
             <CardContent className="pt-6">
               <p className="text-gray-700">
                 <strong className="text-[#0000FF]">Important:</strong> Your phases are customized based on whether you're a new or established business and whether you need cash fast or proper setup.
@@ -532,7 +532,7 @@ export default function KnowledgeBase() {
 
           <div className="space-y-4">
             {FAQ_ITEMS.map((faq, i) => (
-              <Card key={i} className="border-l-4 border-l-[#6EA6FF]" data-testid={`card-faq-${i}`}>
+              <Card key={i} className="border-l-4 border-l-[#97ACCA]" data-testid={`card-faq-${i}`}>
                 <CardContent className="pt-6">
                   <h3 className="text-lg font-bold text-[#0000FF] mb-2 flex items-start gap-2">
                     <HelpCircle className="w-5 h-5 text-[#FF6B00] mt-0.5 flex-shrink-0" />

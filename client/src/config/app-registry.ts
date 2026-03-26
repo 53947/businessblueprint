@@ -178,7 +178,7 @@ export const APP_REGISTRY: SlashApp[] = [
   {
     id: "amplify",
     name: "amplify",
-    color: "#6EA6FF",
+    color: "#97ACCA",
     description: "Advertising Platform",
     icon: "Megaphone",
     landingRoute: "/amplify/landing",

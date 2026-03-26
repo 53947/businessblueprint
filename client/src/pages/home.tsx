@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLocation, Link } from "wouter";
 import { AICoachIcon } from "@/components/pathway-icons";
-import { HowItWorks } from "@/components/how-it-works";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
@@ -10,6 +9,7 @@ import { ClipboardCheck, FileText, Layers, Wrench, Rocket, Star, MessageCircle, 
 import { DigitalAssessmentIcon, DigitalIQIcon, CommverseIcon, CoachBlueIcon, BasePlanIcon, ActionPlanIcon, BuildMethodIcon } from "@/components/brand-icons";
 import bbIcon from "@assets/images_logos/bb-favicon.png";
 import bbLogo from "@assets/images_logos/bb-favicon.png";
+import coachBlueLarge from "@assets/images_logos/coachblue.png";
 import webhostedIcon from "@assets/images_logos/hostsblue-brandmark.png";
 import webhostedLogo from "@assets/images_logos/hostsblue-url.png";
 import airswipedLogo from "@assets/images_logos/swipesblue-brandmark.png";
@@ -42,12 +42,12 @@ export default function Home() {
               
               {/* Desktop copy */}
               <p className="hidden lg:block text-xl text-gray-600 mb-8 leading-relaxed">
-                Powered by our Business IQ Scanner, your full digital footprint is analyzed using Google Business Intelligence to expose gaps, opportunities, and revenue-ready action steps. Our AI then delivers your prescribed Digital Blueprint — a custom, data-driven plan with the exact apps, actions, and pricing your business needs to grow.
+                Your full digital footprint is scored across six categories — website performance, reviews, social media presence, local search rankings, directory accuracy, and overall visibility. Our AI then delivers your prescribed Digital Blueprint — a custom, data-driven plan with the exact apps, actions, and pricing your business needs to grow.
               </p>
               
               {/* Mobile copy */}
               <p className="lg:hidden text-xl text-gray-600 mb-8 leading-relaxed">
-                Your full digital footprint analyzed by Business IQ Scanner with Google Business Intelligence. Get your prescribed Digital Blueprint — the apps, actions, and pricing your business needs to grow.
+                Your digital footprint scored across six categories. Get your prescribed Digital Blueprint — the apps, actions, and pricing your business needs to grow.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -127,15 +127,18 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+                <div className="text-center mt-3">
+                  <a href="/journey" style={{ color: '#A00028', fontSize: 13, fontWeight: 600 }}>
+                    Read the full story →
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* REMOVED: Trust Indicators, Prescription, Base Plans, Compass Apps, Compass Bundle — replaced by sections below */}
-      {/* How It Works */}
-      <HowItWorks onStartAssessment={startAssessment} />
+      {/* Sections 1–6 below */}
 
       {/* Section 1: / connect */}
       <section className="bg-white py-20">
@@ -146,7 +149,7 @@ export default function Home() {
               <h2 className="text-3xl font-bold text-gray-900 mt-6 mb-4">Every Customer. Every Conversation. One Place.</h2>
               <p className="text-gray-600 leading-relaxed mb-4">Most business owners keep customer information in their head, in a spreadsheet, or scattered across their phone. When someone asks about a client — there's no clean answer. / connect changes that. Every contact, every company, every deal, every task in one organized place.</p>
               <p className="text-gray-600 leading-relaxed mb-4">Every app in businessblueprint flows through / connect. A chat from your website widget logs here automatically. A review response from / elevate links to the customer's record. An email campaign from / promote draws from your contact list. You don't manage the connections — they happen on their own.</p>
-              <p className="text-gray-600 leading-relaxed mb-8">Start free. 250 contacts, no credit card, no time limit. Unlimited for $29/mo when you're ready.</p>
+              <p className="text-gray-600 leading-relaxed mb-8">Start free. 100 contacts, no credit card, no time limit. Unlimited for $29/mo when you're ready.</p>
               <div className="flex flex-wrap gap-4">
                 <Link href="/connect"><Button style={{ backgroundColor: '#FF6B00' }} className="text-white font-bold">Add to Cart — Free</Button></Link>
                 <Link href="/connect/dashboard"><Button style={{ backgroundColor: '#008060' }} className="text-white">Open Dashboard</Button></Link>
@@ -159,7 +162,7 @@ export default function Home() {
                 <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #064A6C', color: '#064A6C', top: '0', left: '50%', transform: 'translateX(-50%)' }}>/ publish</div>
                 <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #E9B307', color: '#E9B307', top: '15%', right: '5%' }}>/ elevate</div>
                 <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #374151', color: '#374151', top: '50%', right: '0', transform: 'translateY(-50%)' }}>/ optimize</div>
-                <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #6EA6FF', color: '#6EA6FF', bottom: '15%', right: '5%' }}>/ amplify</div>
+                <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #97ACCA', color: '#97ACCA', bottom: '15%', right: '5%' }}>/ amplify</div>
                 <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #001882', color: '#001882', bottom: '0', left: '50%', transform: 'translateX(-50%)' }}>/ respond</div>
                 <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #660099', color: '#660099', bottom: '15%', left: '5%' }}>/ engage</div>
                 <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #FF44CC', color: '#FF44CC', top: '50%', left: '0', transform: 'translateY(-50%)' }}>/ post</div>
@@ -195,10 +198,10 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white shadow-sm rounded-lg p-6 border-l-4" style={{ borderColor: '#6EA6FF' }}>
+            <div className="bg-white shadow-sm rounded-lg p-6 border-l-4" style={{ borderColor: '#97ACCA' }}>
               <div className="flex items-center gap-2">
                 <AppName appId="amplify" size="md" />
-                <span className="bg-[#6EA6FF] text-white text-xs px-2 py-0.5 rounded-full">FEATURED</span>
+                <span className="bg-[#97ACCA] text-white text-xs px-2 py-0.5 rounded-full">FEATURED</span>
               </div>
               <p className="text-gray-600 text-sm mt-3 mb-4">Facebook and Google have completely different ad structures — so / amplify builds two separate bases, each native to how that platform works, unified by one budget controller and one reporting dashboard. And Reddit is a priority platform inside / amplify — because that's where real local conversations happen. Neighbors recommending businesses. Customers asking who to trust. / amplify puts you in those conversations the right way.</p>
               <div className="flex flex-wrap gap-2">
@@ -316,7 +319,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 gap-16 items-center">
             <div className="flex justify-center mb-12 lg:mb-0">
-              <img src={COACH_BLUE.icon} alt="Coach Blue" className="w-48 h-48" />
+              <img src={coachBlueLarge} alt="Coach Blue" style={{ width: 360, height: 360, objectFit: 'contain' }} />
             </div>
             <div>
               <p className="text-sm font-bold uppercase tracking-widest mb-2" style={{ color: '#0000FF' }}>YOUR AI BUSINESS COACH</p>
@@ -346,35 +349,35 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-              <ArrowRight className="w-8 h-8 mb-4 text-[#6EA6FF]" />
-              <h4 className="text-white font-bold mb-2">/ publish hours pause / amplify ads</h4>
-              <p className="text-gray-400 text-sm">Your business hours in / publish automatically sync to your ad schedules in / amplify. When you close, your ads pause. When you open, they resume. You stop paying for clicks you can't convert.</p>
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <ArrowRight className="w-8 h-8 mb-4 text-[#97ACCA]" />
+              <h4 className="text-gray-900 font-bold mb-2">/ publish hours pause / amplify ads</h4>
+              <p className="text-gray-600 text-sm">Your business hours in / publish automatically sync to your ad schedules in / amplify. When you close, your ads pause. When you open, they resume. You stop paying for clicks you can't convert.</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
               <Star className="w-8 h-8 mb-4 text-[#E9B307]" />
-              <h4 className="text-white font-bold mb-2">/ elevate reviews power / amplify ads</h4>
-              <p className="text-gray-400 text-sm">Your current star rating from / elevate feeds into your / amplify ad copy automatically. 'Rated 4.8 stars by 140 customers' — updated in real time as your reviews change. Your best proof point stays current without you touching anything.</p>
+              <h4 className="text-gray-900 font-bold mb-2">/ elevate reviews power / amplify ads</h4>
+              <p className="text-gray-600 text-sm">Your current star rating from / elevate feeds into your / amplify ad copy automatically. 'Rated 4.8 stars by 140 customers' — updated in real time as your reviews change. Your best proof point stays current without you touching anything.</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
               <MessageCircle className="w-8 h-8 mb-4 text-[#660099]" />
-              <h4 className="text-white font-bold mb-2">/ engage chats log in / connect</h4>
-              <p className="text-gray-400 text-sm">Every website chat from / engage links to a contact record in / connect. If the visitor becomes a customer, the entire conversation history is already there. No copy-paste. No manual entry. No lost context.</p>
+              <h4 className="text-gray-900 font-bold mb-2">/ engage chats log in / connect</h4>
+              <p className="text-gray-600 text-sm">Every website chat from / engage links to a contact record in / connect. If the visitor becomes a customer, the entire conversation history is already there. No copy-paste. No manual entry. No lost context.</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
               <Mail className="w-8 h-8 mb-4 text-[#1844A6]" />
-              <h4 className="text-white font-bold mb-2">/ promote draws from / connect lists</h4>
-              <p className="text-gray-400 text-sm">Your email campaigns in / promote use your actual customer lists from / connect. Segment by industry, by location, by last contact date. The list is always current because / connect is always current.</p>
+              <h4 className="text-gray-900 font-bold mb-2">/ promote draws from / connect lists</h4>
+              <p className="text-gray-600 text-sm">Your email campaigns in / promote use your actual customer lists from / connect. Segment by industry, by location, by last contact date. The list is always current because / connect is always current.</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
               <Target className="w-8 h-8 mb-4 text-gray-300" />
-              <h4 className="text-white font-bold mb-2">/ optimize reads / publish and / elevate</h4>
-              <p className="text-gray-400 text-sm">Your local SEO score in / optimize is calculated from your listing consistency in / publish and your review signals from / elevate. Fix your listings — your SEO improves. Get more reviews — it improves further. The apps make each other better.</p>
+              <h4 className="text-gray-900 font-bold mb-2">/ optimize reads / publish and / elevate</h4>
+              <p className="text-gray-600 text-sm">Your local SEO score in / optimize is calculated from your listing consistency in / publish and your review signals from / elevate. Fix your listings — your SEO improves. Get more reviews — it improves further. The apps make each other better.</p>
             </div>
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
               <GraduationCap className="w-8 h-8 mb-4 text-blue-400" />
-              <h4 className="text-white font-bold mb-2">Coach Blue reads everything</h4>
-              <p className="text-gray-400 text-sm">Coach Blue has access to data from every app you've activated. He doesn't give generic advice — he gives advice based on what's actually happening in your businessblueprint. That's only possible because everything is connected.</p>
+              <h4 className="text-gray-900 font-bold mb-2">Coach Blue reads everything</h4>
+              <p className="text-gray-600 text-sm">Coach Blue has access to data from every app you've activated. He doesn't give generic advice — he gives advice based on what's actually happening in your businessblueprint. That's only possible because everything is connected.</p>
             </div>
           </div>
         </div>

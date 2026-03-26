@@ -122,9 +122,9 @@ export default function CompassPricing() {
             </Card>
 
             {/* / respond Individual */}
-            <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#6EA6FF' }}>
+            <Card className="border-2 shadow-lg hover:shadow-xl transition-shadow bg-white" style={{ borderColor: '#97ACCA' }}>
               <CardHeader>
-                <CardTitle className="text-2xl" style={{ color: '#6EA6FF' }}>/ respond</CardTitle>
+                <CardTitle className="text-2xl" style={{ color: '#97ACCA' }}>/ respond</CardTitle>
                 <CardDescription>Unified Communications</CardDescription>
               </CardHeader>
               <CardContent>
@@ -134,29 +134,29 @@ export default function CompassPricing() {
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#6EA6FF' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#97ACCA' }} />
                     <span className="text-sm text-gray-600">8 channels unified</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#6EA6FF' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#97ACCA' }} />
                     <span className="text-sm text-gray-600">Real-time WebSocket sync</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#6EA6FF' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#97ACCA' }} />
                     <span className="text-sm text-gray-600">Team assignment</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#6EA6FF' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#97ACCA' }} />
                     <span className="text-sm text-gray-600">Smart filters & search</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#6EA6FF' }} />
+                    <Check className="w-5 h-5 mt-0.5" style={{ color: '#97ACCA' }} />
                     <span className="text-sm text-gray-600">AI-powered responses</span>
                   </li>
                 </ul>
                 <Button 
                   className="w-full text-white"
-                  style={{ backgroundColor: '#6EA6FF' }}
+                  style={{ backgroundColor: '#97ACCA' }}
                   data-testid="button-respond-individual"
                   asChild
                 >
@@ -276,7 +276,7 @@ export default function CompassPricing() {
                   <th className="text-left py-4 px-4 font-bold text-gray-900">Feature</th>
                   <th className="text-center py-4 px-4 font-bold" style={{ color: '#1844A6' }}>/ promote</th>
                   <th className="text-center py-4 px-4 font-bold" style={{ color: '#8000FF' }}>/ engage</th>
-                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#6EA6FF' }}>/ respond</th>
+                  <th className="text-center py-4 px-4 font-bold" style={{ color: '#97ACCA' }}>/ respond</th>
                   <th className="text-center py-4 px-4 font-bold" style={{ color: '#FF44CC' }}>/ post</th>
                   <th className="text-center py-4 px-4 font-bold" style={{ color: '#F97316' }}>Bundle</th>
                 </tr>
@@ -310,7 +310,7 @@ export default function CompassPricing() {
                   <td className="py-3 px-4 text-gray-600">Unified Inbox (8 channels)</td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4">—</td>
-                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#6EA6FF' }} /></td>
+                  <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#97ACCA' }} /></td>
                   <td className="text-center py-3 px-4">—</td>
                   <td className="text-center py-3 px-4"><Check className="w-5 h-5 mx-auto" style={{ color: '#F97316' }} /></td>
                 </tr>
@@ -342,7 +342,7 @@ export default function CompassPricing() {
                   <td className="py-3 px-4 font-bold text-gray-900">Monthly Price</td>
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#1844A6' }}>$39</td>
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#8000FF' }}>$39</td>
-                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#6EA6FF' }}>$39</td>
+                  <td className="text-center py-3 px-4 font-bold" style={{ color: '#97ACCA' }}>$39</td>
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#FF44CC' }}>$39</td>
                   <td className="text-center py-3 px-4 font-bold" style={{ color: '#F97316' }}>$99</td>
                 </tr>
