@@ -204,7 +204,7 @@ export default function CompassPricing() {
                   data-testid="button-post-individual"
                   asChild
                 >
-                  <a href="/post-landing">Select</a>
+                  <a href="/post">Select</a>
                 </Button>
               </CardContent>
             </Card>

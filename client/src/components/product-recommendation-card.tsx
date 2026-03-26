@@ -49,7 +49,7 @@ const CATEGORY_ICONS: Record<string, typeof Mail> = {
 const PRODUCT_INFO: Record<string, { name: string; url: string; color: string }> = {
   'send': { name: '/ promote', url: '/promote', color: '#FFEF45' },
   'inbox': { name: '/ respond', url: '/respond', color: '#97ACCA' },
-  'content': { name: '/ post', url: '/post-landing', color: '#FF44CC' },
+  'content': { name: '/ post', url: '/post', color: '#FF44CC' },
   'livechat': { name: '/ engage', url: '/engage', color: '#8000FF' },
   'listings': { name: '/ publish', url: '/publish', color: '#E00420' },
   'reputation': { name: '/ elevate', url: '/elevate', color: '#FFD700' },

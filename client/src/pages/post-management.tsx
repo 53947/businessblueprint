@@ -93,14 +93,14 @@ export default function ContentManagement() {
       queryClient.invalidateQueries({ queryKey: [`/api/post/${clientId}/platforms`] });
       setActiveTab("platforms");
       // Clean URL
-      window.history.replaceState({}, "", "/post");
+      window.history.replaceState({}, "", "/post/dashboard");
     } else if (oauthStatus === "error") {
       toast({
         title: "Connection Failed",
         description: "Failed to connect platform. Please try again.",
         variant: "destructive",
       });
-      window.history.replaceState({}, "", "/post");
+      window.history.replaceState({}, "", "/post/dashboard");
     }
   }, [clientId]);
 

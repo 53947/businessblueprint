@@ -1239,7 +1239,7 @@ export default function AmplifyRedditWizard() {
                 View in Reddit Ads Manager <ExternalLink className="w-4 h-4 ml-1" />
               </a>
             </Button>
-            <Button onClick={() => setLocation("/amplify")} style={{ backgroundColor: AMPLIFY_COLOR }} className="text-white">
+            <Button onClick={() => setLocation("/amplify/dashboard")} style={{ backgroundColor: AMPLIFY_COLOR }} className="text-white">
               Back to Amplify Dashboard
             </Button>
           </div>
@@ -1397,7 +1397,7 @@ export default function AmplifyRedditWizard() {
       <main className="flex-1 w-full max-w-4xl mx-auto px-4 py-8">
         {/* Top bar */}
         <div className="flex items-center gap-3 mb-6">
-          <Button variant="ghost" size="sm" onClick={() => setLocation("/amplify")}>
+          <Button variant="ghost" size="sm" onClick={() => setLocation("/amplify/dashboard")}>
             <ArrowLeft className="w-4 h-4 mr-1" /> Amplify
           </Button>
           <div className="h-5 w-px bg-gray-300" />

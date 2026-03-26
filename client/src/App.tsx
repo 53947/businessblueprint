@@ -113,6 +113,7 @@ function Router() {
       <Route path="/engage/dashboard" component={EngageDashboard} />
       <Route path="/engage/demo" component={EngageDemo} />
       <Route path="/engage/install" component={EngageInstall} />
+      <Route path="/post" component={PostLanding} />
       <Route path="/post-landing" component={PostLanding} />
       <Route path="/post/landing" component={PostLanding} />
       <Route path="/compass" component={CompassLanding} />
@@ -120,7 +121,7 @@ function Router() {
       <Route path="/biif" component={BIIF} />
       <Route path="/admin" component={AdminPanel} />
       <Route path="/brand-studio" component={BrandStudio} />
-      <Route path="/post" component={PostManagement} />
+      <Route path="/post/dashboard" component={PostManagement} />
       <Route path="/anchor" component={AnchorLanding} />
       <Route path="/publish" component={PublishLanding} />
       <Route path="/elevate" component={ElevateLanding} />
@@ -128,8 +129,9 @@ function Router() {
       <Route path="/optimize" component={OptimizeLanding} />
       <Route path="/optimize/setup" component={OptimizeSetup} />
       <Route path="/optimize/dashboard" component={OptimizeDashboard} />
+      <Route path="/amplify" component={AmplifyLanding} />
       <Route path="/amplify/landing" component={AmplifyLanding} />
-      <Route path="/amplify" component={AmplifyDashboard} />
+      <Route path="/amplify/dashboard" component={AmplifyDashboard} />
       <Route path="/amplify/reddit/new" component={AmplifyRedditWizard} />
       <Route path="/publish/dashboard" component={PublishDashboard} />
       <Route path="/privacy" component={Privacy} />
