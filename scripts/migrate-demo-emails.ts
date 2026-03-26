@@ -4,7 +4,7 @@
  * Run on Replit: npx tsx scripts/migrate-demo-emails.ts
  */
 import { db } from "../server/db";
-import { clients } from "../shared/schema";
+import { clients, dashboardAccess, clientAssessments } from "../shared/schema";
 import { eq } from "drizzle-orm";
 
 const migrations = [
@@ -23,8 +23,11 @@ async function migrate() {
       .where(eq(clients.email, to));
 
     if (existingDemo) {
-      await db.delete(clients).where(eq(clients.email, to));
-      console.log(`[REMOVED] old ${to} (id: ${existingDemo.id})`);
+      // Clean up foreign key references first
+      await db.delete(dashboardAccess).where(eq(dashboardAccess.clientId, existingDemo.id));
+      await db.delete(clientAssessments).where(eq(clientAssessments.clientId, existingDemo.id));
+      await db.delete(clients).where(eq(clients.id, existingDemo.id));
+      console.log(`[REMOVED] old ${to} (id: ${existingDemo.id}) + related records`);
     }
 
     // Find the 53947@ record
