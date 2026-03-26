@@ -20,6 +20,7 @@ import {
   supportTickets,
   ticketComments,
   prescriptions,
+  assessmentProductRecommendations,
   type Assessment,
   type InsertAssessment,
   type Recommendation,
@@ -100,6 +101,13 @@ export interface IStorage {
   // Recommendation operations
   createRecommendation(recommendation: InsertRecommendation): Promise<Recommendation>;
   getRecommendationsByAssessmentId(assessmentId: number): Promise<Recommendation[]>;
+  getProductRecommendationScores(assessmentId: number): Promise<Array<{
+    productId: string | null;
+    categoryAffected: string | null;
+    currentScore: number | null;
+    projectedScore: number | null;
+    scoreImprovement: number | null;
+  }>>;
 
   // Client operations
   createClient(client: InsertClient): Promise<Client>;
@@ -266,6 +274,19 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(recommendations)
       .where(eq(recommendations.assessmentId, assessmentId));
+  }
+
+  async getProductRecommendationScores(assessmentId: number) {
+    return await db
+      .select({
+        productId: assessmentProductRecommendations.productId,
+        categoryAffected: assessmentProductRecommendations.categoryAffected,
+        currentScore: assessmentProductRecommendations.currentScore,
+        projectedScore: assessmentProductRecommendations.projectedScore,
+        scoreImprovement: assessmentProductRecommendations.scoreImprovement,
+      })
+      .from(assessmentProductRecommendations)
+      .where(eq(assessmentProductRecommendations.assessmentId, assessmentId));
   }
 
   // Client operations

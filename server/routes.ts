@@ -1135,6 +1135,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ? await storage.getRecommendationsByAssessmentId(prescription.assessmentId)
         : [];
 
+      // Get product recommendation scores and merge onto recommendations
+      const productScores = prescription.assessmentId
+        ? await storage.getProductRecommendationScores(prescription.assessmentId)
+        : [];
+
+      const enrichedRecommendations = recommendations.map(rec => {
+        const scoreData = productScores.find(ps =>
+          (ps.productId && ps.productId === rec.productId) ||
+          (ps.categoryAffected && ps.categoryAffected === rec.category)
+        );
+        return {
+          ...rec,
+          currentScore: scoreData?.currentScore ?? null,
+          projectedScore: scoreData?.projectedScore ?? null,
+          scoreImprovement: scoreData?.scoreImprovement ?? null,
+        };
+      });
+
       // Mark as viewed if not already
       if (!prescription.viewedAt) {
         await db
@@ -1160,7 +1178,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           industry: assessment.industry,
           createdAt: assessment.createdAt,
         } : null,
-        recommendations,
+        recommendations: enrichedRecommendations,
       });
     } catch (error) {
       console.error("Error fetching prescription by token:", error);
@@ -1279,6 +1297,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ? await storage.getRecommendationsByAssessmentId(prescription.assessmentId)
         : [];
 
+      // Get product recommendation scores and merge onto recommendations
+      const productScores = prescription.assessmentId
+        ? await storage.getProductRecommendationScores(prescription.assessmentId)
+        : [];
+
+      const enrichedRecommendations = recommendations.map(rec => {
+        const scoreData = productScores.find(ps =>
+          (ps.productId && ps.productId === rec.productId) ||
+          (ps.categoryAffected && ps.categoryAffected === rec.category)
+        );
+        return {
+          ...rec,
+          currentScore: scoreData?.currentScore ?? null,
+          projectedScore: scoreData?.projectedScore ?? null,
+          scoreImprovement: scoreData?.scoreImprovement ?? null,
+        };
+      });
+
       // Mark as viewed
       if (!prescription.viewedAt) {
         await db
@@ -1297,7 +1333,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           analysisResults: assessment.analysisResults,
           createdAt: assessment.createdAt,
         } : null,
-        recommendations,
+        recommendations: enrichedRecommendations,
       });
     } catch (error) {
       console.error("Error fetching prescription:", error);
