@@ -58,8 +58,8 @@ export default function Home() {
                   className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#A00028] font-semibold"
                   data-testid="button-start-assessment"
                 >
-                  <img src={DIGITAL_IQ.icon} alt="" className="w-6 h-6 mr-2" />
-                  Start Here
+                  <AppIcon name="ClipboardCheck" size={24} color="#A00028" />
+                  <span className="ml-2">Start Here</span>
                 </Button>
                 <Link href="/ai-coach">
                   <Button
@@ -68,7 +68,7 @@ export default function Home() {
                     className="border-2 border-[#0000FF] bg-white hover:bg-gray-50 text-[#FF6B00] font-semibold w-full sm:w-auto"
                     data-testid="button-ai-coach"
                   >
-                    <img src={COACH_BLUE.icon} alt="" className="w-6 h-6 mr-2" />
+                    <img src={coachBlueStepIcon} alt="" className="w-6 h-6 mr-2 rounded" />
                     AI Business Coach
                   </Button>
                 </Link>
