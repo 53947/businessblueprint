@@ -118,7 +118,7 @@
         </div>
       </div>
     `;
-    document.getElementById('bb-company-name').textContent = config.companyName;
+    container.querySelector('#bb-company-name').textContent = config.companyName;
     document.body.appendChild(container);
     bindEvents();
     showWelcomeForm();

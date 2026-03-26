@@ -187,11 +187,11 @@ export function PricingLayout({ variant }: PricingLayoutProps) {
           <p>
             <span className="text-blue-600">→</span> Bundles don't cross-discount each other
           </p>
-          <p>
+          <div>
             <span className="text-blue-600">→</span>{" "}
             <AppName appId="connect" size="sm" iconSize={0} /> always standalone — Free or $
             {CONNECT_CRM.tiers[1].price}
-          </p>
+          </div>
           <p>
             <span className="text-blue-600">→</span> Coach Blue: ${COACH_BLUE.standalonePrice} → $
             {COACH_BLUE.withOneBundlePrice} (1 bundle) → FREE (both)
