@@ -311,7 +311,7 @@ export default function ConnectDashboard() {
               className="w-full flex items-center justify-center gap-2"
               data-testid="btn-exit-to-portal"
             >
-              <img src={bbLogo} alt="BusinessBlueprint" className="h-4" />
+              <img src={bbLogo} alt="businessblueprint.io" className="h-4" />
               <span>Exit to Portal</span>
             </Button>
           </Link>

@@ -276,7 +276,7 @@ export default function ClientPortal() {
               </div>
               <div className="flex items-center justify-center gap-2 mt-3">
                 <Brain className="h-4 w-4" />
-                <span className="text-xs">Powered by businessblueprint AI</span>
+                <span className="text-xs">Powered by businessblueprint.io AI</span>
               </div>
             </CardContent>
           </Card>

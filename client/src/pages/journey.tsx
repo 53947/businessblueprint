@@ -91,7 +91,7 @@ export default function Journey() {
             </div>
           </div>
           <p className="text-gray-600 mb-6 leading-relaxed">
-            Every app in businessblueprint pulls from and pushes to / connect. Your contacts, companies, deals, and tasks live here. When a customer chats with you through / engage, that conversation logs in / connect. When / elevate surfaces a new review from a known contact, it links to their record. When / promote sends a campaign, it draws from your / connect lists. This is why / connect comes before everything else — it is the hub the entire platform is built around. / connect starts free for up to 250 contacts. When you're ready for unlimited contacts and full CRM capabilities, the Performance plan is $29/mo.
+            Every app in businessblueprint.io pulls from and pushes to / connect. Your contacts, companies, deals, and tasks live here. When a customer chats with you through / engage, that conversation logs in / connect. When / elevate surfaces a new review from a known contact, it links to their record. When / promote sends a campaign, it draws from your / connect lists. This is why / connect comes before everything else — it is the hub the entire platform is built around. / connect starts free for up to 250 contacts. When you're ready for unlimited contacts and full CRM capabilities, the Performance plan is $29/mo.
           </p>
           <div className="bg-white border-l-4 p-6 rounded-lg shadow-sm mb-6" style={{ borderColor: "#008060" }}>
             <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: "#008060" }}>WHAT THIS MEANS FOR YOUR BUSINESS</p>
@@ -247,7 +247,7 @@ export default function Journey() {
             </div>
           </div>
           <p className="text-gray-600 mb-6 leading-relaxed">
-            Coach Blue is not a help widget. He is an AI business coach built into every page of businessblueprint — persistent, proactive, and always watching your data. He guides your setup in the exact order that produces results. He walks you through each app step by step and picks up exactly where you left off every time you return. When your Google listing gets an unauthorized edit, Coach Blue alerts you. When your average review response time exceeds 10 minutes, he tells you. When your / engage widget has been live for a week with no conversations, he suggests exactly what to change. Coach Blue is $99/mo standalone. With one suite active, $59/mo. With both Anchor and Compass suites active, Coach Blue is free.
+            Coach Blue is not a help widget. He is an AI business coach built into every page of businessblueprint.io — persistent, proactive, and always watching your data. He guides your setup in the exact order that produces results. He walks you through each app step by step and picks up exactly where you left off every time you return. When your Google listing gets an unauthorized edit, Coach Blue alerts you. When your average review response time exceeds 10 minutes, he tells you. When your / engage widget has been live for a week with no conversations, he suggests exactly what to change. Coach Blue is $99/mo standalone. With one suite active, $59/mo. With both Anchor and Compass suites active, Coach Blue is free.
           </p>
           <div className="bg-white border-l-4 p-6 rounded-lg shadow-sm mb-6" style={{ borderColor: "#0000FF" }}>
             <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: "#0000FF" }}>WHAT THIS MEANS FOR YOUR BUSINESS</p>

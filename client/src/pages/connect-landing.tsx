@@ -22,7 +22,7 @@ export default function ConnectLanding() {
               Every Customer You've Ever Served Deserves to Be Remembered
             </h2>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Most business owners carry their customer relationships in their head. A name here. A number there. A note in their phone. It works — until it doesn't. Until someone on your team can't find the history. Until you forget you already talked to that prospect twice. Until a good customer stops coming back and you never find out why. / connect is the place where every customer relationship lives — organized, searchable, and connected to every other app in businessblueprint.
+              Most business owners carry their customer relationships in their head. A name here. A number there. A note in their phone. It works — until it doesn't. Until someone on your team can't find the history. Until you forget you already talked to that prospect twice. Until a good customer stops coming back and you never find out why. / connect is the place where every customer relationship lives — organized, searchable, and connected to every other app in businessblueprint.io.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -207,7 +207,7 @@ export default function ConnectLanding() {
               / connect Isn't Just a CRM. It's the Center of Everything.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Every app in businessblueprint was designed to feed data into / connect automatically. A conversation from / engage — the live chat widget on your website — logs here. A review response from / elevate links to the customer's record. A campaign from / promote draws from your contact list. An ad lead from / amplify creates a new contact the moment it converts.
+              Every app in businessblueprint.io was designed to feed data into / connect automatically. A conversation from / engage — the live chat widget on your website — logs here. A review response from / elevate links to the customer's record. A campaign from / promote draws from your contact list. An ad lead from / amplify creates a new contact the moment it converts.
             </p>
           </div>
 

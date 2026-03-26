@@ -467,7 +467,7 @@ export default function ApiDocsPage() {
               <div>
                 <h1 className="text-4xl font-bold" data-testid="text-api-docs-title">API Reference</h1>
                 <p className="text-xl text-gray-600 dark:text-gray-400 mt-1">
-                  Build integrations with the BusinessBlueprint CRM API
+                  Build integrations with the businessblueprint.io CRM API
                 </p>
               </div>
             </div>

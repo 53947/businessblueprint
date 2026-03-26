@@ -412,7 +412,7 @@ export default function Tour() {
           <div className="bg-green-50 border-2 border-green-500 rounded-xl p-6 text-center">
             <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-3" />
             <h3 className="text-xl font-bold text-green-700 mb-2">Tour Complete!</h3>
-            <p className="text-green-600 mb-4">You now understand the full BusinessBlueprint platform.</p>
+            <p className="text-green-600 mb-4">You now understand the full businessblueprint.io platform.</p>
             <div className="flex flex-wrap justify-center gap-3">
               <Button
                 onClick={() => setLocation("/portal/prescriptions")}

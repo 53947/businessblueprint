@@ -126,7 +126,7 @@ export default function CoachBluePage() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Responsive</h3>
                   <p className="text-gray-600">
-                    Ask Coach Blue anything about your business. 'Why did my search ranking drop this week?' 'What should I post about this month?' 'How do I get more reviews?' 'Is my email open rate normal?' He answers from the context of your actual businessblueprint data — not from a FAQ, not from a search engine. From what he knows about your business.
+                    Ask Coach Blue anything about your business. 'Why did my search ranking drop this week?' 'What should I post about this month?' 'How do I get more reviews?' 'Is my email open rate normal?' He answers from the context of your actual businessblueprint.io data — not from a FAQ, not from a search engine. From what he knows about your business.
                   </p>
                 </div>
               </CardContent>
@@ -331,7 +331,7 @@ export default function CoachBluePage() {
           <div className="bg-[#0000FF] text-white rounded-xl p-8 my-12">
             <h3 className="text-white font-bold text-xl mb-4">You've Never Had an Advisor Like This</h3>
             <p className="text-blue-100 leading-relaxed">
-              A good business advisor knows your business, watches your numbers, and tells you what to do before problems become crises. For most small business owners, that kind of advisor has never been accessible — the cost is too high, the availability is too limited. Coach Blue changes that. He's inside your businessblueprint, watching everything, available around the clock, and the more apps you activate, the more he knows about your business and the more specific his advice becomes. He's not a chatbot. He's the advisor you should have had from the start.
+              A good business advisor knows your business, watches your numbers, and tells you what to do before problems become crises. For most small business owners, that kind of advisor has never been accessible — the cost is too high, the availability is too limited. Coach Blue changes that. He's inside your businessblueprint.io, watching everything, available around the clock, and the more apps you activate, the more he knows about your business and the more specific his advice becomes. He's not a chatbot. He's the advisor you should have had from the start.
             </p>
           </div>
         </div>

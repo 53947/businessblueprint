@@ -484,7 +484,7 @@ export default function AdminPanel() {
             </div>
             <div>
               <h2 className="font-bold text-lg">Admin Panel</h2>
-              <p className="text-xs text-gray-500">BusinessBlueprint.io</p>
+              <p className="text-xs text-gray-500">businessblueprint.io</p>
             </div>
           </div>
           

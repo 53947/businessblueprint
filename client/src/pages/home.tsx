@@ -148,7 +148,7 @@ export default function Home() {
               <AppName appId="connect" size="lg" iconSize={64} />
               <h2 className="text-3xl font-bold text-gray-900 mt-6 mb-4">Every Customer. Every Conversation. One Place.</h2>
               <p className="text-gray-600 leading-relaxed mb-4">Most business owners keep customer information in their head, in a spreadsheet, or scattered across their phone. When someone asks about a client — there's no clean answer. / connect changes that. Every contact, every company, every deal, every task in one organized place.</p>
-              <p className="text-gray-600 leading-relaxed mb-4">Every app in businessblueprint flows through / connect. A chat from your website widget logs here automatically. A review response from / elevate links to the customer's record. An email campaign from / promote draws from your contact list. You don't manage the connections — they happen on their own.</p>
+              <p className="text-gray-600 leading-relaxed mb-4">Every app in businessblueprint.io flows through / connect. A chat from your website widget logs here automatically. A review response from / elevate links to the customer's record. An email campaign from / promote draws from your contact list. You don't manage the connections — they happen on their own.</p>
               <p className="text-gray-600 leading-relaxed mb-8">Start free. 100 contacts, no credit card, no time limit. Unlimited for $29/mo when you're ready.</p>
               <div className="flex flex-wrap gap-4">
                 <Link href="/connect"><Button style={{ backgroundColor: '#FF6B00' }} className="text-white font-bold">Add to Cart — Free</Button></Link>
@@ -168,7 +168,7 @@ export default function Home() {
                 <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #FF44CC', color: '#FF44CC', top: '50%', left: '0', transform: 'translateY(-50%)' }}>/ post</div>
                 <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #1844A6', color: '#1844A6', top: '15%', left: '5%' }}>/ promote</div>
               </div>
-              <p className="text-xs text-gray-400 text-center mt-2">Every app in businessblueprint connects through / connect</p>
+              <p className="text-xs text-gray-400 text-center mt-2">Every app in businessblueprint.io connects through / connect</p>
             </div>
           </div>
         </div>
@@ -325,7 +325,7 @@ export default function Home() {
               <p className="text-sm font-bold uppercase tracking-widest mb-2" style={{ color: '#0000FF' }}>YOUR AI BUSINESS COACH</p>
               <h3 className="text-4xl font-bold mb-4" style={{ fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}>Coach Blue</h3>
               <h2 className="text-3xl font-bold text-gray-900 mb-6">The Difference Between Data and Direction</h2>
-              <p className="text-gray-600 leading-relaxed mb-4">Every app in businessblueprint generates data. Your review scores. Your ranking changes. Your chat volume. Your email open rates. Most platforms give you that data and leave you to figure out what to do with it. Coach Blue reads all of it and tells you specifically what to act on today.</p>
+              <p className="text-gray-600 leading-relaxed mb-4">Every app in businessblueprint.io generates data. Your review scores. Your ranking changes. Your chat volume. Your email open rates. Most platforms give you that data and leave you to figure out what to do with it. Coach Blue reads all of it and tells you specifically what to act on today.</p>
               <p className="text-gray-600 leading-relaxed mb-4">He's built into every authenticated page as a persistent sidebar — not a chatbot, not a help widget. When your listing gets an unauthorized edit, he alerts you. When your review response time slips, he tells you. When you've set up / connect but haven't started / publish yet, he explains exactly why that needs to happen next and walks you through it.</p>
               <p className="text-gray-600 leading-relaxed mb-8">Coach Blue is $99/mo standalone. With one suite active — Anchor or Compass — he's $59/mo. With both suites active, he's free. The more you build, the less he costs.</p>
               <div className="flex flex-wrap gap-4">
@@ -344,7 +344,7 @@ export default function Home() {
           <div className="text-center mb-16">
             <p className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">BUILT TO WORK TOGETHER</p>
             <h2 className="text-3xl font-bold text-white mb-4">We Built the Most Connected Set of Apps We Knew How to Build</h2>
-            <p className="text-gray-300 max-w-3xl mx-auto mb-4">Every app in businessblueprint was designed with the others in mind. Not added on later. Not bolted together. Designed from the start to share data, trigger actions, and make each other more powerful.</p>
+            <p className="text-gray-300 max-w-3xl mx-auto mb-4">Every app in businessblueprint.io was designed with the others in mind. Not added on later. Not bolted together. Designed from the start to share data, trigger actions, and make each other more powerful.</p>
             <p className="text-gray-300 max-w-3xl mx-auto">And we priced it the way we did on purpose. Because every small business owner deserves access to the tools that used to cost enterprise budgets — and the future shouldn't only belong to the businesses that can already afford to compete in it.</p>
           </div>
 
@@ -377,7 +377,7 @@ export default function Home() {
             <div className="bg-white rounded-xl p-6 border border-gray-200">
               <GraduationCap className="w-8 h-8 mb-4 text-blue-400" />
               <h4 className="text-gray-900 font-bold mb-2">Coach Blue reads everything</h4>
-              <p className="text-gray-600 text-sm">Coach Blue has access to data from every app you've activated. He doesn't give generic advice — he gives advice based on what's actually happening in your businessblueprint. That's only possible because everything is connected.</p>
+              <p className="text-gray-600 text-sm">Coach Blue has access to data from every app you've activated. He doesn't give generic advice — he gives advice based on what's actually happening in your businessblueprint.io. That's only possible because everything is connected.</p>
             </div>
           </div>
         </div>

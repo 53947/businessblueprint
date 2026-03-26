@@ -297,7 +297,7 @@ export default function AmplifyLanding() {
               Built Into Your Ecosystem
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              /amplify is not a silo. It connects to every part of your BusinessBlueprint stack
+              /amplify is not a silo. It connects to every part of your businessblueprint.io stack
               to make your ads smarter, your targeting sharper, and your workflow seamless.
             </p>
           </div>

@@ -59,9 +59,9 @@ const FAQ_ITEMS = [
 
 export default function KnowledgeBase() {
   useEffect(() => {
-    document.title = 'How BusinessBlueprint.io Works | Knowledge Base';
+    document.title = 'How businessblueprint.io Works | Knowledge Base';
     
-    const description = 'Learn how BusinessBlueprint.io\'s Digital IQ Assessment measures your online presence across 9 areas and creates custom prescriptions to grow your business.';
+    const description = 'Learn how businessblueprint.io\'s Digital IQ Assessment measures your online presence across 9 areas and creates custom prescriptions to grow your business.';
     
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
@@ -83,7 +83,7 @@ export default function KnowledgeBase() {
       meta.content = content;
     };
 
-    setMetaTag('og:title', 'How BusinessBlueprint.io Works');
+    setMetaTag('og:title', 'How businessblueprint.io Works');
     setMetaTag('og:description', description);
     setMetaTag('og:type', 'website');
     setMetaTag('og:url', window.location.href);
@@ -96,7 +96,7 @@ export default function KnowledgeBase() {
       <section className="py-16" data-testid="section-hero">
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-[#0000FF] mb-4" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }} data-testid="text-title">
-            How BusinessBlueprint.io Works
+            How businessblueprint.io Works
           </h1>
           <p className="text-xl text-gray-700 mb-8" data-testid="text-subtitle">
             Your guide to understanding our Digital Intelligence Platform
@@ -146,7 +146,7 @@ export default function KnowledgeBase() {
           </h2>
           
           <p className="text-lg text-gray-700 mb-6">
-            BusinessBlueprint.io helps local businesses improve their online presence and grow revenue through:
+            businessblueprint.io helps local businesses improve their online presence and grow revenue through:
           </p>
 
           <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -566,7 +566,7 @@ export default function KnowledgeBase() {
         </section>
 
         <div className="text-center mt-8 text-gray-500 text-sm">
-          <p><strong className="text-[#0000FF]">BusinessBlueprint.io</strong> - We Assess. We Prescribe. You Grow.</p>
+          <p><strong className="text-[#0000FF]">businessblueprint.io</strong> - We Assess. We Prescribe. You Grow.</p>
           <p className="mt-1">Last Updated: January 2026</p>
         </div>
       </div>
