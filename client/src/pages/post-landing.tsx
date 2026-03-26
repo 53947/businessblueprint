@@ -23,11 +23,10 @@ export default function ContentLanding() {
               <AppName appId="post" size="lg" iconSize={36} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Post Once.<br />Show Up Everywhere.
+              Your Business Should Be Showing Up.<br />Without You Having to Think About It.
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Create, schedule, and publish across all your social platforms from one beautiful interface.
-              Built for businesses who want consistent presence without the chaos.
+              Social media works on consistency. The businesses that show up regularly — with useful, relevant content — build an audience that trusts them. The businesses that post when they remember and go quiet for weeks lose ground slowly and never know why. Most small business owners don't have time to be consistent. / post makes consistency automatic — write your content once, schedule it for the week or the month, and let it publish across every platform on its own.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -72,15 +71,8 @@ export default function ContentLanding() {
       <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold text-white">${app.standalonePrice}/mo</div>
-              <span className="text-white text-xl">standalone</span>
-              <span className="text-white text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
-              <span className="text-white text-xl">Compass Suite</span>
-            </div>
-            <p className="text-white text-sm">
-              / promote + / respond + / engage + / post = Complete communication ecosystem
+            <p className="text-white text-xl">
+              $29/mo Standalone  |  $99/mo Compass Suite — includes / respond, / engage, and / promote
             </p>
           </div>
         </div>
@@ -94,8 +86,10 @@ export default function ContentLanding() {
               Why We Built /post
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Social media shouldn't feel like a second full-time job. /post makes it simple to maintain
-              a consistent presence across all platforms without burning out your team.
+              Social media feels like a full-time job because it is one — if you're doing it manually. Different platforms. Different formats. Different posting times. Different audiences. Most small business owners try to keep up and eventually give up. The platforms don't stop, and the businesses that stayed consistent keep appearing while the ones that stopped go invisible.
+            </p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mt-4">
+              / post removes the daily friction. Write your posts. Upload your photos. Pick your platforms. Set your schedule. After that, / post does the work. Your audience sees consistent, professional content from your business — whether you're in the office, on a job site, or on a day off.
             </p>
           </div>
 
@@ -122,7 +116,7 @@ export default function ContentLanding() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-multi-title">Multi-Platform Publishing</h3>
                   <p className="text-gray-600" data-testid="text-feature-multi-description">
-                    Post to Facebook, Instagram, LinkedIn, X, and Google Business from one composer. Cross-post or customize per platform.
+                    Facebook, Instagram, LinkedIn, X, and Google Business — five platforms with five different audiences, five different content norms, and five different reasons customers use them. / post connects all five. Write a post once and publish it everywhere, or customize the caption and format per platform before it goes out. The same content, optimized for where it lands.
                   </p>
                 </div>
               </CardContent>
@@ -136,7 +130,7 @@ export default function ContentLanding() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-ai-title">AI-Powered Suggestions</h3>
                   <p className="text-gray-600" data-testid="text-feature-ai-description">
-                    Built-in AI coach suggests captions, hashtags, and optimal posting times. Never stare at a blank screen again.
+                    The hardest part of social media isn't posting — it's knowing what to post. / post's built-in AI suggests content ideas based on your industry, your recent posts, and what's performing well in your category. When you sit down to plan your week's content, you're not starting from a blank screen. You're choosing from ideas that are already relevant to your business and your audience.
                   </p>
                 </div>
               </CardContent>
@@ -406,7 +400,7 @@ export default function ContentLanding() {
                 </h3>
                 <p className="text-gray-600 mb-6">
                   Enterprise tools are too complex. Free tools lack scheduling and analytics. /post hits the sweet spot —
-                  powerful enough to be effective, simple enough to actually use.
+                  capable enough to be effective, simple enough to actually use.
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
@@ -425,6 +419,18 @@ export default function ContentLanding() {
         </div>
       </section>
 
+      {/* What This Means */}
+      <section className="py-4 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[#FF44CC] rounded-xl p-8 my-12">
+            <h3 className="text-[#09080E] font-bold text-xl mb-4">Visibility Is Not an Accident</h3>
+            <p className="text-[#09080E] leading-relaxed">
+              The businesses your customers see regularly are the ones they think of first when they need something. That's not marketing theory — that's how people work. / post keeps your business in front of your audience consistently, professionally, and without requiring you to be a social media manager. You run the business. / post handles the visibility.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 bg-white border-t border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -432,7 +438,7 @@ export default function ContentLanding() {
             Stop Juggling Social Media Apps
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Join businesses managing all their social media from one beautiful, powerful platform.
+            Join businesses managing all their social media from one clear, capable platform.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

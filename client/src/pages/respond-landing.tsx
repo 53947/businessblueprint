@@ -23,11 +23,10 @@ export default function InboxLanding() {
               <AppName appId="respond" size="lg" iconSize={36} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Every Message. One Inbox.
+              You Have One Inbox. Your Customers Don't Know That.
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Stop juggling multiple apps for customer messages. /respond unifies Facebook Messenger,
-              Instagram DM, and SMS into one real-time command center.
+              Customers reach out the way that's convenient for them — not the way that's convenient for you. One sends a Facebook message. Another texts. A third uses Instagram. If each of those messages lives in a different app on a different device, you're checking three places and still missing some. / respond puts all of them in one inbox — and keeps them there.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -51,7 +50,7 @@ export default function InboxLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/respond-app">Launch /respond</a>
+                <a href="/respond/dashboard">Launch /respond</a>
               </Button>
               <Button
                 size="lg"
@@ -72,15 +71,8 @@ export default function InboxLanding() {
       <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold text-white">${app.standalonePrice}/mo</div>
-              <span className="text-white text-xl">standalone</span>
-              <span className="text-white text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
-              <span className="text-white text-xl">Compass Suite</span>
-            </div>
-            <p className="text-white text-sm">
-              / promote + / respond + / engage + / post = Complete communication ecosystem
+            <p className="text-white text-xl">
+              $29/mo Standalone  |  $99/mo Compass Suite — includes / engage, / post, and / promote
             </p>
           </div>
         </div>
@@ -107,7 +99,7 @@ export default function InboxLanding() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Facebook Messenger</h3>
                   <p className="text-gray-600 mb-4">
-                    Connect your Facebook Business Page and receive every Messenger conversation directly in /respond.
+                    Facebook Messenger is how millions of customers prefer to contact local businesses. It feels informal, low-pressure, and immediate. When you miss a Messenger inquiry, you usually don't know you missed it — because the message is buried in the Facebook app you checked three days ago. / respond pulls every Messenger conversation into your inbox the moment it arrives. You see it. You reply. The customer feels heard.
                   </p>
                   <ul className="text-left text-sm text-gray-600 space-y-2">
                     <li className="flex items-start gap-2">
@@ -135,7 +127,7 @@ export default function InboxLanding() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Instagram DM</h3>
                   <p className="text-gray-600 mb-4">
-                    Connect your Instagram Business account and manage every direct message from your /respond inbox.
+                    If your business has an Instagram presence, your customers are sliding into your DMs. Questions about pricing, availability, products, services. These messages are time-sensitive — a customer asking a question is a customer actively considering a purchase. / respond brings Instagram DMs into the same inbox as your Facebook messages so nothing waits while you're scrolling a different platform.
                   </p>
                   <ul className="text-left text-sm text-gray-600 space-y-2">
                     <li className="flex items-start gap-2">
@@ -163,7 +155,7 @@ export default function InboxLanding() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">SMS</h3>
                   <p className="text-gray-600 mb-4">
-                    Send and receive text messages from your business number, all managed inside /respond.
+                    Text messages have a 98% open rate. Most customers will text a local business if they can find the number. / respond gives you a dedicated business number for SMS through Telnyx — separate from your personal phone — so customers can text you and the conversation logs in / respond alongside everything else. No mixing business and personal. No missed messages because you switched phones.
                   </p>
                   <ul className="text-left text-sm text-gray-600 space-y-2">
                     <li className="flex items-start gap-2">
@@ -190,7 +182,7 @@ export default function InboxLanding() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
-            Powerful Features for Modern Communication
+            Built for How Your Business Actually Works
           </h2>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -245,7 +237,7 @@ export default function InboxLanding() {
               <div>
                 <h3 className="text-xl font-bold mb-2 text-gray-900">Smart Filters & Search</h3>
                 <p className="text-gray-600">
-                  Find any message instantly with powerful search. Filter by channel, status, assignee, or date.
+                  Find any message instantly. Filter by channel, status, assignee, or date — the conversation you need is always one search away.
                 </p>
               </div>
             </div>
@@ -280,8 +272,8 @@ export default function InboxLanding() {
                   Works Autonomously & Together
                 </h3>
                 <p className="text-gray-600">
-                  /respond works powerfully on its own, but when integrated with / promote and / engage, it becomes part of the Compass Suite—
-                  sharing analytics across apps to deliver context-aware communication that drives better outcomes.
+                  /respond works well on its own, but when integrated with / promote and / engage, it becomes part of the Compass Suite —
+                  sharing data across apps so every conversation has context and every response is informed.
                 </p>
               </div>
 
@@ -313,6 +305,18 @@ export default function InboxLanding() {
         </div>
       </section>
 
+      {/* What This Means */}
+      <section className="py-4 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[#001882] text-white rounded-xl p-8 my-12">
+            <h3 className="text-white font-bold text-xl mb-4">Response Time Is a Revenue Number</h3>
+            <p className="text-blue-100 leading-relaxed">
+              A customer who gets a response within five minutes is nine times more likely to convert than one who waits an hour. Nine times. That's not a marginal difference — that's the difference between a business that grows and one that wonders why people keep going to competitors. / respond makes fast response times achievable for a business owner who's also running the operation. One inbox. All messages. No excuses for slow replies.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -320,7 +324,7 @@ export default function InboxLanding() {
             Ready to Unify Your Customer Communications?
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Join businesses who replaced app switching with one powerful inbox.
+            Join businesses who replaced app switching with one unified inbox.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -339,7 +343,7 @@ export default function InboxLanding() {
               asChild
               data-testid="button-explore-platform"
             >
-              <a href="/respond-app">Explore /respond Platform</a>
+              <a href="/respond/dashboard">Explore /respond Platform</a>
             </Button>
           </div>
           <p className="text-sm text-gray-500 mt-6">

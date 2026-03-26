@@ -9,7 +9,7 @@ import { COACH_BLUE } from "@/config/app-registry";
 const COACH_COLOR = COACH_BLUE.color;
 const FONT_FAMILY = "Archivo Semi Expanded, Archivo, sans-serif";
 
-export default function AICoachPage() {
+export default function CoachBluePage() {
   return (
     <div className="min-h-screen bg-white">
       <Header />
@@ -22,11 +22,10 @@ export default function AICoachPage() {
               <AppName appId="coachblue" size="lg" iconSize={36} />
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Your 24/7 AI Business Coach
+              The Business Advice You've Always Needed. Available Whenever You Need It.
             </h2>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Personalized business guidance powered by AI. Get actionable advice on marketing, operations,
-              growth strategy, and digital presence — anytime you need it.
+              Most small business owners have never had access to a business advisor. Not because they didn't want one — because good advisors cost hundreds of dollars an hour and most aren't available at 11pm when you're reviewing your week. Coach Blue is. He knows your Digital IQ Score, your app setup, your data, and your goals. He doesn't give generic advice. He tells you specifically what to do with your specific business — right now.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -71,11 +70,9 @@ export default function AICoachPage() {
       <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold text-white">$99/mo</div>
-              <span className="text-white text-2xl">|</span>
-              <span className="text-white text-xl">Free with Anchor + Compass Suites</span>
-            </div>
+            <p className="text-white text-xl">
+              $99/mo Standalone  |  $59/mo with Anchor or Compass Suite  |  FREE with Both Suites
+            </p>
           </div>
         </div>
       </section>
@@ -85,7 +82,7 @@ export default function AICoachPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: FONT_FAMILY }}>
-              The 4 Modes of Coach Blue
+              Four Ways Coach Blue Shows Up For Your Business
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Coach Blue adapts to what you need, when you need it.
@@ -101,8 +98,7 @@ export default function AICoachPage() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Guided</h3>
                   <p className="text-gray-600">
-                    Step-by-step setup for every app, in the right order. Coach Blue walks you through
-                    each tool so nothing gets missed and everything connects.
+                    Every time you open a new app for the first time, Coach Blue walks you through it. Not a tutorial video. Not a help article. A step-by-step guide specific to your business — in the right order, with the right explanation for why each step matters. He picks up exactly where you left off every time you return. You never have to figure out where to start.
                   </p>
                 </div>
               </CardContent>
@@ -116,8 +112,7 @@ export default function AICoachPage() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Advisory</h3>
                   <p className="text-gray-600">
-                    Proactive insights from your app data, surfaced before you ask. Coach Blue spots
-                    trends and opportunities so you can act on them early.
+                    Every 30 minutes, Coach Blue reviews the data from every active app and looks for patterns worth your attention. A review rating trending down. A keyword ranking that slipped three positions. A campaign open rate that dropped. He surfaces these as insights — not alarms, not notifications that pile up, but specific observations with specific suggested actions. When it's relevant. When it matters.
                   </p>
                 </div>
               </CardContent>
@@ -131,8 +126,7 @@ export default function AICoachPage() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Responsive</h3>
                   <p className="text-gray-600">
-                    Ask anything, get answers specific to your business. Coach Blue pulls from your
-                    data across every app to give context-aware guidance.
+                    Ask Coach Blue anything about your business. 'Why did my search ranking drop this week?' 'What should I post about this month?' 'How do I get more reviews?' 'Is my email open rate normal?' He answers from the context of your actual businessblueprint data — not from a FAQ, not from a search engine. From what he knows about your business.
                   </p>
                 </div>
               </CardContent>
@@ -146,8 +140,7 @@ export default function AICoachPage() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Alert</h3>
                   <p className="text-gray-600">
-                    Urgent flags delivered the moment something needs attention. A bad review, a missed
-                    follow-up, a listing error — Coach Blue catches it first.
+                    Some things can't wait for the next advisory check. An unauthorized edit to your Google listing. A one-star review with no response after 24 hours. A campaign that stopped sending. Coach Blue fires an alert the moment these things happen — before they cost you a customer, a ranking, or a reputation.
                   </p>
                 </div>
               </CardContent>
@@ -161,10 +154,13 @@ export default function AICoachPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: FONT_FAMILY }}>
-              Your Setup Order
+              He Knows the Right Order. And He Keeps You In It.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Coach Blue guides you through each app in the right sequence. Here is the cadence it follows.
+              Most business owners, left to their own devices, set up things in the wrong order. They run ads before their listings are accurate. They send email campaigns before they have a real contact list. They install chat before they have an inbox to route it to. These mistakes cost time and money.
+            </p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mt-4">
+              Coach Blue knows the correct setup sequence — the one that builds each capability on top of the last, so every app you activate makes the ones before it stronger. He guides you through it in order: / connect first, then / publish, then / elevate, then / respond, then / engage, then / post, then / promote, then / amplify. Each step in sequence. Each one building on the last.
             </p>
           </div>
 
@@ -325,6 +321,18 @@ export default function AICoachPage() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What This Means */}
+      <section className="py-4 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[#0000FF] text-white rounded-xl p-8 my-12">
+            <h3 className="text-white font-bold text-xl mb-4">You've Never Had an Advisor Like This</h3>
+            <p className="text-blue-100 leading-relaxed">
+              A good business advisor knows your business, watches your numbers, and tells you what to do before problems become crises. For most small business owners, that kind of advisor has never been accessible — the cost is too high, the availability is too limited. Coach Blue changes that. He's inside your businessblueprint, watching everything, available around the clock, and the more apps you activate, the more he knows about your business and the more specific his advice becomes. He's not a chatbot. He's the advisor you should have had from the start.
+            </p>
           </div>
         </div>
       </section>

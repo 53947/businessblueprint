@@ -6,7 +6,7 @@ import { Footer } from "@/components/footer";
 import { AppName } from "@/components/app-name";
 import { getAppById, getAppsByBundle, getBundlePrice } from "@/config/app-registry";
 
-export default function ReputationLanding() {
+export default function ElevateLanding() {
   const app = getAppById("elevate")!;
   const bundlePrice = getBundlePrice("anchor");
   const bundleApps = getAppsByBundle("anchor");
@@ -23,11 +23,10 @@ export default function ReputationLanding() {
               <AppName appId="elevate" size="lg" iconSize={36} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Your Reputation. Managed.
+              What Customers Say About You Is the Most Powerful Marketing You Have
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              AI-powered review monitoring and response management across all platforms.
-              Never miss a review, respond professionally, and build the reputation that drives revenue.
+              Before a new customer ever calls you, they read your reviews. Every one of them. Not just the rating — the actual words. What did people say went wrong. How did you respond. Did you respond at all. Your review profile is a live, public record of how you treat customers — and most business owners are too busy running their business to manage it properly. / elevate manages it for them.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -72,15 +71,8 @@ export default function ReputationLanding() {
       <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold text-white">${app.standalonePrice}/mo</div>
-              <span className="text-white text-xl">standalone</span>
-              <span className="text-white text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
-              <span className="text-white text-xl">Anchor Suite</span>
-            </div>
-            <p className="text-white text-sm">
-              / publish + / elevate + / optimize = Complete local presence + SEO management
+            <p className="text-white text-xl">
+              $29/mo Standalone  |  $99/mo Anchor Suite — includes / publish, / optimize, and / amplify
             </p>
           </div>
         </div>
@@ -91,7 +83,7 @@ export default function ReputationLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Where We Pull Reviews
+              Every Platform Where Customers Are Talking About You
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Every review from the platforms that matter most, aggregated into a single dashboard.
@@ -106,12 +98,9 @@ export default function ReputationLanding() {
                     <Star className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Google Reviews</h3>
-                  <ul className="text-gray-600 text-sm text-left space-y-2">
-                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Star ratings and review text</li>
-                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Reviewer name and photo</li>
-                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Response status tracking</li>
-                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Direct reply integration</li>
-                  </ul>
+                  <p className="text-gray-600">
+                    Google reviews carry the most weight — for your search ranking, for your credibility, and for the first impression every new customer forms when they find you. / elevate pulls every new Google review the moment it posts, scores the sentiment, drafts a response, and routes it for your approval. You never miss one. You never leave one unanswered.
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -123,12 +112,9 @@ export default function ReputationLanding() {
                     <Star className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Yelp Reviews</h3>
-                  <ul className="text-gray-600 text-sm text-left space-y-2">
-                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Full review content</li>
-                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Sentiment analysis</li>
-                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Rating trend tracking</li>
-                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> New review alerts</li>
-                  </ul>
+                  <p className="text-gray-600">
+                    Yelp users are vocal and they're looking for reasons to trust you — or not. A business with unanswered negative Yelp reviews looks like a business that doesn't care. / elevate gives you the same automated response workflow for Yelp as it does for Google. One dashboard. No platform gets neglected.
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -140,12 +126,9 @@ export default function ReputationLanding() {
                     <Star className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Facebook Reviews</h3>
-                  <ul className="text-gray-600 text-sm text-left space-y-2">
-                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Recommendations and ratings</li>
-                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Comment monitoring</li>
-                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Page engagement data</li>
-                    <li className="flex items-start gap-2"><Check className="w-4 h-4 mt-0.5 flex-shrink-0 text-green-600" /> Response management</li>
-                  </ul>
+                  <p className="text-gray-600">
+                    Your Facebook followers are often your most loyal customers — and their reviews carry social proof that travels through their networks. / elevate monitors your Facebook recommendations and reviews and brings them into the same dashboard as Google and Yelp. Your reputation is managed in one place, across all three.
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -158,10 +141,13 @@ export default function ReputationLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Automated Response Workflow
+              You Can't Respond to Every Review Manually. You Don't Have To.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              AI reads every review, drafts a professional response, and lets you approve it — or auto-publishes on your behalf.
+              A new review posts on Google at 11pm on a Tuesday. By the time you see it Wednesday morning, twelve hours have passed. / elevate saw it the moment it went live — classified the sentiment, drafted a professional response that matches the tone and context of the review, and queued it for your approval. You read it, make any edits you want, and post it. Or you enable auto-publish and it goes out immediately without you.
+            </p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mt-4">
+              The AI that writes the responses doesn't use a template. It reads the actual review — the words, the tone, the specific complaint or compliment — and writes a response that sounds like a real person who read what the customer wrote. Because that's what builds trust. Not 'Thank you for your feedback!' A real, specific, thoughtful response.
             </p>
           </div>
 
@@ -206,7 +192,7 @@ export default function ReputationLanding() {
               Review Request Campaigns
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Turn happy customers into 5-star reviews. After a transaction, automatically request feedback via email or SMS.
+              Happy customers rarely leave reviews on their own. Not because they don't want to — because no one asked them to, and by the time they thought about it, the moment had passed. / elevate sends a review request automatically after a transaction — via email, SMS, or both — while the experience is still fresh. The request links directly to your Google listing. One tap and they're writing a review. / elevate tracks how many requests were sent, opened, and converted into published reviews. You see exactly what's working and what isn't.
             </p>
           </div>
 
@@ -240,6 +226,18 @@ export default function ReputationLanding() {
                 Track how many requests are sent, opened, and converted into published reviews.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What This Means */}
+      <section className="py-4 bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[#E9B307] rounded-xl p-8 my-12">
+            <h3 className="text-[#09080E] font-bold text-xl mb-4">Your Rating Is a Revenue Number</h3>
+            <p className="text-[#09080E] leading-relaxed">
+              Studies consistently show that a business moving from a 3.5 to a 4.5 star rating can see a significant increase in calls, clicks, and revenue — without changing anything else. / elevate manages the activities that move that number: consistent responses that show you care, and a steady flow of review requests that keep fresh reviews coming in. The rating improves. The revenue follows.
+            </p>
           </div>
         </div>
       </section>

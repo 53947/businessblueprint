@@ -6,7 +6,7 @@ import { Footer } from "@/components/footer";
 import { AppName } from "@/components/app-name";
 import { getAppById, getAppsByBundle, getBundlePrice } from "@/config/app-registry";
 
-export default function SendLanding() {
+export default function PromoteLanding() {
   const app = getAppById("promote")!;
   const bundlePrice = getBundlePrice("compass");
   const bundleApps = getAppsByBundle("compass");
@@ -23,11 +23,10 @@ export default function SendLanding() {
               <AppName appId="promote" size="lg" iconSize={36} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Own Your Customer Relationships
+              The Customers You Already Have Are Your Best Source of New Revenue
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Direct email and SMS marketing built for businesses that demand complete control
-              over their customer data and engagement strategy.
+              Email marketing has the highest return of any digital marketing channel — consistently. Not social media. Not ads. Email. Because the people on your list already know you, already trust you, and already bought from you. They opted in. They want to hear from you. / promote gives you the tools to reach them — with campaigns that look professional, send reliably, and track what happens after they land.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -51,7 +50,7 @@ export default function SendLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/promote-app">Get Started with / promote</a>
+                <a href="/promote/dashboard">Get Started with / promote</a>
               </Button>
               <Button
                 size="lg"
@@ -72,15 +71,8 @@ export default function SendLanding() {
       <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold text-white">${app.standalonePrice}/mo</div>
-              <span className="text-white text-xl">standalone</span>
-              <span className="text-white text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
-              <span className="text-white text-xl">Compass Suite</span>
-            </div>
-            <p className="text-white text-sm">
-              / promote + / respond + / engage + / post = Complete communication ecosystem
+            <p className="text-white text-xl">
+              $29/mo Standalone  |  $99/mo Compass Suite — includes / respond, / engage, and / post
             </p>
           </div>
         </div>
@@ -94,9 +86,10 @@ export default function SendLanding() {
               Why We Built / promote
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Your customer data is your most valuable asset. We created / promote so you maintain complete control
-              over your customer relationships, contact information, and engagement history—without depending on
-              third-party platforms that limit access to your own data.
+              Most email marketing platforms are built for marketing teams with designers and dedicated staff. The interfaces are complicated, the pricing scales quickly, and the learning curve is steep. Small business owners sign up, get overwhelmed, and never send a single campaign.
+            </p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mt-4">
+              / promote was built for the business owner who wants to send a professional email to their customer list without needing to become an email marketer. The campaign builder is straightforward. The templates are clean. The list comes directly from / connect — the contacts you've already entered don't need to be imported again. You write the email. You pick the list. You schedule it or send it now. / promote does the rest.
             </p>
           </div>
 
@@ -221,7 +214,10 @@ export default function SendLanding() {
               What $29/mo Gets You
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Transparent pricing with generous limits built for growing businesses.
+              1,000 emails per month included in your plan. Unused emails roll over — up to 2,000 in your bank at any time. If you need to send more, you can bring your own Resend account for higher volumes. Campaigns don't disappear when you hit the limit — they queue and send when capacity is available, or send immediately if you upgrade.
+            </p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mt-4">
+              Your list comes from / connect. Your contacts are already there — no CSV import, no copy-paste, no manual re-entry. Segment by any field in / connect: industry, location, last purchase date, tags you've applied. The right message goes to the right people.
             </p>
           </div>
 
@@ -301,8 +297,8 @@ export default function SendLanding() {
                   Works Autonomously & Together
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  / promote functions powerfully on its own for email and SMS campaigns. But when integrated with / engage and / respond as part of the Compass Suite,
-                  it shares customer insights and analytics to create smarter, more effective marketing automation.
+                  / promote works well on its own for email and SMS campaigns. But when integrated with / engage and / respond as part of the Compass Suite,
+                  it shares customer insights and analytics to create smarter, more effective marketing.
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
@@ -326,7 +322,7 @@ export default function SendLanding() {
                 </h3>
                 <p className="text-gray-600 mb-6">
                   Other platforms force you into their ecosystem. Generic email tools are too complex.
-                  / promote hits the sweet spot: powerful enough for growth, simple enough to actually use.
+                  / promote hits the sweet spot: capable enough for real growth, simple enough to actually use.
                 </p>
 
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-gray-900">
@@ -341,6 +337,18 @@ export default function SendLanding() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What This Means */}
+      <section className="py-4 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[#1844A6] text-white rounded-xl p-8 my-12">
+            <h3 className="text-white font-bold text-xl mb-4">The Best New Customer Is an Old One</h3>
+            <p className="text-blue-100 leading-relaxed">
+              Acquiring a new customer costs five to seven times more than retaining an existing one. The customers in your / connect list already chose you. A well-timed, relevant email — a seasonal promotion, a reminder that it's been a while, a new service announcement — brings them back. / promote makes it easy to stay in contact with every customer in your list, on a schedule that makes sense for your business. Not spam. Communication.
+            </p>
           </div>
         </div>
       </section>
@@ -371,7 +379,7 @@ export default function SendLanding() {
               asChild
               data-testid="button-explore-platform"
             >
-              <a href="/promote-app">Explore / promote Platform</a>
+              <a href="/promote/dashboard">Explore / promote Platform</a>
             </Button>
           </div>
           <p className="text-sm text-gray-500 mt-6">

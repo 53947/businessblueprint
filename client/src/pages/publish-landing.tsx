@@ -6,7 +6,7 @@ import { Footer } from "@/components/footer";
 import { AppName } from "@/components/app-name";
 import { getAppById, getAppsByBundle, getBundlePrice } from "@/config/app-registry";
 
-export default function ListingsLanding() {
+export default function PublishLanding() {
   const app = getAppById("publish")!;
   const bundlePrice = getBundlePrice("anchor");
   const bundleApps = getAppsByBundle("anchor");
@@ -23,11 +23,10 @@ export default function ListingsLanding() {
               <AppName appId="publish" size="lg" iconSize={36} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Your Business. Everywhere It Needs to Be.
+              The Internet Has an Opinion About Your Business. Let's Make Sure It's Accurate.
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Sync your business information across 100+ directories automatically.
-              Google, Yelp, Facebook, Apple Maps — keep your listings accurate and consistent everywhere customers search.
+              Right now, your business is listed somewhere between 50 and 200 places online. Most of those listings have information you didn't put there — pulled automatically from other sources, some of it wrong, some of it outdated. Wrong hours. Old address. Phone number that goes to voicemail no one checks. Search engines read all of it. When the information doesn't match, they stop trusting your listing — and stop showing it to people who are searching for exactly what you offer. / publish fixes that.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -72,15 +71,8 @@ export default function ListingsLanding() {
       <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold text-white">${app.standalonePrice}/mo</div>
-              <span className="text-white text-xl">standalone</span>
-              <span className="text-white text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
-              <span className="text-white text-xl">Anchor Suite</span>
-            </div>
-            <p className="text-white text-sm">
-              / publish + / elevate + / optimize = Complete local presence + SEO management
+            <p className="text-white text-xl">
+              $29/mo Standalone  |  $99/mo Anchor Suite — includes / elevate, / optimize, and / amplify
             </p>
           </div>
         </div>
@@ -94,7 +86,10 @@ export default function ListingsLanding() {
               Google Business Profile
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Your Google listing is the single most important directory. We treat it differently.
+              Your Google Business Profile is the single most valuable piece of digital real estate a local business can own. When someone searches for what you offer near your location, Google decides whether to show your listing based on how complete, accurate, and trusted your profile is. Most business owners set theirs up once and never touch it again. That's a problem — because Google allows anyone to suggest edits to your listing, and those edits can go live without your knowledge.
+            </p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mt-4">
+              / publish walks you through every field of your Google Business Profile — not just the obvious ones, but the ones most businesses skip: services, products, attributes, Q&A, photos, business description, category selection. Our AI validates every field before it goes live. After your profile is approved and optimized, / publish locks it so no unauthorized changes can be made without triggering an alert. Your listing stays accurate. Permanently.
             </p>
           </div>
 
@@ -156,7 +151,10 @@ export default function ListingsLanding() {
               D&B DUNS Number
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              A verified DUNS number unlocks syndication to 80+ business directories. We guide you through every step.
+              Most local business owners have never heard of a D&B DUNS number. Here's why it matters: Dun & Bradstreet maintains the largest commercial database in the world. Their data feeds directly into Apple Maps, Bing, Yahoo, MapQuest, and over 80 other directories. When your business has a verified DUNS number, your correct information propagates to all of those platforms automatically.
+            </p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mt-4">
+              / publish checks whether your business already has a DUNS number on file — many businesses do without knowing it, sometimes with wrong information attached. If you don't have one, we walk you through the free application process step by step. If you have one, we help you claim it, correct any errors, and optimize your D&B profile. From there, your verified business information flows to 80+ platforms on its own. One setup. Dozens of directories. Done.
             </p>
           </div>
 
@@ -247,8 +245,7 @@ export default function ListingsLanding() {
               Why Directory Management Matters
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Inconsistent business information across directories costs you customers. When your hours, phone, or address
-              don't match, search engines lose trust and customers lose patience. / publish keeps everything synchronized.
+              Search engines use consistency as a trust signal. When your business name, address, and phone number — your NAP — appear the same way across dozens of directories, search engines conclude you're a legitimate, established business and rank you accordingly. When they're inconsistent — even something as small as 'Street' vs 'St.' — that trust erodes. / publish monitors your NAP consistency weekly and alerts you the moment a discrepancy appears anywhere. Before it costs you a ranking. Before it costs you a customer.
             </p>
           </div>
 
@@ -294,6 +291,18 @@ export default function ListingsLanding() {
                 </div>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* What This Means */}
+      <section className="py-4 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[#064A6C] text-white rounded-xl p-8 my-12">
+            <h3 className="text-white font-bold text-xl mb-4">The Business Owner Who Gets This Right Wins</h3>
+            <p className="text-blue-100 leading-relaxed">
+              A potential customer searches for your service in your city. Three businesses come up. One has a complete Google listing with recent photos, accurate hours, 47 reviews, and a verified address. The other two have incomplete profiles, mismatched information, and no photos. The first business gets the call. Every time. / publish is how you become that first business.
+            </p>
           </div>
         </div>
       </section>

@@ -6,7 +6,7 @@ import { Footer } from "@/components/footer";
 import { AppName } from "@/components/app-name";
 import { getAppById, getAppsByBundle, getBundlePrice } from "@/config/app-registry";
 
-export default function LivechatLanding() {
+export default function EngageLanding() {
   const app = getAppById("engage")!;
   const bundlePrice = getBundlePrice("compass");
   const bundleApps = getAppsByBundle("compass");
@@ -23,11 +23,10 @@ export default function LivechatLanding() {
               <AppName appId="engage" size="lg" iconSize={36} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Turn Website Visitors<br />Into Conversations
+              The Visitor Who Doesn't Call Will Chat. If You Give Them the Option.
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              The live chat widget that feels natural, remembers everything, and integrates perfectly
-              with your / respond. Because every visitor is a potential customer.
+              Most website visitors leave without doing anything. They read, they browse, they hesitate — and then they go somewhere else. Not because they weren't interested. Because they had a question they didn't know how to ask, or they weren't ready to make a phone call. A live chat widget changes that. It gives them a low-pressure way to start a conversation in the moment they're most interested. / engage puts that widget on your website and routes every conversation directly into / respond — so nothing gets lost.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -51,7 +50,7 @@ export default function LivechatLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/engage-demo">Get Started with / engage</a>
+                <a href="/engage/demo">Get Started with / engage</a>
               </Button>
               <Button
                 size="lg"
@@ -72,15 +71,8 @@ export default function LivechatLanding() {
       <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold text-white">${app.standalonePrice}/mo</div>
-              <span className="text-white text-xl">standalone</span>
-              <span className="text-white text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
-              <span className="text-white text-xl">Compass Suite</span>
-            </div>
-            <p className="text-white text-sm">
-              / promote + / respond + / engage + / post = Complete communication ecosystem
+            <p className="text-white text-xl">
+              $29/mo Standalone  |  $99/mo Compass Suite — includes / respond, / post, and / promote
             </p>
           </div>
         </div>
@@ -91,11 +83,13 @@ export default function LivechatLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why / engage Was Built
+              Why Most Chat Widgets Fail Small Businesses
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Standalone chat widgets are disconnected islands. They don't know about your customer data,
-              marketing campaigns, or business insights. / engage changes that.
+              Standalone chat widgets are disconnected from everything else. When a visitor chats and you're not there, the conversation disappears into an app no one is checking. When a visitor becomes a customer, there's no record of what they asked or what you promised. It's a black hole that makes your business look less responsive than it actually is.
+            </p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mt-4">
+              / engage is different because it's not standalone. Every conversation flows directly into / respond — the same inbox where your Facebook messages, Instagram DMs, and SMS messages arrive. And every conversation that includes a name or contact information automatically creates or updates a record in / connect. The visitor becomes a contact. The contact becomes a customer. The entire history is already there.
             </p>
           </div>
 
@@ -217,10 +211,10 @@ export default function LivechatLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Three Steps to Live
+              One Line of Code. That's It.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Get your live chat widget running in under five minutes. No developer required.
+              Installing / engage on your website requires copying one line of JavaScript and pasting it into your website before the closing body tag. If you built your site on Squarespace, Wix, or WordPress, there's a plugin that does it for you without touching any code. / engage walks you through it step by step. Most business owners have it live within fifteen minutes of signing up.
             </p>
           </div>
 
@@ -385,6 +379,18 @@ export default function LivechatLanding() {
         </div>
       </section>
 
+      {/* What This Means */}
+      <section className="py-4 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[#660099] text-white rounded-xl p-8 my-12">
+            <h3 className="text-white font-bold text-xl mb-4">The Conversation That Starts on Your Website Ends in a Sale</h3>
+            <p className="text-purple-100 leading-relaxed">
+              A customer who chats with you on your website is a warm lead. They came to you, they were curious enough to ask a question, and they gave you a chance to respond. When you respond quickly, knowledgeably, and helpfully — that conversation converts. / engage captures those conversations. / respond routes them to you immediately. / connect keeps the record. The sale starts with a chat widget. The business is built on what happens next.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -412,7 +418,7 @@ export default function LivechatLanding() {
               asChild
               data-testid="button-try-demo"
             >
-              <a href="/engage-demo">Try Live Demo</a>
+              <a href="/engage/demo">Try Live Demo</a>
             </Button>
           </div>
           <p className="text-sm text-gray-500 mt-6">

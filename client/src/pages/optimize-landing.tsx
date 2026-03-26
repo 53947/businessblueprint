@@ -24,11 +24,10 @@ export default function OptimizeLanding() {
               <AppName appId="optimize" size="lg" iconSize={36} />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Know Exactly Where You Stand on Google
+              You Can't Fix What You Can't See
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Monitor your SEO health, track keyword rankings, analyze pages, fix technical issues,
-              and get AI-powered optimization recommendations — all in one dashboard.
+              Most local business owners assume their website is fine. They built it, they launched it, and now it exists. What they don't know is whether it's actually showing up when customers search for them. Whether it loads fast enough on a phone. Whether there are technical errors that search engines penalize. Whether a competitor showed up on page one last month while they dropped to page three. / optimize shows you all of it — scored, categorized, and prioritized so you know exactly where to focus.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -73,15 +72,8 @@ export default function OptimizeLanding() {
       <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold text-white">${app.standalonePrice}/mo</div>
-              <span className="text-white text-xl">standalone</span>
-              <span className="text-white text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">${bundlePrice}/mo</div>
-              <span className="text-white text-xl">Anchor Suite</span>
-            </div>
-            <p className="text-white text-sm">
-              / publish + / elevate + / optimize = Complete local presence + SEO management
+            <p className="text-white text-xl">
+              $29/mo Standalone  |  $99/mo Anchor Suite — includes / publish, / elevate, and / amplify
             </p>
           </div>
         </div>
@@ -92,7 +84,7 @@ export default function OptimizeLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Your SEO Health Score
+              Four Categories. One Score. Total Clarity.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Four categories scored independently so you know exactly where to focus your effort.
@@ -107,7 +99,7 @@ export default function OptimizeLanding() {
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">Technical SEO</h3>
                 <p className="text-gray-600 text-sm">
-                  Page speed, mobile usability, SSL, broken links, crawl errors, and structured data validation.
+                  Speed, mobile performance, security, broken links, crawl errors, structured data. These are the things search engines check before they even look at your content. If any of them are broken, the rest of your SEO efforts are fighting uphill. / optimize scores your technical health weekly and tells you specifically what to fix.
                 </p>
               </CardContent>
             </Card>
@@ -119,7 +111,7 @@ export default function OptimizeLanding() {
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">On-Page SEO</h3>
                 <p className="text-gray-600 text-sm">
-                  Title tags, meta descriptions, heading structure, keyword density, and internal linking.
+                  Every page on your website sends signals to search engines about what it's about and who it serves. Title tags, meta descriptions, heading structure, keyword usage — these aren't technical mysteries, they're straightforward signals most small business websites get wrong. / optimize scores them and tells you exactly which pages need work.
                 </p>
               </CardContent>
             </Card>
@@ -131,7 +123,7 @@ export default function OptimizeLanding() {
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">Local SEO</h3>
                 <p className="text-gray-600 text-sm">
-                  NAP consistency, Google Business Profile optimization, local citations, and geo-targeted content.
+                  Local SEO is different from general SEO. It's specifically about showing up when someone searches for your service in your city. It's driven by your Google Business Profile, your citation consistency, your review signals, and your location-specific content. / optimize reads data directly from / publish and / elevate to calculate this score — because those apps are already managing the factors that drive it.
                 </p>
               </CardContent>
             </Card>
@@ -143,7 +135,7 @@ export default function OptimizeLanding() {
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-2">Content</h3>
                 <p className="text-gray-600 text-sm">
-                  Content quality, word count, readability, keyword targeting, freshness, and topical authority.
+                  Search engines rank pages that thoroughly cover what the searcher is looking for. Thin pages, duplicate content, and outdated information all lower your ranking. / optimize scores your content quality and identifies which pages need to be updated, expanded, or consolidated.
                 </p>
               </CardContent>
             </Card>
@@ -159,7 +151,7 @@ export default function OptimizeLanding() {
               Keyword Rankings That Matter
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Track the local-intent keywords your customers actually search for — not vanity metrics.
+              There's a difference between ranking for your business name and ranking for the searches your customers actually make. 'Best plumber in Denver.' 'Emergency electrician near me.' 'Family dentist accepting new patients.' Those are local-intent searches — and they're the ones that bring in new customers. / optimize tracks your position for the keywords that matter to your specific business and your specific location. When your position drops — even by a few spots — you get an alert. Not after you've lost customers. Before.
             </p>
           </div>
 
@@ -239,7 +231,7 @@ export default function OptimizeLanding() {
       {/* More Features */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">More Powerful Modules</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">More Tools at Your Fingertips</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {[
               { icon: Wrench, title: 'Technical SEO Monitor', desc: 'Detect broken links, missing meta tags, SSL issues, slow pages, and more. Get clear fix instructions.' },
@@ -317,10 +309,10 @@ export default function OptimizeLanding() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             {[
-              { name: '/ publish', href: '/publish-landing', desc: 'Directory listings' },
-              { name: '/ elevate', href: '/elevate-landing', desc: 'Review management' },
+              { name: '/ publish', href: '/publish', desc: 'Directory listings' },
+              { name: '/ elevate', href: '/elevate', desc: 'Review management' },
               { name: 'ScansBlue', href: '/scansblue/purchase', desc: 'Website audits' },
-              { name: 'Coach Blue', href: '/ai-coach', desc: 'AI business coaching' },
+              { name: 'Coach Blue', href: '/coach-blue', desc: 'AI business coaching' },
               { name: '/ post', href: '/post', desc: 'Content management' },
             ].map((integration, i) => (
               <a key={i} href={integration.href} className="block p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow min-w-[140px]">
@@ -328,6 +320,18 @@ export default function OptimizeLanding() {
                 <p className="text-xs text-gray-500">{integration.desc}</p>
               </a>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* What This Means */}
+      <section className="py-4 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[#374151] text-white rounded-xl p-8 my-12">
+            <h3 className="text-white font-bold text-xl mb-4">The Business That Shows Up First Gets the Call</h3>
+            <p className="text-gray-300 leading-relaxed">
+              Local search is a competition. There are only ten spots on the first page of results and dozens of businesses competing for them. The businesses on page one aren't there by accident — they've done the work to optimize their presence. / optimize shows you exactly what that work looks like for your business, your market, and your category. Then Coach Blue helps you do it.
+            </p>
           </div>
         </div>
       </section>

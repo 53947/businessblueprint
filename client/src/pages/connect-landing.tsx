@@ -6,7 +6,7 @@ import { Footer } from "@/components/footer";
 import { AppName } from "@/components/app-name";
 import { CONNECT_CRM } from "@/config/app-registry";
 
-export default function RelationshipsLanding() {
+export default function ConnectLanding() {
   return (
     <div className="min-h-screen bg-white">
       <Header />
@@ -19,11 +19,10 @@ export default function RelationshipsLanding() {
               <AppName appId="connect" size="lg" iconSize={36} />
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Your Complete CRM Command Center
+              Every Customer You've Ever Served Deserves to Be Remembered
             </h2>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Manage contacts, companies, deals, and tasks in one powerful platform.
-              Built for businesses that demand complete control over their customer relationships.
+              Most business owners carry their customer relationships in their head. A name here. A number there. A note in their phone. It works — until it doesn't. Until someone on your team can't find the history. Until you forget you already talked to that prospect twice. Until a good customer stops coming back and you never find out why. / connect is the place where every customer relationship lives — organized, searchable, and connected to every other app in businessblueprint.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -68,15 +67,8 @@ export default function RelationshipsLanding() {
       <section className="py-12 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold text-white">FREE</div>
-              <span className="text-white text-xl">Starter Plan</span>
-              <span className="text-white text-2xl">|</span>
-              <div className="text-4xl font-bold text-white">$29/mo</div>
-              <span className="text-white text-xl">Unlimited Plan</span>
-            </div>
-            <p className="text-gray-300 text-sm">
-              Start free with up to 250 contacts. Scale to unlimited with Performance.
+            <p className="text-white text-xl">
+              FREE — Up to 100 Contacts  |  $29/mo — Unlimited Contacts and Users
             </p>
           </div>
         </div>
@@ -87,11 +79,10 @@ export default function RelationshipsLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Everything You Need to Manage Relationships
+              What / connect Actually Does For Your Business
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              A complete CRM solution designed for growing businesses. Track contacts, close deals,
-              and build lasting customer relationships.
+              Here's what changes when every customer relationship has a home.
             </p>
           </div>
 
@@ -104,8 +95,7 @@ export default function RelationshipsLanding() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Contact Management</h3>
                   <p className="text-gray-600">
-                    Store and organize all your contacts with custom fields, tags, and lifecycle stages.
-                    Import from CSV or add manually.
+                    Every person who has ever done business with you — or might someday — gets a record. Name, company, phone, email, address, and every interaction you've ever had with them. Notes from conversations. Emails sent. Deals discussed. It's all there, in one place, the next time you need it. No more digging through your phone. No more 'what was that customer's name again.'
                   </p>
                 </div>
               </CardContent>
@@ -119,8 +109,7 @@ export default function RelationshipsLanding() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Company Profiles</h3>
                   <p className="text-gray-600">
-                    Link contacts to companies. Track company size, industry, and revenue potential
-                    for better B2B relationship management.
+                    If your customers are businesses — contractors, practices, shops, firms — / connect organizes your contacts by company. You see every person at that company, every deal you've discussed, every note your team has ever made. When the decision-maker changes, the relationship doesn't start over. The history is already there.
                   </p>
                 </div>
               </CardContent>
@@ -134,8 +123,7 @@ export default function RelationshipsLanding() {
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">Deal Pipeline</h3>
                   <p className="text-gray-600">
-                    Visualize your sales pipeline with customizable stages. Track deal values,
-                    close dates, and probability to forecast revenue.
+                    Every opportunity your business is working on, visible in one view. Where is it in the process? What's it worth? When do you expect to close it? Who on your team owns it? / connect keeps every deal from falling through the cracks — because the ones that fall through are the ones that cost you the most.
                   </p>
                 </div>
               </CardContent>
@@ -148,7 +136,7 @@ export default function RelationshipsLanding() {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
-            Powerful Tools for Your Team
+            The Tools That Keep Nothing From Falling Through
           </h2>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -161,7 +149,7 @@ export default function RelationshipsLanding() {
               <div>
                 <h3 className="text-xl font-bold mb-2 text-gray-900">Kanban Board View</h3>
                 <p className="text-gray-600">
-                  Drag-and-drop deals between stages. Visual pipeline management that keeps your team aligned.
+                  Drag your deals from stage to stage as they progress. New lead. Proposal sent. Waiting on decision. Closed. Every deal visible, every stage clear, every team member aligned — without a single status meeting.
                 </p>
               </div>
             </div>
@@ -175,7 +163,7 @@ export default function RelationshipsLanding() {
               <div>
                 <h3 className="text-xl font-bold mb-2 text-gray-900">Task Management</h3>
                 <p className="text-gray-600">
-                  Create tasks linked to contacts and deals. Set due dates, priorities, and never miss a follow-up.
+                  Every follow-up, every callback, every 'I'll send that over by Thursday' — logged as a task linked to the contact or deal it belongs to. Set a due date. Set a priority. Get a reminder. Never let another follow-up slip through the cracks because life got busy.
                 </p>
               </div>
             </div>
@@ -189,7 +177,7 @@ export default function RelationshipsLanding() {
               <div>
                 <h3 className="text-xl font-bold mb-2 text-gray-900">Analytics Dashboard</h3>
                 <p className="text-gray-600">
-                  Track key metrics: contact growth, deal velocity, task completion rates, and pipeline value.
+                  How many new contacts this month? How long does it take your team to close a deal? Which stage is where opportunities get stuck? / connect answers those questions with data from your actual business — not industry averages, not benchmarks. Yours.
                 </p>
               </div>
             </div>
@@ -203,7 +191,7 @@ export default function RelationshipsLanding() {
               <div>
                 <h3 className="text-xl font-bold mb-2 text-gray-900">Activity Timeline</h3>
                 <p className="text-gray-600">
-                  Complete history of all interactions. See emails, calls, meetings, and notes in one place.
+                  Every email sent, every note written, every call logged — in chronological order against the contact record it belongs to. When a customer calls and says 'we spoke a few months ago,' the entire history is right there before you say a word.
                 </p>
               </div>
             </div>
@@ -216,11 +204,10 @@ export default function RelationshipsLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              The Hub Every App Flows Through
+              / connect Isn't Just a CRM. It's the Center of Everything.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Every app in Business Blueprint feeds data into /connect. Your contacts, conversations, reviews,
-              campaigns, and social interactions all live here — giving you one unified view of every customer relationship.
+              Every app in businessblueprint was designed to feed data into / connect automatically. A conversation from / engage — the live chat widget on your website — logs here. A review response from / elevate links to the customer's record. A campaign from / promote draws from your contact list. An ad lead from / amplify creates a new contact the moment it converts.
             </p>
           </div>
 
@@ -265,7 +252,7 @@ export default function RelationshipsLanding() {
                   { name: "/respond", desc: "Messaging" },
                   { name: "/engage", desc: "Live Chat" },
                   { name: "/post", desc: "Social" },
-                  { name: "/coach-blue", desc: "AI Coach" },
+                  { name: "/coach-blue", desc: "Coach Blue" },
                 ].map((app) => (
                   <div key={app.name} className="flex items-center gap-2">
                     <ArrowRight className="w-5 h-5 text-gray-400 flex-shrink-0 rotate-180" />
@@ -276,6 +263,17 @@ export default function RelationshipsLanding() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+          <div className="max-w-4xl mx-auto mt-8">
+            <p className="text-xl text-gray-600 text-center mb-6">
+              You don't set up the connections. They happen on their own — because that's how / connect was built. By the time you have all your apps running, / connect is the single source of truth for every customer relationship in your business. That's not an accident. That's the design.
+            </p>
+            <div className="bg-white border border-gray-200 rounded-xl p-6 mt-6">
+              <p className="text-xs uppercase tracking-widest text-[#008060] font-semibold mb-3">WHAT THIS MEANS FOR YOUR BUSINESS</p>
+              <p className="text-gray-900 leading-relaxed">
+                You've built your business on relationships. / connect makes sure those relationships are never lost, never forgotten, and never scattered across different apps and devices. Every customer you've ever served is one search away — with their full history attached.
+              </p>
             </div>
           </div>
         </div>
