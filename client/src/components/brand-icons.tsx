@@ -143,12 +143,12 @@ export function BuildMethodIcon({ className = "", size = 64 }: BrandIconProps) {
 // 6. Execution Styles Icon - Same as BuildMethod
 export const ExecutionStylesIcon = BuildMethodIcon;
 
-// 7. Commverse Bundle Icon - Official brand icon (diagonal slash)
+// 7. Compass Suite Bundle Icon - Official brand icon (diagonal slash)
 export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <img 
       src={commverseIcon} 
-      alt="Commverse" 
+      alt="Compass Suite" 
       width={size} 
       height={size}
       className={className}
@@ -157,12 +157,12 @@ export function CommverseIcon({ className = "", size = 64 }: BrandIconProps) {
   );
 }
 
-// 8. AI Coach Blue Icon - Official brand icon (coach figure)
+// 8. Coach Blue Icon - Official brand icon (coach figure)
 export function CoachBlueIcon({ className = "", size = 64 }: BrandIconProps) {
   return (
     <img 
       src={coachBlueIcon} 
-      alt="AI Coach Blue" 
+      alt="Coach Blue" 
       width={size} 
       height={size}
       className={className}

@@ -88,10 +88,10 @@ export default function Dashboard() {
 
   const getBundleAdvantage = (category: string): string | null => {
     if (['Email & SMS Marketing', 'Social Media Content', 'Customer Response & Timing', 'Live Chat'].includes(category)) {
-      return 'Get all communication tools in the CommVerse bundle for $99/month - that\'s all four apps in one integrated platform. Save $37 compared to buying separately.';
+      return 'Get all communication tools in the Compass Suite for $99/month - that\'s all four apps in one integrated platform. Save $37 compared to buying separately.';
     }
     if (['Business Listings', 'Reputation Management', 'Google Business Profile'].includes(category)) {
-      return 'Get complete local SEO control with LocalBlue for $99/month - includes listings management, reputation monitoring, and Google Business Profile optimization.';
+      return 'Get complete local SEO control with the Anchor Suite for $99/month - includes listings management, reputation monitoring, and Google Business Profile optimization.';
     }
     return null;
   };
@@ -358,14 +358,14 @@ export default function Dashboard() {
                       Your Next Steps
                     </Button>
                   </Link>
-                  <Link href="/ai-coach">
-                    <Button 
-                      variant="outline" 
+                  <Link href="/coach-blue">
+                    <Button
+                      variant="outline"
                       className="w-full justify-start border-blue-300 hover:bg-blue-50 hover:border-blue-500"
-                      data-testid="btn-ai-coach"
+                      data-testid="btn-coach-blue"
                     >
                       <MessageSquare className="w-4 h-4 mr-2 text-blue-600" />
-                      Ask AI Coach
+                      Ask Coach Blue
                     </Button>
                   </Link>
                 </div>

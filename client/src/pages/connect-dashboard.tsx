@@ -226,7 +226,7 @@ const sidebarItems = [
   { id: "settings" as const, label: "Settings", icon: Settings },
 ];
 
-export default function RelationshipsPage() {
+export default function ConnectDashboard() {
   const [activeSection, setActiveSection] = useState<Section>("dashboard");
   const [searchQuery, setSearchQuery] = useState("");
 

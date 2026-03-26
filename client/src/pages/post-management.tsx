@@ -661,7 +661,7 @@ export default function ContentManagement() {
                 )}
               </div>
 
-              {/* AI Coach Sidebar */}
+              {/* Coach Blue Sidebar */}
               {showAiCoach && (
                 <div className="lg:col-span-1">
                   <Card className="sticky top-6" data-testid="card-ai-coach">
@@ -669,7 +669,7 @@ export default function ContentManagement() {
                       <CardTitle className="flex items-center justify-between">
                         <span className="flex items-center gap-2">
                           <Sparkles className="h-5 w-5 text-[#E91E8C]" />
-                          AI Coach
+                          Coach Blue
                         </span>
                         <Button
                           variant="ghost"

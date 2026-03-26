@@ -61,7 +61,7 @@ export default function Home() {
                   <AppIcon name="ClipboardCheck" size={24} color="#A00028" />
                   <span className="ml-2">Start Here</span>
                 </Button>
-                <Link href="/ai-coach">
+                <Link href="/coach-blue">
                   <Button
                     size="lg"
                     variant="outline"
@@ -250,7 +250,7 @@ export default function Home() {
                 <div className="flex items-center justify-center mb-4">
                   <CoachBlueIcon size={64} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">AI Coach Guidance</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Coach Blue Guidance</h3>
                 <p className="text-gray-600 text-sm">
                   Coach Blue answers questions and guides you through each step of your personalized blueprint.
                 </p>
@@ -417,7 +417,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">AI Coach Access</span>
+                    <span className="text-gray-700 text-sm">Coach Blue Access</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">✓</span>
@@ -462,7 +462,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">✓</span>
-                    <span className="text-gray-700 text-sm">Priority AI Coach Support</span>
+                    <span className="text-gray-700 text-sm">Priority Coach Blue Support</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-green-500 mr-2 mt-1">✓</span>
@@ -520,7 +520,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Commverse Apps Overview */}
+      {/* Compass Apps Overview */}
       <section className="bg-gradient-to-br from-gray-50 via-white to-gray-50 py-20 border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -830,8 +830,8 @@ export default function Home() {
               <p className="text-gray-600 leading-relaxed mb-4">He's built into every authenticated page as a persistent sidebar — not a chatbot, not a help widget. When your listing gets an unauthorized edit, he alerts you. When your review response time slips, he tells you. When you've set up / connect but haven't started / publish yet, he explains exactly why that needs to happen next and walks you through it.</p>
               <p className="text-gray-600 leading-relaxed mb-8">Coach Blue is $99/mo standalone. With one suite active — Anchor or Compass — he's $59/mo. With both suites active, he's free. The more you build, the less he costs.</p>
               <div className="flex flex-wrap gap-4">
-                <Link href="/ai-coach"><Button style={{ backgroundColor: '#FF6B00' }} className="text-white font-bold">Add to Cart — $99/mo</Button></Link>
-                <Link href="/ai-coach"><Button style={{ backgroundColor: '#0000FF' }} className="text-white">Meet Coach Blue</Button></Link>
+                <Link href="/coach-blue"><Button style={{ backgroundColor: '#FF6B00' }} className="text-white font-bold">Add to Cart — $99/mo</Button></Link>
+                <Link href="/coach-blue"><Button style={{ backgroundColor: '#0000FF' }} className="text-white">Meet Coach Blue</Button></Link>
                 <Link href="/pricing"><Button variant="outline" style={{ borderColor: '#0000FF', color: '#0000FF' }}>View All Pricing</Button></Link>
               </div>
             </div>

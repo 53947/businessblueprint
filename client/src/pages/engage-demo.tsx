@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { MessageCircle, Settings, Code, BarChart3, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-export default function LiveChatDemo() {
+export default function EngageDemo() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState('demo');
@@ -31,7 +31,7 @@ export default function LiveChatDemo() {
             icon: Code, 
             active: activeTab === 'installation',
             onClick: () => {
-              setLocation('/engage-install');
+              setLocation('/engage/install');
             },
             testId: 'tab-installation'
           },

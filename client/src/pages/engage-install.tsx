@@ -11,7 +11,7 @@ import { Code, Copy, Check, Download, Settings, Eye, Palette, Globe } from "luci
 import { useToast } from "@/hooks/use-toast";
 import { SectionHeader } from "@/components/section-header";
 
-export default function LiveChatInstall() {
+export default function EngageInstall() {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('installation');

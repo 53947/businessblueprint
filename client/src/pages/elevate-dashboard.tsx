@@ -56,7 +56,7 @@ interface ReputationMetrics {
   };
 }
 
-export default function ReputationManagement() {
+export default function ElevateDashboard() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);

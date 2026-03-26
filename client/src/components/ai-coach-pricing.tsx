@@ -16,7 +16,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('annual');
   const features = [
     {
-      icon: () => <img src={aiCoachSmall} alt="AI Coach" className="w-5 h-5" />,
+      icon: () => <img src={aiCoachSmall} alt="Coach Blue" className="w-5 h-5" />,
       title: "Personalized Business Guidance",
       description: "AI analyzes your specific business context and provides tailored recommendations"
     },
@@ -45,7 +45,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
   const pricingTiers = [
     {
       plan: "essential",
-      title: "AI Coach Essential",
+      title: "Coach Blue Essential",
       monthlyPrice: "$59",
       annualPrice: "$49",
       annualTotal: "$588",
@@ -64,7 +64,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
     },
     {
       plan: "pro",
-      title: "AI Coach Pro",
+      title: "Coach Blue Pro",
       monthlyPrice: "$99",
       annualPrice: "$79",
       annualTotal: "$948",
@@ -91,7 +91,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
       <Card className="max-w-md mx-auto border-2 border-blue-200 bg-blue-50/50">
         <CardHeader className="text-center pb-4">
           <div className="flex justify-center mb-3">
-            <img src={aiCoachLogo} alt="AI Coach" className="h-18 w-18" />
+            <img src={aiCoachLogo} alt="Coach Blue" className="h-18 w-18" />
           </div>
           <CardTitle className="text-2xl">Unlock AI Business Coach</CardTitle>
           <CardDescription>
@@ -120,7 +120,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
           </div>
 
           <Button className="w-full bg-blue-600 hover:bg-blue-700">
-            Add AI Coach to Plan
+            Add Coach Blue to Plan
           </Button>
 
           <div className="text-center space-y-2">
@@ -142,7 +142,7 @@ export function AICoachPricing({ currentPlan, showUpgrade = false }: AICoachPric
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
-            <img src={aiCoachLogo} alt="AI Coach" className="h-24 w-24" />
+            <img src={aiCoachLogo} alt="Coach Blue" className="h-24 w-24" />
           </div>
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             AI Business Coach Add-On

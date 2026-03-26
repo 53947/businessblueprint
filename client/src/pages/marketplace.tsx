@@ -384,7 +384,7 @@ export default function MarketplacePage() {
             <Card className="bg-white border-2 rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all hover:scale-105" style={{ borderColor: '#F79248' }}>
               <div className="text-6xl mb-4">💡</div>
               <h3 className="text-2xl font-black mb-3" style={{ color: '#09080E' }}>Do It Yourself (DIY)</h3>
-              <p className="text-sm text-gray-600 mb-6">Full control with AI-powered tools & 4 Commverse apps</p>
+              <p className="text-sm text-gray-600 mb-6">Full control with AI-powered tools & 4 Compass Suite apps</p>
               <div className="text-5xl font-black mb-2" style={{ color: '#F79248' }}>$99+</div>
               <div className="text-gray-600 text-sm">per month</div>
             </Card>
@@ -417,8 +417,8 @@ export default function MarketplacePage() {
               </div>
               <div>
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8000FF] to-[#B566FF] text-white flex items-center justify-center font-black text-xl mb-4">2</div>
-                <h4 className="font-black text-lg mb-2" style={{ color: '#09080E' }}>Add Commverse Apps</h4>
-                <p className="text-sm text-gray-600">Then add Commverse - the / promote, / respond, / engage, / post Bundle (ALL or individually). Save money by bundling!</p>
+                <h4 className="font-black text-lg mb-2" style={{ color: '#09080E' }}>Add Compass Suite Apps</h4>
+                <p className="text-sm text-gray-600">Then add Compass Suite - the / promote, / respond, / engage, / post Bundle (ALL or individually). Save money by bundling!</p>
               </div>
               <div>
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00FF40] to-[#7DFFB2] text-white flex items-center justify-center font-black text-xl mb-4">3</div>
@@ -443,7 +443,7 @@ export default function MarketplacePage() {
               Base Plans • Digital IQ & Blueprint
             </h2>
             <p className="text-lg text-gray-600 max-w-4xl">
-              These are <span className="font-black" style={{ color: '#F79248' }}>REQUIRED</span> for DIY customers. Includes Digital IQ Assessment + Blueprint. Then add Commverse Apps (Bundle or Individual).
+              These are <span className="font-black" style={{ color: '#F79248' }}>REQUIRED</span> for DIY customers. Includes Digital IQ Assessment + Blueprint. Then add Compass Suite Apps (Bundle or Individual).
             </p>
           </div>
 
@@ -510,17 +510,17 @@ export default function MarketplacePage() {
           </div>
         </div>
 
-        {/* Commverse Apps Bundle */}
+        {/* Compass Suite Apps Bundle */}
         <div className="mb-20">
           <div className="mb-8">
             <div className="inline-block bg-gradient-to-r from-[#8000FF] to-[#B566FF] text-white text-xs font-black tracking-widest uppercase px-4 py-2 rounded-full mb-4">
-              + Add Commverse Apps (Optional)
+              + Add Compass Suite Apps (Optional)
             </div>
             <h2 className="text-4xl font-black mb-3" style={{ color: '#09080E' }}>
-              Commverse: Native Communication Apps
+              Compass Suite: Native Communication Apps
             </h2>
             <p className="text-lg text-gray-600 max-w-4xl">
-              Bundle all 4 Commverse apps for <span className="font-black" style={{ color: '#00FF40' }}>$99/mo and SAVE $57</span>, or purchase individually. These work with or without a base plan.
+              Bundle all 4 Compass Suite apps for <span className="font-black" style={{ color: '#00FF40' }}>$99/mo and SAVE $57</span>, or purchase individually. These work with or without a base plan.
             </p>
           </div>
 
@@ -535,13 +535,13 @@ export default function MarketplacePage() {
                   <AppIcon name="Compass" size={96} color="#F97316" />
                 </div>
                 <div className="inline-flex items-center gap-3 text-2xl font-black px-6 py-3 rounded-full bg-white/20 backdrop-blur-sm mb-6">
-                  <span className="text-white">Commverse Bundle</span>
+                  <span className="text-white">Compass Suite</span>
                 </div>
                 <div className="text-6xl font-black mb-3 text-white">$99/mo</div>
                 <div className="text-xl text-white/90 mb-4">All 4 apps: / promote + / respond + / engage + / post</div>
                 <div className="text-3xl font-black mb-8" style={{ color: '#00FF40' }}>💰 Save $21/month!</div>
                 <Button 
-                  onClick={() => addToCart({ id: 'bundle', name: 'Commverse Bundle', price: 119, icon: MessageSquare, description: 'All 4 apps', features: [], accentColor: 'purple', emoji: '📦' }, 'addon')}
+                  onClick={() => addToCart({ id: 'bundle', name: 'Compass Suite', price: 119, icon: MessageSquare, description: 'All 4 apps', features: [], accentColor: 'purple', emoji: '📦' }, 'addon')}
                   className="bg-white font-black rounded-xl py-6 px-12 text-xl hover:bg-gray-100"
                   style={{ color: '#8000FF' }}>
                   <Plus className="w-6 h-6 mr-2" />

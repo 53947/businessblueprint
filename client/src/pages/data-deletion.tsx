@@ -32,7 +32,7 @@ export default function DataDeletion() {
             <li><strong>Content:</strong> Social media posts, drafts, and scheduled content</li>
             <li><strong>Communications:</strong> Messages, emails, SMS records</li>
             <li><strong>Analytics Data:</strong> Usage history and engagement metrics</li>
-            <li><strong>AI Coach History:</strong> Conversation logs and recommendations</li>
+            <li><strong>Coach Blue History:</strong> Conversation logs and recommendations</li>
             <li><strong>Payment Information:</strong> Billing details (subject to legal retention requirements)</li>
           </ul>
 

@@ -38,7 +38,7 @@ interface Campaign {
   smsBody: string | null;
 }
 
-export default function SendCampaignEditor() {
+export default function PromoteCampaignEditor() {
   const [, setLocation] = useLocation();
   const [, routeParams] = useRoute("/promote/campaigns/:id/edit");
   const campaignId = routeParams?.id ? parseInt(routeParams.id) : null;
@@ -115,7 +115,7 @@ export default function SendCampaignEditor() {
 
       queryClient.invalidateQueries({ queryKey: ["/api/send/campaigns"] });
       queryClient.invalidateQueries({ queryKey: ["/api/send/campaigns/recent"] });
-      setLocation("/promote-app");
+      setLocation("/promote/dashboard");
     } catch (err: any) {
       const message = err?.message || "Failed to save campaign";
       setError(message);
@@ -146,7 +146,7 @@ export default function SendCampaignEditor() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setLocation("/promote-app")}
+              onClick={() => setLocation("/promote/dashboard")}
               data-testid="button-back"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -394,7 +394,7 @@ export default function SendCampaignEditor() {
         <div className="flex justify-between items-center pt-4 border-t">
           <Button
             variant="ghost"
-            onClick={() => setLocation("/promote-app")}
+            onClick={() => setLocation("/promote/dashboard")}
             data-testid="button-cancel"
           >
             Cancel

@@ -53,7 +53,7 @@ interface ActivityItem {
   triggered?: number;
 }
 
-export default function SendDashboard() {
+export default function PromoteDashboard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');

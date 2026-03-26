@@ -5,7 +5,7 @@ import { Check } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
-export default function CommversePricing() {
+export default function CompassPricing() {
   return (
     <div className="min-h-screen bg-white">
       <Header />
@@ -15,7 +15,7 @@ export default function CommversePricing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              <span style={{ color: '#09080E' }}>Commverse </span>
+              <span style={{ color: '#09080E' }}>Compass Suite </span>
               <span style={{ color: '#F97316' }}>Pricing</span>
             </h1>
             <p className="text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
@@ -218,7 +218,7 @@ export default function CommversePricing() {
               </div>
               <CardHeader className="pt-8">
                 <CardTitle className="text-2xl" style={{ color: '#F97316' }}>Complete Bundle</CardTitle>
-                <CardDescription>All 4 Commverse Apps</CardDescription>
+                <CardDescription>All 4 Compass Suite Apps</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
@@ -425,7 +425,7 @@ export default function CommversePricing() {
               asChild
               data-testid="button-explore-apps"
             >
-              <a href="/commverse">Explore Individual Apps</a>
+              <a href="/compass">Explore Individual Apps</a>
             </Button>
           </div>
         </div>

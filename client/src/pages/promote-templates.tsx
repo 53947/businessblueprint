@@ -51,7 +51,7 @@ interface Template {
   updatedAt: string;
 }
 
-export default function SendTemplates() {
+export default function PromoteTemplates() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [filter, setFilter] = useState<"all" | "email" | "sms">("all");
@@ -163,7 +163,7 @@ export default function SendTemplates() {
         ]}
         actions={
           <>
-            <Button variant="ghost" size="sm" onClick={() => setLocation("/promote-app")} data-testid="button-back">
+            <Button variant="ghost" size="sm" onClick={() => setLocation("/promote/dashboard")} data-testid="button-back">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
             </Button>

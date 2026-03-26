@@ -53,6 +53,9 @@ interface Recommendation {
   priority: string;
   estimatedImpact: string | null;
   estimatedEffort: string | null;
+  currentScore: number | null;
+  projectedScore: number | null;
+  scoreImprovement: number | null;
 }
 
 interface PrescriptionData {
@@ -86,6 +89,27 @@ function getGradeInfo(score: number): { grade: string; color: string; textColor:
   if (score >= 42) return { grade: 'D+', color: 'bg-red-500', textColor: 'text-red-600' };
   if (score >= 28) return { grade: 'D', color: 'bg-red-500', textColor: 'text-red-600' };
   return { grade: 'F', color: 'bg-red-600', textColor: 'text-red-600' };
+}
+
+function getGradeDescription(grade: string): string {
+  switch (grade) {
+    case 'A+':
+    case 'A':
+      return 'Outstanding digital presence';
+    case 'B+':
+    case 'B':
+      return 'Strong foundation, room to grow';
+    case 'C+':
+    case 'C':
+      return 'Visible gaps costing you customers';
+    case 'D+':
+    case 'D':
+      return 'Critical gaps — prioritize immediately';
+    case 'F':
+      return 'Significant digital presence issues';
+    default:
+      return '';
+  }
 }
 
 function PrescriptionsList() {
@@ -252,7 +276,7 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
 
   const { prescription, assessment, recommendations } = data;
   const gradeInfo = assessment?.digitalScore ? getGradeInfo(assessment.digitalScore) : null;
-  const highPriority = recommendations.filter(r => r.priority === 'high');
+  const highPriority = recommendations.filter(r => r.priority === 'high' || r.priority === 'critical');
   const mediumPriority = recommendations.filter(r => r.priority === 'medium');
   const lowPriority = recommendations.filter(r => r.priority === 'low');
 
@@ -293,6 +317,9 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
                 <Badge className={`mt-2 ${gradeInfo.color} text-white`}>
                   Grade: {gradeInfo.grade}
                 </Badge>
+                <div className="text-xs text-blue-200 text-center mt-1">
+                  {getGradeDescription(gradeInfo.grade)}
+                </div>
               </div>
             )}
           </div>
@@ -318,6 +345,60 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
           )}
         </CardContent>
       </Card>
+
+      {/* Score Context Explanation */}
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-8">
+        <h3 className="text-sm font-semibold text-blue-900 mb-2">Understanding Your Digital IQ Score</h3>
+        <p className="text-sm text-blue-800 leading-relaxed">
+          Your Digital IQ Score works like a traditional IQ test — it gives you a number from 0 to 140
+          that tells you exactly where your business stands online. A score below 70 means your digital
+          presence has critical gaps that are costing you customers right now. A score between 70 and 100
+          means you have a solid foundation with room to grow. A score above 100 means you are outperforming
+          most businesses in your category.
+        </p>
+        <p className="text-sm text-blue-800 leading-relaxed mt-2">
+          The recommendations below are ordered by impact — the ones that will move your score the most
+          come first. Each recommendation shows your current score in that category and where it will be
+          after you implement it.
+        </p>
+      </div>
+
+      {/* Projected Overall Score */}
+      {assessment?.digitalScore && (() => {
+        const highPriorityWithScores = recommendations.filter(
+          r => (r.priority === 'high' || r.priority === 'critical') && r.scoreImprovement != null
+        );
+        const avgImprovement = highPriorityWithScores.length > 0
+          ? highPriorityWithScores.reduce((sum, r) => sum + (r.scoreImprovement || 0), 0) / highPriorityWithScores.length
+          : 0;
+        const projectedOverall = Math.min(140, Math.round(assessment.digitalScore + avgImprovement));
+        const currentGrade = getGradeInfo(assessment.digitalScore);
+
+        return avgImprovement > 0 ? (
+          <div className="bg-white rounded-xl p-6 border border-gray-200 mt-4">
+            <div className="text-xs uppercase tracking-widest text-gray-500 mb-2">Your Projected Score</div>
+            <div className="flex items-center justify-center gap-6">
+              <div className="text-center">
+                <div className={`text-4xl font-bold font-['Archivo_Semi_Expanded',sans-serif] ${currentGrade.textColor}`}>
+                  {assessment.digitalScore}
+                </div>
+                <div className="text-xs text-gray-500 mt-1">Today</div>
+              </div>
+              <span className="text-gray-400 text-2xl">→</span>
+              <div className="text-center">
+                <div className="text-4xl font-bold font-['Archivo_Semi_Expanded',sans-serif] text-green-600">
+                  {projectedOverall}
+                </div>
+                <div className="text-xs text-gray-500 mt-1">After Your Blueprint</div>
+              </div>
+            </div>
+            <p className="text-sm text-gray-500 text-center mt-3">
+              This estimate is based on implementing the recommendations in your prescription.
+              Actual improvement depends on your business, your market, and how consistently you apply each step.
+            </p>
+          </div>
+        ) : null;
+      })()}
 
       {!token && (
         <Card data-testid="card-progress-tracker">
@@ -442,7 +523,7 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
                 </p>
               </div>
               <Button asChild className="bg-[#0000FF] hover:bg-blue-700">
-                <Link href="/ai-coach">
+                <Link href="/coach-blue">
                   Talk to Coach Blue
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
@@ -483,6 +564,20 @@ function RecommendationCard({ recommendation }: { recommendation: Recommendation
               </Badge>
             )}
           </div>
+          {recommendation.currentScore != null && recommendation.projectedScore != null && recommendation.scoreImprovement != null && (
+            <div className="flex items-center gap-3 mt-2 mb-3 flex-wrap">
+              <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">
+                Current: {recommendation.currentScore}
+              </span>
+              <span className="text-gray-400 text-sm">→</span>
+              <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded">
+                Projected: {recommendation.projectedScore}
+              </span>
+              <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full ml-2">
+                +{recommendation.scoreImprovement} pts
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </div>

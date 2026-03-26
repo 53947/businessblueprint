@@ -9,7 +9,7 @@ import Home from "@/pages/home";
 import Assessment from "@/pages/assessment";
 import Dashboard from "@/pages/dashboard";
 import AssessmentCheckout from "@/pages/assessment-checkout";
-import AICoachPage from "@/pages/ai-coach";
+import CoachBluePage from "@/pages/coach-blue";
 import ClientPortal from "@/pages/client-portal";
 import ClientLogin from "@/pages/client-login";
 import VerifyMagicLink from "@/pages/verify-magic-link";
@@ -19,19 +19,19 @@ import Subscription from "@/pages/subscription";
 import Sitemap from "@/pages/sitemap";
 import Journey from "@/pages/journey";
 import LogoPreview from "@/pages/logo-preview";
-import SendLanding from "@/pages/send-landing";
-import SendDashboard from "@/pages/send-dashboard";
-import SendCampaignEditor from "@/pages/send-campaign-editor";
-import SendTemplates from "@/pages/send-templates";
+import PromoteLanding from "@/pages/promote-landing";
+import PromoteDashboard from "@/pages/promote-dashboard";
+import PromoteCampaignEditor from "@/pages/promote-campaign-editor";
+import PromoteTemplates from "@/pages/promote-templates";
 import RespondLanding from "@/pages/respond-landing";
 import RespondPage from "@/pages/respond";
-import LivechatLanding from "@/pages/livechat-landing";
-import LiveChatDemo from "@/pages/livechat-demo";
-import ChatDashboard from "@/pages/chat-dashboard";
-import LiveChatInstall from "@/pages/livechat-install";
+import EngageLanding from "@/pages/engage-landing";
+import EngageDemo from "@/pages/engage-demo";
+import EngageDashboard from "@/pages/engage-dashboard";
+import EngageInstall from "@/pages/engage-install";
 import PostLanding from "@/pages/post-landing";
-import CommverseLanding from "@/pages/commverse-landing";
-import CommversePricing from "@/pages/commverse-pricing";
+import CompassLanding from "@/pages/compass-landing";
+import CompassPricing from "@/pages/compass-pricing";
 import PathwaysPage from "@/pages/pathways";
 import PricingPage from "@/pages/pricing";
 import MarketplacePage from "@/pages/marketplace";
@@ -42,11 +42,11 @@ import BIIF from "@/pages/biif";
 import AdminPanel from "@/pages/admin-panel";
 import BrandStudio from "@/pages/brand-studio";
 import PostManagement from "@/pages/post-management";
-import ReviewManagement from "@/pages/review";
-import ListManagement from "@/pages/list";
-import LocalBlueLanding from "@/pages/localblue-landing";
-import ListLanding from "@/pages/list-landing";
-import ReviewLanding from "@/pages/review-landing";
+import ElevateDashboard from "@/pages/elevate-dashboard";
+import PublishDashboard from "@/pages/publish-dashboard";
+import AnchorLanding from "@/pages/anchor-landing";
+import PublishLanding from "@/pages/publish-landing";
+import ElevateLanding from "@/pages/elevate-landing";
 import AmplifyLanding from "@/pages/amplify-landing";
 import AmplifyDashboard from "@/pages/amplify-dashboard";
 import AmplifyRedditWizard from "@/pages/amplify-reddit-wizard";
@@ -56,8 +56,8 @@ import DataDeletion from "@/pages/data-deletion";
 import PortalTestAccess from "@/pages/portal-test-access";
 import PortalPrescriptions from "@/pages/portal-prescriptions";
 import FindResults from "@/pages/find-results";
-import RelationshipsLanding from "@/pages/relationships-landing";
-import RelationshipsDashboard from "@/pages/relationships";
+import ConnectLanding from "@/pages/connect-landing";
+import ConnectDashboard from "@/pages/connect-dashboard";
 import ApiDocs from "@/pages/api-docs";
 import AssessmentConfirmation from "@/pages/assessment-confirmation";
 import KnowledgeBase from "@/pages/knowledge-base";
@@ -78,7 +78,7 @@ function Router() {
       <Route path="/assessment" component={Assessment} />
       <Route path="/dashboard/:id" component={Dashboard} />
       <Route path="/assessment-checkout" component={AssessmentCheckout} />
-      <Route path="/ai-coach" component={AICoachPage} />
+      <Route path="/coach-blue" component={CoachBluePage} />
       <Route path="/login" component={AdminLogin} />
       <Route path="/auth/verify" component={VerifyAdminMagicLink} />
       <Route path="/portal/login" component={ClientLogin} />
@@ -102,41 +102,42 @@ function Router() {
       <Route path="/sitemap" component={Sitemap} />
       <Route path="/journey" component={Journey} />
       <Route path="/logo-preview" component={LogoPreview} />
-      <Route path="/promote" component={SendLanding} />
-      <Route path="/promote-app" component={SendDashboard} />
-      <Route path="/promote/campaigns/new" component={SendCampaignEditor} />
-      <Route path="/promote/campaigns/:id/edit" component={SendCampaignEditor} />
-      <Route path="/promote/templates" component={SendTemplates} />
+      <Route path="/promote" component={PromoteLanding} />
+      <Route path="/promote/dashboard" component={PromoteDashboard} />
+      <Route path="/promote/campaigns/new" component={PromoteCampaignEditor} />
+      <Route path="/promote/campaigns/:id/edit" component={PromoteCampaignEditor} />
+      <Route path="/promote/templates" component={PromoteTemplates} />
       <Route path="/respond" component={RespondLanding} />
-      <Route path="/respond-app" component={RespondPage} />
-      <Route path="/engage" component={LivechatLanding} />
-      <Route path="/engage/dashboard" component={ChatDashboard} />
-      <Route path="/engage-demo" component={LiveChatDemo} />
-      <Route path="/engage-install" component={LiveChatInstall} />
+      <Route path="/respond/dashboard" component={RespondPage} />
+      <Route path="/engage" component={EngageLanding} />
+      <Route path="/engage/dashboard" component={EngageDashboard} />
+      <Route path="/engage/demo" component={EngageDemo} />
+      <Route path="/engage/install" component={EngageInstall} />
       <Route path="/post-landing" component={PostLanding} />
-      <Route path="/commverse" component={CommverseLanding} />
-      <Route path="/commverse-pricing" component={CommversePricing} />
+      <Route path="/post/landing" component={PostLanding} />
+      <Route path="/compass" component={CompassLanding} />
+      <Route path="/compass/pricing" component={CompassPricing} />
       <Route path="/biif" component={BIIF} />
       <Route path="/admin" component={AdminPanel} />
       <Route path="/brand-studio" component={BrandStudio} />
       <Route path="/post" component={PostManagement} />
-      <Route path="/localblue" component={LocalBlueLanding} />
-      <Route path="/publish-landing" component={ListLanding} />
-      <Route path="/elevate-landing" component={ReviewLanding} />
-      <Route path="/elevate-app" component={ReviewManagement} />
+      <Route path="/anchor" component={AnchorLanding} />
+      <Route path="/publish" component={PublishLanding} />
+      <Route path="/elevate" component={ElevateLanding} />
+      <Route path="/elevate/dashboard" component={ElevateDashboard} />
       <Route path="/optimize" component={OptimizeLanding} />
       <Route path="/optimize/setup" component={OptimizeSetup} />
       <Route path="/optimize/dashboard" component={OptimizeDashboard} />
-      <Route path="/amplify-landing" component={AmplifyLanding} />
+      <Route path="/amplify/landing" component={AmplifyLanding} />
       <Route path="/amplify" component={AmplifyDashboard} />
       <Route path="/amplify/reddit/new" component={AmplifyRedditWizard} />
-      <Route path="/publish-app" component={ListManagement} />
+      <Route path="/publish/dashboard" component={PublishDashboard} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
       <Route path="/data-deletion" component={DataDeletion} />
       <Route path="/find-results" component={FindResults} />
-      <Route path="/connect" component={RelationshipsLanding} />
-      <Route path="/connect/dashboard" component={RelationshipsDashboard} />
+      <Route path="/connect" component={ConnectLanding} />
+      <Route path="/connect/dashboard" component={ConnectDashboard} />
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/portal/assessment/confirmation" component={AssessmentConfirmation} />
       <Route path="/knowledge-base" component={KnowledgeBase} />

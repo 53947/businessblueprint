@@ -175,7 +175,7 @@ export default function Tour() {
     },
     {
       id: 3,
-      title: "Step 3: LocalBlue",
+      title: "Step 3: Anchor Suite",
       subtitle: "Get Found Locally — Listings & Reputation",
       description: "Control your local visibility with synchronized listings and reputation management.",
       icon: <MapPin className="w-12 h-12" />,
@@ -183,7 +183,7 @@ export default function Tour() {
       content: (
         <div className="space-y-6">
           <div className="bg-gradient-to-r from-[#09080E] to-[#1a1a2e] rounded-xl p-6 text-white">
-            <h3 className="text-2xl font-bold mb-2">LocalBlue Bundle</h3>
+            <h3 className="text-2xl font-bold mb-2">Anchor Suite</h3>
             <p className="opacity-80">Complete local presence management for businesses that need to be found.</p>
           </div>
           
@@ -232,7 +232,7 @@ export default function Tour() {
           <div className="bg-[#EEFBFF] rounded-xl p-6">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <h4 className="font-bold text-[#09080E]">LocalBlue Bundle</h4>
+                <h4 className="font-bold text-[#09080E]">Anchor Suite</h4>
                 <p className="text-sm text-gray-600">Listings + Reputation together</p>
               </div>
               <div className="text-right">
@@ -316,7 +316,7 @@ export default function Tour() {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => setLocation("/ai-coach")}
+                  onClick={() => setLocation("/coach-blue")}
                   className="border-white text-white hover:bg-white hover:text-[#09080E]"
                   data-testid="button-try-coach-blue"
                 >
@@ -330,7 +330,7 @@ export default function Tour() {
     },
     {
       id: 5,
-      title: "Step 5: CommVerse",
+      title: "Step 5: Compass Suite",
       subtitle: "Complete Communication Suite",
       description: "Master every channel with integrated tools for email, messaging, content, and live chat.",
       icon: <MessageSquare className="w-12 h-12" />,
@@ -338,7 +338,7 @@ export default function Tour() {
       content: (
         <div className="space-y-6">
           <div className="bg-gradient-to-r from-[#0000FF] to-[#6EA6FF] rounded-xl p-6 text-white">
-            <h3 className="text-2xl font-bold mb-2">CommVerse Bundle</h3>
+            <h3 className="text-2xl font-bold mb-2">Compass Suite</h3>
             <p className="opacity-90">All four communication tools working together seamlessly.</p>
           </div>
           
@@ -399,7 +399,7 @@ export default function Tour() {
           <div className="bg-[#EEFBFF] rounded-xl p-6">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <h4 className="font-bold text-[#09080E]">CommVerse Bundle</h4>
+                <h4 className="font-bold text-[#09080E]">Compass Suite</h4>
                 <p className="text-sm text-gray-600">All 4 apps: / promote + / respond + / post + / engage</p>
               </div>
               <div className="text-right">

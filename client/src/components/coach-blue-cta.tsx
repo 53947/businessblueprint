@@ -23,7 +23,7 @@ export function CoachBlueCTA({ variant = 'default', message }: CoachBlueCTAProps
                 <p className="text-sm text-gray-600">Available 24/7 to answer questions</p>
               </div>
             </div>
-            <Link href="/ai-coach">
+            <Link href="/coach-blue">
               <Button 
                 className="bg-[#F97316] hover:bg-[#F97316]/90 text-white"
                 data-testid="chat-coach-blue-compact"
@@ -60,7 +60,7 @@ export function CoachBlueCTA({ variant = 'default', message }: CoachBlueCTAProps
       </div>
       <CardContent className="p-6 text-center bg-[#EEFBFF]">
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/ai-coach">
+          <Link href="/coach-blue">
             <Button 
               size="lg"
               className="bg-[#F97316] hover:bg-[#F97316]/90 text-white w-full sm:w-auto"

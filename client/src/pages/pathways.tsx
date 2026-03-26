@@ -242,7 +242,7 @@ export default function PathwaysPage() {
               Included in All Plans
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Commverse Communication Apps
+              Compass Suite Communication Apps
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Four proprietary apps that work together to streamline all your

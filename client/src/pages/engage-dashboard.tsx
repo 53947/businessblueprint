@@ -144,7 +144,7 @@ function ChatSettingsPanel({ clientId }: { clientId: number }) {
   );
 }
 
-export default function ChatDashboard() {
+export default function EngageDashboard() {
   const { toast } = useToast();
   const queryClientRef = useQueryClient();
   const [activeTab, setActiveTab] = useState("conversations");

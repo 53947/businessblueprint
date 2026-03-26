@@ -60,7 +60,7 @@ interface ListingsMetrics {
   avgRating: number;
 }
 
-export default function ListingsManagement() {
+export default function PublishDashboard() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
   const [showEditDialog, setShowEditDialog] = useState(false);

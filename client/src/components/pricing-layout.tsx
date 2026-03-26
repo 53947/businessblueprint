@@ -135,7 +135,7 @@ export function PricingLayout({ variant }: PricingLayoutProps) {
               <span className="font-bold text-emerald-600">FREE</span>
             </div>
           </div>
-          <a href="/ai-coach" className="text-xs font-bold text-blue-600 underline mt-2 inline-block">
+          <a href="/coach-blue" className="text-xs font-bold text-blue-600 underline mt-2 inline-block">
             Learn More →
           </a>
         </div>

@@ -617,12 +617,12 @@ export default function ClientPortal() {
               
               {/* Action Button (BOTTOM) - Conditional */}
               {clientData.livechat?.isSetup ? (
-                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/engage-demo")} data-testid="button-engage-livechat">
+                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/engage/demo")} data-testid="button-engage-livechat">
                   <AppIcon name="MessageCircle" size={16} color="#660099" />
                   <span>Engage</span>
                 </Button>
               ) : (
-                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/engage-demo")} data-testid="button-setup-livechat">
+                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/engage/demo")} data-testid="button-setup-livechat">
                   <AppIcon name="MessageCircle" size={16} color="#660099" />
                   <span>Setup Widget</span>
                 </Button>
@@ -741,7 +741,7 @@ export default function ClientPortal() {
                   <p className="text-gray-600 max-w-md mx-auto mb-4">
                     Manage your business listings across Google, Yelp, Facebook, and more.
                   </p>
-                  <a href="/publish-app" className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
+                  <a href="/publish/dashboard" className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
                     Open Listings Manager
                   </a>
                 </div>
@@ -766,7 +766,7 @@ export default function ClientPortal() {
                   <p className="text-gray-600 max-w-md mx-auto mb-4">
                     Monitor and respond to reviews across Google, Yelp, and Facebook.
                   </p>
-                  <a href="/elevate-app" className="inline-flex items-center justify-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md text-sm font-medium transition-colors">
+                  <a href="/elevate/dashboard" className="inline-flex items-center justify-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md text-sm font-medium transition-colors">
                     Open Review Manager
                   </a>
                 </div>
@@ -798,7 +798,7 @@ export default function ClientPortal() {
                 </div>
                 <div className="text-center py-8">
                   <p className="text-gray-600 mb-4">Create and manage email & SMS campaigns with detailed analytics.</p>
-                  <a href="/promote-app" className="inline-flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm font-medium transition-colors">
+                  <a href="/promote/dashboard" className="inline-flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm font-medium transition-colors">
                     Open Campaign Manager
                   </a>
                 </div>

@@ -6,9 +6,9 @@ import { Footer } from "@/components/footer";
 import { AppName, BundleHeader } from "@/components/app-name";
 import { getAppsByBundle, getBundlePrice, getAppById } from "@/config/app-registry";
 
-export default function CommverseLanding() {
-  const bundlePrice = getBundlePrice("commverse");
-  const bundleApps = getAppsByBundle("commverse");
+export default function CompassLanding() {
+  const bundlePrice = getBundlePrice("compass");
+  const bundleApps = getAppsByBundle("compass");
 
   return (
     <div className="min-h-screen bg-white">
@@ -19,7 +19,7 @@ export default function CommverseLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center mb-6">
-              <BundleHeader bundleId="commverse" />
+              <BundleHeader bundleId="compass" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Your Complete Communication Ecosystem
@@ -36,7 +36,7 @@ export default function CommverseLanding() {
                 asChild
                 data-testid="button-get-started"
               >
-                <a href="/commverse-pricing">View Pricing</a>
+                <a href="/compass/pricing">View Pricing</a>
               </Button>
               <Button 
                 size="lg" 
@@ -65,7 +65,7 @@ export default function CommverseLanding() {
               <span className="text-white text-xl">for all {bundleApps.length}</span>
             </div>
             <p className="text-gray-300 text-sm">
-              Save ${bundleApps.reduce((s, a) => s + a.standalonePrice, 0) - bundlePrice}/month with the complete CommVerse bundle
+              Save ${bundleApps.reduce((s, a) => s + a.standalonePrice, 0) - bundlePrice}/month with the complete Compass Suite bundle
             </p>
           </div>
         </div>
@@ -116,7 +116,7 @@ export default function CommverseLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              The Commverse Advantage
+              The Compass Suite Advantage
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               When integrated, these apps share analytics and customer insights to create smarter automation
@@ -188,7 +188,7 @@ export default function CommverseLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl p-8 md:p-12 text-white" style={{ background: 'linear-gradient(to bottom right, #F97316, #8000FF, #FC6ACD)' }}>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Why Commverse is Different
+              Why Compass Suite is Different
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div>
@@ -205,7 +205,7 @@ export default function CommverseLanding() {
                   Built for Blue Link Ecosystem
                 </h3>
                 <p className="text-blue-50">
-                  Commverse is a mini-ecosystem within Blue Link—seamlessly integrating with businessblueprint.io, hostsblue.com, and swipesblue.com.
+                  Compass Suite is a mini-ecosystem within Blue Link—seamlessly integrating with businessblueprint.io, hostsblue.com, and swipesblue.com.
                 </p>
               </div>
 
@@ -223,7 +223,7 @@ export default function CommverseLanding() {
                   Purpose-Built for Local Business
                 </h3>
                 <p className="text-blue-50">
-                  Enterprise tools are overkill. Generic tools lack features. Commverse hits the sweet spot for growing local businesses.
+                  Enterprise tools are overkill. Generic tools lack features. Compass Suite hits the sweet spot for growing local businesses.
                 </p>
               </div>
             </div>
@@ -248,7 +248,7 @@ export default function CommverseLanding() {
               asChild
               data-testid="button-view-pricing"
             >
-              <a href="/commverse-pricing">View Pricing</a>
+              <a href="/compass/pricing">View Pricing</a>
             </Button>
             <Button 
               size="lg" 

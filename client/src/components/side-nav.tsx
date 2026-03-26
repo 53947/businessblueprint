@@ -39,7 +39,7 @@ interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
 interface NavItem {
   id: string;
   label: string;
-  hoverLabel?: string; // Full industry name shown on hover for Commverse apps
+  hoverLabel?: string; // Full industry name shown on hover for Compass apps
   icon: React.ReactNode;
   logo?: string; // For branded app logos
   badge?: number;
@@ -133,7 +133,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       hoverLabel: "Directory Sync & Consistency",
       icon: <BookOpen className="w-7 h-7" style={{ color: '#064A6C' }} />,
       external: true,
-      href: "/publish-landing",
+      href: "/publish",
       featureCode: "LI",
     },
     {
@@ -142,7 +142,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       hoverLabel: "Review Response & Reputation Management",
       icon: <Star className="w-7 h-7" style={{ color: '#E9B307' }} />,
       external: true,
-      href: "/elevate-landing",
+      href: "/elevate",
       featureCode: "RE",
     },
     {
@@ -171,10 +171,10 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
     },
     {
       id: "ai-coach",
-      label: "AI Coach Blue",
-      icon: <img src={aiCoachIcon} alt="AI Coach Blue" className="w-7 h-7 object-contain" />,
+      label: "Coach Blue",
+      icon: <img src={aiCoachIcon} alt="Coach Blue" className="w-7 h-7 object-contain" />,
       external: true,
-      href: "/ai-coach",
+      href: "/coach-blue",
       featureCode: "AC",
     },
     { 

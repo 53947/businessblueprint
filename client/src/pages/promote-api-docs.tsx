@@ -19,7 +19,7 @@ import {
   ExternalLink
 } from "lucide-react";
 
-export default function SendAPIDocs() {
+export default function PromoteApiDocs() {
   const [activeTab, setActiveTab] = useState("overview");
 
   const codeExamples = {
@@ -470,7 +470,7 @@ $contact = $client->createContact([
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Commverse Bundle</CardTitle>
+                  <CardTitle>Compass Suite</CardTitle>
                   <CardDescription>/ promote + / respond + / engage + / post</CardDescription>
                 </CardHeader>
                 <CardContent>

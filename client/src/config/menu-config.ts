@@ -167,7 +167,7 @@ const PLATFORMS: PlatformEntry[] = [
 ];
 
 const PRODUCT_ENTRIES: PlatformEntry[] = [
-  { id: "coachblue", name: COACH_BLUE.name, description: COACH_BLUE.description, href: "/ai-coach", icon: COACH_BLUE.icon, borderColor: COACH_BLUE.color, testId: "link-solution-ai-coach" },
+  { id: "coachblue", name: COACH_BLUE.name, description: COACH_BLUE.description, href: "/coach-blue", icon: COACH_BLUE.icon, borderColor: COACH_BLUE.color, testId: "link-solution-coach-blue" },
   { id: "digitaliq", name: DIGITAL_IQ.name, description: DIGITAL_IQ.description, href: DIGITAL_IQ.route, icon: DIGITAL_IQ.icon, borderColor: DIGITAL_IQ.color, testId: "link-solution-digital-iq" },
   { id: "scanner", name: "Business IQ Scanner", description: "Digital Footprint Analysis", href: "/assessment", icon: businessIQScannerIcon, borderColor: "#0000FF", testId: "link-solution-business-iq-scanner" },
   { id: "connect", name: `/ ${CONNECT_CRM.name}`, description: CONNECT_CRM.description, href: "/connect", icon: CONNECT_CRM.icon, borderColor: CONNECT_CRM.color, testId: "link-solution-connect" },
@@ -205,7 +205,7 @@ export const RESOURCES_MENU: {
         { label: "/ promote API Docs", description: "Email & SMS API reference", href: "/api-docs", icon: fileTextIcon, testId: "link-resources-api" },
         { label: "/ respond API Docs", description: "Unified communications API", href: "/api-docs", icon: fileTextIcon, testId: "link-resources-respond-api" },
         { label: "/ post API Docs", description: "Social media posting API", href: "/api-docs", icon: fileTextIcon, testId: "link-resources-post-api" },
-        { label: "/ engage Installation", description: "Widget integration guide", href: "/engage-install", icon: codeIcon, testId: "link-resources-engage-install" },
+        { label: "/ engage Installation", description: "Widget integration guide", href: "/engage/install", icon: codeIcon, testId: "link-resources-engage-install" },
         { label: "Site Map", description: "Complete navigation", href: "/sitemap", icon: compassIcon, testId: "link-resources-sitemap" },
       ],
     },
@@ -214,7 +214,7 @@ export const RESOURCES_MENU: {
       icon: helpCircleIcon,
       items: [
         { label: "Help Center", description: "Get answers & support", href: "/contact", icon: messageSquareIcon, testId: "link-resources-help" },
-        { label: "Live Demo", description: "Try our live chat", href: "/engage-demo", icon: messageSquareIcon, testId: "link-resources-demo" },
+        { label: "Live Demo", description: "Try our live chat", href: "/engage/demo", icon: messageSquareIcon, testId: "link-resources-demo" },
         { label: "Client Portal", description: "Manage your account", href: "/portal", icon: usersIcon, testId: "link-resources-portal" },
         { label: "Admin Login", description: "Owner & staff access", href: "/api/login?redirect=/admin", icon: logInIcon, testId: "link-resources-admin-login" },
       ],

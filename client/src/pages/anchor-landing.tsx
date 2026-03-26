@@ -6,9 +6,9 @@ import { Footer } from "@/components/footer";
 import { BundleHeader } from "@/components/app-name";
 import { getAppsByBundle, getBundlePrice } from "@/config/app-registry";
 
-export default function LocalBlueLanding() {
-  const bundlePrice = getBundlePrice("localblue");
-  const bundleApps = getAppsByBundle("localblue");
+export default function AnchorLanding() {
+  const bundlePrice = getBundlePrice("anchor");
+  const bundleApps = getAppsByBundle("anchor");
 
   return (
     <div className="min-h-screen bg-white">
@@ -19,7 +19,7 @@ export default function LocalBlueLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex items-center justify-center gap-4 mb-8">
-              <BundleHeader bundleId="localblue" />
+              <BundleHeader bundleId="anchor" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Dominate Your Local Market
@@ -59,7 +59,7 @@ export default function LocalBlueLanding() {
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
               <div className="text-4xl font-bold" style={{ color: '#0000FF' }}>${bundlePrice}/mo</div>
-              <span className="text-white text-xl">for all {bundleApps.length} LocalBlue apps</span>
+              <span className="text-white text-xl">for all {bundleApps.length} Anchor Suite apps</span>
               <span className="text-gray-400 text-2xl">|</span>
               <div className="text-4xl font-bold text-white">$49-59/mo</div>
               <span className="text-white text-xl">each standalone</span>
@@ -71,15 +71,15 @@ export default function LocalBlueLanding() {
         </div>
       </section>
 
-      {/* The LocalBlue Difference */}
+      {/* The Anchor Suite Difference */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why Businesses Choose LocalBlue
+              Why Businesses Choose Anchor Suite
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Local search drives foot traffic and revenue. LocalBlue ensures your business shows up consistently 
+              Local search drives foot traffic and revenue. Anchor Suite ensures your business shows up consistently 
               across every directory, manages your reputation, and converts searches into customers.
             </p>
           </div>
