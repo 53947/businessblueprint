@@ -7,7 +7,7 @@ export default function PortalTestAccess() {
   useEffect(() => {
     // Set test client session
     sessionStorage.setItem("clientId", "1");
-    sessionStorage.setItem("externalId", "test@businessblueprint.io");
+    sessionStorage.setItem("externalId", "demo@businessblueprint.io");
     
     // Redirect to portal
     setTimeout(() => {

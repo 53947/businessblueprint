@@ -7,10 +7,10 @@ import { clients } from "../shared/schema";
 import { eq } from "drizzle-orm";
 
 const ownerClients = [
-  { email: "53947@businessblueprint.io", companyName: "businessblueprint.io" },
-  { email: "53947@hostsblue.com", companyName: "hostsblue.com" },
-  { email: "53947@swipesblue.com", companyName: "swipesblue.com" },
-  { email: "53947@builderblue2.com", companyName: "builderblue2.com" },
+  { email: "demo@businessblueprint.io", companyName: "businessblueprint.io" },
+  { email: "demo@hostsblue.com", companyName: "hostsblue.com" },
+  { email: "demo@swipesblue.com", companyName: "swipesblue.com" },
+  { email: "demo@builderblue2.com", companyName: "builderblue2.com" },
 ];
 
 async function seed() {
