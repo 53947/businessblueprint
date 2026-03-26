@@ -6,7 +6,7 @@ import { useLocation } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
@@ -14,28 +14,21 @@ import { SideNav } from "@/components/side-nav";
 import { BrandLogo } from "@/components/brand-logo";
 import { AppIcon } from "@/components/app-name";
 import { Header } from "@/components/header";
-import ContentManagement from "@/pages/post-management";
-import { 
-  BarChart3, 
-  Star, 
-  Globe, 
-  MessageSquare, 
-  TrendingUp, 
+import { BundleSection } from "@/components/bundle-section";
+import { BUNDLE_REGISTRY, getAppsByBundle } from "@/config/app-registry";
+import {
+  Globe,
+  MessageSquare,
   Calendar,
   MapPin,
   Phone,
   Mail,
-  ExternalLink,
   CheckCircle,
   AlertCircle,
   Clock,
-  LogOut,
   Brain,
   Home,
-  Share2,
   CheckSquare,
-  MessageCircle,
-  Bell,
   Lock,
   CreditCard,
   DollarSign,
@@ -119,29 +112,6 @@ export default function ClientPortal() {
     setLocation("/portal/login");
   };
 
-  const handleManageListing = (platform: string) => {
-    const platformUrls = {
-      'Google Business': 'https://business.google.com',
-      'Yelp': 'https://biz.yelp.com',
-      'Facebook': 'https://business.facebook.com',
-      'Apple Maps': 'https://mapsconnect.apple.com'
-    };
-    
-    const url = platformUrls[platform as keyof typeof platformUrls];
-    if (url) {
-      window.open(url, '_blank');
-      toast({
-        title: "Redirecting to " + platform,
-        description: "Opening your " + platform + " business management page..."
-      });
-    } else {
-      toast({
-        title: platform,
-        description: "Open the Listings Manager to manage this platform."
-      });
-    }
-  };
-
   const handleViewMessages = () => {
     setLocation("/respond");
   };
@@ -157,13 +127,13 @@ export default function ClientPortal() {
   const handleActivityClick = (activity: string) => {
     switch (activity) {
       case 'New review response needed':
-        navigateToTab('reviews');
+        setLocation('/elevate/dashboard');
         break;
       case 'Listing verification pending':
-        navigateToTab('listings');
+        setLocation('/publish/dashboard');
         break;
       case 'Campaign performance update':
-        navigateToTab('campaigns');
+        setLocation('/promote/dashboard');
         break;
       case 'Task deadline approaching':
         navigateToTab('tasks');
@@ -171,7 +141,7 @@ export default function ClientPortal() {
       default:
         toast({
           title: activity,
-          description: "More details available in the relevant tab"
+          description: "More details available in the relevant app"
         });
     }
   };
@@ -400,236 +370,16 @@ export default function ClientPortal() {
           </CardContent>
         </Card>
 
-        {/* 5 Service Boxes - Official Order */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-          {/* 1. Local SEO Management - /list */}
-          <Card className="hover:shadow-lg transition-shadow" data-testid="card-local-seo">
-            <CardContent className="p-6">
-              {/* Results Section (TOP) */}
-              <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <AppIcon name="BookOpen" size={32} color="#064A6C" />
-                <div className="text-center">
-                  <div className="flex gap-3">
-                    <div>
-                      <div className="text-2xl font-bold text-gray-900">{clientData.listings.verified || 5}</div>
-                      <p className="text-[10px] text-gray-600">Listings</p>
-                    </div>
-                    <div className="border-l border-gray-300"></div>
-                    <div>
-                      <div className="text-2xl font-bold text-gray-900">{clientData.listings.citations || 12}</div>
-                      <p className="text-[10px] text-gray-600">Citations</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Icon & Content (MIDDLE) */}
-              <div className="text-center mb-4">
-                <div className="flex justify-center mb-3">
-                  <AppIcon name="BookOpen" size={64} color="#064A6C" />
-                </div>
-                <div className="flex justify-center mb-2">
-                  <span style={{ color: '#064A6C', fontWeight: 600, fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><span style={{ color: '#09080E' }}>/</span> publish</span>
-                </div>
-                <p className="text-xs text-gray-600">Directory sync & consistency</p>
-              </div>
-              
-              {/* Action Button (BOTTOM) */}
-              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("listings")} data-testid="button-manage-local-seo">
-                <AppIcon name="BookOpen" size={16} color="#064A6C" />
-                <span>Manage</span>
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 2. / promote */}
-          <Card className="hover:shadow-lg transition-shadow" data-testid="card-send">
-            <CardContent className="p-6">
-              {/* Results Section (TOP) */}
-              <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <AppIcon name="Mail" size={32} color="#1844A6" />
-                <div className="text-center w-full">
-                  {clientData.campaigns.latest ? (
-                    <>
-                      <div className="text-sm font-bold text-gray-900 mb-1">{clientData.campaigns.latest.name}</div>
-                      <div className="grid grid-cols-3 gap-1 text-xs">
-                        <div>
-                          <div className="text-base font-bold text-gray-900">{clientData.campaigns.latest.clickThroughs}</div>
-                          <p className="text-[9px] text-gray-600">Clicks</p>
-                        </div>
-                        <div>
-                          <div className="text-base font-bold text-gray-900">{clientData.campaigns.latest.purchases}</div>
-                          <p className="text-[9px] text-gray-600">Sales</p>
-                        </div>
-                        <div>
-                          <div className="text-base font-bold text-gray-900">{clientData.campaigns.latest.unsubscribes}</div>
-                          <p className="text-[9px] text-gray-600">Unsubs</p>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-sm text-gray-500">No campaigns yet</div>
-                  )}
-                </div>
-              </div>
-              
-              {/* Icon & Content (MIDDLE) */}
-              <div className="text-center mb-4">
-                <div className="flex justify-center mb-3">
-                  <AppIcon name="Mail" size={64} color="#1844A6" />
-                </div>
-                <div className="flex justify-center">
-                  <span style={{ color: '#1844A6', fontWeight: 600, fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><span style={{ color: '#09080E' }}>/</span> promote</span>
-                </div>
-                <p className="text-xs text-gray-600">Email & SMS campaigns</p>
-              </div>
-              
-              {/* Action Button (BOTTOM) */}
-              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("campaigns")} data-testid="button-schedule-campaign">
-                <AppIcon name="Mail" size={16} color="#1844A6" />
-                <span>Schedule</span>
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 3. Social Media Management */}
-          <Card className="hover:shadow-lg transition-shadow" data-testid="card-social-media">
-            <CardContent className="p-6">
-              {/* Results Section (TOP) */}
-              <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <AppIcon name="Share2" size={32} color="#FF44CC" />
-                <div className="text-center">
-                  <div className="grid grid-cols-3 gap-2 text-xs">
-                    <div>
-                      <div className="text-lg font-bold text-gray-900">{clientData.socialMedia?.newLikes || 0}</div>
-                      <p className="text-[9px] text-gray-600">Likes</p>
-                    </div>
-                    <div>
-                      <div className="text-lg font-bold text-gray-900">{clientData.socialMedia?.newComments || 0}</div>
-                      <p className="text-[9px] text-gray-600">Comments</p>
-                    </div>
-                    <div>
-                      <div className="text-lg font-bold text-gray-900">{clientData.socialMedia?.newMessages || 0}</div>
-                      <p className="text-[9px] text-gray-600">Messages</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Icon & Content (MIDDLE) */}
-              <div className="text-center mb-4">
-                <div className="flex justify-center mb-3">
-                  <AppIcon name="Share2" size={64} color="#FF44CC" />
-                </div>
-                <div className="flex justify-center">
-                  <span style={{ color: '#FF44CC', fontWeight: 600, fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><span style={{ color: '#09080E' }}>/</span> post</span>
-                </div>
-                <p className="text-xs text-gray-600">Social Media Management</p>
-              </div>
-              
-              {/* Action Button (BOTTOM) - Conditional */}
-              {clientData.socialMedia?.isSetup ? (
-                <div className="grid grid-cols-2 gap-2">
-                  <Button size="sm" variant="outline" className="flex items-center justify-center gap-1" onClick={() => setActiveTab("social")} data-testid="button-schedule-social">
-                    <AppIcon name="Share2" size={16} color="#FF44CC" />
-                    <span className="text-xs">Schedule</span>
-                  </Button>
-                  <Button size="sm" variant="outline" className="flex items-center justify-center gap-1" onClick={() => setActiveTab("social")} data-testid="button-respond-social">
-                    <AppIcon name="Share2" size={16} color="#FF44CC" />
-                    <span className="text-xs">Respond</span>
-                  </Button>
-                </div>
-              ) : (
-                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("social")} data-testid="button-setup-social">
-                  <AppIcon name="Share2" size={16} color="#FF44CC" />
-                  <span>Setup</span>
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* 4. Reputation Management - /review */}
-          <Card className="hover:shadow-lg transition-shadow" data-testid="card-reputation">
-            <CardContent className="p-6">
-              {/* Results Section (TOP) */}
-              <div className="flex items-center justify-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                <AppIcon name="Star" size={32} color="#E9B307" />
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{clientData.reviews.average}</div>
-                  <p className="text-[10px] text-gray-600">Review Ratings</p>
-                </div>
-              </div>
-              
-              {/* Icon & Content (MIDDLE) */}
-              <div className="text-center mb-4">
-                <div className="flex justify-center mb-3">
-                  <AppIcon name="Star" size={64} color="#E9B307" />
-                </div>
-                <div className="flex justify-center mb-2">
-                  <span style={{ color: '#E9B307', fontWeight: 600, fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><span style={{ color: '#09080E' }}>/</span> elevate</span>
-                </div>
-                <p className="text-xs text-gray-600">Review response & reputation management</p>
-              </div>
-              
-              {/* Action Button (BOTTOM) */}
-              <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setActiveTab("reviews")} data-testid="button-respond-reviews">
-                <AppIcon name="Star" size={16} color="#E9B307" />
-                <span>Respond</span>
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* 5. Live Chat */}
-          <Card className="hover:shadow-lg transition-shadow" data-testid="card-livechat">
-            <CardContent className="p-6">
-              {/* Results Section (TOP) */}
-              <div className="flex items-center justify-center gap-2 mb-4 pb-3 border-b border-gray-200">
-                <AppIcon name="MessageCircle" size={32} color="#660099" />
-                <div className="text-center">
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <div className="text-lg font-bold text-gray-900">{clientData.livechat?.participationRating || 0}</div>
-                      <p className="text-[9px] text-gray-600">Rating</p>
-                    </div>
-                    <div>
-                      <div className="text-lg font-bold text-gray-900">{clientData.livechat?.inQueue || 0}</div>
-                      <p className="text-[9px] text-gray-600">In Queue</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Icon & Content (MIDDLE) */}
-              <div className="text-center mb-4">
-                <div className="flex justify-center mb-3">
-                  <AppIcon name="MessageCircle" size={64} color="#660099" />
-                </div>
-                <div className="flex justify-center">
-                  <span style={{ color: '#660099', fontWeight: 600, fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><span style={{ color: '#09080E' }}>/</span> engage</span>
-                </div>
-                <p className="text-xs text-gray-600">
-                  <span className="inline-flex items-center gap-1">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    Active chat participation
-                  </span>
-                </p>
-              </div>
-              
-              {/* Action Button (BOTTOM) - Conditional */}
-              {clientData.livechat?.isSetup ? (
-                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/engage/demo")} data-testid="button-engage-livechat">
-                  <AppIcon name="MessageCircle" size={16} color="#660099" />
-                  <span>Engage</span>
-                </Button>
-              ) : (
-                <Button size="sm" variant="outline" className="w-full flex items-center justify-center gap-2" onClick={() => setLocation("/engage/demo")} data-testid="button-setup-livechat">
-                  <AppIcon name="MessageCircle" size={16} color="#660099" />
-                  <span>Setup Widget</span>
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+        {/* Bundle Sections — Anchor + Compass */}
+        {BUNDLE_REGISTRY.map((bundle) => (
+          <BundleSection
+            key={bundle.id}
+            bundle={bundle}
+            apps={getAppsByBundle(bundle.id)}
+            clientData={clientData}
+            onNavigate={setLocation}
+          />
+        ))}
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -722,93 +472,6 @@ export default function ClientPortal() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          {/* Listings Tab */}
-          <TabsContent value="listings">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
-                  Business Listings Management
-                </CardTitle>
-                <CardDescription>Manage your business presence across directories and platforms</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12">
-                  <Globe className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Listings Management</h3>
-                  <p className="text-gray-600 max-w-md mx-auto mb-4">
-                    Manage your business listings across Google, Yelp, Facebook, and more.
-                  </p>
-                  <a href="/publish/dashboard" className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors">
-                    Open Listings Manager
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Reviews Tab */}
-          <TabsContent value="reviews">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Star className="w-5 h-5" />
-                  Review & Reputation Management
-                </CardTitle>
-                <CardDescription>Monitor and respond to reviews across all platforms</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12">
-                  <MessageSquare className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Review & Reputation Management</h3>
-                  <p className="text-gray-600 max-w-md mx-auto mb-4">
-                    Monitor and respond to reviews across Google, Yelp, and Facebook.
-                  </p>
-                  <a href="/elevate/dashboard" className="inline-flex items-center justify-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md text-sm font-medium transition-colors">
-                    Open Review Manager
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Campaigns Tab */}
-          <TabsContent value="campaigns">
-            <Card>
-              <CardHeader>
-                <CardTitle>Marketing Campaigns</CardTitle>
-                <CardDescription>Track and manage your marketing efforts</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">{clientData.campaigns.active}</div>
-                    <p className="text-sm text-gray-600">Active Campaigns</p>
-                  </div>
-                  <div className="text-center p-4 bg-orange-50 rounded-lg">
-                    <div className="text-2xl font-bold text-orange-600">{clientData.campaigns.pending}</div>
-                    <p className="text-sm text-gray-600">Pending</p>
-                  </div>
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">{clientData.campaigns.performance.reach}</div>
-                    <p className="text-sm text-gray-600">Monthly Reach</p>
-                  </div>
-                </div>
-                <div className="text-center py-8">
-                  <p className="text-gray-600 mb-4">Create and manage email & SMS campaigns with detailed analytics.</p>
-                  <a href="/promote/dashboard" className="inline-flex items-center justify-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm font-medium transition-colors">
-                    Open Campaign Manager
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Content Management Tab */}
-          <TabsContent value="content">
-            <ContentManagement />
           </TabsContent>
 
           {/* Tasks Tab */}
