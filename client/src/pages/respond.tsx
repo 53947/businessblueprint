@@ -31,7 +31,8 @@ import {
   DollarSign,
   Clock,
   ExternalLink,
-  Link2
+  Link2,
+  Tag
 } from 'lucide-react';
 import { SiWhatsapp, SiTiktok } from 'react-icons/si';
 import { apiRequest, queryClient } from '@/lib/queryClient';
@@ -385,8 +386,8 @@ export default function InboxPage() {
             size="sm" 
             data-testid="button-respond-settings"
             onClick={() => toast({
-              title: "Respond Settings",
-              description: "Configure email accounts (Gmail, Outlook), SMS, and social media messaging channels here."
+              title: "Channel Settings",
+              description: "Email sending is active. SMS, WhatsApp, Facebook, and Instagram channel integrations are coming soon."
             })}
           >
             <Settings className="h-4 w-4" />
@@ -684,9 +685,9 @@ export default function InboxPage() {
                 )}
 
                 {/* View in CRM Button */}
-                <Button 
-                  className="w-full" 
-                  variant="outline" 
+                <Button
+                  className="w-full"
+                  variant="outline"
                   size="sm"
                   onClick={() => setLocation('/connect')}
                   data-testid="button-view-crm"
@@ -694,6 +695,29 @@ export default function InboxPage() {
                   <ExternalLink className="w-3 h-3 mr-2" />
                   View in / connect
                 </Button>
+
+                {/* Conversation Management */}
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 mt-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Tag className="w-4 h-4 text-gray-500" />
+                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Conversation</span>
+                  </div>
+                  {selectedConv?.assignedToId && (
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                      Assigned to: Agent #{selectedConv.assignedToId}
+                    </p>
+                  )}
+                  {selectedConv?.tags && Array.isArray(selectedConv.tags) && selectedConv.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-2">
+                      {(selectedConv.tags as string[]).map((tag: string) => (
+                        <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
+                      ))}
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-400 italic">
+                    Assignment, tags, and quick replies are coming soon
+                  </p>
+                </div>
               </div>
             ) : (
               <div className="text-center py-6" data-testid="crm-empty-state">
