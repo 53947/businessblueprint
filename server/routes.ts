@@ -2228,17 +2228,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Client not found" });
       }
 
+      // Fetch the actual review data from the database
+      const review = await reviewSyncService.getReviewById(reviewId);
+      if (!review) {
+        return res.status(404).json({ error: "Review not found" });
+      }
+
       let reviewResponse = response;
       let isAI = false;
 
-      // If AI response requested, generate using ReviewAI service
+      // If AI response requested, generate using ReviewAI service with actual review data
       if (useAI && !response) {
         try {
           const { reviewAI } = await import("./services/reviewAI");
           reviewResponse = await reviewAI.generateReviewResponse({
-            reviewText: response || "",
-            rating: 5,
-            platform: "google",
+            reviewText: review.reviewText || "",
+            rating: review.rating,
+            platform: review.platform,
             businessName: client.companyName || "our business",
           });
           isAI = true;

@@ -192,6 +192,17 @@ class ReviewSyncService {
   }
 
   /**
+   * Get a single review by ID
+   */
+  async getReviewById(reviewId: number) {
+    const [review] = await db
+      .select()
+      .from(businessReviews)
+      .where(eq(businessReviews.id, reviewId));
+    return review || null;
+  }
+
+  /**
    * Save a response to a review
    */
   async respondToReview(reviewId: number, response: string, isAI: boolean = false) {

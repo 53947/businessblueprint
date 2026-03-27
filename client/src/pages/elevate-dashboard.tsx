@@ -87,14 +87,21 @@ export default function ElevateDashboard() {
   const showCrmEmptyState = crmPresence.state === 'unauthenticated' || crmPresence.state === 'empty';
 
   // Helper to check if reviewer is a known CRM contact
-  const findCrmContact = (reviewerName: string) => {
+  const findCrmContact = (reviewerName: string, reviewerEmail?: string) => {
     if (!crmContacts || !reviewerName) return null;
-    // Match by first name or full name
-    const nameLower = reviewerName.toLowerCase();
+    const nameLower = reviewerName.toLowerCase().trim();
     return crmContacts.find(contact => {
-      const fullName = `${contact.firstName} ${contact.lastName}`.toLowerCase();
-      const firstName = (contact.firstName || '').toLowerCase();
-      return fullName.includes(nameLower) || nameLower.includes(firstName);
+      // Email match (strongest signal)
+      if (reviewerEmail && contact.email && contact.email.toLowerCase() === reviewerEmail.toLowerCase()) {
+        return true;
+      }
+      // Full name exact match
+      const fullName = `${contact.firstName || ''} ${contact.lastName || ''}`.toLowerCase().trim();
+      if (fullName && fullName === nameLower) return true;
+      // Full name contains (only when reviewer name has 2+ words to avoid "John" matching "John Smith")
+      if (nameLower.includes(' ') && fullName.includes(nameLower)) return true;
+      if (fullName.includes(' ') && nameLower.includes(fullName)) return true;
+      return false;
     });
   };
 
@@ -110,7 +117,7 @@ export default function ElevateDashboard() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/reviews`] });
       queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/reviews/analytics`] });
-      toast({ title: 'Success', description: 'Response posted successfully' });
+      toast({ title: 'Response Saved', description: 'Your response has been saved. Copy it to post directly on the review platform.' });
       setShowResponseDialog(false);
       setSelectedReview(null);
       setResponseText('');
@@ -385,11 +392,14 @@ export default function ElevateDashboard() {
                   </div>
                   <div>
                     <div className="flex justify-between mb-2">
-                      <span className="font-medium">Facebook</span>
-                      <span className="text-gray-600">{displayMetrics.platformBreakdown.facebook} reviews</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">Facebook</span>
+                        <Badge variant="outline" className="text-xs text-gray-400 border-gray-300">Coming Soon</Badge>
+                      </div>
+                      <span className="text-gray-400">{displayMetrics.platformBreakdown.facebook} reviews</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
+                      <div
                         className="bg-blue-500 h-2 rounded-full"
                         style={{ width: `${displayMetrics.totalReviews > 0 ? (displayMetrics.platformBreakdown.facebook / displayMetrics.totalReviews) * 100 : 0}%` }}
                       ></div>
