@@ -79,31 +79,22 @@ export default function PromoteDashboard() {
   // Show CRM empty state for unauthenticated users or when CRM has no data
   const showCrmEmptyState = crmPresence.state === 'unauthenticated' || crmPresence.state === 'empty';
 
-  // Mock data for development (will be replaced by real API data)
-  const mockMetrics = {
-    totalContacts: 12847,
-    contactsGrowth: 12.5,
-    emailsSent: 45234,
-    emailsDelivered: 44123,
-    emailsOpened: 18567,
-    emailsClicked: 6234,
-    smsSent: 8934,
-    smsDelivered: 8876,
-    avgOpenRate: 42.1,
-    avgClickRate: 14.1,
-    avgDeliverability: 97.5,
+  const emptyMetrics: DashboardMetrics = {
+    totalContacts: 0,
+    contactsGrowth: 0,
+    emailsSent: 0,
+    emailsDelivered: 0,
+    emailsOpened: 0,
+    emailsClicked: 0,
+    smsSent: 0,
+    smsDelivered: 0,
+    avgOpenRate: 0,
+    avgClickRate: 0,
+    avgDeliverability: 0,
   };
 
-  const mockRecentActivity = [
-    { id: 1, type: 'campaign', name: 'Summer Sale Email', status: 'sent', time: '2 hours ago', recipients: 4521 },
-    { id: 2, type: 'contact', name: '124 new contacts imported', status: 'completed', time: '5 hours ago' },
-    { id: 3, type: 'automation', name: 'Welcome Series', status: 'active', time: '1 day ago', triggered: 43 },
-    { id: 4, type: 'campaign', name: 'Product Launch SMS', status: 'scheduled', time: 'Tomorrow 9:00 AM', recipients: 2341 },
-  ];
-
-  // Use real data when available, fallback to mock for development
-  const displayMetrics = metrics || mockMetrics;
-  const displayActivity = recentCampaigns || mockRecentActivity;
+  const displayMetrics = metrics || emptyMetrics;
+  const displayActivity = recentCampaigns || [];
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
@@ -152,7 +143,7 @@ export default function PromoteDashboard() {
             <Button
               onClick={() => setLocation('/promote/campaigns/new')}
               size="sm"
-              className="bg-[#E6B747] hover:bg-[#d1a440] text-white"
+              className="bg-[#1844A6] hover:bg-[#133a8a] text-white"
               data-testid="button-new-campaign"
             >
               <Plus className="w-4 h-4 mr-2" />
@@ -629,7 +620,7 @@ export default function PromoteDashboard() {
               <Button
                 onClick={() => setLocation('/promote/campaigns/new')}
                 size="sm"
-                className="bg-[#E6B747] hover:bg-[#d1a440] text-white"
+                className="bg-[#1844A6] hover:bg-[#133a8a] text-white"
                 data-testid="button-new-campaign-tab"
               >
                 <Plus className="w-4 h-4 mr-2" />

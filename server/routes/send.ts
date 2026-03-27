@@ -12,8 +12,11 @@ import {
   sendContacts,
   sendCampaigns,
   sendTemplates,
+  sendLists,
+  sendListContacts,
+  sendCampaignSends,
 } from "@shared/schema";
-import { eq, desc, sql, and } from "drizzle-orm";
+import { eq, desc, sql, and, inArray } from "drizzle-orm";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth";
 
 export function registerSendRoutes(app: Express) {
@@ -1222,6 +1225,378 @@ export function registerSendRoutes(app: Express) {
       } catch (error) {
         console.error("Error deleting template:", error);
         res.status(500).json({ success: false, message: "Failed to delete template" });
+      }
+    },
+  );
+
+  // =============================================
+  // CAMPAIGN SEND EXECUTION
+  // =============================================
+
+  /** POST /api/send/campaigns/:id/send — Queue a campaign for sending */
+  app.post(
+    "/api/send/campaigns/:id/send",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const campaignId = parseInt(req.params.id);
+        if (isNaN(campaignId)) {
+          return res.status(400).json({ success: false, message: "Invalid campaign ID" });
+        }
+
+        // Get the campaign
+        const [campaign] = await db
+          .select()
+          .from(sendCampaigns)
+          .where(and(eq(sendCampaigns.id, campaignId), eq(sendCampaigns.clientId, clientId)));
+
+        if (!campaign) {
+          return res.status(404).json({ success: false, message: "Campaign not found" });
+        }
+
+        if (campaign.status !== "draft" && campaign.status !== "scheduled") {
+          return res.status(400).json({
+            success: false,
+            message: `Campaign cannot be sent — current status is "${campaign.status}"`,
+          });
+        }
+
+        // Determine recipient list
+        const { listId } = req.body;
+
+        let recipientContacts: { id: number; email: string | null; phone: string | null }[];
+
+        if (listId) {
+          // Get contacts from the specified list
+          const listContactRows = await db
+            .select({ contactId: sendListContacts.contactId })
+            .from(sendListContacts)
+            .where(eq(sendListContacts.listId, parseInt(listId)));
+
+          const contactIds = listContactRows.map((r) => r.contactId).filter((id): id is number => id !== null);
+          if (contactIds.length === 0) {
+            return res.status(400).json({ success: false, message: "No contacts in the selected list" });
+          }
+
+          recipientContacts = await db
+            .select({ id: sendContacts.id, email: sendContacts.email, phone: sendContacts.phone })
+            .from(sendContacts)
+            .where(and(eq(sendContacts.clientId, clientId), inArray(sendContacts.id, contactIds)));
+        } else {
+          // Send to all contacts with appropriate consent
+          recipientContacts = await db
+            .select({ id: sendContacts.id, email: sendContacts.email, phone: sendContacts.phone })
+            .from(sendContacts)
+            .where(eq(sendContacts.clientId, clientId));
+        }
+
+        if (recipientContacts.length === 0) {
+          return res.status(400).json({ success: false, message: "No eligible recipients found" });
+        }
+
+        // Queue individual sends
+        let emailQueued = 0;
+        let smsQueued = 0;
+
+        for (const contact of recipientContacts) {
+          if ((campaign.campaignType === "email" || campaign.campaignType === "both") && contact.email) {
+            await db.insert(sendCampaignSends).values({
+              campaignId,
+              contactId: contact.id,
+              sendType: "email",
+              status: "queued",
+            });
+            emailQueued++;
+          }
+          if ((campaign.campaignType === "sms" || campaign.campaignType === "both") && contact.phone) {
+            await db.insert(sendCampaignSends).values({
+              campaignId,
+              contactId: contact.id,
+              sendType: "sms",
+              status: "queued",
+            });
+            smsQueued++;
+          }
+        }
+
+        // Update campaign status
+        await db
+          .update(sendCampaigns)
+          .set({
+            status: "sending",
+            totalRecipients: recipientContacts.length,
+            updatedAt: new Date(),
+          })
+          .where(eq(sendCampaigns.id, campaignId));
+
+        res.json({
+          success: true,
+          message: `Campaign queued for sending`,
+          totalRecipients: recipientContacts.length,
+          emailQueued,
+          smsQueued,
+        });
+      } catch (error) {
+        console.error("Error sending campaign:", error);
+        res.status(500).json({ success: false, message: "Failed to send campaign" });
+      }
+    },
+  );
+
+  /** POST /api/send/campaigns/:id/schedule — Schedule a campaign for future sending */
+  app.post(
+    "/api/send/campaigns/:id/schedule",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const campaignId = parseInt(req.params.id);
+        const { emailScheduledFor, smsScheduledFor, listId } = req.body;
+
+        if (isNaN(campaignId)) {
+          return res.status(400).json({ success: false, message: "Invalid campaign ID" });
+        }
+
+        if (!emailScheduledFor && !smsScheduledFor) {
+          return res.status(400).json({ success: false, message: "At least one schedule time is required" });
+        }
+
+        const [campaign] = await db
+          .select()
+          .from(sendCampaigns)
+          .where(and(eq(sendCampaigns.id, campaignId), eq(sendCampaigns.clientId, clientId)));
+
+        if (!campaign) {
+          return res.status(404).json({ success: false, message: "Campaign not found" });
+        }
+
+        await db
+          .update(sendCampaigns)
+          .set({
+            status: "scheduled",
+            emailScheduledFor: emailScheduledFor ? new Date(emailScheduledFor) : null,
+            smsScheduledFor: smsScheduledFor ? new Date(smsScheduledFor) : null,
+            segmentRules: listId ? { listId: parseInt(listId) } : campaign.segmentRules,
+            updatedAt: new Date(),
+          })
+          .where(eq(sendCampaigns.id, campaignId));
+
+        res.json({
+          success: true,
+          message: "Campaign scheduled successfully",
+          emailScheduledFor,
+          smsScheduledFor,
+        });
+      } catch (error) {
+        console.error("Error scheduling campaign:", error);
+        res.status(500).json({ success: false, message: "Failed to schedule campaign" });
+      }
+    },
+  );
+
+  // =============================================
+  // LIST MANAGEMENT
+  // =============================================
+
+  /** GET /api/send/lists — Get all lists for authenticated client */
+  app.get(
+    "/api/send/lists",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const lists = await db
+          .select()
+          .from(sendLists)
+          .where(eq(sendLists.clientId, clientId))
+          .orderBy(desc(sendLists.createdAt));
+        res.json({ success: true, lists });
+      } catch (error) {
+        console.error("Error fetching lists:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch lists" });
+      }
+    },
+  );
+
+  /** POST /api/send/lists — Create a new list */
+  app.post(
+    "/api/send/lists",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const { name, description, listType } = req.body;
+
+        if (!name) {
+          return res.status(400).json({ success: false, message: "List name is required" });
+        }
+
+        const [list] = await db
+          .insert(sendLists)
+          .values({
+            clientId,
+            name,
+            description: description || null,
+            listType: listType || "static",
+          })
+          .returning();
+
+        res.json({ success: true, list });
+      } catch (error) {
+        console.error("Error creating list:", error);
+        res.status(500).json({ success: false, message: "Failed to create list" });
+      }
+    },
+  );
+
+  /** POST /api/send/lists/:id/contacts — Add contacts to a list */
+  app.post(
+    "/api/send/lists/:id/contacts",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const listId = parseInt(req.params.id);
+        const { contactIds } = req.body;
+
+        if (isNaN(listId) || !Array.isArray(contactIds) || contactIds.length === 0) {
+          return res.status(400).json({ success: false, message: "Valid list ID and contact IDs required" });
+        }
+
+        // Verify list belongs to client
+        const [list] = await db
+          .select()
+          .from(sendLists)
+          .where(and(eq(sendLists.id, listId), eq(sendLists.clientId, clientId)));
+
+        if (!list) {
+          return res.status(404).json({ success: false, message: "List not found" });
+        }
+
+        let added = 0;
+        for (const contactId of contactIds) {
+          try {
+            await db.insert(sendListContacts).values({ listId, contactId });
+            added++;
+          } catch { /* skip duplicates */ }
+        }
+
+        // Update contact count
+        const [countResult] = await db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(sendListContacts)
+          .where(eq(sendListContacts.listId, listId));
+
+        await db
+          .update(sendLists)
+          .set({ totalContacts: countResult?.count ?? 0, updatedAt: new Date() })
+          .where(eq(sendLists.id, listId));
+
+        res.json({ success: true, added, totalContacts: countResult?.count ?? 0 });
+      } catch (error) {
+        console.error("Error adding contacts to list:", error);
+        res.status(500).json({ success: false, message: "Failed to add contacts" });
+      }
+    },
+  );
+
+  /** DELETE /api/send/lists/:id — Delete a list */
+  app.delete(
+    "/api/send/lists/:id",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const listId = parseInt(req.params.id);
+
+        if (isNaN(listId)) {
+          return res.status(400).json({ success: false, message: "Invalid list ID" });
+        }
+
+        const [list] = await db
+          .select()
+          .from(sendLists)
+          .where(and(eq(sendLists.id, listId), eq(sendLists.clientId, clientId)));
+
+        if (!list) {
+          return res.status(404).json({ success: false, message: "List not found" });
+        }
+
+        // Remove list contacts first, then the list
+        await db.delete(sendListContacts).where(eq(sendListContacts.listId, listId));
+        await db.delete(sendLists).where(eq(sendLists.id, listId));
+
+        res.json({ success: true, message: "List deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting list:", error);
+        res.status(500).json({ success: false, message: "Failed to delete list" });
+      }
+    },
+  );
+
+  // =============================================
+  // CONTACT IMPORT
+  // =============================================
+
+  /** POST /api/send/contacts/import — Bulk import contacts from CSV data */
+  app.post(
+    "/api/send/contacts/import",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const { contacts, listId } = req.body;
+
+        if (!Array.isArray(contacts) || contacts.length === 0) {
+          return res.status(400).json({ success: false, message: "Contacts array is required" });
+        }
+
+        let imported = 0;
+        let skipped = 0;
+        const importedIds: number[] = [];
+
+        for (const contact of contacts) {
+          try {
+            if (!contact.email && !contact.phone) {
+              skipped++;
+              continue;
+            }
+            const [created] = await db
+              .insert(sendContacts)
+              .values({
+                clientId,
+                email: contact.email || null,
+                phone: contact.phone || null,
+                firstName: contact.firstName || null,
+                lastName: contact.lastName || null,
+                emailConsent: !!contact.email,
+                smsConsent: !!contact.phone,
+                emailConsentDate: contact.email ? new Date() : null,
+                smsConsentDate: contact.phone ? new Date() : null,
+                source: "import",
+              })
+              .returning();
+            importedIds.push(created.id);
+            imported++;
+          } catch {
+            skipped++;
+          }
+        }
+
+        // If listId specified, add imported contacts to that list
+        if (listId && importedIds.length > 0) {
+          for (const contactId of importedIds) {
+            try {
+              await db.insert(sendListContacts).values({ listId: parseInt(listId), contactId });
+            } catch { /* skip duplicates */ }
+          }
+        }
+
+        res.json({ success: true, imported, skipped, total: contacts.length });
+      } catch (error) {
+        console.error("Error importing contacts:", error);
+        res.status(500).json({ success: false, message: "Failed to import contacts" });
       }
     },
   );

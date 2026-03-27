@@ -13,6 +13,13 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { SectionHeader } from "@/components/section-header";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   ArrowLeft,
   Mail,
   MessageSquare,
@@ -22,6 +29,9 @@ import {
   AlertCircle,
   CheckCircle,
   Eye,
+  Users,
+  Clock,
+  Calendar,
 } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -54,8 +64,12 @@ export default function PromoteCampaignEditor() {
   const [emailText, setEmailText] = useState("");
   const [smsBody, setSmsBody] = useState("");
   const [saving, setSaving] = useState(false);
+  const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [showPreview, setShowPreview] = useState(false);
+  const [selectedListId, setSelectedListId] = useState<string>("");
+  const [scheduledDate, setScheduledDate] = useState("");
+  const [scheduledTime, setScheduledTime] = useState("");
 
   // Check campaign type from URL params (for new campaigns)
   useEffect(() => {
@@ -70,6 +84,12 @@ export default function PromoteCampaignEditor() {
     queryKey: [`/api/send/campaigns/${campaignId}`],
     enabled: isEditMode,
   });
+
+  // Fetch available lists for recipient selection
+  const { data: listsData } = useQuery<{ lists: { id: number; name: string; totalContacts: number }[] }>({
+    queryKey: ["/api/send/lists"],
+  });
+  const availableLists = listsData?.lists || [];
 
   // Populate form when campaign loads
   useEffect(() => {
@@ -129,7 +149,7 @@ export default function PromoteCampaignEditor() {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
         <Header />
         <div className="flex-1 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-[#E6B747]" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#1844A6]" />
         </div>
         <Footer />
       </div>
@@ -155,7 +175,7 @@ export default function PromoteCampaignEditor() {
             <Button
               onClick={handleSave}
               size="sm"
-              className="bg-[#E6B747] hover:bg-[#d1a440] text-white"
+              className="bg-[#1844A6] hover:bg-[#133a8a] text-white"
               disabled={saving}
               data-testid="button-save-campaign"
             >
@@ -217,7 +237,7 @@ export default function PromoteCampaignEditor() {
                   variant={campaignType === "email" ? "default" : "outline"}
                   size="sm"
                   onClick={() => setCampaignType("email")}
-                  className={campaignType === "email" ? "bg-[#E6B747] hover:bg-[#d1a440] text-white" : ""}
+                  className={campaignType === "email" ? "bg-[#1844A6] hover:bg-[#133a8a] text-white" : ""}
                   data-testid="button-type-email"
                 >
                   <Mail className="w-4 h-4 mr-2" />
@@ -227,7 +247,7 @@ export default function PromoteCampaignEditor() {
                   variant={campaignType === "sms" ? "default" : "outline"}
                   size="sm"
                   onClick={() => setCampaignType("sms")}
-                  className={campaignType === "sms" ? "bg-[#E6B747] hover:bg-[#d1a440] text-white" : ""}
+                  className={campaignType === "sms" ? "bg-[#1844A6] hover:bg-[#133a8a] text-white" : ""}
                   data-testid="button-type-sms"
                 >
                   <MessageSquare className="w-4 h-4 mr-2" />
@@ -237,7 +257,7 @@ export default function PromoteCampaignEditor() {
                   variant={campaignType === "both" ? "default" : "outline"}
                   size="sm"
                   onClick={() => setCampaignType("both")}
-                  className={campaignType === "both" ? "bg-[#E6B747] hover:bg-[#d1a440] text-white" : ""}
+                  className={campaignType === "both" ? "bg-[#1844A6] hover:bg-[#133a8a] text-white" : ""}
                   data-testid="button-type-both"
                 >
                   <Send className="w-4 h-4 mr-2" />
@@ -255,7 +275,7 @@ export default function PromoteCampaignEditor() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="flex items-center gap-2">
-                    <Mail className="w-5 h-5 text-[#E5A100]" />
+                    <Mail className="w-5 h-5 text-[#1844A6]" />
                     Email Content
                   </CardTitle>
                   <CardDescription>Compose your email campaign</CardDescription>
@@ -343,7 +363,7 @@ export default function PromoteCampaignEditor() {
           <Card className="mb-6">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-[#E5A100]" />
+                <MessageSquare className="w-5 h-5 text-[#1844A6]" />
                 SMS Content
               </CardTitle>
               <CardDescription>Compose your SMS message (160 char limit per segment)</CardDescription>
@@ -390,6 +410,76 @@ export default function PromoteCampaignEditor() {
           </CardContent>
         </Card>
 
+        {/* Recipient Selection */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-[#1844A6]" />
+              Recipients
+            </CardTitle>
+            <CardDescription>Choose who receives this campaign</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Send To</Label>
+              <Select value={selectedListId} onValueChange={setSelectedListId}>
+                <SelectTrigger data-testid="select-recipient-list">
+                  <SelectValue placeholder="All contacts" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Contacts</SelectItem>
+                  {availableLists.map((list) => (
+                    <SelectItem key={list.id} value={String(list.id)}>
+                      {list.name} ({list.totalContacts} contacts)
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-gray-500">
+                Select a list or send to all contacts with appropriate consent
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Scheduling */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-[#1844A6]" />
+              Schedule
+            </CardTitle>
+            <CardDescription>Send now or schedule for later</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="schedule-date">Date</Label>
+                <Input
+                  id="schedule-date"
+                  type="date"
+                  value={scheduledDate}
+                  onChange={(e) => setScheduledDate(e.target.value)}
+                  data-testid="input-schedule-date"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="schedule-time">Time</Label>
+                <Input
+                  id="schedule-time"
+                  type="time"
+                  value={scheduledTime}
+                  onChange={(e) => setScheduledTime(e.target.value)}
+                  data-testid="input-schedule-time"
+                />
+              </div>
+            </div>
+            <p className="text-xs text-gray-500">
+              Leave blank to send immediately when you click "Send Campaign"
+            </p>
+          </CardContent>
+        </Card>
+
         {/* Bottom Actions */}
         <div className="flex justify-between items-center pt-4 border-t">
           <Button
@@ -403,7 +493,7 @@ export default function PromoteCampaignEditor() {
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="bg-[#E6B747] hover:bg-[#d1a440] text-white"
+              variant="outline"
               data-testid="button-save-bottom"
             >
               {saving ? (
@@ -411,7 +501,72 @@ export default function PromoteCampaignEditor() {
               ) : (
                 <Save className="h-4 w-4 mr-2" />
               )}
-              {saving ? "Saving..." : isEditMode ? "Update Campaign" : "Save as Draft"}
+              {saving ? "Saving..." : isEditMode ? "Update Draft" : "Save as Draft"}
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!name.trim()) { setError("Campaign name is required"); return; }
+                setSending(true);
+                setError("");
+                try {
+                  // Save first
+                  const payload = {
+                    name: name.trim(),
+                    description: description.trim() || null,
+                    campaignType,
+                    emailSubject: campaignType !== "sms" ? emailSubject.trim() || null : null,
+                    emailHtml: campaignType !== "sms" ? emailHtml.trim() || null : null,
+                    emailText: campaignType !== "sms" ? emailText.trim() || null : null,
+                    smsBody: campaignType !== "email" ? smsBody.trim() || null : null,
+                  };
+
+                  let id = campaignId;
+                  if (isEditMode) {
+                    await apiRequest("PATCH", `/api/send/campaigns/${campaignId}`, payload);
+                  } else {
+                    const res = await apiRequest("POST", "/api/send/campaigns", payload);
+                    const data = await res.json();
+                    id = data.campaign?.id;
+                  }
+
+                  if (!id) throw new Error("Failed to get campaign ID");
+
+                  if (scheduledDate && scheduledTime) {
+                    const scheduledFor = new Date(`${scheduledDate}T${scheduledTime}`).toISOString();
+                    await apiRequest("POST", `/api/send/campaigns/${id}/schedule`, {
+                      emailScheduledFor: campaignType !== "sms" ? scheduledFor : null,
+                      smsScheduledFor: campaignType !== "email" ? scheduledFor : null,
+                      listId: selectedListId && selectedListId !== "all" ? selectedListId : null,
+                    });
+                    toast({ title: "Campaign Scheduled", description: "Your campaign will be sent at the scheduled time." });
+                  } else {
+                    await apiRequest("POST", `/api/send/campaigns/${id}/send`, {
+                      listId: selectedListId && selectedListId !== "all" ? selectedListId : null,
+                    });
+                    toast({ title: "Campaign Sending", description: "Your campaign has been queued for delivery." });
+                  }
+
+                  queryClient.invalidateQueries({ queryKey: ["/api/send/campaigns"] });
+                  queryClient.invalidateQueries({ queryKey: ["/api/send/campaigns/recent"] });
+                  setLocation("/promote/dashboard");
+                } catch (err: any) {
+                  setError(err?.message || "Failed to send campaign");
+                } finally {
+                  setSending(false);
+                }
+              }}
+              disabled={sending}
+              className="bg-[#1844A6] hover:bg-[#133a8a] text-white"
+              data-testid="button-send-campaign"
+            >
+              {sending ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : scheduledDate ? (
+                <Clock className="h-4 w-4 mr-2" />
+              ) : (
+                <Send className="h-4 w-4 mr-2" />
+              )}
+              {sending ? "Processing..." : scheduledDate ? "Schedule Campaign" : "Send Campaign"}
             </Button>
           </div>
         </div>
