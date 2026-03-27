@@ -216,6 +216,10 @@ export default function PublishDashboard() {
     },
     onSuccess: async (res) => {
       const data = await res.json();
+      // Also trigger a metrics snapshot after sync
+      try {
+        await apiRequest('POST', `/api/clients/${clientId}/list/metrics/sync`);
+      } catch (_) { /* non-blocking */ }
       queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/list`] });
       queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/list/metrics`] });
       toast({
@@ -248,7 +252,7 @@ export default function PublishDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <SectionHeader 
-        title="/list - Directory Sync & Consistency"
+        title="/ publish — Business Listings Manager"
         subtitle="Keep your business information accurate and identical across 50+ directories and platforms"
         tabs={[
           { 
@@ -379,7 +383,7 @@ export default function PublishDashboard() {
                 <CardContent>
                   <div className="text-3xl font-bold">{displayMetrics.totalClicks.toLocaleString()}</div>
                   <p className="text-sm text-blue-600 mt-1">
-                    {((displayMetrics.totalClicks / displayMetrics.totalViews) * 100).toFixed(1)}% CTR
+                    {displayMetrics.totalViews > 0 ? ((displayMetrics.totalClicks / displayMetrics.totalViews) * 100).toFixed(1) : 0}% CTR
                   </p>
                 </CardContent>
               </Card>

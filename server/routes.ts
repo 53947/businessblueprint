@@ -2473,6 +2473,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Trigger metrics snapshot for listings (manual sync for views/clicks/calls)
+  app.post(
+    "/api/clients/:id/list/metrics/sync",
+    requireClientPortalAccess,
+    async (req: any, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
+        }
+
+        const client = await storage.getClient(clientId);
+        if (!client) {
+          return res.status(404).json({ error: "Client not found" });
+        }
+
+        // Get all active listings for this client
+        const listings = await db
+          .select()
+          .from(businessListings)
+          .where(eq(businessListings.clientId, clientId));
+
+        if (listings.length === 0) {
+          return res.json({ success: true, snapshotsCreated: 0, message: "No listings to snapshot" });
+        }
+
+        const now = new Date();
+        const periodStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const periodEnd = new Date(periodStart.getTime() + 24 * 60 * 60 * 1000);
+
+        // Create a daily snapshot for each listing
+        // Real metrics come from platform APIs (Google Business Insights, etc.)
+        // This endpoint captures a snapshot; platform adapters will enrich with real data when connected
+        let snapshotsCreated = 0;
+        for (const listing of listings) {
+          // Check if snapshot already exists for today
+          const existing = await db
+            .select()
+            .from(listingMetricsSnapshots)
+            .where(
+              and(
+                eq(listingMetricsSnapshots.clientId, clientId),
+                eq(listingMetricsSnapshots.listingId, listing.id),
+                eq(listingMetricsSnapshots.periodStart, periodStart),
+              ),
+            );
+
+          if (existing.length === 0) {
+            await db.insert(listingMetricsSnapshots).values({
+              clientId,
+              listingId: listing.id,
+              views: 0,
+              clicks: 0,
+              calls: 0,
+              periodStart,
+              periodEnd,
+            });
+            snapshotsCreated++;
+          }
+        }
+
+        res.json({ success: true, snapshotsCreated, totalListings: listings.length });
+      } catch (error) {
+        console.error("Error syncing listing metrics:", error);
+        res.status(500).json({ error: "Failed to sync metrics" });
+      }
+    },
+  );
+
   // Update a business listing
   app.patch("/api/clients/:id/list/:listingId", async (req, res) => {
     try {
