@@ -3739,6 +3739,61 @@ async function registerInboxRoutes(app: Express) {
               details: errorMessage,
             });
           }
+        } else if (conversation.primaryChannelType === "facebook" || conversation.primaryChannelType === "instagram") {
+          // Send via Meta Graph API
+          try {
+            // Get the channel connection to find the page access token
+            const channelId = conversation.primaryChannelId;
+            if (!channelId) {
+              return res.status(400).json({ error: "No channel connection for this conversation" });
+            }
+
+            const { inboxChannelConnections } = await import("@shared/schema");
+            const [channel] = await db.select()
+              .from(inboxChannelConnections)
+              .where(eq(inboxChannelConnections.id, channelId));
+
+            if (!channel || !channel.credentials) {
+              return res.status(400).json({ error: "Channel connection not found or missing credentials" });
+            }
+
+            const creds = channel.credentials as any;
+            const pageAccessToken = creds.pageAccessToken;
+            const pageId = creds.pageId;
+
+            if (!pageAccessToken) {
+              return res.status(400).json({ error: "Page access token missing — reconnect your Facebook page" });
+            }
+
+            // Send message via Meta Graph API
+            const recipientId = conversation.contactIdentifier;
+            const metaResponse = await fetch(
+              `https://graph.facebook.com/v21.0/${pageId}/messages`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  recipient: { id: recipientId },
+                  message: { text: message },
+                  access_token: pageAccessToken,
+                }),
+              },
+            );
+
+            const metaData = await metaResponse.json();
+            if (metaData.error) {
+              throw new Error(metaData.error.message || "Meta API error");
+            }
+
+            deliveryStatus = "delivered";
+          } catch (metaError: any) {
+            errorMessage = metaError.message;
+            console.error(`${conversation.primaryChannelType} send error:`, errorMessage);
+            return res.status(500).json({
+              error: `Failed to send ${conversation.primaryChannelType} message`,
+              details: errorMessage,
+            });
+          }
         }
 
         const [newMessage] = await db
