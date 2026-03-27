@@ -18,6 +18,8 @@ import {
 } from "@shared/schema";
 import { eq, desc, sql, and, inArray } from "drizzle-orm";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth";
+import { Resend } from "resend";
+import { telnyxService } from "../services/telnyx";
 
 export function registerSendRoutes(app: Express) {
   // Create contact
@@ -1295,47 +1297,160 @@ export function registerSendRoutes(app: Express) {
           return res.status(400).json({ success: false, message: "No eligible recipients found" });
         }
 
-        // Queue individual sends
-        let emailQueued = 0;
-        let smsQueued = 0;
+        // Get full contact details for template substitution
+        const fullContacts = await db
+          .select()
+          .from(sendContacts)
+          .where(and(
+            eq(sendContacts.clientId, clientId),
+            inArray(sendContacts.id, recipientContacts.map((c) => c.id)),
+          ));
 
-        for (const contact of recipientContacts) {
-          if ((campaign.campaignType === "email" || campaign.campaignType === "both") && contact.email) {
-            await db.insert(sendCampaignSends).values({
-              campaignId,
-              contactId: contact.id,
-              sendType: "email",
-              status: "queued",
-            });
-            emailQueued++;
-          }
-          if ((campaign.campaignType === "sms" || campaign.campaignType === "both") && contact.phone) {
-            await db.insert(sendCampaignSends).values({
-              campaignId,
-              contactId: contact.id,
-              sendType: "sms",
-              status: "queued",
-            });
-            smsQueued++;
-          }
-        }
+        // Template variable substitution helper
+        const substituteVars = (template: string, contact: typeof fullContacts[0]) => {
+          return template
+            .replace(/\{\{firstName\}\}/g, contact.firstName || "")
+            .replace(/\{\{lastName\}\}/g, contact.lastName || "")
+            .replace(/\{\{email\}\}/g, contact.email || "")
+            .replace(/\{\{company\}\}/g, "")
+            .replace(/\{\{unsubscribeUrl\}\}/g, `${process.env.BASE_URL || "https://businessblueprint.io"}/unsubscribe?id=${contact.id}`);
+        };
 
-        // Update campaign status
+        // Update campaign status immediately
         await db
           .update(sendCampaigns)
           .set({
             status: "sending",
-            totalRecipients: recipientContacts.length,
+            totalRecipients: fullContacts.length,
             updatedAt: new Date(),
           })
           .where(eq(sendCampaigns.id, campaignId));
 
+        // Respond immediately — actual sending happens async
         res.json({
           success: true,
-          message: `Campaign queued for sending`,
-          totalRecipients: recipientContacts.length,
-          emailQueued,
-          smsQueued,
+          message: `Campaign sending to ${fullContacts.length} recipients`,
+          totalRecipients: fullContacts.length,
+        });
+
+        // ── ASYNC DISPATCH (after response) ──────────────────────
+        // Fire-and-forget: send emails via Resend, SMS via Telnyx
+        (async () => {
+          let emailsSent = 0;
+          let smsSent = 0;
+          let emailsFailed = 0;
+          let smsFailed = 0;
+
+          // Email dispatch via Resend
+          if (campaign.campaignType === "email" || campaign.campaignType === "both") {
+            const resendApiKey = process.env.RESEND_API_KEY;
+            const fromEmail = process.env.FROM_EMAIL || "noreply@businessblueprint.io";
+
+            if (resendApiKey) {
+              const resend = new Resend(resendApiKey);
+
+              for (const contact of fullContacts) {
+                if (!contact.email || !contact.emailConsent) continue;
+
+                try {
+                  // Queue tracking record
+                  const [sendRecord] = await db.insert(sendCampaignSends).values({
+                    campaignId,
+                    contactId: contact.id,
+                    sendType: "email",
+                    status: "queued",
+                  }).returning();
+
+                  const subject = campaign.emailSubject
+                    ? substituteVars(campaign.emailSubject, contact)
+                    : campaign.name;
+                  const html = campaign.emailHtml
+                    ? substituteVars(campaign.emailHtml, contact)
+                    : `<p>${substituteVars(campaign.emailText || campaign.name, contact)}</p>`;
+
+                  await resend.emails.send({
+                    from: fromEmail,
+                    to: contact.email,
+                    subject,
+                    html,
+                  });
+
+                  // Mark as sent
+                  await db.update(sendCampaignSends)
+                    .set({ status: "sent" })
+                    .where(eq(sendCampaignSends.id, sendRecord.id));
+                  emailsSent++;
+                } catch (err) {
+                  console.error(`[Campaign ${campaignId}] Email failed for ${contact.email}:`, err);
+                  emailsFailed++;
+                }
+
+                // Rate limit: ~10/sec
+                if (emailsSent % 10 === 0) {
+                  await new Promise((r) => setTimeout(r, 1000));
+                }
+              }
+            } else {
+              console.warn(`[Campaign ${campaignId}] RESEND_API_KEY not configured — emails not sent`);
+            }
+          }
+
+          // SMS dispatch via Telnyx
+          if (campaign.campaignType === "sms" || campaign.campaignType === "both") {
+            const fromPhone = process.env.TELNYX_FROM_NUMBER;
+
+            if (process.env.TELNYX_API_KEY && fromPhone) {
+              for (const contact of fullContacts) {
+                if (!contact.phone || !contact.smsConsent) continue;
+
+                try {
+                  const [sendRecord] = await db.insert(sendCampaignSends).values({
+                    campaignId,
+                    contactId: contact.id,
+                    sendType: "sms",
+                    status: "queued",
+                  }).returning();
+
+                  const smsText = campaign.smsBody
+                    ? substituteVars(campaign.smsBody, contact)
+                    : campaign.name;
+
+                  await telnyxService.sendSms({
+                    to: contact.phone,
+                    from: fromPhone,
+                    text: smsText,
+                  });
+
+                  await db.update(sendCampaignSends)
+                    .set({ status: "sent" })
+                    .where(eq(sendCampaignSends.id, sendRecord.id));
+                  smsSent++;
+                } catch (err) {
+                  console.error(`[Campaign ${campaignId}] SMS failed for ${contact.phone}:`, err);
+                  smsFailed++;
+                }
+              }
+            } else {
+              console.warn(`[Campaign ${campaignId}] TELNYX not configured — SMS not sent`);
+            }
+          }
+
+          // Update campaign with final stats
+          await db
+            .update(sendCampaigns)
+            .set({
+              status: "sent",
+              emailsSent,
+              smsSent,
+              emailSentAt: emailsSent > 0 ? new Date() : null,
+              smsSentAt: smsSent > 0 ? new Date() : null,
+              updatedAt: new Date(),
+            })
+            .where(eq(sendCampaigns.id, campaignId));
+
+          console.log(`[Campaign ${campaignId}] Complete: ${emailsSent} emails, ${smsSent} SMS sent. Failures: ${emailsFailed} email, ${smsFailed} SMS`);
+        })().catch((err) => {
+          console.error(`[Campaign ${campaignId}] Async dispatch failed:`, err);
         });
       } catch (error) {
         console.error("Error sending campaign:", error);

@@ -55,6 +55,7 @@ import { GoogleBusinessService } from "./services/googleBusiness";
 import { OpenAIAnalysisService } from "./services/openai";
 import { ResendEmailService } from "./services/resend-email";
 import { inboxEmailService } from "./services/inbox-email";
+import { telnyxService } from "./services/telnyx";
 import { aiCoachService } from "./services/aiCoach";
 import { productRecommendationService } from "./services/productRecommendations";
 import { reviewAI } from "./services/reviewAI";
@@ -3713,6 +3714,28 @@ async function registerInboxRoutes(app: Express) {
             console.error("Email send error:", errorMessage);
             return res.status(500).json({
               error: "Failed to send email",
+              details: errorMessage,
+            });
+          }
+        } else if (conversation.primaryChannelType === "sms") {
+          const fromPhone = process.env.TELNYX_FROM_NUMBER;
+          if (!fromPhone || !process.env.TELNYX_API_KEY) {
+            return res.status(503).json({
+              error: "SMS sending not configured. TELNYX_API_KEY and TELNYX_FROM_NUMBER required.",
+            });
+          }
+          try {
+            await telnyxService.sendSms({
+              to: conversation.contactIdentifier,
+              from: fromPhone,
+              text: message,
+            });
+            deliveryStatus = "delivered";
+          } catch (smsError: any) {
+            errorMessage = smsError.message;
+            console.error("SMS send error:", errorMessage);
+            return res.status(500).json({
+              error: "Failed to send SMS",
               details: errorMessage,
             });
           }
