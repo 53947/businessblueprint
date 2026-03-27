@@ -2911,7 +2911,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerPaymentRoutes(app);
 
   // CRM (/relationships) Routes
-  app.use("/api/crm", crmRouter);
+  app.use("/api/crm", isAuthenticated, crmRouter);
 
   // / chat Routes (Live Chat SaaS)
   app.use("/api/chat", chatRouter);
