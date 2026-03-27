@@ -182,7 +182,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>{NAV_ITEMS[1].label}</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="p-3 w-[900px] max-h-[80vh] overflow-y-auto">
+                        <div className="p-3 w-[90vw] max-w-[900px] max-h-[80vh] overflow-y-auto">
                           <PricingLayout variant="menu" />
                         </div>
                       </NavigationMenuContent>
@@ -196,7 +196,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="p-4 w-[90vw] max-w-[900px]">
-                          <div className="grid grid-cols-3 gap-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                             {/* Platforms */}
                             {SOLUTIONS_MENU.platforms.map((p) => (
                               <NavigationMenuLink key={p.id} asChild>
@@ -243,7 +243,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>{NAV_ITEMS[3].label}</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid gap-4 p-6 w-[90vw] max-w-[700px]" style={{ gridTemplateColumns: "1fr 1fr 1fr" }}>
+                        <div className="grid gap-4 p-6 w-[90vw] max-w-[700px] grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                           {/* Learn column */}
                           <ResourceColumn column={RESOURCES_MENU.columns[0]} />
 

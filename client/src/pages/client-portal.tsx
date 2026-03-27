@@ -345,7 +345,7 @@ export default function ClientPortal() {
                   </p>
                 </div>
               </div>
-              <div className="flex-1 grid grid-cols-3 gap-4 text-center">
+              <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="text-2xl font-bold text-gray-900 dark:text-white" data-testid="text-crm-contacts-count">
                     {clientData?.crm?.contactsCount || 0}
