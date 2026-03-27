@@ -398,8 +398,8 @@ function KeywordsTab() {
                   <tr className="border-b text-left">
                     <th className="pb-3 text-sm font-medium text-gray-500">Keyword</th>
                     <th className="pb-3 text-sm font-medium text-gray-500 text-center">Rank</th>
-                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Volume</th>
-                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Difficulty</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Est. Volume</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Est. Difficulty</th>
                     <th className="pb-3 text-sm font-medium text-gray-500 text-center">Source</th>
                     <th className="pb-3 text-sm font-medium text-gray-500"></th>
                   </tr>
