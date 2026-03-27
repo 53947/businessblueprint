@@ -337,7 +337,7 @@ export default function ClientPortal() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">/ connect</h3>
+                    <h3 className="text-xl font-bold" style={{ fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif' }}><span style={{ color: '#09080E' }}>/ </span><span style={{ color: '#008060' }}>connect</span></h3>
                     <Badge className="bg-green-500 text-white">CRM</Badge>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">

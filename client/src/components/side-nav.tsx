@@ -21,6 +21,8 @@ import aiCoachIcon from "@assets/images_logos/coachblue48.png";
 import hostsBlueWordmark from "@assets/images_logos/hostsblue_logo_image_and_text_as_url.png";
 import swipesBlueWordmark from "@assets/images_logos/swipesblue_logo_image_and_text_as_url.png";
 import builderBlueWordmark from "@assets/images_logos/builderblue2-logo-image-and-text-as-url-for-header.png";
+import scansBlueWordmark from "@assets/images_logos/scansblue_logo_image_and_text_as_url.png";
+import { CONNECT_CRM } from "@/config/app-registry";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;
@@ -45,6 +47,7 @@ interface NavItem {
   featureCode?: string; // Maps to enabledFeatures codes: RS, LC, SE, PO, LI, RE, AC
   isSlashApp?: boolean; // Renders with "/ appname" protocol
   appColor?: string; // App brand color for label
+  headingColor?: string; // Brand color for section headings
 }
 
 export function SideNav({ activeTab = "list", onTabChange, onSignOut, className, enabledFeatures, ...props }: SideNavProps) {
@@ -84,17 +87,34 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
   const compassBundle = BUNDLE_REGISTRY.find(b => b.id === "compass")!;
   const anchorBundle = BUNDLE_REGISTRY.find(b => b.id === "anchor")!;
 
+  // / connect nav item from registry
+  const ConnectIcon = ICON_MAP[CONNECT_CRM.icon];
+  const connectNavItem: NavItem = {
+    id: CONNECT_CRM.id,
+    label: CONNECT_CRM.name,
+    hoverLabel: CONNECT_CRM.description,
+    icon: ConnectIcon ? <ConnectIcon className="w-7 h-7" style={{ color: CONNECT_CRM.color }} /> : null,
+    external: true,
+    href: "/connect/dashboard",
+    featureCode: "CO",
+    isSlashApp: true,
+    appColor: CONNECT_CRM.color,
+  };
+
   const navItems: NavItem[] = [
-    // Compass Suite
-    { id: "compass-heading", label: "Compass Suite", icon: null, isHeading: true },
-    ...compassBundle.appIds.map(buildAppNavItem),
+    // / connect CRM at the top
+    connectNavItem,
+    { id: "divider-0", label: "", icon: null, isDivider: true },
+    // Anchor Suite first
+    { id: "anchor-heading", label: "Anchor Suite", icon: null, isHeading: true, headingColor: anchorBundle.color },
+    ...anchorBundle.appIds.map(buildAppNavItem),
     { id: "divider-1", label: "", icon: null, isDivider: true },
+    // Compass Suite
+    { id: "compass-heading", label: "Compass Suite", icon: null, isHeading: true, headingColor: compassBundle.color },
+    ...compassBundle.appIds.map(buildAppNavItem),
+    { id: "divider-2", label: "", icon: null, isDivider: true },
     { id: "tasks", label: "Tasks", icon: <CheckSquare className="w-7 h-7" /> },
     { id: "billing", label: "Billing", icon: <CreditCard className="w-7 h-7" /> },
-    { id: "divider-2", label: "", icon: null, isDivider: true },
-    // Anchor Suite
-    { id: "anchor-heading", label: "Anchor Suite", icon: null, isHeading: true },
-    ...anchorBundle.appIds.map(buildAppNavItem),
     { id: "divider-3", label: "", icon: null, isDivider: true },
     {
       id: "ai-coach",
@@ -106,30 +126,10 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
     },
     { id: "settings", label: "Settings", icon: <Settings className="w-7 h-7" /> },
     { id: "divider-4", label: "", icon: null, isDivider: true },
-    {
-      id: "hostsblue",
-      label: "hostsblue.com",
-      icon: null,
-      logo: hostsBlueWordmark,
-      external: true,
-      href: "https://hostsblue.com",
-    },
-    {
-      id: "swipesblue",
-      label: "swipesblue.com",
-      icon: null,
-      logo: swipesBlueWordmark,
-      external: true,
-      href: "https://swipesblue.com",
-    },
-    {
-      id: "builderblue2",
-      label: "builderblue2.com",
-      icon: null,
-      logo: builderBlueWordmark,
-      external: true,
-      href: "https://builderblue2.com",
-    },
+    { id: "hostsblue", label: "hostsblue.com", icon: null, logo: hostsBlueWordmark, external: true, href: "https://hostsblue.com" },
+    { id: "swipesblue", label: "swipesblue.com", icon: null, logo: swipesBlueWordmark, external: true, href: "https://swipesblue.com" },
+    { id: "builderblue2", label: "builderblue2.com", icon: null, logo: builderBlueWordmark, external: true, href: "https://builderblue2.com" },
+    { id: "scansblue", label: "scansblue.com", icon: null, logo: scansBlueWordmark, external: true, href: "https://scansblue.com" },
   ];
 
   const isFeatureEnabled = (item: NavItem) => {
@@ -181,7 +181,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
           return (
             <div key={item.id} className="px-4 py-2 mt-2">
               {!collapsed && (
-                <span className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide" data-testid={`heading-${item.id}`}>
+                <span className="text-sm font-bold uppercase tracking-wide" style={{ color: item.headingColor || '#6B7280' }} data-testid={`heading-${item.id}`}>
                   {item.label}
                 </span>
               )}
@@ -223,7 +223,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
                   alt={item.label}
                   className={cn(
                     "flex-1 object-contain object-left",
-                    item.id === "hostsblue" || item.id === "swipesblue" || item.id === "builderblue2" ? "h-7" : "h-5",
+                    ["hostsblue", "swipesblue", "builderblue2", "scansblue"].includes(item.id) ? "h-7" : "h-5",
                     locked ? "grayscale" : ""
                   )}
                   data-testid={`logo-nav-${item.id}`}

@@ -427,7 +427,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 )}
 
                 <a
-                  href={isLoggedIn ? "/portal/respond" : "/login?redirect=/portal/respond"}
+                  href={isLoggedIn ? "/respond/dashboard" : "/login?redirect=/respond/dashboard"}
                   className="flex items-center px-2 py-1.5 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs transition-colors"
                   data-testid="button-quick-respond"
                 >
@@ -459,7 +459,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
         <div className="lg:hidden flex items-center justify-between gap-2 h-16 border-t border-gray-200 flex-wrap p-2">
           {showNavigation && (
             <>
-              <a href={isLoggedIn ? "/portal/respond" : "/login?redirect=/portal/respond"} className="flex-1 px-2 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs text-center transition-colors" data-testid="button-respond-mobile">
+              <a href={isLoggedIn ? "/respond/dashboard" : "/login?redirect=/respond/dashboard"} className="flex-1 px-2 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs text-center transition-colors" data-testid="button-respond-mobile">
                 Inbox
               </a>
               {isLoggedIn ? (
