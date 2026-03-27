@@ -1397,8 +1397,9 @@ export default function ContentManagement() {
                       <CardContent className="h-[300px] flex items-center justify-center">
                         <div className="text-center text-gray-500">
                           <BarChart3 className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                          <p className="text-sm">Performance analytics will appear here</p>
-                          <p className="text-xs mt-2">Connect your accounts and publish posts to see insights</p>
+                          <p className="text-sm">Engagement Analytics</p>
+                          <p className="text-xs mt-2">Likes, reach, and impressions from connected platforms will appear here once posts are published.</p>
+                          <Badge variant="secondary" className="text-xs mt-3">Coming Soon</Badge>
                         </div>
                       </CardContent>
                     </Card>

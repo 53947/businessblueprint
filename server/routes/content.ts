@@ -25,6 +25,7 @@ import { MediaStorageService } from '../services/mediaStorage';
 import { publishPost } from '../workers/contentPublisher';
 import { PlatformFactory } from '../services/platforms/platformFactory';
 import { isDemoAccountById } from '../utils/demoAccounts';
+import { unifiedAI } from '../services/ai-provider';
 
 const router = Router();
 const mediaStorage = new MediaStorageService();
@@ -759,18 +760,41 @@ router.post('/:clientId/ai/suggest', requireContentAccess, async (req: Request, 
   try {
     const { prompt = 'Generate social media post ideas' } = req.body;
 
-    const suggestions = [
-      `Here's a compelling ${prompt} idea that resonates with your audience and drives engagement.`,
-      `Try this approach: A ${prompt} that highlights customer value and creates urgency.`,
-      `Consider this angle: Share your expertise through a ${prompt} that educates and entertains.`,
-      `This ${prompt} hooks attention immediately with a question your audience wants answered.`,
-      `Use this structure: Story → Challenge → Solution format for maximum ${prompt} impact.`,
-    ];
+    const result = await unifiedAI.getCompletion('claude', {
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a social media marketing expert for small local businesses. Generate 5 actionable social media post ideas. Return ONLY a JSON array of 5 strings, each being a complete post idea. No markdown, no explanation — just the JSON array.',
+        },
+        {
+          role: 'user',
+          content: `Generate 5 social media post ideas for: ${prompt}`,
+        },
+      ],
+      temperature: 0.8,
+      maxTokens: 500,
+    });
+
+    let suggestions: string[];
+    try {
+      suggestions = JSON.parse(result.content);
+    } catch {
+      suggestions = result.content.split('\n').filter((s: string) => s.trim()).slice(0, 5);
+    }
 
     res.json({ suggestions });
   } catch (error) {
     console.error('[Content] Error generating suggestions:', error);
-    res.status(500).json({ message: 'Failed to generate suggestions' });
+    // Graceful fallback
+    res.json({
+      suggestions: [
+        `Share a behind-the-scenes look at your business to build trust.`,
+        `Highlight a customer success story or testimonial.`,
+        `Post a quick tip related to your industry that helps your audience.`,
+        `Announce a limited-time offer or seasonal promotion.`,
+        `Ask your audience a question to boost engagement.`,
+      ],
+    });
   }
 });
 
@@ -786,13 +810,40 @@ router.post('/:clientId/ai/caption', requireContentAccess, async (req: Request, 
       return res.status(400).json({ message: 'Topic is required' });
     }
 
-    res.json({
-      caption: `AI-generated caption about ${topic} (${tone || 'professional'} tone, ${length || 'medium'} length)`,
-      hashtags: ['#business', '#marketing', '#social'],
+    const lengthGuide = length === 'short' ? '1-2 sentences' : length === 'long' ? '3-5 sentences' : '2-3 sentences';
+
+    const result = await unifiedAI.getCompletion('claude', {
+      messages: [
+        {
+          role: 'system',
+          content: `You are a social media copywriter for small local businesses. Write engaging captions that feel human, not corporate. Return ONLY a JSON object with "caption" (string) and "hashtags" (array of 3-5 strings). No markdown.`,
+        },
+        {
+          role: 'user',
+          content: `Write a ${tone || 'professional'} social media caption (${lengthGuide}) about: ${topic}`,
+        },
+      ],
+      temperature: 0.7,
+      maxTokens: 300,
     });
+
+    let parsed: { caption: string; hashtags: string[] };
+    try {
+      parsed = JSON.parse(result.content);
+    } catch {
+      parsed = {
+        caption: result.content.replace(/```json|```/g, '').trim(),
+        hashtags: ['#business', '#local', '#community'],
+      };
+    }
+
+    res.json(parsed);
   } catch (error) {
     console.error('[Content] Error generating caption:', error);
-    res.status(500).json({ message: 'Failed to generate caption' });
+    res.json({
+      caption: `Check out what's new at our business! We're excited to share this with you.`,
+      hashtags: ['#business', '#local', '#community'],
+    });
   }
 });
 
@@ -808,12 +859,34 @@ router.post('/:clientId/ai/hashtags', requireContentAccess, async (req: Request,
       return res.status(400).json({ message: 'Content is required' });
     }
 
-    res.json({
-      hashtags: ['#business', '#marketing', '#socialmedia', '#contentcreation'],
+    const result = await unifiedAI.getCompletion('claude', {
+      messages: [
+        {
+          role: 'system',
+          content: `You are a social media hashtag expert. Generate relevant hashtags for the given content and platform. Return ONLY a JSON object with "hashtags" (array of 5-8 strings, each starting with #). No markdown.`,
+        },
+        {
+          role: 'user',
+          content: `Generate hashtags for this ${platform || 'social media'} post:\n\n${content}`,
+        },
+      ],
+      temperature: 0.6,
+      maxTokens: 150,
     });
+
+    let parsed: { hashtags: string[] };
+    try {
+      parsed = JSON.parse(result.content);
+    } catch {
+      parsed = { hashtags: ['#business', '#marketing', '#socialmedia', '#local'] };
+    }
+
+    res.json(parsed);
   } catch (error) {
     console.error('[Content] Error generating hashtags:', error);
-    res.status(500).json({ message: 'Failed to generate hashtags' });
+    res.json({
+      hashtags: ['#business', '#marketing', '#socialmedia', '#local'],
+    });
   }
 });
 
