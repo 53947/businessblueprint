@@ -243,6 +243,21 @@ function EmptyState({ message, action, onAction }: { message: string; action?: s
   );
 }
 
+function ComingSoonCard({ title, description }: { title: string; description: string }) {
+  return (
+    <Card>
+      <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gray-100">
+          <AlertTriangle className="w-8 h-8 text-gray-400" />
+        </div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+        <p className="text-gray-500 text-sm mb-4 max-w-md">{description}</p>
+        <Badge variant="secondary" className="text-xs">Coming Soon</Badge>
+      </CardContent>
+    </Card>
+  );
+}
+
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
 }
@@ -491,27 +506,32 @@ function MetaBaseTab() {
       )}
 
       {subTab === "audiences" && (
-        <EmptyState message="No audiences configured yet. Create a campaign first, then define your target audiences." />
+        <ComingSoonCard
+          title="Meta Audiences"
+          description="Define and manage custom audiences, lookalike audiences, and retargeting segments for your Meta campaigns. Requires Meta Business account connection."
+        />
       )}
       {subTab === "creatives" && (
-        <EmptyState message="No creatives uploaded yet. Add images and videos to use in your Meta campaigns." />
+        <ComingSoonCard
+          title="Meta Creatives Library"
+          description="Upload and manage ad images, videos, and carousels for use across your Meta campaigns. Requires Meta Business account connection."
+        />
       )}
       {subTab === "settings" && (
         <Card>
           <CardHeader>
-            <CardTitle>Meta Account Settings</CardTitle>
-            <CardDescription>Connect and configure your Meta Business account.</CardDescription>
+            <CardTitle>Meta Account Connection</CardTitle>
+            <CardDescription>
+              Meta Ads integration requires OAuth connection to your Meta Business account.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-gray-700">Meta Business ID</label>
-              <Input placeholder="Enter your Meta Business ID" className="mt-1" />
+            <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+              <p className="text-sm text-amber-800">
+                Meta Ads API integration is coming soon. Reddit advertising is fully available now.
+              </p>
             </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700">Ad Account ID</label>
-              <Input placeholder="Enter your Ad Account ID" className="mt-1" />
-            </div>
-            <Button style={{ backgroundColor: AMPLIFY_COLOR }}>Save Settings</Button>
           </CardContent>
         </Card>
       )}
@@ -623,27 +643,32 @@ function GoogleBaseTab() {
       )}
 
       {subTab === "keywords" && (
-        <EmptyState message="No keywords tracked yet. Launch a Google campaign to start keyword tracking." />
+        <ComingSoonCard
+          title="Google Keyword Tracking"
+          description="Track keyword bids, quality scores, and search term reports for your Google Ads campaigns. Requires Google Ads account connection."
+        />
       )}
       {subTab === "audiences" && (
-        <EmptyState message="No audiences configured yet. Create a campaign first, then define your target audiences." />
+        <ComingSoonCard
+          title="Google & Microsoft Audiences"
+          description="Define in-market audiences, affinity segments, and custom intent audiences for Google and Microsoft campaigns. Requires account connection."
+        />
       )}
       {subTab === "settings" && (
         <Card>
           <CardHeader>
-            <CardTitle>Google Ads Settings</CardTitle>
-            <CardDescription>Connect and configure your Google Ads account.</CardDescription>
+            <CardTitle>Google & Microsoft Account Connection</CardTitle>
+            <CardDescription>
+              Google Ads and Microsoft Advertising integrations require OAuth connection.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-gray-700">Google Ads Customer ID</label>
-              <Input placeholder="e.g. 123-456-7890" className="mt-1" />
+            <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+              <p className="text-sm text-amber-800">
+                Google Ads and Microsoft Advertising API integrations are coming soon. Reddit advertising is fully available now.
+              </p>
             </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700">Microsoft Advertising Account ID</label>
-              <Input placeholder="Enter your Microsoft Ads Account ID (optional)" className="mt-1" />
-            </div>
-            <Button style={{ backgroundColor: AMPLIFY_COLOR }}>Save Settings</Button>
           </CardContent>
         </Card>
       )}
@@ -1668,6 +1693,7 @@ function RedditBaseTab() {
 // ─── CAMPAIGNS TAB (Unified) ─────────────────────
 
 function CampaignsTab() {
+  const queryClient = useQueryClient();
   const [platformFilter, setPlatformFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
@@ -1679,6 +1705,22 @@ function CampaignsTab() {
       return res.json();
     },
   });
+
+  const bulkAction = async (action: "pause" | "resume" | "delete") => {
+    const ids = Array.from(selectedIds);
+    const endpoint = action === "delete" ? "DELETE" : "PUT";
+    const suffix = action === "delete" ? "" : `/${action}`;
+    let success = 0;
+    for (const id of ids) {
+      try {
+        await apiRequest(endpoint, `/api/amplify/campaigns/${id}${suffix}`);
+        success++;
+      } catch { /* continue */ }
+    }
+    setSelectedIds(new Set());
+    queryClient.invalidateQueries({ queryKey: ["/api/amplify/campaigns"] });
+    return success;
+  };
 
   const allCampaigns: Campaign[] = data?.campaigns ?? [];
 
@@ -1742,13 +1784,13 @@ function CampaignsTab() {
         <Card>
           <CardContent className="py-3 flex items-center gap-3">
             <span className="text-sm font-medium">{selectedIds.size} selected</span>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => bulkAction("pause")}>
               <Pause className="w-3.5 h-3.5 mr-1" /> Pause
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => bulkAction("resume")}>
               <Play className="w-3.5 h-3.5 mr-1" /> Resume
             </Button>
-            <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+            <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700" onClick={() => bulkAction("delete")}>
               <Trash2 className="w-3.5 h-3.5 mr-1" /> Delete
             </Button>
           </CardContent>
