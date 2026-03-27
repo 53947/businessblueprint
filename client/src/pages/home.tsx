@@ -6,7 +6,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { BrandLogo } from "@/components/brand-logo";
 import { ClipboardCheck, FileText, Layers, Wrench, Rocket, Star, MessageCircle, Mail, Target, GraduationCap, ArrowRight, CheckCircle2 } from "lucide-react";
-import { DigitalAssessmentIcon, DigitalIQIcon, CommverseIcon, CoachBlueIcon, BasePlanIcon, ActionPlanIcon, BuildMethodIcon } from "@/components/brand-icons";
+import { DigitalAssessmentIcon, DigitalIQIcon, CoachBlueIcon, BasePlanIcon, ActionPlanIcon, BuildMethodIcon } from "@/components/brand-icons";
 import bbIcon from "@assets/images_logos/bb-favicon.png";
 import bbLogo from "@assets/images_logos/bb-favicon.png";
 import coachBlueLarge from "@assets/images_logos/coachblue.png";

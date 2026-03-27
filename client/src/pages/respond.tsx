@@ -378,7 +378,7 @@ export default function InboxPage() {
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       {/* Section Header - Respond Navigation */}
       <SectionHeader
-        title="Respond"
+        title="/ respond — Unified Inbox"
         tabs={inboxTabs}
         actions={
           <Button 

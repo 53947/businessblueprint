@@ -234,7 +234,7 @@ export default function ElevateDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <SectionHeader 
-        title="/review - Review Response & Reputation"
+        title="/ elevate — Reputation & Reviews Manager"
         subtitle="Respond to reviews instantly (AI-powered or manual), monitor ratings, and manage your online reputation"
         tabs={[
           { 
