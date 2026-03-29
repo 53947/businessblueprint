@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
+import { Footer } from "@/components/footer";
 
 export default function Terms() {
   return (
@@ -143,6 +144,7 @@ export default function Terms() {
           </p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

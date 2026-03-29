@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { ArrowLeft, Trash2, Database, Clock } from "lucide-react";
+import { Footer } from "@/components/footer";
 
 export default function DataDeletion() {
   return (
@@ -133,6 +134,7 @@ export default function DataDeletion() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

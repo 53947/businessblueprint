@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, ChevronRight, ChevronLeft, Play, RotateCcw, Star, MessageSquare, Mail, FileText, Users, MapPin, Award, Bot, Sparkles, ArrowRight } from "lucide-react";
+import { Footer } from "@/components/footer";
 
 const TOUR_STORAGE_KEY = "blueprintTourProgress";
 
@@ -528,6 +529,7 @@ export default function Tour() {
             </Button>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -658,6 +660,7 @@ export default function Tour() {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

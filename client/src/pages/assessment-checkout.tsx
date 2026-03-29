@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { CheckCircle2, TrendingUp, AlertCircle } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { Footer } from "@/components/footer";
 
 interface AssessmentData {
   id: number;
@@ -359,6 +360,7 @@ export default function AssessmentCheckoutPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

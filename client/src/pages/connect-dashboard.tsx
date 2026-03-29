@@ -78,6 +78,7 @@ import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { Footer } from "@/components/footer";
 import bbLogo from "@assets/images_logos/bb-logo-only.png";
 
 interface CrmStats {
@@ -5965,6 +5966,7 @@ function SettingsView() {
           </div>
         </DialogContent>
       </Dialog>
+      <Footer />
     </div>
   );
 }

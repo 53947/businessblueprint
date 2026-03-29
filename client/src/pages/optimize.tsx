@@ -12,6 +12,7 @@ import {
   Loader2, X, ChevronRight, Eye, TrendingUp
 } from "lucide-react";
 import { SectionHeader } from "@/components/section-header";
+import { Footer } from "@/components/footer";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -63,7 +64,8 @@ export default function OptimizeDashboard() {
       <SectionHeader
         title="/ optimize"
         subtitle="SEO Optimization Suite"
-        featureCode="OP"
+        showHomeButton={true}
+        homeRoute="/portal"
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -99,6 +101,7 @@ export default function OptimizeDashboard() {
         {activeTab === 'action-plan' && <ActionPlanTab />}
         {activeTab === 'reports' && <ComingSoonTab title="Reporting & Insights" icon={BarChart3} description="Generate beautiful SEO performance reports with trend analysis, competitive benchmarking, and actionable insights." />}
       </div>
+      <Footer />
     </div>
   );
 }

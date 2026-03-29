@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -550,6 +551,7 @@ add_action('wp_footer', 'bb_livechat_widget');
           </TabsContent>
         </Tabs>
       </main>
+      <Footer />
     </div>
   );
 }

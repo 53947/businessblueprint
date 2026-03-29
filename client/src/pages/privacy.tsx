@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
+import { Footer } from "@/components/footer";
 
 export default function Privacy() {
   return (
@@ -115,6 +116,7 @@ export default function Privacy() {
           </p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

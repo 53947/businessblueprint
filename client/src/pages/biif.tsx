@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { Building2, MapPin, Phone, Globe, Clock } from "lucide-react";
+import { Footer } from "@/components/footer";
 
 const businessInfoSchema = z.object({
   name: z.string().min(2, "Business name is required"),
@@ -387,6 +388,7 @@ export default function BIIF() {
           </Card>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

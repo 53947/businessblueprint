@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Target, Globe, Search, Users, X, Plus, Loader2, ArrowRight, ArrowLeft } from "lucide-react";
 import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -287,6 +288,7 @@ export default function OptimizeSetup() {
           </Card>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

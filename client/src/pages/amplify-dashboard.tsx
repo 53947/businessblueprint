@@ -41,6 +41,7 @@ import {
   Upload, Copy, AlertTriangle,
 } from "lucide-react";
 import { SectionHeader } from "@/components/section-header";
+import { Footer } from "@/components/footer";
 import { apiRequest } from "@/lib/queryClient";
 
 const AMPLIFY_COLOR = "#97ACCA";
@@ -153,6 +154,8 @@ export default function AmplifyDashboard() {
       <SectionHeader
         title="/ amplify"
         subtitle="Paid Advertising Suite"
+        showHomeButton={true}
+        homeRoute="/portal"
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -189,6 +192,7 @@ export default function AmplifyDashboard() {
         {activeTab === "budget" && <BudgetTab />}
         {activeTab === "reports" && <ReportsTab />}
       </div>
+      <Footer />
     </div>
   );
 }

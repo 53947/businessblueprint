@@ -27,6 +27,7 @@ import { format } from "date-fns";
 
 import { CrmEmptyState, CRM_EMPTY_CONFIGS } from "@/components/crm-empty-state";
 import { useCrmPresence } from "@/hooks/use-crm-presence";
+import { Footer } from "@/components/footer";
 
 interface Review {
   id: number;
@@ -761,6 +762,7 @@ export default function ElevateDashboard() {
           </Card>
         </div>
       )}
+      <Footer />
     </div>
   );
 }

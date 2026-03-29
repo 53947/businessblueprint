@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { SectionHeader } from '@/components/section-header';
+import { Footer } from "@/components/footer";
 import { 
   Send, 
   Mail, 
@@ -393,6 +394,8 @@ export default function InboxPage() {
             <Settings className="h-4 w-4" />
           </Button>
         }
+        showHomeButton={true}
+        homeRoute="/portal"
       />
 
       {/* Main Content */}
@@ -739,6 +742,7 @@ export default function InboxPage() {
         </div>
       )}
       </div>
+      <Footer />
     </div>
   );
 }

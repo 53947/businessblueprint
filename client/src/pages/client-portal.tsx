@@ -10,6 +10,7 @@ import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
+import { Footer } from "@/components/footer";
 import { SideNav } from "@/components/side-nav";
 import { BrandLogo } from "@/components/brand-logo";
 import { AppIcon } from "@/components/app-name";
@@ -817,6 +818,7 @@ export default function ClientPortal() {
       </div>
       </div>
       </div>
+      <Footer />
     </div>
   );
 }
