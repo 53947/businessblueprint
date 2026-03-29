@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, ChevronRight, ChevronLeft, Play, RotateCcw, Star, MessageSquare, Mail, FileText, Users, MapPin, Award, Bot, Sparkles, ArrowRight } from "lucide-react";
 import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 
 const TOUR_STORAGE_KEY = "blueprintTourProgress";
 
@@ -460,6 +461,7 @@ export default function Tour() {
   if (!isStarted) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-[#EEFBFF] to-white">
+        <Header />
         <div className="max-w-4xl mx-auto px-4 py-16">
           <div className="text-center mb-12">
             <div className="font-['Archivo_Semi_Expanded'] text-3xl font-bold mb-4">
@@ -538,6 +540,7 @@ export default function Tour() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#EEFBFF] to-white">
+      <Header />
       <div className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-2">

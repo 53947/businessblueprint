@@ -12,6 +12,7 @@ import { CheckCircle2, TrendingUp, AlertCircle } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 
 interface AssessmentData {
   id: number;
@@ -183,6 +184,7 @@ export default function AssessmentCheckoutPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+      <Header />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2" data-testid="heading-assessment-checkout">

@@ -1,10 +1,12 @@
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
 import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 
 export default function Terms() {
   return (
     <div className="min-h-screen bg-white">
+      <Header />
       <div className="max-w-4xl mx-auto px-6 py-12">
         <Link href="/" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 mb-8">
           <ArrowLeft className="w-4 h-4" />

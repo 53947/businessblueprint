@@ -49,17 +49,26 @@ export function Footer() {
           {/* Column 2 — Platform */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-4">Platform</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="/assessment"><span style={{ color: '#09080E' }}>/ </span><span style={{ color: '#A00028' }}>assess</span></a></li>
-              <li><a href="/connect"><AppName appId="connect" size="sm" iconSize={0} /></a></li>
-              <li><a href="/publish"><AppName appId="publish" size="sm" iconSize={0} /></a></li>
-              <li><a href="/elevate"><AppName appId="elevate" size="sm" iconSize={0} /></a></li>
-              <li><a href="/optimize"><AppName appId="optimize" size="sm" iconSize={0} /></a></li>
-              <li><a href="/amplify"><AppName appId="amplify" size="sm" iconSize={0} /></a></li>
-              <li><a href="/respond"><AppName appId="respond" size="sm" iconSize={0} /></a></li>
-              <li><a href="/engage"><AppName appId="engage" size="sm" iconSize={0} /></a></li>
-              <li><a href="/post"><AppName appId="post" size="sm" iconSize={0} /></a></li>
-              <li><a href="/promote"><AppName appId="promote" size="sm" iconSize={0} /></a></li>
+            <ul className="space-y-2 text-sm" style={{ fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600, fontSize: 14 }}>
+              {[
+                { href: "/assessment", slash: true, name: "assess", color: "#960D71" },
+                { href: "/connect", slash: true, name: "connect", color: "#008060" },
+                { href: "/publish", slash: true, name: "publish", color: "#064A6C" },
+                { href: "/elevate", slash: true, name: "elevate", color: "#E9B307" },
+                { href: "/optimize", slash: true, name: "optimize", color: "#374151" },
+                { href: "/amplify", slash: true, name: "amplify", color: "#97ACCA" },
+                { href: "/respond", slash: true, name: "respond", color: "#001882" },
+                { href: "/engage", slash: true, name: "engage", color: "#660099" },
+                { href: "/post", slash: true, name: "post", color: "#FF44CC" },
+                { href: "/promote", slash: true, name: "promote", color: "#1844A6" },
+              ].map((app) => (
+                <li key={app.name}>
+                  <a href={app.href} className="hover:opacity-80 transition-opacity">
+                    <span style={{ color: '#09080E' }}>/ </span>
+                    <span style={{ color: app.color }}>{app.name}</span>
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 

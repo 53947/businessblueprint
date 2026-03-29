@@ -26,6 +26,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { Building2, MapPin, Phone, Globe, Clock } from "lucide-react";
 import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 
 const businessInfoSchema = z.object({
   name: z.string().min(2, "Business name is required"),
@@ -97,6 +98,7 @@ export default function BIIF() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4">
+      <Header />
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
