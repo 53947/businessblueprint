@@ -9,6 +9,9 @@ import googleRoutes from "./routes/google";
 import linkedinRoutes from "./routes/linkedin";
 import tiktokRoutes from "./routes/tiktok";
 import snapchatRoutes from "./routes/snapchat";
+import pinterestRoutes from "./routes/pinterest";
+import nextdoorRoutes from "./routes/nextdoor";
+import spotifyRoutes from "./routes/spotify";
 import { tasksRouter } from "./routes/tasks";
 import brandColorsRoutes from "./routes/brand-colors";
 import { registerBillingAdminRoutes } from "./routes/billing-admin";
@@ -2903,6 +2906,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/linkedin", linkedinRoutes);
   app.use("/api/tiktok", tiktokRoutes);
   app.use("/api/snapchat", snapchatRoutes);
+  app.use("/api/pinterest", pinterestRoutes);
+  app.use("/api/nextdoor", nextdoorRoutes);
+  app.use("/api/spotify", spotifyRoutes);
 
   // Telnyx SMS Webhook — receives inbound SMS and routes to / respond inbox
   app.post("/api/telnyx/webhook", async (req, res) => {
