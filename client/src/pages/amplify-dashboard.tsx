@@ -230,6 +230,27 @@ function SentimentBadge({ sentiment }: { sentiment: string }) {
   );
 }
 
+function useConnectPlatform() {
+  const [connecting, setConnecting] = useState<string | null>(null);
+
+  const connect = async (platform: "meta" | "google" | "microsoft") => {
+    setConnecting(platform);
+    try {
+      const res = await apiRequest("POST", "/api/amplify/accounts/connect", { platform });
+      const data = await res.json();
+      if (data.success && data.oauthUrl) {
+        window.location.href = data.oauthUrl;
+      }
+    } catch (err) {
+      console.error(`Failed to connect ${platform}:`, err);
+    } finally {
+      setConnecting(null);
+    }
+  };
+
+  return { connect, connecting };
+}
+
 function EmptyState({ message, action, onAction }: { message: string; action?: string; onAction?: () => void }) {
   return (
     <Card>
@@ -270,6 +291,7 @@ function formatCurrency(value: number) {
 
 function OverviewTab() {
   const [, setLocation] = useLocation();
+  const { connect, connecting } = useConnectPlatform();
 
   const { data: accountsData, isLoading: accountsLoading } = useQuery({
     queryKey: ["/api/amplify/accounts"],
@@ -334,9 +356,26 @@ function OverviewTab() {
                     </span>
                   )}
                 </div>
-                {account.connected && account.accountName && (
+                {account.connected && account.accountName ? (
                   <span className="text-xs text-gray-500">{account.accountName}</span>
-                )}
+                ) : !account.connected && ["Meta", "Google", "Microsoft"].includes(account.platform) ? (
+                  <Button
+                    size="sm"
+                    className="text-xs h-7"
+                    style={{ backgroundColor: AMPLIFY_COLOR }}
+                    disabled={connecting === account.platform.toLowerCase()}
+                    onClick={() => connect(account.platform.toLowerCase() as "meta" | "google" | "microsoft")}
+                  >
+                    {connecting === account.platform.toLowerCase() ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <>
+                        <Link2 className="w-3 h-3 mr-1" />
+                        Connect
+                      </>
+                    )}
+                  </Button>
+                ) : null}
               </CardContent>
             </Card>
           ))}
@@ -416,6 +455,7 @@ function OverviewTab() {
 
 function MetaBaseTab() {
   const [, setLocation] = useLocation();
+  const { connect, connecting } = useConnectPlatform();
   const [subTab, setSubTab] = useState("campaigns");
 
   const { data, isLoading } = useQuery({
@@ -530,11 +570,29 @@ function MetaBaseTab() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-              <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
-              <p className="text-sm text-amber-800">
-                Meta Ads API integration is coming soon. Reddit advertising is fully available now.
-              </p>
+            <div className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ backgroundColor: `${AMPLIFY_COLOR}20` }}
+              >
+                <Megaphone className="w-5 h-5" style={{ color: AMPLIFY_COLOR }} />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-sm">Meta Business Account</p>
+                <p className="text-xs text-gray-500">Connect your Meta Business account to manage Facebook and Instagram ads.</p>
+              </div>
+              <Button
+                style={{ backgroundColor: AMPLIFY_COLOR }}
+                disabled={connecting === "meta"}
+                onClick={() => connect("meta")}
+              >
+                {connecting === "meta" ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : (
+                  <Link2 className="w-4 h-4 mr-2" />
+                )}
+                Connect Meta Ads
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -547,6 +605,7 @@ function MetaBaseTab() {
 
 function GoogleBaseTab() {
   const [, setLocation] = useLocation();
+  const { connect, connecting } = useConnectPlatform();
   const [subTab, setSubTab] = useState("campaigns");
 
   const { data, isLoading } = useQuery({
@@ -667,11 +726,53 @@ function GoogleBaseTab() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-              <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
-              <p className="text-sm text-amber-800">
-                Google Ads and Microsoft Advertising API integrations are coming soon. Reddit advertising is fully available now.
-              </p>
+            <div className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ backgroundColor: `${AMPLIFY_COLOR}20` }}
+              >
+                <Globe className="w-5 h-5" style={{ color: AMPLIFY_COLOR }} />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-sm">Google Ads Account</p>
+                <p className="text-xs text-gray-500">Connect your Google Ads account to manage search, display, and video campaigns.</p>
+              </div>
+              <Button
+                style={{ backgroundColor: AMPLIFY_COLOR }}
+                disabled={connecting === "google"}
+                onClick={() => connect("google")}
+              >
+                {connecting === "google" ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : (
+                  <Link2 className="w-4 h-4 mr-2" />
+                )}
+                Connect Google Ads
+              </Button>
+            </div>
+            <div className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
+              <div
+                className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ backgroundColor: `${AMPLIFY_COLOR}20` }}
+              >
+                <BarChart3 className="w-5 h-5" style={{ color: AMPLIFY_COLOR }} />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-sm">Microsoft Advertising Account</p>
+                <p className="text-xs text-gray-500">Connect your Microsoft Advertising account to manage Bing search and audience campaigns.</p>
+              </div>
+              <Button
+                style={{ backgroundColor: AMPLIFY_COLOR }}
+                disabled={connecting === "microsoft"}
+                onClick={() => connect("microsoft")}
+              >
+                {connecting === "microsoft" ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : (
+                  <Link2 className="w-4 h-4 mr-2" />
+                )}
+                Connect Microsoft Ads
+              </Button>
             </div>
           </CardContent>
         </Card>

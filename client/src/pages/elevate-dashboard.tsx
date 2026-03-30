@@ -395,7 +395,7 @@ export default function ElevateDashboard() {
                     <div className="flex justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <span className="font-medium">Facebook</span>
-                        <Badge variant="outline" className="text-xs text-gray-400 border-gray-300">Coming Soon</Badge>
+                        <Badge variant="outline" className="text-xs text-gray-400 border-gray-300">Recommendations</Badge>
                       </div>
                       <span className="text-gray-400">{displayMetrics.platformBreakdown.facebook} reviews</span>
                     </div>

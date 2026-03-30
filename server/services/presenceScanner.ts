@@ -586,33 +586,231 @@ export class PresenceScannerService {
   }
 
   /**
-   * Scan social media presence
-   * NOTE: This is a placeholder implementation. Real implementation requires:
-   * - Facebook Graph API integration
-   * - Instagram Basic Display API
-   * - Twitter API v2
-   * - LinkedIn API
-   * - YouTube Data API
+   * Scan social media presence using available APIs
+   *
+   * Checks: Facebook (Graph API), Instagram (via FB), Twitter/X (HTTP probe),
+   * LinkedIn (HTTP probe), YouTube (Data API)
    */
   private async scanSocialMedia(businessName: string): Promise<SocialMediaScan> {
-    console.log(`ℹ️ Social media scanning not yet implemented for: ${businessName}`);
-    
-    // TODO: Implement real social media discovery
-    // For now, return neutral scores to avoid misleading data
-    const platforms = {
-      facebook: { exists: false, isActive: false },
-      instagram: { exists: false, isActive: false },
-      twitter: { exists: false, isActive: false },
-      linkedin: { exists: false, isActive: false },
-      youtube: { exists: false, isActive: false },
-    };
+    console.log(`🔍 Scanning social media for: ${businessName}`);
 
-    return {
-      platforms,
-      totalPresence: 0,
-      activeProfiles: 0,
-      score: 50, // Neutral score (not 0 to avoid penalizing unknowns)
-    };
+    const businessSlug = businessName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '')
+      .slice(0, 60);
+
+    // Run all platform checks in parallel
+    const [facebook, instagram, twitter, linkedin, youtube] = await Promise.all([
+      this.checkFacebook(businessName),
+      this.checkInstagram(businessName),
+      this.checkTwitter(businessSlug),
+      this.checkLinkedIn(businessSlug),
+      this.checkYouTube(businessName),
+    ]);
+
+    const platforms = { facebook, instagram, twitter, linkedin, youtube };
+
+    const totalPresence = Object.values(platforms).filter(p => p.exists).length;
+    const activeProfiles = Object.values(platforms).filter(p => p.isActive).length;
+
+    // Score: each platform found = 15 points, active bonus = 5 points each
+    const score = Math.min(100, totalPresence * 15 + activeProfiles * 5);
+
+    console.log(`📊 Social media scan: ${totalPresence}/5 present, ${activeProfiles} active, score: ${score}/100`);
+
+    return { platforms, totalPresence, activeProfiles, score };
+  }
+
+  /**
+   * Check Facebook page existence via Graph API search
+   */
+  private async checkFacebook(businessName: string): Promise<PlatformPresence> {
+    const appId = process.env.META_APP_ID;
+    const appSecret = process.env.META_APP_SECRET;
+
+    if (!appId || !appSecret) {
+      console.log('ℹ️ META_APP_ID / META_APP_SECRET not set — skipping Facebook check');
+      return { exists: false, isActive: false };
+    }
+
+    try {
+      const appToken = `${appId}|${appSecret}`;
+      const searchUrl = `https://graph.facebook.com/v21.0/pages/search?q=${encodeURIComponent(businessName)}&access_token=${encodeURIComponent(appToken)}&fields=name,link,fan_count&limit=5`;
+      const response = await fetch(searchUrl, { signal: AbortSignal.timeout(8000) });
+
+      if (!response.ok) {
+        console.warn(`⚠️ Facebook Graph API returned ${response.status}`);
+        return { exists: false, isActive: false };
+      }
+
+      const data = await response.json() as any;
+      const pages = data?.data || [];
+
+      if (pages.length === 0) {
+        return { exists: false, isActive: false };
+      }
+
+      // Pick the best match (first result from the API is usually most relevant)
+      const page = pages[0];
+      return {
+        exists: true,
+        url: page.link || `https://www.facebook.com/${page.id}`,
+        followers: page.fan_count || undefined,
+        isActive: true, // If the page exists in search, it's active
+      };
+    } catch (error) {
+      console.warn('⚠️ Facebook check failed:', error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
+  }
+
+  /**
+   * Check Instagram presence via Facebook Graph API (linked IG account)
+   * Falls back to false if no Meta credentials are available.
+   */
+  private async checkInstagram(businessName: string): Promise<PlatformPresence> {
+    const appId = process.env.META_APP_ID;
+    const appSecret = process.env.META_APP_SECRET;
+
+    if (!appId || !appSecret) {
+      return { exists: false, isActive: false };
+    }
+
+    try {
+      // Instagram Business Discovery requires a page-scoped token, which we don't have
+      // for arbitrary businesses. Use the pages/search result and check for instagram_business_account.
+      // The app token can search pages but can't access IG fields on other pages,
+      // so we do a lightweight username probe instead.
+      const slug = businessName.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const probeUrl = `https://www.instagram.com/${slug}/`;
+      const response = await fetch(probeUrl, {
+        method: 'HEAD',
+        redirect: 'follow',
+        signal: AbortSignal.timeout(8000),
+        headers: { 'User-Agent': 'BusinessBlueprint-Scanner/1.0' },
+      });
+
+      // Instagram returns 200 for existing profiles and 404 for missing ones
+      if (response.ok) {
+        return {
+          exists: true,
+          url: probeUrl,
+          isActive: true,
+        };
+      }
+      return { exists: false, isActive: false };
+    } catch (error) {
+      console.warn('⚠️ Instagram check failed:', error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
+  }
+
+  /**
+   * Check Twitter/X presence via HTTP probe
+   * No API key required — uses a HEAD request to x.com/{slug}
+   */
+  private async checkTwitter(businessSlug: string): Promise<PlatformPresence> {
+    try {
+      const probeUrl = `https://x.com/${businessSlug}`;
+      const response = await fetch(probeUrl, {
+        method: 'HEAD',
+        redirect: 'follow',
+        signal: AbortSignal.timeout(8000),
+        headers: { 'User-Agent': 'BusinessBlueprint-Scanner/1.0' },
+      });
+
+      if (response.ok) {
+        return {
+          exists: true,
+          url: probeUrl,
+          isActive: true,
+        };
+      }
+      return { exists: false, isActive: false };
+    } catch (error) {
+      console.warn('⚠️ Twitter/X check failed:', error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
+  }
+
+  /**
+   * Check LinkedIn company page via HTTP probe (HEAD request)
+   */
+  private async checkLinkedIn(businessSlug: string): Promise<PlatformPresence> {
+    try {
+      const probeUrl = `https://www.linkedin.com/company/${businessSlug}`;
+      const response = await fetch(probeUrl, {
+        method: 'HEAD',
+        redirect: 'follow',
+        signal: AbortSignal.timeout(8000),
+        headers: { 'User-Agent': 'BusinessBlueprint-Scanner/1.0' },
+      });
+
+      // LinkedIn returns 200 for existing company pages
+      if (response.ok) {
+        return {
+          exists: true,
+          url: probeUrl,
+          isActive: true,
+        };
+      }
+      return { exists: false, isActive: false };
+    } catch (error) {
+      console.warn('⚠️ LinkedIn check failed:', error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
+  }
+
+  /**
+   * Check YouTube channel presence via YouTube Data API v3
+   * Uses GOOGLE_PLACES_API_KEY (same Google Cloud project key works for YouTube Data API)
+   */
+  private async checkYouTube(businessName: string): Promise<PlatformPresence> {
+    const apiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.GOOGLE_API_KEY;
+
+    if (!apiKey) {
+      console.log('ℹ️ No Google API key available — skipping YouTube check');
+      return { exists: false, isActive: false };
+    }
+
+    try {
+      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(businessName)}&type=channel&maxResults=3&key=${apiKey}`;
+      const response = await fetch(searchUrl, { signal: AbortSignal.timeout(8000) });
+
+      if (!response.ok) {
+        // 403 usually means YouTube Data API isn't enabled on this key — not an error
+        if (response.status === 403) {
+          console.log('ℹ️ YouTube Data API not enabled for this key — skipping');
+        } else {
+          console.warn(`⚠️ YouTube API returned ${response.status}`);
+        }
+        return { exists: false, isActive: false };
+      }
+
+      const data = await response.json() as any;
+      const channels = data?.items || [];
+
+      if (channels.length === 0) {
+        return { exists: false, isActive: false };
+      }
+
+      // Check if any result closely matches the business name
+      const nameLower = businessName.toLowerCase();
+      const match = channels.find((ch: any) =>
+        ch.snippet?.title?.toLowerCase().includes(nameLower) ||
+        nameLower.includes(ch.snippet?.title?.toLowerCase() || '')
+      ) || channels[0]; // Fall back to top result
+
+      const channelId = match.snippet?.channelId || match.id?.channelId;
+      return {
+        exists: true,
+        url: channelId ? `https://www.youtube.com/channel/${channelId}` : undefined,
+        isActive: true,
+      };
+    } catch (error) {
+      console.warn('⚠️ YouTube check failed:', error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
   }
 
   /**
@@ -649,9 +847,12 @@ export class PresenceScannerService {
         claimed: yelpResult.isClaimed || false, 
         isConsistent: true 
       },
-      facebook: { exists: false, claimed: false, isConsistent: true }, // TODO: Add Facebook API
-      yellowPages: { exists: false, claimed: false, isConsistent: true }, // TODO: Add scraping
-      bbb: { exists: false, claimed: false, isConsistent: true }, // TODO: Add scraping
+      facebook: { exists: false, claimed: false, isConsistent: true }, // Covered by social media scan; directory listing not separately checked
+      // Yellow Pages and BBB: These directories don't offer public APIs.
+      // Scraping their pages is fragile, violates their ToS, and breaks frequently.
+      // We intentionally leave these as unknown rather than returning unreliable data.
+      yellowPages: { exists: false, claimed: false, isConsistent: true },
+      bbb: { exists: false, claimed: false, isConsistent: true },
     };
 
     const totalListings = Object.values(platforms).filter(p => p.exists).length;
@@ -712,27 +913,34 @@ export class PresenceScannerService {
     );
 
     const platforms = {
-      google: { 
+      google: {
         exists: googleResult.exists && (googleResult.reviewCount || 0) > 0,
         reviewCount: googleResult.reviewCount || 0,
         averageRating: googleResult.rating || 0,
         recentReviews: (googleResult.reviews || []).length,
-        responseRate: 0, // TODO: Calculate response rate
+        // Google Places API returns up to 5 reviews and doesn't expose owner_response
+        // in the basic fields we fetch. Response rate can't be reliably calculated
+        // from partial data, so we leave it at 0 (unknown) rather than guessing.
+        responseRate: 0,
       },
-      yelp: { 
+      yelp: {
         exists: yelpResult.exists && (yelpResult.reviewCount || 0) > 0,
         reviewCount: yelpResult.reviewCount || 0,
         averageRating: yelpResult.rating || 0,
         recentReviews: (yelpResult.reviews || []).length,
-        responseRate: 0, // TODO: Calculate response rate
+        // Yelp API v3 does not include business owner responses in review data.
+        // Response rate can't be calculated from available data.
+        responseRate: 0,
       },
-      facebook: { 
-        exists: false, 
-        reviewCount: 0, 
-        averageRating: 0, 
-        recentReviews: 0, 
-        responseRate: 0 
-      }, // TODO: Add Facebook Graph API
+      facebook: {
+        exists: false,
+        reviewCount: 0,
+        averageRating: 0,
+        recentReviews: 0,
+        // Facebook page reviews require a page access token from the business owner.
+        // Not available during a public scan.
+        responseRate: 0,
+      },
     };
 
     // Calculate totals

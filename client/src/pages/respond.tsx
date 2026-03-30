@@ -38,6 +38,7 @@ import {
 import { SiWhatsapp, SiTiktok } from 'react-icons/si';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import { formatDistanceToNow } from 'date-fns';
 import { BRAND_HEX } from '@/lib/brand-colors';
 import { CrmEmptyState, CRM_EMPTY_CONFIGS } from '@/components/crm-empty-state';
@@ -143,7 +144,8 @@ export default function InboxPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
   const { toast } = useToast();
-  
+  const { user } = useAuth();
+
   const crmPresence = useCrmPresence();
 
   // Check authentication
@@ -323,7 +325,7 @@ export default function InboxPage() {
       socket.emit('agent:message', {
         conversationId: selectedConversation,
         message: messageInput,
-        agentName: 'Agent', // TODO: Get from session
+        agentName: user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : 'Agent',
       });
     }
   };
@@ -335,7 +337,7 @@ export default function InboxPage() {
     if (socket && selectedConversation) {
       socket.emit('user:typing', {
         conversationId: selectedConversation,
-        name: 'Agent',
+        name: user?.firstName || 'Agent',
       });
 
       // Clear previous timeout
@@ -388,7 +390,7 @@ export default function InboxPage() {
             data-testid="button-respond-settings"
             onClick={() => toast({
               title: "Channel Settings",
-              description: "Email sending is active. SMS, WhatsApp, Facebook, and Instagram channel integrations are coming soon."
+              description: "Email, SMS, Facebook, and Instagram messaging are active. WhatsApp is available with Meta Business verification. X (Twitter) and TikTok DM integrations coming soon."
             })}
           >
             <Settings className="h-4 w-4" />

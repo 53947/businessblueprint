@@ -902,7 +902,7 @@ export default function ContentManagement() {
                         <Button
                           className="w-full bg-blue-700 hover:bg-blue-800 text-white"
                           disabled={connectedPlatforms.some((p: any) => p.platform === 'linkedin')}
-                          onClick={() => toast({ title: "Coming Soon", description: "LinkedIn integration will be available once API credentials are configured." })}
+                          onClick={() => window.location.href = `/api/linkedin/oauth/start?clientId=${clientId}&returnUrl=/post`}
                           data-testid="button-connect-linkedin"
                         >
                           {connectedPlatforms.some((p: any) => p.platform === 'linkedin') ? 'Connected' : 'Connect LinkedIn'}
@@ -926,7 +926,7 @@ export default function ContentManagement() {
                         <Button
                           className="w-full bg-black hover:bg-gray-900 text-white"
                           disabled={connectedPlatforms.some((p: any) => p.platform === 'twitter' || p.platform === 'x')}
-                          onClick={() => toast({ title: "Coming Soon", description: "X (Twitter) integration will be available once API credentials are configured." })}
+                          onClick={() => toast({ title: "X (Twitter) Not Available", description: "X (Twitter) connection requires API access approval. Apply at developer.twitter.com" })}
                           data-testid="button-connect-twitter"
                         >
                           {connectedPlatforms.some((p: any) => p.platform === 'twitter' || p.platform === 'x') ? 'Connected' : 'Connect X'}
@@ -974,7 +974,7 @@ export default function ContentManagement() {
                         <Button
                           className="w-full bg-black hover:bg-gray-900 text-white"
                           disabled={connectedPlatforms.some((p: any) => p.platform === 'tiktok')}
-                          onClick={() => toast({ title: "Coming Soon", description: "TikTok integration will be available once API credentials are configured." })}
+                          onClick={() => window.location.href = `/api/tiktok/oauth/start?clientId=${clientId}&returnUrl=/post`}
                           data-testid="button-connect-tiktok"
                         >
                           {connectedPlatforms.some((p: any) => p.platform === 'tiktok') ? 'Connected' : 'Connect TikTok'}

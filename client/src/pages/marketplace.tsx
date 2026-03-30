@@ -20,7 +20,12 @@ import {
   MessageSquare,
   Wrench,
   Paperclip,
-  Target
+  Target,
+  Globe,
+  PenTool,
+  Megaphone,
+  Monitor,
+  Mail
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { AppIcon } from "@/components/app-name";
@@ -230,7 +235,104 @@ export default function MarketplacePage() {
   ];
 
 
-  const mspServices: Addon[] = []; // TODO: Define MSP services
+  const mspServices: Addon[] = [
+    {
+      id: 'msp-social-management',
+      name: 'Social Media Management',
+      icon: MessageSquare,
+      emoji: '📲',
+      price: 299,
+      priceNote: '/mo',
+      description: 'Done-for-you social posting & engagement',
+      accentColor: 'pink',
+      features: [
+        '12 branded posts per month',
+        'Platform management (FB, IG, Google)',
+        'Community engagement & replies',
+        'Monthly performance report'
+      ]
+    },
+    {
+      id: 'msp-reputation',
+      name: 'Reputation Management',
+      icon: Star,
+      emoji: '🛡️',
+      price: 199,
+      priceNote: '/mo',
+      description: 'Professional review monitoring & response',
+      accentColor: 'yellow',
+      features: [
+        'Same-day review responses',
+        'Review generation campaigns',
+        'Negative review escalation',
+        'Monthly reputation scorecard'
+      ]
+    },
+    {
+      id: 'msp-seo-content',
+      name: 'SEO Content Writing',
+      icon: PenTool,
+      emoji: '✍️',
+      price: 349,
+      priceNote: '/mo',
+      description: 'Local SEO blog posts & content strategy',
+      accentColor: 'green',
+      features: [
+        '4 SEO-optimized blog posts/mo',
+        'Local keyword targeting',
+        'Google Business Profile updates',
+        'Quarterly content strategy review'
+      ]
+    },
+    {
+      id: 'msp-paid-ads',
+      name: 'Paid Ads Management',
+      icon: Megaphone,
+      emoji: '📣',
+      price: 499,
+      priceNote: '/mo + ad spend',
+      description: 'Google & Meta ad campaign management',
+      accentColor: 'blue',
+      features: [
+        'Campaign setup & optimization',
+        'Ad creative design',
+        'A/B testing & bid management',
+        'Weekly performance reports'
+      ]
+    },
+    {
+      id: 'msp-website-maintenance',
+      name: 'Website Maintenance',
+      icon: Monitor,
+      emoji: '🖥️',
+      price: 99,
+      priceNote: '/mo',
+      description: 'Hosting, updates & security via hostsblue.com',
+      accentColor: 'gray',
+      features: [
+        'Managed hosting & SSL',
+        'Monthly plugin & CMS updates',
+        'Uptime monitoring & backups',
+        'Up to 1 hr content edits/mo'
+      ]
+    },
+    {
+      id: 'msp-email-marketing',
+      name: 'Email Marketing Setup',
+      icon: Mail,
+      emoji: '📧',
+      price: 249,
+      priceNote: '/mo',
+      description: 'Campaign design, automation & list building',
+      accentColor: 'orange',
+      features: [
+        '4 branded email campaigns/mo',
+        'List segmentation & growth',
+        'Automated drip sequences',
+        'Open & click-rate reporting'
+      ]
+    }
+  ];
 
   const alaCarteServices: Addon[] = [
     {
