@@ -6,6 +6,9 @@ import { randomBytes } from "crypto";
 import contentRoutes from "./routes/content";
 import metaRoutes from "./routes/meta";
 import googleRoutes from "./routes/google";
+import linkedinRoutes from "./routes/linkedin";
+import tiktokRoutes from "./routes/tiktok";
+import snapchatRoutes from "./routes/snapchat";
 import { tasksRouter } from "./routes/tasks";
 import brandColorsRoutes from "./routes/brand-colors";
 import { registerBillingAdminRoutes } from "./routes/billing-admin";
@@ -2897,6 +2900,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Meta (Facebook/Instagram/WhatsApp) Integration Routes
   app.use("/api/meta", metaRoutes);
   app.use("/api/google", googleRoutes);
+  app.use("/api/linkedin", linkedinRoutes);
+  app.use("/api/tiktok", tiktokRoutes);
+  app.use("/api/snapchat", snapchatRoutes);
 
   // Telnyx SMS Webhook — receives inbound SMS and routes to / respond inbox
   app.post("/api/telnyx/webhook", async (req, res) => {
