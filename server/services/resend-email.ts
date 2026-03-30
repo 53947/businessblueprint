@@ -1,72 +1,49 @@
 import { Resend } from 'resend';
 
-// Replit Resend Connector Integration
-// WARNING: Never cache this client - access tokens may expire
-let connectionSettings: any;
-
 async function getResendCredentials(): Promise<{ apiKey: string; fromEmail: string } | null> {
+  // Check RESEND_API_KEY env var FIRST (works on Railway, Replit, and all deployments)
+  const envApiKey = process.env.RESEND_API_KEY;
+  if (envApiKey) {
+    console.log('[Email] Using RESEND_API_KEY from environment');
+    return { apiKey: envApiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
+  }
+
+  // Secondary fallback: Replit connector (only works on Replit deployments)
   try {
     const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
-    
-    // If no connector hostname, fall back to env var
     if (!hostname) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
-      }
-      console.warn('[Email Service] No Resend connector or RESEND_API_KEY configured');
+      console.error('[Email] FAILED — no RESEND_API_KEY env var and no Replit connector configured');
       return null;
     }
-    
-    const xReplitToken = process.env.REPL_IDENTITY 
-      ? 'repl ' + process.env.REPL_IDENTITY 
-      : process.env.WEB_REPL_RENEWAL 
-      ? 'depl ' + process.env.WEB_REPL_RENEWAL 
+
+    const xReplitToken = process.env.REPL_IDENTITY
+      ? 'repl ' + process.env.REPL_IDENTITY
+      : process.env.WEB_REPL_RENEWAL
+      ? 'depl ' + process.env.WEB_REPL_RENEWAL
       : null;
 
     if (!xReplitToken) {
-      // Fall back to env var
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
-      }
-      console.warn('[Email Service] No Replit token found for connector');
+      console.error('[Email] FAILED — no RESEND_API_KEY env var and no Replit connector configured');
       return null;
     }
 
-    connectionSettings = await fetch(
+    const connectionSettings = await fetch(
       'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
-      {
-        headers: {
-          'Accept': 'application/json',
-          'X_REPLIT_TOKEN': xReplitToken
-        }
-      }
+      { headers: { 'Accept': 'application/json', 'X_REPLIT_TOKEN': xReplitToken } }
     ).then(res => res.json()).then(data => data.items?.[0]);
 
-    if (!connectionSettings || !connectionSettings.settings?.api_key) {
-      // Fall back to env var
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        console.log('[Email Service] Using RESEND_API_KEY from environment');
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
-      }
-      console.warn('[Email Service] Resend connector not configured');
-      return null;
+    if (connectionSettings?.settings?.api_key) {
+      console.log('[Email] Using Replit connector');
+      return {
+        apiKey: connectionSettings.settings.api_key,
+        fromEmail: connectionSettings.settings.from_email || 'noreply@businessblueprint.io'
+      };
     }
-    
-    console.log('[Email Service] Using Resend connector credentials');
-    return {
-      apiKey: connectionSettings.settings.api_key,
-      fromEmail: connectionSettings.settings.from_email || 'noreply@businessblueprint.io'
-    };
+
+    console.error('[Email] FAILED — no RESEND_API_KEY env var and no Replit connector configured');
+    return null;
   } catch (error) {
-    console.error('[Email Service] Error fetching Resend credentials:', error);
-    // Fall back to env var
-    const apiKey = process.env.RESEND_API_KEY;
-    if (apiKey) {
-      return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
-    }
+    console.error('[Email] FAILED — no RESEND_API_KEY env var and no Replit connector configured');
     return null;
   }
 }
@@ -481,17 +458,22 @@ export class ResendEmailService {
     const baseUrl = process.env.FRONTEND_URL || 'https://businessblueprint.io';
     
     const getProductIcon = (productId: string | undefined): string => {
-      const iconMap: Record<string, string> = {
-        'send': 'send.png',
-        'inbox': 'inbox.png', 
-        'content': 'content.png',
-        'livechat': 'livechat.png',
-        'reputation': 'reputation.png',
-        'listings': 'listings.png',
-        'localblue': 'localblue.png',
-        'commverse': 'commverse.png',
+      // Product icons use app accent colors as CSS-based icons in emails
+      // No broken image tags — return empty string if no match
+      const colorMap: Record<string, string> = {
+        'promote': '#1844A6',
+        'respond': '#001882',
+        'engage': '#660099',
+        'post': '#FF44CC',
+        'publish': '#064A6C',
+        'elevate': '#E9B307',
+        'optimize': '#374151',
+        'amplify': '#97ACCA',
+        'connect': '#008060',
       };
-      return productId ? `${baseUrl}/${iconMap[productId] || 'send.png'}` : `${baseUrl}/send.png`;
+      const color = productId ? colorMap[productId] : null;
+      if (!color) return '';
+      return `<span style="display:inline-block;width:12px;height:12px;background:${color};border-radius:3px;margin-right:6px;vertical-align:middle;"></span>`;
     };
     
     return `
@@ -739,13 +721,11 @@ export class ResendEmailService {
           </div>
           
           <div class="bundle-item">
-            <img src="${baseUrl}/commverse.png" alt="CommVerse Bundle" />
-            <p><strong>CommVerse Bundle ($99/mo):</strong> Includes Send, Content, Inbox (unified communications), and LiveChat (website chat widget)—all four tools in one integrated platform. Save money and manage everything from one dashboard.</p>
+            <p><strong style="color: #F97316;">/ compass suite ($99/mo):</strong> Includes / promote (email campaigns), / post (social media), / respond (unified inbox), and / engage (live chat widget) — all four communication tools in one integrated platform.</p>
           </div>
-          
+
           <div class="bundle-item" style="margin-top: 20px;">
-            <img src="${baseUrl}/localblue.png" alt="LocalBlue Bundle" />
-            <p><strong>LocalBlue Bundle ($59/mo):</strong> Includes Reputation, business Listings management, and Google Business Profile optimization for complete local SEO dominance.</p>
+            <p><strong style="color: #97ACCA;">/ anchor suite ($99/mo):</strong> Includes / elevate (reputation & reviews), / publish (business listings), / optimize (SEO health), and / amplify (advertising) — complete local SEO and visibility.</p>
           </div>
         </div>
         
@@ -950,8 +930,8 @@ export class ResendEmailService {
         
         <ul style="margin: 20px 0; padding-left: 20px;">
           <li><strong>Your Prescription:</strong> How to read and prioritize your recommendations</li>
-          <li><strong>The 5-Step Journey:</strong> Assessment → Prescription → LocalBlue → Coach Blue → CommVerse</li>
-          <li><strong>Our Tools:</strong> A complete overview of all 9 apps and what they do</li>
+          <li><strong>The 6-Step Journey:</strong> Scan → Blueprint → / connect → / anchor suite → / compass suite → Coach Blue</li>
+          <li><strong>Our Tools:</strong> A complete overview of all our apps and what they do</li>
           <li><strong>Getting Started:</strong> Which tools to implement first for maximum impact</li>
         </ul>
         
@@ -970,7 +950,7 @@ export class ResendEmailService {
           
           <p>The platform tour is just the beginning. If you want <strong>ongoing, personalized guidance</strong> as you grow your business, I'm available as a premium subscription.</p>
           
-          <p><strong>With Coach Blue Premium ($99/mo), I'll help you:</strong></p>
+          <p><strong>With Coach Blue ($99/mo standalone, $59/mo with one suite, free with both suites), I'll help you:</strong></p>
           <ul>
             <li>Implement your prescription step-by-step</li>
             <li>Troubleshoot technical issues</li>

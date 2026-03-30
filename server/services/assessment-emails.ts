@@ -3,64 +3,49 @@ import { db } from '../db';
 import { emailLogs } from '@shared/schema';
 
 async function getResendCredentials(): Promise<{ apiKey: string; fromEmail: string } | null> {
+  // Check RESEND_API_KEY env var FIRST (works on Railway, Replit, and all deployments)
+  const envApiKey = process.env.RESEND_API_KEY;
+  if (envApiKey) {
+    console.log('[Email] Using RESEND_API_KEY from environment');
+    return { apiKey: envApiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
+  }
+
+  // Secondary fallback: Replit connector (only works on Replit deployments)
   try {
     const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
-    
     if (!hostname) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
-      }
-      console.warn('[Assessment Email] No Resend connector or RESEND_API_KEY configured');
+      console.error('[Email] FAILED — no RESEND_API_KEY env var and no Replit connector configured');
       return null;
     }
-    
-    const xReplitToken = process.env.REPL_IDENTITY 
-      ? 'repl ' + process.env.REPL_IDENTITY 
-      : process.env.WEB_REPL_RENEWAL 
-      ? 'depl ' + process.env.WEB_REPL_RENEWAL 
+
+    const xReplitToken = process.env.REPL_IDENTITY
+      ? 'repl ' + process.env.REPL_IDENTITY
+      : process.env.WEB_REPL_RENEWAL
+      ? 'depl ' + process.env.WEB_REPL_RENEWAL
       : null;
 
     if (!xReplitToken) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
-      }
-      console.warn('[Assessment Email] No Replit token found for connector');
+      console.error('[Email] FAILED — no RESEND_API_KEY env var and no Replit connector configured');
       return null;
     }
 
     const connectionSettings = await fetch(
       'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
-      {
-        headers: {
-          'Accept': 'application/json',
-          'X_REPLIT_TOKEN': xReplitToken
-        }
-      }
+      { headers: { 'Accept': 'application/json', 'X_REPLIT_TOKEN': xReplitToken } }
     ).then(res => res.json()).then(data => data.items?.[0]);
 
-    if (!connectionSettings || !connectionSettings.settings?.api_key) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        console.log('[Assessment Email] Using RESEND_API_KEY from environment');
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
-      }
-      console.warn('[Assessment Email] Resend connector not configured');
-      return null;
+    if (connectionSettings?.settings?.api_key) {
+      console.log('[Email] Using Replit connector');
+      return {
+        apiKey: connectionSettings.settings.api_key,
+        fromEmail: connectionSettings.settings.from_email || 'noreply@businessblueprint.io'
+      };
     }
-    
-    console.log('[Assessment Email] Using Resend connector credentials');
-    return {
-      apiKey: connectionSettings.settings.api_key,
-      fromEmail: connectionSettings.settings.from_email || 'noreply@businessblueprint.io'
-    };
+
+    console.error('[Email] FAILED — no RESEND_API_KEY env var and no Replit connector configured');
+    return null;
   } catch (error) {
-    console.error('[Assessment Email] Error fetching Resend credentials:', error);
-    const apiKey = process.env.RESEND_API_KEY;
-    if (apiKey) {
-      return { apiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
-    }
+    console.error('[Email] FAILED — no RESEND_API_KEY env var and no Replit connector configured');
     return null;
   }
 }

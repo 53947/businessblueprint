@@ -3058,9 +3058,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         assessmentId: assessmentId || 1,
         summary: "Your business shows strong potential but has room for improvement in digital presence.",
         recommendations: [
-          { category: "Email & SMS Marketing", title: "Start email campaigns", description: "Begin collecting emails and sending regular newsletters", priority: "high", productId: "send" },
-          { category: "Social Media Content", title: "Increase posting frequency", description: "Post 3-5 times per week on social media", priority: "high", productId: "content" },
-          { category: "Reputation Management", title: "Respond to reviews", description: "Reply to all customer reviews within 24 hours", priority: "medium", productId: "reputation" },
+          { category: "Email & SMS Marketing", title: "Start email campaigns", description: "Begin collecting emails and sending regular newsletters", priority: "high", productId: "promote" },
+          { category: "Social Media Content", title: "Increase posting frequency", description: "Post 3-5 times per week on social media", priority: "high", productId: "post" },
+          { category: "Reputation Management", title: "Respond to reviews", description: "Reply to all customer reviews within 24 hours", priority: "medium", productId: "elevate" },
         ]
       };
       
@@ -3131,14 +3131,23 @@ async function processAssessmentAsync(
 ) {
   console.log(`[Assessment Pipeline] ▶️ STARTING background processing for assessment ID: ${assessmentId}`);
   const startTime = Date.now();
-  
+
   // Helper function to log with timing
   const logStep = (step: string, message: string) => {
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
     console.log(`[Assessment Pipeline] [${elapsed}s] ${step}: ${message}`);
   };
-  
+
+  // Hard timeout of 3 minutes — force-fail if pipeline hangs
+  const TIMEOUT_MS = 3 * 60 * 1000;
+  const timeoutPromise = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error("Analysis timed out — please try again")), TIMEOUT_MS)
+  );
+
+  let completed = false;
+
   try {
+    await Promise.race([timeoutPromise, (async () => {
     // Update status to analyzing
     logStep("Step 1", "Updating status to 'analyzing'...");
     await storage.updateAssessment(assessmentId, { status: "analyzing" });
@@ -3398,7 +3407,7 @@ async function processAssessmentAsync(
         priority: rec.priority,
         estimatedImpact: rec.estimatedImpact || "moderate",
         estimatedEffort: rec.estimatedEffort || "low",
-        productId: (rec as any).productId || null, // String product ID from catalog (inbox, send, etc.)
+        productId: (rec as any).productId || null, // String product ID from catalog (promote, respond, etc.)
         bundleId: (rec as any).bundleId || null, // String bundle ID if applicable (commverse, localblue)
       });
     }
@@ -3501,7 +3510,29 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
       logStep("Step 8", `❌ Coach Blue email ERROR: ${coachEmailError}`);
     }
     
+    // ── EMAIL CADENCE ──────────────────────────────────
+    // Report email already sent above (Step 7)
+    // Coach Blue intro already sent above (Step 8)
+    // Schedule the 5-minute delayed thank-you introduction as a background task
+    const assessment = await storage.getAssessment(assessmentId);
+    if (assessment?.email) {
+      setTimeout(async () => {
+        try {
+          console.log(`[Assessment Cadence] Sending 5-minute delayed Coach Blue intro to ${assessment.email}`);
+          const result = await emailService.sendThankYouIntroduction(assessment.email, {
+            businessName: assessment.businessName,
+            assessmentId,
+          });
+          console.log(`[Assessment Cadence] Coach Blue intro ${result ? 'SENT' : 'FAILED'}`);
+        } catch (err) {
+          console.error(`[Assessment Cadence] Coach Blue intro error (non-blocking):`, err);
+        }
+      }, 5 * 60 * 1000); // 5 minutes
+    }
+
+    completed = true;
     logStep("COMPLETE", `✅ Assessment ${assessmentId} fully processed!`);
+    })()]); // end Promise.race
   } catch (error) {
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
     console.error(`[Assessment Pipeline] [${elapsed}s] ❌ FATAL ERROR processing assessment ${assessmentId}:`, error);
@@ -3524,9 +3555,9 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
               digitalScore: assessment.digitalScore || 50,
               summary: `We've completed your Digital IQ Assessment for ${assessment.businessName}. Due to high demand, some advanced analysis features are still processing. You'll receive a follow-up with additional insights shortly.`,
               recommendations: [
-                { category: 'Email Marketing', title: 'Build Your Email List', description: 'Start collecting customer emails to build relationships.', priority: 'high', productId: 'send' },
-                { category: 'Reputation', title: 'Monitor Reviews', description: 'Respond to customer reviews to build trust.', priority: 'medium', productId: 'reputation' },
-                { category: 'Content', title: 'Create Regular Content', description: 'Post consistently on social media.', priority: 'medium', productId: 'content' },
+                { category: 'Email Marketing', title: 'Build Your Email List', description: 'Start collecting customer emails to build relationships.', priority: 'high', productId: 'promote' },
+                { category: 'Reputation', title: 'Monitor Reviews', description: 'Respond to customer reviews to build trust.', priority: 'medium', productId: 'elevate' },
+                { category: 'Content', title: 'Create Regular Content', description: 'Post consistently on social media.', priority: 'medium', productId: 'post' },
               ],
               assessmentId,
             },
@@ -3565,6 +3596,22 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
         await storage.updateAssessment(assessmentId, { status: "failed" });
       } catch (updateError) {
         console.error(`[Assessment Pipeline] Could not update status to failed:`, updateError);
+      }
+    }
+  } finally {
+    // GUARANTEE: assessment status is NEVER left as "pending" or "analyzing"
+    if (!completed) {
+      try {
+        const currentAssessment = await storage.getAssessment(assessmentId);
+        if (currentAssessment && (currentAssessment.status === "pending" || currentAssessment.status === "analyzing")) {
+          const errorMsg = ((Date.now() - startTime) >= TIMEOUT_MS)
+            ? "Analysis timed out — please try again"
+            : "Analysis failed — please try again";
+          await storage.updateAssessment(assessmentId, { status: "failed" });
+          console.error(`[Assessment Pipeline] FINALLY: Force-set assessment ${assessmentId} to 'failed' — ${errorMsg}`);
+        }
+      } catch (finallyError) {
+        console.error(`[Assessment Pipeline] FINALLY: Could not update status:`, finallyError);
       }
     }
   }
