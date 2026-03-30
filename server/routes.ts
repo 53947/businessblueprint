@@ -2898,6 +2898,108 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/meta", metaRoutes);
   app.use("/api/google", googleRoutes);
 
+  // Telnyx SMS Webhook — receives inbound SMS and routes to / respond inbox
+  app.post("/api/telnyx/webhook", async (req, res) => {
+    try {
+      // Respond immediately (Telnyx requires 2xx within 2 seconds)
+      res.status(200).json({ ok: true });
+
+      const event = req.body?.data;
+      if (!event || event.event_type !== "message.received") return;
+
+      const payload = event.payload;
+      if (!payload) return;
+
+      const fromNumber = payload.from?.phone_number;
+      const toNumber = payload.to?.[0]?.phone_number || payload.to;
+      const messageText = payload.text || "";
+      const messageId = payload.id;
+
+      if (!fromNumber || !messageText) return;
+
+      // Find which client owns this Telnyx number
+      // Look up by the "to" number in adAccountConnections or use a default client
+      // For now, find conversations with this sender
+      const [existingConv] = await db
+        .select()
+        .from(inboxConversations)
+        .where(
+          and(
+            eq(inboxConversations.contactIdentifier, fromNumber),
+            eq(inboxConversations.primaryChannelType, "sms"),
+          ),
+        )
+        .limit(1);
+
+      if (existingConv) {
+        // Add message to existing conversation
+        await db.insert(inboxMessages2).values({
+          conversationId: existingConv.id,
+          channelType: "sms",
+          messageType: "incoming",
+          direction: "inbound",
+          content: messageText,
+          contentType: "text",
+          fromIdentifier: fromNumber,
+          fromName: existingConv.contactName || fromNumber,
+          toIdentifier: toNumber,
+          toName: "Support",
+          externalMessageId: messageId,
+          status: "delivered",
+          deliveredAt: new Date(),
+          metadata: { provider: "telnyx", event: payload },
+        });
+
+        // Update conversation
+        await db.update(inboxConversations)
+          .set({
+            lastMessageAt: new Date(),
+            lastMessagePreview: messageText.substring(0, 100),
+            unreadCount: (existingConv.unreadCount || 0) + 1,
+            updatedAt: new Date(),
+          })
+          .where(eq(inboxConversations.id, existingConv.id));
+
+        console.log(`[Telnyx] SMS received from ${fromNumber} → conversation ${existingConv.id}`);
+      } else {
+        // Create new conversation for this SMS sender
+        const [newConv] = await db.insert(inboxConversations).values({
+          clientId: 1, // Default client — will be refined when multi-tenant matching is built
+          contactName: fromNumber,
+          contactIdentifier: fromNumber,
+          primaryChannelType: "sms",
+          status: "open",
+          priority: "normal",
+          lastMessageAt: new Date(),
+          lastMessagePreview: messageText.substring(0, 100),
+          unreadCount: 1,
+        }).returning();
+
+        await db.insert(inboxMessages2).values({
+          conversationId: newConv.id,
+          channelType: "sms",
+          messageType: "incoming",
+          direction: "inbound",
+          content: messageText,
+          contentType: "text",
+          fromIdentifier: fromNumber,
+          fromName: fromNumber,
+          toIdentifier: toNumber,
+          toName: "Support",
+          externalMessageId: messageId,
+          status: "delivered",
+          deliveredAt: new Date(),
+          metadata: { provider: "telnyx", event: payload },
+        });
+
+        console.log(`[Telnyx] New SMS conversation from ${fromNumber}`);
+      }
+    } catch (error) {
+      console.error("[Telnyx] Webhook processing error:", error);
+      // Don't send error response — we already sent 200
+    }
+  });
+
   // Task Management Routes (protected by authentication)
   app.use("/api/tasks", isAuthenticated, tasksRouter);
 
