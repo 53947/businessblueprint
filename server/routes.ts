@@ -12,6 +12,7 @@ import snapchatRoutes from "./routes/snapchat";
 import pinterestRoutes from "./routes/pinterest";
 import nextdoorRoutes from "./routes/nextdoor";
 import spotifyRoutes from "./routes/spotify";
+import microsoftAdsRoutes from "./routes/microsoft-ads";
 import { tasksRouter } from "./routes/tasks";
 import brandColorsRoutes from "./routes/brand-colors";
 import { registerBillingAdminRoutes } from "./routes/billing-admin";
@@ -2909,6 +2910,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use("/api/pinterest", pinterestRoutes);
   app.use("/api/nextdoor", nextdoorRoutes);
   app.use("/api/spotify", spotifyRoutes);
+  app.use("/api/microsoft-ads", microsoftAdsRoutes);
 
   // Telnyx SMS Webhook — receives inbound SMS and routes to / respond inbox
   app.post("/api/telnyx/webhook", async (req, res) => {

@@ -238,13 +238,22 @@ router.post(
         return res.json({ success: true, oauthUrl: authUrl.toString() });
       }
 
-      // Microsoft — still coming soon
+      // Microsoft Advertising OAuth
       if (platformLower === "microsoft") {
-        return res.json({
-          success: true,
-          oauthUrl: null,
-          message: "Microsoft Advertising integration is coming soon.",
-        });
+        const msClientId = process.env.MICROSOFT_ADS_CLIENT_ID;
+        if (!msClientId) {
+          return res.status(500).json({ success: false, message: "Microsoft Advertising OAuth not configured" });
+        }
+        const redirectUri = `${req.protocol}://${req.get("host")}/api/microsoft-ads/oauth/callback`;
+        const state = Buffer.from(JSON.stringify({ nonce: crypto.randomBytes(16).toString("hex"), timestamp: Date.now() })).toString("base64");
+        const authUrl = new URL("https://login.microsoftonline.com/common/oauth2/v2.0/authorize");
+        authUrl.searchParams.set("client_id", msClientId);
+        authUrl.searchParams.set("redirect_uri", redirectUri);
+        authUrl.searchParams.set("response_type", "code");
+        authUrl.searchParams.set("scope", "https://ads.microsoft.com/msads.manage openid profile email");
+        authUrl.searchParams.set("state", state);
+        authUrl.searchParams.set("prompt", "consent");
+        return res.json({ success: true, oauthUrl: authUrl.toString() });
       }
 
       return res.status(400).json({
