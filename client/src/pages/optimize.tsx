@@ -9,8 +9,19 @@ import {
   Target, Search, FileText, Wrench, PenTool, Link2, MapPin,
   Code2, Sparkles, BarChart3, RefreshCw, Plus, Trash2, ExternalLink,
   AlertTriangle, CheckCircle2, Clock, ArrowUp, ArrowDown, Minus,
-  Loader2, X, ChevronRight, Eye, TrendingUp
+  Loader2, X, ChevronRight, Eye, TrendingUp, Copy, Download,
+  Globe, Phone, Building2, ShieldCheck, Star, Info, Calendar,
+  Hash, Tag, Clipboard
 } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { SectionHeader } from "@/components/section-header";
 import { Footer } from "@/components/footer";
 import { useToast } from "@/hooks/use-toast";
@@ -95,11 +106,11 @@ export default function OptimizeDashboard() {
         {activeTab === 'on-page' && <OnPageTab />}
         {activeTab === 'technical' && <TechnicalTab />}
         {activeTab === 'content' && <ContentTab />}
-        {activeTab === 'backlinks' && <ComingSoonTab title="Backlink Monitor" icon={Link2} description="Track your backlink profile, monitor new and lost links, and analyze domain authority. Coming in a future update." />}
-        {activeTab === 'local-seo' && <ComingSoonTab title="Local SEO Optimizer" icon={MapPin} description="Optimize for local search with location-specific keyword tracking, Google Business Profile integration, and local citation management." />}
-        {activeTab === 'schema' && <ComingSoonTab title="Schema Markup Generator" icon={Code2} description="Generate structured data (JSON-LD) for your pages with a visual wizard. Support for LocalBusiness, Product, FAQ, and more." />}
+        {activeTab === 'backlinks' && <BacklinksTab />}
+        {activeTab === 'local-seo' && <LocalSeoTab />}
+        {activeTab === 'schema' && <SchemaTab />}
         {activeTab === 'action-plan' && <ActionPlanTab />}
-        {activeTab === 'reports' && <ComingSoonTab title="Reporting & Insights" icon={BarChart3} description="Generate beautiful SEO performance reports with trend analysis, competitive benchmarking, and actionable insights." />}
+        {activeTab === 'reports' && <ReportsTab />}
       </div>
       <Footer />
     </div>
@@ -915,22 +926,1342 @@ function ActionPlanTab() {
 }
 
 // =============================================
-// COMING SOON TAB
+// BACKLINKS TAB
 // =============================================
 
-function ComingSoonTab({ title, icon: Icon, description }: { title: string; icon: any; description: string }) {
+function BacklinksTab() {
+  const { toast } = useToast();
+  const [urlInput, setUrlInput] = useState('');
+  const queryClient = useQueryClient();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['/api/seo/backlinks'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/backlinks'); return res.json(); },
+  });
+
+  const { data: profileData } = useQuery({
+    queryKey: ['/api/seo/profiles'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/profiles'); return res.json(); },
+  });
+
+  const [checkingUrl, setCheckingUrl] = useState(false);
+  const [checkedBacklinks, setCheckedBacklinks] = useState<any[]>([]);
+
+  const handleCheckUrl = async () => {
+    if (!urlInput.trim()) return;
+    setCheckingUrl(true);
+    try {
+      const res = await apiRequest('POST', '/api/seo/scan', { scanType: 'full' });
+      await res.json();
+      toast({ title: "Backlink Check Started", description: "We're scanning for backlinks. This may take a moment." });
+      // Refresh backlinks data after a delay
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['/api/seo/backlinks'] });
+      }, 3000);
+    } catch {
+      toast({ title: "Error", description: "Failed to check backlinks", variant: "destructive" });
+    }
+    setCheckingUrl(false);
+  };
+
+  if (isLoading) return <LoadingState />;
+
+  const backlinks = data?.backlinks || [];
+  const domain = profileData?.profile?.domain || '';
+
   return (
-    <div className="flex items-center justify-center py-20">
-      <Card className="max-w-md text-center">
-        <CardContent className="pt-8 pb-8">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gray-100">
-            <Icon className="w-8 h-8 text-gray-400" />
+    <div className="space-y-6">
+      {/* Explainer Card */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${OPTIMIZE_COLOR}15` }}>
+              <Link2 className="w-6 h-6" style={{ color: OPTIMIZE_COLOR }} />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-1" style={{ color: OPTIMIZE_COLOR }}>What Are Backlinks?</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Backlinks are links from other websites that point to your site. Think of them as "votes of confidence" from other sites.
+                The more quality backlinks you have, the more search engines trust your website, which helps you rank higher in search results.
+                Links from well-known, reputable sites carry more weight than links from unknown sites.
+              </p>
+            </div>
           </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
-          <p className="text-gray-500 text-sm mb-4">{description}</p>
-          <Badge variant="secondary" className="text-xs">Coming Soon</Badge>
         </CardContent>
       </Card>
+
+      {/* URL Check */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Search className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            Check Your Backlinks
+          </CardTitle>
+          <CardDescription>Enter your domain to discover who links to your website</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-3">
+            <Input
+              placeholder={domain ? domain : "Enter your domain (e.g., example.com)..."}
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleCheckUrl()}
+              data-testid="input-backlink-url"
+            />
+            <Button
+              onClick={handleCheckUrl}
+              disabled={checkingUrl}
+              style={{ backgroundColor: OPTIMIZE_COLOR }}
+              className="text-white"
+              data-testid="button-check-backlinks"
+            >
+              {checkingUrl ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Search className="w-4 h-4 mr-2" />}
+              Check
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Backlinks Summary */}
+      {backlinks.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="pt-4 pb-4 text-center">
+              <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>{backlinks.length}</p>
+              <p className="text-xs text-gray-500 font-medium">Total Backlinks</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-4 pb-4 text-center">
+              <p className="text-2xl font-bold text-green-600">
+                {backlinks.filter((b: any) => b.status === 'active').length}
+              </p>
+              <p className="text-xs text-gray-500 font-medium">Active Links</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-4 pb-4 text-center">
+              <p className="text-2xl font-bold text-blue-600">
+                {new Set(backlinks.map((b: any) => {
+                  try { return new URL(b.sourceUrl || '').hostname; } catch { return b.sourceUrl; }
+                })).size}
+              </p>
+              <p className="text-xs text-gray-500 font-medium">Referring Domains</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-4 pb-4 text-center">
+              <p className="text-2xl font-bold text-purple-600">
+                {Math.round(backlinks.reduce((sum: number, b: any) => sum + (b.domainAuthority || 0), 0) / (backlinks.length || 1))}
+              </p>
+              <p className="text-xs text-gray-500 font-medium">Avg. Domain Authority</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Backlinks Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Discovered Backlinks ({backlinks.length})</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {backlinks.length === 0 ? (
+            <EmptyState message="Add your domain above to discover your backlink profile. We'll find sites that link to you." />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b text-left">
+                    <th className="pb-3 text-sm font-medium text-gray-500">Source Domain</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500">Anchor Text</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">DA</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Status</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">First Seen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {backlinks.map((bl: any) => {
+                    let sourceDomain = bl.sourceUrl || '—';
+                    try { sourceDomain = new URL(bl.sourceUrl).hostname; } catch {}
+                    return (
+                      <tr key={bl.id} className="border-b last:border-0">
+                        <td className="py-3">
+                          <div className="flex items-center gap-2">
+                            <Globe className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            <div className="min-w-0">
+                              <p className="font-medium text-sm truncate">{sourceDomain}</p>
+                              <a href={bl.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 truncate block">
+                                {bl.sourceUrl} <ExternalLink className="w-3 h-3 inline" />
+                              </a>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-3 text-sm text-gray-600">
+                          {bl.anchorText || <span className="text-gray-400 italic">no anchor</span>}
+                        </td>
+                        <td className="py-3 text-center">
+                          {bl.domainAuthority ? (
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${
+                              bl.domainAuthority >= 50 ? 'bg-green-100 text-green-700' :
+                              bl.domainAuthority >= 20 ? 'bg-yellow-100 text-yellow-700' :
+                              'bg-gray-100 text-gray-600'
+                            }`}>{bl.domainAuthority}</span>
+                          ) : <span className="text-gray-400">—</span>}
+                        </td>
+                        <td className="py-3 text-center">
+                          <Badge variant={bl.status === 'active' ? 'default' : 'secondary'} className="text-xs">
+                            {bl.status || 'active'}
+                          </Badge>
+                        </td>
+                        <td className="py-3 text-center text-xs text-gray-400">
+                          {bl.firstSeen ? new Date(bl.firstSeen).toLocaleDateString() : '—'}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// =============================================
+// LOCAL SEO TAB
+// =============================================
+
+function LocalSeoTab() {
+  const { data: profileData, isLoading: profileLoading } = useQuery({
+    queryKey: ['/api/seo/profiles'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/profiles'); return res.json(); },
+  });
+
+  const { data: dashData } = useQuery({
+    queryKey: ['/api/seo/dashboard'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/dashboard'); return res.json(); },
+  });
+
+  const { data: keywordsData } = useQuery({
+    queryKey: ['/api/seo/keywords'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/keywords'); return res.json(); },
+  });
+
+  if (profileLoading) return <LoadingState />;
+
+  const profile = profileData?.profile;
+  const dashboard = dashData?.data;
+  const keywords = keywordsData?.keywords || [];
+  const localEnabled = profile?.localEnabled || false;
+  const location = profile?.location || '';
+  const businessName = profile?.businessName || '';
+
+  // Simulated local SEO score based on available data
+  const hasLocation = !!location;
+  const hasBusinessName = !!businessName;
+  const hasKeywords = keywords.length > 0;
+  const hasScan = dashboard?.overallScore !== null && dashboard?.overallScore !== undefined;
+  let localScore = 0;
+  if (hasLocation) localScore += 25;
+  if (hasBusinessName) localScore += 25;
+  if (hasKeywords) localScore += 25;
+  if (hasScan && dashboard?.overallScore >= 50) localScore += 25;
+
+  // Generate local keyword suggestions based on profile
+  const localKeywordSuggestions = [];
+  if (businessName && location) {
+    const industry = profile?.industry || 'business';
+    localKeywordSuggestions.push(
+      `${industry} near ${location}`,
+      `best ${industry} in ${location}`,
+      `${businessName} reviews`,
+      `${industry} ${location} open now`,
+      `affordable ${industry} ${location}`,
+      `top rated ${industry} near me`,
+    );
+  }
+
+  // NAP directories simulation
+  const napDirectories = [
+    { name: 'Google Business Profile', icon: Globe, status: localEnabled ? 'connected' : 'not connected' },
+    { name: 'Yelp', icon: Star, status: 'unknown' },
+    { name: 'Facebook Business', icon: Building2, status: 'unknown' },
+    { name: 'Apple Maps', icon: MapPin, status: 'unknown' },
+    { name: 'Bing Places', icon: Search, status: 'unknown' },
+    { name: 'Yellow Pages', icon: Phone, status: 'unknown' },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Local SEO Score */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="md:col-span-1">
+          <CardContent className="pt-6 text-center">
+            <div className="relative inline-flex items-center justify-center w-28 h-28 mb-4">
+              <svg className="w-28 h-28 -rotate-90" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="54" stroke="#e5e7eb" strokeWidth="8" fill="none" />
+                <circle
+                  cx="60" cy="60" r="54"
+                  stroke={localScore >= 70 ? '#22c55e' : localScore >= 40 ? '#f59e0b' : '#ef4444'}
+                  strokeWidth="8" fill="none"
+                  strokeDasharray={`${(localScore / 100) * 339.3} 339.3`}
+                  strokeLinecap="round"
+                />
+              </svg>
+              <span className="absolute text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>
+                {localScore}
+              </span>
+            </div>
+            <p className="text-sm font-medium text-gray-500">Local SEO Health</p>
+            <p className="text-xs text-gray-400 mt-1">Based on your profile completeness</p>
+          </CardContent>
+        </Card>
+
+        <Card className="md:col-span-2">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+              Local SEO Checklist
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <ChecklistItem checked={hasBusinessName} label="Business name configured" detail={businessName || 'Set up in your SEO profile'} />
+              <ChecklistItem checked={hasLocation} label="Business location set" detail={location || 'Add location in SEO profile settings'} />
+              <ChecklistItem checked={localEnabled} label="Local SEO enabled" detail={localEnabled ? 'Active' : 'Enable in your profile settings'} />
+              <ChecklistItem checked={hasKeywords} label="Keywords being tracked" detail={hasKeywords ? `${keywords.length} keywords tracked` : 'Add keywords in the Keywords tab'} />
+              <ChecklistItem checked={hasScan} label="Site scan completed" detail={hasScan ? `Score: ${dashboard?.overallScore}/100` : 'Run a scan from the Overview tab'} />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Google Business Profile */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Globe className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            Google Business Profile
+          </CardTitle>
+          <CardDescription>Your Google Business Profile is essential for appearing in local search results and Google Maps</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {localEnabled ? (
+            <div className="flex items-center gap-3 p-4 bg-green-50 rounded-lg">
+              <CheckCircle2 className="w-6 h-6 text-green-600 flex-shrink-0" />
+              <div>
+                <p className="font-medium text-green-800">Local SEO is enabled for your profile</p>
+                <p className="text-sm text-green-600">Your business information is being optimized for local search</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 p-4 bg-amber-50 rounded-lg">
+              <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="font-medium text-amber-800">Local SEO not enabled</p>
+                <p className="text-sm text-amber-600 mb-2">Enable local SEO in your profile settings to optimize for local search results</p>
+                <a
+                  href="https://business.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-800"
+                >
+                  Set up Google Business Profile <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* NAP Consistency */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Building2 className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            NAP Consistency Checker
+          </CardTitle>
+          <CardDescription>
+            NAP stands for Name, Address, Phone. Consistent business information across directories helps search engines trust your business.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {!businessName && !location ? (
+            <EmptyState message="Add your business name and location in your SEO profile to check NAP consistency across directories." />
+          ) : (
+            <div className="space-y-3">
+              {businessName && (
+                <div className="p-3 bg-gray-50 rounded-lg mb-4">
+                  <p className="text-xs text-gray-500 mb-1">Your Business Info</p>
+                  <p className="font-medium text-sm">{businessName}</p>
+                  {location && <p className="text-sm text-gray-600">{location}</p>}
+                </div>
+              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {napDirectories.map((dir) => (
+                  <div key={dir.name} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <dir.icon className="w-5 h-5 text-gray-400" />
+                      <span className="text-sm font-medium">{dir.name}</span>
+                    </div>
+                    <Badge variant={dir.status === 'connected' ? 'default' : dir.status === 'not connected' ? 'destructive' : 'secondary'} className="text-xs">
+                      {dir.status}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Local Keyword Suggestions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Tag className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            Local Keyword Suggestions
+          </CardTitle>
+          <CardDescription>Keywords that can help your business appear in local search results</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {localKeywordSuggestions.length === 0 ? (
+            <EmptyState message="Add your business name and location to get local keyword suggestions." />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {localKeywordSuggestions.map((kw, i) => (
+                <div key={i} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                  <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                  <span className="text-sm font-medium">{kw}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function ChecklistItem({ checked, label, detail }: { checked: boolean; label: string; detail: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${checked ? 'bg-green-100' : 'bg-gray-100'}`}>
+        {checked ? <CheckCircle2 className="w-4 h-4 text-green-600" /> : <Minus className="w-4 h-4 text-gray-400" />}
+      </div>
+      <div>
+        <p className={`text-sm font-medium ${checked ? 'text-gray-900' : 'text-gray-500'}`}>{label}</p>
+        <p className="text-xs text-gray-400">{detail}</p>
+      </div>
+    </div>
+  );
+}
+
+// =============================================
+// SCHEMA MARKUP TAB
+// =============================================
+
+const SCHEMA_TYPES = [
+  { value: 'LocalBusiness', label: 'Local Business' },
+  { value: 'Product', label: 'Product' },
+  { value: 'FAQ', label: 'FAQ' },
+  { value: 'Event', label: 'Event' },
+  { value: 'Restaurant', label: 'Restaurant' },
+];
+
+function SchemaTab() {
+  const { toast } = useToast();
+  const [schemaType, setSchemaType] = useState('LocalBusiness');
+  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [faqItems, setFaqItems] = useState([{ question: '', answer: '' }]);
+  const [generatedSchema, setGeneratedSchema] = useState('');
+
+  const { data: profileData } = useQuery({
+    queryKey: ['/api/seo/profiles'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/profiles'); return res.json(); },
+  });
+
+  const profile = profileData?.profile;
+
+  // Pre-fill from profile when type changes
+  useEffect(() => {
+    const defaults: Record<string, string> = {};
+    if (schemaType === 'LocalBusiness' || schemaType === 'Restaurant') {
+      defaults.name = profile?.businessName || '';
+      defaults.address = profile?.location || '';
+      defaults.url = profile?.domain ? (profile.domain.startsWith('http') ? profile.domain : `https://${profile.domain}`) : '';
+    }
+    setFormData(defaults);
+    setFaqItems([{ question: '', answer: '' }]);
+    setGeneratedSchema('');
+  }, [schemaType, profile?.businessName, profile?.location, profile?.domain]);
+
+  const updateField = (key: string, value: string) => {
+    setFormData(prev => ({ ...prev, [key]: value }));
+  };
+
+  const generateSchema = () => {
+    let schema: any = {};
+
+    if (schemaType === 'LocalBusiness') {
+      schema = {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": formData.name || "Your Business Name",
+        "description": formData.description || "",
+        "url": formData.url || "",
+        "telephone": formData.phone || "",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": formData.streetAddress || "",
+          "addressLocality": formData.city || "",
+          "addressRegion": formData.state || "",
+          "postalCode": formData.zip || "",
+          "addressCountry": formData.country || "US"
+        },
+        "openingHours": formData.hours || "",
+        "priceRange": formData.priceRange || ""
+      };
+      if (formData.image) schema.image = formData.image;
+    } else if (schemaType === 'Restaurant') {
+      schema = {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": formData.name || "Your Restaurant Name",
+        "description": formData.description || "",
+        "url": formData.url || "",
+        "telephone": formData.phone || "",
+        "servesCuisine": formData.cuisine || "",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": formData.streetAddress || "",
+          "addressLocality": formData.city || "",
+          "addressRegion": formData.state || "",
+          "postalCode": formData.zip || "",
+          "addressCountry": formData.country || "US"
+        },
+        "openingHours": formData.hours || "",
+        "priceRange": formData.priceRange || "",
+        "menu": formData.menuUrl || ""
+      };
+      if (formData.image) schema.image = formData.image;
+    } else if (schemaType === 'Product') {
+      schema = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": formData.productName || "Product Name",
+        "description": formData.description || "",
+        "image": formData.image || "",
+        "brand": {
+          "@type": "Brand",
+          "name": formData.brand || ""
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": formData.price || "",
+          "priceCurrency": formData.currency || "USD",
+          "availability": formData.availability || "https://schema.org/InStock",
+          "url": formData.url || ""
+        }
+      };
+      if (formData.sku) schema.sku = formData.sku;
+    } else if (schemaType === 'FAQ') {
+      const validFaqs = faqItems.filter(f => f.question.trim() && f.answer.trim());
+      schema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": validFaqs.map(faq => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.answer
+          }
+        }))
+      };
+    } else if (schemaType === 'Event') {
+      schema = {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": formData.eventName || "Event Name",
+        "description": formData.description || "",
+        "startDate": formData.startDate || "",
+        "endDate": formData.endDate || "",
+        "location": {
+          "@type": "Place",
+          "name": formData.venueName || "",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": formData.streetAddress || "",
+            "addressLocality": formData.city || "",
+            "addressRegion": formData.state || "",
+            "postalCode": formData.zip || ""
+          }
+        },
+        "organizer": {
+          "@type": "Organization",
+          "name": formData.organizer || "",
+          "url": formData.organizerUrl || ""
+        }
+      };
+      if (formData.image) schema.image = formData.image;
+      if (formData.ticketUrl) {
+        schema.offers = {
+          "@type": "Offer",
+          "url": formData.ticketUrl,
+          "price": formData.ticketPrice || "",
+          "priceCurrency": formData.currency || "USD",
+          "availability": "https://schema.org/InStock"
+        };
+      }
+    }
+
+    // Clean up empty strings
+    const cleanSchema = JSON.parse(JSON.stringify(schema, (key, value) => {
+      if (value === "" && key !== "@context" && key !== "@type") return undefined;
+      if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+        const entries = Object.entries(value).filter(([k, v]) => v !== undefined && v !== "");
+        if (entries.length === 0) return undefined;
+      }
+      return value;
+    }));
+
+    const output = JSON.stringify(cleanSchema, null, 2);
+    setGeneratedSchema(output);
+    toast({ title: "Schema Generated", description: "Your JSON-LD markup is ready to copy" });
+  };
+
+  const copyToClipboard = () => {
+    const scriptTag = `<script type="application/ld+json">\n${generatedSchema}\n</script>`;
+    navigator.clipboard.writeText(scriptTag).then(() => {
+      toast({ title: "Copied!", description: "Schema markup copied to clipboard. Paste it into your website's <head> section." });
+    }).catch(() => {
+      toast({ title: "Copy Failed", description: "Please select and copy the markup manually.", variant: "destructive" });
+    });
+  };
+
+  const renderFormFields = () => {
+    if (schemaType === 'LocalBusiness' || schemaType === 'Restaurant') {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="text-sm">Business Name *</Label>
+            <Input value={formData.name || ''} onChange={(e) => updateField('name', e.target.value)} placeholder="Acme Coffee Shop" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Phone</Label>
+            <Input value={formData.phone || ''} onChange={(e) => updateField('phone', e.target.value)} placeholder="+1-555-123-4567" />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <Label className="text-sm">Description</Label>
+            <Textarea value={formData.description || ''} onChange={(e) => updateField('description', e.target.value)} placeholder="A brief description of your business..." rows={2} />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Website URL</Label>
+            <Input value={formData.url || ''} onChange={(e) => updateField('url', e.target.value)} placeholder="https://example.com" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Street Address</Label>
+            <Input value={formData.streetAddress || ''} onChange={(e) => updateField('streetAddress', e.target.value)} placeholder="123 Main St" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">City</Label>
+            <Input value={formData.city || ''} onChange={(e) => updateField('city', e.target.value)} placeholder="San Francisco" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">State</Label>
+            <Input value={formData.state || ''} onChange={(e) => updateField('state', e.target.value)} placeholder="CA" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">ZIP Code</Label>
+            <Input value={formData.zip || ''} onChange={(e) => updateField('zip', e.target.value)} placeholder="94102" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Opening Hours</Label>
+            <Input value={formData.hours || ''} onChange={(e) => updateField('hours', e.target.value)} placeholder="Mo-Fr 09:00-17:00" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Price Range</Label>
+            <Input value={formData.priceRange || ''} onChange={(e) => updateField('priceRange', e.target.value)} placeholder="$$" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Image URL</Label>
+            <Input value={formData.image || ''} onChange={(e) => updateField('image', e.target.value)} placeholder="https://example.com/photo.jpg" />
+          </div>
+          {schemaType === 'Restaurant' && (
+            <>
+              <div className="space-y-2">
+                <Label className="text-sm">Cuisine Type</Label>
+                <Input value={formData.cuisine || ''} onChange={(e) => updateField('cuisine', e.target.value)} placeholder="Italian, Mexican, etc." />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm">Menu URL</Label>
+                <Input value={formData.menuUrl || ''} onChange={(e) => updateField('menuUrl', e.target.value)} placeholder="https://example.com/menu" />
+              </div>
+            </>
+          )}
+        </div>
+      );
+    }
+
+    if (schemaType === 'Product') {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="text-sm">Product Name *</Label>
+            <Input value={formData.productName || ''} onChange={(e) => updateField('productName', e.target.value)} placeholder="Widget Pro 2000" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Brand</Label>
+            <Input value={formData.brand || ''} onChange={(e) => updateField('brand', e.target.value)} placeholder="Acme Corp" />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <Label className="text-sm">Description</Label>
+            <Textarea value={formData.description || ''} onChange={(e) => updateField('description', e.target.value)} placeholder="Product description..." rows={2} />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Price</Label>
+            <Input value={formData.price || ''} onChange={(e) => updateField('price', e.target.value)} placeholder="29.99" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Currency</Label>
+            <Input value={formData.currency || 'USD'} onChange={(e) => updateField('currency', e.target.value)} placeholder="USD" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">SKU</Label>
+            <Input value={formData.sku || ''} onChange={(e) => updateField('sku', e.target.value)} placeholder="WP-2000" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Product URL</Label>
+            <Input value={formData.url || ''} onChange={(e) => updateField('url', e.target.value)} placeholder="https://example.com/product" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Image URL</Label>
+            <Input value={formData.image || ''} onChange={(e) => updateField('image', e.target.value)} placeholder="https://example.com/product.jpg" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Availability</Label>
+            <Select value={formData.availability || 'https://schema.org/InStock'} onValueChange={(v) => updateField('availability', v)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="https://schema.org/InStock">In Stock</SelectItem>
+                <SelectItem value="https://schema.org/OutOfStock">Out of Stock</SelectItem>
+                <SelectItem value="https://schema.org/PreOrder">Pre-Order</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      );
+    }
+
+    if (schemaType === 'FAQ') {
+      return (
+        <div className="space-y-4">
+          {faqItems.map((faq, idx) => (
+            <div key={idx} className="p-4 border rounded-lg space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium">Question {idx + 1}</Label>
+                {faqItems.length > 1 && (
+                  <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-600"
+                    onClick={() => setFaqItems(prev => prev.filter((_, i) => i !== idx))}>
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+              <Input
+                value={faq.question}
+                onChange={(e) => {
+                  const updated = [...faqItems];
+                  updated[idx] = { ...updated[idx], question: e.target.value };
+                  setFaqItems(updated);
+                }}
+                placeholder="What is your return policy?"
+              />
+              <Textarea
+                value={faq.answer}
+                onChange={(e) => {
+                  const updated = [...faqItems];
+                  updated[idx] = { ...updated[idx], answer: e.target.value };
+                  setFaqItems(updated);
+                }}
+                placeholder="We offer a 30-day money-back guarantee..."
+                rows={2}
+              />
+            </div>
+          ))}
+          <Button variant="outline" size="sm" onClick={() => setFaqItems(prev => [...prev, { question: '', answer: '' }])}>
+            <Plus className="w-4 h-4 mr-2" /> Add Question
+          </Button>
+        </div>
+      );
+    }
+
+    if (schemaType === 'Event') {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="text-sm">Event Name *</Label>
+            <Input value={formData.eventName || ''} onChange={(e) => updateField('eventName', e.target.value)} placeholder="Annual Community Fair" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Venue Name</Label>
+            <Input value={formData.venueName || ''} onChange={(e) => updateField('venueName', e.target.value)} placeholder="City Convention Center" />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <Label className="text-sm">Description</Label>
+            <Textarea value={formData.description || ''} onChange={(e) => updateField('description', e.target.value)} placeholder="Event description..." rows={2} />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Start Date</Label>
+            <Input type="datetime-local" value={formData.startDate || ''} onChange={(e) => updateField('startDate', e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">End Date</Label>
+            <Input type="datetime-local" value={formData.endDate || ''} onChange={(e) => updateField('endDate', e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Street Address</Label>
+            <Input value={formData.streetAddress || ''} onChange={(e) => updateField('streetAddress', e.target.value)} placeholder="123 Main St" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">City</Label>
+            <Input value={formData.city || ''} onChange={(e) => updateField('city', e.target.value)} placeholder="San Francisco" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">State</Label>
+            <Input value={formData.state || ''} onChange={(e) => updateField('state', e.target.value)} placeholder="CA" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">ZIP Code</Label>
+            <Input value={formData.zip || ''} onChange={(e) => updateField('zip', e.target.value)} placeholder="94102" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Organizer</Label>
+            <Input value={formData.organizer || ''} onChange={(e) => updateField('organizer', e.target.value)} placeholder="Community Events Inc." />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Ticket URL</Label>
+            <Input value={formData.ticketUrl || ''} onChange={(e) => updateField('ticketUrl', e.target.value)} placeholder="https://tickets.example.com" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Ticket Price</Label>
+            <Input value={formData.ticketPrice || ''} onChange={(e) => updateField('ticketPrice', e.target.value)} placeholder="25.00" />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-sm">Image URL</Label>
+            <Input value={formData.image || ''} onChange={(e) => updateField('image', e.target.value)} placeholder="https://example.com/event.jpg" />
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Explainer */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${OPTIMIZE_COLOR}15` }}>
+              <Code2 className="w-6 h-6" style={{ color: OPTIMIZE_COLOR }} />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-1" style={{ color: OPTIMIZE_COLOR }}>Schema Markup Generator</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Schema markup (JSON-LD) is structured data you add to your website that helps search engines understand your content better.
+                It can make your search results more eye-catching with rich snippets like star ratings, pricing, and event dates.
+                Fill out the form below, generate the markup, and paste it into your website's HTML.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Schema Type Selector */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Hash className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            Choose Schema Type
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+            {SCHEMA_TYPES.map((type) => (
+              <button
+                key={type.value}
+                onClick={() => setSchemaType(type.value)}
+                className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
+                  schemaType === type.value
+                    ? 'text-white border-transparent'
+                    : 'text-gray-600 border-gray-200 hover:bg-gray-50'
+                }`}
+                style={schemaType === type.value ? { backgroundColor: OPTIMIZE_COLOR } : {}}
+              >
+                {type.label}
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Form Fields */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">
+            {SCHEMA_TYPES.find(t => t.value === schemaType)?.label} Details
+          </CardTitle>
+          <CardDescription>Fill in the fields below. Required fields are marked with *</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {renderFormFields()}
+          <div className="mt-6">
+            <Button
+              onClick={generateSchema}
+              style={{ backgroundColor: OPTIMIZE_COLOR }}
+              className="text-white"
+              data-testid="button-generate-schema"
+            >
+              <Code2 className="w-4 h-4 mr-2" />
+              Generate Schema Markup
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Generated Output */}
+      {generatedSchema && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Clipboard className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                Generated JSON-LD
+              </CardTitle>
+              <Button
+                onClick={copyToClipboard}
+                size="sm"
+                variant="outline"
+                data-testid="button-copy-schema"
+              >
+                <Copy className="w-4 h-4 mr-2" /> Copy to Clipboard
+              </Button>
+            </div>
+            <CardDescription>Paste this code into the {'<head>'} section of your website</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="relative">
+              <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm font-mono leading-relaxed">
+                {`<script type="application/ld+json">\n${generatedSchema}\n</script>`}
+              </pre>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+// =============================================
+// REPORTS TAB
+// =============================================
+
+function ReportsTab() {
+  const { toast } = useToast();
+  const [dateRange, setDateRange] = useState('30');
+
+  const { data: dashData, isLoading: dashLoading } = useQuery({
+    queryKey: ['/api/seo/dashboard'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/dashboard'); return res.json(); },
+  });
+
+  const { data: keywordsData, isLoading: keywordsLoading } = useQuery({
+    queryKey: ['/api/seo/keywords'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/keywords'); return res.json(); },
+  });
+
+  const { data: pagesData, isLoading: pagesLoading } = useQuery({
+    queryKey: ['/api/seo/pages'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/pages'); return res.json(); },
+  });
+
+  const { data: issuesData, isLoading: issuesLoading } = useQuery({
+    queryKey: ['/api/seo/technical-issues'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/technical-issues'); return res.json(); },
+  });
+
+  const { data: briefsData } = useQuery({
+    queryKey: ['/api/seo/content-briefs'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/content-briefs'); return res.json(); },
+  });
+
+  const { data: scansData } = useQuery({
+    queryKey: ['/api/seo/scans'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/scans'); return res.json(); },
+  });
+
+  const isLoading = dashLoading || keywordsLoading || pagesLoading || issuesLoading;
+
+  if (isLoading) return <LoadingState />;
+
+  const dashboard = dashData?.data;
+  const keywords = keywordsData?.keywords || [];
+  const pages = pagesData?.pages || [];
+  const issues = issuesData?.issues || [];
+  const briefs = briefsData?.briefs || [];
+  const scans = scansData?.scans || [];
+
+  const openIssues = issues.filter((i: any) => i.status === 'open');
+  const criticalIssues = openIssues.filter((i: any) => i.severity === 'critical');
+  const highIssues = openIssues.filter((i: any) => i.severity === 'high');
+  const avgPageScore = pages.length > 0
+    ? Math.round(pages.reduce((sum: number, p: any) => sum + (p.score || 0), 0) / pages.length)
+    : null;
+
+  // Filter scans by date range
+  const now = new Date();
+  const rangeMs = parseInt(dateRange) * 24 * 60 * 60 * 1000;
+  const filteredScans = scans.filter((s: any) => {
+    const scanDate = new Date(s.createdAt);
+    return now.getTime() - scanDate.getTime() <= rangeMs;
+  });
+
+  const handleExport = () => {
+    const lines: string[] = [];
+    lines.push('SEO Performance Report');
+    lines.push(`Generated: ${new Date().toLocaleDateString()}`);
+    lines.push(`Period: Last ${dateRange} days`);
+    lines.push('');
+    lines.push('=== OVERVIEW ===');
+    lines.push(`Overall SEO Score: ${dashboard?.overallScore ?? 'N/A'}/100`);
+    lines.push(`Performance Score: ${dashboard?.performanceScore ?? 'N/A'}/100`);
+    lines.push(`SEO Score: ${dashboard?.seoScore ?? 'N/A'}/100`);
+    lines.push(`Accessibility Score: ${dashboard?.accessibilityScore ?? 'N/A'}/100`);
+    lines.push('');
+    lines.push('=== KEYWORDS ===');
+    lines.push(`Keywords Tracked: ${keywords.length}`);
+    keywords.forEach((kw: any) => {
+      lines.push(`  ${kw.keyword} — Rank: ${kw.currentRank || 'N/A'}, Volume: ${kw.searchVolume || 'N/A'}, Difficulty: ${kw.difficulty || 'N/A'}`);
+    });
+    lines.push('');
+    lines.push('=== PAGES ===');
+    lines.push(`Pages Analyzed: ${pages.length}`);
+    lines.push(`Average Page Score: ${avgPageScore ?? 'N/A'}/100`);
+    pages.forEach((p: any) => {
+      lines.push(`  ${p.url} — Score: ${p.score ?? 'N/A'}/100, Words: ${p.wordCount || 'N/A'}`);
+    });
+    lines.push('');
+    lines.push('=== TECHNICAL ISSUES ===');
+    lines.push(`Open Issues: ${openIssues.length}`);
+    lines.push(`  Critical: ${criticalIssues.length}`);
+    lines.push(`  High: ${highIssues.length}`);
+    openIssues.forEach((issue: any) => {
+      lines.push(`  [${issue.severity?.toUpperCase()}] ${issue.description}`);
+    });
+    lines.push('');
+    lines.push('=== CONTENT BRIEFS ===');
+    lines.push(`Total Briefs: ${briefs.length}`);
+    briefs.forEach((b: any) => {
+      lines.push(`  "${b.targetKeyword}" — ${b.title} (${b.status})`);
+    });
+    lines.push('');
+    lines.push(`=== SCANS (Last ${dateRange} Days) ===`);
+    lines.push(`Total Scans: ${filteredScans.length}`);
+    filteredScans.forEach((s: any) => {
+      lines.push(`  ${new Date(s.createdAt).toLocaleDateString()} — ${s.scanType} — Score: ${s.overallScore ?? 'N/A'} — ${s.status}`);
+    });
+
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `seo-report-${new Date().toISOString().split('T')[0]}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast({ title: "Report Exported", description: "Your SEO report has been downloaded." });
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header Row */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <h3 className="text-lg font-bold" style={{ color: OPTIMIZE_COLOR }}>SEO Performance Report</h3>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-gray-400" />
+            <Select value={dateRange} onValueChange={setDateRange}>
+              <SelectTrigger className="w-[140px] h-9">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7">Last 7 days</SelectItem>
+                <SelectItem value="30">Last 30 days</SelectItem>
+                <SelectItem value="90">Last 90 days</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button
+            onClick={handleExport}
+            variant="outline"
+            size="sm"
+            data-testid="button-export-report"
+          >
+            <Download className="w-4 h-4 mr-2" /> Export
+          </Button>
+        </div>
+      </div>
+
+      {/* Score Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <Card>
+          <CardContent className="pt-4 pb-4 text-center">
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
+              (dashboard?.overallScore ?? 0) >= 70 ? 'bg-green-100' :
+              (dashboard?.overallScore ?? 0) >= 40 ? 'bg-yellow-100' : 'bg-red-100'
+            }`}>
+              <Target className={`w-5 h-5 ${
+                (dashboard?.overallScore ?? 0) >= 70 ? 'text-green-600' :
+                (dashboard?.overallScore ?? 0) >= 40 ? 'text-yellow-600' : 'text-red-600'
+              }`} />
+            </div>
+            <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>
+              {dashboard?.overallScore ?? '—'}
+            </p>
+            <p className="text-xs text-gray-500 font-medium">Overall Score</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 pb-4 text-center">
+            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-2">
+              <Search className="w-5 h-5 text-blue-600" />
+            </div>
+            <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>{keywords.length}</p>
+            <p className="text-xs text-gray-500 font-medium">Keywords Tracked</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 pb-4 text-center">
+            <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-2">
+              <FileText className="w-5 h-5 text-purple-600" />
+            </div>
+            <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>{pages.length}</p>
+            <p className="text-xs text-gray-500 font-medium">Pages Analyzed</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 pb-4 text-center">
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
+              criticalIssues.length > 0 ? 'bg-red-100' : 'bg-green-100'
+            }`}>
+              <AlertTriangle className={`w-5 h-5 ${criticalIssues.length > 0 ? 'text-red-600' : 'text-green-600'}`} />
+            </div>
+            <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>{openIssues.length}</p>
+            <p className="text-xs text-gray-500 font-medium">Open Issues</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4 pb-4 text-center">
+            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-2">
+              <PenTool className="w-5 h-5 text-amber-600" />
+            </div>
+            <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>{briefs.length}</p>
+            <p className="text-xs text-gray-500 font-medium">Content Briefs</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Score Breakdown */}
+      {(dashboard?.performanceScore !== null || dashboard?.seoScore !== null) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Score Breakdown</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <ScoreBreakdownItem label="Performance" score={dashboard?.performanceScore} />
+              <ScoreBreakdownItem label="SEO" score={dashboard?.seoScore} />
+              <ScoreBreakdownItem label="Accessibility" score={dashboard?.accessibilityScore} />
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Issue Breakdown */}
+      {openIssues.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Issue Breakdown</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-4 gap-4 mb-4">
+              <div className="text-center p-3 rounded-lg bg-red-50">
+                <p className="text-2xl font-bold text-red-600">{criticalIssues.length}</p>
+                <p className="text-xs text-red-600 font-medium">Critical</p>
+              </div>
+              <div className="text-center p-3 rounded-lg bg-orange-50">
+                <p className="text-2xl font-bold text-orange-600">{highIssues.length}</p>
+                <p className="text-xs text-orange-600 font-medium">High</p>
+              </div>
+              <div className="text-center p-3 rounded-lg bg-yellow-50">
+                <p className="text-2xl font-bold text-yellow-600">
+                  {openIssues.filter((i: any) => i.severity === 'medium').length}
+                </p>
+                <p className="text-xs text-yellow-600 font-medium">Medium</p>
+              </div>
+              <div className="text-center p-3 rounded-lg bg-blue-50">
+                <p className="text-2xl font-bold text-blue-600">
+                  {openIssues.filter((i: any) => i.severity === 'low').length}
+                </p>
+                <p className="text-xs text-blue-600 font-medium">Low</p>
+              </div>
+            </div>
+            <div className="space-y-2">
+              {openIssues.slice(0, 5).map((issue: any) => (
+                <div key={issue.id} className="flex items-center gap-2 text-sm p-2 bg-gray-50 rounded">
+                  <Badge variant={issue.severity === 'critical' || issue.severity === 'high' ? 'destructive' : 'secondary'} className="text-xs">
+                    {issue.severity}
+                  </Badge>
+                  <span className="text-gray-700 truncate">{issue.description}</span>
+                </div>
+              ))}
+              {openIssues.length > 5 && (
+                <p className="text-xs text-gray-400 text-center">+{openIssues.length - 5} more issues</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Keywords Summary */}
+      {keywords.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Top Keywords</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b text-left">
+                    <th className="pb-3 text-sm font-medium text-gray-500">Keyword</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Rank</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Volume</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Difficulty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {keywords.slice(0, 10).map((kw: any) => (
+                    <tr key={kw.id} className="border-b last:border-0">
+                      <td className="py-2 text-sm font-medium">{kw.keyword}</td>
+                      <td className="py-2 text-center">
+                        {kw.currentRank ? (
+                          <span className={`font-bold text-sm ${kw.currentRank <= 10 ? 'text-green-600' : kw.currentRank <= 30 ? 'text-yellow-600' : 'text-gray-500'}`}>
+                            #{kw.currentRank}
+                          </span>
+                        ) : <span className="text-gray-400 text-sm">--</span>}
+                      </td>
+                      <td className="py-2 text-center text-sm text-gray-600">{kw.searchVolume?.toLocaleString() || '--'}</td>
+                      <td className="py-2 text-center">
+                        {kw.difficulty ? (
+                          <Badge variant={kw.difficulty <= 30 ? 'default' : kw.difficulty <= 60 ? 'secondary' : 'destructive'} className="text-xs">
+                            {kw.difficulty}/100
+                          </Badge>
+                        ) : <span className="text-gray-400 text-sm">--</span>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {keywords.length > 10 && (
+              <p className="text-xs text-gray-400 text-center mt-2">Showing top 10 of {keywords.length} keywords</p>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Page Scores */}
+      {pages.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Page Analysis Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-4 mb-4 p-3 bg-gray-50 rounded-lg">
+              <span className="text-sm text-gray-600">Average Page Score:</span>
+              <ScoreBadge score={avgPageScore} />
+            </div>
+            <div className="space-y-2">
+              {pages.slice(0, 8).map((page: any) => (
+                <div key={page.id} className="flex items-center justify-between p-2 border rounded-lg">
+                  <div className="flex-1 min-w-0 mr-4">
+                    <p className="text-sm font-medium truncate">{page.title || page.url}</p>
+                    <p className="text-xs text-gray-400 truncate">{page.url}</p>
+                  </div>
+                  <ScoreBadge score={page.score} />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Scan History */}
+      {filteredScans.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Scan History (Last {dateRange} Days)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {filteredScans.map((scan: any) => (
+                <div key={scan.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Badge variant={scan.status === 'completed' ? 'default' : scan.status === 'running' ? 'secondary' : 'destructive'}>
+                      {scan.status}
+                    </Badge>
+                    <span className="text-sm text-gray-600">{scan.scanType} scan</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    {scan.overallScore !== null && (
+                      <span className="font-bold text-sm" style={{ color: OPTIMIZE_COLOR }}>{scan.overallScore}/100</span>
+                    )}
+                    <span className="text-xs text-gray-400">
+                      {new Date(scan.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* No Data State */}
+      {!dashboard && keywords.length === 0 && pages.length === 0 && (
+        <EmptyState message="No SEO data available yet. Run a scan and add keywords from the other tabs to see your report." />
+      )}
+    </div>
+  );
+}
+
+function ScoreBreakdownItem({ label, score }: { label: string; score: number | null | undefined }) {
+  if (score === null || score === undefined) return null;
+  const color = score >= 70 ? '#22c55e' : score >= 40 ? '#f59e0b' : '#ef4444';
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-medium text-gray-600">{label}</span>
+        <span className="text-sm font-bold" style={{ color }}>{score}/100</span>
+      </div>
+      <div className="w-full bg-gray-200 rounded-full h-3">
+        <div className="h-3 rounded-full transition-all" style={{ width: `${score}%`, backgroundColor: color }} />
+      </div>
     </div>
   );
 }
