@@ -85,22 +85,22 @@ export default function Home() {
               </div>
             </div>
             <div className="lg:text-center">
-              <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden">
-                {/* Blueprint Paper Grid Lines */}
-                <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.4 }}>
+              <div className="p-4 rounded-xl shadow-lg relative overflow-hidden" style={{ backgroundColor: "#064A6C" }}>
+                {/* Blueprint Grid Lines — Triad White on green */}
+                <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.25 }}>
                   <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                       <pattern id="blueprint-grid" width="30" height="30" patternUnits="userSpaceOnUse">
-                        <path d="M 0 0 L 30 0" fill="none" stroke="#16A34A" strokeWidth="1"/>
-                        <path d="M 0 0 L 0 30" fill="none" stroke="#16A34A" strokeWidth="1"/>
+                        <path d="M 0 0 L 30 0" fill="none" stroke="#E9ECF0" strokeWidth="1"/>
+                        <path d="M 0 0 L 0 30" fill="none" stroke="#E9ECF0" strokeWidth="1"/>
                       </pattern>
                     </defs>
                     <rect width="100%" height="100%" fill="url(#blueprint-grid)" />
                   </svg>
                 </div>
 
-                <h3 className="text-xl font-bold text-gray-900 mb-2 relative z-10">A Blueprint to Your Growth</h3>
-                <p className="text-xs text-gray-600 mb-4 relative z-10">
+                <h3 className="text-xl font-bold mb-2 relative z-10" style={{ color: "#E9ECF0" }}>A Blueprint to Your Growth</h3>
+                <p className="text-xs mb-4 relative z-10" style={{ color: "rgba(233,236,240,0.8)" }}>
                   Custom digital growth plan built from AI analysis of your business.
                 </p>
                 <div className="space-y-3 relative z-10">
@@ -112,7 +112,7 @@ export default function Home() {
                     { title: "Activate Your Communications — / compass suite", desc: "Email campaigns, live chat on your website, one inbox for every message channel, and social media scheduling — all connected, all talking to each other.", color: "#F97316" },
                     { title: "Never Grow Alone — Coach Blue", desc: "Coach Blue watches your data, guides your setup, and tells you exactly what needs attention before it becomes a problem.", color: "#0000FF", isPng: true },
                   ].map((step, i) => (
-                    <div key={i} className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: step.color, backgroundColor: "rgba(255,255,255,0.85)" }}>
+                    <div key={i} className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: step.color, backgroundColor: "rgba(6,74,108,0.7)" }}>
                       <div className="flex-shrink-0 -mt-2">
                         {step.isPng ? (
                           <img src={coachBlueStepIcon} alt="Coach Blue" width={40} height={40} style={{ borderRadius: 8, objectFit: "contain" }} />
@@ -121,14 +121,14 @@ export default function Home() {
                         )}
                       </div>
                       <div className="text-left">
-                        <div className="font-bold text-sm text-gray-900">Step {i + 1} — {step.title}</div>
-                        <p className="text-xs text-gray-600">{step.desc}</p>
+                        <div className="font-bold text-sm" style={{ color: "#E9ECF0" }}>Step {i + 1} — {step.title}</div>
+                        <p className="text-xs" style={{ color: "rgba(233,236,240,0.85)" }}>{step.desc}</p>
                       </div>
                     </div>
                   ))}
                 </div>
                 <div className="text-center mt-3">
-                  <a href="/journey" style={{ color: '#A00028', fontSize: 13, fontWeight: 600 }}>
+                  <a href="/journey" style={{ color: '#E9ECF0', fontSize: 13, fontWeight: 600 }}>
                     Read the full story →
                   </a>
                 </div>
