@@ -87,11 +87,13 @@ export default function Home() {
             <div className="lg:text-center">
               <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden">
                 {/* Blueprint Paper Grid Lines */}
-                <div className="absolute inset-0 opacity-10 pointer-events-none">
+                <div className="absolute inset-0 opacity-20 pointer-events-none">
                   <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                       <pattern id="blueprint-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#3B82F6" strokeWidth="0.5"/>
+                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#22C55E" strokeWidth="0.5"/>
+                        <path d="M 0 0 L 20 20" fill="none" stroke="#22C55E" strokeWidth="0.3"/>
+                        <path d="M 20 0 L 0 20" fill="none" stroke="#22C55E" strokeWidth="0.3"/>
                       </pattern>
                     </defs>
                     <rect width="100%" height="100%" fill="url(#blueprint-grid)" />
