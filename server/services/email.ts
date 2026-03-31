@@ -632,21 +632,23 @@ export class EmailService {
     
     const getProductIcon = (productId: string | undefined): string => {
       const iconMap: Record<string, string> = {
-        'send': 'send.png',
-        'inbox': 'inbox.png', 
-        'content': 'content.png',
-        'livechat': 'livechat.png',
-        'reputation': 'reputation.png',
-        'listings': 'listings.png',
-        'localblue': 'localblue.png',
-        'commverse': 'commverse.png',
-        'relationships': 'relationships.png',
+        'promote': 'promote.png',
+        'respond': 'respond.png',
+        'post': 'post.png',
+        'engage': 'engage.png',
+        'elevate': 'elevate.png',
+        'publish': 'publish.png',
+        'optimize': 'optimize.png',
+        'amplify': 'amplify.png',
+        'anchor': 'anchor.png',
+        'compass': 'compass.png',
+        'connect': 'connect.png',
         'website': 'Website-SEO.png',
         'seo': 'Website-SEO.png',
         'hostsblue': 'hostsblue.png',
         'swipesblue': 'swipesblue.png',
       };
-      return productId ? `${baseUrl}/${iconMap[productId] || 'send.png'}` : `${baseUrl}/send.png`;
+      return productId ? `${baseUrl}/${iconMap[productId] || 'promote.png'}` : `${baseUrl}/promote.png`;
     };
     
     return `
@@ -884,13 +886,13 @@ export class EmailService {
           </div>
           
           <div class="bundle-item">
-            <img src="${baseUrl}/commverse.png" alt="CommVerse Bundle" />
-            <p><strong>CommVerse Bundle ($99/mo):</strong> Includes Send, Content, Inbox (unified communications), and LiveChat (website chat widget)—all four tools in one integrated platform. Save money and manage everything from one dashboard.</p>
+            <img src="${baseUrl}/compass.png" alt="Compass Suite" />
+            <p><strong>Compass Suite ($99/mo):</strong> Includes / promote (email campaigns), / respond (unified inbox), / engage (live chat widget), and / post (social media) — all four communication tools in one integrated platform.</p>
           </div>
-          
+
           <div class="bundle-item" style="margin-top: 20px;">
-            <img src="${baseUrl}/localblue.png" alt="LocalBlue Bundle" />
-            <p><strong>LocalBlue Bundle ($59/mo):</strong> Includes Reputation, business Listings management, and Google Business Profile optimization for complete local SEO dominance.</p>
+            <img src="${baseUrl}/anchor.png" alt="Anchor Suite" />
+            <p><strong>Anchor Suite ($99/mo):</strong> Includes / publish (business listings), / elevate (reputation & reviews), / optimize (SEO health), and / amplify (advertising) — complete local SEO and visibility.</p>
           </div>
         </div>
         
@@ -1508,7 +1510,7 @@ export class EmailService {
         
         <ul style="margin: 20px 0; padding-left: 20px;">
           <li><strong>Your Prescription:</strong> How to read and prioritize your recommendations</li>
-          <li><strong>The 5-Step Journey:</strong> Assessment → Prescription → LocalBlue → Coach Blue → CommVerse</li>
+          <li><strong>The 6-Step Journey:</strong> Scan → Prescription → / connect → Anchor Suite → Compass Suite → Coach Blue</li>
           <li><strong>Our Tools:</strong> A complete overview of all 9 apps and what they do</li>
           <li><strong>Getting Started:</strong> Which tools to implement first for maximum impact</li>
         </ul>

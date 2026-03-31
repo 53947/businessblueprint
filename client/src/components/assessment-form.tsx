@@ -728,7 +728,7 @@ export function AssessmentForm() {
                   {/* Google Business Profile */}
                   <div className="bg-white p-6 rounded-lg border-2 border-[#0000FF]/20">
                     <div className="flex items-center gap-3 mb-6">
-                      <img src="/localblue.png" alt="Google Business" className="w-10 h-10" />
+                      <img src="/anchor.png" alt="Google Business" className="w-10 h-10" />
                       <h3 className="text-xl font-bold text-[#0000FF]" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }}>
                         Google Business Profile
                       </h3>
