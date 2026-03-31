@@ -79,7 +79,7 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
           style={{ backgroundColor: primaryColor }}
           aria-label="Open chat"
         >
-          <MessageCircle className="w-7 h-7 text-white" />
+          <MessageCircle className="w-7 h-7" style={{ color: "#E9ECF0" }} />
           {supportUnread > 0 && (
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
               {supportUnread > 9 ? "9+" : supportUnread}
@@ -110,14 +110,14 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold transition-colors relative ${
                   activeTab === "support" ? "opacity-100" : "opacity-70 hover:opacity-90"
                 }`}
-                style={{ backgroundColor: "#F97316", color: "#FFFFFF" }}
+                style={{ backgroundColor: "#F97316", color: "#E9ECF0" }}
                 role="tab"
                 aria-selected={activeTab === "support"}
               >
                 <Headphones className="w-4 h-4" />
                 <span>Support</span>
                 {supportUnread > 0 && activeTab !== "support" && (
-                  <span className="w-2 h-2 bg-white rounded-full absolute top-2 right-4" />
+                  <span className="w-2 h-2 rounded-full absolute top-2 right-4" style={{ backgroundColor: "#E9ECF0" }} />
                 )}
               </button>
 
@@ -127,7 +127,7 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold transition-colors ${
                   activeTab === "coach-blue" ? "opacity-100" : "opacity-70 hover:opacity-90"
                 }`}
-                style={{ backgroundColor: "#0000FF", color: "#FFFFFF" }}
+                style={{ backgroundColor: "#0000FF", color: "#E9ECF0" }}
                 role="tab"
                 aria-selected={activeTab === "coach-blue"}
               >
@@ -141,7 +141,7 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
                 className="px-3 flex items-center justify-center transition-colors"
                 style={{
                   backgroundColor: activeTab === "support" ? "#F97316" : "#0000FF",
-                  color: "#FFFFFF"
+                  color: "#E9ECF0"
                 }}
                 aria-label="Close chat"
               >
@@ -166,45 +166,45 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
                 ) : (
                   /* Locked state — blue background, white text, white trim */
                   <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-4" style={{ backgroundColor: "#0000FF" }}>
-                    <div className="w-20 h-20 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.15)", border: "2px solid rgba(255,255,255,0.3)" }}>
+                    <div className="w-20 h-20 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(233,236,240,0.15)", border: "2px solid rgba(233,236,240,0.3)" }}>
                       <img src={coachBlueIcon48} alt="Coach Blue" className="w-12 h-12 object-contain" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-base" style={{ color: "#FFFFFF" }}>Coach Blue</h3>
-                      <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.7)" }}>Your AI Business Advisor</p>
+                      <h3 className="font-semibold text-base" style={{ color: "#E9ECF0" }}>Coach Blue</h3>
+                      <p className="text-xs mt-0.5" style={{ color: "rgba(233,236,240,0.7)" }}>Your AI Business Advisor</p>
                     </div>
-                    <p className="text-sm max-w-xs" style={{ color: "#FFFFFF" }}>
+                    <p className="text-sm max-w-xs" style={{ color: "#E9ECF0" }}>
                       {isLoggedIn
                         ? "Get personalized guidance based on your Digital IQ score, setup progress, and business data."
                         : "Coach Blue is your personal AI business mentor — available 24/7 to help you grow your digital presence."}
                     </p>
                     {!isLoggedIn ? (
                       <>
-                        <p className="text-sm max-w-xs" style={{ color: "rgba(255,255,255,0.85)" }}>
+                        <p className="text-sm max-w-xs" style={{ color: "rgba(233,236,240,0.85)" }}>
                           Coach Blue is available to subscribers. Log in to your account to get started.
                         </p>
                         <button
                           onClick={() => { setIsOpen(false); setLocation("/portal/login"); }}
                           className="px-6 py-2 text-sm font-semibold rounded-lg transition-colors"
-                          style={{ backgroundColor: "#FFFFFF", color: "#0000FF" }}
+                          style={{ backgroundColor: "#E9ECF0", color: "#0000FF" }}
                         >
                           Log In
                         </button>
                         <button
                           onClick={() => { setIsOpen(false); setLocation("/coach-blue"); }}
                           className="px-6 py-2 text-sm font-medium transition-colors rounded-lg"
-                          style={{ color: "#FFFFFF", border: "1px solid rgba(255,255,255,0.5)" }}
+                          style={{ color: "#E9ECF0", border: "1px solid rgba(233,236,240,0.5)" }}
                         >
                           Learn More About Coach Blue
                         </button>
                       </>
                     ) : (
                       <>
-                        <p className="text-sm font-semibold" style={{ color: "#FFFFFF" }}>$99/mo standalone · $59/mo with a suite · FREE with both suites</p>
+                        <p className="text-sm font-semibold" style={{ color: "#E9ECF0" }}>$99/mo standalone · $59/mo with a suite · FREE with both suites</p>
                         <button
                           onClick={() => { setIsOpen(false); setLocation("/coach-blue"); }}
                           className="px-6 py-2 text-sm font-semibold rounded-lg transition-colors"
-                          style={{ backgroundColor: "#FFFFFF", color: "#0000FF" }}
+                          style={{ backgroundColor: "#E9ECF0", color: "#0000FF" }}
                         >
                           Learn More
                         </button>
