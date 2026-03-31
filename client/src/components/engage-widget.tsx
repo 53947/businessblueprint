@@ -29,8 +29,8 @@ interface CrmContactInfo {
 }
 
 interface EngageChatContentProps {
-  clientId: number;
-  companyName: string;
+  clientId?: number;
+  companyName?: string;
   primaryColor?: string;
   onUnreadChange?: (count: number) => void;
 }

@@ -9,13 +9,13 @@ import { CoachBlueChat } from "@/components/ai-coach";
 type TabId = "support" | "coach-blue";
 
 interface ChatWidgetProps {
-  clientId: number;
-  companyName: string;
+  clientId?: number;
+  companyName?: string;
   primaryColor?: string;
   enabledFeatures?: string;
 }
 
-export function ChatWidget({ clientId, companyName, primaryColor = "#007bff", enabledFeatures }: ChatWidgetProps) {
+export function ChatWidget({ clientId, companyName = "businessblueprint.io", primaryColor = "#F97316", enabledFeatures }: ChatWidgetProps) {
   const [isOpen, setIsOpen] = useState(() => {
     return sessionStorage.getItem("chatWidgetOpen") === "true";
   });
@@ -52,12 +52,15 @@ export function ChatWidget({ clientId, companyName, primaryColor = "#007bff", en
     return () => window.removeEventListener("openCoachBlue", handleOpenCoachBlue);
   }, []);
 
+  // Auth check — is user logged into client portal?
+  const isLoggedIn = !!(sessionStorage.getItem("clientId") && sessionStorage.getItem("authToken"));
+
   // Subscription check — Coach Blue feature code is "AC"
   const enabledSet = new Set(
     enabledFeatures ? enabledFeatures.split(",").map((f) => f.trim()) : []
   );
   const hasFeatureGating = enabledFeatures !== undefined && enabledFeatures !== "";
-  const hasCoachBlue = !hasFeatureGating || enabledSet.has("AC");
+  const hasCoachBlue = isLoggedIn && (!hasFeatureGating || enabledSet.has("AC"));
 
   // Track support unread from EngageChatContent
   const handleSupportUnread = useCallback((count: number) => {
@@ -161,7 +164,7 @@ export function ChatWidget({ clientId, companyName, primaryColor = "#007bff", en
                 hasCoachBlue ? (
                   <CoachBlueChat />
                 ) : (
-                  /* Locked state for non-subscribers */
+                  /* Locked state — not logged in or no subscription */
                   <div className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-4">
                     <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center">
                       <img src={coachBlueIcon48} alt="Coach Blue" className="w-12 h-12 object-contain opacity-60" />
@@ -171,18 +174,39 @@ export function ChatWidget({ clientId, companyName, primaryColor = "#007bff", en
                       <p className="text-xs text-gray-500 mt-0.5">Your AI Business Advisor</p>
                     </div>
                     <p className="text-sm text-gray-600 max-w-xs">
-                      Get personalized guidance based on your Digital IQ score, setup progress, and business data.
+                      {isLoggedIn
+                        ? "Get personalized guidance based on your Digital IQ score, setup progress, and business data."
+                        : "Coach Blue is your personal AI business mentor — available 24/7 to help you grow your digital presence."}
                     </p>
-                    <p className="text-sm font-semibold text-gray-800">Starting at $59/mo</p>
-                    <button
-                      onClick={() => { setIsOpen(false); setLocation("/coach-blue"); }}
-                      className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      Learn More
-                    </button>
-                    <p className="text-xs text-gray-400">
-                      Coach Blue is available with your subscription.
-                    </p>
+                    {!isLoggedIn ? (
+                      <>
+                        <p className="text-sm text-gray-600 max-w-xs">
+                          Coach Blue is available to subscribers. Log in to your account to get started.
+                        </p>
+                        <button
+                          onClick={() => { setIsOpen(false); setLocation("/portal/login"); }}
+                          className="px-6 py-2 bg-[#F97316] text-white text-sm font-medium rounded-lg hover:bg-[#EA6C10] transition-colors"
+                        >
+                          Log In
+                        </button>
+                        <button
+                          onClick={() => { setIsOpen(false); setLocation("/coach-blue"); }}
+                          className="px-6 py-2 text-sm font-medium text-[#0000FF] hover:underline transition-colors"
+                        >
+                          Learn More About Coach Blue
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm font-semibold text-gray-800">$99/mo standalone · $59/mo with a suite · FREE with both suites</p>
+                        <button
+                          onClick={() => { setIsOpen(false); setLocation("/coach-blue"); }}
+                          className="px-6 py-2 bg-[#0000FF] text-white text-sm font-medium rounded-lg hover:bg-[#0000CC] transition-colors"
+                        >
+                          Learn More
+                        </button>
+                      </>
+                    )}
                   </div>
                 )
               )}

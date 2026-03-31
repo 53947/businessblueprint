@@ -12,7 +12,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/footer";
 import { SideNav } from "@/components/side-nav";
-import { ChatWidget } from "@/components/chat-widget";
 import { SetupNotifications } from "@/components/setup-notifications";
 import { BrandLogo } from "@/components/brand-logo";
 import { AppIcon } from "@/components/app-name";
@@ -822,12 +821,6 @@ export default function ClientPortal() {
       </div>
       <Footer />
 
-      {/* Two-tab chat widget — Support Agent + Coach Blue */}
-      <ChatWidget
-        clientId={parseInt(clientId || "0")}
-        companyName={clientData.client.companyName || "Support"}
-        enabledFeatures={dashboardData?.client?.enabledFeatures}
-      />
       <SetupNotifications />
     </div>
   );

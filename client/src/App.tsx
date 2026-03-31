@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -69,6 +69,7 @@ import AdminLogin from "@/pages/login";
 import VerifyAdminMagicLink from "@/pages/verify-admin-magic-link";
 import DirectionsForUse from "@/pages/directions-for-use";
 import NotFound from "@/pages/not-found";
+import { ChatWidget } from "@/components/chat-widget";
 
 function Router() {
   return (
@@ -149,6 +150,13 @@ function Router() {
   );
 }
 
+function GlobalChatWidget() {
+  const [location] = useLocation();
+  const isAdminPage = location.startsWith("/admin") || location === "/login";
+  if (isAdminPage) return null;
+  return <ChatWidget />;
+}
+
 function App() {
   // Clean up stale auth data on app init
   useEffect(() => {
@@ -169,6 +177,7 @@ function App() {
         <TaskContextMenu>
           <Toaster />
           <Router />
+          <GlobalChatWidget />
         </TaskContextMenu>
       </TooltipProvider>
     </QueryClientProvider>
