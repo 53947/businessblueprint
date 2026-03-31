@@ -92,3 +92,32 @@ aiCoachRouter.post(
     }
   },
 );
+
+// Create a task/note from Coach Blue advice
+aiCoachRouter.post(
+  "/api/ai-coach/create-task",
+  requireClientPortalAccess,
+  async (req: any, res) => {
+    try {
+      const clientId = req.clientId;
+      const { type, appId, title, description, stepId } = req.body;
+
+      if (!type || !appId || !title) {
+        return res.status(400).json({ error: "type, appId, and title are required" });
+      }
+
+      await aiCoachService.createTaskFromAdvice(clientId, {
+        type,
+        appId,
+        title,
+        description,
+        stepId,
+      });
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error creating task from Coach Blue:", error);
+      res.status(500).json({ error: "Failed to create task" });
+    }
+  },
+);

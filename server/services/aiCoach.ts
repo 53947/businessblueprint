@@ -2,8 +2,9 @@ import { unifiedAI } from './ai-provider';
 import { aiSettingsService } from './ai-settings';
 import { scansBlueService } from './scansblue';
 import { db } from "../db";
-import { aiCoachConversations, aiCoachMessages } from "@shared/schema";
-import { eq, desc } from "drizzle-orm";
+import { aiCoachConversations, aiCoachMessages, setupTasks, setupNotes } from "@shared/schema";
+import { eq, desc, sql } from "drizzle-orm";
+import { CONTROLLED_RESPONSES } from "@shared/knowledge-base";
 
 interface CoachingContext {
   businessInfo: {
@@ -43,30 +44,108 @@ interface CoachingResponse {
 export class AICoachService {
   private getProductKnowledgeContext(): string {
     return `
-BUSINESSBLUEPRINT PRODUCT CATALOG (recommend these products when relevant):
+BUSINESSBLUEPRINT PRODUCT CATALOG — recommend these when relevant:
 
-COMMVERSE BUNDLE ($99/mo - Save $37 vs buying separately):
-- /send: Email & SMS marketing with automation and analytics - for businesses needing email campaigns
-- /inbox: Unified inbox for email, SMS, social, chat - never miss a message
-- /content: Social media scheduling, AI content creation, engagement tracking
-- /livechat: Website chat widget for real-time support and lead capture
+ANCHOR SUITE ($99/mo — local presence bundle):
+- / publish: Business listing management across 50+ directories — ensures your NAP (name, address, phone) is consistent everywhere
+- / elevate: Review monitoring, automated review requests, response management — your online reputation
+- / optimize: SEO health monitoring, keyword rankings, technical site audits — climb higher in search results
+- / amplify: Advertising across Google, Meta (Facebook/Instagram), Reddit — data-driven paid campaigns
 
-LOCALBLUE BUNDLE ($59/mo - Complete local SEO):
-- /listings: Manage 50+ directory listings, NAP consistency - for businesses with inconsistent listings
-- /reputation: Review monitoring, automated requests, response management - for review problems
-- /localblue: Complete package including GBP optimization
+COMPASS SUITE ($99/mo — communications bundle):
+- / promote: Email campaigns, newsletters, automated sequences — targeted, measurable outreach
+- / engage: Live chat widget for your website — capture leads and answer questions in real time
+- / respond: Unified inbox for email, SMS, social, chat — never miss a message
+- / post: Social media scheduling and management across all platforms — stay consistently visible
 
 STANDALONE:
-- /relationships: CRM for customer tracking, pipelines, follow-ups ($29/mo, free tier available)
+- / connect: CRM — contacts, deals, pipelines, task management. FREE Starter (100 contacts, 1 user) or $29/mo Performance (unlimited). The foundation all other apps connect to.
 
-PARTNERS:
-- HostsBlue (hostsblue.com): Web hosting, domains, website builder, SSL - for website issues
-- SwipesBlue (swipesblue.com): Payment processing, shopping cart
-- ScansBlue (scansblue.com): Website technical analysis, speed/mobile/SEO audits
+COACH BLUE (that's you):
+- $99/mo standalone, $59/mo with one suite, FREE with both suites active
 
-When giving advice, naturally mention relevant products that solve the user's problem.
-Example: "To improve your review response rate, I'd recommend using our Reputation tool at /reputation - it automates review requests and helps you respond faster."
+ECOSYSTEM PARTNERS:
+- hostsblue.com: Cloud hosting, domains, website builder, email, SSL
+- swipesblue.com: Payment processing (all billing goes through swipesblue)
+- scansblue.com: Website technical audits, speed/mobile/SEO analysis
+- BUILDERBLUE2.COM: AI-powered website coding platform
+
+SETUP CADENCE (always follow this order when guiding setup):
+1. / connect → 2. / publish → 3. / elevate → 4. / respond → 5. / engage → 6. / post → 7. / promote → 8. / amplify
+
+When giving advice, recommend specific apps that solve the user's problem. Reference their Directions for Use when appropriate. Never make up features that don't exist.
 `;
+  }
+
+  private async buildSystemPrompt(clientId: number, currentContext?: string): Promise<string> {
+    const productKnowledge = this.getProductKnowledgeContext();
+
+    // Import setup task state
+    let taskContext = "";
+    try {
+      const tasks = await db
+        .select()
+        .from(setupTasks)
+        .where(eq(setupTasks.clientId, clientId))
+        .orderBy(setupTasks.cadenceOrder);
+
+      if (tasks.length > 0) {
+        const completed = tasks.filter(t => t.status === "completed").length;
+        const total = tasks.length;
+        const currentTask = tasks.find(t => t.status !== "completed" && t.status !== "skipped" && !t.substepId);
+
+        taskContext = `\n\nUSER'S SETUP PROGRESS:
+- Overall: ${completed}/${total} steps completed (${Math.round((completed / total) * 100)}%)
+- Current step: ${currentTask ? `"${currentTask.title}" in / ${currentTask.appId}` : "All complete"}
+- Phase: ${completed === total ? "engagement" : "setup"}`;
+      }
+    } catch (e) {
+      // Setup tasks may not exist yet — that's fine
+    }
+
+    // Import relevant knowledge base content based on context
+    let appKnowledge = "";
+    if (currentContext) {
+      try {
+        const contextLower = currentContext.toLowerCase();
+        const appIds = ["connect", "publish", "elevate"];
+
+        for (const appId of appIds) {
+          if (contextLower.includes(appId)) {
+            const module = await import(`../../shared/knowledge-base/apps/${appId}`);
+            const knowledge = module[`${appId}Knowledge`];
+            if (knowledge) {
+              appKnowledge += `\n\nKNOWLEDGE BASE — / ${appId}:
+- Purpose: ${knowledge.purpose}
+- Why it matters: ${knowledge.whyItMatters}
+- Common mistakes: ${knowledge.commonMistakes.join("; ")}
+- Coach Blue guidance (on first open): ${knowledge.coachBlueGuidance.onFirstOpen}
+- Coach Blue guidance (on stall): ${knowledge.coachBlueGuidance.onStall}`;
+            }
+          }
+        }
+      } catch (e) {
+        // Knowledge base for this app may not exist yet
+      }
+    }
+
+    return `You are Coach Blue, the AI business coach for businessblueprint.io. You help small business owners — primarily Gen X and SMB owners — improve their digital presence with direct, practical, jargon-free guidance.
+
+PERSONALITY:
+- Direct and honest — no fluff, no corporate speak
+- Encouraging but not patronizing — these are experienced business owners, not students
+- Specific — always tell them exactly what to do, not vague advice
+- Grounded — only recommend things the platform actually offers
+- Patient — they may not be tech-savvy, explain without condescending
+
+RULES:
+- NEVER make up features, capabilities, or pricing that don't exist in the product catalog
+- ALWAYS reference their Directions for Use when they ask what to do next
+- When recommending an app, explain WHY it solves their specific problem
+- Keep responses focused and actionable — under 200 words when possible
+- If you don't know something, say so. Offer to help with what you do know.
+
+${productKnowledge}${taskContext}${appKnowledge}`;
   }
 
   async getPersonalizedGuidance(context: CoachingContext): Promise<CoachingResponse> {
@@ -81,13 +160,13 @@ Example: "To improve your review response rate, I'd recommend using our Reputati
         messages: [
           {
             role: "system",
-            content: `You are Coach Blue, an expert digital marketing coach for BusinessBlueprint.io. You help small businesses improve their online presence with encouraging, actionable guidance.
+            content: `You are Coach Blue, the AI business coach for businessblueprint.io. You help small business owners improve their digital presence with direct, practical, jargon-free guidance.
 
 Key principles:
 - Be supportive and motivational
 - Break down complex tasks into simple steps
 - Consider their time constraints and experience
-- When recommending solutions, suggest BusinessBlueprint products that solve their specific problem
+- When recommending solutions, suggest specific businessblueprint.io apps that solve their problem
 - Celebrate their progress and acknowledge challenges
 
 ${productKnowledge}`
@@ -132,10 +211,10 @@ ${productKnowledge}`
         messages: [
           {
             role: "system",
-            content: `You are Coach Blue helping with technical website questions. Provide helpful, non-technical explanations. When relevant, recommend BusinessBlueprint products:
-- HostsBlue (hostsblue.com) for hosting, domains, SSL issues
-- ScansBlue (scansblue.com) for detailed technical audits
-- /livechat for adding live chat to capture leads`
+            content: `You are Coach Blue helping with technical website questions. Provide helpful, non-technical explanations. When relevant, recommend businessblueprint.io apps:
+- hostsblue.com for hosting, domains, SSL issues
+- scansblue.com for detailed technical audits
+- / engage for adding live chat to capture leads`
           },
           {
             role: "user",
@@ -155,8 +234,8 @@ ${productKnowledge}`
       if (content.toLowerCase().includes('scansblue') || content.toLowerCase().includes('audit')) {
         products.push('scansBlue');
       }
-      if (content.toLowerCase().includes('livechat') || content.toLowerCase().includes('chat')) {
-        products.push('livechat');
+      if (content.toLowerCase().includes('engage') || content.toLowerCase().includes('chat')) {
+        products.push('engage');
       }
 
       return {
@@ -167,7 +246,7 @@ ${productKnowledge}`
     } catch (error) {
       console.error('[Coach Blue] Technical help error:', error);
       return {
-        answer: 'I can help with website questions! For detailed technical analysis, I recommend running a ScansBlue audit at scansblue.com.',
+        answer: 'I can help with website questions! For detailed technical analysis, I recommend running an audit at scansblue.com.',
         recommendedProducts: ['scansBlue']
       };
     }
@@ -470,6 +549,43 @@ Format as JSON with actionItems array containing task, priority, estimatedTime, 
       messageType: "guidance",
     });
 
+    // Check controlled responses FIRST — critical matches take precedence
+    const userMessageLower = userMessage.toLowerCase().trim();
+    const criticalMatch = CONTROLLED_RESPONSES.find(cr =>
+      cr.priority === "critical" && cr.trigger.some(t => userMessageLower.includes(t.toLowerCase()))
+    );
+    const standardMatch = CONTROLLED_RESPONSES.find(cr =>
+      cr.priority === "standard" && cr.trigger.some(t => userMessageLower.includes(t.toLowerCase()))
+    );
+    const matchedResponse = criticalMatch || standardMatch;
+
+    if (matchedResponse) {
+      // Save the controlled response as the assistant message
+      await db.insert(aiCoachMessages).values({
+        conversationId,
+        role: "assistant",
+        content: matchedResponse.response,
+        messageType: "controlled",
+      });
+
+      // Update conversation timestamp and title
+      const history = await this.getMessages(conversationId);
+      if (history.length <= 2) {
+        const title = userMessage.length > 60 ? userMessage.substring(0, 57) + "..." : userMessage;
+        await db
+          .update(aiCoachConversations)
+          .set({ title, updatedAt: new Date() })
+          .where(eq(aiCoachConversations.id, conversationId));
+      } else {
+        await db
+          .update(aiCoachConversations)
+          .set({ updatedAt: new Date() })
+          .where(eq(aiCoachConversations.id, conversationId));
+      }
+
+      return { role: "assistant" as const, content: matchedResponse.response, isControlled: true };
+    }
+
     // Get conversation history for context
     const history = await this.getMessages(conversationId);
     const chatHistory = history.map((m) => ({
@@ -477,19 +593,15 @@ Format as JSON with actionItems array containing task, priority, estimatedTime, 
       content: m.content,
     }));
 
-    // Build the AI request with history
-    const productKnowledge = this.getProductKnowledgeContext();
-    const contextInfo = context
-      ? `\n\nBusiness Context:\n- Business: ${context.businessInfo.name} (${context.businessInfo.industry})\n- Digital Score: ${context.businessInfo.digitalScore}/100\n- Experience: ${context.userProgress.experience}`
-      : "";
-
     try {
       const provider = await aiSettingsService.getProvider("coach_blue");
+      const systemPrompt = await this.buildSystemPrompt(clientId, userMessage);
+
       const response = await unifiedAI.getCompletion(provider, {
         messages: [
           {
             role: "system",
-            content: `You are Coach Blue, an expert digital marketing coach for BusinessBlueprint.io. You help small businesses improve their online presence with encouraging, actionable guidance. Be conversational and helpful.${contextInfo}\n\n${productKnowledge}`,
+            content: systemPrompt,
           },
           ...chatHistory,
         ],
@@ -532,6 +644,51 @@ Format as JSON with actionItems array containing task, priority, estimatedTime, 
         messageType: "guidance",
       });
       return { role: "assistant" as const, content: fallback };
+    }
+  }
+  /**
+   * Create a setup task or note from Coach Blue's advice.
+   * Called when Coach Blue's response contains actionable items.
+   */
+  async createTaskFromAdvice(
+    clientId: number,
+    item: {
+      type: "task" | "note";
+      appId: string;
+      title: string;
+      description?: string;
+      stepId?: string;
+    }
+  ): Promise<void> {
+    if (item.type === "task") {
+      // Find the highest cadence order for this client to append after
+      const existing = await db
+        .select({ maxOrder: sql<number>`MAX(${setupTasks.cadenceOrder})` })
+        .from(setupTasks)
+        .where(eq(setupTasks.clientId, clientId));
+
+      const nextOrder = (existing[0]?.maxOrder || 0) + 1;
+
+      await db.insert(setupTasks).values({
+        clientId,
+        appId: item.appId,
+        stepId: item.stepId || `coach-blue-${Date.now()}`,
+        title: item.title,
+        description: item.description || null,
+        source: "coach_blue",
+        cadenceOrder: nextOrder,
+        status: "pending",
+        phase: "setup",
+      });
+    } else {
+      await db.insert(setupNotes).values({
+        clientId,
+        appId: item.appId,
+        stepId: item.stepId || null,
+        content: item.title,
+        isTodo: true,
+        isCompleted: false,
+      });
     }
   }
 }

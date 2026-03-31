@@ -10,9 +10,13 @@ import {
   Loader2,
   Trash2,
   Brain,
+  ListPlus,
+  X,
+  Check,
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 interface Conversation {
   id: number;
@@ -41,10 +45,42 @@ export function AICoach({ assessmentData }: AICoachProps) {
   >(null);
   const [inputMessage, setInputMessage] = useState("");
   const [showSidebar, setShowSidebar] = useState(true);
+  const [saveMenuMessageId, setSaveMenuMessageId] = useState<number | null>(null);
+  const [saveAppId, setSaveAppId] = useState("connect");
+  const [saveType, setSaveType] = useState<"task" | "note">("note");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const isAuthenticated = !!sessionStorage.getItem("clientId");
+
+  const APP_OPTIONS = [
+    { id: "connect", label: "/ connect" },
+    { id: "publish", label: "/ publish" },
+    { id: "elevate", label: "/ elevate" },
+    { id: "optimize", label: "/ optimize" },
+    { id: "amplify", label: "/ amplify" },
+    { id: "promote", label: "/ promote" },
+    { id: "engage", label: "/ engage" },
+    { id: "respond", label: "/ respond" },
+    { id: "post", label: "/ post" },
+  ];
+
+  // Save Coach Blue advice as task/note
+  const saveTaskMutation = useMutation({
+    mutationFn: async ({ type, appId, title }: { type: "task" | "note"; appId: string; title: string }) => {
+      const res = await apiRequest("POST", "/api/ai-coach/create-task", { type, appId, title });
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({ title: "Added to your Directions for Use", description: `Saved as ${saveType === "task" ? "setup task" : "personal note"}.` });
+      setSaveMenuMessageId(null);
+      queryClient.invalidateQueries({ queryKey: ["/api/setup-tasks"] });
+    },
+    onError: () => {
+      toast({ title: "Failed to save", description: "Something went wrong. Try again.", variant: "destructive" });
+    },
+  });
 
   // Fetch conversations
   const { data: conversationsData } = useQuery<{ conversations: Conversation[] }>({
@@ -90,10 +126,16 @@ export function AICoach({ assessmentData }: AICoachProps) {
       conversationId: number;
       message: string;
     }) => {
+      const currentPath = window.location.pathname;
+      const contextInfo = {
+        currentPage: currentPath,
+        currentApp: currentPath.match(/\/(connect|publish|elevate|optimize|amplify|promote|engage|respond|post)/)?.[1] || null,
+      };
+
       const res = await apiRequest(
         "POST",
         `/api/ai-coach/conversations/${conversationId}/chat`,
-        { message },
+        { message, context: contextInfo },
       );
       return res.json();
     },
@@ -202,8 +244,8 @@ export function AICoach({ assessmentData }: AICoachProps) {
               <div className="bg-white border px-4 py-2 rounded-2xl rounded-bl-md max-w-sm text-sm text-gray-700">
                 Great question! Here are 3 quick wins for your restaurant: 1)
                 Add a QR code to receipts linking to your Google review page, 2)
-                Train staff to ask happy customers for reviews, 3) Use our
-                Reputation tool at /reputation to automate review requests after
+                Train staff to ask happy customers for reviews, 3) Use
+                / elevate to automate review requests after
                 each visit.
               </div>
             </div>
@@ -331,22 +373,92 @@ export function AICoach({ assessmentData }: AICoachProps) {
                   key={msg.id}
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  <div
-                    className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
-                      msg.role === "user"
-                        ? "bg-blue-600 text-white rounded-br-md"
-                        : "bg-gray-100 text-gray-800 rounded-bl-md"
-                    }`}
-                  >
-                    <div className="whitespace-pre-wrap">{msg.content}</div>
+                  <div className="relative group">
                     <div
-                      className={`text-xs mt-1.5 ${msg.role === "user" ? "text-blue-200" : "text-gray-400"}`}
+                      className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                        msg.role === "user"
+                          ? "bg-blue-600 text-white rounded-br-md"
+                          : "bg-gray-100 text-gray-800 rounded-bl-md"
+                      }`}
                     >
-                      {new Date(msg.createdAt).toLocaleTimeString("en-US", {
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}
+                      <div className="whitespace-pre-wrap">{msg.content}</div>
+                      <div
+                        className={`text-xs mt-1.5 ${msg.role === "user" ? "text-blue-200" : "text-gray-400"}`}
+                      >
+                        {new Date(msg.createdAt).toLocaleTimeString("en-US", {
+                          hour: "numeric",
+                          minute: "2-digit",
+                        })}
+                      </div>
                     </div>
+
+                    {/* Save to Directions for Use — assistant messages only */}
+                    {msg.role === "assistant" && (
+                      <div className="absolute -bottom-1 right-0 translate-y-full">
+                        <button
+                          onClick={() => setSaveMenuMessageId(saveMenuMessageId === msg.id ? null : msg.id)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-gray-200 text-gray-400 hover:text-gray-600"
+                          title="Save to Directions for Use"
+                        >
+                          <ListPlus className="h-3.5 w-3.5" />
+                        </button>
+
+                        {saveMenuMessageId === msg.id && (
+                          <div className="absolute right-0 top-full mt-1 w-64 bg-white border rounded-lg shadow-lg p-3 z-50 space-y-3">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-semibold text-gray-700">Save to Directions for Use</span>
+                              <button onClick={() => setSaveMenuMessageId(null)} className="p-0.5 rounded hover:bg-gray-100">
+                                <X className="h-3 w-3 text-gray-400" />
+                              </button>
+                            </div>
+                            <div>
+                              <label className="text-xs text-gray-500 block mb-1">App section</label>
+                              <select
+                                value={saveAppId}
+                                onChange={(e) => setSaveAppId(e.target.value)}
+                                className="w-full text-xs border rounded px-2 py-1.5 bg-white"
+                              >
+                                {APP_OPTIONS.map((app) => (
+                                  <option key={app.id} value={app.id}>{app.label}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div>
+                              <label className="text-xs text-gray-500 block mb-1">Save as</label>
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => setSaveType("task")}
+                                  className={`flex-1 text-xs px-2 py-1.5 rounded border ${saveType === "task" ? "bg-blue-50 border-blue-300 text-blue-700" : "bg-white text-gray-600"}`}
+                                >
+                                  Setup Task
+                                </button>
+                                <button
+                                  onClick={() => setSaveType("note")}
+                                  className={`flex-1 text-xs px-2 py-1.5 rounded border ${saveType === "note" ? "bg-blue-50 border-blue-300 text-blue-700" : "bg-white text-gray-600"}`}
+                                >
+                                  Personal Note
+                                </button>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => {
+                                const truncatedContent = msg.content.length > 200 ? msg.content.substring(0, 197) + "..." : msg.content;
+                                saveTaskMutation.mutate({ type: saveType, appId: saveAppId, title: truncatedContent });
+                              }}
+                              disabled={saveTaskMutation.isPending}
+                              className="w-full text-xs bg-blue-600 text-white rounded px-2 py-1.5 hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-1"
+                            >
+                              {saveTaskMutation.isPending ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <Check className="h-3 w-3" />
+                              )}
+                              Save
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
