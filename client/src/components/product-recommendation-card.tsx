@@ -53,7 +53,7 @@ const PRODUCT_INFO: Record<string, { name: string; url: string; color: string }>
   'livechat': { name: '/ engage', url: '/engage', color: '#8000FF' },
   'listings': { name: '/ publish', url: '/publish', color: '#E00420' },
   'reputation': { name: '/ elevate', url: '/elevate', color: '#FFD700' },
-  'anchor': { name: 'Anchor Suite', url: '/anchor', color: '#0000FF' },
+  'anchor': { name: 'Anchor Suite', url: '/anchor', color: '#2073E3' },
   'relationships': { name: '/ connect', url: '/connect', color: '#008060' },
   'hostsBlue': { name: 'HostsBlue', url: 'https://hostsblue.com', color: '#F97316' },
   'scansBlue': { name: 'ScansBlue', url: 'https://scansblue.com', color: '#0000FF' },

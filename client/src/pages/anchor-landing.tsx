@@ -32,7 +32,7 @@ export default function AnchorLanding() {
               <Button 
                 size="lg" 
                 className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity"
-                style={{ backgroundColor: '#0000FF', color: '#FFF' }}
+                style={{ backgroundColor: '#2073E3', color: '#FFF' }}
                 asChild
                 data-testid="button-get-started"
               >
@@ -42,7 +42,7 @@ export default function AnchorLanding() {
                 size="lg" 
                 variant="outline" 
                 className="text-lg px-8 py-6 shadow-md hover:bg-blue-50 transition-colors"
-                style={{ borderColor: '#0000FF', color: '#0000FF' }}
+                style={{ borderColor: '#2073E3', color: '#2073E3' }}
                 asChild
                 data-testid="button-view-pricing"
               >
@@ -58,7 +58,7 @@ export default function AnchorLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center gap-4 mb-4">
-              <div className="text-4xl font-bold" style={{ color: '#0000FF' }}>${bundlePrice}/mo</div>
+              <div className="text-4xl font-bold" style={{ color: '#2073E3' }}>${bundlePrice}/mo</div>
               <span className="text-white text-xl">for all {bundleApps.length} Anchor Suite apps</span>
               <span className="text-gray-400 text-2xl">|</span>
               <div className="text-4xl font-bold text-white">$49-59/mo</div>
@@ -88,7 +88,7 @@ export default function AnchorLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#0000FF' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#2073E3' }}>
                     <MapPin className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-listings-title">Accurate Listings Everywhere</h3>
@@ -102,7 +102,7 @@ export default function AnchorLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#0000FF' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#2073E3' }}>
                     <Star className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-reputation-title">AI-Powered Review Response</h3>
@@ -116,7 +116,7 @@ export default function AnchorLanding() {
             <Card className="border border-gray-200 shadow-md hover:shadow-lg transition-shadow bg-white">
               <CardContent className="pt-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#0000FF' }}>
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#2073E3' }}>
                     <TrendingUp className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900" data-testid="text-feature-seo-title">Local SEO Optimization</h3>
@@ -140,7 +140,7 @@ export default function AnchorLanding() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#0000FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#2073E3' }}>
                   <MapPin className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -154,7 +154,7 @@ export default function AnchorLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#0000FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#2073E3' }}>
                   <Star className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -168,7 +168,7 @@ export default function AnchorLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#0000FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#2073E3' }}>
                   <Shield className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -182,7 +182,7 @@ export default function AnchorLanding() {
 
             <div className="flex gap-4 p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow bg-white">
               <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#0000FF' }}>
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm" style={{ backgroundColor: '#2073E3' }}>
                   <Zap className="w-6 h-6 text-white" />
                 </div>
               </div>
@@ -210,7 +210,7 @@ export default function AnchorLanding() {
             <Button 
               size="lg" 
               className="text-lg px-8 py-6"
-              style={{ backgroundColor: '#0000FF', color: '#FFF' }}
+              style={{ backgroundColor: '#2073E3', color: '#FFF' }}
               asChild
               data-testid="button-cta-assessment"
             >
@@ -220,7 +220,7 @@ export default function AnchorLanding() {
               size="lg" 
               variant="outline"
               className="text-lg px-8 py-6"
-              style={{ borderColor: '#0000FF', color: '#0000FF' }}
+              style={{ borderColor: '#2073E3', color: '#2073E3' }}
               asChild
               data-testid="button-cta-pricing"
             >

@@ -112,9 +112,9 @@ export default function Journey() {
       <section className="bg-gray-50 py-16 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-start gap-6 mb-6">
-            <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#064A6C" }}>4</div>
+            <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: "#2073E3" }}>4</div>
             <div className="flex items-center gap-3">
-              <AppIcon name="Anchor" size={40} color="#064A6C" />
+              <AppIcon name="Anchor" size={40} color="#2073E3" />
               <h2 className="text-3xl font-bold text-gray-900">Own Your Local Presence — / anchor suite</h2>
             </div>
           </div>
@@ -162,8 +162,8 @@ export default function Journey() {
             </p>
           </div>
 
-          <div className="bg-white border-l-4 p-6 rounded-lg shadow-sm mb-6" style={{ borderColor: "#064A6C" }}>
-            <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: "#064A6C" }}>WHAT THIS MEANS FOR YOUR BUSINESS</p>
+          <div className="bg-white border-l-4 p-6 rounded-lg shadow-sm mb-6" style={{ borderColor: "#2073E3" }}>
+            <p className="text-xs uppercase tracking-widest font-semibold mb-2" style={{ color: "#2073E3" }}>WHAT THIS MEANS FOR YOUR BUSINESS</p>
             <p className="text-gray-900 text-base leading-relaxed">Most business owners assume their Google listing is fine. It's usually not. Hours wrong, photos missing, categories mismatched — and anyone on the internet can submit an edit. / publish fixes all of it, locks your listing down, and makes sure the information people find about your business is accurate everywhere they look.</p>
           </div>
           <div className="bg-gray-100 rounded-lg p-4 italic text-gray-600 text-sm">

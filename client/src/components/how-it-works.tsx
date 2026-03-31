@@ -37,7 +37,7 @@ const STEPS = [
     description: "Claim your Google Business listing and D&B DUNS number. Get listed on 80+ directories. Manage reviews. Monitor SEO. Run local advertising.",
     shortDesc: "Listings, reviews, SEO, and ads.",
     icon: "Anchor",
-    color: "#064A6C",
+    color: "#2073E3",
   },
   {
     number: 5,

@@ -131,7 +131,7 @@ export const HOW_IT_WORKS_MENU: {
       href: "/anchor",
       testId: "link-step4",
       icon: HOW_IT_WORKS_STEPS[3].icon,
-      borderColor: "#064A6C",
+      borderColor: "#2073E3",
     },
     {
       number: 5,
