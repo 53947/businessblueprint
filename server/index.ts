@@ -63,6 +63,14 @@ app.use((req, res, next) => {
     console.error('[Scheduler] Failed to start scheduler:', error);
   }
 
+  // Start stall detector for Directions for Use reminders
+  try {
+    const { startStallDetector } = await import('./services/stall-detector');
+    startStallDetector();
+  } catch (error) {
+    console.error('[StallDetector] Failed to start stall detector:', error);
+  }
+
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";

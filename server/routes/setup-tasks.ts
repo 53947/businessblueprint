@@ -9,7 +9,7 @@ import {
   type SetupTask,
   type SetupNote,
 } from "@shared/schema";
-import { eq, and, asc, sql } from "drizzle-orm";
+import { eq, and, asc, desc, sql } from "drizzle-orm";
 import { requireClientPortalAccess } from "../middleware/clientPortalAuth";
 import {
   SETUP_CADENCE,
@@ -167,6 +167,32 @@ setupTasksRouter.post("/generate", requireClientPortalAccess, async (req: any, r
 });
 
 // ============================================================================
+// GET /api/setup-tasks/events/recent — Recent notification events for polling
+// ============================================================================
+setupTasksRouter.get("/events/recent", requireClientPortalAccess, async (req: any, res) => {
+  try {
+    const clientId = req.clientId;
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+
+    const events = await db
+      .select()
+      .from(setupTaskEvents)
+      .where(and(
+        eq(setupTaskEvents.clientId, clientId),
+        sql`${setupTaskEvents.eventType} LIKE 'notification_%'`,
+        sql`${setupTaskEvents.createdAt} >= ${fiveMinutesAgo}`,
+      ))
+      .orderBy(desc(setupTaskEvents.createdAt))
+      .limit(5);
+
+    res.json({ events });
+  } catch (error) {
+    console.error("[SetupTasks] Error fetching recent events:", error);
+    res.status(500).json({ error: "Failed to fetch recent events" });
+  }
+});
+
+// ============================================================================
 // PATCH /api/setup-tasks/:id — Update task status
 // ============================================================================
 setupTasksRouter.patch("/:id", requireClientPortalAccess, async (req: any, res) => {
@@ -238,6 +264,18 @@ setupTasksRouter.patch("/:id", requireClientPortalAccess, async (req: any, res) 
       .where(eq(clients.id, clientId));
 
     res.json({ task: updated, progress: { totalTasks, completedTasks, percentage } });
+
+    // Fire triggers asynchronously — NEVER block the response
+    if (status === "completed") {
+      import('../services/setup-triggers').then(({ setupTriggerService }) => {
+        setupTriggerService.onTaskStatusChange(clientId, taskId, status, {
+          appId: updated.appId,
+          stepId: updated.stepId,
+          substepId: updated.substepId || null,
+          title: updated.title,
+        }).catch(err => console.error('[Trigger] Async trigger failed:', err));
+      });
+    }
   } catch (error) {
     console.error("[SetupTasks] Error updating task:", error);
     res.status(500).json({ error: "Failed to update task" });

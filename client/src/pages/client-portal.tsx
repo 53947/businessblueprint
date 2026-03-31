@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/footer";
 import { SideNav } from "@/components/side-nav";
 import { ChatWidget } from "@/components/chat-widget";
+import { SetupNotifications } from "@/components/setup-notifications";
 import { BrandLogo } from "@/components/brand-logo";
 import { AppIcon } from "@/components/app-name";
 import { Header } from "@/components/header";
@@ -827,6 +828,7 @@ export default function ClientPortal() {
         companyName={clientData.client.companyName || "Support"}
         enabledFeatures={dashboardData?.client?.enabledFeatures}
       />
+      <SetupNotifications />
     </div>
   );
 }
