@@ -98,36 +98,46 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
             className={
               // Desktop: fixed bottom-right card | Mobile: full-screen overlay
               "fixed z-50 flex flex-col bg-white shadow-xl " +
-              "md:bottom-6 md:right-6 md:w-[380px] md:h-[520px] md:rounded-xl md:border md:border-gray-200 " +
-              "inset-0 md:inset-auto"
+              "md:bottom-6 md:right-6 md:w-[380px] md:h-[520px] md:rounded-t-xl md:rounded-b-xl md:border md:border-gray-200 " +
+              "inset-0 md:inset-auto overflow-hidden"
             }
           >
-            {/* Tab Bar */}
-            <div className="flex items-stretch md:rounded-t-xl shrink-0 overflow-hidden">
-              {/* Support tab — Triad Orange #F97316, white text */}
+            {/* Tab Bar — folder-style tabs */}
+            <div className="flex items-end pt-1 px-1 shrink-0" style={{ backgroundColor: "#09080E" }}>
+              {/* Support tab */}
               <button
                 onClick={() => handleTabChange("support")}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold transition-colors relative ${
-                  activeTab === "support" ? "opacity-100" : "opacity-70 hover:opacity-90"
+                className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold transition-colors relative ${
+                  activeTab === "support" ? "z-10" : "opacity-80 hover:opacity-100"
                 }`}
-                style={{ backgroundColor: "#F97316", color: "#E9ECF0" }}
+                style={{
+                  backgroundColor: activeTab === "support" ? "#F97316" : "rgba(249,115,22,0.4)",
+                  color: "#E9ECF0",
+                  borderRadius: "10px 10px 0 0",
+                  marginBottom: activeTab === "support" ? "-1px" : "2px",
+                }}
                 role="tab"
                 aria-selected={activeTab === "support"}
               >
                 <Headphones className="w-4 h-4" />
                 <span>Support</span>
                 {supportUnread > 0 && activeTab !== "support" && (
-                  <span className="w-2 h-2 rounded-full absolute top-2 right-4" style={{ backgroundColor: "#E9ECF0" }} />
+                  <span className="w-2 h-2 rounded-full absolute top-1.5 right-2" style={{ backgroundColor: "#E9ECF0" }} />
                 )}
               </button>
 
-              {/* Coach Blue tab — Pure Blue #0000FF, white text */}
+              {/* Coach Blue tab */}
               <button
                 onClick={() => handleTabChange("coach-blue")}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold transition-colors ${
-                  activeTab === "coach-blue" ? "opacity-100" : "opacity-70 hover:opacity-90"
+                className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold transition-colors ${
+                  activeTab === "coach-blue" ? "z-10" : "opacity-80 hover:opacity-100"
                 }`}
-                style={{ backgroundColor: "#0000FF", color: "#E9ECF0" }}
+                style={{
+                  backgroundColor: activeTab === "coach-blue" ? "#0000FF" : "rgba(0,0,255,0.4)",
+                  color: "#E9ECF0",
+                  borderRadius: "10px 10px 0 0",
+                  marginBottom: activeTab === "coach-blue" ? "-1px" : "2px",
+                }}
                 role="tab"
                 aria-selected={activeTab === "coach-blue"}
               >
@@ -135,14 +145,12 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
                 <span>Coach Blue</span>
               </button>
 
-              {/* Close button — matches active tab color */}
+              {/* Spacer + Close button */}
+              <div className="flex-1" />
               <button
                 onClick={() => setIsOpen(false)}
-                className="px-3 flex items-center justify-center transition-colors"
-                style={{
-                  backgroundColor: activeTab === "support" ? "#F97316" : "#0000FF",
-                  color: "#E9ECF0"
-                }}
+                className="p-2 mb-1 rounded-full transition-colors"
+                style={{ color: "#E9ECF0" }}
                 aria-label="Close chat"
               >
                 <X className="w-4 h-4" />
