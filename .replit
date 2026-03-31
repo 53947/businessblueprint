@@ -68,7 +68,7 @@ integrations = ["javascript_log_in_with_replit:1.0.0", "agentmail:1.0.0", "javas
 [userenv]
 
 [userenv.shared]
-PAYMENT_PROVIDER = "stripe"
+PAYMENT_PROVIDER = "swipesblue"
 SCANSBLUE_API_URL = "https://scansblue.com/api/businessblueprint"
 
 [objectStorage]
