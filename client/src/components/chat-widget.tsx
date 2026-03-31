@@ -103,7 +103,7 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
             }
           >
             {/* Tab Bar — folder-style tabs */}
-            <div className="flex items-end pt-1 px-1 shrink-0" style={{ backgroundColor: "#09080E" }}>
+            <div className="flex items-end pt-1 px-1 shrink-0" style={{ backgroundColor: "#808080" }}>
               {/* Support tab */}
               <button
                 onClick={() => handleTabChange("support")}
