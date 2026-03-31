@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { LiveChatWidget } from "@/components/livechat-widget";
+import { EngageWidget } from "@/components/engage-widget";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SectionHeader } from "@/components/section-header";
 import { Button } from "@/components/ui/button";
@@ -152,8 +152,8 @@ export default function EngageDemo() {
 
       <Footer />
       
-      {/* Live Chat Widget */}
-      <LiveChatWidget 
+      {/* / engage Chat Widget */}
+      <EngageWidget
         clientId={1} 
         companyName="businessblueprint.io"
         primaryColor="#007bff"

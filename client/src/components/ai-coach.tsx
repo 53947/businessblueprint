@@ -512,3 +512,231 @@ export function AICoach({ assessmentData }: AICoachProps) {
     </div>
   );
 }
+
+/**
+ * Compact Coach Blue chat for embedding in the two-tab ChatWidget.
+ * No conversation sidebar — auto-continues the most recent conversation.
+ */
+export function CoachBlueChat() {
+  const [activeConversationId, setActiveConversationId] = useState<number | null>(null);
+  const [inputMessage, setInputMessage] = useState("");
+  const [saveMenuMessageId, setSaveMenuMessageId] = useState<number | null>(null);
+  const [saveAppId, setSaveAppId] = useState("connect");
+  const [saveType, setSaveType] = useState<"task" | "note">("note");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  const isAuthenticated = !!sessionStorage.getItem("clientId");
+
+  const APP_OPTIONS = [
+    { id: "connect", label: "/ connect" },
+    { id: "publish", label: "/ publish" },
+    { id: "elevate", label: "/ elevate" },
+    { id: "optimize", label: "/ optimize" },
+    { id: "amplify", label: "/ amplify" },
+    { id: "promote", label: "/ promote" },
+    { id: "engage", label: "/ engage" },
+    { id: "respond", label: "/ respond" },
+    { id: "post", label: "/ post" },
+  ];
+
+  const saveTaskMutation = useMutation({
+    mutationFn: async ({ type, appId, title }: { type: "task" | "note"; appId: string; title: string }) => {
+      const res = await apiRequest("POST", "/api/ai-coach/create-task", { type, appId, title });
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({ title: "Added to your Directions for Use", description: `Saved as ${saveType === "task" ? "setup task" : "personal note"}.` });
+      setSaveMenuMessageId(null);
+      queryClient.invalidateQueries({ queryKey: ["/api/setup-tasks"] });
+    },
+    onError: () => {
+      toast({ title: "Failed to save", description: "Something went wrong. Try again.", variant: "destructive" });
+    },
+  });
+
+  // Fetch conversations and auto-select most recent
+  const { data: conversationsData } = useQuery<{ conversations: Conversation[] }>({
+    queryKey: ["/api/ai-coach/conversations"],
+    enabled: isAuthenticated,
+  });
+  const conversations = conversationsData?.conversations || [];
+
+  useEffect(() => {
+    if (!activeConversationId && conversations.length > 0) {
+      setActiveConversationId(conversations[0].id);
+    }
+  }, [conversations, activeConversationId]);
+
+  const { data: messagesData, isLoading: messagesLoading } = useQuery<{ messages: Message[] }>({
+    queryKey: [`/api/ai-coach/conversations/${activeConversationId}/messages`],
+    enabled: isAuthenticated && !!activeConversationId,
+  });
+  const messages = messagesData?.messages || [];
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const createConversation = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest("POST", "/api/ai-coach/conversations");
+      return res.json();
+    },
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/ai-coach/conversations"] });
+      setActiveConversationId(data.conversation.id);
+    },
+  });
+
+  const chatMutation = useMutation({
+    mutationFn: async ({ conversationId, message }: { conversationId: number; message: string }) => {
+      const currentPath = window.location.pathname;
+      const contextInfo = {
+        currentPage: currentPath,
+        currentApp: currentPath.match(/\/(connect|publish|elevate|optimize|amplify|promote|engage|respond|post)/)?.[1] || null,
+      };
+      const res = await apiRequest("POST", `/api/ai-coach/conversations/${conversationId}/chat`, { message, context: contextInfo });
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/ai-coach/conversations/${activeConversationId}/messages`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/ai-coach/conversations"] });
+    },
+  });
+
+  const handleSend = async () => {
+    if (!inputMessage.trim()) return;
+    let conversationId = activeConversationId;
+    if (!conversationId) {
+      const result: any = await createConversation.mutateAsync();
+      conversationId = result.conversation.id;
+      setActiveConversationId(conversationId);
+    }
+    const message = inputMessage;
+    setInputMessage("");
+    chatMutation.mutate({ conversationId: conversationId!, message });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  return (
+    <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-3">
+        {!activeConversationId && messages.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-full text-center py-8 space-y-3">
+            <h3 className="font-semibold text-gray-700 text-sm">How can I help your business today?</h3>
+            <p className="text-xs text-gray-500 max-w-xs">
+              Ask me about improving your online presence, getting more reviews, social media strategy, or any digital marketing challenge.
+            </p>
+            <div className="flex flex-wrap gap-1.5 justify-center">
+              {["How do I get more reviews?", "What should I do first?", "Help with my SEO"].map((s) => (
+                <button key={s} onClick={() => setInputMessage(s)} className="px-2.5 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-full text-gray-700 transition-colors">
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {messagesLoading && (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
+          </div>
+        )}
+
+        <div className="space-y-3">
+          {messages.map((msg) => (
+            <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div className="relative group">
+                <div className={`max-w-[85%] px-3 py-2 rounded-2xl text-sm leading-relaxed ${msg.role === "user" ? "bg-blue-600 text-white rounded-br-md" : "bg-gray-100 text-gray-800 rounded-bl-md"}`}>
+                  <div className="whitespace-pre-wrap">{msg.content}</div>
+                  <div className={`text-xs mt-1 ${msg.role === "user" ? "text-blue-200" : "text-gray-400"}`}>
+                    {new Date(msg.createdAt).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
+                  </div>
+                </div>
+                {msg.role === "assistant" && (
+                  <div className="absolute -bottom-1 right-0 translate-y-full">
+                    <button
+                      onClick={() => setSaveMenuMessageId(saveMenuMessageId === msg.id ? null : msg.id)}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-gray-200 text-gray-400 hover:text-gray-600"
+                      title="Save to Directions for Use"
+                    >
+                      <ListPlus className="h-3.5 w-3.5" />
+                    </button>
+                    {saveMenuMessageId === msg.id && (
+                      <div className="absolute right-0 top-full mt-1 w-56 bg-white border rounded-lg shadow-lg p-2.5 z-50 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold text-gray-700">Save to Directions</span>
+                          <button onClick={() => setSaveMenuMessageId(null)} className="p-0.5 rounded hover:bg-gray-100">
+                            <X className="h-3 w-3 text-gray-400" />
+                          </button>
+                        </div>
+                        <select value={saveAppId} onChange={(e) => setSaveAppId(e.target.value)} className="w-full text-xs border rounded px-2 py-1 bg-white">
+                          {APP_OPTIONS.map((app) => (<option key={app.id} value={app.id}>{app.label}</option>))}
+                        </select>
+                        <div className="flex gap-1.5">
+                          <button onClick={() => setSaveType("task")} className={`flex-1 text-xs px-2 py-1 rounded border ${saveType === "task" ? "bg-blue-50 border-blue-300 text-blue-700" : "bg-white text-gray-600"}`}>Task</button>
+                          <button onClick={() => setSaveType("note")} className={`flex-1 text-xs px-2 py-1 rounded border ${saveType === "note" ? "bg-blue-50 border-blue-300 text-blue-700" : "bg-white text-gray-600"}`}>Note</button>
+                        </div>
+                        <button
+                          onClick={() => { saveTaskMutation.mutate({ type: saveType, appId: saveAppId, title: msg.content.length > 200 ? msg.content.substring(0, 197) + "..." : msg.content }); }}
+                          disabled={saveTaskMutation.isPending}
+                          className="w-full text-xs bg-blue-600 text-white rounded px-2 py-1 hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-1"
+                        >
+                          {saveTaskMutation.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
+                          Save
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+          {chatMutation.isPending && (
+            <div className="flex justify-start">
+              <div className="bg-gray-100 px-3 py-2 rounded-2xl rounded-bl-md">
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  Coach Blue is thinking...
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input */}
+      <div className="p-3 border-t bg-white">
+        <div className="flex gap-2 items-end">
+          <Textarea
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Ask Coach Blue..."
+            className="resize-none min-h-[40px] max-h-24 text-sm"
+            rows={1}
+            disabled={chatMutation.isPending}
+          />
+          <Button
+            onClick={handleSend}
+            disabled={!inputMessage.trim() || chatMutation.isPending || createConversation.isPending}
+            size="icon"
+            className="h-10 w-10 shrink-0"
+          >
+            {chatMutation.isPending || createConversation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}

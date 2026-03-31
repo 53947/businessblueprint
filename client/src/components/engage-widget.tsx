@@ -15,7 +15,7 @@ interface Message {
   timestamp: string;
 }
 
-interface LiveChatWidgetProps {
+interface EngageWidgetProps {
   clientId: number;
   companyName: string;
   primaryColor?: string;
@@ -28,7 +28,221 @@ interface CrmContactInfo {
   lifecycleStage?: string;
 }
 
-export function LiveChatWidget({ clientId, companyName, primaryColor = '#007bff' }: LiveChatWidgetProps) {
+interface EngageChatContentProps {
+  clientId: number;
+  companyName: string;
+  primaryColor?: string;
+  onUnreadChange?: (count: number) => void;
+}
+
+/**
+ * Embeddable / engage chat content for use inside the two-tab ChatWidget.
+ * Contains all Socket.IO logic, pre-chat form, messages, and input.
+ * No floating button, no open/close — the parent container handles that.
+ */
+export function EngageChatContent({ clientId, companyName, primaryColor = '#007bff', onUnreadChange }: EngageChatContentProps) {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [visitorName, setVisitorName] = useState('');
+  const [visitorEmail, setVisitorEmail] = useState('');
+  const [crmContact, setCrmContact] = useState<CrmContactInfo | null>(null);
+  const [sessionId] = useState(() => {
+    const stored = localStorage.getItem('livechat-sessionId');
+    if (stored) return stored;
+    const newId = nanoid();
+    localStorage.setItem('livechat-sessionId', newId);
+    return newId;
+  });
+  const [conversationId, setConversationId] = useState<number | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [hasStartedChat, setHasStartedChat] = useState(false);
+  const [agentTyping, setAgentTyping] = useState(false);
+
+  const socketRef = useRef<Socket | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout>();
+  const unreadRef = useRef(0);
+
+  useEffect(() => {
+    const socket = io({
+      auth: { sessionId, role: 'customer' },
+      transports: ['websocket', 'polling']
+    });
+    socketRef.current = socket;
+
+    socket.on('connect', () => {
+      setIsConnected(true);
+      socket.emit('join:session', sessionId);
+    });
+    socket.on('disconnect', () => setIsConnected(false));
+
+    socket.on('agent:message', (data: { id?: number; message: string; agentName: string; timestamp: string }) => {
+      setMessages(prev => [...prev, {
+        id: data.id?.toString() || nanoid(),
+        content: data.message,
+        fromName: data.agentName,
+        direction: 'outbound',
+        timestamp: data.timestamp
+      }]);
+      unreadRef.current++;
+      onUnreadChange?.(unreadRef.current);
+    });
+
+    socket.on('message:history', (data: { messages: any[] }) => {
+      const historyMessages = data.messages.map((msg: any) => ({
+        id: msg.id.toString(),
+        content: msg.content,
+        fromName: msg.direction === 'inbound' ? 'You' : msg.fromName,
+        direction: msg.direction,
+        timestamp: msg.createdAt
+      }));
+      setMessages(historyMessages);
+      if (data.messages.length > 0 && data.messages[0].conversationId) {
+        setConversationId(data.messages[0].conversationId);
+        socket.emit('join:conversation', data.messages[0].conversationId);
+      }
+    });
+
+    socket.on('message:sent', (data: { messageId: number; conversationId: number }) => {
+      if (!conversationId) {
+        setConversationId(data.conversationId);
+        socket.emit('join:conversation', data.conversationId);
+      }
+    });
+
+    socket.on('user:typing', () => setAgentTyping(true));
+    socket.on('user:stop-typing', () => setAgentTyping(false));
+
+    return () => { socket.disconnect(); };
+  }, [sessionId]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // CRM lookup
+  const lastEmailRef = useRef('');
+  useEffect(() => {
+    if (visitorEmail !== lastEmailRef.current) setCrmContact(null);
+    if (!visitorEmail || !visitorEmail.includes('@') || !visitorEmail.includes('.')) return;
+    if (visitorEmail === lastEmailRef.current) return;
+
+    const timeoutId = setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/crm/integration/lookup?email=${encodeURIComponent(visitorEmail)}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.found && data.contact) {
+            setCrmContact({ id: data.contact.id, firstName: data.contact.firstName, lastName: data.contact.lastName, lifecycleStage: data.contact.lifecycleStage });
+            if (!visitorName && data.contact.firstName) setVisitorName(`${data.contact.firstName} ${data.contact.lastName || ''}`.trim());
+          } else {
+            setCrmContact(null);
+          }
+          lastEmailRef.current = visitorEmail;
+        }
+      } catch (err) {
+        console.error('CRM lookup failed:', err);
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [visitorEmail, visitorName]);
+
+  const handleStartChat = () => {
+    if (!visitorName.trim()) return;
+    setHasStartedChat(true);
+    fetch('/api/inbox/livechat/session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clientId, sessionId, visitorName, visitorEmail, pageUrl: window.location.href, pageTitle: document.title, referrer: document.referrer, userAgent: navigator.userAgent })
+    });
+  };
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputMessage.trim()) return;
+    setMessages(prev => [...prev, { id: nanoid(), content: inputMessage, fromName: visitorName || 'You', direction: 'inbound', timestamp: new Date().toISOString() }]);
+    socketRef.current?.emit('chat:message', { sessionId, conversationId, message: inputMessage, visitorName, visitorEmail, clientId });
+    setInputMessage('');
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    socketRef.current?.emit('typing:stop', { conversationId });
+  };
+
+  const handleInputChange = (value: string) => {
+    setInputMessage(value);
+    if (!conversationId) return;
+    socketRef.current?.emit('typing:start', { conversationId, name: visitorName || 'Visitor' });
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    typingTimeoutRef.current = setTimeout(() => { socketRef.current?.emit('typing:stop', { conversationId }); }, 2000);
+  };
+
+  const formatTime = (timestamp: string) => new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  /** Call this from the parent when the Support tab becomes active to clear unread */
+  const clearUnread = () => { unreadRef.current = 0; onUnreadChange?.(0); };
+
+  if (!hasStartedChat) {
+    return (
+      <div className="flex-1 flex flex-col justify-center p-6 gap-4">
+        <div className="text-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">{crmContact ? `Welcome back, ${crmContact.firstName}!` : 'Welcome!'}</h3>
+          <p className="text-sm text-gray-600 mt-2">Start a conversation with our team</p>
+          {crmContact && (
+            <Badge className="mt-2 bg-green-100 text-green-700">
+              <UserCheck className="w-3 h-3 mr-1" />
+              Recognized Contact
+            </Badge>
+          )}
+        </div>
+        <Input type="text" placeholder="Your name *" value={visitorName} onChange={(e) => setVisitorName(e.target.value)} />
+        <Input type="email" placeholder="Your email (optional)" value={visitorEmail} onChange={(e) => setVisitorEmail(e.target.value)} />
+        <Button onClick={handleStartChat} disabled={!visitorName.trim()} style={{ backgroundColor: primaryColor }} className="w-full text-white hover:opacity-90">
+          Start Chat
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        {messages.length === 0 && (
+          <div className="text-center text-gray-500 mt-8">
+            <p className="text-sm">Send a message to start the conversation</p>
+          </div>
+        )}
+        {messages.map((msg) => (
+          <div key={msg.id} className={`flex ${msg.direction === 'inbound' ? 'justify-end' : 'justify-start'}`}>
+            <div className={`max-w-[75%] rounded-lg p-3 ${msg.direction === 'inbound' ? 'text-white' : 'bg-gray-100 text-gray-800'}`} style={msg.direction === 'inbound' ? { backgroundColor: primaryColor } : {}}>
+              {msg.direction === 'outbound' && <p className="text-xs font-semibold mb-1">{msg.fromName}</p>}
+              <p className="text-sm break-words">{msg.content}</p>
+              <p className="text-xs opacity-70 mt-1">{formatTime(msg.timestamp)}</p>
+            </div>
+          </div>
+        ))}
+        {agentTyping && (
+          <div className="flex justify-start">
+            <div className="bg-gray-100 rounded-lg p-3">
+              <p className="text-sm text-gray-600 italic">Agent is typing...</p>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+      {/* Input */}
+      <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-200">
+        <div className="flex gap-2">
+          <Input type="text" placeholder="Type a message..." value={inputMessage} onChange={(e) => handleInputChange(e.target.value)} className="flex-1" />
+          <Button type="submit" disabled={!inputMessage.trim()} style={{ backgroundColor: primaryColor }} className="text-white hover:opacity-90">
+            <Send className="w-4 h-4" />
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export function EngageWidget({ clientId, companyName, primaryColor = '#007bff' }: EngageWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -292,7 +506,7 @@ export function LiveChatWidget({ clientId, companyName, primaryColor = '#007bff'
       {isOpen && (
         <Card 
           className="fixed bottom-6 right-6 w-96 h-[500px] shadow-2xl z-50 flex flex-col"
-          data-testid="card-livechat-widget"
+          data-testid="card-engage-widget"
         >
           {/* Header */}
           <CardHeader 

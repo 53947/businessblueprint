@@ -118,9 +118,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       id: "ai-coach",
       label: "Coach Blue",
       icon: <img src={aiCoachIcon} alt="Coach Blue" className="w-7 h-7 object-contain" />,
-      external: true,
-      href: "/coach-blue",
-      featureCode: "AC",
+      external: false,
     },
     {
       id: "digital-iq",
@@ -158,6 +156,13 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
   const handleNavClick = (item: NavItem, closeMobile: boolean = false) => {
     if (closeMobile) {
       setIsMobileOpen(false);
+    }
+
+    // Coach Blue opens the chat widget tab instead of navigating
+    if (item.id === "ai-coach") {
+      window.dispatchEvent(new CustomEvent("openCoachBlue"));
+      if (closeMobile) setIsMobileOpen(false);
+      return;
     }
 
     // Block navigation for locked features
