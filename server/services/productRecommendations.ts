@@ -11,7 +11,7 @@ interface AssessmentScores {
 }
 
 interface ProductRecommendation {
-  productId: string; // String ID matching PRODUCTS catalog (inbox, send, etc.)
+  productId: string; // String ID matching PRODUCTS catalog (respond, promote, etc.)
   productName: string;
   reason: string;
   priority: 'critical' | 'high' | 'medium' | 'low';
@@ -131,15 +131,17 @@ export class ProductRecommendationService {
   private calculateImprovement(productId: string, category: string): number {
     // Improvement estimates based on AUTHORIZED product catalog only
     const improvements: Record<string, Record<string, number>> = {
-      'inbox': { engagement: 20, visibility: 10 },
-      'send': { engagement: 25, visibility: 15 },
-      'content': { engagement: 18, visibility: 12 },
-      'livechat': { engagement: 20, visibility: 15 },
-      'commverse': { engagement: 35, visibility: 25 },
-      'listings': { visibility: 25, completeness: 20 },
-      'reputation': { reviews: 30, engagement: 15 },
-      'localblue': { visibility: 30, reviews: 25, completeness: 30 },
-      'relationships': { engagement: 20, completeness: 15 },
+      'respond': { engagement: 20, visibility: 10 },
+      'promote': { engagement: 25, visibility: 15 },
+      'post': { engagement: 18, visibility: 12 },
+      'engage': { engagement: 20, visibility: 15 },
+      'compass': { engagement: 35, visibility: 25 },
+      'publish': { visibility: 25, completeness: 20 },
+      'elevate': { reviews: 30, engagement: 15 },
+      'anchor': { visibility: 30, reviews: 25, completeness: 30 },
+      'connect': { engagement: 20, completeness: 15 },
+      'optimize': { visibility: 20, completeness: 15 },
+      'amplify': { visibility: 15, engagement: 10 },
       'hostsBlue': { completeness: 25, visibility: 15 },
       'swipesBlue': { engagement: 15 }
     };

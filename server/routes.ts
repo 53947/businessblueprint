@@ -109,8 +109,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register credential/magic-link auth routes (for production login)
   app.use(authRouter);
 
-  // Serve favicon.ico from attached_assets
+  // Serve favicon.ico from attached_assets (short cache — OGA manages the real favicon)
   app.get("/favicon.ico", (req, res) => {
+    res.setHeader("Cache-Control", "public, max-age=300");
     res.sendFile(
       path.resolve(
         process.cwd(),
@@ -323,7 +324,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             title: `Digital IQ Assessment started for ${validatedData.businessName}`,
             description: `Assessment ID: ${assessment.id}`,
             occurredAt: new Date(),
-            sourceApp: "relationships",
+            sourceApp: "connect",
             actorType: "system",
           });
         } else {
@@ -1550,7 +1551,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             eventType: "portal_login",
             title: `First portal login by ${client.companyName || client.email}`,
             occurredAt: new Date(),
-            sourceApp: "relationships",
+            sourceApp: "connect",
             actorType: "system",
           });
         } else {
@@ -2885,7 +2886,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Set appropriate headers
       res.setHeader("Content-Type", asset.mimeType);
       res.setHeader("Content-Length", buffer.length);
-      res.setHeader("Cache-Control", "public, max-age=31536000"); // Cache for 1 year
+      res.setHeader("Cache-Control", "public, max-age=3600"); // Cache for 1 hour
 
       res.send(buffer);
     } catch (error) {
@@ -3415,7 +3416,7 @@ async function processAssessmentAsync(
         estimatedImpact: rec.estimatedImpact || "moderate",
         estimatedEffort: rec.estimatedEffort || "low",
         productId: (rec as any).productId || null, // String product ID from catalog (promote, respond, etc.)
-        bundleId: (rec as any).bundleId || null, // String bundle ID if applicable (commverse, localblue)
+        bundleId: (rec as any).bundleId || null, // String bundle ID if applicable (compass, anchor)
       });
     }
 
@@ -3659,7 +3660,7 @@ async function registerInboxRoutes(app: Express) {
             // Log livechat interaction as timeline event
             await db.insert(crmTimeline).values({
               contactId: existing[0].id,
-              eventType: "livechat",
+              eventType: "engage",
               title: "Started live chat session",
               description: `Visitor started a live chat session from ${validatedData.pageUrl || "unknown page"}`,
               metadata: {
@@ -3667,7 +3668,7 @@ async function registerInboxRoutes(app: Express) {
                 pageUrl: validatedData.pageUrl,
                 pageTitle: validatedData.pageTitle,
               },
-              sourceApp: "livechat",
+              sourceApp: "engage",
               occurredAt: new Date(),
             });
           } else {
@@ -3683,7 +3684,7 @@ async function registerInboxRoutes(app: Express) {
                 lastName,
                 email: validatedData.visitorEmail,
                 lifecycleStage: "lead",
-                leadSource: "livechat",
+                leadSource: "engage",
                 customFields: {
                   livechatSessionId: session.sessionId,
                   firstPageUrl: validatedData.pageUrl,
@@ -3701,7 +3702,7 @@ async function registerInboxRoutes(app: Express) {
               title: "Contact created from live chat",
               description: `New contact created when ${validatedData.visitorName} started a live chat session`,
               metadata: { sessionId: session.sessionId },
-              sourceApp: "livechat",
+              sourceApp: "engage",
               occurredAt: new Date(),
             });
           }

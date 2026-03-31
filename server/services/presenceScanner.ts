@@ -74,6 +74,15 @@ interface WebsiteScan {
     hasBusinessHours: boolean;
   };
   score: number;
+  detections: {
+    emailCapture: { detected: boolean; platform: string | null; method: string };
+    chatWidget: { detected: boolean; platform: string | null };
+    crm: { detected: boolean; platform: string | null };
+    automation: { detected: boolean; platform: string | null };
+    blog: { detected: boolean; lastPostDate: string | null; estimatedFrequency: string | null };
+    smsMarketing: { detected: boolean; platform: string | null };
+    lastUpdate: { estimatedDate: string | null; method: string };
+  };
 }
 
 interface SocialMediaScan {
@@ -501,6 +510,16 @@ export class PresenceScannerService {
       const contentData = this.analyzeContent(html);
       const isMobileFriendly = this.checkMobileFriendly(html);
 
+      // Run all detections on the same HTML
+      const emailCapture = this.detectEmailCapture(html);
+      const chatWidget = this.detectChatWidget(html);
+      const crmAndAutomation = this.detectCRMAndAutomation(html);
+      const blog = this.detectBlog(html);
+      const smsMarketing = this.detectSMSMarketing(html);
+      const lastUpdate = this.detectLastUpdate(html);
+
+      console.log(`[PresenceScanner] Detections: email=${emailCapture.detected ? emailCapture.platform || 'form' : 'none'}, chat=${chatWidget.detected ? chatWidget.platform : 'none'}, crm=${crmAndAutomation.crmDetected ? crmAndAutomation.crmPlatform : 'none'}, blog=${blog.detected}, sms=${smsMarketing.detected}`);
+
       const score = this.calculateWebsiteScore({
         hasSSL,
         isMobileFriendly,
@@ -517,6 +536,15 @@ export class PresenceScannerService {
         seo: seoData,
         content: contentData,
         score,
+        detections: {
+          emailCapture,
+          chatWidget,
+          crm: { detected: crmAndAutomation.crmDetected, platform: crmAndAutomation.crmPlatform },
+          automation: { detected: crmAndAutomation.automationDetected, platform: crmAndAutomation.automationPlatform },
+          blog,
+          smsMarketing,
+          lastUpdate,
+        },
       };
     } catch (error) {
       console.error('Website scan error:', error);
@@ -570,6 +598,273 @@ export class PresenceScannerService {
       hasEmail,
       hasBusinessHours,
     };
+  }
+
+  /**
+   * Detect email collection mechanisms on the website.
+   * Checks for: email marketing platform scripts, newsletter signup forms,
+   * email input fields with subscribe/signup context.
+   */
+  private detectEmailCapture(html: string): {
+    detected: boolean;
+    platform: string | null;
+    method: string;
+  } {
+    const platforms: Record<string, RegExp[]> = {
+      'mailchimp': [/mc\.js/i, /list-manage\.com/i, /chimpstatic/i],
+      'constant_contact': [/constantcontact\.com/i, /cc\.js/i],
+      'convertkit': [/convertkit\.com/i, /ck\.js/i],
+      'klaviyo': [/klaviyo\.com/i, /klviyo/i],
+      'activecampaign': [/activecampaign\.com/i],
+      'hubspot': [/js\.hs-scripts\.com/i, /hbspt\.forms/i, /hsforms/i],
+      'drip': [/getdrip\.com/i],
+      'mailerlite': [/mailerlite\.com/i, /ml\.js/i],
+      'brevo': [/brevo\.com/i, /sendinblue\.com/i, /sibforms/i],
+      'campaign_monitor': [/createsend\.com/i, /campaignmonitor\.com/i],
+      'aweber': [/aweber\.com/i],
+      'getresponse': [/getresponse\.com/i],
+      'beehiiv': [/beehiiv\.com/i],
+      'substack': [/substack\.com/i, /substackapi/i],
+    };
+
+    for (const [name, patterns] of Object.entries(platforms)) {
+      if (patterns.some(p => p.test(html))) {
+        return { detected: true, platform: name, method: 'embedded_script' };
+      }
+    }
+
+    // Check for generic email signup forms
+    const hasEmailInput = /<input[^>]*type=["']email["'][^>]*>/i.test(html);
+    const hasNewsletterContext = /newsletter|subscribe|sign.?up|email.?list|mailing.?list|stay.?in.?touch|get.?updates|join.*list/i.test(html);
+    const hasFormWithEmail = /<form[^>]*>[\s\S]{0,2000}?<input[^>]*type=["']email["']/i.test(html);
+
+    if (hasFormWithEmail && hasNewsletterContext) {
+      return { detected: true, platform: null, method: 'signup_form' };
+    }
+
+    return { detected: false, platform: null, method: 'none' };
+  }
+
+  /**
+   * Detect live chat widgets on the website.
+   */
+  private detectChatWidget(html: string): {
+    detected: boolean;
+    platform: string | null;
+  } {
+    const platforms: Record<string, RegExp[]> = {
+      'intercom': [/intercom/i, /intercomSettings/i, /widget\.intercom\.io/i],
+      'drift': [/drift\.com/i, /driftt\.com/i, /js\.driftt/i],
+      'tawk': [/tawk\.to/i, /embed\.tawk/i],
+      'livechat': [/livechatinc\.com/i, /cdn\.livechatinc/i],
+      'zendesk_chat': [/zopim/i, /static\.zdassets/i, /zendesk.*chat/i],
+      'crisp': [/crisp\.chat/i, /client\.crisp/i],
+      'tidio': [/tidio\.co/i, /code\.tidio/i],
+      'olark': [/olark\.com/i, /static\.olark/i],
+      'hubspot_chat': [/js\.usemessages\.com/i, /HubSpotConversations/i],
+      'freshchat': [/wchat\.freshchat/i, /freshdesk\.com.*widget/i],
+      'facebook_messenger': [/customerchat/i, /facebook.*messenger.*plugin/i, /fb-customerchat/i],
+      'chatwoot': [/chatwoot/i, /app\.chatwoot/i],
+      'gorgias': [/gorgias/i],
+      'helpscout': [/beacon-v2/i, /helpscout/i],
+    };
+
+    for (const [name, patterns] of Object.entries(platforms)) {
+      if (patterns.some(p => p.test(html))) {
+        return { detected: true, platform: name };
+      }
+    }
+
+    return { detected: false, platform: null };
+  }
+
+  /**
+   * Detect CRM tracking codes and marketing automation platforms.
+   */
+  private detectCRMAndAutomation(html: string): {
+    crmDetected: boolean;
+    crmPlatform: string | null;
+    automationDetected: boolean;
+    automationPlatform: string | null;
+  } {
+    const crmPlatforms: Record<string, RegExp[]> = {
+      'hubspot': [/js\.hs-scripts\.com/i, /js\.hs-analytics/i, /hbspt/i],
+      'salesforce': [/force\.com/i, /salesforce.*tracking/i, /sfdc/i],
+      'zoho': [/zoho.*crm/i, /salesiq\.zoho/i],
+      'pipedrive': [/pipedrive/i, /leadbooster/i],
+      'keap': [/keap\.com/i, /infusionsoft/i],
+      'freshsales': [/freshsales/i, /freshmarketer/i],
+    };
+
+    const automationPlatforms: Record<string, RegExp[]> = {
+      'hubspot': [/js\.hs-scripts\.com/i, /hbspt/i],
+      'marketo': [/marketo\.com/i, /munchkin/i, /mkto/i],
+      'pardot': [/pardot\.com/i, /pi\.pardot/i],
+      'activecampaign': [/activecampaign\.com.*tracking/i, /trackcmp/i],
+      'drip': [/getdrip\.com/i],
+      'klaviyo': [/klaviyo\.com.*track/i],
+      'customer_io': [/customer\.io/i, /customeriotracking/i],
+      'autopilot': [/autopilothq/i],
+    };
+
+    let crmResult = { detected: false, platform: null as string | null };
+    let autoResult = { detected: false, platform: null as string | null };
+
+    for (const [name, patterns] of Object.entries(crmPlatforms)) {
+      if (patterns.some(p => p.test(html))) {
+        crmResult = { detected: true, platform: name };
+        break;
+      }
+    }
+
+    for (const [name, patterns] of Object.entries(automationPlatforms)) {
+      if (patterns.some(p => p.test(html))) {
+        autoResult = { detected: true, platform: name };
+        break;
+      }
+    }
+
+    return {
+      crmDetected: crmResult.detected,
+      crmPlatform: crmResult.platform,
+      automationDetected: autoResult.detected,
+      automationPlatform: autoResult.platform,
+    };
+  }
+
+  /**
+   * Detect blog/content section and estimate posting frequency.
+   */
+  private detectBlog(html: string): {
+    detected: boolean;
+    lastPostDate: string | null;
+    estimatedFrequency: string | null;
+  } {
+    // Check for blog links in navigation or page content
+    const blogLinkPattern = /href=["'][^"']*\/(blog|news|articles|insights|posts|journal|stories|resources\/blog)[/"']/i;
+    const hasBlogLink = blogLinkPattern.test(html);
+
+    // Check for article structured data
+    const hasArticleSchema = /"@type"\s*:\s*"(BlogPosting|NewsArticle|Article)"/i.test(html);
+    const hasArticleTag = /<article[\s>]/i.test(html);
+
+    // Try to find dates in article/blog content
+    // ISO dates
+    const isoDatePattern = /datetime=["'](\d{4}-\d{2}-\d{2})/g;
+    const dates: Date[] = [];
+    let match;
+
+    while ((match = isoDatePattern.exec(html)) !== null) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime()) && d.getFullYear() >= 2020) dates.push(d);
+    }
+
+    // Schema.org datePublished
+    const schemaDatePattern = /"datePublished"\s*:\s*"(\d{4}-\d{2}-\d{2})/g;
+    while ((match = schemaDatePattern.exec(html)) !== null) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime()) && d.getFullYear() >= 2020) dates.push(d);
+    }
+
+    if (!hasBlogLink && !hasArticleSchema && !hasArticleTag && dates.length === 0) {
+      return { detected: false, lastPostDate: null, estimatedFrequency: null };
+    }
+
+    const sortedDates = dates.sort((a, b) => b.getTime() - a.getTime());
+    const lastPostDate = sortedDates[0] || null;
+
+    let frequency: string | null = null;
+    if (lastPostDate) {
+      const daysSince = Math.floor((Date.now() - lastPostDate.getTime()) / (1000 * 60 * 60 * 24));
+      if (daysSince <= 10) frequency = 'yes_weekly';
+      else if (daysSince <= 45) frequency = 'yes_monthly';
+      else if (daysSince <= 180) frequency = 'yes_inconsistent';
+      else frequency = 'no_planning';
+    } else if (hasBlogLink || hasArticleSchema) {
+      frequency = 'yes_inconsistent';
+    }
+
+    return {
+      detected: hasBlogLink || hasArticleSchema || hasArticleTag,
+      lastPostDate: lastPostDate ? lastPostDate.toISOString().split('T')[0] : null,
+      estimatedFrequency: frequency,
+    };
+  }
+
+  /**
+   * Detect SMS marketing platform presence.
+   */
+  private detectSMSMarketing(html: string): {
+    detected: boolean;
+    platform: string | null;
+  } {
+    const platforms: Record<string, RegExp[]> = {
+      'twilio': [/twilio\.com/i],
+      'eztexting': [/eztexting\.com/i],
+      'simpletexting': [/simpletexting\.com/i],
+      'slicktext': [/slicktext\.com/i],
+      'textmagic': [/textmagic\.com/i],
+      'postscript': [/postscript\.io/i],
+      'attentive': [/attentivemobile\.com/i, /attn\.tv/i],
+    };
+
+    for (const [name, patterns] of Object.entries(platforms)) {
+      if (patterns.some(p => p.test(html))) {
+        return { detected: true, platform: name };
+      }
+    }
+
+    // Check for "Text KEYWORD to SHORTCODE" patterns
+    const textToPattern = /text\s+\w+\s+to\s+\d{5,6}/i;
+    if (textToPattern.test(html)) {
+      return { detected: true, platform: 'shortcode_detected' };
+    }
+
+    return { detected: false, platform: null };
+  }
+
+  /**
+   * Estimate when the website was last updated.
+   */
+  private detectLastUpdate(html: string): {
+    estimatedDate: string | null;
+    method: string;
+  } {
+    // Check for copyright year in footer
+    const copyrightPattern = /©\s*(\d{4})|copyright\s*(\d{4})/i;
+    const copyrightMatch = html.match(copyrightPattern);
+    const copyrightYear = copyrightMatch ? parseInt(copyrightMatch[1] || copyrightMatch[2]) : null;
+
+    // Check for recent dates in content
+    const allDates: Date[] = [];
+
+    // ISO format dates
+    const isoPattern = /(\d{4}-\d{2}-\d{2})/g;
+    let match;
+    while ((match = isoPattern.exec(html)) !== null) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime()) && d.getFullYear() >= 2020 && d.getTime() <= Date.now()) {
+        allDates.push(d);
+      }
+    }
+
+    // Schema dateModified
+    const modifiedPattern = /"dateModified"\s*:\s*"(\d{4}-\d{2}-\d{2})/g;
+    while ((match = modifiedPattern.exec(html)) !== null) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime())) allDates.push(d);
+    }
+
+    if (allDates.length > 0) {
+      const mostRecent = allDates.sort((a, b) => b.getTime() - a.getTime())[0];
+      return { estimatedDate: mostRecent.toISOString().split('T')[0], method: 'content_date' };
+    }
+
+    if (copyrightYear) {
+      return { estimatedDate: `${copyrightYear}-06-15`, method: 'copyright_year' };
+    }
+
+    return { estimatedDate: null, method: 'unknown' };
   }
 
   /**
@@ -1055,6 +1350,10 @@ export class PresenceScannerService {
     crmPlatform?: string | null;
     lastCRMFollowup?: string | null;
     hasAutomation?: string | null;
+    // Advertising & Paid Media (Q28-Q30)
+    runsAds?: string | null;
+    lastAdCampaign?: string | null;
+    monthlyAdBudget?: string | null;
   }): number {
     // Define scoring tables: maps answer values to points (0-10 per question, normalized at end)
     // IMPORTANT: Values must match exactly what the form produces
@@ -1199,6 +1498,24 @@ export class PresenceScannerService {
       'dont_know': 3,
     };
 
+    const runsAdsScores: Record<string, number> = {
+      'yes_both': 10,
+      'yes_google': 8,
+      'yes_meta': 8,
+      'yes_other': 6,
+      'no_interested': 3,
+      'no_not_interested': 0,
+    };
+
+    const adBudgetScores: Record<string, number> = {
+      '5000_plus': 10,
+      '2500_5000': 8,
+      '1000_2500': 6,
+      '500_1000': 4,
+      'under_500': 2,
+      'none': 0,
+    };
+
     // Helper to get score with fallback
     const getScore = (value: string | null | undefined, scoreTable: Record<string, number>): number => {
       if (!value) return 0;
@@ -1244,17 +1561,13 @@ export class PresenceScannerService {
       getScore(operationalData.chatResponseTime, responseTimeScores)
     ) / 30 * 7.78;
 
-    // Business Listings (2 questions) - 7.78 points max
-    const listingsRaw = (
+    // Business Listings & GBP (4 questions: Q18-Q21 — old listings + old GBP merged) - 7.78 points max
+    const publishRaw = (
       getScore(operationalData.lastListingUpdate, recencyScores) +
-      getScore(operationalData.listingConsistency, listingConsistencyScores)
-    ) / 20 * 7.78;
-
-    // Google Business Profile (2 questions) - 7.78 points max
-    const gbpRaw = (
+      getScore(operationalData.listingConsistency, listingConsistencyScores) +
       getScore(operationalData.lastGBPPost, recencyScores) +
       getScore(operationalData.lastGBPPhoto, recencyScores)
-    ) / 20 * 7.78;
+    ) / 40 * 7.78;
 
     // Website & SEO (2 questions) - 7.78 points max
     const websiteRaw = (
@@ -1270,12 +1583,19 @@ export class PresenceScannerService {
       getScore(operationalData.hasAutomation, automationScores)
     ) / 40 * 7.78;
 
+    // Advertising & Paid Media (3 questions: Q28-Q30) - 7.78 points max
+    const amplifyRaw = (
+      getScore(operationalData.runsAds, runsAdsScores) +
+      getScore(operationalData.lastAdCampaign, recencyScores) +
+      getScore(operationalData.monthlyAdBudget, adBudgetScores)
+    ) / 30 * 7.78;
+
     const operationalTotal = Math.round(
-      emailSmsRaw + socialRaw + reputationRaw + responseRaw + 
-      chatRaw + listingsRaw + gbpRaw + websiteRaw + crmRaw
+      emailSmsRaw + socialRaw + reputationRaw + responseRaw +
+      chatRaw + publishRaw + websiteRaw + crmRaw + amplifyRaw
     );
 
-    console.log(`📊 Operational Score Breakdown: Email/SMS=${emailSmsRaw.toFixed(1)}, Social=${socialRaw.toFixed(1)}, Reputation=${reputationRaw.toFixed(1)}, Response=${responseRaw.toFixed(1)}, Chat=${chatRaw.toFixed(1)}, Listings=${listingsRaw.toFixed(1)}, GBP=${gbpRaw.toFixed(1)}, Website=${websiteRaw.toFixed(1)}, CRM=${crmRaw.toFixed(1)}, Total=${operationalTotal}/70`);
+    console.log(`📊 Operational Score Breakdown: Promote=${emailSmsRaw.toFixed(1)}, Post=${socialRaw.toFixed(1)}, Elevate=${reputationRaw.toFixed(1)}, Respond=${responseRaw.toFixed(1)}, Engage=${chatRaw.toFixed(1)}, Publish=${publishRaw.toFixed(1)}, Optimize=${websiteRaw.toFixed(1)}, Connect=${crmRaw.toFixed(1)}, Amplify=${amplifyRaw.toFixed(1)}, Total=${operationalTotal}/70`);
 
     return Math.min(70, Math.max(0, operationalTotal));
   }
@@ -1367,6 +1687,23 @@ export class PresenceScannerService {
     // Social media recommendations
     if (data.socialMedia.activeProfiles < 2) {
       recommendations.push('Establish active presence on key social media platforms');
+    }
+
+    // Detection-based recommendations
+    if (data.website?.detections) {
+      const d = data.website.detections;
+
+      if (!d.emailCapture.detected) {
+        recommendations.push('Add an email signup form to your website to capture leads');
+      }
+      if (!d.chatWidget.detected) {
+        recommendations.push('Add a live chat widget to your website to engage visitors in real time');
+      }
+      if (!d.blog.detected) {
+        recommendations.push('Start a blog to improve SEO and demonstrate expertise');
+      } else if (d.blog.estimatedFrequency === 'yes_inconsistent' || d.blog.estimatedFrequency === 'no_planning') {
+        recommendations.push('Your blog exists but hasn\'t been updated recently — consistent posting improves search rankings');
+      }
     }
 
     return recommendations.slice(0, 10); // Top 10 recommendations
@@ -1488,6 +1825,15 @@ export class PresenceScannerService {
         hasBusinessHours: false,
       },
       score: 0,
+      detections: {
+        emailCapture: { detected: false, platform: null, method: 'none' },
+        chatWidget: { detected: false, platform: null },
+        crm: { detected: false, platform: null },
+        automation: { detected: false, platform: null },
+        blog: { detected: false, lastPostDate: null, estimatedFrequency: null },
+        smsMarketing: { detected: false, platform: null },
+        lastUpdate: { estimatedDate: null, method: 'unknown' },
+      },
     };
   }
 }

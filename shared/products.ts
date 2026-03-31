@@ -25,12 +25,12 @@ export interface Bundle {
 }
 
 export const PRODUCTS: Record<string, Product> = {
-  inbox: {
-    id: 'inbox',
-    name: 'Inbox',
-    description: 'Unified Communication Hub - Consolidates email, SMS, social messages, live chat into ONE inbox',
-    price: '$34/mo',
-    priceValue: 34,
+  respond: {
+    id: 'respond',
+    name: '/ respond',
+    description: 'Unified Multi-Channel Inbox — Consolidates email, SMS, social messages, live chat into ONE inbox',
+    price: '$29/mo',
+    priceValue: 29,
     benefits: [
       'Consolidates all messages into ONE inbox',
       'Never miss a customer message again',
@@ -38,16 +38,15 @@ export const PRODUCTS: Record<string, Product> = {
       'Track response times and conversation history',
       'Works across email, SMS, social, and chat'
     ],
-    icon: '/assets/approved icons and logos/Additional Apps/icon-inbox.png',
-    url: '/products/inbox',
-    bundle: 'commverse'
+    url: '/respond',
+    bundle: 'compass'
   },
-  send: {
-    id: 'send',
-    name: 'Send',
-    description: 'Email & SMS Marketing Platform - Build and segment your customer list, create campaigns',
-    price: '$34/mo',
-    priceValue: 34,
+  promote: {
+    id: 'promote',
+    name: '/ promote',
+    description: 'Email Campaign Manager — Build and segment your customer list, create campaigns',
+    price: '$29/mo',
+    priceValue: 29,
     benefits: [
       'Build and segment your customer list',
       'Create professional email campaigns in minutes',
@@ -55,16 +54,15 @@ export const PRODUCTS: Record<string, Product> = {
       'Automated drip campaigns that run themselves',
       'Track open rates, clicks, and conversions'
     ],
-    icon: '/assets/approved icons and logos/Additional Apps/icon-send.png',
-    url: '/products/send',
-    bundle: 'commverse'
+    url: '/promote',
+    bundle: 'compass'
   },
-  content: {
-    id: 'content',
-    name: 'Content',
-    description: 'Social Media Management - Schedule posts, create content with AI, track engagement',
-    price: '$34/mo',
-    priceValue: 34,
+  post: {
+    id: 'post',
+    name: '/ post',
+    description: 'Social Media Manager — Schedule posts, create content with AI, track engagement',
+    price: '$29/mo',
+    priceValue: 29,
     benefits: [
       'Schedule posts across all platforms',
       'Create engaging content with AI assistance',
@@ -72,16 +70,15 @@ export const PRODUCTS: Record<string, Product> = {
       'Respond to comments and DMs',
       'Content calendar and planning tools'
     ],
-    icon: '/assets/approved icons and logos/Additional Apps/icon-content.png',
-    url: '/products/content',
-    bundle: 'commverse'
+    url: '/post',
+    bundle: 'compass'
   },
-  livechat: {
-    id: 'livechat',
-    name: 'LiveChat',
-    description: 'Website Chat Widget - Real-time customer support and lead capture',
-    price: '$34/mo',
-    priceValue: 34,
+  engage: {
+    id: 'engage',
+    name: '/ engage',
+    description: 'Live Chat Widget — Real-time customer support and lead capture',
+    price: '$29/mo',
+    priceValue: 29,
     benefits: [
       'Real-time customer support',
       'Proactive chat invitations',
@@ -89,16 +86,15 @@ export const PRODUCTS: Record<string, Product> = {
       'Chat transcripts and history',
       'Lead capture and qualification'
     ],
-    icon: '/assets/approved icons and logos/Additional Apps/icon-livechat.png',
-    url: '/products/livechat',
-    bundle: 'commverse'
+    url: '/engage',
+    bundle: 'compass'
   },
-  listings: {
-    id: 'listings',
-    name: 'Listings',
-    description: 'Business Listings Management - Manage 50+ directory listings from one dashboard',
-    price: '$39/mo',
-    priceValue: 39,
+  publish: {
+    id: 'publish',
+    name: '/ publish',
+    description: 'Business Listings Manager — Manage 50+ directory listings from one dashboard',
+    price: '$29/mo',
+    priceValue: 29,
     benefits: [
       'Manage 50+ directory listings from one dashboard',
       'Ensure NAP (Name, Address, Phone) consistency',
@@ -106,16 +102,15 @@ export const PRODUCTS: Record<string, Product> = {
       'Monitor listing performance',
       'Fix duplicate and incorrect listings'
     ],
-    icon: '/assets/approved icons and logos/Additional Apps/icon-listings.png',
-    url: '/products/listings',
-    bundle: 'localblue'
+    url: '/publish',
+    bundle: 'anchor'
   },
-  reputation: {
-    id: 'reputation',
-    name: 'Reputation',
-    description: 'Ratings & Review Management - Monitor and respond to reviews across all platforms',
-    price: '$39/mo',
-    priceValue: 39,
+  elevate: {
+    id: 'elevate',
+    name: '/ elevate',
+    description: 'Reputation & Reviews Manager — Monitor and respond to reviews across all platforms',
+    price: '$29/mo',
+    priceValue: 29,
     benefits: [
       'Monitor reviews across all platforms',
       'Automated review request campaigns',
@@ -123,31 +118,13 @@ export const PRODUCTS: Record<string, Product> = {
       'Sentiment analysis and trending',
       'Showcase positive reviews on your website'
     ],
-    icon: '/assets/approved icons and logos/Additional Apps/icon-reputation.png',
-    url: '/products/reputation',
-    bundle: 'localblue'
-  },
-  localblue: {
-    id: 'localblue',
-    name: 'LocalBlue Complete',
-    description: 'Full Local SEO Package - Includes Listings + Reputation + GBP optimization',
-    price: '$59/mo',
-    priceValue: 59,
-    benefits: [
-      'Includes Listings + Reputation management',
-      'Google Business Profile optimization',
-      'Local keyword tracking',
-      'Competitor analysis',
-      'Monthly performance reports'
-    ],
-    icon: '/assets/approved icons and logos/Additional Apps/icon-localblue.png',
-    url: '/products/localblue',
-    bundle: 'localblue'
+    url: '/elevate',
+    bundle: 'anchor'
   },
   optimize: {
     id: 'optimize',
     name: '/ optimize',
-    description: 'SEO Optimization Suite - Complete SEO health monitoring, keyword tracking, and AI-powered optimization',
+    description: 'SEO Health Monitor — Complete SEO health monitoring, keyword tracking, and AI-powered optimization',
     price: '$29/mo',
     priceValue: 29,
     benefits: [
@@ -159,12 +136,28 @@ export const PRODUCTS: Record<string, Product> = {
       'Prioritized action plans'
     ],
     url: '/optimize',
-    bundle: 'localblue'
+    bundle: 'anchor'
   },
-  relationships: {
-    id: 'relationships',
-    name: 'Relationships CRM',
-    description: 'The Truth Center - Centralized customer database and sales pipeline',
+  amplify: {
+    id: 'amplify',
+    name: '/ amplify',
+    description: 'Advertising Platform — Manage and optimize your digital advertising campaigns',
+    price: '$29/mo',
+    priceValue: 29,
+    benefits: [
+      'Manage digital advertising campaigns',
+      'Track ad performance and ROI',
+      'Optimize ad spend across platforms',
+      'Targeted audience management',
+      'Performance reporting and analytics'
+    ],
+    url: '/amplify',
+    bundle: 'anchor'
+  },
+  connect: {
+    id: 'connect',
+    name: '/ connect',
+    description: 'Customer Relationship Management Tool — Centralized customer database and sales pipeline',
     price: '$29/mo',
     priceValue: 29,
     benefits: [
@@ -172,15 +165,14 @@ export const PRODUCTS: Record<string, Product> = {
       'Track every interaction across all channels',
       'Sales pipeline and opportunity tracking',
       'Automated follow-ups and reminders',
-      'Seamless integration with all CommVerse and LocalBlue tools'
+      'Integration with all Compass and Anchor tools'
     ],
-    icon: '/assets/approved icons and logos/Additional Apps/approved-apps-relationship-icon.png',
-    url: '/products/relationships'
+    url: '/connect'
   },
   coachblue: {
     id: 'coachblue',
     name: 'Coach Blue',
-    description: 'Your 24/7 AI Business Guide - Personalized guidance based on YOUR business',
+    description: 'Your 24/7 AI Business Guide — Personalized guidance based on YOUR business',
     price: '$99/mo',
     priceValue: 99,
     benefits: [
@@ -194,8 +186,8 @@ export const PRODUCTS: Record<string, Product> = {
   },
   hostsblue: {
     id: 'hostsblue',
-    name: 'HostsBlue.com',
-    description: 'Complete Web Services - Domain, hosting, email, website builder',
+    name: 'hostsblue.com',
+    description: 'Complete Web Services — Domain, hosting, email, website builder',
     price: 'Varies',
     priceValue: 0,
     benefits: [
@@ -211,8 +203,8 @@ export const PRODUCTS: Record<string, Product> = {
   },
   swipesblue: {
     id: 'swipesblue',
-    name: 'SwipesBlue.com',
-    description: 'Payment Processing and E-commerce - Integrated payment gateway',
+    name: 'swipesblue.com',
+    description: 'Payment Processing — Integrated payment gateway',
     price: '2.9% + 30¢',
     priceValue: 0,
     benefits: [
@@ -228,7 +220,7 @@ export const PRODUCTS: Record<string, Product> = {
   siteinspector: {
     id: 'siteinspector',
     name: 'ScansBlue',
-    description: 'Website Analysis Tool - Professional-grade website audits',
+    description: 'Website Analysis Tool — Professional-grade website audits',
     price: 'Free',
     priceValue: 0,
     benefits: [
@@ -244,68 +236,65 @@ export const PRODUCTS: Record<string, Product> = {
 };
 
 export const BUNDLES: Record<string, Bundle> = {
-  commverse: {
-    id: 'commverse',
-    name: 'CommVerse Bundle',
-    description: 'Complete Communications Universe - All 4 communication tools in one integrated platform',
+  compass: {
+    id: 'compass',
+    name: 'Compass Suite',
+    description: 'Communication & Marketing Bundle — All 4 communication tools in one integrated platform',
     price: '$99/mo',
     priceValue: 99,
-    savings: 'Save $37/month vs buying separately',
-    products: ['inbox', 'send', 'content', 'livechat'],
+    savings: 'Save vs buying apps separately',
+    products: ['promote', 'respond', 'engage', 'post'],
     benefits: [
       'All 4 communication tools in one platform',
       'Unified dashboard for all customer communications',
-      'Save $37/month vs buying apps separately',
+      'Save vs buying apps separately',
       'Perfect sync between email, SMS, social, and chat',
       'One login, one bill, complete control'
     ],
-    icon: '/assets/approved icons and logos/Additional Apps/icon-commverse.png',
-    url: '/products/commverse'
+    url: '/compass'
   },
-  localblue: {
-    id: 'localblue',
-    name: 'LocalBlue Bundle',
-    description: 'Complete Local SEO Package - Listings + Reputation + SEO Optimization',
-    price: '$49.50/mo',
-    priceValue: 49.50,
-    savings: 'Save $58.50/month vs buying separately',
-    products: ['listings', 'reputation', 'optimize'],
+  anchor: {
+    id: 'anchor',
+    name: 'Anchor Suite',
+    description: 'Local SEO & Reputation Bundle — / publish, / elevate, / optimize, / amplify in one integrated platform',
+    price: '$99/mo',
+    priceValue: 99,
+    savings: 'Save vs buying apps separately',
+    products: ['publish', 'elevate', 'optimize', 'amplify'],
     benefits: [
       'Complete control of your local presence',
-      'Listings management + Reputation monitoring + SEO optimization',
+      '/ publish + / elevate + / optimize + / amplify',
       'Google Business Profile optimization',
       'AI-powered SEO health monitoring and keyword tracking',
-      'Save vs buying all 3 apps separately',
+      'Save vs buying all 4 apps separately',
       'Dominate local search results'
     ],
-    icon: '/assets/approved icons and logos/Additional Apps/icon-localblue.png',
-    url: '/products/localblue'
+    url: '/anchor'
   }
 };
 
 export const CATEGORY_PRODUCT_MAP: Record<string, { primary: string; bundle?: string; secondary?: string[] }> = {
-  'Email & SMS Marketing': { primary: 'send', bundle: 'commverse' },
-  'Social Media Content': { primary: 'content', bundle: 'commverse' },
-  'Reputation Management': { primary: 'reputation', bundle: 'localblue' },
-  'Customer Response & Timing': { primary: 'inbox', bundle: 'commverse' },
-  'Live Chat': { primary: 'livechat', bundle: 'commverse' },
-  'Business Listings': { primary: 'listings', bundle: 'localblue' },
-  'Google Business Profile': { primary: 'localblue', bundle: 'localblue' },
-  'SEO Optimization': { primary: 'optimize', bundle: 'localblue' },
-  'Website & SEO': { primary: 'hostsblue', secondary: ['siteinspector', 'livechat', 'optimize'] },
-  'CRM Systems': { primary: 'relationships' }
+  'Email & SMS Marketing': { primary: 'promote', bundle: 'compass' },
+  'Social Media Content': { primary: 'post', bundle: 'compass' },
+  'Reputation Management': { primary: 'elevate', bundle: 'anchor' },
+  'Unified Inbox & Response': { primary: 'respond', bundle: 'compass' },
+  'Live Chat': { primary: 'engage', bundle: 'compass' },
+  'Business Listings & GBP': { primary: 'publish', bundle: 'anchor' },
+  'Website & SEO': { primary: 'optimize', bundle: 'anchor' },
+  'CRM & Customer Management': { primary: 'connect' },
+  'Advertising & Paid Media': { primary: 'amplify', bundle: 'anchor' },
 };
 
 export const SCORING_AREAS = [
-  { id: 'email_sms', name: 'Email & SMS Marketing', maxPoints: 15 },
-  { id: 'social_media', name: 'Social Media Content', maxPoints: 13 },
-  { id: 'reputation', name: 'Reputation Management', maxPoints: 16 },
-  { id: 'customer_response', name: 'Customer Response & Timing', maxPoints: 15 },
-  { id: 'live_chat', name: 'Live Chat', maxPoints: 15 },
-  { id: 'listings', name: 'Business Listings', maxPoints: 18 },
-  { id: 'gbp', name: 'Google Business Profile', maxPoints: 16 },
-  { id: 'website_seo', name: 'Website & SEO', maxPoints: 20 },
-  { id: 'crm', name: 'CRM Systems', maxPoints: 12 }
+  { id: 'promote', name: 'Email & SMS Marketing', maxPoints: 15 },
+  { id: 'post', name: 'Social Media Content', maxPoints: 13 },
+  { id: 'elevate', name: 'Reputation Management', maxPoints: 16 },
+  { id: 'respond', name: 'Unified Inbox & Response', maxPoints: 15 },
+  { id: 'engage', name: 'Live Chat', maxPoints: 15 },
+  { id: 'publish', name: 'Business Listings & GBP', maxPoints: 18 },
+  { id: 'optimize', name: 'Website & SEO', maxPoints: 14 },
+  { id: 'connect', name: 'CRM & Customer Management', maxPoints: 12 },
+  { id: 'amplify', name: 'Advertising & Paid Media', maxPoints: 12 },
 ];
 
 export const COACH_PERSONALITY = {
@@ -327,7 +316,7 @@ export const COACH_PERSONALITY = {
   howToRecommend: [
     'Lead with the benefit/outcome',
     'Explain how our product solves their specific problem',
-    'Mention bundle savings when relevant',
+    'Mention suite savings when relevant',
     'Offer to walk them through setup',
     'Never pushy - always helpful'
   ]
@@ -355,11 +344,11 @@ export function getProductsForCategory(category: string): { primary: Product; bu
 }
 
 export function getBundleAdvantageMessage(category: string): string | null {
-  if (['Email & SMS Marketing', 'Social Media Content', 'Customer Response & Timing', 'Live Chat'].includes(category)) {
-    return 'Get all communication tools in the CommVerse bundle for $99/month - that\'s all four apps in one integrated platform. Save compared to buying separately.';
+  if (['Email & SMS Marketing', 'Social Media Content', 'Unified Inbox & Response', 'Live Chat'].includes(category)) {
+    return 'Get all communication tools in the Compass Suite for $99/month — all four apps in one integrated platform. Save compared to buying separately.';
   }
-  if (['Business Listings', 'Reputation Management', 'Google Business Profile'].includes(category)) {
-    return 'Get complete local SEO control with LocalBlue for $49.50/month - includes listings management, reputation monitoring, SEO optimization, and Google Business Profile tools.';
+  if (['Business Listings & GBP', 'Reputation Management', 'Website & SEO', 'Advertising & Paid Media'].includes(category)) {
+    return 'Get complete local SEO control with the Anchor Suite for $99/month — includes / publish, / elevate, / optimize, and / amplify.';
   }
   return null;
 }

@@ -126,7 +126,12 @@ export const assessments = pgTable("assessments", {
   crmPlatform: varchar("crm_platform", { length: 50 }), // salesforce, hubspot, zoho, monday, pipedrive, sheets_excel, other, none
   lastCRMFollowup: varchar("last_crm_followup", { length: 50 }), // past_week, past_month, past_3_months, 3_months_plus, never_no_crm
   hasAutomation: varchar("has_automation", { length: 50 }), // yes_full, yes_partial, no_manual, dont_know
-  
+
+  // Advertising & Paid Media (Q28-Q30)
+  runsAds: varchar("runs_ads", { length: 50 }), // yes_google, yes_meta, yes_both, yes_other, no_interested, no_not_interested
+  lastAdCampaign: varchar("last_ad_campaign", { length: 50 }), // past_week, past_month, past_3_months, past_6_months, 6_months_plus, never
+  monthlyAdBudget: varchar("monthly_ad_budget", { length: 50 }), // none, under_500, 500_1000, 1000_2500, 2500_5000, 5000_plus
+
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -205,7 +210,7 @@ export const scansBluePurchases = pgTable("scans_blue_purchases", {
   assessmentId: integer("assessment_id").notNull().references(() => assessments.id),
   
   // Provider-agnostic payment fields
-  paymentProvider: varchar("payment_provider", { length: 20 }).notNull().default("stripe"), // 'stripe' or 'swipesblue'
+  paymentProvider: varchar("payment_provider", { length: 20 }).notNull().default("swipesblue"), // 'swipesblue'
   transactionId: text("transaction_id").notNull().unique(), // Stripe session ID or SwipesBlue transaction ID
   paymentIntentId: text("payment_intent_id"), // Provider-specific payment reference
   
@@ -394,6 +399,9 @@ export const insertAssessmentSchema = createInsertSchema(assessments).pick({
   crmPlatform: true,
   lastCRMFollowup: true,
   hasAutomation: true,
+  runsAds: true,
+  lastAdCampaign: true,
+  monthlyAdBudget: true,
 });
 
 export const insertRecommendationSchema = createInsertSchema(recommendations).pick({
