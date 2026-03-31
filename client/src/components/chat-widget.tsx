@@ -103,7 +103,7 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
             }
           >
             {/* Tab Bar — folder-style tabs */}
-            <div className="flex items-end pt-1 px-1 shrink-0" style={{ backgroundColor: "#808080" }}>
+            <div className="flex items-end pt-1 shrink-0" style={{ backgroundColor: "#808080" }}>
               {/* Support tab */}
               <button
                 onClick={() => handleTabChange("support")}
@@ -145,11 +145,10 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
                 <span>Coach Blue</span>
               </button>
 
-              {/* Spacer + Close button */}
-              <div className="flex-1" />
+              {/* Close button */}
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-2 mb-1 rounded-full transition-colors"
+                className="px-2 py-2.5 transition-colors"
                 style={{ color: "#E9ECF0" }}
                 aria-label="Close chat"
               >
