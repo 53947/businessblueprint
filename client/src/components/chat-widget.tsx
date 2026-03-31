@@ -107,7 +107,7 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
               {/* Support tab */}
               <button
                 onClick={() => handleTabChange("support")}
-                className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold transition-colors relative ${
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold transition-colors relative ${
                   activeTab === "support" ? "z-10" : "opacity-80 hover:opacity-100"
                 }`}
                 style={{
@@ -129,7 +129,7 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
               {/* Coach Blue tab */}
               <button
                 onClick={() => handleTabChange("coach-blue")}
-                className={`flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold transition-colors ${
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold transition-colors ${
                   activeTab === "coach-blue" ? "z-10" : "opacity-80 hover:opacity-100"
                 }`}
                 style={{
