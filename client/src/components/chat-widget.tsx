@@ -20,7 +20,7 @@ export function ChatWidget({ clientId, companyName = "businessblueprint.io", pri
     return sessionStorage.getItem("chatWidgetOpen") === "true";
   });
   const [activeTab, setActiveTab] = useState<TabId>(() => {
-    return (sessionStorage.getItem("chatWidgetTab") as TabId) || "support";
+    return (sessionStorage.getItem("chatWidgetTab") as TabId) || "coach-blue";
   });
   const [supportUnread, setSupportUnread] = useState(0);
   const [, setLocation] = useLocation();
