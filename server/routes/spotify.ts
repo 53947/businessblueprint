@@ -151,14 +151,11 @@ router.get("/oauth/callback", async (req: Request, res: Response) => {
     await db.insert(adAccountConnections).values({
       platform: "spotify",
       accountName,
+      accountId: profileData.id,
       status: "active",
-      credentials: {
-        accessToken,
-        refreshToken,
-        expiresAt: Date.now() + (expiresIn || 3600) * 1000,
-        spotifyUserId: profileData.id,
-        email: profileData.email,
-      },
+      accessToken,
+      refreshToken,
+      tokenExpiresAt: new Date(Date.now() + (expiresIn || 3600) * 1000),
     });
 
     console.log(`[Spotify] Ads connected: ${accountName}`);

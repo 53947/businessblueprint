@@ -115,6 +115,10 @@ export class TikTokAdapter extends BasePlatformAdapter {
     }
   }
 
+  async validateCredentials(): Promise<boolean> {
+    return !!(this.credentials?.accessToken);
+  }
+
   getCapabilities(): PlatformCapabilities {
     return {
       maxTextLength: 2200,

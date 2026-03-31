@@ -3,14 +3,14 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import {
-  CheckSquare,
   LogOut,
   ChevronLeft,
   ChevronRight,
   Menu,
-  CreditCard,
   Lock,
-  Settings
+  Settings,
+  BarChart3,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { APP_REGISTRY, BUNDLE_REGISTRY } from "@/config/app-registry";
@@ -105,7 +105,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
     // / connect CRM at the top
     connectNavItem,
     { id: "divider-0", label: "", icon: null, isDivider: true },
-    // Anchor Suite first
+    // Anchor Suite
     { id: "anchor-heading", label: "Anchor Suite", icon: null, isHeading: true, headingColor: anchorBundle.color },
     ...anchorBundle.appIds.map(buildAppNavItem),
     { id: "divider-1", label: "", icon: null, isDivider: true },
@@ -113,9 +113,7 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
     { id: "compass-heading", label: "Compass Suite", icon: null, isHeading: true, headingColor: compassBundle.color },
     ...compassBundle.appIds.map(buildAppNavItem),
     { id: "divider-2", label: "", icon: null, isDivider: true },
-    { id: "tasks", label: "Tasks", icon: <CheckSquare className="w-7 h-7" /> },
-    { id: "billing", label: "Billing", icon: <CreditCard className="w-7 h-7" /> },
-    { id: "divider-3", label: "", icon: null, isDivider: true },
+    // Your Guide zone
     {
       id: "ai-coach",
       label: "Coach Blue",
@@ -124,8 +122,25 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       href: "/coach-blue",
       featureCode: "AC",
     },
+    {
+      id: "digital-iq",
+      label: "Digital IQ",
+      icon: <BarChart3 className="w-7 h-7" style={{ color: "#960D71" }} />,
+      external: true,
+      href: "/portal/prescriptions",
+    },
+    {
+      id: "directions-for-use",
+      label: "Directions for Use",
+      icon: <ClipboardList className="w-7 h-7" style={{ color: "#09080E" }} />,
+      external: true,
+      href: "/portal/directions",
+    },
+    { id: "divider-3", label: "", icon: null, isDivider: true },
+    // Admin zone
     { id: "settings", label: "Settings", icon: <Settings className="w-7 h-7" /> },
     { id: "divider-4", label: "", icon: null, isDivider: true },
+    // Platform links
     { id: "hostsblue", label: "hostsblue.com", icon: null, logo: hostsBlueWordmark, external: true, href: "https://hostsblue.com" },
     { id: "swipesblue", label: "swipesblue.com", icon: null, logo: swipesBlueWordmark, external: true, href: "https://swipesblue.com" },
     { id: "builderblue2", label: "builderblue2.com", icon: null, logo: builderBlueWordmark, external: true, href: "https://builderblue2.com" },

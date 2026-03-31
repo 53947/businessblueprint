@@ -10,10 +10,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { 
-  FileText, 
-  CheckCircle, 
-  Clock, 
+import {
+  FileText,
+  CheckCircle,
+  Clock,
   AlertTriangle,
   ArrowRight,
   TrendingUp,
@@ -22,7 +22,9 @@ import {
   ChevronLeft,
   Target,
   Sparkles,
-  BarChart3
+  BarChart3,
+  ClipboardList,
+  Loader2,
 } from "lucide-react";
 
 interface Prescription {
@@ -222,6 +224,33 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
   const { data, isLoading, error } = useQuery<PrescriptionData>({
     queryKey: [endpoint],
     enabled: !!(prescriptionId || token),
+  });
+
+  // Check if Directions for Use tasks already exist
+  const { data: setupProgressData } = useQuery<{ totalTasks: number }>({
+    queryKey: ['/api/setup-tasks/progress'],
+    enabled: !token,
+  });
+
+  const generateTasksMutation = useMutation({
+    mutationFn: async (prescriptionId: number) => {
+      const res = await apiRequest('POST', '/api/setup-tasks/generate', { prescriptionId });
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/setup-tasks/progress'] });
+      toast({
+        title: "Your Directions for Use are ready!",
+        description: "Your step-by-step setup plan has been created.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Generation Failed",
+        description: "Could not generate your setup tasks. Please try again.",
+        variant: "destructive",
+      });
+    },
   });
 
   const progressMutation = useMutation({
@@ -511,6 +540,61 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
           )}
         </CardContent>
       </Card>
+
+      {!token && (prescription.status === 'delivered' || prescription.status === 'completed' || prescription.status === 'in_progress') && (
+        <Card className="border border-gray-200 bg-white">
+          <CardContent className="p-6">
+            {setupProgressData && setupProgressData.totalTasks > 0 ? (
+              <div className="flex flex-col md:flex-row items-center gap-4">
+                <div className="flex-1">
+                  <h3 className="font-semibold text-lg mb-1 flex items-center gap-2">
+                    <ClipboardList className="w-5 h-5 text-gray-700" />
+                    Your Directions for Use Are Ready
+                  </h3>
+                  <p className="text-gray-600">
+                    Your step-by-step setup plan has been generated. View it to start checking off your tasks.
+                  </p>
+                </div>
+                <Button asChild className="bg-gray-900 hover:bg-gray-800 text-white">
+                  <Link href="/portal/directions">
+                    View Directions for Use
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col md:flex-row items-center gap-4">
+                <div className="flex-1">
+                  <h3 className="font-semibold text-lg mb-1 flex items-center gap-2">
+                    <ClipboardList className="w-5 h-5 text-gray-700" />
+                    Generate Your Directions for Use
+                  </h3>
+                  <p className="text-gray-600">
+                    Turn this prescription into a step-by-step setup checklist you can follow at your own pace.
+                  </p>
+                </div>
+                <Button
+                  onClick={() => generateTasksMutation.mutate(prescription.id)}
+                  disabled={generateTasksMutation.isPending}
+                  className="bg-[#FF6B00] hover:bg-[#e55f00] text-white"
+                >
+                  {generateTasksMutation.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      Generate My Plan
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {!token && (
         <Card className="bg-gradient-to-r from-[#FF6B00]/10 to-[#0000FF]/10 border-[#FF6B00]/30">

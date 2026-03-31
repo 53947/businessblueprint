@@ -257,6 +257,10 @@ export const clients = pgTable("clients", {
   // External dashboard URL (legacy Vendasta integration)
   vendastaDashboardUrl: text("vendasta_dashboard_url"),
 
+  // Directions for Use tracking
+  setupProgress: integer("setup_progress").default(0),
+  setupPhase: varchar("setup_phase", { length: 30 }).default("not_started"), // not_started, in_progress, complete, engagement
+
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -2841,6 +2845,111 @@ export type InsertCrmAutomation = z.infer<typeof insertCrmAutomationSchema>;
 export type CrmAutomationStep = typeof crmAutomationSteps.$inferSelect;
 export type InsertCrmAutomationStep = z.infer<typeof insertCrmAutomationStepSchema>;
 export type CrmAutomationExecution = typeof crmAutomationExecutions.$inferSelect;
+
+// ========================================
+// SETUP TASKS — Directions for Use (system-controlled)
+// Completely separate from CRM Tasks. Different purpose, different data model.
+// These are prescribed setup steps generated from assessments/prescriptions.
+// ========================================
+
+export const setupTasks = pgTable("setup_tasks", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+
+  // Links to knowledge base
+  appId: varchar("app_id", { length: 30 }).notNull(),
+  stepId: varchar("step_id", { length: 100 }).notNull(),
+  substepId: varchar("substep_id", { length: 100 }),
+
+  // Task state
+  status: varchar("status", { length: 20 }).notNull().default("pending"), // pending, in_progress, completed, skipped
+  completedAt: timestamp("completed_at"),
+
+  // Source tracking
+  source: varchar("source", { length: 30 }).notNull().default("prescription"), // prescription, coach_blue, rescan
+  sourceId: integer("source_id"),
+
+  // Display
+  cadenceOrder: integer("cadence_order").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  estimatedMinutes: integer("estimated_minutes"),
+
+  // Phase tracking
+  phase: varchar("phase", { length: 20 }).notNull().default("setup"), // setup, maintenance, growth
+
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_setup_tasks_client").on(table.clientId),
+  index("idx_setup_tasks_status").on(table.clientId, table.status),
+  index("idx_setup_tasks_app").on(table.clientId, table.appId),
+]);
+
+export const insertSetupTaskSchema = createInsertSchema(setupTasks).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type SetupTask = typeof setupTasks.$inferSelect;
+export type InsertSetupTask = z.infer<typeof insertSetupTaskSchema>;
+
+// ========================================
+// SETUP NOTES — User's personal notes and to-dos (user-controlled)
+// Attached to Directions for Use steps. Users create, edit, delete freely.
+// ========================================
+
+export const setupNotes = pgTable("setup_notes", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+
+  // Where this note lives
+  appId: varchar("app_id", { length: 30 }).notNull(),
+  stepId: varchar("step_id", { length: 100 }),
+
+  // Note content
+  content: text("content").notNull(),
+  isTodo: boolean("is_todo").notNull().default(false),
+  isCompleted: boolean("is_completed").notNull().default(false),
+  completedAt: timestamp("completed_at"),
+
+  // Ordering
+  sortOrder: integer("sort_order").default(0),
+
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  index("idx_setup_notes_client").on(table.clientId),
+  index("idx_setup_notes_location").on(table.clientId, table.appId, table.stepId),
+]);
+
+export const insertSetupNoteSchema = createInsertSchema(setupNotes).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type SetupNote = typeof setupNotes.$inferSelect;
+export type InsertSetupNote = z.infer<typeof insertSetupNoteSchema>;
+
+// ========================================
+// SETUP TASK EVENTS — Audit trail for Directions for Use
+// ========================================
+
+export const setupTaskEvents = pgTable("setup_task_events", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+  taskId: integer("task_id").references(() => setupTasks.id),
+  eventType: varchar("event_type", { length: 30 }).notNull(), // completed, stalled, nudge_sent, email_sent, reopened
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_setup_events_client").on(table.clientId),
+  index("idx_setup_events_task").on(table.taskId),
+]);
+
+export type SetupTaskEvent = typeof setupTaskEvents.$inferSelect;
 
 // ============================================================================
 // PUBLIC API - API Keys for External Integration

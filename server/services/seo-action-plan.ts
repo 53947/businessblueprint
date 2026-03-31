@@ -3,7 +3,7 @@
  * Used by / optimize AI SEO Action Plan module.
  */
 
-import { unifiedAI } from './ai-provider';
+import { unifiedAI, type AIProvider } from './ai-provider';
 import { aiSettingsService } from './ai-settings';
 
 interface ActionItem {
@@ -29,8 +29,8 @@ interface ActionPlanInput {
  * Generate an AI-prioritized SEO action plan based on all available data.
  */
 export async function generateActionPlan(input: ActionPlanInput): Promise<ActionItem[]> {
-  const settings = await aiSettingsService.getSettings();
-  const provider = settings.defaultProvider || 'openai';
+  const settings = await aiSettingsService.getAllSettings();
+  const provider = ((settings.length > 0 ? settings[0].provider : null) || 'openai') as AIProvider;
 
   const prompt = `You are an SEO consultant creating a prioritized action plan for a business.
 

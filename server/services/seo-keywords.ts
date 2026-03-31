@@ -3,7 +3,7 @@
  * Used by / optimize Keyword Intelligence module.
  */
 
-import { unifiedAI } from './ai-provider';
+import { unifiedAI, type AIProvider } from './ai-provider';
 import { aiSettingsService } from './ai-settings';
 
 interface KeywordSuggestion {
@@ -28,8 +28,8 @@ export async function researchKeywords(
   industry: string,
   location?: string
 ): Promise<KeywordSuggestion[]> {
-  const settings = await aiSettingsService.getSettings();
-  const provider = settings.defaultProvider || 'openai';
+  const settings = await aiSettingsService.getAllSettings();
+  const provider = ((settings.length > 0 ? settings[0].provider : null) || 'openai') as AIProvider;
 
   const prompt = `You are an SEO keyword research expert. Given the following seed keywords and business information, generate 15-20 keyword suggestions.
 
@@ -81,8 +81,8 @@ export async function analyzeKeywordGap(
   industry: string,
   currentKeywords: string[]
 ): Promise<KeywordGapResult> {
-  const settings = await aiSettingsService.getSettings();
-  const provider = settings.defaultProvider || 'openai';
+  const settings = await aiSettingsService.getAllSettings();
+  const provider = ((settings.length > 0 ? settings[0].provider : null) || 'openai') as AIProvider;
 
   const prompt = `You are an SEO expert performing a keyword gap analysis.
 

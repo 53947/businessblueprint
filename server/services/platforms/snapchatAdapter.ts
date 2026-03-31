@@ -120,6 +120,10 @@ export class SnapchatAdapter extends BasePlatformAdapter {
     }
   }
 
+  async validateCredentials(): Promise<boolean> {
+    return !!(this.credentials?.accessToken);
+  }
+
   getCapabilities(): PlatformCapabilities {
     return {
       maxTextLength: 34, // Snap ad headline limit

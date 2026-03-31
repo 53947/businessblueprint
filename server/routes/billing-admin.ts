@@ -18,9 +18,7 @@ const requireAdmin = [isAuthenticated, async (req: any, res: any, next: any): Pr
     }
     
     // Check if user is an admin in the database
-    const user = await db.query.clients.findFirst({
-      where: eq(clients.id, parseInt(userId))
-    });
+    const [user] = await db.select().from(clients).where(eq(clients.id, parseInt(userId))).limit(1);
     
     if (!user || !user.isAdmin) {
       return res.status(403).json({ error: 'Admin access required' });

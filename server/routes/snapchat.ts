@@ -154,12 +154,9 @@ router.get("/oauth/callback", async (req: Request, res: Response) => {
       platform: "snapchat",
       accountName,
       status: "active",
-      credentials: {
-        accessToken,
-        refreshToken,
-        expiresAt: Date.now() + (expiresIn || 1800) * 1000,
-        organizationId: orgId,
-      },
+      accessToken,
+      refreshToken,
+      tokenExpiresAt: new Date(Date.now() + (expiresIn || 1800) * 1000),
     });
 
     console.log(`[Snapchat] Ads connected: ${accountName}`);

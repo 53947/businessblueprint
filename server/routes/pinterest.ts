@@ -213,14 +213,11 @@ router.get("/oauth/callback", async (req: Request, res: Response) => {
       await db.insert(adAccountConnections).values({
         platform: "pinterest",
         accountName: adAccount.name || accountName,
+        accountId: adAccount.id,
         status: "active",
-        credentials: {
-          accessToken,
-          refreshToken,
-          expiresAt: Date.now() + (expiresIn || 2592000) * 1000,
-          adAccountId: adAccount.id,
-          pinterestUserId: pinterestId,
-        },
+        accessToken,
+        refreshToken,
+        tokenExpiresAt: new Date(Date.now() + (expiresIn || 2592000) * 1000),
       });
     }
 

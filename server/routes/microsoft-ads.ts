@@ -182,13 +182,9 @@ router.get("/oauth/callback", async (req: Request, res: Response) => {
       platform: "microsoft",
       accountName,
       status: "active",
-      credentials: {
-        accessToken,
-        refreshToken,
-        expiresAt: Date.now() + (expiresIn || 3600) * 1000,
-        email: profile.mail || profile.userPrincipalName,
-        developerToken,
-      },
+      accessToken,
+      refreshToken,
+      tokenExpiresAt: new Date(Date.now() + (expiresIn || 3600) * 1000),
     });
 
     console.log(`[Microsoft Ads] Connected: ${accountName}`);

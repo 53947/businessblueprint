@@ -73,34 +73,34 @@ export async function analyzePage(url: string): Promise<PageAnalysis> {
 }
 
 function parseHtml(url: string, html: string): PageAnalysis {
-  const titleMatch = html.match(/<title[^>]*>(.*?)<\/title>/is);
+  const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
   const title = titleMatch ? titleMatch[1].trim() : null;
 
-  const metaDescMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["'](.*?)["'][^>]*\/?>/is)
-    || html.match(/<meta[^>]*content=["'](.*?)["'][^>]*name=["']description["'][^>]*\/?>/is);
+  const metaDescMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([\s\S]*?)["'][^>]*\/?>/i)
+    || html.match(/<meta[^>]*content=["']([\s\S]*?)["'][^>]*name=["']description["'][^>]*\/?>/i);
   const metaDescription = metaDescMatch ? metaDescMatch[1].trim() : null;
 
-  const h1Match = html.match(/<h1[^>]*>(.*?)<\/h1>/is);
+  const h1Match = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
   const h1 = h1Match ? h1Match[1].replace(/<[^>]*>/g, '').trim() : null;
 
-  const h2Matches = html.match(/<h2[^>]*>(.*?)<\/h2>/gis) || [];
+  const h2Matches = html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/gi) || [];
   const h2s = h2Matches.map(m => m.replace(/<[^>]*>/g, '').trim()).slice(0, 20);
 
   // Word count from body text
-  const bodyMatch = html.match(/<body[^>]*>(.*)<\/body>/is);
-  const bodyText = bodyMatch ? bodyMatch[1].replace(/<script[^>]*>.*?<\/script>/gis, '')
-    .replace(/<style[^>]*>.*?<\/style>/gis, '')
+  const bodyMatch = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+  const bodyText = bodyMatch ? bodyMatch[1].replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
     .replace(/<[^>]*>/g, ' ')
     .replace(/\s+/g, ' ')
     .trim() : '';
   const wordCount = bodyText ? bodyText.split(/\s+/).length : 0;
 
   // Images
-  const imgMatches = html.match(/<img[^>]*>/gis) || [];
+  const imgMatches = html.match(/<img[^>]*>/gi) || [];
   const imagesWithoutAlt = imgMatches.filter(img => !img.match(/alt=["'][^"']+["']/i)).length;
 
   // Links
-  const linkMatches = html.match(/<a[^>]*href=["']([^"']*?)["'][^>]*>/gis) || [];
+  const linkMatches = html.match(/<a[^>]*href=["']([^"']*?)["'][^>]*>/gi) || [];
   const parsedUrl = new URL(url);
   let internal = 0, external = 0;
   for (const link of linkMatches) {

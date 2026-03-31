@@ -3,16 +3,9 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { setupWebSocket } from "./websocket";
 import { paymentWebhookRouter } from "./routes/payment-webhook";
-import { handleScansBlueStripeWebhook } from "./routes/scansblue-webhook";
 import { analyticsSyncService } from "./services/analyticsSync";
 
 const app = express();
-
-// ScansBlue Stripe webhook needs raw body (before express.json)
-app.post('/api/scansblue/stripe-webhook',
-  express.raw({ type: 'application/json' }),
-  handleScansBlueStripeWebhook
-);
 
 // SwipesBlue webhook for subscription events
 app.use(paymentWebhookRouter);

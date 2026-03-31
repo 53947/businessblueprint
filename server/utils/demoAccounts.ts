@@ -14,11 +14,8 @@ export function isDemoEmail(email: string): boolean {
 
 export async function isDemoAccountById(clientId: number): Promise<boolean> {
   try {
-    const client = await db.query.clients.findFirst({
-      where: eq(clients.id, clientId),
-      columns: { email: true }
-    });
-    
+    const [client] = await db.select({ email: clients.email }).from(clients).where(eq(clients.id, clientId)).limit(1);
+
     if (!client?.email) return false;
     return isDemoEmail(client.email);
   } catch (error) {
@@ -29,10 +26,7 @@ export async function isDemoAccountById(clientId: number): Promise<boolean> {
 
 export async function getClientEmail(clientId: number): Promise<string | null> {
   try {
-    const client = await db.query.clients.findFirst({
-      where: eq(clients.id, clientId),
-      columns: { email: true }
-    });
+    const [client] = await db.select({ email: clients.email }).from(clients).where(eq(clients.id, clientId)).limit(1);
     return client?.email || null;
   } catch (error) {
     console.error('[getClientEmail] Error fetching email:', error);

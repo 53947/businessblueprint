@@ -6,9 +6,7 @@ import type { AIProvider } from './ai-provider';
 export class AISettingsService {
   async getProvider(feature: 'assessment' | 'prescription' | 'coach_blue'): Promise<AIProvider> {
     try {
-      const setting = await db.query.aiSettings.findFirst({
-        where: eq(aiSettings.feature, feature),
-      });
+      const [setting] = await db.select().from(aiSettings).where(eq(aiSettings.feature, feature)).limit(1);
 
       return (setting?.provider as AIProvider) || this.getDefaultProvider(feature);
     } catch (error) {
@@ -33,9 +31,7 @@ export class AISettingsService {
     provider: AIProvider,
     updatedBy?: number
   ) {
-    const existing = await db.query.aiSettings.findFirst({
-      where: eq(aiSettings.feature, feature),
-    });
+    const [existing] = await db.select().from(aiSettings).where(eq(aiSettings.feature, feature)).limit(1);
 
     if (existing) {
       await db
@@ -83,9 +79,7 @@ export class AISettingsService {
     ];
 
     for (const setting of defaults) {
-      const existing = await db.query.aiSettings.findFirst({
-        where: eq(aiSettings.feature, setting.feature),
-      });
+      const [existing] = await db.select().from(aiSettings).where(eq(aiSettings.feature, setting.feature)).limit(1);
 
       if (!existing) {
         await db.insert(aiSettings).values({

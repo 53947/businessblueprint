@@ -365,13 +365,9 @@ router.get(
           platform: "google",
           accountName: profile.email || "Google Ads",
           status: "active",
-          credentials: {
-            accessToken: tokenData.access_token,
-            refreshToken: tokenData.refresh_token,
-            expiresAt: Date.now() + (tokenData.expires_in || 3600) * 1000,
-            email: profile.email,
-            developerToken: GOOGLE_ADS_DEVELOPER_TOKEN,
-          },
+          accessToken: tokenData.access_token,
+          refreshToken: tokenData.refresh_token,
+          tokenExpiresAt: new Date(Date.now() + (tokenData.expires_in || 3600) * 1000),
         })
         .returning();
 
@@ -438,12 +434,9 @@ router.get(
         .values({
           platform: "meta",
           accountName,
+          accountId: adAccountId,
           status: "active",
-          credentials: {
-            accessToken,
-            adAccountId,
-            adAccounts: adAccountsData.data || [],
-          },
+          accessToken,
         })
         .returning();
 
@@ -800,19 +793,18 @@ router.post("/api/amplify/campaigns/google", isAuthenticated, async (req, res) =
       .from(adAccountConnections)
       .where(and(eq(adAccountConnections.platform, "google"), eq(adAccountConnections.status, "active")));
 
-    if (googleAccount?.credentials && GOOGLE_ADS_DEVELOPER_TOKEN) {
-      const creds = googleAccount.credentials as any;
+    if (googleAccount?.accessToken && GOOGLE_ADS_DEVELOPER_TOKEN) {
       try {
         // Refresh token if needed
-        let accessToken = creds.accessToken;
-        if (creds.expiresAt && Date.now() > creds.expiresAt && creds.refreshToken) {
+        let accessToken = googleAccount.accessToken;
+        if (googleAccount.tokenExpiresAt && Date.now() > googleAccount.tokenExpiresAt.getTime() && googleAccount.refreshToken) {
           const refreshResponse = await fetch("https://oauth2.googleapis.com/token", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
               client_id: GOOGLE_CLIENT_ID!,
               client_secret: GOOGLE_CLIENT_SECRET!,
-              refresh_token: creds.refreshToken,
+              refresh_token: googleAccount.refreshToken,
               grant_type: "refresh_token",
             }),
           });
@@ -821,7 +813,7 @@ router.post("/api/amplify/campaigns/google", isAuthenticated, async (req, res) =
             accessToken = refreshData.access_token;
             // Update stored token
             await db.update(adAccountConnections)
-              .set({ credentials: { ...creds, accessToken, expiresAt: Date.now() + (refreshData.expires_in || 3600) * 1000 } })
+              .set({ accessToken, tokenExpiresAt: new Date(Date.now() + (refreshData.expires_in || 3600) * 1000) })
               .where(eq(adAccountConnections.id, googleAccount.id));
           }
         }

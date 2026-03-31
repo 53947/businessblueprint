@@ -153,13 +153,11 @@ router.get("/oauth/callback", async (req: Request, res: Response) => {
     await db.insert(adAccountConnections).values({
       platform: "nextdoor",
       accountName,
+      accountId: advertiserId,
       status: "active",
-      credentials: {
-        accessToken,
-        refreshToken,
-        expiresAt: Date.now() + (expiresIn || 3600) * 1000,
-        advertiserId,
-      },
+      accessToken,
+      refreshToken,
+      tokenExpiresAt: new Date(Date.now() + (expiresIn || 3600) * 1000),
     });
 
     console.log(`[Nextdoor] Ads connected: ${accountName}`);

@@ -264,6 +264,10 @@ export class MicrosoftAdsAdapter extends BasePlatformAdapter {
     };
   }
 
+  async validateCredentials(): Promise<boolean> {
+    return !!(this.credentials?.accessToken);
+  }
+
   private escapeXml(str: string): string {
     return str
       .replace(/&/g, '&amp;')

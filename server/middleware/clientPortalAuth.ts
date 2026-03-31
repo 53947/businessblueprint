@@ -49,15 +49,12 @@ export async function requireClientPortalAccess(req: any, res: Response, next: N
     }
     
     // Get client from database to check account status
-    const client = await db.query.clients.findFirst({
-      where: eq(clients.id, sessionClientId),
-      columns: {
-        id: true,
-        accountStatus: true,
-        companyName: true,
-        email: true
-      }
-    });
+    const [client] = await db.select({
+      id: clients.id,
+      accountStatus: clients.accountStatus,
+      companyName: clients.companyName,
+      email: clients.email
+    }).from(clients).where(eq(clients.id, sessionClientId)).limit(1);
     
     if (!client) {
       return res.status(404).json({ 

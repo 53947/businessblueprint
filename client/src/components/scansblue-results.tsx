@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {} from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,58 +45,16 @@ interface ScansBlueResultsProps {
 }
 
 export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestFullReport }: ScansBlueResultsProps) {
-  const [isPurchasing, setIsPurchasing] = useState(false);
   const { toast } = useToast();
 
   if (!results) return null;
 
-  const handlePurchaseFullReport = async () => {
-    if (!assessmentId) {
-      toast({
-        title: "Error",
-        description: "Assessment ID is required to purchase the full report.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsPurchasing(true);
-    try {
-      const response = await fetch('/api/scansblue/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ assessmentId })
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        let errorMessage = 'Failed to create checkout session';
-        try {
-          const errorData = JSON.parse(errorText);
-          errorMessage = errorData.error || errorMessage;
-        } catch {
-          errorMessage = errorText || errorMessage;
-        }
-        throw new Error(errorMessage);
-      }
-
-      const data = await response.json();
-
-      if (data.success && data.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error(data.error || 'Failed to create checkout session');
-      }
-    } catch (error: any) {
-      console.error('Purchase error:', error);
-      toast({
-        title: "Purchase Error",
-        description: error.message || "Failed to initiate checkout. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsPurchasing(false);
-    }
+  const handlePurchaseFullReport = () => {
+    // Full report purchases are handled on scansblue.com
+    const url = assessmentId
+      ? `https://scansblue.com/purchase?assessment=${assessmentId}`
+      : "https://scansblue.com/purchase";
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   const getScoreColor = (score: number) => {
@@ -237,14 +195,9 @@ export function ScansBlueResults({ results, websiteUrl, assessmentId, onRequestF
             <Button
               className="bg-gradient-to-r from-[#0000FF] to-[#F97316] hover:opacity-90 text-white shadow-lg"
               onClick={handlePurchaseFullReport}
-              disabled={isPurchasing}
               data-testid="purchase-full-report"
             >
-              {isPurchasing ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <CreditCard className="w-4 h-4 mr-2" />
-              )}
+              <CreditCard className="w-4 h-4 mr-2" />
               Get Full Report - $10
             </Button>
           )}

@@ -52,6 +52,8 @@ interface Conversation {
   subject: string | null;
   status: string;
   priority: string;
+  assignedToId?: number | null;
+  tags?: string[];
   unreadCount: number;
   lastMessageAt: string;
   lastMessagePreview: string | null;

@@ -19,6 +19,8 @@ import { registerBillingAdminRoutes } from "./routes/billing-admin";
 import { registerEmailAdminRoutes } from "./routes/email-admin";
 import { registerPaymentRoutes } from "./routes/payments";
 import { crmRouter } from "./routes/crm";
+import { setupTasksRouter } from "./routes/setup-tasks";
+import { setupNotesRouter } from "./routes/setup-notes";
 import { publicApiRouter } from "./routes/api";
 import { listingDistributionRouter } from "./routes/listing-distribution";
 import { chatRouter } from "./routes/chat";
@@ -3030,6 +3032,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // CRM (/relationships) Routes
   app.use("/api/crm", isAuthenticated, crmRouter);
 
+  // Setup Tasks & Notes — Directions for Use (client portal auth)
+  app.use("/api/setup-tasks", setupTasksRouter);
+  app.use("/api/setup-notes", setupNotesRouter);
+  // Combined endpoint is at /api/setup-tasks/directions-for-use
+
   // / chat Routes (Live Chat SaaS)
   app.use("/api/chat", chatRouter);
 
@@ -3455,13 +3462,11 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
       // Retrieve Fast Check results if they exist
       let fastCheckData: any = undefined;
       try {
-        const fastCheckResult = await db.query.scansBlueResults?.findFirst({
-          where: (results, { eq, and }) => and(
-            eq(results.assessmentId, assessmentId),
-            eq(results.type, 'fast_check'),
-            eq(results.status, 'completed')
-          )
-        });
+        const [fastCheckResult] = await db.select().from(scansBlueResults).where(and(
+          eq(scansBlueResults.assessmentId, assessmentId),
+          eq(scansBlueResults.type, 'fast_check'),
+          eq(scansBlueResults.status, 'completed')
+        )).limit(1);
         
         if (fastCheckResult) {
           fastCheckData = {
@@ -3514,13 +3519,13 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
     // Report email already sent above (Step 7)
     // Coach Blue intro already sent above (Step 8)
     // Schedule the 5-minute delayed thank-you introduction as a background task
-    const assessment = await storage.getAssessment(assessmentId);
-    if (assessment?.email) {
+    const latestAssessment = await storage.getAssessment(assessmentId);
+    if (latestAssessment?.email) {
       setTimeout(async () => {
         try {
-          console.log(`[Assessment Cadence] Sending 5-minute delayed Coach Blue intro to ${assessment.email}`);
-          const result = await emailService.sendThankYouIntroduction(assessment.email, {
-            businessName: assessment.businessName,
+          console.log(`[Assessment Cadence] Sending 5-minute delayed Coach Blue intro to ${latestAssessment.email}`);
+          const result = await emailService.sendThankYouIntroduction(latestAssessment.email, {
+            businessName: latestAssessment.businessName,
             assessmentId,
           });
           console.log(`[Assessment Cadence] Coach Blue intro ${result ? 'SENT' : 'FAILED'}`);
@@ -4062,9 +4067,7 @@ async function registerInboxRoutes(app: Express) {
         const assessment = await storage.getAssessment(parsedAssessmentId);
         
         if (assessment) {
-          const purchase = await db.query.scansBluePurchases?.findFirst({
-            where: (purchases: any, { eq }: any) => eq(purchases.assessmentId, parsedAssessmentId)
-          });
+          const [purchase] = await db.select().from(scansBluePurchases).where(eq(scansBluePurchases.assessmentId, parsedAssessmentId)).limit(1);
           
           const customerEmail = purchase?.email || assessment.email;
           

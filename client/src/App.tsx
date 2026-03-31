@@ -62,13 +62,12 @@ import ApiDocs from "@/pages/api-docs";
 import AssessmentConfirmation from "@/pages/assessment-confirmation";
 import KnowledgeBase from "@/pages/knowledge-base";
 import Tour from "@/pages/tour";
-import ScansBluePurchase from "@/pages/scansblue-purchase";
-import ScansBlueSuccess from "@/pages/scansblue-success";
 import OptimizeLanding from "@/pages/optimize-landing";
 import OptimizeSetup from "@/pages/optimize-setup";
 import OptimizeDashboard from "@/pages/optimize";
 import AdminLogin from "@/pages/login";
 import VerifyAdminMagicLink from "@/pages/verify-admin-magic-link";
+import DirectionsForUse from "@/pages/directions-for-use";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -86,6 +85,7 @@ function Router() {
       <Route path="/portal/test" component={PortalTestAccess} />
       <Route path="/portal/dashboard" component={ClientPortal} />
       <Route path="/portal/respond" component={RespondPage} />
+      <Route path="/portal/directions" component={DirectionsForUse} />
       <Route path="/portal/prescriptions/:id" component={PortalPrescriptions} />
       <Route path="/portal/prescriptions" component={PortalPrescriptions} />
       <Route path="/portal/prescription/:token" component={PortalPrescriptions} />
@@ -144,8 +144,6 @@ function Router() {
       <Route path="/portal/assessment/confirmation" component={AssessmentConfirmation} />
       <Route path="/knowledge-base" component={KnowledgeBase} />
       <Route path="/tour" component={Tour} />
-      <Route path="/scansblue/purchase" component={ScansBluePurchase} />
-      <Route path="/scansblue/success" component={ScansBlueSuccess} />
       <Route component={NotFound} />
     </Switch>
   );
