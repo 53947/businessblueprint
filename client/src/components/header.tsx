@@ -200,10 +200,19 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* Platforms */}
                             {SOLUTIONS_MENU.platforms.map((p) => (
                               <NavigationMenuLink key={p.id} asChild>
-                                <a href={p.href} className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: p.borderColor }} data-testid={p.testId}>
-                                  <img src={p.icon} alt={p.name} className="h-12 w-12 object-contain mb-2" />
-                                  <div className="text-sm font-bold text-gray-900 text-center">{p.name}</div>
-                                  <p className="text-xs text-gray-600 text-center">{p.description}</p>
+                                <a
+                                  href={p.href}
+                                  className="flex flex-col items-center justify-between p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer"
+                                  style={{ borderColor: p.borderColor }}
+                                  data-testid={p.testId}
+                                >
+                                  <img
+                                    src={p.icon}
+                                    alt={p.name}
+                                    className="w-full object-contain"
+                                    style={{ maxHeight: 36 }}
+                                  />
+                                  <p className="text-xs text-gray-500 text-center mt-2">{p.description}</p>
                                 </a>
                               </NavigationMenuLink>
                             ))}
@@ -259,14 +268,17 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             </div>
                             {SOLUTIONS_MENU.platforms.map((p) => (
                               <NavigationMenuLink key={p.id} asChild>
-                                <a className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent" href={p.href} data-testid={`link-resources-${p.id}`}>
-                                  <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                    <img src={p.icon} alt={p.name} className="w-full h-full object-contain" />
-                                  </div>
-                                  <div>
-                                    <div className="text-sm font-medium text-gray-900">{p.name}</div>
-                                    <p className="text-xs text-gray-600">{p.description}</p>
-                                  </div>
+                                <a
+                                  className="group flex items-center rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                  href={p.href}
+                                  data-testid={`link-resources-${p.id}`}
+                                >
+                                  <img
+                                    src={p.icon}
+                                    alt={p.name}
+                                    className="object-contain"
+                                    style={{ height: 20, maxWidth: 120 }}
+                                  />
                                 </a>
                               </NavigationMenuLink>
                             ))}
@@ -566,9 +578,14 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {item.label === "Solutions" && (
                               <div className="grid grid-cols-2 gap-2">
                                 {SOLUTIONS_MENU.platforms.map((p) => (
-                                  <a key={p.id} href={p.href} className="flex flex-col items-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: p.borderColor }} data-testid={`mobile-${p.testId}`}>
-                                    <p className="text-xs font-bold text-gray-900 text-center">{p.name}</p>
-                                    <p className="text-xs text-gray-600 text-center">{p.description}</p>
+                                  <a key={p.id} href={p.href} className="flex flex-col items-center justify-between p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: p.borderColor }} data-testid={`mobile-${p.testId}`}>
+                                    <img
+                                      src={p.icon}
+                                      alt={p.name}
+                                      className="w-full object-contain"
+                                      style={{ maxHeight: 28 }}
+                                    />
+                                    <p className="text-xs text-gray-500 text-center mt-1">{p.description}</p>
                                   </a>
                                 ))}
                                 {SOLUTIONS_MENU.products.map((p) => (
@@ -611,9 +628,13 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                   <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Platforms</h4>
                                   <div className="space-y-2">
                                     {SOLUTIONS_MENU.platforms.map((p) => (
-                                      <a key={p.id} href={p.href} className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                        <div className="font-bold">{p.name}</div>
-                                        <p className="text-xs text-gray-600">{p.description}</p>
+                                      <a key={p.id} href={p.href} className="flex items-center p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
+                                        <img
+                                          src={p.icon}
+                                          alt={p.name}
+                                          className="object-contain"
+                                          style={{ height: 20, maxWidth: 120 }}
+                                        />
                                       </a>
                                     ))}
                                     <a href="/connect" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
