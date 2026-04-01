@@ -159,14 +159,14 @@ export default function Home() {
             <div className="mt-12 lg:mt-0">
               <div className="relative h-72 flex items-center justify-center">
                 <div className="rounded-full w-20 h-20 flex items-center justify-center text-white text-xs font-bold text-center" style={{ backgroundColor: '#008060' }}>/ connect</div>
-                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #064A6C', backgroundColor: '#064A6C', color: '#E9ECF0', top: '0', left: '50%', transform: 'translateX(-50%)' }}>/ publish</div>
-                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #E9B307', backgroundColor: '#E9B307', color: '#09080E', top: '15%', right: '5%' }}>/ elevate</div>
-                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #374151', backgroundColor: '#374151', color: '#E9ECF0', top: '50%', right: '0', transform: 'translateY(-50%)' }}>/ optimize</div>
-                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #97ACCA', backgroundColor: '#97ACCA', color: '#09080E', bottom: '15%', right: '5%' }}>/ amplify</div>
-                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #001882', backgroundColor: '#001882', color: '#E9ECF0', bottom: '0', left: '50%', transform: 'translateX(-50%)' }}>/ respond</div>
-                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #660099', backgroundColor: '#660099', color: '#E9ECF0', bottom: '15%', left: '5%' }}>/ engage</div>
-                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #FF44CC', backgroundColor: '#FF44CC', color: '#09080E', top: '50%', left: '0', transform: 'translateY(-50%)' }}>/ post</div>
-                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #1844A6', backgroundColor: '#1844A6', color: '#E9ECF0', top: '15%', left: '5%' }}>/ promote</div>
+                <div className="absolute text-xs px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #064A6C', backgroundColor: '#064A6C', color: '#E9ECF0', letterSpacing: '0.05em', top: '0', left: '50%', transform: 'translateX(-50%)' }}>/ publish</div>
+                <div className="absolute text-xs px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #E9B307', backgroundColor: '#E9B307', color: '#09080E', letterSpacing: '0.05em', top: '15%', right: '5%' }}>/ elevate</div>
+                <div className="absolute text-xs px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #374151', backgroundColor: '#374151', color: '#E9ECF0', letterSpacing: '0.05em', top: '50%', right: '0', transform: 'translateY(-50%)' }}>/ optimize</div>
+                <div className="absolute text-xs px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #97ACCA', backgroundColor: '#97ACCA', color: '#09080E', letterSpacing: '0.05em', bottom: '15%', right: '5%' }}>/ amplify</div>
+                <div className="absolute text-xs px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #001882', backgroundColor: '#001882', color: '#E9ECF0', letterSpacing: '0.05em', bottom: '0', left: '50%', transform: 'translateX(-50%)' }}>/ respond</div>
+                <div className="absolute text-xs px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #660099', backgroundColor: '#660099', color: '#E9ECF0', letterSpacing: '0.05em', bottom: '15%', left: '5%' }}>/ engage</div>
+                <div className="absolute text-xs px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #FF44CC', backgroundColor: '#FF44CC', color: '#09080E', letterSpacing: '0.05em', top: '50%', left: '0', transform: 'translateY(-50%)' }}>/ post</div>
+                <div className="absolute text-xs px-3 py-2.5 rounded-full shadow-sm" style={{ border: '2px solid #1844A6', backgroundColor: '#1844A6', color: '#E9ECF0', letterSpacing: '0.05em', top: '15%', left: '5%' }}>/ promote</div>
               </div>
               <p className="text-xs text-gray-400 text-center mt-2">Every app in businessblueprint.io connects through / connect</p>
             </div>
@@ -184,7 +184,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white shadow-sm rounded-lg p-6 border-l-4" style={{ borderColor: '#064A6C' }}>
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#064A6C' }}>
               <div className="flex items-center gap-2">
                 <AppName appId="publish" size="md" />
                 <span className="bg-[#064A6C] text-white text-xs px-2 py-0.5 rounded-full">FEATURED</span>
@@ -198,7 +198,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white shadow-sm rounded-lg p-6 border-l-4" style={{ borderColor: '#97ACCA' }}>
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#97ACCA' }}>
               <div className="flex items-center gap-2">
                 <AppName appId="amplify" size="md" />
                 <span className="bg-[#97ACCA] text-white text-xs px-2 py-0.5 rounded-full">FEATURED</span>
@@ -212,7 +212,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white shadow-sm rounded-lg p-6 border-l-4" style={{ borderColor: '#E9B307' }}>
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#E9B307' }}>
               <AppName appId="elevate" size="md" />
               <p className="text-gray-600 text-sm mt-3 mb-4">Reviews are the first thing a new customer reads about your business. / elevate pulls your reviews from Google, Yelp, and Facebook into one dashboard, drafts a response for every new review, and sends review requests after each transaction. Your reputation is managed — you just approve before it goes out.</p>
               <div className="flex flex-wrap gap-2">
@@ -223,7 +223,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white shadow-sm rounded-lg p-6 border-l-4" style={{ borderColor: '#374151' }}>
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#374151' }}>
               <AppName appId="optimize" size="md" />
               <p className="text-gray-600 text-sm mt-3 mb-4">Search rankings change constantly. Most businesses don't know when they slip. / optimize tracks where you rank for the local-intent searches your customers actually make. When your ranking drops, you get an alert before you lose the customer. It reads your listing data from / publish and review signals from / elevate to give you a complete local SEO score.</p>
               <div className="flex flex-wrap gap-2">
@@ -263,7 +263,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white shadow-sm rounded-lg p-6 border-l-4" style={{ borderColor: '#001882' }}>
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#001882' }}>
               <AppName appId="respond" size="md" />
               <p className="text-gray-600 text-sm mt-3 mb-4">/ respond is the inbox every other Compass app feeds into. Facebook Messenger, Instagram DM, and SMS all arrive here. Set it up first — because without it, the responses from / engage and / promote have nowhere to go.</p>
               <div className="flex flex-wrap gap-2">
@@ -273,7 +273,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white shadow-sm rounded-lg p-6 border-l-4" style={{ borderColor: '#660099' }}>
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#660099' }}>
               <AppName appId="engage" size="md" />
               <p className="text-gray-600 text-sm mt-3 mb-4">One line of code. That's all it takes to add a live chat widget to your website that routes every conversation into / respond automatically. Most website visitors leave without saying a word. / engage gives them a reason to stay and a way to reach you.</p>
               <div className="flex flex-wrap gap-2">
@@ -283,7 +283,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white shadow-sm rounded-lg p-6 border-l-4" style={{ borderColor: '#FF44CC' }}>
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#FF44CC' }}>
               <AppName appId="post" size="md" />
               <p className="text-gray-600 text-sm mt-3 mb-4">Write once, schedule once, post everywhere. / post connects Facebook, Instagram, LinkedIn, X, and your Google Business account. Plan your content for the week, set the times, and let it run. Your social presence stays active without requiring you to be.</p>
               <div className="flex flex-wrap gap-2">
@@ -295,7 +295,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-white shadow-sm rounded-lg p-6 border-l-4" style={{ borderColor: '#1844A6' }}>
+            <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 border-l-4" style={{ borderColor: '#1844A6' }}>
               <AppName appId="promote" size="md" />
               <p className="text-gray-600 text-sm mt-3 mb-4">Email is still the highest-return marketing channel available to small businesses. / promote comes last in the Compass Suite because your best email list comes from the customers already in / connect. Campaign builder, list segmentation, scheduling, and delivery analytics built in. 1,000 emails per month included. Unused emails roll over.</p>
               <div className="flex flex-wrap gap-2">
