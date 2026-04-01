@@ -9,11 +9,11 @@ import {
 } from "@/config/app-registry";
 
 // ── Platform icons (non-registry) ──
-import blueprintIcon from "@assets/images_logos/bb-favicon.png";
-import hostsBlueIcon from "@assets/images_logos/hostsblue-brandmark.png";
-import swipesBlueIcon from "@assets/images_logos/swipesblue-brandmark.png";
-import consoleBlueIcon from "@assets/images_logos/consoleblue-favicon.png";
-import scansBlueIcon from "@assets/images_logos/scansblue-icon.png";
+import blueprintIcon from "@assets/images_logos/businessblueprint-logo.png";
+import hostsBlueIcon from "@assets/images_logos/hostsblue-logo.png";
+import swipesBlueIcon from "@assets/images_logos/swipesblue-logo.png";
+import builderBlue2Icon from "@assets/images_logos/builderblue2-logo.png";
+import scansBlueIcon from "@assets/images_logos/scansblue-logo.png";
 import businessIQScannerIcon from "@assets/images_logos/business-iq-scanner.png";
 
 // ── Lucide icon name strings (rendered via ICON_MAP in app-name.tsx) ──
@@ -162,7 +162,7 @@ const PLATFORMS: PlatformEntry[] = [
   { id: "businessblueprint", name: "businessblueprint.io", description: "Digital Intelligence", href: "/", icon: blueprintIcon, borderColor: "#FF6B00", testId: "link-solution-businessblueprint" },
   { id: "hostsblue", name: "HostsBlue", description: "Web Services", href: "#hostsblue", icon: hostsBlueIcon, borderColor: "#8000FF", testId: "link-solution-hostsblue" },
   { id: "swipesblue", name: "SwipesBlue", description: "Payment Gateway", href: "#swipesblue", icon: swipesBlueIcon, borderColor: "#FF0040", testId: "link-solution-swipesblue" },
-  { id: "consoleblue", name: "ConsoleBlue", description: "Admin Console", href: "#consoleblue", icon: consoleBlueIcon, borderColor: "#0000FF", testId: "link-solution-consoleblue" },
+  { id: "builderblue2", name: "BUILDERBLUE2.COM", description: "AI-Powered Vibe Coding", href: "https://builderblue2.com", icon: builderBlue2Icon, borderColor: "#0000FF", testId: "link-solution-builderblue2" },
   { id: "scansblue", name: "ScansBlue", description: "Site Analysis", href: "#scansblue", icon: scansBlueIcon, borderColor: "#0000FF", testId: "link-solution-scansblue" },
 ];
 
