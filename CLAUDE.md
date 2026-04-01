@@ -30,7 +30,7 @@ Compass Suite — $99/mo
   / respond — Unified inbox (#001882)
   / post — Social media management (#FF44CC)
 
-Anchor Suite — $99/mo
+Anchor Suite — $99/mo (#2073E3)
   / elevate — Reviews (#E9B307)
   / optimize — SEO monitoring (#374151)
   / publish — Listings management (#064A6C)
