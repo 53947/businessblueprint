@@ -225,8 +225,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {APP_REGISTRY.map((app) => (
                               <NavigationMenuLink key={app.id} asChild>
                                 <a href={app.landingRoute} className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: app.color }} data-testid={`link-solution-${app.id}`}>
-                                  <img src={app.icon} alt={`/ ${app.name}`} className="h-12 w-12 object-contain mb-2" />
-                                  <AppName appId={app.id} size="sm" iconSize={0} />
+                                  <AppIcon name={app.icon} size={48} color={app.color} />
+                                  <div className="mt-2"><AppName appId={app.id} size="sm" iconSize={0} /></div>
                                   <p className="text-xs text-gray-600 text-center">{app.description}</p>
                                 </a>
                               </NavigationMenuLink>
@@ -270,7 +270,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <NavigationMenuLink asChild>
                               <a className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent" href="/connect" data-testid="link-resources-connect">
                                 <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <img src={CONNECT_CRM.icon} alt={`/ ${CONNECT_CRM.name}`} className="w-full h-full object-contain" />
+                                  <AppIcon name={CONNECT_CRM.icon} size={16} color={CONNECT_CRM.color} />
                                 </div>
                                 <div>
                                   <AppName appId="connect" size="sm" iconSize={0} />
@@ -282,7 +282,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <NavigationMenuLink key={app.id} asChild>
                                 <a className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent" href={app.landingRoute} data-testid={`link-resources-${app.id}`}>
                                   <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                    <img src={app.icon} alt={`/ ${app.name}`} className="w-full h-full object-contain" />
+                                    <AppIcon name={app.icon} size={16} color={app.color} />
                                   </div>
                                   <div>
                                     <AppName appId={app.id} size="sm" iconSize={0} />

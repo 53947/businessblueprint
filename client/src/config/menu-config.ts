@@ -20,7 +20,7 @@ import businessIQScannerIcon from "@assets/images_logos/business-iq-scanner.png"
 const compassIcon = "Layers";
 const bookOpenIcon = "BookOpen";
 const shoppingBasketIcon = "ShoppingBasket";
-const lightbulbIcon = "Lightbulb";
+const lightbulbIcon = "LayoutGrid";
 const graduationCapIcon = "GraduationCap";
 const codeIcon = "Code";
 const helpCircleIcon = "HelpCircle";

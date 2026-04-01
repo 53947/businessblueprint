@@ -69,7 +69,7 @@ export function PricingLayout({ variant }: PricingLayoutProps) {
           <AppIcon name={HOW_IT_WORKS_STEPS[0].icon} size={20} color="#A00028" />
           <span>Complete assessment</span>
           <span className="text-blue-600">→</span>
-          <img src={SCANNING_TOOL.icon} alt="" className="w-5 h-5" />
+          <AppIcon name={SCANNING_TOOL.icon} size={20} color="#0000FF" />
           <span>We scan your presence</span>
           <span className="text-blue-600">→</span>
           <AppIcon name={HOW_IT_WORKS_STEPS[1].icon} size={20} color="#FFC107" />
@@ -145,7 +145,7 @@ export function PricingLayout({ variant }: PricingLayoutProps) {
       <BundleSection
         bundle={anchorBundle}
         apps={anchorApps}
-        columns={3}
+        columns={4}
         pad={pad}
         padInner={padInner}
       />

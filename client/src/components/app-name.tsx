@@ -1,7 +1,7 @@
 import {
   BookOpen, Star, Target, Mail, Inbox, MessageCircle, Share2, Megaphone,
   Anchor, Compass, Users, BarChart3, ScanLine, ClipboardCheck, FileText,
-  GraduationCap, TrendingUp, Layers, ShoppingBasket, Lightbulb, Code,
+  GraduationCap, TrendingUp, Layers, ShoppingBasket, Lightbulb, LayoutGrid, Code,
   HelpCircle, Video, MessageSquare, LogIn, Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -20,7 +20,7 @@ import {
 export const ICON_MAP: Record<string, LucideIcon> = {
   BookOpen, Star, Target, Mail, Inbox, MessageCircle, Share2, Megaphone,
   Anchor, Compass, Users, BarChart3, ScanLine, ClipboardCheck, FileText,
-  GraduationCap, TrendingUp, Layers, ShoppingBasket, Lightbulb, Code,
+  GraduationCap, TrendingUp, Layers, ShoppingBasket, Lightbulb, LayoutGrid, Code,
   HelpCircle, Video, MessageSquare, LogIn, Settings,
 };
 
@@ -153,6 +153,33 @@ export function AppName({
   }
 
   // Small and medium: inline layout
+  if (showDesc) {
+    return (
+      <div className={className} style={{ fontFamily: FONT_FAMILY }}>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            fontWeight: 600,
+            fontSize,
+            lineHeight: 1,
+          }}
+        >
+          {iconElement}
+          {app.isSlashApp && (
+            <span style={{ color: TRIAD_BLACK }}>/</span>
+          )}
+          {app.isSlashApp && " "}
+          <span style={{ color: app.color }}>{app.name}</span>
+        </span>
+        <div style={{ color: app.color, fontSize: 11, fontWeight: 400, marginTop: 2 }}>
+          {app.description}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <span
       className={className}
@@ -172,12 +199,6 @@ export function AppName({
       )}
       {app.isSlashApp && " "}
       <span style={{ color: app.color }}>{app.name}</span>
-      {showDesc && (
-        <span style={{ color: app.color, fontSize: 11, fontWeight: 400 }}>
-          {" "}
-          — {app.description}
-        </span>
-      )}
     </span>
   );
 }
