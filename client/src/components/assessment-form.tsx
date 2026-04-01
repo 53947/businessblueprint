@@ -21,7 +21,7 @@ const steps = [
   { title: "Email & SMS Marketing", description: "Your outreach efforts" },
   { title: "Social & Reputation", description: "Your online presence" },
   { title: "Response & Chat", description: "Customer communication" },
-  { title: "Listings & CRM", description: "Business management" },
+  { title: "Listings, Advertising & CRM", description: "Business management" },
   { title: "Review & Submit", description: "Confirm your information" }
 ];
 
@@ -74,6 +74,9 @@ export function AssessmentForm() {
       crmPlatform: "",
       lastCRMFollowup: "",
       hasAutomation: "",
+      runsAds: "",
+      lastAdCampaign: "",
+      monthlyAdBudget: "",
     },
   });
 
@@ -749,6 +752,42 @@ export function AssessmentForm() {
                       { value: "6_months_plus", label: "More than 6 months ago" },
                       { value: "never", label: "Never added photos" },
                     ], "select-last-gbp-photo")}
+                  </div>
+
+                  {/* Advertising & Paid Media */}
+                  <div className="bg-white p-6 rounded-lg border-2 border-[#97ACCA]/40">
+                    <div className="flex items-center gap-3 mb-6">
+                      <h3 className="text-xl font-bold text-[#97ACCA]" style={{ fontFamily: 'Archivo Semi Expanded, sans-serif' }}>
+                        Advertising & Paid Media
+                      </h3>
+                    </div>
+
+                    {renderSelectQuestion("runsAds", "Do you currently run paid advertising?", [
+                      { value: "yes_both", label: "Yes — Google and Meta (Facebook/Instagram)" },
+                      { value: "yes_google", label: "Yes — Google Ads only" },
+                      { value: "yes_meta", label: "Yes — Meta (Facebook/Instagram) only" },
+                      { value: "yes_other", label: "Yes — other platforms" },
+                      { value: "no_interested", label: "No, but interested" },
+                      { value: "no_not_interested", label: "No, not interested" },
+                    ], "select-runs-ads")}
+
+                    {renderSelectQuestion("lastAdCampaign", "When was your last advertising campaign?", [
+                      { value: "past_week", label: "Within the past week" },
+                      { value: "past_month", label: "Within the past month" },
+                      { value: "past_3_months", label: "1-3 months ago" },
+                      { value: "past_6_months", label: "3-6 months ago" },
+                      { value: "6_months_plus", label: "More than 6 months ago" },
+                      { value: "never", label: "Never run ads" },
+                    ], "select-last-ad-campaign")}
+
+                    {renderSelectQuestion("monthlyAdBudget", "What is your monthly advertising budget?", [
+                      { value: "none", label: "No budget allocated" },
+                      { value: "under_500", label: "Under $500/month" },
+                      { value: "500_1000", label: "$500-$1,000/month" },
+                      { value: "1000_2500", label: "$1,000-$2,500/month" },
+                      { value: "2500_5000", label: "$2,500-$5,000/month" },
+                      { value: "5000_plus", label: "Over $5,000/month" },
+                    ], "select-monthly-ad-budget")}
                   </div>
 
                   {/* Website & SEO */}

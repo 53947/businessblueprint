@@ -3244,6 +3244,9 @@ async function processAssessmentAsync(
       crmPlatform: assessment.crmPlatform,
       lastCRMFollowup: assessment.lastCRMFollowup,
       hasAutomation: assessment.hasAutomation,
+      runsAds: assessment.runsAds,
+      lastAdCampaign: assessment.lastAdCampaign,
+      monthlyAdBudget: assessment.monthlyAdBudget,
     });
 
     // Calculate combined Digital IQ score (scan 0-70 + operational 0-70 = 0-140)
