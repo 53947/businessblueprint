@@ -211,7 +211,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {SOLUTIONS_MENU.products.map((p) => (
                               <NavigationMenuLink key={p.id} asChild>
                                 <a href={p.href} className="flex flex-col items-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer" style={{ borderColor: p.borderColor }} data-testid={p.testId}>
-                                  <img src={p.icon} alt={p.name} className="h-12 w-12 object-contain mb-2" />
+                                  {p.icon.startsWith("/") || p.icon.includes(".") ? (
+                                    <img src={p.icon} alt={p.name} className="h-12 w-12 object-contain mb-2" />
+                                  ) : (
+                                    <div className="mb-2"><AppIcon name={p.icon} size={48} color={p.borderColor} /></div>
+                                  )}
                                   {p.id === "connect" ? (
                                     <AppName appId="connect" size="sm" iconSize={0} />
                                   ) : (
