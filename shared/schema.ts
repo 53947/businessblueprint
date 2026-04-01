@@ -210,7 +210,7 @@ export const scansBluePurchases = pgTable("scans_blue_purchases", {
   assessmentId: integer("assessment_id").notNull().references(() => assessments.id),
   
   // Provider-agnostic payment fields
-  paymentProvider: varchar("payment_provider", { length: 20 }).notNull().default("stripe"), // 'stripe' or 'swipesblue'
+  paymentProvider: varchar("payment_provider", { length: 20 }).notNull().default("swipesblue"),
   transactionId: text("transaction_id").notNull().unique(), // Stripe session ID or SwipesBlue transaction ID
   paymentIntentId: text("payment_intent_id"), // Provider-specific payment reference
   
