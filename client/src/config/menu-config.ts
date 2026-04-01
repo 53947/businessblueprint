@@ -9,11 +9,11 @@ import {
 } from "@/config/app-registry";
 
 // ── Platform icons (non-registry) ──
-import blueprintIcon from "@assets/images_logos/businessblueprint-logo.png";
-import hostsBlueIcon from "@assets/images_logos/hostsblue-logo.png";
-import swipesBlueIcon from "@assets/images_logos/swipesblue-logo.png";
-import builderBlue2Icon from "@assets/images_logos/builderblue2-logo.png";
-import scansBlueIcon from "@assets/images_logos/scansblue-logo.png";
+import blueprintIcon from "@assets/images_logos/bb-header-logo.png";
+import hostsBlueIcon from "@assets/images_logos/hostsblue_logo_image_and_text_as_url.png";
+import swipesBlueIcon from "@assets/images_logos/swipesblue_logo_image_and_text_as_url.png";
+import builderBlue2Icon from "@assets/images_logos/builderblue2-logo-image-and-text-as-url-for-header.png";
+import scansBlueIcon from "@assets/images_logos/scansblue_logo_image_and_text_as_url.png";
 import businessIQScannerIcon from "@assets/images_logos/business-iq-scanner.png";
 
 // ── Lucide icon name strings (rendered via ICON_MAP in app-name.tsx) ──
