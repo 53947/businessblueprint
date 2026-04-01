@@ -30,6 +30,7 @@ import { registerOptimizeRoutes } from "./routes/optimize";
 import { amplifyRouter } from "./routes/amplify";
 import { registerSubscriptionRoutes } from "./routes/subscriptions";
 import {
+  assessments,
   insertAssessmentSchema,
   subscriptions,
   livechatSessions,
@@ -514,6 +515,140 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating pathway:", error);
       res.status(500).json({ message: "Failed to update pathway" });
+    }
+  });
+
+  // Get scan results for an assessment (used by the scan-first form to poll for completion)
+  app.get("/api/assessments/:id/scan-results", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+
+      const assessment = await storage.getAssessment(id);
+      if (!assessment) return res.status(404).json({ error: "Assessment not found" });
+
+      // Check if scan is complete by looking for analysisResults
+      const results = assessment.analysisResults as any;
+      if (!results) {
+        return res.json({ status: assessment.status === "failed" ? "failed" : "scanning", progress: null });
+      }
+
+      const presenceScan = results.presenceScan || {};
+      return res.json({
+        status: "complete",
+        detections: presenceScan.website?.detections || null,
+        socialMedia: presenceScan.socialMedia || null,
+        directories: presenceScan.directories || null,
+        reviews: presenceScan.reviews || null,
+        website: presenceScan.website || null,
+      });
+    } catch (error) {
+      console.error("Error fetching scan results:", error);
+      res.status(500).json({ error: "Failed to fetch scan results" });
+    }
+  });
+
+  // Submit operational data (auto-detected + confirmed + manual answers) — scan-first form Step 3→4
+  app.patch("/api/assessments/:id/operational", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+
+      const assessment = await storage.getAssessment(id);
+      if (!assessment) return res.status(404).json({ error: "Assessment not found" });
+
+      // Extract tracking metadata before updating
+      const scanDetectionsData = req.body._scanDetections || null;
+      const scanCorrectionsData = req.body._scanCorrections || null;
+
+      // Build the operational fields update (only known assessment columns)
+      const operationalColumns = [
+        'collectsEmails', 'lastEmailCampaign', 'emailListSize', 'sendsSMS', 'lastSMSCampaign',
+        'lastSocialPost', 'socialPostFrequency', 'socialContentCreator',
+        'lastReviewResponse', 'reviewResponseRate', 'lastNewReview',
+        'inquiryResponseTime', 'hasUnifiedInbox', 'missedInquiries',
+        'hasLiveChat', 'lastChatConversation', 'chatResponseTime',
+        'lastListingUpdate', 'listingConsistency', 'lastGBPPost', 'lastGBPPhoto',
+        'lastWebsiteUpdate', 'hasBlog',
+        'usesCRM', 'crmPlatform', 'lastCRMFollowup', 'hasAutomation',
+        'runsAds', 'lastAdCampaign', 'monthlyAdBudget',
+      ];
+
+      const updateData: Record<string, any> = {};
+      for (const col of operationalColumns) {
+        if (req.body[col] !== undefined) {
+          updateData[col] = req.body[col];
+        }
+      }
+
+      // Include detection tracking
+      updateData.scanDetections = scanDetectionsData;
+      updateData.scanCorrections = scanCorrectionsData;
+      updateData.updatedAt = new Date();
+
+      await db.update(assessments).set(updateData).where(eq(assessments.id, id));
+
+      // Re-fetch the updated assessment for scoring
+      const updatedAssessment = await storage.getAssessment(id);
+      if (!updatedAssessment) return res.status(404).json({ error: "Assessment not found after update" });
+
+      // Recalculate operational score with the new data
+      const operationalScore = presenceScannerService.calculateOperationalScore({
+        collectsEmails: updatedAssessment.collectsEmails,
+        lastEmailCampaign: updatedAssessment.lastEmailCampaign,
+        emailListSize: updatedAssessment.emailListSize,
+        sendsSMS: updatedAssessment.sendsSMS,
+        lastSMSCampaign: updatedAssessment.lastSMSCampaign,
+        lastSocialPost: updatedAssessment.lastSocialPost,
+        socialPostFrequency: updatedAssessment.socialPostFrequency,
+        socialContentCreator: updatedAssessment.socialContentCreator,
+        lastReviewResponse: updatedAssessment.lastReviewResponse,
+        reviewResponseRate: updatedAssessment.reviewResponseRate,
+        lastNewReview: updatedAssessment.lastNewReview,
+        inquiryResponseTime: updatedAssessment.inquiryResponseTime,
+        hasUnifiedInbox: updatedAssessment.hasUnifiedInbox,
+        missedInquiries: updatedAssessment.missedInquiries,
+        hasLiveChat: updatedAssessment.hasLiveChat,
+        lastChatConversation: updatedAssessment.lastChatConversation,
+        chatResponseTime: updatedAssessment.chatResponseTime,
+        lastListingUpdate: updatedAssessment.lastListingUpdate,
+        listingConsistency: updatedAssessment.listingConsistency,
+        lastGBPPost: updatedAssessment.lastGBPPost,
+        lastGBPPhoto: updatedAssessment.lastGBPPhoto,
+        lastWebsiteUpdate: updatedAssessment.lastWebsiteUpdate,
+        hasBlog: updatedAssessment.hasBlog,
+        usesCRM: updatedAssessment.usesCRM,
+        crmPlatform: updatedAssessment.crmPlatform,
+        lastCRMFollowup: updatedAssessment.lastCRMFollowup,
+        hasAutomation: updatedAssessment.hasAutomation,
+        runsAds: updatedAssessment.runsAds,
+        lastAdCampaign: updatedAssessment.lastAdCampaign,
+        monthlyAdBudget: updatedAssessment.monthlyAdBudget,
+      });
+
+      // Get scan score from existing analysis results
+      const existingResults = updatedAssessment.analysisResults as any;
+      const scanScore = existingResults?.scanScore || existingResults?.presenceScan?.overall?.digitalIQScore || 0;
+      const combinedDigitalIQ = presenceScannerService.calculateCombinedDigitalIQ(scanScore, operationalScore);
+
+      // Update the analysisResults with recalculated scores
+      const updatedAnalysis = {
+        ...existingResults,
+        digitalScore: combinedDigitalIQ,
+        operationalScore: operationalScore,
+      };
+
+      await storage.updateAssessment(id, {
+        analysisResults: updatedAnalysis,
+        digitalScore: combinedDigitalIQ,
+      });
+
+      console.log(`[Assessment] Operational data updated for ${id}: Scan=${scanScore}/70 + Operational=${operationalScore}/70 = ${combinedDigitalIQ}/140`);
+
+      res.json({ success: true, assessmentId: id, digitalScore: combinedDigitalIQ });
+    } catch (error) {
+      console.error("Error updating operational data:", error);
+      res.status(500).json({ error: "Failed to update operational data" });
     }
   });
 

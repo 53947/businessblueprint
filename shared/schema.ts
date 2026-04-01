@@ -132,6 +132,10 @@ export const assessments = pgTable("assessments", {
   lastAdCampaign: varchar("last_ad_campaign", { length: 50 }), // past_week, past_month, past_3_months, past_6_months, 6_months_plus, never
   monthlyAdBudget: varchar("monthly_ad_budget", { length: 50 }), // none, under_500, 500_1000, 1000_2500, 2500_5000, 5000_plus
 
+  // Assessment detection tracking (scan-first form)
+  scanDetections: jsonb("scan_detections"),   // What was auto-detected by the presence scanner
+  scanCorrections: jsonb("scan_corrections"), // What the user corrected from auto-detected values
+
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
