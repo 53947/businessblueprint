@@ -842,7 +842,7 @@ export function AssessmentForm() {
   // ─── Render ─────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-white py-8">
+    <div className="py-8">
       {/* Header */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
         <div className="text-center mb-8">
@@ -876,66 +876,79 @@ export function AssessmentForm() {
 
       {/* Form Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Card className="shadow-xl border border-gray-200">
-          <CardContent className="p-8">
+        <Card className="shadow-sm border border-gray-200 rounded-lg">
+          <CardContent className="p-6 md:p-8">
 
             {/* ═══ STEP 1: Business Information ═══ */}
             {currentStep === 0 && (
-              <div className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <Label htmlFor="businessName">Business Name *</Label>
-                    <Input
-                      id="businessName"
-                      placeholder="Enter your business name"
-                      {...form.register("businessName")}
-                    />
-                    {form.formState.errors.businessName && (
-                      <p className="text-sm text-red-600 mt-1">{form.formState.errors.businessName.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="industry">Industry *</Label>
-                    <Select
-                      value={form.watch("industry")}
-                      onValueChange={(value) => form.setValue("industry", value, { shouldValidate: true })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your industry" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="restaurant">Restaurant/Food Service</SelectItem>
-                        <SelectItem value="retail">Retail</SelectItem>
-                        <SelectItem value="healthcare">Healthcare</SelectItem>
-                        <SelectItem value="professional">Professional Services</SelectItem>
-                        <SelectItem value="home-services">Home Services</SelectItem>
-                        <SelectItem value="automotive">Automotive</SelectItem>
-                        <SelectItem value="beauty">Beauty/Wellness</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {form.formState.errors.industry && (
-                      <p className="text-sm text-red-600 mt-1">{form.formState.errors.industry.message}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Website — prominent placement with helper text */}
+              <div className="space-y-8">
+                {/* Section: Business Info */}
                 <div>
-                  <Label htmlFor="website">Website URL</Label>
-                  <Input
-                    id="website"
-                    type="url"
-                    placeholder="https://yourwebsite.com"
-                    {...form.register("website")}
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Without your website URL, we can't scan your site for marketing tools, chat widgets, or technical issues.
-                  </p>
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-[#09080E]/50 mb-4">Business Information</h3>
+                  <div className="grid md:grid-cols-2 gap-6 md:divide-x md:divide-gray-200">
+                    <div>
+                      <Label htmlFor="businessName">Business Name *</Label>
+                      <Input
+                        id="businessName"
+                        placeholder="Enter your business name"
+                        {...form.register("businessName")}
+                      />
+                      {form.formState.errors.businessName && (
+                        <p className="text-sm text-red-600 mt-1">{form.formState.errors.businessName.message}</p>
+                      )}
+                    </div>
+                    <div className="md:pl-6">
+                      <Label htmlFor="industry">Industry *</Label>
+                      <Select
+                        value={form.watch("industry")}
+                        onValueChange={(value) => form.setValue("industry", value, { shouldValidate: true })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your industry" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="restaurant">Restaurant/Food Service</SelectItem>
+                          <SelectItem value="retail">Retail</SelectItem>
+                          <SelectItem value="healthcare">Healthcare</SelectItem>
+                          <SelectItem value="professional">Professional Services</SelectItem>
+                          <SelectItem value="home-services">Home Services</SelectItem>
+                          <SelectItem value="automotive">Automotive</SelectItem>
+                          <SelectItem value="beauty">Beauty/Wellness</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {form.formState.errors.industry && (
+                        <p className="text-sm text-red-600 mt-1">{form.formState.errors.industry.message}</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
-                {/* Contact Info */}
-                <div className="grid md:grid-cols-2 gap-6">
+                <hr className="border-gray-200" />
+
+                {/* Section: Website */}
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-[#09080E]/50 mb-4">Website</h3>
+                  <div>
+                    <Label htmlFor="website">Website URL</Label>
+                    <Input
+                      id="website"
+                      type="url"
+                      placeholder="https://yourwebsite.com"
+                      {...form.register("website")}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Without your website URL, we can't scan your site for marketing tools, chat widgets, or technical issues.
+                    </p>
+                  </div>
+                </div>
+
+                <hr className="border-gray-200" />
+
+                {/* Section: Contact Info */}
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-[#09080E]/50 mb-4">Contact Information</h3>
+                  <div className="grid md:grid-cols-2 gap-6 md:divide-x md:divide-gray-200">
                   <div>
                     <Label htmlFor="email">Email Address *</Label>
                     <Input
@@ -948,7 +961,7 @@ export function AssessmentForm() {
                       <p className="text-sm text-red-600 mt-1">{form.formState.errors.email.message}</p>
                     )}
                   </div>
-                  <div>
+                  <div className="md:pl-6">
                     <Label htmlFor="phone">Phone Number *</Label>
                     <Input
                       id="phone"
@@ -961,11 +974,14 @@ export function AssessmentForm() {
                     )}
                   </div>
                 </div>
+                </div>
 
-                {/* Address */}
+                <hr className="border-gray-200" />
+
+                {/* Section: Address */}
                 <div className="space-y-4">
-                  <h3 className="text-sm font-medium text-[#09080E]/70 border-b border-gray-200 pb-2">Business Address</h3>
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-[#09080E]/50">Business Address</h3>
+                  <div className="grid md:grid-cols-2 gap-4 md:divide-x md:divide-gray-200">
                     <div>
                       <Label htmlFor="address">Address Line 1 *</Label>
                       <Input id="address" placeholder="Street address" {...form.register("address")} />
@@ -973,7 +989,7 @@ export function AssessmentForm() {
                         <p className="text-sm text-red-600 mt-1">{form.formState.errors.address.message}</p>
                       )}
                     </div>
-                    <div>
+                    <div className="md:pl-4">
                       <Label htmlFor="address2">Address Line 2</Label>
                       <Input id="address2" placeholder="Building, floor, etc. (optional)" {...form.register("address2")} />
                     </div>
@@ -1230,6 +1246,8 @@ export function AssessmentForm() {
                   </div>
                 </div>
 
+                <hr className="border-gray-200" />
+
                 {/* Section B: Remaining Questions */}
                 {(() => {
                   const questionsToShow = buildQuestionsToShow();
@@ -1279,61 +1297,64 @@ export function AssessmentForm() {
                   </p>
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-6 space-y-4 border border-gray-200">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-sm font-medium text-[#09080E]/60">Business Name</Label>
-                      <p className="text-sm font-medium text-[#09080E]">{form.watch("businessName")}</p>
+                <div className="rounded-lg border border-gray-200 divide-y divide-gray-200">
+                  <div className="grid md:grid-cols-2 md:divide-x md:divide-gray-200">
+                    <div className="p-4">
+                      <Label className="text-xs font-medium uppercase tracking-wider text-[#09080E]/40">Business Name</Label>
+                      <p className="text-sm font-medium text-[#09080E] mt-1">{form.watch("businessName")}</p>
                     </div>
-                    <div>
-                      <Label className="text-sm font-medium text-[#09080E]/60">Industry</Label>
-                      <p className="text-sm font-medium text-[#09080E]">{form.watch("industry")}</p>
+                    <div className="p-4">
+                      <Label className="text-xs font-medium uppercase tracking-wider text-[#09080E]/40">Industry</Label>
+                      <p className="text-sm font-medium text-[#09080E] mt-1">{form.watch("industry")}</p>
                     </div>
                   </div>
 
-                  <div>
-                    <Label className="text-sm font-medium text-[#09080E]/60">Business Address</Label>
-                    <div className="text-sm font-medium text-[#09080E] space-y-0.5">
+                  <div className="p-4">
+                    <Label className="text-xs font-medium uppercase tracking-wider text-[#09080E]/40">Business Address</Label>
+                    <div className="text-sm font-medium text-[#09080E] mt-1 space-y-0.5">
                       <p>{form.watch("address")}{form.watch("unit") && `, ${form.watch("unit")}`}</p>
                       {form.watch("address2") && <p>{form.watch("address2")}</p>}
                       <p>{form.watch("city")}, {form.watch("state")} {form.watch("zipCode")}</p>
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-sm font-medium text-[#09080E]/60">Phone</Label>
-                      <p className="text-sm font-medium text-[#09080E]">{form.watch("phone")}</p>
+                  <div className="grid md:grid-cols-2 md:divide-x md:divide-gray-200">
+                    <div className="p-4">
+                      <Label className="text-xs font-medium uppercase tracking-wider text-[#09080E]/40">Phone</Label>
+                      <p className="text-sm font-medium text-[#09080E] mt-1">{form.watch("phone")}</p>
                     </div>
-                    <div>
-                      <Label className="text-sm font-medium text-[#09080E]/60">Email</Label>
-                      <p className="text-sm font-medium text-[#09080E]">{form.watch("email")}</p>
+                    <div className="p-4">
+                      <Label className="text-xs font-medium uppercase tracking-wider text-[#09080E]/40">Email</Label>
+                      <p className="text-sm font-medium text-[#09080E] mt-1">{form.watch("email")}</p>
                     </div>
                   </div>
+
                   {form.watch("website") && (
-                    <div>
-                      <Label className="text-sm font-medium text-[#09080E]/60">Website</Label>
-                      <p className="text-sm font-medium text-[#09080E]">{form.watch("website")}</p>
+                    <div className="p-4">
+                      <Label className="text-xs font-medium uppercase tracking-wider text-[#09080E]/40">Website</Label>
+                      <p className="text-sm font-medium text-[#09080E] mt-1">{form.watch("website")}</p>
                     </div>
                   )}
                 </div>
 
                 {/* Key Findings Summary */}
                 {buildDetectionCards().length > 0 && (
-                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                    <h4 className="font-medium text-[#09080E] mb-3">Key Findings</h4>
-                    <div className="grid md:grid-cols-2 gap-2">
+                  <div className="rounded-lg border border-gray-200">
+                    <div className="px-4 py-3 border-b border-gray-200">
+                      <h4 className="text-xs font-semibold uppercase tracking-wider text-[#09080E]/50">Key Findings</h4>
+                    </div>
+                    <div className="grid md:grid-cols-2 md:divide-x md:divide-gray-200 divide-y md:divide-y-0 divide-gray-100">
                       {buildDetectionCards().map(card => (
-                        <div key={card.id} className="flex items-center gap-2 text-sm">
+                        <div key={card.id} className="flex items-center gap-2 text-sm px-4 py-2.5">
                           <div className={cn(
-                            "w-4 h-4 rounded-full flex items-center justify-center",
+                            "w-4 h-4 rounded-full flex items-center justify-center shrink-0",
                             card.detected ? "bg-green-100 text-green-600" : "bg-amber-100 text-amber-600"
                           )}>
                             {card.detected ? <Check className="w-3 h-3" /> : <Circle className="w-3 h-3" />}
                           </div>
                           <span className="text-[#09080E]/80">{card.category}: {card.detected ? "Detected" : "Not found"}</span>
                           {corrections[card.id]?.value && (
-                            <span className="text-xs text-blue-600">(corrected)</span>
+                            <span className="text-xs text-blue-600 ml-auto">(corrected)</span>
                           )}
                         </div>
                       ))}
