@@ -159,14 +159,14 @@ export default function Home() {
             <div className="mt-12 lg:mt-0">
               <div className="relative h-72 flex items-center justify-center">
                 <div className="rounded-full w-20 h-20 flex items-center justify-center text-white text-xs font-bold text-center" style={{ backgroundColor: '#008060' }}>/ connect</div>
-                <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #064A6C', color: '#064A6C', top: '0', left: '50%', transform: 'translateX(-50%)' }}>/ publish</div>
-                <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #E9B307', color: '#E9B307', top: '15%', right: '5%' }}>/ elevate</div>
-                <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #374151', color: '#374151', top: '50%', right: '0', transform: 'translateY(-50%)' }}>/ optimize</div>
-                <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #97ACCA', color: '#97ACCA', bottom: '15%', right: '5%' }}>/ amplify</div>
-                <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #001882', color: '#001882', bottom: '0', left: '50%', transform: 'translateX(-50%)' }}>/ respond</div>
-                <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #660099', color: '#660099', bottom: '15%', left: '5%' }}>/ engage</div>
-                <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #FF44CC', color: '#FF44CC', top: '50%', left: '0', transform: 'translateY(-50%)' }}>/ post</div>
-                <div className="absolute bg-white text-xs px-2 py-1 rounded-full" style={{ border: '1px solid #1844A6', color: '#1844A6', top: '15%', left: '5%' }}>/ promote</div>
+                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #064A6C', backgroundColor: '#064A6C', color: '#E9ECF0', top: '0', left: '50%', transform: 'translateX(-50%)' }}>/ publish</div>
+                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #E9B307', backgroundColor: '#E9B307', color: '#09080E', top: '15%', right: '5%' }}>/ elevate</div>
+                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #374151', backgroundColor: '#374151', color: '#E9ECF0', top: '50%', right: '0', transform: 'translateY(-50%)' }}>/ optimize</div>
+                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #97ACCA', backgroundColor: '#97ACCA', color: '#09080E', bottom: '15%', right: '5%' }}>/ amplify</div>
+                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #001882', backgroundColor: '#001882', color: '#E9ECF0', bottom: '0', left: '50%', transform: 'translateX(-50%)' }}>/ respond</div>
+                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #660099', backgroundColor: '#660099', color: '#E9ECF0', bottom: '15%', left: '5%' }}>/ engage</div>
+                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #FF44CC', backgroundColor: '#FF44CC', color: '#09080E', top: '50%', left: '0', transform: 'translateY(-50%)' }}>/ post</div>
+                <div className="absolute text-xs font-bold px-3 py-1.5 rounded-full shadow-sm" style={{ border: '2px solid #1844A6', backgroundColor: '#1844A6', color: '#E9ECF0', top: '15%', left: '5%' }}>/ promote</div>
               </div>
               <p className="text-xs text-gray-400 text-center mt-2">Every app in businessblueprint.io connects through / connect</p>
             </div>
