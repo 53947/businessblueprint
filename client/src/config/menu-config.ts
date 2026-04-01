@@ -162,7 +162,7 @@ const PLATFORMS: PlatformEntry[] = [
   { id: "businessblueprint", name: "businessblueprint.io", description: "Digital Intelligence", href: "/", icon: blueprintIcon, borderColor: "#FF6B00", testId: "link-solution-businessblueprint" },
   { id: "hostsblue", name: "HostsBlue", description: "Web Services", href: "#hostsblue", icon: hostsBlueIcon, borderColor: "#8000FF", testId: "link-solution-hostsblue" },
   { id: "swipesblue", name: "SwipesBlue", description: "Payment Gateway", href: "#swipesblue", icon: swipesBlueIcon, borderColor: "#FF0040", testId: "link-solution-swipesblue" },
-  { id: "builderblue2", name: "BUILDERBLUE2.COM", description: "AI-Powered Vibe Coding", href: "https://builderblue2.com", icon: builderBlue2Icon, borderColor: "#0000FF", testId: "link-solution-builderblue2" },
+  { id: "builderblue2", name: "BUILDERBLUE2.COM", description: "AI Vibe Coding 2.0", href: "https://builderblue2.com", icon: builderBlue2Icon, borderColor: "#0000FF", testId: "link-solution-builderblue2" },
   { id: "scansblue", name: "ScansBlue", description: "Site Analysis", href: "#scansblue", icon: scansBlueIcon, borderColor: "#0000FF", testId: "link-solution-scansblue" },
 ];
 

@@ -202,7 +202,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               <NavigationMenuLink key={p.id} asChild>
                                 <a
                                   href={p.href}
-                                  className="flex flex-col items-center justify-between p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer"
+                                  className="flex flex-col items-center justify-center p-3 rounded-lg border-2 hover:shadow-lg transition-all cursor-pointer"
                                   style={{ borderColor: p.borderColor }}
                                   data-testid={p.testId}
                                 >
@@ -277,8 +277,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                     src={p.icon}
                                     alt={p.name}
                                     className="object-contain"
-                                    style={{ height: 20, maxWidth: 120 }}
+                                    style={{ height: 16 }}
                                   />
+                                  <p className="text-xs text-gray-600 ml-2">{p.description}</p>
                                 </a>
                               </NavigationMenuLink>
                             ))}
@@ -578,7 +579,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {item.label === "Solutions" && (
                               <div className="grid grid-cols-2 gap-2">
                                 {SOLUTIONS_MENU.platforms.map((p) => (
-                                  <a key={p.id} href={p.href} className="flex flex-col items-center justify-between p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: p.borderColor }} data-testid={`mobile-${p.testId}`}>
+                                  <a key={p.id} href={p.href} className="flex flex-col items-center justify-center p-2 rounded-lg border-2 hover:shadow-lg transition-all" style={{ borderColor: p.borderColor }} data-testid={`mobile-${p.testId}`}>
                                     <img
                                       src={p.icon}
                                       alt={p.name}
@@ -633,8 +634,9 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                           src={p.icon}
                                           alt={p.name}
                                           className="object-contain"
-                                          style={{ height: 20, maxWidth: 120 }}
+                                          style={{ height: 16 }}
                                         />
+                                        <p className="text-xs text-gray-600 ml-2">{p.description}</p>
                                       </a>
                                     ))}
                                     <a href="/connect" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
