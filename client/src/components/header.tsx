@@ -320,7 +320,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                           {/* CTA */}
                           <div className="col-span-3 border-t-[0.5px] border-[#09080E] pt-3 mt-1">
-                            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-3 border border-blue-200">
+                            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-3">
                               <div className="flex items-center justify-between">
                                 <div>
                                   <div className="text-sm font-bold text-gray-900">{RESOURCES_MENU.cta.label}</div>

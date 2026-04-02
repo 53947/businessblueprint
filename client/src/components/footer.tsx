@@ -105,8 +105,11 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="border-t-[0.5px] border-[#09080E] mt-12 pt-6">
+      </div>
+
+      {/* Bottom bar — full width line matching top border */}
+      <div className="border-t-[0.5px] border-[#09080E]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs text-gray-400">
               &copy; {currentYear} TRIADBLUE, Inc. All rights reserved.
