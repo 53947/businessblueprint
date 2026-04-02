@@ -138,7 +138,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             <h3 className="text-xl font-bold text-gray-900 mb-2">{HOW_IT_WORKS_MENU.title}</h3>
                             <p className="text-xs text-gray-600">{HOW_IT_WORKS_MENU.description}</p>
                           </div>
-                          <div className="space-y-3 divide-y divide-gray-200">
+                          <div className="space-y-3 divide-y divide-[#09080E] [&>*]:border-[0.5px]">
                             {HOW_IT_WORKS_MENU.steps.map((step) => {
                               const inner = (
                                 <div
@@ -164,7 +164,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                               );
                             })}
                           </div>
-                          <div className="mt-6 pt-4 border-t-2 border-[#09080E]">
+                          <div className="mt-6 pt-4 border-t-[0.5px] border-[#09080E]">
                             <Link href={HOW_IT_WORKS_MENU.ctaHref}>
                               <Button className="w-full text-white" style={{ backgroundColor: "#A00028" }} data-testid="button-start-blueprint">
                                 {HOW_IT_WORKS_MENU.ctaText}
@@ -196,7 +196,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
                         <div className="p-4 w-[90vw] max-w-[900px]">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 [&>*]:border-b [&>*]:border-gray-100 [&>*]:pb-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 [&>*]:border-b-[0.5px] [&>*]:border-[#09080E] [&>*]:pb-3">
                             {/* Platforms */}
                             {SOLUTIONS_MENU.platforms.map((p) => (
                               <NavigationMenuLink key={p.id} asChild>
@@ -256,7 +256,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>{NAV_ITEMS[3].label}</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid gap-4 p-6 w-[90vw] max-w-[700px] grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:divide-x md:divide-gray-200">
+                        <div className="grid gap-4 p-6 w-[90vw] max-w-[700px] grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:[&>*+*]:border-l-[0.5px] md:[&>*+*]:border-[#09080E]">
                           {/* Learn column */}
                           <ResourceColumn column={RESOURCES_MENU.columns[0]} />
 
@@ -313,13 +313,13 @@ export function Header({ showNavigation = true }: HeaderProps) {
                           {/* Right side: Developers + Support stacked */}
                           <div className="space-y-3 md:pl-4">
                             <ResourceColumn column={RESOURCES_MENU.columns[1]} />
-                            <div className="border-t border-gray-200 pt-2 mt-2">
+                            <div className="border-t-[0.5px] border-[#09080E] pt-2 mt-2">
                               <ResourceColumn column={RESOURCES_MENU.columns[2]} />
                             </div>
                           </div>
 
                           {/* CTA */}
-                          <div className="col-span-3 border-t border-gray-200 pt-3 mt-1">
+                          <div className="col-span-3 border-t-[0.5px] border-[#09080E] pt-3 mt-1">
                             <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-3 border border-blue-200">
                               <div className="flex items-center justify-between">
                                 <div>
@@ -696,7 +696,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
 function ResourceColumn({ column }: { column: (typeof RESOURCES_MENU.columns)[number] }) {
   const ColIcon = ICON_MAP[column.icon];
   return (
-    <div className="space-y-1 divide-y divide-gray-100">
+    <div className="space-y-1 [&>*+*]:border-t-[0.5px] [&>*+*]:border-[#09080E]">
       <div className="flex items-center gap-2 pb-2">
         {ColIcon && <ColIcon className="w-4 h-4 text-gray-500" />}
         <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide">{column.title}</h4>
