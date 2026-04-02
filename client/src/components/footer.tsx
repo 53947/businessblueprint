@@ -11,10 +11,10 @@ export function Footer() {
 
   return (
     <footer className="bg-white mt-auto">
-      <div className="border-t border-[#09080E]" />
+      <div className="border-t-[0.5px] border-[#09080E]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:divide-x md:divide-[#09080E]">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:[&>*+*]:border-l-[0.5px] md:[&>*+*]:border-[#09080E]">
 
           {/* Column 1 — Ecosystem (spans 2) */}
           <div className="md:col-span-2">
@@ -106,7 +106,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-[#09080E] mt-12 pt-6">
+        <div className="border-t-[0.5px] border-[#09080E] mt-12 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs text-gray-400">
               &copy; {currentYear} TRIADBLUE, Inc. All rights reserved.
