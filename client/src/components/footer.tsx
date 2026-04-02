@@ -11,10 +11,10 @@ export function Footer() {
 
   return (
     <footer className="bg-white mt-auto">
-      <div className="border-t border-gray-200" />
+      <div className="border-t border-[#09080E]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 md:divide-x md:divide-[#09080E]">
 
           {/* Column 1 — Ecosystem (spans 2) */}
           <div className="md:col-span-2">
@@ -47,7 +47,7 @@ export function Footer() {
           </div>
 
           {/* Column 2 — Platform */}
-          <div>
+          <div className="md:pl-6">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-4">Platform</h3>
             <ul className="space-y-2 text-sm" style={{ fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600, fontSize: 14 }}>
               {[
@@ -73,7 +73,7 @@ export function Footer() {
           </div>
 
           {/* Column 3 — Company */}
-          <div>
+          <div className="md:pl-6">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-4">Company</h3>
             <ul className="space-y-2 text-sm">
               <li><a href="/about" className="text-gray-600 hover:text-gray-900 transition-colors">About</a></li>
@@ -85,7 +85,7 @@ export function Footer() {
           </div>
 
           {/* Column 4 — Support */}
-          <div>
+          <div className="md:pl-6">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-4">Support</h3>
             <ul className="space-y-2 text-sm">
               <li><a href="/knowledge-base" className="text-gray-600 hover:text-gray-900 transition-colors">Help Center</a></li>
@@ -106,7 +106,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-gray-200 mt-12 pt-6">
+        <div className="border-t border-[#09080E] mt-12 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs text-gray-400">
               &copy; {currentYear} TRIADBLUE, Inc. All rights reserved.
