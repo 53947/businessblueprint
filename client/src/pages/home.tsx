@@ -32,7 +32,7 @@ export default function Home() {
       <Header showNavigation={true} />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-blue-50 via-white to-gray-50 py-12 lg:py-20 border-b-[0.5px] border-[#09080E]">
+      <section className="bg-gradient-to-b from-blue-50 via-white to-gray-50 py-12 lg:py-20 border-b-[0.5px] border-[#09080E]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
             <div className="mb-8 lg:mb-0">
@@ -141,7 +141,7 @@ export default function Home() {
       {/* Sections 1–6 below */}
 
       {/* Section 1: / connect */}
-      <section className="bg-white py-20 border-b-[0.5px] border-[#09080E]">
+      <section className="bg-white py-20 border-b-[0.5px] border-[#09080E]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 gap-16 items-center">
             <div>
@@ -175,7 +175,7 @@ export default function Home() {
       </section>
 
       {/* Section 2: / anchor suite */}
-      <section className="bg-gray-50 py-20 border-b-[0.5px] border-[#09080E]">
+      <section className="bg-gray-50 py-20 border-b-[0.5px] border-[#09080E]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <BundleHeader bundleId="anchor" />
@@ -244,7 +244,7 @@ export default function Home() {
       </section>
 
       {/* Section 3: / compass suite */}
-      <section className="bg-white py-20 border-b-[0.5px] border-[#09080E]">
+      <section className="bg-white py-20 border-b-[0.5px] border-[#09080E]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <BundleHeader bundleId="compass" />
@@ -315,7 +315,7 @@ export default function Home() {
       </section>
 
       {/* Section 4: Coach Blue */}
-      <section className="bg-gray-50 py-20 border-b-[0.5px] border-[#09080E]">
+      <section className="bg-gray-50 py-20 border-b-[0.5px] border-[#09080E]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:grid lg:grid-cols-2 gap-16 items-center">
             <div className="flex justify-center mb-12 lg:mb-0">
@@ -339,7 +339,7 @@ export default function Home() {
       </section>
 
       {/* Section 5: Integration */}
-      <section className="bg-[#09080E] py-20 border-b-[0.5px] border-[#09080E]">
+      <section className="bg-[#09080E] py-20 border-b-[0.5px] border-[#09080E]/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <p className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">BUILT TO WORK TOGETHER</p>
