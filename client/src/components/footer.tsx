@@ -26,22 +26,22 @@ export function Footer() {
             <div className="space-y-4">
               <div>
                 <img src={swipesLogo} alt="swipesblue.com" style={{ height: 22, objectFit: 'contain' }} />
-                <p className="text-xs text-gray-400 mt-1">Proprietary payment processing for the ecosystem</p>
+                <p className="text-xs text-gray-400 mt-1">Get paid. Stay paid. Go Blue.</p>
               </div>
 
               <div>
                 <img src={hostsLogo} alt="hostsblue.com" style={{ height: 22, objectFit: 'contain' }} />
-                <p className="text-xs text-gray-400 mt-1">Domains, hosting, email, and website builder</p>
+                <p className="text-xs text-gray-400 mt-1">Get site. Go live. Go Blue.</p>
               </div>
 
               <div>
                 <img src={scansLogo} alt="scansblue.com" style={{ height: 22, objectFit: 'contain' }} />
-                <p className="text-xs text-gray-400 mt-1">Website auditing and digital presence scanning</p>
+                <p className="text-xs text-gray-400 mt-1">Get scanned. Get scored. Go Blue.</p>
               </div>
 
               <div>
                 <img src={builderLogo} alt="BUILDERBLUE2.COM" style={{ height: 22, objectFit: 'contain' }} />
-                <p className="text-xs text-gray-400 mt-1">AI-powered vibe coding platform</p>
+                <p className="text-xs text-gray-400 mt-1">Get vibe. Get code. Go Blue².</p>
               </div>
             </div>
           </div>
