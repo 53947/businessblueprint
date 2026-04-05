@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Search, FileSearch, ArrowRight, Clock, CheckCircle, AlertTriangle, Lock, UserPlus } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
+import { getDisplayScore } from "@shared/score-utils";
 
 interface AssessmentResult {
   id: number;
@@ -111,7 +112,7 @@ export default function FindResults() {
         return (
           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
             <CheckCircle className="w-4 h-4 mr-1" />
-            Score: {score ? 70 + Math.round(score / 2) : "N/A"}
+            Score: {score ? getDisplayScore(score) : "N/A"}
           </span>
         );
       case "analyzing":
@@ -210,7 +211,7 @@ export default function FindResults() {
                   Your Assessment Results
                 </h1>
                 <p className="text-gray-600">
-                  You have temporary access for 15 minutes. Create an account to save your results permanently.
+                  Your assessment results are ready. Create a free account to access your full prescription and track improvements over time.
                 </p>
               </div>
             </div>

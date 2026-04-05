@@ -198,7 +198,7 @@ export default function KnowledgeBase() {
             <CardContent className="pt-6">
               <h3 className="text-2xl font-bold text-[#0000FF] mb-4">What Is It?</h3>
               <p className="text-lg text-gray-700">
-                Your Digital IQ Score (0-140 points) measures how effectively your business shows up online and converts visitors into customers.
+                Your Digital IQ Score measures how effectively your business shows up online and converts visitors into customers.
               </p>
             </CardContent>
           </Card>

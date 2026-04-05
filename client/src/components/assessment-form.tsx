@@ -1368,7 +1368,7 @@ export function AssessmentForm() {
                     <div>
                       <h4 className="font-medium text-green-900">What happens next:</h4>
                       <ul className="text-sm text-green-800 mt-2 space-y-1">
-                        <li>- Your Digital IQ Score (0-140) is finalized</li>
+                        <li>- Your Digital IQ Score is finalized</li>
                         <li>- Personalized prescription with prioritized recommendations</li>
                         <li>- Results delivered via email within 2-3 minutes</li>
                       </ul>

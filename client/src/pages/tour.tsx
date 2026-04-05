@@ -97,10 +97,10 @@ export default function Tour() {
           
           <div className="bg-[#EEFBFF] rounded-xl p-6">
             <h4 className="font-semibold text-[#09080E] mb-3">Your Digital IQ Score</h4>
-            <p className="text-gray-600 mb-4">Your combined score (out of 140) tells us exactly where you stand and what tools will help you grow.</p>
+            <p className="text-gray-600 mb-4">Your score tells us exactly where you stand and what tools will help you grow.</p>
             <div className="flex items-center gap-4">
-              <div className="text-4xl font-bold text-[#0000FF]">0-140</div>
-              <div className="text-sm text-gray-500">Combined Score Range</div>
+              <div className="text-4xl font-bold text-[#0000FF]">70-140</div>
+              <div className="text-sm text-gray-500">Digital IQ Score Range</div>
             </div>
           </div>
         </div>

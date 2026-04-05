@@ -13,6 +13,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { getDisplayScore } from "@shared/score-utils";
 
 interface AssessmentData {
   id: number;
@@ -212,7 +213,7 @@ export default function AssessmentCheckoutPage() {
                       <p className="text-sm text-gray-600 dark:text-gray-400">Digital IQ Score</p>
                     </div>
                     <div className="text-right">
-                      <div className="text-3xl font-bold text-blue-600" data-testid="text-digital-score">{70 + Math.round((assessment.digitalScore || 0) / 2)}</div>
+                      <div className="text-3xl font-bold text-blue-600" data-testid="text-digital-score">{getDisplayScore(assessment.digitalScore || 0)}</div>
                     </div>
                   </div>
                   <Separator />

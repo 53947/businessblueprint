@@ -12,6 +12,7 @@ import { Footer } from "@/components/footer";
 import { ScansBlueResults } from "@/components/scansblue-results";
 import { ProductCategorySection } from "@/components/product-recommendation-card";
 import { CoachBlueCTA } from "@/components/coach-blue-cta";
+import { getDisplayScore as sharedGetDisplayScore } from "@shared/score-utils";
 import { 
   BarChart3, 
   Star, 
@@ -267,10 +268,7 @@ export default function Dashboard() {
     }
   };
 
-  // Digital IQ display: raw 0-140 → displayed 70-140
-  const getDisplayScore = (rawScore: number): number => {
-    return 70 + Math.round(rawScore / 2);
-  };
+  const getDisplayScore = sharedGetDisplayScore;
 
   const getDigitalIQDescription = (displayScore: number): { label: string; color: string } => {
     if (displayScore >= 130) return { label: "Digital Genius", color: "text-purple-600" };

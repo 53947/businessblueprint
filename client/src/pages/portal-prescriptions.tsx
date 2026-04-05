@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { getDisplayScore as sharedGetDisplayScore, getScoreLabel, getScoreColor as sharedGetScoreColor } from "@shared/score-utils";
 import {
   FileText,
   CheckCircle,
@@ -81,12 +82,9 @@ function getStatusBadge(status: string) {
   }
 }
 
-// Digital IQ display: raw 0-140 → displayed 70-140
-function getDisplayScore(rawScore: number): number {
-  return 70 + Math.round(rawScore / 2);
-}
-
-function getScoreColor(displayScore: number): string {
+// Use shared score utilities
+const getDisplayScore = sharedGetDisplayScore;
+function getScoreColorClass(displayScore: number): string {
   if (displayScore >= 120) return 'text-green-600';
   if (displayScore >= 100) return 'text-blue-600';
   if (displayScore >= 85) return 'text-orange-600';
@@ -381,7 +379,7 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
             <div className="text-xs uppercase tracking-widest text-gray-500 mb-2">Your Projected Score</div>
             <div className="flex items-center justify-center gap-6">
               <div className="text-center">
-                <div className={`text-4xl font-bold font-['Archivo_Semi_Expanded',sans-serif] ${getScoreColor(currentDisplay)}`}>
+                <div className={`text-4xl font-bold font-['Archivo_Semi_Expanded',sans-serif] ${getScoreColorClass(currentDisplay)}`}>
                   {currentDisplay}
                 </div>
                 <div className="text-xs text-gray-500 mt-1">Today</div>

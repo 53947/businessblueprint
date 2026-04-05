@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/footer";
 import { SideNav } from "@/components/side-nav";
 import { SetupNotifications } from "@/components/setup-notifications";
+import { getDisplayScore } from "@shared/score-utils";
 import { BrandLogo } from "@/components/brand-logo";
 import { AppIcon } from "@/components/app-name";
 import { Header } from "@/components/header";
@@ -246,7 +247,7 @@ export default function ClientPortal() {
             <CardContent className="p-4">
               <div className="text-center mb-3">
                 <h2 className="text-lg font-bold mb-1">Digital IQ</h2>
-                <div className="text-4xl font-bold mb-1">{70 + Math.round((clientData.digitalScore || 0) / 2)}</div>
+                <div className="text-4xl font-bold mb-1">{getDisplayScore(clientData.digitalScore || 0)}</div>
                 <p className="text-xs text-blue-100">Updated {new Date(clientData.lastUpdated).toLocaleDateString()}</p>
               </div>
               {/* Score improvement insights */}

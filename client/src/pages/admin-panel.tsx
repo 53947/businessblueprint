@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Header } from "@/components/header";
+import { getDisplayScore } from "@shared/score-utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -685,7 +686,7 @@ export default function AdminPanel() {
                               </p>
                             </div>
                             {assessment.digitalScore && (
-                              <Badge variant="secondary">{70 + Math.round((assessment.digitalScore || 0) / 2)}/140</Badge>
+                              <Badge variant="secondary">{getDisplayScore(assessment.digitalScore || 0)}/140</Badge>
                             )}
                           </div>
                         ))}
@@ -1063,7 +1064,7 @@ export default function AdminPanel() {
                                 {assessment.digitalScore ? (
                                   <div className="flex items-center gap-2">
                                     <TrendingUp className="h-4 w-4 text-blue-500" />
-                                    <span className="font-bold text-blue-600">{70 + Math.round((assessment.digitalScore || 0) / 2)}/140</span>
+                                    <span className="font-bold text-blue-600">{getDisplayScore(assessment.digitalScore || 0)}/140</span>
                                   </div>
                                 ) : (
                                   <span className="text-gray-400 text-sm">N/A</span>

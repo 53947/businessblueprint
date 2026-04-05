@@ -268,7 +268,7 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
           <div class="timeline-icon">1</div>
           <div>
             <h3>AI Analysis (2-3 minutes)</h3>
-            <p>Our AI is analyzing your business using Google Business Intelligence and industry best practices to identify growth opportunities.</p>
+            <p>Our AI is scanning your online presence across directories, reviews, social media, and your website to identify growth opportunities.</p>
           </div>
         </div>
         
@@ -283,8 +283,8 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
         <div class="timeline-item">
           <div class="timeline-icon">3</div>
           <div>
-            <h3>Expert Review & Delivery (within 24 hours)</h3>
-            <p>Our team reviews the AI prescription to ensure quality and relevance, then delivers it to your client portal.</p>
+            <h3>Your Prescription is Ready</h3>
+            <p>Your personalized Digital IQ prescription with specific, prioritized recommendations is delivered to your portal and email.</p>
           </div>
         </div>
       </div>

@@ -445,15 +445,15 @@ export function Header({ showNavigation = true }: HeaderProps) {
 
                 <a
                   href={isLoggedIn ? "/respond/dashboard" : "/login?redirect=/respond/dashboard"}
-                  className="flex items-center px-2 py-1.5 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs transition-colors"
+                  className="flex items-center px-2 py-1.5 bg-white border border-[#001882] hover:bg-blue-50 text-[#001882] rounded-md font-bold text-xs transition-colors"
                   data-testid="button-quick-respond"
                 >
-                  Inbox
+                  <span style={{ color: "#09080E" }}>/</span>&nbsp;respond
                 </a>
 
                 <a
                   href={isLoggedIn ? "/assessment" : "/login?redirect=/assessment"}
-                  className="flex items-center px-2 py-1.5 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs font-bold transition-all whitespace-nowrap"
+                  className="flex items-center px-2 py-1.5 border-2 border-[#960D71] text-[#960D71] bg-transparent hover:bg-[#960D71] hover:text-white rounded-md text-xs font-bold transition-all whitespace-nowrap"
                   data-testid="button-digital-iq"
                 >
                   Digital IQ
@@ -476,8 +476,8 @@ export function Header({ showNavigation = true }: HeaderProps) {
         <div className="lg:hidden flex items-center justify-between gap-2 h-16 border-t border-gray-200 flex-wrap p-2">
           {showNavigation && (
             <>
-              <a href={isLoggedIn ? "/respond/dashboard" : "/login?redirect=/respond/dashboard"} className="flex-1 px-2 py-2 bg-white border border-blue-600 hover:bg-blue-50 text-blue-600 rounded-md font-bold text-xs text-center transition-colors" data-testid="button-respond-mobile">
-                Inbox
+              <a href={isLoggedIn ? "/respond/dashboard" : "/login?redirect=/respond/dashboard"} className="flex-1 px-2 py-2 bg-white border border-[#001882] hover:bg-blue-50 text-[#001882] rounded-md font-bold text-xs text-center transition-colors" data-testid="button-respond-mobile">
+                <span style={{ color: "#09080E" }}>/</span>&nbsp;respond
               </a>
               {isLoggedIn ? (
                 <DropdownMenu>
