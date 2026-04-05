@@ -85,34 +85,34 @@ export default function Home() {
               </div>
             </div>
             <div className="lg:text-center">
-              <div className="p-4 rounded-xl shadow-lg relative overflow-hidden" style={{ backgroundColor: "#064A6C" }}>
-                {/* Blueprint Grid Lines — Triad White on green */}
+              <div className="p-4 rounded-xl shadow-lg relative overflow-hidden" style={{ backgroundColor: "#E9ECF0" }}>
+                {/* Blueprint Grid Lines — #064A6C on Triad White */}
                 <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.25 }}>
                   <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                       <pattern id="blueprint-grid" width="30" height="30" patternUnits="userSpaceOnUse">
-                        <path d="M 0 0 L 30 0" fill="none" stroke="#E9ECF0" strokeWidth="1"/>
-                        <path d="M 0 0 L 0 30" fill="none" stroke="#E9ECF0" strokeWidth="1"/>
+                        <path d="M 0 0 L 30 0" fill="none" stroke="#064A6C" strokeWidth="1"/>
+                        <path d="M 0 0 L 0 30" fill="none" stroke="#064A6C" strokeWidth="1"/>
                       </pattern>
                     </defs>
                     <rect width="100%" height="100%" fill="url(#blueprint-grid)" />
                   </svg>
                 </div>
 
-                <h3 className="text-xl font-bold mb-2 relative z-10" style={{ color: "#E9ECF0" }}>A Blueprint to Your Growth</h3>
-                <p className="text-xs mb-4 relative z-10" style={{ color: "rgba(233,236,240,0.8)" }}>
+                <h3 className="text-xl font-bold mb-2 relative z-10" style={{ color: "#09080E" }}>A Blueprint to Your Growth</h3>
+                <p className="text-xs mb-4 relative z-10" style={{ color: "rgba(9,8,14,0.7)" }}>
                   Custom digital growth plan built from AI analysis of your business.
                 </p>
                 <div className="space-y-3 relative z-10">
                   {[
                     { title: "Scan Your Digital Presence", titleJsx: null, desc: "Free. Five minutes. We score your website, your reviews, your social presence, and how consistently your business information appears across the web.", descJsx: null, color: "#A00028" },
                     { title: "Get Your Custom Blueprint", titleJsx: null, desc: "Your scores tell the AI what's broken. It builds a prescription specific to your business — not a generic checklist, not a sales pitch.", descJsx: null, color: "#FFC107" },
-                    { title: "", titleJsx: <>Build Your Foundation — <Link href="/connect" className="hover:underline" style={{ color: "#E9ECF0" }}>/ connect</Link></>, desc: "", descJsx: <><Link href="/connect" className="hover:underline" style={{ color: "#E9ECF0" }}>/ connect</Link> is your CRM — the central record for every customer, conversation, and deal. Every app you activate feeds into it automatically.</>, color: "#008060" },
-                    { title: "", titleJsx: <>Own Your Local Presence — <Link href="/anchor" className="hover:underline" style={{ color: "#E9ECF0" }}>/ anchor suite</Link></>, desc: "Claim your Google Business listing. Register your D&B DUNS number. Get listed everywhere your customers are looking — all from one place.", descJsx: null, color: "#2073E3" },
-                    { title: "", titleJsx: <>Activate Your Communications — <Link href="/compass" className="hover:underline" style={{ color: "#E9ECF0" }}>/ compass suite</Link></>, desc: "Email campaigns, live chat on your website, one inbox for every message channel, and social media scheduling — all connected, all talking to each other.", descJsx: null, color: "#F97316" },
-                    { title: "", titleJsx: <>Never Grow Alone — <Link href="/coach-blue" className="hover:underline" style={{ color: "#E9ECF0" }}>Coach Blue</Link></>, desc: "", descJsx: <><Link href="/coach-blue" className="hover:underline" style={{ color: "#E9ECF0" }}>Coach Blue</Link> watches your data, guides your setup, and tells you exactly what needs attention before it becomes a problem.</>, color: "#0000FF", isPng: true },
+                    { title: "", titleJsx: <>Build Your Foundation — <Link href="/connect" className="hover:underline" style={{ color: "#064A6C" }}>/ connect</Link></>, desc: "", descJsx: <><Link href="/connect" className="hover:underline" style={{ color: "#064A6C" }}>/ connect</Link> is your CRM — the central record for every customer, conversation, and deal. Every app you activate feeds into it automatically.</>, color: "#008060" },
+                    { title: "", titleJsx: <>Own Your Local Presence — <Link href="/anchor" className="hover:underline" style={{ color: "#064A6C" }}>/ anchor suite</Link></>, desc: "Claim your Google Business listing. Register your D&B DUNS number. Get listed everywhere your customers are looking — all from one place.", descJsx: null, color: "#2073E3" },
+                    { title: "", titleJsx: <>Activate Your Communications — <Link href="/compass" className="hover:underline" style={{ color: "#064A6C" }}>/ compass suite</Link></>, desc: "Email campaigns, live chat on your website, one inbox for every message channel, and social media scheduling — all connected, all talking to each other.", descJsx: null, color: "#F97316" },
+                    { title: "", titleJsx: <>Never Grow Alone — <Link href="/coach-blue" className="hover:underline" style={{ color: "#064A6C" }}>Coach Blue</Link></>, desc: "", descJsx: <><Link href="/coach-blue" className="hover:underline" style={{ color: "#064A6C" }}>Coach Blue</Link> watches your data, guides your setup, and tells you exactly what needs attention before it becomes a problem.</>, color: "#0000FF", isPng: true },
                   ].map((step, i) => (
-                    <div key={i} className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: step.color, backgroundColor: "rgba(6,74,108,0.7)" }}>
+                    <div key={i} className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: step.color, backgroundColor: "rgba(233,236,240,0.85)" }}>
                       <div className="flex-shrink-0 -mt-2">
                         {step.isPng ? (
                           <img src={coachBlueStepIcon} alt="Coach Blue" width={40} height={40} style={{ borderRadius: 8, objectFit: "contain" }} />
@@ -121,14 +121,14 @@ export default function Home() {
                         )}
                       </div>
                       <div className="text-left">
-                        <div className="font-bold text-sm" style={{ color: "#E9ECF0" }}>Step {i + 1} — {step.titleJsx || step.title}</div>
-                        <p className="text-xs" style={{ color: "rgba(233,236,240,0.85)" }}>{step.descJsx || step.desc}</p>
+                        <div className="font-bold text-sm" style={{ color: "#09080E" }}>Step {i + 1} — {step.titleJsx || step.title}</div>
+                        <p className="text-xs" style={{ color: "rgba(9,8,14,0.75)" }}>{step.descJsx || step.desc}</p>
                       </div>
                     </div>
                   ))}
                 </div>
                 <div className="text-center mt-3">
-                  <a href="/journey" style={{ color: '#E9ECF0', fontSize: 13, fontWeight: 600 }}>
+                  <a href="/journey" style={{ color: '#064A6C', fontSize: 13, fontWeight: 600 }}>
                     Read the full story →
                   </a>
                 </div>
