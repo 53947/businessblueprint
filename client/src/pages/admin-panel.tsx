@@ -685,7 +685,7 @@ export default function AdminPanel() {
                               </p>
                             </div>
                             {assessment.digitalScore && (
-                              <Badge variant="secondary">{assessment.digitalScore}/100</Badge>
+                              <Badge variant="secondary">{70 + Math.round((assessment.digitalScore || 0) / 2)}/140</Badge>
                             )}
                           </div>
                         ))}
@@ -1063,7 +1063,7 @@ export default function AdminPanel() {
                                 {assessment.digitalScore ? (
                                   <div className="flex items-center gap-2">
                                     <TrendingUp className="h-4 w-4 text-blue-500" />
-                                    <span className="font-bold text-blue-600">{assessment.digitalScore}/100</span>
+                                    <span className="font-bold text-blue-600">{70 + Math.round((assessment.digitalScore || 0) / 2)}/140</span>
                                   </div>
                                 ) : (
                                   <span className="text-gray-400 text-sm">N/A</span>

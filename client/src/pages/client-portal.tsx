@@ -246,7 +246,7 @@ export default function ClientPortal() {
             <CardContent className="p-4">
               <div className="text-center mb-3">
                 <h2 className="text-lg font-bold mb-1">Digital IQ</h2>
-                <div className="text-4xl font-bold mb-1">{clientData.digitalScore}</div>
+                <div className="text-4xl font-bold mb-1">{70 + Math.round((clientData.digitalScore || 0) / 2)}</div>
                 <p className="text-xs text-blue-100">Updated {new Date(clientData.lastUpdated).toLocaleDateString()}</p>
               </div>
               {/* Score improvement insights */}

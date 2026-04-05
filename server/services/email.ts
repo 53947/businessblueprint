@@ -530,9 +530,10 @@ export class EmailService {
     digitalScore?: number;
   }): string {
     const portalUrl = `${process.env.FRONTEND_URL || 'https://businessblueprint.io'}/portal/prescriptions`;
-    const scoreSection = data.digitalScore ? `
+    const displayScore = data.digitalScore ? 70 + Math.round(data.digitalScore / 2) : null;
+    const scoreSection = displayScore ? `
             <div style="background: rgba(255,255,255,0.2); display: inline-block; padding: 15px 30px; border-radius: 25px; margin: 15px 0; border: 2px solid rgba(255,255,255,0.3);">
-                <div style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; font-size: 36px; font-weight: bold;">${data.digitalScore}</div>
+                <div style="font-family: 'Archivo Semi Expanded', 'Archivo', Arial, sans-serif; font-size: 36px; font-weight: bold;">${displayScore}</div>
                 <div style="font-size: 14px;">Your Digital IQ Score</div>
             </div>` : '';
     
@@ -836,7 +837,7 @@ export class EmailService {
       <!-- HEADER -->
       <div class="header">
         <h1>Your Digital IQ Assessment Results</h1>
-        <div class="score">${data.digitalScore}<span style="font-size: 24px; opacity: 0.8;">/140</span></div>
+        <div class="score">${70 + Math.round((data.digitalScore || 0) / 2)}<span style="font-size: 24px; opacity: 0.8;">/140</span></div>
         <div class="score-label">Digital IQ Score</div>
       </div>
       
@@ -1261,7 +1262,7 @@ export class EmailService {
         <div class="header">
             <h1>📊 Your Digital Growth Plan is Ready!</h1>
             <p style="font-size: 18px; margin-top: 10px;">${data.businessName}</p>
-            <div class="score-badge">Digital IQ Score: ${data.digitalScore}</div>
+            <div class="score-badge">Digital IQ Score: ${70 + Math.round((data.digitalScore || 0) / 2)}</div>
         </div>
         
         <div class="content">

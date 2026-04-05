@@ -212,8 +212,7 @@ export default function AssessmentCheckoutPage() {
                       <p className="text-sm text-gray-600 dark:text-gray-400">Digital IQ Score</p>
                     </div>
                     <div className="text-right">
-                      <div className="text-3xl font-bold text-blue-600" data-testid="text-digital-score">{assessment.digitalScore}</div>
-                      <Badge variant="outline" data-testid="badge-grade">{assessment.grade}</Badge>
+                      <div className="text-3xl font-bold text-blue-600" data-testid="text-digital-score">{70 + Math.round((assessment.digitalScore || 0) / 2)}</div>
                     </div>
                   </div>
                   <Separator />

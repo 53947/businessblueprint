@@ -34,16 +34,14 @@ const DIGITAL_IQ_AREAS = [
   { number: 9, title: 'CRM & Organization', points: 12, desc: 'Do you track customer relationships? Are you organized and systematic?' },
 ];
 
-const GRADE_RANGES = [
-  { grade: 'A+', range: '126-140', label: 'Excellent', color: 'bg-green-500' },
-  { grade: 'A', range: '112-125', label: 'Strong', color: 'bg-green-500' },
-  { grade: 'B+', range: '98-111', label: 'Good', color: 'bg-blue-500' },
-  { grade: 'B', range: '84-97', label: 'Above Average', color: 'bg-blue-500' },
-  { grade: 'C+', range: '70-83', label: 'Average', color: 'bg-orange-500' },
-  { grade: 'C', range: '56-69', label: 'Below Average', color: 'bg-orange-500' },
-  { grade: 'D+', range: '42-55', label: 'Needs Work', color: 'bg-red-500' },
-  { grade: 'D', range: '28-41', label: 'Poor', color: 'bg-red-500' },
-  { grade: 'F', range: '0-27', label: 'Critical', color: 'bg-red-600' },
+const SCORE_RANGES = [
+  { range: '130-140', label: 'Exceptional', color: 'bg-green-600' },
+  { range: '120-129', label: 'Excellent', color: 'bg-green-500' },
+  { range: '110-119', label: 'Strong', color: 'bg-blue-500' },
+  { range: '100-109', label: 'Good', color: 'bg-blue-500' },
+  { range: '90-99', label: 'Average', color: 'bg-orange-400' },
+  { range: '80-89', label: 'Below Average', color: 'bg-orange-500' },
+  { range: '70-79', label: 'Needs Work', color: 'bg-red-500' },
 ];
 
 const FAQ_ITEMS = [
@@ -233,15 +231,14 @@ export default function KnowledgeBase() {
             Understanding Your Score
           </h2>
 
-          <div className="grid grid-cols-3 md:grid-cols-9 gap-2 md:gap-4">
-            {GRADE_RANGES.map((grade) => (
-              <Card key={grade.grade} className="text-center" data-testid={`card-grade-${grade.grade}`}>
+          <div className="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-4">
+            {SCORE_RANGES.map((item) => (
+              <Card key={item.range} className="text-center" data-testid={`card-score-${item.range}`}>
                 <CardContent className="p-3 md:pt-6">
-                  <div className={`inline-block px-3 py-1 md:px-4 md:py-2 rounded-full text-white font-bold text-lg md:text-2xl mb-1 md:mb-2 ${grade.color}`}>
-                    {grade.grade}
+                  <div className={`inline-block px-3 py-1 md:px-4 md:py-2 rounded-full text-white font-bold text-sm md:text-lg mb-1 md:mb-2 ${item.color}`}>
+                    {item.range}
                   </div>
-                  <p className="text-xs text-gray-600 hidden md:block">{grade.range}</p>
-                  <p className="text-xs md:text-sm font-semibold text-[#0000FF]">{grade.label}</p>
+                  <p className="text-xs md:text-sm font-semibold text-[#0000FF]">{item.label}</p>
                 </CardContent>
               </Card>
             ))}

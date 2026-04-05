@@ -111,7 +111,7 @@ export default function FindResults() {
         return (
           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
             <CheckCircle className="w-4 h-4 mr-1" />
-            Score: {score || "N/A"}
+            Score: {score ? 70 + Math.round(score / 2) : "N/A"}
           </span>
         );
       case "analyzing":

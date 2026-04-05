@@ -81,37 +81,16 @@ function getStatusBadge(status: string) {
   }
 }
 
-function getGradeInfo(score: number): { grade: string; color: string; textColor: string } {
-  if (score >= 126) return { grade: 'A+', color: 'bg-green-500', textColor: 'text-green-600' };
-  if (score >= 112) return { grade: 'A', color: 'bg-green-500', textColor: 'text-green-600' };
-  if (score >= 98) return { grade: 'B+', color: 'bg-blue-500', textColor: 'text-blue-600' };
-  if (score >= 84) return { grade: 'B', color: 'bg-blue-500', textColor: 'text-blue-600' };
-  if (score >= 70) return { grade: 'C+', color: 'bg-orange-500', textColor: 'text-orange-600' };
-  if (score >= 56) return { grade: 'C', color: 'bg-orange-500', textColor: 'text-orange-600' };
-  if (score >= 42) return { grade: 'D+', color: 'bg-red-500', textColor: 'text-red-600' };
-  if (score >= 28) return { grade: 'D', color: 'bg-red-500', textColor: 'text-red-600' };
-  return { grade: 'F', color: 'bg-red-600', textColor: 'text-red-600' };
+// Digital IQ display: raw 0-140 → displayed 70-140
+function getDisplayScore(rawScore: number): number {
+  return 70 + Math.round(rawScore / 2);
 }
 
-function getGradeDescription(grade: string): string {
-  switch (grade) {
-    case 'A+':
-    case 'A':
-      return 'Outstanding digital presence';
-    case 'B+':
-    case 'B':
-      return 'Strong foundation, room to grow';
-    case 'C+':
-    case 'C':
-      return 'Visible gaps costing you customers';
-    case 'D+':
-    case 'D':
-      return 'Critical gaps — prioritize immediately';
-    case 'F':
-      return 'Significant digital presence issues';
-    default:
-      return '';
-  }
+function getScoreColor(displayScore: number): string {
+  if (displayScore >= 120) return 'text-green-600';
+  if (displayScore >= 100) return 'text-blue-600';
+  if (displayScore >= 85) return 'text-orange-600';
+  return 'text-red-600';
 }
 
 function PrescriptionsList() {
@@ -304,7 +283,7 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
   }
 
   const { prescription, assessment, recommendations } = data;
-  const gradeInfo = assessment?.digitalScore ? getGradeInfo(assessment.digitalScore) : null;
+  const displayScore = assessment?.digitalScore ? getDisplayScore(assessment.digitalScore) : null;
   const highPriority = recommendations.filter(r => r.priority === 'high' || r.priority === 'critical');
   const mediumPriority = recommendations.filter(r => r.priority === 'medium');
   const lowPriority = recommendations.filter(r => r.priority === 'low');
@@ -336,19 +315,13 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
                 </p>
               )}
             </div>
-            {assessment?.digitalScore && gradeInfo && (
+            {assessment?.digitalScore && displayScore && (
               <div className="text-center bg-white/10 rounded-xl p-4 backdrop-blur-sm">
                 <div className="text-sm text-blue-100 mb-1">Digital IQ Score</div>
                 <div className="text-4xl font-bold font-['Archivo_Semi_Expanded',sans-serif]">
-                  {assessment.digitalScore}
+                  {displayScore}
                 </div>
                 <div className="text-sm text-blue-100">out of 140</div>
-                <Badge className={`mt-2 ${gradeInfo.color} text-white`}>
-                  Grade: {gradeInfo.grade}
-                </Badge>
-                <div className="text-xs text-blue-200 text-center mt-1">
-                  {getGradeDescription(gradeInfo.grade)}
-                </div>
               </div>
             )}
           </div>
@@ -379,11 +352,10 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
       <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-8">
         <h3 className="text-sm font-semibold text-blue-900 mb-2">Understanding Your Digital IQ Score</h3>
         <p className="text-sm text-blue-800 leading-relaxed">
-          Your Digital IQ Score works like a traditional IQ test — it gives you a number from 0 to 140
-          that tells you exactly where your business stands online. A score below 70 means your digital
-          presence has critical gaps that are costing you customers right now. A score between 70 and 100
-          means you have a solid foundation with room to grow. A score above 100 means you are outperforming
-          most businesses in your category.
+          Your Digital IQ Score tells you exactly where your business stands online, on a scale from 70 to 140.
+          A score below 85 means your digital presence has critical gaps that are costing you customers right now.
+          A score between 85 and 110 means you have a solid foundation with room to grow. A score above 110
+          means you are outperforming most businesses in your category.
         </p>
         <p className="text-sm text-blue-800 leading-relaxed mt-2">
           The recommendations below are ordered by impact — the ones that will move your score the most
@@ -400,23 +372,24 @@ function PrescriptionDetail({ prescriptionId, token }: { prescriptionId?: string
         const avgImprovement = highPriorityWithScores.length > 0
           ? highPriorityWithScores.reduce((sum, r) => sum + (r.scoreImprovement || 0), 0) / highPriorityWithScores.length
           : 0;
-        const projectedOverall = Math.min(140, Math.round(assessment.digitalScore + avgImprovement));
-        const currentGrade = getGradeInfo(assessment.digitalScore);
+        const projectedRaw = Math.min(140, Math.round(assessment.digitalScore + avgImprovement));
+        const currentDisplay = getDisplayScore(assessment.digitalScore);
+        const projectedDisplay = getDisplayScore(projectedRaw);
 
         return avgImprovement > 0 ? (
           <div className="bg-white rounded-xl p-6 border border-gray-200 mt-4">
             <div className="text-xs uppercase tracking-widest text-gray-500 mb-2">Your Projected Score</div>
             <div className="flex items-center justify-center gap-6">
               <div className="text-center">
-                <div className={`text-4xl font-bold font-['Archivo_Semi_Expanded',sans-serif] ${currentGrade.textColor}`}>
-                  {assessment.digitalScore}
+                <div className={`text-4xl font-bold font-['Archivo_Semi_Expanded',sans-serif] ${getScoreColor(currentDisplay)}`}>
+                  {currentDisplay}
                 </div>
                 <div className="text-xs text-gray-500 mt-1">Today</div>
               </div>
               <span className="text-gray-400 text-2xl">→</span>
               <div className="text-center">
                 <div className="text-4xl font-bold font-['Archivo_Semi_Expanded',sans-serif] text-green-600">
-                  {projectedOverall}
+                  {projectedDisplay}
                 </div>
                 <div className="text-xs text-gray-500 mt-1">After Your Blueprint</div>
               </div>

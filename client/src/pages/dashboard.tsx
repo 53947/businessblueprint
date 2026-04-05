@@ -267,20 +267,18 @@ export default function Dashboard() {
     }
   };
 
-  // Digital IQ calculation functions
-  const getDigitalIQ = (score: number): number => {
-    // Convert 0-100 score to IQ scale (70-140 range)
-    // 100 = 100 IQ (average), scale appropriately
-    return Math.round(70 + (score * 0.7));
+  // Digital IQ display: raw 0-140 → displayed 70-140
+  const getDisplayScore = (rawScore: number): number => {
+    return 70 + Math.round(rawScore / 2);
   };
 
-  const getDigitalIQDescription = (iq: number): { label: string; color: string } => {
-    if (iq >= 130) return { label: "Digital Genius", color: "text-purple-600" };
-    if (iq >= 120) return { label: "Digital Expert", color: "text-blue-600" };
-    if (iq >= 110) return { label: "Above Average Digital Presence", color: "text-green-600" };
-    if (iq >= 90) return { label: "Average Digital Presence", color: "text-gray-600" };
-    if (iq >= 80) return { label: "Below Average", color: "text-yellow-600" };
-    if (iq >= 70) return { label: "Significant Digital Gaps", color: "text-orange-600" };
+  const getDigitalIQDescription = (displayScore: number): { label: string; color: string } => {
+    if (displayScore >= 130) return { label: "Digital Genius", color: "text-purple-600" };
+    if (displayScore >= 120) return { label: "Digital Expert", color: "text-blue-600" };
+    if (displayScore >= 110) return { label: "Above Average Digital Presence", color: "text-green-600" };
+    if (displayScore >= 90) return { label: "Average Digital Presence", color: "text-gray-600" };
+    if (displayScore >= 80) return { label: "Below Average", color: "text-yellow-600" };
+    if (displayScore >= 70) return { label: "Significant Digital Gaps", color: "text-orange-600" };
     return { label: "Major Digital Presence Issues", color: "text-red-600" };
   };
 
@@ -495,13 +493,13 @@ export default function Dashboard() {
                 {/* Digital IQ Section */}
                 <div className="text-center pb-4 border-b border-blue-200">
                   <div className="text-6xl font-bold text-blue-600 mb-2">
-                    {getDigitalIQ(assessment.digitalScore || 0)}
+                    {getDisplayScore(assessment.digitalScore || 0)}
                   </div>
                   <div className="text-2xl text-gray-600 mb-1">
-                    {getDigitalIQ(assessment.digitalScore || 0)}/{getDigitalIQ(100)}
+                    {getDisplayScore(assessment.digitalScore || 0)}/140
                   </div>
-                  <div className={`text-lg font-semibold mb-1 ${getDigitalIQDescription(getDigitalIQ(assessment.digitalScore || 0)).color}`}>
-                    {getDigitalIQDescription(getDigitalIQ(assessment.digitalScore || 0)).label}
+                  <div className={`text-lg font-semibold mb-1 ${getDigitalIQDescription(getDisplayScore(assessment.digitalScore || 0)).color}`}>
+                    {getDigitalIQDescription(getDisplayScore(assessment.digitalScore || 0)).label}
                   </div>
                   <p className="text-sm text-gray-700 leading-relaxed">
                     {analysisResults?.summary || "Digital assessment analysis in progress..."}
