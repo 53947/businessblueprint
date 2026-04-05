@@ -344,13 +344,19 @@ export async function sendAssessmentConfirmationEmail(assessment: AssessmentData
       return { success: false, error: 'Email service not configured' };
     }
     
+    console.log('[Assessment Email] Sending from:', resendClient.fromEmail, 'to:', assessment.email);
     const result = await resendClient.client.emails.send({
       from: resendClient.fromEmail,
       to: assessment.email,
       subject: subject,
       html: htmlBody,
     });
-    
+
+    if (result.error) {
+      console.error('[Assessment Email] Resend API ERROR:', JSON.stringify(result.error));
+      return { success: false, error: JSON.stringify(result.error) };
+    }
+
     await db.insert(emailLogs).values({
       recipientEmail: assessment.email,
       recipientName: assessment.businessName || null,
@@ -362,7 +368,7 @@ export async function sendAssessmentConfirmationEmail(assessment: AssessmentData
       resendApiId: result.data?.id || null,
       sentAt: new Date(),
     });
-    
+
     console.log(`[Assessment Email] Confirmation sent to ${assessment.email}, Resend ID: ${result.data?.id}`);
     return { success: true };
     
