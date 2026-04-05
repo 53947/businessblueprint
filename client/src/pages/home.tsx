@@ -32,24 +32,37 @@ export default function Home() {
       <Header showNavigation={true} />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-blue-50 via-white to-gray-50 py-12 lg:py-20 border-b-[0.5px] border-[#09080E]/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-12 lg:py-20 border-b-[0.5px] border-[#09080E]/50 overflow-hidden" style={{ backgroundColor: "#E9ECF0" }}>
+        {/* Blueprint Grid Lines — full section */}
+        <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.25 }}>
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="blueprint-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                <path d="M 0 0 L 30 0" fill="none" stroke="#064A6C" strokeWidth="1"/>
+                <path d="M 0 0 L 0 30" fill="none" stroke="#064A6C" strokeWidth="1"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#blueprint-grid)" />
+          </svg>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
             <div className="mb-8 lg:mb-0">
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 className="text-3xl lg:text-4xl font-bold mb-6 leading-tight" style={{ color: "#09080E" }}>
                 We Assess. We Prescribe. You Grow.
               </h1>
-              
+
               {/* Desktop copy */}
-              <p className="hidden lg:block text-xl text-gray-600 mb-8 leading-relaxed">
+              <p className="hidden lg:block text-xl mb-8 leading-relaxed" style={{ color: "rgba(9,8,14,0.7)" }}>
                 Your full digital footprint is scored across six categories — website performance, reviews, social media presence, local search rankings, directory accuracy, and overall visibility. Our AI then delivers your prescribed Digital Blueprint — a custom, data-driven plan with the exact apps, actions, and pricing your business needs to grow.
               </p>
-              
+
               {/* Mobile copy */}
-              <p className="lg:hidden text-xl text-gray-600 mb-8 leading-relaxed">
+              <p className="lg:hidden text-xl mb-8 leading-relaxed" style={{ color: "rgba(9,8,14,0.7)" }}>
                 Your digital footprint scored across six categories. Get your prescribed Digital Blueprint — the apps, actions, and pricing your business needs to grow.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Button
                   onClick={startAssessment}
@@ -73,37 +86,24 @@ export default function Home() {
                   </Button>
                 </Link>
               </div>
-              <div className="flex items-center space-x-6 text-sm text-gray-500">
+              <div className="flex items-center space-x-6 text-sm" style={{ color: "rgba(9,8,14,0.6)" }}>
                 <div className="flex items-center">
-                  <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" />
+                  <CheckCircle2 className="w-4 h-4 text-green-600 mr-2" />
                   No Credit Card Required
                 </div>
                 <div className="flex items-center">
-                  <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" />
+                  <CheckCircle2 className="w-4 h-4 text-green-600 mr-2" />
                   100% Secure
                 </div>
               </div>
             </div>
             <div className="lg:text-center">
-              <div className="p-4 rounded-xl shadow-lg relative overflow-hidden" style={{ backgroundColor: "#E9ECF0" }}>
-                {/* Blueprint Grid Lines — #064A6C on Triad White */}
-                <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.25 }}>
-                  <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                      <pattern id="blueprint-grid" width="30" height="30" patternUnits="userSpaceOnUse">
-                        <path d="M 0 0 L 30 0" fill="none" stroke="#064A6C" strokeWidth="1"/>
-                        <path d="M 0 0 L 0 30" fill="none" stroke="#064A6C" strokeWidth="1"/>
-                      </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#blueprint-grid)" />
-                  </svg>
-                </div>
-
-                <h3 className="text-xl font-bold mb-2 relative z-10" style={{ color: "#09080E" }}>A Blueprint to Your Growth</h3>
-                <p className="text-xs mb-4 relative z-10" style={{ color: "rgba(9,8,14,0.7)" }}>
+              <div className="p-4">
+                <h3 className="text-xl font-bold mb-2" style={{ color: "#09080E" }}>A Blueprint to Your Growth</h3>
+                <p className="text-xs mb-4" style={{ color: "rgba(9,8,14,0.7)" }}>
                   Custom digital growth plan built from AI analysis of your business.
                 </p>
-                <div className="space-y-3 relative z-10">
+                <div className="space-y-3">
                   {[
                     { title: "Scan Your Digital Presence", titleJsx: null, desc: "Free. Five minutes. We score your website, your reviews, your social presence, and how consistently your business information appears across the web.", descJsx: null, color: "#A00028" },
                     { title: "Get Your Custom Blueprint", titleJsx: null, desc: "Your scores tell the AI what's broken. It builds a prescription specific to your business — not a generic checklist, not a sales pitch.", descJsx: null, color: "#FFC107" },
@@ -112,7 +112,7 @@ export default function Home() {
                     { title: "", titleJsx: <>Activate Your Communications — <Link href="/compass" className="hover:underline" style={{ color: "#064A6C" }}>/ compass suite</Link></>, desc: "Email campaigns, live chat on your website, one inbox for every message channel, and social media scheduling — all connected, all talking to each other.", descJsx: null, color: "#F97316" },
                     { title: "", titleJsx: <>Never Grow Alone — <Link href="/coach-blue" className="hover:underline" style={{ color: "#064A6C" }}>Coach Blue</Link></>, desc: "", descJsx: <><Link href="/coach-blue" className="hover:underline" style={{ color: "#064A6C" }}>Coach Blue</Link> watches your data, guides your setup, and tells you exactly what needs attention before it becomes a problem.</>, color: "#0000FF", isPng: true },
                   ].map((step, i) => (
-                    <div key={i} className="flex items-start gap-2 p-2 rounded-lg border-l-4" style={{ borderColor: step.color, backgroundColor: "rgba(233,236,240,0.85)" }}>
+                    <div key={i} className="flex items-start gap-2 p-2 rounded-lg border-l-4 backdrop-blur-sm" style={{ borderColor: step.color, backgroundColor: "rgba(255,255,255,0.5)" }}>
                       <div className="flex-shrink-0 -mt-2">
                         {step.isPng ? (
                           <img src={coachBlueStepIcon} alt="Coach Blue" width={40} height={40} style={{ borderRadius: 8, objectFit: "contain" }} />
