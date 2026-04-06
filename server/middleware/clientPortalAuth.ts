@@ -27,8 +27,11 @@ export async function requireClientPortalAccess(req: any, res: Response, next: N
       return next();
     }
 
-    // Extract clientId from session
-    const sessionClientId = parseInt((req.session as any).clientId || '0');
+    // Internal server-to-server calls use x-client-id header
+    const internalClientId = req.headers['x-client-id'] ? parseInt(req.headers['x-client-id'] as string) : 0;
+
+    // Extract clientId from session or internal header
+    const sessionClientId = parseInt((req.session as any).clientId || '0') || internalClientId;
     
     // Also check URL param if present (for endpoints like /api/clients/:id/dashboard)
     const urlClientId = req.params.id ? parseInt(req.params.id) : null;

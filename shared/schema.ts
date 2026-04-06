@@ -2886,6 +2886,7 @@ export const setupTasks = pgTable("setup_tasks", {
   title: text("title").notNull(),
   description: text("description"),
   estimatedMinutes: integer("estimated_minutes"),
+  suggestedDate: timestamp("suggested_date"),
 
   // Phase tracking
   phase: varchar("phase", { length: 20 }).notNull().default("setup"), // setup, maintenance, growth

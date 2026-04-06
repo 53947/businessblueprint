@@ -76,11 +76,16 @@ interface AnalysisResult {
   summary: string;
   strengths: string[];
   weaknesses: string[];
+  strengthsNarrative?: string;
+  prescriptionNarrative?: string;
   recommendations: {
     category: string;
+    appId?: string;
     title: string;
     description: string;
     priority: "high" | "medium" | "low";
+    estimatedPointIncrease?: number;
+    estimatedMinutes?: number;
     estimatedImpact: string;
     estimatedEffort: string;
     productId?: string;
@@ -95,7 +100,7 @@ interface AnalysisResult {
   };
 }
 
-export class OpenAIAnalysisService {
+export class AssessmentAIService {
   async analyzeBusinessPresence(input: BusinessAnalysisInput): Promise<AnalysisResult> {
     try {
       const provider = await aiSettingsService.getProvider('assessment');
@@ -107,7 +112,7 @@ export class OpenAIAnalysisService {
         messages: [
           {
             role: "system",
-            content: "You are a digital marketing expert specializing in local business online presence analysis. Provide detailed, actionable insights based on Google Business Profile data and general digital marketing best practices. Always respond with valid JSON."
+            content: "You are a senior digital strategist writing a personalized prescription for a small business owner. You are reviewing their entire digital presence — their website, their reviews, their listings, their social media, their communications, their advertising. You speak directly to the business owner in second person. You are respectful — this is their livelihood. You lead with what they are doing well before addressing what needs work. Your prescription reads like one flowing document, not a stack of cards. You never repeat yourself. Every recommendation is specific to THIS business based on the data provided. Always respond with valid JSON."
           },
           {
             role: "user",
@@ -197,12 +202,14 @@ Generate 12-18 PRODUCT-FOCUSED recommendations across these 9 areas:
 ★ BUNDLE RULE: ONLY recommend Compass Suite (productId: "compass") if business needs ALL 4 communication tools.
 ★ BUNDLE RULE: ONLY recommend Anchor Suite (productId: "anchor") if business needs multiple local presence tools (/ publish, / elevate, / optimize, / amplify).
 
+CRITICAL: Every recommendation MUST include an "appId" field matching one of: promote, post, elevate, respond, engage, publish, optimize, connect, amplify. This maps the recommendation to the correct scoring category and setup task.
+
 RESPOND WITH VALID JSON:
 {
   "digitalScore": number (0-140),
-  "summary": string (2-3 sentences emphasizing transformation potential),
-  "strengths": [array of current strengths - be specific],
-  "weaknesses": [array of gaps - tie each to a product that fixes it],
+  "summary": string (2-3 sentences — used internally, not shown to user),
+  "strengths": [array of current strengths — be specific to THIS business],
+  "weaknesses": [array of gaps — tie each to a product that fixes it],
   "areaScores": {
     "promote": number (0-15),
     "post": number (0-13),
@@ -214,12 +221,20 @@ RESPOND WITH VALID JSON:
     "connect": number (0-12),
     "amplify": number (0-12)
   },
+
+  "strengthsNarrative": "2-3 paragraphs acknowledging what this business is doing RIGHT. Be specific — reference their actual data (review response rate, posting frequency, website quality, etc.). Earn credibility before delivering hard truths. Write in second person ('you', 'your'). Tone: respectful, warm, professional. Never condescending. Never generic. If they have very few strengths, still find something genuine — they showed up and took the assessment, that alone is a step most business owners skip.",
+
+  "prescriptionNarrative": "One flowing document — NOT a list of cards. This is the prescription. Organized by setup cadence order: connect → publish → elevate → optimize → respond → engage → post → promote → amplify. ONLY include areas where the business needs improvement (skip areas where they score well). Each area transitions naturally into the next — like a doctor walking a patient through a treatment plan. For each area: explain WHY it matters to THEIR business (not generic), what specific action to take, which businessblueprint.io app handles it, and the estimated Digital IQ point increase (clearly marked as 'est.'). NEVER repeat yourself across areas. If two areas share context (e.g., listings and reviews both relate to local presence), acknowledge it briefly and move on. Write in second person. Tone: direct but respectful — you are critiquing someone's livelihood. 800-1500 words depending on how many areas need attention.",
+
   "recommendations": [
     {
       "category": "Email & SMS Marketing" | "Social Media Content" | "Reputation Management" | "Unified Inbox & Response" | "Live Chat" | "Business Listings & GBP" | "Website & SEO" | "CRM & Customer Management" | "Advertising & Paid Media",
-      "title": "The Prescription: [specific need statement]",
-      "description": "Detailed explanation of WHY this matters (revenue impact, customer experience, competitive advantage) and HOW our product solves it",
+      "appId": "promote" | "post" | "elevate" | "respond" | "engage" | "publish" | "optimize" | "connect" | "amplify",
+      "title": "Concise action statement — what to do (not 'The Prescription: ...')",
+      "description": "1-2 sentences explaining the specific action and expected outcome",
       "priority": "high" | "medium" | "low",
+      "estimatedPointIncrease": number (1-15, the estimated Digital IQ points this action adds),
+      "estimatedMinutes": number (estimated minutes to complete this task),
       "estimatedImpact": "High ROI" | "Medium ROI" | "Long-term benefit",
       "estimatedEffort": "Quick setup" | "1-2 days" | "1-2 weeks" | "Ongoing",
       "productId": "compass" | "anchor" | "promote" | "respond" | "post" | "engage" | "publish" | "elevate" | "optimize" | "amplify" | "connect" | "hostsblue" | "swipesblue",

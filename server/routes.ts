@@ -62,7 +62,7 @@ import {
   chatWidgetSettings,
 } from "@shared/schema";
 import { GoogleBusinessService } from "./services/googleBusiness";
-import { OpenAIAnalysisService } from "./services/openai";
+import { AssessmentAIService } from "./services/assessment-ai";
 import { ResendEmailService } from "./services/resend-email";
 import { inboxEmailService } from "./services/inbox-email";
 import { telnyxService } from "./services/telnyx";
@@ -168,7 +168,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const googleService = new GoogleBusinessService();
-  const aiService = new OpenAIAnalysisService();
+  const aiService = new AssessmentAIService();
   const emailService = new ResendEmailService();
 
   // Temporary setup endpoint to create demo accounts (for Meta review)
@@ -3268,7 +3268,7 @@ function calculateNextBillingDate(billingCycle: string): Date {
 async function processAssessmentAsync(
   assessmentId: number,
   googleService: GoogleBusinessService,
-  aiService: OpenAIAnalysisService,
+  aiService: AssessmentAIService,
   emailService: ResendEmailService,
   storage: any,
 ) {
@@ -3590,6 +3590,31 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
         }).returning();
 
         console.log(`[Assessment] Created prescription ID ${prescription.id} with token ${accessToken.substring(0, 8)}... for assessment ${assessmentId}`);
+
+        // Auto-generate Directions for Use tasks from this prescription
+        try {
+          const { setupTasks: setupTasksTable } = await import('@shared/schema');
+          const existingTasks = await db.select({ id: setupTasksTable.id })
+            .from(setupTasksTable)
+            .where(eq(setupTasksTable.clientId, client.id))
+            .limit(1);
+
+          if (existingTasks.length === 0) {
+            const generateUrl = `http://localhost:${process.env.PORT || 3000}/api/setup-tasks/generate`;
+            await fetch(generateUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-client-id': String(client.id),
+                'x-client-email': assessment.email,
+              },
+              body: JSON.stringify({ prescriptionId: prescription.id }),
+            });
+            console.log(`[Assessment] Auto-generated Directions for Use tasks for client ${client.id}`);
+          }
+        } catch (taskError) {
+          console.error('[Assessment] Failed to auto-generate tasks:', taskError);
+        }
       }
     } catch (prescriptionError) {
       console.error("[Assessment] Error creating prescription:", prescriptionError);

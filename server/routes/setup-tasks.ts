@@ -6,6 +6,7 @@ import {
   setupTaskEvents,
   clients,
   prescriptions,
+  recommendations as recommendationsTable,
   type SetupTask,
   type SetupNote,
 } from "@shared/schema";
@@ -151,6 +152,93 @@ setupTasksRouter.post("/generate", requireClientPortalAccess, async (req: any, r
           createdTasks.push(substepTask);
         }
       }
+    }
+
+    // Create tasks from AI recommendations for apps without knowledge base files
+    if (prescriptionId) {
+      const prescriptionRow = await db.select({ assessmentId: prescriptions.assessmentId })
+        .from(prescriptions)
+        .where(eq(prescriptions.id, prescriptionId))
+        .limit(1);
+
+      if (prescriptionRow[0]?.assessmentId) {
+        const recommendations = await db.select()
+          .from(recommendationsTable)
+          .where(eq(recommendationsTable.assessmentId, prescriptionRow[0].assessmentId));
+
+        const existingAppIds = new Set(
+          (await db.select({ appId: setupTasks.appId })
+            .from(setupTasks)
+            .where(eq(setupTasks.clientId, clientId))
+          ).map(t => t.appId)
+        );
+
+        const recsByApp = new Map<string, typeof recommendations>();
+        for (const rec of recommendations) {
+          const appId = (rec as any).productId;
+          if (!appId || existingAppIds.has(appId) || appId === 'compass' || appId === 'anchor' || appId === 'hostsblue' || appId === 'swipesblue') continue;
+          if (!recsByApp.has(appId)) recsByApp.set(appId, []);
+          recsByApp.get(appId)!.push(rec);
+        }
+
+        for (const [appId, recs] of Array.from(recsByApp.entries())) {
+          const cadenceStep = SETUP_CADENCE.find(c => c.appId === appId);
+          const baseOrder = cadenceStep ? cadenceStep.order * 100 : 900;
+
+          for (let i = 0; i < recs.length; i++) {
+            const rec = recs[i];
+            const [task] = await db.insert(setupTasks).values({
+              clientId,
+              appId,
+              stepId: `${appId}-rec-${i + 1}`,
+              status: "pending",
+              source: "prescription",
+              sourceId: prescriptionId,
+              cadenceOrder: baseOrder + (i + 1) * 10,
+              title: (rec as any).title || `Set up ${appId}`,
+              description: (rec as any).description || null,
+              estimatedMinutes: (rec as any).estimatedMinutes || 15,
+            }).returning();
+            createdTasks.push(task);
+          }
+        }
+      }
+    }
+
+    // Assign suggested dates — manageable cadence
+    const APP_DAY_OFFSETS: Record<string, number> = {
+      connect: 0,
+      publish: 4,
+      elevate: 9,
+      optimize: 12,
+      respond: 16,
+      engage: 20,
+      post: 24,
+      promote: 28,
+      amplify: 33,
+    };
+
+    const allClientTasks = await db.select()
+      .from(setupTasks)
+      .where(eq(setupTasks.clientId, clientId))
+      .orderBy(asc(setupTasks.cadenceOrder));
+
+    const baseDate = new Date();
+    baseDate.setHours(9, 0, 0, 0);
+    baseDate.setDate(baseDate.getDate() + 1);
+
+    const appTaskIndex = new Map<string, number>();
+    for (const task of allClientTasks) {
+      const dayOffset = APP_DAY_OFFSETS[task.appId] ?? 35;
+      const indexInApp = appTaskIndex.get(task.appId) || 0;
+      appTaskIndex.set(task.appId, indexInApp + 1);
+
+      const taskDate = new Date(baseDate);
+      taskDate.setDate(taskDate.getDate() + dayOffset + indexInApp);
+
+      await db.update(setupTasks)
+        .set({ suggestedDate: taskDate, updatedAt: new Date() })
+        .where(eq(setupTasks.id, task.id));
     }
 
     // Update client's setup phase
