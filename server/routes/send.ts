@@ -20,6 +20,7 @@ import { eq, desc, sql, and, inArray } from "drizzle-orm";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth";
 import { Resend } from "resend";
 import { telnyxService } from "../services/telnyx";
+import { logContactActivity } from "../services/timeline-logger";
 
 export function registerSendRoutes(app: Express) {
   // Create contact
@@ -1380,6 +1381,19 @@ export function registerSendRoutes(app: Express) {
                     .set({ status: "sent" })
                     .where(eq(sendCampaignSends.id, sendRecord.id));
                   emailsSent++;
+
+                  // Log to / connect timeline
+                  logContactActivity({
+                    clientId,
+                    contactId: contact.id,
+                    eventType: 'campaign_sent',
+                    title: `Email sent: "${subject}"`,
+                    description: `Campaign "${campaign.name}" delivered`,
+                    sourceApp: 'promote',
+                    sourceEntityType: 'email',
+                    sourceEntityId: String(campaignId),
+                    metadata: { campaignId, campaignName: campaign.name, subject },
+                  });
                 } catch (err) {
                   console.error(`[Campaign ${campaignId}] Email failed for ${contact.email}:`, err);
                   emailsFailed++;

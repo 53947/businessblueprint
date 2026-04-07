@@ -121,6 +121,8 @@ export async function publishPost(post: typeof contentPosts.$inferSelect) {
         hashtags: post.hashtags || undefined,
       });
       
+      // TODO: logContactActivity — log social_post_published when post is tied to a contact
+      // TODO: log social_like, social_comment, social_share when engagement comes from a known CRM contact
       if (result.success) {
         publishResults[platform] = {
           platformPostId: result.platformPostId,

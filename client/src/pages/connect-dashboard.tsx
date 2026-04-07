@@ -4745,6 +4745,20 @@ function TimelineView() {
     }
   };
 
+  const getSourceAppHex = (sourceApp: string | null): string => {
+    switch (sourceApp) {
+      case 'promote': return '#1844A6';
+      case 'respond': return '#001882';
+      case 'engage': return '#660099';
+      case 'post': return '#FF44CC';
+      case 'publish': return '#064A6C';
+      case 'elevate': return '#E9B307';
+      case 'optimize': return '#374151';
+      case 'amplify': return '#97ACCA';
+      default: return '#6B7280';
+    }
+  };
+
   const getSourceAppColor = (sourceApp: string | null) => {
     switch (sourceApp) {
       case 'promote': return 'bg-[#1844A6]/10 text-[#1844A6]';
@@ -4842,8 +4856,9 @@ function TimelineView() {
                     )}
                     <div className="flex items-center gap-2 mt-2">
                       {event.sourceApp && (
-                        <Badge variant="outline" className="text-xs">
-                          /{event.sourceApp}
+                        <Badge variant="outline" className="text-xs" style={{ borderColor: getSourceAppHex(event.sourceApp) }}>
+                          <span style={{ color: '#09080E' }}>/</span>
+                          <span style={{ color: getSourceAppHex(event.sourceApp) }}> {event.sourceApp}</span>
                         </Badge>
                       )}
                       <Badge variant="secondary" className="text-xs">

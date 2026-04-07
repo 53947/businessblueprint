@@ -215,6 +215,9 @@ class ReviewSyncService {
         updatedAt: new Date(),
       })
       .where(eq(businessReviews.id, reviewId));
+
+    // TODO: logContactActivity — log review_responded event when review can be matched to a CRM contact
+    // Requires: clientId, contactId (matched by reviewer name/email), review.platform, review.rating
   }
 }
 

@@ -4129,6 +4129,32 @@ async function registerInboxRoutes(app: Express) {
           .set({ updatedAt: new Date() })
           .where(eq(inboxConversations.id, conversationId));
 
+        // Log to / connect timeline — match contact by email/phone
+        try {
+          const { logContactActivity } = await import('./services/timeline-logger');
+          const { crmContacts: crmContactsTable } = await import('@shared/schema');
+          const [crmContact] = await db.select({ id: crmContactsTable.id })
+            .from(crmContactsTable)
+            .where(and(
+              eq(crmContactsTable.clientId, clientId),
+              eq(crmContactsTable.email, conversation.contactIdentifier),
+            ))
+            .limit(1);
+          if (crmContact) {
+            logContactActivity({
+              clientId,
+              contactId: crmContact.id,
+              eventType: 'message_sent',
+              title: `Reply sent via ${conversation.primaryChannelType}`,
+              description: message.substring(0, 200),
+              sourceApp: 'respond',
+              sourceEntityType: 'message',
+              sourceEntityId: String(newMessage.id),
+              metadata: { channel: conversation.primaryChannelType, messageId: newMessage.id, direction: 'outbound' },
+            });
+          }
+        } catch {}
+
         res.json(newMessage);
       } catch (error) {
         console.error("Error sending message:", error);
