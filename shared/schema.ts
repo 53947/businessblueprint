@@ -2449,7 +2449,7 @@ export const crmTimeline = pgTable("crm_timeline", {
   description: text("description"),
   
   // Source app (for integration events)
-  sourceApp: varchar("source_app", { length: 50 }), // relationships, send, inbox, livechat, content, listings, reputation
+  sourceApp: varchar("source_app", { length: 50 }), // promote, respond, engage, post, publish, elevate, optimize, amplify (the 8 spoke apps — CRM-native events have no sourceApp)
   sourceEntityType: varchar("source_entity_type", { length: 50 }), // email, message, post, review, etc.
   sourceEntityId: varchar("source_entity_id", { length: 100 }), // ID in source app
   

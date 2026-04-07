@@ -56,7 +56,13 @@ import {
   AlertCircle,
   Play,
   Pause,
-  RefreshCw
+  RefreshCw,
+  MessageSquare,
+  MessageCircle,
+  Share2,
+  Heart,
+  Megaphone,
+  Inbox,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -4703,6 +4709,37 @@ function TimelineView() {
         return <CheckSquare className="w-4 h-4" />;
       case 'email_sent':
         return <Send className="w-4 h-4" />;
+      case 'review_received':
+        return <Star className="w-4 h-4" />;
+      case 'review_responded':
+        return <MessageSquare className="w-4 h-4" />;
+      case 'campaign_sent':
+      case 'campaign_opened':
+      case 'campaign_clicked':
+        return <Mail className="w-4 h-4" />;
+      case 'chat_started':
+      case 'chat_message':
+        return <MessageCircle className="w-4 h-4" />;
+      case 'social_post_published':
+        return <Share2 className="w-4 h-4" />;
+      case 'social_like':
+        return <Heart className="w-4 h-4" />;
+      case 'social_comment':
+        return <MessageSquare className="w-4 h-4" />;
+      case 'social_share':
+        return <Share2 className="w-4 h-4" />;
+      case 'listing_updated':
+      case 'listing_claimed':
+        return <MapPin className="w-4 h-4" />;
+      case 'ad_campaign_targeted':
+      case 'ad_attribution':
+      case 'ad_spend_attributed':
+        return <Megaphone className="w-4 h-4" />;
+      case 'message_received':
+      case 'message_sent':
+        return <Inbox className="w-4 h-4" />;
+      case 'seo_report':
+        return <Search className="w-4 h-4" />;
       default:
         return <Clock className="w-4 h-4" />;
     }
@@ -4710,13 +4747,14 @@ function TimelineView() {
 
   const getSourceAppColor = (sourceApp: string | null) => {
     switch (sourceApp) {
-      case 'relationships': return 'bg-[#22C55E]/10 text-[#22C55E]';
-      case 'send': return 'bg-blue-100 text-blue-600';
-      case 'inbox': return 'bg-purple-100 text-purple-600';
-      case 'livechat': return 'bg-orange-100 text-orange-600';
-      case 'content': return 'bg-pink-100 text-pink-600';
-      case 'listings': return 'bg-red-100 text-red-600';
-      case 'reputation': return 'bg-yellow-100 text-yellow-600';
+      case 'promote': return 'bg-[#1844A6]/10 text-[#1844A6]';
+      case 'respond': return 'bg-[#001882]/10 text-[#001882]';
+      case 'engage': return 'bg-[#660099]/10 text-[#660099]';
+      case 'post': return 'bg-[#FF44CC]/10 text-[#FF44CC]';
+      case 'publish': return 'bg-[#064A6C]/10 text-[#064A6C]';
+      case 'elevate': return 'bg-[#E9B307]/10 text-[#E9B307]';
+      case 'optimize': return 'bg-[#374151]/10 text-[#374151]';
+      case 'amplify': return 'bg-[#97ACCA]/10 text-[#97ACCA]';
       default: return 'bg-gray-100 text-gray-600';
     }
   };
