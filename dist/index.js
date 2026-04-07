@@ -1,5 +1,10 @@
 var __defProp = Object.defineProperty;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __glob = (map) => (path4) => {
+  var fn = map[path4];
+  if (fn) return fn();
+  throw new Error("Module not found in bundle: " + path4);
+};
 var __esm = (fn, res) => function __init() {
   return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
 };
@@ -12,10 +17,17 @@ var __export = (target, all) => {
 var schema_exports = {};
 __export(schema_exports, {
   accountStatusHistory: () => accountStatusHistory,
+  adAccountConnections: () => adAccountConnections,
   adminActivityLog: () => adminActivityLog,
   aiCoachConversations: () => aiCoachConversations,
   aiCoachMessages: () => aiCoachMessages,
   aiSettings: () => aiSettings,
+  amplifyAdSets: () => amplifyAdSets,
+  amplifyAds: () => amplifyAds,
+  amplifyAudiences: () => amplifyAudiences,
+  amplifyBudgetAllocations: () => amplifyBudgetAllocations,
+  amplifyCampaigns: () => amplifyCampaigns,
+  amplifySpendAlerts: () => amplifySpendAlerts,
   apiKeys: () => apiKeys,
   assessmentProductRecommendations: () => assessmentProductRecommendations,
   assessments: () => assessments,
@@ -73,7 +85,14 @@ __export(schema_exports, {
   inboxParticipants: () => inboxParticipants,
   inboxQuickReplies: () => inboxQuickReplies,
   insertAccountStatusHistorySchema: () => insertAccountStatusHistorySchema,
+  insertAdAccountConnectionSchema: () => insertAdAccountConnectionSchema,
   insertAdminActivityLogSchema: () => insertAdminActivityLogSchema,
+  insertAmplifyAdSchema: () => insertAmplifyAdSchema,
+  insertAmplifyAdSetSchema: () => insertAmplifyAdSetSchema,
+  insertAmplifyAudienceSchema: () => insertAmplifyAudienceSchema,
+  insertAmplifyBudgetAllocationSchema: () => insertAmplifyBudgetAllocationSchema,
+  insertAmplifyCampaignSchema: () => insertAmplifyCampaignSchema,
+  insertAmplifySpendAlertSchema: () => insertAmplifySpendAlertSchema,
   insertApiKeySchema: () => insertApiKeySchema,
   insertAssessmentProductRecommendationSchema: () => insertAssessmentProductRecommendationSchema,
   insertAssessmentSchema: () => insertAssessmentSchema,
@@ -125,6 +144,7 @@ __export(schema_exports, {
   insertProductSchema: () => insertProductSchema,
   insertQuickReplySchema: () => insertQuickReplySchema,
   insertRecommendationSchema: () => insertRecommendationSchema,
+  insertRedditAdCommentSchema: () => insertRedditAdCommentSchema,
   insertScansBluePurchaseSchema: () => insertScansBluePurchaseSchema,
   insertSendAutomationSchema: () => insertSendAutomationSchema,
   insertSendCampaignSchema: () => insertSendCampaignSchema,
@@ -143,6 +163,8 @@ __export(schema_exports, {
   insertSeoReportSchema: () => insertSeoReportSchema,
   insertSeoScanSchema: () => insertSeoScanSchema,
   insertSeoTechnicalIssueSchema: () => insertSeoTechnicalIssueSchema,
+  insertSetupNoteSchema: () => insertSetupNoteSchema,
+  insertSetupTaskSchema: () => insertSetupTaskSchema,
   insertSocialMediaAccountSchema: () => insertSocialMediaAccountSchema,
   insertSubscriptionAddonSchema: () => insertSubscriptionAddonSchema,
   insertSubscriptionPlanSchema: () => insertSubscriptionPlanSchema,
@@ -159,6 +181,7 @@ __export(schema_exports, {
   prescriptions: () => prescriptions,
   products: () => products,
   recommendations: () => recommendations,
+  redditAdComments: () => redditAdComments,
   scansBluePurchases: () => scansBluePurchases,
   scansBlueResults: () => scansBlueResults,
   sendAutomations: () => sendAutomations,
@@ -187,6 +210,9 @@ __export(schema_exports, {
   seoTechnicalIssues: () => seoTechnicalIssues,
   sessions: () => sessions,
   setPinSchema: () => setPinSchema,
+  setupNotes: () => setupNotes,
+  setupTaskEvents: () => setupTaskEvents,
+  setupTasks: () => setupTasks,
   socialMediaAccounts: () => socialMediaAccounts,
   subscriptionAddonSelections: () => subscriptionAddonSelections,
   subscriptionAddons: () => subscriptionAddons,
@@ -221,7 +247,7 @@ import {
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-var sessions, users, assessments, recommendations, scansBlueResults, scansBluePurchases, insertScansBluePurchaseSchema, clients, magicLinkTokens, inboxMessages, campaigns, emailChangeHistory, dashboardAccess, clientAssessments, accountStatusHistory, insertAssessmentSchema, insertRecommendationSchema, insertClientSchema, insertAccountStatusHistorySchema, insertMagicLinkTokenSchema, insertEmailChangeHistorySchema, insertInboxMessageSchema, insertCampaignSchema, subscriptionPlans, subscriptionAddons, subscriptions, subscriptionAddonSelections, products, assessmentProductRecommendations, billingHistory, insertSubscriptionPlanSchema, insertSubscriptionAddonSchema, insertSubscriptionSchema, insertBillingHistorySchema, insertProductSchema, insertAssessmentProductRecommendationSchema, sendContacts, sendLists, sendListContacts, sendTemplates, sendCampaigns, sendCampaignSends, sendAutomations, sendConsentRecords, sendSuppressionList, sendBounceLog, sendPreferenceCenter, sendUnsubscribeRecords, insertSendContactSchema, insertSendListSchema, insertSendTemplateSchema, insertSendCampaignSchema, insertSendAutomationSchema, domains, dnsRecords, domainTransfers, nameserverHistory, impersonationSessions, impersonationAuditLog, insertDomainSchema, insertDnsRecordSchema, insertDomainTransferSchema, insertImpersonationSessionSchema, insertImpersonationAuditSchema, inboxChannelConnections, inboxConversations, inboxMessages2, inboxAttachments, inboxQuickReplies, inboxParticipants, livechatSessions, brandAssets, insertChannelConnectionSchema, insertConversationSchema, insertInboxMessage2Schema, insertQuickReplySchema, insertLivechatSessionSchema, insertBrandAssetSchema, socialMediaAccounts, contentMedia, contentPosts, contentAnalytics, contentTemplates, insertSocialMediaAccountSchema, insertContentMediaSchema, insertContentPostSchema, insertContentTemplateSchema, aiCoachConversations, aiCoachMessages, tasks, insertTaskSchema, brandColors, insertBrandColorSchema, crmCompanies, crmContacts, crmPipelines, crmPipelineStages, crmDeals, crmTasks, crmNotes, crmTimeline, crmSegments, crmSegmentMembers, crmCustomFieldDefs, crmAppointments, crmTags, crmSubscriptions, crmLeadForms, insertCrmCompanySchema, insertCrmContactSchema, insertCrmPipelineSchema, insertCrmPipelineStageSchema, insertCrmDealSchema, insertCrmTaskSchema, insertCrmNoteSchema, insertCrmTimelineSchema, insertCrmSegmentSchema, insertCrmAppointmentSchema, insertCrmTagSchema, insertCrmCustomFieldDefSchema, insertCrmSubscriptionSchema, insertCrmLeadFormSchema, crmAutomations, crmAutomationSteps, crmAutomationExecutions, insertCrmAutomationSchema, insertCrmAutomationStepSchema, apiKeys, insertApiKeySchema, webhookSubscriptions, insertWebhookSubscriptionSchema, supportTickets, ticketComments, prescriptions, adminActivityLog, emailLogs, emailTemplates, aiSettings, insertSupportTicketSchema, insertTicketCommentSchema, insertPrescriptionSchema, insertAdminActivityLogSchema, updateSupportTicketSchema, updatePrescriptionSchema, insertEmailLogSchema, insertEmailTemplateSchema, updateEmailTemplateSchema, businessListings, listingSyncLogs, listingMetricsSnapshots, insertBusinessListingSchema, updateBusinessListingSchema, insertListingSyncLogSchema, businessReviews, canonicalBusinessProfiles, distributionTargets, distributionSubmissions, distributionLogs, insertCanonicalProfileSchema, updateCanonicalProfileSchema, setPinSchema, verifyPinSchema, chatWidgetSettings, chatAgents, chatAnalyticsEvents, insertChatWidgetSettingsSchema, updateChatWidgetSettingsSchema, insertChatAgentSchema, insertChatAnalyticsEventSchema, seoProfiles, seoScans, seoKeywords, seoKeywordRankings, seoPages, seoTechnicalIssues, seoBacklinks, seoContentBriefs, seoActionItems, seoReports, seoCompetitors, seoCompetitorData, insertSeoProfileSchema, insertSeoScanSchema, insertSeoKeywordSchema, insertSeoKeywordRankingSchema, insertSeoPageSchema, insertSeoTechnicalIssueSchema, insertSeoBacklinkSchema, insertSeoContentBriefSchema, insertSeoActionItemSchema, insertSeoReportSchema, insertSeoCompetitorSchema, insertSeoCompetitorDataSchema;
+var sessions, users, assessments, recommendations, scansBlueResults, scansBluePurchases, insertScansBluePurchaseSchema, clients, magicLinkTokens, inboxMessages, campaigns, emailChangeHistory, dashboardAccess, clientAssessments, accountStatusHistory, insertAssessmentSchema, insertRecommendationSchema, insertClientSchema, insertAccountStatusHistorySchema, insertMagicLinkTokenSchema, insertEmailChangeHistorySchema, insertInboxMessageSchema, insertCampaignSchema, subscriptionPlans, subscriptionAddons, subscriptions, subscriptionAddonSelections, products, assessmentProductRecommendations, billingHistory, insertSubscriptionPlanSchema, insertSubscriptionAddonSchema, insertSubscriptionSchema, insertBillingHistorySchema, insertProductSchema, insertAssessmentProductRecommendationSchema, sendContacts, sendLists, sendListContacts, sendTemplates, sendCampaigns, sendCampaignSends, sendAutomations, sendConsentRecords, sendSuppressionList, sendBounceLog, sendPreferenceCenter, sendUnsubscribeRecords, insertSendContactSchema, insertSendListSchema, insertSendTemplateSchema, insertSendCampaignSchema, insertSendAutomationSchema, domains, dnsRecords, domainTransfers, nameserverHistory, impersonationSessions, impersonationAuditLog, insertDomainSchema, insertDnsRecordSchema, insertDomainTransferSchema, insertImpersonationSessionSchema, insertImpersonationAuditSchema, inboxChannelConnections, inboxConversations, inboxMessages2, inboxAttachments, inboxQuickReplies, inboxParticipants, livechatSessions, brandAssets, insertChannelConnectionSchema, insertConversationSchema, insertInboxMessage2Schema, insertQuickReplySchema, insertLivechatSessionSchema, insertBrandAssetSchema, socialMediaAccounts, contentMedia, contentPosts, contentAnalytics, contentTemplates, insertSocialMediaAccountSchema, insertContentMediaSchema, insertContentPostSchema, insertContentTemplateSchema, aiCoachConversations, aiCoachMessages, tasks, insertTaskSchema, brandColors, insertBrandColorSchema, crmCompanies, crmContacts, crmPipelines, crmPipelineStages, crmDeals, crmTasks, crmNotes, crmTimeline, crmSegments, crmSegmentMembers, crmCustomFieldDefs, crmAppointments, crmTags, crmSubscriptions, crmLeadForms, insertCrmCompanySchema, insertCrmContactSchema, insertCrmPipelineSchema, insertCrmPipelineStageSchema, insertCrmDealSchema, insertCrmTaskSchema, insertCrmNoteSchema, insertCrmTimelineSchema, insertCrmSegmentSchema, insertCrmAppointmentSchema, insertCrmTagSchema, insertCrmCustomFieldDefSchema, insertCrmSubscriptionSchema, insertCrmLeadFormSchema, crmAutomations, crmAutomationSteps, crmAutomationExecutions, insertCrmAutomationSchema, insertCrmAutomationStepSchema, setupTasks, insertSetupTaskSchema, setupNotes, insertSetupNoteSchema, setupTaskEvents, apiKeys, insertApiKeySchema, webhookSubscriptions, insertWebhookSubscriptionSchema, supportTickets, ticketComments, prescriptions, adminActivityLog, emailLogs, emailTemplates, aiSettings, insertSupportTicketSchema, insertTicketCommentSchema, insertPrescriptionSchema, insertAdminActivityLogSchema, updateSupportTicketSchema, updatePrescriptionSchema, insertEmailLogSchema, insertEmailTemplateSchema, updateEmailTemplateSchema, businessListings, listingSyncLogs, listingMetricsSnapshots, insertBusinessListingSchema, updateBusinessListingSchema, insertListingSyncLogSchema, businessReviews, canonicalBusinessProfiles, distributionTargets, distributionSubmissions, distributionLogs, insertCanonicalProfileSchema, updateCanonicalProfileSchema, setPinSchema, verifyPinSchema, chatWidgetSettings, chatAgents, chatAnalyticsEvents, insertChatWidgetSettingsSchema, updateChatWidgetSettingsSchema, insertChatAgentSchema, insertChatAnalyticsEventSchema, seoProfiles, seoScans, seoKeywords, seoKeywordRankings, seoPages, seoTechnicalIssues, seoBacklinks, seoContentBriefs, seoActionItems, seoReports, seoCompetitors, seoCompetitorData, insertSeoProfileSchema, insertSeoScanSchema, insertSeoKeywordSchema, insertSeoKeywordRankingSchema, insertSeoPageSchema, insertSeoTechnicalIssueSchema, insertSeoBacklinkSchema, insertSeoContentBriefSchema, insertSeoActionItemSchema, insertSeoReportSchema, insertSeoCompetitorSchema, insertSeoCompetitorDataSchema, adAccountConnections, amplifyCampaigns, amplifyAdSets, amplifyAds, amplifyAudiences, amplifyBudgetAllocations, amplifySpendAlerts, redditAdComments, insertAdAccountConnectionSchema, insertAmplifyCampaignSchema, insertAmplifyAdSetSchema, insertAmplifyAdSchema, insertAmplifyAudienceSchema, insertAmplifyBudgetAllocationSchema, insertAmplifySpendAlertSchema, insertRedditAdCommentSchema;
 var init_schema = __esm({
   "shared/schema.ts"() {
     "use strict";
@@ -240,6 +266,7 @@ var init_schema = __esm({
       firstName: varchar("first_name"),
       lastName: varchar("last_name"),
       profileImageUrl: varchar("profile_image_url"),
+      passwordHash: varchar("password_hash"),
       createdAt: timestamp("created_at").defaultNow(),
       updatedAt: timestamp("updated_at").defaultNow()
     });
@@ -344,6 +371,18 @@ var init_schema = __esm({
       // past_week, past_month, past_3_months, 3_months_plus, never_no_crm
       hasAutomation: varchar("has_automation", { length: 50 }),
       // yes_full, yes_partial, no_manual, dont_know
+      // Advertising & Paid Media (Q28-Q30)
+      runsAds: varchar("runs_ads", { length: 50 }),
+      // yes_google, yes_meta, yes_both, yes_other, no_interested, no_not_interested
+      lastAdCampaign: varchar("last_ad_campaign", { length: 50 }),
+      // past_week, past_month, past_3_months, past_6_months, 6_months_plus, never
+      monthlyAdBudget: varchar("monthly_ad_budget", { length: 50 }),
+      // none, under_500, 500_1000, 1000_2500, 2500_5000, 5000_plus
+      // Assessment detection tracking (scan-first form)
+      scanDetections: jsonb("scan_detections"),
+      // What was auto-detected by the presence scanner
+      scanCorrections: jsonb("scan_corrections"),
+      // What the user corrected from auto-detected values
       createdAt: timestamp("created_at").defaultNow(),
       updatedAt: timestamp("updated_at").defaultNow()
     });
@@ -412,8 +451,7 @@ var init_schema = __esm({
       id: serial("id").primaryKey(),
       assessmentId: integer("assessment_id").notNull().references(() => assessments.id),
       // Provider-agnostic payment fields
-      paymentProvider: varchar("payment_provider", { length: 20 }).notNull().default("stripe"),
-      // 'stripe' or 'swipesblue'
+      paymentProvider: varchar("payment_provider", { length: 20 }).notNull().default("swipesblue"),
       transactionId: text("transaction_id").notNull().unique(),
       // Stripe session ID or SwipesBlue transaction ID
       paymentIntentId: text("payment_intent_id"),
@@ -463,6 +501,10 @@ var init_schema = __esm({
       // Admin ID who changed status
       // External dashboard URL (legacy Vendasta integration)
       vendastaDashboardUrl: text("vendasta_dashboard_url"),
+      // Directions for Use tracking
+      setupProgress: integer("setup_progress").default(0),
+      setupPhase: varchar("setup_phase", { length: 30 }).default("not_started"),
+      // not_started, in_progress, complete, engagement
       createdAt: timestamp("created_at").defaultNow(),
       updatedAt: timestamp("updated_at").defaultNow()
     });
@@ -586,7 +628,10 @@ var init_schema = __esm({
       usesCRM: true,
       crmPlatform: true,
       lastCRMFollowup: true,
-      hasAutomation: true
+      hasAutomation: true,
+      runsAds: true,
+      lastAdCampaign: true,
+      monthlyAdBudget: true
     });
     insertRecommendationSchema = createInsertSchema(recommendations).pick({
       assessmentId: true,
@@ -700,8 +745,7 @@ var init_schema = __esm({
     });
     subscriptions = pgTable("subscriptions", {
       id: serial("id").primaryKey(),
-      nmiSubscriptionId: varchar("nmi_subscription_id", { length: 100 }).unique(),
-      // NMI subscription ID
+      swipesblueSubscriptionId: varchar("swipesblue_subscription_id", { length: 100 }).unique(),
       assessmentId: integer("assessment_id").references(() => assessments.id),
       clientId: integer("client_id").references(() => clients.id),
       planId: integer("plan_id").references(() => subscriptionPlans.id),
@@ -791,7 +835,7 @@ var init_schema = __esm({
     billingHistory = pgTable("billing_history", {
       id: serial("id").primaryKey(),
       subscriptionId: integer("subscription_id").references(() => subscriptions.id),
-      nmiTransactionId: varchar("nmi_transaction_id", { length: 100 }),
+      swipesblueTransactionId: varchar("swipesblue_transaction_id", { length: 100 }),
       amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
       status: varchar("status", { length: 30 }).notNull(),
       // paid, failed, pending, refunded
@@ -825,7 +869,7 @@ var init_schema = __esm({
       compatiblePathways: true
     });
     insertSubscriptionSchema = createInsertSchema(subscriptions).pick({
-      nmiSubscriptionId: true,
+      swipesblueSubscriptionId: true,
       assessmentId: true,
       clientId: true,
       planId: true,
@@ -841,7 +885,7 @@ var init_schema = __esm({
     });
     insertBillingHistorySchema = createInsertSchema(billingHistory).pick({
       subscriptionId: true,
-      nmiTransactionId: true,
+      swipesblueTransactionId: true,
       amount: true,
       status: true,
       billingDate: true,
@@ -2309,7 +2353,7 @@ var init_schema = __esm({
       description: text("description"),
       // Source app (for integration events)
       sourceApp: varchar("source_app", { length: 50 }),
-      // relationships, send, inbox, livechat, content, listings, reputation
+      // promote, respond, engage, post, publish, elevate, optimize, amplify (the 8 spoke apps — CRM-native events have no sourceApp)
       sourceEntityType: varchar("source_entity_type", { length: 50 }),
       // email, message, post, review, etc.
       sourceEntityId: varchar("source_entity_id", { length: 100 }),
@@ -2613,6 +2657,78 @@ var init_schema = __esm({
       id: true,
       createdAt: true
     });
+    setupTasks = pgTable("setup_tasks", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id).notNull(),
+      // Links to knowledge base
+      appId: varchar("app_id", { length: 30 }).notNull(),
+      stepId: varchar("step_id", { length: 100 }).notNull(),
+      substepId: varchar("substep_id", { length: 100 }),
+      // Task state
+      status: varchar("status", { length: 20 }).notNull().default("pending"),
+      // pending, in_progress, completed, skipped
+      completedAt: timestamp("completed_at"),
+      // Source tracking
+      source: varchar("source", { length: 30 }).notNull().default("prescription"),
+      // prescription, coach_blue, rescan
+      sourceId: integer("source_id"),
+      // Display
+      cadenceOrder: integer("cadence_order").notNull(),
+      title: text("title").notNull(),
+      description: text("description"),
+      estimatedMinutes: integer("estimated_minutes"),
+      suggestedDate: timestamp("suggested_date"),
+      // Phase tracking
+      phase: varchar("phase", { length: 20 }).notNull().default("setup"),
+      // setup, maintenance, growth
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      index("idx_setup_tasks_client").on(table.clientId),
+      index("idx_setup_tasks_status").on(table.clientId, table.status),
+      index("idx_setup_tasks_app").on(table.clientId, table.appId)
+    ]);
+    insertSetupTaskSchema = createInsertSchema(setupTasks).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    setupNotes = pgTable("setup_notes", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id).notNull(),
+      // Where this note lives
+      appId: varchar("app_id", { length: 30 }).notNull(),
+      stepId: varchar("step_id", { length: 100 }),
+      // Note content
+      content: text("content").notNull(),
+      isTodo: boolean("is_todo").notNull().default(false),
+      isCompleted: boolean("is_completed").notNull().default(false),
+      completedAt: timestamp("completed_at"),
+      // Ordering
+      sortOrder: integer("sort_order").default(0),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    }, (table) => [
+      index("idx_setup_notes_client").on(table.clientId),
+      index("idx_setup_notes_location").on(table.clientId, table.appId, table.stepId)
+    ]);
+    insertSetupNoteSchema = createInsertSchema(setupNotes).omit({
+      id: true,
+      createdAt: true,
+      updatedAt: true
+    });
+    setupTaskEvents = pgTable("setup_task_events", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id).notNull(),
+      taskId: integer("task_id").references(() => setupTasks.id),
+      eventType: varchar("event_type", { length: 30 }).notNull(),
+      // completed, stalled, nudge_sent, email_sent, reopened
+      metadata: jsonb("metadata"),
+      createdAt: timestamp("created_at").defaultNow()
+    }, (table) => [
+      index("idx_setup_events_client").on(table.clientId),
+      index("idx_setup_events_task").on(table.taskId)
+    ]);
     apiKeys = pgTable("api_keys", {
       id: serial("id").primaryKey(),
       clientId: integer("client_id").references(() => clients.id, { onDelete: "cascade" }),
@@ -3417,26 +3533,157 @@ var init_schema = __esm({
     insertSeoReportSchema = createInsertSchema(seoReports);
     insertSeoCompetitorSchema = createInsertSchema(seoCompetitors);
     insertSeoCompetitorDataSchema = createInsertSchema(seoCompetitorData);
+    adAccountConnections = pgTable("ad_account_connections", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      platform: text("platform"),
+      // meta, google, microsoft, reddit, tiktok, linkedin, snapchat, pinterest
+      accountId: text("account_id"),
+      accountName: text("account_name"),
+      accessToken: text("access_token"),
+      // encrypted
+      refreshToken: text("refresh_token"),
+      // encrypted
+      tokenExpiresAt: timestamp("token_expires_at"),
+      status: text("status").default("active"),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    });
+    amplifyCampaigns = pgTable("amplify_campaigns", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      platform: text("platform"),
+      externalCampaignId: text("external_campaign_id"),
+      name: text("name").notNull(),
+      objective: text("objective"),
+      status: text("status").default("draft"),
+      dailyBudget: decimal("daily_budget"),
+      lifetimeBudget: decimal("lifetime_budget"),
+      startDate: timestamp("start_date"),
+      endDate: timestamp("end_date"),
+      spendToDate: decimal("spend_to_date").default("0"),
+      impressions: integer("impressions").default(0),
+      clicks: integer("clicks").default(0),
+      conversions: integer("conversions").default(0),
+      roas: decimal("roas"),
+      redditPixelInstalled: boolean("reddit_pixel_installed"),
+      redditEngagementScore: integer("reddit_engagement_score"),
+      redditCommentCount: integer("reddit_comment_count").default(0),
+      redditUpvoteRatio: decimal("reddit_upvote_ratio"),
+      redditSentiment: text("reddit_sentiment"),
+      redditLastSentimentCheck: timestamp("reddit_last_sentiment_check"),
+      createdAt: timestamp("created_at").defaultNow(),
+      updatedAt: timestamp("updated_at").defaultNow()
+    });
+    amplifyAdSets = pgTable("amplify_ad_sets", {
+      id: serial("id").primaryKey(),
+      campaignId: integer("campaign_id").references(() => amplifyCampaigns.id),
+      externalAdSetId: text("external_ad_set_id"),
+      name: text("name").notNull(),
+      targetingSummary: jsonb("targeting_summary"),
+      budget: decimal("budget"),
+      status: text("status").default("active"),
+      createdAt: timestamp("created_at").defaultNow()
+    });
+    amplifyAds = pgTable("amplify_ads", {
+      id: serial("id").primaryKey(),
+      adSetId: integer("ad_set_id").references(() => amplifyAdSets.id),
+      externalAdId: text("external_ad_id"),
+      name: text("name"),
+      headline: text("headline"),
+      body: text("body"),
+      mediaUrl: text("media_url"),
+      cta: text("cta"),
+      status: text("status").default("active"),
+      impressions: integer("impressions").default(0),
+      clicks: integer("clicks").default(0),
+      spend: decimal("spend").default("0"),
+      conversions: integer("conversions").default(0),
+      createdAt: timestamp("created_at").defaultNow()
+    });
+    amplifyAudiences = pgTable("amplify_audiences", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      platform: text("platform"),
+      audienceName: text("audience_name").notNull(),
+      audienceType: text("audience_type"),
+      externalAudienceId: text("external_audience_id"),
+      sizeEstimate: integer("size_estimate"),
+      sourceType: varchar("source_type", { length: 50 }),
+      crmFilter: jsonb("crm_filter"),
+      createdAt: timestamp("created_at").defaultNow()
+    });
+    amplifyBudgetAllocations = pgTable("amplify_budget_allocations", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      month: text("month").notNull(),
+      totalBudget: decimal("total_budget").notNull(),
+      metaAllocation: decimal("meta_allocation").default("0"),
+      googleAllocation: decimal("google_allocation").default("0"),
+      microsoftAllocation: decimal("microsoft_allocation").default("0"),
+      redditAllocation: decimal("reddit_allocation").default("0"),
+      otherAllocations: jsonb("other_allocations"),
+      updatedAt: timestamp("updated_at").defaultNow()
+    });
+    amplifySpendAlerts = pgTable("amplify_spend_alerts", {
+      id: serial("id").primaryKey(),
+      clientId: integer("client_id").references(() => clients.id),
+      platform: text("platform"),
+      thresholdAmount: decimal("threshold_amount").notNull(),
+      thresholdType: text("threshold_type").notNull(),
+      notificationSent: boolean("notification_sent").default(false),
+      createdAt: timestamp("created_at").defaultNow()
+    });
+    redditAdComments = pgTable("reddit_ad_comments", {
+      id: serial("id").primaryKey(),
+      campaignId: integer("campaign_id").references(() => amplifyCampaigns.id),
+      externalCommentId: text("external_comment_id"),
+      authorUsername: text("author_username"),
+      commentText: text("comment_text"),
+      sentiment: text("sentiment"),
+      suggestedResponse: text("suggested_response"),
+      responded: boolean("responded").default(false),
+      respondedAt: timestamp("responded_at"),
+      createdAt: timestamp("created_at").defaultNow()
+    });
+    insertAdAccountConnectionSchema = createInsertSchema(adAccountConnections);
+    insertAmplifyCampaignSchema = createInsertSchema(amplifyCampaigns);
+    insertAmplifyAdSetSchema = createInsertSchema(amplifyAdSets);
+    insertAmplifyAdSchema = createInsertSchema(amplifyAds);
+    insertAmplifyAudienceSchema = createInsertSchema(amplifyAudiences);
+    insertAmplifyBudgetAllocationSchema = createInsertSchema(amplifyBudgetAllocations);
+    insertAmplifySpendAlertSchema = createInsertSchema(amplifySpendAlerts);
+    insertRedditAdCommentSchema = createInsertSchema(redditAdComments);
   }
 });
 
 // server/db.ts
-import { Pool, neonConfig } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-serverless";
+import { Pool as NeonPool, neonConfig } from "@neondatabase/serverless";
+import { drizzle as drizzleNeon } from "drizzle-orm/neon-serverless";
+import { Pool as PgPool } from "pg";
+import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import ws from "ws";
-var pool, db;
+var isNeon, pool, db;
 var init_db = __esm({
   "server/db.ts"() {
     "use strict";
     init_schema();
-    neonConfig.webSocketConstructor = ws;
     if (!process.env.DATABASE_URL) {
       throw new Error(
         "DATABASE_URL must be set. Did you forget to provision a database?"
       );
     }
-    pool = new Pool({ connectionString: process.env.DATABASE_URL });
-    db = drizzle({ client: pool, schema: schema_exports });
+    isNeon = process.env.DATABASE_URL.includes("neon.tech");
+    if (isNeon) {
+      neonConfig.webSocketConstructor = ws;
+      const neonPool = new NeonPool({ connectionString: process.env.DATABASE_URL });
+      pool = neonPool;
+      db = drizzleNeon({ client: neonPool, schema: schema_exports });
+    } else {
+      const pgPool = new PgPool({ connectionString: process.env.DATABASE_URL });
+      pool = pgPool;
+      db = drizzlePg({ client: pgPool, schema: schema_exports });
+    }
   }
 });
 
@@ -4493,146 +4740,6 @@ var init_contentPublisher = __esm({
   }
 });
 
-// server/services/jwt.ts
-var jwt_exports = {};
-__export(jwt_exports, {
-  JWTService: () => JWTService,
-  jwtService: () => jwtService
-});
-import jwt2 from "jsonwebtoken";
-import crypto5 from "crypto";
-import { eq as eq19 } from "drizzle-orm";
-var JWTService, jwtService;
-var init_jwt = __esm({
-  "server/services/jwt.ts"() {
-    "use strict";
-    init_db();
-    init_schema();
-    JWTService = class {
-      keyPair;
-      algorithm;
-      // Allow HS256 as well
-      constructor() {
-        console.log("[JWT Service] v2.0.1 - Initializing with HS256 forced mode");
-        this.keyPair = this.generateKeyPair();
-        const hasValidRSAKeys = this.keyPair.privateKey && this.keyPair.publicKey && this.keyPair.privateKey.length > 100 && this.keyPair.publicKey.length > 100 && this.keyPair.privateKey.includes("-----BEGIN RSA") && this.keyPair.publicKey.includes("-----BEGIN");
-        this.algorithm = hasValidRSAKeys ? "RS256" : "HS256";
-        if (this.algorithm === "HS256") {
-          const hasSecret = !!process.env.JWT_SECRET;
-          if (!hasSecret) {
-            console.warn("[JWT Service] WARNING: No JWT_SECRET set, using fallback key");
-          }
-        }
-      }
-      /**
-       * Generate RSA key pair for JWT signing
-       */
-      generateKeyPair() {
-        const existingPrivateKey = process.env.JWT_PRIVATE_KEY;
-        const existingPublicKey = process.env.JWT_PUBLIC_KEY;
-        if (existingPrivateKey && existingPublicKey) {
-          const privateKey = existingPrivateKey.includes("\\n") ? existingPrivateKey.replace(/\\n/g, "\n") : existingPrivateKey;
-          const publicKey = existingPublicKey.includes("\\n") ? existingPublicKey.replace(/\\n/g, "\n") : existingPublicKey;
-          return { privateKey, publicKey };
-        }
-        return { publicKey: "", privateKey: "" };
-      }
-      /**
-       * Create a secure dashboard access token for a client
-       */
-      async createDashboardToken(clientId, externalId) {
-        const payload = {
-          clientId,
-          externalId,
-          permissions: ["dashboard:read", "dashboard:write", "campaigns:read", "messages:read"],
-          iss: "businessblueprint.io",
-          aud: "client-portal"
-        };
-        const options = {
-          algorithm: this.algorithm,
-          expiresIn: "24h"
-          // 24 hour token expiration
-        };
-        const signingKey = this.algorithm === "RS256" ? this.keyPair.privateKey : process.env.JWT_SECRET || "fallback-secret-key";
-        const token = jwt2.sign(payload, signingKey, options);
-        await db.insert(dashboardAccess).values({
-          clientId,
-          accessToken: token,
-          dashboardUrl: `/portal?token=${token}`,
-          isActive: true
-        });
-        return token;
-      }
-      /**
-       * Verify and decode a JWT token
-       */
-      verifyToken(token) {
-        try {
-          const options = {
-            algorithms: [this.algorithm],
-            issuer: "businessblueprint.io",
-            audience: "client-portal"
-          };
-          const verificationKey = this.algorithm === "RS256" ? this.keyPair.publicKey : process.env.JWT_SECRET || "fallback-secret-key";
-          const decoded = jwt2.verify(token, verificationKey, options);
-          return decoded;
-        } catch (error) {
-          throw new Error(`Invalid token: ${error instanceof Error ? error.message : "Unknown error"}`);
-        }
-      }
-      /**
-       * Refresh a token (create new token with extended expiration)
-       */
-      async refreshToken(oldToken) {
-        try {
-          const decoded = this.verifyToken(oldToken);
-          const newToken = await this.createDashboardToken(decoded.clientId, decoded.externalId);
-          await this.revokeToken(oldToken);
-          return newToken;
-        } catch (error) {
-          throw new Error(`Cannot refresh token: ${error instanceof Error ? error.message : "Unknown error"}`);
-        }
-      }
-      /**
-       * Revoke a token (mark as inactive in database)
-       */
-      async revokeToken(token) {
-        await db.update(dashboardAccess).set({ isActive: false }).where(eq19(dashboardAccess.accessToken, token));
-      }
-      /**
-       * Check if token is active in database
-       */
-      async isTokenActive(token) {
-        const [record] = await db.select().from(dashboardAccess).where(eq19(dashboardAccess.accessToken, token));
-        return record?.isActive || false;
-      }
-      /**
-       * Get public key for external verification
-       */
-      getPublicKey() {
-        return this.keyPair.publicKey || "";
-      }
-      /**
-       * Get JWK (JSON Web Key) for public key distribution
-       */
-      getJWK() {
-        if (this.algorithm === "RS256" && this.keyPair.publicKey) {
-          const publicKey = crypto5.createPublicKey(this.keyPair.publicKey);
-          const jwk = publicKey.export({ format: "jwk" });
-          return {
-            ...jwk,
-            alg: this.algorithm,
-            use: "sig",
-            kid: crypto5.createHash("sha256").update(this.keyPair.publicKey).digest("hex").substring(0, 16)
-          };
-        }
-        return null;
-      }
-    };
-    jwtService = new JWTService();
-  }
-});
-
 // server/services/ai-provider.ts
 var ai_provider_exports = {};
 __export(ai_provider_exports, {
@@ -4798,13 +4905,1707 @@ var init_ai_provider = __esm({
   }
 });
 
+// server/services/analyticsSync.ts
+var analyticsSync_exports = {};
+__export(analyticsSync_exports, {
+  analyticsSyncService: () => analyticsSyncService
+});
+import { eq as eq5, and as and4, desc as desc2 } from "drizzle-orm";
+var AnalyticsSyncService, analyticsSyncService;
+var init_analyticsSync = __esm({
+  "server/services/analyticsSync.ts"() {
+    "use strict";
+    init_db();
+    init_schema();
+    init_platformFactory();
+    AnalyticsSyncService = class {
+      /**
+       * Sync analytics for all published posts belonging to a client
+       */
+      async syncClientAnalytics(clientId) {
+        const result = { synced: 0, errors: [] };
+        const posts = await db.select().from(contentPosts).where(
+          and4(
+            eq5(contentPosts.clientId, clientId),
+            eq5(contentPosts.status, "published")
+          )
+        ).orderBy(desc2(contentPosts.publishedAt));
+        const accounts = await db.select().from(socialMediaAccounts).where(
+          and4(
+            eq5(socialMediaAccounts.clientId, clientId),
+            eq5(socialMediaAccounts.isActive, true)
+          )
+        );
+        const credentialMap = /* @__PURE__ */ new Map();
+        for (const account of accounts) {
+          credentialMap.set(account.platform, {
+            accessToken: account.accessToken || "",
+            refreshToken: account.refreshToken || void 0,
+            platformAccountId: account.platformAccountId
+          });
+        }
+        for (const post of posts) {
+          const publishResults = post.publishResults || {};
+          for (const [platform, platformResult] of Object.entries(publishResults)) {
+            const pr = platformResult;
+            if (!pr?.postId) continue;
+            try {
+              const creds = credentialMap.get(platform);
+              if (!creds?.accessToken) continue;
+              const adapter = PlatformFactory.createAdapter(platform, {
+                accessToken: creds.accessToken,
+                refreshToken: creds.refreshToken,
+                platformAccountId: creds.platformAccountId
+              });
+              if (!adapter) continue;
+              const analytics = await adapter.getAnalytics(
+                pr.postId
+              );
+              const totalEngagement = (analytics.likes || 0) + (analytics.comments || 0) + (analytics.shares || 0) + (analytics.clicks || 0);
+              const engagementRate = analytics.impressions && analytics.impressions > 0 ? (totalEngagement / analytics.impressions * 100).toFixed(2) : "0.00";
+              const existing = await db.select().from(contentAnalytics).where(
+                and4(
+                  eq5(contentAnalytics.postId, post.id),
+                  eq5(contentAnalytics.platform, platform)
+                )
+              ).limit(1);
+              if (existing.length > 0) {
+                await db.update(contentAnalytics).set({
+                  impressions: analytics.impressions || 0,
+                  reach: analytics.engagement || 0,
+                  likes: analytics.likes || 0,
+                  comments: analytics.comments || 0,
+                  shares: analytics.shares || 0,
+                  clicks: analytics.clicks || 0,
+                  saves: analytics.saves || 0,
+                  engagementRate,
+                  lastSyncedAt: /* @__PURE__ */ new Date(),
+                  updatedAt: /* @__PURE__ */ new Date()
+                }).where(eq5(contentAnalytics.id, existing[0].id));
+              } else {
+                await db.insert(contentAnalytics).values({
+                  postId: post.id,
+                  platform,
+                  platformPostId: pr.postId,
+                  platformPostUrl: pr.url || null,
+                  impressions: analytics.impressions || 0,
+                  reach: analytics.engagement || 0,
+                  likes: analytics.likes || 0,
+                  comments: analytics.comments || 0,
+                  shares: analytics.shares || 0,
+                  clicks: analytics.clicks || 0,
+                  saves: analytics.saves || 0,
+                  engagementRate
+                });
+              }
+              result.synced++;
+              if (analytics.likes && analytics.likes >= 10 && analytics.likes % 10 === 0) {
+                console.log(`[AnalyticsSync] Post ${post.id} reached ${analytics.likes} likes on ${platform}`);
+              }
+            } catch (error) {
+              result.errors.push({
+                postId: post.id,
+                platform,
+                message: error.message
+              });
+            }
+          }
+        }
+        return result;
+      }
+      /**
+       * Get aggregated analytics for a client across all platforms
+       */
+      async getClientAnalyticsSummary(clientId) {
+        const posts = await db.select().from(contentPosts).where(eq5(contentPosts.clientId, clientId));
+        const postIds = posts.map((p) => p.id);
+        if (postIds.length === 0) {
+          return {
+            totalPosts: 0,
+            publishedPosts: 0,
+            totalImpressions: 0,
+            totalEngagement: 0,
+            totalClicks: 0,
+            avgEngagementRate: 0,
+            platformBreakdown: {},
+            topPosts: []
+          };
+        }
+        const allAnalytics = await db.select().from(contentAnalytics).where(
+          eq5(contentAnalytics.postId, postIds[0])
+          // Start with first
+        );
+        const analyticsMap = /* @__PURE__ */ new Map();
+        for (const postId of postIds) {
+          const records = await db.select().from(contentAnalytics).where(eq5(contentAnalytics.postId, postId));
+          if (records.length > 0) {
+            analyticsMap.set(postId, records);
+          }
+        }
+        let totalImpressions = 0;
+        let totalLikes = 0;
+        let totalComments = 0;
+        let totalShares = 0;
+        let totalClicks = 0;
+        const platformTotals = {};
+        const allRecords = [];
+        for (const records of Array.from(analyticsMap.values())) {
+          for (const r of records) {
+            allRecords.push(r);
+            totalImpressions += r.impressions || 0;
+            totalLikes += r.likes || 0;
+            totalComments += r.comments || 0;
+            totalShares += r.shares || 0;
+            totalClicks += r.clicks || 0;
+            if (!platformTotals[r.platform]) {
+              platformTotals[r.platform] = {
+                impressions: 0,
+                engagement: 0,
+                posts: 0
+              };
+            }
+            platformTotals[r.platform].impressions += r.impressions || 0;
+            platformTotals[r.platform].engagement += (r.likes || 0) + (r.comments || 0) + (r.shares || 0);
+            platformTotals[r.platform].posts++;
+          }
+        }
+        const totalEngagement = totalLikes + totalComments + totalShares;
+        const avgEngagementRate = totalImpressions > 0 ? parseFloat(
+          (totalEngagement / totalImpressions * 100).toFixed(2)
+        ) : 0;
+        const postEngagement = /* @__PURE__ */ new Map();
+        for (const r of allRecords) {
+          const current = postEngagement.get(r.postId) || 0;
+          postEngagement.set(
+            r.postId,
+            current + (r.likes || 0) + (r.comments || 0) + (r.shares || 0)
+          );
+        }
+        const topPostIds = Array.from(postEngagement.entries()).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([id]) => id);
+        const topPosts = posts.filter((p) => topPostIds.includes(p.id)).map((p) => ({
+          id: p.id,
+          caption: p.caption,
+          platform: p.platforms || [],
+          publishedAt: p.publishedAt,
+          engagement: postEngagement.get(p.id) || 0
+        }));
+        return {
+          totalPosts: posts.length,
+          publishedPosts: posts.filter((p) => p.status === "published").length,
+          totalImpressions,
+          totalEngagement,
+          totalClicks,
+          avgEngagementRate,
+          platformBreakdown: platformTotals,
+          topPosts
+        };
+      }
+      /**
+       * Sync analytics for all clients with connected platforms
+       * Designed to be called periodically (e.g., every 6 hours)
+       */
+      async syncAllClients() {
+        const summary = { total: 0, synced: 0, errors: 0 };
+        try {
+          const activeAccounts = await db.select({ clientId: socialMediaAccounts.clientId }).from(socialMediaAccounts).where(eq5(socialMediaAccounts.isActive, true)).groupBy(socialMediaAccounts.clientId);
+          summary.total = activeAccounts.length;
+          for (const { clientId } of activeAccounts) {
+            if (!clientId) continue;
+            try {
+              const result = await this.syncClientAnalytics(clientId);
+              summary.synced += result.synced;
+              summary.errors += result.errors.length;
+            } catch (error) {
+              console.error(`Analytics sync failed for client ${clientId}:`, error.message);
+              summary.errors++;
+            }
+          }
+          console.log(
+            `Analytics sync complete: ${summary.total} clients, ${summary.synced} posts synced, ${summary.errors} errors`
+          );
+        } catch (error) {
+          console.error("Analytics sync all failed:", error);
+        }
+        return summary;
+      }
+      /**
+       * Start periodic analytics sync (every 6 hours)
+       */
+      syncInterval = null;
+      startScheduledSync(intervalMs = 6 * 60 * 60 * 1e3) {
+        if (this.syncInterval) {
+          clearInterval(this.syncInterval);
+        }
+        console.log(`Starting analytics sync scheduler (every ${intervalMs / 36e5}h)`);
+        this.syncInterval = setInterval(async () => {
+          try {
+            await this.syncAllClients();
+          } catch (error) {
+            console.error("Scheduled analytics sync error:", error);
+          }
+        }, intervalMs);
+        setTimeout(() => this.syncAllClients().catch(console.error), 3e4);
+      }
+      stopScheduledSync() {
+        if (this.syncInterval) {
+          clearInterval(this.syncInterval);
+          this.syncInterval = null;
+        }
+      }
+    };
+    analyticsSyncService = new AnalyticsSyncService();
+  }
+});
+
+// shared/knowledge-base/types.ts
+var init_types = __esm({
+  "shared/knowledge-base/types.ts"() {
+    "use strict";
+  }
+});
+
+// shared/knowledge-base/setup-cadence.ts
+var SETUP_CADENCE;
+var init_setup_cadence = __esm({
+  "shared/knowledge-base/setup-cadence.ts"() {
+    "use strict";
+    SETUP_CADENCE = [
+      {
+        order: 1,
+        appId: "connect",
+        milestone: "Foundation Set",
+        why: "Every other app reads from and writes to / connect. Without it, nothing connects."
+      },
+      {
+        order: 2,
+        appId: "publish",
+        milestone: "Discoverable Online",
+        why: "Your business identity needs to be locked in across directories before anything else matters."
+      },
+      {
+        order: 3,
+        appId: "elevate",
+        milestone: "Reputation Active",
+        why: "Reviews are flowing. You need to surface them and respond before investing in communications."
+      },
+      {
+        order: 4,
+        appId: "optimize",
+        milestone: "SEO Healthy",
+        why: "Your website's technical health and search visibility need attention before you drive traffic to it."
+      },
+      {
+        order: 5,
+        appId: "respond",
+        milestone: "Inbox Unified",
+        why: "All incoming messages from every channel now land in one place. Nothing falls through cracks."
+      },
+      {
+        order: 6,
+        appId: "engage",
+        milestone: "Chat Live",
+        why: "Your website visitors can now talk to you in real time. Conversations flow into / respond."
+      },
+      {
+        order: 7,
+        appId: "post",
+        milestone: "Social Active",
+        why: "You're posting consistently across platforms. Content drives traffic, traffic drives leads."
+      },
+      {
+        order: 8,
+        appId: "promote",
+        milestone: "Campaigns Running",
+        why: "Email campaigns to your / connect contact list. Targeted, measurable, revenue-driving."
+      },
+      {
+        order: 9,
+        appId: "amplify",
+        milestone: "Advertising Live",
+        why: "Paid advertising across Meta, Google, Reddit. Data from every other app informs targeting."
+      }
+    ];
+  }
+});
+
+// shared/knowledge-base/apps/connect.ts
+var connect_exports = {};
+__export(connect_exports, {
+  connectKnowledge: () => connectKnowledge
+});
+var connectKnowledge;
+var init_connect = __esm({
+  "shared/knowledge-base/apps/connect.ts"() {
+    "use strict";
+    connectKnowledge = {
+      appId: "connect",
+      appName: "connect",
+      suite: "standalone",
+      purpose: "Central CRM that all other apps read from and write to. This is the foundation of your entire digital presence \u2014 your contacts, your business details, your pipeline.",
+      whyItMatters: "Without / connect set up properly, every other tool on the platform is working with incomplete information. When your business details are accurate here, they flow automatically into your listings, your email campaigns, your chat widget, and your ad targeting. Get this right first, and everything else gets easier.",
+      setupSteps: [
+        {
+          id: "connect-step-1",
+          order: 1,
+          title: "Verify Your Business Information",
+          description: "Your business name, address, phone number, and hours are the foundation of your online presence. Every directory, every listing, every search result pulls from this data. If it is inconsistent anywhere, search engines penalize you and customers get confused. Take ten minutes to make sure everything here is exactly right.",
+          estimatedMinutes: 10,
+          substeps: [
+            {
+              id: "connect-step-1-sub-a",
+              title: "Confirm NAP consistency",
+              helpText: "NAP stands for Name, Address, Phone. Your business name must be spelled exactly the same way everywhere \u2014 including punctuation. If your legal name is 'Smith & Sons Plumbing LLC' but your Google listing says 'Smith and Sons Plumbing', that inconsistency hurts your search rankings.",
+              validationRule: "business_name_matches_assessment"
+            },
+            {
+              id: "connect-step-1-sub-b",
+              title: "Format address to USPS standard",
+              helpText: "Use the official USPS format for your address. That means 'St' not 'Street', 'Ste' not 'Suite', and the correct ZIP+4 if you have it. Search engines compare your address against USPS records, so matching their format gives you a ranking advantage.",
+              validationRule: "address_usps_format"
+            },
+            {
+              id: "connect-step-1-sub-c",
+              title: "Use a local phone number",
+              helpText: "Use a local area code phone number, not a toll-free 800 number. Google and other directories prioritize businesses with local phone numbers because it signals you are actually located in the area you serve. If you use a call tracking number, make sure it has a local area code.",
+              validationRule: "phone_is_local"
+            },
+            {
+              id: "connect-step-1-sub-d",
+              title: "Set accurate business hours",
+              helpText: "Enter your actual business hours, including any seasonal or holiday variations. Nothing frustrates a potential customer more than driving to a business that Google says is open but is actually closed. If your hours change seasonally, set a reminder to update them."
+            }
+          ],
+          triggerOnComplete: {
+            email: {
+              templateId: "connect-step-1-complete",
+              subject: "Your business information is verified \u2014 here's what happens next",
+              delayMinutes: 5
+            },
+            coachBlueAction: "celebrate_nap_verified",
+            nextStepPrompt: "Great \u2014 your business information is locked in. Now let's get your contacts imported so you have people to reach."
+          }
+        },
+        {
+          id: "connect-step-2",
+          order: 2,
+          title: "Import Your Existing Contacts",
+          description: "You already have customers and leads \u2014 they are in your email, your phone, maybe a spreadsheet somewhere. Getting them into / connect means every tool on the platform can work with your actual customer list instead of starting from zero.",
+          estimatedMinutes: 15,
+          substeps: [
+            {
+              id: "connect-step-2-sub-a",
+              title: "Export contacts from your current system",
+              helpText: "If you are using Gmail, Outlook, Mailchimp, Constant Contact, or any other tool, export your contacts as a CSV file. Most systems have an 'Export' option in their contacts or audience section. If you are not sure how, search '[your tool name] export contacts CSV' \u2014 there are step-by-step guides for every major platform."
+            },
+            {
+              id: "connect-step-2-sub-b",
+              title: "Clean up your CSV before importing",
+              helpText: "Open your CSV file and remove obvious junk: test emails you sent to yourself, old employees, duplicates, and anyone who has asked to be removed from your list. Importing dirty data means every campaign and report you run later will be less accurate. Fifteen minutes of cleanup now saves hours of frustration later."
+            },
+            {
+              id: "connect-step-2-sub-c",
+              title: "Upload and map your fields",
+              helpText: "Upload your CSV file and match your spreadsheet columns to the / connect fields (first name, last name, email, phone, etc.). The import tool will show you a preview so you can verify everything looks right before it goes in. If a field does not match, you can skip it \u2014 you can always add that data later."
+            }
+          ],
+          triggerOnComplete: {
+            email: {
+              templateId: "connect-step-2-complete",
+              subject: "Your contacts are in \u2014 now let's organize them",
+              delayMinutes: 5
+            },
+            coachBlueAction: "celebrate_contacts_imported",
+            nextStepPrompt: "Your contacts are imported. Now let's organize them into categories so you can target the right people with the right messages."
+          }
+        },
+        {
+          id: "connect-step-3",
+          order: 3,
+          title: "Set Up Contact Categories",
+          description: "Not every customer is the same. Some are loyal regulars, some are one-time buyers, some are leads who have never purchased. Categorizing your contacts means you can send the right message to the right group instead of blasting everyone with the same thing.",
+          estimatedMinutes: 10,
+          substeps: [
+            {
+              id: "connect-step-3-sub-a",
+              title: "Create categories relevant to your business",
+              helpText: "Think about how you naturally group your customers. A restaurant might use 'Regulars', 'Catering Clients', and 'Event Inquiries'. A plumber might use 'Residential', 'Commercial', and 'Property Managers'. Use terms that make sense for YOUR business, not generic marketing labels."
+            },
+            {
+              id: "connect-step-3-sub-b",
+              title: "Identify your VIP customers",
+              helpText: "Tag your best customers \u2014 the ones who spend the most, refer the most, or have been with you the longest. These are the people you want to treat differently: early access to promotions, personal check-ins, priority service. Knowing who they are is the first step."
+            },
+            {
+              id: "connect-step-3-sub-c",
+              title: "Set up lead source tracking",
+              helpText: "When a new contact comes in, where did they come from? Google search? A referral? Your website? Tracking lead sources tells you which marketing channels are actually working so you can invest more in what works and stop wasting money on what does not."
+            }
+          ],
+          triggerOnComplete: {
+            email: null,
+            coachBlueAction: "celebrate_categories_created",
+            nextStepPrompt: "Your contacts are organized. Now let's build a pipeline to track your deals from first conversation to closed sale."
+          }
+        },
+        {
+          id: "connect-step-4",
+          order: 4,
+          title: "Create Your First Pipeline",
+          description: "A pipeline is a visual way to track where each potential deal stands \u2014 from first contact to closed sale. Instead of keeping it all in your head or on sticky notes, you will see every opportunity laid out in stages so nothing falls through the cracks.",
+          estimatedMinutes: 10,
+          substeps: [
+            {
+              id: "connect-step-4-sub-a",
+              title: "Name your pipeline stages",
+              helpText: "Keep it simple. Most businesses need 4-6 stages: 'New Lead', 'Contacted', 'Proposal Sent', 'Negotiating', 'Won', 'Lost'. Use language that matches how you actually talk about deals in your business. You can always add or rename stages later."
+            },
+            {
+              id: "connect-step-4-sub-b",
+              title: "Assign values to your stages",
+              helpText: "For each deal in your pipeline, estimate its value. This does not have to be exact \u2014 a rough number is fine. When you can see that you have $50,000 in your pipeline, it changes how you prioritize your day. It also helps you forecast revenue, which matters when you are planning expenses or hiring."
+            },
+            {
+              id: "connect-step-4-sub-c",
+              title: "Set up basic automation rules",
+              helpText: "/ connect can automatically move deals between stages or send you reminders based on triggers you set. For example: if a deal has been in 'Proposal Sent' for 7 days with no activity, you get a reminder to follow up. Start with one or two simple rules \u2014 you can add more as you learn what works."
+            }
+          ],
+          triggerOnComplete: {
+            email: {
+              templateId: "connect-step-4-complete",
+              subject: "Your pipeline is ready \u2014 one more step to finish / connect setup",
+              delayMinutes: 5
+            },
+            coachBlueAction: "celebrate_pipeline_created",
+            nextStepPrompt: "Your pipeline is set up. Last step \u2014 connect your business email so everything syncs automatically."
+          }
+        },
+        {
+          id: "connect-step-5",
+          order: 5,
+          title: "Connect Your Email",
+          description: "Connecting your business email lets / connect automatically log conversations with your contacts, track email opens, and keep everything in one place. No more switching between your inbox and your CRM \u2014 it all syncs.",
+          estimatedMinutes: 5,
+          substeps: [
+            {
+              id: "connect-step-5-sub-a",
+              title: "Authorize your email provider",
+              helpText: "Click the 'Connect Email' button and sign in with your business email (Gmail, Outlook, or other provider). You will be asked to grant permission for / connect to read and send emails on your behalf. This is secure \u2014 your password is never stored, and you can revoke access at any time."
+            },
+            {
+              id: "connect-step-5-sub-b",
+              title: "Configure sync settings",
+              helpText: "Choose which emails to sync: all emails, only emails to/from your contacts, or only emails you manually tag. For most businesses, syncing emails to/from known contacts is the right balance between keeping a complete record and not cluttering your CRM with every newsletter you receive."
+            }
+          ],
+          triggerOnComplete: {
+            email: {
+              templateId: "connect-step-5-complete",
+              subject: "/ connect is fully set up \u2014 your foundation is solid",
+              delayMinutes: 5
+            },
+            coachBlueAction: "celebrate_connect_complete",
+            nextStepPrompt: "/ connect is fully set up. Your foundation is solid. Next up: / publish \u2014 let's get your business showing up on every directory that matters."
+          }
+        }
+      ],
+      whatDoneLooksLike: [
+        "Business name, address, phone, and hours are verified and consistent",
+        "Existing contacts are imported and free of duplicates",
+        "Contacts are categorized with at least 3 meaningful tags",
+        "At least one deal pipeline is created with named stages",
+        "Business email is connected and syncing"
+      ],
+      commonMistakes: [
+        "Importing contacts without cleaning the list first \u2014 duplicates and bad data pollute every report and campaign you run later",
+        "Creating too many pipeline stages \u2014 4 to 6 is ideal. More than that and deals get stuck in stages nobody checks",
+        "Not categorizing contacts at all \u2014 sending the same message to everyone is the fastest way to get unsubscribes",
+        "Skipping email connection \u2014 without it, you are manually logging every conversation, which means you will stop doing it within a week"
+      ],
+      troubleshooting: [
+        {
+          question: "My CSV import failed. What do I do?",
+          answer: "The most common cause is special characters in your CSV file (curly quotes, em dashes, accented characters). Open the file in a plain text editor, save it as UTF-8 CSV, and try again. If it still fails, check that your column headers do not contain spaces at the beginning or end.",
+          relatedStepId: "connect-step-2"
+        },
+        {
+          question: "I see duplicate contacts after importing. How do I fix it?",
+          answer: "Go to your contact list and use the 'Find Duplicates' tool. It will show you contacts with matching email addresses or phone numbers. You can merge them with one click \u2014 the system keeps the most complete record and discards the rest.",
+          relatedStepId: "connect-step-2"
+        },
+        {
+          question: "My email provider is not listed. Can I still connect?",
+          answer: "If your email provider supports IMAP (most do), you can connect it manually using your IMAP server settings. Check with your email provider or hosting company for the IMAP server address, port, and whether it requires SSL. If you are using hostsblue.com for email, the settings are pre-configured.",
+          relatedStepId: "connect-step-5"
+        }
+      ],
+      coachBlueGuidance: {
+        onFirstOpen: "Welcome to / connect \u2014 this is your home base. Everything on the platform starts here. I am going to walk you through five steps that will take about 50 minutes total. You do not have to do them all at once, but the sooner your foundation is set, the sooner every other tool starts working for you. Let's start with your business information.",
+        onStall: "I noticed you started importing your contacts but have not finished. That is the step where most people pause \u2014 it feels like a big task. Here is the thing: even importing 20 contacts is better than zero. You can always add more later. Want to pick up where you left off?",
+        onComplete: "/ connect is fully set up. Your business information is verified, your contacts are organized, your pipeline is tracking deals, and your email is connected. This is a solid foundation. Next step: / publish. That is where we make sure your business shows up correctly on every directory that matters \u2014 Google, Yelp, Apple Maps, and dozens more.",
+        criticalWarnings: [
+          "Do not skip the NAP verification step. Inconsistent business information across directories is one of the top reasons businesses rank poorly in local search.",
+          "Do not import contacts who have previously unsubscribed from your emails. This violates CAN-SPAM regulations and can get your email sending privileges suspended."
+        ]
+      },
+      relatedApps: ["publish", "promote", "respond"],
+      nextInCadence: "publish"
+    };
+  }
+});
+
+// shared/knowledge-base/apps/publish.ts
+var publish_exports = {};
+__export(publish_exports, {
+  publishKnowledge: () => publishKnowledge
+});
+var publishKnowledge;
+var init_publish = __esm({
+  "shared/knowledge-base/apps/publish.ts"() {
+    "use strict";
+    publishKnowledge = {
+      appId: "publish",
+      appName: "publish",
+      suite: "anchor",
+      purpose: "Manage your business listings across online directories so customers find accurate, consistent information about you everywhere they look \u2014 Google, Yelp, Apple Maps, Bing, Facebook, and dozens of industry-specific sites.",
+      whyItMatters: "When someone searches for a business like yours, they check multiple places. If your name is spelled differently on Yelp than on Google, or your phone number on Apple Maps goes to an old line, search engines lose confidence in your business and rank you lower. Worse, customers who find wrong information just call your competitor instead. / publish fixes this by pushing your verified information to every directory from one place.",
+      setupSteps: [
+        {
+          id: "publish-step-1",
+          order: 1,
+          title: "Verify Your Business Information",
+          description: "Before we push your business details anywhere, we need to make sure they are exactly right. Your Name, Address, and Phone (NAP) must be identical everywhere \u2014 one typo on one directory can hurt your ranking across all of them. This step pulls from what you entered in / connect, but you should double-check everything here with fresh eyes.",
+          estimatedMinutes: 10,
+          substeps: [
+            {
+              id: "publish-step-1-sub-a",
+              title: "Confirm business name consistency",
+              helpText: "Your business name must be exactly the same across every directory. That means the same punctuation, the same abbreviations (or lack of them), the same legal suffix. If your Google listing says 'Joe's Auto Repair' but your Yelp says 'Joes Auto Repair LLC', that counts as a mismatch.",
+              validationRule: "business_name_matches_connect"
+            },
+            {
+              id: "publish-step-1-sub-b",
+              title: "Format address to USPS standard",
+              helpText: "Directories compare your address against the USPS database. Use the standardized format: abbreviate Street to St, Avenue to Ave, Suite to Ste. Include your ZIP+4 if you know it. This is not about being formal \u2014 it is about matching the format that the algorithms expect.",
+              validationRule: "address_usps_format"
+            },
+            {
+              id: "publish-step-1-sub-c",
+              title: "Confirm local phone number",
+              helpText: "Use your local-area-code phone number, not a toll-free number. Local phone numbers are a ranking signal \u2014 they tell Google you are actually located where you say you are. If you use a tracking number for marketing, make sure the area code matches your service area.",
+              validationRule: "phone_is_local"
+            },
+            {
+              id: "publish-step-1-sub-d",
+              title: "Set accurate hours including holidays",
+              helpText: "Enter your regular business hours and any known holiday closures or adjusted hours. Google specifically penalizes businesses with inaccurate hours because it creates a bad experience for searchers. If you close early on Saturdays or are closed on holidays, list that here."
+            }
+          ],
+          triggerOnComplete: {
+            email: {
+              templateId: "publish-step-1-complete",
+              subject: "Business info verified \u2014 ready to submit your listings",
+              delayMinutes: 5
+            },
+            coachBlueAction: "celebrate_publish_nap_verified",
+            nextStepPrompt: "Your business information is verified and ready to go. Now let's pick which directories to list you on."
+          }
+        },
+        {
+          id: "publish-step-2",
+          order: 2,
+          title: "Select Target Directories",
+          description: "Not every directory matters equally for every business. A restaurant needs Yelp and TripAdvisor. A plumber needs HomeAdvisor and Angi. We will recommend the directories that matter most for your industry, but you pick the final list.",
+          estimatedMinutes: 5,
+          substeps: [
+            {
+              id: "publish-step-2-sub-a",
+              title: "Review industry-specific recommendations",
+              helpText: "Based on your business category, we recommend specific directories where your customers are most likely to search. These are not random \u2014 they are based on which directories rank highest in search results for businesses like yours in your area."
+            },
+            {
+              id: "publish-step-2-sub-b",
+              title: "Select your initial directory list",
+              helpText: "Check the directories you want to submit to. We recommend starting with at least 10 \u2014 the core ones (Google Business Profile, Yelp, Apple Maps, Bing Places, Facebook) plus industry-specific directories. You can always add more later, but starting with a solid foundation gives you the best ranking boost."
+            }
+          ],
+          triggerOnComplete: {
+            email: null,
+            coachBlueAction: "celebrate_directories_selected",
+            nextStepPrompt: "Good choices. Now let's submit your listings \u2014 this is where your business starts showing up."
+          }
+        },
+        {
+          id: "publish-step-3",
+          order: 3,
+          title: "Submit Your Listings",
+          description: "This is where it gets real. We are going to push your verified business information to every directory you selected. Each directory has its own format and requirements \u2014 / publish handles all of that for you. You just review and confirm.",
+          estimatedMinutes: 5,
+          substeps: [
+            {
+              id: "publish-step-3-sub-a",
+              title: "Review submission preview",
+              helpText: "Before anything goes live, you will see exactly what will be submitted to each directory. Check that your business name, address, phone, hours, and category look correct on every listing. This is your last chance to catch any issues before they go live."
+            },
+            {
+              id: "publish-step-3-sub-b",
+              title: "Confirm and submit",
+              helpText: "Click submit and your listings will be pushed to all selected directories. Most directories process submissions within 24-48 hours, though some (like Google Business Profile) may take up to a week for new listings. You will be notified as each one goes live."
+            }
+          ],
+          triggerOnComplete: {
+            email: {
+              templateId: "publish-step-3-complete",
+              subject: "Your listings are submitted \u2014 here's what to expect",
+              delayMinutes: 5
+            },
+            coachBlueAction: "celebrate_listings_submitted",
+            nextStepPrompt: "Your listings are on their way. While they process, let's set up monitoring so you will know immediately if anything changes."
+          }
+        },
+        {
+          id: "publish-step-4",
+          order: 4,
+          title: "Set Up Monitoring",
+          description: "Listings are not set-it-and-forget-it. Directories can change your information without telling you \u2014 a user might 'suggest an edit' on Google that changes your hours, or a data aggregator might overwrite your phone number with an old one. Monitoring catches these changes before they cost you customers.",
+          estimatedMinutes: 5,
+          substeps: [
+            {
+              id: "publish-step-4-sub-a",
+              title: "Configure monitoring frequency",
+              helpText: "Choose how often / publish checks your listings for changes. Weekly is good for most businesses. If you are in a highly competitive market or have had listing issues before, daily monitoring catches problems faster."
+            },
+            {
+              id: "publish-step-4-sub-b",
+              title: "Set up change alerts",
+              helpText: "Choose how you want to be notified when a listing changes: email, in-app notification, or both. We recommend both \u2014 email for the detailed report, in-app for the quick flag. You will also see a summary in your / publish dashboard anytime a change is detected."
+            }
+          ],
+          triggerOnComplete: {
+            email: {
+              templateId: "publish-step-4-complete",
+              subject: "/ publish is fully set up \u2014 your business is now discoverable",
+              delayMinutes: 5
+            },
+            coachBlueAction: "celebrate_publish_complete",
+            nextStepPrompt: "/ publish is fully set up. Your business is now discoverable across the directories that matter. Next: / elevate \u2014 let's make sure your online reputation is working for you, not against you."
+          }
+        }
+      ],
+      whatDoneLooksLike: [
+        "NAP (Name, Address, Phone) is verified and consistent across all listings",
+        "Business is listed on 10 or more relevant directories",
+        "Google Business Profile is connected and verified",
+        "Listing monitoring is active with alerts configured"
+      ],
+      commonMistakes: [
+        "Using different business names on different platforms \u2014 even small differences like 'LLC' on one and not another count as a mismatch",
+        "Using a toll-free number instead of a local number \u2014 this hurts local search ranking",
+        "Forgetting to update holiday hours \u2014 customers who find you closed when Google says you are open leave bad reviews",
+        "Not responding to Questions & Answers on directory listings \u2014 unanswered questions signal a neglected business"
+      ],
+      troubleshooting: [
+        {
+          question: "My Google Business Profile says 'pending verification'. How long does this take?",
+          answer: "Google typically verifies new listings within 5-7 business days via postcard, phone, or email. If your business has been operating for a while, you may get instant verification. If it has been more than 2 weeks, contact Google Business support directly \u2014 do not create a duplicate listing.",
+          relatedStepId: "publish-step-3"
+        },
+        {
+          question: "A directory has the wrong information and I cannot edit it. What do I do?",
+          answer: "Some directories pull data from aggregators rather than accepting direct edits. / publish can push corrections through these aggregator channels, but it may take 2-4 weeks to propagate. In the meantime, if you can claim the listing directly on the directory's website, that gives you faster control.",
+          relatedStepId: "publish-step-4"
+        },
+        {
+          question: "Do I need to list my home address if I run a home-based business?",
+          answer: "No. Google and most directories allow service-area businesses to hide their street address while still appearing in local results. Set your listing as a 'service area business' and define the areas you serve instead of showing your home address.",
+          relatedStepId: "publish-step-1"
+        }
+      ],
+      coachBlueGuidance: {
+        onFirstOpen: "Welcome to / publish. This is where we make your business findable. Right now, customers searching for what you do might not find you \u2014 or worse, they might find wrong information about you. We are going to fix that. First step: let's make sure your business details are exactly right.",
+        onStall: "I see you verified your business info but have not submitted your listings yet. Here is why this matters: every day your business is not listed correctly on major directories, potential customers are finding your competitors instead. The submission step takes about 5 minutes. Want to knock it out?",
+        onComplete: "/ publish is set up and your listings are live. Your business is now showing up accurately across the directories that matter most for your industry. Next up: / elevate. That is where we manage your online reputation \u2014 reviews, ratings, and how customers talk about you online.",
+        criticalWarnings: [
+          "Never create duplicate listings on any directory. If you already have a Google Business Profile, claim it instead of creating a new one. Duplicate listings confuse search engines and split your reviews.",
+          "Do not use a PO Box as your business address. Most directories reject PO Boxes, and Google will suspend listings that use them for non-PO-Box businesses."
+        ]
+      },
+      relatedApps: ["connect", "elevate", "optimize"],
+      nextInCadence: "elevate"
+    };
+  }
+});
+
+// shared/knowledge-base/apps/elevate.ts
+var elevate_exports = {};
+__export(elevate_exports, {
+  elevateKnowledge: () => elevateKnowledge
+});
+var elevateKnowledge;
+var init_elevate = __esm({
+  "shared/knowledge-base/apps/elevate.ts"() {
+    "use strict";
+    elevateKnowledge = {
+      appId: "elevate",
+      appName: "elevate",
+      suite: "anchor",
+      purpose: "Monitor, manage, and grow your online reputation by aggregating reviews from every platform into one dashboard and giving you the tools to respond quickly and strategically.",
+      whyItMatters: "88% of consumers trust online reviews as much as personal recommendations. A single unanswered negative review can cost you dozens of customers who read it and quietly go elsewhere. / elevate brings all your reviews together so you see them as they come in and can respond before the damage spreads. It also helps you actively ask happy customers for reviews, which is the single fastest way to improve how your business looks online.",
+      setupSteps: [
+        {
+          id: "elevate-step-1",
+          order: 1,
+          title: "Connect Your Review Platforms",
+          description: "Your reviews are scattered across Google, Yelp, Facebook, and industry-specific sites. Right now you would have to check each one individually to see what people are saying. Connecting them to / elevate means every review from every platform shows up in one place, in real time.",
+          estimatedMinutes: 10,
+          substeps: [
+            {
+              id: "elevate-step-1-sub-a",
+              title: "Connect Google Business Profile reviews",
+              helpText: "Google reviews are the most visible and impactful for local businesses \u2014 they show up directly in search results. Click 'Connect Google' and authorize / elevate to read your Google Business reviews. This is read-only access; it does not change anything on your Google profile."
+            },
+            {
+              id: "elevate-step-1-sub-b",
+              title: "Connect Yelp reviews",
+              helpText: "Yelp reviews carry significant weight, especially for restaurants, home services, and healthcare. Connect your Yelp business page so new reviews appear in your / elevate dashboard automatically."
+            },
+            {
+              id: "elevate-step-1-sub-c",
+              title: "Connect at least one other review platform",
+              helpText: "Depending on your industry, you may have reviews on Facebook, TripAdvisor, Angi, Healthgrades, Avvo, Houzz, or other platforms. Connect at least one more so you have a broader view of your reputation. The more platforms you connect, the more complete your picture."
+            }
+          ],
+          triggerOnComplete: {
+            email: {
+              templateId: "elevate-step-1-complete",
+              subject: "Review platforms connected \u2014 your reputation dashboard is live",
+              delayMinutes: 5
+            },
+            coachBlueAction: "celebrate_review_platforms_connected",
+            nextStepPrompt: "Your review platforms are connected. Now let's set up alerts so you never miss a new review."
+          }
+        },
+        {
+          id: "elevate-step-2",
+          order: 2,
+          title: "Set Up Review Alerts",
+          description: "The window for responding to a review effectively is 24-48 hours. After that, the reviewer has moved on and other potential customers have already seen the unanswered review. Alerts make sure you know about every new review as soon as it posts.",
+          estimatedMinutes: 5,
+          substeps: [
+            {
+              id: "elevate-step-2-sub-a",
+              title: "Set alert frequency",
+              helpText: "Choose how quickly you want to be notified: immediately (as soon as a review is detected), daily digest (summary each morning), or weekly. For most businesses, immediate alerts for negative reviews and a daily digest for everything else is the right balance."
+            },
+            {
+              id: "elevate-step-2-sub-b",
+              title: "Choose notification channels",
+              helpText: "Pick where you want to receive alerts: email, in-app notification, or both. If you are not at your computer all day, make sure email notifications go to an inbox you check on your phone. A review that sits unresponded for a week is a missed opportunity."
+            }
+          ],
+          triggerOnComplete: {
+            email: null,
+            coachBlueAction: "celebrate_alerts_configured",
+            nextStepPrompt: "Alerts are set up \u2014 you will not miss a review. Now let's create response templates so you can reply quickly and consistently."
+          }
+        },
+        {
+          id: "elevate-step-3",
+          order: 3,
+          title: "Create Response Templates",
+          description: "Having templates ready means you can respond to any review within minutes instead of agonizing over what to say. You are not going to copy-paste the same response to every review \u2014 that looks robotic and customers notice. Instead, you will have a starting framework you can personalize quickly.",
+          estimatedMinutes: 15,
+          substeps: [
+            {
+              id: "elevate-step-3-sub-a",
+              title: "Create a positive review response template",
+              helpText: "For happy customers, your response should: (1) thank them by name if possible, (2) reference something specific they mentioned, (3) invite them back. Example framework: 'Thank you [Name]! We are glad [specific thing they mentioned]. We look forward to seeing you again.' Personalize each one \u2014 customers can tell when it is a template."
+            },
+            {
+              id: "elevate-step-3-sub-b",
+              title: "Create a neutral review response template",
+              helpText: "Neutral reviews (3 stars) are an opportunity. The customer was not unhappy enough to complain but not impressed enough to rave. Your response should: (1) thank them for their feedback, (2) ask what could have made it a 5-star experience, (3) offer to make it right. This often turns a 3-star customer into a loyal one."
+            },
+            {
+              id: "elevate-step-3-sub-c",
+              title: "Create a negative review response template",
+              helpText: "Negative reviews feel personal, but your response is not for the reviewer \u2014 it is for every future customer who reads it. Your response should: (1) apologize without being defensive, (2) acknowledge the specific issue, (3) offer to make it right offline (provide a phone number or email). Never argue publicly. Never offer excuses. A professional response to a negative review actually builds trust with readers."
+            }
+          ],
+          triggerOnComplete: {
+            email: {
+              templateId: "elevate-step-3-complete",
+              subject: "Response templates ready \u2014 time to respond to your first review",
+              delayMinutes: 5
+            },
+            coachBlueAction: "celebrate_templates_created",
+            nextStepPrompt: "Your templates are saved. Now let's put them to use \u2014 pick an existing review and respond to it using the tools."
+          }
+        },
+        {
+          id: "elevate-step-4",
+          order: 4,
+          title: "Respond to Your First Review",
+          description: "Practice makes it real. Pick one of your existing reviews \u2014 ideally a recent one \u2014 and respond to it using / elevate. This is not just practice; it is a real response that the reviewer and every future customer will see.",
+          estimatedMinutes: 5,
+          substeps: [
+            {
+              id: "elevate-step-4-sub-a",
+              title: "Select a review to respond to",
+              helpText: "Look at your recent reviews and pick one that has not been responded to yet. If you have a mix, start with a positive one to build confidence. If you only have negative reviews waiting, start with the most recent \u2014 it is the most visible to potential customers right now."
+            },
+            {
+              id: "elevate-step-4-sub-b",
+              title: "Compose and send your response",
+              helpText: "Use your template as a starting point, then personalize it for this specific review. Reference something the reviewer mentioned, use their name if available, and keep it concise \u2014 2-4 sentences is ideal. Once you are satisfied, click send. The response will be posted directly to the review platform."
+            }
+          ],
+          triggerOnComplete: {
+            email: {
+              templateId: "elevate-step-4-complete",
+              subject: "/ elevate is set up \u2014 your reputation is now actively managed",
+              delayMinutes: 5
+            },
+            coachBlueAction: "celebrate_elevate_complete",
+            nextStepPrompt: "/ elevate is fully set up. You are now actively managing your online reputation. Next: / respond \u2014 we are going to unify all your incoming messages into one inbox so nothing falls through the cracks."
+          }
+        }
+      ],
+      whatDoneLooksLike: [
+        "Three or more review platforms connected and syncing",
+        "Review alerts are active and configured to your preferences",
+        "Response templates saved for positive, neutral, and negative reviews",
+        "At least one real review has been responded to through / elevate"
+      ],
+      commonMistakes: [
+        "Ignoring negative reviews \u2014 silence looks like indifference to every potential customer who reads it",
+        "Copy-pasting identical responses to every review \u2014 reviewers and readers notice, and it makes your business look like it does not care",
+        "Waiting more than 48 hours to respond \u2014 the effectiveness of a response drops sharply after the first two days",
+        "Getting defensive in responses to negative reviews \u2014 your response is for future customers reading the review, not for winning an argument with the reviewer"
+      ],
+      troubleshooting: [
+        {
+          question: "A review platform is not showing all my reviews. What happened?",
+          answer: "Some platforms (especially Yelp) filter reviews they consider suspicious or less reliable. These filtered reviews are not visible to / elevate because they are not visible on the platform itself. This is normal and not something you can control. Focus on the reviews that are visible \u2014 those are the ones customers see.",
+          relatedStepId: "elevate-step-1"
+        },
+        {
+          question: "Can I delete a negative review?",
+          answer: "You cannot delete reviews left by customers. You can report a review to the platform if it violates their policies (fake review, spam, contains threats, etc.), but the platform decides whether to remove it. Your best strategy is always to respond professionally. A thoughtful response to a negative review often does more for your reputation than no negative reviews at all.",
+          relatedStepId: "elevate-step-4"
+        },
+        {
+          question: "How do I get more positive reviews?",
+          answer: "The best way is to ask. After a positive interaction with a customer, send them a direct link to leave a review on Google or your preferred platform. / elevate can automate this with follow-up emails after appointments or purchases. Most happy customers are willing to leave a review \u2014 they just need a nudge and a direct link.",
+          relatedStepId: "elevate-step-3"
+        }
+      ],
+      coachBlueGuidance: {
+        onFirstOpen: "Welcome to / elevate. Your online reputation is one of the most valuable assets your business has \u2014 and right now it might be working against you without you even knowing it. We are going to connect your review platforms, set up alerts, create response templates, and respond to your first review. The whole setup takes about 35 minutes, and the payoff is immediate.",
+        onStall: "I noticed you connected your review platforms but have not set up your response templates yet. Here is why this matters: right now you are seeing reviews come in, but you do not have a fast way to respond to them. The 24-48 hour response window is real \u2014 every day you wait, the impact of your response drops. Let's get those templates done in 15 minutes.",
+        onComplete: "/ elevate is fully set up. Your review platforms are connected, alerts are active, templates are ready, and you have responded to your first review. From here on out, you will see every new review as it comes in and be able to respond quickly and professionally. Next: / respond \u2014 that is where we unify all your incoming messages from email, social, and web into one inbox.",
+        criticalWarnings: [
+          "Never offer compensation publicly in a review response. Saying 'we will give you a refund' in a public response teaches every future customer that complaining publicly gets them free stuff. Take the conversation offline.",
+          "Never respond to reviews when you are angry or upset. Write your response, wait 30 minutes, re-read it, then send. A response written in anger almost always makes the situation worse."
+        ]
+      },
+      relatedApps: ["publish", "respond", "connect"],
+      nextInCadence: "respond"
+    };
+  }
+});
+
+// shared/knowledge-base/coach-blue/controlled-responses.ts
+var CONTROLLED_RESPONSES;
+var init_controlled_responses = __esm({
+  "shared/knowledge-base/coach-blue/controlled-responses.ts"() {
+    "use strict";
+    CONTROLLED_RESPONSES = [
+      {
+        trigger: ["cancel", "cancel subscription", "cancel my account", "how do i cancel"],
+        response: "You can manage your subscription from Settings in the left sidebar \u2014 look for the Billing section. If you're thinking about canceling, I'd love to understand what's not working. I might be able to help solve it before you go.",
+        priority: "critical",
+        category: "billing"
+      },
+      {
+        trigger: ["digital iq", "my score", "what is my score", "digital iq score"],
+        response: "Your Digital IQ score measures your online presence across 9 key areas, each weighted by how much it impacts your visibility and revenue. Click 'Digital IQ' in the left sidebar to see your full breakdown. I can explain any specific area if you want to dig deeper.",
+        priority: "critical",
+        category: "scoring"
+      },
+      {
+        trigger: ["what order", "where do i start", "what should i do first", "setup order", "what order should i set up"],
+        response: "Follow your Directions for Use \u2014 click it in the left sidebar under your guide section. It's customized to your prescription. The general order is: 1. / connect (your foundation), 2. / publish (get found online), 3. / elevate (manage your reputation), then communications and advertising. Each step builds on the last.",
+        priority: "critical",
+        category: "setup"
+      },
+      {
+        trigger: ["how much", "pricing", "what does it cost", "price"],
+        response: "Here's how pricing works: individual apps are $29/mo each. The Anchor Suite bundles / publish, / elevate, / optimize, and / amplify for $99/mo. The Compass Suite bundles / promote, / engage, / respond, and / post for $99/mo. / connect CRM has a free Starter tier (100 contacts) or $29/mo for unlimited. I'm $99/mo standalone, $59/mo if you have one suite, and free if you have both suites. All payments go through swipesblue.",
+        priority: "critical",
+        category: "billing"
+      },
+      {
+        trigger: ["what is connect", "what does connect do", "tell me about connect"],
+        response: "/ connect is your CRM \u2014 the central hub where all your contacts, deals, and customer data lives. Every other app reads from and writes to / connect. When someone fills out your / engage chat widget, they become a contact in / connect. When you send campaigns from / promote, you're sending to your / connect lists. It's the foundation \u2014 that's why it's always step 1 in your Directions for Use.",
+        priority: "standard",
+        category: "apps"
+      },
+      {
+        trigger: ["what is publish", "what does publish do", "tell me about publish"],
+        response: "/ publish manages your business listings across online directories \u2014 Google, Yelp, Apple Maps, Facebook, and dozens more. It makes sure your name, address, phone number, and hours are correct everywhere. When that info is inconsistent, Google penalizes your search ranking. / publish fixes that and monitors for changes.",
+        priority: "standard",
+        category: "apps"
+      },
+      {
+        trigger: ["what is elevate", "what does elevate do", "tell me about elevate"],
+        response: "/ elevate is your reputation manager. It pulls in reviews from Google, Yelp, Facebook, and other platforms into one place so you can see and respond to all of them. It helps you request new reviews from happy customers and gives you templates for responding to negative ones. Reviews are the #1 factor in local purchase decisions.",
+        priority: "standard",
+        category: "apps"
+      },
+      {
+        trigger: ["what is promote", "what does promote do", "tell me about promote"],
+        response: "/ promote is your email campaign tool. You build and send email campaigns to your / connect contact lists \u2014 newsletters, promotions, announcements, automated sequences. It tracks opens, clicks, and conversions so you know what's working.",
+        priority: "standard",
+        category: "apps"
+      },
+      {
+        trigger: ["what is engage", "what does engage do", "tell me about engage"],
+        response: "/ engage is a live chat widget you install on your website. When visitors have questions, they can chat with you in real time. Every conversation flows into / respond (your unified inbox) and every visitor becomes a contact in / connect.",
+        priority: "standard",
+        category: "apps"
+      },
+      {
+        trigger: ["what is respond", "what does respond do", "tell me about respond"],
+        response: "/ respond is your unified inbox. Messages from email, chat, social media, and SMS all land in one place. You never miss a message and you never have to check five different platforms. Everything is connected back to the contact in / connect.",
+        priority: "standard",
+        category: "apps"
+      },
+      {
+        trigger: ["what is post", "what does post do", "tell me about post"],
+        response: "/ post is your social media management tool. Schedule and publish content across Facebook, Instagram, LinkedIn, and more from one dashboard. It helps you stay consistent \u2014 which is the single biggest factor in social media success.",
+        priority: "standard",
+        category: "apps"
+      },
+      {
+        trigger: ["what is optimize", "what does optimize do", "tell me about optimize"],
+        response: "/ optimize monitors your SEO health \u2014 keyword rankings, site performance, backlinks, and technical issues that affect your search visibility. It shows you what's working and what needs attention so you can climb higher in search results.",
+        priority: "standard",
+        category: "apps"
+      },
+      {
+        trigger: ["what is amplify", "what does amplify do", "tell me about amplify"],
+        response: "/ amplify is your advertising platform. Run paid ads across Google, Meta (Facebook/Instagram), and Reddit from one dashboard. It uses data from your other apps \u2014 your / connect contacts, your / publish listing hours, your / elevate reviews \u2014 to make your ads smarter and more targeted.",
+        priority: "standard",
+        category: "apps"
+      },
+      {
+        trigger: ["compass suite", "what is compass", "compass bundle"],
+        response: "The Compass Suite is your communications bundle \u2014 $99/mo for four apps: / promote (email campaigns), / engage (live chat widget), / respond (unified inbox), and / post (social media management). Buying the suite saves you $17/mo versus buying all four apps individually at $29 each.",
+        priority: "standard",
+        category: "suites"
+      },
+      {
+        trigger: ["anchor suite", "what is anchor", "anchor bundle"],
+        response: "The Anchor Suite is your local presence bundle \u2014 $99/mo for four apps: / publish (directory listings), / elevate (reputation management), / optimize (SEO monitoring), and / amplify (advertising). It covers everything you need to be found locally and manage how your business appears online.",
+        priority: "standard",
+        category: "suites"
+      },
+      {
+        trigger: ["directions for use", "setup checklist", "what do i do next", "next step"],
+        response: "Your Directions for Use is in the left sidebar \u2014 click it to see your personalized setup checklist. It shows every step you need to complete, organized by app in the order that matters most. You can check off steps as you go, add your own notes, and track your progress. Start at the top and work your way down.",
+        priority: "critical",
+        category: "setup"
+      },
+      {
+        trigger: ["support", "help", "talk to someone", "contact support"],
+        response: "For support, you can use the chat widget in the bottom-right corner \u2014 the Support Agent tab connects you with our team. You can also email support@businessblueprint.io. If you have a question about setup or strategy, I can help with that right here.",
+        priority: "standard",
+        category: "support"
+      },
+      {
+        trigger: ["hostsblue", "hosting", "domain", "website builder"],
+        response: "hostsblue.com is our cloud hosting platform \u2014 domains, hosting, email, website builder, and SSL certificates. If you need a website or want to improve your current one, that's where to start. Visit hostsblue.com to explore plans.",
+        priority: "standard",
+        category: "ecosystem"
+      },
+      {
+        trigger: ["swipesblue", "payment", "payment processing"],
+        response: "swipesblue.com is our payment processing platform. All billing and payment processing across the businessblueprint.io ecosystem goes through swipesblue. If you have billing questions, check Settings in the left sidebar.",
+        priority: "standard",
+        category: "ecosystem"
+      }
+    ];
+  }
+});
+
+// shared/knowledge-base/index.ts
+var init_knowledge_base = __esm({
+  "shared/knowledge-base/index.ts"() {
+    "use strict";
+    init_types();
+    init_setup_cadence();
+    init_connect();
+    init_publish();
+    init_elevate();
+    init_controlled_responses();
+  }
+});
+
+// import("../../shared/knowledge-base/apps/**/*") in server/services/setup-triggers.ts
+var globImport_shared_knowledge_base_apps;
+var init_ = __esm({
+  'import("../../shared/knowledge-base/apps/**/*") in server/services/setup-triggers.ts'() {
+    globImport_shared_knowledge_base_apps = __glob({
+      "../../shared/knowledge-base/apps/connect.ts": () => Promise.resolve().then(() => (init_connect(), connect_exports)),
+      "../../shared/knowledge-base/apps/elevate.ts": () => Promise.resolve().then(() => (init_elevate(), elevate_exports)),
+      "../../shared/knowledge-base/apps/publish.ts": () => Promise.resolve().then(() => (init_publish(), publish_exports))
+    });
+  }
+});
+
+// server/services/setup-triggers.ts
+var setup_triggers_exports = {};
+__export(setup_triggers_exports, {
+  SetupTriggerService: () => SetupTriggerService,
+  setupTriggerService: () => setupTriggerService
+});
+import { eq as eq19, and as and15, sql as sql8, ne, desc as desc8 } from "drizzle-orm";
+import { Resend as Resend2 } from "resend";
+var SetupTriggerService, setupTriggerService;
+var init_setup_triggers = __esm({
+  "server/services/setup-triggers.ts"() {
+    "use strict";
+    init_db();
+    init_schema();
+    init_knowledge_base();
+    init_();
+    SetupTriggerService = class {
+      /**
+       * Fire triggers for a task status change.
+       * Called ASYNCHRONOUSLY from the PATCH /api/setup-tasks/:id endpoint.
+       * Must never throw — all errors are caught and logged.
+       */
+      async onTaskStatusChange(clientId, taskId, newStatus, task) {
+        try {
+          if (newStatus === "completed" && !task.substepId) {
+            await this.onStepCompleted(clientId, task);
+          }
+          await this.checkAppCompletion(clientId, task.appId);
+          await this.checkJourneyCompletion(clientId);
+        } catch (error) {
+          console.error("[SetupTriggers] Error processing trigger:", error);
+        }
+      }
+      /**
+       * Fires when a parent setup step is completed (not a substep).
+       */
+      async onStepCompleted(clientId, task) {
+        await db.insert(setupTaskEvents).values({
+          clientId,
+          taskId: null,
+          eventType: "completed",
+          metadata: { appId: task.appId, stepId: task.stepId, title: task.title }
+        });
+        try {
+          const appModule = await globImport_shared_knowledge_base_apps(`../../shared/knowledge-base/apps/${task.appId}`);
+          const knowledge = appModule[`${task.appId}Knowledge`];
+          if (knowledge) {
+            const step = knowledge.setupSteps.find((s) => s.id === task.stepId);
+            if (step?.triggerOnComplete) {
+              if (step.triggerOnComplete.email) {
+                await this.queueStepCompletionEmail(clientId, task, step.triggerOnComplete.email);
+              }
+              if (step.triggerOnComplete.coachBlueAction) {
+                await this.queueCoachBlueMessage(clientId, step.triggerOnComplete.coachBlueAction);
+              }
+            }
+          }
+        } catch (e) {
+          console.log(`[SetupTriggers] No knowledge file for ${task.appId} \u2014 skipping step triggers`);
+        }
+        await this.fireNotification(clientId, "step_completed", {
+          title: "Step Complete",
+          message: `You've completed "${task.title}" \u2014 nice work.`
+        });
+      }
+      /**
+       * Checks if all steps for a specific app are complete.
+       */
+      async checkAppCompletion(clientId, appId) {
+        const appTasks = await db.select().from(setupTasks).where(and15(
+          eq19(setupTasks.clientId, clientId),
+          eq19(setupTasks.appId, appId)
+        ));
+        const parentTasks = appTasks.filter((t) => !t.substepId);
+        const completedParents = parentTasks.filter((t) => t.status === "completed");
+        if (parentTasks.length > 0 && completedParents.length === parentTasks.length) {
+          const alreadyLogged = await db.select({ id: setupTaskEvents.id }).from(setupTaskEvents).where(and15(
+            eq19(setupTaskEvents.clientId, clientId),
+            eq19(setupTaskEvents.eventType, "app_complete"),
+            sql8`${setupTaskEvents.metadata}->>'appId' = ${appId}`
+          )).limit(1);
+          if (alreadyLogged.length > 0) return;
+          await db.insert(setupTaskEvents).values({
+            clientId,
+            eventType: "app_complete",
+            metadata: { appId }
+          });
+          const cadenceStep = SETUP_CADENCE.find((s) => s.appId === appId);
+          const milestone = cadenceStep?.milestone || `/ ${appId} setup`;
+          await this.queueAppCompletionEmail(clientId, appId, milestone);
+          try {
+            const appModule = await globImport_shared_knowledge_base_apps(`../../shared/knowledge-base/apps/${appId}`);
+            const knowledge = appModule[`${appId}Knowledge`];
+            if (knowledge?.coachBlueGuidance?.onComplete) {
+              await this.queueCoachBlueMessage(clientId, knowledge.coachBlueGuidance.onComplete);
+            }
+          } catch (e) {
+          }
+          await this.fireNotification(clientId, "app_complete", {
+            title: "Milestone Reached",
+            message: `${milestone} \u2014 / ${appId} setup is complete.`
+          });
+        }
+      }
+      /**
+       * Checks if the entire setup journey is complete.
+       */
+      async checkJourneyCompletion(clientId) {
+        const allTasks = await db.select().from(setupTasks).where(eq19(setupTasks.clientId, clientId));
+        const parentTasks = allTasks.filter((t) => !t.substepId);
+        const completedParents = parentTasks.filter((t) => t.status === "completed" || t.status === "skipped");
+        if (parentTasks.length > 0 && completedParents.length === parentTasks.length) {
+          const alreadyLogged = await db.select({ id: setupTaskEvents.id }).from(setupTaskEvents).where(and15(
+            eq19(setupTaskEvents.clientId, clientId),
+            eq19(setupTaskEvents.eventType, "journey_complete")
+          )).limit(1);
+          if (alreadyLogged.length > 0) return;
+          await db.update(clients).set({ setupPhase: "complete", setupProgress: 100 }).where(eq19(clients.id, clientId));
+          await db.insert(setupTaskEvents).values({
+            clientId,
+            eventType: "journey_complete",
+            metadata: { completedAt: (/* @__PURE__ */ new Date()).toISOString() }
+          });
+          await this.queueJourneyCompletionEmail(clientId);
+          await this.queueCoachBlueMessage(
+            clientId,
+            "Congratulations \u2014 your digital presence setup is complete. Every app is configured and working. From here, I'll keep an eye on your progress and let you know when there are opportunities to improve. Your Directions for Use will shift to ongoing optimization tips. You've done the hard part."
+          );
+          await this.fireNotification(clientId, "journey_complete", {
+            title: "Journey Complete",
+            message: "Your digital presence setup is fully complete."
+          });
+        }
+      }
+      // =====================
+      // EMAIL METHODS
+      // =====================
+      /**
+       * Check daily email cap before sending.
+       * Returns true if an email can be sent today.
+       */
+      async canSendEmail(clientId) {
+        const today = /* @__PURE__ */ new Date();
+        today.setHours(0, 0, 0, 0);
+        const todayEmails = await db.select({ count: sql8`COUNT(*)` }).from(emailLogs).where(and15(
+          eq19(emailLogs.clientId, clientId),
+          sql8`${emailLogs.createdAt} >= ${today}`,
+          sql8`${emailLogs.emailType} LIKE 'setup_%'`
+        ));
+        return (todayEmails[0]?.count || 0) < 1;
+      }
+      async queueStepCompletionEmail(clientId, task, emailTrigger) {
+        if (!await this.canSendEmail(clientId)) {
+          console.log(`[SetupTriggers] Daily email cap reached for client ${clientId} \u2014 skipping step email`);
+          return;
+        }
+        const client = await db.select().from(clients).where(eq19(clients.id, clientId)).limit(1);
+        if (!client[0]?.email) return;
+        const nextStep = await this.getNextIncompleteStep(clientId);
+        await this.sendSetupEmail(
+          client[0].email,
+          client[0].companyName || "there",
+          clientId,
+          emailTrigger.subject,
+          "setup_step_complete",
+          this.buildStepCompletionEmailHtml(
+            client[0].companyName || "there",
+            task.title,
+            task.appId,
+            nextStep
+          )
+        );
+      }
+      async queueAppCompletionEmail(clientId, appId, milestone) {
+        if (!await this.canSendEmail(clientId)) return;
+        const client = await db.select().from(clients).where(eq19(clients.id, clientId)).limit(1);
+        if (!client[0]?.email) return;
+        const currentCadence = SETUP_CADENCE.find((s) => s.appId === appId);
+        const nextAppInCadence = currentCadence ? SETUP_CADENCE.find((s) => s.order === currentCadence.order + 1) : null;
+        await this.sendSetupEmail(
+          client[0].email,
+          client[0].companyName || "there",
+          clientId,
+          `${milestone} \u2014 / ${appId} is fully set up`,
+          "setup_app_complete",
+          this.buildAppCompletionEmailHtml(
+            client[0].companyName || "there",
+            appId,
+            milestone,
+            nextAppInCadence
+          )
+        );
+      }
+      async queueJourneyCompletionEmail(clientId) {
+        const client = await db.select().from(clients).where(eq19(clients.id, clientId)).limit(1);
+        if (!client[0]?.email) return;
+        await this.sendSetupEmail(
+          client[0].email,
+          client[0].companyName || "there",
+          clientId,
+          "Your digital presence setup is complete",
+          "setup_journey_complete",
+          this.buildJourneyCompletionEmailHtml(client[0].companyName || "there")
+        );
+      }
+      /**
+       * Send email using Resend (follows existing patterns in resend-email.ts / assessment-emails.ts)
+       */
+      async sendSetupEmail(recipientEmail, recipientName, clientId, subject, emailType, htmlBody) {
+        try {
+          const apiKey = process.env.RESEND_API_KEY;
+          if (!apiKey) {
+            console.error("[SetupTriggers] No RESEND_API_KEY \u2014 cannot send email");
+            return;
+          }
+          const resend = new Resend2(apiKey);
+          const fromEmail = process.env.FROM_EMAIL || "noreply@businessblueprint.io";
+          const result = await resend.emails.send({
+            from: `businessblueprint.io <${fromEmail}>`,
+            to: recipientEmail,
+            subject,
+            html: htmlBody
+          });
+          await db.insert(emailLogs).values({
+            recipientEmail,
+            recipientName,
+            clientId,
+            emailType,
+            subject,
+            htmlBody,
+            status: "sent",
+            sentAt: /* @__PURE__ */ new Date(),
+            resendApiId: result?.data?.id || null
+          });
+          console.log(`[SetupTriggers] Email sent: ${emailType} to ${recipientEmail}`);
+        } catch (error) {
+          console.error("[SetupTriggers] Email send failed:", error);
+          await db.insert(emailLogs).values({
+            recipientEmail,
+            recipientName,
+            clientId,
+            emailType,
+            subject,
+            htmlBody,
+            status: "failed",
+            errorMessage: String(error)
+          }).catch(() => {
+          });
+        }
+      }
+      // =====================
+      // COACH BLUE MESSAGES
+      // =====================
+      /**
+       * Queue a proactive Coach Blue message.
+       * Inserts into the AI coach conversation so it appears in the widget.
+       */
+      async queueCoachBlueMessage(clientId, message) {
+        try {
+          let conversations = await db.select().from(aiCoachConversations).where(eq19(aiCoachConversations.clientId, clientId)).orderBy(desc8(aiCoachConversations.updatedAt)).limit(1);
+          let conversationId;
+          if (conversations.length === 0) {
+            const [newConv] = await db.insert(aiCoachConversations).values({
+              clientId,
+              title: "Coach Blue"
+            }).returning();
+            conversationId = newConv.id;
+          } else {
+            conversationId = conversations[0].id;
+          }
+          await db.insert(aiCoachMessages).values({
+            conversationId,
+            role: "assistant",
+            content: message,
+            messageType: "proactive"
+          });
+          await db.update(aiCoachConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq19(aiCoachConversations.id, conversationId));
+          console.log(`[SetupTriggers] Coach Blue message queued for client ${clientId}`);
+        } catch (error) {
+          console.error("[SetupTriggers] Coach Blue message failed:", error);
+        }
+      }
+      // =====================
+      // IN-APP NOTIFICATIONS
+      // =====================
+      /**
+       * Fire an in-app notification.
+       * Stores as a setup_task_event — the frontend polls for recent notification events.
+       */
+      async fireNotification(clientId, type, data) {
+        await db.insert(setupTaskEvents).values({
+          clientId,
+          eventType: `notification_${type}`,
+          metadata: data
+        });
+      }
+      // =====================
+      // HELPER METHODS
+      // =====================
+      async getNextIncompleteStep(clientId) {
+        const tasks2 = await db.select().from(setupTasks).where(and15(
+          eq19(setupTasks.clientId, clientId),
+          ne(setupTasks.status, "completed"),
+          ne(setupTasks.status, "skipped"),
+          sql8`${setupTasks.substepId} IS NULL`
+        )).orderBy(setupTasks.cadenceOrder).limit(1);
+        return tasks2[0] ? { appId: tasks2[0].appId, title: tasks2[0].title } : null;
+      }
+      // =====================
+      // EMAIL HTML TEMPLATES
+      // =====================
+      // Clean, professional HTML emails.
+      // Tone: pharmaceutical, authoritative, helpful. No emoji. No marketing fluff.
+      // Palette: white background, Triad Black (#09080E) text, app accent colors for headers.
+      buildStepCompletionEmailHtml(businessName, stepTitle, appId, nextStep) {
+        return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head>
+<body style="margin:0;padding:0;background:#f9fafb;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;">
+        <tr><td style="padding:32px 40px;border-bottom:2px solid #09080E;">
+          <h2 style="margin:0;font-size:14px;letter-spacing:2px;color:#09080E;text-transform:uppercase;">Directions for Use</h2>
+        </td></tr>
+        <tr><td style="padding:40px;">
+          <p style="font-size:16px;color:#09080E;margin:0 0 20px;">
+            ${businessName},
+          </p>
+          <p style="font-size:16px;color:#09080E;margin:0 0 20px;">
+            Step completed: <strong>${stepTitle}</strong> in / ${appId}.
+          </p>
+          ${nextStep ? `
+          <p style="font-size:16px;color:#09080E;margin:0 0 20px;">
+            Next up: <strong>${nextStep.title}</strong> in / ${nextStep.appId}. Log in to continue.
+          </p>
+          ` : `
+          <p style="font-size:16px;color:#09080E;margin:0 0 20px;">
+            You're making solid progress. Log in to see what's next.
+          </p>
+          `}
+          <a href="https://businessblueprint.io/portal/directions"
+             style="display:inline-block;padding:12px 28px;background:#09080E;color:#ffffff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600;">
+            Open Directions for Use
+          </a>
+        </td></tr>
+        <tr><td style="padding:20px 40px;border-top:1px solid #e5e7eb;">
+          <p style="font-size:12px;color:#9ca3af;margin:0;">
+            businessblueprint.io \u2014 TRIADBLUE Inc.
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+      }
+      buildAppCompletionEmailHtml(businessName, appId, milestone, nextApp) {
+        return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head>
+<body style="margin:0;padding:0;background:#f9fafb;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;">
+        <tr><td style="padding:32px 40px;border-bottom:2px solid #09080E;">
+          <h2 style="margin:0;font-size:14px;letter-spacing:2px;color:#09080E;text-transform:uppercase;">Directions for Use \u2014 Milestone</h2>
+        </td></tr>
+        <tr><td style="padding:40px;">
+          <p style="font-size:16px;color:#09080E;margin:0 0 20px;">
+            ${businessName},
+          </p>
+          <p style="font-size:20px;color:#09080E;margin:0 0 8px;font-weight:700;">
+            ${milestone}
+          </p>
+          <p style="font-size:16px;color:#09080E;margin:0 0 24px;">
+            / ${appId} is fully configured. This part of your digital presence is working.
+          </p>
+          ${nextApp ? `
+          <p style="font-size:16px;color:#09080E;margin:0 0 8px;font-weight:600;">
+            Next: / ${nextApp.appId}
+          </p>
+          <p style="font-size:16px;color:#6b7280;margin:0 0 24px;">
+            ${nextApp.why}
+          </p>
+          ` : ""}
+          <a href="https://businessblueprint.io/portal/directions"
+             style="display:inline-block;padding:12px 28px;background:#09080E;color:#ffffff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600;">
+            Continue Setup
+          </a>
+        </td></tr>
+        <tr><td style="padding:20px 40px;border-top:1px solid #e5e7eb;">
+          <p style="font-size:12px;color:#9ca3af;margin:0;">
+            businessblueprint.io \u2014 TRIADBLUE Inc.
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+      }
+      buildJourneyCompletionEmailHtml(businessName) {
+        return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head>
+<body style="margin:0;padding:0;background:#f9fafb;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;">
+        <tr><td style="padding:32px 40px;border-bottom:2px solid #09080E;">
+          <h2 style="margin:0;font-size:14px;letter-spacing:2px;color:#09080E;text-transform:uppercase;">Directions for Use \u2014 Complete</h2>
+        </td></tr>
+        <tr><td style="padding:40px;">
+          <p style="font-size:16px;color:#09080E;margin:0 0 20px;">
+            ${businessName},
+          </p>
+          <p style="font-size:20px;color:#09080E;margin:0 0 12px;font-weight:700;">
+            Your digital presence setup is complete.
+          </p>
+          <p style="font-size:16px;color:#09080E;margin:0 0 20px;">
+            Every app in your prescription has been configured. Your business is now visible, responsive, and actively managed online.
+          </p>
+          <p style="font-size:16px;color:#09080E;margin:0 0 24px;">
+            From here, your Directions for Use will shift to ongoing optimization recommendations. We will also prompt you for a 90-day rescan to measure your progress.
+          </p>
+          <a href="https://businessblueprint.io/portal/directions"
+             style="display:inline-block;padding:12px 28px;background:#09080E;color:#ffffff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600;">
+            View Your Progress
+          </a>
+        </td></tr>
+        <tr><td style="padding:20px 40px;border-top:1px solid #e5e7eb;">
+          <p style="font-size:12px;color:#9ca3af;margin:0;">
+            businessblueprint.io \u2014 TRIADBLUE Inc.
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+      }
+      // =====================
+      // STALL REMINDER EMAILS
+      // =====================
+      buildStallReminderEmailHtml(businessName, stallDays, currentStep, progressPercent) {
+        const urgencyText = stallDays >= 14 ? "Your setup has been paused for two weeks. Getting back on track now will make a meaningful difference." : stallDays >= 7 ? "It's been a week since your last progress. Most steps take under 15 minutes." : "You were making good progress. Pick up where you left off \u2014 this step is straightforward.";
+        return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"></head>
+<body style="margin:0;padding:0;background:#f9fafb;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;">
+        <tr><td style="padding:32px 40px;border-bottom:2px solid #09080E;">
+          <h2 style="margin:0;font-size:14px;letter-spacing:2px;color:#09080E;text-transform:uppercase;">Directions for Use \u2014 Reminder</h2>
+        </td></tr>
+        <tr><td style="padding:40px;">
+          <p style="font-size:16px;color:#09080E;margin:0 0 20px;">
+            ${businessName},
+          </p>
+          <p style="font-size:16px;color:#09080E;margin:0 0 20px;">
+            ${urgencyText}
+          </p>
+          <p style="font-size:16px;color:#09080E;margin:0 0 8px;">
+            <strong>Your current step:</strong> ${currentStep.title}
+          </p>
+          <p style="font-size:16px;color:#6b7280;margin:0 0 24px;">
+            in / ${currentStep.appId} \u2014 overall progress: ${progressPercent}%
+          </p>
+          <a href="https://businessblueprint.io/portal/directions"
+             style="display:inline-block;padding:12px 28px;background:#09080E;color:#ffffff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600;">
+            Resume Setup
+          </a>
+        </td></tr>
+        <tr><td style="padding:20px 40px;border-top:1px solid #e5e7eb;">
+          <p style="font-size:12px;color:#9ca3af;margin:0;">
+            businessblueprint.io \u2014 TRIADBLUE Inc.
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+      }
+    };
+    setupTriggerService = new SetupTriggerService();
+  }
+});
+
+// server/services/jwt.ts
+var jwt_exports = {};
+__export(jwt_exports, {
+  JWTService: () => JWTService,
+  jwtService: () => jwtService
+});
+import jwt2 from "jsonwebtoken";
+import crypto13 from "crypto";
+import { eq as eq25 } from "drizzle-orm";
+var JWTService, jwtService;
+var init_jwt = __esm({
+  "server/services/jwt.ts"() {
+    "use strict";
+    init_db();
+    init_schema();
+    JWTService = class {
+      keyPair;
+      algorithm;
+      // Allow HS256 as well
+      constructor() {
+        console.log("[JWT Service] v2.0.1 - Initializing with HS256 forced mode");
+        this.keyPair = this.generateKeyPair();
+        const hasValidRSAKeys = this.keyPair.privateKey && this.keyPair.publicKey && this.keyPair.privateKey.length > 100 && this.keyPair.publicKey.length > 100 && this.keyPair.privateKey.includes("-----BEGIN RSA") && this.keyPair.publicKey.includes("-----BEGIN");
+        this.algorithm = hasValidRSAKeys ? "RS256" : "HS256";
+        if (this.algorithm === "HS256") {
+          const hasSecret = !!process.env.JWT_SECRET;
+          if (!hasSecret) {
+            console.warn("[JWT Service] WARNING: No JWT_SECRET set, using fallback key");
+          }
+        }
+      }
+      /**
+       * Generate RSA key pair for JWT signing
+       */
+      generateKeyPair() {
+        const existingPrivateKey = process.env.JWT_PRIVATE_KEY;
+        const existingPublicKey = process.env.JWT_PUBLIC_KEY;
+        if (existingPrivateKey && existingPublicKey) {
+          const privateKey = existingPrivateKey.includes("\\n") ? existingPrivateKey.replace(/\\n/g, "\n") : existingPrivateKey;
+          const publicKey = existingPublicKey.includes("\\n") ? existingPublicKey.replace(/\\n/g, "\n") : existingPublicKey;
+          return { privateKey, publicKey };
+        }
+        return { publicKey: "", privateKey: "" };
+      }
+      /**
+       * Create a secure dashboard access token for a client
+       */
+      async createDashboardToken(clientId, externalId) {
+        const payload = {
+          clientId,
+          externalId,
+          permissions: ["dashboard:read", "dashboard:write", "campaigns:read", "messages:read"],
+          iss: "businessblueprint.io",
+          aud: "client-portal"
+        };
+        const options = {
+          algorithm: this.algorithm,
+          expiresIn: "24h"
+          // 24 hour token expiration
+        };
+        const signingKey = this.algorithm === "RS256" ? this.keyPair.privateKey : process.env.JWT_SECRET || "fallback-secret-key";
+        const token = jwt2.sign(payload, signingKey, options);
+        await db.insert(dashboardAccess).values({
+          clientId,
+          accessToken: token,
+          dashboardUrl: `/portal?token=${token}`,
+          isActive: true
+        });
+        return token;
+      }
+      /**
+       * Verify and decode a JWT token
+       */
+      verifyToken(token) {
+        try {
+          const options = {
+            algorithms: [this.algorithm],
+            issuer: "businessblueprint.io",
+            audience: "client-portal"
+          };
+          const verificationKey = this.algorithm === "RS256" ? this.keyPair.publicKey : process.env.JWT_SECRET || "fallback-secret-key";
+          const decoded = jwt2.verify(token, verificationKey, options);
+          return decoded;
+        } catch (error) {
+          throw new Error(`Invalid token: ${error instanceof Error ? error.message : "Unknown error"}`);
+        }
+      }
+      /**
+       * Refresh a token (create new token with extended expiration)
+       */
+      async refreshToken(oldToken) {
+        try {
+          const decoded = this.verifyToken(oldToken);
+          const newToken = await this.createDashboardToken(decoded.clientId, decoded.externalId);
+          await this.revokeToken(oldToken);
+          return newToken;
+        } catch (error) {
+          throw new Error(`Cannot refresh token: ${error instanceof Error ? error.message : "Unknown error"}`);
+        }
+      }
+      /**
+       * Revoke a token (mark as inactive in database)
+       */
+      async revokeToken(token) {
+        await db.update(dashboardAccess).set({ isActive: false }).where(eq25(dashboardAccess.accessToken, token));
+      }
+      /**
+       * Check if token is active in database
+       */
+      async isTokenActive(token) {
+        const [record] = await db.select().from(dashboardAccess).where(eq25(dashboardAccess.accessToken, token));
+        return record?.isActive || false;
+      }
+      /**
+       * Get public key for external verification
+       */
+      getPublicKey() {
+        return this.keyPair.publicKey || "";
+      }
+      /**
+       * Get JWK (JSON Web Key) for public key distribution
+       */
+      getJWK() {
+        if (this.algorithm === "RS256" && this.keyPair.publicKey) {
+          const publicKey = crypto13.createPublicKey(this.keyPair.publicKey);
+          const jwk = publicKey.export({ format: "jwk" });
+          return {
+            ...jwk,
+            alg: this.algorithm,
+            use: "sig",
+            kid: crypto13.createHash("sha256").update(this.keyPair.publicKey).digest("hex").substring(0, 16)
+          };
+        }
+        return null;
+      }
+    };
+    jwtService = new JWTService();
+  }
+});
+
 // server/services/ai-settings.ts
 var ai_settings_exports = {};
 __export(ai_settings_exports, {
   AISettingsService: () => AISettingsService,
   aiSettingsService: () => aiSettingsService
 });
-import { eq as eq21 } from "drizzle-orm";
+import { eq as eq27 } from "drizzle-orm";
 var AISettingsService, aiSettingsService;
 var init_ai_settings = __esm({
   "server/services/ai-settings.ts"() {
@@ -4814,9 +6615,7 @@ var init_ai_settings = __esm({
     AISettingsService = class {
       async getProvider(feature) {
         try {
-          const setting = await db.query.aiSettings.findFirst({
-            where: eq21(aiSettings.feature, feature)
-          });
+          const [setting] = await db.select().from(aiSettings).where(eq27(aiSettings.feature, feature)).limit(1);
           return setting?.provider || this.getDefaultProvider(feature);
         } catch (error) {
           console.error(`[AI Settings] Error fetching provider for ${feature}:`, error);
@@ -4834,15 +6633,13 @@ var init_ai_settings = __esm({
         }
       }
       async updateProvider(feature, provider, updatedBy) {
-        const existing = await db.query.aiSettings.findFirst({
-          where: eq21(aiSettings.feature, feature)
-        });
+        const [existing] = await db.select().from(aiSettings).where(eq27(aiSettings.feature, feature)).limit(1);
         if (existing) {
           await db.update(aiSettings).set({
             provider,
             lastUpdated: /* @__PURE__ */ new Date(),
             updatedBy
-          }).where(eq21(aiSettings.feature, feature));
+          }).where(eq27(aiSettings.feature, feature));
         } else {
           await db.insert(aiSettings).values({
             feature,
@@ -4874,9 +6671,7 @@ var init_ai_settings = __esm({
           { feature: "coach_blue", provider: "claude", isActive: true }
         ];
         for (const setting of defaults) {
-          const existing = await db.query.aiSettings.findFirst({
-            where: eq21(aiSettings.feature, setting.feature)
-          });
+          const [existing] = await db.select().from(aiSettings).where(eq27(aiSettings.feature, setting.feature)).limit(1);
           if (!existing) {
             await db.insert(aiSettings).values({
               feature: setting.feature,
@@ -4890,6 +6685,39 @@ var init_ai_settings = __esm({
       }
     };
     aiSettingsService = new AISettingsService();
+  }
+});
+
+// server/services/timeline-logger.ts
+var timeline_logger_exports = {};
+__export(timeline_logger_exports, {
+  logContactActivity: () => logContactActivity
+});
+async function logContactActivity(event) {
+  try {
+    await db.insert(crmTimeline).values({
+      clientId: event.clientId,
+      contactId: event.contactId,
+      eventType: event.eventType,
+      eventSubtype: event.eventSubtype || null,
+      title: event.title,
+      description: event.description || null,
+      sourceApp: event.sourceApp,
+      sourceEntityType: event.sourceEntityType || null,
+      sourceEntityId: event.sourceEntityId || null,
+      metadata: event.metadata || null,
+      actorType: event.actorType || "system",
+      occurredAt: /* @__PURE__ */ new Date()
+    });
+  } catch (error) {
+    console.error(`[Timeline] Failed to log activity for contact ${event.contactId}:`, error);
+  }
+}
+var init_timeline_logger = __esm({
+  "server/services/timeline-logger.ts"() {
+    "use strict";
+    init_db();
+    init_schema();
   }
 });
 
@@ -5091,8 +6919,8 @@ __export(scheduler_exports, {
   startScheduler: () => startScheduler,
   stopScheduler: () => stopScheduler
 });
-import { eq as eq35, and as and22, lte as lte3, isNull as isNull2, or as or5 } from "drizzle-orm";
-import { sql as sql12 } from "drizzle-orm";
+import { eq as eq43, and as and30, lte as lte3, isNull as isNull2, or as or5 } from "drizzle-orm";
+import { sql as sql17 } from "drizzle-orm";
 function startScheduler() {
   if (isRunning) {
     console.log("[Scheduler] Already running");
@@ -5124,16 +6952,16 @@ function stopScheduler() {
 async function processScheduledPosts() {
   try {
     const duePosts = await db.select().from(contentPosts).where(
-      and22(
-        eq35(contentPosts.status, "scheduled"),
-        lte3(contentPosts.scheduledFor, sql12`NOW()`),
+      and30(
+        eq43(contentPosts.status, "scheduled"),
+        lte3(contentPosts.scheduledFor, sql17`NOW()`),
         or5(
           isNull2(contentPosts.lockedAt),
-          lte3(contentPosts.lockedAt, sql12`NOW() - INTERVAL '5 minutes'`)
+          lte3(contentPosts.lockedAt, sql17`NOW() - INTERVAL '5 minutes'`)
         ),
         or5(
           isNull2(contentPosts.nextRetryAt),
-          lte3(contentPosts.nextRetryAt, sql12`NOW()`)
+          lte3(contentPosts.nextRetryAt, sql17`NOW()`)
         )
       )
     ).limit(10);
@@ -5151,15 +6979,15 @@ async function processScheduledPosts() {
 async function processPost(postId) {
   try {
     const claimed = await db.update(contentPosts).set({
-      lockedAt: sql12`NOW()`,
+      lockedAt: sql17`NOW()`,
       status: "publishing"
     }).where(
-      and22(
-        eq35(contentPosts.id, postId),
-        eq35(contentPosts.status, "scheduled"),
+      and30(
+        eq43(contentPosts.id, postId),
+        eq43(contentPosts.status, "scheduled"),
         or5(
           isNull2(contentPosts.lockedAt),
-          lte3(contentPosts.lockedAt, sql12`NOW() - INTERVAL '5 minutes'`)
+          lte3(contentPosts.lockedAt, sql17`NOW() - INTERVAL '5 minutes'`)
         )
       )
     ).returning();
@@ -5173,11 +7001,11 @@ async function processPost(postId) {
       await publishPost2(post);
       await db.update(contentPosts).set({
         status: "published",
-        publishedAt: sql12`NOW()`,
+        publishedAt: sql17`NOW()`,
         lockedAt: null,
         lastError: null,
-        updatedAt: sql12`NOW()`
-      }).where(eq35(contentPosts.id, postId));
+        updatedAt: sql17`NOW()`
+      }).where(eq43(contentPosts.id, postId));
       console.log(`[Scheduler] \u2705 Successfully published post ${postId}`);
     } catch (publishError) {
       const attempts = (post.attempts || 0) + 1;
@@ -5189,8 +7017,8 @@ async function processPost(postId) {
         nextRetryAt: maxReached ? null : nextRetryAt,
         lastError: publishError.message || "Unknown error",
         lockedAt: null,
-        updatedAt: sql12`NOW()`
-      }).where(eq35(contentPosts.id, postId));
+        updatedAt: sql17`NOW()`
+      }).where(eq43(contentPosts.id, postId));
       if (maxReached) {
         console.error(`[Scheduler] \u274C Post ${postId} failed after ${attempts} attempts:`, publishError.message);
       } else {
@@ -5204,8 +7032,8 @@ async function processPost(postId) {
         status: "scheduled",
         lockedAt: null,
         lastError: error.message || "Scheduler error",
-        updatedAt: sql12`NOW()`
-      }).where(eq35(contentPosts.id, postId));
+        updatedAt: sql17`NOW()`
+      }).where(eq43(contentPosts.id, postId));
     } catch (releaseError) {
       console.error(`[Scheduler] Failed to release lock for post ${postId}:`, releaseError);
     }
@@ -5230,6 +7058,159 @@ var init_scheduler = __esm({
     RETRY_DELAYS = [6e4, 3e5, 9e5];
     schedulerInterval = null;
     isRunning = false;
+  }
+});
+
+// import("../../shared/knowledge-base/apps/**/*") in server/services/stall-detector.ts
+var globImport_shared_knowledge_base_apps3;
+var init_2 = __esm({
+  'import("../../shared/knowledge-base/apps/**/*") in server/services/stall-detector.ts'() {
+    globImport_shared_knowledge_base_apps3 = __glob({
+      "../../shared/knowledge-base/apps/connect.ts": () => Promise.resolve().then(() => (init_connect(), connect_exports)),
+      "../../shared/knowledge-base/apps/elevate.ts": () => Promise.resolve().then(() => (init_elevate(), elevate_exports)),
+      "../../shared/knowledge-base/apps/publish.ts": () => Promise.resolve().then(() => (init_publish(), publish_exports))
+    });
+  }
+});
+
+// server/services/stall-detector.ts
+var stall_detector_exports = {};
+__export(stall_detector_exports, {
+  startStallDetector: () => startStallDetector,
+  stopStallDetector: () => stopStallDetector
+});
+import { eq as eq44, and as and31, sql as sql18, ne as ne2, desc as desc20 } from "drizzle-orm";
+import { Resend as Resend6 } from "resend";
+function startStallDetector() {
+  console.log("[StallDetector] Starting \u2014 runs every 6 hours");
+  checkForStalls().catch((err) => console.error("[StallDetector] Error:", err));
+  stallInterval = setInterval(() => {
+    checkForStalls().catch((err) => console.error("[StallDetector] Error:", err));
+  }, 6 * 60 * 60 * 1e3);
+}
+function stopStallDetector() {
+  if (stallInterval) {
+    clearInterval(stallInterval);
+    stallInterval = null;
+    console.log("[StallDetector] Stopped");
+  }
+}
+async function checkForStalls() {
+  console.log("[StallDetector] Checking for stalled users...");
+  const activeClients = await db.select({ id: clients.id, email: clients.email, companyName: clients.companyName }).from(clients).where(eq44(clients.setupPhase, "in_progress"));
+  for (const client of activeClients) {
+    try {
+      await checkClientStall(client.id, client.email, client.companyName || "there");
+    } catch (err) {
+      console.error(`[StallDetector] Error checking client ${client.id}:`, err);
+    }
+  }
+  console.log(`[StallDetector] Checked ${activeClients.length} active clients`);
+}
+async function checkClientStall(clientId, email, businessName) {
+  const lastCompletion = await db.select({ completedAt: setupTasks.completedAt }).from(setupTasks).where(and31(
+    eq44(setupTasks.clientId, clientId),
+    eq44(setupTasks.status, "completed"),
+    sql18`${setupTasks.completedAt} IS NOT NULL`
+  )).orderBy(desc20(setupTasks.completedAt)).limit(1);
+  let lastActivityDate;
+  if (lastCompletion.length > 0 && lastCompletion[0].completedAt) {
+    lastActivityDate = new Date(lastCompletion[0].completedAt);
+  } else {
+    const firstTask = await db.select({ createdAt: setupTasks.createdAt }).from(setupTasks).where(eq44(setupTasks.clientId, clientId)).orderBy(setupTasks.createdAt).limit(1);
+    if (firstTask.length === 0) return;
+    lastActivityDate = new Date(firstTask[0].createdAt);
+  }
+  const daysSinceActivity = Math.floor(
+    (Date.now() - lastActivityDate.getTime()) / (1e3 * 60 * 60 * 24)
+  );
+  for (const interval of STALL_INTERVALS) {
+    if (daysSinceActivity >= interval.days) {
+      const alreadySent = await db.select({ id: setupTaskEvents.id }).from(setupTaskEvents).where(and31(
+        eq44(setupTaskEvents.clientId, clientId),
+        eq44(setupTaskEvents.eventType, interval.eventType)
+      )).limit(1);
+      if (alreadySent.length === 0) {
+        await sendStallNudge(clientId, email, businessName, interval.days, interval.eventType);
+      }
+    }
+  }
+}
+async function sendStallNudge(clientId, email, businessName, stallDays, eventType) {
+  const nextStep = await db.select({ appId: setupTasks.appId, title: setupTasks.title }).from(setupTasks).where(and31(
+    eq44(setupTasks.clientId, clientId),
+    ne2(setupTasks.status, "completed"),
+    ne2(setupTasks.status, "skipped"),
+    sql18`${setupTasks.substepId} IS NULL`
+  )).orderBy(setupTasks.cadenceOrder).limit(1);
+  if (nextStep.length === 0) return;
+  const allTasks = await db.select().from(setupTasks).where(and31(eq44(setupTasks.clientId, clientId), sql18`${setupTasks.substepId} IS NULL`));
+  const completedCount = allTasks.filter((t) => t.status === "completed").length;
+  const progressPercent = allTasks.length > 0 ? Math.round(completedCount / allTasks.length * 100) : 0;
+  const subject = "Your setup in businessblueprint.io \u2014 pick up where you left off";
+  const html = setupTriggerService.buildStallReminderEmailHtml(
+    businessName,
+    stallDays,
+    { appId: nextStep[0].appId, title: nextStep[0].title },
+    progressPercent
+  );
+  try {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) return;
+    const resend = new Resend6(apiKey);
+    const fromEmail = process.env.FROM_EMAIL || "noreply@businessblueprint.io";
+    await resend.emails.send({
+      from: `businessblueprint.io <${fromEmail}>`,
+      to: email,
+      subject,
+      html
+    });
+    await db.insert(emailLogs).values({
+      recipientEmail: email,
+      recipientName: businessName,
+      clientId,
+      emailType: `setup_stall_${stallDays}d`,
+      subject,
+      htmlBody: html,
+      status: "sent",
+      sentAt: /* @__PURE__ */ new Date()
+    });
+  } catch (err) {
+    console.error(`[StallDetector] Email failed for client ${clientId}:`, err);
+  }
+  try {
+    const appModule = await globImport_shared_knowledge_base_apps3(`../../shared/knowledge-base/apps/${nextStep[0].appId}`);
+    const knowledge = appModule[`${nextStep[0].appId}Knowledge`];
+    if (knowledge?.coachBlueGuidance?.onStall) {
+      await setupTriggerService.queueCoachBlueMessage(clientId, knowledge.coachBlueGuidance.onStall);
+    }
+  } catch (e) {
+    await setupTriggerService.queueCoachBlueMessage(
+      clientId,
+      `I noticed you paused on "${nextStep[0].title}" in / ${nextStep[0].appId}. Most people finish this step in under 15 minutes. Want me to walk you through it?`
+    );
+  }
+  await db.insert(setupTaskEvents).values({
+    clientId,
+    eventType,
+    metadata: { stallDays, currentStep: nextStep[0].title }
+  });
+  console.log(`[StallDetector] Sent ${stallDays}-day nudge to client ${clientId}`);
+}
+var STALL_INTERVALS, stallInterval;
+var init_stall_detector = __esm({
+  "server/services/stall-detector.ts"() {
+    "use strict";
+    init_db();
+    init_schema();
+    init_setup_triggers();
+    init_2();
+    STALL_INTERVALS = [
+      { days: 3, eventType: "stall_nudge_3d" },
+      { days: 7, eventType: "stall_nudge_7d" },
+      { days: 14, eventType: "stall_nudge_14d" }
+    ];
+    stallInterval = null;
   }
 });
 
@@ -5289,26 +7270,35 @@ var DatabaseStorage = class {
   async getRecommendationsByAssessmentId(assessmentId) {
     return await db.select().from(recommendations).where(eq(recommendations.assessmentId, assessmentId));
   }
+  async getProductRecommendationScores(assessmentId) {
+    return await db.select({
+      productId: assessmentProductRecommendations.productId,
+      categoryAffected: assessmentProductRecommendations.categoryAffected,
+      currentScore: assessmentProductRecommendations.currentScore,
+      projectedScore: assessmentProductRecommendations.projectedScore,
+      scoreImprovement: assessmentProductRecommendations.scoreImprovement
+    }).from(assessmentProductRecommendations).where(eq(assessmentProductRecommendations.assessmentId, assessmentId));
+  }
   // Client operations
   async createClient(clientData) {
-    const [client2] = await db.insert(clients).values(clientData).returning();
-    return client2;
+    const [client] = await db.insert(clients).values(clientData).returning();
+    return client;
   }
   async getClient(id) {
-    const [client2] = await db.select().from(clients).where(eq(clients.id, id));
-    return client2 || void 0;
+    const [client] = await db.select().from(clients).where(eq(clients.id, id));
+    return client || void 0;
   }
   async getClientByExternalId(externalId) {
-    const [client2] = await db.select().from(clients).where(eq(clients.externalId, externalId));
-    return client2 || void 0;
+    const [client] = await db.select().from(clients).where(eq(clients.externalId, externalId));
+    return client || void 0;
   }
   async getClientByEmail(email) {
-    const [client2] = await db.select().from(clients).where(eq(clients.email, email));
-    return client2 || void 0;
+    const [client] = await db.select().from(clients).where(eq(clients.email, email));
+    return client || void 0;
   }
   async updateClient(id, data) {
-    const [client2] = await db.update(clients).set(data).where(eq(clients.id, id)).returning();
-    return client2;
+    const [client] = await db.update(clients).set(data).where(eq(clients.id, id)).returning();
+    return client;
   }
   async getAllClients() {
     return await db.select().from(clients).orderBy(desc(clients.createdAt));
@@ -5453,7 +7443,7 @@ var DatabaseStorage = class {
     const allSubscriptions = await db.select().from(subscriptions).orderBy(desc(subscriptions.createdAt));
     const result = [];
     for (const subscription of allSubscriptions) {
-      const [client2] = await db.select().from(clients).where(eq(clients.id, subscription.clientId));
+      const [client] = await db.select().from(clients).where(eq(clients.id, subscription.clientId));
       const [plan] = await db.select().from(subscriptionPlans).where(eq(subscriptionPlans.id, subscription.planId));
       const addonSelections = await db.select().from(subscriptionAddonSelections).where(eq(subscriptionAddonSelections.subscriptionId, subscription.id));
       const addons = [];
@@ -5464,10 +7454,10 @@ var DatabaseStorage = class {
         }
       }
       const billing = await db.select().from(billingHistory).where(eq(billingHistory.subscriptionId, subscription.id)).orderBy(desc(billingHistory.billingDate)).limit(6);
-      if (client2 && plan) {
+      if (client && plan) {
         result.push({
           subscription,
-          client: client2,
+          client,
           plan,
           addons,
           billingHistory: billing
@@ -5526,14 +7516,14 @@ var DatabaseStorage = class {
   }
   // Account status management
   async updateClientAccountStatus(clientId, newStatus, reason, changedBy) {
-    const [client2] = await db.update(clients).set({
+    const [client] = await db.update(clients).set({
       accountStatus: newStatus,
       suspensionReason: reason ?? null,
       statusChangedAt: /* @__PURE__ */ new Date(),
       statusChangedBy: changedBy ?? null,
       updatedAt: /* @__PURE__ */ new Date()
     }).where(eq(clients.id, clientId)).returning();
-    return client2;
+    return client;
   }
   async recordAccountStatusChange(record) {
     const [history] = await db.insert(accountStatusHistory).values(record).returning();
@@ -5622,14 +7612,14 @@ var DatabaseStorage = class {
 var storage = new DatabaseStorage();
 
 // server/routes.ts
-import { randomBytes } from "crypto";
+import { randomBytes as randomBytes2 } from "crypto";
 
 // server/routes/content.ts
 init_db();
 init_schema();
 import { Router } from "express";
 import { z as z2 } from "zod";
-import { eq as eq5, and as and4, desc as desc2, sql as sql4 } from "drizzle-orm";
+import { eq as eq6, and as and5, desc as desc3, sql as sql4 } from "drizzle-orm";
 
 // server/services/mediaStorage.ts
 init_db();
@@ -6080,12 +8070,9 @@ function isDemoEmail(email) {
 }
 async function isDemoAccountById(clientId) {
   try {
-    const client2 = await db.query.clients.findFirst({
-      where: eq4(clients.id, clientId),
-      columns: { email: true }
-    });
-    if (!client2?.email) return false;
-    return isDemoEmail(client2.email);
+    const [client] = await db.select({ email: clients.email }).from(clients).where(eq4(clients.id, clientId)).limit(1);
+    if (!client?.email) return false;
+    return isDemoEmail(client.email);
   } catch (error) {
     console.error("[isDemoAccountById] Error checking demo status:", error);
     return false;
@@ -6093,6 +8080,7 @@ async function isDemoAccountById(clientId) {
 }
 
 // server/routes/content.ts
+init_ai_provider();
 var router = Router();
 var mediaStorage = new MediaStorageService();
 async function requireContentAccess(req, res, next) {
@@ -6106,13 +8094,13 @@ async function requireContentAccess(req, res, next) {
     }
     const hasAccess = await db.select({ id: subscriptionAddonSelections.id }).from(subscriptionAddonSelections).innerJoin(
       subscriptions,
-      eq5(subscriptionAddonSelections.subscriptionId, subscriptions.id)
+      eq6(subscriptionAddonSelections.subscriptionId, subscriptions.id)
     ).innerJoin(
       subscriptionAddons,
-      eq5(subscriptionAddonSelections.addonId, subscriptionAddons.id)
+      eq6(subscriptionAddonSelections.addonId, subscriptionAddons.id)
     ).where(
-      and4(
-        eq5(subscriptions.clientId, clientId),
+      and5(
+        eq6(subscriptions.clientId, clientId),
         sql4`${subscriptionAddons.name} LIKE '%Post Management%'`
       )
     ).limit(1);
@@ -6131,9 +8119,9 @@ async function getPlatformLimits(clientId) {
   if (await isDemoAccountById(clientId)) {
     return { maxPlatforms: 7, tier: "msp" };
   }
-  const [subscription] = await db.select({ addonName: subscriptionAddons.name }).from(subscriptionAddonSelections).innerJoin(subscriptions, eq5(subscriptionAddonSelections.subscriptionId, subscriptions.id)).innerJoin(subscriptionAddons, eq5(subscriptionAddonSelections.addonId, subscriptionAddons.id)).where(
-    and4(
-      eq5(subscriptions.clientId, clientId),
+  const [subscription] = await db.select({ addonName: subscriptionAddons.name }).from(subscriptionAddonSelections).innerJoin(subscriptions, eq6(subscriptionAddonSelections.subscriptionId, subscriptions.id)).innerJoin(subscriptionAddons, eq6(subscriptionAddonSelections.addonId, subscriptionAddons.id)).where(
+    and5(
+      eq6(subscriptions.clientId, clientId),
       sql4`${subscriptionAddons.name} LIKE '%Post Management%'`
     )
   ).limit(1);
@@ -6147,10 +8135,10 @@ router.get("/:clientId/posts", requireContentAccess, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     const status = req.query.status;
-    const posts = status ? await db.select().from(contentPosts).where(and4(
-      eq5(contentPosts.clientId, clientId),
-      eq5(contentPosts.status, status)
-    )).orderBy(desc2(contentPosts.createdAt)) : await db.select().from(contentPosts).where(eq5(contentPosts.clientId, clientId)).orderBy(desc2(contentPosts.createdAt));
+    const posts = status ? await db.select().from(contentPosts).where(and5(
+      eq6(contentPosts.clientId, clientId),
+      eq6(contentPosts.status, status)
+    )).orderBy(desc3(contentPosts.createdAt)) : await db.select().from(contentPosts).where(eq6(contentPosts.clientId, clientId)).orderBy(desc3(contentPosts.createdAt));
     res.json(posts);
   } catch (error) {
     console.error("[Content] Error fetching posts:", error);
@@ -6161,9 +8149,9 @@ router.get("/:clientId/posts/:postId", requireContentAccess, async (req, res) =>
   try {
     const clientId = parseInt(req.params.clientId);
     const postId = parseInt(req.params.postId);
-    const [post] = await db.select().from(contentPosts).where(and4(
-      eq5(contentPosts.id, postId),
-      eq5(contentPosts.clientId, clientId)
+    const [post] = await db.select().from(contentPosts).where(and5(
+      eq6(contentPosts.id, postId),
+      eq6(contentPosts.clientId, clientId)
     ));
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -6228,9 +8216,9 @@ router.put("/:clientId/posts/:postId", requireContentAccess, async (req, res) =>
       templateId: z2.number().optional()
     });
     const data = updateSchema.parse(req.body);
-    const [post] = await db.update(contentPosts).set(data).where(and4(
-      eq5(contentPosts.id, postId),
-      eq5(contentPosts.clientId, clientId)
+    const [post] = await db.update(contentPosts).set(data).where(and5(
+      eq6(contentPosts.id, postId),
+      eq6(contentPosts.clientId, clientId)
     )).returning();
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -6248,9 +8236,9 @@ router.delete("/:clientId/posts/:postId", requireContentAccess, async (req, res)
   try {
     const clientId = parseInt(req.params.clientId);
     const postId = parseInt(req.params.postId);
-    const [deleted] = await db.delete(contentPosts).where(and4(
-      eq5(contentPosts.id, postId),
-      eq5(contentPosts.clientId, clientId)
+    const [deleted] = await db.delete(contentPosts).where(and5(
+      eq6(contentPosts.id, postId),
+      eq6(contentPosts.clientId, clientId)
     )).returning();
     if (!deleted) {
       return res.status(404).json({ message: "Post not found" });
@@ -6265,9 +8253,9 @@ router.post("/:clientId/posts/:postId/publish", requireContentAccess, async (req
   try {
     const clientId = parseInt(req.params.clientId);
     const postId = parseInt(req.params.postId);
-    const [post] = await db.select().from(contentPosts).where(and4(
-      eq5(contentPosts.id, postId),
-      eq5(contentPosts.clientId, clientId)
+    const [post] = await db.select().from(contentPosts).where(and5(
+      eq6(contentPosts.id, postId),
+      eq6(contentPosts.clientId, clientId)
     ));
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
@@ -6277,13 +8265,13 @@ router.post("/:clientId/posts/:postId/publish", requireContentAccess, async (req
     }
     const isScheduled = post.scheduledFor && new Date(post.scheduledFor) > /* @__PURE__ */ new Date();
     if (isScheduled) {
-      await db.update(contentPosts).set({ status: "scheduled" }).where(eq5(contentPosts.id, postId));
+      await db.update(contentPosts).set({ status: "scheduled" }).where(eq6(contentPosts.id, postId));
       res.json({
         message: "Post scheduled successfully",
         scheduledFor: post.scheduledFor
       });
     } else {
-      const [updatedPost] = await db.update(contentPosts).set({ status: "publishing", attempts: 0 }).where(eq5(contentPosts.id, postId)).returning();
+      const [updatedPost] = await db.update(contentPosts).set({ status: "publishing", attempts: 0 }).where(eq6(contentPosts.id, postId)).returning();
       publishPost(updatedPost).catch(async (err) => {
         console.error("[Content] Background publish failed:", err);
         await db.update(contentPosts).set({
@@ -6292,7 +8280,7 @@ router.post("/:clientId/posts/:postId/publish", requireContentAccess, async (req
           attempts: 1,
           lockedAt: null
           // Release lock
-        }).where(eq5(contentPosts.id, postId));
+        }).where(eq6(contentPosts.id, postId));
       });
       res.json({ message: "Post is being published" });
     }
@@ -6304,9 +8292,9 @@ router.post("/:clientId/posts/:postId/publish", requireContentAccess, async (req
 router.get("/:clientId/schedule", requireContentAccess, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
-    const scheduledPosts = await db.select().from(contentPosts).where(and4(
-      eq5(contentPosts.clientId, clientId),
-      eq5(contentPosts.status, "scheduled")
+    const scheduledPosts = await db.select().from(contentPosts).where(and5(
+      eq6(contentPosts.clientId, clientId),
+      eq6(contentPosts.status, "scheduled")
     )).orderBy(contentPosts.scheduledFor);
     res.json(scheduledPosts);
   } catch (error) {
@@ -6324,9 +8312,9 @@ router.put("/:clientId/schedule/:postId", requireContentAccess, async (req, res)
       })
     });
     const { scheduledFor: newScheduleDate } = scheduleSchema.parse(req.body);
-    const [existingPost] = await db.select().from(contentPosts).where(and4(
-      eq5(contentPosts.id, postId),
-      eq5(contentPosts.clientId, clientId)
+    const [existingPost] = await db.select().from(contentPosts).where(and5(
+      eq6(contentPosts.id, postId),
+      eq6(contentPosts.clientId, clientId)
     ));
     if (!existingPost) {
       return res.status(404).json({ message: "Post not found" });
@@ -6338,9 +8326,9 @@ router.put("/:clientId/schedule/:postId", requireContentAccess, async (req, res)
       lockedAt: null,
       attempts: 0,
       nextRetryAt: null
-    }).where(and4(
-      eq5(contentPosts.id, postId),
-      eq5(contentPosts.clientId, clientId)
+    }).where(and5(
+      eq6(contentPosts.id, postId),
+      eq6(contentPosts.clientId, clientId)
     )).returning();
     res.json({
       message: "Schedule updated successfully",
@@ -6358,10 +8346,10 @@ router.delete("/:clientId/schedule/:postId", requireContentAccess, async (req, r
   try {
     const clientId = parseInt(req.params.clientId);
     const postId = parseInt(req.params.postId);
-    const [existingPost] = await db.select().from(contentPosts).where(and4(
-      eq5(contentPosts.id, postId),
-      eq5(contentPosts.clientId, clientId),
-      eq5(contentPosts.status, "scheduled")
+    const [existingPost] = await db.select().from(contentPosts).where(and5(
+      eq6(contentPosts.id, postId),
+      eq6(contentPosts.clientId, clientId),
+      eq6(contentPosts.status, "scheduled")
     ));
     if (!existingPost) {
       return res.status(404).json({ message: "Scheduled post not found" });
@@ -6373,9 +8361,9 @@ router.delete("/:clientId/schedule/:postId", requireContentAccess, async (req, r
       lockedAt: null,
       attempts: 0,
       nextRetryAt: null
-    }).where(and4(
-      eq5(contentPosts.id, postId),
-      eq5(contentPosts.clientId, clientId)
+    }).where(and5(
+      eq6(contentPosts.id, postId),
+      eq6(contentPosts.clientId, clientId)
     )).returning();
     res.json({
       message: "Schedule cancelled successfully",
@@ -6390,10 +8378,10 @@ router.get("/:clientId/media", requireContentAccess, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     const folder = req.query.folder;
-    const media = folder ? await db.select().from(contentMedia).where(and4(
-      eq5(contentMedia.clientId, clientId),
-      eq5(contentMedia.folder, folder)
-    )).orderBy(desc2(contentMedia.createdAt)) : await db.select().from(contentMedia).where(eq5(contentMedia.clientId, clientId)).orderBy(desc2(contentMedia.createdAt));
+    const media = folder ? await db.select().from(contentMedia).where(and5(
+      eq6(contentMedia.clientId, clientId),
+      eq6(contentMedia.folder, folder)
+    )).orderBy(desc3(contentMedia.createdAt)) : await db.select().from(contentMedia).where(eq6(contentMedia.clientId, clientId)).orderBy(desc3(contentMedia.createdAt));
     res.json(media);
   } catch (error) {
     console.error("[Content] Error fetching media:", error);
@@ -6440,7 +8428,7 @@ router.delete("/:clientId/media/:mediaId", requireContentAccess, async (req, res
 router.get("/:clientId/platforms", requireContentAccess, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
-    const accounts = await db.select().from(socialMediaAccounts).where(eq5(socialMediaAccounts.clientId, clientId)).orderBy(socialMediaAccounts.platform);
+    const accounts = await db.select().from(socialMediaAccounts).where(eq6(socialMediaAccounts.clientId, clientId)).orderBy(socialMediaAccounts.platform);
     const limits = await getPlatformLimits(clientId);
     res.json({
       accounts,
@@ -6456,7 +8444,7 @@ router.post("/:clientId/platforms", requireContentAccess, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     const limits = await getPlatformLimits(clientId);
-    const currentAccounts = await db.select().from(socialMediaAccounts).where(eq5(socialMediaAccounts.clientId, clientId));
+    const currentAccounts = await db.select().from(socialMediaAccounts).where(eq6(socialMediaAccounts.clientId, clientId));
     if (currentAccounts.length >= limits.maxPlatforms) {
       return res.status(400).json({
         message: `Platform limit reached. Your ${limits.tier.toUpperCase()} tier supports ${limits.maxPlatforms} platforms.`
@@ -6503,9 +8491,9 @@ router.delete("/:clientId/platforms/:accountId", requireContentAccess, async (re
   try {
     const clientId = parseInt(req.params.clientId);
     const accountId = parseInt(req.params.accountId);
-    const [deleted] = await db.delete(socialMediaAccounts).where(and4(
-      eq5(socialMediaAccounts.id, accountId),
-      eq5(socialMediaAccounts.clientId, clientId)
+    const [deleted] = await db.delete(socialMediaAccounts).where(and5(
+      eq6(socialMediaAccounts.id, accountId),
+      eq6(socialMediaAccounts.clientId, clientId)
     )).returning();
     if (!deleted) {
       return res.status(404).json({ message: "Platform account not found" });
@@ -6519,9 +8507,9 @@ router.delete("/:clientId/platforms/:accountId", requireContentAccess, async (re
 router.get("/:clientId/analytics", requireContentAccess, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
-    const posts = await db.select().from(contentPosts).where(eq5(contentPosts.clientId, clientId));
+    const posts = await db.select().from(contentPosts).where(eq6(contentPosts.clientId, clientId));
     const postIds = posts.map((p) => p.id);
-    const analytics = postIds.length > 0 ? await db.select().from(contentAnalytics).where(sql4`${contentAnalytics.postId} IN (${sql4.join(postIds.map((id) => sql4`${id}`), sql4`, `)})`).orderBy(desc2(contentAnalytics.lastSyncedAt)) : [];
+    const analytics = postIds.length > 0 ? await db.select().from(contentAnalytics).where(sql4`${contentAnalytics.postId} IN (${sql4.join(postIds.map((id) => sql4`${id}`), sql4`, `)})`).orderBy(desc3(contentAnalytics.lastSyncedAt)) : [];
     const summary = {
       totalPosts: posts.length,
       publishedPosts: posts.filter((p) => p.status === "published").length,
@@ -6535,20 +8523,52 @@ router.get("/:clientId/analytics", requireContentAccess, async (req, res) => {
     res.status(500).json({ message: "Failed to fetch analytics" });
   }
 });
+router.post("/:clientId/analytics/sync", requireContentAccess, async (req, res) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const { analyticsSyncService: analyticsSyncService2 } = await Promise.resolve().then(() => (init_analyticsSync(), analyticsSync_exports));
+    const result = await analyticsSyncService2.syncClientAnalytics(clientId);
+    res.json({ success: true, ...result });
+  } catch (error) {
+    console.error("[Content] Error syncing analytics:", error);
+    res.status(500).json({ message: "Failed to sync analytics" });
+  }
+});
 router.post("/:clientId/ai/suggest", requireContentAccess, async (req, res) => {
   try {
     const { prompt = "Generate social media post ideas" } = req.body;
-    const suggestions = [
-      `Here's a compelling ${prompt} idea that resonates with your audience and drives engagement.`,
-      `Try this approach: A ${prompt} that highlights customer value and creates urgency.`,
-      `Consider this angle: Share your expertise through a ${prompt} that educates and entertains.`,
-      `This ${prompt} hooks attention immediately with a question your audience wants answered.`,
-      `Use this structure: Story \u2192 Challenge \u2192 Solution format for maximum ${prompt} impact.`
-    ];
+    const result = await unifiedAI.getCompletion("claude", {
+      messages: [
+        {
+          role: "system",
+          content: "You are a social media marketing expert for small local businesses. Generate 5 actionable social media post ideas. Return ONLY a JSON array of 5 strings, each being a complete post idea. No markdown, no explanation \u2014 just the JSON array."
+        },
+        {
+          role: "user",
+          content: `Generate 5 social media post ideas for: ${prompt}`
+        }
+      ],
+      temperature: 0.8,
+      maxTokens: 500
+    });
+    let suggestions;
+    try {
+      suggestions = JSON.parse(result.content);
+    } catch {
+      suggestions = result.content.split("\n").filter((s) => s.trim()).slice(0, 5);
+    }
     res.json({ suggestions });
   } catch (error) {
     console.error("[Content] Error generating suggestions:", error);
-    res.status(500).json({ message: "Failed to generate suggestions" });
+    res.json({
+      suggestions: [
+        `Share a behind-the-scenes look at your business to build trust.`,
+        `Highlight a customer success story or testimonial.`,
+        `Post a quick tip related to your industry that helps your audience.`,
+        `Announce a limited-time offer or seasonal promotion.`,
+        `Ask your audience a question to boost engagement.`
+      ]
+    });
   }
 });
 router.post("/:clientId/ai/caption", requireContentAccess, async (req, res) => {
@@ -6557,13 +8577,37 @@ router.post("/:clientId/ai/caption", requireContentAccess, async (req, res) => {
     if (!topic) {
       return res.status(400).json({ message: "Topic is required" });
     }
-    res.json({
-      caption: `AI-generated caption about ${topic} (${tone || "professional"} tone, ${length || "medium"} length)`,
-      hashtags: ["#business", "#marketing", "#social"]
+    const lengthGuide = length === "short" ? "1-2 sentences" : length === "long" ? "3-5 sentences" : "2-3 sentences";
+    const result = await unifiedAI.getCompletion("claude", {
+      messages: [
+        {
+          role: "system",
+          content: `You are a social media copywriter for small local businesses. Write engaging captions that feel human, not corporate. Return ONLY a JSON object with "caption" (string) and "hashtags" (array of 3-5 strings). No markdown.`
+        },
+        {
+          role: "user",
+          content: `Write a ${tone || "professional"} social media caption (${lengthGuide}) about: ${topic}`
+        }
+      ],
+      temperature: 0.7,
+      maxTokens: 300
     });
+    let parsed;
+    try {
+      parsed = JSON.parse(result.content);
+    } catch {
+      parsed = {
+        caption: result.content.replace(/```json|```/g, "").trim(),
+        hashtags: ["#business", "#local", "#community"]
+      };
+    }
+    res.json(parsed);
   } catch (error) {
     console.error("[Content] Error generating caption:", error);
-    res.status(500).json({ message: "Failed to generate caption" });
+    res.json({
+      caption: `Check out what's new at our business! We're excited to share this with you.`,
+      hashtags: ["#business", "#local", "#community"]
+    });
   }
 });
 router.post("/:clientId/ai/hashtags", requireContentAccess, async (req, res) => {
@@ -6572,12 +8616,34 @@ router.post("/:clientId/ai/hashtags", requireContentAccess, async (req, res) => 
     if (!content) {
       return res.status(400).json({ message: "Content is required" });
     }
-    res.json({
-      hashtags: ["#business", "#marketing", "#socialmedia", "#contentcreation"]
+    const result = await unifiedAI.getCompletion("claude", {
+      messages: [
+        {
+          role: "system",
+          content: `You are a social media hashtag expert. Generate relevant hashtags for the given content and platform. Return ONLY a JSON object with "hashtags" (array of 5-8 strings, each starting with #). No markdown.`
+        },
+        {
+          role: "user",
+          content: `Generate hashtags for this ${platform || "social media"} post:
+
+${content}`
+        }
+      ],
+      temperature: 0.6,
+      maxTokens: 150
     });
+    let parsed;
+    try {
+      parsed = JSON.parse(result.content);
+    } catch {
+      parsed = { hashtags: ["#business", "#marketing", "#socialmedia", "#local"] };
+    }
+    res.json(parsed);
   } catch (error) {
     console.error("[Content] Error generating hashtags:", error);
-    res.status(500).json({ message: "Failed to generate hashtags" });
+    res.json({
+      hashtags: ["#business", "#marketing", "#socialmedia", "#local"]
+    });
   }
 });
 var content_default = router;
@@ -6586,7 +8652,7 @@ var content_default = router;
 init_db();
 init_schema();
 import { Router as Router2 } from "express";
-import { eq as eq6, and as and5 } from "drizzle-orm";
+import { eq as eq7, and as and6 } from "drizzle-orm";
 import crypto from "crypto";
 var router2 = Router2();
 var META_APP_ID = process.env.META_APP_ID;
@@ -6756,10 +8822,10 @@ router2.get("/oauth/callback", async (req, res) => {
     if (pageData.data && pageData.data.length > 0) {
       for (const page of pageData.data) {
         const existing = await db.select().from(inboxChannelConnections).where(
-          and5(
-            eq6(inboxChannelConnections.clientId, clientId),
-            eq6(inboxChannelConnections.channelType, platform),
-            eq6(inboxChannelConnections.channelIdentifier, page.id)
+          and6(
+            eq7(inboxChannelConnections.clientId, clientId),
+            eq7(inboxChannelConnections.channelType, platform),
+            eq7(inboxChannelConnections.channelIdentifier, page.id)
           )
         );
         const credentials = {
@@ -6776,7 +8842,7 @@ router2.get("/oauth/callback", async (req, res) => {
             status: "active",
             lastSyncedAt: /* @__PURE__ */ new Date(),
             updatedAt: /* @__PURE__ */ new Date()
-          }).where(eq6(inboxChannelConnections.id, existing[0].id));
+          }).where(eq7(inboxChannelConnections.id, existing[0].id));
         } else {
           await db.insert(inboxChannelConnections).values({
             clientId,
@@ -6790,10 +8856,10 @@ router2.get("/oauth/callback", async (req, res) => {
         }
         console.log(`\u2705 Connected ${platform} page: ${page.name}`);
         const [existingSocial] = await db.select().from(socialMediaAccounts).where(
-          and5(
-            eq6(socialMediaAccounts.clientId, clientId),
-            eq6(socialMediaAccounts.platform, platform),
-            eq6(socialMediaAccounts.platformAccountId, page.id)
+          and6(
+            eq7(socialMediaAccounts.clientId, clientId),
+            eq7(socialMediaAccounts.platform, platform),
+            eq7(socialMediaAccounts.platformAccountId, page.id)
           )
         );
         if (existingSocial) {
@@ -6804,7 +8870,7 @@ router2.get("/oauth/callback", async (req, res) => {
             lastSyncedAt: /* @__PURE__ */ new Date(),
             updatedAt: /* @__PURE__ */ new Date(),
             metadata: { pageCategory: page.category, userAccessToken }
-          }).where(eq6(socialMediaAccounts.id, existingSocial.id));
+          }).where(eq7(socialMediaAccounts.id, existingSocial.id));
         } else {
           await db.insert(socialMediaAccounts).values({
             clientId,
@@ -6860,9 +8926,9 @@ async function processMessagingEvent(event, platform) {
     const messageId = event.message.mid;
     const channelType = platform === "instagram" ? "instagram" : "facebook";
     const [channel] = await db.select().from(inboxChannelConnections).where(
-      and5(
-        eq6(inboxChannelConnections.channelType, channelType),
-        eq6(inboxChannelConnections.channelIdentifier, recipientId)
+      and6(
+        eq7(inboxChannelConnections.channelType, channelType),
+        eq7(inboxChannelConnections.channelIdentifier, recipientId)
       )
     );
     if (!channel || !channel.clientId) {
@@ -6870,10 +8936,10 @@ async function processMessagingEvent(event, platform) {
       return;
     }
     let [conversation] = await db.select().from(inboxConversations).where(
-      and5(
-        eq6(inboxConversations.clientId, channel.clientId),
-        eq6(inboxConversations.contactIdentifier, senderId),
-        eq6(inboxConversations.primaryChannelType, channelType)
+      and6(
+        eq7(inboxConversations.clientId, channel.clientId),
+        eq7(inboxConversations.contactIdentifier, senderId),
+        eq7(inboxConversations.primaryChannelType, channelType)
       )
     );
     if (!conversation) {
@@ -6895,7 +8961,7 @@ async function processMessagingEvent(event, platform) {
         lastMessagePreview: messageText.substring(0, 100),
         unreadCount: (conversation.unreadCount || 0) + 1,
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq6(inboxConversations.id, conversation.id));
+      }).where(eq7(inboxConversations.id, conversation.id));
     }
     await db.insert(inboxMessages2).values({
       conversationId: conversation.id,
@@ -6941,17 +9007,17 @@ async function processComment(comment, pageId, platform) {
     if (!senderId || !commentText) return;
     const channelType = platform === "instagram" ? "instagram" : "facebook";
     const [channel] = await db.select().from(inboxChannelConnections).where(
-      and5(
-        eq6(inboxChannelConnections.channelType, channelType),
-        eq6(inboxChannelConnections.channelIdentifier, pageId)
+      and6(
+        eq7(inboxChannelConnections.channelType, channelType),
+        eq7(inboxChannelConnections.channelIdentifier, pageId)
       )
     );
     if (!channel || !channel.clientId) return;
     let [conversation] = await db.select().from(inboxConversations).where(
-      and5(
-        eq6(inboxConversations.clientId, channel.clientId),
-        eq6(inboxConversations.contactIdentifier, senderId),
-        eq6(inboxConversations.primaryChannelType, channelType)
+      and6(
+        eq7(inboxConversations.clientId, channel.clientId),
+        eq7(inboxConversations.contactIdentifier, senderId),
+        eq7(inboxConversations.primaryChannelType, channelType)
       )
     );
     if (!conversation) {
@@ -7008,7 +9074,7 @@ var meta_default = router2;
 init_db();
 init_schema();
 import { Router as Router3 } from "express";
-import { eq as eq7, and as and6 } from "drizzle-orm";
+import { eq as eq8, and as and7 } from "drizzle-orm";
 import crypto2 from "crypto";
 var router3 = Router3();
 var GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
@@ -7160,10 +9226,10 @@ router3.get("/oauth/callback", async (req, res) => {
         } catch {
         }
         const [existing] = await db.select().from(socialMediaAccounts).where(
-          and6(
-            eq7(socialMediaAccounts.clientId, clientId),
-            eq7(socialMediaAccounts.platform, "google_business"),
-            eq7(socialMediaAccounts.platformAccountId, accountId)
+          and7(
+            eq8(socialMediaAccounts.clientId, clientId),
+            eq8(socialMediaAccounts.platform, "google_business"),
+            eq8(socialMediaAccounts.platformAccountId, accountId)
           )
         );
         const tokenExpiry = expiresIn ? new Date(Date.now() + expiresIn * 1e3) : null;
@@ -7182,7 +9248,7 @@ router3.get("/oauth/callback", async (req, res) => {
               verificationState: account.verificationState,
               profileEmail: profile.email
             }
-          }).where(eq7(socialMediaAccounts.id, existing.id));
+          }).where(eq8(socialMediaAccounts.id, existing.id));
         } else {
           await db.insert(socialMediaAccounts).values({
             clientId,
@@ -7210,10 +9276,10 @@ router3.get("/oauth/callback", async (req, res) => {
       }
     } else {
       const [existing] = await db.select().from(socialMediaAccounts).where(
-        and6(
-          eq7(socialMediaAccounts.clientId, clientId),
-          eq7(socialMediaAccounts.platform, "google_business"),
-          eq7(socialMediaAccounts.platformAccountId, profile.id || profile.email)
+        and7(
+          eq8(socialMediaAccounts.clientId, clientId),
+          eq8(socialMediaAccounts.platform, "google_business"),
+          eq8(socialMediaAccounts.platformAccountId, profile.id || profile.email)
         )
       );
       if (!existing) {
@@ -7244,11 +9310,1059 @@ router3.get("/oauth/callback", async (req, res) => {
 });
 var google_default = router3;
 
-// server/routes/tasks.ts
+// server/routes/linkedin.ts
 init_db();
 init_schema();
 import { Router as Router4 } from "express";
-import { eq as eq8, and as and7, desc as desc3 } from "drizzle-orm";
+import { eq as eq9, and as and8 } from "drizzle-orm";
+import crypto3 from "crypto";
+var router4 = Router4();
+var LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
+var LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
+var LINKEDIN_STATE_SECRET = process.env.LINKEDIN_CLIENT_SECRET || "linkedin-fallback-secret";
+var LINKEDIN_SCOPES = [
+  "openid",
+  "profile",
+  "email",
+  "w_member_social"
+];
+var ALLOWED_RETURN_PATHS3 = ["/post", "/portal/dashboard", "/amplify/dashboard"];
+function signState3(data) {
+  const payload = Buffer.from(JSON.stringify(data)).toString("base64");
+  const signature = crypto3.createHmac("sha256", LINKEDIN_STATE_SECRET).update(payload).digest("hex");
+  return `${payload}.${signature}`;
+}
+function verifyState3(state) {
+  try {
+    const [payload, signature] = state.split(".");
+    if (!payload || !signature) return { valid: false };
+    const expectedSignature = crypto3.createHmac("sha256", LINKEDIN_STATE_SECRET).update(payload).digest("hex");
+    if (!crypto3.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
+      return { valid: false };
+    }
+    const data = JSON.parse(Buffer.from(payload, "base64").toString());
+    return { valid: true, data };
+  } catch {
+    return { valid: false };
+  }
+}
+function isValidReturnPath3(path4) {
+  if (!path4) return false;
+  return path4.startsWith("/") && ALLOWED_RETURN_PATHS3.some(
+    (allowed) => path4 === allowed || path4.startsWith(allowed + "?") || path4.startsWith(allowed + "/")
+  );
+}
+function getRedirectUri3(req) {
+  const protocol = req.protocol;
+  const host = req.get("host");
+  return `${protocol}://${host}/api/linkedin/oauth/callback`;
+}
+router4.get("/oauth/start", (req, res) => {
+  try {
+    const clientId = req.query.clientId;
+    const returnUrl = req.query.returnUrl;
+    if (!clientId || isNaN(parseInt(clientId))) {
+      return res.status(400).json({ error: "Valid clientId is required" });
+    }
+    if (!LINKEDIN_CLIENT_ID || !LINKEDIN_CLIENT_SECRET) {
+      return res.status(500).json({ error: "LinkedIn OAuth not configured" });
+    }
+    const safeReturnUrl = isValidReturnPath3(returnUrl) ? returnUrl : "/post";
+    const stateData = {
+      clientId: parseInt(clientId),
+      returnUrl: safeReturnUrl,
+      nonce: crypto3.randomBytes(16).toString("hex"),
+      timestamp: Date.now()
+    };
+    const state = signState3(stateData);
+    const redirectUri = getRedirectUri3(req);
+    const authUrl = new URL("https://www.linkedin.com/oauth/v2/authorization");
+    authUrl.searchParams.set("response_type", "code");
+    authUrl.searchParams.set("client_id", LINKEDIN_CLIENT_ID);
+    authUrl.searchParams.set("redirect_uri", redirectUri);
+    authUrl.searchParams.set("scope", LINKEDIN_SCOPES.join(" "));
+    authUrl.searchParams.set("state", state);
+    console.log(`[LinkedIn] Starting OAuth for client ${clientId}`);
+    res.redirect(authUrl.toString());
+  } catch (error) {
+    console.error("[LinkedIn] OAuth start error:", error);
+    res.status(500).json({ error: "Failed to start OAuth flow" });
+  }
+});
+router4.get("/oauth/callback", async (req, res) => {
+  try {
+    const code = req.query.code;
+    const stateParam = req.query.state;
+    const error = req.query.error;
+    if (error) {
+      console.error("[LinkedIn] OAuth denied:", error);
+      return res.redirect("/post?oauth=error&reason=denied&platform=linkedin");
+    }
+    if (!code || !stateParam) {
+      return res.status(400).json({ error: "Missing authorization code or state" });
+    }
+    const stateResult = verifyState3(stateParam);
+    if (!stateResult.valid || !stateResult.data) {
+      return res.status(403).json({ error: "Invalid state \u2014 possible CSRF attack" });
+    }
+    const stateAge = Date.now() - (stateResult.data.timestamp || 0);
+    if (stateAge > 10 * 60 * 1e3) {
+      return res.status(400).json({ error: "OAuth session expired. Please try again." });
+    }
+    const clientId = stateResult.data.clientId;
+    const returnUrl = isValidReturnPath3(stateResult.data.returnUrl) ? stateResult.data.returnUrl : "/post";
+    const tokenResponse = await fetch("https://www.linkedin.com/oauth/v2/accessToken", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        grant_type: "authorization_code",
+        code,
+        client_id: LINKEDIN_CLIENT_ID,
+        client_secret: LINKEDIN_CLIENT_SECRET,
+        redirect_uri: getRedirectUri3(req)
+      })
+    });
+    const tokenData = await tokenResponse.json();
+    if (!tokenData.access_token) {
+      console.error("[LinkedIn] Token exchange failed:", tokenData);
+      return res.redirect(`${returnUrl}?oauth=error&platform=linkedin`);
+    }
+    const accessToken = tokenData.access_token;
+    const refreshToken = tokenData.refresh_token;
+    const expiresIn = tokenData.expires_in;
+    const profileResponse = await fetch("https://api.linkedin.com/v2/userinfo", {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const profile = await profileResponse.json();
+    const linkedinId = profile.sub || profile.id;
+    const profileName = profile.name || `${profile.given_name || ""} ${profile.family_name || ""}`.trim();
+    const profileEmail = profile.email;
+    const profilePicture = profile.picture;
+    const [existing] = await db.select().from(socialMediaAccounts).where(
+      and8(
+        eq9(socialMediaAccounts.clientId, clientId),
+        eq9(socialMediaAccounts.platform, "linkedin"),
+        eq9(socialMediaAccounts.platformAccountId, linkedinId)
+      )
+    );
+    const tokenExpiry = expiresIn ? new Date(Date.now() + expiresIn * 1e3) : null;
+    if (existing) {
+      await db.update(socialMediaAccounts).set({
+        accessToken,
+        refreshToken: refreshToken || existing.refreshToken,
+        tokenExpiresAt: tokenExpiry,
+        platformAccountName: profileName,
+        isActive: true,
+        lastSyncedAt: /* @__PURE__ */ new Date(),
+        updatedAt: /* @__PURE__ */ new Date(),
+        metadata: { email: profileEmail, picture: profilePicture }
+      }).where(eq9(socialMediaAccounts.id, existing.id));
+    } else {
+      await db.insert(socialMediaAccounts).values({
+        clientId,
+        platform: "linkedin",
+        platformAccountId: linkedinId,
+        platformAccountName: profileName,
+        platformAccountHandle: profileEmail,
+        platformAccountAvatar: profilePicture || null,
+        accessToken,
+        refreshToken: refreshToken || null,
+        tokenExpiresAt: tokenExpiry,
+        accountType: "personal",
+        permissions: LINKEDIN_SCOPES,
+        isActive: true,
+        lastSyncedAt: /* @__PURE__ */ new Date(),
+        metadata: { email: profileEmail, picture: profilePicture }
+      });
+    }
+    console.log(`[LinkedIn] Connected: ${profileName} (${profileEmail})`);
+    const redirectWithStatus = returnUrl.includes("?") ? `${returnUrl}&oauth=success&platform=linkedin` : `${returnUrl}?oauth=success&platform=linkedin`;
+    res.redirect(redirectWithStatus);
+  } catch (error) {
+    console.error("[LinkedIn] OAuth callback error:", error);
+    res.redirect("/post?oauth=error&platform=linkedin");
+  }
+});
+var linkedin_default = router4;
+
+// server/routes/tiktok.ts
+init_db();
+init_schema();
+import { Router as Router5 } from "express";
+import { eq as eq10, and as and9 } from "drizzle-orm";
+import crypto4 from "crypto";
+var router5 = Router5();
+var TIKTOK_CLIENT_KEY = process.env.TIKTOK_CLIENT_KEY;
+var TIKTOK_CLIENT_SECRET = process.env.TIKTOK_CLIENT_SECRET;
+var TIKTOK_STATE_SECRET = process.env.TIKTOK_CLIENT_SECRET || "tiktok-fallback-secret";
+var TIKTOK_SCOPES = ["user.info.basic", "video.publish", "video.upload"];
+var ALLOWED_RETURN_PATHS4 = ["/post", "/portal/dashboard"];
+function signState4(data) {
+  const payload = Buffer.from(JSON.stringify(data)).toString("base64");
+  const signature = crypto4.createHmac("sha256", TIKTOK_STATE_SECRET).update(payload).digest("hex");
+  return `${payload}.${signature}`;
+}
+function verifyState4(state) {
+  try {
+    const [payload, signature] = state.split(".");
+    if (!payload || !signature) return { valid: false };
+    const expected = crypto4.createHmac("sha256", TIKTOK_STATE_SECRET).update(payload).digest("hex");
+    if (!crypto4.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return { valid: false };
+    return { valid: true, data: JSON.parse(Buffer.from(payload, "base64").toString()) };
+  } catch {
+    return { valid: false };
+  }
+}
+function isValidReturnPath4(path4) {
+  if (!path4) return false;
+  return path4.startsWith("/") && ALLOWED_RETURN_PATHS4.some((a) => path4 === a || path4.startsWith(a + "?") || path4.startsWith(a + "/"));
+}
+function getRedirectUri4(req) {
+  return `${req.protocol}://${req.get("host")}/api/tiktok/oauth/callback`;
+}
+router5.get("/oauth/start", (req, res) => {
+  try {
+    const clientId = req.query.clientId;
+    const returnUrl = req.query.returnUrl;
+    if (!clientId || isNaN(parseInt(clientId))) {
+      return res.status(400).json({ error: "Valid clientId is required" });
+    }
+    if (!TIKTOK_CLIENT_KEY || !TIKTOK_CLIENT_SECRET) {
+      return res.status(500).json({ error: "TikTok OAuth not configured. Set TIKTOK_CLIENT_KEY and TIKTOK_CLIENT_SECRET." });
+    }
+    const safeReturnUrl = isValidReturnPath4(returnUrl) ? returnUrl : "/post";
+    const state = signState4({
+      clientId: parseInt(clientId),
+      returnUrl: safeReturnUrl,
+      nonce: crypto4.randomBytes(16).toString("hex"),
+      timestamp: Date.now()
+    });
+    const redirectUri = getRedirectUri4(req);
+    const authUrl = new URL("https://www.tiktok.com/v2/auth/authorize/");
+    authUrl.searchParams.set("client_key", TIKTOK_CLIENT_KEY);
+    authUrl.searchParams.set("redirect_uri", redirectUri);
+    authUrl.searchParams.set("scope", TIKTOK_SCOPES.join(","));
+    authUrl.searchParams.set("response_type", "code");
+    authUrl.searchParams.set("state", state);
+    console.log(`[TikTok] Starting OAuth for client ${clientId}`);
+    res.redirect(authUrl.toString());
+  } catch (error) {
+    console.error("[TikTok] OAuth start error:", error);
+    res.status(500).json({ error: "Failed to start OAuth flow" });
+  }
+});
+router5.get("/oauth/callback", async (req, res) => {
+  try {
+    const code = req.query.code;
+    const stateParam = req.query.state;
+    const error = req.query.error;
+    if (error || !code) {
+      return res.redirect("/post?oauth=error&platform=tiktok");
+    }
+    const stateResult = verifyState4(stateParam);
+    if (!stateResult.valid || !stateResult.data) {
+      return res.status(403).json({ error: "Invalid state" });
+    }
+    const stateAge = Date.now() - (stateResult.data.timestamp || 0);
+    if (stateAge > 10 * 60 * 1e3) {
+      return res.status(400).json({ error: "OAuth session expired" });
+    }
+    const clientId = stateResult.data.clientId;
+    const returnUrl = isValidReturnPath4(stateResult.data.returnUrl) ? stateResult.data.returnUrl : "/post";
+    const tokenResponse = await fetch("https://open.tiktokapis.com/v2/oauth/token/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_key: TIKTOK_CLIENT_KEY,
+        client_secret: TIKTOK_CLIENT_SECRET,
+        code,
+        grant_type: "authorization_code",
+        redirect_uri: getRedirectUri4(req)
+      })
+    });
+    const tokenData = await tokenResponse.json();
+    if (!tokenData.access_token) {
+      console.error("[TikTok] Token exchange failed:", tokenData);
+      return res.redirect(`${returnUrl}?oauth=error&platform=tiktok`);
+    }
+    const accessToken = tokenData.access_token;
+    const refreshToken = tokenData.refresh_token;
+    const expiresIn = tokenData.expires_in;
+    const openId = tokenData.open_id;
+    const userResponse = await fetch("https://open.tiktokapis.com/v2/user/info/?fields=open_id,display_name,avatar_url", {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const userData = await userResponse.json();
+    const userInfo = userData.data?.user || {};
+    const displayName = userInfo.display_name || "TikTok User";
+    const avatarUrl = userInfo.avatar_url;
+    const [existing] = await db.select().from(socialMediaAccounts).where(
+      and9(
+        eq10(socialMediaAccounts.clientId, clientId),
+        eq10(socialMediaAccounts.platform, "tiktok"),
+        eq10(socialMediaAccounts.platformAccountId, openId)
+      )
+    );
+    const tokenExpiry = expiresIn ? new Date(Date.now() + expiresIn * 1e3) : null;
+    if (existing) {
+      await db.update(socialMediaAccounts).set({
+        accessToken,
+        refreshToken: refreshToken || existing.refreshToken,
+        tokenExpiresAt: tokenExpiry,
+        platformAccountName: displayName,
+        isActive: true,
+        lastSyncedAt: /* @__PURE__ */ new Date(),
+        updatedAt: /* @__PURE__ */ new Date()
+      }).where(eq10(socialMediaAccounts.id, existing.id));
+    } else {
+      await db.insert(socialMediaAccounts).values({
+        clientId,
+        platform: "tiktok",
+        platformAccountId: openId,
+        platformAccountName: displayName,
+        platformAccountAvatar: avatarUrl || null,
+        accessToken,
+        refreshToken: refreshToken || null,
+        tokenExpiresAt: tokenExpiry,
+        accountType: "personal",
+        permissions: TIKTOK_SCOPES,
+        isActive: true,
+        lastSyncedAt: /* @__PURE__ */ new Date()
+      });
+    }
+    console.log(`[TikTok] Connected: ${displayName}`);
+    res.redirect(`${returnUrl}?oauth=success&platform=tiktok`);
+  } catch (error) {
+    console.error("[TikTok] OAuth callback error:", error);
+    res.redirect("/post?oauth=error&platform=tiktok");
+  }
+});
+var tiktok_default = router5;
+
+// server/routes/snapchat.ts
+init_db();
+init_schema();
+import { Router as Router6 } from "express";
+import crypto5 from "crypto";
+var router6 = Router6();
+var SNAP_CLIENT_ID = process.env.SNAP_CLIENT_ID;
+var SNAP_CLIENT_SECRET = process.env.SNAP_CLIENT_SECRET;
+var SNAP_STATE_SECRET = process.env.SNAP_CLIENT_SECRET || "snap-fallback-secret";
+var SNAP_SCOPES = ["snapchat-marketing-api"];
+var ALLOWED_RETURN_PATHS5 = ["/amplify/dashboard", "/portal/dashboard"];
+function signState5(data) {
+  const payload = Buffer.from(JSON.stringify(data)).toString("base64");
+  const signature = crypto5.createHmac("sha256", SNAP_STATE_SECRET).update(payload).digest("hex");
+  return `${payload}.${signature}`;
+}
+function verifyState5(state) {
+  try {
+    const [payload, signature] = state.split(".");
+    if (!payload || !signature) return { valid: false };
+    const expected = crypto5.createHmac("sha256", SNAP_STATE_SECRET).update(payload).digest("hex");
+    if (!crypto5.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return { valid: false };
+    return { valid: true, data: JSON.parse(Buffer.from(payload, "base64").toString()) };
+  } catch {
+    return { valid: false };
+  }
+}
+function isValidReturnPath5(path4) {
+  if (!path4) return false;
+  return path4.startsWith("/") && ALLOWED_RETURN_PATHS5.some((a) => path4 === a || path4.startsWith(a + "?") || path4.startsWith(a + "/"));
+}
+function getRedirectUri5(req) {
+  return `${req.protocol}://${req.get("host")}/api/snapchat/oauth/callback`;
+}
+router6.get("/oauth/start", (req, res) => {
+  try {
+    const clientId = req.query.clientId;
+    const returnUrl = req.query.returnUrl;
+    if (!clientId || isNaN(parseInt(clientId))) {
+      return res.status(400).json({ error: "Valid clientId is required" });
+    }
+    if (!SNAP_CLIENT_ID || !SNAP_CLIENT_SECRET) {
+      return res.status(500).json({ error: "Snapchat OAuth not configured. Set SNAP_CLIENT_ID and SNAP_CLIENT_SECRET." });
+    }
+    const safeReturnUrl = isValidReturnPath5(returnUrl) ? returnUrl : "/amplify/dashboard";
+    const state = signState5({
+      clientId: parseInt(clientId),
+      returnUrl: safeReturnUrl,
+      nonce: crypto5.randomBytes(16).toString("hex"),
+      timestamp: Date.now()
+    });
+    const redirectUri = getRedirectUri5(req);
+    const authUrl = new URL("https://accounts.snapchat.com/login/oauth2/authorize");
+    authUrl.searchParams.set("client_id", SNAP_CLIENT_ID);
+    authUrl.searchParams.set("redirect_uri", redirectUri);
+    authUrl.searchParams.set("response_type", "code");
+    authUrl.searchParams.set("scope", SNAP_SCOPES.join(" "));
+    authUrl.searchParams.set("state", state);
+    console.log(`[Snapchat] Starting OAuth for client ${clientId}`);
+    res.redirect(authUrl.toString());
+  } catch (error) {
+    console.error("[Snapchat] OAuth start error:", error);
+    res.status(500).json({ error: "Failed to start OAuth flow" });
+  }
+});
+router6.get("/oauth/callback", async (req, res) => {
+  try {
+    const code = req.query.code;
+    const stateParam = req.query.state;
+    const error = req.query.error;
+    if (error || !code) {
+      return res.redirect("/amplify/dashboard?oauth=error&platform=snapchat");
+    }
+    const stateResult = verifyState5(stateParam);
+    if (!stateResult.valid || !stateResult.data) {
+      return res.status(403).json({ error: "Invalid state" });
+    }
+    const stateAge = Date.now() - (stateResult.data.timestamp || 0);
+    if (stateAge > 10 * 60 * 1e3) {
+      return res.status(400).json({ error: "OAuth session expired" });
+    }
+    const returnUrl = isValidReturnPath5(stateResult.data.returnUrl) ? stateResult.data.returnUrl : "/amplify/dashboard";
+    const tokenResponse = await fetch("https://accounts.snapchat.com/login/oauth2/access_token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id: SNAP_CLIENT_ID,
+        client_secret: SNAP_CLIENT_SECRET,
+        code,
+        grant_type: "authorization_code",
+        redirect_uri: getRedirectUri5(req)
+      })
+    });
+    const tokenData = await tokenResponse.json();
+    if (!tokenData.access_token) {
+      console.error("[Snapchat] Token exchange failed:", tokenData);
+      return res.redirect(`${returnUrl}?oauth=error&platform=snapchat`);
+    }
+    const accessToken = tokenData.access_token;
+    const refreshToken = tokenData.refresh_token;
+    const expiresIn = tokenData.expires_in;
+    const meResponse = await fetch("https://adsapi.snapchat.com/v1/me", {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const meData = await meResponse.json();
+    const accountName = meData.me?.display_name || meData.me?.email || "Snapchat Ads";
+    const orgsResponse = await fetch("https://adsapi.snapchat.com/v1/me/organizations", {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const orgsData = await orgsResponse.json();
+    const orgId = orgsData.organizations?.[0]?.organization?.id;
+    await db.insert(adAccountConnections).values({
+      platform: "snapchat",
+      accountName,
+      status: "active",
+      accessToken,
+      refreshToken,
+      tokenExpiresAt: new Date(Date.now() + (expiresIn || 1800) * 1e3)
+    });
+    console.log(`[Snapchat] Ads connected: ${accountName}`);
+    res.redirect(`${returnUrl}?oauth=success&platform=snapchat`);
+  } catch (error) {
+    console.error("[Snapchat] OAuth callback error:", error);
+    res.redirect("/amplify/dashboard?oauth=error&platform=snapchat");
+  }
+});
+var snapchat_default = router6;
+
+// server/routes/pinterest.ts
+init_db();
+init_schema();
+import { Router as Router7 } from "express";
+import { eq as eq11, and as and10 } from "drizzle-orm";
+import crypto6 from "crypto";
+var router7 = Router7();
+var PINTEREST_CLIENT_ID = process.env.PINTEREST_CLIENT_ID;
+var PINTEREST_CLIENT_SECRET = process.env.PINTEREST_CLIENT_SECRET;
+var PINTEREST_STATE_SECRET = process.env.PINTEREST_CLIENT_SECRET || "pinterest-fallback-secret";
+var PINTEREST_SCOPES = [
+  "ads:read",
+  "ads:write",
+  "boards:read",
+  "pins:read",
+  "pins:write",
+  "user_accounts:read"
+];
+var ALLOWED_RETURN_PATHS6 = ["/amplify/dashboard", "/post", "/portal/dashboard"];
+function signState6(data) {
+  const payload = Buffer.from(JSON.stringify(data)).toString("base64");
+  const signature = crypto6.createHmac("sha256", PINTEREST_STATE_SECRET).update(payload).digest("hex");
+  return `${payload}.${signature}`;
+}
+function verifyState6(state) {
+  try {
+    const [payload, signature] = state.split(".");
+    if (!payload || !signature) return { valid: false };
+    const expected = crypto6.createHmac("sha256", PINTEREST_STATE_SECRET).update(payload).digest("hex");
+    if (!crypto6.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return { valid: false };
+    return { valid: true, data: JSON.parse(Buffer.from(payload, "base64").toString()) };
+  } catch {
+    return { valid: false };
+  }
+}
+function isValidReturnPath6(path4) {
+  if (!path4) return false;
+  return path4.startsWith("/") && ALLOWED_RETURN_PATHS6.some((a) => path4 === a || path4.startsWith(a + "?") || path4.startsWith(a + "/"));
+}
+function getRedirectUri6(req) {
+  return `${req.protocol}://${req.get("host")}/api/pinterest/oauth/callback`;
+}
+router7.get("/oauth/start", (req, res) => {
+  try {
+    const clientId = req.query.clientId;
+    const returnUrl = req.query.returnUrl;
+    if (!clientId || isNaN(parseInt(clientId))) {
+      return res.status(400).json({ error: "Valid clientId is required" });
+    }
+    if (!PINTEREST_CLIENT_ID || !PINTEREST_CLIENT_SECRET) {
+      return res.status(500).json({ error: "Pinterest OAuth not configured. Set PINTEREST_CLIENT_ID and PINTEREST_CLIENT_SECRET." });
+    }
+    const safeReturnUrl = isValidReturnPath6(returnUrl) ? returnUrl : "/amplify/dashboard";
+    const state = signState6({
+      clientId: parseInt(clientId),
+      returnUrl: safeReturnUrl,
+      nonce: crypto6.randomBytes(16).toString("hex"),
+      timestamp: Date.now()
+    });
+    const redirectUri = getRedirectUri6(req);
+    const authUrl = new URL("https://api.pinterest.com/oauth/");
+    authUrl.searchParams.set("client_id", PINTEREST_CLIENT_ID);
+    authUrl.searchParams.set("redirect_uri", redirectUri);
+    authUrl.searchParams.set("response_type", "code");
+    authUrl.searchParams.set("scope", PINTEREST_SCOPES.join(","));
+    authUrl.searchParams.set("state", state);
+    console.log(`[Pinterest] Starting OAuth for client ${clientId}`);
+    res.redirect(authUrl.toString());
+  } catch (error) {
+    console.error("[Pinterest] OAuth start error:", error);
+    res.status(500).json({ error: "Failed to start OAuth flow" });
+  }
+});
+router7.get("/oauth/callback", async (req, res) => {
+  try {
+    const code = req.query.code;
+    const stateParam = req.query.state;
+    const error = req.query.error;
+    if (error || !code) {
+      return res.redirect("/amplify/dashboard?oauth=error&platform=pinterest");
+    }
+    const stateResult = verifyState6(stateParam);
+    if (!stateResult.valid || !stateResult.data) {
+      return res.status(403).json({ error: "Invalid state" });
+    }
+    const stateAge = Date.now() - (stateResult.data.timestamp || 0);
+    if (stateAge > 10 * 60 * 1e3) {
+      return res.status(400).json({ error: "OAuth session expired" });
+    }
+    const clientId = stateResult.data.clientId;
+    const returnUrl = isValidReturnPath6(stateResult.data.returnUrl) ? stateResult.data.returnUrl : "/amplify/dashboard";
+    const basicAuth = Buffer.from(`${PINTEREST_CLIENT_ID}:${PINTEREST_CLIENT_SECRET}`).toString("base64");
+    const tokenResponse = await fetch("https://api.pinterest.com/v5/oauth/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": `Basic ${basicAuth}`
+      },
+      body: new URLSearchParams({
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: getRedirectUri6(req)
+      })
+    });
+    const tokenData = await tokenResponse.json();
+    if (!tokenData.access_token) {
+      console.error("[Pinterest] Token exchange failed:", tokenData);
+      return res.redirect(`${returnUrl}?oauth=error&platform=pinterest`);
+    }
+    const accessToken = tokenData.access_token;
+    const refreshToken = tokenData.refresh_token;
+    const expiresIn = tokenData.expires_in;
+    const userResponse = await fetch("https://api.pinterest.com/v5/user_account", {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const userData = await userResponse.json();
+    const accountName = userData.username || userData.business_name || "Pinterest Ads";
+    const pinterestId = userData.id || userData.username;
+    const [existingSocial] = await db.select().from(socialMediaAccounts).where(
+      and10(
+        eq11(socialMediaAccounts.clientId, clientId),
+        eq11(socialMediaAccounts.platform, "pinterest"),
+        eq11(socialMediaAccounts.platformAccountId, String(pinterestId))
+      )
+    );
+    const tokenExpiry = expiresIn ? new Date(Date.now() + expiresIn * 1e3) : null;
+    if (existingSocial) {
+      await db.update(socialMediaAccounts).set({
+        accessToken,
+        refreshToken: refreshToken || existingSocial.refreshToken,
+        tokenExpiresAt: tokenExpiry,
+        platformAccountName: accountName,
+        isActive: true,
+        lastSyncedAt: /* @__PURE__ */ new Date(),
+        updatedAt: /* @__PURE__ */ new Date(),
+        metadata: { profileImage: userData.profile_image }
+      }).where(eq11(socialMediaAccounts.id, existingSocial.id));
+    } else {
+      await db.insert(socialMediaAccounts).values({
+        clientId,
+        platform: "pinterest",
+        platformAccountId: String(pinterestId),
+        platformAccountName: accountName,
+        platformAccountHandle: userData.username || null,
+        platformAccountAvatar: userData.profile_image || null,
+        accessToken,
+        refreshToken: refreshToken || null,
+        tokenExpiresAt: tokenExpiry,
+        accountType: userData.account_type === "BUSINESS" ? "business" : "personal",
+        permissions: PINTEREST_SCOPES,
+        isActive: true,
+        lastSyncedAt: /* @__PURE__ */ new Date(),
+        metadata: { profileImage: userData.profile_image }
+      });
+    }
+    const adAccountsResponse = await fetch("https://api.pinterest.com/v5/ad_accounts", {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const adAccountsData = await adAccountsResponse.json();
+    const adAccount = adAccountsData.items?.[0];
+    if (adAccount) {
+      await db.insert(adAccountConnections).values({
+        platform: "pinterest",
+        accountName: adAccount.name || accountName,
+        accountId: adAccount.id,
+        status: "active",
+        accessToken,
+        refreshToken,
+        tokenExpiresAt: new Date(Date.now() + (expiresIn || 2592e3) * 1e3)
+      });
+    }
+    console.log(`[Pinterest] Connected: ${accountName}`);
+    res.redirect(`${returnUrl}?oauth=success&platform=pinterest`);
+  } catch (error) {
+    console.error("[Pinterest] OAuth callback error:", error);
+    res.redirect("/amplify/dashboard?oauth=error&platform=pinterest");
+  }
+});
+var pinterest_default = router7;
+
+// server/routes/nextdoor.ts
+init_db();
+init_schema();
+import { Router as Router8 } from "express";
+import crypto7 from "crypto";
+var router8 = Router8();
+var NEXTDOOR_CLIENT_ID = process.env.NEXTDOOR_CLIENT_ID;
+var NEXTDOOR_CLIENT_SECRET = process.env.NEXTDOOR_CLIENT_SECRET;
+var NEXTDOOR_STATE_SECRET = process.env.NEXTDOOR_CLIENT_SECRET || "nextdoor-fallback-secret";
+var NEXTDOOR_SCOPES = ["openid", "profile", "ads:read", "ads:write"];
+var ALLOWED_RETURN_PATHS7 = ["/amplify/dashboard", "/post", "/portal/dashboard"];
+function signState7(data) {
+  const payload = Buffer.from(JSON.stringify(data)).toString("base64");
+  const signature = crypto7.createHmac("sha256", NEXTDOOR_STATE_SECRET).update(payload).digest("hex");
+  return `${payload}.${signature}`;
+}
+function verifyState7(state) {
+  try {
+    const [payload, signature] = state.split(".");
+    if (!payload || !signature) return { valid: false };
+    const expected = crypto7.createHmac("sha256", NEXTDOOR_STATE_SECRET).update(payload).digest("hex");
+    if (!crypto7.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return { valid: false };
+    return { valid: true, data: JSON.parse(Buffer.from(payload, "base64").toString()) };
+  } catch {
+    return { valid: false };
+  }
+}
+function isValidReturnPath7(path4) {
+  if (!path4) return false;
+  return path4.startsWith("/") && ALLOWED_RETURN_PATHS7.some((a) => path4 === a || path4.startsWith(a + "?") || path4.startsWith(a + "/"));
+}
+function getRedirectUri7(req) {
+  return `${req.protocol}://${req.get("host")}/api/nextdoor/oauth/callback`;
+}
+router8.get("/oauth/start", (req, res) => {
+  try {
+    const clientId = req.query.clientId;
+    const returnUrl = req.query.returnUrl;
+    if (!clientId || isNaN(parseInt(clientId))) {
+      return res.status(400).json({ error: "Valid clientId is required" });
+    }
+    if (!NEXTDOOR_CLIENT_ID || !NEXTDOOR_CLIENT_SECRET) {
+      return res.status(500).json({ error: "Nextdoor OAuth not configured. Set NEXTDOOR_CLIENT_ID and NEXTDOOR_CLIENT_SECRET." });
+    }
+    const safeReturnUrl = isValidReturnPath7(returnUrl) ? returnUrl : "/amplify/dashboard";
+    const state = signState7({
+      clientId: parseInt(clientId),
+      returnUrl: safeReturnUrl,
+      nonce: crypto7.randomBytes(16).toString("hex"),
+      timestamp: Date.now()
+    });
+    const redirectUri = getRedirectUri7(req);
+    const authUrl = new URL("https://auth.nextdoor.com/v2/authorize");
+    authUrl.searchParams.set("client_id", NEXTDOOR_CLIENT_ID);
+    authUrl.searchParams.set("redirect_uri", redirectUri);
+    authUrl.searchParams.set("response_type", "code");
+    authUrl.searchParams.set("scope", NEXTDOOR_SCOPES.join(" "));
+    authUrl.searchParams.set("state", state);
+    console.log(`[Nextdoor] Starting OAuth for client ${clientId}`);
+    res.redirect(authUrl.toString());
+  } catch (error) {
+    console.error("[Nextdoor] OAuth start error:", error);
+    res.status(500).json({ error: "Failed to start OAuth flow" });
+  }
+});
+router8.get("/oauth/callback", async (req, res) => {
+  try {
+    const code = req.query.code;
+    const stateParam = req.query.state;
+    const error = req.query.error;
+    if (error || !code) {
+      return res.redirect("/amplify/dashboard?oauth=error&platform=nextdoor");
+    }
+    const stateResult = verifyState7(stateParam);
+    if (!stateResult.valid || !stateResult.data) {
+      return res.status(403).json({ error: "Invalid state" });
+    }
+    const stateAge = Date.now() - (stateResult.data.timestamp || 0);
+    if (stateAge > 10 * 60 * 1e3) {
+      return res.status(400).json({ error: "OAuth session expired" });
+    }
+    const returnUrl = isValidReturnPath7(stateResult.data.returnUrl) ? stateResult.data.returnUrl : "/amplify/dashboard";
+    const tokenResponse = await fetch("https://auth.nextdoor.com/v2/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id: NEXTDOOR_CLIENT_ID,
+        client_secret: NEXTDOOR_CLIENT_SECRET,
+        code,
+        grant_type: "authorization_code",
+        redirect_uri: getRedirectUri7(req)
+      })
+    });
+    const tokenData = await tokenResponse.json();
+    if (!tokenData.access_token) {
+      console.error("[Nextdoor] Token exchange failed:", tokenData);
+      return res.redirect(`${returnUrl}?oauth=error&platform=nextdoor`);
+    }
+    const accessToken = tokenData.access_token;
+    const refreshToken = tokenData.refresh_token;
+    const expiresIn = tokenData.expires_in;
+    const profileResponse = await fetch("https://api.nextdoor.com/v2/me", {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const profileData = await profileResponse.json();
+    const accountName = profileData.name || profileData.display_name || "Nextdoor Ads";
+    const advertiserResponse = await fetch("https://api.nextdoor.com/v2/advertiser/me", {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const advertiserData = await advertiserResponse.json();
+    const advertiserId = advertiserData.id || profileData.id;
+    await db.insert(adAccountConnections).values({
+      platform: "nextdoor",
+      accountName,
+      accountId: advertiserId,
+      status: "active",
+      accessToken,
+      refreshToken,
+      tokenExpiresAt: new Date(Date.now() + (expiresIn || 3600) * 1e3)
+    });
+    console.log(`[Nextdoor] Ads connected: ${accountName}`);
+    res.redirect(`${returnUrl}?oauth=success&platform=nextdoor`);
+  } catch (error) {
+    console.error("[Nextdoor] OAuth callback error:", error);
+    res.redirect("/amplify/dashboard?oauth=error&platform=nextdoor");
+  }
+});
+var nextdoor_default = router8;
+
+// server/routes/spotify.ts
+init_db();
+init_schema();
+import { Router as Router9 } from "express";
+import crypto8 from "crypto";
+var router9 = Router9();
+var SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+var SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+var SPOTIFY_STATE_SECRET = process.env.SPOTIFY_CLIENT_SECRET || "spotify-fallback-secret";
+var SPOTIFY_SCOPES = [
+  "user-read-private",
+  "user-read-email"
+];
+var ALLOWED_RETURN_PATHS8 = ["/amplify/dashboard", "/post", "/portal/dashboard"];
+function signState8(data) {
+  const payload = Buffer.from(JSON.stringify(data)).toString("base64");
+  const signature = crypto8.createHmac("sha256", SPOTIFY_STATE_SECRET).update(payload).digest("hex");
+  return `${payload}.${signature}`;
+}
+function verifyState8(state) {
+  try {
+    const [payload, signature] = state.split(".");
+    if (!payload || !signature) return { valid: false };
+    const expected = crypto8.createHmac("sha256", SPOTIFY_STATE_SECRET).update(payload).digest("hex");
+    if (!crypto8.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return { valid: false };
+    return { valid: true, data: JSON.parse(Buffer.from(payload, "base64").toString()) };
+  } catch {
+    return { valid: false };
+  }
+}
+function isValidReturnPath8(path4) {
+  if (!path4) return false;
+  return path4.startsWith("/") && ALLOWED_RETURN_PATHS8.some((a) => path4 === a || path4.startsWith(a + "?") || path4.startsWith(a + "/"));
+}
+function getRedirectUri8(req) {
+  return `${req.protocol}://${req.get("host")}/api/spotify/oauth/callback`;
+}
+router9.get("/oauth/start", (req, res) => {
+  try {
+    const clientId = req.query.clientId;
+    const returnUrl = req.query.returnUrl;
+    if (!clientId || isNaN(parseInt(clientId))) {
+      return res.status(400).json({ error: "Valid clientId is required" });
+    }
+    if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET) {
+      return res.status(500).json({ error: "Spotify OAuth not configured. Set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET." });
+    }
+    const safeReturnUrl = isValidReturnPath8(returnUrl) ? returnUrl : "/amplify/dashboard";
+    const state = signState8({
+      clientId: parseInt(clientId),
+      returnUrl: safeReturnUrl,
+      nonce: crypto8.randomBytes(16).toString("hex"),
+      timestamp: Date.now()
+    });
+    const redirectUri = getRedirectUri8(req);
+    const authUrl = new URL("https://accounts.spotify.com/authorize");
+    authUrl.searchParams.set("client_id", SPOTIFY_CLIENT_ID);
+    authUrl.searchParams.set("redirect_uri", redirectUri);
+    authUrl.searchParams.set("response_type", "code");
+    authUrl.searchParams.set("scope", SPOTIFY_SCOPES.join(" "));
+    authUrl.searchParams.set("state", state);
+    console.log(`[Spotify] Starting OAuth for client ${clientId}`);
+    res.redirect(authUrl.toString());
+  } catch (error) {
+    console.error("[Spotify] OAuth start error:", error);
+    res.status(500).json({ error: "Failed to start OAuth flow" });
+  }
+});
+router9.get("/oauth/callback", async (req, res) => {
+  try {
+    const code = req.query.code;
+    const stateParam = req.query.state;
+    const error = req.query.error;
+    if (error || !code) {
+      return res.redirect("/amplify/dashboard?oauth=error&platform=spotify");
+    }
+    const stateResult = verifyState8(stateParam);
+    if (!stateResult.valid || !stateResult.data) {
+      return res.status(403).json({ error: "Invalid state" });
+    }
+    const stateAge = Date.now() - (stateResult.data.timestamp || 0);
+    if (stateAge > 10 * 60 * 1e3) {
+      return res.status(400).json({ error: "OAuth session expired" });
+    }
+    const returnUrl = isValidReturnPath8(stateResult.data.returnUrl) ? stateResult.data.returnUrl : "/amplify/dashboard";
+    const basicAuth = Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`).toString("base64");
+    const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": `Basic ${basicAuth}`
+      },
+      body: new URLSearchParams({
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: getRedirectUri8(req)
+      })
+    });
+    const tokenData = await tokenResponse.json();
+    if (!tokenData.access_token) {
+      console.error("[Spotify] Token exchange failed:", tokenData);
+      return res.redirect(`${returnUrl}?oauth=error&platform=spotify`);
+    }
+    const accessToken = tokenData.access_token;
+    const refreshToken = tokenData.refresh_token;
+    const expiresIn = tokenData.expires_in;
+    const profileResponse = await fetch("https://api.spotify.com/v1/me", {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const profileData = await profileResponse.json();
+    const accountName = profileData.display_name || profileData.email || "Spotify Ads";
+    await db.insert(adAccountConnections).values({
+      platform: "spotify",
+      accountName,
+      accountId: profileData.id,
+      status: "active",
+      accessToken,
+      refreshToken,
+      tokenExpiresAt: new Date(Date.now() + (expiresIn || 3600) * 1e3)
+    });
+    console.log(`[Spotify] Ads connected: ${accountName}`);
+    res.redirect(`${returnUrl}?oauth=success&platform=spotify`);
+  } catch (error) {
+    console.error("[Spotify] OAuth callback error:", error);
+    res.redirect("/amplify/dashboard?oauth=error&platform=spotify");
+  }
+});
+var spotify_default = router9;
+
+// server/routes/microsoft-ads.ts
+init_db();
+init_schema();
+import { Router as Router10 } from "express";
+import crypto9 from "crypto";
+var router10 = Router10();
+var MICROSOFT_CLIENT_ID = process.env.MICROSOFT_ADS_CLIENT_ID;
+var MICROSOFT_CLIENT_SECRET = process.env.MICROSOFT_ADS_CLIENT_SECRET;
+var MICROSOFT_STATE_SECRET = process.env.MICROSOFT_ADS_CLIENT_SECRET || "msads-fallback-secret";
+var MICROSOFT_SCOPES = ["https://ads.microsoft.com/msads.manage", "openid", "profile", "email"];
+var ALLOWED_RETURN_PATHS9 = ["/amplify/dashboard", "/portal/dashboard"];
+function signState9(data) {
+  const payload = Buffer.from(JSON.stringify(data)).toString("base64");
+  const signature = crypto9.createHmac("sha256", MICROSOFT_STATE_SECRET).update(payload).digest("hex");
+  return `${payload}.${signature}`;
+}
+function verifyState9(state) {
+  try {
+    const [payload, signature] = state.split(".");
+    if (!payload || !signature) return { valid: false };
+    const expected = crypto9.createHmac("sha256", MICROSOFT_STATE_SECRET).update(payload).digest("hex");
+    if (!crypto9.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return { valid: false };
+    return { valid: true, data: JSON.parse(Buffer.from(payload, "base64").toString()) };
+  } catch {
+    return { valid: false };
+  }
+}
+function isValidReturnPath9(path4) {
+  if (!path4) return false;
+  return path4.startsWith("/") && ALLOWED_RETURN_PATHS9.some((a) => path4 === a || path4.startsWith(a + "?") || path4.startsWith(a + "/"));
+}
+function getRedirectUri9(req) {
+  return `${req.protocol}://${req.get("host")}/api/microsoft-ads/oauth/callback`;
+}
+router10.get("/oauth/start", (req, res) => {
+  try {
+    const clientId = req.query.clientId;
+    const returnUrl = req.query.returnUrl;
+    if (!clientId || isNaN(parseInt(clientId))) {
+      return res.status(400).json({ error: "Valid clientId is required" });
+    }
+    if (!MICROSOFT_CLIENT_ID || !MICROSOFT_CLIENT_SECRET) {
+      return res.status(500).json({ error: "Microsoft Advertising OAuth not configured. Set MICROSOFT_ADS_CLIENT_ID and MICROSOFT_ADS_CLIENT_SECRET." });
+    }
+    const safeReturnUrl = isValidReturnPath9(returnUrl) ? returnUrl : "/amplify/dashboard";
+    const state = signState9({
+      clientId: parseInt(clientId),
+      returnUrl: safeReturnUrl,
+      nonce: crypto9.randomBytes(16).toString("hex"),
+      timestamp: Date.now()
+    });
+    const redirectUri = getRedirectUri9(req);
+    const authUrl = new URL("https://login.microsoftonline.com/common/oauth2/v2.0/authorize");
+    authUrl.searchParams.set("client_id", MICROSOFT_CLIENT_ID);
+    authUrl.searchParams.set("redirect_uri", redirectUri);
+    authUrl.searchParams.set("response_type", "code");
+    authUrl.searchParams.set("scope", MICROSOFT_SCOPES.join(" "));
+    authUrl.searchParams.set("state", state);
+    authUrl.searchParams.set("prompt", "consent");
+    console.log(`[Microsoft Ads] Starting OAuth for client ${clientId}`);
+    res.redirect(authUrl.toString());
+  } catch (error) {
+    console.error("[Microsoft Ads] OAuth start error:", error);
+    res.status(500).json({ error: "Failed to start OAuth flow" });
+  }
+});
+router10.get("/oauth/callback", async (req, res) => {
+  try {
+    const code = req.query.code;
+    const stateParam = req.query.state;
+    const error = req.query.error;
+    if (error || !code) {
+      return res.redirect("/amplify/dashboard?oauth=error&platform=microsoft");
+    }
+    const stateResult = verifyState9(stateParam);
+    if (!stateResult.valid || !stateResult.data) {
+      return res.status(403).json({ error: "Invalid state" });
+    }
+    const stateAge = Date.now() - (stateResult.data.timestamp || 0);
+    if (stateAge > 10 * 60 * 1e3) {
+      return res.status(400).json({ error: "OAuth session expired" });
+    }
+    const returnUrl = isValidReturnPath9(stateResult.data.returnUrl) ? stateResult.data.returnUrl : "/amplify/dashboard";
+    const tokenResponse = await fetch("https://login.microsoftonline.com/common/oauth2/v2.0/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id: MICROSOFT_CLIENT_ID,
+        client_secret: MICROSOFT_CLIENT_SECRET,
+        code,
+        grant_type: "authorization_code",
+        redirect_uri: getRedirectUri9(req),
+        scope: MICROSOFT_SCOPES.join(" ")
+      })
+    });
+    const tokenData = await tokenResponse.json();
+    if (!tokenData.access_token) {
+      console.error("[Microsoft Ads] Token exchange failed:", tokenData);
+      return res.redirect(`${returnUrl}?oauth=error&platform=microsoft`);
+    }
+    const accessToken = tokenData.access_token;
+    const refreshToken = tokenData.refresh_token;
+    const expiresIn = tokenData.expires_in;
+    const profileResponse = await fetch("https://graph.microsoft.com/v1.0/me", {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const profile = await profileResponse.json();
+    const accountName = profile.displayName || profile.mail || "Microsoft Advertising";
+    const developerToken = process.env.MICROSOFT_ADS_DEVELOPER_TOKEN || "BBD37VB98";
+    let customerInfo = null;
+    try {
+      const soapBody = `<?xml version="1.0" encoding="utf-8"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Header>
+    <AuthenticationToken xmlns="https://bingads.microsoft.com/Customer/v13">${accessToken}</AuthenticationToken>
+    <DeveloperToken xmlns="https://bingads.microsoft.com/Customer/v13">${developerToken}</DeveloperToken>
+  </s:Header>
+  <s:Body>
+    <GetUserRequest xmlns="https://bingads.microsoft.com/Customer/v13">
+      <UserId xmlns:i="http://www.w3.org/2001/XMLSchema-instance" i:nil="true"/>
+    </GetUserRequest>
+  </s:Body>
+</s:Envelope>`;
+      const bingResponse = await fetch("https://clientcenter.api.bingads.microsoft.com/Api/CustomerManagement/v13/CustomerManagementService.svc", {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/xml; charset=utf-8",
+          "SOAPAction": "GetUser"
+        },
+        body: soapBody
+      });
+      const bingData = await bingResponse.text();
+      console.log("[Microsoft Ads] Got Bing Ads user info");
+    } catch (bingErr) {
+      console.error("[Microsoft Ads] Bing Ads API call failed (non-blocking):", bingErr);
+    }
+    await db.insert(adAccountConnections).values({
+      platform: "microsoft",
+      accountName,
+      status: "active",
+      accessToken,
+      refreshToken,
+      tokenExpiresAt: new Date(Date.now() + (expiresIn || 3600) * 1e3)
+    });
+    console.log(`[Microsoft Ads] Connected: ${accountName}`);
+    res.redirect(`${returnUrl}?oauth=success&platform=microsoft`);
+  } catch (error) {
+    console.error("[Microsoft Ads] OAuth callback error:", error);
+    res.redirect("/amplify/dashboard?oauth=error&platform=microsoft");
+  }
+});
+var microsoft_ads_default = router10;
+
+// server/routes/tasks.ts
+init_db();
+init_schema();
+import { Router as Router11 } from "express";
+import { eq as eq12, and as and11, desc as desc4 } from "drizzle-orm";
 import { z as z3 } from "zod";
 
 // server/services/github-sync.ts
@@ -7429,7 +10543,7 @@ var GitHubSyncService = class {
 var githubSync = new GitHubSyncService();
 
 // server/routes/tasks.ts
-var tasksRouter = Router4();
+var tasksRouter = Router11();
 tasksRouter.get("/", async (req, res) => {
   try {
     const user = req.user;
@@ -7437,7 +10551,7 @@ tasksRouter.get("/", async (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
     const clientId = user.claims.sub;
-    const allTasks = await db.select().from(tasks).where(eq8(tasks.clientId, clientId)).orderBy(desc3(tasks.createdAt));
+    const allTasks = await db.select().from(tasks).where(eq12(tasks.clientId, clientId)).orderBy(desc4(tasks.createdAt));
     res.json(allTasks);
   } catch (error) {
     console.error("Error fetching tasks:", error);
@@ -7452,9 +10566,9 @@ tasksRouter.get("/:id", async (req, res) => {
     }
     const clientId = user.claims.sub;
     const taskId = parseInt(req.params.id);
-    const [task] = await db.select().from(tasks).where(and7(
-      eq8(tasks.id, taskId),
-      eq8(tasks.clientId, clientId)
+    const [task] = await db.select().from(tasks).where(and11(
+      eq12(tasks.id, taskId),
+      eq12(tasks.clientId, clientId)
     ));
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
@@ -7495,7 +10609,7 @@ tasksRouter.post("/", async (req, res) => {
           await db.update(tasks).set({
             githubIssueId: `#${issue.number}`,
             githubIssueUrl: issue.html_url
-          }).where(eq8(tasks.id, newTask.id));
+          }).where(eq12(tasks.id, newTask.id));
           console.log(`[Tasks] Task ${newTask.id} synced to GitHub issue #${issue.number}`);
         }
       }).catch((error) => {
@@ -7544,9 +10658,9 @@ tasksRouter.patch("/:id", async (req, res) => {
     if (validatedData.status === "completed") {
       updateData.completedAt = /* @__PURE__ */ new Date();
     }
-    const [updatedTask] = await db.update(tasks).set(updateData).where(and7(
-      eq8(tasks.id, taskId),
-      eq8(tasks.clientId, clientId)
+    const [updatedTask] = await db.update(tasks).set(updateData).where(and11(
+      eq12(tasks.id, taskId),
+      eq12(tasks.clientId, clientId)
     )).returning();
     if (!updatedTask) {
       return res.status(404).json({ message: "Task not found" });
@@ -7604,9 +10718,9 @@ tasksRouter.delete("/:id", async (req, res) => {
     }
     const clientId = user.claims.sub;
     const taskId = parseInt(req.params.id);
-    const [deletedTask] = await db.delete(tasks).where(and7(
-      eq8(tasks.id, taskId),
-      eq8(tasks.clientId, clientId)
+    const [deletedTask] = await db.delete(tasks).where(and11(
+      eq12(tasks.id, taskId),
+      eq12(tasks.clientId, clientId)
     )).returning();
     if (!deletedTask) {
       return res.status(404).json({ message: "Task not found" });
@@ -7621,10 +10735,10 @@ tasksRouter.delete("/:id", async (req, res) => {
 // server/routes/brand-colors.ts
 init_db();
 init_schema();
-import { Router as Router5 } from "express";
-import { eq as eq9 } from "drizzle-orm";
-var router4 = Router5();
-router4.get("/", async (req, res) => {
+import { Router as Router12 } from "express";
+import { eq as eq13 } from "drizzle-orm";
+var router11 = Router12();
+router11.get("/", async (req, res) => {
   try {
     const colors = await db.select().from(brandColors);
     res.json({ success: true, colors });
@@ -7633,7 +10747,7 @@ router4.get("/", async (req, res) => {
     res.status(500).json({ success: false, error: "Failed to fetch colors" });
   }
 });
-router4.post("/", async (req, res) => {
+router11.post("/", async (req, res) => {
   try {
     const validatedData = insertBrandColorSchema.parse(req.body);
     const [newColor] = await db.insert(brandColors).values(validatedData).returning();
@@ -7643,43 +10757,30 @@ router4.post("/", async (req, res) => {
     res.status(400).json({ success: false, error: "Failed to add color" });
   }
 });
-router4.delete("/:id", async (req, res) => {
+router11.delete("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
       return res.status(400).json({ success: false, error: "Invalid ID" });
     }
-    await db.delete(brandColors).where(eq9(brandColors.id, id));
+    await db.delete(brandColors).where(eq13(brandColors.id, id));
     res.json({ success: true });
   } catch (error) {
     console.error("Error deleting brand color:", error);
     res.status(500).json({ success: false, error: "Failed to delete color" });
   }
 });
-var brand_colors_default = router4;
+var brand_colors_default = router11;
 
 // server/routes/billing-admin.ts
 import { z as z4 } from "zod";
 
 // server/replitAuth.ts
-import * as client from "openid-client";
-import { Strategy } from "openid-client/passport";
 import passport from "passport";
 import session from "express-session";
-import memoize from "memoizee";
 import connectPg from "connect-pg-simple";
-if (!process.env.REPLIT_DOMAINS) {
-  throw new Error("Environment variable REPLIT_DOMAINS not provided");
-}
-var getOidcConfig = memoize(
-  async () => {
-    return await client.discovery(
-      new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
-      process.env.REPL_ID
-    );
-  },
-  { maxAge: 3600 * 1e3 }
-);
+var isProduction = process.env.NODE_ENV === "production";
+var useReplitOidc = !isProduction && !!process.env.REPLIT_DOMAINS;
 function getSession() {
   const sessionTtlSeconds = 7 * 24 * 60 * 60;
   const pgStore = connectPg(session);
@@ -7690,7 +10791,7 @@ function getSession() {
     tableName: "sessions"
   });
   return session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || "dev-session-secret",
     store: sessionStore,
     resave: true,
     saveUninitialized: true,
@@ -7703,103 +10804,147 @@ function getSession() {
     }
   });
 }
-function updateUserSession(user, tokens) {
-  user.claims = tokens.claims();
-  user.access_token = tokens.access_token;
-  user.refresh_token = tokens.refresh_token;
-  user.expires_at = user.claims?.exp;
-}
-async function upsertUser(claims) {
-  await storage.upsertUser({
-    id: claims["sub"],
-    email: claims["email"],
-    firstName: claims["first_name"],
-    lastName: claims["last_name"],
-    profileImageUrl: claims["profile_image_url"]
-  });
-}
 async function setupAuth(app2) {
   app2.set("trust proxy", 1);
   app2.use(getSession());
   app2.use(passport.initialize());
   app2.use(passport.session());
-  const config = await getOidcConfig();
-  const verify = async (tokens, verified) => {
-    const user = {};
-    updateUserSession(user, tokens);
-    await upsertUser(tokens.claims());
-    verified(null, user);
-  };
-  for (const domain of process.env.REPLIT_DOMAINS.split(",")) {
-    const strategy = new Strategy(
-      {
-        name: `replitauth:${domain}`,
-        config,
-        scope: "openid email profile offline_access",
-        callbackURL: `https://${domain}/api/callback`
-      },
-      verify
-    );
-    passport.use(strategy);
-  }
   passport.serializeUser((user, cb) => cb(null, user));
   passport.deserializeUser((user, cb) => cb(null, user));
-  app2.get("/api/login", (req, res, next) => {
-    const redirect = req.query.redirect;
-    if (redirect && redirect.startsWith("/") && !redirect.startsWith("//")) {
-      req.session.loginRedirect = redirect;
-    }
-    passport.authenticate(`replitauth:${req.hostname}`, {
-      prompt: "login consent",
-      scope: ["openid", "email", "profile", "offline_access"]
-    })(req, res, next);
-  });
-  app2.get("/api/callback", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, (err, user) => {
-      if (err) {
-        console.error("[Auth] Callback error:", err);
-        return res.redirect("/api/login");
+  if (useReplitOidc) {
+    try {
+      const client = await import("openid-client");
+      const { Strategy } = await import("openid-client/passport");
+      const memoize = (await import("memoizee")).default;
+      const getOidcConfig = memoize(
+        async () => {
+          return await client.discovery(
+            new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
+            process.env.REPL_ID
+          );
+        },
+        { maxAge: 3600 * 1e3 }
+      );
+      const config = await getOidcConfig();
+      const verify = async (tokens, verified) => {
+        const user = {};
+        user.claims = tokens.claims();
+        user.access_token = tokens.access_token;
+        user.refresh_token = tokens.refresh_token;
+        user.expires_at = user.claims?.exp;
+        await storage.upsertUser({
+          id: user.claims["sub"],
+          email: user.claims["email"],
+          firstName: user.claims["first_name"],
+          lastName: user.claims["last_name"],
+          profileImageUrl: user.claims["profile_image_url"]
+        });
+        verified(null, user);
+      };
+      for (const domain of process.env.REPLIT_DOMAINS.split(",")) {
+        const strategy = new Strategy(
+          {
+            name: `replitauth:${domain}`,
+            config,
+            scope: "openid email profile offline_access",
+            callbackURL: `https://${domain}/api/callback`
+          },
+          verify
+        );
+        passport.use(strategy);
       }
-      if (!user) {
-        console.error("[Auth] No user returned from callback");
-        return res.redirect("/api/login");
-      }
-      req.logIn(user, (loginErr) => {
-        if (loginErr) {
-          console.error("[Auth] Login error:", loginErr);
-          return res.redirect("/api/login");
+      app2.get("/api/login", (req, res, next) => {
+        const redirect = req.query.redirect;
+        if (redirect && redirect.startsWith("/") && !redirect.startsWith("//")) {
+          req.session.loginRedirect = redirect;
         }
-        req.session.save((saveErr) => {
-          if (saveErr) {
-            console.error("[Auth] Session save error:", saveErr);
+        passport.authenticate(`replitauth:${req.hostname}`, {
+          prompt: "login consent",
+          scope: ["openid", "email", "profile", "offline_access"]
+        })(req, res, next);
+      });
+      app2.get("/api/callback", (req, res, next) => {
+        passport.authenticate(`replitauth:${req.hostname}`, (err, user) => {
+          if (err) {
+            console.error("[Auth] Callback error:", err);
+            return res.redirect("/api/login");
           }
-          console.log("[Auth] User logged in successfully:", user.claims?.email);
-          const redirectTo = req.session.loginRedirect || "/admin";
-          delete req.session.loginRedirect;
-          return res.redirect(redirectTo);
+          if (!user) {
+            console.error("[Auth] No user returned from callback");
+            return res.redirect("/api/login");
+          }
+          req.logIn(user, (loginErr) => {
+            if (loginErr) {
+              console.error("[Auth] Login error:", loginErr);
+              return res.redirect("/api/login");
+            }
+            req.session.save((saveErr) => {
+              if (saveErr) {
+                console.error("[Auth] Session save error:", saveErr);
+              }
+              console.log("[Auth] User logged in successfully:", user.claims?.email);
+              const redirectTo = req.session.loginRedirect || "/admin";
+              delete req.session.loginRedirect;
+              return res.redirect(redirectTo);
+            });
+          });
+        })(req, res, next);
+      });
+      app2.get("/api/logout", (req, res) => {
+        req.logout(() => {
+          res.redirect(
+            client.buildEndSessionUrl(config, {
+              client_id: process.env.REPL_ID,
+              post_logout_redirect_uri: `${req.protocol}://${req.hostname}`
+            }).href
+          );
         });
       });
-    })(req, res, next);
-  });
-  app2.get("/api/logout", (req, res) => {
-    req.logout(() => {
-      res.redirect(
-        client.buildEndSessionUrl(config, {
-          client_id: process.env.REPL_ID,
-          post_logout_redirect_uri: `${req.protocol}://${req.hostname}`
-        }).href
-      );
+      console.log("[Auth] Replit OIDC authentication configured");
+    } catch (error) {
+      console.error("[Auth] Failed to setup Replit OIDC:", error);
+    }
+  } else {
+    console.log("[Auth] Replit OIDC not available \u2014 using credential/magic-link auth");
+    app2.get("/api/logout", (req, res) => {
+      req.logout(() => {
+        req.session.destroy(() => {
+          res.redirect("/login");
+        });
+      });
     });
-  });
+  }
 }
 var isAuthenticated = async (req, res, next) => {
+  if (process.env.NODE_ENV !== "production") {
+    if (req.isAuthenticated && req.isAuthenticated()) {
+      return next();
+    }
+    const session3 = req.session;
+    if (session3?.clientId && session3?.isAdmin) {
+      return next();
+    }
+    req.user = {
+      claims: {
+        sub: "dev-user",
+        email: "dev@localhost",
+        first_name: "Dev",
+        last_name: "User"
+      },
+      expires_at: Math.floor(Date.now() / 1e3) + 86400
+    };
+    return next();
+  }
   const session2 = req.session;
   if (session2?.clientId && session2?.isAdmin) {
     console.log("[Auth] Client portal admin session found:", session2.clientId);
     return next();
   }
+  if (session2?.userId) {
+    return next();
+  }
   const user = req.user;
-  if (!req.isAuthenticated() || !user?.expires_at) {
+  if (!req.isAuthenticated || !req.isAuthenticated() || !user?.expires_at) {
     return res.status(401).json({ message: "Unauthorized" });
   }
   const now = Math.floor(Date.now() / 1e3);
@@ -7808,32 +10953,50 @@ var isAuthenticated = async (req, res, next) => {
   }
   const refreshToken = user.refresh_token;
   if (!refreshToken) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
+    return res.status(401).json({ message: "Unauthorized" });
   }
   try {
+    const client = await import("openid-client");
+    const memoize = (await import("memoizee")).default;
+    const getOidcConfig = memoize(
+      async () => {
+        return await client.discovery(
+          new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
+          process.env.REPL_ID
+        );
+      },
+      { maxAge: 3600 * 1e3 }
+    );
     const config = await getOidcConfig();
     const tokenResponse = await client.refreshTokenGrant(config, refreshToken);
-    updateUserSession(user, tokenResponse);
+    user.claims = tokenResponse.claims();
+    user.access_token = tokenResponse.access_token;
+    user.refresh_token = tokenResponse.refresh_token;
+    user.expires_at = user.claims?.exp;
     return next();
   } catch (error) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
+    return res.status(401).json({ message: "Unauthorized" });
   }
 };
 
 // server/routes/billing-admin.ts
 init_db();
 init_schema();
-import { eq as eq11 } from "drizzle-orm";
+import { eq as eq15 } from "drizzle-orm";
 
 // server/middleware/clientPortalAuth.ts
 init_db();
 init_schema();
-import { eq as eq10 } from "drizzle-orm";
+import { eq as eq14 } from "drizzle-orm";
 async function requireClientPortalAccess(req, res, next) {
   try {
-    const sessionClientId = parseInt(req.session.clientId || "0");
+    if (process.env.NODE_ENV !== "production") {
+      req.clientId = parseInt(req.session.clientId || "1");
+      req.client = { id: req.clientId, accountStatus: "active", companyName: "Dev Client", email: "dev@localhost" };
+      return next();
+    }
+    const internalClientId = req.headers["x-client-id"] ? parseInt(req.headers["x-client-id"]) : 0;
+    const sessionClientId = parseInt(req.session.clientId || "0") || internalClientId;
     const urlClientId = req.params.id ? parseInt(req.params.id) : null;
     if (!sessionClientId) {
       return res.status(401).json({
@@ -7847,29 +11010,26 @@ async function requireClientPortalAccess(req, res, next) {
         message: "You do not have permission to access this resource"
       });
     }
-    const client2 = await db.query.clients.findFirst({
-      where: eq10(clients.id, sessionClientId),
-      columns: {
-        id: true,
-        accountStatus: true,
-        companyName: true,
-        email: true
-      }
-    });
-    if (!client2) {
+    const [client] = await db.select({
+      id: clients.id,
+      accountStatus: clients.accountStatus,
+      companyName: clients.companyName,
+      email: clients.email
+    }).from(clients).where(eq14(clients.id, sessionClientId)).limit(1);
+    if (!client) {
       return res.status(404).json({
         error: "Account not found",
         message: "Your account could not be found"
       });
     }
-    if (client2.accountStatus !== "active") {
+    if (client.accountStatus !== "active") {
       const statusMessages = {
         suspended: "Your account has been suspended. Please contact support to resolve billing issues.",
         banned: "Your account access has been restricted. Please contact support for assistance.",
         inactive: "Your account is inactive. Please contact support to reactivate your account.",
         pending: "Your account setup is still being processed. Please check back later or contact support."
       };
-      const accountStatus = client2.accountStatus || "inactive";
+      const accountStatus = client.accountStatus || "inactive";
       return res.status(403).json({
         error: "Account access restricted",
         message: statusMessages[accountStatus] || "Your account status prevents portal access",
@@ -7877,7 +11037,7 @@ async function requireClientPortalAccess(req, res, next) {
       });
     }
     req.clientId = sessionClientId;
-    req.client = client2;
+    req.client = client;
     next();
   } catch (error) {
     console.error("[ClientPortalAuth] Error checking access:", error);
@@ -7892,9 +11052,7 @@ var requireAdmin = [isAuthenticated, async (req, res, next) => {
     if (!userId) {
       return res.status(401).json({ error: "Authentication required" });
     }
-    const user = await db.query.clients.findFirst({
-      where: eq11(clients.id, parseInt(userId))
-    });
+    const [user] = await db.select().from(clients).where(eq15(clients.id, parseInt(userId))).limit(1);
     if (!user || !user.isAdmin) {
       return res.status(403).json({ error: "Admin access required" });
     }
@@ -7904,8 +11062,8 @@ var requireAdmin = [isAuthenticated, async (req, res, next) => {
     return res.status(500).json({ error: "Authorization check failed" });
   }
 }];
-function registerBillingAdminRoutes(router6) {
-  router6.get("/api/admin/subscriptions", requireAdmin, async (req, res) => {
+function registerBillingAdminRoutes(router16) {
+  router16.get("/api/admin/subscriptions", requireAdmin, async (req, res) => {
     try {
       const subscriptions2 = await storage.getAllSubscriptions();
       const stats = {
@@ -7919,18 +11077,18 @@ function registerBillingAdminRoutes(router6) {
       res.status(500).json({ error: "Failed to fetch subscriptions" });
     }
   });
-  router6.get("/api/admin/clients/:id/billing", requireAdmin, async (req, res) => {
+  router16.get("/api/admin/clients/:id/billing", requireAdmin, async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
+      const client = await storage.getClient(clientId);
+      if (!client) {
         return res.status(404).json({ error: "Client not found" });
       }
       const subscription = await storage.getClientSubscription(clientId);
       const billingHistory2 = await storage.getClientBillingHistory(clientId, 12);
       const statusHistory = await storage.getClientAccountStatusHistory(clientId);
       res.json({
-        client: client2,
+        client,
         subscription,
         billingHistory: billingHistory2,
         statusHistory
@@ -7940,7 +11098,7 @@ function registerBillingAdminRoutes(router6) {
       res.status(500).json({ error: "Failed to fetch client billing details" });
     }
   });
-  router6.patch("/api/admin/clients/:id/status", requireAdmin, async (req, res) => {
+  router16.patch("/api/admin/clients/:id/status", requireAdmin, async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
       const statusSchema = z4.object({
@@ -7977,7 +11135,7 @@ function registerBillingAdminRoutes(router6) {
       res.status(500).json({ error: "Failed to update account status" });
     }
   });
-  router6.get("/api/portal/subscription", requireClientPortalAccess, async (req, res) => {
+  router16.get("/api/portal/subscription", requireClientPortalAccess, async (req, res) => {
     try {
       const clientId = req.clientId;
       const subscription = await storage.getClientSubscription(clientId);
@@ -7990,7 +11148,7 @@ function registerBillingAdminRoutes(router6) {
       res.status(500).json({ error: "Failed to fetch subscription details" });
     }
   });
-  router6.get("/api/portal/billing-history", requireClientPortalAccess, async (req, res) => {
+  router16.get("/api/portal/billing-history", requireClientPortalAccess, async (req, res) => {
     try {
       const clientId = req.clientId;
       const limit = parseInt(req.query.limit) || 12;
@@ -8007,7 +11165,7 @@ function registerBillingAdminRoutes(router6) {
 init_db();
 init_schema();
 init_schema();
-import { eq as eq12, desc as desc4, and as and8, sql as sql5, ilike, gte, lte, or } from "drizzle-orm";
+import { eq as eq16, desc as desc5, and as and12, sql as sql5, ilike, gte, lte, or } from "drizzle-orm";
 import { Resend } from "resend";
 var connectionSettings;
 async function getResendCredentials() {
@@ -8041,10 +11199,10 @@ function registerEmailAdminRoutes(app2) {
       const offset = (pageNum - 1) * limitNum;
       let conditions = [];
       if (status && status !== "all") {
-        conditions.push(eq12(emailLogs.status, status));
+        conditions.push(eq16(emailLogs.status, status));
       }
       if (emailType && emailType !== "all") {
-        conditions.push(eq12(emailLogs.emailType, emailType));
+        conditions.push(eq16(emailLogs.emailType, emailType));
       }
       if (search) {
         conditions.push(or(
@@ -8059,9 +11217,9 @@ function registerEmailAdminRoutes(app2) {
       if (endDate) {
         conditions.push(lte(emailLogs.createdAt, new Date(endDate)));
       }
-      const whereClause = conditions.length > 0 ? and8(...conditions) : void 0;
+      const whereClause = conditions.length > 0 ? and12(...conditions) : void 0;
       const [logs, totalResult] = await Promise.all([
-        db.select().from(emailLogs).where(whereClause).orderBy(desc4(emailLogs.createdAt)).limit(limitNum).offset(offset),
+        db.select().from(emailLogs).where(whereClause).orderBy(desc5(emailLogs.createdAt)).limit(limitNum).offset(offset),
         db.select({ count: sql5`count(*)` }).from(emailLogs).where(whereClause)
       ]);
       const total = Number(totalResult[0]?.count || 0);
@@ -8101,9 +11259,7 @@ function registerEmailAdminRoutes(app2) {
   app2.get("/api/admin/email-logs/:id", isAuthenticated, async (req, res) => {
     try {
       const logId = parseInt(req.params.id);
-      const log2 = await db.query.emailLogs.findFirst({
-        where: eq12(emailLogs.id, logId)
-      });
+      const [log2] = await db.select().from(emailLogs).where(eq16(emailLogs.id, logId)).limit(1);
       if (!log2) {
         return res.status(404).json({ error: "Email log not found" });
       }
@@ -8115,7 +11271,7 @@ function registerEmailAdminRoutes(app2) {
   });
   app2.get("/api/admin/emails/failed", isAuthenticated, async (req, res) => {
     try {
-      const failedLogs = await db.select().from(emailLogs).where(eq12(emailLogs.status, "failed")).orderBy(desc4(emailLogs.createdAt)).limit(100);
+      const failedLogs = await db.select().from(emailLogs).where(eq16(emailLogs.status, "failed")).orderBy(desc5(emailLogs.createdAt)).limit(100);
       res.json(failedLogs);
     } catch (error) {
       console.error("Error fetching failed emails:", error);
@@ -8126,18 +11282,16 @@ function registerEmailAdminRoutes(app2) {
     try {
       const logId = parseInt(req.params.logId);
       const { subject, htmlBody, recipientEmail } = req.body;
-      const originalLog = await db.query.emailLogs.findFirst({
-        where: eq12(emailLogs.id, logId)
-      });
+      const [originalLog] = await db.select().from(emailLogs).where(eq16(emailLogs.id, logId)).limit(1);
       if (!originalLog) {
         return res.status(404).json({ error: "Email log not found" });
       }
       const { apiKey, fromEmail } = await getResendCredentials();
-      const client2 = new Resend(apiKey);
+      const client = new Resend(apiKey);
       const emailSubject = subject || originalLog.subject;
       const emailHtml = htmlBody || originalLog.htmlBody;
       const emailTo = recipientEmail || originalLog.recipientEmail;
-      const result = await client2.emails.send({
+      const result = await client.emails.send({
         from: fromEmail || "noreply@businessblueprint.io",
         to: emailTo,
         subject: emailSubject,
@@ -8162,7 +11316,7 @@ function registerEmailAdminRoutes(app2) {
         await db.update(emailLogs).set({
           retryCount: (originalLog.retryCount || 0) + 1,
           lastRetryAt: /* @__PURE__ */ new Date()
-        }).where(eq12(emailLogs.id, logId));
+        }).where(eq16(emailLogs.id, logId));
       }
       res.json({ success: true, log: newLog });
     } catch (error) {
@@ -8177,8 +11331,8 @@ function registerEmailAdminRoutes(app2) {
         return res.status(400).json({ error: "Missing required fields: recipientEmail, subject, htmlBody" });
       }
       const { apiKey, fromEmail } = await getResendCredentials();
-      const client2 = new Resend(apiKey);
-      const result = await client2.emails.send({
+      const client = new Resend(apiKey);
+      const result = await client.emails.send({
         from: fromEmail || "noreply@businessblueprint.io",
         to: recipientEmail,
         subject,
@@ -8206,9 +11360,7 @@ function registerEmailAdminRoutes(app2) {
   app2.post("/api/admin/emails/retry/:logId", isAuthenticated, async (req, res) => {
     try {
       const logId = parseInt(req.params.logId);
-      const originalLog = await db.query.emailLogs.findFirst({
-        where: eq12(emailLogs.id, logId)
-      });
+      const [originalLog] = await db.select().from(emailLogs).where(eq16(emailLogs.id, logId)).limit(1);
       if (!originalLog) {
         return res.status(404).json({ error: "Email log not found" });
       }
@@ -8216,9 +11368,9 @@ function registerEmailAdminRoutes(app2) {
         return res.status(400).json({ error: "Can only retry failed emails" });
       }
       const { apiKey, fromEmail } = await getResendCredentials();
-      const client2 = new Resend(apiKey);
+      const client = new Resend(apiKey);
       try {
-        const result = await client2.emails.send({
+        const result = await client.emails.send({
           from: fromEmail || "noreply@businessblueprint.io",
           to: originalLog.recipientEmail,
           subject: originalLog.subject,
@@ -8231,14 +11383,14 @@ function registerEmailAdminRoutes(app2) {
           errorMessage: null,
           retryCount: (originalLog.retryCount || 0) + 1,
           lastRetryAt: /* @__PURE__ */ new Date()
-        }).where(eq12(emailLogs.id, logId));
+        }).where(eq16(emailLogs.id, logId));
         res.json({ success: true, message: "Email resent successfully" });
       } catch (sendError) {
         await db.update(emailLogs).set({
           retryCount: (originalLog.retryCount || 0) + 1,
           lastRetryAt: /* @__PURE__ */ new Date(),
           errorMessage: sendError instanceof Error ? sendError.message : String(sendError)
-        }).where(eq12(emailLogs.id, logId));
+        }).where(eq16(emailLogs.id, logId));
         throw sendError;
       }
     } catch (error) {
@@ -8259,9 +11411,7 @@ function registerEmailAdminRoutes(app2) {
   app2.get("/api/admin/email-templates/:id", isAuthenticated, async (req, res) => {
     try {
       const templateId = parseInt(req.params.id);
-      const template = await db.query.emailTemplates.findFirst({
-        where: eq12(emailTemplates.id, templateId)
-      });
+      const [template] = await db.select().from(emailTemplates).where(eq16(emailTemplates.id, templateId)).limit(1);
       if (!template) {
         return res.status(404).json({ error: "Template not found" });
       }
@@ -8309,7 +11459,7 @@ function registerEmailAdminRoutes(app2) {
         ...validationResult.data,
         lastEditedById: adminId,
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq12(emailTemplates.id, templateId)).returning();
+      }).where(eq16(emailTemplates.id, templateId)).returning();
       if (!updated) {
         return res.status(404).json({ error: "Template not found" });
       }
@@ -8322,16 +11472,14 @@ function registerEmailAdminRoutes(app2) {
   app2.delete("/api/admin/email-templates/:id", isAuthenticated, async (req, res) => {
     try {
       const templateId = parseInt(req.params.id);
-      const template = await db.query.emailTemplates.findFirst({
-        where: eq12(emailTemplates.id, templateId)
-      });
+      const [template] = await db.select().from(emailTemplates).where(eq16(emailTemplates.id, templateId)).limit(1);
       if (!template) {
         return res.status(404).json({ error: "Template not found" });
       }
       if (template.isSystem) {
         return res.status(400).json({ error: "Cannot delete system templates" });
       }
-      await db.delete(emailTemplates).where(eq12(emailTemplates.id, templateId));
+      await db.delete(emailTemplates).where(eq16(emailTemplates.id, templateId));
       res.json({ success: true });
     } catch (error) {
       console.error("Error deleting email template:", error);
@@ -8345,9 +11493,7 @@ function registerEmailAdminRoutes(app2) {
       if (!recipientEmail) {
         return res.status(400).json({ error: "Missing required field: recipientEmail" });
       }
-      const template = await db.query.emailTemplates.findFirst({
-        where: eq12(emailTemplates.id, templateId)
-      });
+      const [template] = await db.select().from(emailTemplates).where(eq16(emailTemplates.id, templateId)).limit(1);
       if (!template) {
         return res.status(404).json({ error: "Template not found" });
       }
@@ -8362,8 +11508,8 @@ function registerEmailAdminRoutes(app2) {
         htmlBody = htmlBody.replace(regex, String(value));
       });
       const { apiKey, fromEmail } = await getResendCredentials();
-      const client2 = new Resend(apiKey);
-      const result = await client2.emails.send({
+      const client = new Resend(apiKey);
+      const result = await client.emails.send({
         from: fromEmail || "noreply@businessblueprint.io",
         to: recipientEmail,
         subject,
@@ -8394,378 +11540,64 @@ function registerEmailAdminRoutes(app2) {
 // server/routes/payments.ts
 init_db();
 init_schema();
-import { eq as eq13 } from "drizzle-orm";
 
-// server/services/StripeProvider.ts
-import Stripe from "stripe";
-var StripeProvider = class {
-  stripe;
-  name = "stripe";
-  constructor(apiKey) {
-    if (!apiKey) {
-      throw new Error("Stripe API key is required");
-    }
-    this.stripe = new Stripe(apiKey, {
-      apiVersion: "2025-12-15.clover"
+// server/services/swipesblue.ts
+import crypto10 from "crypto";
+var SWIPESBLUE_API_URL = process.env.SWIPESBLUE_API_URL || "https://swipesblue.com/api/v1";
+var SWIPESBLUE_API_KEY = process.env.SWIPESBLUE_API_KEY;
+var SWIPESBLUE_MERCHANT_ID = process.env.SWIPESBLUE_MERCHANT_ID;
+function headers() {
+  return {
+    "Authorization": `Bearer ${SWIPESBLUE_API_KEY}`,
+    "X-Merchant-ID": SWIPESBLUE_MERCHANT_ID || "",
+    "Content-Type": "application/json"
+  };
+}
+var SwipesBlueService = {
+  async createCustomer(params) {
+    const response = await fetch(`${SWIPESBLUE_API_URL}/customers`, {
+      method: "POST",
+      headers: headers(),
+      body: JSON.stringify(params)
     });
-  }
-  /**
-   * Process a one-time charge
-   */
-  async charge(params) {
-    try {
-      const amountInCents = Math.round(params.amount * 100);
-      const charge = await this.stripe.charges.create({
-        amount: amountInCents,
-        currency: "usd",
-        customer: params.customerId,
-        source: params.source,
-        description: params.description || "",
-        metadata: params.metadata || {}
-      });
-      return {
-        success: true,
-        transactionId: charge.id,
-        amount: charge.amount / 100,
-        status: charge.status,
-        provider: this.name,
-        raw: charge
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: `Stripe charge failed: ${error.message}`,
-        provider: this.name
-      };
-    }
-  }
-  /**
-   * Refund a transaction
-   */
-  async refund(transactionId, amount) {
-    try {
-      const refundData = {
-        charge: transactionId
-      };
-      if (amount !== void 0) {
-        refundData.amount = Math.round(amount * 100);
-      }
-      const refund = await this.stripe.refunds.create(refundData);
-      return {
-        success: true,
-        refundId: refund.id,
-        transactionId: refund.charge,
-        amount: refund.amount / 100,
-        status: refund.status || "pending",
-        provider: this.name,
-        raw: refund
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: `Stripe refund failed: ${error.message}`,
-        provider: this.name
-      };
-    }
-  }
-  /**
-   * Create a customer
-   */
-  async createCustomer(params) {
-    try {
-      const customer = await this.stripe.customers.create({
-        email: params.email,
-        name: params.name,
-        phone: params.phone,
-        metadata: params.metadata || {}
-      });
-      return {
-        success: true,
-        customerId: customer.id,
-        provider: this.name,
-        raw: customer
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: `Stripe customer creation failed: ${error.message}`,
-        provider: this.name
-      };
-    }
-  }
-  /**
-   * Update customer
-   */
-  async updateCustomer(customerId, updates) {
-    try {
-      const customer = await this.stripe.customers.update(customerId, updates);
-      return {
-        success: true,
-        customerId: customer.id,
-        provider: this.name,
-        raw: customer
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: `Stripe customer update failed: ${error.message}`,
-        provider: this.name
-      };
-    }
-  }
-  /**
-   * Delete customer
-   */
-  async deleteCustomer(customerId) {
-    try {
-      const deleted = await this.stripe.customers.del(customerId);
-      return {
-        success: true,
-        customerId: deleted.id,
-        provider: this.name,
-        raw: deleted
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: `Stripe customer deletion failed: ${error.message}`,
-        provider: this.name
-      };
-    }
-  }
-  /**
-   * Add payment method to customer
-   */
-  async addPaymentMethod(customerId, paymentMethodId) {
-    try {
-      const paymentMethod = await this.stripe.paymentMethods.attach(paymentMethodId, {
-        customer: customerId
-      });
-      return {
-        success: true,
-        paymentMethodId: paymentMethod.id,
-        customerId: paymentMethod.customer,
-        provider: this.name,
-        raw: paymentMethod
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: `Stripe payment method attachment failed: ${error.message}`,
-        provider: this.name
-      };
-    }
-  }
-  /**
-   * Create payment intent (modern Stripe way)
-   */
-  async createPaymentIntent(params) {
-    try {
-      const amountInCents = Math.round(params.amount * 100);
-      const paymentIntent = await this.stripe.paymentIntents.create({
-        amount: amountInCents,
-        currency: "usd",
-        customer: params.customerId,
-        metadata: params.metadata || {}
-      });
-      return {
-        success: true,
-        clientSecret: paymentIntent.client_secret,
-        paymentIntentId: paymentIntent.id,
-        status: paymentIntent.status,
-        provider: this.name,
-        raw: paymentIntent
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: `Stripe payment intent creation failed: ${error.message}`,
-        provider: this.name
-      };
-    }
-  }
-  /**
-   * Create a Stripe Checkout Session
-   * Used for one-time purchases with hosted checkout
-   */
-  async createCheckoutSession(params) {
-    try {
-      const session2 = await this.stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            price_data: {
-              currency: "usd",
-              product_data: {
-                name: params.productName,
-                description: params.productDescription
-              },
-              unit_amount: params.priceInCents
-            },
-            quantity: 1
-          }
-        ],
-        mode: "payment",
-        success_url: params.successUrl,
-        cancel_url: params.cancelUrl,
-        customer_email: params.customerEmail,
-        metadata: params.metadata || {}
-      });
-      return {
-        success: true,
-        sessionId: session2.id,
-        url: session2.url,
-        provider: this.name,
-        raw: session2
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: `Stripe checkout session creation failed: ${error.message}`,
-        provider: this.name
-      };
-    }
-  }
-  /**
-   * Verify and retrieve a checkout session
-   */
-  async retrieveCheckoutSession(sessionId) {
-    try {
-      const session2 = await this.stripe.checkout.sessions.retrieve(sessionId, {
-        expand: ["payment_intent"]
-      });
-      return {
-        success: true,
-        session: session2,
-        provider: this.name
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: `Stripe session retrieval failed: ${error.message}`,
-        provider: this.name
-      };
-    }
-  }
-  /**
-   * Construct and verify webhook event
-   */
-  constructWebhookEvent(payload, signature, webhookSecret) {
-    return this.stripe.webhooks.constructEvent(payload, signature, webhookSecret);
+    return response.json();
+  },
+  async createSubscription(params) {
+    const response = await fetch(`${SWIPESBLUE_API_URL}/subscriptions`, {
+      method: "POST",
+      headers: headers(),
+      body: JSON.stringify(params)
+    });
+    return response.json();
+  },
+  async processTransaction(params) {
+    const response = await fetch(`${SWIPESBLUE_API_URL}/transactions`, {
+      method: "POST",
+      headers: headers(),
+      body: JSON.stringify(params)
+    });
+    return response.json();
+  },
+  async cancelSubscription(subscriptionId) {
+    const response = await fetch(`${SWIPESBLUE_API_URL}/subscriptions/${subscriptionId}/cancel`, {
+      method: "POST",
+      headers: headers()
+    });
+    return response.json();
+  },
+  async getSubscription(subscriptionId) {
+    const response = await fetch(`${SWIPESBLUE_API_URL}/subscriptions/${subscriptionId}`, {
+      headers: headers()
+    });
+    return response.json();
+  },
+  verifyWebhookSignature(payload, signature) {
+    const webhookSecret = process.env.SWIPESBLUE_WEBHOOK_SECRET;
+    if (!webhookSecret) return true;
+    const expected = crypto10.createHmac("sha256", webhookSecret).update(payload).digest("hex");
+    return expected === signature;
   }
 };
-
-// server/services/payment-service.ts
-var PaymentService = class {
-  provider;
-  providerType;
-  constructor() {
-    this.providerType = process.env.PAYMENT_PROVIDER || "stripe";
-    if (this.providerType === "stripe") {
-      const stripeKey = process.env.STRIPE_SECRET_KEY;
-      if (!stripeKey) {
-        throw new Error("STRIPE_SECRET_KEY not configured in environment");
-      }
-      this.provider = new StripeProvider(stripeKey);
-    } else if (this.providerType === "swipesblue") {
-      throw new Error("SwipesBlue payment provider not yet configured. Set PAYMENT_PROVIDER=stripe or wait for SwipesBlue integration.");
-    } else {
-      throw new Error(`Unknown payment provider: ${this.providerType}. Valid options: stripe, swipesblue`);
-    }
-    console.log(`[PaymentService] Initialized with provider: ${this.providerType}`);
-  }
-  /**
-   * Get the active provider name
-   */
-  getProviderName() {
-    return this.provider.name;
-  }
-  /**
-   * Get the active provider type
-   */
-  getProviderType() {
-    return this.providerType;
-  }
-  /**
-   * Get supported payment methods for the provider
-   */
-  getSupportedMethods() {
-    if (this.providerType === "stripe") {
-      return ["card", "apple_pay", "google_pay"];
-    }
-    return ["card"];
-  }
-  /**
-   * Process a charge
-   */
-  async charge(params) {
-    return await this.provider.charge(params);
-  }
-  /**
-   * Refund a transaction
-   */
-  async refund(transactionId, amount) {
-    return await this.provider.refund(transactionId, amount);
-  }
-  /**
-   * Create a customer
-   */
-  async createCustomer(params) {
-    return await this.provider.createCustomer(params);
-  }
-  /**
-   * Update a customer
-   */
-  async updateCustomer(customerId, updates) {
-    return await this.provider.updateCustomer(customerId, updates);
-  }
-  /**
-   * Delete a customer
-   */
-  async deleteCustomer(customerId) {
-    return await this.provider.deleteCustomer(customerId);
-  }
-  /**
-   * Add payment method to customer
-   */
-  async addPaymentMethod(customerId, paymentMethodId) {
-    return await this.provider.addPaymentMethod(customerId, paymentMethodId);
-  }
-  /**
-   * Create payment intent
-   */
-  async createPaymentIntent(params) {
-    return await this.provider.createPaymentIntent(params);
-  }
-  /**
-   * Create a Checkout Session
-   */
-  async createCheckoutSession(params) {
-    return await this.provider.createCheckoutSession(params);
-  }
-  /**
-   * Retrieve a checkout session
-   */
-  async retrieveCheckoutSession(sessionId) {
-    return await this.provider.retrieveCheckoutSession(sessionId);
-  }
-  /**
-   * Verify and construct webhook event
-   * Used by webhook handlers to verify incoming payment webhooks
-   */
-  verifyWebhook(payload, signature) {
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    if (!webhookSecret) {
-      console.warn("[PaymentService] No webhook secret configured, processing without verification");
-      if (typeof payload === "string") {
-        return JSON.parse(payload);
-      }
-      return JSON.parse(payload.toString());
-    }
-    return this.provider.constructWebhookEvent(payload, signature, webhookSecret);
-  }
-};
-var paymentService = new PaymentService();
 
 // server/routes/payments.ts
 console.log("[PAYMENT ROUTES] File loaded!");
@@ -8773,10 +11605,9 @@ function registerPaymentRoutes(app2) {
   console.log("[PAYMENT ROUTES] Registering routes...");
   app2.get("/api/payments/test", async (req, res) => {
     try {
-      const provider = paymentService.getProviderName();
       res.json({
         success: true,
-        provider,
+        provider: "swipesblue",
         message: "Payment service is ready"
       });
     } catch (error) {
@@ -8788,119 +11619,39 @@ function registerPaymentRoutes(app2) {
   });
   app2.get("/api/payments/methods", async (req, res) => {
     try {
-      const methods = paymentService.getSupportedMethods();
       res.json({
         success: true,
-        methods
+        methods: ["card", "apple_pay", "google_pay"]
       });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
     }
   });
-  app2.post("/api/payments/create-intent", async (req, res) => {
-    try {
-      const { amount, customerId, metadata } = req.body;
-      if (!amount || !customerId) {
-        return res.status(400).json({
-          success: false,
-          error: "Amount and customerId are required"
-        });
-      }
-      const customer = await db.query.users.findFirst({
-        where: (users2, { eq: eq36 }) => eq36(users2.id, customerId)
-      });
-      if (!customer) {
-        return res.status(404).json({
-          success: false,
-          error: "Customer not found"
-        });
-      }
-      let paymentCustomerId = customer.stripeCustomerId;
-      if (!paymentCustomerId) {
-        const customerName = customer.firstName && customer.lastName ? `${customer.firstName} ${customer.lastName}` : customer.email || "Customer";
-        const result2 = await paymentService.createCustomer({
-          email: customer.email || "",
-          name: customerName,
-          metadata: {
-            crm_id: customer.id.toString()
-          }
-        });
-        if (!result2.success) {
-          return res.status(500).json(result2);
-        }
-        paymentCustomerId = result2.customerId;
-        await db.update(users).set({ stripeCustomerId: paymentCustomerId }).where(eq13(users.id, customer.id));
-      }
-      const result = await paymentService.createPaymentIntent({
-        amount: parseFloat(amount),
-        customerId: paymentCustomerId,
-        metadata: metadata || {}
-      });
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        error: error.message
-      });
-    }
-  });
   app2.post("/api/payments/charge", async (req, res) => {
     try {
-      const { amount, customerId, paymentMethodId, description, metadata } = req.body;
-      if (!amount || !customerId || !paymentMethodId) {
+      const { amount, paymentToken, description, customerId } = req.body;
+      if (!amount || !paymentToken) {
         return res.status(400).json({
           success: false,
-          error: "Amount, customerId, and paymentMethodId are required"
+          error: "Amount and paymentToken are required"
         });
       }
-      const customer = await db.query.users.findFirst({
-        where: (users2, { eq: eq36 }) => eq36(users2.id, customerId)
-      });
-      if (!customer || !customer.stripeCustomerId) {
-        return res.status(404).json({
-          success: false,
-          error: "Customer not found or not set up for payments"
-        });
-      }
-      const customerName = customer.firstName && customer.lastName ? `${customer.firstName} ${customer.lastName}` : customer.email || "Customer";
-      const result = await paymentService.charge({
-        amount: parseFloat(amount),
-        customerId: customer.stripeCustomerId,
-        source: paymentMethodId,
-        description: description || `Payment for ${customerName}`,
-        metadata: metadata || {}
+      const result = await SwipesBlueService.processTransaction({
+        paymentToken,
+        amount: parseFloat(amount).toFixed(2),
+        description: description || "Payment",
+        customerId
       });
       if (result.success && result.transactionId) {
         await db.insert(billingHistory).values({
-          nmiTransactionId: result.transactionId,
-          amount: String(result.amount || amount),
+          swipesblueTransactionId: result.transactionId,
+          amount: String(amount),
           status: "paid",
           billingDate: /* @__PURE__ */ new Date(),
           paidDate: /* @__PURE__ */ new Date(),
-          paymentMethod: { provider: result.provider, paymentMethodId }
+          paymentMethod: { provider: "swipesblue" }
         });
       }
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        error: error.message
-      });
-    }
-  });
-  app2.post("/api/payments/refund", async (req, res) => {
-    try {
-      const { transactionId, amount } = req.body;
-      if (!transactionId) {
-        return res.status(400).json({
-          success: false,
-          error: "transactionId is required"
-        });
-      }
-      const result = await paymentService.refund(
-        transactionId,
-        amount ? parseFloat(amount) : void 0
-      );
       res.json(result);
     } catch (error) {
       res.status(500).json({
@@ -8911,18 +11662,18 @@ function registerPaymentRoutes(app2) {
   });
   app2.post("/api/payments/customers", async (req, res) => {
     try {
-      const { email, name, phone, metadata } = req.body;
-      if (!email || !name) {
+      const { firstName, lastName, email, phone } = req.body;
+      if (!email || !firstName || !lastName) {
         return res.status(400).json({
           success: false,
-          error: "Email and name are required"
+          error: "firstName, lastName, and email are required"
         });
       }
-      const result = await paymentService.createCustomer({
+      const result = await SwipesBlueService.createCustomer({
+        firstName,
+        lastName,
         email,
-        name,
-        phone,
-        metadata: metadata || {}
+        phone
       });
       res.json(result);
     } catch (error) {
@@ -8935,89 +11686,9 @@ function registerPaymentRoutes(app2) {
   app2.get("/api/payments/config", async (req, res) => {
     try {
       res.json({
-        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
-        provider: paymentService.getProviderName()
+        provider: "swipesblue"
       });
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        error: error.message
-      });
-    }
-  });
-  app2.post("/api/scansblue/checkout", async (req, res) => {
-    try {
-      const { assessmentId, email } = req.body;
-      if (!assessmentId) {
-        return res.status(400).json({
-          success: false,
-          error: "assessmentId is required"
-        });
-      }
-      const assessment = await db.query.assessments.findFirst({
-        where: (assessments3, { eq: eq36 }) => eq36(assessments3.id, parseInt(assessmentId))
-      });
-      if (!assessment) {
-        return res.status(404).json({
-          success: false,
-          error: "Assessment not found"
-        });
-      }
-      const customerEmail = email || assessment.email;
-      const baseUrl = process.env.APP_URL || `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`;
-      const result = await paymentService.createCheckoutSession({
-        priceInCents: 1e3,
-        // $10.00
-        productName: "ScansBlue Full Report",
-        productDescription: `Comprehensive website analysis for ${assessment.website || "your business"}`,
-        customerEmail,
-        successUrl: `${baseUrl}/scansblue/success?session_id={CHECKOUT_SESSION_ID}&assessment=${assessmentId}`,
-        cancelUrl: `${baseUrl}/scansblue/purchase?assessment=${assessmentId}&cancelled=true`,
-        metadata: {
-          type: "scansblue_full_report",
-          assessmentId: assessmentId.toString(),
-          websiteUrl: assessment.website || ""
-        }
-      });
-      if (!result.success) {
-        return res.status(500).json(result);
-      }
-      res.json({
-        success: true,
-        sessionId: result.sessionId,
-        url: result.url
-      });
-    } catch (error) {
-      console.error("[ScansBlue Checkout] Error:", error);
-      res.status(500).json({
-        success: false,
-        error: error.message
-      });
-    }
-  });
-  app2.get("/api/scansblue/verify-session", async (req, res) => {
-    try {
-      const { session_id } = req.query;
-      if (!session_id || typeof session_id !== "string") {
-        return res.status(400).json({
-          success: false,
-          error: "session_id is required"
-        });
-      }
-      const result = await paymentService.retrieveCheckoutSession(session_id);
-      if (!result.success) {
-        return res.status(400).json(result);
-      }
-      const session2 = result.session;
-      res.json({
-        success: true,
-        paid: session2.payment_status === "paid",
-        assessmentId: session2.metadata?.assessmentId,
-        customerEmail: session2.customer_email,
-        paymentIntentId: typeof session2.payment_intent === "string" ? session2.payment_intent : session2.payment_intent?.id
-      });
-    } catch (error) {
-      console.error("[ScansBlue Verify] Error:", error);
       res.status(500).json({
         success: false,
         error: error.message
@@ -9030,23 +11701,23 @@ function registerPaymentRoutes(app2) {
 // server/routes/crm.ts
 init_db();
 init_schema();
-import { Router as Router7 } from "express";
-import { eq as eq15, and as and10, desc as desc6, asc as asc2, ilike as ilike3, or as or3, sql as sql7, inArray as inArray2 } from "drizzle-orm";
+import { Router as Router14 } from "express";
+import { eq as eq18, and as and14, desc as desc7, asc as asc2, ilike as ilike3, or as or3, sql as sql7, inArray as inArray2 } from "drizzle-orm";
 import { z as z6 } from "zod";
 
 // server/routes/api.ts
 init_db();
 init_schema();
-import { Router as Router6 } from "express";
-import { eq as eq14, and as and9, desc as desc5, asc, ilike as ilike2, or as or2, sql as sql6, isNull } from "drizzle-orm";
+import { Router as Router13 } from "express";
+import { eq as eq17, and as and13, desc as desc6, asc, ilike as ilike2, or as or2, sql as sql6, isNull } from "drizzle-orm";
 import { z as z5 } from "zod";
-import crypto3 from "crypto";
-var publicApiRouter = Router6();
+import crypto11 from "crypto";
+var publicApiRouter = Router13();
 function hashApiKey(key) {
-  return crypto3.createHash("sha256").update(key).digest("hex");
+  return crypto11.createHash("sha256").update(key).digest("hex");
 }
 function generateApiKey() {
-  const key = `bb_${crypto3.randomBytes(32).toString("hex")}`;
+  const key = `bb_${crypto11.randomBytes(32).toString("hex")}`;
   const hash = hashApiKey(key);
   const prefix = key.substring(0, 8);
   return { key, hash, prefix };
@@ -9063,7 +11734,7 @@ async function authenticateApiKey(req, res, next) {
   const key = authHeader.substring(7);
   const keyHash = hashApiKey(key);
   try {
-    const [apiKeyRecord] = await db.select().from(apiKeys).where(eq14(apiKeys.keyHash, keyHash));
+    const [apiKeyRecord] = await db.select().from(apiKeys).where(eq17(apiKeys.keyHash, keyHash));
     if (!apiKeyRecord) {
       res.status(401).json({ error: "Unauthorized", message: "Invalid API key" });
       return;
@@ -9084,7 +11755,7 @@ async function authenticateApiKey(req, res, next) {
         rateLimitResetAt: new Date(now.getTime() + 60 * 60 * 1e3),
         lastUsedAt: now,
         totalRequests: sql6`${apiKeys.totalRequests} + 1`
-      }).where(eq14(apiKeys.id, apiKeyRecord.id));
+      }).where(eq17(apiKeys.id, apiKeyRecord.id));
     } else {
       if ((apiKeyRecord.requestsThisHour || 0) >= (apiKeyRecord.rateLimit || 1e3)) {
         res.status(429).json({
@@ -9098,7 +11769,7 @@ async function authenticateApiKey(req, res, next) {
         requestsThisHour: sql6`${apiKeys.requestsThisHour} + 1`,
         lastUsedAt: now,
         totalRequests: sql6`${apiKeys.totalRequests} + 1`
-      }).where(eq14(apiKeys.id, apiKeyRecord.id));
+      }).where(eq17(apiKeys.id, apiKeyRecord.id));
     }
     req.apiKey = {
       id: apiKeyRecord.id,
@@ -9173,7 +11844,7 @@ publicApiRouter.get("/contacts", authenticateApiKey, requireScope("read:contacts
     const lifecycleStage = req.query.lifecycleStage;
     let conditions = [];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(crmContacts.clientId, req.apiKey.clientId));
+      conditions.push(eq17(crmContacts.clientId, req.apiKey.clientId));
     }
     if (search) {
       conditions.push(
@@ -9185,10 +11856,10 @@ publicApiRouter.get("/contacts", authenticateApiKey, requireScope("read:contacts
       );
     }
     if (lifecycleStage) {
-      conditions.push(eq14(crmContacts.lifecycleStage, lifecycleStage));
+      conditions.push(eq17(crmContacts.lifecycleStage, lifecycleStage));
     }
-    const query = conditions.length > 0 ? db.select().from(crmContacts).where(and9(...conditions)) : db.select().from(crmContacts);
-    const contacts = await query.orderBy(desc5(crmContacts.createdAt)).limit(limit).offset(offset);
+    const query = conditions.length > 0 ? db.select().from(crmContacts).where(and13(...conditions)) : db.select().from(crmContacts);
+    const contacts = await query.orderBy(desc6(crmContacts.createdAt)).limit(limit).offset(offset);
     res.json({
       data: contacts,
       pagination: {
@@ -9205,11 +11876,11 @@ publicApiRouter.get("/contacts", authenticateApiKey, requireScope("read:contacts
 publicApiRouter.get("/contacts/:id", authenticateApiKey, requireScope("read:contacts", "*"), async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    let conditions = [eq14(crmContacts.id, id)];
+    let conditions = [eq17(crmContacts.id, id)];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(crmContacts.clientId, req.apiKey.clientId));
+      conditions.push(eq17(crmContacts.clientId, req.apiKey.clientId));
     }
-    const [contact] = await db.select().from(crmContacts).where(and9(...conditions));
+    const [contact] = await db.select().from(crmContacts).where(and13(...conditions));
     if (!contact) {
       return res.status(404).json({ error: "Contact not found" });
     }
@@ -9240,11 +11911,11 @@ publicApiRouter.patch("/contacts/:id", authenticateApiKey, requireScope("write:c
     const id = parseInt(req.params.id);
     const partialSchema = insertCrmContactSchema.partial();
     const validatedData = partialSchema.parse(req.body);
-    let conditions = [eq14(crmContacts.id, id)];
+    let conditions = [eq17(crmContacts.id, id)];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(crmContacts.clientId, req.apiKey.clientId));
+      conditions.push(eq17(crmContacts.clientId, req.apiKey.clientId));
     }
-    const [contact] = await db.update(crmContacts).set({ ...validatedData, updatedAt: /* @__PURE__ */ new Date() }).where(and9(...conditions)).returning();
+    const [contact] = await db.update(crmContacts).set({ ...validatedData, updatedAt: /* @__PURE__ */ new Date() }).where(and13(...conditions)).returning();
     if (!contact) {
       return res.status(404).json({ error: "Contact not found" });
     }
@@ -9260,11 +11931,11 @@ publicApiRouter.patch("/contacts/:id", authenticateApiKey, requireScope("write:c
 publicApiRouter.delete("/contacts/:id", authenticateApiKey, requireScope("delete:contacts", "*"), async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    let conditions = [eq14(crmContacts.id, id)];
+    let conditions = [eq17(crmContacts.id, id)];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(crmContacts.clientId, req.apiKey.clientId));
+      conditions.push(eq17(crmContacts.clientId, req.apiKey.clientId));
     }
-    const [deleted] = await db.delete(crmContacts).where(and9(...conditions)).returning();
+    const [deleted] = await db.delete(crmContacts).where(and13(...conditions)).returning();
     if (!deleted) {
       return res.status(404).json({ error: "Contact not found" });
     }
@@ -9281,13 +11952,13 @@ publicApiRouter.get("/companies", authenticateApiKey, requireScope("read:compani
     const search = req.query.search;
     let conditions = [];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(crmCompanies.clientId, req.apiKey.clientId));
+      conditions.push(eq17(crmCompanies.clientId, req.apiKey.clientId));
     }
     if (search) {
       conditions.push(ilike2(crmCompanies.name, `%${search}%`));
     }
-    const query = conditions.length > 0 ? db.select().from(crmCompanies).where(and9(...conditions)) : db.select().from(crmCompanies);
-    const companies = await query.orderBy(desc5(crmCompanies.createdAt)).limit(limit).offset(offset);
+    const query = conditions.length > 0 ? db.select().from(crmCompanies).where(and13(...conditions)) : db.select().from(crmCompanies);
+    const companies = await query.orderBy(desc6(crmCompanies.createdAt)).limit(limit).offset(offset);
     res.json({
       data: companies,
       pagination: { limit, offset, hasMore: companies.length === limit }
@@ -9321,16 +11992,16 @@ publicApiRouter.get("/deals", authenticateApiKey, requireScope("read:deals", "*"
     const pipelineId = parseInt(req.query.pipelineId);
     let conditions = [];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(crmDeals.clientId, req.apiKey.clientId));
+      conditions.push(eq17(crmDeals.clientId, req.apiKey.clientId));
     }
     if (status) {
-      conditions.push(eq14(crmDeals.status, status));
+      conditions.push(eq17(crmDeals.status, status));
     }
     if (pipelineId) {
-      conditions.push(eq14(crmDeals.pipelineId, pipelineId));
+      conditions.push(eq17(crmDeals.pipelineId, pipelineId));
     }
-    const query = conditions.length > 0 ? db.select().from(crmDeals).where(and9(...conditions)) : db.select().from(crmDeals);
-    const deals = await query.orderBy(desc5(crmDeals.createdAt)).limit(limit).offset(offset);
+    const query = conditions.length > 0 ? db.select().from(crmDeals).where(and13(...conditions)) : db.select().from(crmDeals);
+    const deals = await query.orderBy(desc6(crmDeals.createdAt)).limit(limit).offset(offset);
     res.json({
       data: deals,
       pagination: { limit, offset, hasMore: deals.length === limit }
@@ -9364,16 +12035,16 @@ publicApiRouter.get("/tasks", authenticateApiKey, requireScope("read:tasks", "*"
     const contactId = parseInt(req.query.contactId);
     let conditions = [];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(crmTasks.clientId, req.apiKey.clientId));
+      conditions.push(eq17(crmTasks.clientId, req.apiKey.clientId));
     }
     if (status) {
-      conditions.push(eq14(crmTasks.status, status));
+      conditions.push(eq17(crmTasks.status, status));
     }
     if (contactId) {
-      conditions.push(eq14(crmTasks.contactId, contactId));
+      conditions.push(eq17(crmTasks.contactId, contactId));
     }
-    const query = conditions.length > 0 ? db.select().from(crmTasks).where(and9(...conditions)) : db.select().from(crmTasks);
-    const tasks2 = await query.orderBy(desc5(crmTasks.createdAt)).limit(limit).offset(offset);
+    const query = conditions.length > 0 ? db.select().from(crmTasks).where(and13(...conditions)) : db.select().from(crmTasks);
+    const tasks2 = await query.orderBy(desc6(crmTasks.createdAt)).limit(limit).offset(offset);
     res.json({
       data: tasks2,
       pagination: { limit, offset, hasMore: tasks2.length === limit }
@@ -9403,13 +12074,13 @@ publicApiRouter.get("/pipelines", authenticateApiKey, requireScope("read:pipelin
   try {
     const pipelines = req.apiKey?.clientId ? await db.select().from(crmPipelines).where(
       or2(
-        eq14(crmPipelines.clientId, req.apiKey.clientId),
+        eq17(crmPipelines.clientId, req.apiKey.clientId),
         isNull(crmPipelines.clientId)
       )
     ).orderBy(asc(crmPipelines.id)) : await db.select().from(crmPipelines).orderBy(asc(crmPipelines.id));
     const pipelinesWithStages = await Promise.all(
       pipelines.map(async (pipeline) => {
-        const stages = await db.select().from(crmPipelineStages).where(eq14(crmPipelineStages.pipelineId, pipeline.id)).orderBy(asc(crmPipelineStages.id));
+        const stages = await db.select().from(crmPipelineStages).where(eq17(crmPipelineStages.pipelineId, pipeline.id)).orderBy(asc(crmPipelineStages.id));
         return { ...pipeline, stages };
       })
     );
@@ -9423,7 +12094,7 @@ publicApiRouter.get("/segments", authenticateApiKey, requireScope("read:segments
   try {
     let segments;
     if (req.apiKey?.clientId) {
-      segments = await db.select().from(crmSegments).where(eq14(crmSegments.clientId, req.apiKey.clientId)).orderBy(asc(crmSegments.name));
+      segments = await db.select().from(crmSegments).where(eq17(crmSegments.clientId, req.apiKey.clientId)).orderBy(asc(crmSegments.name));
     } else {
       segments = await db.select().from(crmSegments).orderBy(asc(crmSegments.name));
     }
@@ -9441,16 +12112,16 @@ publicApiRouter.get("/timeline", authenticateApiKey, requireScope("read:timeline
     const companyId = parseInt(req.query.companyId);
     let conditions = [];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(crmTimeline.clientId, req.apiKey.clientId));
+      conditions.push(eq17(crmTimeline.clientId, req.apiKey.clientId));
     }
     if (contactId) {
-      conditions.push(eq14(crmTimeline.contactId, contactId));
+      conditions.push(eq17(crmTimeline.contactId, contactId));
     }
     if (companyId) {
-      conditions.push(eq14(crmTimeline.companyId, companyId));
+      conditions.push(eq17(crmTimeline.companyId, companyId));
     }
-    const query = conditions.length > 0 ? db.select().from(crmTimeline).where(and9(...conditions)) : db.select().from(crmTimeline);
-    const events = await query.orderBy(desc5(crmTimeline.occurredAt)).limit(limit).offset(offset);
+    const query = conditions.length > 0 ? db.select().from(crmTimeline).where(and13(...conditions)) : db.select().from(crmTimeline);
+    const events = await query.orderBy(desc6(crmTimeline.occurredAt)).limit(limit).offset(offset);
     res.json({
       data: events,
       pagination: { limit, offset, hasMore: events.length === limit }
@@ -9507,7 +12178,7 @@ publicApiRouter.get("/api-keys", authenticateApiKey, requireScope("admin:api-key
       totalRequests: apiKeys.totalRequests,
       expiresAt: apiKeys.expiresAt,
       createdAt: apiKeys.createdAt
-    }).from(apiKeys).where(req.apiKey?.clientId ? eq14(apiKeys.clientId, req.apiKey.clientId) : sql6`true`);
+    }).from(apiKeys).where(req.apiKey?.clientId ? eq17(apiKeys.clientId, req.apiKey.clientId) : sql6`true`);
     res.json({ data: keys });
   } catch (error) {
     console.error("[API] List API keys error:", error);
@@ -9517,11 +12188,11 @@ publicApiRouter.get("/api-keys", authenticateApiKey, requireScope("admin:api-key
 publicApiRouter.delete("/api-keys/:id", authenticateApiKey, requireScope("admin:api-keys", "*"), async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    let conditions = [eq14(apiKeys.id, id)];
+    let conditions = [eq17(apiKeys.id, id)];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(apiKeys.clientId, req.apiKey.clientId));
+      conditions.push(eq17(apiKeys.clientId, req.apiKey.clientId));
     }
-    const [deleted] = await db.delete(apiKeys).where(and9(...conditions)).returning();
+    const [deleted] = await db.delete(apiKeys).where(and13(...conditions)).returning();
     if (!deleted) {
       return res.status(404).json({ error: "API key not found" });
     }
@@ -9559,19 +12230,19 @@ publicApiRouter.post("/generate-test-key", async (req, res) => {
   }
 });
 function generateWebhookSecret() {
-  return crypto3.randomBytes(32).toString("hex");
+  return crypto11.randomBytes(32).toString("hex");
 }
 function signWebhookPayload(payload, secret) {
-  return crypto3.createHmac("sha256", secret).update(payload).digest("hex");
+  return crypto11.createHmac("sha256", secret).update(payload).digest("hex");
 }
 publicApiRouter.get("/webhooks", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req, res) => {
   try {
     let conditions = [];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(webhookSubscriptions.clientId, req.apiKey.clientId));
+      conditions.push(eq17(webhookSubscriptions.clientId, req.apiKey.clientId));
     }
-    const query = conditions.length > 0 ? db.select().from(webhookSubscriptions).where(and9(...conditions)) : db.select().from(webhookSubscriptions);
-    const webhooks = await query.orderBy(desc5(webhookSubscriptions.createdAt));
+    const query = conditions.length > 0 ? db.select().from(webhookSubscriptions).where(and13(...conditions)) : db.select().from(webhookSubscriptions);
+    const webhooks = await query.orderBy(desc6(webhookSubscriptions.createdAt));
     const sanitizedWebhooks = webhooks.map(({ secret, ...rest }) => rest);
     res.json({ data: sanitizedWebhooks });
   } catch (error) {
@@ -9604,11 +12275,11 @@ publicApiRouter.post("/webhooks", authenticateApiKey, requireScope("admin:webhoo
 publicApiRouter.get("/webhooks/:id", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    let conditions = [eq14(webhookSubscriptions.id, id)];
+    let conditions = [eq17(webhookSubscriptions.id, id)];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(webhookSubscriptions.clientId, req.apiKey.clientId));
+      conditions.push(eq17(webhookSubscriptions.clientId, req.apiKey.clientId));
     }
-    const [webhook] = await db.select().from(webhookSubscriptions).where(and9(...conditions));
+    const [webhook] = await db.select().from(webhookSubscriptions).where(and13(...conditions));
     if (!webhook) {
       return res.status(404).json({ error: "Webhook not found" });
     }
@@ -9624,11 +12295,11 @@ publicApiRouter.patch("/webhooks/:id", authenticateApiKey, requireScope("admin:w
     const id = parseInt(req.params.id);
     const partialSchema = insertWebhookSubscriptionSchema.partial().omit({ secret: true });
     const validatedData = partialSchema.parse(req.body);
-    let conditions = [eq14(webhookSubscriptions.id, id)];
+    let conditions = [eq17(webhookSubscriptions.id, id)];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(webhookSubscriptions.clientId, req.apiKey.clientId));
+      conditions.push(eq17(webhookSubscriptions.clientId, req.apiKey.clientId));
     }
-    const [webhook] = await db.update(webhookSubscriptions).set({ ...validatedData, updatedAt: /* @__PURE__ */ new Date() }).where(and9(...conditions)).returning();
+    const [webhook] = await db.update(webhookSubscriptions).set({ ...validatedData, updatedAt: /* @__PURE__ */ new Date() }).where(and13(...conditions)).returning();
     if (!webhook) {
       return res.status(404).json({ error: "Webhook not found" });
     }
@@ -9645,11 +12316,11 @@ publicApiRouter.patch("/webhooks/:id", authenticateApiKey, requireScope("admin:w
 publicApiRouter.delete("/webhooks/:id", authenticateApiKey, requireScope("admin:webhooks", "*"), async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    let conditions = [eq14(webhookSubscriptions.id, id)];
+    let conditions = [eq17(webhookSubscriptions.id, id)];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(webhookSubscriptions.clientId, req.apiKey.clientId));
+      conditions.push(eq17(webhookSubscriptions.clientId, req.apiKey.clientId));
     }
-    const [deleted] = await db.delete(webhookSubscriptions).where(and9(...conditions)).returning();
+    const [deleted] = await db.delete(webhookSubscriptions).where(and13(...conditions)).returning();
     if (!deleted) {
       return res.status(404).json({ error: "Webhook not found" });
     }
@@ -9663,11 +12334,11 @@ publicApiRouter.post("/webhooks/:id/rotate-secret", authenticateApiKey, requireS
   try {
     const id = parseInt(req.params.id);
     const newSecret = generateWebhookSecret();
-    let conditions = [eq14(webhookSubscriptions.id, id)];
+    let conditions = [eq17(webhookSubscriptions.id, id)];
     if (req.apiKey?.clientId) {
-      conditions.push(eq14(webhookSubscriptions.clientId, req.apiKey.clientId));
+      conditions.push(eq17(webhookSubscriptions.clientId, req.apiKey.clientId));
     }
-    const [webhook] = await db.update(webhookSubscriptions).set({ secret: newSecret, updatedAt: /* @__PURE__ */ new Date() }).where(and9(...conditions)).returning();
+    const [webhook] = await db.update(webhookSubscriptions).set({ secret: newSecret, updatedAt: /* @__PURE__ */ new Date() }).where(and13(...conditions)).returning();
     if (!webhook) {
       return res.status(404).json({ error: "Webhook not found" });
     }
@@ -9683,12 +12354,12 @@ publicApiRouter.post("/webhooks/:id/rotate-secret", authenticateApiKey, requireS
 async function dispatchWebhookEvent(clientId, eventType, data) {
   try {
     let conditions = [
-      eq14(webhookSubscriptions.isActive, true)
+      eq17(webhookSubscriptions.isActive, true)
     ];
     if (clientId) {
-      conditions.push(eq14(webhookSubscriptions.clientId, clientId));
+      conditions.push(eq17(webhookSubscriptions.clientId, clientId));
     }
-    const subscriptions2 = await db.select().from(webhookSubscriptions).where(and9(...conditions));
+    const subscriptions2 = await db.select().from(webhookSubscriptions).where(and13(...conditions));
     const matchingSubscriptions = subscriptions2.filter((sub) => {
       if (!sub.events || sub.events.length === 0) return false;
       return sub.events.includes(eventType) || sub.events.includes("*");
@@ -9698,7 +12369,7 @@ async function dispatchWebhookEvent(clientId, eventType, data) {
       return;
     }
     const event = {
-      id: crypto3.randomUUID(),
+      id: crypto11.randomUUID(),
       event: eventType,
       data,
       timestamp: (/* @__PURE__ */ new Date()).toISOString()
@@ -9734,7 +12405,7 @@ async function dispatchToSubscription(subscription, payload, eventId) {
       await db.update(webhookSubscriptions).set({
         lastSuccessAt: /* @__PURE__ */ new Date(),
         failureCount: 0
-      }).where(eq14(webhookSubscriptions.id, subscription.id));
+      }).where(eq17(webhookSubscriptions.id, subscription.id));
       console.log(`[Webhooks] Successfully delivered to ${subscription.url}`);
     } else {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -9746,7 +12417,7 @@ async function dispatchToSubscription(subscription, payload, eventId) {
       failureCount: newFailureCount,
       // Disable webhook after 10 consecutive failures
       isActive: newFailureCount < 10
-    }).where(eq14(webhookSubscriptions.id, subscription.id));
+    }).where(eq17(webhookSubscriptions.id, subscription.id));
     console.error(`[Webhooks] Delivery failed to ${subscription.url}:`, error);
     if (newFailureCount >= 10) {
       console.warn(`[Webhooks] Disabled subscription ${subscription.id} after 10 failures`);
@@ -9755,7 +12426,7 @@ async function dispatchToSubscription(subscription, payload, eventId) {
 }
 
 // server/routes/crm.ts
-var crmRouter = Router7();
+var crmRouter = Router14();
 function evaluateCondition(conditionType, conditionConfig, triggerData, contact) {
   if (!conditionType || conditionType === "always") {
     return true;
@@ -9779,12 +12450,12 @@ function evaluateCondition(conditionType, conditionConfig, triggerData, contact)
 }
 async function executeAutomationTrigger(triggerType, contactId, triggerData) {
   try {
-    const automations = await db.select().from(crmAutomations).where(and10(
-      eq15(crmAutomations.triggerType, triggerType),
-      eq15(crmAutomations.isActive, true)
+    const automations = await db.select().from(crmAutomations).where(and14(
+      eq18(crmAutomations.triggerType, triggerType),
+      eq18(crmAutomations.isActive, true)
     ));
     for (const automation of automations) {
-      const steps = await db.select().from(crmAutomationSteps).where(eq15(crmAutomationSteps.automationId, automation.id)).orderBy(asc2(crmAutomationSteps.stepOrder));
+      const steps = await db.select().from(crmAutomationSteps).where(eq18(crmAutomationSteps.automationId, automation.id)).orderBy(asc2(crmAutomationSteps.stepOrder));
       if (steps.length === 0) continue;
       const [execution] = await db.insert(crmAutomationExecutions).values({
         automationId: automation.id,
@@ -9797,13 +12468,13 @@ async function executeAutomationTrigger(triggerType, contactId, triggerData) {
       await db.update(crmAutomations).set({
         runCount: sql7`${crmAutomations.runCount} + 1`,
         lastRunAt: /* @__PURE__ */ new Date()
-      }).where(eq15(crmAutomations.id, automation.id));
+      }).where(eq18(crmAutomations.id, automation.id));
       const executionLog = [];
       let finalStatus = "completed";
       let errorMessage = null;
       let contact = null;
       if (contactId) {
-        const [c] = await db.select().from(crmContacts).where(eq15(crmContacts.id, contactId));
+        const [c] = await db.select().from(crmContacts).where(eq18(crmContacts.id, contactId));
         contact = c;
       }
       for (let i = 0; i < steps.length; i++) {
@@ -9820,15 +12491,15 @@ async function executeAutomationTrigger(triggerType, contactId, triggerData) {
             executionLog.push({ step: i + 1, action: step.stepType, result: "Skipped: condition not met", timestamp: /* @__PURE__ */ new Date() });
             continue;
           }
-          await db.update(crmAutomationExecutions).set({ currentStep: i + 1 }).where(eq15(crmAutomationExecutions.id, execution.id));
+          await db.update(crmAutomationExecutions).set({ currentStep: i + 1 }).where(eq18(crmAutomationExecutions.id, execution.id));
           switch (step.stepType) {
             case "add_tag":
               if (contactId && config.tag) {
-                const [contact2] = await db.select().from(crmContacts).where(eq15(crmContacts.id, contactId));
+                const [contact2] = await db.select().from(crmContacts).where(eq18(crmContacts.id, contactId));
                 if (contact2) {
                   const currentTags = Array.isArray(contact2.tags) ? contact2.tags : [];
                   if (!currentTags.includes(config.tag)) {
-                    await db.update(crmContacts).set({ tags: [...currentTags, config.tag] }).where(eq15(crmContacts.id, contactId));
+                    await db.update(crmContacts).set({ tags: [...currentTags, config.tag] }).where(eq18(crmContacts.id, contactId));
                   }
                 }
               }
@@ -9836,17 +12507,17 @@ async function executeAutomationTrigger(triggerType, contactId, triggerData) {
               break;
             case "remove_tag":
               if (contactId && config.tag) {
-                const [contact2] = await db.select().from(crmContacts).where(eq15(crmContacts.id, contactId));
+                const [contact2] = await db.select().from(crmContacts).where(eq18(crmContacts.id, contactId));
                 if (contact2) {
                   const currentTags = Array.isArray(contact2.tags) ? contact2.tags : [];
-                  await db.update(crmContacts).set({ tags: currentTags.filter((t) => t !== config.tag) }).where(eq15(crmContacts.id, contactId));
+                  await db.update(crmContacts).set({ tags: currentTags.filter((t) => t !== config.tag) }).where(eq18(crmContacts.id, contactId));
                 }
               }
               executionLog.push({ step: i + 1, action: "remove_tag", result: `Removed tag: ${config.tag || "none"}`, timestamp: /* @__PURE__ */ new Date() });
               break;
             case "update_contact":
               if (contactId && config.field && config.value !== void 0) {
-                await db.update(crmContacts).set({ [config.field]: config.value }).where(eq15(crmContacts.id, contactId));
+                await db.update(crmContacts).set({ [config.field]: config.value }).where(eq18(crmContacts.id, contactId));
               }
               executionLog.push({ step: i + 1, action: "update_contact", result: `Updated ${config.field || "field"}`, timestamp: /* @__PURE__ */ new Date() });
               break;
@@ -9896,7 +12567,7 @@ async function executeAutomationTrigger(triggerType, contactId, triggerData) {
         completedAt: /* @__PURE__ */ new Date(),
         errorMessage,
         executionLog
-      }).where(eq15(crmAutomationExecutions.id, execution.id));
+      }).where(eq18(crmAutomationExecutions.id, execution.id));
       console.log(`[CRM] Automation "${automation.name}" ${finalStatus} for trigger "${triggerType}"${contactId ? ` (contact ${contactId})` : ""}`);
     }
   } catch (error) {
@@ -9915,16 +12586,16 @@ crmRouter.get("/contacts", async (req, res) => {
     let query = db.select().from(crmContacts);
     const conditions = [];
     if (clientId) {
-      conditions.push(eq15(crmContacts.clientId, clientId));
+      conditions.push(eq18(crmContacts.clientId, clientId));
     }
     if (companyId) {
-      conditions.push(eq15(crmContacts.companyId, companyId));
+      conditions.push(eq18(crmContacts.companyId, companyId));
     }
     if (lifecycleStage) {
-      conditions.push(eq15(crmContacts.lifecycleStage, lifecycleStage));
+      conditions.push(eq18(crmContacts.lifecycleStage, lifecycleStage));
     }
     if (leadSource) {
-      conditions.push(eq15(crmContacts.leadSource, leadSource));
+      conditions.push(eq18(crmContacts.leadSource, leadSource));
     }
     if (search) {
       conditions.push(
@@ -9935,8 +12606,8 @@ crmRouter.get("/contacts", async (req, res) => {
         )
       );
     }
-    const contacts = await db.select().from(crmContacts).where(conditions.length > 0 ? and10(...conditions) : void 0).orderBy(desc6(crmContacts.createdAt)).limit(limit).offset(offset);
-    const countResult = await db.select({ count: sql7`count(*)` }).from(crmContacts).where(conditions.length > 0 ? and10(...conditions) : void 0);
+    const contacts = await db.select().from(crmContacts).where(conditions.length > 0 ? and14(...conditions) : void 0).orderBy(desc7(crmContacts.createdAt)).limit(limit).offset(offset);
+    const countResult = await db.select({ count: sql7`count(*)` }).from(crmContacts).where(conditions.length > 0 ? and14(...conditions) : void 0);
     res.json({
       contacts,
       total: Number(countResult[0]?.count || 0),
@@ -9951,7 +12622,7 @@ crmRouter.get("/contacts", async (req, res) => {
 crmRouter.get("/contacts/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const contact = await db.select().from(crmContacts).where(eq15(crmContacts.id, id)).limit(1);
+    const contact = await db.select().from(crmContacts).where(eq18(crmContacts.id, id)).limit(1);
     if (!contact.length) {
       return res.status(404).json({ error: "Contact not found" });
     }
@@ -10023,10 +12694,10 @@ crmRouter.post("/contacts/import", async (req, res) => {
         });
         const validatedData = partialSchema.parse(contactWithDefaults);
         if (validatedData.email) {
-          const existing = await db.select().from(crmContacts).where(eq15(crmContacts.email, validatedData.email)).limit(1);
+          const existing = await db.select().from(crmContacts).where(eq18(crmContacts.email, validatedData.email)).limit(1);
           if (existing.length > 0) {
             if (duplicateHandling === "update") {
-              await db.update(crmContacts).set({ ...validatedData, updatedAt: /* @__PURE__ */ new Date() }).where(eq15(crmContacts.id, existing[0].id));
+              await db.update(crmContacts).set({ ...validatedData, updatedAt: /* @__PURE__ */ new Date() }).where(eq18(crmContacts.id, existing[0].id));
               results.updated++;
             } else {
               results.skipped++;
@@ -10062,7 +12733,7 @@ crmRouter.patch("/contacts/:id", async (req, res) => {
     const partialSchema = insertCrmContactSchema.partial();
     const validatedData = partialSchema.parse(req.body);
     const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
-    const [contact] = await db.update(crmContacts).set(updateData).where(eq15(crmContacts.id, id)).returning();
+    const [contact] = await db.update(crmContacts).set(updateData).where(eq18(crmContacts.id, id)).returning();
     if (!contact) {
       return res.status(404).json({ error: "Contact not found" });
     }
@@ -10079,8 +12750,8 @@ crmRouter.patch("/contacts/:id", async (req, res) => {
 crmRouter.delete("/contacts/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const [contact] = await db.select().from(crmContacts).where(eq15(crmContacts.id, id));
-    await db.delete(crmContacts).where(eq15(crmContacts.id, id));
+    const [contact] = await db.select().from(crmContacts).where(eq18(crmContacts.id, id));
+    await db.delete(crmContacts).where(eq18(crmContacts.id, id));
     if (contact) {
       dispatchWebhookEvent(contact.clientId, "contact.deleted", { id, email: contact.email });
     }
@@ -10099,10 +12770,10 @@ crmRouter.get("/companies", async (req, res) => {
     const offset = parseInt(req.query.offset) || 0;
     const conditions = [];
     if (clientId) {
-      conditions.push(eq15(crmCompanies.clientId, clientId));
+      conditions.push(eq18(crmCompanies.clientId, clientId));
     }
     if (type) {
-      conditions.push(eq15(crmCompanies.type, type));
+      conditions.push(eq18(crmCompanies.type, type));
     }
     if (search) {
       conditions.push(
@@ -10112,8 +12783,8 @@ crmRouter.get("/companies", async (req, res) => {
         )
       );
     }
-    const companies = await db.select().from(crmCompanies).where(conditions.length > 0 ? and10(...conditions) : void 0).orderBy(desc6(crmCompanies.createdAt)).limit(limit).offset(offset);
-    const countResult = await db.select({ count: sql7`count(*)` }).from(crmCompanies).where(conditions.length > 0 ? and10(...conditions) : void 0);
+    const companies = await db.select().from(crmCompanies).where(conditions.length > 0 ? and14(...conditions) : void 0).orderBy(desc7(crmCompanies.createdAt)).limit(limit).offset(offset);
+    const countResult = await db.select({ count: sql7`count(*)` }).from(crmCompanies).where(conditions.length > 0 ? and14(...conditions) : void 0);
     res.json({
       companies,
       total: Number(countResult[0]?.count || 0),
@@ -10128,7 +12799,7 @@ crmRouter.get("/companies", async (req, res) => {
 crmRouter.get("/companies/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const company = await db.select().from(crmCompanies).where(eq15(crmCompanies.id, id)).limit(1);
+    const company = await db.select().from(crmCompanies).where(eq18(crmCompanies.id, id)).limit(1);
     if (!company.length) {
       return res.status(404).json({ error: "Company not found" });
     }
@@ -10157,7 +12828,7 @@ crmRouter.patch("/companies/:id", async (req, res) => {
     const partialSchema = insertCrmCompanySchema.partial();
     const validatedData = partialSchema.parse(req.body);
     const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
-    const [company] = await db.update(crmCompanies).set(updateData).where(eq15(crmCompanies.id, id)).returning();
+    const [company] = await db.update(crmCompanies).set(updateData).where(eq18(crmCompanies.id, id)).returning();
     if (!company) {
       return res.status(404).json({ error: "Company not found" });
     }
@@ -10173,7 +12844,7 @@ crmRouter.patch("/companies/:id", async (req, res) => {
 crmRouter.delete("/companies/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    await db.delete(crmCompanies).where(eq15(crmCompanies.id, id));
+    await db.delete(crmCompanies).where(eq18(crmCompanies.id, id));
     res.status(204).send();
   } catch (error) {
     console.error("[CRM] Error deleting company:", error);
@@ -10185,12 +12856,12 @@ crmRouter.get("/pipelines", async (req, res) => {
     const clientId = parseInt(req.query.clientId);
     const conditions = [];
     if (clientId) {
-      conditions.push(eq15(crmPipelines.clientId, clientId));
+      conditions.push(eq18(crmPipelines.clientId, clientId));
     }
-    const pipelines = await db.select().from(crmPipelines).where(conditions.length > 0 ? and10(...conditions) : void 0).orderBy(asc2(crmPipelines.displayOrder));
+    const pipelines = await db.select().from(crmPipelines).where(conditions.length > 0 ? and14(...conditions) : void 0).orderBy(asc2(crmPipelines.displayOrder));
     const pipelinesWithStages = await Promise.all(
       pipelines.map(async (pipeline) => {
-        const stages = await db.select().from(crmPipelineStages).where(eq15(crmPipelineStages.pipelineId, pipeline.id)).orderBy(asc2(crmPipelineStages.displayOrder));
+        const stages = await db.select().from(crmPipelineStages).where(eq18(crmPipelineStages.pipelineId, pipeline.id)).orderBy(asc2(crmPipelineStages.displayOrder));
         return { ...pipeline, stages };
       })
     );
@@ -10249,18 +12920,18 @@ crmRouter.get("/deals", async (req, res) => {
     const limit = parseInt(req.query.limit) || 50;
     const offset = parseInt(req.query.offset) || 0;
     const conditions = [];
-    if (clientId) conditions.push(eq15(crmDeals.clientId, clientId));
-    if (companyId) conditions.push(eq15(crmDeals.companyId, companyId));
-    if (contactId) conditions.push(eq15(crmDeals.contactId, contactId));
-    if (pipelineId) conditions.push(eq15(crmDeals.pipelineId, pipelineId));
-    if (stageId) conditions.push(eq15(crmDeals.stageId, stageId));
-    if (status) conditions.push(eq15(crmDeals.status, status));
-    const deals = await db.select().from(crmDeals).where(conditions.length > 0 ? and10(...conditions) : void 0).orderBy(desc6(crmDeals.createdAt)).limit(limit).offset(offset);
-    const countResult = await db.select({ count: sql7`count(*)` }).from(crmDeals).where(conditions.length > 0 ? and10(...conditions) : void 0);
+    if (clientId) conditions.push(eq18(crmDeals.clientId, clientId));
+    if (companyId) conditions.push(eq18(crmDeals.companyId, companyId));
+    if (contactId) conditions.push(eq18(crmDeals.contactId, contactId));
+    if (pipelineId) conditions.push(eq18(crmDeals.pipelineId, pipelineId));
+    if (stageId) conditions.push(eq18(crmDeals.stageId, stageId));
+    if (status) conditions.push(eq18(crmDeals.status, status));
+    const deals = await db.select().from(crmDeals).where(conditions.length > 0 ? and14(...conditions) : void 0).orderBy(desc7(crmDeals.createdAt)).limit(limit).offset(offset);
+    const countResult = await db.select({ count: sql7`count(*)` }).from(crmDeals).where(conditions.length > 0 ? and14(...conditions) : void 0);
     const totalValueResult = await db.select({ total: sql7`COALESCE(SUM(amount), 0)` }).from(crmDeals).where(
-      and10(
+      and14(
         ...conditions.length > 0 ? conditions : [],
-        eq15(crmDeals.status, "open")
+        eq18(crmDeals.status, "open")
       )
     );
     res.json({
@@ -10278,7 +12949,7 @@ crmRouter.get("/deals", async (req, res) => {
 crmRouter.get("/deals/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const deal = await db.select().from(crmDeals).where(eq15(crmDeals.id, id)).limit(1);
+    const deal = await db.select().from(crmDeals).where(eq18(crmDeals.id, id)).limit(1);
     if (!deal.length) {
       return res.status(404).json({ error: "Deal not found" });
     }
@@ -10321,7 +12992,7 @@ crmRouter.patch("/deals/:id", async (req, res) => {
     const partialSchema = insertCrmDealSchema.partial();
     const validatedData = partialSchema.parse(req.body);
     const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
-    const [deal] = await db.update(crmDeals).set(updateData).where(eq15(crmDeals.id, id)).returning();
+    const [deal] = await db.update(crmDeals).set(updateData).where(eq18(crmDeals.id, id)).returning();
     if (!deal) {
       return res.status(404).json({ error: "Deal not found" });
     }
@@ -10338,7 +13009,7 @@ crmRouter.patch("/deals/:id/stage", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const { stageId } = req.body;
-    const stage = await db.select().from(crmPipelineStages).where(eq15(crmPipelineStages.id, stageId)).limit(1);
+    const stage = await db.select().from(crmPipelineStages).where(eq18(crmPipelineStages.id, stageId)).limit(1);
     if (!stage.length) {
       return res.status(404).json({ error: "Stage not found" });
     }
@@ -10356,7 +13027,7 @@ crmRouter.patch("/deals/:id/stage", async (req, res) => {
     } else {
       updateData.status = "open";
     }
-    const [deal] = await db.update(crmDeals).set(updateData).where(eq15(crmDeals.id, id)).returning();
+    const [deal] = await db.update(crmDeals).set(updateData).where(eq18(crmDeals.id, id)).returning();
     if (!deal) {
       return res.status(404).json({ error: "Deal not found" });
     }
@@ -10407,7 +13078,7 @@ crmRouter.patch("/deals/:id/stage", async (req, res) => {
 crmRouter.delete("/deals/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    await db.delete(crmDeals).where(eq15(crmDeals.id, id));
+    await db.delete(crmDeals).where(eq18(crmDeals.id, id));
     res.status(204).send();
   } catch (error) {
     console.error("[CRM] Error deleting deal:", error);
@@ -10422,10 +13093,10 @@ crmRouter.get("/tasks", async (req, res) => {
     const limit = parseInt(req.query.limit) || 50;
     const offset = parseInt(req.query.offset) || 0;
     const conditions = [];
-    if (clientId) conditions.push(eq15(crmTasks.clientId, clientId));
-    if (contactId) conditions.push(eq15(crmTasks.contactId, contactId));
-    if (status) conditions.push(eq15(crmTasks.status, status));
-    const tasks2 = await db.select().from(crmTasks).where(conditions.length > 0 ? and10(...conditions) : void 0).orderBy(asc2(crmTasks.dueDate)).limit(limit).offset(offset);
+    if (clientId) conditions.push(eq18(crmTasks.clientId, clientId));
+    if (contactId) conditions.push(eq18(crmTasks.contactId, contactId));
+    if (status) conditions.push(eq18(crmTasks.status, status));
+    const tasks2 = await db.select().from(crmTasks).where(conditions.length > 0 ? and14(...conditions) : void 0).orderBy(asc2(crmTasks.dueDate)).limit(limit).offset(offset);
     res.json({ tasks: tasks2 });
   } catch (error) {
     console.error("[CRM] Error fetching tasks:", error);
@@ -10454,7 +13125,7 @@ crmRouter.patch("/tasks/:id", async (req, res) => {
     if (updateData.status === "completed" && !updateData.completedAt) {
       updateData.completedAt = /* @__PURE__ */ new Date();
     }
-    const [task] = await db.update(crmTasks).set(updateData).where(eq15(crmTasks.id, id)).returning();
+    const [task] = await db.update(crmTasks).set(updateData).where(eq18(crmTasks.id, id)).returning();
     if (!task) {
       return res.status(404).json({ error: "Task not found" });
     }
@@ -10470,7 +13141,7 @@ crmRouter.patch("/tasks/:id", async (req, res) => {
 crmRouter.delete("/tasks/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    await db.delete(crmTasks).where(eq15(crmTasks.id, id));
+    await db.delete(crmTasks).where(eq18(crmTasks.id, id));
     res.status(204).send();
   } catch (error) {
     console.error("[CRM] Error deleting task:", error);
@@ -10483,10 +13154,10 @@ crmRouter.get("/notes", async (req, res) => {
     const companyId = parseInt(req.query.companyId);
     const dealId = parseInt(req.query.dealId);
     const conditions = [];
-    if (contactId) conditions.push(eq15(crmNotes.contactId, contactId));
-    if (companyId) conditions.push(eq15(crmNotes.companyId, companyId));
-    if (dealId) conditions.push(eq15(crmNotes.dealId, dealId));
-    const notes = await db.select().from(crmNotes).where(conditions.length > 0 ? and10(...conditions) : void 0).orderBy(desc6(crmNotes.isPinned), desc6(crmNotes.createdAt));
+    if (contactId) conditions.push(eq18(crmNotes.contactId, contactId));
+    if (companyId) conditions.push(eq18(crmNotes.companyId, companyId));
+    if (dealId) conditions.push(eq18(crmNotes.dealId, dealId));
+    const notes = await db.select().from(crmNotes).where(conditions.length > 0 ? and14(...conditions) : void 0).orderBy(desc7(crmNotes.isPinned), desc7(crmNotes.createdAt));
     res.json({ notes });
   } catch (error) {
     console.error("[CRM] Error fetching notes:", error);
@@ -10524,7 +13195,7 @@ crmRouter.patch("/notes/:id", async (req, res) => {
     const partialSchema = insertCrmNoteSchema.partial();
     const validatedData = partialSchema.parse(req.body);
     const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
-    const [note] = await db.update(crmNotes).set(updateData).where(eq15(crmNotes.id, id)).returning();
+    const [note] = await db.update(crmNotes).set(updateData).where(eq18(crmNotes.id, id)).returning();
     if (!note) {
       return res.status(404).json({ error: "Note not found" });
     }
@@ -10540,7 +13211,7 @@ crmRouter.patch("/notes/:id", async (req, res) => {
 crmRouter.delete("/notes/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    await db.delete(crmNotes).where(eq15(crmNotes.id, id));
+    await db.delete(crmNotes).where(eq18(crmNotes.id, id));
     res.status(204).send();
   } catch (error) {
     console.error("[CRM] Error deleting note:", error);
@@ -10554,9 +13225,9 @@ crmRouter.get("/timeline", async (req, res) => {
     const limit = parseInt(req.query.limit) || 50;
     const offset = parseInt(req.query.offset) || 0;
     const conditions = [];
-    if (contactId) conditions.push(eq15(crmTimeline.contactId, contactId));
-    if (companyId) conditions.push(eq15(crmTimeline.companyId, companyId));
-    const events = await db.select().from(crmTimeline).where(conditions.length > 0 ? and10(...conditions) : void 0).orderBy(desc6(crmTimeline.occurredAt)).limit(limit).offset(offset);
+    if (contactId) conditions.push(eq18(crmTimeline.contactId, contactId));
+    if (companyId) conditions.push(eq18(crmTimeline.companyId, companyId));
+    const events = await db.select().from(crmTimeline).where(conditions.length > 0 ? and14(...conditions) : void 0).orderBy(desc7(crmTimeline.occurredAt)).limit(limit).offset(offset);
     res.json({ events });
   } catch (error) {
     console.error("[CRM] Error fetching timeline:", error);
@@ -10576,6 +13247,66 @@ crmRouter.post("/timeline", async (req, res) => {
     res.status(500).json({ error: "Failed to create timeline event" });
   }
 });
+crmRouter.get("/timeline/summary", async (req, res) => {
+  try {
+    const contactId = parseInt(req.query.contactId);
+    if (!contactId) return res.status(400).json({ error: "contactId is required" });
+    const events = await db.select().from(crmTimeline).where(eq18(crmTimeline.contactId, contactId)).orderBy(desc7(crmTimeline.occurredAt));
+    const apps = {};
+    for (const event of events) {
+      const app2 = event.sourceApp || "connect";
+      if (!apps[app2]) {
+        apps[app2] = { count: 0, lastEvent: "", events: [] };
+      }
+      apps[app2].count++;
+      if (!apps[app2].lastEvent || event.occurredAt > new Date(apps[app2].lastEvent)) {
+        apps[app2].lastEvent = event.occurredAt?.toISOString() || "";
+      }
+      apps[app2].events.push(event);
+    }
+    const summary = {};
+    for (const [app2, data] of Object.entries(apps)) {
+      let summaryText = `${data.count} event${data.count !== 1 ? "s" : ""}`;
+      if (app2 === "promote") {
+        const sent = data.events.filter((e) => e.eventType === "campaign_sent").length;
+        const opened = data.events.filter((e) => e.eventType === "campaign_opened").length;
+        summaryText = `${sent} email${sent !== 1 ? "s" : ""}${opened > 0 ? `, ${opened} opened` : ""}`;
+      } else if (app2 === "elevate") {
+        const review = data.events.find((e) => e.eventType === "review_received");
+        const meta = review?.metadata;
+        if (meta?.rating && meta?.platform) {
+          summaryText = "\u2605".repeat(meta.rating) + ` on ${meta.platform}`;
+          summary[app2] = { ...data, summary: summaryText, rating: meta.rating, platform: meta.platform };
+          continue;
+        }
+      } else if (app2 === "engage") {
+        summaryText = `${data.count} chat session${data.count !== 1 ? "s" : ""}`;
+      } else if (app2 === "respond") {
+        const received = data.events.filter((e) => e.eventType === "message_received").length;
+        const sent = data.events.filter((e) => e.eventType === "message_sent").length;
+        summaryText = `${received} received, ${sent} sent`;
+      } else if (app2 === "post") {
+        const likes = data.events.filter((e) => e.eventType === "social_like").length;
+        const comments = data.events.filter((e) => e.eventType === "social_comment").length;
+        const shares = data.events.filter((e) => e.eventType === "social_share").length;
+        const parts = [];
+        if (likes) parts.push(`${likes} like${likes !== 1 ? "s" : ""}`);
+        if (comments) parts.push(`${comments} comment${comments !== 1 ? "s" : ""}`);
+        if (shares) parts.push(`${shares} share${shares !== 1 ? "s" : ""}`);
+        summaryText = parts.length > 0 ? parts.join(", ") : `${data.count} event${data.count !== 1 ? "s" : ""}`;
+      } else if (app2 === "amplify") {
+        const spendEvents = data.events.filter((e) => e.eventType === "ad_spend_attributed");
+        const totalSpend = spendEvents.reduce((sum, e) => sum + (e.metadata?.amount || 0), 0);
+        summaryText = totalSpend > 0 ? `$${totalSpend} ad spend` : `${data.count} ad event${data.count !== 1 ? "s" : ""}`;
+      }
+      summary[app2] = { count: data.count, lastEvent: data.lastEvent, summary: summaryText };
+    }
+    res.json({ apps: summary });
+  } catch (error) {
+    console.error("[CRM] Error fetching timeline summary:", error);
+    res.status(500).json({ error: "Failed to fetch timeline summary" });
+  }
+});
 crmRouter.get("/appointments", async (req, res) => {
   try {
     const clientId = parseInt(req.query.clientId);
@@ -10583,11 +13314,11 @@ crmRouter.get("/appointments", async (req, res) => {
     const startDate = req.query.startDate;
     const endDate = req.query.endDate;
     const conditions = [];
-    if (clientId) conditions.push(eq15(crmAppointments.clientId, clientId));
-    if (contactId) conditions.push(eq15(crmAppointments.contactId, contactId));
+    if (clientId) conditions.push(eq18(crmAppointments.clientId, clientId));
+    if (contactId) conditions.push(eq18(crmAppointments.contactId, contactId));
     if (startDate) conditions.push(sql7`start_time >= ${new Date(startDate)}`);
     if (endDate) conditions.push(sql7`start_time <= ${new Date(endDate)}`);
-    const appointments = await db.select().from(crmAppointments).where(conditions.length > 0 ? and10(...conditions) : void 0).orderBy(asc2(crmAppointments.startTime));
+    const appointments = await db.select().from(crmAppointments).where(conditions.length > 0 ? and14(...conditions) : void 0).orderBy(asc2(crmAppointments.startTime));
     res.json({ appointments });
   } catch (error) {
     console.error("[CRM] Error fetching appointments:", error);
@@ -10633,7 +13364,7 @@ crmRouter.patch("/appointments/:id", async (req, res) => {
     const partialSchema = insertCrmAppointmentSchema.partial();
     const validatedData = partialSchema.parse(body);
     const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
-    const [appointment] = await db.update(crmAppointments).set(updateData).where(eq15(crmAppointments.id, id)).returning();
+    const [appointment] = await db.update(crmAppointments).set(updateData).where(eq18(crmAppointments.id, id)).returning();
     if (!appointment) {
       return res.status(404).json({ error: "Appointment not found" });
     }
@@ -10649,7 +13380,7 @@ crmRouter.patch("/appointments/:id", async (req, res) => {
 crmRouter.delete("/appointments/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    await db.delete(crmAppointments).where(eq15(crmAppointments.id, id));
+    await db.delete(crmAppointments).where(eq18(crmAppointments.id, id));
     res.status(204).send();
   } catch (error) {
     console.error("[CRM] Error deleting appointment:", error);
@@ -10660,8 +13391,8 @@ crmRouter.get("/tags", async (req, res) => {
   try {
     const clientId = parseInt(req.query.clientId);
     const conditions = [];
-    if (clientId) conditions.push(eq15(crmTags.clientId, clientId));
-    const tags = await db.select().from(crmTags).where(conditions.length > 0 ? and10(...conditions) : void 0).orderBy(desc6(crmTags.usageCount));
+    if (clientId) conditions.push(eq18(crmTags.clientId, clientId));
+    const tags = await db.select().from(crmTags).where(conditions.length > 0 ? and14(...conditions) : void 0).orderBy(desc7(crmTags.usageCount));
     res.json({ tags });
   } catch (error) {
     console.error("[CRM] Error fetching tags:", error);
@@ -10685,8 +13416,8 @@ crmRouter.get("/segments", async (req, res) => {
   try {
     const clientId = parseInt(req.query.clientId);
     const conditions = [];
-    if (clientId) conditions.push(eq15(crmSegments.clientId, clientId));
-    const segments = await db.select().from(crmSegments).where(conditions.length > 0 ? and10(...conditions) : void 0).orderBy(asc2(crmSegments.name));
+    if (clientId) conditions.push(eq18(crmSegments.clientId, clientId));
+    const segments = await db.select().from(crmSegments).where(conditions.length > 0 ? and14(...conditions) : void 0).orderBy(asc2(crmSegments.name));
     res.json({ segments });
   } catch (error) {
     console.error("[CRM] Error fetching segments:", error);
@@ -10699,7 +13430,7 @@ crmRouter.get("/subscription", async (req, res) => {
     if (!clientId) {
       return res.status(400).json({ error: "clientId is required" });
     }
-    const subscription = await db.select().from(crmSubscriptions).where(eq15(crmSubscriptions.clientId, clientId)).limit(1);
+    const subscription = await db.select().from(crmSubscriptions).where(eq18(crmSubscriptions.clientId, clientId)).limit(1);
     if (!subscription.length) {
       return res.json({ tier: "starter", status: "active" });
     }
@@ -10712,21 +13443,21 @@ crmRouter.get("/subscription", async (req, res) => {
 crmRouter.get("/stats", async (req, res) => {
   try {
     const clientId = parseInt(req.query.clientId);
-    const conditions = clientId ? [eq15(crmContacts.clientId, clientId)] : [];
-    const dealConditions = clientId ? [eq15(crmDeals.clientId, clientId)] : [];
-    const taskConditions = clientId ? [eq15(crmTasks.clientId, clientId)] : [];
-    const [contactCount] = await db.select({ count: sql7`count(*)` }).from(crmContacts).where(conditions.length > 0 ? and10(...conditions) : void 0);
-    const [companyCount] = await db.select({ count: sql7`count(*)` }).from(crmCompanies).where(clientId ? eq15(crmCompanies.clientId, clientId) : void 0);
+    const conditions = clientId ? [eq18(crmContacts.clientId, clientId)] : [];
+    const dealConditions = clientId ? [eq18(crmDeals.clientId, clientId)] : [];
+    const taskConditions = clientId ? [eq18(crmTasks.clientId, clientId)] : [];
+    const [contactCount] = await db.select({ count: sql7`count(*)` }).from(crmContacts).where(conditions.length > 0 ? and14(...conditions) : void 0);
+    const [companyCount] = await db.select({ count: sql7`count(*)` }).from(crmCompanies).where(clientId ? eq18(crmCompanies.clientId, clientId) : void 0);
     const [openDeals] = await db.select({
       count: sql7`count(*)`,
       value: sql7`COALESCE(SUM(amount), 0)`
-    }).from(crmDeals).where(and10(
+    }).from(crmDeals).where(and14(
       ...dealConditions,
-      eq15(crmDeals.status, "open")
+      eq18(crmDeals.status, "open")
     ));
-    const [pendingTasks] = await db.select({ count: sql7`count(*)` }).from(crmTasks).where(and10(
+    const [pendingTasks] = await db.select({ count: sql7`count(*)` }).from(crmTasks).where(and14(
       ...taskConditions,
-      eq15(crmTasks.status, "pending")
+      eq18(crmTasks.status, "pending")
     ));
     res.json({
       contacts: Number(contactCount?.count || 0),
@@ -10743,8 +13474,8 @@ crmRouter.get("/stats", async (req, res) => {
 crmRouter.get("/forms", async (req, res) => {
   try {
     const clientId = parseInt(req.query.clientId);
-    const conditions = clientId ? [eq15(crmLeadForms.clientId, clientId)] : [];
-    const forms = await db.select().from(crmLeadForms).where(conditions.length > 0 ? and10(...conditions) : void 0).orderBy(desc6(crmLeadForms.createdAt));
+    const conditions = clientId ? [eq18(crmLeadForms.clientId, clientId)] : [];
+    const forms = await db.select().from(crmLeadForms).where(conditions.length > 0 ? and14(...conditions) : void 0).orderBy(desc7(crmLeadForms.createdAt));
     res.json({ forms });
   } catch (error) {
     console.error("[CRM] Error fetching forms:", error);
@@ -10754,7 +13485,7 @@ crmRouter.get("/forms", async (req, res) => {
 crmRouter.get("/forms/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const form = await db.select().from(crmLeadForms).where(eq15(crmLeadForms.id, id)).limit(1);
+    const form = await db.select().from(crmLeadForms).where(eq18(crmLeadForms.id, id)).limit(1);
     if (!form.length) {
       return res.status(404).json({ error: "Form not found" });
     }
@@ -10783,7 +13514,7 @@ crmRouter.patch("/forms/:id", async (req, res) => {
     const partialSchema = insertCrmLeadFormSchema.partial();
     const validatedData = partialSchema.parse(req.body);
     const updateData = { ...validatedData, updatedAt: /* @__PURE__ */ new Date() };
-    const [form] = await db.update(crmLeadForms).set(updateData).where(eq15(crmLeadForms.id, id)).returning();
+    const [form] = await db.update(crmLeadForms).set(updateData).where(eq18(crmLeadForms.id, id)).returning();
     if (!form) {
       return res.status(404).json({ error: "Form not found" });
     }
@@ -10799,7 +13530,7 @@ crmRouter.patch("/forms/:id", async (req, res) => {
 crmRouter.delete("/forms/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const [deleted] = await db.delete(crmLeadForms).where(eq15(crmLeadForms.id, id)).returning();
+    const [deleted] = await db.delete(crmLeadForms).where(eq18(crmLeadForms.id, id)).returning();
     if (!deleted) {
       return res.status(404).json({ error: "Form not found" });
     }
@@ -10813,7 +13544,7 @@ crmRouter.post("/forms/:slug/submit", async (req, res) => {
   try {
     const slug = req.params.slug;
     const submission = req.body;
-    const [form] = await db.select().from(crmLeadForms).where(eq15(crmLeadForms.slug, slug)).limit(1);
+    const [form] = await db.select().from(crmLeadForms).where(eq18(crmLeadForms.slug, slug)).limit(1);
     if (!form || !form.isActive) {
       return res.status(404).json({ error: "Form not found" });
     }
@@ -10827,16 +13558,16 @@ crmRouter.post("/forms/:slug/submit", async (req, res) => {
       leadSource: form.defaultLeadSource || "web_form"
     };
     if (contactData.email) {
-      const existing = await db.select().from(crmContacts).where(eq15(crmContacts.email, contactData.email)).limit(1);
+      const existing = await db.select().from(crmContacts).where(eq18(crmContacts.email, contactData.email)).limit(1);
       if (existing.length > 0) {
-        await db.update(crmContacts).set({ ...contactData, updatedAt: /* @__PURE__ */ new Date() }).where(eq15(crmContacts.id, existing[0].id));
-        await db.update(crmLeadForms).set({ submissionCount: sql7`submission_count + 1` }).where(eq15(crmLeadForms.id, form.id));
+        await db.update(crmContacts).set({ ...contactData, updatedAt: /* @__PURE__ */ new Date() }).where(eq18(crmContacts.id, existing[0].id));
+        await db.update(crmLeadForms).set({ submissionCount: sql7`submission_count + 1` }).where(eq18(crmLeadForms.id, form.id));
         res.json({ success: true, message: form.successMessage, contactId: existing[0].id });
         return;
       }
     }
     const [contact] = await db.insert(crmContacts).values(contactData).returning();
-    await db.update(crmLeadForms).set({ submissionCount: sql7`submission_count + 1` }).where(eq15(crmLeadForms.id, form.id));
+    await db.update(crmLeadForms).set({ submissionCount: sql7`submission_count + 1` }).where(eq18(crmLeadForms.id, form.id));
     if (form.clientId) {
       await db.insert(crmTimeline).values({
         clientId: form.clientId,
@@ -10862,11 +13593,11 @@ crmRouter.get("/integration/lookup", async (req, res) => {
     }
     let contact = null;
     if (email && typeof email === "string") {
-      const results = await db.select().from(crmContacts).where(eq15(crmContacts.email, email.toLowerCase())).limit(1);
+      const results = await db.select().from(crmContacts).where(eq18(crmContacts.email, email.toLowerCase())).limit(1);
       if (results.length > 0) contact = results[0];
     }
     if (!contact && phone && typeof phone === "string") {
-      const results = await db.select().from(crmContacts).where(eq15(crmContacts.phone, phone)).limit(1);
+      const results = await db.select().from(crmContacts).where(eq18(crmContacts.phone, phone)).limit(1);
       if (results.length > 0) contact = results[0];
     }
     if (!contact) {
@@ -10874,7 +13605,7 @@ crmRouter.get("/integration/lookup", async (req, res) => {
     }
     let company = null;
     if (contact.companyId) {
-      const companyResults = await db.select().from(crmCompanies).where(eq15(crmCompanies.id, contact.companyId)).limit(1);
+      const companyResults = await db.select().from(crmCompanies).where(eq18(crmCompanies.id, contact.companyId)).limit(1);
       if (companyResults.length > 0) company = companyResults[0];
     }
     res.json({
@@ -10906,18 +13637,18 @@ crmRouter.get("/integration/lookup", async (req, res) => {
 crmRouter.get("/integration/context/:id", async (req, res) => {
   try {
     const contactId = parseInt(req.params.id);
-    const contacts = await db.select().from(crmContacts).where(eq15(crmContacts.id, contactId)).limit(1);
+    const contacts = await db.select().from(crmContacts).where(eq18(crmContacts.id, contactId)).limit(1);
     if (contacts.length === 0) {
       return res.status(404).json({ error: "Contact not found" });
     }
     const contact = contacts[0];
     let company = null;
     if (contact.companyId) {
-      const companies = await db.select().from(crmCompanies).where(eq15(crmCompanies.id, contact.companyId)).limit(1);
+      const companies = await db.select().from(crmCompanies).where(eq18(crmCompanies.id, contact.companyId)).limit(1);
       if (companies.length > 0) company = companies[0];
     }
-    const deals = await db.select().from(crmDeals).where(eq15(crmDeals.contactId, contactId)).orderBy(desc6(crmDeals.updatedAt)).limit(5);
-    const recentActivity = await db.select().from(crmTimeline).where(eq15(crmTimeline.contactId, contactId)).orderBy(desc6(crmTimeline.occurredAt)).limit(10);
+    const deals = await db.select().from(crmDeals).where(eq18(crmDeals.contactId, contactId)).orderBy(desc7(crmDeals.updatedAt)).limit(5);
+    const recentActivity = await db.select().from(crmTimeline).where(eq18(crmTimeline.contactId, contactId)).orderBy(desc7(crmTimeline.occurredAt)).limit(10);
     const contactTags = contact.tags || [];
     res.json({
       contact: {
@@ -10987,7 +13718,7 @@ crmRouter.get("/integration/segments/:id/members", async (req, res) => {
       lastName: crmContacts.lastName,
       email: crmContacts.email,
       phone: crmContacts.phone
-    }).from(crmSegmentMembers).innerJoin(crmContacts, eq15(crmSegmentMembers.contactId, crmContacts.id)).where(eq15(crmSegmentMembers.segmentId, segmentId)).limit(limit).offset(offset);
+    }).from(crmSegmentMembers).innerJoin(crmContacts, eq18(crmSegmentMembers.contactId, crmContacts.id)).where(eq18(crmSegmentMembers.segmentId, segmentId)).limit(limit).offset(offset);
     res.json({ members, segmentId });
   } catch (error) {
     console.error("[CRM] Integration segment members error:", error);
@@ -11002,14 +13733,14 @@ crmRouter.post("/integration/timeline", async (req, res) => {
     }
     let resolvedContactId = contactId;
     if (!resolvedContactId && req.body.email) {
-      const contacts = await db.select({ id: crmContacts.id, clientId: crmContacts.clientId }).from(crmContacts).where(eq15(crmContacts.email, req.body.email)).limit(1);
+      const contacts = await db.select({ id: crmContacts.id, clientId: crmContacts.clientId }).from(crmContacts).where(eq18(crmContacts.email, req.body.email)).limit(1);
       if (contacts.length > 0) {
         resolvedContactId = contacts[0].id;
       }
     }
     let clientId = null;
     if (resolvedContactId) {
-      const contacts = await db.select({ clientId: crmContacts.clientId }).from(crmContacts).where(eq15(crmContacts.id, resolvedContactId)).limit(1);
+      const contacts = await db.select({ clientId: crmContacts.clientId }).from(crmContacts).where(eq18(crmContacts.id, resolvedContactId)).limit(1);
       if (contacts.length > 0) {
         clientId = contacts[0].clientId;
       }
@@ -11063,7 +13794,7 @@ crmRouter.post("/integration/bulk-lookup", async (req, res) => {
 });
 crmRouter.get("/automations", async (req, res) => {
   try {
-    const automations = await db.select().from(crmAutomations).orderBy(desc6(crmAutomations.createdAt));
+    const automations = await db.select().from(crmAutomations).orderBy(desc7(crmAutomations.createdAt));
     res.json({ automations });
   } catch (error) {
     console.error("[CRM] List automations error:", error);
@@ -11073,12 +13804,12 @@ crmRouter.get("/automations", async (req, res) => {
 crmRouter.get("/automations/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const [automation] = await db.select().from(crmAutomations).where(eq15(crmAutomations.id, id));
+    const [automation] = await db.select().from(crmAutomations).where(eq18(crmAutomations.id, id));
     if (!automation) {
       return res.status(404).json({ error: "Automation not found" });
     }
-    const steps = await db.select().from(crmAutomationSteps).where(eq15(crmAutomationSteps.automationId, id)).orderBy(asc2(crmAutomationSteps.stepOrder));
-    const executions = await db.select().from(crmAutomationExecutions).where(eq15(crmAutomationExecutions.automationId, id)).orderBy(desc6(crmAutomationExecutions.startedAt)).limit(10);
+    const steps = await db.select().from(crmAutomationSteps).where(eq18(crmAutomationSteps.automationId, id)).orderBy(asc2(crmAutomationSteps.stepOrder));
+    const executions = await db.select().from(crmAutomationExecutions).where(eq18(crmAutomationExecutions.automationId, id)).orderBy(desc7(crmAutomationExecutions.startedAt)).limit(10);
     res.json({ automation, steps, executions });
   } catch (error) {
     console.error("[CRM] Get automation error:", error);
@@ -11102,7 +13833,7 @@ crmRouter.patch("/automations/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const updates = req.body;
-    const [automation] = await db.update(crmAutomations).set({ ...updates, updatedAt: /* @__PURE__ */ new Date() }).where(eq15(crmAutomations.id, id)).returning();
+    const [automation] = await db.update(crmAutomations).set({ ...updates, updatedAt: /* @__PURE__ */ new Date() }).where(eq18(crmAutomations.id, id)).returning();
     if (!automation) {
       return res.status(404).json({ error: "Automation not found" });
     }
@@ -11115,7 +13846,7 @@ crmRouter.patch("/automations/:id", async (req, res) => {
 crmRouter.delete("/automations/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    await db.delete(crmAutomations).where(eq15(crmAutomations.id, id));
+    await db.delete(crmAutomations).where(eq18(crmAutomations.id, id));
     res.json({ success: true });
   } catch (error) {
     console.error("[CRM] Delete automation error:", error);
@@ -11129,7 +13860,7 @@ crmRouter.post("/automations/:id/steps", async (req, res) => {
     if (!Array.isArray(steps)) {
       return res.status(400).json({ error: "steps array required" });
     }
-    await db.delete(crmAutomationSteps).where(eq15(crmAutomationSteps.automationId, automationId));
+    await db.delete(crmAutomationSteps).where(eq18(crmAutomationSteps.automationId, automationId));
     if (steps.length > 0) {
       const stepsToInsert = steps.map((step, index2) => ({
         automationId,
@@ -11141,7 +13872,7 @@ crmRouter.post("/automations/:id/steps", async (req, res) => {
       }));
       await db.insert(crmAutomationSteps).values(stepsToInsert);
     }
-    const insertedSteps = await db.select().from(crmAutomationSteps).where(eq15(crmAutomationSteps.automationId, automationId)).orderBy(asc2(crmAutomationSteps.stepOrder));
+    const insertedSteps = await db.select().from(crmAutomationSteps).where(eq18(crmAutomationSteps.automationId, automationId)).orderBy(asc2(crmAutomationSteps.stepOrder));
     res.json({ steps: insertedSteps });
   } catch (error) {
     console.error("[CRM] Add automation steps error:", error);
@@ -11152,11 +13883,11 @@ crmRouter.post("/automations/:id/trigger", async (req, res) => {
   try {
     const automationId = parseInt(req.params.id);
     const { contactId, triggerData } = req.body;
-    const [automation] = await db.select().from(crmAutomations).where(eq15(crmAutomations.id, automationId));
+    const [automation] = await db.select().from(crmAutomations).where(eq18(crmAutomations.id, automationId));
     if (!automation) {
       return res.status(404).json({ error: "Automation not found" });
     }
-    const steps = await db.select().from(crmAutomationSteps).where(eq15(crmAutomationSteps.automationId, automationId)).orderBy(asc2(crmAutomationSteps.stepOrder));
+    const steps = await db.select().from(crmAutomationSteps).where(eq18(crmAutomationSteps.automationId, automationId)).orderBy(asc2(crmAutomationSteps.stepOrder));
     const [execution] = await db.insert(crmAutomationExecutions).values({
       automationId,
       contactId,
@@ -11168,13 +13899,13 @@ crmRouter.post("/automations/:id/trigger", async (req, res) => {
     await db.update(crmAutomations).set({
       runCount: sql7`${crmAutomations.runCount} + 1`,
       lastRunAt: /* @__PURE__ */ new Date()
-    }).where(eq15(crmAutomations.id, automationId));
+    }).where(eq18(crmAutomations.id, automationId));
     const executionLog = [];
     let finalStatus = "completed";
     let errorMessage = null;
     let contact = null;
     if (contactId) {
-      const [c] = await db.select().from(crmContacts).where(eq15(crmContacts.id, contactId));
+      const [c] = await db.select().from(crmContacts).where(eq18(crmContacts.id, contactId));
       contact = c;
     }
     for (let i = 0; i < steps.length; i++) {
@@ -11191,15 +13922,15 @@ crmRouter.post("/automations/:id/trigger", async (req, res) => {
           executionLog.push({ step: i + 1, action: step.stepType, result: "Skipped: condition not met", timestamp: /* @__PURE__ */ new Date() });
           continue;
         }
-        await db.update(crmAutomationExecutions).set({ currentStep: i + 1 }).where(eq15(crmAutomationExecutions.id, execution.id));
+        await db.update(crmAutomationExecutions).set({ currentStep: i + 1 }).where(eq18(crmAutomationExecutions.id, execution.id));
         switch (step.stepType) {
           case "add_tag":
             if (contactId && config.tag) {
-              const [contactData] = await db.select().from(crmContacts).where(eq15(crmContacts.id, contactId));
+              const [contactData] = await db.select().from(crmContacts).where(eq18(crmContacts.id, contactId));
               if (contactData) {
                 const currentTags = Array.isArray(contactData.tags) ? contactData.tags : [];
                 if (!currentTags.includes(config.tag)) {
-                  await db.update(crmContacts).set({ tags: [...currentTags, config.tag] }).where(eq15(crmContacts.id, contactId));
+                  await db.update(crmContacts).set({ tags: [...currentTags, config.tag] }).where(eq18(crmContacts.id, contactId));
                 }
               }
             }
@@ -11207,17 +13938,17 @@ crmRouter.post("/automations/:id/trigger", async (req, res) => {
             break;
           case "remove_tag":
             if (contactId && config.tag) {
-              const [contact2] = await db.select().from(crmContacts).where(eq15(crmContacts.id, contactId));
+              const [contact2] = await db.select().from(crmContacts).where(eq18(crmContacts.id, contactId));
               if (contact2) {
                 const currentTags = Array.isArray(contact2.tags) ? contact2.tags : [];
-                await db.update(crmContacts).set({ tags: currentTags.filter((t) => t !== config.tag) }).where(eq15(crmContacts.id, contactId));
+                await db.update(crmContacts).set({ tags: currentTags.filter((t) => t !== config.tag) }).where(eq18(crmContacts.id, contactId));
               }
             }
             executionLog.push({ step: i + 1, action: "remove_tag", result: `Removed tag: ${config.tag || "none"}`, timestamp: /* @__PURE__ */ new Date() });
             break;
           case "update_contact":
             if (contactId && config.field && config.value !== void 0) {
-              await db.update(crmContacts).set({ [config.field]: config.value }).where(eq15(crmContacts.id, contactId));
+              await db.update(crmContacts).set({ [config.field]: config.value }).where(eq18(crmContacts.id, contactId));
             }
             executionLog.push({ step: i + 1, action: "update_contact", result: `Updated ${config.field || "field"}`, timestamp: /* @__PURE__ */ new Date() });
             break;
@@ -11268,7 +13999,7 @@ crmRouter.post("/automations/:id/trigger", async (req, res) => {
       completedAt: /* @__PURE__ */ new Date(),
       errorMessage,
       executionLog
-    }).where(eq15(crmAutomationExecutions.id, execution.id));
+    }).where(eq18(crmAutomationExecutions.id, execution.id));
     res.json({
       success: finalStatus === "completed",
       execution: {
@@ -11301,7 +14032,7 @@ crmRouter.get("/automations/:id/executions", async (req, res) => {
         lastName: crmContacts.lastName,
         email: crmContacts.email
       }
-    }).from(crmAutomationExecutions).leftJoin(crmContacts, eq15(crmAutomationExecutions.contactId, crmContacts.id)).where(eq15(crmAutomationExecutions.automationId, automationId)).orderBy(desc6(crmAutomationExecutions.startedAt)).limit(50);
+    }).from(crmAutomationExecutions).leftJoin(crmContacts, eq18(crmAutomationExecutions.contactId, crmContacts.id)).where(eq18(crmAutomationExecutions.automationId, automationId)).orderBy(desc7(crmAutomationExecutions.startedAt)).limit(50);
     res.json({ executions });
   } catch (error) {
     console.error("[CRM] Get automation executions error:", error);
@@ -11324,7 +14055,7 @@ crmRouter.get("/analytics", async (req, res) => {
       stageId: crmDeals.stageId,
       count: sql7`count(*)::int`,
       totalValue: sql7`coalesce(sum(${crmDeals.amount}::float), 0)::float`
-    }).from(crmDeals).leftJoin(crmPipelineStages, eq15(crmDeals.stageId, crmPipelineStages.id)).where(eq15(crmDeals.status, "open")).groupBy(crmDeals.stageId, crmPipelineStages.name);
+    }).from(crmDeals).leftJoin(crmPipelineStages, eq18(crmDeals.stageId, crmPipelineStages.id)).where(eq18(crmDeals.status, "open")).groupBy(crmDeals.stageId, crmPipelineStages.name);
     const leadSourceStats = await db.select({
       source: crmContacts.leadSource,
       count: sql7`count(*)::int`
@@ -11374,16 +14105,458 @@ crmRouter.get("/analytics", async (req, res) => {
   }
 });
 
+// server/routes/setup-tasks.ts
+init_db();
+init_schema();
+import { Router as Router15 } from "express";
+import { eq as eq20, and as and16, asc as asc3, desc as desc9, sql as sql9 } from "drizzle-orm";
+init_knowledge_base();
+var setupTasksRouter = Router15();
+var APP_KNOWLEDGE = {
+  connect: connectKnowledge,
+  publish: publishKnowledge,
+  elevate: elevateKnowledge
+};
+setupTasksRouter.get("/", requireClientPortalAccess, async (req, res) => {
+  try {
+    const clientId = req.clientId;
+    const tasks2 = await db.select().from(setupTasks).where(eq20(setupTasks.clientId, clientId)).orderBy(asc3(setupTasks.cadenceOrder));
+    const total = tasks2.length;
+    const completed = tasks2.filter((t) => t.status === "completed").length;
+    const pending = tasks2.filter((t) => t.status === "pending").length;
+    res.json({ tasks: tasks2, counts: { total, completed, pending } });
+  } catch (error) {
+    console.error("[SetupTasks] Error fetching tasks:", error);
+    res.status(500).json({ error: "Failed to fetch setup tasks" });
+  }
+});
+setupTasksRouter.post("/generate", requireClientPortalAccess, async (req, res) => {
+  try {
+    const clientId = req.clientId;
+    const { prescriptionId } = req.body;
+    if (!prescriptionId) {
+      return res.status(400).json({ error: "prescriptionId is required" });
+    }
+    const [prescription] = await db.select().from(prescriptions).where(
+      and16(
+        eq20(prescriptions.id, prescriptionId),
+        eq20(prescriptions.clientId, clientId)
+      )
+    ).limit(1);
+    if (!prescription) {
+      return res.status(404).json({ error: "Prescription not found" });
+    }
+    const createdTasks = [];
+    for (const cadenceStep of SETUP_CADENCE) {
+      const knowledge = APP_KNOWLEDGE[cadenceStep.appId];
+      if (!knowledge) continue;
+      const existingTasks = await db.select({ id: setupTasks.id }).from(setupTasks).where(
+        and16(
+          eq20(setupTasks.clientId, clientId),
+          eq20(setupTasks.appId, cadenceStep.appId)
+        )
+      ).limit(1);
+      if (existingTasks.length > 0) continue;
+      for (const step of knowledge.setupSteps) {
+        const parentOrder = cadenceStep.order * 100 + step.order * 10;
+        const [parentTask] = await db.insert(setupTasks).values({
+          clientId,
+          appId: cadenceStep.appId,
+          stepId: step.id,
+          substepId: null,
+          status: "pending",
+          source: "prescription",
+          sourceId: prescriptionId,
+          cadenceOrder: parentOrder,
+          title: step.title,
+          description: step.description,
+          estimatedMinutes: step.estimatedMinutes,
+          phase: "setup"
+        }).returning();
+        createdTasks.push(parentTask);
+        for (let i = 0; i < step.substeps.length; i++) {
+          const substep = step.substeps[i];
+          const [substepTask] = await db.insert(setupTasks).values({
+            clientId,
+            appId: cadenceStep.appId,
+            stepId: step.id,
+            substepId: substep.id,
+            status: "pending",
+            source: "prescription",
+            sourceId: prescriptionId,
+            cadenceOrder: parentOrder + i + 1,
+            title: substep.title,
+            description: substep.helpText,
+            estimatedMinutes: null,
+            phase: "setup"
+          }).returning();
+          createdTasks.push(substepTask);
+        }
+      }
+    }
+    if (prescriptionId) {
+      const prescriptionRow = await db.select({ assessmentId: prescriptions.assessmentId }).from(prescriptions).where(eq20(prescriptions.id, prescriptionId)).limit(1);
+      if (prescriptionRow[0]?.assessmentId) {
+        const recommendations2 = await db.select().from(recommendations).where(eq20(recommendations.assessmentId, prescriptionRow[0].assessmentId));
+        const existingAppIds = new Set(
+          (await db.select({ appId: setupTasks.appId }).from(setupTasks).where(eq20(setupTasks.clientId, clientId))).map((t) => t.appId)
+        );
+        const recsByApp = /* @__PURE__ */ new Map();
+        for (const rec of recommendations2) {
+          const appId = rec.productId;
+          if (!appId || existingAppIds.has(appId) || appId === "compass" || appId === "anchor" || appId === "hostsblue" || appId === "swipesblue") continue;
+          if (!recsByApp.has(appId)) recsByApp.set(appId, []);
+          recsByApp.get(appId).push(rec);
+        }
+        for (const [appId, recs] of Array.from(recsByApp.entries())) {
+          const cadenceStep = SETUP_CADENCE.find((c) => c.appId === appId);
+          const baseOrder = cadenceStep ? cadenceStep.order * 100 : 900;
+          for (let i = 0; i < recs.length; i++) {
+            const rec = recs[i];
+            const [task] = await db.insert(setupTasks).values({
+              clientId,
+              appId,
+              stepId: `${appId}-rec-${i + 1}`,
+              status: "pending",
+              source: "prescription",
+              sourceId: prescriptionId,
+              cadenceOrder: baseOrder + (i + 1) * 10,
+              title: rec.title || `Set up ${appId}`,
+              description: rec.description || null,
+              estimatedMinutes: rec.estimatedMinutes || 15
+            }).returning();
+            createdTasks.push(task);
+          }
+        }
+      }
+    }
+    const APP_DAY_OFFSETS = {
+      connect: 0,
+      publish: 4,
+      elevate: 9,
+      optimize: 12,
+      respond: 16,
+      engage: 20,
+      post: 24,
+      promote: 28,
+      amplify: 33
+    };
+    const allClientTasks = await db.select().from(setupTasks).where(eq20(setupTasks.clientId, clientId)).orderBy(asc3(setupTasks.cadenceOrder));
+    const baseDate = /* @__PURE__ */ new Date();
+    baseDate.setHours(9, 0, 0, 0);
+    baseDate.setDate(baseDate.getDate() + 1);
+    const appTaskIndex = /* @__PURE__ */ new Map();
+    for (const task of allClientTasks) {
+      const dayOffset = APP_DAY_OFFSETS[task.appId] ?? 35;
+      const indexInApp = appTaskIndex.get(task.appId) || 0;
+      appTaskIndex.set(task.appId, indexInApp + 1);
+      const taskDate = new Date(baseDate);
+      taskDate.setDate(taskDate.getDate() + dayOffset + indexInApp);
+      await db.update(setupTasks).set({ suggestedDate: taskDate, updatedAt: /* @__PURE__ */ new Date() }).where(eq20(setupTasks.id, task.id));
+    }
+    await db.update(clients).set({ setupPhase: "in_progress", updatedAt: /* @__PURE__ */ new Date() }).where(eq20(clients.id, clientId));
+    res.json({ tasks: createdTasks, count: createdTasks.length });
+  } catch (error) {
+    console.error("[SetupTasks] Error generating tasks:", error);
+    res.status(500).json({ error: "Failed to generate setup tasks" });
+  }
+});
+setupTasksRouter.get("/events/recent", requireClientPortalAccess, async (req, res) => {
+  try {
+    const clientId = req.clientId;
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1e3);
+    const events = await db.select().from(setupTaskEvents).where(and16(
+      eq20(setupTaskEvents.clientId, clientId),
+      sql9`${setupTaskEvents.eventType} LIKE 'notification_%'`,
+      sql9`${setupTaskEvents.createdAt} >= ${fiveMinutesAgo}`
+    )).orderBy(desc9(setupTaskEvents.createdAt)).limit(5);
+    res.json({ events });
+  } catch (error) {
+    console.error("[SetupTasks] Error fetching recent events:", error);
+    res.status(500).json({ error: "Failed to fetch recent events" });
+  }
+});
+setupTasksRouter.patch("/:id", requireClientPortalAccess, async (req, res) => {
+  try {
+    const clientId = req.clientId;
+    const taskId = parseInt(req.params.id);
+    const { status } = req.body;
+    if (!["pending", "in_progress", "completed", "skipped"].includes(status)) {
+      return res.status(400).json({ error: "Invalid status" });
+    }
+    const [existing] = await db.select().from(setupTasks).where(and16(eq20(setupTasks.id, taskId), eq20(setupTasks.clientId, clientId))).limit(1);
+    if (!existing) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+    const updateData = {
+      status,
+      updatedAt: /* @__PURE__ */ new Date()
+    };
+    if (status === "completed") {
+      updateData.completedAt = /* @__PURE__ */ new Date();
+    }
+    const [updated] = await db.update(setupTasks).set(updateData).where(eq20(setupTasks.id, taskId)).returning();
+    await db.insert(setupTaskEvents).values({
+      clientId,
+      taskId,
+      eventType: status === "completed" ? "completed" : status === "skipped" ? "completed" : "reopened",
+      metadata: { previousStatus: existing.status, newStatus: status }
+    });
+    const allTasks = await db.select({ status: setupTasks.status }).from(setupTasks).where(eq20(setupTasks.clientId, clientId));
+    const totalTasks = allTasks.length;
+    const completedTasks = allTasks.filter(
+      (t) => t.status === "completed" || t.status === "skipped"
+    ).length;
+    const percentage = totalTasks > 0 ? Math.round(completedTasks / totalTasks * 100) : 0;
+    const newPhase = completedTasks === totalTasks && totalTasks > 0 ? "complete" : "in_progress";
+    await db.update(clients).set({
+      setupProgress: percentage,
+      setupPhase: newPhase,
+      updatedAt: /* @__PURE__ */ new Date()
+    }).where(eq20(clients.id, clientId));
+    res.json({ task: updated, progress: { totalTasks, completedTasks, percentage } });
+    if (status === "completed") {
+      Promise.resolve().then(() => (init_setup_triggers(), setup_triggers_exports)).then(({ setupTriggerService: setupTriggerService2 }) => {
+        setupTriggerService2.onTaskStatusChange(clientId, taskId, status, {
+          appId: updated.appId,
+          stepId: updated.stepId,
+          substepId: updated.substepId || null,
+          title: updated.title
+        }).catch((err) => console.error("[Trigger] Async trigger failed:", err));
+      });
+    }
+  } catch (error) {
+    console.error("[SetupTasks] Error updating task:", error);
+    res.status(500).json({ error: "Failed to update task" });
+  }
+});
+setupTasksRouter.get("/progress", requireClientPortalAccess, async (req, res) => {
+  try {
+    const clientId = req.clientId;
+    const allTasks = await db.select().from(setupTasks).where(eq20(setupTasks.clientId, clientId)).orderBy(asc3(setupTasks.cadenceOrder));
+    const totalTasks = allTasks.length;
+    const completedTasks = allTasks.filter(
+      (t) => t.status === "completed" || t.status === "skipped"
+    ).length;
+    const percentage = totalTasks > 0 ? Math.round(completedTasks / totalTasks * 100) : 0;
+    const firstIncomplete = allTasks.find(
+      (t) => t.status !== "completed" && t.status !== "skipped"
+    );
+    const currentApp = firstIncomplete?.appId || null;
+    const currentStep = firstIncomplete?.stepId || null;
+    const byAppMap = /* @__PURE__ */ new Map();
+    for (const task of allTasks) {
+      if (!byAppMap.has(task.appId)) {
+        byAppMap.set(task.appId, { appId: task.appId, total: 0, completed: 0 });
+      }
+      const entry = byAppMap.get(task.appId);
+      entry.total++;
+      if (task.status === "completed" || task.status === "skipped") {
+        entry.completed++;
+      }
+    }
+    const byApp = Array.from(byAppMap.values()).map((a) => ({
+      ...a,
+      percentage: a.total > 0 ? Math.round(a.completed / a.total * 100) : 0
+    }));
+    res.json({
+      totalTasks,
+      completedTasks,
+      percentage,
+      currentApp,
+      currentStep,
+      byApp
+    });
+  } catch (error) {
+    console.error("[SetupTasks] Error fetching progress:", error);
+    res.status(500).json({ error: "Failed to fetch progress" });
+  }
+});
+setupTasksRouter.get("/directions-for-use", requireClientPortalAccess, async (req, res) => {
+  try {
+    const clientId = req.clientId;
+    const [allTasks, allNotes, client] = await Promise.all([
+      db.select().from(setupTasks).where(eq20(setupTasks.clientId, clientId)).orderBy(asc3(setupTasks.cadenceOrder)),
+      db.select().from(setupNotes).where(eq20(setupNotes.clientId, clientId)).orderBy(asc3(setupNotes.sortOrder)),
+      db.select({ setupProgress: clients.setupProgress, setupPhase: clients.setupPhase }).from(clients).where(eq20(clients.id, clientId)).limit(1).then((rows) => rows[0] || null)
+    ]);
+    const taskRows = allTasks;
+    const noteRows = allNotes;
+    const totalTasks = taskRows.length;
+    const completedTasks = taskRows.filter(
+      (t) => t.status === "completed" || t.status === "skipped"
+    ).length;
+    const percentage = totalTasks > 0 ? Math.round(completedTasks / totalTasks * 100) : 0;
+    const appGroupMap = /* @__PURE__ */ new Map();
+    for (const task of taskRows) {
+      if (!appGroupMap.has(task.appId)) {
+        appGroupMap.set(task.appId, []);
+      }
+      appGroupMap.get(task.appId).push(task);
+    }
+    const sections = SETUP_CADENCE.filter((c) => appGroupMap.has(c.appId)).map((cadenceStep) => {
+      const appTasks = appGroupMap.get(cadenceStep.appId);
+      const knowledge = APP_KNOWLEDGE[cadenceStep.appId];
+      const appName = knowledge?.appName || cadenceStep.appId;
+      const parentSteps = appTasks.filter((t) => !t.substepId);
+      const substepTasks = appTasks.filter((t) => t.substepId);
+      const appNotes = noteRows.filter((n) => n.appId === cadenceStep.appId);
+      const taskSections = parentSteps.map((parentTask) => {
+        const childSubsteps = substepTasks.filter((s) => s.stepId === parentTask.stepId).map((s) => ({
+          id: s.id,
+          substepId: s.substepId,
+          title: s.title,
+          status: s.status,
+          completedAt: s.completedAt
+        }));
+        const stepNotes = appNotes.filter((n) => n.stepId === parentTask.stepId).map((n) => ({
+          id: n.id,
+          content: n.content,
+          isTodo: n.isTodo,
+          isCompleted: n.isCompleted
+        }));
+        return {
+          id: parentTask.id,
+          stepId: parentTask.stepId,
+          title: parentTask.title,
+          description: parentTask.description,
+          status: parentTask.status,
+          estimatedMinutes: parentTask.estimatedMinutes,
+          completedAt: parentTask.completedAt,
+          substeps: childSubsteps,
+          notes: stepNotes
+        };
+      });
+      const sectionNotes = appNotes.filter((n) => !n.stepId).map((n) => ({
+        id: n.id,
+        content: n.content,
+        isTodo: n.isTodo,
+        isCompleted: n.isCompleted
+      }));
+      const appTotal = appTasks.length;
+      const appCompleted = appTasks.filter(
+        (t) => t.status === "completed" || t.status === "skipped"
+      ).length;
+      return {
+        appId: cadenceStep.appId,
+        appName,
+        cadenceOrder: cadenceStep.order,
+        totalSteps: appTotal,
+        completedSteps: appCompleted,
+        tasks: taskSections,
+        sectionNotes
+      };
+    });
+    res.json({
+      progress: {
+        totalTasks,
+        completedTasks,
+        percentage,
+        phase: client?.setupPhase || "not_started"
+      },
+      sections
+    });
+  } catch (error) {
+    console.error("[DirectionsForUse] Error fetching data:", error);
+    res.status(500).json({ error: "Failed to fetch directions for use" });
+  }
+});
+
+// server/routes/setup-notes.ts
+init_db();
+init_schema();
+import { Router as Router16 } from "express";
+import { eq as eq21, and as and17, asc as asc4 } from "drizzle-orm";
+var setupNotesRouter = Router16();
+setupNotesRouter.get("/", requireClientPortalAccess, async (req, res) => {
+  try {
+    const clientId = req.clientId;
+    const appId = req.query.appId;
+    const conditions = [eq21(setupNotes.clientId, clientId)];
+    if (appId) {
+      conditions.push(eq21(setupNotes.appId, appId));
+    }
+    const notes = await db.select().from(setupNotes).where(and17(...conditions)).orderBy(asc4(setupNotes.sortOrder));
+    res.json({ notes });
+  } catch (error) {
+    console.error("[SetupNotes] Error fetching notes:", error);
+    res.status(500).json({ error: "Failed to fetch setup notes" });
+  }
+});
+setupNotesRouter.post("/", requireClientPortalAccess, async (req, res) => {
+  try {
+    const clientId = req.clientId;
+    const { appId, stepId, content, isTodo } = req.body;
+    if (!appId || !content) {
+      return res.status(400).json({ error: "appId and content are required" });
+    }
+    const [note] = await db.insert(setupNotes).values({
+      clientId,
+      appId,
+      stepId: stepId || null,
+      content,
+      isTodo: isTodo || false,
+      isCompleted: false,
+      sortOrder: 0
+    }).returning();
+    res.json({ note });
+  } catch (error) {
+    console.error("[SetupNotes] Error creating note:", error);
+    res.status(500).json({ error: "Failed to create note" });
+  }
+});
+setupNotesRouter.patch("/:id", requireClientPortalAccess, async (req, res) => {
+  try {
+    const clientId = req.clientId;
+    const noteId = parseInt(req.params.id);
+    const { content, isTodo, isCompleted, sortOrder } = req.body;
+    const [existing] = await db.select().from(setupNotes).where(and17(eq21(setupNotes.id, noteId), eq21(setupNotes.clientId, clientId))).limit(1);
+    if (!existing) {
+      return res.status(404).json({ error: "Note not found" });
+    }
+    const updateData = { updatedAt: /* @__PURE__ */ new Date() };
+    if (content !== void 0) updateData.content = content;
+    if (isTodo !== void 0) updateData.isTodo = isTodo;
+    if (isCompleted !== void 0) {
+      updateData.isCompleted = isCompleted;
+      if (isCompleted && !existing.isCompleted) {
+        updateData.completedAt = /* @__PURE__ */ new Date();
+      }
+    }
+    if (sortOrder !== void 0) updateData.sortOrder = sortOrder;
+    const [updated] = await db.update(setupNotes).set(updateData).where(eq21(setupNotes.id, noteId)).returning();
+    res.json({ note: updated });
+  } catch (error) {
+    console.error("[SetupNotes] Error updating note:", error);
+    res.status(500).json({ error: "Failed to update note" });
+  }
+});
+setupNotesRouter.delete("/:id", requireClientPortalAccess, async (req, res) => {
+  try {
+    const clientId = req.clientId;
+    const noteId = parseInt(req.params.id);
+    const [existing] = await db.select().from(setupNotes).where(and17(eq21(setupNotes.id, noteId), eq21(setupNotes.clientId, clientId))).limit(1);
+    if (!existing) {
+      return res.status(404).json({ error: "Note not found" });
+    }
+    await db.delete(setupNotes).where(eq21(setupNotes.id, noteId));
+    res.json({ success: true });
+  } catch (error) {
+    console.error("[SetupNotes] Error deleting note:", error);
+    res.status(500).json({ error: "Failed to delete note" });
+  }
+});
+
 // server/routes/listing-distribution.ts
 init_db();
 init_schema();
-import { Router as Router8 } from "express";
-import { eq as eq18, desc as desc8 } from "drizzle-orm";
+import { Router as Router17 } from "express";
+import { eq as eq24, desc as desc11 } from "drizzle-orm";
 
 // server/services/listing-distribution/distributionService.ts
 init_db();
 init_schema();
-import { eq as eq16, and as and11, desc as desc7 } from "drizzle-orm";
+import { eq as eq22, and as and18, desc as desc10 } from "drizzle-orm";
 
 // server/services/listing-distribution/baseListingAdapter.ts
 var BaseListingAdapter = class {
@@ -12506,7 +15679,7 @@ var ListingDistributionService = class {
   async distributeToTarget(clientId, targetSlug) {
     const profile = await this.getProfile(clientId);
     if (!profile) throw new Error(`No canonical profile found for client ${clientId}`);
-    const [target] = await db.select().from(distributionTargets).where(eq16(distributionTargets.slug, targetSlug)).limit(1);
+    const [target] = await db.select().from(distributionTargets).where(eq22(distributionTargets.slug, targetSlug)).limit(1);
     if (!target) throw new Error(`Unknown target: ${targetSlug}`);
     const listingData = this.profileToListingData(profile);
     return this.distributeToSingleTarget(clientId, profile, target.slug, target.id, listingData);
@@ -12515,8 +15688,8 @@ var ListingDistributionService = class {
    * Flag all active submissions as needing resync when canonical data changes.
    */
   async flagResyncNeeded(clientId, changedFields) {
-    const subs = await db.select().from(distributionSubmissions).where(and11(
-      eq16(distributionSubmissions.clientId, clientId)
+    const subs = await db.select().from(distributionSubmissions).where(and18(
+      eq22(distributionSubmissions.clientId, clientId)
     ));
     const activeSubs = subs.filter(
       (s) => ["submitted", "processing", "verified", "active"].includes(s.status)
@@ -12526,7 +15699,7 @@ var ListingDistributionService = class {
       await db.update(distributionSubmissions).set({
         needsResync: true,
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq16(distributionSubmissions.id, sub.id));
+      }).where(eq22(distributionSubmissions.id, sub.id));
       flagged++;
     }
     if (flagged > 0) {
@@ -12538,14 +15711,14 @@ var ListingDistributionService = class {
    * Process the resync queue — picks up submissions with needsResync=true and re-pushes.
    */
   async processResyncQueue(batchSize = 10) {
-    const pending = await db.select().from(distributionSubmissions).where(eq16(distributionSubmissions.needsResync, true)).limit(batchSize);
+    const pending = await db.select().from(distributionSubmissions).where(eq22(distributionSubmissions.needsResync, true)).limit(batchSize);
     let processed = 0;
     let errors = 0;
     for (const sub of pending) {
       try {
         const profile = await this.getProfile(sub.clientId);
         if (!profile) continue;
-        const [target] = await db.select().from(distributionTargets).where(eq16(distributionTargets.id, sub.targetId)).limit(1);
+        const [target] = await db.select().from(distributionTargets).where(eq22(distributionTargets.id, sub.targetId)).limit(1);
         if (!target) continue;
         const listingData = this.profileToListingData(profile);
         const adapter = getAdapter(target.adapterKey);
@@ -12569,7 +15742,7 @@ var ListingDistributionService = class {
           errorCount: result.success ? sub.errorCount : (sub.errorCount || 0) + 1,
           platformResponse: result.rawResponse || sub.platformResponse,
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq16(distributionSubmissions.id, sub.id));
+        }).where(eq22(distributionSubmissions.id, sub.id));
         await this.log(sub.clientId, sub.id, target.slug, "update", result.success ? "success" : "failure", durationMs, profile.dataVersion, null, result.rawResponse, result.message);
         processed++;
       } catch (error) {
@@ -12585,7 +15758,7 @@ var ListingDistributionService = class {
   async getClientDistributionStatus(clientId) {
     const profile = await this.getProfile(clientId);
     const allTargets = await db.select().from(distributionTargets);
-    const subs = await db.select().from(distributionSubmissions).where(eq16(distributionSubmissions.clientId, clientId));
+    const subs = await db.select().from(distributionSubmissions).where(eq22(distributionSubmissions.clientId, clientId));
     const byStatus = {};
     let needsResync = 0;
     for (const s of subs) {
@@ -12616,7 +15789,7 @@ var ListingDistributionService = class {
    * Get all submissions for a client, joined with target details.
    */
   async getClientSubmissions(clientId) {
-    const subs = await db.select().from(distributionSubmissions).where(eq16(distributionSubmissions.clientId, clientId)).orderBy(desc7(distributionSubmissions.updatedAt));
+    const subs = await db.select().from(distributionSubmissions).where(eq22(distributionSubmissions.clientId, clientId)).orderBy(desc10(distributionSubmissions.updatedAt));
     const targets = await db.select().from(distributionTargets);
     const targetMap = new Map(targets.map((t) => [t.id, t]));
     return subs.map((s) => ({
@@ -12628,30 +15801,30 @@ var ListingDistributionService = class {
    * Get canonical profile for a client, or null.
    */
   async getProfile(clientId) {
-    const [profile] = await db.select().from(canonicalBusinessProfiles).where(eq16(canonicalBusinessProfiles.clientId, clientId)).limit(1);
+    const [profile] = await db.select().from(canonicalBusinessProfiles).where(eq22(canonicalBusinessProfiles.clientId, clientId)).limit(1);
     return profile || null;
   }
   /**
    * Auto-create a canonical profile from existing client data.
    */
   async autoCreateProfile(clientId) {
-    const [client2] = await db.select().from(clients).where(eq16(clients.id, clientId)).limit(1);
-    if (!client2) return null;
+    const [client] = await db.select().from(clients).where(eq22(clients.id, clientId)).limit(1);
+    if (!client) return null;
     const existing = await this.getProfile(clientId);
     if (existing) return existing;
-    const addressParts = (client2.address || "").split(",").map((s) => s.trim());
+    const addressParts = (client.address || "").split(",").map((s) => s.trim());
     const [profile] = await db.insert(canonicalBusinessProfiles).values({
       clientId,
-      businessName: client2.companyName,
-      address1: addressParts[0] || client2.address || "",
+      businessName: client.companyName,
+      address1: addressParts[0] || client.address || "",
       city: addressParts[1] || "",
       state: addressParts[2] || "",
       zip: addressParts[3] || "",
       country: "US",
-      phone: client2.phone || "",
-      website: client2.website || void 0,
-      email: client2.email,
-      categories: client2.businessCategory ? [client2.businessCategory] : []
+      phone: client.phone || "",
+      website: client.website || void 0,
+      email: client.email,
+      categories: client.businessCategory ? [client.businessCategory] : []
     }).returning();
     return profile;
   }
@@ -12659,7 +15832,7 @@ var ListingDistributionService = class {
   async distributeToSingleTarget(clientId, profile, targetSlug, targetId, listingData) {
     const adapter = getAdapter(targetSlug === "data_axle" ? "data_axle" : targetSlug.replace(/-/g, "_"));
     if (!adapter) {
-      const [target] = await db.select().from(distributionTargets).where(eq16(distributionTargets.slug, targetSlug)).limit(1);
+      const [target] = await db.select().from(distributionTargets).where(eq22(distributionTargets.slug, targetSlug)).limit(1);
       const a = target ? getAdapter(target.adapterKey) : null;
       if (!a) return { success: false, status: "skipped", message: `No adapter for ${targetSlug}` };
       return this.executeSubmission(clientId, profile, targetSlug, targetId, listingData, a);
@@ -12670,9 +15843,9 @@ var ListingDistributionService = class {
     return this.executeSubmission(clientId, profile, targetSlug, targetId, listingData, adapter);
   }
   async executeSubmission(clientId, profile, targetSlug, targetId, listingData, adapter) {
-    let [submission] = await db.select().from(distributionSubmissions).where(and11(
-      eq16(distributionSubmissions.clientId, clientId),
-      eq16(distributionSubmissions.targetId, targetId)
+    let [submission] = await db.select().from(distributionSubmissions).where(and18(
+      eq22(distributionSubmissions.clientId, clientId),
+      eq22(distributionSubmissions.targetId, targetId)
     )).limit(1);
     if (!submission) {
       [submission] = await db.insert(distributionSubmissions).values({
@@ -12682,7 +15855,7 @@ var ListingDistributionService = class {
         status: "pending"
       }).returning();
     }
-    await db.update(distributionSubmissions).set({ status: "submitting", updatedAt: /* @__PURE__ */ new Date() }).where(eq16(distributionSubmissions.id, submission.id));
+    await db.update(distributionSubmissions).set({ status: "submitting", updatedAt: /* @__PURE__ */ new Date() }).where(eq22(distributionSubmissions.id, submission.id));
     const startTime = Date.now();
     let result;
     try {
@@ -12706,7 +15879,7 @@ var ListingDistributionService = class {
       errorCount: result.success ? 0 : (submission.errorCount || 0) + 1,
       platformResponse: result.rawResponse || submission.platformResponse,
       updatedAt: /* @__PURE__ */ new Date()
-    }).where(eq16(distributionSubmissions.id, submission.id));
+    }).where(eq22(distributionSubmissions.id, submission.id));
     await this.log(
       clientId,
       submission.id,
@@ -12774,7 +15947,7 @@ var listingDistributionService = new ListingDistributionService();
 // server/services/listing-distribution/seedTargets.ts
 init_db();
 init_schema();
-import { eq as eq17 } from "drizzle-orm";
+import { eq as eq23 } from "drizzle-orm";
 var TARGET_SEEDS = [
   {
     slug: "foursquare",
@@ -12947,7 +16120,7 @@ async function seedDistributionTargets() {
   let created = 0;
   let updated = 0;
   for (const seed of TARGET_SEEDS) {
-    const [existing] = await db.select().from(distributionTargets).where(eq17(distributionTargets.slug, seed.slug)).limit(1);
+    const [existing] = await db.select().from(distributionTargets).where(eq23(distributionTargets.slug, seed.slug)).limit(1);
     if (existing) {
       await db.update(distributionTargets).set({
         displayName: seed.displayName,
@@ -12958,7 +16131,7 @@ async function seedDistributionTargets() {
         description: seed.description,
         estimatedProcessingTime: seed.estimatedProcessingTime,
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq17(distributionTargets.id, existing.id));
+      }).where(eq23(distributionTargets.id, existing.id));
       updated++;
     } else {
       await db.insert(distributionTargets).values({
@@ -12980,17 +16153,17 @@ async function seedDistributionTargets() {
 }
 
 // server/routes/listing-distribution.ts
-import crypto4 from "crypto";
+import crypto12 from "crypto";
 import jwt from "jsonwebtoken";
-var listingDistributionRouter = Router8();
+var listingDistributionRouter = Router17();
 function hashPin(pin) {
-  const salt = crypto4.randomBytes(16).toString("hex");
-  const hash = crypto4.scryptSync(pin, salt, 64).toString("hex");
+  const salt = crypto12.randomBytes(16).toString("hex");
+  const hash = crypto12.scryptSync(pin, salt, 64).toString("hex");
   return `${salt}:${hash}`;
 }
 function verifyPin(pin, stored) {
   const [salt, hash] = stored.split(":");
-  const test = crypto4.scryptSync(pin, salt, 64).toString("hex");
+  const test = crypto12.scryptSync(pin, salt, 64).toString("hex");
   return hash === test;
 }
 listingDistributionRouter.get("/clients/:id/distribution/profile", async (req, res) => {
@@ -13017,7 +16190,7 @@ listingDistributionRouter.post("/clients/:id/distribution/profile", async (req, 
     const data = insertCanonicalProfileSchema.parse({ ...req.body, clientId });
     const existing = await listingDistributionService.getProfile(clientId);
     if (existing) {
-      await db.delete(canonicalBusinessProfiles).where(eq18(canonicalBusinessProfiles.id, existing.id));
+      await db.delete(canonicalBusinessProfiles).where(eq24(canonicalBusinessProfiles.id, existing.id));
     }
     const [profile] = await db.insert(canonicalBusinessProfiles).values(data).returning();
     res.json({ success: true, profile });
@@ -13050,7 +16223,7 @@ listingDistributionRouter.post("/clients/:id/distribution/profile/set-pin", asyn
     const profile = await listingDistributionService.getProfile(clientId);
     if (!profile) return res.status(404).json({ error: "No profile found" });
     const hash = hashPin(pin);
-    await db.update(canonicalBusinessProfiles).set({ editPin: hash }).where(eq18(canonicalBusinessProfiles.id, profile.id));
+    await db.update(canonicalBusinessProfiles).set({ editPin: hash }).where(eq24(canonicalBusinessProfiles.id, profile.id));
     res.json({ success: true, message: "PIN set successfully" });
   } catch (error) {
     if (error.name === "ZodError") {
@@ -13119,7 +16292,7 @@ listingDistributionRouter.patch("/clients/:id/distribution/profile", async (req,
       dataVersion: existing.dataVersion + 1,
       lastModifiedFields: changedFields,
       updatedAt: /* @__PURE__ */ new Date()
-    }).where(eq18(canonicalBusinessProfiles.id, existing.id)).returning();
+    }).where(eq24(canonicalBusinessProfiles.id, existing.id)).returning();
     const flagged = await listingDistributionService.flagResyncNeeded(clientId, changedFields);
     res.json({ success: true, profile: updated, resyncFlagged: flagged });
   } catch (error) {
@@ -13184,7 +16357,7 @@ listingDistributionRouter.get("/clients/:id/distribution/logs", async (req, res)
     const clientId = parseInt(req.params.id);
     if (isNaN(clientId)) return res.status(400).json({ error: "Invalid client ID" });
     const limit = Math.min(parseInt(req.query.limit) || 50, 200);
-    const logs = await db.select().from(distributionLogs).where(eq18(distributionLogs.clientId, clientId)).orderBy(desc8(distributionLogs.createdAt)).limit(limit);
+    const logs = await db.select().from(distributionLogs).where(eq24(distributionLogs.clientId, clientId)).orderBy(desc11(distributionLogs.createdAt)).limit(limit);
     res.json({ success: true, logs });
   } catch (error) {
     console.error("Error fetching distribution logs:", error);
@@ -13236,7 +16409,7 @@ listingDistributionRouter.post("/admin/distribution/resync", async (req, res) =>
 });
 
 // server/routes/chat.ts
-import { Router as Router9 } from "express";
+import { Router as Router18 } from "express";
 
 // server/middleware/auth.ts
 init_jwt();
@@ -13277,10 +16450,10 @@ async function requireAuth(req, res, next) {
 // server/routes/chat.ts
 init_db();
 init_schema();
-import { eq as eq20, and as and12, desc as desc9, sql as sql8 } from "drizzle-orm";
+import { eq as eq26, and as and19, desc as desc12, sql as sql10 } from "drizzle-orm";
 import { z as z7 } from "zod";
 import { nanoid as nanoid2 } from "nanoid";
-var router5 = Router9();
+var router12 = Router18();
 var widgetCors = (req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -13290,17 +16463,17 @@ var widgetCors = (req, res, next) => {
   }
   next();
 };
-router5.get("/widget/settings/:clientId", widgetCors, async (req, res) => {
+router12.get("/widget/settings/:clientId", widgetCors, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     if (isNaN(clientId) || clientId <= 0) {
       return res.status(400).json({ error: "Invalid client ID" });
     }
-    const [client2] = await db.select({ id: clients.id }).from(clients).where(eq20(clients.id, clientId)).limit(1);
-    if (!client2) {
+    const [client] = await db.select({ id: clients.id }).from(clients).where(eq26(clients.id, clientId)).limit(1);
+    if (!client) {
       return res.status(404).json({ error: "Client not found" });
     }
-    const [settings] = await db.select().from(chatWidgetSettings).where(eq20(chatWidgetSettings.clientId, clientId)).limit(1);
+    const [settings] = await db.select().from(chatWidgetSettings).where(eq26(chatWidgetSettings.clientId, clientId)).limit(1);
     if (!settings) {
       return res.json({
         clientId,
@@ -13349,15 +16522,15 @@ var createSessionSchema = z7.object({
   referrer: z7.string().optional(),
   userAgent: z7.string().optional()
 });
-router5.post("/widget/sessions", widgetCors, async (req, res) => {
+router12.post("/widget/sessions", widgetCors, async (req, res) => {
   try {
     const data = createSessionSchema.parse(req.body);
-    const [client2] = await db.select({ id: clients.id }).from(clients).where(eq20(clients.id, data.clientId)).limit(1);
-    if (!client2) {
+    const [client] = await db.select({ id: clients.id }).from(clients).where(eq26(clients.id, data.clientId)).limit(1);
+    if (!client) {
       return res.status(404).json({ error: "Client not found" });
     }
     const sessionId = data.sessionId || `sess_${nanoid2(16)}`;
-    const [existingSession] = await db.select().from(livechatSessions).where(eq20(livechatSessions.sessionId, sessionId)).limit(1);
+    const [existingSession] = await db.select().from(livechatSessions).where(eq26(livechatSessions.sessionId, sessionId)).limit(1);
     if (existingSession) {
       return res.json({
         sessionId: existingSession.sessionId,
@@ -13390,9 +16563,9 @@ router5.post("/widget/sessions", widgetCors, async (req, res) => {
     }).returning();
     if (data.visitorEmail) {
       try {
-        const [existingContact] = await db.select().from(crmContacts).where(and12(
-          eq20(crmContacts.clientId, data.clientId),
-          eq20(crmContacts.email, data.visitorEmail)
+        const [existingContact] = await db.select().from(crmContacts).where(and19(
+          eq26(crmContacts.clientId, data.clientId),
+          eq26(crmContacts.email, data.visitorEmail)
         )).limit(1);
         if (!existingContact) {
           await db.insert(crmContacts).values({
@@ -13437,10 +16610,10 @@ var sendMessageSchema = z7.object({
   fileUrl: z7.string().optional(),
   fileName: z7.string().optional()
 });
-router5.post("/widget/messages", widgetCors, async (req, res) => {
+router12.post("/widget/messages", widgetCors, async (req, res) => {
   try {
     const data = sendMessageSchema.parse(req.body);
-    const [session2] = await db.select().from(livechatSessions).where(eq20(livechatSessions.sessionId, data.sessionId)).limit(1);
+    const [session2] = await db.select().from(livechatSessions).where(eq26(livechatSessions.sessionId, data.sessionId)).limit(1);
     if (!session2 || !session2.conversationId) {
       return res.status(404).json({ error: "Session not found" });
     }
@@ -13461,8 +16634,8 @@ router5.post("/widget/messages", widgetCors, async (req, res) => {
     await db.update(inboxConversations).set({
       lastMessageAt: /* @__PURE__ */ new Date(),
       lastMessagePreview: data.content.substring(0, 100),
-      unreadCount: sql8`${inboxConversations.unreadCount} + 1`
-    }).where(eq20(inboxConversations.id, session2.conversationId));
+      unreadCount: sql10`${inboxConversations.unreadCount} + 1`
+    }).where(eq26(inboxConversations.id, session2.conversationId));
     await db.insert(chatAnalyticsEvents).values({
       clientId: session2.clientId,
       eventType: "message_sent",
@@ -13480,14 +16653,14 @@ router5.post("/widget/messages", widgetCors, async (req, res) => {
     res.status(500).json({ error: "Failed to send message" });
   }
 });
-router5.get("/widget/messages/:sessionId", widgetCors, async (req, res) => {
+router12.get("/widget/messages/:sessionId", widgetCors, async (req, res) => {
   try {
     const { sessionId } = req.params;
-    const [session2] = await db.select().from(livechatSessions).where(eq20(livechatSessions.sessionId, sessionId)).limit(1);
+    const [session2] = await db.select().from(livechatSessions).where(eq26(livechatSessions.sessionId, sessionId)).limit(1);
     if (!session2 || !session2.conversationId) {
       return res.status(404).json({ error: "Session not found" });
     }
-    const messages = await db.select().from(inboxMessages2).where(eq20(inboxMessages2.conversationId, session2.conversationId)).orderBy(inboxMessages2.createdAt);
+    const messages = await db.select().from(inboxMessages2).where(eq26(inboxMessages2.conversationId, session2.conversationId)).orderBy(inboxMessages2.createdAt);
     res.json({
       messages: messages.map((m) => ({
         id: m.id,
@@ -13509,7 +16682,7 @@ var trackEventSchema = z7.object({
   eventType: z7.string(),
   eventData: z7.record(z7.any()).optional()
 });
-router5.post("/widget/analytics", widgetCors, async (req, res) => {
+router12.post("/widget/analytics", widgetCors, async (req, res) => {
   try {
     const data = trackEventSchema.parse(req.body);
     await db.insert(chatAnalyticsEvents).values({
@@ -13523,7 +16696,7 @@ router5.post("/widget/analytics", widgetCors, async (req, res) => {
     res.status(500).json({ error: "Failed to track event" });
   }
 });
-router5.get("/dashboard/conversations/:clientId", requireAuth, async (req, res) => {
+router12.get("/dashboard/conversations/:clientId", requireAuth, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     if (clientId !== req.clientId) {
@@ -13541,34 +16714,34 @@ router5.get("/dashboard/conversations/:clientId", requireAuth, async (req, res) 
       lastMessagePreview: inboxConversations.lastMessagePreview,
       unreadCount: inboxConversations.unreadCount,
       createdAt: inboxConversations.createdAt
-    }).from(inboxConversations).where(and12(
-      eq20(inboxConversations.clientId, clientId),
-      eq20(inboxConversations.primaryChannelType, "livechat"),
-      status !== "all" ? eq20(inboxConversations.status, status) : void 0
-    )).orderBy(desc9(inboxConversations.lastMessageAt)).limit(limit).offset((page - 1) * limit);
+    }).from(inboxConversations).where(and19(
+      eq26(inboxConversations.clientId, clientId),
+      eq26(inboxConversations.primaryChannelType, "livechat"),
+      status !== "all" ? eq26(inboxConversations.status, status) : void 0
+    )).orderBy(desc12(inboxConversations.lastMessageAt)).limit(limit).offset((page - 1) * limit);
     res.json({ conversations, page, limit });
   } catch (error) {
     console.error("Error fetching conversations:", error);
     res.status(500).json({ error: "Failed to fetch conversations" });
   }
 });
-router5.get("/dashboard/conversations/:clientId/:conversationId", requireAuth, async (req, res) => {
+router12.get("/dashboard/conversations/:clientId/:conversationId", requireAuth, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     if (clientId !== req.clientId) {
       return res.status(403).json({ error: "Access denied" });
     }
     const conversationId = parseInt(req.params.conversationId);
-    const [conversation] = await db.select().from(inboxConversations).where(and12(
-      eq20(inboxConversations.id, conversationId),
-      eq20(inboxConversations.clientId, clientId)
+    const [conversation] = await db.select().from(inboxConversations).where(and19(
+      eq26(inboxConversations.id, conversationId),
+      eq26(inboxConversations.clientId, clientId)
     )).limit(1);
     if (!conversation) {
       return res.status(404).json({ error: "Conversation not found" });
     }
-    const [session2] = await db.select().from(livechatSessions).where(eq20(livechatSessions.conversationId, conversationId)).limit(1);
-    const messages = await db.select().from(inboxMessages2).where(eq20(inboxMessages2.conversationId, conversationId)).orderBy(inboxMessages2.createdAt);
-    await db.update(inboxConversations).set({ unreadCount: 0 }).where(eq20(inboxConversations.id, conversationId));
+    const [session2] = await db.select().from(livechatSessions).where(eq26(livechatSessions.conversationId, conversationId)).limit(1);
+    const messages = await db.select().from(inboxMessages2).where(eq26(inboxMessages2.conversationId, conversationId)).orderBy(inboxMessages2.createdAt);
+    await db.update(inboxConversations).set({ unreadCount: 0 }).where(eq26(inboxConversations.id, conversationId));
     res.json({
       conversation,
       session: session2,
@@ -13593,21 +16766,21 @@ var agentMessageSchema = z7.object({
   agentId: z7.number().optional(),
   agentName: z7.string().optional()
 });
-router5.post("/dashboard/messages/:clientId", requireAuth, async (req, res) => {
+router12.post("/dashboard/messages/:clientId", requireAuth, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     if (clientId !== req.clientId) {
       return res.status(403).json({ error: "Access denied" });
     }
     const data = agentMessageSchema.parse(req.body);
-    const [conversation] = await db.select().from(inboxConversations).where(and12(
-      eq20(inboxConversations.id, data.conversationId),
-      eq20(inboxConversations.clientId, clientId)
+    const [conversation] = await db.select().from(inboxConversations).where(and19(
+      eq26(inboxConversations.id, data.conversationId),
+      eq26(inboxConversations.clientId, clientId)
     )).limit(1);
     if (!conversation) {
       return res.status(404).json({ error: "Conversation not found" });
     }
-    const [session2] = await db.select().from(livechatSessions).where(eq20(livechatSessions.conversationId, data.conversationId)).limit(1);
+    const [session2] = await db.select().from(livechatSessions).where(eq26(livechatSessions.conversationId, data.conversationId)).limit(1);
     const [message] = await db.insert(inboxMessages2).values({
       conversationId: data.conversationId,
       channelType: "livechat",
@@ -13624,7 +16797,7 @@ router5.post("/dashboard/messages/:clientId", requireAuth, async (req, res) => {
     await db.update(inboxConversations).set({
       lastMessageAt: /* @__PURE__ */ new Date(),
       lastMessagePreview: data.content.substring(0, 100)
-    }).where(eq20(inboxConversations.id, data.conversationId));
+    }).where(eq26(inboxConversations.id, data.conversationId));
     res.json({
       messageId: message.id,
       timestamp: message.createdAt
@@ -13634,34 +16807,34 @@ router5.post("/dashboard/messages/:clientId", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Failed to send message" });
   }
 });
-router5.put("/dashboard/conversations/:clientId/:conversationId/close", requireAuth, async (req, res) => {
+router12.put("/dashboard/conversations/:clientId/:conversationId/close", requireAuth, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     if (clientId !== req.clientId) {
       return res.status(403).json({ error: "Access denied" });
     }
     const conversationId = parseInt(req.params.conversationId);
-    await db.update(inboxConversations).set({ status: "resolved" }).where(and12(
-      eq20(inboxConversations.id, conversationId),
-      eq20(inboxConversations.clientId, clientId)
+    await db.update(inboxConversations).set({ status: "resolved" }).where(and19(
+      eq26(inboxConversations.id, conversationId),
+      eq26(inboxConversations.clientId, clientId)
     ));
     await db.update(livechatSessions).set({
       status: "ended",
       endedAt: /* @__PURE__ */ new Date()
-    }).where(eq20(livechatSessions.conversationId, conversationId));
+    }).where(eq26(livechatSessions.conversationId, conversationId));
     res.json({ success: true });
   } catch (error) {
     console.error("Error closing conversation:", error);
     res.status(500).json({ error: "Failed to close conversation" });
   }
 });
-router5.get("/settings/:clientId", requireAuth, async (req, res) => {
+router12.get("/settings/:clientId", requireAuth, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     if (clientId !== req.clientId) {
       return res.status(403).json({ error: "Access denied" });
     }
-    const [settings] = await db.select().from(chatWidgetSettings).where(eq20(chatWidgetSettings.clientId, clientId)).limit(1);
+    const [settings] = await db.select().from(chatWidgetSettings).where(eq26(chatWidgetSettings.clientId, clientId)).limit(1);
     if (!settings) {
       return res.json({
         clientId,
@@ -13682,16 +16855,16 @@ router5.get("/settings/:clientId", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Failed to fetch settings" });
   }
 });
-router5.put("/settings/:clientId", requireAuth, async (req, res) => {
+router12.put("/settings/:clientId", requireAuth, async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     if (clientId !== req.clientId) {
       return res.status(403).json({ error: "Access denied" });
     }
     const updates = updateChatWidgetSettingsSchema.parse(req.body);
-    const [existing] = await db.select().from(chatWidgetSettings).where(eq20(chatWidgetSettings.clientId, clientId)).limit(1);
+    const [existing] = await db.select().from(chatWidgetSettings).where(eq26(chatWidgetSettings.clientId, clientId)).limit(1);
     if (existing) {
-      const [updated] = await db.update(chatWidgetSettings).set({ ...updates, updatedAt: /* @__PURE__ */ new Date() }).where(eq20(chatWidgetSettings.clientId, clientId)).returning();
+      const [updated] = await db.update(chatWidgetSettings).set({ ...updates, updatedAt: /* @__PURE__ */ new Date() }).where(eq26(chatWidgetSettings.clientId, clientId)).returning();
       return res.json(updated);
     } else {
       const [created] = await db.insert(chatWidgetSettings).values({ clientId, ...updates }).returning();
@@ -13705,7 +16878,7 @@ router5.put("/settings/:clientId", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Failed to update settings" });
   }
 });
-router5.get("/embed/:clientId", async (req, res) => {
+router12.get("/embed/:clientId", async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     const baseUrl = process.env.BASE_URL || "https://businessblueprint.io";
@@ -13722,7 +16895,7 @@ router5.get("/embed/:clientId", async (req, res) => {
     res.status(500).json({ error: "Failed to generate embed code" });
   }
 });
-router5.get("/analytics/:clientId", async (req, res) => {
+router12.get("/analytics/:clientId", async (req, res) => {
   try {
     const clientId = parseInt(req.params.clientId);
     const period = req.query.period || "week";
@@ -13738,20 +16911,20 @@ router5.get("/analytics/:clientId", async (req, res) => {
       default:
         startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1e3);
     }
-    const conversationCount = await db.select({ count: sql8`count(*)` }).from(inboxConversations).where(and12(
-      eq20(inboxConversations.clientId, clientId),
-      eq20(inboxConversations.primaryChannelType, "livechat"),
-      sql8`${inboxConversations.createdAt} >= ${startDate}`
+    const conversationCount = await db.select({ count: sql10`count(*)` }).from(inboxConversations).where(and19(
+      eq26(inboxConversations.clientId, clientId),
+      eq26(inboxConversations.primaryChannelType, "livechat"),
+      sql10`${inboxConversations.createdAt} >= ${startDate}`
     ));
-    const messageCount = await db.select({ count: sql8`count(*)` }).from(chatAnalyticsEvents).where(and12(
-      eq20(chatAnalyticsEvents.clientId, clientId),
-      eq20(chatAnalyticsEvents.eventType, "message_sent"),
-      sql8`${chatAnalyticsEvents.createdAt} >= ${startDate}`
+    const messageCount = await db.select({ count: sql10`count(*)` }).from(chatAnalyticsEvents).where(and19(
+      eq26(chatAnalyticsEvents.clientId, clientId),
+      eq26(chatAnalyticsEvents.eventType, "message_sent"),
+      sql10`${chatAnalyticsEvents.createdAt} >= ${startDate}`
     ));
-    const widgetOpens = await db.select({ count: sql8`count(*)` }).from(chatAnalyticsEvents).where(and12(
-      eq20(chatAnalyticsEvents.clientId, clientId),
-      eq20(chatAnalyticsEvents.eventType, "widget_opened"),
-      sql8`${chatAnalyticsEvents.createdAt} >= ${startDate}`
+    const widgetOpens = await db.select({ count: sql10`count(*)` }).from(chatAnalyticsEvents).where(and19(
+      eq26(chatAnalyticsEvents.clientId, clientId),
+      eq26(chatAnalyticsEvents.eventType, "widget_opened"),
+      sql10`${chatAnalyticsEvents.createdAt} >= ${startDate}`
     ));
     res.json({
       period,
@@ -13764,10 +16937,10 @@ router5.get("/analytics/:clientId", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch analytics" });
   }
 });
-var chatRouter = router5;
+var chatRouter = router12;
 
 // server/routes/ai-coach.ts
-import { Router as Router10 } from "express";
+import { Router as Router19 } from "express";
 
 // server/services/aiCoach.ts
 init_ai_provider();
@@ -13776,7 +16949,7 @@ init_ai_settings();
 // server/services/scansblue.ts
 init_db();
 init_schema();
-import { eq as eq22 } from "drizzle-orm";
+import { eq as eq28 } from "drizzle-orm";
 var ScansBlueService = class {
   apiKey;
   baseUrl;
@@ -13931,7 +17104,7 @@ var ScansBlueService = class {
         fullReportUrl: reportUrl,
         fullReportStatus: status,
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq22(scansBlueResults.assessmentId, assessmentId));
+      }).where(eq28(scansBlueResults.assessmentId, assessmentId));
       console.log(`[ScansBlue] Full Report status updated: ${status}`);
     } catch (error) {
       console.error("[ScansBlue] Error updating report status:", error);
@@ -13939,9 +17112,7 @@ var ScansBlueService = class {
   }
   async getResults(assessmentId) {
     try {
-      const results = await db.query.scansBlueResults?.findFirst({
-        where: eq22(scansBlueResults.assessmentId, assessmentId)
-      });
+      const [results] = await db.select().from(scansBlueResults).where(eq28(scansBlueResults.assessmentId, assessmentId)).limit(1);
       if (results && results.criticalIssues) {
         return {
           ...results,
@@ -13975,34 +17146,111 @@ var scansBlueService = new ScansBlueService();
 // server/services/aiCoach.ts
 init_db();
 init_schema();
-import { eq as eq23, desc as desc10 } from "drizzle-orm";
+init_knowledge_base();
+import { eq as eq29, desc as desc13, sql as sql11 } from "drizzle-orm";
+
+// import("../../shared/knowledge-base/apps/**/*") in server/services/aiCoach.ts
+var globImport_shared_knowledge_base_apps2 = __glob({
+  "../../shared/knowledge-base/apps/connect.ts": () => Promise.resolve().then(() => (init_connect(), connect_exports)),
+  "../../shared/knowledge-base/apps/elevate.ts": () => Promise.resolve().then(() => (init_elevate(), elevate_exports)),
+  "../../shared/knowledge-base/apps/publish.ts": () => Promise.resolve().then(() => (init_publish(), publish_exports))
+});
+
+// server/services/aiCoach.ts
 var AICoachService = class {
   getProductKnowledgeContext() {
     return `
-BUSINESSBLUEPRINT PRODUCT CATALOG (recommend these products when relevant):
+BUSINESSBLUEPRINT PRODUCT CATALOG \u2014 recommend these when relevant:
 
-COMMVERSE BUNDLE ($99/mo - Save $37 vs buying separately):
-- /send: Email & SMS marketing with automation and analytics - for businesses needing email campaigns
-- /inbox: Unified inbox for email, SMS, social, chat - never miss a message
-- /content: Social media scheduling, AI content creation, engagement tracking
-- /livechat: Website chat widget for real-time support and lead capture
+ANCHOR SUITE ($99/mo \u2014 local presence bundle):
+- / publish: Business listing management across 50+ directories \u2014 ensures your NAP (name, address, phone) is consistent everywhere
+- / elevate: Review monitoring, automated review requests, response management \u2014 your online reputation
+- / optimize: SEO health monitoring, keyword rankings, technical site audits \u2014 climb higher in search results
+- / amplify: Advertising across Google, Meta (Facebook/Instagram), Reddit \u2014 data-driven paid campaigns
 
-LOCALBLUE BUNDLE ($59/mo - Complete local SEO):
-- /listings: Manage 50+ directory listings, NAP consistency - for businesses with inconsistent listings
-- /reputation: Review monitoring, automated requests, response management - for review problems
-- /localblue: Complete package including GBP optimization
+COMPASS SUITE ($99/mo \u2014 communications bundle):
+- / promote: Email campaigns, newsletters, automated sequences \u2014 targeted, measurable outreach
+- / engage: Live chat widget for your website \u2014 capture leads and answer questions in real time
+- / respond: Unified inbox for email, SMS, social, chat \u2014 never miss a message
+- / post: Social media scheduling and management across all platforms \u2014 stay consistently visible
 
 STANDALONE:
-- /relationships: CRM for customer tracking, pipelines, follow-ups ($29/mo, free tier available)
+- / connect: CRM \u2014 contacts, deals, pipelines, task management. FREE Starter (100 contacts, 1 user) or $29/mo Performance (unlimited). The foundation all other apps connect to.
 
-PARTNERS:
-- HostsBlue (hostsblue.com): Web hosting, domains, website builder, SSL - for website issues
-- SwipesBlue (swipesblue.com): Payment processing, shopping cart
-- ScansBlue (scansblue.com): Website technical analysis, speed/mobile/SEO audits
+COACH BLUE (that's you):
+- $99/mo standalone, $59/mo with one suite, FREE with both suites active
 
-When giving advice, naturally mention relevant products that solve the user's problem.
-Example: "To improve your review response rate, I'd recommend using our Reputation tool at /reputation - it automates review requests and helps you respond faster."
+ECOSYSTEM PARTNERS:
+- hostsblue.com: Cloud hosting, domains, website builder, email, SSL
+- swipesblue.com: Payment processing (all billing goes through swipesblue)
+- scansblue.com: Website technical audits, speed/mobile/SEO analysis
+- BUILDERBLUE2.COM: AI-powered website coding platform
+
+SETUP CADENCE (always follow this order when guiding setup):
+1. / connect \u2192 2. / publish \u2192 3. / elevate \u2192 4. / respond \u2192 5. / engage \u2192 6. / post \u2192 7. / promote \u2192 8. / amplify
+
+When giving advice, recommend specific apps that solve the user's problem. Reference their Directions for Use when appropriate. Never make up features that don't exist.
 `;
+  }
+  async buildSystemPrompt(clientId, currentContext) {
+    const productKnowledge = this.getProductKnowledgeContext();
+    let taskContext = "";
+    try {
+      const tasks2 = await db.select().from(setupTasks).where(eq29(setupTasks.clientId, clientId)).orderBy(setupTasks.cadenceOrder);
+      if (tasks2.length > 0) {
+        const completed = tasks2.filter((t) => t.status === "completed").length;
+        const total = tasks2.length;
+        const currentTask = tasks2.find((t) => t.status !== "completed" && t.status !== "skipped" && !t.substepId);
+        taskContext = `
+
+USER'S SETUP PROGRESS:
+- Overall: ${completed}/${total} steps completed (${Math.round(completed / total * 100)}%)
+- Current step: ${currentTask ? `"${currentTask.title}" in / ${currentTask.appId}` : "All complete"}
+- Phase: ${completed === total ? "engagement" : "setup"}`;
+      }
+    } catch (e) {
+    }
+    let appKnowledge = "";
+    if (currentContext) {
+      try {
+        const contextLower = currentContext.toLowerCase();
+        const appIds = ["connect", "publish", "elevate"];
+        for (const appId of appIds) {
+          if (contextLower.includes(appId)) {
+            const module = await globImport_shared_knowledge_base_apps2(`../../shared/knowledge-base/apps/${appId}`);
+            const knowledge = module[`${appId}Knowledge`];
+            if (knowledge) {
+              appKnowledge += `
+
+KNOWLEDGE BASE \u2014 / ${appId}:
+- Purpose: ${knowledge.purpose}
+- Why it matters: ${knowledge.whyItMatters}
+- Common mistakes: ${knowledge.commonMistakes.join("; ")}
+- Coach Blue guidance (on first open): ${knowledge.coachBlueGuidance.onFirstOpen}
+- Coach Blue guidance (on stall): ${knowledge.coachBlueGuidance.onStall}`;
+            }
+          }
+        }
+      } catch (e) {
+      }
+    }
+    return `You are Coach Blue, the AI business coach for businessblueprint.io. You help small business owners \u2014 primarily Gen X and SMB owners \u2014 improve their digital presence with direct, practical, jargon-free guidance.
+
+PERSONALITY:
+- Direct and honest \u2014 no fluff, no corporate speak
+- Encouraging but not patronizing \u2014 these are experienced business owners, not students
+- Specific \u2014 always tell them exactly what to do, not vague advice
+- Grounded \u2014 only recommend things the platform actually offers
+- Patient \u2014 they may not be tech-savvy, explain without condescending
+
+RULES:
+- NEVER make up features, capabilities, or pricing that don't exist in the product catalog
+- ALWAYS reference their Directions for Use when they ask what to do next
+- When recommending an app, explain WHY it solves their specific problem
+- Keep responses focused and actionable \u2014 under 200 words when possible
+- If you don't know something, say so. Offer to help with what you do know.
+
+${productKnowledge}${taskContext}${appKnowledge}`;
   }
   async getPersonalizedGuidance(context) {
     const prompt = this.buildCoachingPrompt(context);
@@ -14014,13 +17262,13 @@ Example: "To improve your review response rate, I'd recommend using our Reputati
         messages: [
           {
             role: "system",
-            content: `You are Coach Blue, an expert digital marketing coach for BusinessBlueprint.io. You help small businesses improve their online presence with encouraging, actionable guidance.
+            content: `You are Coach Blue, the AI business coach for businessblueprint.io. You help small business owners improve their digital presence with direct, practical, jargon-free guidance.
 
 Key principles:
 - Be supportive and motivational
 - Break down complex tasks into simple steps
 - Consider their time constraints and experience
-- When recommending solutions, suggest BusinessBlueprint products that solve their specific problem
+- When recommending solutions, suggest specific businessblueprint.io apps that solve their problem
 - Celebrate their progress and acknowledge challenges
 
 ${productKnowledge}`
@@ -14058,10 +17306,10 @@ ${auditorResponse.response}`;
         messages: [
           {
             role: "system",
-            content: `You are Coach Blue helping with technical website questions. Provide helpful, non-technical explanations. When relevant, recommend BusinessBlueprint products:
-- HostsBlue (hostsblue.com) for hosting, domains, SSL issues
-- ScansBlue (scansblue.com) for detailed technical audits
-- /livechat for adding live chat to capture leads`
+            content: `You are Coach Blue helping with technical website questions. Provide helpful, non-technical explanations. When relevant, recommend businessblueprint.io apps:
+- hostsblue.com for hosting, domains, SSL issues
+- scansblue.com for detailed technical audits
+- / engage for adding live chat to capture leads`
           },
           {
             role: "user",
@@ -14079,8 +17327,8 @@ ${auditorResponse.response}`;
       if (content.toLowerCase().includes("scansblue") || content.toLowerCase().includes("audit")) {
         products2.push("scansBlue");
       }
-      if (content.toLowerCase().includes("livechat") || content.toLowerCase().includes("chat")) {
-        products2.push("livechat");
+      if (content.toLowerCase().includes("engage") || content.toLowerCase().includes("chat")) {
+        products2.push("engage");
       }
       return {
         answer: content,
@@ -14090,7 +17338,7 @@ ${auditorResponse.response}`;
     } catch (error) {
       console.error("[Coach Blue] Technical help error:", error);
       return {
-        answer: "I can help with website questions! For detailed technical analysis, I recommend running a ScansBlue audit at scansblue.com.",
+        answer: "I can help with website questions! For detailed technical analysis, I recommend running an audit at scansblue.com.",
         recommendedProducts: ["scansBlue"]
       };
     }
@@ -14303,13 +17551,13 @@ Format as JSON with actionItems array containing task, priority, estimatedTime, 
    * Get all conversations for a client
    */
   async getConversations(clientId) {
-    return db.select().from(aiCoachConversations).where(eq23(aiCoachConversations.clientId, clientId)).orderBy(desc10(aiCoachConversations.updatedAt));
+    return db.select().from(aiCoachConversations).where(eq29(aiCoachConversations.clientId, clientId)).orderBy(desc13(aiCoachConversations.updatedAt));
   }
   /**
    * Get all messages in a conversation
    */
   async getMessages(conversationId) {
-    return db.select().from(aiCoachMessages).where(eq23(aiCoachMessages.conversationId, conversationId)).orderBy(aiCoachMessages.createdAt);
+    return db.select().from(aiCoachMessages).where(eq29(aiCoachMessages.conversationId, conversationId)).orderBy(aiCoachMessages.createdAt);
   }
   /**
    * Send a message in a conversation and get AI response
@@ -14321,27 +17569,43 @@ Format as JSON with actionItems array containing task, priority, estimatedTime, 
       content: userMessage,
       messageType: "guidance"
     });
+    const userMessageLower = userMessage.toLowerCase().trim();
+    const criticalMatch = CONTROLLED_RESPONSES.find(
+      (cr) => cr.priority === "critical" && cr.trigger.some((t) => userMessageLower.includes(t.toLowerCase()))
+    );
+    const standardMatch = CONTROLLED_RESPONSES.find(
+      (cr) => cr.priority === "standard" && cr.trigger.some((t) => userMessageLower.includes(t.toLowerCase()))
+    );
+    const matchedResponse = criticalMatch || standardMatch;
+    if (matchedResponse) {
+      await db.insert(aiCoachMessages).values({
+        conversationId,
+        role: "assistant",
+        content: matchedResponse.response,
+        messageType: "controlled"
+      });
+      const history2 = await this.getMessages(conversationId);
+      if (history2.length <= 2) {
+        const title = userMessage.length > 60 ? userMessage.substring(0, 57) + "..." : userMessage;
+        await db.update(aiCoachConversations).set({ title, updatedAt: /* @__PURE__ */ new Date() }).where(eq29(aiCoachConversations.id, conversationId));
+      } else {
+        await db.update(aiCoachConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq29(aiCoachConversations.id, conversationId));
+      }
+      return { role: "assistant", content: matchedResponse.response, isControlled: true };
+    }
     const history = await this.getMessages(conversationId);
     const chatHistory = history.map((m) => ({
       role: m.role,
       content: m.content
     }));
-    const productKnowledge = this.getProductKnowledgeContext();
-    const contextInfo = context ? `
-
-Business Context:
-- Business: ${context.businessInfo.name} (${context.businessInfo.industry})
-- Digital Score: ${context.businessInfo.digitalScore}/100
-- Experience: ${context.userProgress.experience}` : "";
     try {
       const provider = await aiSettingsService.getProvider("coach_blue");
+      const systemPrompt = await this.buildSystemPrompt(clientId, userMessage);
       const response = await unifiedAI.getCompletion(provider, {
         messages: [
           {
             role: "system",
-            content: `You are Coach Blue, an expert digital marketing coach for BusinessBlueprint.io. You help small businesses improve their online presence with encouraging, actionable guidance. Be conversational and helpful.${contextInfo}
-
-${productKnowledge}`
+            content: systemPrompt
           },
           ...chatHistory
         ],
@@ -14357,9 +17621,9 @@ ${productKnowledge}`
       });
       if (history.length <= 1) {
         const title = userMessage.length > 60 ? userMessage.substring(0, 57) + "..." : userMessage;
-        await db.update(aiCoachConversations).set({ title, updatedAt: /* @__PURE__ */ new Date() }).where(eq23(aiCoachConversations.id, conversationId));
+        await db.update(aiCoachConversations).set({ title, updatedAt: /* @__PURE__ */ new Date() }).where(eq29(aiCoachConversations.id, conversationId));
       } else {
-        await db.update(aiCoachConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq23(aiCoachConversations.id, conversationId));
+        await db.update(aiCoachConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq29(aiCoachConversations.id, conversationId));
       }
       return { role: "assistant", content: aiMessage };
     } catch (error) {
@@ -14374,11 +17638,41 @@ ${productKnowledge}`
       return { role: "assistant", content: fallback };
     }
   }
+  /**
+   * Create a setup task or note from Coach Blue's advice.
+   * Called when Coach Blue's response contains actionable items.
+   */
+  async createTaskFromAdvice(clientId, item) {
+    if (item.type === "task") {
+      const existing = await db.select({ maxOrder: sql11`MAX(${setupTasks.cadenceOrder})` }).from(setupTasks).where(eq29(setupTasks.clientId, clientId));
+      const nextOrder = (existing[0]?.maxOrder || 0) + 1;
+      await db.insert(setupTasks).values({
+        clientId,
+        appId: item.appId,
+        stepId: item.stepId || `coach-blue-${Date.now()}`,
+        title: item.title,
+        description: item.description || null,
+        source: "coach_blue",
+        cadenceOrder: nextOrder,
+        status: "pending",
+        phase: "setup"
+      });
+    } else {
+      await db.insert(setupNotes).values({
+        clientId,
+        appId: item.appId,
+        stepId: item.stepId || null,
+        content: item.title,
+        isTodo: true,
+        isCompleted: false
+      });
+    }
+  }
 };
 var aiCoachService = new AICoachService();
 
 // server/routes/ai-coach.ts
-var aiCoachRouter = Router10();
+var aiCoachRouter = Router19();
 aiCoachRouter.get(
   "/api/ai-coach/conversations",
   requireClientPortalAccess,
@@ -14451,11 +17745,161 @@ aiCoachRouter.post(
     }
   }
 );
+aiCoachRouter.post(
+  "/api/ai-coach/create-task",
+  requireClientPortalAccess,
+  async (req, res) => {
+    try {
+      const clientId = req.clientId;
+      const { type, appId, title, description, stepId } = req.body;
+      if (!type || !appId || !title) {
+        return res.status(400).json({ error: "type, appId, and title are required" });
+      }
+      await aiCoachService.createTaskFromAdvice(clientId, {
+        type,
+        appId,
+        title,
+        description,
+        stepId
+      });
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error creating task from Coach Blue:", error);
+      res.status(500).json({ error: "Failed to create task" });
+    }
+  }
+);
 
 // server/routes/send.ts
 init_db();
 init_schema();
-import { eq as eq24, desc as desc11, sql as sql9, and as and13 } from "drizzle-orm";
+import { eq as eq30, desc as desc14, sql as sql12, and as and20, inArray as inArray3 } from "drizzle-orm";
+import { Resend as Resend3 } from "resend";
+
+// server/services/telnyx.ts
+var TelnyxService = class {
+  apiKey;
+  baseUrl = "https://api.telnyx.com/v2";
+  constructor() {
+    this.apiKey = process.env.TELNYX_API_KEY || "";
+    if (!this.apiKey) {
+      console.warn("\u26A0\uFE0F TELNYX_API_KEY not configured - SMS sending will fail");
+    }
+  }
+  /**
+   * Send SMS via Telnyx
+   */
+  async sendSms(params) {
+    if (!this.apiKey) {
+      throw new Error("TELNYX_API_KEY not configured");
+    }
+    if (!params.to.match(/^\+[1-9]\d{1,14}$/)) {
+      throw new Error(`Invalid phone number format: ${params.to}. Must be E.164 format (e.g., +15551234567)`);
+    }
+    const response = await fetch(`${this.baseUrl}/messages`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${this.apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from: params.from,
+        to: params.to,
+        text: params.text
+      })
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`Telnyx API error: ${error.errors?.[0]?.detail || response.statusText}`);
+    }
+    return response.json();
+  }
+  /**
+   * Send bulk SMS (for campaigns)
+   */
+  async sendBulkSms(messages) {
+    const BATCH_SIZE = 10;
+    const BATCH_DELAY_MS = 500;
+    const allResults = [];
+    for (let i = 0; i < messages.length; i += BATCH_SIZE) {
+      const batch = messages.slice(i, i + BATCH_SIZE);
+      const results = await Promise.allSettled(
+        batch.map((msg) => this.sendSms(msg))
+      );
+      allResults.push(
+        ...results.filter((r) => r.status === "fulfilled").map((r) => r.value)
+      );
+      if (i + BATCH_SIZE < messages.length) {
+        await new Promise((resolve) => setTimeout(resolve, BATCH_DELAY_MS));
+      }
+    }
+    return allResults;
+  }
+  /**
+   * Get message status (for delivery tracking)
+   */
+  async getMessageStatus(messageId) {
+    if (!this.apiKey) {
+      throw new Error("TELNYX_API_KEY not configured");
+    }
+    const response = await fetch(`${this.baseUrl}/messages/${messageId}`, {
+      headers: {
+        "Authorization": `Bearer ${this.apiKey}`
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to get message status: ${response.statusText}`);
+    }
+    return response.json();
+  }
+  /**
+   * List available phone numbers (for setup)
+   */
+  async listPhoneNumbers() {
+    if (!this.apiKey) {
+      throw new Error("TELNYX_API_KEY not configured");
+    }
+    const response = await fetch(`${this.baseUrl}/phone_numbers`, {
+      headers: {
+        "Authorization": `Bearer ${this.apiKey}`
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to list phone numbers: ${response.statusText}`);
+    }
+    return response.json();
+  }
+  /**
+   * Calculate SMS cost (1 segment = $0.004)
+   */
+  calculateCost(messageBody) {
+    const hasUnicode = /[^\x00-\x7F]/.test(messageBody);
+    const maxCharsPerSegment = hasUnicode ? 70 : 160;
+    const segments = Math.ceil(messageBody.length / maxCharsPerSegment);
+    const cost = segments * 4e-3;
+    return { segments, cost };
+  }
+  /**
+   * Validate phone number format
+   */
+  isValidPhoneNumber(phone) {
+    return /^\+[1-9]\d{1,14}$/.test(phone);
+  }
+  /**
+   * Format phone number to E.164
+   */
+  formatPhoneNumber(phone, countryCode = "1") {
+    const digits = phone.replace(/\D/g, "");
+    if (!digits.startsWith(countryCode)) {
+      return `+${countryCode}${digits}`;
+    }
+    return `+${digits}`;
+  }
+};
+var telnyxService = new TelnyxService();
+
+// server/routes/send.ts
+init_timeline_logger();
 function registerSendRoutes(app2) {
   app2.post(
     "/api/send/contacts",
@@ -14962,15 +18406,15 @@ function registerSendRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const [contactCount] = await db.select({ count: sql9`count(*)::int` }).from(sendContacts).where(eq24(sendContacts.clientId, clientId));
+        const [contactCount] = await db.select({ count: sql12`count(*)::int` }).from(sendContacts).where(eq30(sendContacts.clientId, clientId));
         const [campaignStats] = await db.select({
-          emailsSent: sql9`coalesce(sum(${sendCampaigns.emailsSent}), 0)::int`,
-          emailsOpened: sql9`coalesce(sum(${sendCampaigns.emailsOpened}), 0)::int`,
-          emailsClicked: sql9`coalesce(sum(${sendCampaigns.emailsClicked}), 0)::int`,
-          emailsBounced: sql9`coalesce(sum(${sendCampaigns.emailsBounced}), 0)::int`,
-          smsSent: sql9`coalesce(sum(${sendCampaigns.smsSent}), 0)::int`,
-          smsDelivered: sql9`coalesce(sum(${sendCampaigns.smsDelivered}), 0)::int`
-        }).from(sendCampaigns).where(eq24(sendCampaigns.clientId, clientId));
+          emailsSent: sql12`coalesce(sum(${sendCampaigns.emailsSent}), 0)::int`,
+          emailsOpened: sql12`coalesce(sum(${sendCampaigns.emailsOpened}), 0)::int`,
+          emailsClicked: sql12`coalesce(sum(${sendCampaigns.emailsClicked}), 0)::int`,
+          emailsBounced: sql12`coalesce(sum(${sendCampaigns.emailsBounced}), 0)::int`,
+          smsSent: sql12`coalesce(sum(${sendCampaigns.smsSent}), 0)::int`,
+          smsDelivered: sql12`coalesce(sum(${sendCampaigns.smsDelivered}), 0)::int`
+        }).from(sendCampaigns).where(eq30(sendCampaigns.clientId, clientId));
         const totalContacts = contactCount?.count ?? 0;
         const emailsSent = campaignStats?.emailsSent ?? 0;
         const emailsOpened = campaignStats?.emailsOpened ?? 0;
@@ -15014,7 +18458,7 @@ function registerSendRoutes(app2) {
           parseInt(req.query.limit) || 10,
           50
         );
-        const campaigns2 = await db.select().from(sendCampaigns).where(eq24(sendCampaigns.clientId, clientId)).orderBy(desc11(sendCampaigns.createdAt)).limit(limit);
+        const campaigns2 = await db.select().from(sendCampaigns).where(eq30(sendCampaigns.clientId, clientId)).orderBy(desc14(sendCampaigns.createdAt)).limit(limit);
         const activityItems = campaigns2.map((c) => ({
           id: c.id,
           type: "campaign",
@@ -15046,17 +18490,17 @@ function registerSendRoutes(app2) {
         const offset = parseInt(req.query.offset) || 0;
         const status = req.query.status;
         let query = db.select().from(sendCampaigns).where(
-          status ? and13(
-            eq24(sendCampaigns.clientId, clientId),
-            eq24(sendCampaigns.status, status)
-          ) : eq24(sendCampaigns.clientId, clientId)
-        ).orderBy(desc11(sendCampaigns.createdAt)).limit(limit).offset(offset);
+          status ? and20(
+            eq30(sendCampaigns.clientId, clientId),
+            eq30(sendCampaigns.status, status)
+          ) : eq30(sendCampaigns.clientId, clientId)
+        ).orderBy(desc14(sendCampaigns.createdAt)).limit(limit).offset(offset);
         const campaigns2 = await query;
-        const [countResult] = await db.select({ count: sql9`count(*)::int` }).from(sendCampaigns).where(
-          status ? and13(
-            eq24(sendCampaigns.clientId, clientId),
-            eq24(sendCampaigns.status, status)
-          ) : eq24(sendCampaigns.clientId, clientId)
+        const [countResult] = await db.select({ count: sql12`count(*)::int` }).from(sendCampaigns).where(
+          status ? and20(
+            eq30(sendCampaigns.clientId, clientId),
+            eq30(sendCampaigns.status, status)
+          ) : eq30(sendCampaigns.clientId, clientId)
         );
         res.json({
           success: true,
@@ -15139,9 +18583,9 @@ function registerSendRoutes(app2) {
           });
         }
         const [campaign] = await db.select().from(sendCampaigns).where(
-          and13(
-            eq24(sendCampaigns.id, id),
-            eq24(sendCampaigns.clientId, clientId)
+          and20(
+            eq30(sendCampaigns.id, id),
+            eq30(sendCampaigns.clientId, clientId)
           )
         );
         if (!campaign) {
@@ -15174,9 +18618,9 @@ function registerSendRoutes(app2) {
           });
         }
         const [existing] = await db.select().from(sendCampaigns).where(
-          and13(
-            eq24(sendCampaigns.id, id),
-            eq24(sendCampaigns.clientId, clientId)
+          and20(
+            eq30(sendCampaigns.id, id),
+            eq30(sendCampaigns.clientId, clientId)
           )
         );
         if (!existing) {
@@ -15194,7 +18638,7 @@ function registerSendRoutes(app2) {
         const updateData = { ...req.body, updatedAt: /* @__PURE__ */ new Date() };
         delete updateData.clientId;
         delete updateData.id;
-        const [campaign] = await db.update(sendCampaigns).set(updateData).where(eq24(sendCampaigns.id, id)).returning();
+        const [campaign] = await db.update(sendCampaigns).set(updateData).where(eq30(sendCampaigns.id, id)).returning();
         res.json({ success: true, campaign });
       } catch (error) {
         console.error("Error updating campaign:", error);
@@ -15219,9 +18663,9 @@ function registerSendRoutes(app2) {
           });
         }
         const [existing] = await db.select().from(sendCampaigns).where(
-          and13(
-            eq24(sendCampaigns.id, id),
-            eq24(sendCampaigns.clientId, clientId)
+          and20(
+            eq30(sendCampaigns.id, id),
+            eq30(sendCampaigns.clientId, clientId)
           )
         );
         if (!existing) {
@@ -15236,7 +18680,7 @@ function registerSendRoutes(app2) {
             message: "Only draft campaigns can be deleted"
           });
         }
-        await db.delete(sendCampaigns).where(eq24(sendCampaigns.id, id));
+        await db.delete(sendCampaigns).where(eq30(sendCampaigns.id, id));
         res.json({
           success: true,
           message: "Campaign deleted successfully"
@@ -15257,13 +18701,13 @@ function registerSendRoutes(app2) {
       try {
         const clientId = req.clientId;
         const type = req.query.type;
-        let query = db.select().from(sendTemplates).where(eq24(sendTemplates.clientId, clientId)).orderBy(desc11(sendTemplates.updatedAt));
+        let query = db.select().from(sendTemplates).where(eq30(sendTemplates.clientId, clientId)).orderBy(desc14(sendTemplates.updatedAt));
         const templates = await (type ? db.select().from(sendTemplates).where(
-          and13(
-            eq24(sendTemplates.clientId, clientId),
-            eq24(sendTemplates.templateType, type)
+          and20(
+            eq30(sendTemplates.clientId, clientId),
+            eq30(sendTemplates.templateType, type)
           )
-        ).orderBy(desc11(sendTemplates.updatedAt)) : query);
+        ).orderBy(desc14(sendTemplates.updatedAt)) : query);
         res.json({ success: true, templates });
       } catch (error) {
         console.error("Error fetching templates:", error);
@@ -15325,7 +18769,7 @@ function registerSendRoutes(app2) {
           return res.status(400).json({ success: false, message: "Invalid template ID" });
         }
         const [template] = await db.select().from(sendTemplates).where(
-          and13(eq24(sendTemplates.id, id), eq24(sendTemplates.clientId, clientId))
+          and20(eq30(sendTemplates.id, id), eq30(sendTemplates.clientId, clientId))
         );
         if (!template) {
           return res.status(404).json({ success: false, message: "Template not found" });
@@ -15348,7 +18792,7 @@ function registerSendRoutes(app2) {
           return res.status(400).json({ success: false, message: "Invalid template ID" });
         }
         const [existing] = await db.select().from(sendTemplates).where(
-          and13(eq24(sendTemplates.id, id), eq24(sendTemplates.clientId, clientId))
+          and20(eq30(sendTemplates.id, id), eq30(sendTemplates.clientId, clientId))
         );
         if (!existing) {
           return res.status(404).json({ success: false, message: "Template not found" });
@@ -15356,7 +18800,7 @@ function registerSendRoutes(app2) {
         const updateData = { ...req.body, updatedAt: /* @__PURE__ */ new Date() };
         delete updateData.clientId;
         delete updateData.id;
-        const [template] = await db.update(sendTemplates).set(updateData).where(eq24(sendTemplates.id, id)).returning();
+        const [template] = await db.update(sendTemplates).set(updateData).where(eq30(sendTemplates.id, id)).returning();
         res.json({ success: true, template });
       } catch (error) {
         console.error("Error updating template:", error);
@@ -15375,7 +18819,7 @@ function registerSendRoutes(app2) {
           return res.status(400).json({ success: false, message: "Invalid template ID" });
         }
         const [existing] = await db.select().from(sendTemplates).where(
-          and13(eq24(sendTemplates.id, id), eq24(sendTemplates.clientId, clientId))
+          and20(eq30(sendTemplates.id, id), eq30(sendTemplates.clientId, clientId))
         );
         if (!existing) {
           return res.status(404).json({ success: false, message: "Template not found" });
@@ -15386,11 +18830,343 @@ function registerSendRoutes(app2) {
             message: "System templates cannot be deleted"
           });
         }
-        await db.delete(sendTemplates).where(eq24(sendTemplates.id, id));
+        await db.delete(sendTemplates).where(eq30(sendTemplates.id, id));
         res.json({ success: true, message: "Template deleted successfully" });
       } catch (error) {
         console.error("Error deleting template:", error);
         res.status(500).json({ success: false, message: "Failed to delete template" });
+      }
+    }
+  );
+  app2.post(
+    "/api/send/campaigns/:id/send",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const campaignId = parseInt(req.params.id);
+        if (isNaN(campaignId)) {
+          return res.status(400).json({ success: false, message: "Invalid campaign ID" });
+        }
+        const [campaign] = await db.select().from(sendCampaigns).where(and20(eq30(sendCampaigns.id, campaignId), eq30(sendCampaigns.clientId, clientId)));
+        if (!campaign) {
+          return res.status(404).json({ success: false, message: "Campaign not found" });
+        }
+        if (campaign.status !== "draft" && campaign.status !== "scheduled") {
+          return res.status(400).json({
+            success: false,
+            message: `Campaign cannot be sent \u2014 current status is "${campaign.status}"`
+          });
+        }
+        const { listId } = req.body;
+        let recipientContacts;
+        if (listId) {
+          const listContactRows = await db.select({ contactId: sendListContacts.contactId }).from(sendListContacts).where(eq30(sendListContacts.listId, parseInt(listId)));
+          const contactIds = listContactRows.map((r) => r.contactId).filter((id) => id !== null);
+          if (contactIds.length === 0) {
+            return res.status(400).json({ success: false, message: "No contacts in the selected list" });
+          }
+          recipientContacts = await db.select({ id: sendContacts.id, email: sendContacts.email, phone: sendContacts.phone }).from(sendContacts).where(and20(eq30(sendContacts.clientId, clientId), inArray3(sendContacts.id, contactIds)));
+        } else {
+          recipientContacts = await db.select({ id: sendContacts.id, email: sendContacts.email, phone: sendContacts.phone }).from(sendContacts).where(eq30(sendContacts.clientId, clientId));
+        }
+        if (recipientContacts.length === 0) {
+          return res.status(400).json({ success: false, message: "No eligible recipients found" });
+        }
+        const fullContacts = await db.select().from(sendContacts).where(and20(
+          eq30(sendContacts.clientId, clientId),
+          inArray3(sendContacts.id, recipientContacts.map((c) => c.id))
+        ));
+        const substituteVars = (template, contact) => {
+          return template.replace(/\{\{firstName\}\}/g, contact.firstName || "").replace(/\{\{lastName\}\}/g, contact.lastName || "").replace(/\{\{email\}\}/g, contact.email || "").replace(/\{\{company\}\}/g, "").replace(/\{\{unsubscribeUrl\}\}/g, `${process.env.BASE_URL || "https://businessblueprint.io"}/unsubscribe?id=${contact.id}`);
+        };
+        await db.update(sendCampaigns).set({
+          status: "sending",
+          totalRecipients: fullContacts.length,
+          updatedAt: /* @__PURE__ */ new Date()
+        }).where(eq30(sendCampaigns.id, campaignId));
+        res.json({
+          success: true,
+          message: `Campaign sending to ${fullContacts.length} recipients`,
+          totalRecipients: fullContacts.length
+        });
+        (async () => {
+          let emailsSent = 0;
+          let smsSent = 0;
+          let emailsFailed = 0;
+          let smsFailed = 0;
+          if (campaign.campaignType === "email" || campaign.campaignType === "both") {
+            const resendApiKey = process.env.RESEND_API_KEY;
+            const fromEmail = process.env.FROM_EMAIL || "noreply@businessblueprint.io";
+            if (resendApiKey) {
+              const resend = new Resend3(resendApiKey);
+              for (const contact of fullContacts) {
+                if (!contact.email || !contact.emailConsent) continue;
+                try {
+                  const [sendRecord] = await db.insert(sendCampaignSends).values({
+                    campaignId,
+                    contactId: contact.id,
+                    sendType: "email",
+                    status: "queued"
+                  }).returning();
+                  const subject = campaign.emailSubject ? substituteVars(campaign.emailSubject, contact) : campaign.name;
+                  const html = campaign.emailHtml ? substituteVars(campaign.emailHtml, contact) : `<p>${substituteVars(campaign.emailText || campaign.name, contact)}</p>`;
+                  await resend.emails.send({
+                    from: fromEmail,
+                    to: contact.email,
+                    subject,
+                    html
+                  });
+                  await db.update(sendCampaignSends).set({ status: "sent" }).where(eq30(sendCampaignSends.id, sendRecord.id));
+                  emailsSent++;
+                  logContactActivity({
+                    clientId,
+                    contactId: contact.id,
+                    eventType: "campaign_sent",
+                    title: `Email sent: "${subject}"`,
+                    description: `Campaign "${campaign.name}" delivered`,
+                    sourceApp: "promote",
+                    sourceEntityType: "email",
+                    sourceEntityId: String(campaignId),
+                    metadata: { campaignId, campaignName: campaign.name, subject }
+                  });
+                } catch (err) {
+                  console.error(`[Campaign ${campaignId}] Email failed for ${contact.email}:`, err);
+                  emailsFailed++;
+                }
+                if (emailsSent % 10 === 0) {
+                  await new Promise((r) => setTimeout(r, 1e3));
+                }
+              }
+            } else {
+              console.warn(`[Campaign ${campaignId}] RESEND_API_KEY not configured \u2014 emails not sent`);
+            }
+          }
+          if (campaign.campaignType === "sms" || campaign.campaignType === "both") {
+            const fromPhone = process.env.TELNYX_FROM_NUMBER;
+            if (process.env.TELNYX_API_KEY && fromPhone) {
+              for (const contact of fullContacts) {
+                if (!contact.phone || !contact.smsConsent) continue;
+                try {
+                  const [sendRecord] = await db.insert(sendCampaignSends).values({
+                    campaignId,
+                    contactId: contact.id,
+                    sendType: "sms",
+                    status: "queued"
+                  }).returning();
+                  const smsText = campaign.smsBody ? substituteVars(campaign.smsBody, contact) : campaign.name;
+                  await telnyxService.sendSms({
+                    to: contact.phone,
+                    from: fromPhone,
+                    text: smsText
+                  });
+                  await db.update(sendCampaignSends).set({ status: "sent" }).where(eq30(sendCampaignSends.id, sendRecord.id));
+                  smsSent++;
+                } catch (err) {
+                  console.error(`[Campaign ${campaignId}] SMS failed for ${contact.phone}:`, err);
+                  smsFailed++;
+                }
+              }
+            } else {
+              console.warn(`[Campaign ${campaignId}] TELNYX not configured \u2014 SMS not sent`);
+            }
+          }
+          await db.update(sendCampaigns).set({
+            status: "sent",
+            emailsSent,
+            smsSent,
+            emailSentAt: emailsSent > 0 ? /* @__PURE__ */ new Date() : null,
+            smsSentAt: smsSent > 0 ? /* @__PURE__ */ new Date() : null,
+            updatedAt: /* @__PURE__ */ new Date()
+          }).where(eq30(sendCampaigns.id, campaignId));
+          console.log(`[Campaign ${campaignId}] Complete: ${emailsSent} emails, ${smsSent} SMS sent. Failures: ${emailsFailed} email, ${smsFailed} SMS`);
+        })().catch((err) => {
+          console.error(`[Campaign ${campaignId}] Async dispatch failed:`, err);
+        });
+      } catch (error) {
+        console.error("Error sending campaign:", error);
+        res.status(500).json({ success: false, message: "Failed to send campaign" });
+      }
+    }
+  );
+  app2.post(
+    "/api/send/campaigns/:id/schedule",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const campaignId = parseInt(req.params.id);
+        const { emailScheduledFor, smsScheduledFor, listId } = req.body;
+        if (isNaN(campaignId)) {
+          return res.status(400).json({ success: false, message: "Invalid campaign ID" });
+        }
+        if (!emailScheduledFor && !smsScheduledFor) {
+          return res.status(400).json({ success: false, message: "At least one schedule time is required" });
+        }
+        const [campaign] = await db.select().from(sendCampaigns).where(and20(eq30(sendCampaigns.id, campaignId), eq30(sendCampaigns.clientId, clientId)));
+        if (!campaign) {
+          return res.status(404).json({ success: false, message: "Campaign not found" });
+        }
+        await db.update(sendCampaigns).set({
+          status: "scheduled",
+          emailScheduledFor: emailScheduledFor ? new Date(emailScheduledFor) : null,
+          smsScheduledFor: smsScheduledFor ? new Date(smsScheduledFor) : null,
+          segmentRules: listId ? { listId: parseInt(listId) } : campaign.segmentRules,
+          updatedAt: /* @__PURE__ */ new Date()
+        }).where(eq30(sendCampaigns.id, campaignId));
+        res.json({
+          success: true,
+          message: "Campaign scheduled successfully",
+          emailScheduledFor,
+          smsScheduledFor
+        });
+      } catch (error) {
+        console.error("Error scheduling campaign:", error);
+        res.status(500).json({ success: false, message: "Failed to schedule campaign" });
+      }
+    }
+  );
+  app2.get(
+    "/api/send/lists",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const lists = await db.select().from(sendLists).where(eq30(sendLists.clientId, clientId)).orderBy(desc14(sendLists.createdAt));
+        res.json({ success: true, lists });
+      } catch (error) {
+        console.error("Error fetching lists:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch lists" });
+      }
+    }
+  );
+  app2.post(
+    "/api/send/lists",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const { name, description, listType } = req.body;
+        if (!name) {
+          return res.status(400).json({ success: false, message: "List name is required" });
+        }
+        const [list] = await db.insert(sendLists).values({
+          clientId,
+          name,
+          description: description || null,
+          listType: listType || "static"
+        }).returning();
+        res.json({ success: true, list });
+      } catch (error) {
+        console.error("Error creating list:", error);
+        res.status(500).json({ success: false, message: "Failed to create list" });
+      }
+    }
+  );
+  app2.post(
+    "/api/send/lists/:id/contacts",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const listId = parseInt(req.params.id);
+        const { contactIds } = req.body;
+        if (isNaN(listId) || !Array.isArray(contactIds) || contactIds.length === 0) {
+          return res.status(400).json({ success: false, message: "Valid list ID and contact IDs required" });
+        }
+        const [list] = await db.select().from(sendLists).where(and20(eq30(sendLists.id, listId), eq30(sendLists.clientId, clientId)));
+        if (!list) {
+          return res.status(404).json({ success: false, message: "List not found" });
+        }
+        let added = 0;
+        for (const contactId of contactIds) {
+          try {
+            await db.insert(sendListContacts).values({ listId, contactId });
+            added++;
+          } catch {
+          }
+        }
+        const [countResult] = await db.select({ count: sql12`count(*)::int` }).from(sendListContacts).where(eq30(sendListContacts.listId, listId));
+        await db.update(sendLists).set({ totalContacts: countResult?.count ?? 0, updatedAt: /* @__PURE__ */ new Date() }).where(eq30(sendLists.id, listId));
+        res.json({ success: true, added, totalContacts: countResult?.count ?? 0 });
+      } catch (error) {
+        console.error("Error adding contacts to list:", error);
+        res.status(500).json({ success: false, message: "Failed to add contacts" });
+      }
+    }
+  );
+  app2.delete(
+    "/api/send/lists/:id",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const listId = parseInt(req.params.id);
+        if (isNaN(listId)) {
+          return res.status(400).json({ success: false, message: "Invalid list ID" });
+        }
+        const [list] = await db.select().from(sendLists).where(and20(eq30(sendLists.id, listId), eq30(sendLists.clientId, clientId)));
+        if (!list) {
+          return res.status(404).json({ success: false, message: "List not found" });
+        }
+        await db.delete(sendListContacts).where(eq30(sendListContacts.listId, listId));
+        await db.delete(sendLists).where(eq30(sendLists.id, listId));
+        res.json({ success: true, message: "List deleted successfully" });
+      } catch (error) {
+        console.error("Error deleting list:", error);
+        res.status(500).json({ success: false, message: "Failed to delete list" });
+      }
+    }
+  );
+  app2.post(
+    "/api/send/contacts/import",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const { contacts, listId } = req.body;
+        if (!Array.isArray(contacts) || contacts.length === 0) {
+          return res.status(400).json({ success: false, message: "Contacts array is required" });
+        }
+        let imported = 0;
+        let skipped = 0;
+        const importedIds = [];
+        for (const contact of contacts) {
+          try {
+            if (!contact.email && !contact.phone) {
+              skipped++;
+              continue;
+            }
+            const [created] = await db.insert(sendContacts).values({
+              clientId,
+              email: contact.email || null,
+              phone: contact.phone || null,
+              firstName: contact.firstName || null,
+              lastName: contact.lastName || null,
+              emailConsent: !!contact.email,
+              smsConsent: !!contact.phone,
+              emailConsentDate: contact.email ? /* @__PURE__ */ new Date() : null,
+              smsConsentDate: contact.phone ? /* @__PURE__ */ new Date() : null,
+              source: "import"
+            }).returning();
+            importedIds.push(created.id);
+            imported++;
+          } catch {
+            skipped++;
+          }
+        }
+        if (listId && importedIds.length > 0) {
+          for (const contactId of importedIds) {
+            try {
+              await db.insert(sendListContacts).values({ listId: parseInt(listId), contactId });
+            } catch {
+            }
+          }
+        }
+        res.json({ success: true, imported, skipped, total: contacts.length });
+      } catch (error) {
+        console.error("Error importing contacts:", error);
+        res.status(500).json({ success: false, message: "Failed to import contacts" });
       }
     }
   );
@@ -15399,7 +19175,7 @@ function registerSendRoutes(app2) {
 // server/routes/optimize.ts
 init_db();
 init_schema();
-import { eq as eq25, desc as desc12, and as and14, sql as sql10, asc as asc3 } from "drizzle-orm";
+import { eq as eq31, desc as desc15, and as and21, sql as sql13, asc as asc5 } from "drizzle-orm";
 
 // server/services/seo-crawler.ts
 async function analyzePage(url) {
@@ -15431,20 +19207,20 @@ async function analyzePage(url) {
   }
 }
 function parseHtml(url, html) {
-  const titleMatch = html.match(/<title[^>]*>(.*?)<\/title>/is);
+  const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
   const title = titleMatch ? titleMatch[1].trim() : null;
-  const metaDescMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["'](.*?)["'][^>]*\/?>/is) || html.match(/<meta[^>]*content=["'](.*?)["'][^>]*name=["']description["'][^>]*\/?>/is);
+  const metaDescMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([\s\S]*?)["'][^>]*\/?>/i) || html.match(/<meta[^>]*content=["']([\s\S]*?)["'][^>]*name=["']description["'][^>]*\/?>/i);
   const metaDescription = metaDescMatch ? metaDescMatch[1].trim() : null;
-  const h1Match = html.match(/<h1[^>]*>(.*?)<\/h1>/is);
+  const h1Match = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
   const h1 = h1Match ? h1Match[1].replace(/<[^>]*>/g, "").trim() : null;
-  const h2Matches = html.match(/<h2[^>]*>(.*?)<\/h2>/gis) || [];
+  const h2Matches = html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/gi) || [];
   const h2s = h2Matches.map((m) => m.replace(/<[^>]*>/g, "").trim()).slice(0, 20);
-  const bodyMatch = html.match(/<body[^>]*>(.*)<\/body>/is);
-  const bodyText = bodyMatch ? bodyMatch[1].replace(/<script[^>]*>.*?<\/script>/gis, "").replace(/<style[^>]*>.*?<\/style>/gis, "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "";
+  const bodyMatch = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+  const bodyText = bodyMatch ? bodyMatch[1].replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "").replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "";
   const wordCount = bodyText ? bodyText.split(/\s+/).length : 0;
-  const imgMatches = html.match(/<img[^>]*>/gis) || [];
+  const imgMatches = html.match(/<img[^>]*>/gi) || [];
   const imagesWithoutAlt = imgMatches.filter((img) => !img.match(/alt=["'][^"']+["']/i)).length;
-  const linkMatches = html.match(/<a[^>]*href=["']([^"']*?)["'][^>]*>/gis) || [];
+  const linkMatches = html.match(/<a[^>]*href=["']([^"']*?)["'][^>]*>/gi) || [];
   const parsedUrl = new URL(url);
   let internal = 0, external = 0;
   for (const link of linkMatches) {
@@ -15653,8 +19429,8 @@ function calculateSeoScore(metrics) {
 init_ai_provider();
 init_ai_settings();
 async function researchKeywords(seed, industry, location) {
-  const settings = await aiSettingsService.getSettings();
-  const provider = settings.defaultProvider || "openai";
+  const settings = await aiSettingsService.getAllSettings();
+  const provider = (settings.length > 0 ? settings[0].provider : null) || "openai";
   const prompt = `You are an SEO keyword research expert. Given the following seed keywords and business information, generate 15-20 keyword suggestions.
 
 Seed Keywords: ${seed.join(", ")}
@@ -15698,8 +19474,8 @@ Return ONLY a JSON array of objects. No markdown, no explanation.`;
 init_ai_provider();
 init_ai_settings();
 async function generateContentBrief(keyword, industry, currentPageContent) {
-  const settings = await aiSettingsService.getSettings();
-  const provider = settings.defaultProvider || "openai";
+  const settings = await aiSettingsService.getAllSettings();
+  const provider = (settings.length > 0 ? settings[0].provider : null) || "openai";
   const prompt = `You are an SEO content strategist. Create a detailed content brief for a page targeting the keyword "${keyword}".
 
 ${industry ? `Industry: ${industry}` : ""}
@@ -15756,8 +19532,8 @@ Return ONLY valid JSON. No markdown.`;
 init_ai_provider();
 init_ai_settings();
 async function generateActionPlan(input) {
-  const settings = await aiSettingsService.getSettings();
-  const provider = settings.defaultProvider || "openai";
+  const settings = await aiSettingsService.getAllSettings();
+  const provider = (settings.length > 0 ? settings[0].provider : null) || "openai";
   const prompt = `You are an SEO consultant creating a prioritized action plan for a business.
 
 Domain: ${input.domain}
@@ -15832,7 +19608,7 @@ function registerOptimizeRoutes(app2) {
         if (!domain) {
           return res.status(400).json({ success: false, message: "Domain is required" });
         }
-        const existing = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const existing = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (existing.length > 0) {
           const [updated] = await db.update(seoProfiles).set({
             domain,
@@ -15843,7 +19619,7 @@ function registerOptimizeRoutes(app2) {
             competitors: competitors || [],
             localEnabled: localEnabled || false,
             updatedAt: /* @__PURE__ */ new Date()
-          }).where(eq25(seoProfiles.id, existing[0].id)).returning();
+          }).where(eq31(seoProfiles.id, existing[0].id)).returning();
           return res.json({ success: true, profile: updated });
         }
         const [profile] = await db.insert(seoProfiles).values({
@@ -15878,7 +19654,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profiles = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profiles = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profiles.length === 0) {
           return res.json({ success: true, profile: null });
         }
@@ -15895,7 +19671,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) {
           return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
         }
@@ -15922,7 +19698,7 @@ function registerOptimizeRoutes(app2) {
             const pageData = await analyzePage(
               profileData.domain.startsWith("http") ? profileData.domain : `https://${profileData.domain}`
             );
-            const existingPage = await db.select().from(seoPages).where(and14(eq25(seoPages.profileId, profileData.id), eq25(seoPages.url, pageData.url))).limit(1);
+            const existingPage = await db.select().from(seoPages).where(and21(eq31(seoPages.profileId, profileData.id), eq31(seoPages.url, pageData.url))).limit(1);
             const pageScore = calculatePageScore(pageData);
             if (existingPage.length > 0) {
               await db.update(seoPages).set({
@@ -15933,7 +19709,7 @@ function registerOptimizeRoutes(app2) {
                 score: pageScore,
                 issues: pageData,
                 lastAnalyzed: /* @__PURE__ */ new Date()
-              }).where(eq25(seoPages.id, existingPage[0].id));
+              }).where(eq31(seoPages.id, existingPage[0].id));
             } else {
               await db.insert(seoPages).values({
                 profileId: profileData.id,
@@ -15948,16 +19724,16 @@ function registerOptimizeRoutes(app2) {
               });
             }
             const issueCountResult = await db.select({
-              critical: sql10`count(*) filter (where ${seoTechnicalIssues.severity} = 'critical')`,
-              high: sql10`count(*) filter (where ${seoTechnicalIssues.severity} = 'high')`,
-              medium: sql10`count(*) filter (where ${seoTechnicalIssues.severity} = 'medium')`,
-              low: sql10`count(*) filter (where ${seoTechnicalIssues.severity} = 'low')`
-            }).from(seoTechnicalIssues).where(and14(
-              eq25(seoTechnicalIssues.profileId, profileData.id),
-              eq25(seoTechnicalIssues.status, "open")
+              critical: sql13`count(*) filter (where ${seoTechnicalIssues.severity} = 'critical')`,
+              high: sql13`count(*) filter (where ${seoTechnicalIssues.severity} = 'high')`,
+              medium: sql13`count(*) filter (where ${seoTechnicalIssues.severity} = 'medium')`,
+              low: sql13`count(*) filter (where ${seoTechnicalIssues.severity} = 'low')`
+            }).from(seoTechnicalIssues).where(and21(
+              eq31(seoTechnicalIssues.profileId, profileData.id),
+              eq31(seoTechnicalIssues.status, "open")
             ));
             const issueCounts = issueCountResult[0] || { critical: 0, high: 0, medium: 0, low: 0 };
-            const keywordCount = await db.select({ count: sql10`count(*)` }).from(seoKeywords).where(eq25(seoKeywords.profileId, profileData.id));
+            const keywordCount = await db.select({ count: sql13`count(*)` }).from(seoKeywords).where(eq31(seoKeywords.profileId, profileData.id));
             const overallScore = calculateSeoScore({
               technicalIssues: {
                 critical: Number(issueCounts.critical),
@@ -15978,10 +19754,10 @@ function registerOptimizeRoutes(app2) {
               metrics: auditResult,
               issues: auditResult.issues,
               status: "completed"
-            }).where(eq25(seoScans.id, scan.id));
+            }).where(eq31(seoScans.id, scan.id));
           } catch (err) {
             console.error("[Optimize] Scan failed:", err);
-            await db.update(seoScans).set({ status: "failed" }).where(eq25(seoScans.id, scan.id));
+            await db.update(seoScans).set({ status: "failed" }).where(eq31(seoScans.id, scan.id));
           }
         })();
         res.json({ success: true, scan: { id: scan.id, status: "running" } });
@@ -15997,9 +19773,9 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, scans: [] });
-        const scans = await db.select().from(seoScans).where(eq25(seoScans.profileId, profile[0].id)).orderBy(desc12(seoScans.createdAt)).limit(20);
+        const scans = await db.select().from(seoScans).where(eq31(seoScans.profileId, profile[0].id)).orderBy(desc15(seoScans.createdAt)).limit(20);
         res.json({ success: true, scans });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to fetch scans" });
@@ -16011,7 +19787,7 @@ function registerOptimizeRoutes(app2) {
     requireAuth,
     async (req, res) => {
       try {
-        const scan = await db.select().from(seoScans).where(eq25(seoScans.id, parseInt(req.params.id))).limit(1);
+        const scan = await db.select().from(seoScans).where(eq31(seoScans.id, parseInt(req.params.id))).limit(1);
         if (scan.length === 0) return res.status(404).json({ success: false, message: "Scan not found" });
         res.json({ success: true, scan: scan[0] });
       } catch (error) {
@@ -16025,18 +19801,18 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, data: null });
         const profileId = profile[0].id;
-        const latestScan = await db.select().from(seoScans).where(and14(eq25(seoScans.profileId, profileId), eq25(seoScans.status, "completed"))).orderBy(desc12(seoScans.createdAt)).limit(1);
+        const latestScan = await db.select().from(seoScans).where(and21(eq31(seoScans.profileId, profileId), eq31(seoScans.status, "completed"))).orderBy(desc15(seoScans.createdAt)).limit(1);
         const issueCounts = await db.select({
           severity: seoTechnicalIssues.severity,
-          count: sql10`count(*)::int`
-        }).from(seoTechnicalIssues).where(and14(eq25(seoTechnicalIssues.profileId, profileId), eq25(seoTechnicalIssues.status, "open"))).groupBy(seoTechnicalIssues.severity);
-        const keywordStats = await db.select({ count: sql10`count(*)::int` }).from(seoKeywords).where(and14(eq25(seoKeywords.profileId, profileId), eq25(seoKeywords.status, "tracking")));
-        const pageStats = await db.select({ count: sql10`count(*)::int` }).from(seoPages).where(eq25(seoPages.profileId, profileId));
-        const actionStats = await db.select({ count: sql10`count(*)::int` }).from(seoActionItems).where(and14(eq25(seoActionItems.profileId, profileId), eq25(seoActionItems.status, "pending")));
-        const recentScans = await db.select().from(seoScans).where(eq25(seoScans.profileId, profileId)).orderBy(desc12(seoScans.createdAt)).limit(5);
+          count: sql13`count(*)::int`
+        }).from(seoTechnicalIssues).where(and21(eq31(seoTechnicalIssues.profileId, profileId), eq31(seoTechnicalIssues.status, "open"))).groupBy(seoTechnicalIssues.severity);
+        const keywordStats = await db.select({ count: sql13`count(*)::int` }).from(seoKeywords).where(and21(eq31(seoKeywords.profileId, profileId), eq31(seoKeywords.status, "tracking")));
+        const pageStats = await db.select({ count: sql13`count(*)::int` }).from(seoPages).where(eq31(seoPages.profileId, profileId));
+        const actionStats = await db.select({ count: sql13`count(*)::int` }).from(seoActionItems).where(and21(eq31(seoActionItems.profileId, profileId), eq31(seoActionItems.status, "pending")));
+        const recentScans = await db.select().from(seoScans).where(eq31(seoScans.profileId, profileId)).orderBy(desc15(seoScans.createdAt)).limit(5);
         const issueMap = {};
         for (const ic of issueCounts) {
           issueMap[ic.severity || "unknown"] = ic.count;
@@ -16075,9 +19851,9 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, keywords: [] });
-        const keywords = await db.select().from(seoKeywords).where(and14(eq25(seoKeywords.profileId, profile[0].id), eq25(seoKeywords.status, "tracking"))).orderBy(asc3(seoKeywords.keyword));
+        const keywords = await db.select().from(seoKeywords).where(and21(eq31(seoKeywords.profileId, profile[0].id), eq31(seoKeywords.status, "tracking"))).orderBy(asc5(seoKeywords.keyword));
         res.json({ success: true, keywords });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to fetch keywords" });
@@ -16090,7 +19866,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
         const { keywords } = req.body;
         const keywordList = Array.isArray(keywords) ? keywords : [keywords];
@@ -16115,7 +19891,7 @@ function registerOptimizeRoutes(app2) {
     requireAuth,
     async (req, res) => {
       try {
-        await db.update(seoKeywords).set({ status: "removed" }).where(eq25(seoKeywords.id, parseInt(req.params.id)));
+        await db.update(seoKeywords).set({ status: "removed" }).where(eq31(seoKeywords.id, parseInt(req.params.id)));
         res.json({ success: true });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to delete keyword" });
@@ -16127,7 +19903,7 @@ function registerOptimizeRoutes(app2) {
     requireAuth,
     async (req, res) => {
       try {
-        const history = await db.select().from(seoKeywordRankings).where(eq25(seoKeywordRankings.keywordId, parseInt(req.params.id))).orderBy(desc12(seoKeywordRankings.date)).limit(90);
+        const history = await db.select().from(seoKeywordRankings).where(eq31(seoKeywordRankings.keywordId, parseInt(req.params.id))).orderBy(desc15(seoKeywordRankings.date)).limit(90);
         res.json({ success: true, history });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to fetch rank history" });
@@ -16140,7 +19916,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
         const { seeds } = req.body;
         const seedKeywords = seeds || profile[0].targetKeywords || [];
@@ -16159,9 +19935,9 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, pages: [] });
-        const pages = await db.select().from(seoPages).where(eq25(seoPages.profileId, profile[0].id)).orderBy(desc12(seoPages.lastAnalyzed));
+        const pages = await db.select().from(seoPages).where(eq31(seoPages.profileId, profile[0].id)).orderBy(desc15(seoPages.lastAnalyzed));
         res.json({ success: true, pages });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to fetch pages" });
@@ -16173,7 +19949,7 @@ function registerOptimizeRoutes(app2) {
     requireAuth,
     async (req, res) => {
       try {
-        const page = await db.select().from(seoPages).where(eq25(seoPages.id, parseInt(req.params.id))).limit(1);
+        const page = await db.select().from(seoPages).where(eq31(seoPages.id, parseInt(req.params.id))).limit(1);
         if (page.length === 0) return res.status(404).json({ success: false, message: "Page not found" });
         res.json({ success: true, page: page[0] });
       } catch (error) {
@@ -16187,13 +19963,13 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
         const { url } = req.body;
         if (!url) return res.status(400).json({ success: false, message: "URL is required" });
         const pageData = await analyzePage(url);
         const score = calculatePageScore(pageData);
-        const existing = await db.select().from(seoPages).where(and14(eq25(seoPages.profileId, profile[0].id), eq25(seoPages.url, url))).limit(1);
+        const existing = await db.select().from(seoPages).where(and21(eq31(seoPages.profileId, profile[0].id), eq31(seoPages.url, url))).limit(1);
         let page;
         if (existing.length > 0) {
           [page] = await db.update(seoPages).set({
@@ -16205,7 +19981,7 @@ function registerOptimizeRoutes(app2) {
             issues: pageData,
             suggestions: generatePageSuggestions(pageData),
             lastAnalyzed: /* @__PURE__ */ new Date()
-          }).where(eq25(seoPages.id, existing[0].id)).returning();
+          }).where(eq31(seoPages.id, existing[0].id)).returning();
         } else {
           [page] = await db.insert(seoPages).values({
             profileId: profile[0].id,
@@ -16233,11 +20009,11 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, issues: [] });
-        let query = db.select().from(seoTechnicalIssues).where(eq25(seoTechnicalIssues.profileId, profile[0].id)).orderBy(
-          sql10`CASE ${seoTechnicalIssues.severity} WHEN 'critical' THEN 1 WHEN 'high' THEN 2 WHEN 'medium' THEN 3 WHEN 'low' THEN 4 END`,
-          desc12(seoTechnicalIssues.createdAt)
+        let query = db.select().from(seoTechnicalIssues).where(eq31(seoTechnicalIssues.profileId, profile[0].id)).orderBy(
+          sql13`CASE ${seoTechnicalIssues.severity} WHEN 'critical' THEN 1 WHEN 'high' THEN 2 WHEN 'medium' THEN 3 WHEN 'low' THEN 4 END`,
+          desc15(seoTechnicalIssues.createdAt)
         );
         const issues = await query;
         res.json({ success: true, issues });
@@ -16252,7 +20028,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const { status } = req.body;
-        const [updated] = await db.update(seoTechnicalIssues).set({ status }).where(eq25(seoTechnicalIssues.id, parseInt(req.params.id))).returning();
+        const [updated] = await db.update(seoTechnicalIssues).set({ status }).where(eq31(seoTechnicalIssues.id, parseInt(req.params.id))).returning();
         res.json({ success: true, issue: updated });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to update issue" });
@@ -16265,9 +20041,9 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, briefs: [] });
-        const briefs = await db.select().from(seoContentBriefs).where(eq25(seoContentBriefs.profileId, profile[0].id)).orderBy(desc12(seoContentBriefs.createdAt));
+        const briefs = await db.select().from(seoContentBriefs).where(eq31(seoContentBriefs.profileId, profile[0].id)).orderBy(desc15(seoContentBriefs.createdAt));
         res.json({ success: true, briefs });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to fetch content briefs" });
@@ -16280,7 +20056,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
         const { targetKeyword } = req.body;
         if (!targetKeyword) return res.status(400).json({ success: false, message: "Target keyword is required" });
@@ -16306,11 +20082,11 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, items: [] });
-        const items = await db.select().from(seoActionItems).where(eq25(seoActionItems.profileId, profile[0].id)).orderBy(
-          sql10`CASE ${seoActionItems.priority} WHEN 'critical' THEN 1 WHEN 'high' THEN 2 WHEN 'medium' THEN 3 WHEN 'low' THEN 4 END`,
-          desc12(seoActionItems.createdAt)
+        const items = await db.select().from(seoActionItems).where(eq31(seoActionItems.profileId, profile[0].id)).orderBy(
+          sql13`CASE ${seoActionItems.priority} WHEN 'critical' THEN 1 WHEN 'high' THEN 2 WHEN 'medium' THEN 3 WHEN 'low' THEN 4 END`,
+          desc15(seoActionItems.createdAt)
         );
         res.json({ success: true, items });
       } catch (error) {
@@ -16324,13 +20100,13 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq25(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
         const profileData = profile[0];
-        const latestScan = await db.select().from(seoScans).where(and14(eq25(seoScans.profileId, profileData.id), eq25(seoScans.status, "completed"))).orderBy(desc12(seoScans.createdAt)).limit(1);
-        const keywords = await db.select().from(seoKeywords).where(and14(eq25(seoKeywords.profileId, profileData.id), eq25(seoKeywords.status, "tracking")));
-        const pages = await db.select().from(seoPages).where(eq25(seoPages.profileId, profileData.id));
-        const issues = await db.select().from(seoTechnicalIssues).where(and14(eq25(seoTechnicalIssues.profileId, profileData.id), eq25(seoTechnicalIssues.status, "open")));
+        const latestScan = await db.select().from(seoScans).where(and21(eq31(seoScans.profileId, profileData.id), eq31(seoScans.status, "completed"))).orderBy(desc15(seoScans.createdAt)).limit(1);
+        const keywords = await db.select().from(seoKeywords).where(and21(eq31(seoKeywords.profileId, profileData.id), eq31(seoKeywords.status, "tracking")));
+        const pages = await db.select().from(seoPages).where(eq31(seoPages.profileId, profileData.id));
+        const issues = await db.select().from(seoTechnicalIssues).where(and21(eq31(seoTechnicalIssues.profileId, profileData.id), eq31(seoTechnicalIssues.status, "open")));
         const actionItems = await generateActionPlan({
           domain: profileData.domain,
           industry: profileData.industry || void 0,
@@ -16366,7 +20142,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const { status } = req.body;
-        const [updated] = await db.update(seoActionItems).set({ status }).where(eq25(seoActionItems.id, parseInt(req.params.id))).returning();
+        const [updated] = await db.update(seoActionItems).set({ status }).where(eq31(seoActionItems.id, parseInt(req.params.id))).returning();
         res.json({ success: true, item: updated });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to update action item" });
@@ -16421,6 +20197,2150 @@ function generatePageSuggestions(pageData) {
   }
   return suggestions;
 }
+
+// server/routes/amplify.ts
+init_db();
+import { Router as Router20 } from "express";
+init_schema();
+import { eq as eq33, and as and23, desc as desc16, sql as sql14, inArray as inArray4 } from "drizzle-orm";
+
+// server/services/reddit-ads.ts
+init_db();
+init_schema();
+import { eq as eq32, and as and22 } from "drizzle-orm";
+import crypto14 from "crypto";
+var REDDIT_ADS_API = "https://ads-api.reddit.com";
+var REDDIT_OAUTH_API = "https://oauth.reddit.com";
+var USER_AGENT = "businessblueprint-amplify/1.0";
+var MAX_RETRIES = 3;
+var BASE_DELAY_MS = 1e3;
+var ENCRYPTION_KEY = process.env.TOKEN_ENCRYPTION_KEY || process.env.SESSION_SECRET || "businessblueprint-default-key-change-me";
+function getEncryptionKey() {
+  return crypto14.createHash("sha256").update(ENCRYPTION_KEY).digest();
+}
+function encryptToken(plaintext) {
+  const iv = crypto14.randomBytes(16);
+  const cipher = crypto14.createCipheriv("aes-256-cbc", getEncryptionKey(), iv);
+  let encrypted = cipher.update(plaintext, "utf8", "hex");
+  encrypted += cipher.final("hex");
+  return iv.toString("hex") + ":" + encrypted;
+}
+function decryptToken(ciphertext) {
+  const [ivHex, encrypted] = ciphertext.split(":");
+  if (!ivHex || !encrypted) return ciphertext;
+  try {
+    const iv = Buffer.from(ivHex, "hex");
+    const decipher = crypto14.createDecipheriv("aes-256-cbc", getEncryptionKey(), iv);
+    let decrypted = decipher.update(encrypted, "hex", "utf8");
+    decrypted += decipher.final("utf8");
+    return decrypted;
+  } catch {
+    return ciphertext;
+  }
+}
+function sha256Hash(value) {
+  return crypto14.createHash("sha256").update(value.trim().toLowerCase()).digest("hex");
+}
+var RedditAdsService = class {
+  clientId;
+  clientSecret;
+  constructor() {
+    this.clientId = process.env.REDDIT_CLIENT_ID || "";
+    this.clientSecret = process.env.REDDIT_CLIENT_SECRET || "";
+  }
+  // ---- Internal fetch with retry & rate-limit backoff ----
+  async fetchWithRetry(url, options, retries = MAX_RETRIES) {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      const response = await fetch(url, options);
+      if (response.status === 429 && attempt < retries) {
+        const retryAfter = response.headers.get("retry-after");
+        const delay = retryAfter ? parseInt(retryAfter, 10) * 1e3 : BASE_DELAY_MS * Math.pow(2, attempt);
+        console.warn(`[RedditAds] Rate limited (429). Retrying in ${delay}ms (attempt ${attempt + 1}/${retries})`);
+        await new Promise((r) => setTimeout(r, delay));
+        continue;
+      }
+      return response;
+    }
+    throw new Error("[RedditAds] Max retries exceeded");
+  }
+  adsHeaders(accessToken) {
+    const headers2 = {
+      "User-Agent": USER_AGENT,
+      "Content-Type": "application/json"
+    };
+    if (accessToken) {
+      headers2.Authorization = `Bearer ${accessToken}`;
+    }
+    return headers2;
+  }
+  basicAuthHeader() {
+    return "Basic " + Buffer.from(`${this.clientId}:${this.clientSecret}`).toString("base64");
+  }
+  // ============================================================
+  // 1. OAuth
+  // ============================================================
+  getAuthorizationUrl(clientId, redirectUri) {
+    const state = `reddit_${clientId}_${Date.now()}`;
+    const params = new URLSearchParams({
+      client_id: this.clientId,
+      response_type: "code",
+      state,
+      redirect_uri: redirectUri,
+      duration: "permanent",
+      scope: "adsedit adsread identity"
+    });
+    return `https://www.reddit.com/api/v1/authorize?${params.toString()}`;
+  }
+  async exchangeCodeForToken(code, redirectUri) {
+    const response = await this.fetchWithRetry("https://www.reddit.com/api/v1/access_token", {
+      method: "POST",
+      headers: {
+        Authorization: this.basicAuthHeader(),
+        "User-Agent": USER_AGENT,
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams({
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: redirectUri
+      }).toString()
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] Token exchange failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] Token exchange failed: ${response.status}`);
+    }
+    const data = await response.json();
+    return {
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      expires_in: data.expires_in
+    };
+  }
+  async refreshAccessToken(refreshToken) {
+    const response = await this.fetchWithRetry("https://www.reddit.com/api/v1/access_token", {
+      method: "POST",
+      headers: {
+        Authorization: this.basicAuthHeader(),
+        "User-Agent": USER_AGENT,
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams({
+        grant_type: "refresh_token",
+        refresh_token: refreshToken
+      }).toString()
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] Token refresh failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] Token refresh failed: ${response.status}`);
+    }
+    const data = await response.json();
+    return {
+      access_token: data.access_token,
+      refresh_token: data.refresh_token || refreshToken,
+      // Reddit may not return a new refresh token
+      expires_in: data.expires_in
+    };
+  }
+  // ============================================================
+  // 2. Campaign Management
+  // ============================================================
+  async getCampaigns(accessToken, accountId) {
+    const url = `${REDDIT_ADS_API}/api/v3/accounts/${accountId}/campaigns`;
+    const response = await this.fetchWithRetry(url, {
+      method: "GET",
+      headers: this.adsHeaders(accessToken)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] getCampaigns failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] getCampaigns failed: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.data || [];
+  }
+  async createCampaign(accessToken, accountId, data) {
+    const url = `${REDDIT_ADS_API}/api/v3/accounts/${accountId}/campaigns`;
+    const response = await this.fetchWithRetry(url, {
+      method: "POST",
+      headers: this.adsHeaders(accessToken),
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] createCampaign failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] createCampaign failed: ${response.status}`);
+    }
+    return response.json();
+  }
+  async updateCampaign(accessToken, accountId, campaignId, data) {
+    const url = `${REDDIT_ADS_API}/api/v3/accounts/${accountId}/campaigns/${campaignId}`;
+    const response = await this.fetchWithRetry(url, {
+      method: "PUT",
+      headers: this.adsHeaders(accessToken),
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] updateCampaign failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] updateCampaign failed: ${response.status}`);
+    }
+    return response.json();
+  }
+  async pauseCampaign(accessToken, accountId, campaignId) {
+    return this.updateCampaign(accessToken, accountId, campaignId, {
+      configured_status: "PAUSED"
+    });
+  }
+  async resumeCampaign(accessToken, accountId, campaignId) {
+    return this.updateCampaign(accessToken, accountId, campaignId, {
+      configured_status: "ACTIVE"
+    });
+  }
+  // ============================================================
+  // 3. Ad Groups
+  // ============================================================
+  async createAdGroup(accessToken, accountId, data) {
+    const url = `${REDDIT_ADS_API}/api/v3/accounts/${accountId}/adgroups`;
+    const response = await this.fetchWithRetry(url, {
+      method: "POST",
+      headers: this.adsHeaders(accessToken),
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] createAdGroup failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] createAdGroup failed: ${response.status}`);
+    }
+    return response.json();
+  }
+  async getAdGroups(accessToken, accountId, campaignId) {
+    let url = `${REDDIT_ADS_API}/api/v3/accounts/${accountId}/adgroups`;
+    if (campaignId) {
+      url += `?campaign_id=${campaignId}`;
+    }
+    const response = await this.fetchWithRetry(url, {
+      method: "GET",
+      headers: this.adsHeaders(accessToken)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] getAdGroups failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] getAdGroups failed: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.data || [];
+  }
+  // ============================================================
+  // 4. Ads
+  // ============================================================
+  async createAd(accessToken, accountId, data) {
+    const url = `${REDDIT_ADS_API}/api/v3/accounts/${accountId}/ads`;
+    const response = await this.fetchWithRetry(url, {
+      method: "POST",
+      headers: this.adsHeaders(accessToken),
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] createAd failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] createAd failed: ${response.status}`);
+    }
+    return response.json();
+  }
+  async getAds(accessToken, accountId, adGroupId) {
+    let url = `${REDDIT_ADS_API}/api/v3/accounts/${accountId}/ads`;
+    if (adGroupId) {
+      url += `?ad_group_id=${adGroupId}`;
+    }
+    const response = await this.fetchWithRetry(url, {
+      method: "GET",
+      headers: this.adsHeaders(accessToken)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] getAds failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] getAds failed: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.data || [];
+  }
+  // ============================================================
+  // 5. Audiences
+  // ============================================================
+  async createCustomAudience(accessToken, data) {
+    const url = `${REDDIT_ADS_API}/api/v3/custom_audiences`;
+    const response = await this.fetchWithRetry(url, {
+      method: "POST",
+      headers: this.adsHeaders(accessToken),
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] createCustomAudience failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] createCustomAudience failed: ${response.status}`);
+    }
+    return response.json();
+  }
+  async addUsersToAudience(accessToken, audienceId, hashedEmails) {
+    const users3 = hashedEmails.map((email) => {
+      if (email.includes("@")) {
+        return { email: sha256Hash(email) };
+      }
+      return { email: email.toLowerCase() };
+    });
+    const url = `${REDDIT_ADS_API}/api/v3/custom_audiences/${audienceId}/users`;
+    const response = await this.fetchWithRetry(url, {
+      method: "PATCH",
+      headers: this.adsHeaders(accessToken),
+      body: JSON.stringify({ users: users3 })
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] addUsersToAudience failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] addUsersToAudience failed: ${response.status}`);
+    }
+    return response.json();
+  }
+  // ============================================================
+  // 6. Reporting
+  // ============================================================
+  async getCampaignReport(accessToken, accountId, campaignId, startDate, endDate) {
+    const params = new URLSearchParams({
+      starts_at: startDate,
+      ends_at: endDate,
+      campaign_id: campaignId,
+      metrics: "impressions,clicks,spend,conversions,upvotes,video_views,engagement_rate",
+      group_by: "campaign_id"
+    });
+    const url = `${REDDIT_ADS_API}/api/v3/accounts/${accountId}/reports?${params.toString()}`;
+    const response = await this.fetchWithRetry(url, {
+      method: "GET",
+      headers: this.adsHeaders(accessToken)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] getCampaignReport failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] getCampaignReport failed: ${response.status}`);
+    }
+    return response.json();
+  }
+  // ============================================================
+  // 7. Subreddit Intelligence
+  // ============================================================
+  async searchSubreddits(query, accessToken) {
+    const url = `${REDDIT_OAUTH_API}/subreddits/search?q=${encodeURIComponent(query)}&limit=10`;
+    const response = await this.fetchWithRetry(url, {
+      method: "GET",
+      headers: this.adsHeaders(accessToken)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] searchSubreddits failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] searchSubreddits failed: ${response.status}`);
+    }
+    const data = await response.json();
+    const children = data?.data?.children || [];
+    return children.map((child) => {
+      const sub = child.data;
+      return {
+        name: sub.display_name_prefixed || `r/${sub.display_name}`,
+        display_name: sub.display_name,
+        subscribers: sub.subscribers || 0,
+        active_user_count: sub.active_user_count || sub.accounts_active || 0,
+        public_description: sub.public_description || "",
+        over18: sub.over18 || false,
+        url: sub.url || `/r/${sub.display_name}`,
+        icon_img: sub.icon_img || sub.community_icon || void 0
+      };
+    });
+  }
+  async getSubredditPosts(subreddit, limit = 25, accessToken) {
+    const cleanSub = subreddit.replace(/^r\//, "");
+    const url = `${REDDIT_OAUTH_API}/r/${encodeURIComponent(cleanSub)}/hot?limit=${limit}`;
+    const response = await this.fetchWithRetry(url, {
+      method: "GET",
+      headers: this.adsHeaders(accessToken)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] getSubredditPosts failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] getSubredditPosts failed: ${response.status}`);
+    }
+    const data = await response.json();
+    const children = data?.data?.children || [];
+    return children.map((child) => ({
+      id: child.data.id,
+      title: child.data.title,
+      author: child.data.author,
+      score: child.data.score,
+      upvote_ratio: child.data.upvote_ratio,
+      num_comments: child.data.num_comments,
+      created_utc: child.data.created_utc,
+      url: child.data.url,
+      selftext: child.data.selftext?.substring(0, 500) || "",
+      permalink: `https://reddit.com${child.data.permalink}`
+    }));
+  }
+  // ============================================================
+  // 8. Comments
+  // ============================================================
+  async getAdComments(accessToken, adId) {
+    const url = `${REDDIT_OAUTH_API}/comments/${adId}`;
+    const response = await this.fetchWithRetry(url, {
+      method: "GET",
+      headers: this.adsHeaders(accessToken)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] getAdComments failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] getAdComments failed: ${response.status}`);
+    }
+    const data = await response.json();
+    const commentsListing = Array.isArray(data) && data.length > 1 ? data[1] : data;
+    const children = commentsListing?.data?.children || [];
+    return children.filter((child) => child.kind === "t1").map((child) => ({
+      id: child.data.id,
+      fullname: child.data.name,
+      // t1_xxxxx
+      author: child.data.author,
+      body: child.data.body,
+      score: child.data.score,
+      created_utc: child.data.created_utc,
+      parent_id: child.data.parent_id,
+      replies: child.data.replies?.data?.children?.length || 0
+    }));
+  }
+  async replyToComment(accessToken, commentId, text2) {
+    const thingId = commentId.startsWith("t1_") ? commentId : `t1_${commentId}`;
+    const url = `${REDDIT_OAUTH_API}/api/comment`;
+    const response = await this.fetchWithRetry(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "User-Agent": USER_AGENT,
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: new URLSearchParams({
+        thing_id: thingId,
+        text: text2,
+        api_type: "json"
+      }).toString()
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] replyToComment failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] replyToComment failed: ${response.status}`);
+    }
+    return response.json();
+  }
+  // ============================================================
+  // 9. Conversions API
+  // ============================================================
+  async sendConversionEvent(accessToken, data) {
+    const hashedUser = {};
+    if (data.user.email) {
+      hashedUser.email = sha256Hash(data.user.email);
+    }
+    if (data.user.external_id) {
+      hashedUser.external_id = sha256Hash(data.user.external_id);
+    }
+    if (data.user.ip_address) {
+      hashedUser.ip_address = sha256Hash(data.user.ip_address);
+    }
+    if (data.user.user_agent) hashedUser.user_agent = data.user.user_agent;
+    if (data.user.idfa) hashedUser.idfa = sha256Hash(data.user.idfa);
+    if (data.user.aaid) hashedUser.aaid = sha256Hash(data.user.aaid);
+    if (data.user.click_id) hashedUser.click_id = data.user.click_id;
+    if (data.user.uuid) hashedUser.uuid = data.user.uuid;
+    const payload = {
+      events: [
+        {
+          event_at: data.event_at,
+          event_type: data.event_type,
+          user: hashedUser,
+          event_metadata: data.event_metadata || {}
+        }
+      ]
+    };
+    const url = `${REDDIT_ADS_API}/api/v3/conversions/events`;
+    const response = await this.fetchWithRetry(url, {
+      method: "POST",
+      headers: this.adsHeaders(accessToken),
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[RedditAds] sendConversionEvent failed: ${response.status} ${errorText}`);
+      throw new Error(`[RedditAds] sendConversionEvent failed: ${response.status}`);
+    }
+    return response.json();
+  }
+  // ============================================================
+  // 10. Token Management
+  // ============================================================
+  async getValidToken(clientId) {
+    try {
+      const [connection] = await db.select().from(adAccountConnections).where(
+        and22(
+          eq32(adAccountConnections.clientId, typeof clientId === "string" ? parseInt(clientId) || 0 : clientId),
+          eq32(adAccountConnections.platform, "reddit"),
+          eq32(adAccountConnections.status, "active")
+        )
+      ).limit(1);
+      if (!connection || !connection.accessToken) {
+        console.warn(`[RedditAds] No active Reddit connection found for client ${clientId}`);
+        return null;
+      }
+      const accessToken = decryptToken(connection.accessToken);
+      const refreshToken = connection.refreshToken ? decryptToken(connection.refreshToken) : null;
+      const isExpired = connection.tokenExpiresAt && new Date(connection.tokenExpiresAt).getTime() < Date.now() + 5 * 60 * 1e3;
+      if (!isExpired) {
+        return accessToken;
+      }
+      if (!refreshToken) {
+        console.error(`[RedditAds] Token expired and no refresh token for client ${clientId}`);
+        await db.update(adAccountConnections).set({ status: "expired", updatedAt: /* @__PURE__ */ new Date() }).where(eq32(adAccountConnections.id, connection.id));
+        return null;
+      }
+      console.log(`[RedditAds] Refreshing expired token for client ${clientId}`);
+      const tokens = await this.refreshAccessToken(refreshToken);
+      await db.update(adAccountConnections).set({
+        accessToken: encryptToken(tokens.access_token),
+        refreshToken: encryptToken(tokens.refresh_token),
+        tokenExpiresAt: new Date(Date.now() + tokens.expires_in * 1e3),
+        updatedAt: /* @__PURE__ */ new Date()
+      }).where(eq32(adAccountConnections.id, connection.id));
+      return tokens.access_token;
+    } catch (error) {
+      console.error(`[RedditAds] getValidToken error for client ${clientId}:`, error);
+      return null;
+    }
+  }
+  async storeToken(clientId, accountId, accountName, tokens) {
+    try {
+      const [existing] = await db.select().from(adAccountConnections).where(
+        and22(
+          eq32(adAccountConnections.clientId, typeof clientId === "string" ? parseInt(clientId) || 0 : clientId),
+          eq32(adAccountConnections.platform, "reddit")
+        )
+      ).limit(1);
+      const tokenData = {
+        accountId,
+        accountName,
+        accessToken: encryptToken(tokens.access_token),
+        refreshToken: encryptToken(tokens.refresh_token),
+        tokenExpiresAt: new Date(Date.now() + tokens.expires_in * 1e3),
+        status: "active",
+        updatedAt: /* @__PURE__ */ new Date()
+      };
+      if (existing) {
+        await db.update(adAccountConnections).set(tokenData).where(eq32(adAccountConnections.id, existing.id));
+        console.log(`[RedditAds] Updated token for client ${clientId}`);
+      } else {
+        await db.insert(adAccountConnections).values({
+          clientId: typeof clientId === "string" ? parseInt(clientId) || 0 : clientId,
+          platform: "reddit",
+          ...tokenData,
+          createdAt: /* @__PURE__ */ new Date()
+        });
+        console.log(`[RedditAds] Stored new token for client ${clientId}`);
+      }
+    } catch (error) {
+      console.error(`[RedditAds] storeToken error for client ${clientId}:`, error);
+      throw error;
+    }
+  }
+};
+var redditAdsService = new RedditAdsService();
+
+// server/routes/amplify.ts
+init_ai_provider();
+import crypto15 from "crypto";
+var router13 = Router20();
+var GOOGLE_CLIENT_ID2 = process.env.GOOGLE_CLIENT_ID;
+var GOOGLE_CLIENT_SECRET2 = process.env.GOOGLE_CLIENT_SECRET;
+var GOOGLE_ADS_DEVELOPER_TOKEN = process.env.GOOGLE_ADS_DEVELOPER_TOKEN;
+var META_APP_ID2 = process.env.META_APP_ID;
+var META_APP_SECRET2 = process.env.META_APP_SECRET;
+function getUserId(req) {
+  return req.session?.userId || req.user?.claims?.sub || "dev-user";
+}
+router13.get("/api/amplify/overview", isAuthenticated, async (req, res) => {
+  try {
+    const accountsResult = await db.select({ count: sql14`count(*)::int` }).from(adAccountConnections).where(eq33(adAccountConnections.status, "active"));
+    const activeCampaignsResult = await db.select({ count: sql14`count(*)::int` }).from(amplifyCampaigns).where(eq33(amplifyCampaigns.status, "active"));
+    const now = /* @__PURE__ */ new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const spendResult = await db.select({
+      total: sql14`coalesce(sum(spend_to_date::numeric), 0)::text`
+    }).from(amplifyCampaigns).where(
+      and23(
+        eq33(amplifyCampaigns.status, "active"),
+        sql14`${amplifyCampaigns.createdAt} >= ${monthStart}`
+      )
+    );
+    const topCampaign = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.status, "active")).orderBy(desc16(amplifyCampaigns.roas)).limit(1);
+    res.json({
+      success: true,
+      data: {
+        connectedAccounts: accountsResult[0]?.count || 0,
+        activeCampaigns: activeCampaignsResult[0]?.count || 0,
+        totalSpendThisMonth: spendResult[0]?.total || "0",
+        topPerformingCampaign: topCampaign[0] || null
+      }
+    });
+  } catch (error) {
+    console.error("[Amplify] Overview error:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch overview" });
+  }
+});
+router13.get("/api/amplify/stats", isAuthenticated, async (_req, res) => {
+  try {
+    const totalCampaignsResult = await db.select({ count: sql14`count(*)::int` }).from(amplifyCampaigns);
+    const totalSpendResult = await db.select({
+      total: sql14`coalesce(sum(spend_to_date::numeric), 0)::text`
+    }).from(amplifyCampaigns);
+    const avgRoasResult = await db.select({
+      avg: sql14`coalesce(avg(roas::numeric), 0)::text`
+    }).from(amplifyCampaigns).where(sql14`${amplifyCampaigns.roas} is not null`);
+    const activeCampaignsResult = await db.select({ count: sql14`count(*)::int` }).from(amplifyCampaigns).where(eq33(amplifyCampaigns.status, "active"));
+    const platformBreakdown = await db.select({
+      platform: amplifyCampaigns.platform,
+      count: sql14`count(*)::int`,
+      spend: sql14`coalesce(sum(spend_to_date::numeric), 0)::text`
+    }).from(amplifyCampaigns).groupBy(amplifyCampaigns.platform);
+    res.json({
+      success: true,
+      stats: {
+        totalCampaigns: totalCampaignsResult[0]?.count || 0,
+        activeCampaigns: activeCampaignsResult[0]?.count || 0,
+        totalSpend: totalSpendResult[0]?.total || "0",
+        avgRoas: avgRoasResult[0]?.avg || "0",
+        platformBreakdown
+      }
+    });
+  } catch (error) {
+    console.error("[Amplify] Stats error:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch stats" });
+  }
+});
+router13.get("/api/amplify/accounts", isAuthenticated, async (_req, res) => {
+  try {
+    const accounts = await db.select().from(adAccountConnections).where(eq33(adAccountConnections.status, "active")).orderBy(desc16(adAccountConnections.createdAt));
+    res.json({ success: true, accounts });
+  } catch (error) {
+    console.error("[Amplify] List accounts error:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch accounts" });
+  }
+});
+router13.post(
+  "/api/amplify/accounts/connect",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const { platform } = req.body;
+      if (!platform) {
+        return res.status(400).json({ success: false, message: "Platform is required" });
+      }
+      const platformLower = platform.toLowerCase();
+      if (platformLower === "reddit") {
+        try {
+          const oauthUrl = redditAdsService.getAuthorizationUrl(0, process.env.REDDIT_REDIRECT_URI || `${req.protocol}://${req.get("host")}/api/amplify/accounts/reddit/callback`);
+          return res.json({ success: true, oauthUrl });
+        } catch (err) {
+          console.error("[Amplify] Reddit OAuth URL error:", err);
+          return res.status(500).json({
+            success: false,
+            message: "Failed to generate Reddit OAuth URL. Check REDDIT_CLIENT_ID and REDDIT_REDIRECT_URI env vars."
+          });
+        }
+      }
+      if (platformLower === "google") {
+        if (!GOOGLE_CLIENT_ID2) {
+          return res.status(500).json({ success: false, message: "Google OAuth not configured" });
+        }
+        const redirectUri = `${req.protocol}://${req.get("host")}/api/amplify/accounts/google/callback`;
+        const state = Buffer.from(JSON.stringify({ nonce: crypto15.randomBytes(16).toString("hex"), timestamp: Date.now() })).toString("base64");
+        const authUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+        authUrl.searchParams.set("client_id", GOOGLE_CLIENT_ID2);
+        authUrl.searchParams.set("redirect_uri", redirectUri);
+        authUrl.searchParams.set("response_type", "code");
+        authUrl.searchParams.set("scope", "https://www.googleapis.com/auth/adwords https://www.googleapis.com/auth/userinfo.email");
+        authUrl.searchParams.set("state", state);
+        authUrl.searchParams.set("access_type", "offline");
+        authUrl.searchParams.set("prompt", "consent");
+        return res.json({ success: true, oauthUrl: authUrl.toString() });
+      }
+      if (platformLower === "meta") {
+        if (!META_APP_ID2) {
+          return res.status(500).json({ success: false, message: "Meta OAuth not configured" });
+        }
+        const redirectUri = `${req.protocol}://${req.get("host")}/api/amplify/accounts/meta/callback`;
+        const state = Buffer.from(JSON.stringify({ nonce: crypto15.randomBytes(16).toString("hex"), timestamp: Date.now() })).toString("base64");
+        const authUrl = new URL("https://www.facebook.com/v21.0/dialog/oauth");
+        authUrl.searchParams.set("client_id", META_APP_ID2);
+        authUrl.searchParams.set("redirect_uri", redirectUri);
+        authUrl.searchParams.set("scope", "ads_management,ads_read,pages_show_list");
+        authUrl.searchParams.set("state", state);
+        authUrl.searchParams.set("response_type", "code");
+        return res.json({ success: true, oauthUrl: authUrl.toString() });
+      }
+      if (platformLower === "microsoft") {
+        const msClientId = process.env.MICROSOFT_ADS_CLIENT_ID;
+        if (!msClientId) {
+          return res.status(500).json({ success: false, message: "Microsoft Advertising OAuth not configured" });
+        }
+        const redirectUri = `${req.protocol}://${req.get("host")}/api/microsoft-ads/oauth/callback`;
+        const state = Buffer.from(JSON.stringify({ nonce: crypto15.randomBytes(16).toString("hex"), timestamp: Date.now() })).toString("base64");
+        const authUrl = new URL("https://login.microsoftonline.com/common/oauth2/v2.0/authorize");
+        authUrl.searchParams.set("client_id", msClientId);
+        authUrl.searchParams.set("redirect_uri", redirectUri);
+        authUrl.searchParams.set("response_type", "code");
+        authUrl.searchParams.set("scope", "https://ads.microsoft.com/msads.manage openid profile email");
+        authUrl.searchParams.set("state", state);
+        authUrl.searchParams.set("prompt", "consent");
+        return res.json({ success: true, oauthUrl: authUrl.toString() });
+      }
+      return res.status(400).json({
+        success: false,
+        message: `Unsupported platform: ${platform}. Supported: meta, google, microsoft, reddit`
+      });
+    } catch (error) {
+      console.error("[Amplify] Connect account error:", error);
+      res.status(500).json({ success: false, message: "Failed to initiate connection" });
+    }
+  }
+);
+router13.get(
+  "/api/amplify/accounts/reddit/callback",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const { code, state, error: oauthError } = req.query;
+      if (oauthError) {
+        console.error("[Amplify] Reddit OAuth denied:", oauthError);
+        return res.status(400).json({
+          success: false,
+          message: `Reddit OAuth denied: ${oauthError}`
+        });
+      }
+      if (!code || typeof code !== "string") {
+        return res.status(400).json({
+          success: false,
+          message: "Missing authorization code from Reddit"
+        });
+      }
+      const tokenData = await redditAdsService.exchangeCodeForToken(code, process.env.REDDIT_REDIRECT_URI || `${req.protocol}://${req.get("host")}/api/amplify/accounts/reddit/callback`);
+      const userId = getUserId(req);
+      await redditAdsService.storeToken(userId, "reddit_ads", "Reddit Ads", tokenData);
+      console.log(
+        "[Amplify] Reddit OAuth completed successfully for user:",
+        userId
+      );
+      res.json({
+        success: true,
+        message: "Reddit ad account connected successfully",
+        accountName: "Reddit Ads"
+      });
+    } catch (error) {
+      console.error("[Amplify] Reddit OAuth callback error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to complete Reddit OAuth: " + error.message
+      });
+    }
+  }
+);
+router13.get(
+  "/api/amplify/accounts/google/callback",
+  async (req, res) => {
+    try {
+      const { code, error: oauthError } = req.query;
+      if (oauthError || !code) {
+        return res.redirect("/amplify/dashboard?oauth=error&platform=google");
+      }
+      const redirectUri = `${req.protocol}://${req.get("host")}/api/amplify/accounts/google/callback`;
+      const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          code,
+          client_id: GOOGLE_CLIENT_ID2,
+          client_secret: GOOGLE_CLIENT_SECRET2,
+          redirect_uri: redirectUri,
+          grant_type: "authorization_code"
+        })
+      });
+      const tokenData = await tokenResponse.json();
+      if (!tokenData.access_token) {
+        console.error("[Amplify] Google token exchange failed:", tokenData);
+        return res.redirect("/amplify/dashboard?oauth=error&platform=google");
+      }
+      const profileResponse = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+        headers: { Authorization: `Bearer ${tokenData.access_token}` }
+      });
+      const profile = await profileResponse.json();
+      const [connection] = await db.insert(adAccountConnections).values({
+        platform: "google",
+        accountName: profile.email || "Google Ads",
+        status: "active",
+        accessToken: tokenData.access_token,
+        refreshToken: tokenData.refresh_token,
+        tokenExpiresAt: new Date(Date.now() + (tokenData.expires_in || 3600) * 1e3)
+      }).returning();
+      console.log(`[Amplify] Google Ads connected: ${profile.email}`);
+      res.redirect("/amplify/dashboard?oauth=success&platform=google");
+    } catch (error) {
+      console.error("[Amplify] Google OAuth callback error:", error);
+      res.redirect("/amplify/dashboard?oauth=error&platform=google");
+    }
+  }
+);
+router13.get(
+  "/api/amplify/accounts/meta/callback",
+  async (req, res) => {
+    try {
+      const { code, error: oauthError } = req.query;
+      if (oauthError || !code) {
+        return res.redirect("/amplify/dashboard?oauth=error&platform=meta");
+      }
+      const redirectUri = `${req.protocol}://${req.get("host")}/api/amplify/accounts/meta/callback`;
+      const tokenResponse = await fetch(
+        `https://graph.facebook.com/v21.0/oauth/access_token?client_id=${META_APP_ID2}&client_secret=${META_APP_SECRET2}&code=${code}&redirect_uri=${encodeURIComponent(redirectUri)}`
+      );
+      const tokenData = await tokenResponse.json();
+      if (!tokenData.access_token) {
+        console.error("[Amplify] Meta token exchange failed:", tokenData);
+        return res.redirect("/amplify/dashboard?oauth=error&platform=meta");
+      }
+      const longLivedResponse = await fetch(
+        `https://graph.facebook.com/v21.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${META_APP_ID2}&client_secret=${META_APP_SECRET2}&fb_exchange_token=${tokenData.access_token}`
+      );
+      const longLivedData = await longLivedResponse.json();
+      const accessToken = longLivedData.access_token || tokenData.access_token;
+      const adAccountsResponse = await fetch(
+        `https://graph.facebook.com/v21.0/me/adaccounts?fields=name,account_id,account_status&access_token=${accessToken}`
+      );
+      const adAccountsData = await adAccountsResponse.json();
+      const accountName = adAccountsData.data?.[0]?.name || "Meta Ads";
+      const adAccountId = adAccountsData.data?.[0]?.account_id;
+      const [connection] = await db.insert(adAccountConnections).values({
+        platform: "meta",
+        accountName,
+        accountId: adAccountId,
+        status: "active",
+        accessToken
+      }).returning();
+      console.log(`[Amplify] Meta Ads connected: ${accountName}`);
+      res.redirect("/amplify/dashboard?oauth=success&platform=meta");
+    } catch (error) {
+      console.error("[Amplify] Meta OAuth callback error:", error);
+      res.redirect("/amplify/dashboard?oauth=error&platform=meta");
+    }
+  }
+);
+router13.delete(
+  "/api/amplify/accounts/:id",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const accountId = parseInt(req.params.id);
+      if (isNaN(accountId)) {
+        return res.status(400).json({ success: false, message: "Invalid account ID" });
+      }
+      const [updated] = await db.update(adAccountConnections).set({ status: "disconnected", updatedAt: /* @__PURE__ */ new Date() }).where(eq33(adAccountConnections.id, accountId)).returning();
+      if (!updated) {
+        return res.status(404).json({ success: false, message: "Account not found" });
+      }
+      res.json({
+        success: true,
+        message: "Account disconnected",
+        account: updated
+      });
+    } catch (error) {
+      console.error("[Amplify] Disconnect account error:", error);
+      res.status(500).json({ success: false, message: "Failed to disconnect account" });
+    }
+  }
+);
+router13.get("/api/amplify/campaigns", isAuthenticated, async (req, res) => {
+  try {
+    const { platform, status, page, limit } = req.query;
+    const pageNum = parseInt(page) || 1;
+    const limitNum = Math.min(parseInt(limit) || 20, 100);
+    const offset = (pageNum - 1) * limitNum;
+    const conditions = [];
+    if (platform) {
+      conditions.push(eq33(amplifyCampaigns.platform, platform));
+    }
+    if (status) {
+      conditions.push(eq33(amplifyCampaigns.status, status));
+    }
+    const whereClause = conditions.length > 0 ? and23(...conditions) : void 0;
+    const campaigns2 = await db.select().from(amplifyCampaigns).where(whereClause).orderBy(desc16(amplifyCampaigns.createdAt)).limit(limitNum).offset(offset);
+    const totalResult = await db.select({ count: sql14`count(*)::int` }).from(amplifyCampaigns).where(whereClause);
+    res.json({
+      success: true,
+      campaigns: campaigns2,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total: totalResult[0]?.count || 0,
+        totalPages: Math.ceil((totalResult[0]?.count || 0) / limitNum)
+      }
+    });
+  } catch (error) {
+    console.error("[Amplify] List campaigns error:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch campaigns" });
+  }
+});
+router13.get(
+  "/api/amplify/reddit/campaigns",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const { status, page, limit } = req.query;
+      const pageNum = parseInt(page) || 1;
+      const limitNum = Math.min(parseInt(limit) || 20, 100);
+      const offset = (pageNum - 1) * limitNum;
+      const conditions = [
+        eq33(amplifyCampaigns.platform, "reddit")
+      ];
+      if (status) {
+        conditions.push(eq33(amplifyCampaigns.status, status));
+      }
+      const whereClause = and23(...conditions);
+      const campaigns2 = await db.select().from(amplifyCampaigns).where(whereClause).orderBy(desc16(amplifyCampaigns.createdAt)).limit(limitNum).offset(offset);
+      const totalResult = await db.select({ count: sql14`count(*)::int` }).from(amplifyCampaigns).where(whereClause);
+      res.json({
+        success: true,
+        campaigns: campaigns2,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          total: totalResult[0]?.count || 0,
+          totalPages: Math.ceil((totalResult[0]?.count || 0) / limitNum)
+        }
+      });
+    } catch (error) {
+      console.error("[Amplify] List Reddit campaigns error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch Reddit campaigns" });
+    }
+  }
+);
+router13.get(
+  "/api/amplify/meta/campaigns",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const { status, page, limit } = req.query;
+      const pageNum = parseInt(page) || 1;
+      const limitNum = Math.min(parseInt(limit) || 20, 100);
+      const offset = (pageNum - 1) * limitNum;
+      const conditions = [eq33(amplifyCampaigns.platform, "meta")];
+      if (status) {
+        conditions.push(eq33(amplifyCampaigns.status, status));
+      }
+      const whereClause = and23(...conditions);
+      const campaigns2 = await db.select().from(amplifyCampaigns).where(whereClause).orderBy(desc16(amplifyCampaigns.createdAt)).limit(limitNum).offset(offset);
+      const totalResult = await db.select({ count: sql14`count(*)::int` }).from(amplifyCampaigns).where(whereClause);
+      res.json({
+        success: true,
+        campaigns: campaigns2,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          total: totalResult[0]?.count || 0,
+          totalPages: Math.ceil((totalResult[0]?.count || 0) / limitNum)
+        }
+      });
+    } catch (error) {
+      console.error("[Amplify] List Meta campaigns error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch Meta campaigns" });
+    }
+  }
+);
+router13.get(
+  "/api/amplify/google/campaigns",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const { status, page, limit } = req.query;
+      const pageNum = parseInt(page) || 1;
+      const limitNum = Math.min(parseInt(limit) || 20, 100);
+      const offset = (pageNum - 1) * limitNum;
+      const conditions = [
+        eq33(amplifyCampaigns.platform, "google")
+      ];
+      if (status) {
+        conditions.push(eq33(amplifyCampaigns.status, status));
+      }
+      const whereClause = and23(...conditions);
+      const campaigns2 = await db.select().from(amplifyCampaigns).where(whereClause).orderBy(desc16(amplifyCampaigns.createdAt)).limit(limitNum).offset(offset);
+      const totalResult = await db.select({ count: sql14`count(*)::int` }).from(amplifyCampaigns).where(whereClause);
+      res.json({
+        success: true,
+        campaigns: campaigns2,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          total: totalResult[0]?.count || 0,
+          totalPages: Math.ceil((totalResult[0]?.count || 0) / limitNum)
+        }
+      });
+    } catch (error) {
+      console.error("[Amplify] List Google campaigns error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch Google campaigns"
+      });
+    }
+  }
+);
+async function createGenericCampaign(req, res, platform) {
+  try {
+    const {
+      name,
+      objective,
+      dailyBudget,
+      lifetimeBudget,
+      startDate,
+      endDate
+    } = req.body;
+    if (!name) {
+      return res.status(400).json({ success: false, message: "Campaign name is required" });
+    }
+    if (!objective) {
+      return res.status(400).json({ success: false, message: "Campaign objective is required" });
+    }
+    const [campaign] = await db.insert(amplifyCampaigns).values({
+      platform,
+      name,
+      objective,
+      dailyBudget: dailyBudget || null,
+      lifetimeBudget: lifetimeBudget || null,
+      startDate: startDate ? new Date(startDate) : null,
+      endDate: endDate ? new Date(endDate) : null,
+      status: "draft"
+    }).returning();
+    console.log(
+      `[Amplify] ${platform} campaign ${campaign.id} created in DB (platform API integration pending)`
+    );
+    res.json({
+      success: true,
+      campaign,
+      message: `${platform} campaign stored. API submission pending OAuth integration.`
+    });
+  } catch (error) {
+    console.error(`[Amplify] Create ${platform} campaign error:`, error);
+    res.status(500).json({
+      success: false,
+      message: `Failed to create ${platform} campaign`
+    });
+  }
+}
+router13.post(
+  "/api/amplify/campaigns/meta",
+  isAuthenticated,
+  (req, res) => createGenericCampaign(req, res, "meta")
+);
+router13.post("/api/amplify/campaigns/google", isAuthenticated, async (req, res) => {
+  try {
+    const { name, objective, dailyBudget, lifetimeBudget, startDate, endDate } = req.body;
+    if (!name) return res.status(400).json({ success: false, message: "Campaign name is required" });
+    if (!objective) return res.status(400).json({ success: false, message: "Campaign objective is required" });
+    const [campaign] = await db.insert(amplifyCampaigns).values({
+      platform: "google",
+      name,
+      objective,
+      dailyBudget: dailyBudget || null,
+      lifetimeBudget: lifetimeBudget || null,
+      startDate: startDate ? new Date(startDate) : null,
+      endDate: endDate ? new Date(endDate) : null,
+      status: "draft"
+    }).returning();
+    const [googleAccount] = await db.select().from(adAccountConnections).where(and23(eq33(adAccountConnections.platform, "google"), eq33(adAccountConnections.status, "active")));
+    if (googleAccount?.accessToken && GOOGLE_ADS_DEVELOPER_TOKEN) {
+      try {
+        let accessToken = googleAccount.accessToken;
+        if (googleAccount.tokenExpiresAt && Date.now() > googleAccount.tokenExpiresAt.getTime() && googleAccount.refreshToken) {
+          const refreshResponse = await fetch("https://oauth2.googleapis.com/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+              client_id: GOOGLE_CLIENT_ID2,
+              client_secret: GOOGLE_CLIENT_SECRET2,
+              refresh_token: googleAccount.refreshToken,
+              grant_type: "refresh_token"
+            })
+          });
+          const refreshData = await refreshResponse.json();
+          if (refreshData.access_token) {
+            accessToken = refreshData.access_token;
+            await db.update(adAccountConnections).set({ accessToken, tokenExpiresAt: new Date(Date.now() + (refreshData.expires_in || 3600) * 1e3) }).where(eq33(adAccountConnections.id, googleAccount.id));
+          }
+        }
+        console.log(`[Amplify] Google campaign ${campaign.id} created. Google Ads API submission ready when campaign is activated.`);
+      } catch (apiErr) {
+        console.error("[Amplify] Google Ads API error (non-blocking):", apiErr.message);
+      }
+    }
+    res.json({
+      success: true,
+      campaign,
+      message: googleAccount ? "Google campaign created and linked to your Google Ads account." : "Google campaign saved as draft. Connect your Google Ads account to publish."
+    });
+  } catch (error) {
+    console.error("[Amplify] Create Google campaign error:", error);
+    res.status(500).json({ success: false, message: "Failed to create Google campaign" });
+  }
+});
+router13.post(
+  "/api/amplify/campaigns/microsoft",
+  isAuthenticated,
+  (req, res) => createGenericCampaign(req, res, "microsoft")
+);
+router13.post(
+  "/api/amplify/campaigns/reddit",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const {
+        name,
+        objective,
+        subreddits,
+        dailyBudget,
+        lifetimeBudget,
+        startDate,
+        endDate,
+        headline,
+        body: adBody,
+        destinationUrl,
+        callToAction,
+        mediaUrl
+      } = req.body;
+      if (!name || typeof name !== "string" || name.trim().length === 0) {
+        return res.status(400).json({ success: false, message: "Campaign name is required" });
+      }
+      if (!objective) {
+        return res.status(400).json({ success: false, message: "Campaign objective is required" });
+      }
+      if (!subreddits || !Array.isArray(subreddits) || subreddits.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "At least one target subreddit is required"
+        });
+      }
+      const budgetAmount = parseFloat(dailyBudget || lifetimeBudget || "0");
+      if (budgetAmount < 5) {
+        return res.status(400).json({
+          success: false,
+          message: "Reddit Ads minimum budget is $5.00"
+        });
+      }
+      if (!headline) {
+        return res.status(400).json({ success: false, message: "Ad headline is required" });
+      }
+      if (!destinationUrl) {
+        return res.status(400).json({
+          success: false,
+          message: "Destination URL is required"
+        });
+      }
+      const [campaign] = await db.insert(amplifyCampaigns).values({
+        platform: "reddit",
+        name: name.trim(),
+        objective,
+        dailyBudget: dailyBudget || null,
+        lifetimeBudget: lifetimeBudget || null,
+        startDate: startDate ? new Date(startDate) : /* @__PURE__ */ new Date(),
+        endDate: endDate ? new Date(endDate) : null,
+        status: "pending"
+      }).returning();
+      let externalCampaignId = null;
+      let externalAdGroupId = null;
+      let externalAdId = null;
+      try {
+        const userId = getUserId(req);
+        const token = await redditAdsService.getValidToken(userId);
+        if (!token) return;
+        if (!token) throw new Error("No valid Reddit token \u2014 connect your account first");
+        const [redditAccount] = await db.select().from(adAccountConnections).where(and23(eq33(adAccountConnections.clientId, parseInt(userId) || 0), eq33(adAccountConnections.platform, "reddit"))).limit(1);
+        const redditAccountId = redditAccount?.accountId || "default";
+        const redditCampaign = await redditAdsService.createCampaign(token, redditAccountId, {
+          name: name.trim(),
+          objective: objective.toUpperCase(),
+          daily_budget_micro: Math.round(budgetAmount * 1e6),
+          start_time: campaign.startDate?.toISOString() || (/* @__PURE__ */ new Date()).toISOString(),
+          end_time: campaign.endDate?.toISOString() || void 0,
+          funding_instrument_id: redditAccountId
+        });
+        externalCampaignId = redditCampaign.id;
+        const adGroup = await redditAdsService.createAdGroup(token, redditAccountId, {
+          campaign_id: redditCampaign.id,
+          name: `${name.trim()} - Ad Group`,
+          bid_micro: Math.round(budgetAmount / 10 * 1e6),
+          start_time: campaign.startDate?.toISOString() || (/* @__PURE__ */ new Date()).toISOString(),
+          target: { subreddits }
+        });
+        externalAdGroupId = adGroup.id;
+        const ad = await redditAdsService.createAd(token, redditAccountId, {
+          ad_group_id: adGroup.id,
+          name: `${name.trim()} - Ad`,
+          headline,
+          link_url: destinationUrl,
+          call_to_action: callToAction || "LEARN_MORE",
+          thumbnail_url: mediaUrl || void 0
+        });
+        externalAdId = ad.id;
+        await db.update(amplifyCampaigns).set({
+          externalCampaignId,
+          status: "active",
+          updatedAt: /* @__PURE__ */ new Date()
+        }).where(eq33(amplifyCampaigns.id, campaign.id));
+        await db.insert(amplifyAdSets).values({
+          campaignId: campaign.id,
+          externalAdSetId: externalAdGroupId,
+          name: `${name.trim()} - Ad Group`,
+          targetingSummary: { subreddits },
+          budget: dailyBudget || lifetimeBudget || "0",
+          status: "active"
+        });
+        const [adSet] = await db.select().from(amplifyAdSets).where(eq33(amplifyAdSets.campaignId, campaign.id)).limit(1);
+        if (adSet) {
+          await db.insert(amplifyAds).values({
+            adSetId: adSet.id,
+            externalAdId,
+            name: `${name.trim()} - Ad`,
+            headline,
+            body: adBody || "",
+            mediaUrl: mediaUrl || null,
+            cta: callToAction || "LEARN_MORE",
+            status: "active"
+          });
+        }
+        console.log(
+          `[Amplify] Reddit campaign ${campaign.id} created on Reddit API: campaign=${externalCampaignId}, adGroup=${externalAdGroupId}, ad=${externalAdId}`
+        );
+      } catch (apiError) {
+        console.error(
+          "[Amplify] Reddit API error during campaign creation:",
+          apiError
+        );
+        await db.update(amplifyCampaigns).set({ status: "draft", updatedAt: /* @__PURE__ */ new Date() }).where(eq33(amplifyCampaigns.id, campaign.id));
+        const [updatedCampaign] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaign.id));
+        return res.status(207).json({
+          success: true,
+          partial: true,
+          campaign: updatedCampaign,
+          message: "Campaign saved locally but Reddit API submission failed: " + apiError.message + ". Connect your Reddit account or check credentials."
+        });
+      }
+      const [finalCampaign] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaign.id));
+      res.json({
+        success: true,
+        campaign: finalCampaign,
+        reddit: {
+          externalCampaignId,
+          externalAdGroupId,
+          externalAdId
+        }
+      });
+    } catch (error) {
+      console.error("[Amplify] Create Reddit campaign error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to create Reddit campaign: " + error.message
+      });
+    }
+  }
+);
+router13.put(
+  "/api/amplify/campaigns/:id/pause",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      if (isNaN(campaignId)) {
+        return res.status(400).json({ success: false, message: "Invalid campaign ID" });
+      }
+      const [existing] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).limit(1);
+      if (!existing) {
+        return res.status(404).json({ success: false, message: "Campaign not found" });
+      }
+      if (existing.platform === "reddit" && existing.externalCampaignId) {
+        try {
+          const userId = getUserId(req);
+          const token = await redditAdsService.getValidToken(userId);
+          if (!token) return;
+          const [acct] = await db.select().from(adAccountConnections).where(and23(eq33(adAccountConnections.clientId, parseInt(userId) || 0), eq33(adAccountConnections.platform, "reddit"))).limit(1);
+          await redditAdsService.updateCampaign(
+            token,
+            acct?.accountId || "default",
+            existing.externalCampaignId,
+            { configured_status: "PAUSED" }
+          );
+        } catch (apiErr) {
+          console.warn(
+            "[Amplify] Could not pause on Reddit API:",
+            apiErr.message
+          );
+        }
+      }
+      const [updated] = await db.update(amplifyCampaigns).set({ status: "paused", updatedAt: /* @__PURE__ */ new Date() }).where(eq33(amplifyCampaigns.id, campaignId)).returning();
+      res.json({ success: true, campaign: updated });
+    } catch (error) {
+      console.error("[Amplify] Pause campaign error:", error);
+      res.status(500).json({ success: false, message: "Failed to pause campaign" });
+    }
+  }
+);
+router13.put(
+  "/api/amplify/campaigns/:id/resume",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      if (isNaN(campaignId)) {
+        return res.status(400).json({ success: false, message: "Invalid campaign ID" });
+      }
+      const [existing] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).limit(1);
+      if (!existing) {
+        return res.status(404).json({ success: false, message: "Campaign not found" });
+      }
+      if (existing.platform === "reddit" && existing.externalCampaignId) {
+        try {
+          const userId = getUserId(req);
+          const token = await redditAdsService.getValidToken(userId);
+          if (!token) return;
+          const [acct] = await db.select().from(adAccountConnections).where(and23(eq33(adAccountConnections.clientId, parseInt(userId) || 0), eq33(adAccountConnections.platform, "reddit"))).limit(1);
+          await redditAdsService.updateCampaign(
+            token,
+            acct?.accountId || "default",
+            existing.externalCampaignId,
+            { configured_status: "ACTIVE" }
+          );
+        } catch (apiErr) {
+          console.warn(
+            "[Amplify] Could not resume on Reddit API:",
+            apiErr.message
+          );
+        }
+      }
+      const [updated] = await db.update(amplifyCampaigns).set({ status: "active", updatedAt: /* @__PURE__ */ new Date() }).where(eq33(amplifyCampaigns.id, campaignId)).returning();
+      res.json({ success: true, campaign: updated });
+    } catch (error) {
+      console.error("[Amplify] Resume campaign error:", error);
+      res.status(500).json({ success: false, message: "Failed to resume campaign" });
+    }
+  }
+);
+router13.delete(
+  "/api/amplify/campaigns/:id",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      if (isNaN(campaignId)) {
+        return res.status(400).json({ success: false, message: "Invalid campaign ID" });
+      }
+      const [existing] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).limit(1);
+      if (!existing) {
+        return res.status(404).json({ success: false, message: "Campaign not found" });
+      }
+      const adSets = await db.select().from(amplifyAdSets).where(eq33(amplifyAdSets.campaignId, campaignId));
+      if (adSets.length > 0) {
+        const adSetIds = adSets.map((s) => s.id);
+        await db.delete(amplifyAds).where(inArray4(amplifyAds.adSetId, adSetIds));
+        await db.delete(amplifyAdSets).where(eq33(amplifyAdSets.campaignId, campaignId));
+      }
+      await db.delete(redditAdComments).where(eq33(redditAdComments.campaignId, campaignId));
+      const [deleted] = await db.delete(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).returning();
+      res.json({ success: true, message: "Campaign deleted", campaign: deleted });
+    } catch (error) {
+      console.error("[Amplify] Delete campaign error:", error);
+      res.status(500).json({ success: false, message: "Failed to delete campaign" });
+    }
+  }
+);
+router13.get("/api/amplify/audiences", isAuthenticated, async (_req, res) => {
+  try {
+    const audiences = await db.select().from(amplifyAudiences).orderBy(desc16(amplifyAudiences.createdAt));
+    res.json({ success: true, audiences });
+  } catch (error) {
+    console.error("[Amplify] List audiences error:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch audiences" });
+  }
+});
+router13.post("/api/amplify/audiences", isAuthenticated, async (req, res) => {
+  try {
+    const { audienceName, audienceType, platform, sizeEstimate } = req.body;
+    if (!audienceName) {
+      return res.status(400).json({ success: false, message: "Audience name is required" });
+    }
+    const [audience] = await db.insert(amplifyAudiences).values({
+      audienceName,
+      audienceType: audienceType || "custom",
+      platform: platform || null,
+      sizeEstimate: sizeEstimate || null
+    }).returning();
+    res.json({ success: true, audience });
+  } catch (error) {
+    console.error("[Amplify] Create audience error:", error);
+    res.status(500).json({ success: false, message: "Failed to create audience" });
+  }
+});
+router13.post(
+  "/api/amplify/audiences/export-crm",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const { platform, audienceName } = req.body;
+      if (!platform) {
+        return res.status(400).json({ success: false, message: "Platform is required" });
+      }
+      const [audience] = await db.insert(amplifyAudiences).values({
+        audienceName: audienceName || `CRM Export - ${(/* @__PURE__ */ new Date()).toISOString().split("T")[0]}`,
+        audienceType: "crm_export",
+        platform,
+        sizeEstimate: 0
+      }).returning();
+      res.json({
+        success: true,
+        audience,
+        message: `CRM contacts queued for export to ${platform}. Actual API upload will happen when OAuth is connected.`
+      });
+    } catch (error) {
+      console.error("[Amplify] Export CRM audience error:", error);
+      res.status(500).json({ success: false, message: "Failed to export CRM audience" });
+    }
+  }
+);
+router13.post("/api/amplify/audiences/from-crm", isAuthenticated, async (req, res) => {
+  try {
+    const { audienceName, platform, filter } = req.body;
+    if (!audienceName || !platform) {
+      return res.status(400).json({ success: false, message: "Audience name and platform are required" });
+    }
+    const clientId = req.session?.clientId;
+    const { crmContacts: crmContacts2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+    const conditions = [eq33(crmContacts2.clientId, clientId)];
+    if (filter?.lifecycleStage) {
+      conditions.push(eq33(crmContacts2.lifecycleStage, filter.lifecycleStage));
+    }
+    if (filter?.leadSource) {
+      conditions.push(eq33(crmContacts2.leadSource, filter.leadSource));
+    }
+    if (filter?.status) {
+      conditions.push(eq33(crmContacts2.status, filter.status));
+    }
+    const contacts = await db.select({ id: crmContacts2.id, email: crmContacts2.email, firstName: crmContacts2.firstName, lastName: crmContacts2.lastName }).from(crmContacts2).where(and23(...conditions));
+    const contactEmails = contacts.filter((c) => c.email).map((c) => c.email);
+    const [audience] = await db.insert(amplifyAudiences).values({
+      clientId,
+      platform,
+      audienceName,
+      audienceType: "crm_segment",
+      sizeEstimate: contactEmails.length,
+      sourceType: "crm_segment",
+      crmFilter: filter || {}
+    }).returning();
+    const { logContactActivity: logContactActivity2 } = await Promise.resolve().then(() => (init_timeline_logger(), timeline_logger_exports));
+    for (const contact of contacts.slice(0, 500)) {
+      await logContactActivity2({
+        clientId,
+        contactId: contact.id,
+        eventType: "ad_campaign_targeted",
+        title: `Added to ad audience: "${audienceName}" on ${platform}`,
+        sourceApp: "amplify",
+        sourceEntityType: "audience",
+        sourceEntityId: String(audience.id),
+        metadata: { audienceName, platform, audienceId: audience.id }
+      });
+    }
+    res.json({
+      success: true,
+      audience,
+      contactCount: contactEmails.length,
+      message: `Audience created with ${contactEmails.length} contacts from your CRM`
+    });
+  } catch (error) {
+    console.error("[Amplify] CRM audience creation error:", error);
+    res.status(500).json({ success: false, message: "Failed to create CRM audience" });
+  }
+});
+router13.post("/api/amplify/attribute", isAuthenticated, async (req, res) => {
+  try {
+    const { contactId, campaignId, platform, utmSource, utmMedium, utmCampaign } = req.body;
+    const clientId = req.session?.clientId;
+    if (!contactId || !campaignId) {
+      return res.status(400).json({ success: false, message: "contactId and campaignId are required" });
+    }
+    const [campaign] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).limit(1);
+    const campaignName = campaign?.name || `Campaign #${campaignId}`;
+    const { logContactActivity: logContactActivity2 } = await Promise.resolve().then(() => (init_timeline_logger(), timeline_logger_exports));
+    await logContactActivity2({
+      clientId,
+      contactId,
+      eventType: "ad_attribution",
+      title: `Arrived via ${platform || "ad"} \u2014 ${campaignName}`,
+      sourceApp: "amplify",
+      sourceEntityType: "campaign",
+      sourceEntityId: String(campaignId),
+      metadata: {
+        campaignId,
+        campaignName,
+        platform: platform || campaign?.platform,
+        utmSource,
+        utmMedium,
+        utmCampaign
+      }
+    });
+    res.json({ success: true, message: "Attribution logged" });
+  } catch (error) {
+    console.error("[Amplify] Attribution error:", error);
+    res.status(500).json({ success: false, message: "Failed to log attribution" });
+  }
+});
+router13.get("/api/amplify/budget", isAuthenticated, async (_req, res) => {
+  try {
+    const now = /* @__PURE__ */ new Date();
+    const currentMonth = `${now.getFullYear()}-${String(
+      now.getMonth() + 1
+    ).padStart(2, "0")}`;
+    const budgets = await db.select().from(amplifyBudgetAllocations).where(eq33(amplifyBudgetAllocations.month, currentMonth));
+    res.json({
+      success: true,
+      month: currentMonth,
+      budget: budgets[0] || null
+    });
+  } catch (error) {
+    console.error("[Amplify] Get budget error:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch budget" });
+  }
+});
+router13.put("/api/amplify/budget", isAuthenticated, async (req, res) => {
+  try {
+    const {
+      totalBudget,
+      metaAllocation,
+      googleAllocation,
+      microsoftAllocation,
+      redditAllocation,
+      otherAllocations
+    } = req.body;
+    if (!totalBudget) {
+      return res.status(400).json({ success: false, message: "Total budget is required" });
+    }
+    const now = /* @__PURE__ */ new Date();
+    const currentMonth = `${now.getFullYear()}-${String(
+      now.getMonth() + 1
+    ).padStart(2, "0")}`;
+    const existing = await db.select().from(amplifyBudgetAllocations).where(eq33(amplifyBudgetAllocations.month, currentMonth)).limit(1);
+    let budget;
+    if (existing.length > 0) {
+      [budget] = await db.update(amplifyBudgetAllocations).set({
+        totalBudget,
+        metaAllocation: metaAllocation || "0",
+        googleAllocation: googleAllocation || "0",
+        microsoftAllocation: microsoftAllocation || "0",
+        redditAllocation: redditAllocation || "0",
+        otherAllocations: otherAllocations || null,
+        updatedAt: /* @__PURE__ */ new Date()
+      }).where(eq33(amplifyBudgetAllocations.id, existing[0].id)).returning();
+    } else {
+      [budget] = await db.insert(amplifyBudgetAllocations).values({
+        month: currentMonth,
+        totalBudget,
+        metaAllocation: metaAllocation || "0",
+        googleAllocation: googleAllocation || "0",
+        microsoftAllocation: microsoftAllocation || "0",
+        redditAllocation: redditAllocation || "0",
+        otherAllocations: otherAllocations || null
+      }).returning();
+    }
+    res.json({ success: true, budget });
+  } catch (error) {
+    console.error("[Amplify] Update budget error:", error);
+    res.status(500).json({ success: false, message: "Failed to update budget" });
+  }
+});
+router13.get("/api/amplify/reports", isAuthenticated, async (req, res) => {
+  try {
+    const { startDate, endDate, platform } = req.query;
+    const conditions = [];
+    if (platform) {
+      conditions.push(eq33(amplifyCampaigns.platform, platform));
+    }
+    if (startDate) {
+      conditions.push(
+        sql14`${amplifyCampaigns.createdAt} >= ${new Date(startDate)}`
+      );
+    }
+    if (endDate) {
+      conditions.push(
+        sql14`${amplifyCampaigns.createdAt} <= ${new Date(endDate)}`
+      );
+    }
+    const whereClause = conditions.length > 0 ? and23(...conditions) : void 0;
+    const metrics = await db.select({
+      platform: amplifyCampaigns.platform,
+      totalSpend: sql14`coalesce(sum(spend_to_date::numeric), 0)::text`,
+      totalImpressions: sql14`coalesce(sum(${amplifyCampaigns.impressions}), 0)::int`,
+      totalClicks: sql14`coalesce(sum(${amplifyCampaigns.clicks}), 0)::int`,
+      totalConversions: sql14`coalesce(sum(${amplifyCampaigns.conversions}), 0)::int`,
+      campaignCount: sql14`count(*)::int`,
+      avgRoas: sql14`coalesce(avg(${amplifyCampaigns.roas}::numeric), 0)::text`
+    }).from(amplifyCampaigns).where(whereClause).groupBy(amplifyCampaigns.platform);
+    const campaigns2 = await db.select().from(amplifyCampaigns).where(whereClause).orderBy(desc16(amplifyCampaigns.createdAt));
+    res.json({
+      success: true,
+      report: {
+        dateRange: {
+          startDate: startDate || null,
+          endDate: endDate || null
+        },
+        platformMetrics: metrics,
+        campaigns: campaigns2
+      }
+    });
+  } catch (error) {
+    console.error("[Amplify] Reports error:", error);
+    res.status(500).json({ success: false, message: "Failed to generate report" });
+  }
+});
+router13.get("/api/amplify/insights", isAuthenticated, async (_req, res) => {
+  try {
+    const activeCampaigns = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.status, "active"));
+    const insights = [];
+    if (activeCampaigns.length > 0) {
+      const platformPerf = {};
+      for (const c of activeCampaigns) {
+        const plat = c.platform || "unknown";
+        if (!platformPerf[plat])
+          platformPerf[plat] = { spend: 0, conversions: 0, count: 0 };
+        platformPerf[plat].spend += parseFloat(c.spendToDate || "0");
+        platformPerf[plat].conversions += c.conversions || 0;
+        platformPerf[plat].count += 1;
+      }
+      let bestPlat = "";
+      let bestCpa = Infinity;
+      for (const [plat, data] of Object.entries(platformPerf)) {
+        if (data.conversions > 0) {
+          const cpa = data.spend / data.conversions;
+          if (cpa < bestCpa) {
+            bestCpa = cpa;
+            bestPlat = plat;
+          }
+        }
+      }
+      if (bestPlat) {
+        insights.push({
+          type: "platform_performance",
+          title: `${bestPlat} has the lowest CPA`,
+          description: `Your ${bestPlat} campaigns have a cost-per-acquisition of $${bestCpa.toFixed(2)}, the best across all platforms. Consider shifting budget here.`,
+          confidence: 0.9
+        });
+      }
+    }
+    const redditCampaigns = activeCampaigns.filter(
+      (c) => c.platform === "reddit"
+    );
+    if (redditCampaigns.length > 0) {
+      const avgUpvote = redditCampaigns.reduce(
+        (sum, c) => sum + parseFloat(c.redditUpvoteRatio || "0"),
+        0
+      ) / redditCampaigns.length;
+      if (avgUpvote > 0) {
+        insights.push({
+          type: "reddit_sentiment",
+          title: "Reddit ad sentiment",
+          description: `Your Reddit ads have an average upvote ratio of ${(avgUpvote * 100).toFixed(1)}%. ${avgUpvote > 0.6 ? "Audience reception is positive \u2014 consider scaling." : "Consider refreshing creative to improve reception."}`,
+          confidence: 0.85
+        });
+      }
+    }
+    insights.push(
+      {
+        type: "engage_timing",
+        title: "Best posting times from /engage",
+        description: "Your social posts get 2.3x more engagement on Tuesdays between 10am-12pm. Consider scheduling ad campaigns to align with peak organic engagement windows.",
+        confidence: 0.85
+      },
+      {
+        type: "elevate_rating",
+        title: "Review sentiment from /elevate",
+        description: "Your average review rating is 4.6 stars. Use positive review quotes as social proof in ad creative for higher CTR.",
+        confidence: 0.92
+      }
+    );
+    res.json({ success: true, insights });
+  } catch (error) {
+    console.error("[Amplify] Insights error:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch insights" });
+  }
+});
+router13.post(
+  "/api/amplify/creative/draft",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const {
+        platform,
+        business_type,
+        headline_count,
+        target_subreddit,
+        brand_voice,
+        product_description
+      } = req.body;
+      const count2 = Math.min(headline_count || 3, 10);
+      const plat = (platform || "meta").toLowerCase();
+      const biz = business_type || "local business";
+      let systemPrompt;
+      if (plat === "reddit") {
+        systemPrompt = `You are an expert Reddit advertising copywriter. Generate Reddit-native ad copy.
+
+RULES:
+- Headlines should sound like real Reddit posts, NOT ads. Mimic the conversational, authentic tone of Reddit.
+- Value-first approach: lead with insight, story, or useful information.
+- NO corporate-speak, no buzzwords, no "synergy" or "leverage".
+- Use lowercase style where appropriate (Reddit culture).
+- If a target subreddit is provided, match the community's tone and interests.
+- Each headline should be under 300 characters (Reddit limit).
+- Body copy should feel like a genuine post, not marketing material.
+
+Business type: ${biz}
+${target_subreddit ? `Target subreddit: r/${target_subreddit}` : ""}
+${brand_voice ? `Brand voice: ${brand_voice}` : ""}
+${product_description ? `Product/service: ${product_description}` : ""}`;
+      } else if (plat === "google") {
+        systemPrompt = `You are an expert Google Ads copywriter. Generate high-performing search ad copy.
+
+RULES:
+- Headlines must be under 30 characters each.
+- Descriptions under 90 characters each.
+- Include strong CTAs and value propositions.
+- Use keywords naturally.
+
+Business type: ${biz}
+${product_description ? `Product/service: ${product_description}` : ""}`;
+      } else if (plat === "microsoft") {
+        systemPrompt = `You are an expert Microsoft Ads copywriter. Generate professional ad copy for Bing/Microsoft audiences.
+
+RULES:
+- Professional tone suitable for the Microsoft/LinkedIn audience demographic.
+- Headlines under 30 characters.
+- Clear value propositions.
+
+Business type: ${biz}
+${product_description ? `Product/service: ${product_description}` : ""}`;
+      } else {
+        systemPrompt = `You are an expert Meta (Facebook/Instagram) ad copywriter. Generate scroll-stopping ad copy.
+
+RULES:
+- Headlines should grab attention in the feed.
+- Body copy should be conversational but persuasive.
+- Include social proof angles where possible.
+- Optimize for engagement (likes, comments, shares).
+
+Business type: ${biz}
+${product_description ? `Product/service: ${product_description}` : ""}`;
+      }
+      const userPrompt = `Generate ${count2} ad creative variations. For each, provide a headline and body text.
+
+Return your response as valid JSON in this exact format:
+{
+  "drafts": [
+    {
+      "headline": "headline text here",
+      "body": "body copy here",
+      "cta": "suggested call-to-action button text"
+    }
+  ]
+}
+
+Only return the JSON, no other text.`;
+      try {
+        const aiResponse = await unifiedAI.getCompletion("openai", {
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt }
+          ],
+          temperature: 0.8,
+          maxTokens: 2e3,
+          responseFormat: "json"
+        });
+        let parsed;
+        try {
+          parsed = JSON.parse(aiResponse.content);
+        } catch {
+          const jsonMatch = aiResponse.content.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            parsed = JSON.parse(jsonMatch[0]);
+          } else {
+            throw new Error("AI response was not valid JSON");
+          }
+        }
+        const drafts = (parsed.drafts || []).map((d) => ({
+          headline: d.headline,
+          body: d.body,
+          platform: plat,
+          cta: d.cta || "Learn More",
+          aiGenerated: true,
+          provider: aiResponse.provider
+        }));
+        return res.json({ success: true, drafts });
+      } catch (aiError) {
+        console.warn(
+          "[Amplify] AI creative generation failed, falling back to templates:",
+          aiError.message
+        );
+        const fallbackDrafts = generateTemplateDrafts(plat, biz, count2);
+        return res.json({
+          success: true,
+          drafts: fallbackDrafts,
+          fallback: true,
+          message: "AI service unavailable; template-based drafts generated instead."
+        });
+      }
+    } catch (error) {
+      console.error("[Amplify] Creative draft error:", error);
+      res.status(500).json({ success: false, message: "Failed to generate creative drafts" });
+    }
+  }
+);
+function generateTemplateDrafts(platform, businessType, count2) {
+  const templates = {
+    reddit: {
+      headlines: [
+        `Honest talk about running a ${businessType}`,
+        `What we learned helping 500+ ${businessType} owners`,
+        `${businessType} tips the gurus won't tell you`,
+        `AMA: Growing a ${businessType} in 2026`,
+        `The real cost of scaling a ${businessType}`
+      ],
+      bodies: [
+        `We've been in the ${businessType} space for years. Here's what actually moves the needle (no fluff).`,
+        `Community-first approach to ${businessType} growth. Happy to answer questions.`
+      ]
+    },
+    meta: {
+      headlines: [
+        `Discover the Best ${businessType} in Your Area`,
+        `Why Local ${businessType} Owners Trust Us`,
+        `Transform Your ${businessType} Today`,
+        `${businessType} Solutions That Actually Work`,
+        `Ready to Grow Your ${businessType}?`
+      ],
+      bodies: [
+        `Join thousands of ${businessType} owners who have boosted their revenue by 40%. Get started with a free consultation today.`,
+        `Stop wasting money on ads that don't convert. Our proven strategy helps ${businessType} owners get real results.`
+      ]
+    },
+    google: {
+      headlines: [
+        `Top ${businessType} Services`,
+        `Affordable ${businessType} Solutions`,
+        `${businessType} - Get Results Fast`,
+        `Best-Rated ${businessType} Near You`,
+        `${businessType} Experts Since 2020`
+      ],
+      bodies: [
+        `Looking for reliable ${businessType} services? We deliver measurable results with transparent pricing.`,
+        `Grow your ${businessType} with data-driven strategies. Free consultation available.`
+      ]
+    },
+    microsoft: {
+      headlines: [
+        `Professional ${businessType} Services`,
+        `${businessType} Growth Strategies`,
+        `Trusted ${businessType} Partner`,
+        `Enterprise ${businessType} Solutions`,
+        `${businessType} Made Simple`
+      ],
+      bodies: [
+        `Elevate your ${businessType} with enterprise-grade solutions at small-business prices.`,
+        `Our ${businessType} platform helps you save time and increase ROI.`
+      ]
+    }
+  };
+  const t = templates[platform] || templates.meta;
+  const drafts = [];
+  for (let i = 0; i < count2; i++) {
+    drafts.push({
+      headline: t.headlines[i % t.headlines.length],
+      body: t.bodies[i % t.bodies.length],
+      platform,
+      cta: platform === "reddit" ? "Learn More" : "Get Started",
+      aiGenerated: false
+    });
+  }
+  return drafts;
+}
+router13.get(
+  "/api/amplify/reddit/subreddits",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const { query, business_type, city } = req.query;
+      const searchQuery = query || business_type || "local business";
+      let subreddits;
+      try {
+        subreddits = await redditAdsService.searchSubreddits(searchQuery);
+      } catch (searchError) {
+        console.warn(
+          "[Amplify] Reddit subreddit search API failed, using fallback:",
+          searchError.message
+        );
+        return res.json({
+          success: true,
+          recommendations: [],
+          message: "Reddit API unavailable. Connect your Reddit account to enable subreddit intelligence."
+        });
+      }
+      const recommendations2 = [];
+      for (const sub of subreddits.slice(0, 10)) {
+        let samplePosts = [];
+        try {
+          const posts = await redditAdsService.getSubredditPosts(
+            sub.display_name || sub.name,
+            5
+          );
+          samplePosts = posts.map((p) => p.title);
+        } catch {
+        }
+        recommendations2.push({
+          subreddit: `r/${sub.name}`,
+          subscribers: sub.subscribers || 0,
+          description: sub.description || "",
+          relevanceScore: sub.relevanceScore || 0,
+          adFriendly: sub.adFriendly !== false,
+          samplePostTitles: samplePosts,
+          notes: city ? `Relevant to ${business_type || "business"} in ${city}` : void 0
+        });
+      }
+      res.json({ success: true, recommendations: recommendations2 });
+    } catch (error) {
+      console.error("[Amplify] Subreddit scan error:", error);
+      res.status(500).json({ success: false, message: "Failed to scan subreddits" });
+    }
+  }
+);
+router13.get(
+  "/api/amplify/reddit/comments",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const { sentiment, responded } = req.query;
+      const conditions = [];
+      if (sentiment && typeof sentiment === "string") {
+        conditions.push(eq33(redditAdComments.sentiment, sentiment));
+      }
+      if (responded !== void 0) {
+        conditions.push(
+          eq33(redditAdComments.responded, responded === "true")
+        );
+      }
+      const whereClause = conditions.length > 0 ? and23(...conditions) : void 0;
+      const comments = await db.select().from(redditAdComments).where(whereClause).orderBy(desc16(redditAdComments.createdAt)).limit(100);
+      res.json({ success: true, comments });
+    } catch (error) {
+      console.error("[Amplify] Reddit all comments error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch Reddit comments" });
+    }
+  }
+);
+router13.get(
+  "/api/amplify/reddit/campaigns/:id/comments",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      if (isNaN(campaignId)) {
+        return res.status(400).json({ success: false, message: "Invalid campaign ID" });
+      }
+      const comments = await db.select().from(redditAdComments).where(eq33(redditAdComments.campaignId, campaignId)).orderBy(desc16(redditAdComments.createdAt));
+      refreshCampaignComments(campaignId, getUserId(req)).catch(
+        (err) => console.warn(
+          `[Amplify] Background comment refresh failed for campaign ${campaignId}:`,
+          err.message
+        )
+      );
+      res.json({ success: true, comments, refreshing: true });
+    } catch (error) {
+      console.error("[Amplify] Reddit comments error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch Reddit comments" });
+    }
+  }
+);
+async function refreshCampaignComments(campaignId, userId) {
+  const [campaign] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).limit(1);
+  if (!campaign || !campaign.externalCampaignId) return;
+  const token = await redditAdsService.getValidToken(userId);
+  if (!token) return;
+  const apiComments = await redditAdsService.getAdComments(
+    token,
+    campaign.externalCampaignId
+  );
+  for (const comment of apiComments) {
+    const existing = await db.select().from(redditAdComments).where(eq33(redditAdComments.externalCommentId, comment.id)).limit(1);
+    if (existing.length > 0) continue;
+    let sentiment = "neutral";
+    let suggestedResponse = null;
+    try {
+      const aiResult = await unifiedAI.getCompletion("openai", {
+        messages: [
+          {
+            role: "system",
+            content: 'You analyze Reddit ad comments. Classify sentiment as "positive", "neutral", or "negative". Also suggest a brief, authentic response. Return JSON: {"sentiment":"...","suggestedResponse":"..."}'
+          },
+          {
+            role: "user",
+            content: `Comment by u/${comment.author}: "${comment.body}"`
+          }
+        ],
+        temperature: 0.3,
+        maxTokens: 300,
+        responseFormat: "json"
+      });
+      try {
+        const parsed = JSON.parse(aiResult.content);
+        sentiment = parsed.sentiment || "neutral";
+        suggestedResponse = parsed.suggestedResponse || null;
+      } catch {
+      }
+    } catch {
+    }
+    await db.insert(redditAdComments).values({
+      campaignId,
+      externalCommentId: comment.id,
+      authorUsername: comment.author,
+      commentText: comment.body,
+      sentiment,
+      suggestedResponse,
+      responded: false
+    });
+  }
+  const countResult = await db.select({ count: sql14`count(*)::int` }).from(redditAdComments).where(eq33(redditAdComments.campaignId, campaignId));
+  await db.update(amplifyCampaigns).set({
+    redditCommentCount: countResult[0]?.count || 0,
+    updatedAt: /* @__PURE__ */ new Date()
+  }).where(eq33(amplifyCampaigns.id, campaignId));
+}
+router13.post(
+  "/api/amplify/reddit/campaigns/:id/comments/:commentId/respond",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const commentId = parseInt(req.params.commentId);
+      if (isNaN(commentId)) {
+        return res.status(400).json({ success: false, message: "Invalid comment ID" });
+      }
+      const { responseText } = req.body;
+      if (!responseText || typeof responseText !== "string" || !responseText.trim()) {
+        return res.status(400).json({ success: false, message: "Response text is required" });
+      }
+      const [comment] = await db.select().from(redditAdComments).where(eq33(redditAdComments.id, commentId)).limit(1);
+      if (!comment) {
+        return res.status(404).json({ success: false, message: "Comment not found" });
+      }
+      if (comment.externalCommentId) {
+        try {
+          const userId = getUserId(req);
+          const token = await redditAdsService.getValidToken(userId);
+          if (!token) return;
+          await redditAdsService.replyToComment(
+            token,
+            comment.externalCommentId,
+            responseText.trim()
+          );
+        } catch (apiErr) {
+          console.warn(
+            "[Amplify] Reddit reply API failed:",
+            apiErr.message
+          );
+        }
+      }
+      const [updated] = await db.update(redditAdComments).set({
+        responded: true,
+        respondedAt: /* @__PURE__ */ new Date(),
+        suggestedResponse: responseText.trim()
+      }).where(eq33(redditAdComments.id, commentId)).returning();
+      res.json({ success: true, comment: updated });
+    } catch (error) {
+      console.error("[Amplify] Reddit respond error:", error);
+      res.status(500).json({ success: false, message: "Failed to respond to comment" });
+    }
+  }
+);
+router13.get(
+  "/api/amplify/reddit/campaigns/:id/sentiment",
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const campaignId = parseInt(req.params.id);
+      if (isNaN(campaignId)) {
+        return res.status(400).json({ success: false, message: "Invalid campaign ID" });
+      }
+      const [campaign] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).limit(1);
+      if (!campaign) {
+        return res.status(404).json({ success: false, message: "Campaign not found" });
+      }
+      const sentimentBreakdown = await db.select({
+        sentiment: redditAdComments.sentiment,
+        count: sql14`count(*)::int`
+      }).from(redditAdComments).where(eq33(redditAdComments.campaignId, campaignId)).groupBy(redditAdComments.sentiment);
+      const sentimentMap = {};
+      for (const s of sentimentBreakdown) {
+        sentimentMap[s.sentiment || "unknown"] = s.count;
+      }
+      const totalComments = Object.values(sentimentMap).reduce(
+        (a, b) => a + b,
+        0
+      );
+      const positive = sentimentMap.positive || 0;
+      const negative = sentimentMap.negative || 0;
+      const neutral = sentimentMap.neutral || 0;
+      let overallSentiment = "neutral";
+      if (totalComments > 0) {
+        if (positive > negative * 2) overallSentiment = "positive";
+        else if (negative > positive * 2) overallSentiment = "negative";
+        else if (positive > negative) overallSentiment = "mostly_positive";
+        else if (negative > positive) overallSentiment = "mostly_negative";
+      }
+      const upvoteRatio = parseFloat(campaign.redditUpvoteRatio || "0");
+      const commentVolume = Math.min(totalComments / 100, 1);
+      const engagementScore = Math.round(
+        upvoteRatio * 70 + commentVolume * 30
+      );
+      res.json({
+        success: true,
+        sentiment: {
+          campaignId,
+          overallSentiment,
+          engagementScore: campaign.redditEngagementScore || engagementScore,
+          upvoteRatio: campaign.redditUpvoteRatio || "0",
+          commentCount: totalComments,
+          breakdown: {
+            positive,
+            neutral,
+            negative,
+            total: totalComments
+          },
+          positiveRate: totalComments > 0 ? (positive / totalComments * 100).toFixed(1) + "%" : "0%",
+          negativeRate: totalComments > 0 ? (negative / totalComments * 100).toFixed(1) + "%" : "0%",
+          lastChecked: campaign.redditLastSentimentCheck || null
+        }
+      });
+    } catch (error) {
+      console.error("[Amplify] Sentiment analysis error:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch sentiment data" });
+    }
+  }
+);
+var amplifyRouter = router13;
 
 // server/routes/subscriptions.ts
 init_schema();
@@ -16623,192 +22543,10 @@ var PricingEngine = class {
   }
 };
 
-// server/services/nmi.ts
-import { URLSearchParams as URLSearchParams2 } from "url";
-var NMIService = class {
-  static BASE_URL = "https://secure.nmi.com/api/transact.php";
-  static API_KEY = process.env.NMI_API_KEY;
-  /**
-   * Validate NMI configuration
-   */
-  static validateConfig() {
-    if (!this.API_KEY) {
-      throw new Error("NMI_API_KEY environment variable is required");
-    }
-  }
-  /**
-   * Create a recurring subscription with NMI
-   */
-  static async createSubscription(request) {
-    this.validateConfig();
-    const monthFrequency = this.getMonthlyFrequency(request.billingCycle);
-    const subscriptionData = new URLSearchParams2({
-      security_key: this.API_KEY,
-      recurring: "add_subscription",
-      payment_token: request.paymentToken,
-      // Plan details
-      plan_amount: request.planAmount,
-      plan_payments: "0",
-      // Unlimited payments
-      month_frequency: monthFrequency.toString(),
-      // Customer information
-      first_name: request.customerData.firstName,
-      last_name: request.customerData.lastName,
-      email: request.customerData.email,
-      phone: request.customerData.phone || "",
-      address1: request.customerData.address || "",
-      city: request.customerData.city || "",
-      state: request.customerData.state || "",
-      zip: request.customerData.zip || "",
-      // Optional metadata
-      orderid: request.planId,
-      order_description: `Subscription: ${request.planId} (${request.billingCycle})`,
-      // Start date (optional)
-      ...request.startDate && { start_date: request.startDate }
-    });
-    try {
-      const response = await fetch(this.BASE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: subscriptionData.toString()
-      });
-      const responseText = await response.text();
-      return this.parseNMIResponse(responseText);
-    } catch (error) {
-      console.error("NMI Subscription creation failed:", error);
-      throw new Error("Failed to create subscription with NMI");
-    }
-  }
-  /**
-   * Update an existing subscription
-   */
-  static async updateSubscription(subscriptionId, updates) {
-    this.validateConfig();
-    const updateData = new URLSearchParams2({
-      security_key: this.API_KEY,
-      recurring: "update_subscription",
-      subscription_id: subscriptionId,
-      ...updates.planAmount && { plan_amount: updates.planAmount }
-    });
-    try {
-      const response = await fetch(this.BASE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: updateData.toString()
-      });
-      const responseText = await response.text();
-      return this.parseNMIResponse(responseText);
-    } catch (error) {
-      console.error("NMI Subscription update failed:", error);
-      throw new Error("Failed to update subscription with NMI");
-    }
-  }
-  /**
-   * Cancel a subscription
-   */
-  static async cancelSubscription(subscriptionId) {
-    this.validateConfig();
-    const cancelData = new URLSearchParams2({
-      security_key: this.API_KEY,
-      recurring: "delete_subscription",
-      subscription_id: subscriptionId
-    });
-    try {
-      const response = await fetch(this.BASE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: cancelData.toString()
-      });
-      const responseText = await response.text();
-      return this.parseNMIResponse(responseText);
-    } catch (error) {
-      console.error("NMI Subscription cancellation failed:", error);
-      throw new Error("Failed to cancel subscription with NMI");
-    }
-  }
-  /**
-   * Process a one-time transaction (for setup fees, etc.)
-   */
-  static async processTransaction(paymentToken, amount, orderDescription) {
-    this.validateConfig();
-    const transactionData = new URLSearchParams2({
-      security_key: this.API_KEY,
-      type: "sale",
-      payment_token: paymentToken,
-      amount,
-      order_description: orderDescription
-    });
-    try {
-      const response = await fetch(this.BASE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: transactionData.toString()
-      });
-      const responseText = await response.text();
-      return this.parseNMIResponse(responseText);
-    } catch (error) {
-      console.error("NMI Transaction failed:", error);
-      throw new Error("Failed to process transaction with NMI");
-    }
-  }
-  /**
-   * Get billing frequency in months for different cycles (NMI month_frequency parameter)
-   */
-  static getMonthlyFrequency(cycle) {
-    switch (cycle) {
-      case "monthly":
-        return 1;
-      case "quarterly":
-        return 3;
-      case "annual":
-        return 12;
-      default:
-        return 1;
-    }
-  }
-  /**
-   * Parse NMI response string into object
-   */
-  static parseNMIResponse(responseText) {
-    const params = new URLSearchParams2(responseText);
-    const result = {};
-    params.forEach((value, key) => {
-      result[key] = value;
-    });
-    return result;
-  }
-  /**
-   * Check if response indicates success
-   */
-  static isSuccessResponse(response) {
-    return response.response === "1";
-  }
-  /**
-   * Get error message from response
-   */
-  static getErrorMessage(response) {
-    return response.responsetext || "Unknown error occurred";
-  }
-  /**
-   * Validate payment token format
-   */
-  static validatePaymentToken(token) {
-    return /^[a-zA-Z0-9]{16,32}$/.test(token);
-  }
-};
-
 // server/services/productRecommendations.ts
 init_db();
 init_schema();
-import { eq as eq26 } from "drizzle-orm";
+import { eq as eq34 } from "drizzle-orm";
 var ProductRecommendationService = class {
   /**
    * Generate product recommendations based on assessment scores
@@ -16847,7 +22585,7 @@ var ProductRecommendationService = class {
     if (weakCategories.length === 0) {
       return [];
     }
-    const allProducts = await db.select().from(products).where(eq26(products.isActive, true));
+    const allProducts = await db.select().from(products).where(eq34(products.isActive, true));
     for (const weakCat of weakCategories) {
       const matchingProducts = allProducts.filter(
         (product) => product.improvesCategory?.includes(weakCat.category)
@@ -16900,15 +22638,17 @@ var ProductRecommendationService = class {
    */
   calculateImprovement(productId, category) {
     const improvements = {
-      "inbox": { engagement: 20, visibility: 10 },
-      "send": { engagement: 25, visibility: 15 },
-      "content": { engagement: 18, visibility: 12 },
-      "livechat": { engagement: 20, visibility: 15 },
-      "commverse": { engagement: 35, visibility: 25 },
-      "listings": { visibility: 25, completeness: 20 },
-      "reputation": { reviews: 30, engagement: 15 },
-      "localblue": { visibility: 30, reviews: 25, completeness: 30 },
-      "relationships": { engagement: 20, completeness: 15 },
+      "respond": { engagement: 20, visibility: 10 },
+      "promote": { engagement: 25, visibility: 15 },
+      "post": { engagement: 18, visibility: 12 },
+      "engage": { engagement: 20, visibility: 15 },
+      "compass": { engagement: 35, visibility: 25 },
+      "publish": { visibility: 25, completeness: 20 },
+      "elevate": { reviews: 30, engagement: 15 },
+      "anchor": { visibility: 30, reviews: 25, completeness: 30 },
+      "connect": { engagement: 20, completeness: 15 },
+      "optimize": { visibility: 20, completeness: 15 },
+      "amplify": { visibility: 15, engagement: 10 },
       "hostsBlue": { completeness: 25, visibility: 15 },
       "swipesBlue": { engagement: 15 }
     };
@@ -16941,7 +22681,7 @@ var ProductRecommendationService = class {
       categoryAffected: assessmentProductRecommendations.categoryAffected,
       isAccepted: assessmentProductRecommendations.isAccepted,
       isPurchased: assessmentProductRecommendations.isPurchased
-    }).from(assessmentProductRecommendations).innerJoin(products, eq26(assessmentProductRecommendations.productId, products.productId)).where(eq26(assessmentProductRecommendations.assessmentId, assessmentId));
+    }).from(assessmentProductRecommendations).innerJoin(products, eq34(assessmentProductRecommendations.productId, products.productId)).where(eq34(assessmentProductRecommendations.assessmentId, assessmentId));
     return recs;
   }
 };
@@ -16949,7 +22689,7 @@ var productRecommendationService = new ProductRecommendationService();
 
 // server/routes/subscriptions.ts
 init_db();
-import { eq as eq27 } from "drizzle-orm";
+import { eq as eq35 } from "drizzle-orm";
 import { z as z8 } from "zod";
 function calculateNextBillingDate(billingCycle) {
   const now = /* @__PURE__ */ new Date();
@@ -16962,10 +22702,10 @@ function calculateNextBillingDate(billingCycle) {
       return new Date(now.getTime() + 30 * 24 * 60 * 60 * 1e3);
   }
 }
-function registerSubscriptionRoutes(app2, emailService) {
+function registerSubscriptionRoutes(app2, emailService2) {
   app2.get("/api/subscription-plans", async (req, res) => {
     try {
-      const plans = await db.select().from(subscriptionPlans).where(eq27(subscriptionPlans.isActive, true));
+      const plans = await db.select().from(subscriptionPlans).where(eq35(subscriptionPlans.isActive, true));
       res.json({
         success: true,
         plans: plans.map((plan) => ({
@@ -16985,7 +22725,7 @@ function registerSubscriptionRoutes(app2, emailService) {
   });
   app2.get("/api/subscription-addons", async (req, res) => {
     try {
-      const addons = await db.select().from(subscriptionAddons).where(eq27(subscriptionAddons.isActive, true));
+      const addons = await db.select().from(subscriptionAddons).where(eq35(subscriptionAddons.isActive, true));
       const categoryIconMap = {
         seo: "Globe",
         social: "Users",
@@ -17065,32 +22805,32 @@ function registerSubscriptionRoutes(app2, emailService) {
           message: "Order total mismatch. Please refresh and try again."
         });
       }
-      const nmiRequest = {
-        planId: "marketplace-order-" + Date.now(),
-        customerData: {
-          firstName: customerInfo.firstName,
-          lastName: customerInfo.lastName,
-          email: customerInfo.email,
-          phone: customerInfo.phone || "",
-          address: customerInfo.address || "",
-          city: customerInfo.city || "",
-          state: customerInfo.state || "",
-          zip: customerInfo.zip || ""
-        },
-        paymentToken,
+      const customerResult = await SwipesBlueService.createCustomer({
+        firstName: customerInfo.firstName,
+        lastName: customerInfo.lastName,
+        email: customerInfo.email,
+        phone: customerInfo.phone || void 0,
+        address: customerInfo.address || void 0,
+        city: customerInfo.city || void 0,
+        state: customerInfo.state || void 0,
+        zip: customerInfo.zip || void 0
+      });
+      const swipesblueResult = await SwipesBlueService.createSubscription({
+        customerId: customerResult.customerId,
         planAmount: calculatedTotal.toFixed(2),
-        billingCycle: "monthly"
-      };
-      const nmiResult = await NMIService.createSubscription(nmiRequest);
-      if (nmiResult.response !== "1") {
+        billingCycle: "monthly",
+        paymentToken,
+        planId: "marketplace-order-" + Date.now()
+      });
+      if (!swipesblueResult.success) {
         return res.status(400).json({
           success: false,
-          message: nmiResult.responsetext || "Payment processing failed"
+          message: swipesblueResult.message || "Payment processing failed"
         });
       }
-      let client2 = await storage.getClientByEmail(customerInfo.email);
-      if (!client2) {
-        client2 = await storage.createClient({
+      let client = await storage.getClientByEmail(customerInfo.email);
+      if (!client) {
+        client = await storage.createClient({
           companyName: `${customerInfo.firstName} ${customerInfo.lastName}`,
           email: customerInfo.email,
           phone: customerInfo.phone || null,
@@ -17107,16 +22847,16 @@ function registerSubscriptionRoutes(app2, emailService) {
         "ai-coach": "AC"
       };
       const purchasedCodes = items.filter((item) => item.type === "app").map((item) => featureCodeMap[item.id]).filter(Boolean);
-      const existingCodes = (client2.enabledFeatures || "").split(",").filter(Boolean);
+      const existingCodes = (client.enabledFeatures || "").split(",").filter(Boolean);
       const allCodes = Array.from(
         /* @__PURE__ */ new Set([...existingCodes, ...purchasedCodes])
       );
-      await storage.updateClient(client2.id, {
+      await storage.updateClient(client.id, {
         enabledFeatures: allCodes.join(",")
       });
       console.log("Marketplace order successful:", {
-        subscriptionId: nmiResult.subscription_id,
-        clientId: client2.id,
+        subscriptionId: swipesblueResult.subscriptionId,
+        clientId: client.id,
         customerEmail: customerInfo.email,
         items: items.length,
         total: calculatedTotal
@@ -17124,8 +22864,8 @@ function registerSubscriptionRoutes(app2, emailService) {
       res.json({
         success: true,
         message: "Order processed successfully",
-        subscriptionId: nmiResult.subscription_id,
-        clientId: client2.id,
+        subscriptionId: swipesblueResult.subscriptionId,
+        clientId: client.id,
         items: items.map((item) => item.name)
       });
     } catch (error) {
@@ -17149,14 +22889,14 @@ function registerSubscriptionRoutes(app2, emailService) {
           message: "Plan ID is required"
         });
       }
-      const plan = await db.select().from(subscriptionPlans).where(eq27(subscriptionPlans.planId, planId)).limit(1);
+      const plan = await db.select().from(subscriptionPlans).where(eq35(subscriptionPlans.planId, planId)).limit(1);
       if (plan.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Plan not found"
         });
       }
-      const addons = await db.select().from(subscriptionAddons).where(eq27(subscriptionAddons.isActive, true));
+      const addons = await db.select().from(subscriptionAddons).where(eq35(subscriptionAddons.isActive, true));
       const pricing = PricingEngine.calculateSubscriptionPrice(
         plan[0],
         addons,
@@ -17193,7 +22933,7 @@ function registerSubscriptionRoutes(app2, emailService) {
         diy: "diy-platform"
       };
       const planStringId = planIdMap[pathway];
-      const [plan] = await db.select().from(subscriptionPlans).where(eq27(subscriptionPlans.planId, planStringId)).limit(1);
+      const [plan] = await db.select().from(subscriptionPlans).where(eq35(subscriptionPlans.planId, planStringId)).limit(1);
       if (!plan) {
         return res.status(404).json({
           success: false,
@@ -17201,11 +22941,11 @@ function registerSubscriptionRoutes(app2, emailService) {
         });
       }
       const { products: productsTable } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-      const { inArray: inArray4 } = await import("drizzle-orm");
+      const { inArray: inArray6 } = await import("drizzle-orm");
       let selectedProducts = [];
       let productsTotal = 0;
       if (productIds.length > 0) {
-        selectedProducts = await db.select().from(productsTable).where(inArray4(productsTable.id, productIds));
+        selectedProducts = await db.select().from(productsTable).where(inArray6(productsTable.id, productIds));
         productsTotal = selectedProducts.reduce((sum, product) => {
           const price = parseFloat(product.diyPrice || "0");
           return sum + price;
@@ -17275,7 +23015,7 @@ function registerSubscriptionRoutes(app2, emailService) {
         diy: "diy-platform"
       };
       const planStringId = planIdMap[pathway];
-      const [plan] = await db.select().from(subscriptionPlans).where(eq27(subscriptionPlans.planId, planStringId)).limit(1);
+      const [plan] = await db.select().from(subscriptionPlans).where(eq35(subscriptionPlans.planId, planStringId)).limit(1);
       if (!plan) {
         return res.status(404).json({
           success: false,
@@ -17283,11 +23023,11 @@ function registerSubscriptionRoutes(app2, emailService) {
         });
       }
       const { products: productsTable } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-      const { inArray: inArray4 } = await import("drizzle-orm");
+      const { inArray: inArray6 } = await import("drizzle-orm");
       let selectedProducts = [];
       let productsTotal = 0;
       if (productIds.length > 0) {
-        selectedProducts = await db.select().from(productsTable).where(inArray4(productsTable.id, productIds));
+        selectedProducts = await db.select().from(productsTable).where(inArray6(productsTable.id, productIds));
         productsTotal = selectedProducts.reduce((sum, product) => {
           const price = parseFloat(product.diyPrice || "0");
           return sum + price;
@@ -17329,7 +23069,7 @@ function registerSubscriptionRoutes(app2, emailService) {
           ...baseFeatures,
           ...productNames.filter(Boolean)
         ];
-        await emailService.sendEnrollmentConfirmation(assessment.email, {
+        await emailService2.sendEnrollmentConfirmation(assessment.email, {
           businessName: assessment.businessName,
           pathway,
           planName,
@@ -17356,7 +23096,7 @@ function registerSubscriptionRoutes(app2, emailService) {
   app2.get("/api/subscriptions/:id/trial-status", async (req, res) => {
     try {
       const { id } = req.params;
-      const [subscription] = await db.select().from(subscriptions).where(eq27(subscriptions.id, parseInt(id)));
+      const [subscription] = await db.select().from(subscriptions).where(eq35(subscriptions.id, parseInt(id)));
       if (!subscription) {
         return res.status(404).json({
           success: false,
@@ -17421,14 +23161,14 @@ function registerSubscriptionRoutes(app2, emailService) {
         paymentToken,
         customerInfo
       } = validation.data;
-      const plan = await db.select().from(subscriptionPlans).where(eq27(subscriptionPlans.planId, planId)).limit(1);
+      const plan = await db.select().from(subscriptionPlans).where(eq35(subscriptionPlans.planId, planId)).limit(1);
       if (plan.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Plan not found"
         });
       }
-      const addons = await db.select().from(subscriptionAddons).where(eq27(subscriptionAddons.isActive, true));
+      const addons = await db.select().from(subscriptionAddons).where(eq35(subscriptionAddons.isActive, true));
       const pricing = PricingEngine.calculateSubscriptionPrice(
         plan[0],
         addons,
@@ -17437,15 +23177,15 @@ function registerSubscriptionRoutes(app2, emailService) {
       );
       let setupTransactionResult = null;
       if (pricing.setupFee > 0) {
-        setupTransactionResult = await NMIService.processTransaction(
+        setupTransactionResult = await SwipesBlueService.processTransaction({
           paymentToken,
-          pricing.oneTimeTotal.toFixed(2),
-          `${plan[0].name} Setup Fee`
-        );
-        if (setupTransactionResult.response !== "1") {
+          amount: pricing.oneTimeTotal.toFixed(2),
+          description: `${plan[0].name} Setup Fee`
+        });
+        if (!setupTransactionResult.success) {
           return res.status(400).json({
             success: false,
-            message: setupTransactionResult.responsetext || "Setup fee payment failed"
+            message: setupTransactionResult.message || "Setup fee payment failed"
           });
         }
       }
@@ -17455,33 +23195,33 @@ function registerSubscriptionRoutes(app2, emailService) {
       const isTrialEligible = hasAiCoachAddon;
       const trialPeriodEnd = isTrialEligible ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1e3) : null;
       const recurringAmount = pricing.recurringTotal.toFixed(2);
-      const nmiRequest = {
-        planId: plan[0].planId,
-        customerData: {
-          firstName: customerInfo.firstName,
-          lastName: customerInfo.lastName,
-          email: customerInfo.email,
-          phone: customerInfo.phone || "",
-          address: customerInfo.address || "",
-          city: customerInfo.city || "",
-          state: customerInfo.state || "",
-          zip: customerInfo.zip || ""
-        },
-        paymentToken,
+      const swipesblueCustomer = await SwipesBlueService.createCustomer({
+        firstName: customerInfo.firstName,
+        lastName: customerInfo.lastName,
+        email: customerInfo.email,
+        phone: customerInfo.phone || void 0,
+        address: customerInfo.address || void 0,
+        city: customerInfo.city || void 0,
+        state: customerInfo.state || void 0,
+        zip: customerInfo.zip || void 0
+      });
+      const swipesblueResult = await SwipesBlueService.createSubscription({
+        customerId: swipesblueCustomer.customerId,
         planAmount: recurringAmount,
         billingCycle,
+        paymentToken,
+        planId: plan[0].planId,
         startDate: trialPeriodEnd ? trialPeriodEnd.toISOString().split("T")[0] : void 0
-      };
-      const nmiResult = await NMIService.createSubscription(nmiRequest);
-      if (nmiResult.response !== "1") {
+      });
+      if (!swipesblueResult.success) {
         return res.status(400).json({
           success: false,
-          message: nmiResult.responsetext || "Subscription creation failed"
+          message: swipesblueResult.message || "Subscription creation failed"
         });
       }
-      let client2 = await storage.getClientByEmail(customerInfo.email);
-      if (!client2) {
-        client2 = await storage.createClient({
+      let client = await storage.getClientByEmail(customerInfo.email);
+      if (!client) {
+        client = await storage.createClient({
           companyName: `${customerInfo.firstName} ${customerInfo.lastName}`,
           email: customerInfo.email,
           phone: customerInfo.phone || null,
@@ -17499,10 +23239,10 @@ function registerSubscriptionRoutes(app2, emailService) {
         (addon) => addons.find((a) => a.addonId === addon.addonId)?.category === "coaching"
       );
       const enabledFeatures = hasAiCoach ? `${coreFeatures},AC` : coreFeatures;
-      await storage.updateClient(client2.id, { enabledFeatures });
+      await storage.updateClient(client.id, { enabledFeatures });
       const subscriptionData = {
-        nmiSubscriptionId: nmiResult.subscription_id,
-        clientId: client2.id,
+        swipesblueSubscriptionId: swipesblueResult.subscriptionId,
+        clientId: client.id,
         planId: plan[0].id,
         status: isTrialEligible ? "trial" : "active",
         baseAmount: pricing.basePrice.toFixed(2),
@@ -17536,8 +23276,8 @@ function registerSubscriptionRoutes(app2, emailService) {
       res.json({
         success: true,
         subscription: newSubscription,
-        nmiSubscriptionId: nmiResult.subscription_id,
-        clientId: client2.id,
+        swipesblueSubscriptionId: swipesblueResult.subscriptionId,
+        clientId: client.id,
         message: "Subscription created successfully"
       });
     } catch (error) {
@@ -17583,12 +23323,12 @@ function registerSubscriptionRoutes(app2, emailService) {
       const deliveryMethod = req.query.deliveryMethod;
       const category = req.query.category;
       const { products: products2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-      const { eq: eq36, and: and23 } = await import("drizzle-orm");
-      const conditions = [eq36(products2.isActive, true)];
+      const { eq: eq45, and: and32 } = await import("drizzle-orm");
+      const conditions = [eq45(products2.isActive, true)];
       if (category) {
-        conditions.push(eq36(products2.category, category));
+        conditions.push(eq45(products2.category, category));
       }
-      const allProducts = await db.select().from(products2).where(and23(...conditions));
+      const allProducts = await db.select().from(products2).where(and32(...conditions));
       const filteredProducts = deliveryMethod ? allProducts.filter(
         (p) => p.deliveryMethod?.includes(deliveryMethod)
       ) : allProducts;
@@ -17608,8 +23348,8 @@ function registerSubscriptionRoutes(app2, emailService) {
     try {
       const productId = parseInt(req.params.id);
       const { products: products2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-      const { eq: eq36 } = await import("drizzle-orm");
-      const [product] = await db.select().from(products2).where(eq36(products2.id, productId));
+      const { eq: eq45 } = await import("drizzle-orm");
+      const [product] = await db.select().from(products2).where(eq45(products2.id, productId));
       if (!product) {
         return res.status(404).json({
           success: false,
@@ -17780,10 +23520,10 @@ var GoogleBusinessService = class {
   }
 };
 
-// server/services/openai.ts
+// server/services/assessment-ai.ts
 init_ai_provider();
 init_ai_settings();
-var OpenAIAnalysisService = class {
+var AssessmentAIService = class {
   async analyzeBusinessPresence(input) {
     try {
       const provider = await aiSettingsService.getProvider("assessment");
@@ -17793,7 +23533,7 @@ var OpenAIAnalysisService = class {
         messages: [
           {
             role: "system",
-            content: "You are a digital marketing expert specializing in local business online presence analysis. Provide detailed, actionable insights based on Google Business Profile data and general digital marketing best practices. Always respond with valid JSON."
+            content: "You are a senior digital strategist writing a personalized prescription for a small business owner. You are reviewing their entire digital presence \u2014 their website, their reviews, their listings, their social media, their communications, their advertising. You speak directly to the business owner in second person. You are respectful \u2014 this is their livelihood. You lead with what they are doing well before addressing what needs work. Your prescription reads like one flowing document, not a stack of cards. You never repeat yourself. Every recommendation is specific to THIS business based on the data provided. Always respond with valid JSON."
           },
           {
             role: "user",
@@ -17866,48 +23606,58 @@ GOOGLE BUSINESS DATA:
 ${JSON.stringify(input.googleData, null, 2)}
 
 Generate 12-18 PRODUCT-FOCUSED recommendations across these 9 areas:
-1. Email & SMS Marketing \u2192 Recommend: Send OR CommVerse Bundle (if multiple comm needs)
-2. Social Media Content \u2192 Recommend: Content OR CommVerse Bundle (if multiple comm needs)
-3. Reputation Management \u2192 Recommend: Reputation OR LocalBlue Bundle (if also needs Listings)
-4. Customer Response & Timing \u2192 Recommend: Inbox OR CommVerse Bundle (if multiple comm needs)
-5. Live Chat \u2192 Recommend: LiveChat OR CommVerse Bundle (if multiple comm needs)
-6. Business Listings \u2192 Recommend: Listings OR LocalBlue Bundle (if also needs Reputation)
-7. Google Business Profile \u2192 Recommend: LocalBlue Bundle
-8. Website & SEO \u2192 Recommend: hostsblue (HostsBlue.com)
-9. CRM Systems \u2192 Recommend: Relationships
+1. Email & SMS Marketing \u2192 Recommend: / promote OR Compass Suite (if multiple comm needs)
+2. Social Media Content \u2192 Recommend: / post OR Compass Suite (if multiple comm needs)
+3. Reputation Management \u2192 Recommend: / elevate OR Anchor Suite (if multiple local presence needs)
+4. Unified Inbox & Response \u2192 Recommend: / respond OR Compass Suite (if multiple comm needs)
+5. Live Chat \u2192 Recommend: / engage OR Compass Suite (if multiple comm needs)
+6. Business Listings & GBP \u2192 Recommend: / publish OR Anchor Suite (if multiple local presence needs)
+7. Website & SEO \u2192 Recommend: / optimize OR Anchor Suite (if multiple local presence needs)
+8. CRM & Customer Management \u2192 Recommend: / connect
+9. Advertising & Paid Media \u2192 Recommend: / amplify OR Anchor Suite (if multiple local presence needs)
 
-\u2605 BUNDLE RULE: ONLY recommend CommVerse Bundle (productId: "commverse") if business needs ALL 4 communication tools.
-\u2605 BUNDLE RULE: ONLY recommend LocalBlue Bundle (productId: "localblue") if business needs BOTH Listings AND Reputation.
+\u2605 BUNDLE RULE: ONLY recommend Compass Suite (productId: "compass") if business needs ALL 4 communication tools.
+\u2605 BUNDLE RULE: ONLY recommend Anchor Suite (productId: "anchor") if business needs multiple local presence tools (/ publish, / elevate, / optimize, / amplify).
+
+CRITICAL: Every recommendation MUST include an "appId" field matching one of: promote, post, elevate, respond, engage, publish, optimize, connect, amplify. This maps the recommendation to the correct scoring category and setup task.
 
 RESPOND WITH VALID JSON:
 {
   "digitalScore": number (0-140),
-  "summary": string (2-3 sentences emphasizing transformation potential),
-  "strengths": [array of current strengths - be specific],
-  "weaknesses": [array of gaps - tie each to a product that fixes it],
+  "summary": string (2-3 sentences \u2014 used internally, not shown to user),
+  "strengths": [array of current strengths \u2014 be specific to THIS business],
+  "weaknesses": [array of gaps \u2014 tie each to a product that fixes it],
   "areaScores": {
-    "emailSms": number (0-15),
-    "socialMedia": number (0-13),
-    "reputation": number (0-16),
-    "customerResponse": number (0-15),
-    "liveChat": number (0-15),
-    "listings": number (0-18),
-    "gbp": number (0-16),
-    "websiteSeo": number (0-20),
-    "crm": number (0-12)
+    "promote": number (0-15),
+    "post": number (0-13),
+    "elevate": number (0-16),
+    "respond": number (0-15),
+    "engage": number (0-15),
+    "publish": number (0-18),
+    "optimize": number (0-14),
+    "connect": number (0-12),
+    "amplify": number (0-12)
   },
+
+  "strengthsNarrative": "2-3 paragraphs acknowledging what this business is doing RIGHT. Be specific \u2014 reference their actual data (review response rate, posting frequency, website quality, etc.). Earn credibility before delivering hard truths. Write in second person ('you', 'your'). Tone: respectful, warm, professional. Never condescending. Never generic. If they have very few strengths, still find something genuine \u2014 they showed up and took the assessment, that alone is a step most business owners skip.",
+
+  "prescriptionNarrative": "One flowing document \u2014 NOT a list of cards. This is the prescription. Organized by setup cadence order: connect \u2192 publish \u2192 elevate \u2192 optimize \u2192 respond \u2192 engage \u2192 post \u2192 promote \u2192 amplify. ONLY include areas where the business needs improvement (skip areas where they score well). Each area transitions naturally into the next \u2014 like a doctor walking a patient through a treatment plan. For each area: explain WHY it matters to THEIR business (not generic), what specific action to take, which businessblueprint.io app handles it, and the estimated Digital IQ point increase (clearly marked as 'est.'). NEVER repeat yourself across areas. If two areas share context (e.g., listings and reviews both relate to local presence), acknowledge it briefly and move on. Write in second person. Tone: direct but respectful \u2014 you are critiquing someone's livelihood. 800-1500 words depending on how many areas need attention.",
+
   "recommendations": [
     {
-      "category": "Email & SMS Marketing" | "Social Media Content" | "Reputation Management" | "Customer Response & Timing" | "Live Chat" | "Business Listings" | "Google Business Profile" | "Website & SEO" | "CRM Systems",
-      "title": "The Prescription: [specific need statement]",
-      "description": "Detailed explanation of WHY this matters (revenue impact, customer experience, competitive advantage) and HOW our product solves it",
+      "category": "Email & SMS Marketing" | "Social Media Content" | "Reputation Management" | "Unified Inbox & Response" | "Live Chat" | "Business Listings & GBP" | "Website & SEO" | "CRM & Customer Management" | "Advertising & Paid Media",
+      "appId": "promote" | "post" | "elevate" | "respond" | "engage" | "publish" | "optimize" | "connect" | "amplify",
+      "title": "Concise action statement \u2014 what to do (not 'The Prescription: ...')",
+      "description": "1-2 sentences explaining the specific action and expected outcome",
       "priority": "high" | "medium" | "low",
+      "estimatedPointIncrease": number (1-15, the estimated Digital IQ points this action adds),
+      "estimatedMinutes": number (estimated minutes to complete this task),
       "estimatedImpact": "High ROI" | "Medium ROI" | "Long-term benefit",
       "estimatedEffort": "Quick setup" | "1-2 days" | "1-2 weeks" | "Ongoing",
-      "productId": "commverse" | "localblue" | "send" | "inbox" | "content" | "livechat" | "listings" | "reputation" | "relationships" | "hostsBlue" | "swipesBlue",
-      "bundleId": "commverse" | "localblue" | null,
+      "productId": "compass" | "anchor" | "promote" | "respond" | "post" | "engage" | "publish" | "elevate" | "optimize" | "amplify" | "connect" | "hostsblue" | "swipesblue",
+      "bundleId": "compass" | "anchor" | null,
       "productBenefits": ["benefit 1", "benefit 2", "benefit 3"],
-      "bundleAdvantage": "Save with CommVerse bundle..." or null
+      "bundleAdvantage": "Save with Compass Suite..." or null
     }
   ],
   "competitorInsights": [array of industry-specific competitive insights],
@@ -17923,43 +23673,45 @@ RESPOND WITH VALID JSON:
 
 You may ONLY recommend products with these EXACT productId values:
 
-\u2605\u2605\u2605 BUNDLES (PRIORITIZE THESE - BEST VALUE) \u2605\u2605\u2605
-| productId   | Display Name      | Price   | Includes                              | Savings        |
-|-------------|-------------------|---------|---------------------------------------|----------------|
-| commverse   | CommVerse Bundle  | $99/mo  | Inbox + Send + Content + LiveChat     | Save $37/month |
-| localblue   | LocalBlue Bundle  | $59/mo  | Listings + Reputation                 | Save $19/month |
+\u2605\u2605\u2605 SUITES (PRIORITIZE THESE - BEST VALUE) \u2605\u2605\u2605
+| productId   | Display Name      | Price   | Includes                                      | Savings         |
+|-------------|-------------------|---------|-----------------------------------------------|-----------------|
+| compass     | Compass Suite     | $99/mo  | / promote + / respond + / engage + / post     | Save vs separate |
+| anchor      | Anchor Suite      | $99/mo  | / publish + / elevate + / optimize + / amplify | Save vs separate |
 
-COMMUNICATION TOOLS (Individual apps - recommend CommVerse Bundle instead when 2+ needed):
-| productId   | Display Name | Price    | Use For                              |
-|-------------|--------------|----------|--------------------------------------|
-| inbox       | Inbox        | $34/mo   | Unified inbox, message consolidation |
-| send        | Send         | $34/mo   | Email & SMS marketing                |
-| content     | Content      | $34/mo   | Social media scheduling & creation   |
-| livechat    | LiveChat     | $34/mo   | Website chat widget, lead capture    |
+COMPASS SUITE APPS (Individual \u2014 recommend Compass Suite when 2+ needed):
+| productId   | Display Name  | Price    | Use For                              |
+|-------------|---------------|----------|--------------------------------------|
+| respond     | / respond     | $29/mo   | Unified inbox, message consolidation |
+| promote     | / promote     | $29/mo   | Email & SMS marketing campaigns      |
+| post        | / post        | $29/mo   | Social media scheduling & creation   |
+| engage      | / engage      | $29/mo   | Website chat widget, lead capture    |
 
-LOCAL PRESENCE TOOLS (Individual apps - recommend LocalBlue Bundle instead when both needed):
-| productId   | Display Name | Price    | Use For                              |
-|-------------|--------------|----------|--------------------------------------|
-| listings    | Listings     | $39/mo   | Directory sync, NAP consistency      |
-| reputation  | Reputation   | $39/mo   | Review monitoring & response         |
+ANCHOR SUITE APPS (Individual \u2014 recommend Anchor Suite when 2+ needed):
+| productId   | Display Name  | Price    | Use For                              |
+|-------------|---------------|----------|--------------------------------------|
+| publish     | / publish     | $29/mo   | Directory sync, NAP consistency      |
+| elevate     | / elevate     | $29/mo   | Review monitoring & response         |
+| optimize    | / optimize    | $29/mo   | SEO health monitoring & tracking     |
+| amplify     | / amplify     | $29/mo   | Digital advertising management       |
 
-BUSINESS OPERATIONS:
-| productId      | Display Name      | Price    | Use For                    |
-|----------------|-------------------|----------|----------------------------|
-| relationships  | Relationships CRM | $29/mo   | Customer tracking, pipeline |
+STANDALONE (NEVER BUNDLED):
+| productId   | Display Name  | Price    | Use For                    |
+|-------------|---------------|----------|----------------------------|
+| connect     | / connect     | $29/mo   | Customer tracking, pipeline |
 
 PARTNER SERVICES:
-| productId     | Display Name   | Price     | Use For                        |
-|---------------|----------------|-----------|--------------------------------|
-| hostsblue     | HostsBlue.com  | Varies    | Web hosting, domains, SSL      |
-| swipesblue    | SwipesBlue.com | 2.9%+30\xA2  | Payment processing             |
+| productId   | Display Name   | Price     | Use For                        |
+|-------------|----------------|-----------|--------------------------------|
+| hostsblue   | hostsblue.com  | Varies    | Web hosting, domains, SSL      |
+| swipesblue  | swipesblue.com | 2.9%+30\xA2  | Payment processing             |
 
-\u2605\u2605\u2605 BUNDLE RECOMMENDATION RULES \u2605\u2605\u2605
-- ONLY recommend "commverse" (CommVerse Bundle) if business needs ALL 4 communication tools (Inbox, Send, Content, LiveChat)
-- ONLY recommend "localblue" (LocalBlue Bundle) if business needs BOTH Listings AND Reputation
-- If only 1-3 communication tools needed, recommend individual apps instead
-- Bundles ARE products - use productId "commverse" or "localblue" directly
-- Always mention bundle savings in description when recommending bundles
+\u2605\u2605\u2605 SUITE RECOMMENDATION RULES \u2605\u2605\u2605
+- ONLY recommend "compass" (Compass Suite) if business needs ALL 4 communication tools (/ promote, / respond, / engage, / post)
+- ONLY recommend "anchor" (Anchor Suite) if business needs multiple local presence tools (/ publish, / elevate, / optimize, / amplify)
+- If only 1-3 tools needed from a suite, recommend individual apps instead
+- Suites ARE products \u2014 use productId "compass" or "anchor" directly
+- Always mention suite savings in description when recommending suites
 
 \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 \u{1F6AB} FORBIDDEN - DO NOT DO ANY OF THESE:
@@ -18032,6 +23784,12 @@ If you can't find a matching product, DO NOT create a fake one.
   - Last followup: ${data.lastCRMFollowup || "Unknown"}
   - Has automation: ${data.hasAutomation || "Unknown"}`);
     }
+    if (data.runsAds || data.lastAdCampaign || data.monthlyAdBudget) {
+      sections.push(`ADVERTISING & PAID MEDIA:
+  - Runs ads: ${data.runsAds || "Unknown"}
+  - Last ad campaign: ${data.lastAdCampaign || "Unknown"}
+  - Monthly ad budget: ${data.monthlyAdBudget || "Unknown"}`);
+    }
     return sections.length > 0 ? `OPERATIONAL ASSESSMENT DATA:
 ${sections.join("\n\n")}` : "OPERATIONAL DATA: Minimal data provided";
   }
@@ -18055,7 +23813,7 @@ ${issues.slice(0, 5).map((i) => `- [${i.severity.toUpperCase()}] ${i.issue}: ${i
 When recommending Website & SEO improvements:
 1. Reference these SPECIFIC technical issues
 2. Recommend HostsBlue.com to fix infrastructure issues (hosting, SSL, performance)
-3. Then recommend LiveChat to capture leads from improved site`;
+3. Then recommend / engage to capture leads from improved site`;
   }
   repairJSON(content) {
     let cleaned = content.replace(/[\x00-\x1F\x7F]/g, " ").replace(/,\s*}/g, "}").replace(/,\s*]/g, "]");
@@ -18081,26 +23839,26 @@ When recommending Website & SEO improvements:
         {
           category: "Email & SMS Marketing",
           title: "Start Building Your Customer Database",
-          description: "Use Send to collect emails and SMS subscribers for direct marketing.",
+          description: "Use / promote to collect emails and SMS subscribers for direct marketing.",
           priority: "high",
-          productId: "send",
-          bundleId: "commverse"
+          productId: "promote",
+          bundleId: "compass"
         },
         {
           category: "Reputation Management",
           title: "Improve Online Reviews",
-          description: "Use Reputation to monitor and respond to customer reviews.",
+          description: "Use / elevate to monitor and respond to customer reviews.",
           priority: "high",
-          productId: "reputation",
-          bundleId: "localblue"
+          productId: "elevate",
+          bundleId: "anchor"
         },
         {
           category: "Business Listings",
           title: "Sync Business Information",
-          description: "Use Listings to ensure consistent NAP across directories.",
+          description: "Use / publish to ensure consistent NAP across directories.",
           priority: "medium",
-          productId: "listings",
-          bundleId: "localblue"
+          productId: "publish",
+          bundleId: "anchor"
         }
       ],
       competitorInsights: [],
@@ -18131,7 +23889,7 @@ When recommending Website & SEO improvements:
           priority: "high",
           estimatedImpact: "High ROI",
           estimatedEffort: "1-2 weeks",
-          productId: "send",
+          productId: "promote",
           productBenefits: ["Automated campaigns", "Customer retention", "Revenue growth"]
         },
         {
@@ -18141,7 +23899,7 @@ When recommending Website & SEO improvements:
           priority: "medium",
           estimatedImpact: "Medium ROI",
           estimatedEffort: "2-4 weeks",
-          productId: "content",
+          productId: "post",
           productBenefits: ["Brand awareness", "Engagement", "Lead generation"]
         },
         {
@@ -18151,8 +23909,8 @@ When recommending Website & SEO improvements:
           priority: "medium",
           estimatedImpact: "High trust-building",
           estimatedEffort: "1 week",
-          productId: "reputation",
-          bundleId: "localblue",
+          productId: "elevate",
+          bundleId: "anchor",
           productBenefits: ["Customer trust", "SEO benefits", "Insight gathering"]
         }
       );
@@ -18170,30 +23928,31 @@ When recommending Website & SEO improvements:
   }
   validateRecommendation(rec, rejectedCount) {
     const VALID_PRODUCT_IDS = [
-      "inbox",
-      "send",
-      "content",
-      "livechat",
-      "commverse",
-      "listings",
-      "reputation",
-      "localblue",
-      "relationships",
+      "respond",
+      "promote",
+      "post",
+      "engage",
+      "compass",
+      "publish",
+      "elevate",
+      "optimize",
+      "amplify",
+      "anchor",
+      "connect",
       "hostsblue",
       "swipesblue"
-      // Lowercase for consistent matching
     ];
-    const VALID_BUNDLE_IDS = ["commverse", "localblue"];
+    const VALID_BUNDLE_IDS = ["compass", "anchor"];
     const VALID_CATEGORIES = [
       "Email & SMS Marketing",
       "Social Media Content",
       "Reputation Management",
-      "Customer Response & Timing",
+      "Unified Inbox & Response",
       "Live Chat",
-      "Business Listings",
-      "Google Business Profile",
+      "Business Listings & GBP",
       "Website & SEO",
-      "CRM Systems"
+      "CRM & Customer Management",
+      "Advertising & Paid Media"
     ];
     const rawProductId = rec.productId;
     const productId = rawProductId?.toLowerCase?.() || rawProductId;
@@ -18226,57 +23985,39 @@ When recommending Website & SEO improvements:
 };
 
 // server/services/resend-email.ts
-import { Resend as Resend2 } from "resend";
-var connectionSettings2;
+import { Resend as Resend4 } from "resend";
 async function getResendCredentials2() {
+  const envApiKey = process.env.RESEND_API_KEY;
+  if (envApiKey) {
+    console.log("[Email] Using RESEND_API_KEY from environment");
+    return { apiKey: envApiKey, fromEmail: process.env.FROM_EMAIL || "noreply@businessblueprint.io" };
+  }
   try {
     const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
     if (!hostname) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || "noreply@businessblueprint.io" };
-      }
-      console.warn("[Email Service] No Resend connector or RESEND_API_KEY configured");
+      console.error("[Email] FAILED \u2014 no RESEND_API_KEY env var and no Replit connector configured");
       return null;
     }
     const xReplitToken = process.env.REPL_IDENTITY ? "repl " + process.env.REPL_IDENTITY : process.env.WEB_REPL_RENEWAL ? "depl " + process.env.WEB_REPL_RENEWAL : null;
     if (!xReplitToken) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || "noreply@businessblueprint.io" };
-      }
-      console.warn("[Email Service] No Replit token found for connector");
+      console.error("[Email] FAILED \u2014 no RESEND_API_KEY env var and no Replit connector configured");
       return null;
     }
-    connectionSettings2 = await fetch(
+    const connectionSettings2 = await fetch(
       "https://" + hostname + "/api/v2/connection?include_secrets=true&connector_names=resend",
-      {
-        headers: {
-          "Accept": "application/json",
-          "X_REPLIT_TOKEN": xReplitToken
-        }
-      }
+      { headers: { "Accept": "application/json", "X_REPLIT_TOKEN": xReplitToken } }
     ).then((res) => res.json()).then((data) => data.items?.[0]);
-    if (!connectionSettings2 || !connectionSettings2.settings?.api_key) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        console.log("[Email Service] Using RESEND_API_KEY from environment");
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || "noreply@businessblueprint.io" };
-      }
-      console.warn("[Email Service] Resend connector not configured");
-      return null;
+    if (connectionSettings2?.settings?.api_key) {
+      console.log("[Email] Using Replit connector");
+      return {
+        apiKey: connectionSettings2.settings.api_key,
+        fromEmail: connectionSettings2.settings.from_email || "noreply@businessblueprint.io"
+      };
     }
-    console.log("[Email Service] Using Resend connector credentials");
-    return {
-      apiKey: connectionSettings2.settings.api_key,
-      fromEmail: connectionSettings2.settings.from_email || "noreply@businessblueprint.io"
-    };
+    console.error("[Email] FAILED \u2014 no RESEND_API_KEY env var and no Replit connector configured");
+    return null;
   } catch (error) {
-    console.error("[Email Service] Error fetching Resend credentials:", error);
-    const apiKey = process.env.RESEND_API_KEY;
-    if (apiKey) {
-      return { apiKey, fromEmail: process.env.FROM_EMAIL || "noreply@businessblueprint.io" };
-    }
+    console.error("[Email] FAILED \u2014 no RESEND_API_KEY env var and no Replit connector configured");
     return null;
   }
 }
@@ -18286,7 +24027,7 @@ async function getResendClient() {
     return null;
   }
   return {
-    client: new Resend2(credentials.apiKey),
+    client: new Resend4(credentials.apiKey),
     fromEmail: credentials.fromEmail
   };
 }
@@ -18615,17 +24356,20 @@ var ResendEmailService = class {
     const highPriorityRecs = data.recommendations.filter((r) => r.priority === "high").slice(0, 3);
     const baseUrl = process.env.FRONTEND_URL || "https://businessblueprint.io";
     const getProductIcon = (productId) => {
-      const iconMap = {
-        "send": "send.png",
-        "inbox": "inbox.png",
-        "content": "content.png",
-        "livechat": "livechat.png",
-        "reputation": "reputation.png",
-        "listings": "listings.png",
-        "localblue": "localblue.png",
-        "commverse": "commverse.png"
+      const colorMap = {
+        "promote": "#1844A6",
+        "respond": "#001882",
+        "engage": "#660099",
+        "post": "#FF44CC",
+        "publish": "#064A6C",
+        "elevate": "#E9B307",
+        "optimize": "#374151",
+        "amplify": "#97ACCA",
+        "connect": "#008060"
       };
-      return productId ? `${baseUrl}/${iconMap[productId] || "send.png"}` : `${baseUrl}/send.png`;
+      const color = productId ? colorMap[productId] : null;
+      if (!color) return "";
+      return `<span style="display:inline-block;width:12px;height:12px;background:${color};border-radius:3px;margin-right:6px;vertical-align:middle;"></span>`;
     };
     return `
 <!DOCTYPE html>
@@ -18872,13 +24616,11 @@ var ResendEmailService = class {
           </div>
           
           <div class="bundle-item">
-            <img src="${baseUrl}/commverse.png" alt="CommVerse Bundle" />
-            <p><strong>CommVerse Bundle ($99/mo):</strong> Includes Send, Content, Inbox (unified communications), and LiveChat (website chat widget)\u2014all four tools in one integrated platform. Save money and manage everything from one dashboard.</p>
+            <p><strong style="color: #F97316;">/ compass suite ($99/mo):</strong> Includes / promote (email campaigns), / post (social media), / respond (unified inbox), and / engage (live chat widget) \u2014 all four communication tools in one integrated platform.</p>
           </div>
-          
+
           <div class="bundle-item" style="margin-top: 20px;">
-            <img src="${baseUrl}/localblue.png" alt="LocalBlue Bundle" />
-            <p><strong>LocalBlue Bundle ($59/mo):</strong> Includes Reputation, business Listings management, and Google Business Profile optimization for complete local SEO dominance.</p>
+            <p><strong style="color: #97ACCA;">/ anchor suite ($99/mo):</strong> Includes / elevate (reputation & reviews), / publish (business listings), / optimize (SEO health), and / amplify (advertising) \u2014 complete local SEO and visibility.</p>
           </div>
         </div>
         
@@ -19074,8 +24816,8 @@ var ResendEmailService = class {
         
         <ul style="margin: 20px 0; padding-left: 20px;">
           <li><strong>Your Prescription:</strong> How to read and prioritize your recommendations</li>
-          <li><strong>The 5-Step Journey:</strong> Assessment \u2192 Prescription \u2192 LocalBlue \u2192 Coach Blue \u2192 CommVerse</li>
-          <li><strong>Our Tools:</strong> A complete overview of all 9 apps and what they do</li>
+          <li><strong>The 6-Step Journey:</strong> Scan \u2192 Blueprint \u2192 / connect \u2192 / anchor suite \u2192 / compass suite \u2192 Coach Blue</li>
+          <li><strong>Our Tools:</strong> A complete overview of all our apps and what they do</li>
           <li><strong>Getting Started:</strong> Which tools to implement first for maximum impact</li>
         </ul>
         
@@ -19094,7 +24836,7 @@ var ResendEmailService = class {
           
           <p>The platform tour is just the beginning. If you want <strong>ongoing, personalized guidance</strong> as you grow your business, I'm available as a premium subscription.</p>
           
-          <p><strong>With Coach Blue Premium ($99/mo), I'll help you:</strong></p>
+          <p><strong>With Coach Blue ($99/mo standalone, $59/mo with one suite, free with both suites), I'll help you:</strong></p>
           <ul>
             <li>Implement your prescription step-by-step</li>
             <li>Troubleshoot technical issues</li>
@@ -19153,7 +24895,7 @@ var ResendEmailService = class {
 init_db();
 init_schema();
 import nodemailer from "nodemailer";
-import { eq as eq28, and as and16 } from "drizzle-orm";
+import { eq as eq36, and as and25 } from "drizzle-orm";
 var InboxEmailService = class {
   transporter;
   constructor() {
@@ -19174,17 +24916,17 @@ var InboxEmailService = class {
    * @throws Error with details about the failure
    */
   async sendMessage(conversationId, content, fromName) {
-    const [conversation] = await db.select().from(inboxConversations).where(eq28(inboxConversations.id, conversationId)).limit(1);
+    const [conversation] = await db.select().from(inboxConversations).where(eq36(inboxConversations.id, conversationId)).limit(1);
     if (!conversation) {
       throw new Error("Conversation not found");
     }
     if (conversation.primaryChannelType !== "email") {
       throw new Error("Conversation is not an email thread");
     }
-    const [channelConnection] = await db.select().from(inboxChannelConnections).where(and16(
-      eq28(inboxChannelConnections.clientId, conversation.clientId),
-      eq28(inboxChannelConnections.channelType, "email"),
-      eq28(inboxChannelConnections.status, "active")
+    const [channelConnection] = await db.select().from(inboxChannelConnections).where(and25(
+      eq36(inboxChannelConnections.clientId, conversation.clientId),
+      eq36(inboxChannelConnections.channelType, "email"),
+      eq36(inboxChannelConnections.status, "active")
     )).limit(1);
     const fromEmail = channelConnection?.channelIdentifier || process.env.FROM_EMAIL || "inbox@businessblueprint.io";
     const toEmail = conversation.contactIdentifier;
@@ -19256,10 +24998,10 @@ var InboxEmailService = class {
    */
   async handleIncomingEmail(data) {
     try {
-      let conversation = await db.select().from(inboxConversations).where(and16(
-        eq28(inboxConversations.clientId, data.clientId),
-        eq28(inboxConversations.contactIdentifier, data.from),
-        eq28(inboxConversations.primaryChannelType, "email")
+      let conversation = await db.select().from(inboxConversations).where(and25(
+        eq36(inboxConversations.clientId, data.clientId),
+        eq36(inboxConversations.contactIdentifier, data.from),
+        eq36(inboxConversations.primaryChannelType, "email")
       )).limit(1);
       let conversationId;
       if (conversation.length === 0) {
@@ -19278,7 +25020,7 @@ var InboxEmailService = class {
         await db.update(inboxConversations).set({
           subject: data.subject,
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq28(inboxConversations.id, conversationId));
+        }).where(eq36(inboxConversations.id, conversationId));
       }
       const [message] = await db.insert(inboxMessages2).values({
         conversationId,
@@ -19388,6 +25130,41 @@ var GooglePlacesService = class {
     } catch (error) {
       console.error("\u274C Google Places API error:", error);
       return { exists: false };
+    }
+  }
+  /**
+   * Reply to a Google review via the My Business API.
+   * Requires the Google My Business API to be enabled and OAuth credentials with
+   * the 'https://www.googleapis.com/auth/business.manage' scope.
+   *
+   * NOTE: This requires the business owner to have connected their Google
+   * Business account via OAuth. If credentials are not available, the response
+   * is stored locally only and the owner is notified to connect their account.
+   */
+  async replyToReview(accountId, locationId, reviewId, replyText, accessToken) {
+    try {
+      const url = `https://mybusiness.googleapis.com/v4/accounts/${accountId}/locations/${locationId}/reviews/${reviewId}/reply`;
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ comment: replyText })
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error("[GooglePlaces] Review reply failed:", response.status, errorData);
+        return {
+          success: false,
+          error: `Google API error ${response.status}: ${errorData?.error?.message || "Unknown error"}`
+        };
+      }
+      console.log(`[GooglePlaces] Successfully replied to review ${reviewId}`);
+      return { success: true };
+    } catch (error) {
+      console.error("[GooglePlaces] Review reply error:", error);
+      return { success: false, error: error.message };
     }
   }
   /**
@@ -19853,6 +25630,13 @@ var PresenceScannerService = class {
       const seoData = this.analyzeSEO(html);
       const contentData = this.analyzeContent(html);
       const isMobileFriendly = this.checkMobileFriendly(html);
+      const emailCapture = this.detectEmailCapture(html);
+      const chatWidget = this.detectChatWidget(html);
+      const crmAndAutomation = this.detectCRMAndAutomation(html);
+      const blog = this.detectBlog(html);
+      const smsMarketing = this.detectSMSMarketing(html);
+      const lastUpdate = this.detectLastUpdate(html);
+      console.log(`[PresenceScanner] Detections: email=${emailCapture.detected ? emailCapture.platform || "form" : "none"}, chat=${chatWidget.detected ? chatWidget.platform : "none"}, crm=${crmAndAutomation.crmDetected ? crmAndAutomation.crmPlatform : "none"}, blog=${blog.detected}, sms=${smsMarketing.detected}`);
       const score = this.calculateWebsiteScore({
         hasSSL,
         isMobileFriendly,
@@ -19867,7 +25651,16 @@ var PresenceScannerService = class {
         loadTime,
         seo: seoData,
         content: contentData,
-        score
+        score,
+        detections: {
+          emailCapture,
+          chatWidget,
+          crm: { detected: crmAndAutomation.crmDetected, platform: crmAndAutomation.crmPlatform },
+          automation: { detected: crmAndAutomation.automationDetected, platform: crmAndAutomation.automationPlatform },
+          blog,
+          smsMarketing,
+          lastUpdate
+        }
       };
     } catch (error) {
       console.error("Website scan error:", error);
@@ -19916,6 +25709,206 @@ var PresenceScannerService = class {
     };
   }
   /**
+   * Detect email collection mechanisms on the website.
+   * Checks for: email marketing platform scripts, newsletter signup forms,
+   * email input fields with subscribe/signup context.
+   */
+  detectEmailCapture(html) {
+    const platforms = {
+      "mailchimp": [/mc\.js/i, /list-manage\.com/i, /chimpstatic/i],
+      "constant_contact": [/constantcontact\.com/i, /cc\.js/i],
+      "convertkit": [/convertkit\.com/i, /ck\.js/i],
+      "klaviyo": [/klaviyo\.com/i, /klviyo/i],
+      "activecampaign": [/activecampaign\.com/i],
+      "hubspot": [/js\.hs-scripts\.com/i, /hbspt\.forms/i, /hsforms/i],
+      "drip": [/getdrip\.com/i],
+      "mailerlite": [/mailerlite\.com/i, /ml\.js/i],
+      "brevo": [/brevo\.com/i, /sendinblue\.com/i, /sibforms/i],
+      "campaign_monitor": [/createsend\.com/i, /campaignmonitor\.com/i],
+      "aweber": [/aweber\.com/i],
+      "getresponse": [/getresponse\.com/i],
+      "beehiiv": [/beehiiv\.com/i],
+      "substack": [/substack\.com/i, /substackapi/i]
+    };
+    for (const [name, patterns] of Object.entries(platforms)) {
+      if (patterns.some((p) => p.test(html))) {
+        return { detected: true, platform: name, method: "embedded_script" };
+      }
+    }
+    const hasEmailInput = /<input[^>]*type=["']email["'][^>]*>/i.test(html);
+    const hasNewsletterContext = /newsletter|subscribe|sign.?up|email.?list|mailing.?list|stay.?in.?touch|get.?updates|join.*list/i.test(html);
+    const hasFormWithEmail = /<form[^>]*>[\s\S]{0,2000}?<input[^>]*type=["']email["']/i.test(html);
+    if (hasFormWithEmail && hasNewsletterContext) {
+      return { detected: true, platform: null, method: "signup_form" };
+    }
+    return { detected: false, platform: null, method: "none" };
+  }
+  /**
+   * Detect live chat widgets on the website.
+   */
+  detectChatWidget(html) {
+    const platforms = {
+      "intercom": [/intercom/i, /intercomSettings/i, /widget\.intercom\.io/i],
+      "drift": [/drift\.com/i, /driftt\.com/i, /js\.driftt/i],
+      "tawk": [/tawk\.to/i, /embed\.tawk/i],
+      "livechat": [/livechatinc\.com/i, /cdn\.livechatinc/i],
+      "zendesk_chat": [/zopim/i, /static\.zdassets/i, /zendesk.*chat/i],
+      "crisp": [/crisp\.chat/i, /client\.crisp/i],
+      "tidio": [/tidio\.co/i, /code\.tidio/i],
+      "olark": [/olark\.com/i, /static\.olark/i],
+      "hubspot_chat": [/js\.usemessages\.com/i, /HubSpotConversations/i],
+      "freshchat": [/wchat\.freshchat/i, /freshdesk\.com.*widget/i],
+      "facebook_messenger": [/customerchat/i, /facebook.*messenger.*plugin/i, /fb-customerchat/i],
+      "chatwoot": [/chatwoot/i, /app\.chatwoot/i],
+      "gorgias": [/gorgias/i],
+      "helpscout": [/beacon-v2/i, /helpscout/i]
+    };
+    for (const [name, patterns] of Object.entries(platforms)) {
+      if (patterns.some((p) => p.test(html))) {
+        return { detected: true, platform: name };
+      }
+    }
+    return { detected: false, platform: null };
+  }
+  /**
+   * Detect CRM tracking codes and marketing automation platforms.
+   */
+  detectCRMAndAutomation(html) {
+    const crmPlatforms = {
+      "hubspot": [/js\.hs-scripts\.com/i, /js\.hs-analytics/i, /hbspt/i],
+      "salesforce": [/force\.com/i, /salesforce.*tracking/i, /sfdc/i],
+      "zoho": [/zoho.*crm/i, /salesiq\.zoho/i],
+      "pipedrive": [/pipedrive/i, /leadbooster/i],
+      "keap": [/keap\.com/i, /infusionsoft/i],
+      "freshsales": [/freshsales/i, /freshmarketer/i]
+    };
+    const automationPlatforms = {
+      "hubspot": [/js\.hs-scripts\.com/i, /hbspt/i],
+      "marketo": [/marketo\.com/i, /munchkin/i, /mkto/i],
+      "pardot": [/pardot\.com/i, /pi\.pardot/i],
+      "activecampaign": [/activecampaign\.com.*tracking/i, /trackcmp/i],
+      "drip": [/getdrip\.com/i],
+      "klaviyo": [/klaviyo\.com.*track/i],
+      "customer_io": [/customer\.io/i, /customeriotracking/i],
+      "autopilot": [/autopilothq/i]
+    };
+    let crmResult = { detected: false, platform: null };
+    let autoResult = { detected: false, platform: null };
+    for (const [name, patterns] of Object.entries(crmPlatforms)) {
+      if (patterns.some((p) => p.test(html))) {
+        crmResult = { detected: true, platform: name };
+        break;
+      }
+    }
+    for (const [name, patterns] of Object.entries(automationPlatforms)) {
+      if (patterns.some((p) => p.test(html))) {
+        autoResult = { detected: true, platform: name };
+        break;
+      }
+    }
+    return {
+      crmDetected: crmResult.detected,
+      crmPlatform: crmResult.platform,
+      automationDetected: autoResult.detected,
+      automationPlatform: autoResult.platform
+    };
+  }
+  /**
+   * Detect blog/content section and estimate posting frequency.
+   */
+  detectBlog(html) {
+    const blogLinkPattern = /href=["'][^"']*\/(blog|news|articles|insights|posts|journal|stories|resources\/blog)[/"']/i;
+    const hasBlogLink = blogLinkPattern.test(html);
+    const hasArticleSchema = /"@type"\s*:\s*"(BlogPosting|NewsArticle|Article)"/i.test(html);
+    const hasArticleTag = /<article[\s>]/i.test(html);
+    const isoDatePattern = /datetime=["'](\d{4}-\d{2}-\d{2})/g;
+    const dates = [];
+    let match;
+    while ((match = isoDatePattern.exec(html)) !== null) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime()) && d.getFullYear() >= 2020) dates.push(d);
+    }
+    const schemaDatePattern = /"datePublished"\s*:\s*"(\d{4}-\d{2}-\d{2})/g;
+    while ((match = schemaDatePattern.exec(html)) !== null) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime()) && d.getFullYear() >= 2020) dates.push(d);
+    }
+    if (!hasBlogLink && !hasArticleSchema && !hasArticleTag && dates.length === 0) {
+      return { detected: false, lastPostDate: null, estimatedFrequency: null };
+    }
+    const sortedDates = dates.sort((a, b) => b.getTime() - a.getTime());
+    const lastPostDate = sortedDates[0] || null;
+    let frequency = null;
+    if (lastPostDate) {
+      const daysSince = Math.floor((Date.now() - lastPostDate.getTime()) / (1e3 * 60 * 60 * 24));
+      if (daysSince <= 10) frequency = "yes_weekly";
+      else if (daysSince <= 45) frequency = "yes_monthly";
+      else if (daysSince <= 180) frequency = "yes_inconsistent";
+      else frequency = "no_planning";
+    } else if (hasBlogLink || hasArticleSchema) {
+      frequency = "yes_inconsistent";
+    }
+    return {
+      detected: hasBlogLink || hasArticleSchema || hasArticleTag,
+      lastPostDate: lastPostDate ? lastPostDate.toISOString().split("T")[0] : null,
+      estimatedFrequency: frequency
+    };
+  }
+  /**
+   * Detect SMS marketing platform presence.
+   */
+  detectSMSMarketing(html) {
+    const platforms = {
+      "twilio": [/twilio\.com/i],
+      "eztexting": [/eztexting\.com/i],
+      "simpletexting": [/simpletexting\.com/i],
+      "slicktext": [/slicktext\.com/i],
+      "textmagic": [/textmagic\.com/i],
+      "postscript": [/postscript\.io/i],
+      "attentive": [/attentivemobile\.com/i, /attn\.tv/i]
+    };
+    for (const [name, patterns] of Object.entries(platforms)) {
+      if (patterns.some((p) => p.test(html))) {
+        return { detected: true, platform: name };
+      }
+    }
+    const textToPattern = /text\s+\w+\s+to\s+\d{5,6}/i;
+    if (textToPattern.test(html)) {
+      return { detected: true, platform: "shortcode_detected" };
+    }
+    return { detected: false, platform: null };
+  }
+  /**
+   * Estimate when the website was last updated.
+   */
+  detectLastUpdate(html) {
+    const copyrightPattern = /©\s*(\d{4})|copyright\s*(\d{4})/i;
+    const copyrightMatch = html.match(copyrightPattern);
+    const copyrightYear = copyrightMatch ? parseInt(copyrightMatch[1] || copyrightMatch[2]) : null;
+    const allDates = [];
+    const isoPattern = /(\d{4}-\d{2}-\d{2})/g;
+    let match;
+    while ((match = isoPattern.exec(html)) !== null) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime()) && d.getFullYear() >= 2020 && d.getTime() <= Date.now()) {
+        allDates.push(d);
+      }
+    }
+    const modifiedPattern = /"dateModified"\s*:\s*"(\d{4}-\d{2}-\d{2})/g;
+    while ((match = modifiedPattern.exec(html)) !== null) {
+      const d = new Date(match[1]);
+      if (!isNaN(d.getTime())) allDates.push(d);
+    }
+    if (allDates.length > 0) {
+      const mostRecent = allDates.sort((a, b) => b.getTime() - a.getTime())[0];
+      return { estimatedDate: mostRecent.toISOString().split("T")[0], method: "content_date" };
+    }
+    if (copyrightYear) {
+      return { estimatedDate: `${copyrightYear}-06-15`, method: "copyright_year" };
+    }
+    return { estimatedDate: null, method: "unknown" };
+  }
+  /**
    * Check if website is mobile-friendly
    */
   checkMobileFriendly(html) {
@@ -19924,30 +25917,187 @@ var PresenceScannerService = class {
     return hasViewport || hasResponsive;
   }
   /**
-   * Scan social media presence
-   * NOTE: This is a placeholder implementation. Real implementation requires:
-   * - Facebook Graph API integration
-   * - Instagram Basic Display API
-   * - Twitter API v2
-   * - LinkedIn API
-   * - YouTube Data API
+   * Scan social media presence using available APIs
+   *
+   * Checks: Facebook (Graph API), Instagram (via FB), Twitter/X (HTTP probe),
+   * LinkedIn (HTTP probe), YouTube (Data API)
    */
   async scanSocialMedia(businessName) {
-    console.log(`\u2139\uFE0F Social media scanning not yet implemented for: ${businessName}`);
-    const platforms = {
-      facebook: { exists: false, isActive: false },
-      instagram: { exists: false, isActive: false },
-      twitter: { exists: false, isActive: false },
-      linkedin: { exists: false, isActive: false },
-      youtube: { exists: false, isActive: false }
-    };
-    return {
-      platforms,
-      totalPresence: 0,
-      activeProfiles: 0,
-      score: 50
-      // Neutral score (not 0 to avoid penalizing unknowns)
-    };
+    console.log(`\u{1F50D} Scanning social media for: ${businessName}`);
+    const businessSlug = businessName.toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 60);
+    const [facebook, instagram, twitter, linkedin, youtube] = await Promise.all([
+      this.checkFacebook(businessName),
+      this.checkInstagram(businessName),
+      this.checkTwitter(businessSlug),
+      this.checkLinkedIn(businessSlug),
+      this.checkYouTube(businessName)
+    ]);
+    const platforms = { facebook, instagram, twitter, linkedin, youtube };
+    const totalPresence = Object.values(platforms).filter((p) => p.exists).length;
+    const activeProfiles = Object.values(platforms).filter((p) => p.isActive).length;
+    const score = Math.min(100, totalPresence * 15 + activeProfiles * 5);
+    console.log(`\u{1F4CA} Social media scan: ${totalPresence}/5 present, ${activeProfiles} active, score: ${score}/100`);
+    return { platforms, totalPresence, activeProfiles, score };
+  }
+  /**
+   * Check Facebook page existence via Graph API search
+   */
+  async checkFacebook(businessName) {
+    const appId = process.env.META_APP_ID;
+    const appSecret = process.env.META_APP_SECRET;
+    if (!appId || !appSecret) {
+      console.log("\u2139\uFE0F META_APP_ID / META_APP_SECRET not set \u2014 skipping Facebook check");
+      return { exists: false, isActive: false };
+    }
+    try {
+      const appToken = `${appId}|${appSecret}`;
+      const searchUrl = `https://graph.facebook.com/v21.0/pages/search?q=${encodeURIComponent(businessName)}&access_token=${encodeURIComponent(appToken)}&fields=name,link,fan_count&limit=5`;
+      const response = await fetch(searchUrl, { signal: AbortSignal.timeout(8e3) });
+      if (!response.ok) {
+        console.warn(`\u26A0\uFE0F Facebook Graph API returned ${response.status}`);
+        return { exists: false, isActive: false };
+      }
+      const data = await response.json();
+      const pages = data?.data || [];
+      if (pages.length === 0) {
+        return { exists: false, isActive: false };
+      }
+      const page = pages[0];
+      return {
+        exists: true,
+        url: page.link || `https://www.facebook.com/${page.id}`,
+        followers: page.fan_count || void 0,
+        isActive: true
+        // If the page exists in search, it's active
+      };
+    } catch (error) {
+      console.warn("\u26A0\uFE0F Facebook check failed:", error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
+  }
+  /**
+   * Check Instagram presence via Facebook Graph API (linked IG account)
+   * Falls back to false if no Meta credentials are available.
+   */
+  async checkInstagram(businessName) {
+    const appId = process.env.META_APP_ID;
+    const appSecret = process.env.META_APP_SECRET;
+    if (!appId || !appSecret) {
+      return { exists: false, isActive: false };
+    }
+    try {
+      const slug = businessName.toLowerCase().replace(/[^a-z0-9]/g, "");
+      const probeUrl = `https://www.instagram.com/${slug}/`;
+      const response = await fetch(probeUrl, {
+        method: "HEAD",
+        redirect: "follow",
+        signal: AbortSignal.timeout(8e3),
+        headers: { "User-Agent": "BusinessBlueprint-Scanner/1.0" }
+      });
+      if (response.ok) {
+        return {
+          exists: true,
+          url: probeUrl,
+          isActive: true
+        };
+      }
+      return { exists: false, isActive: false };
+    } catch (error) {
+      console.warn("\u26A0\uFE0F Instagram check failed:", error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
+  }
+  /**
+   * Check Twitter/X presence via HTTP probe
+   * No API key required — uses a HEAD request to x.com/{slug}
+   */
+  async checkTwitter(businessSlug) {
+    try {
+      const probeUrl = `https://x.com/${businessSlug}`;
+      const response = await fetch(probeUrl, {
+        method: "HEAD",
+        redirect: "follow",
+        signal: AbortSignal.timeout(8e3),
+        headers: { "User-Agent": "BusinessBlueprint-Scanner/1.0" }
+      });
+      if (response.ok) {
+        return {
+          exists: true,
+          url: probeUrl,
+          isActive: true
+        };
+      }
+      return { exists: false, isActive: false };
+    } catch (error) {
+      console.warn("\u26A0\uFE0F Twitter/X check failed:", error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
+  }
+  /**
+   * Check LinkedIn company page via HTTP probe (HEAD request)
+   */
+  async checkLinkedIn(businessSlug) {
+    try {
+      const probeUrl = `https://www.linkedin.com/company/${businessSlug}`;
+      const response = await fetch(probeUrl, {
+        method: "HEAD",
+        redirect: "follow",
+        signal: AbortSignal.timeout(8e3),
+        headers: { "User-Agent": "BusinessBlueprint-Scanner/1.0" }
+      });
+      if (response.ok) {
+        return {
+          exists: true,
+          url: probeUrl,
+          isActive: true
+        };
+      }
+      return { exists: false, isActive: false };
+    } catch (error) {
+      console.warn("\u26A0\uFE0F LinkedIn check failed:", error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
+  }
+  /**
+   * Check YouTube channel presence via YouTube Data API v3
+   * Uses GOOGLE_PLACES_API_KEY (same Google Cloud project key works for YouTube Data API)
+   */
+  async checkYouTube(businessName) {
+    const apiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.GOOGLE_API_KEY;
+    if (!apiKey) {
+      console.log("\u2139\uFE0F No Google API key available \u2014 skipping YouTube check");
+      return { exists: false, isActive: false };
+    }
+    try {
+      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(businessName)}&type=channel&maxResults=3&key=${apiKey}`;
+      const response = await fetch(searchUrl, { signal: AbortSignal.timeout(8e3) });
+      if (!response.ok) {
+        if (response.status === 403) {
+          console.log("\u2139\uFE0F YouTube Data API not enabled for this key \u2014 skipping");
+        } else {
+          console.warn(`\u26A0\uFE0F YouTube API returned ${response.status}`);
+        }
+        return { exists: false, isActive: false };
+      }
+      const data = await response.json();
+      const channels = data?.items || [];
+      if (channels.length === 0) {
+        return { exists: false, isActive: false };
+      }
+      const nameLower = businessName.toLowerCase();
+      const match = channels.find(
+        (ch) => ch.snippet?.title?.toLowerCase().includes(nameLower) || nameLower.includes(ch.snippet?.title?.toLowerCase() || "")
+      ) || channels[0];
+      const channelId = match.snippet?.channelId || match.id?.channelId;
+      return {
+        exists: true,
+        url: channelId ? `https://www.youtube.com/channel/${channelId}` : void 0,
+        isActive: true
+      };
+    } catch (error) {
+      console.warn("\u26A0\uFE0F YouTube check failed:", error instanceof Error ? error.message : error);
+      return { exists: false, isActive: false };
+    }
   }
   /**
    * Scan business directories using real APIs
@@ -19975,11 +26125,12 @@ var PresenceScannerService = class {
         isConsistent: true
       },
       facebook: { exists: false, claimed: false, isConsistent: true },
-      // TODO: Add Facebook API
+      // Covered by social media scan; directory listing not separately checked
+      // Yellow Pages and BBB: These directories don't offer public APIs.
+      // Scraping their pages is fragile, violates their ToS, and breaks frequently.
+      // We intentionally leave these as unknown rather than returning unreliable data.
       yellowPages: { exists: false, claimed: false, isConsistent: true },
-      // TODO: Add scraping
       bbb: { exists: false, claimed: false, isConsistent: true }
-      // TODO: Add scraping
     };
     const totalListings = Object.values(platforms).filter((p) => p.exists).length;
     const claimedListings = Object.values(platforms).filter((p) => p.claimed).length;
@@ -20027,25 +26178,29 @@ var PresenceScannerService = class {
         reviewCount: googleResult.reviewCount || 0,
         averageRating: googleResult.rating || 0,
         recentReviews: (googleResult.reviews || []).length,
+        // Google Places API returns up to 5 reviews and doesn't expose owner_response
+        // in the basic fields we fetch. Response rate can't be reliably calculated
+        // from partial data, so we leave it at 0 (unknown) rather than guessing.
         responseRate: 0
-        // TODO: Calculate response rate
       },
       yelp: {
         exists: yelpResult.exists && (yelpResult.reviewCount || 0) > 0,
         reviewCount: yelpResult.reviewCount || 0,
         averageRating: yelpResult.rating || 0,
         recentReviews: (yelpResult.reviews || []).length,
+        // Yelp API v3 does not include business owner responses in review data.
+        // Response rate can't be calculated from available data.
         responseRate: 0
-        // TODO: Calculate response rate
       },
       facebook: {
         exists: false,
         reviewCount: 0,
         averageRating: 0,
         recentReviews: 0,
+        // Facebook page reviews require a page access token from the business owner.
+        // Not available during a public scan.
         responseRate: 0
       }
-      // TODO: Add Facebook Graph API
     };
     const totalReviews = platforms.google.reviewCount + platforms.yelp.reviewCount;
     const ratingsWithCounts = [
@@ -20230,6 +26385,22 @@ var PresenceScannerService = class {
       "no_manual": 2,
       "dont_know": 3
     };
+    const runsAdsScores = {
+      "yes_both": 10,
+      "yes_google": 8,
+      "yes_meta": 8,
+      "yes_other": 6,
+      "no_interested": 3,
+      "no_not_interested": 0
+    };
+    const adBudgetScores = {
+      "5000_plus": 10,
+      "2500_5000": 8,
+      "1000_2500": 6,
+      "500_1000": 4,
+      "under_500": 2,
+      "none": 0
+    };
     const getScore = (value, scoreTable) => {
       if (!value) return 0;
       return scoreTable[value] ?? 0;
@@ -20239,14 +26410,14 @@ var PresenceScannerService = class {
     const reputationRaw = (getScore(operationalData.lastReviewResponse, recencyScores) + getScore(operationalData.reviewResponseRate, responseRateScores) + getScore(operationalData.lastNewReview, recencyScores)) / 30 * 7.78;
     const responseRaw = (getScore(operationalData.inquiryResponseTime, responseTimeScores) + getScore(operationalData.hasUnifiedInbox, unifiedInboxScores) + getScore(operationalData.missedInquiries, missedInquiriesScores)) / 30 * 7.78;
     const chatRaw = (getScore(operationalData.hasLiveChat, liveChatScores) + getScore(operationalData.lastChatConversation, recencyScores) + getScore(operationalData.chatResponseTime, responseTimeScores)) / 30 * 7.78;
-    const listingsRaw = (getScore(operationalData.lastListingUpdate, recencyScores) + getScore(operationalData.listingConsistency, listingConsistencyScores)) / 20 * 7.78;
-    const gbpRaw = (getScore(operationalData.lastGBPPost, recencyScores) + getScore(operationalData.lastGBPPhoto, recencyScores)) / 20 * 7.78;
+    const publishRaw = (getScore(operationalData.lastListingUpdate, recencyScores) + getScore(operationalData.listingConsistency, listingConsistencyScores) + getScore(operationalData.lastGBPPost, recencyScores) + getScore(operationalData.lastGBPPhoto, recencyScores)) / 40 * 7.78;
     const websiteRaw = (getScore(operationalData.lastWebsiteUpdate, recencyScores) + getScore(operationalData.hasBlog, blogScores)) / 20 * 7.78;
     const crmRaw = (getScore(operationalData.usesCRM, crmScores) + getScore(operationalData.crmPlatform, crmPlatformScores) + getScore(operationalData.lastCRMFollowup, recencyScores) + getScore(operationalData.hasAutomation, automationScores)) / 40 * 7.78;
+    const amplifyRaw = (getScore(operationalData.runsAds, runsAdsScores) + getScore(operationalData.lastAdCampaign, recencyScores) + getScore(operationalData.monthlyAdBudget, adBudgetScores)) / 30 * 7.78;
     const operationalTotal = Math.round(
-      emailSmsRaw + socialRaw + reputationRaw + responseRaw + chatRaw + listingsRaw + gbpRaw + websiteRaw + crmRaw
+      emailSmsRaw + socialRaw + reputationRaw + responseRaw + chatRaw + publishRaw + websiteRaw + crmRaw + amplifyRaw
     );
-    console.log(`\u{1F4CA} Operational Score Breakdown: Email/SMS=${emailSmsRaw.toFixed(1)}, Social=${socialRaw.toFixed(1)}, Reputation=${reputationRaw.toFixed(1)}, Response=${responseRaw.toFixed(1)}, Chat=${chatRaw.toFixed(1)}, Listings=${listingsRaw.toFixed(1)}, GBP=${gbpRaw.toFixed(1)}, Website=${websiteRaw.toFixed(1)}, CRM=${crmRaw.toFixed(1)}, Total=${operationalTotal}/70`);
+    console.log(`\u{1F4CA} Operational Score Breakdown: Promote=${emailSmsRaw.toFixed(1)}, Post=${socialRaw.toFixed(1)}, Elevate=${reputationRaw.toFixed(1)}, Respond=${responseRaw.toFixed(1)}, Engage=${chatRaw.toFixed(1)}, Publish=${publishRaw.toFixed(1)}, Optimize=${websiteRaw.toFixed(1)}, Connect=${crmRaw.toFixed(1)}, Amplify=${amplifyRaw.toFixed(1)}, Total=${operationalTotal}/70`);
     return Math.min(70, Math.max(0, operationalTotal));
   }
   /**
@@ -20307,6 +26478,20 @@ var PresenceScannerService = class {
     }
     if (data.socialMedia.activeProfiles < 2) {
       recommendations2.push("Establish active presence on key social media platforms");
+    }
+    if (data.website?.detections) {
+      const d = data.website.detections;
+      if (!d.emailCapture.detected) {
+        recommendations2.push("Add an email signup form to your website to capture leads");
+      }
+      if (!d.chatWidget.detected) {
+        recommendations2.push("Add a live chat widget to your website to engage visitors in real time");
+      }
+      if (!d.blog.detected) {
+        recommendations2.push("Start a blog to improve SEO and demonstrate expertise");
+      } else if (d.blog.estimatedFrequency === "yes_inconsistent" || d.blog.estimatedFrequency === "no_planning") {
+        recommendations2.push("Your blog exists but hasn't been updated recently \u2014 consistent posting improves search rankings");
+      }
     }
     return recommendations2.slice(0, 10);
   }
@@ -20394,7 +26579,16 @@ var PresenceScannerService = class {
         hasEmail: false,
         hasBusinessHours: false
       },
-      score: 0
+      score: 0,
+      detections: {
+        emailCapture: { detected: false, platform: null, method: "none" },
+        chatWidget: { detected: false, platform: null },
+        crm: { detected: false, platform: null },
+        automation: { detected: false, platform: null },
+        blog: { detected: false, lastPostDate: null, estimatedFrequency: null },
+        smsMarketing: { detected: false, platform: null },
+        lastUpdate: { estimatedDate: null, method: "unknown" }
+      }
     };
   }
 };
@@ -20403,7 +26597,7 @@ var presenceScannerService = new PresenceScannerService();
 // server/services/listingSync.ts
 init_db();
 init_schema();
-import { eq as eq29, and as and17 } from "drizzle-orm";
+import { eq as eq37, and as and26 } from "drizzle-orm";
 var ListingSyncService = class {
   /**
    * Sync listings for a client by searching Google Places and Yelp
@@ -20461,7 +26655,7 @@ var ListingSyncService = class {
    * Returns 'created' or 'updated'.
    */
   async upsertListing(clientId, platform, data) {
-    const existing = await db.select().from(businessListings).where(and17(eq29(businessListings.clientId, clientId), eq29(businessListings.platform, platform))).limit(1);
+    const existing = await db.select().from(businessListings).where(and26(eq37(businessListings.clientId, clientId), eq37(businessListings.platform, platform))).limit(1);
     const now = /* @__PURE__ */ new Date();
     if (existing.length > 0) {
       await db.update(businessListings).set({
@@ -20480,7 +26674,7 @@ var ListingSyncService = class {
         syncError: null,
         status: "active",
         updatedAt: now
-      }).where(eq29(businessListings.id, existing[0].id));
+      }).where(eq37(businessListings.id, existing[0].id));
       return "updated";
     }
     await db.insert(businessListings).values({
@@ -20509,7 +26703,7 @@ var listingSyncService = new ListingSyncService();
 // server/services/reviewSync.ts
 init_db();
 init_schema();
-import { eq as eq30, and as and18, desc as desc13 } from "drizzle-orm";
+import { eq as eq38, and as and27, desc as desc17, sql as sql15 } from "drizzle-orm";
 function classifySentiment(rating) {
   if (rating >= 4) return "positive";
   if (rating <= 2) return "negative";
@@ -20538,6 +26732,37 @@ var ReviewSyncService = class {
           });
           if (upserted === "created") result.created++;
           else result.updated++;
+          try {
+            const { crmContacts: crmContacts2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+            const { logContactActivity: logContactActivity2 } = await Promise.resolve().then(() => (init_timeline_logger(), timeline_logger_exports));
+            const nameParts = (review.author || "").trim().split(/\s+/);
+            const firstName = nameParts[0] || "";
+            const lastName = nameParts.slice(1).join(" ") || "";
+            if (firstName) {
+              const contacts = await db.select().from(crmContacts2).where(
+                and27(
+                  eq38(crmContacts2.clientId, clientId),
+                  sql15`LOWER(${crmContacts2.firstName}) = LOWER(${firstName})`,
+                  lastName ? sql15`LOWER(${crmContacts2.lastName}) = LOWER(${lastName})` : sql15`1=1`
+                )
+              );
+              if (contacts.length === 1) {
+                await logContactActivity2({
+                  clientId,
+                  contactId: contacts[0].id,
+                  eventType: "review_received",
+                  title: `Left a ${review.rating}-star review on google`,
+                  description: (review.text || "").substring(0, 200) || void 0,
+                  sourceApp: "elevate",
+                  sourceEntityType: "review",
+                  sourceEntityId: platformReviewId,
+                  metadata: { rating: review.rating, platform: "google" }
+                });
+              }
+            }
+          } catch (matchErr) {
+            console.error("[ReviewSync] Timeline logging error (non-blocking):", matchErr);
+          }
         }
       }
     } catch (error) {
@@ -20560,6 +26785,37 @@ var ReviewSyncService = class {
           });
           if (upserted === "created") result.created++;
           else result.updated++;
+          try {
+            const { crmContacts: crmContacts2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+            const { logContactActivity: logContactActivity2 } = await Promise.resolve().then(() => (init_timeline_logger(), timeline_logger_exports));
+            const nameParts = (review.author || "").trim().split(/\s+/);
+            const firstName = nameParts[0] || "";
+            const lastName = nameParts.slice(1).join(" ") || "";
+            if (firstName) {
+              const contacts = await db.select().from(crmContacts2).where(
+                and27(
+                  eq38(crmContacts2.clientId, clientId),
+                  sql15`LOWER(${crmContacts2.firstName}) = LOWER(${firstName})`,
+                  lastName ? sql15`LOWER(${crmContacts2.lastName}) = LOWER(${lastName})` : sql15`1=1`
+                )
+              );
+              if (contacts.length === 1) {
+                await logContactActivity2({
+                  clientId,
+                  contactId: contacts[0].id,
+                  eventType: "review_received",
+                  title: `Left a ${review.rating}-star review on yelp`,
+                  description: (review.text || "").substring(0, 200) || void 0,
+                  sourceApp: "elevate",
+                  sourceEntityType: "review",
+                  sourceEntityId: platformReviewId,
+                  metadata: { rating: review.rating, platform: "yelp" }
+                });
+              }
+            }
+          } catch (matchErr) {
+            console.error("[ReviewSync] Timeline logging error (non-blocking):", matchErr);
+          }
         }
       }
     } catch (error) {
@@ -20572,9 +26828,9 @@ var ReviewSyncService = class {
    */
   async upsertReview(clientId, data) {
     const existing = await db.select().from(businessReviews).where(
-      and18(
-        eq30(businessReviews.clientId, clientId),
-        eq30(businessReviews.platformReviewId, data.platformReviewId)
+      and27(
+        eq38(businessReviews.clientId, clientId),
+        eq38(businessReviews.platformReviewId, data.platformReviewId)
       )
     ).limit(1);
     const sentiment = classifySentiment(data.rating);
@@ -20585,7 +26841,7 @@ var ReviewSyncService = class {
         reviewText: data.reviewText,
         sentiment,
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq30(businessReviews.id, existing[0].id));
+      }).where(eq38(businessReviews.id, existing[0].id));
       return "updated";
     }
     await db.insert(businessReviews).values({
@@ -20605,7 +26861,7 @@ var ReviewSyncService = class {
    * Get all reviews for a client
    */
   async getClientReviews(clientId) {
-    return db.select().from(businessReviews).where(eq30(businessReviews.clientId, clientId)).orderBy(desc13(businessReviews.reviewDate));
+    return db.select().from(businessReviews).where(eq38(businessReviews.clientId, clientId)).orderBy(desc17(businessReviews.reviewDate));
   }
   /**
    * Get review analytics for a client
@@ -20635,7 +26891,14 @@ var ReviewSyncService = class {
     };
   }
   /**
-   * Save a response to a review
+   * Get a single review by ID
+   */
+  async getReviewById(reviewId) {
+    const [review] = await db.select().from(businessReviews).where(eq38(businessReviews.id, reviewId));
+    return review || null;
+  }
+  /**
+   * Save a response to a review, push to Google if possible, and log to CRM timeline
    */
   async respondToReview(reviewId, response, isAI = false) {
     await db.update(businessReviews).set({
@@ -20643,303 +26906,129 @@ var ReviewSyncService = class {
       responseDate: /* @__PURE__ */ new Date(),
       isAIGenerated: isAI,
       updatedAt: /* @__PURE__ */ new Date()
-    }).where(eq30(businessReviews.id, reviewId));
+    }).where(eq38(businessReviews.id, reviewId));
+    const [review] = await db.select().from(businessReviews).where(eq38(businessReviews.id, reviewId)).limit(1);
+    if (!review) return;
+    if (review.platform === "google" && review.platformReviewId) {
+      try {
+        const { socialMediaAccounts: socialMediaAccounts2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+        const [googleAccount] = await db.select().from(socialMediaAccounts2).where(
+          and27(
+            eq38(socialMediaAccounts2.clientId, review.clientId),
+            eq38(socialMediaAccounts2.platform, "google_business"),
+            eq38(socialMediaAccounts2.isActive, true)
+          )
+        ).limit(1);
+        if (googleAccount?.accessToken && googleAccount?.platformAccountId) {
+          const result = await googlePlacesService.replyToReview(
+            googleAccount.platformAccountId.split("/")[0] || "",
+            googleAccount.platformAccountId,
+            review.platformReviewId.replace("google_", ""),
+            response,
+            googleAccount.accessToken
+          );
+          if (!result.success) {
+            console.warn(`[ReviewSync] Google API push failed for review ${reviewId}: ${result.error}. Response saved locally.`);
+          }
+        } else {
+          console.log(`[ReviewSync] No Google Business credentials for client ${review.clientId}. Response saved locally only.`);
+        }
+      } catch (apiError) {
+        console.error("[ReviewSync] Google API push error (response saved locally):", apiError);
+      }
+    }
+    try {
+      const { crmContacts: crmContacts2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+      const { logContactActivity: logContactActivity2 } = await Promise.resolve().then(() => (init_timeline_logger(), timeline_logger_exports));
+      const nameParts = review.reviewerName.trim().split(/\s+/);
+      const firstName = nameParts[0] || "";
+      const lastName = nameParts.slice(1).join(" ") || "";
+      let matchedContact = null;
+      if (firstName && lastName) {
+        const [contact] = await db.select().from(crmContacts2).where(
+          and27(
+            eq38(crmContacts2.clientId, review.clientId),
+            sql15`LOWER(${crmContacts2.firstName}) = LOWER(${firstName})`,
+            sql15`LOWER(${crmContacts2.lastName}) = LOWER(${lastName})`
+          )
+        ).limit(1);
+        matchedContact = contact;
+      }
+      if (!matchedContact && firstName && firstName.length > 2) {
+        const allMatches = await db.select().from(crmContacts2).where(
+          and27(
+            eq38(crmContacts2.clientId, review.clientId),
+            sql15`LOWER(${crmContacts2.firstName}) = LOWER(${firstName})`
+          )
+        );
+        if (allMatches.length === 1) {
+          matchedContact = allMatches[0];
+        }
+      }
+      if (matchedContact) {
+        await logContactActivity2({
+          clientId: review.clientId,
+          contactId: matchedContact.id,
+          eventType: "review_responded",
+          title: `You responded to their ${review.rating}-star review on ${review.platform}`,
+          description: response.substring(0, 200),
+          sourceApp: "elevate",
+          sourceEntityType: "review",
+          sourceEntityId: String(review.id),
+          metadata: {
+            rating: review.rating,
+            platform: review.platform,
+            reviewId: review.id,
+            isAIGenerated: isAI
+          }
+        });
+      }
+    } catch (matchError) {
+      console.error("[ReviewSync] Contact matching error (non-blocking):", matchError);
+    }
   }
 };
 var reviewSyncService = new ReviewSyncService();
 
-// server/services/analyticsSync.ts
-init_db();
-init_schema();
-init_platformFactory();
-import { eq as eq31, and as and19, desc as desc14 } from "drizzle-orm";
-var AnalyticsSyncService = class {
-  /**
-   * Sync analytics for all published posts belonging to a client
-   */
-  async syncClientAnalytics(clientId) {
-    const result = { synced: 0, errors: [] };
-    const posts = await db.select().from(contentPosts).where(
-      and19(
-        eq31(contentPosts.clientId, clientId),
-        eq31(contentPosts.status, "published")
-      )
-    ).orderBy(desc14(contentPosts.publishedAt));
-    const accounts = await db.select().from(socialMediaAccounts).where(
-      and19(
-        eq31(socialMediaAccounts.clientId, clientId),
-        eq31(socialMediaAccounts.isActive, true)
-      )
-    );
-    const credentialMap = /* @__PURE__ */ new Map();
-    for (const account of accounts) {
-      credentialMap.set(account.platform, {
-        accessToken: account.accessToken || "",
-        refreshToken: account.refreshToken || void 0,
-        platformAccountId: account.platformAccountId
-      });
-    }
-    for (const post of posts) {
-      const publishResults = post.publishResults || {};
-      for (const [platform, platformResult] of Object.entries(publishResults)) {
-        const pr = platformResult;
-        if (!pr?.postId) continue;
-        try {
-          const creds = credentialMap.get(platform);
-          if (!creds?.accessToken) continue;
-          const adapter = PlatformFactory.createAdapter(platform, {
-            accessToken: creds.accessToken,
-            refreshToken: creds.refreshToken,
-            platformAccountId: creds.platformAccountId
-          });
-          if (!adapter) continue;
-          const analytics = await adapter.getAnalytics(
-            pr.postId
-          );
-          const totalEngagement = (analytics.likes || 0) + (analytics.comments || 0) + (analytics.shares || 0) + (analytics.clicks || 0);
-          const engagementRate = analytics.impressions && analytics.impressions > 0 ? (totalEngagement / analytics.impressions * 100).toFixed(2) : "0.00";
-          const existing = await db.select().from(contentAnalytics).where(
-            and19(
-              eq31(contentAnalytics.postId, post.id),
-              eq31(contentAnalytics.platform, platform)
-            )
-          ).limit(1);
-          if (existing.length > 0) {
-            await db.update(contentAnalytics).set({
-              impressions: analytics.impressions || 0,
-              reach: analytics.engagement || 0,
-              likes: analytics.likes || 0,
-              comments: analytics.comments || 0,
-              shares: analytics.shares || 0,
-              clicks: analytics.clicks || 0,
-              saves: analytics.saves || 0,
-              engagementRate,
-              lastSyncedAt: /* @__PURE__ */ new Date(),
-              updatedAt: /* @__PURE__ */ new Date()
-            }).where(eq31(contentAnalytics.id, existing[0].id));
-          } else {
-            await db.insert(contentAnalytics).values({
-              postId: post.id,
-              platform,
-              platformPostId: pr.postId,
-              platformPostUrl: pr.url || null,
-              impressions: analytics.impressions || 0,
-              reach: analytics.engagement || 0,
-              likes: analytics.likes || 0,
-              comments: analytics.comments || 0,
-              shares: analytics.shares || 0,
-              clicks: analytics.clicks || 0,
-              saves: analytics.saves || 0,
-              engagementRate
-            });
-          }
-          result.synced++;
-        } catch (error) {
-          result.errors.push({
-            postId: post.id,
-            platform,
-            message: error.message
-          });
-        }
-      }
-    }
-    return result;
-  }
-  /**
-   * Get aggregated analytics for a client across all platforms
-   */
-  async getClientAnalyticsSummary(clientId) {
-    const posts = await db.select().from(contentPosts).where(eq31(contentPosts.clientId, clientId));
-    const postIds = posts.map((p) => p.id);
-    if (postIds.length === 0) {
-      return {
-        totalPosts: 0,
-        publishedPosts: 0,
-        totalImpressions: 0,
-        totalEngagement: 0,
-        totalClicks: 0,
-        avgEngagementRate: 0,
-        platformBreakdown: {},
-        topPosts: []
-      };
-    }
-    const allAnalytics = await db.select().from(contentAnalytics).where(
-      eq31(contentAnalytics.postId, postIds[0])
-      // Start with first
-    );
-    const analyticsMap = /* @__PURE__ */ new Map();
-    for (const postId of postIds) {
-      const records = await db.select().from(contentAnalytics).where(eq31(contentAnalytics.postId, postId));
-      if (records.length > 0) {
-        analyticsMap.set(postId, records);
-      }
-    }
-    let totalImpressions = 0;
-    let totalLikes = 0;
-    let totalComments = 0;
-    let totalShares = 0;
-    let totalClicks = 0;
-    const platformTotals = {};
-    const allRecords = [];
-    for (const records of Array.from(analyticsMap.values())) {
-      for (const r of records) {
-        allRecords.push(r);
-        totalImpressions += r.impressions || 0;
-        totalLikes += r.likes || 0;
-        totalComments += r.comments || 0;
-        totalShares += r.shares || 0;
-        totalClicks += r.clicks || 0;
-        if (!platformTotals[r.platform]) {
-          platformTotals[r.platform] = {
-            impressions: 0,
-            engagement: 0,
-            posts: 0
-          };
-        }
-        platformTotals[r.platform].impressions += r.impressions || 0;
-        platformTotals[r.platform].engagement += (r.likes || 0) + (r.comments || 0) + (r.shares || 0);
-        platformTotals[r.platform].posts++;
-      }
-    }
-    const totalEngagement = totalLikes + totalComments + totalShares;
-    const avgEngagementRate = totalImpressions > 0 ? parseFloat(
-      (totalEngagement / totalImpressions * 100).toFixed(2)
-    ) : 0;
-    const postEngagement = /* @__PURE__ */ new Map();
-    for (const r of allRecords) {
-      const current = postEngagement.get(r.postId) || 0;
-      postEngagement.set(
-        r.postId,
-        current + (r.likes || 0) + (r.comments || 0) + (r.shares || 0)
-      );
-    }
-    const topPostIds = Array.from(postEngagement.entries()).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([id]) => id);
-    const topPosts = posts.filter((p) => topPostIds.includes(p.id)).map((p) => ({
-      id: p.id,
-      caption: p.caption,
-      platform: p.platforms || [],
-      publishedAt: p.publishedAt,
-      engagement: postEngagement.get(p.id) || 0
-    }));
-    return {
-      totalPosts: posts.length,
-      publishedPosts: posts.filter((p) => p.status === "published").length,
-      totalImpressions,
-      totalEngagement,
-      totalClicks,
-      avgEngagementRate,
-      platformBreakdown: platformTotals,
-      topPosts
-    };
-  }
-  /**
-   * Sync analytics for all clients with connected platforms
-   * Designed to be called periodically (e.g., every 6 hours)
-   */
-  async syncAllClients() {
-    const summary = { total: 0, synced: 0, errors: 0 };
-    try {
-      const activeAccounts = await db.select({ clientId: socialMediaAccounts.clientId }).from(socialMediaAccounts).where(eq31(socialMediaAccounts.isActive, true)).groupBy(socialMediaAccounts.clientId);
-      summary.total = activeAccounts.length;
-      for (const { clientId } of activeAccounts) {
-        if (!clientId) continue;
-        try {
-          const result = await this.syncClientAnalytics(clientId);
-          summary.synced += result.synced;
-          summary.errors += result.errors.length;
-        } catch (error) {
-          console.error(`Analytics sync failed for client ${clientId}:`, error.message);
-          summary.errors++;
-        }
-      }
-      console.log(
-        `Analytics sync complete: ${summary.total} clients, ${summary.synced} posts synced, ${summary.errors} errors`
-      );
-    } catch (error) {
-      console.error("Analytics sync all failed:", error);
-    }
-    return summary;
-  }
-  /**
-   * Start periodic analytics sync (every 6 hours)
-   */
-  syncInterval = null;
-  startScheduledSync(intervalMs = 6 * 60 * 60 * 1e3) {
-    if (this.syncInterval) {
-      clearInterval(this.syncInterval);
-    }
-    console.log(`Starting analytics sync scheduler (every ${intervalMs / 36e5}h)`);
-    this.syncInterval = setInterval(async () => {
-      try {
-        await this.syncAllClients();
-      } catch (error) {
-        console.error("Scheduled analytics sync error:", error);
-      }
-    }, intervalMs);
-    setTimeout(() => this.syncAllClients().catch(console.error), 3e4);
-  }
-  stopScheduledSync() {
-    if (this.syncInterval) {
-      clearInterval(this.syncInterval);
-      this.syncInterval = null;
-    }
-  }
-};
-var analyticsSyncService = new AnalyticsSyncService();
+// server/routes.ts
+init_analyticsSync();
 
 // server/services/assessment-emails.ts
 init_db();
 init_schema();
-import { Resend as Resend3 } from "resend";
+import { Resend as Resend5 } from "resend";
 async function getResendCredentials3() {
+  const envApiKey = process.env.RESEND_API_KEY;
+  if (envApiKey) {
+    console.log("[Email] Using RESEND_API_KEY from environment");
+    return { apiKey: envApiKey, fromEmail: process.env.FROM_EMAIL || "noreply@businessblueprint.io" };
+  }
   try {
     const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
     if (!hostname) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || "noreply@businessblueprint.io" };
-      }
-      console.warn("[Assessment Email] No Resend connector or RESEND_API_KEY configured");
+      console.error("[Email] FAILED \u2014 no RESEND_API_KEY env var and no Replit connector configured");
       return null;
     }
     const xReplitToken = process.env.REPL_IDENTITY ? "repl " + process.env.REPL_IDENTITY : process.env.WEB_REPL_RENEWAL ? "depl " + process.env.WEB_REPL_RENEWAL : null;
     if (!xReplitToken) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || "noreply@businessblueprint.io" };
-      }
-      console.warn("[Assessment Email] No Replit token found for connector");
+      console.error("[Email] FAILED \u2014 no RESEND_API_KEY env var and no Replit connector configured");
       return null;
     }
-    const connectionSettings3 = await fetch(
+    const connectionSettings2 = await fetch(
       "https://" + hostname + "/api/v2/connection?include_secrets=true&connector_names=resend",
-      {
-        headers: {
-          "Accept": "application/json",
-          "X_REPLIT_TOKEN": xReplitToken
-        }
-      }
+      { headers: { "Accept": "application/json", "X_REPLIT_TOKEN": xReplitToken } }
     ).then((res) => res.json()).then((data) => data.items?.[0]);
-    if (!connectionSettings3 || !connectionSettings3.settings?.api_key) {
-      const apiKey = process.env.RESEND_API_KEY;
-      if (apiKey) {
-        console.log("[Assessment Email] Using RESEND_API_KEY from environment");
-        return { apiKey, fromEmail: process.env.FROM_EMAIL || "noreply@businessblueprint.io" };
-      }
-      console.warn("[Assessment Email] Resend connector not configured");
-      return null;
+    if (connectionSettings2?.settings?.api_key) {
+      console.log("[Email] Using Replit connector");
+      return {
+        apiKey: connectionSettings2.settings.api_key,
+        fromEmail: connectionSettings2.settings.from_email || "noreply@businessblueprint.io"
+      };
     }
-    console.log("[Assessment Email] Using Resend connector credentials");
-    return {
-      apiKey: connectionSettings3.settings.api_key,
-      fromEmail: connectionSettings3.settings.from_email || "noreply@businessblueprint.io"
-    };
+    console.error("[Email] FAILED \u2014 no RESEND_API_KEY env var and no Replit connector configured");
+    return null;
   } catch (error) {
-    console.error("[Assessment Email] Error fetching Resend credentials:", error);
-    const apiKey = process.env.RESEND_API_KEY;
-    if (apiKey) {
-      return { apiKey, fromEmail: process.env.FROM_EMAIL || "noreply@businessblueprint.io" };
-    }
+    console.error("[Email] FAILED \u2014 no RESEND_API_KEY env var and no Replit connector configured");
     return null;
   }
 }
@@ -20949,7 +27038,7 @@ async function getResendClient2() {
     return null;
   }
   return {
-    client: new Resend3(credentials.apiKey),
+    client: new Resend5(credentials.apiKey),
     fromEmail: credentials.fromEmail
   };
 }
@@ -21152,7 +27241,7 @@ function generateAssessmentConfirmationHTML(assessment) {
           <div class="timeline-icon">1</div>
           <div>
             <h3>AI Analysis (2-3 minutes)</h3>
-            <p>Our AI is analyzing your business using Google Business Intelligence and industry best practices to identify growth opportunities.</p>
+            <p>Our AI is scanning your online presence across directories, reviews, social media, and your website to identify growth opportunities.</p>
           </div>
         </div>
         
@@ -21167,8 +27256,8 @@ function generateAssessmentConfirmationHTML(assessment) {
         <div class="timeline-item">
           <div class="timeline-icon">3</div>
           <div>
-            <h3>Expert Review & Delivery (within 24 hours)</h3>
-            <p>Our team reviews the AI prescription to ensure quality and relevance, then delivers it to your client portal.</p>
+            <h3>Your Prescription is Ready</h3>
+            <p>Your personalized Digital IQ prescription with specific, prioritized recommendations is delivered to your portal and email.</p>
           </div>
         </div>
       </div>
@@ -21224,12 +27313,17 @@ async function sendAssessmentConfirmationEmail(assessment) {
       });
       return { success: false, error: "Email service not configured" };
     }
+    console.log("[Assessment Email] Sending from:", resendClient.fromEmail, "to:", assessment.email);
     const result = await resendClient.client.emails.send({
       from: resendClient.fromEmail,
       to: assessment.email,
       subject,
       html: htmlBody
     });
+    if (result.error) {
+      console.error("[Assessment Email] Resend API ERROR:", JSON.stringify(result.error));
+      return { success: false, error: JSON.stringify(result.error) };
+    }
     await db.insert(emailLogs).values({
       recipientEmail: assessment.email,
       recipientName: assessment.businessName || null,
@@ -21294,8 +27388,202 @@ async function sendAdminNotification(assessment) {
 // server/routes.ts
 init_schema();
 init_db();
-import { eq as eq32, desc as desc15, and as and20, or as or4, lte as lte2, sql as sql11 } from "drizzle-orm";
+import { eq as eq40, desc as desc18, and as and28, or as or4, lte as lte2, sql as sql16 } from "drizzle-orm";
 import { z as z9 } from "zod";
+
+// server/routes/auth.ts
+init_db();
+init_schema();
+import { Router as Router21 } from "express";
+import bcrypt from "bcryptjs";
+import { randomBytes } from "crypto";
+import { eq as eq39 } from "drizzle-orm";
+var router14 = Router21();
+var emailService = new ResendEmailService();
+router14.post("/api/auth/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
+    }
+    const [user] = await db.select().from(users).where(eq39(users.email, email.trim().toLowerCase()));
+    if (!user) {
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
+    }
+    if (!user.passwordHash) {
+      return res.status(401).json({
+        success: false,
+        message: "No password set for this account. Use magic link to log in, then set a password."
+      });
+    }
+    const isValid = await bcrypt.compare(password, user.passwordHash);
+    if (!isValid) {
+      return res.status(401).json({ success: false, message: "Invalid email or password" });
+    }
+    const sessionUser = {
+      claims: {
+        sub: user.id,
+        email: user.email,
+        first_name: user.firstName,
+        last_name: user.lastName
+      },
+      expires_at: Math.floor(Date.now() / 1e3) + 7 * 24 * 60 * 60
+      // 7 days
+    };
+    req.logIn(sessionUser, (err) => {
+      if (err) {
+        console.error("[Auth] Login session error:", err);
+        return res.status(500).json({ success: false, message: "Failed to create session" });
+      }
+      req.session.userId = user.id;
+      req.session.save((saveErr) => {
+        if (saveErr) {
+          console.error("[Auth] Session save error:", saveErr);
+        }
+        console.log("[Auth] User logged in via credentials:", user.email);
+        return res.json({
+          success: true,
+          user: {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName
+          }
+        });
+      });
+    });
+  } catch (error) {
+    console.error("[Auth] Credential login error:", error);
+    return res.status(500).json({ success: false, message: "Login failed" });
+  }
+});
+router14.post("/api/auth/magic-link", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ success: false, message: "Email is required" });
+    }
+    const normalizedEmail = email.trim().toLowerCase();
+    const [user] = await db.select().from(users).where(eq39(users.email, normalizedEmail));
+    if (!user) {
+      return res.json({ success: true, message: "If an account exists, a login link has been sent." });
+    }
+    const token = randomBytes(32).toString("hex");
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1e3);
+    await db.insert(magicLinkTokens).values({
+      email: normalizedEmail,
+      token,
+      expiresAt
+    });
+    const baseUrl = process.env.FRONTEND_URL || `${req.protocol}://${req.get("host")}`;
+    const magicLink = `${baseUrl}/auth/verify?token=${token}`;
+    emailService.sendMagicLinkEmail(normalizedEmail, magicLink, "Business Blueprint Admin").catch((err) => {
+      console.error("[Auth] Failed to send admin magic link email:", err);
+    });
+    console.log("[Auth] Magic link requested for:", normalizedEmail);
+    if (process.env.NODE_ENV !== "production") {
+      return res.json({
+        success: true,
+        message: "Login link sent to your email.",
+        devLink: magicLink,
+        devToken: token
+      });
+    }
+    return res.json({ success: true, message: "If an account exists, a login link has been sent." });
+  } catch (error) {
+    console.error("[Auth] Magic link request error:", error);
+    return res.status(500).json({ success: false, message: "Failed to send login link" });
+  }
+});
+router14.get("/api/auth/verify-magic-link", async (req, res) => {
+  try {
+    const tokenStr = req.query.token;
+    if (!tokenStr) {
+      return res.status(400).json({ success: false, message: "Token is required" });
+    }
+    const [magicToken] = await db.select().from(magicLinkTokens).where(eq39(magicLinkTokens.token, tokenStr));
+    if (!magicToken) {
+      return res.status(400).json({ success: false, message: "Invalid or expired token" });
+    }
+    if (magicToken.used) {
+      return res.status(400).json({ success: false, message: "This link has already been used" });
+    }
+    if (/* @__PURE__ */ new Date() > magicToken.expiresAt) {
+      return res.status(400).json({ success: false, message: "This link has expired" });
+    }
+    const [user] = await db.select().from(users).where(eq39(users.email, magicToken.email));
+    if (!user) {
+      return res.status(400).json({ success: false, message: "Account not found" });
+    }
+    await db.update(magicLinkTokens).set({ used: true, usedAt: /* @__PURE__ */ new Date() }).where(eq39(magicLinkTokens.token, tokenStr));
+    const sessionUser = {
+      claims: {
+        sub: user.id,
+        email: user.email,
+        first_name: user.firstName,
+        last_name: user.lastName
+      },
+      expires_at: Math.floor(Date.now() / 1e3) + 7 * 24 * 60 * 60
+    };
+    req.logIn(sessionUser, (err) => {
+      if (err) {
+        console.error("[Auth] Magic link session error:", err);
+        return res.status(500).json({ success: false, message: "Failed to create session" });
+      }
+      req.session.userId = user.id;
+      req.session.save((saveErr) => {
+        if (saveErr) {
+          console.error("[Auth] Session save error:", saveErr);
+        }
+        console.log("[Auth] User logged in via magic link:", user.email);
+        return res.json({
+          success: true,
+          user: {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName
+          }
+        });
+      });
+    });
+  } catch (error) {
+    console.error("[Auth] Magic link verify error:", error);
+    return res.status(500).json({ success: false, message: "Verification failed" });
+  }
+});
+router14.post("/api/auth/set-password", isAuthenticated, async (req, res) => {
+  try {
+    const { password } = req.body;
+    if (!password || password.length < 8) {
+      return res.status(400).json({ success: false, message: "Password must be at least 8 characters" });
+    }
+    const userId = req.session.userId || req.user?.claims?.sub;
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Not authenticated" });
+    }
+    const passwordHash = await bcrypt.hash(password, 12);
+    await db.update(users).set({ passwordHash, updatedAt: /* @__PURE__ */ new Date() }).where(eq39(users.id, userId));
+    console.log("[Auth] Password set for user:", userId);
+    return res.json({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    console.error("[Auth] Set password error:", error);
+    return res.status(500).json({ success: false, message: "Failed to update password" });
+  }
+});
+router14.post("/api/auth/logout", (req, res) => {
+  req.logout(() => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("[Auth] Logout error:", err);
+      }
+      return res.json({ success: true });
+    });
+  });
+});
+var authRouter = router14;
+
+// server/routes.ts
 var platformDisplayNames = {
   google_business: "Google Business",
   yelp: "Yelp",
@@ -21313,11 +27601,13 @@ function platformInternalName(display) {
 }
 async function registerRoutes(app2) {
   await setupAuth(app2);
+  app2.use(authRouter);
   app2.get("/favicon.ico", (req, res) => {
+    res.setHeader("Cache-Control", "public, max-age=300");
     res.sendFile(
       path.resolve(
         process.cwd(),
-        "attached_assets/Blueprint_Favicon_1762489845363.ico"
+        "attached_assets/brand/bb-favicon.png"
       )
     );
   });
@@ -21329,20 +27619,37 @@ async function registerRoutes(app2) {
   });
   app2.get("/api/auth/user", async (req, res) => {
     try {
+      if (process.env.NODE_ENV !== "production") {
+        if (req.isAuthenticated && req.isAuthenticated()) {
+          const userId2 = req.user.claims.sub;
+          const user2 = await storage.getUser(userId2);
+          return res.json({ user: user2 || { id: "dev-user", email: "dev@localhost", firstName: "Dev", lastName: "User" } });
+        }
+        return res.json({
+          user: { id: "dev-user", email: "dev@localhost", firstName: "Dev", lastName: "User" }
+        });
+      }
+      const session2 = req.session;
+      if (session2?.userId) {
+        const user2 = await storage.getUser(session2.userId);
+        if (user2) {
+          return res.json({ user: user2 });
+        }
+      }
       if (!req.isAuthenticated || !req.isAuthenticated()) {
         return res.json({ user: null });
       }
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
-      res.json(user);
+      res.json({ user: user || null });
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });
   const googleService = new GoogleBusinessService();
-  const aiService = new OpenAIAnalysisService();
-  const emailService = new ResendEmailService();
+  const aiService = new AssessmentAIService();
+  const emailService2 = new ResendEmailService();
   app2.post("/api/setup/demo-accounts", async (req, res) => {
     try {
       const demoAccounts = [
@@ -21401,8 +27708,8 @@ async function registerRoutes(app2) {
     try {
       const validatedData = insertAssessmentSchema.parse(req.body);
       const assessment = await storage.createAssessment(validatedData);
-      let client2 = await storage.getClientByEmail(validatedData.email);
-      if (!client2) {
+      let client = await storage.getClientByEmail(validatedData.email);
+      if (!client) {
         const fullAddress = [
           validatedData.attention ? `Attn: ${validatedData.attention}` : null,
           validatedData.address,
@@ -21411,7 +27718,7 @@ async function registerRoutes(app2) {
           `${validatedData.city}, ${validatedData.state} ${validatedData.zipCode}`,
           validatedData.country || "United States"
         ].filter(Boolean).join("\n");
-        client2 = await storage.createClient({
+        client = await storage.createClient({
           companyName: validatedData.businessName,
           email: validatedData.email,
           phone: validatedData.phone,
@@ -21420,19 +27727,19 @@ async function registerRoutes(app2) {
           accountStatus: "active"
         });
         console.log(
-          `[Assessment] Created client account for ${validatedData.email}, ID: ${client2.id}`
+          `[Assessment] Created client account for ${validatedData.email}, ID: ${client.id}`
         );
       }
-      await storage.linkAssessmentToClient(client2.id, assessment.id);
+      await storage.linkAssessmentToClient(client.id, assessment.id);
       console.log(
-        `[Assessment] Linked assessment ${assessment.id} to client ${client2.id}`
+        `[Assessment] Linked assessment ${assessment.id} to client ${client.id}`
       );
       try {
-        const existingCrmContact = await db.select().from(crmContacts).where(eq32(crmContacts.email, validatedData.email)).limit(1);
+        const existingCrmContact = await db.select().from(crmContacts).where(eq40(crmContacts.email, validatedData.email)).limit(1);
         let crmContactId = null;
         if (existingCrmContact.length === 0) {
           const [crmContact] = await db.insert(crmContacts).values({
-            clientId: client2.id,
+            clientId: client.id,
             firstName: validatedData.businessName?.split(" ")[0] || "Business",
             lastName: "Owner",
             email: validatedData.email,
@@ -21459,13 +27766,13 @@ async function registerRoutes(app2) {
             `[Assessment] Created CRM contact ${crmContactId} for ${validatedData.email}`
           );
           await db.insert(crmTimeline).values({
-            clientId: client2.id,
+            clientId: client.id,
             contactId: crmContactId,
             eventType: "assessment_started",
             title: `Digital IQ Assessment started for ${validatedData.businessName}`,
             description: `Assessment ID: ${assessment.id}`,
             occurredAt: /* @__PURE__ */ new Date(),
-            sourceApp: "relationships",
+            sourceApp: "connect",
             actorType: "system"
           });
         } else {
@@ -21483,7 +27790,7 @@ async function registerRoutes(app2) {
               assessmentId: assessment.id
             },
             updatedAt: /* @__PURE__ */ new Date()
-          }).where(eq32(crmContacts.id, crmContactId));
+          }).where(eq40(crmContacts.id, crmContactId));
         }
       } catch (crmError) {
         console.error("[Assessment] Failed to create CRM contact:", crmError);
@@ -21513,7 +27820,7 @@ async function registerRoutes(app2) {
         assessment.id,
         googleService,
         aiService,
-        emailService,
+        emailService2,
         storage
       ).catch((err) => {
         console.error(`[Assessment] Background processing FAILED for ID ${assessment.id}:`, err);
@@ -21521,7 +27828,7 @@ async function registerRoutes(app2) {
       res.json({
         success: true,
         assessmentId: assessment.id,
-        clientId: client2.id,
+        clientId: client.id,
         message: "Assessment started. You'll receive results via email within 2-3 minutes."
       });
     } catch (error) {
@@ -21538,8 +27845,8 @@ async function registerRoutes(app2) {
       if (!email || typeof email !== "string") {
         return res.status(400).json({ message: "Email parameter is required" });
       }
-      const assessments3 = await storage.getAssessmentsByEmail(email);
-      res.json(assessments3);
+      const assessments4 = await storage.getAssessmentsByEmail(email);
+      res.json(assessments4);
     } catch (error) {
       console.error("Error fetching assessments:", error);
       res.status(500).json({ message: "Failed to fetch assessments" });
@@ -21551,14 +27858,14 @@ async function registerRoutes(app2) {
       if (!email || typeof email !== "string") {
         return res.status(400).json({ message: "Email parameter is required" });
       }
-      const assessments3 = await storage.getAssessmentsByEmail(email);
-      if (!assessments3 || assessments3.length === 0) {
+      const assessments4 = await storage.getAssessmentsByEmail(email);
+      if (!assessments4 || assessments4.length === 0) {
         return res.status(404).json({
           message: "No assessments found for this email address.",
           assessments: []
         });
       }
-      const simplifiedAssessments = assessments3.map((a) => ({
+      const simplifiedAssessments = assessments4.map((a) => ({
         id: a.id,
         businessName: a.businessName,
         status: a.status,
@@ -21576,8 +27883,8 @@ async function registerRoutes(app2) {
   });
   app2.get("/api/admin/assessments", isAuthenticated, async (req, res) => {
     try {
-      const assessments3 = await storage.getAllAssessments();
-      res.json(assessments3);
+      const assessments4 = await storage.getAllAssessments();
+      res.json(assessments4);
     } catch (error) {
       console.error("Error fetching all assessments:", error);
       res.status(500).json({ message: "Failed to fetch assessments" });
@@ -21616,6 +27923,133 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Failed to update pathway" });
     }
   });
+  app2.get("/api/assessments/:id/scan-results", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+      const assessment = await storage.getAssessment(id);
+      if (!assessment) return res.status(404).json({ error: "Assessment not found" });
+      const results = assessment.analysisResults;
+      if (!results) {
+        return res.json({ status: assessment.status === "failed" ? "failed" : "scanning", progress: null });
+      }
+      const presenceScan = results.presenceScan || {};
+      return res.json({
+        status: "complete",
+        detections: presenceScan.website?.detections || null,
+        socialMedia: presenceScan.socialMedia || null,
+        directories: presenceScan.directories || null,
+        reviews: presenceScan.reviews || null,
+        website: presenceScan.website || null
+      });
+    } catch (error) {
+      console.error("Error fetching scan results:", error);
+      res.status(500).json({ error: "Failed to fetch scan results" });
+    }
+  });
+  app2.patch("/api/assessments/:id/operational", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+      const assessment = await storage.getAssessment(id);
+      if (!assessment) return res.status(404).json({ error: "Assessment not found" });
+      const scanDetectionsData = req.body._scanDetections || null;
+      const scanCorrectionsData = req.body._scanCorrections || null;
+      const operationalColumns = [
+        "collectsEmails",
+        "lastEmailCampaign",
+        "emailListSize",
+        "sendsSMS",
+        "lastSMSCampaign",
+        "lastSocialPost",
+        "socialPostFrequency",
+        "socialContentCreator",
+        "lastReviewResponse",
+        "reviewResponseRate",
+        "lastNewReview",
+        "inquiryResponseTime",
+        "hasUnifiedInbox",
+        "missedInquiries",
+        "hasLiveChat",
+        "lastChatConversation",
+        "chatResponseTime",
+        "lastListingUpdate",
+        "listingConsistency",
+        "lastGBPPost",
+        "lastGBPPhoto",
+        "lastWebsiteUpdate",
+        "hasBlog",
+        "usesCRM",
+        "crmPlatform",
+        "lastCRMFollowup",
+        "hasAutomation",
+        "runsAds",
+        "lastAdCampaign",
+        "monthlyAdBudget"
+      ];
+      const updateData = {};
+      for (const col of operationalColumns) {
+        if (req.body[col] !== void 0) {
+          updateData[col] = req.body[col];
+        }
+      }
+      updateData.scanDetections = scanDetectionsData;
+      updateData.scanCorrections = scanCorrectionsData;
+      updateData.updatedAt = /* @__PURE__ */ new Date();
+      await db.update(assessments).set(updateData).where(eq40(assessments.id, id));
+      const updatedAssessment = await storage.getAssessment(id);
+      if (!updatedAssessment) return res.status(404).json({ error: "Assessment not found after update" });
+      const operationalScore = presenceScannerService.calculateOperationalScore({
+        collectsEmails: updatedAssessment.collectsEmails,
+        lastEmailCampaign: updatedAssessment.lastEmailCampaign,
+        emailListSize: updatedAssessment.emailListSize,
+        sendsSMS: updatedAssessment.sendsSMS,
+        lastSMSCampaign: updatedAssessment.lastSMSCampaign,
+        lastSocialPost: updatedAssessment.lastSocialPost,
+        socialPostFrequency: updatedAssessment.socialPostFrequency,
+        socialContentCreator: updatedAssessment.socialContentCreator,
+        lastReviewResponse: updatedAssessment.lastReviewResponse,
+        reviewResponseRate: updatedAssessment.reviewResponseRate,
+        lastNewReview: updatedAssessment.lastNewReview,
+        inquiryResponseTime: updatedAssessment.inquiryResponseTime,
+        hasUnifiedInbox: updatedAssessment.hasUnifiedInbox,
+        missedInquiries: updatedAssessment.missedInquiries,
+        hasLiveChat: updatedAssessment.hasLiveChat,
+        lastChatConversation: updatedAssessment.lastChatConversation,
+        chatResponseTime: updatedAssessment.chatResponseTime,
+        lastListingUpdate: updatedAssessment.lastListingUpdate,
+        listingConsistency: updatedAssessment.listingConsistency,
+        lastGBPPost: updatedAssessment.lastGBPPost,
+        lastGBPPhoto: updatedAssessment.lastGBPPhoto,
+        lastWebsiteUpdate: updatedAssessment.lastWebsiteUpdate,
+        hasBlog: updatedAssessment.hasBlog,
+        usesCRM: updatedAssessment.usesCRM,
+        crmPlatform: updatedAssessment.crmPlatform,
+        lastCRMFollowup: updatedAssessment.lastCRMFollowup,
+        hasAutomation: updatedAssessment.hasAutomation,
+        runsAds: updatedAssessment.runsAds,
+        lastAdCampaign: updatedAssessment.lastAdCampaign,
+        monthlyAdBudget: updatedAssessment.monthlyAdBudget
+      });
+      const existingResults = updatedAssessment.analysisResults;
+      const scanScore = existingResults?.scanScore || existingResults?.presenceScan?.overall?.digitalIQScore || 0;
+      const combinedDigitalIQ = presenceScannerService.calculateCombinedDigitalIQ(scanScore, operationalScore);
+      const updatedAnalysis = {
+        ...existingResults,
+        digitalScore: combinedDigitalIQ,
+        operationalScore
+      };
+      await storage.updateAssessment(id, {
+        analysisResults: updatedAnalysis,
+        digitalScore: combinedDigitalIQ
+      });
+      console.log(`[Assessment] Operational data updated for ${id}: Scan=${scanScore}/70 + Operational=${operationalScore}/70 = ${combinedDigitalIQ}/140`);
+      res.json({ success: true, assessmentId: id, digitalScore: combinedDigitalIQ });
+    } catch (error) {
+      console.error("Error updating operational data:", error);
+      res.status(500).json({ error: "Failed to update operational data" });
+    }
+  });
   app2.post("/api/assessments/:id/send-pathway-reminder", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
@@ -21626,7 +28060,7 @@ async function registerRoutes(app2) {
       if (assessment.selectedPathway && assessment.selectedPathway !== "none") {
         return res.status(400).json({ message: "Pathway already selected" });
       }
-      const emailSent = await emailService.sendPathwayReminderEmail(
+      const emailSent = await emailService2.sendPathwayReminderEmail(
         assessment.email,
         {
           businessName: assessment.businessName,
@@ -21654,7 +28088,7 @@ async function registerRoutes(app2) {
       if (!assessment.selectedPathway || assessment.selectedPathway === "none") {
         return res.status(400).json({ message: "No pathway selected yet" });
       }
-      const existingSubscriptions = await db.select().from(subscriptions).where(eq32(subscriptions.assessmentId, id));
+      const existingSubscriptions = await db.select().from(subscriptions).where(eq40(subscriptions.assessmentId, id));
       if (existingSubscriptions.length > 0) {
         return res.status(400).json({ message: "Subscription already exists" });
       }
@@ -21664,7 +28098,7 @@ async function registerRoutes(app2) {
       const monthlyPrices = {
         diy: 49
       };
-      const emailSent = await emailService.sendCheckoutAbandonmentEmail(
+      const emailSent = await emailService2.sendCheckoutAbandonmentEmail(
         assessment.email,
         {
           businessName: assessment.businessName,
@@ -21693,8 +28127,8 @@ async function registerRoutes(app2) {
         if (isNaN(clientId)) {
           return res.status(400).json({ message: "Invalid client ID" });
         }
-        const client2 = await storage.getClient(clientId);
-        if (!client2) {
+        const client = await storage.getClient(clientId);
+        if (!client) {
           return res.status(404).json({ message: "Client not found" });
         }
         const campaigns2 = await storage.getCampaignsByClient(clientId);
@@ -21702,20 +28136,20 @@ async function registerRoutes(app2) {
         const latestCampaign = campaigns2.length > 0 ? campaigns2[0] : null;
         let crmStats = { contactsCount: 0, activeDeals: 0, tasksDue: 0 };
         try {
-          const contacts = await db.select().from(crmContacts).where(eq32(crmContacts.clientId, clientId));
+          const contacts = await db.select().from(crmContacts).where(eq40(crmContacts.clientId, clientId));
           crmStats.contactsCount = contacts.length;
           const activeDeals = await db.select().from(crmDeals).where(
-            and20(eq32(crmDeals.clientId, clientId), eq32(crmDeals.status, "open"))
+            and28(eq40(crmDeals.clientId, clientId), eq40(crmDeals.status, "open"))
           );
           crmStats.activeDeals = activeDeals.length;
           const today = /* @__PURE__ */ new Date();
           today.setHours(23, 59, 59, 999);
           const tasks2 = await db.select().from(crmTasks).where(
-            and20(
-              eq32(crmTasks.clientId, clientId),
+            and28(
+              eq40(crmTasks.clientId, clientId),
               or4(
-                eq32(crmTasks.status, "pending"),
-                eq32(crmTasks.status, "in_progress")
+                eq40(crmTasks.status, "pending"),
+                eq40(crmTasks.status, "in_progress")
               )
             )
           );
@@ -21726,13 +28160,13 @@ async function registerRoutes(app2) {
           console.error("[Dashboard] Error fetching CRM stats:", err);
         }
         const dashboardData = {
-          client: client2,
+          client,
           digitalScore: 75,
           // Could be calculated from various factors
-          lastUpdated: client2.updatedAt,
+          lastUpdated: client.updatedAt,
           listings: await (async () => {
             try {
-              const allListings = await db.select().from(businessListings).where(eq32(businessListings.clientId, clientId));
+              const allListings = await db.select().from(businessListings).where(eq40(businessListings.clientId, clientId));
               const activeCount = allListings.filter((l) => l.status === "active").length;
               const pendingCount = allListings.filter((l) => l.status === "pending").length;
               const platforms = Array.from(new Set(allListings.map((l) => l.platform)));
@@ -21781,7 +28215,7 @@ async function registerRoutes(app2) {
           },
           socialMedia: await (async () => {
             try {
-              const accounts = await db.select().from(socialMediaAccounts).where(and20(eq32(socialMediaAccounts.clientId, clientId), eq32(socialMediaAccounts.isActive, true)));
+              const accounts = await db.select().from(socialMediaAccounts).where(and28(eq40(socialMediaAccounts.clientId, clientId), eq40(socialMediaAccounts.isActive, true)));
               return {
                 isSetup: accounts.length > 0,
                 connectedProfiles: accounts.length,
@@ -21795,8 +28229,8 @@ async function registerRoutes(app2) {
           })(),
           livechat: await (async () => {
             try {
-              const [widgetSettings] = await db.select().from(chatWidgetSettings).where(eq32(chatWidgetSettings.clientId, clientId)).limit(1);
-              const sessions2 = await db.select().from(livechatSessions).where(eq32(livechatSessions.clientId, clientId));
+              const [widgetSettings] = await db.select().from(chatWidgetSettings).where(eq40(chatWidgetSettings.clientId, clientId)).limit(1);
+              const sessions2 = await db.select().from(livechatSessions).where(eq40(livechatSessions.clientId, clientId));
               const activeSessions = sessions2.filter((s) => s.status === "active" || s.status === "waiting");
               return {
                 isSetup: !!widgetSettings,
@@ -22085,14 +28519,26 @@ async function registerRoutes(app2) {
       if (!token || token.length !== 64) {
         return res.status(400).json({ message: "Invalid prescription token" });
       }
-      const [prescription] = await db.select().from(prescriptions).where(eq32(prescriptions.accessToken, token)).limit(1);
+      const [prescription] = await db.select().from(prescriptions).where(eq40(prescriptions.accessToken, token)).limit(1);
       if (!prescription) {
         return res.status(404).json({ message: "Prescription not found" });
       }
       const assessment = prescription.assessmentId ? await storage.getAssessment(prescription.assessmentId) : null;
       const recommendations2 = prescription.assessmentId ? await storage.getRecommendationsByAssessmentId(prescription.assessmentId) : [];
+      const productScores = prescription.assessmentId ? await storage.getProductRecommendationScores(prescription.assessmentId) : [];
+      const enrichedRecommendations = recommendations2.map((rec) => {
+        const scoreData = productScores.find(
+          (ps) => ps.productId && ps.productId === rec.productId || ps.categoryAffected && ps.categoryAffected === rec.category
+        );
+        return {
+          ...rec,
+          currentScore: scoreData?.currentScore ?? null,
+          projectedScore: scoreData?.projectedScore ?? null,
+          scoreImprovement: scoreData?.scoreImprovement ?? null
+        };
+      });
       if (!prescription.viewedAt) {
-        await db.update(prescriptions).set({ viewedAt: /* @__PURE__ */ new Date(), updatedAt: /* @__PURE__ */ new Date() }).where(eq32(prescriptions.id, prescription.id));
+        await db.update(prescriptions).set({ viewedAt: /* @__PURE__ */ new Date(), updatedAt: /* @__PURE__ */ new Date() }).where(eq40(prescriptions.id, prescription.id));
       }
       res.json({
         prescription: {
@@ -22111,7 +28557,7 @@ async function registerRoutes(app2) {
           industry: assessment.industry,
           createdAt: assessment.createdAt
         } : null,
-        recommendations: recommendations2
+        recommendations: enrichedRecommendations
       });
     } catch (error) {
       console.error("Error fetching prescription by token:", error);
@@ -22121,18 +28567,18 @@ async function registerRoutes(app2) {
   app2.get("/api/portal/prescriptions", requireClientPortalAccess, async (req, res) => {
     try {
       const clientEmail = req.clientEmail;
-      const [client2] = await db.select().from(clients).where(eq32(clients.email, clientEmail)).limit(1);
-      if (!client2) {
+      const [client] = await db.select().from(clients).where(eq40(clients.email, clientEmail)).limit(1);
+      if (!client) {
         return res.json({ prescriptions: [] });
       }
       const clientPrescriptions = await db.select({
         prescription: prescriptions
-      }).from(prescriptions).where(eq32(prescriptions.clientId, client2.id)).orderBy(desc15(prescriptions.createdAt));
+      }).from(prescriptions).where(eq40(prescriptions.clientId, client.id)).orderBy(desc18(prescriptions.createdAt));
       const { assessments: assessmentsTable } = await Promise.resolve().then(() => (init_schema(), schema_exports));
       const assessmentPrescriptions = await db.select({
         prescription: prescriptions,
         assessment: assessmentsTable
-      }).from(prescriptions).innerJoin(assessmentsTable, eq32(prescriptions.assessmentId, assessmentsTable.id)).where(eq32(assessmentsTable.email, clientEmail)).orderBy(desc15(prescriptions.createdAt));
+      }).from(prescriptions).innerJoin(assessmentsTable, eq40(prescriptions.assessmentId, assessmentsTable.id)).where(eq40(assessmentsTable.email, clientEmail)).orderBy(desc18(prescriptions.createdAt));
       const allPrescriptions = [
         ...clientPrescriptions.map((p) => p.prescription),
         ...assessmentPrescriptions.map((p) => p.prescription)
@@ -22153,13 +28599,13 @@ async function registerRoutes(app2) {
       if (isNaN(prescriptionId)) {
         return res.status(400).json({ message: "Invalid prescription ID" });
       }
-      const [prescription] = await db.select().from(prescriptions).where(eq32(prescriptions.id, prescriptionId)).limit(1);
+      const [prescription] = await db.select().from(prescriptions).where(eq40(prescriptions.id, prescriptionId)).limit(1);
       if (!prescription) {
         return res.status(404).json({ message: "Prescription not found" });
       }
       let hasAccess = false;
-      const [client2] = await db.select().from(clients).where(eq32(clients.email, clientEmail)).limit(1);
-      if (client2 && prescription.clientId === client2.id) {
+      const [client] = await db.select().from(clients).where(eq40(clients.email, clientEmail)).limit(1);
+      if (client && prescription.clientId === client.id) {
         hasAccess = true;
       }
       if (!hasAccess && prescription.assessmentId) {
@@ -22173,8 +28619,20 @@ async function registerRoutes(app2) {
       }
       const assessment = prescription.assessmentId ? await storage.getAssessment(prescription.assessmentId) : null;
       const recommendations2 = prescription.assessmentId ? await storage.getRecommendationsByAssessmentId(prescription.assessmentId) : [];
+      const productScores = prescription.assessmentId ? await storage.getProductRecommendationScores(prescription.assessmentId) : [];
+      const enrichedRecommendations = recommendations2.map((rec) => {
+        const scoreData = productScores.find(
+          (ps) => ps.productId && ps.productId === rec.productId || ps.categoryAffected && ps.categoryAffected === rec.category
+        );
+        return {
+          ...rec,
+          currentScore: scoreData?.currentScore ?? null,
+          projectedScore: scoreData?.projectedScore ?? null,
+          scoreImprovement: scoreData?.scoreImprovement ?? null
+        };
+      });
       if (!prescription.viewedAt) {
-        await db.update(prescriptions).set({ viewedAt: /* @__PURE__ */ new Date(), updatedAt: /* @__PURE__ */ new Date() }).where(eq32(prescriptions.id, prescription.id));
+        await db.update(prescriptions).set({ viewedAt: /* @__PURE__ */ new Date(), updatedAt: /* @__PURE__ */ new Date() }).where(eq40(prescriptions.id, prescription.id));
       }
       res.json({
         prescription,
@@ -22186,7 +28644,7 @@ async function registerRoutes(app2) {
           analysisResults: assessment.analysisResults,
           createdAt: assessment.createdAt
         } : null,
-        recommendations: recommendations2
+        recommendations: enrichedRecommendations
       });
     } catch (error) {
       console.error("Error fetching prescription:", error);
@@ -22204,13 +28662,13 @@ async function registerRoutes(app2) {
       if (typeof implementationProgress !== "number" || implementationProgress < 0 || implementationProgress > 100) {
         return res.status(400).json({ message: "Progress must be a number between 0 and 100" });
       }
-      const [prescription] = await db.select().from(prescriptions).where(eq32(prescriptions.id, prescriptionId)).limit(1);
+      const [prescription] = await db.select().from(prescriptions).where(eq40(prescriptions.id, prescriptionId)).limit(1);
       if (!prescription) {
         return res.status(404).json({ message: "Prescription not found" });
       }
       let hasAccess = false;
-      const [client2] = await db.select().from(clients).where(eq32(clients.email, clientEmail)).limit(1);
-      if (client2 && prescription.clientId === client2.id) {
+      const [client] = await db.select().from(clients).where(eq40(clients.email, clientEmail)).limit(1);
+      if (client && prescription.clientId === client.id) {
         hasAccess = true;
       }
       if (!hasAccess && prescription.assessmentId) {
@@ -22226,7 +28684,7 @@ async function registerRoutes(app2) {
         implementationProgress,
         status: implementationProgress === 100 ? "completed" : "in_progress",
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq32(prescriptions.id, prescriptionId)).returning();
+      }).where(eq40(prescriptions.id, prescriptionId)).returning();
       res.json(updated);
     } catch (error) {
       console.error("Error updating prescription progress:", error);
@@ -22268,29 +28726,29 @@ async function registerRoutes(app2) {
           message: "This login link has expired. Please request a new one."
         });
       }
-      const client2 = await storage.getClientByEmail(magicToken.email);
+      const client = await storage.getClientByEmail(magicToken.email);
       console.log(
         "[Magic Link Verify] Found client:",
-        client2 ? { id: client2.id, email: client2.email, idType: typeof client2.id } : "null"
+        client ? { id: client.id, email: client.email, idType: typeof client.id } : "null"
       );
-      if (!client2) {
+      if (!client) {
         return res.status(404).json({
           success: false,
           message: "Account not found"
         });
       }
       console.log("[Magic Link Verify] Validating client.id:", {
-        id: client2.id,
-        type: typeof client2.id,
-        isNaN: isNaN(client2.id),
-        isNumber: typeof client2.id === "number",
-        fullClient: JSON.stringify(client2)
+        id: client.id,
+        type: typeof client.id,
+        isNaN: isNaN(client.id),
+        isNumber: typeof client.id === "number",
+        fullClient: JSON.stringify(client)
       });
-      if (!client2.id || typeof client2.id !== "number" || isNaN(client2.id)) {
+      if (!client.id || typeof client.id !== "number" || isNaN(client.id)) {
         console.error("[Magic Link Verify] Invalid client ID detected:", {
-          id: client2.id,
-          type: typeof client2.id,
-          isNaN: isNaN(client2.id)
+          id: client.id,
+          type: typeof client.id,
+          isNaN: isNaN(client.id)
         });
         return res.status(500).json({
           success: false,
@@ -22299,46 +28757,46 @@ async function registerRoutes(app2) {
       }
       console.log(
         "[Magic Link Verify] Client ID validation passed:",
-        client2.id
+        client.id
       );
       console.log(
         "[Magic Link Verify] Updating client login tracking for ID:",
-        client2.id
+        client.id
       );
-      await storage.updateClient(client2.id, {
+      await storage.updateClient(client.id, {
         lastLoginTime: /* @__PURE__ */ new Date(),
-        loginCount: (client2.loginCount || 0) + 1
+        loginCount: (client.loginCount || 0) + 1
       });
       console.log("[Magic Link Verify] Login tracking updated");
       try {
-        const existingCrmContact = await db.select().from(crmContacts).where(eq32(crmContacts.email, client2.email)).limit(1);
+        const existingCrmContact = await db.select().from(crmContacts).where(eq40(crmContacts.email, client.email)).limit(1);
         if (existingCrmContact.length === 0) {
           const [crmContact] = await db.insert(crmContacts).values({
-            clientId: client2.id,
-            firstName: client2.companyName?.split(" ")[0] || "Portal",
+            clientId: client.id,
+            firstName: client.companyName?.split(" ")[0] || "Portal",
             lastName: "User",
-            email: client2.email,
-            phone: client2.phone || null,
+            email: client.email,
+            phone: client.phone || null,
             lifecycleStage: "lead",
             leadSource: "portal_signup"
           }).returning();
           console.log(
-            `[Magic Link Verify] Created CRM contact ${crmContact.id} for portal user ${client2.email}`
+            `[Magic Link Verify] Created CRM contact ${crmContact.id} for portal user ${client.email}`
           );
           await db.insert(crmTimeline).values({
-            clientId: client2.id,
+            clientId: client.id,
             contactId: crmContact.id,
             eventType: "portal_login",
-            title: `First portal login by ${client2.companyName || client2.email}`,
+            title: `First portal login by ${client.companyName || client.email}`,
             occurredAt: /* @__PURE__ */ new Date(),
-            sourceApp: "relationships",
+            sourceApp: "connect",
             actorType: "system"
           });
         } else {
           if (!existingCrmContact[0].clientId) {
-            await db.update(crmContacts).set({ clientId: client2.id, updatedAt: /* @__PURE__ */ new Date() }).where(eq32(crmContacts.id, existingCrmContact[0].id));
+            await db.update(crmContacts).set({ clientId: client.id, updatedAt: /* @__PURE__ */ new Date() }).where(eq40(crmContacts.id, existingCrmContact[0].id));
             console.log(
-              `[Magic Link Verify] Linked existing CRM contact ${existingCrmContact[0].id} to client ${client2.id}`
+              `[Magic Link Verify] Linked existing CRM contact ${existingCrmContact[0].id} to client ${client.id}`
             );
           }
         }
@@ -22350,26 +28808,26 @@ async function registerRoutes(app2) {
       }
       console.log(
         "[Magic Link Verify] Creating dashboard token for client ID:",
-        client2.id
+        client.id
       );
       const jwtToken = await jwtService.createDashboardToken(
-        client2.id,
-        client2.email
+        client.id,
+        client.email
       );
       console.log("[Magic Link Verify] JWT token created successfully");
-      req.session.clientId = client2.id;
-      req.session.email = client2.email;
-      req.session.isAdmin = client2.isAdmin || false;
-      console.log("[Magic Link Verify] Session set for client ID:", client2.id, "isAdmin:", client2.isAdmin);
+      req.session.clientId = client.id;
+      req.session.email = client.email;
+      req.session.isAdmin = client.isAdmin || false;
+      console.log("[Magic Link Verify] Session set for client ID:", client.id, "isAdmin:", client.isAdmin);
       await storage.markTokenAsUsed(token);
       console.log("[Magic Link Verify] Token marked as used after successful verification");
       res.json({
         success: true,
         client: {
-          id: client2.id,
-          companyName: client2.companyName,
-          email: client2.email,
-          isEmailVerified: client2.isEmailVerified || false
+          id: client.id,
+          companyName: client.companyName,
+          email: client.email,
+          isEmailVerified: client.isEmailVerified || false
         },
         token: jwtToken,
         message: "Login successful"
@@ -22399,11 +28857,11 @@ async function registerRoutes(app2) {
           );
           return res.status(400).json({ message: "Invalid client ID format" });
         }
-        const client2 = await storage.getClient(clientId);
-        if (!client2) {
+        const client = await storage.getClient(clientId);
+        if (!client) {
           return res.status(404).json({ message: "Client not found" });
         }
-        res.json(client2);
+        res.json(client);
       } catch (error) {
         console.error("Error fetching client:", error);
         res.status(500).json({ message: "Failed to fetch client" });
@@ -22423,14 +28881,14 @@ async function registerRoutes(app2) {
           );
           return res.status(400).json({ message: "Invalid client ID format" });
         }
-        const client2 = await storage.getClient(clientId);
-        if (!client2) {
+        const client = await storage.getClient(clientId);
+        if (!client) {
           return res.status(404).json({ message: "Client not found" });
         }
         const campaigns2 = await storage.getCampaignsByClient(clientId);
         const messages = await storage.getMessagesByClient(clientId);
         const campaignData = {
-          client: client2,
+          client,
           campaigns: campaigns2,
           messages,
           stats: {
@@ -22492,7 +28950,7 @@ async function registerRoutes(app2) {
       if (!isActive) {
         return res.status(401).json({ message: "Token has been revoked" });
       }
-      const [dashboardRecord] = await db.select().from(dashboardAccess).where(eq32(dashboardAccess.accessToken, token));
+      const [dashboardRecord] = await db.select().from(dashboardAccess).where(eq40(dashboardAccess.accessToken, token));
       if (!dashboardRecord) {
         return res.status(404).json({ message: "Dashboard access not found" });
       }
@@ -22527,8 +28985,8 @@ async function registerRoutes(app2) {
     try {
       const clientId = parseInt(req.params.id);
       const { jwtService: jwtService2 } = await Promise.resolve().then(() => (init_jwt(), jwt_exports));
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
+      const client = await storage.getClient(clientId);
+      if (!client) {
         return res.status(404).json({ message: "Client not found" });
       }
       const token = await jwtService2.createDashboardToken(clientId);
@@ -22570,30 +29028,30 @@ async function registerRoutes(app2) {
         "test@businessblueprint.io": { companyName: "Test Business" },
         "agency@businessblueprint.io": { companyName: "Social Media Agency" }
       };
-      let client2 = await storage.getClientByEmail(normalizedEmail);
-      if (!client2 && autoAccounts[normalizedEmail]) {
+      let client = await storage.getClientByEmail(normalizedEmail);
+      if (!client && autoAccounts[normalizedEmail]) {
         const acct = autoAccounts[normalizedEmail];
-        client2 = await storage.createClient({
+        client = await storage.createClient({
           companyName: acct.companyName,
           email: normalizedEmail,
           accountStatus: "active",
           ...acct.isAdmin && { isAdmin: true }
         });
         console.log(
-          `[Login] Auto-created account: ${normalizedEmail} (ID: ${client2.id}, admin: ${!!acct.isAdmin})`
+          `[Login] Auto-created account: ${normalizedEmail} (ID: ${client.id}, admin: ${!!acct.isAdmin})`
         );
       }
-      if (client2 && autoAccounts[normalizedEmail]?.isAdmin && !client2.isAdmin) {
-        await db.update(clients).set({ isAdmin: true }).where(eq32(clients.id, client2.id));
-        client2 = { ...client2, isAdmin: true };
+      if (client && autoAccounts[normalizedEmail]?.isAdmin && !client.isAdmin) {
+        await db.update(clients).set({ isAdmin: true }).where(eq40(clients.id, client.id));
+        client = { ...client, isAdmin: true };
       }
-      if (!client2) {
+      if (!client) {
         return res.status(404).json({
           success: false,
           message: "No account found with this email address. Please check your email or contact support."
         });
       }
-      const token = randomBytes(32).toString("hex");
+      const token = randomBytes2(32).toString("hex");
       const expiresAt = /* @__PURE__ */ new Date();
       const isDemoAccount = [
         "53947@triadblue.com",
@@ -22620,7 +29078,7 @@ async function registerRoutes(app2) {
       }
       const magicLink = `${frontendUrl}/portal/verify?token=${token}`;
       const magicLinkEmailService = new ResendEmailService();
-      magicLinkEmailService.sendMagicLinkEmail(normalizedEmail, magicLink, client2.companyName).then((sent) => {
+      magicLinkEmailService.sendMagicLinkEmail(normalizedEmail, magicLink, client.companyName).then((sent) => {
         if (sent) {
           console.log(`\u2705 Magic link email sent to ${normalizedEmail}`);
         } else {
@@ -22657,19 +29115,19 @@ async function registerRoutes(app2) {
   app2.get("/api/client/dashboard/:clientId", async (req, res) => {
     try {
       const clientId = parseInt(req.params.clientId);
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
+      const client = await storage.getClient(clientId);
+      if (!client) {
         return res.status(404).json({ error: "Client not found" });
       }
-      const assessments3 = await storage.getClientAssessments(clientId);
+      const assessments4 = await storage.getClientAssessments(clientId);
       const campaigns2 = await storage.getClientCampaigns(clientId);
       const messages = await storage.getClientMessages(clientId, 10);
-      const latestAssessment = assessments3[0];
+      const latestAssessment = assessments4[0];
       const digitalScore = latestAssessment?.digitalScore || 0;
       const dashboardData = {
-        client: client2,
+        client,
         digitalScore,
-        assessments: assessments3.length,
+        assessments: assessments4.length,
         campaigns: campaigns2.length,
         activeCampaigns: campaigns2.filter((c) => c.status === "active").length,
         recentMessages: messages,
@@ -22684,11 +29142,11 @@ async function registerRoutes(app2) {
   app2.get("/api/client/list/:clientId", async (req, res) => {
     try {
       const clientId = parseInt(req.params.clientId);
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
+      const client = await storage.getClient(clientId);
+      if (!client) {
         return res.status(404).json({ error: "Client not found" });
       }
-      const rows = await db.select().from(businessListings).where(eq32(businessListings.clientId, clientId));
+      const rows = await db.select().from(businessListings).where(eq40(businessListings.clientId, clientId));
       const total = rows.length;
       const verified = rows.filter((r) => r.status === "active").length;
       const pending = rows.filter((r) => r.status === "pending").length;
@@ -22712,11 +29170,11 @@ async function registerRoutes(app2) {
         if (isNaN(clientId)) {
           return res.status(400).json({ error: "Invalid client ID" });
         }
-        const client2 = await storage.getClient(clientId);
-        if (!client2) {
+        const client = await storage.getClient(clientId);
+        if (!client) {
           return res.status(404).json({ error: "Client not found" });
         }
-        const rows = await db.select().from(businessListings).where(eq32(businessListings.clientId, clientId)).orderBy(desc15(businessListings.updatedAt));
+        const rows = await db.select().from(businessListings).where(eq40(businessListings.clientId, clientId)).orderBy(desc18(businessListings.updatedAt));
         const listings = rows.map((r) => ({
           id: r.id,
           platform: platformDisplayName(r.platform),
@@ -22746,11 +29204,11 @@ async function registerRoutes(app2) {
         if (isNaN(clientId)) {
           return res.status(400).json({ error: "Invalid client ID" });
         }
-        const client2 = await storage.getClient(clientId);
-        if (!client2) {
+        const client = await storage.getClient(clientId);
+        if (!client) {
           return res.status(404).json({ error: "Client not found" });
         }
-        const rows = await db.select().from(businessListings).where(eq32(businessListings.clientId, clientId));
+        const rows = await db.select().from(businessListings).where(eq40(businessListings.clientId, clientId));
         const totalListings = rows.length;
         const activeListings = rows.filter((r) => r.status === "active").length;
         const pendingListings = rows.filter((r) => r.status === "pending").length;
@@ -22761,9 +29219,9 @@ async function registerRoutes(app2) {
         ) : 0;
         const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1e3);
         const metricsRows = await db.select().from(listingMetricsSnapshots).where(
-          and20(
-            eq32(listingMetricsSnapshots.clientId, clientId),
-            lte2(sql11`${listingMetricsSnapshots.periodStart}`, /* @__PURE__ */ new Date())
+          and28(
+            eq40(listingMetricsSnapshots.clientId, clientId),
+            lte2(sql16`${listingMetricsSnapshots.periodStart}`, /* @__PURE__ */ new Date())
           )
         );
         const recentMetrics = metricsRows.filter(
@@ -22795,8 +29253,8 @@ async function registerRoutes(app2) {
         if (isNaN(clientId)) {
           return res.status(400).json({ error: "Invalid client ID" });
         }
-        const client2 = await storage.getClient(clientId);
-        if (!client2) {
+        const client = await storage.getClient(clientId);
+        if (!client) {
           return res.status(404).json({ error: "Client not found" });
         }
         const reviews = await reviewSyncService.getClientReviews(clientId);
@@ -22828,8 +29286,8 @@ async function registerRoutes(app2) {
         if (isNaN(clientId)) {
           return res.status(400).json({ error: "Invalid client ID" });
         }
-        const client2 = await storage.getClient(clientId);
-        if (!client2) {
+        const client = await storage.getClient(clientId);
+        if (!client) {
           return res.status(404).json({ error: "Client not found" });
         }
         const analytics = await reviewSyncService.getClientReviewAnalytics(clientId);
@@ -22848,9 +29306,13 @@ async function registerRoutes(app2) {
       if (isNaN(clientId) || isNaN(reviewId)) {
         return res.status(400).json({ error: "Invalid client ID or review ID" });
       }
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
+      const client = await storage.getClient(clientId);
+      if (!client) {
         return res.status(404).json({ error: "Client not found" });
+      }
+      const review = await reviewSyncService.getReviewById(reviewId);
+      if (!review) {
+        return res.status(404).json({ error: "Review not found" });
       }
       let reviewResponse = response;
       let isAI = false;
@@ -22858,10 +29320,10 @@ async function registerRoutes(app2) {
         try {
           const { reviewAI: reviewAI2 } = await Promise.resolve().then(() => (init_reviewAI(), reviewAI_exports));
           reviewResponse = await reviewAI2.generateReviewResponse({
-            reviewText: response || "",
-            rating: 5,
-            platform: "google",
-            businessName: client2.companyName || "our business"
+            reviewText: review.reviewText || "",
+            rating: review.rating,
+            platform: review.platform,
+            businessName: client.companyName || "our business"
           });
           isAI = true;
         } catch {
@@ -22889,19 +29351,19 @@ async function registerRoutes(app2) {
         if (isNaN(clientId)) {
           return res.status(400).json({ error: "Invalid client ID" });
         }
-        const client2 = await storage.getClient(clientId);
-        if (!client2) {
+        const client = await storage.getClient(clientId);
+        if (!client) {
           return res.status(404).json({ error: "Client not found" });
         }
-        const businessName = client2.companyName || "";
+        const businessName = client.companyName || "";
         if (!businessName) {
           return res.status(400).json({ error: "Client has no business name set" });
         }
         const result = await reviewSyncService.syncClientReviews(
           clientId,
           businessName,
-          client2.address || void 0,
-          client2.phone || void 0
+          client.address || void 0,
+          client.phone || void 0
         );
         res.json({
           success: true,
@@ -22953,8 +29415,8 @@ async function registerRoutes(app2) {
       if (isNaN(clientId)) {
         return res.status(400).json({ error: "Invalid client ID" });
       }
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
+      const client = await storage.getClient(clientId);
+      if (!client) {
         return res.status(404).json({ error: "Client not found" });
       }
       const { platform, name, address, phone, website, hours, url } = req.body;
@@ -22999,11 +29461,11 @@ async function registerRoutes(app2) {
       if (isNaN(clientId)) {
         return res.status(400).json({ error: "Invalid client ID" });
       }
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
+      const client = await storage.getClient(clientId);
+      if (!client) {
         return res.status(404).json({ error: "Client not found" });
       }
-      const businessName = client2.companyName || "";
+      const businessName = client.companyName || "";
       if (!businessName) {
         return res.status(400).json({ error: "Client has no business name set" });
       }
@@ -23016,15 +29478,15 @@ async function registerRoutes(app2) {
       const result = await listingSyncService.syncClientListings(
         clientId,
         businessName,
-        client2.address || void 0,
-        client2.phone || void 0
+        client.address || void 0,
+        client.phone || void 0
       );
       try {
         await reviewSyncService.syncClientReviews(
           clientId,
           businessName,
-          client2.address || void 0,
-          client2.phone || void 0
+          client.address || void 0,
+          client.phone || void 0
         );
       } catch (reviewErr) {
         console.error("Review sync error (non-blocking):", reviewErr);
@@ -23036,7 +29498,7 @@ async function registerRoutes(app2) {
         listingsUpdated: result.updated,
         errors: result.errors.length > 0 ? result.errors : null,
         completedAt: /* @__PURE__ */ new Date()
-      }).where(eq32(listingSyncLogs.id, syncLog.id));
+      }).where(eq40(listingSyncLogs.id, syncLog.id));
       res.json({
         success: true,
         ...result
@@ -23046,6 +29508,55 @@ async function registerRoutes(app2) {
       res.status(500).json({ error: "Failed to sync listings" });
     }
   });
+  app2.post(
+    "/api/clients/:id/list/metrics/sync",
+    requireClientPortalAccess,
+    async (req, res) => {
+      try {
+        const clientId = parseInt(req.params.id);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ error: "Invalid client ID" });
+        }
+        const client = await storage.getClient(clientId);
+        if (!client) {
+          return res.status(404).json({ error: "Client not found" });
+        }
+        const listings = await db.select().from(businessListings).where(eq40(businessListings.clientId, clientId));
+        if (listings.length === 0) {
+          return res.json({ success: true, snapshotsCreated: 0, message: "No listings to snapshot" });
+        }
+        const now = /* @__PURE__ */ new Date();
+        const periodStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const periodEnd = new Date(periodStart.getTime() + 24 * 60 * 60 * 1e3);
+        let snapshotsCreated = 0;
+        for (const listing of listings) {
+          const existing = await db.select().from(listingMetricsSnapshots).where(
+            and28(
+              eq40(listingMetricsSnapshots.clientId, clientId),
+              eq40(listingMetricsSnapshots.listingId, listing.id),
+              eq40(listingMetricsSnapshots.periodStart, periodStart)
+            )
+          );
+          if (existing.length === 0) {
+            await db.insert(listingMetricsSnapshots).values({
+              clientId,
+              listingId: listing.id,
+              views: 0,
+              clicks: 0,
+              calls: 0,
+              periodStart,
+              periodEnd
+            });
+            snapshotsCreated++;
+          }
+        }
+        res.json({ success: true, snapshotsCreated, totalListings: listings.length });
+      } catch (error) {
+        console.error("Error syncing listing metrics:", error);
+        res.status(500).json({ error: "Failed to sync metrics" });
+      }
+    }
+  );
   app2.patch("/api/clients/:id/list/:listingId", async (req, res) => {
     try {
       const clientId = parseInt(req.params.id);
@@ -23053,14 +29564,14 @@ async function registerRoutes(app2) {
       if (isNaN(clientId) || isNaN(listingId)) {
         return res.status(400).json({ error: "Invalid client ID or listing ID" });
       }
-      const client2 = await storage.getClient(clientId);
-      if (!client2) {
+      const client = await storage.getClient(clientId);
+      if (!client) {
         return res.status(404).json({ error: "Client not found" });
       }
       const [existing] = await db.select().from(businessListings).where(
-        and20(
-          eq32(businessListings.id, listingId),
-          eq32(businessListings.clientId, clientId)
+        and28(
+          eq40(businessListings.id, listingId),
+          eq40(businessListings.clientId, clientId)
         )
       ).limit(1);
       if (!existing) {
@@ -23071,7 +29582,7 @@ async function registerRoutes(app2) {
         return res.status(400).json({ error: "Invalid update data", details: parsed.error.issues });
       }
       const updates = { ...parsed.data, updatedAt: /* @__PURE__ */ new Date() };
-      await db.update(businessListings).set(updates).where(eq32(businessListings.id, listingId));
+      await db.update(businessListings).set(updates).where(eq40(businessListings.id, listingId));
       res.json({
         success: true,
         message: "Listing updated successfully",
@@ -23110,9 +29621,10 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Failed to analyze progress" });
     }
   });
-  registerSubscriptionRoutes(app2, emailService);
+  registerSubscriptionRoutes(app2, emailService2);
   registerSendRoutes(app2);
   registerOptimizeRoutes(app2);
+  app2.use(amplifyRouter);
   const multer = await import("multer");
   const upload = multer.default({ storage: multer.default.memoryStorage() });
   app2.post("/api/brand-assets", upload.single("file"), async (req, res) => {
@@ -23291,7 +29803,7 @@ async function registerRoutes(app2) {
       const buffer = Buffer.from(asset.data, "base64");
       res.setHeader("Content-Type", asset.mimeType);
       res.setHeader("Content-Length", buffer.length);
-      res.setHeader("Cache-Control", "public, max-age=31536000");
+      res.setHeader("Cache-Control", "public, max-age=3600");
       res.send(buffer);
     } catch (error) {
       console.error("Error serving asset:", error);
@@ -23305,12 +29817,98 @@ async function registerRoutes(app2) {
   app2.use("/api/post", content_default);
   app2.use("/api/meta", meta_default);
   app2.use("/api/google", google_default);
+  app2.use("/api/linkedin", linkedin_default);
+  app2.use("/api/tiktok", tiktok_default);
+  app2.use("/api/snapchat", snapchat_default);
+  app2.use("/api/pinterest", pinterest_default);
+  app2.use("/api/nextdoor", nextdoor_default);
+  app2.use("/api/spotify", spotify_default);
+  app2.use("/api/microsoft-ads", microsoft_ads_default);
+  app2.post("/api/telnyx/webhook", async (req, res) => {
+    try {
+      res.status(200).json({ ok: true });
+      const event = req.body?.data;
+      if (!event || event.event_type !== "message.received") return;
+      const payload = event.payload;
+      if (!payload) return;
+      const fromNumber = payload.from?.phone_number;
+      const toNumber = payload.to?.[0]?.phone_number || payload.to;
+      const messageText = payload.text || "";
+      const messageId = payload.id;
+      if (!fromNumber || !messageText) return;
+      const [existingConv] = await db.select().from(inboxConversations).where(
+        and28(
+          eq40(inboxConversations.contactIdentifier, fromNumber),
+          eq40(inboxConversations.primaryChannelType, "sms")
+        )
+      ).limit(1);
+      if (existingConv) {
+        await db.insert(inboxMessages2).values({
+          conversationId: existingConv.id,
+          channelType: "sms",
+          messageType: "incoming",
+          direction: "inbound",
+          content: messageText,
+          contentType: "text",
+          fromIdentifier: fromNumber,
+          fromName: existingConv.contactName || fromNumber,
+          toIdentifier: toNumber,
+          toName: "Support",
+          externalMessageId: messageId,
+          status: "delivered",
+          deliveredAt: /* @__PURE__ */ new Date(),
+          metadata: { provider: "telnyx", event: payload }
+        });
+        await db.update(inboxConversations).set({
+          lastMessageAt: /* @__PURE__ */ new Date(),
+          lastMessagePreview: messageText.substring(0, 100),
+          unreadCount: (existingConv.unreadCount || 0) + 1,
+          updatedAt: /* @__PURE__ */ new Date()
+        }).where(eq40(inboxConversations.id, existingConv.id));
+        console.log(`[Telnyx] SMS received from ${fromNumber} \u2192 conversation ${existingConv.id}`);
+      } else {
+        const [newConv] = await db.insert(inboxConversations).values({
+          clientId: 1,
+          // Default client — will be refined when multi-tenant matching is built
+          contactName: fromNumber,
+          contactIdentifier: fromNumber,
+          primaryChannelType: "sms",
+          status: "open",
+          priority: "normal",
+          lastMessageAt: /* @__PURE__ */ new Date(),
+          lastMessagePreview: messageText.substring(0, 100),
+          unreadCount: 1
+        }).returning();
+        await db.insert(inboxMessages2).values({
+          conversationId: newConv.id,
+          channelType: "sms",
+          messageType: "incoming",
+          direction: "inbound",
+          content: messageText,
+          contentType: "text",
+          fromIdentifier: fromNumber,
+          fromName: fromNumber,
+          toIdentifier: toNumber,
+          toName: "Support",
+          externalMessageId: messageId,
+          status: "delivered",
+          deliveredAt: /* @__PURE__ */ new Date(),
+          metadata: { provider: "telnyx", event: payload }
+        });
+        console.log(`[Telnyx] New SMS conversation from ${fromNumber}`);
+      }
+    } catch (error) {
+      console.error("[Telnyx] Webhook processing error:", error);
+    }
+  });
   app2.use("/api/tasks", isAuthenticated, tasksRouter);
   app2.use("/api/brand-colors", brand_colors_default);
   registerBillingAdminRoutes(app2);
   registerEmailAdminRoutes(app2);
   registerPaymentRoutes(app2);
-  app2.use("/api/crm", crmRouter);
+  app2.use("/api/crm", isAuthenticated, crmRouter);
+  app2.use("/api/setup-tasks", setupTasksRouter);
+  app2.use("/api/setup-notes", setupNotesRouter);
   app2.use("/api/chat", chatRouter);
   app2.use("/api/v1", publicApiRouter);
   app2.use(aiCoachRouter);
@@ -23327,9 +29925,9 @@ async function registerRoutes(app2) {
         assessmentId: assessmentId || 1,
         summary: "Your business shows strong potential but has room for improvement in digital presence.",
         recommendations: [
-          { category: "Email & SMS Marketing", title: "Start email campaigns", description: "Begin collecting emails and sending regular newsletters", priority: "high", productId: "send" },
-          { category: "Social Media Content", title: "Increase posting frequency", description: "Post 3-5 times per week on social media", priority: "high", productId: "content" },
-          { category: "Reputation Management", title: "Respond to reviews", description: "Reply to all customer reviews within 24 hours", priority: "medium", productId: "reputation" }
+          { category: "Email & SMS Marketing", title: "Start email campaigns", description: "Begin collecting emails and sending regular newsletters", priority: "high", productId: "promote" },
+          { category: "Social Media Content", title: "Increase posting frequency", description: "Post 3-5 times per week on social media", priority: "high", productId: "post" },
+          { category: "Reputation Management", title: "Respond to reviews", description: "Reply to all customer reviews within 24 hours", priority: "medium", productId: "elevate" }
         ]
       };
       if (assessmentId) {
@@ -23345,9 +29943,9 @@ async function registerRoutes(app2) {
         }
       }
       console.log(`[Test Email] Sending test emails to ${email}...`);
-      const reportSent = await emailService.sendAssessmentReport(email, testData);
+      const reportSent = await emailService2.sendAssessmentReport(email, testData);
       console.log(`[Test Email] Assessment Report: ${reportSent ? "SENT" : "FAILED"}`);
-      const coachSent = await emailService.sendThankYouIntroduction(email, {
+      const coachSent = await emailService2.sendThankYouIntroduction(email, {
         businessName: testData.businessName,
         assessmentId: testData.assessmentId
       });
@@ -23368,326 +29966,350 @@ async function registerRoutes(app2) {
   const httpServer = createServer(app2);
   return httpServer;
 }
-async function processAssessmentAsync(assessmentId, googleService, aiService, emailService, storage2) {
+async function processAssessmentAsync(assessmentId, googleService, aiService, emailService2, storage2) {
   console.log(`[Assessment Pipeline] \u25B6\uFE0F STARTING background processing for assessment ID: ${assessmentId}`);
   const startTime = Date.now();
   const logStep = (step, message) => {
     const elapsed = ((Date.now() - startTime) / 1e3).toFixed(1);
     console.log(`[Assessment Pipeline] [${elapsed}s] ${step}: ${message}`);
   };
+  const TIMEOUT_MS = 3 * 60 * 1e3;
+  const timeoutPromise = new Promise(
+    (_, reject) => setTimeout(() => reject(new Error("Analysis timed out \u2014 please try again")), TIMEOUT_MS)
+  );
+  let completed = false;
   try {
-    logStep("Step 1", "Updating status to 'analyzing'...");
-    await storage2.updateAssessment(assessmentId, { status: "analyzing" });
-    const assessment = await storage2.getAssessment(assessmentId);
-    if (!assessment) throw new Error("Assessment not found");
-    logStep("Step 1", `\u2705 Assessment loaded: ${assessment.businessName} (${assessment.email})`);
-    if (assessment.website) {
-      logStep("Step 1.5", `\u{1F50D} Starting ScansBlue Fast Check for ${assessment.website}...`);
-      (async () => {
-        try {
-          const fastCheckResult = await scansBlueService.runFastCheck(assessment.website);
-          if (fastCheckResult && fastCheckResult.success) {
-            const r = fastCheckResult.results;
-            await db.insert(scansBlueResults).values({
-              assessmentId,
-              url: assessment.website,
-              type: "fast_check",
-              status: "completed",
-              overallScore: r.summary?.overallScore || 0,
-              sslPresent: r.ssl?.present || false,
-              sslValid: r.ssl?.valid || false,
-              sslIssuer: r.ssl?.issuer || null,
-              sslExpiresIn: r.ssl?.expiresIn || null,
-              loadTime: String(r.performance?.loadTime || 0),
-              performanceScore: r.performance?.score || 0,
-              mobileOptimized: r.mobile?.optimized || false,
-              mobileScore: r.mobile?.score || 0,
-              criticalIssues: r.criticalIssues ? JSON.stringify(r.criticalIssues) : null,
-              requestedAt: /* @__PURE__ */ new Date(),
-              completedAt: /* @__PURE__ */ new Date()
-            });
-            console.log(`[ScansBlue] Fast Check completed and saved for assessment ${assessmentId}`);
+    await Promise.race([timeoutPromise, (async () => {
+      logStep("Step 1", "Updating status to 'analyzing'...");
+      await storage2.updateAssessment(assessmentId, { status: "analyzing" });
+      const assessment = await storage2.getAssessment(assessmentId);
+      if (!assessment) throw new Error("Assessment not found");
+      logStep("Step 1", `\u2705 Assessment loaded: ${assessment.businessName} (${assessment.email})`);
+      if (assessment.website) {
+        logStep("Step 1.5", `\u{1F50D} Starting ScansBlue Fast Check for ${assessment.website}...`);
+        (async () => {
+          try {
+            const fastCheckResult = await scansBlueService.runFastCheck(assessment.website);
+            if (fastCheckResult && fastCheckResult.success) {
+              const r = fastCheckResult.results;
+              await db.insert(scansBlueResults).values({
+                assessmentId,
+                url: assessment.website,
+                type: "fast_check",
+                status: "completed",
+                overallScore: r.summary?.overallScore || 0,
+                sslPresent: r.ssl?.present || false,
+                sslValid: r.ssl?.valid || false,
+                sslIssuer: r.ssl?.issuer || null,
+                sslExpiresIn: r.ssl?.expiresIn || null,
+                loadTime: String(r.performance?.loadTime || 0),
+                performanceScore: r.performance?.score || 0,
+                mobileOptimized: r.mobile?.optimized || false,
+                mobileScore: r.mobile?.score || 0,
+                criticalIssues: r.criticalIssues ? JSON.stringify(r.criticalIssues) : null,
+                requestedAt: /* @__PURE__ */ new Date(),
+                completedAt: /* @__PURE__ */ new Date()
+              });
+              console.log(`[ScansBlue] Fast Check completed and saved for assessment ${assessmentId}`);
+            }
+          } catch (error) {
+            console.error("[ScansBlue] Fast Check error (non-blocking):", error);
           }
-        } catch (error) {
-          console.error("[ScansBlue] Fast Check error (non-blocking):", error);
+        })();
+      }
+      logStep("Step 2", `\u{1F50D} Starting presence scan for ${assessment.businessName}...`);
+      const presenceScan = await presenceScannerService.scanBusiness({
+        businessName: assessment.businessName,
+        website: assessment.website || void 0,
+        phone: assessment.phone,
+        address: assessment.address
+      });
+      logStep("Step 2", `\u2705 Presence scan complete`);
+      const operationalScore = presenceScannerService.calculateOperationalScore({
+        collectsEmails: assessment.collectsEmails,
+        lastEmailCampaign: assessment.lastEmailCampaign,
+        emailListSize: assessment.emailListSize,
+        sendsSMS: assessment.sendsSMS,
+        lastSMSCampaign: assessment.lastSMSCampaign,
+        lastSocialPost: assessment.lastSocialPost,
+        socialPostFrequency: assessment.socialPostFrequency,
+        socialContentCreator: assessment.socialContentCreator,
+        lastReviewResponse: assessment.lastReviewResponse,
+        reviewResponseRate: assessment.reviewResponseRate,
+        lastNewReview: assessment.lastNewReview,
+        inquiryResponseTime: assessment.inquiryResponseTime,
+        hasUnifiedInbox: assessment.hasUnifiedInbox,
+        missedInquiries: assessment.missedInquiries,
+        hasLiveChat: assessment.hasLiveChat,
+        lastChatConversation: assessment.lastChatConversation,
+        chatResponseTime: assessment.chatResponseTime,
+        lastListingUpdate: assessment.lastListingUpdate,
+        listingConsistency: assessment.listingConsistency,
+        lastGBPPost: assessment.lastGBPPost,
+        lastGBPPhoto: assessment.lastGBPPhoto,
+        lastWebsiteUpdate: assessment.lastWebsiteUpdate,
+        hasBlog: assessment.hasBlog,
+        usesCRM: assessment.usesCRM,
+        crmPlatform: assessment.crmPlatform,
+        lastCRMFollowup: assessment.lastCRMFollowup,
+        hasAutomation: assessment.hasAutomation,
+        runsAds: assessment.runsAds,
+        lastAdCampaign: assessment.lastAdCampaign,
+        monthlyAdBudget: assessment.monthlyAdBudget
+      });
+      const scanScore = presenceScan.overall.digitalIQScore;
+      const combinedDigitalIQ = presenceScannerService.calculateCombinedDigitalIQ(scanScore, operationalScore);
+      console.log(`\u{1F4CA} Final Digital IQ: Scan=${scanScore}/70 + Operational=${operationalScore}/70 = ${combinedDigitalIQ}/140`);
+      const enhancedPresenceScan = {
+        ...presenceScan,
+        overall: {
+          ...presenceScan.overall,
+          digitalIQScore: combinedDigitalIQ,
+          // Combined 0-140 score for backward compatibility
+          scanScore,
+          // Scan-only 0-70
+          operationalScore
+          // Operational-only 0-70
         }
-      })();
-    }
-    logStep("Step 2", `\u{1F50D} Starting presence scan for ${assessment.businessName}...`);
-    const presenceScan = await presenceScannerService.scanBusiness({
-      businessName: assessment.businessName,
-      website: assessment.website || void 0,
-      phone: assessment.phone,
-      address: assessment.address
-    });
-    logStep("Step 2", `\u2705 Presence scan complete`);
-    const operationalScore = presenceScannerService.calculateOperationalScore({
-      collectsEmails: assessment.collectsEmails,
-      lastEmailCampaign: assessment.lastEmailCampaign,
-      emailListSize: assessment.emailListSize,
-      sendsSMS: assessment.sendsSMS,
-      lastSMSCampaign: assessment.lastSMSCampaign,
-      lastSocialPost: assessment.lastSocialPost,
-      socialPostFrequency: assessment.socialPostFrequency,
-      socialContentCreator: assessment.socialContentCreator,
-      lastReviewResponse: assessment.lastReviewResponse,
-      reviewResponseRate: assessment.reviewResponseRate,
-      lastNewReview: assessment.lastNewReview,
-      inquiryResponseTime: assessment.inquiryResponseTime,
-      hasUnifiedInbox: assessment.hasUnifiedInbox,
-      missedInquiries: assessment.missedInquiries,
-      hasLiveChat: assessment.hasLiveChat,
-      lastChatConversation: assessment.lastChatConversation,
-      chatResponseTime: assessment.chatResponseTime,
-      lastListingUpdate: assessment.lastListingUpdate,
-      listingConsistency: assessment.listingConsistency,
-      lastGBPPost: assessment.lastGBPPost,
-      lastGBPPhoto: assessment.lastGBPPhoto,
-      lastWebsiteUpdate: assessment.lastWebsiteUpdate,
-      hasBlog: assessment.hasBlog,
-      usesCRM: assessment.usesCRM,
-      crmPlatform: assessment.crmPlatform,
-      lastCRMFollowup: assessment.lastCRMFollowup,
-      hasAutomation: assessment.hasAutomation
-    });
-    const scanScore = presenceScan.overall.digitalIQScore;
-    const combinedDigitalIQ = presenceScannerService.calculateCombinedDigitalIQ(scanScore, operationalScore);
-    console.log(`\u{1F4CA} Final Digital IQ: Scan=${scanScore}/70 + Operational=${operationalScore}/70 = ${combinedDigitalIQ}/140`);
-    const enhancedPresenceScan = {
-      ...presenceScan,
-      overall: {
-        ...presenceScan.overall,
-        digitalIQScore: combinedDigitalIQ,
-        // Combined 0-140 score for backward compatibility
-        scanScore,
-        // Scan-only 0-70
-        operationalScore
-        // Operational-only 0-70
-      }
-    };
-    const googleData = await googleService.searchBusiness(
-      assessment.businessName,
-      assessment.address
-    );
-    const presenceScore = {
-      overallScore: combinedDigitalIQ,
-      // Use combined score (scan + operational)
-      scanScore,
-      // Scan-only score (0-70)
-      operationalScore,
-      // Operational-only score (0-70)
-      scores: {
-        visibility: Math.round(
-          enhancedPresenceScan.directories.score * 0.7 + enhancedPresenceScan.website.score * 0.3
-        ),
-        reviews: enhancedPresenceScan.reviews.score,
-        completeness: enhancedPresenceScan.overall.completeness,
-        engagement: enhancedPresenceScan.socialMedia.score
-      },
-      insights: enhancedPresenceScan.recommendations
-    };
-    logStep("Step 4", "Generating product recommendations...");
-    const productRecommendations = await productRecommendationService.generateRecommendations(assessmentId, {
-      visibility: presenceScore.scores.visibility,
-      reviews: presenceScore.scores.reviews,
-      completeness: presenceScore.scores.completeness,
-      engagement: presenceScore.scores.engagement,
-      overall: presenceScore.overallScore
-    });
-    logStep("Step 4", `\u2705 Generated ${productRecommendations.length} product recommendations`);
-    await productRecommendationService.saveRecommendations(
-      assessmentId,
-      productRecommendations
-    );
-    logStep("Step 5", "\u{1F916} Starting AI analysis (this may take 30-60 seconds)...");
-    let analysisResult = null;
-    let aiAnalysisFailed = false;
-    try {
-      analysisResult = await aiService.analyzeBusinessPresence({
-        businessInfo: {
-          name: assessment.businessName,
-          industry: assessment.industry,
-          location: assessment.location,
-          website: assessment.website || void 0
-        },
-        googleData,
-        presenceScore
-      });
-      logStep("Step 5", `\u2705 AI analysis complete - summary length: ${analysisResult.summary?.length || 0} chars`);
-    } catch (aiError) {
-      aiAnalysisFailed = true;
-      logStep("Step 5", `\u26A0\uFE0F AI analysis failed - using fallback data. Error: ${aiError}`);
-      console.error("[Assessment Pipeline] AI analysis error (using fallback):", aiError);
-      analysisResult = {
-        summary: `Based on our automated scan of ${assessment.businessName}, we identified ${productRecommendations.length} opportunities to improve your digital presence. Your Digital IQ Score is ${combinedDigitalIQ}/140.`,
-        recommendations: productRecommendations.map((rec) => ({
-          category: rec.category || "digital_presence",
-          title: rec.title || rec.productName || "Recommendation",
-          description: rec.description || rec.reason || "Improve your digital presence",
-          priority: rec.priority || "medium",
-          estimatedImpact: rec.impact || "moderate",
-          estimatedEffort: "medium",
-          productId: rec.productId?.toLowerCase?.() || rec.productId,
-          // Normalize to lowercase
-          bundleId: rec.bundleId?.toLowerCase?.() || rec.bundleId
-        })),
-        strengths: [],
-        weaknesses: enhancedPresenceScan.recommendations || []
-        // Keep as string array
       };
-    }
-    const aiRecs = Array.isArray(analysisResult?.recommendations) ? analysisResult.recommendations : [];
-    const scanRecs = Array.isArray(enhancedPresenceScan?.recommendations) ? enhancedPresenceScan.recommendations : [];
-    const allRecs = [
-      ...aiRecs,
-      ...scanRecs.map((rec) => ({
-        category: "digital_presence",
-        title: rec,
-        description: rec,
-        priority: "medium",
-        estimatedImpact: "moderate",
-        estimatedEffort: "low"
-      }))
-    ];
-    const seenProductIds = /* @__PURE__ */ new Set();
-    const seenTitles = /* @__PURE__ */ new Set();
-    const dedupedRecommendations = allRecs.filter((rec) => {
-      if (rec.productId) {
-        const normalizedId = rec.productId.toLowerCase();
-        if (seenProductIds.has(normalizedId)) return false;
-        seenProductIds.add(normalizedId);
-        rec.productId = normalizedId;
-      }
-      if (rec.bundleId) {
-        rec.bundleId = rec.bundleId.toLowerCase();
-      }
-      const titleKey = rec.title?.toLowerCase();
-      if (titleKey) {
-        if (seenTitles.has(titleKey)) return false;
-        seenTitles.add(titleKey);
-      }
-      return true;
-    });
-    const enhancedAnalysis = {
-      ...analysisResult,
-      aiAnalysisFailed,
-      // Flag to indicate if we used fallback
-      digitalScore: combinedDigitalIQ,
-      // Use combined score (scan + operational)
-      scanScore,
-      // Scan-only score (0-70)
-      operationalScore,
-      // Operational-only score (0-70)
-      presenceScan: enhancedPresenceScan,
-      // Include complete scan results with proper scores
-      scanDate: enhancedPresenceScan.overall.lastScanned,
-      recommendations: dedupedRecommendations
-    };
-    await storage2.updateAssessment(assessmentId, {
-      googleBusinessData: googleData,
-      analysisResults: enhancedAnalysis,
-      digitalScore: combinedDigitalIQ,
-      // Use combined score (scan + operational)
-      status: "completed"
-    });
-    for (const rec of enhancedAnalysis.recommendations) {
-      await storage2.createRecommendation({
-        assessmentId,
-        category: rec.category,
-        title: rec.title,
-        description: rec.description,
-        priority: rec.priority,
-        estimatedImpact: rec.estimatedImpact || "moderate",
-        estimatedEffort: rec.estimatedEffort || "low",
-        productId: rec.productId || null,
-        // String product ID from catalog (inbox, send, etc.)
-        bundleId: rec.bundleId || null
-        // String bundle ID if applicable (commverse, localblue)
+      const googleData = await googleService.searchBusiness(
+        assessment.businessName,
+        assessment.address
+      );
+      const presenceScore = {
+        overallScore: combinedDigitalIQ,
+        // Use combined score (scan + operational)
+        scanScore,
+        // Scan-only score (0-70)
+        operationalScore,
+        // Operational-only score (0-70)
+        scores: {
+          visibility: Math.round(
+            enhancedPresenceScan.directories.score * 0.7 + enhancedPresenceScan.website.score * 0.3
+          ),
+          reviews: enhancedPresenceScan.reviews.score,
+          completeness: enhancedPresenceScan.overall.completeness,
+          engagement: enhancedPresenceScan.socialMedia.score
+        },
+        insights: enhancedPresenceScan.recommendations
+      };
+      logStep("Step 4", "Generating product recommendations...");
+      const productRecommendations = await productRecommendationService.generateRecommendations(assessmentId, {
+        visibility: presenceScore.scores.visibility,
+        reviews: presenceScore.scores.reviews,
+        completeness: presenceScore.scores.completeness,
+        engagement: presenceScore.scores.engagement,
+        overall: presenceScore.overallScore
       });
-    }
-    const highPriorityCount = enhancedAnalysis.recommendations.filter(
-      (r) => r.priority === "high"
-    ).length;
-    const prescriptionSummary = `
+      logStep("Step 4", `\u2705 Generated ${productRecommendations.length} product recommendations`);
+      await productRecommendationService.saveRecommendations(
+        assessmentId,
+        productRecommendations
+      );
+      logStep("Step 5", "\u{1F916} Starting AI analysis (this may take 30-60 seconds)...");
+      let analysisResult = null;
+      let aiAnalysisFailed = false;
+      try {
+        analysisResult = await aiService.analyzeBusinessPresence({
+          businessInfo: {
+            name: assessment.businessName,
+            industry: assessment.industry,
+            location: assessment.location,
+            website: assessment.website || void 0
+          },
+          googleData,
+          presenceScore
+        });
+        logStep("Step 5", `\u2705 AI analysis complete - summary length: ${analysisResult.summary?.length || 0} chars`);
+      } catch (aiError) {
+        aiAnalysisFailed = true;
+        logStep("Step 5", `\u26A0\uFE0F AI analysis failed - using fallback data. Error: ${aiError}`);
+        console.error("[Assessment Pipeline] AI analysis error (using fallback):", aiError);
+        analysisResult = {
+          summary: `Based on our automated scan of ${assessment.businessName}, we identified ${productRecommendations.length} opportunities to improve your digital presence. Your Digital IQ Score is ${combinedDigitalIQ}/140.`,
+          recommendations: productRecommendations.map((rec) => ({
+            category: rec.category || "digital_presence",
+            title: rec.title || rec.productName || "Recommendation",
+            description: rec.description || rec.reason || "Improve your digital presence",
+            priority: rec.priority || "medium",
+            estimatedImpact: rec.impact || "moderate",
+            estimatedEffort: "medium",
+            productId: rec.productId?.toLowerCase?.() || rec.productId,
+            // Normalize to lowercase
+            bundleId: rec.bundleId?.toLowerCase?.() || rec.bundleId
+          })),
+          strengths: [],
+          weaknesses: enhancedPresenceScan.recommendations || []
+          // Keep as string array
+        };
+      }
+      const aiRecs = Array.isArray(analysisResult?.recommendations) ? analysisResult.recommendations : [];
+      const scanRecs = Array.isArray(enhancedPresenceScan?.recommendations) ? enhancedPresenceScan.recommendations : [];
+      const allRecs = [
+        ...aiRecs,
+        ...scanRecs.map((rec) => ({
+          category: "digital_presence",
+          title: rec,
+          description: rec,
+          priority: "medium",
+          estimatedImpact: "moderate",
+          estimatedEffort: "low"
+        }))
+      ];
+      const seenProductIds = /* @__PURE__ */ new Set();
+      const seenTitles = /* @__PURE__ */ new Set();
+      const dedupedRecommendations = allRecs.filter((rec) => {
+        if (rec.productId) {
+          const normalizedId = rec.productId.toLowerCase();
+          if (seenProductIds.has(normalizedId)) return false;
+          seenProductIds.add(normalizedId);
+          rec.productId = normalizedId;
+        }
+        if (rec.bundleId) {
+          rec.bundleId = rec.bundleId.toLowerCase();
+        }
+        const titleKey = rec.title?.toLowerCase();
+        if (titleKey) {
+          if (seenTitles.has(titleKey)) return false;
+          seenTitles.add(titleKey);
+        }
+        return true;
+      });
+      const enhancedAnalysis = {
+        ...analysisResult,
+        aiAnalysisFailed,
+        // Flag to indicate if we used fallback
+        digitalScore: combinedDigitalIQ,
+        // Use combined score (scan + operational)
+        scanScore,
+        // Scan-only score (0-70)
+        operationalScore,
+        // Operational-only score (0-70)
+        presenceScan: enhancedPresenceScan,
+        // Include complete scan results with proper scores
+        scanDate: enhancedPresenceScan.overall.lastScanned,
+        recommendations: dedupedRecommendations
+      };
+      await storage2.updateAssessment(assessmentId, {
+        googleBusinessData: googleData,
+        analysisResults: enhancedAnalysis,
+        digitalScore: combinedDigitalIQ,
+        // Use combined score (scan + operational)
+        status: "completed"
+      });
+      for (const rec of enhancedAnalysis.recommendations) {
+        await storage2.createRecommendation({
+          assessmentId,
+          category: rec.category,
+          title: rec.title,
+          description: rec.description,
+          priority: rec.priority,
+          estimatedImpact: rec.estimatedImpact || "moderate",
+          estimatedEffort: rec.estimatedEffort || "low",
+          productId: rec.productId || null,
+          // String product ID from catalog (promote, respond, etc.)
+          bundleId: rec.bundleId || null
+          // String bundle ID if applicable (compass, anchor)
+        });
+      }
+      const highPriorityCount = enhancedAnalysis.recommendations.filter(
+        (r) => r.priority === "high"
+      ).length;
+      const prescriptionSummary = `
 Based on your Digital IQ Score of ${combinedDigitalIQ}/140 (Scan: ${scanScore}/70, Operations: ${operationalScore}/70), we've identified ${enhancedAnalysis.recommendations.length} key opportunities to improve your online presence.
 
 ${enhancedAnalysis.summary}
 
 Focus on the ${highPriorityCount} high-priority recommendations first for maximum impact.
 `.trim();
-    try {
-      const accessToken = randomBytes(32).toString("hex");
-      const client2 = await storage2.getClientByEmail(assessment.email);
-      if (!client2) {
-        console.error(`[Assessment] Cannot create prescription - client not found for ${assessment.email}`);
-      } else {
-        const [prescription] = await db.insert(prescriptions).values({
-          clientId: client2.id,
-          assessmentId,
-          title: `Digital Growth Prescription for ${assessment.businessName}`,
-          summary: prescriptionSummary,
-          accessToken,
-          status: "delivered",
-          implementationProgress: 0,
-          deliveredAt: /* @__PURE__ */ new Date()
-        }).returning();
-        console.log(`[Assessment] Created prescription ID ${prescription.id} with token ${accessToken.substring(0, 8)}... for assessment ${assessmentId}`);
-      }
-    } catch (prescriptionError) {
-      console.error("[Assessment] Error creating prescription:", prescriptionError);
-    }
-    logStep("Step 7", `\u{1F4E7} Sending Digital IQ Report email to ${assessment.email}...`);
-    try {
-      let fastCheckData = void 0;
       try {
-        const fastCheckResult = await db.query.scansBlueResults?.findFirst({
-          where: (results, { eq: eq36, and: and23 }) => and23(
-            eq36(results.assessmentId, assessmentId),
-            eq36(results.type, "fast_check"),
-            eq36(results.status, "completed")
-          )
-        });
-        if (fastCheckResult) {
-          fastCheckData = {
-            overallScore: fastCheckResult.overallScore || 0,
-            performanceScore: fastCheckResult.performanceScore || 0,
-            mobileScore: fastCheckResult.mobileScore || 0,
-            sslPresent: fastCheckResult.sslPresent || false,
-            sslValid: fastCheckResult.sslValid || false,
-            criticalIssues: fastCheckResult.criticalIssues ? JSON.parse(fastCheckResult.criticalIssues) : void 0
-          };
-          logStep("Step 7", `\u2705 Fast Check data found for email (score: ${fastCheckData.overallScore})`);
+        const accessToken = randomBytes2(32).toString("hex");
+        const client = await storage2.getClientByEmail(assessment.email);
+        if (!client) {
+          console.error(`[Assessment] Cannot create prescription - client not found for ${assessment.email}`);
+        } else {
+          const [prescription] = await db.insert(prescriptions).values({
+            clientId: client.id,
+            assessmentId,
+            title: `Digital Growth Prescription for ${assessment.businessName}`,
+            summary: prescriptionSummary,
+            accessToken,
+            status: "delivered",
+            implementationProgress: 0,
+            deliveredAt: /* @__PURE__ */ new Date()
+          }).returning();
+          console.log(`[Assessment] Created prescription ID ${prescription.id} with token ${accessToken.substring(0, 8)}... for assessment ${assessmentId}`);
         }
-      } catch (fastCheckError) {
-        logStep("Step 7", `\u26A0\uFE0F Could not retrieve Fast Check data: ${fastCheckError}`);
+      } catch (prescriptionError) {
+        console.error("[Assessment] Error creating prescription:", prescriptionError);
       }
-      const emailSent = await emailService.sendAssessmentReport(
-        assessment.email,
-        {
-          businessName: assessment.businessName,
-          digitalScore: presenceScan.overall.digitalIQScore,
-          summary: `Your Digital IQ Score: ${presenceScan.overall.digitalIQScore}/140. ${enhancedAnalysis.summary}`,
-          recommendations: enhancedAnalysis.recommendations,
-          assessmentId,
-          fastCheck: fastCheckData
+      logStep("Step 7", `\u{1F4E7} Sending Digital IQ Report email to ${assessment.email}...`);
+      try {
+        let fastCheckData = void 0;
+        try {
+          const [fastCheckResult] = await db.select().from(scansBlueResults).where(and28(
+            eq40(scansBlueResults.assessmentId, assessmentId),
+            eq40(scansBlueResults.type, "fast_check"),
+            eq40(scansBlueResults.status, "completed")
+          )).limit(1);
+          if (fastCheckResult) {
+            fastCheckData = {
+              overallScore: fastCheckResult.overallScore || 0,
+              performanceScore: fastCheckResult.performanceScore || 0,
+              mobileScore: fastCheckResult.mobileScore || 0,
+              sslPresent: fastCheckResult.sslPresent || false,
+              sslValid: fastCheckResult.sslValid || false,
+              criticalIssues: fastCheckResult.criticalIssues ? JSON.parse(fastCheckResult.criticalIssues) : void 0
+            };
+            logStep("Step 7", `\u2705 Fast Check data found for email (score: ${fastCheckData.overallScore})`);
+          }
+        } catch (fastCheckError) {
+          logStep("Step 7", `\u26A0\uFE0F Could not retrieve Fast Check data: ${fastCheckError}`);
         }
-      );
-      await storage2.updateAssessment(assessmentId, { emailSent });
-      logStep("Step 7", `\u2705 Digital IQ Report email ${emailSent ? "SENT" : "FAILED"}`);
-    } catch (emailError) {
-      logStep("Step 7", `\u274C Digital IQ Report email ERROR: ${emailError}`);
-    }
-    logStep("Step 8", `\u{1F4E7} Sending Coach Blue email to ${assessment.email}...`);
-    try {
-      const coachSent = await emailService.sendThankYouIntroduction(assessment.email, {
-        businessName: assessment.businessName,
-        assessmentId
-      });
-      logStep("Step 8", `\u2705 Coach Blue email ${coachSent ? "SENT" : "FAILED"}`);
-    } catch (coachEmailError) {
-      logStep("Step 8", `\u274C Coach Blue email ERROR: ${coachEmailError}`);
-    }
-    logStep("COMPLETE", `\u2705 Assessment ${assessmentId} fully processed!`);
+        const emailSent = await emailService2.sendAssessmentReport(
+          assessment.email,
+          {
+            businessName: assessment.businessName,
+            digitalScore: presenceScan.overall.digitalIQScore,
+            summary: `Your Digital IQ Score: ${presenceScan.overall.digitalIQScore}/140. ${enhancedAnalysis.summary}`,
+            recommendations: enhancedAnalysis.recommendations,
+            assessmentId,
+            fastCheck: fastCheckData
+          }
+        );
+        await storage2.updateAssessment(assessmentId, { emailSent });
+        logStep("Step 7", `\u2705 Digital IQ Report email ${emailSent ? "SENT" : "FAILED"}`);
+      } catch (emailError) {
+        logStep("Step 7", `\u274C Digital IQ Report email ERROR: ${emailError}`);
+      }
+      logStep("Step 8", `\u{1F4E7} Sending Coach Blue email to ${assessment.email}...`);
+      try {
+        const coachSent = await emailService2.sendThankYouIntroduction(assessment.email, {
+          businessName: assessment.businessName,
+          assessmentId
+        });
+        logStep("Step 8", `\u2705 Coach Blue email ${coachSent ? "SENT" : "FAILED"}`);
+      } catch (coachEmailError) {
+        logStep("Step 8", `\u274C Coach Blue email ERROR: ${coachEmailError}`);
+      }
+      const latestAssessment = await storage2.getAssessment(assessmentId);
+      if (latestAssessment?.email) {
+        setTimeout(async () => {
+          try {
+            console.log(`[Assessment Cadence] Sending 5-minute delayed Coach Blue intro to ${latestAssessment.email}`);
+            const result = await emailService2.sendThankYouIntroduction(latestAssessment.email, {
+              businessName: latestAssessment.businessName,
+              assessmentId
+            });
+            console.log(`[Assessment Cadence] Coach Blue intro ${result ? "SENT" : "FAILED"}`);
+          } catch (err) {
+            console.error(`[Assessment Cadence] Coach Blue intro error (non-blocking):`, err);
+          }
+        }, 5 * 60 * 1e3);
+      }
+      completed = true;
+      logStep("COMPLETE", `\u2705 Assessment ${assessmentId} fully processed!`);
+    })()]);
   } catch (error) {
     const elapsed = ((Date.now() - startTime) / 1e3).toFixed(1);
     console.error(`[Assessment Pipeline] [${elapsed}s] \u274C FATAL ERROR processing assessment ${assessmentId}:`, error);
@@ -23698,16 +30320,16 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
       if (assessment && assessment.email) {
         console.log(`[Assessment Pipeline] Attempting fallback emails to ${assessment.email}...`);
         try {
-          reportSent = await emailService.sendAssessmentReport(
+          reportSent = await emailService2.sendAssessmentReport(
             assessment.email,
             {
               businessName: assessment.businessName,
               digitalScore: assessment.digitalScore || 50,
               summary: `We've completed your Digital IQ Assessment for ${assessment.businessName}. Due to high demand, some advanced analysis features are still processing. You'll receive a follow-up with additional insights shortly.`,
               recommendations: [
-                { category: "Email Marketing", title: "Build Your Email List", description: "Start collecting customer emails to build relationships.", priority: "high", productId: "send" },
-                { category: "Reputation", title: "Monitor Reviews", description: "Respond to customer reviews to build trust.", priority: "medium", productId: "reputation" },
-                { category: "Content", title: "Create Regular Content", description: "Post consistently on social media.", priority: "medium", productId: "content" }
+                { category: "Email Marketing", title: "Build Your Email List", description: "Start collecting customer emails to build relationships.", priority: "high", productId: "promote" },
+                { category: "Reputation", title: "Monitor Reviews", description: "Respond to customer reviews to build trust.", priority: "medium", productId: "elevate" },
+                { category: "Content", title: "Create Regular Content", description: "Post consistently on social media.", priority: "medium", productId: "post" }
               ],
               assessmentId
             }
@@ -23717,7 +30339,7 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
           console.error(`[Assessment Pipeline] Fallback report email threw:`, reportError);
         }
         try {
-          coachSent = await emailService.sendThankYouIntroduction(assessment.email, {
+          coachSent = await emailService2.sendThankYouIntroduction(assessment.email, {
             businessName: assessment.businessName,
             assessmentId
           });
@@ -23744,6 +30366,19 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
         console.error(`[Assessment Pipeline] Could not update status to failed:`, updateError);
       }
     }
+  } finally {
+    if (!completed) {
+      try {
+        const currentAssessment = await storage2.getAssessment(assessmentId);
+        if (currentAssessment && (currentAssessment.status === "pending" || currentAssessment.status === "analyzing")) {
+          const errorMsg = Date.now() - startTime >= TIMEOUT_MS ? "Analysis timed out \u2014 please try again" : "Analysis failed \u2014 please try again";
+          await storage2.updateAssessment(assessmentId, { status: "failed" });
+          console.error(`[Assessment Pipeline] FINALLY: Force-set assessment ${assessmentId} to 'failed' \u2014 ${errorMsg}`);
+        }
+      } catch (finallyError) {
+        console.error(`[Assessment Pipeline] FINALLY: Could not update status:`, finallyError);
+      }
+    }
   }
 }
 async function registerInboxRoutes(app2) {
@@ -23757,12 +30392,12 @@ async function registerInboxRoutes(app2) {
       let crmContactId = null;
       if (validatedData.visitorEmail) {
         try {
-          const existing = await db.select().from(crmContacts).where(eq32(crmContacts.email, validatedData.visitorEmail)).limit(1);
+          const existing = await db.select().from(crmContacts).where(eq40(crmContacts.email, validatedData.visitorEmail)).limit(1);
           if (existing.length > 0) {
             crmContactId = existing[0].id;
             await db.insert(crmTimeline).values({
               contactId: existing[0].id,
-              eventType: "livechat",
+              eventType: "engage",
               title: "Started live chat session",
               description: `Visitor started a live chat session from ${validatedData.pageUrl || "unknown page"}`,
               metadata: {
@@ -23770,7 +30405,7 @@ async function registerInboxRoutes(app2) {
                 pageUrl: validatedData.pageUrl,
                 pageTitle: validatedData.pageTitle
               },
-              sourceApp: "livechat",
+              sourceApp: "engage",
               occurredAt: /* @__PURE__ */ new Date()
             });
           } else {
@@ -23782,7 +30417,7 @@ async function registerInboxRoutes(app2) {
               lastName,
               email: validatedData.visitorEmail,
               lifecycleStage: "lead",
-              leadSource: "livechat",
+              leadSource: "engage",
               customFields: {
                 livechatSessionId: session2.sessionId,
                 firstPageUrl: validatedData.pageUrl,
@@ -23796,7 +30431,7 @@ async function registerInboxRoutes(app2) {
               title: "Contact created from live chat",
               description: `New contact created when ${validatedData.visitorName} started a live chat session`,
               metadata: { sessionId: session2.sessionId },
-              sourceApp: "livechat",
+              sourceApp: "engage",
               occurredAt: /* @__PURE__ */ new Date()
             });
           }
@@ -23835,10 +30470,10 @@ async function registerInboxRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const conversations = await db.select().from(inboxConversations).where(eq32(inboxConversations.clientId, clientId)).orderBy(desc15(inboxConversations.updatedAt));
+        const conversations = await db.select().from(inboxConversations).where(eq40(inboxConversations.clientId, clientId)).orderBy(desc18(inboxConversations.updatedAt));
         const conversationsWithMessages = await Promise.all(
           conversations.map(async (conv) => {
-            const lastMessage = await db.select().from(inboxMessages2).where(eq32(inboxMessages2.conversationId, conv.id)).orderBy(desc15(inboxMessages2.createdAt)).limit(1);
+            const lastMessage = await db.select().from(inboxMessages2).where(eq40(inboxMessages2.conversationId, conv.id)).orderBy(desc18(inboxMessages2.createdAt)).limit(1);
             return {
               id: conv.id,
               contactName: conv.contactName,
@@ -23868,15 +30503,15 @@ async function registerInboxRoutes(app2) {
         const clientId = req.clientId;
         const conversationId = parseInt(req.params.conversationId);
         const [conversation] = await db.select().from(inboxConversations).where(
-          and20(
-            eq32(inboxConversations.id, conversationId),
-            eq32(inboxConversations.clientId, clientId)
+          and28(
+            eq40(inboxConversations.id, conversationId),
+            eq40(inboxConversations.clientId, clientId)
           )
         ).limit(1);
         if (!conversation) {
           return res.status(404).json({ error: "Conversation not found or access denied" });
         }
-        const messages = await db.select().from(inboxMessages2).where(eq32(inboxMessages2.conversationId, conversationId)).orderBy(inboxMessages2.createdAt);
+        const messages = await db.select().from(inboxMessages2).where(eq40(inboxMessages2.conversationId, conversationId)).orderBy(inboxMessages2.createdAt);
         res.json(messages);
       } catch (error) {
         console.error("Error fetching messages:", error);
@@ -23895,17 +30530,17 @@ async function registerInboxRoutes(app2) {
           return res.status(400).json({ error: "Missing required fields" });
         }
         const [conversation] = await db.select().from(inboxConversations).where(
-          and20(
-            eq32(inboxConversations.id, conversationId),
-            eq32(inboxConversations.clientId, clientId)
+          and28(
+            eq40(inboxConversations.id, conversationId),
+            eq40(inboxConversations.clientId, clientId)
           )
         ).limit(1);
         if (!conversation) {
           return res.status(404).json({ error: "Conversation not found or access denied" });
         }
-        const [client2] = await db.select({ companyName: clients.companyName, email: clients.email }).from(clients).where(eq32(clients.id, clientId)).limit(1);
-        const agentName = client2?.companyName || "Support";
-        const agentEmail = client2?.email || "support@businessblueprint.io";
+        const [client] = await db.select({ companyName: clients.companyName, email: clients.email }).from(clients).where(eq40(clients.id, clientId)).limit(1);
+        const agentName = client?.companyName || "Support";
+        const agentEmail = client?.email || "support@businessblueprint.io";
         let deliveryStatus = "sent";
         let errorMessage = null;
         if (conversation.primaryChannelType === "email") {
@@ -23924,6 +30559,71 @@ async function registerInboxRoutes(app2) {
               details: errorMessage
             });
           }
+        } else if (conversation.primaryChannelType === "sms") {
+          const fromPhone = process.env.TELNYX_FROM_NUMBER;
+          if (!fromPhone || !process.env.TELNYX_API_KEY) {
+            return res.status(503).json({
+              error: "SMS sending not configured. TELNYX_API_KEY and TELNYX_FROM_NUMBER required."
+            });
+          }
+          try {
+            await telnyxService.sendSms({
+              to: conversation.contactIdentifier,
+              from: fromPhone,
+              text: message
+            });
+            deliveryStatus = "delivered";
+          } catch (smsError) {
+            errorMessage = smsError.message;
+            console.error("SMS send error:", errorMessage);
+            return res.status(500).json({
+              error: "Failed to send SMS",
+              details: errorMessage
+            });
+          }
+        } else if (conversation.primaryChannelType === "facebook" || conversation.primaryChannelType === "instagram") {
+          try {
+            const channelId = conversation.primaryChannelId;
+            if (!channelId) {
+              return res.status(400).json({ error: "No channel connection for this conversation" });
+            }
+            const { inboxChannelConnections: inboxChannelConnections2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+            const [channel] = await db.select().from(inboxChannelConnections2).where(eq40(inboxChannelConnections2.id, channelId));
+            if (!channel || !channel.credentials) {
+              return res.status(400).json({ error: "Channel connection not found or missing credentials" });
+            }
+            const creds = channel.credentials;
+            const pageAccessToken = creds.pageAccessToken;
+            const pageId = creds.pageId;
+            if (!pageAccessToken) {
+              return res.status(400).json({ error: "Page access token missing \u2014 reconnect your Facebook page" });
+            }
+            const recipientId = conversation.contactIdentifier;
+            const metaResponse = await fetch(
+              `https://graph.facebook.com/v21.0/${pageId}/messages`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  recipient: { id: recipientId },
+                  message: { text: message },
+                  access_token: pageAccessToken
+                })
+              }
+            );
+            const metaData = await metaResponse.json();
+            if (metaData.error) {
+              throw new Error(metaData.error.message || "Meta API error");
+            }
+            deliveryStatus = "delivered";
+          } catch (metaError) {
+            errorMessage = metaError.message;
+            console.error(`${conversation.primaryChannelType} send error:`, errorMessage);
+            return res.status(500).json({
+              error: `Failed to send ${conversation.primaryChannelType} message`,
+              details: errorMessage
+            });
+          }
         }
         const [newMessage] = await db.insert(inboxMessages2).values({
           conversationId,
@@ -23937,7 +30637,29 @@ async function registerInboxRoutes(app2) {
           toName: conversation.contactName || void 0,
           status: deliveryStatus
         }).returning();
-        await db.update(inboxConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq32(inboxConversations.id, conversationId));
+        await db.update(inboxConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq40(inboxConversations.id, conversationId));
+        try {
+          const { logContactActivity: logContactActivity2 } = await Promise.resolve().then(() => (init_timeline_logger(), timeline_logger_exports));
+          const { crmContacts: crmContactsTable } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+          const [crmContact] = await db.select({ id: crmContactsTable.id }).from(crmContactsTable).where(and28(
+            eq40(crmContactsTable.clientId, clientId),
+            eq40(crmContactsTable.email, conversation.contactIdentifier)
+          )).limit(1);
+          if (crmContact) {
+            logContactActivity2({
+              clientId,
+              contactId: crmContact.id,
+              eventType: "message_sent",
+              title: `Reply sent via ${conversation.primaryChannelType}`,
+              description: message.substring(0, 200),
+              sourceApp: "respond",
+              sourceEntityType: "message",
+              sourceEntityId: String(newMessage.id),
+              metadata: { channel: conversation.primaryChannelType, messageId: newMessage.id, direction: "outbound" }
+            });
+          }
+        } catch {
+        }
         res.json(newMessage);
       } catch (error) {
         console.error("Error sending message:", error);
@@ -23995,21 +30717,19 @@ async function registerInboxRoutes(app2) {
         const parsedAssessmentId = parseInt(assessmentId);
         const assessment = await storage.getAssessment(parsedAssessmentId);
         if (assessment) {
-          const purchase = await db.query.scansBluePurchases?.findFirst({
-            where: (purchases, { eq: eq36 }) => eq36(purchases.assessmentId, parsedAssessmentId)
-          });
+          const [purchase] = await db.select().from(scansBluePurchases).where(eq40(scansBluePurchases.assessmentId, parsedAssessmentId)).limit(1);
           const customerEmail = purchase?.email || assessment.email;
           if (customerEmail) {
             console.log(`[Webhook] Sending full report email to ${customerEmail}`);
-            const emailService = new ResendEmailService();
-            await emailService.sendScansBlueFullReport(customerEmail, {
+            const emailService2 = new ResendEmailService();
+            await emailService2.sendScansBlueFullReport(customerEmail, {
               businessName: assessment.businessName,
               websiteUrl: url || assessment.website || "",
               assessmentId: parsedAssessmentId,
               reportData: reportData || summary || {}
             });
             if (purchase) {
-              await db.update(scansBluePurchases).set({ reportDeliveredAt: /* @__PURE__ */ new Date() }).where(eq32(scansBluePurchases.id, purchase.id));
+              await db.update(scansBluePurchases).set({ reportDeliveredAt: /* @__PURE__ */ new Date() }).where(eq40(scansBluePurchases.id, purchase.id));
             }
           }
         }
@@ -24161,8 +30881,9 @@ function serveStatic(app2) {
 init_db();
 init_schema();
 init_jwt();
+init_timeline_logger();
 import { Server } from "socket.io";
-import { eq as eq33, and as and21 } from "drizzle-orm";
+import { eq as eq41, and as and29 } from "drizzle-orm";
 function setupWebSocket(server) {
   const io = new Server(server, {
     cors: {
@@ -24231,7 +30952,7 @@ function setupWebSocket(server) {
             lastMessagePreview: data.message.substring(0, 100)
           }).returning();
           conversationId = conversation.id;
-          await db.update(livechatSessions).set({ conversationId }).where(eq33(livechatSessions.sessionId, data.sessionId));
+          await db.update(livechatSessions).set({ conversationId }).where(eq41(livechatSessions.sessionId, data.sessionId));
         }
         const [message] = await db.insert(inboxMessages2).values({
           conversationId,
@@ -24249,9 +30970,9 @@ function setupWebSocket(server) {
         await db.update(inboxConversations).set({
           lastMessageAt: /* @__PURE__ */ new Date(),
           lastMessagePreview: data.message.substring(0, 100),
-          unreadCount: db.$count(inboxMessages2, eq33(inboxMessages2.conversationId, conversationId)),
+          unreadCount: db.$count(inboxMessages2, eq41(inboxMessages2.conversationId, conversationId)),
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq33(inboxConversations.id, conversationId));
+        }).where(eq41(inboxConversations.id, conversationId));
         io.to(`conversation:${conversationId}`).emit("message:new", {
           ...message,
           conversationId
@@ -24273,7 +30994,7 @@ function setupWebSocket(server) {
     });
     socket.on("agent:message", async (data) => {
       try {
-        const [conversation] = await db.select().from(inboxConversations).where(eq33(inboxConversations.id, data.conversationId)).limit(1);
+        const [conversation] = await db.select().from(inboxConversations).where(eq41(inboxConversations.id, data.conversationId)).limit(1);
         if (!conversation) {
           socket.emit("message:error", { error: "Conversation not found" });
           return;
@@ -24296,7 +31017,7 @@ function setupWebSocket(server) {
           lastMessageAt: /* @__PURE__ */ new Date(),
           lastMessagePreview: data.message.substring(0, 100),
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq33(inboxConversations.id, data.conversationId));
+        }).where(eq41(inboxConversations.id, data.conversationId));
         io.to(`conversation:${data.conversationId}`).emit("message:new", {
           ...message,
           conversationId: data.conversationId
@@ -24313,6 +31034,27 @@ function setupWebSocket(server) {
           messageId: message.id,
           conversationId: data.conversationId
         });
+        if (conversation.primaryChannelType === "livechat") {
+          const { crmContacts: crmContacts2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+          const [contact] = await db.select({ id: crmContacts2.id }).from(crmContacts2).where(and29(
+            eq41(crmContacts2.clientId, data.clientId),
+            eq41(crmContacts2.email, conversation.contactIdentifier)
+          )).limit(1);
+          if (contact) {
+            logContactActivity({
+              clientId: data.clientId,
+              contactId: contact.id,
+              eventType: "chat_message",
+              eventSubtype: "outbound",
+              title: "You replied in live chat",
+              description: data.message.substring(0, 200),
+              sourceApp: "engage",
+              sourceEntityType: "message",
+              sourceEntityId: String(message.id),
+              metadata: { conversationId: data.conversationId, direction: "outbound" }
+            });
+          }
+        }
       } catch (error) {
         console.error("Error sending agent message:", error);
         socket.emit("message:error", { error: "Failed to send message" });
@@ -24335,12 +31077,12 @@ function setupWebSocket(server) {
           status: "read",
           readAt: /* @__PURE__ */ new Date()
         }).where(
-          and21(
-            eq33(inboxMessages2.conversationId, data.conversationId),
-            eq33(inboxMessages2.direction, "inbound")
+          and29(
+            eq41(inboxMessages2.conversationId, data.conversationId),
+            eq41(inboxMessages2.direction, "inbound")
           )
         );
-        await db.update(inboxConversations).set({ unreadCount: 0 }).where(eq33(inboxConversations.id, data.conversationId));
+        await db.update(inboxConversations).set({ unreadCount: 0 }).where(eq41(inboxConversations.id, data.conversationId));
         io.to(`conversation:${data.conversationId}`).emit("messages:read", {
           conversationId: data.conversationId
         });
@@ -24353,9 +31095,9 @@ function setupWebSocket(server) {
       socket.join(`session:${sessionId}`);
       console.log(`Customer ${socket.id} joined session: ${sessionId}`);
       try {
-        const [session2] = await db.select().from(livechatSessions).where(eq33(livechatSessions.sessionId, sessionId)).limit(1);
+        const [session2] = await db.select().from(livechatSessions).where(eq41(livechatSessions.sessionId, sessionId)).limit(1);
         if (session2 && session2.conversationId) {
-          const messages = await db.select().from(inboxMessages2).where(eq33(inboxMessages2.conversationId, session2.conversationId)).orderBy(inboxMessages2.createdAt);
+          const messages = await db.select().from(inboxMessages2).where(eq41(inboxMessages2.conversationId, session2.conversationId)).orderBy(inboxMessages2.createdAt);
           socket.emit("message:history", { messages });
         }
       } catch (error) {
@@ -24370,168 +31112,78 @@ function setupWebSocket(server) {
   return io;
 }
 
-// server/routes/stripe-webhook.ts
+// server/routes/payment-webhook.ts
+import { Router as Router22 } from "express";
 init_db();
 init_schema();
-import { eq as eq34 } from "drizzle-orm";
-var scansBlueService2 = new ScansBlueService();
-async function handleStripeWebhook(req, res) {
-  const sig = req.headers["stripe-signature"];
-  if (!sig) {
-    console.error("[Payment Webhook] No signature provided");
-    return res.status(400).json({ error: "No signature" });
-  }
-  let event;
+import { eq as eq42 } from "drizzle-orm";
+var router15 = Router22();
+router15.post("/api/webhooks/swipesblue", async (req, res) => {
   try {
-    event = paymentService.verifyWebhook(req.body, sig);
-  } catch (err) {
-    console.error("[Payment Webhook] Signature verification failed:", err.message);
-    return res.status(400).json({ error: "Webhook signature verification failed" });
-  }
-  console.log(`[Payment Webhook] Received event: ${event.type}`);
-  try {
-    switch (event.type) {
-      case "checkout.session.completed": {
-        const session2 = event.data.object;
-        await handleCheckoutCompleted(session2);
+    const rawBody = typeof req.body === "string" ? req.body : JSON.stringify(req.body);
+    const signature = req.headers["x-swipesblue-signature"];
+    if (!SwipesBlueService.verifyWebhookSignature(rawBody, signature)) {
+      console.error("[SwipesBlue Webhook] Invalid signature");
+      return res.status(401).json({ error: "Invalid signature" });
+    }
+    const event = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    const { type, data } = event;
+    console.log(`[SwipesBlue Webhook] Received event: ${type}`);
+    switch (type) {
+      case "payment.success": {
+        if (data.subscriptionId) {
+          await db.update(subscriptions).set({
+            status: "active",
+            updatedAt: /* @__PURE__ */ new Date()
+          }).where(eq42(subscriptions.swipesblueSubscriptionId, data.subscriptionId));
+        }
+        console.log(`[SwipesBlue Webhook] Payment succeeded for subscription ${data.subscriptionId}`);
         break;
       }
-      case "payment_intent.succeeded": {
-        const paymentIntent = event.data.object;
-        console.log(`[Payment Webhook] Payment succeeded: ${paymentIntent.id}`);
+      case "payment.failed": {
+        if (data.subscriptionId) {
+          await db.update(subscriptions).set({
+            status: "past_due",
+            updatedAt: /* @__PURE__ */ new Date()
+          }).where(eq42(subscriptions.swipesblueSubscriptionId, data.subscriptionId));
+        }
+        console.log(`[SwipesBlue Webhook] Payment failed for subscription ${data.subscriptionId}`);
         break;
       }
-      case "payment_intent.payment_failed": {
-        const paymentIntent = event.data.object;
-        console.log(`[Payment Webhook] Payment failed: ${paymentIntent.id}`);
-        await handlePaymentFailed(paymentIntent);
+      case "subscription.cancelled": {
+        if (data.subscriptionId) {
+          await db.update(subscriptions).set({
+            status: "cancelled",
+            updatedAt: /* @__PURE__ */ new Date()
+          }).where(eq42(subscriptions.swipesblueSubscriptionId, data.subscriptionId));
+        }
+        console.log(`[SwipesBlue Webhook] Subscription cancelled: ${data.subscriptionId}`);
+        break;
+      }
+      case "subscription.renewed": {
+        if (data.subscriptionId) {
+          await db.update(subscriptions).set({
+            status: "active",
+            updatedAt: /* @__PURE__ */ new Date()
+          }).where(eq42(subscriptions.swipesblueSubscriptionId, data.subscriptionId));
+        }
+        console.log(`[SwipesBlue Webhook] Subscription renewed: ${data.subscriptionId}`);
         break;
       }
       default:
-        console.log(`[Payment Webhook] Unhandled event type: ${event.type}`);
+        console.log(`[SwipesBlue Webhook] Unhandled event type: ${type}`);
     }
     res.json({ received: true });
   } catch (error) {
-    console.error("[Payment Webhook] Error processing event:", error);
+    console.error("[SwipesBlue Webhook] Error:", error.message);
     res.status(500).json({ error: "Webhook processing failed" });
   }
-}
-async function handleCheckoutCompleted(session2) {
-  const { metadata } = session2;
-  if (!metadata?.type || metadata.type !== "scansblue_full_report") {
-    console.log("[Payment Webhook] Not a ScansBlue purchase, skipping");
-    return;
-  }
-  const assessmentId = metadata.assessmentId ? parseInt(metadata.assessmentId) : null;
-  const websiteUrl = metadata.websiteUrl || "";
-  console.log(`[Payment Webhook] Processing ScansBlue Full Report purchase for assessment ${assessmentId}`);
-  if (!assessmentId) {
-    console.error("[Payment Webhook] No assessmentId in metadata");
-    return;
-  }
-  try {
-    const existingPurchase = await db.query.scansBluePurchases?.findFirst({
-      where: (purchases, { eq: eq36 }) => eq36(purchases.transactionId, session2.id)
-    });
-    if (existingPurchase) {
-      console.log(`[Payment Webhook] Purchase already recorded for session ${session2.id}`);
-      return;
-    }
-    await db.insert(scansBluePurchases).values({
-      assessmentId,
-      paymentProvider: "stripe",
-      transactionId: session2.id,
-      paymentIntentId: typeof session2.payment_intent === "string" ? session2.payment_intent : session2.payment_intent?.id || null,
-      amount: session2.amount_total || 1e3,
-      status: "paid",
-      email: session2.customer_email || null,
-      purchasedAt: /* @__PURE__ */ new Date()
-    });
-    console.log(`[Payment Webhook] Purchase recorded for assessment ${assessmentId}`);
-    const assessment = await db.query.assessments.findFirst({
-      where: (assessments3, { eq: eq36 }) => eq36(assessments3.id, assessmentId)
-    });
-    if (!assessment) {
-      console.error(`[Payment Webhook] Assessment ${assessmentId} not found`);
-      return;
-    }
-    const targetUrl = websiteUrl || assessment.website;
-    const customerEmail = session2.customer_email || assessment.email;
-    if (!targetUrl) {
-      console.error("[Payment Webhook] No website URL available for full report");
-      return;
-    }
-    await db.insert(scansBlueResults).values({
-      assessmentId,
-      url: targetUrl,
-      type: "full_report",
-      status: "processing",
-      requestedAt: /* @__PURE__ */ new Date()
-    });
-    console.log(`[Payment Webhook] Requesting full report for ${targetUrl}`);
-    const reportResult = await scansBlueService2.requestFullReport(
-      targetUrl,
-      customerEmail || void 0,
-      assessmentId
-    );
-    if (reportResult) {
-      console.log(`[Payment Webhook] Full report queued: ${reportResult.reportId}`);
-      setTimeout(async () => {
-        try {
-          await checkAndDeliverReport(assessmentId, customerEmail || void 0, targetUrl);
-        } catch (error) {
-          console.error("[Payment Webhook] Error in delayed report check:", error);
-        }
-      }, 3 * 60 * 1e3);
-    }
-  } catch (error) {
-    console.error("[Payment Webhook] Error handling checkout completed:", error);
-    throw error;
-  }
-}
-async function handlePaymentFailed(paymentIntent) {
-  console.log(`[Payment Webhook] Payment failed for ${paymentIntent.id}`);
-  try {
-    const existingPurchase = await db.query.scansBluePurchases?.findFirst({
-      where: (purchases, { eq: eq36 }) => eq36(purchases.paymentIntentId, paymentIntent.id)
-    });
-    if (existingPurchase) {
-      await db.update(scansBluePurchases).set({ status: "failed" }).where(eq34(scansBluePurchases.id, existingPurchase.id));
-      console.log(`[Payment Webhook] Updated purchase ${existingPurchase.id} to failed status`);
-    }
-  } catch (error) {
-    console.error("[Payment Webhook] Error updating failed payment:", error);
-  }
-}
-async function checkAndDeliverReport(assessmentId, email, websiteUrl) {
-  try {
-    const result = await db.query.scansBlueResults?.findFirst({
-      where: (results, { eq: eq36, and: and23 }) => and23(
-        eq36(results.assessmentId, assessmentId),
-        eq36(results.type, "full_report")
-      )
-    });
-    if (result && result.status === "completed" && email) {
-      console.log(`[Payment Webhook] Sending full report email to ${email}`);
-      const purchase = await db.query.scansBluePurchases?.findFirst({
-        where: (purchases, { eq: eq36 }) => eq36(purchases.assessmentId, assessmentId)
-      });
-      if (purchase) {
-        await db.update(scansBluePurchases).set({ reportDeliveredAt: /* @__PURE__ */ new Date() }).where(eq34(scansBluePurchases.id, purchase.id));
-      }
-    }
-  } catch (error) {
-    console.error("[Payment Webhook] Error checking/delivering report:", error);
-  }
-}
+});
 
 // server/index.ts
+init_analyticsSync();
 var app = express2();
-app.post(
-  "/api/stripe/webhook",
-  express2.raw({ type: "application/json" }),
-  handleStripeWebhook
-);
+app.use(router15);
 app.use(express2.json());
 app.use(express2.urlencoded({ extended: false }));
 app.use("/attached_assets", express2.static("attached_assets"));
@@ -24568,6 +31220,12 @@ app.use((req, res, next) => {
     startScheduler2();
   } catch (error) {
     console.error("[Scheduler] Failed to start scheduler:", error);
+  }
+  try {
+    const { startStallDetector: startStallDetector2 } = await Promise.resolve().then(() => (init_stall_detector(), stall_detector_exports));
+    startStallDetector2();
+  } catch (error) {
+    console.error("[StallDetector] Failed to start stall detector:", error);
   }
   app.use((err, _req, res, _next) => {
     const status = err.status || err.statusCode || 500;

@@ -4085,6 +4085,8 @@ export const amplifyAudiences = pgTable("amplify_audiences", {
   audienceType: text("audience_type"),
   externalAudienceId: text("external_audience_id"),
   sizeEstimate: integer("size_estimate"),
+  sourceType: varchar("source_type", { length: 50 }),
+  crmFilter: jsonb("crm_filter"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 

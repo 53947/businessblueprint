@@ -750,6 +750,22 @@ router.get('/:clientId/analytics', requireContentAccess, async (req: Request, re
   }
 });
 
+/**
+ * POST /api/post/:clientId/analytics/sync
+ * Trigger analytics sync for all published posts
+ */
+router.post('/:clientId/analytics/sync', requireContentAccess, async (req: Request, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const { analyticsSyncService } = await import('../services/analyticsSync');
+    const result = await analyticsSyncService.syncClientAnalytics(clientId);
+    res.json({ success: true, ...result });
+  } catch (error) {
+    console.error('[Content] Error syncing analytics:', error);
+    res.status(500).json({ message: 'Failed to sync analytics' });
+  }
+});
+
 // ===== AI ASSISTANCE ROUTES =====
 
 /**

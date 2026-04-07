@@ -140,6 +140,11 @@ class AnalyticsSyncService {
           }
 
           result.synced++;
+
+          // Log significant engagement milestones
+          if (analytics.likes && analytics.likes >= 10 && analytics.likes % 10 === 0) {
+            console.log(`[AnalyticsSync] Post ${post.id} reached ${analytics.likes} likes on ${platform}`);
+          }
         } catch (error: any) {
           result.errors.push({
             postId: post.id,

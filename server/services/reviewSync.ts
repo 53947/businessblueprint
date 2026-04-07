@@ -7,7 +7,7 @@
 
 import { db } from "../db";
 import { businessReviews, businessListings } from "@shared/schema";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, sql } from "drizzle-orm";
 import { googlePlacesService } from "./googlePlaces";
 import { yelpApiService } from "./yelpApi";
 
@@ -56,6 +56,45 @@ class ReviewSyncService {
           });
           if (upserted === "created") result.created++;
           else result.updated++;
+
+          // Attempt to match reviewer to CRM contact and log timeline event
+          try {
+            const { crmContacts } = await import('@shared/schema');
+            const { logContactActivity } = await import('./timeline-logger');
+
+            const nameParts = (review.author || '').trim().split(/\s+/);
+            const firstName = nameParts[0] || '';
+            const lastName = nameParts.slice(1).join(' ') || '';
+
+            if (firstName) {
+              const contacts = await db
+                .select()
+                .from(crmContacts)
+                .where(
+                  and(
+                    eq(crmContacts.clientId, clientId),
+                    sql`LOWER(${crmContacts.firstName}) = LOWER(${firstName})`,
+                    lastName ? sql`LOWER(${crmContacts.lastName}) = LOWER(${lastName})` : sql`1=1`,
+                  )
+                );
+
+              if (contacts.length === 1) {
+                await logContactActivity({
+                  clientId,
+                  contactId: contacts[0].id,
+                  eventType: 'review_received',
+                  title: `Left a ${review.rating}-star review on google`,
+                  description: (review.text || '').substring(0, 200) || undefined,
+                  sourceApp: 'elevate',
+                  sourceEntityType: 'review',
+                  sourceEntityId: platformReviewId,
+                  metadata: { rating: review.rating, platform: 'google' },
+                });
+              }
+            }
+          } catch (matchErr) {
+            console.error('[ReviewSync] Timeline logging error (non-blocking):', matchErr);
+          }
         }
       }
     } catch (error: any) {
@@ -80,6 +119,45 @@ class ReviewSyncService {
           });
           if (upserted === "created") result.created++;
           else result.updated++;
+
+          // Attempt to match reviewer to CRM contact and log timeline event
+          try {
+            const { crmContacts } = await import('@shared/schema');
+            const { logContactActivity } = await import('./timeline-logger');
+
+            const nameParts = (review.author || '').trim().split(/\s+/);
+            const firstName = nameParts[0] || '';
+            const lastName = nameParts.slice(1).join(' ') || '';
+
+            if (firstName) {
+              const contacts = await db
+                .select()
+                .from(crmContacts)
+                .where(
+                  and(
+                    eq(crmContacts.clientId, clientId),
+                    sql`LOWER(${crmContacts.firstName}) = LOWER(${firstName})`,
+                    lastName ? sql`LOWER(${crmContacts.lastName}) = LOWER(${lastName})` : sql`1=1`,
+                  )
+                );
+
+              if (contacts.length === 1) {
+                await logContactActivity({
+                  clientId,
+                  contactId: contacts[0].id,
+                  eventType: 'review_received',
+                  title: `Left a ${review.rating}-star review on yelp`,
+                  description: (review.text || '').substring(0, 200) || undefined,
+                  sourceApp: 'elevate',
+                  sourceEntityType: 'review',
+                  sourceEntityId: platformReviewId,
+                  metadata: { rating: review.rating, platform: 'yelp' },
+                });
+              }
+            }
+          } catch (matchErr) {
+            console.error('[ReviewSync] Timeline logging error (non-blocking):', matchErr);
+          }
         }
       }
     } catch (error: any) {
@@ -203,9 +281,10 @@ class ReviewSyncService {
   }
 
   /**
-   * Save a response to a review
+   * Save a response to a review, push to Google if possible, and log to CRM timeline
    */
   async respondToReview(reviewId: number, response: string, isAI: boolean = false) {
+    // 1. Save to database
     await db
       .update(businessReviews)
       .set({
@@ -216,8 +295,114 @@ class ReviewSyncService {
       })
       .where(eq(businessReviews.id, reviewId));
 
-    // TODO: logContactActivity — log review_responded event when review can be matched to a CRM contact
-    // Requires: clientId, contactId (matched by reviewer name/email), review.platform, review.rating
+    // 2. Get the full review record for API push and timeline logging
+    const [review] = await db
+      .select()
+      .from(businessReviews)
+      .where(eq(businessReviews.id, reviewId))
+      .limit(1);
+
+    if (!review) return;
+
+    // 3. Attempt Google API push (only for Google reviews)
+    if (review.platform === 'google' && review.platformReviewId) {
+      try {
+        const { socialMediaAccounts } = await import('@shared/schema');
+        const [googleAccount] = await db
+          .select()
+          .from(socialMediaAccounts)
+          .where(
+            and(
+              eq(socialMediaAccounts.clientId, review.clientId),
+              eq(socialMediaAccounts.platform, 'google_business'),
+              eq(socialMediaAccounts.isActive, true),
+            )
+          )
+          .limit(1);
+
+        if (googleAccount?.accessToken && googleAccount?.platformAccountId) {
+          const result = await googlePlacesService.replyToReview(
+            googleAccount.platformAccountId.split('/')[0] || '',
+            googleAccount.platformAccountId,
+            review.platformReviewId.replace('google_', ''),
+            response,
+            googleAccount.accessToken,
+          );
+
+          if (!result.success) {
+            console.warn(`[ReviewSync] Google API push failed for review ${reviewId}: ${result.error}. Response saved locally.`);
+          }
+        } else {
+          console.log(`[ReviewSync] No Google Business credentials for client ${review.clientId}. Response saved locally only.`);
+        }
+      } catch (apiError) {
+        console.error('[ReviewSync] Google API push error (response saved locally):', apiError);
+      }
+    }
+    // Note: Yelp does not support automated review replies via API.
+
+    // 4. Contact matching — attempt to find a CRM contact matching this reviewer
+    try {
+      const { crmContacts } = await import('@shared/schema');
+      const { logContactActivity } = await import('./timeline-logger');
+
+      const nameParts = review.reviewerName.trim().split(/\s+/);
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      let matchedContact = null;
+
+      if (firstName && lastName) {
+        const [contact] = await db
+          .select()
+          .from(crmContacts)
+          .where(
+            and(
+              eq(crmContacts.clientId, review.clientId),
+              sql`LOWER(${crmContacts.firstName}) = LOWER(${firstName})`,
+              sql`LOWER(${crmContacts.lastName}) = LOWER(${lastName})`,
+            )
+          )
+          .limit(1);
+        matchedContact = contact;
+      }
+
+      if (!matchedContact && firstName && firstName.length > 2) {
+        const allMatches = await db
+          .select()
+          .from(crmContacts)
+          .where(
+            and(
+              eq(crmContacts.clientId, review.clientId),
+              sql`LOWER(${crmContacts.firstName}) = LOWER(${firstName})`,
+            )
+          );
+        if (allMatches.length === 1) {
+          matchedContact = allMatches[0];
+        }
+      }
+
+      if (matchedContact) {
+        await logContactActivity({
+          clientId: review.clientId,
+          contactId: matchedContact.id,
+          eventType: 'review_responded',
+          title: `You responded to their ${review.rating}-star review on ${review.platform}`,
+          description: response.substring(0, 200),
+          sourceApp: 'elevate',
+          sourceEntityType: 'review',
+          sourceEntityId: String(review.id),
+          metadata: {
+            rating: review.rating,
+            platform: review.platform,
+            reviewId: review.id,
+            isAIGenerated: isAI,
+          },
+        });
+      }
+    } catch (matchError) {
+      console.error('[ReviewSync] Contact matching error (non-blocking):', matchError);
+    }
   }
 }
 

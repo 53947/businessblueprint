@@ -318,16 +318,81 @@ function EmptyState({ message, action, onAction }: { message: string; action?: s
   );
 }
 
-function ComingSoonCard({ title, description }: { title: string; description: string }) {
+function CrmAudienceCard() {
+  const queryClient = useQueryClient();
+  const [crmAudienceName, setCrmAudienceName] = useState('');
+  const [crmFilter, setCrmFilter] = useState('all');
+  const [crmPlatform, setCrmPlatform] = useState('');
+
   return (
     <Card>
-      <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-gray-100">
-          <AlertTriangle className="w-8 h-8 text-gray-400" />
+      <CardHeader>
+        <CardTitle className="text-lg">Build Audience from Your Customers</CardTitle>
+        <CardDescription>
+          Use your / connect contact list to create targeted ad audiences
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <div>
+            <Label>Audience Name</Label>
+            <Input
+              placeholder="e.g., All Customers, VIP Leads"
+              value={crmAudienceName}
+              onChange={(e) => setCrmAudienceName(e.target.value)}
+            />
+          </div>
+          <div>
+            <Label>Contact Filter</Label>
+            <Select value={crmFilter} onValueChange={setCrmFilter}>
+              <SelectTrigger><SelectValue placeholder="All contacts" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Contacts</SelectItem>
+                <SelectItem value="customer">Customers Only</SelectItem>
+                <SelectItem value="lead">Leads Only</SelectItem>
+                <SelectItem value="subscriber">Subscribers</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label>Target Platform</Label>
+            <Select value={crmPlatform} onValueChange={setCrmPlatform}>
+              <SelectTrigger><SelectValue placeholder="Select platform" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="meta">Meta (Facebook/Instagram)</SelectItem>
+                <SelectItem value="google">Google Ads</SelectItem>
+                <SelectItem value="reddit">Reddit</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button
+            onClick={async () => {
+              try {
+                const filterMap: Record<string, any> = {
+                  all: {},
+                  customer: { lifecycleStage: 'customer' },
+                  lead: { lifecycleStage: 'lead' },
+                  subscriber: { lifecycleStage: 'subscriber' },
+                };
+                const res = await apiRequest('POST', '/api/amplify/audiences/from-crm', {
+                  audienceName: crmAudienceName,
+                  platform: crmPlatform,
+                  filter: filterMap[crmFilter] || {},
+                });
+                const data = await res.json();
+                queryClient.invalidateQueries({ queryKey: ['/api/amplify/audiences'] });
+                setCrmAudienceName('');
+              } catch {
+                // Error handled by apiRequest
+              }
+            }}
+            disabled={!crmAudienceName || !crmPlatform}
+            className="w-full"
+            style={{ backgroundColor: '#97ACCA' }}
+          >
+            Build Audience from / connect
+          </Button>
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
-        <p className="text-gray-500 text-sm mb-4 max-w-md">{description}</p>
-        <Badge variant="secondary" className="text-xs">Coming Soon</Badge>
       </CardContent>
     </Card>
   );
@@ -1512,6 +1577,8 @@ function RedditBaseTab() {
       {/* ── 4. AUDIENCES SUB-TAB ── */}
       {subTab === "audiences" && (
         <div className="space-y-4">
+          <CrmAudienceCard />
+
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Reddit Audiences</h3>
             <Button

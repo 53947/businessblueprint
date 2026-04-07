@@ -126,6 +126,50 @@ class GooglePlacesService {
   }
 
   /**
+   * Reply to a Google review via the My Business API.
+   * Requires the Google My Business API to be enabled and OAuth credentials with
+   * the 'https://www.googleapis.com/auth/business.manage' scope.
+   *
+   * NOTE: This requires the business owner to have connected their Google
+   * Business account via OAuth. If credentials are not available, the response
+   * is stored locally only and the owner is notified to connect their account.
+   */
+  async replyToReview(
+    accountId: string,
+    locationId: string,
+    reviewId: string,
+    replyText: string,
+    accessToken: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const url = `https://mybusiness.googleapis.com/v4/accounts/${accountId}/locations/${locationId}/reviews/${reviewId}/reply`;
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ comment: replyText }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('[GooglePlaces] Review reply failed:', response.status, errorData);
+        return {
+          success: false,
+          error: `Google API error ${response.status}: ${(errorData as any)?.error?.message || 'Unknown error'}`,
+        };
+      }
+
+      console.log(`[GooglePlaces] Successfully replied to review ${reviewId}`);
+      return { success: true };
+    } catch (error: any) {
+      console.error('[GooglePlaces] Review reply error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  /**
    * Get reviews for a specific place
    */
   async getReviews(placeId: string): Promise<GoogleReview[]> {

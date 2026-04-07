@@ -23,8 +23,9 @@ import {
   CalendarIcon,
   ImagePlus, 
   Send, 
-  Clock, 
-  Sparkles, 
+  Clock,
+  RefreshCw,
+  Sparkles,
   X,
   Image as ImageIcon,
   Video,
@@ -127,6 +128,12 @@ export default function ContentManagement() {
   // Fetch media
   const { data: mediaData, isLoading: mediaLoading } = useQuery<any>({
     queryKey: [`/api/post/${clientId}/media`],
+    enabled: !!clientId,
+  });
+
+  // Fetch analytics data
+  const { data: analyticsData } = useQuery<any>({
+    queryKey: [`/api/post/${clientId}/analytics`],
     enabled: !!clientId,
   });
 
@@ -1397,20 +1404,83 @@ export default function ContentManagement() {
                     </Card>
                   </div>
 
-                  {/* Performance Metrics Placeholder */}
+                  {/* Performance Metrics */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <Card>
-                      <CardHeader>
-                        <CardTitle>Post Performance</CardTitle>
-                        <CardDescription>Engagement metrics across platforms</CardDescription>
-                      </CardHeader>
-                      <CardContent className="h-[300px] flex items-center justify-center">
-                        <div className="text-center text-gray-500">
-                          <BarChart3 className="h-16 w-16 mx-auto mb-4 opacity-50" />
-                          <p className="text-sm">Engagement Analytics</p>
-                          <p className="text-xs mt-2">Likes, reach, and impressions from connected platforms will appear here once posts are published.</p>
-                          <Badge variant="secondary" className="text-xs mt-3">Coming Soon</Badge>
+                      <CardHeader className="flex flex-row items-center justify-between">
+                        <div>
+                          <CardTitle>Post Performance</CardTitle>
+                          <CardDescription>Engagement metrics across platforms</CardDescription>
                         </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={async () => {
+                            try {
+                              await apiRequest('POST', `/api/post/${clientId}/analytics/sync`);
+                              queryClient.invalidateQueries({ queryKey: [`/api/post/${clientId}/analytics`] });
+                              toast({ title: "Analytics synced", description: "Engagement data refreshed from connected platforms." });
+                            } catch {
+                              toast({ title: "Sync failed", description: "Could not refresh analytics.", variant: "destructive" });
+                            }
+                          }}
+                        >
+                          <RefreshCw className="w-4 h-4 mr-1" /> Sync
+                        </Button>
+                      </CardHeader>
+                      <CardContent>
+                        {analyticsData?.analytics && analyticsData.analytics.length > 0 ? (
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                                <div className="text-2xl font-bold text-[#FF44CC]">
+                                  {analyticsData.analytics.reduce((sum: number, a: any) => sum + (a.likes || 0), 0).toLocaleString()}
+                                </div>
+                                <div className="text-xs text-gray-500 mt-1">Likes</div>
+                              </div>
+                              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                                <div className="text-2xl font-bold text-[#FF44CC]">
+                                  {analyticsData.analytics.reduce((sum: number, a: any) => sum + (a.comments || 0), 0).toLocaleString()}
+                                </div>
+                                <div className="text-xs text-gray-500 mt-1">Comments</div>
+                              </div>
+                              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                                <div className="text-2xl font-bold text-[#FF44CC]">
+                                  {analyticsData.analytics.reduce((sum: number, a: any) => sum + (a.shares || 0), 0).toLocaleString()}
+                                </div>
+                                <div className="text-xs text-gray-500 mt-1">Shares</div>
+                              </div>
+                              <div className="text-center p-3 bg-gray-50 rounded-lg">
+                                <div className="text-2xl font-bold text-[#FF44CC]">
+                                  {analyticsData.analytics.reduce((sum: number, a: any) => sum + (a.impressions || 0), 0).toLocaleString()}
+                                </div>
+                                <div className="text-xs text-gray-500 mt-1">Impressions</div>
+                              </div>
+                            </div>
+                            <div className="space-y-2 mt-4">
+                              {analyticsData.analytics.slice(0, 10).map((a: any) => (
+                                <div key={a.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                                  <div className="flex-1 min-w-0">
+                                    <span className="text-sm font-medium text-gray-900 truncate block">{a.platform}</span>
+                                  </div>
+                                  <div className="flex gap-4 text-xs text-gray-500">
+                                    <span>{a.likes || 0} likes</span>
+                                    <span>{a.comments || 0} comments</span>
+                                    <span>{a.shares || 0} shares</span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="h-[300px] flex items-center justify-center">
+                            <div className="text-center text-gray-500">
+                              <BarChart3 className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                              <p className="text-sm">No engagement data yet</p>
+                              <p className="text-xs mt-2">Publish posts to connected platforms to see performance metrics here.</p>
+                            </div>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
 

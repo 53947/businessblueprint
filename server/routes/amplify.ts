@@ -1353,6 +1353,122 @@ router.post(
   }
 );
 
+/** POST /api/amplify/audiences/from-crm — create audience from CRM contacts */
+router.post("/api/amplify/audiences/from-crm", isAuthenticated, async (req: any, res) => {
+  try {
+    const { audienceName, platform, filter } = req.body;
+
+    if (!audienceName || !platform) {
+      return res.status(400).json({ success: false, message: "Audience name and platform are required" });
+    }
+
+    const clientId = req.session?.clientId;
+
+    const { crmContacts } = await import('@shared/schema');
+
+    // Build conditions array
+    const conditions: any[] = [eq(crmContacts.clientId, clientId)];
+    if (filter?.lifecycleStage) {
+      conditions.push(eq(crmContacts.lifecycleStage, filter.lifecycleStage));
+    }
+    if (filter?.leadSource) {
+      conditions.push(eq(crmContacts.leadSource, filter.leadSource));
+    }
+    if (filter?.status) {
+      conditions.push(eq(crmContacts.status, filter.status));
+    }
+
+    const contacts = await db
+      .select({ id: crmContacts.id, email: crmContacts.email, firstName: crmContacts.firstName, lastName: crmContacts.lastName })
+      .from(crmContacts)
+      .where(and(...conditions));
+
+    const contactEmails = contacts.filter(c => c.email).map(c => c.email);
+
+    const [audience] = await db
+      .insert(amplifyAudiences)
+      .values({
+        clientId,
+        platform,
+        audienceName,
+        audienceType: 'crm_segment',
+        sizeEstimate: contactEmails.length,
+        sourceType: 'crm_segment',
+        crmFilter: filter || {},
+      })
+      .returning();
+
+    // Log timeline events for contacts in the audience (cap at 500)
+    const { logContactActivity } = await import('../services/timeline-logger');
+    for (const contact of contacts.slice(0, 500)) {
+      await logContactActivity({
+        clientId,
+        contactId: contact.id,
+        eventType: 'ad_campaign_targeted',
+        title: `Added to ad audience: "${audienceName}" on ${platform}`,
+        sourceApp: 'amplify',
+        sourceEntityType: 'audience',
+        sourceEntityId: String(audience.id),
+        metadata: { audienceName, platform, audienceId: audience.id },
+      });
+    }
+
+    res.json({
+      success: true,
+      audience,
+      contactCount: contactEmails.length,
+      message: `Audience created with ${contactEmails.length} contacts from your CRM`,
+    });
+  } catch (error) {
+    console.error("[Amplify] CRM audience creation error:", error);
+    res.status(500).json({ success: false, message: "Failed to create CRM audience" });
+  }
+});
+
+/** POST /api/amplify/attribute — attribute a contact to an ad campaign */
+router.post("/api/amplify/attribute", isAuthenticated, async (req: any, res) => {
+  try {
+    const { contactId, campaignId, platform, utmSource, utmMedium, utmCampaign } = req.body;
+    const clientId = req.session?.clientId;
+
+    if (!contactId || !campaignId) {
+      return res.status(400).json({ success: false, message: "contactId and campaignId are required" });
+    }
+
+    const [campaign] = await db
+      .select()
+      .from(amplifyCampaigns)
+      .where(eq(amplifyCampaigns.id, campaignId))
+      .limit(1);
+
+    const campaignName = campaign?.name || `Campaign #${campaignId}`;
+
+    const { logContactActivity } = await import('../services/timeline-logger');
+    await logContactActivity({
+      clientId,
+      contactId,
+      eventType: 'ad_attribution',
+      title: `Arrived via ${platform || 'ad'} — ${campaignName}`,
+      sourceApp: 'amplify',
+      sourceEntityType: 'campaign',
+      sourceEntityId: String(campaignId),
+      metadata: {
+        campaignId,
+        campaignName,
+        platform: platform || campaign?.platform,
+        utmSource,
+        utmMedium,
+        utmCampaign,
+      },
+    });
+
+    res.json({ success: true, message: "Attribution logged" });
+  } catch (error) {
+    console.error("[Amplify] Attribution error:", error);
+    res.status(500).json({ success: false, message: "Failed to log attribution" });
+  }
+});
+
 // =============================================
 // BUDGET
 // =============================================
