@@ -478,6 +478,7 @@ var init_schema = __esm({
       website: text("website"),
       address: text("address"),
       businessCategory: text("business_category"),
+      dunsNumber: varchar("duns_number", { length: 9 }),
       enabledFeatures: text("enabled_features"),
       // CO,VI,SP,RE,SO,RI
       // System protection - prevents automated deletion
@@ -3139,6 +3140,17 @@ var init_schema = __esm({
       paymentMethods: text("payment_methods").array(),
       amenities: text("amenities").array(),
       serviceArea: jsonb("service_area"),
+      // D&B DUNS Number
+      dunsNumber: varchar("duns_number", { length: 9 }),
+      dunsVerified: boolean("duns_verified").default(false),
+      dunsVerifiedAt: timestamp("duns_verified_at"),
+      dunsMatchConfidence: integer("duns_match_confidence"),
+      // 1-10 confidence score from D&B
+      dunsCompanyName: varchar("duns_company_name", { length: 255 }),
+      // Name as registered with D&B
+      dunsAddress: text("duns_address"),
+      // Address as registered with D&B
+      dunsLastChecked: timestamp("duns_last_checked"),
       // PIN protection
       editPin: varchar("edit_pin", { length: 255 }),
       // bcrypt hash of 4-6 digit PIN
@@ -6467,7 +6479,7 @@ __export(jwt_exports, {
 });
 import jwt2 from "jsonwebtoken";
 import crypto13 from "crypto";
-import { eq as eq25 } from "drizzle-orm";
+import { eq as eq26 } from "drizzle-orm";
 var JWTService, jwtService;
 var init_jwt = __esm({
   "server/services/jwt.ts"() {
@@ -6563,13 +6575,13 @@ var init_jwt = __esm({
        * Revoke a token (mark as inactive in database)
        */
       async revokeToken(token) {
-        await db.update(dashboardAccess).set({ isActive: false }).where(eq25(dashboardAccess.accessToken, token));
+        await db.update(dashboardAccess).set({ isActive: false }).where(eq26(dashboardAccess.accessToken, token));
       }
       /**
        * Check if token is active in database
        */
       async isTokenActive(token) {
-        const [record] = await db.select().from(dashboardAccess).where(eq25(dashboardAccess.accessToken, token));
+        const [record] = await db.select().from(dashboardAccess).where(eq26(dashboardAccess.accessToken, token));
         return record?.isActive || false;
       }
       /**
@@ -6605,7 +6617,7 @@ __export(ai_settings_exports, {
   AISettingsService: () => AISettingsService,
   aiSettingsService: () => aiSettingsService
 });
-import { eq as eq27 } from "drizzle-orm";
+import { eq as eq28 } from "drizzle-orm";
 var AISettingsService, aiSettingsService;
 var init_ai_settings = __esm({
   "server/services/ai-settings.ts"() {
@@ -6615,7 +6627,7 @@ var init_ai_settings = __esm({
     AISettingsService = class {
       async getProvider(feature) {
         try {
-          const [setting] = await db.select().from(aiSettings).where(eq27(aiSettings.feature, feature)).limit(1);
+          const [setting] = await db.select().from(aiSettings).where(eq28(aiSettings.feature, feature)).limit(1);
           return setting?.provider || this.getDefaultProvider(feature);
         } catch (error) {
           console.error(`[AI Settings] Error fetching provider for ${feature}:`, error);
@@ -6633,13 +6645,13 @@ var init_ai_settings = __esm({
         }
       }
       async updateProvider(feature, provider, updatedBy) {
-        const [existing] = await db.select().from(aiSettings).where(eq27(aiSettings.feature, feature)).limit(1);
+        const [existing] = await db.select().from(aiSettings).where(eq28(aiSettings.feature, feature)).limit(1);
         if (existing) {
           await db.update(aiSettings).set({
             provider,
             lastUpdated: /* @__PURE__ */ new Date(),
             updatedBy
-          }).where(eq27(aiSettings.feature, feature));
+          }).where(eq28(aiSettings.feature, feature));
         } else {
           await db.insert(aiSettings).values({
             feature,
@@ -6671,7 +6683,7 @@ var init_ai_settings = __esm({
           { feature: "coach_blue", provider: "claude", isActive: true }
         ];
         for (const setting of defaults) {
-          const [existing] = await db.select().from(aiSettings).where(eq27(aiSettings.feature, setting.feature)).limit(1);
+          const [existing] = await db.select().from(aiSettings).where(eq28(aiSettings.feature, setting.feature)).limit(1);
           if (!existing) {
             await db.insert(aiSettings).values({
               feature: setting.feature,
@@ -6919,7 +6931,7 @@ __export(scheduler_exports, {
   startScheduler: () => startScheduler,
   stopScheduler: () => stopScheduler
 });
-import { eq as eq43, and as and30, lte as lte3, isNull as isNull2, or as or5 } from "drizzle-orm";
+import { eq as eq44, and as and30, lte as lte3, isNull as isNull2, or as or5 } from "drizzle-orm";
 import { sql as sql17 } from "drizzle-orm";
 function startScheduler() {
   if (isRunning) {
@@ -6953,7 +6965,7 @@ async function processScheduledPosts() {
   try {
     const duePosts = await db.select().from(contentPosts).where(
       and30(
-        eq43(contentPosts.status, "scheduled"),
+        eq44(contentPosts.status, "scheduled"),
         lte3(contentPosts.scheduledFor, sql17`NOW()`),
         or5(
           isNull2(contentPosts.lockedAt),
@@ -6983,8 +6995,8 @@ async function processPost(postId) {
       status: "publishing"
     }).where(
       and30(
-        eq43(contentPosts.id, postId),
-        eq43(contentPosts.status, "scheduled"),
+        eq44(contentPosts.id, postId),
+        eq44(contentPosts.status, "scheduled"),
         or5(
           isNull2(contentPosts.lockedAt),
           lte3(contentPosts.lockedAt, sql17`NOW() - INTERVAL '5 minutes'`)
@@ -7005,7 +7017,7 @@ async function processPost(postId) {
         lockedAt: null,
         lastError: null,
         updatedAt: sql17`NOW()`
-      }).where(eq43(contentPosts.id, postId));
+      }).where(eq44(contentPosts.id, postId));
       console.log(`[Scheduler] \u2705 Successfully published post ${postId}`);
     } catch (publishError) {
       const attempts = (post.attempts || 0) + 1;
@@ -7018,7 +7030,7 @@ async function processPost(postId) {
         lastError: publishError.message || "Unknown error",
         lockedAt: null,
         updatedAt: sql17`NOW()`
-      }).where(eq43(contentPosts.id, postId));
+      }).where(eq44(contentPosts.id, postId));
       if (maxReached) {
         console.error(`[Scheduler] \u274C Post ${postId} failed after ${attempts} attempts:`, publishError.message);
       } else {
@@ -7033,7 +7045,7 @@ async function processPost(postId) {
         lockedAt: null,
         lastError: error.message || "Scheduler error",
         updatedAt: sql17`NOW()`
-      }).where(eq43(contentPosts.id, postId));
+      }).where(eq44(contentPosts.id, postId));
     } catch (releaseError) {
       console.error(`[Scheduler] Failed to release lock for post ${postId}:`, releaseError);
     }
@@ -7079,7 +7091,7 @@ __export(stall_detector_exports, {
   startStallDetector: () => startStallDetector,
   stopStallDetector: () => stopStallDetector
 });
-import { eq as eq44, and as and31, sql as sql18, ne as ne2, desc as desc20 } from "drizzle-orm";
+import { eq as eq45, and as and31, sql as sql18, ne as ne2, desc as desc20 } from "drizzle-orm";
 import { Resend as Resend6 } from "resend";
 function startStallDetector() {
   console.log("[StallDetector] Starting \u2014 runs every 6 hours");
@@ -7097,7 +7109,7 @@ function stopStallDetector() {
 }
 async function checkForStalls() {
   console.log("[StallDetector] Checking for stalled users...");
-  const activeClients = await db.select({ id: clients.id, email: clients.email, companyName: clients.companyName }).from(clients).where(eq44(clients.setupPhase, "in_progress"));
+  const activeClients = await db.select({ id: clients.id, email: clients.email, companyName: clients.companyName }).from(clients).where(eq45(clients.setupPhase, "in_progress"));
   for (const client of activeClients) {
     try {
       await checkClientStall(client.id, client.email, client.companyName || "there");
@@ -7109,15 +7121,15 @@ async function checkForStalls() {
 }
 async function checkClientStall(clientId, email, businessName) {
   const lastCompletion = await db.select({ completedAt: setupTasks.completedAt }).from(setupTasks).where(and31(
-    eq44(setupTasks.clientId, clientId),
-    eq44(setupTasks.status, "completed"),
+    eq45(setupTasks.clientId, clientId),
+    eq45(setupTasks.status, "completed"),
     sql18`${setupTasks.completedAt} IS NOT NULL`
   )).orderBy(desc20(setupTasks.completedAt)).limit(1);
   let lastActivityDate;
   if (lastCompletion.length > 0 && lastCompletion[0].completedAt) {
     lastActivityDate = new Date(lastCompletion[0].completedAt);
   } else {
-    const firstTask = await db.select({ createdAt: setupTasks.createdAt }).from(setupTasks).where(eq44(setupTasks.clientId, clientId)).orderBy(setupTasks.createdAt).limit(1);
+    const firstTask = await db.select({ createdAt: setupTasks.createdAt }).from(setupTasks).where(eq45(setupTasks.clientId, clientId)).orderBy(setupTasks.createdAt).limit(1);
     if (firstTask.length === 0) return;
     lastActivityDate = new Date(firstTask[0].createdAt);
   }
@@ -7127,8 +7139,8 @@ async function checkClientStall(clientId, email, businessName) {
   for (const interval of STALL_INTERVALS) {
     if (daysSinceActivity >= interval.days) {
       const alreadySent = await db.select({ id: setupTaskEvents.id }).from(setupTaskEvents).where(and31(
-        eq44(setupTaskEvents.clientId, clientId),
-        eq44(setupTaskEvents.eventType, interval.eventType)
+        eq45(setupTaskEvents.clientId, clientId),
+        eq45(setupTaskEvents.eventType, interval.eventType)
       )).limit(1);
       if (alreadySent.length === 0) {
         await sendStallNudge(clientId, email, businessName, interval.days, interval.eventType);
@@ -7138,13 +7150,13 @@ async function checkClientStall(clientId, email, businessName) {
 }
 async function sendStallNudge(clientId, email, businessName, stallDays, eventType) {
   const nextStep = await db.select({ appId: setupTasks.appId, title: setupTasks.title }).from(setupTasks).where(and31(
-    eq44(setupTasks.clientId, clientId),
+    eq45(setupTasks.clientId, clientId),
     ne2(setupTasks.status, "completed"),
     ne2(setupTasks.status, "skipped"),
     sql18`${setupTasks.substepId} IS NULL`
   )).orderBy(setupTasks.cadenceOrder).limit(1);
   if (nextStep.length === 0) return;
-  const allTasks = await db.select().from(setupTasks).where(and31(eq44(setupTasks.clientId, clientId), sql18`${setupTasks.substepId} IS NULL`));
+  const allTasks = await db.select().from(setupTasks).where(and31(eq45(setupTasks.clientId, clientId), sql18`${setupTasks.substepId} IS NULL`));
   const completedCount = allTasks.filter((t) => t.status === "completed").length;
   const progressPercent = allTasks.length > 0 ? Math.round(completedCount / allTasks.length * 100) : 0;
   const subject = "Your setup in businessblueprint.io \u2014 pick up where you left off";
@@ -15609,6 +15621,338 @@ var AppleConnectAdapter = class extends BaseListingAdapter {
   }
 };
 
+// server/services/dnb.ts
+var DnBService = class {
+  baseUrl = "https://plus.dnb.com";
+  cachedToken = null;
+  tokenExpiry = 0;
+  get apiKey() {
+    return process.env.DNB_API_KEY || "";
+  }
+  get apiSecret() {
+    return process.env.DNB_API_SECRET || "";
+  }
+  get isConfigured() {
+    return !!(this.apiKey && this.apiSecret);
+  }
+  /**
+   * Get OAuth2 bearer token (cached until expiry)
+   */
+  async getToken() {
+    if (this.cachedToken && Date.now() < this.tokenExpiry) {
+      return this.cachedToken;
+    }
+    const credentials = Buffer.from(`${this.apiKey}:${this.apiSecret}`).toString("base64");
+    const response = await fetch(`${this.baseUrl}/v2/token`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Basic ${credentials}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ grant_type: "client_credentials" })
+    });
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("[D&B] Token request failed:", response.status, error);
+      throw new Error(`D&B authentication failed: ${response.status}`);
+    }
+    const data = await response.json();
+    this.cachedToken = data.access_token;
+    this.tokenExpiry = Date.now() + data.expiresIn * 1e3 - 6e4;
+    return this.cachedToken;
+  }
+  /**
+   * Look up a business by name and address to find its DUNS number.
+   * Returns the best match with confidence score.
+   */
+  async lookupDuns(businessName, address, city, state, postalCode, country = "US") {
+    if (!this.isConfigured) {
+      return {
+        found: false,
+        dunsNumber: null,
+        confidence: null,
+        companyName: null,
+        address: null,
+        city: null,
+        state: null,
+        postalCode: null,
+        phone: null,
+        operatingStatus: null,
+        employees: null,
+        error: "D&B API credentials not configured. Add DNB_API_KEY and DNB_API_SECRET to environment variables."
+      };
+    }
+    try {
+      const token = await this.getToken();
+      const response = await fetch(`${this.baseUrl}/v1/match/cleanseMatch`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: businessName,
+          countryISOAlpha2Code: country,
+          streetAddressLine1: address,
+          addressLocality: city,
+          addressRegion: state,
+          postalCode
+        })
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("[D&B] Match request failed:", response.status, errorText);
+        return {
+          found: false,
+          dunsNumber: null,
+          confidence: null,
+          companyName: null,
+          address: null,
+          city: null,
+          state: null,
+          postalCode: null,
+          phone: null,
+          operatingStatus: null,
+          employees: null,
+          error: `D&B API error: ${response.status}`
+        };
+      }
+      const data = await response.json();
+      if (!data.matchCandidates || data.matchCandidates.length === 0) {
+        return {
+          found: false,
+          dunsNumber: null,
+          confidence: null,
+          companyName: null,
+          address: null,
+          city: null,
+          state: null,
+          postalCode: null,
+          phone: null,
+          operatingStatus: null,
+          employees: null
+        };
+      }
+      const best = data.matchCandidates[0];
+      const org = best.organization;
+      const addr = org.primaryAddress;
+      return {
+        found: true,
+        dunsNumber: org.duns,
+        confidence: best.matchQualityInformation?.confidenceCode || null,
+        companyName: org.primaryName,
+        address: addr?.streetAddress?.line1 || null,
+        city: addr?.addressLocality?.name || null,
+        state: addr?.addressRegion?.abbreviatedName || addr?.addressRegion?.name || null,
+        postalCode: addr?.postalCode || null,
+        phone: org.telephone?.telephoneNumber || null,
+        operatingStatus: org.dunsControlStatus?.operatingStatus?.description || null,
+        employees: org.numberOfEmployees?.[0]?.value || null
+      };
+    } catch (error) {
+      console.error("[D&B] Lookup error:", error);
+      return {
+        found: false,
+        dunsNumber: null,
+        confidence: null,
+        companyName: null,
+        address: null,
+        city: null,
+        state: null,
+        postalCode: null,
+        phone: null,
+        operatingStatus: null,
+        employees: null,
+        error: error.message
+      };
+    }
+  }
+  /**
+   * Get detailed company profile by DUNS number.
+   */
+  async getCompanyProfile(dunsNumber) {
+    if (!this.isConfigured) {
+      return {
+        dunsNumber,
+        companyName: "",
+        tradeName: null,
+        address: null,
+        city: null,
+        state: null,
+        postalCode: null,
+        country: null,
+        phone: null,
+        yearStarted: null,
+        employees: null,
+        annualRevenue: null,
+        industryCode: null,
+        industryDescription: null,
+        operatingStatus: null,
+        error: "D&B API credentials not configured."
+      };
+    }
+    try {
+      const token = await this.getToken();
+      const response = await fetch(
+        `${this.baseUrl}/v1/data/duns/${dunsNumber}?blockIDs=companyinfo_L1_v1`,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("[D&B] Profile request failed:", response.status, errorText);
+        return {
+          dunsNumber,
+          companyName: "",
+          tradeName: null,
+          address: null,
+          city: null,
+          state: null,
+          postalCode: null,
+          country: null,
+          phone: null,
+          yearStarted: null,
+          employees: null,
+          annualRevenue: null,
+          industryCode: null,
+          industryDescription: null,
+          operatingStatus: null,
+          error: `D&B API error: ${response.status}`
+        };
+      }
+      const data = await response.json();
+      const org = data.organization || {};
+      const addr = org.primaryAddress || {};
+      return {
+        dunsNumber: org.duns || dunsNumber,
+        companyName: org.primaryName || "",
+        tradeName: org.tradeStyleNames?.[0]?.name || null,
+        address: addr.streetAddress?.line1 || null,
+        city: addr.addressLocality?.name || null,
+        state: addr.addressRegion?.abbreviatedName || null,
+        postalCode: addr.postalCode || null,
+        country: addr.addressCountry?.isoAlpha2Code || null,
+        phone: org.telephone?.[0]?.telephoneNumber || null,
+        yearStarted: org.startedDate ? parseInt(org.startedDate.substring(0, 4)) : null,
+        employees: org.numberOfEmployees?.[0]?.value || null,
+        annualRevenue: org.financials?.[0]?.yearlyRevenue?.[0]?.value || null,
+        industryCode: org.industryCodes?.[0]?.code || null,
+        industryDescription: org.industryCodes?.[0]?.description || null,
+        operatingStatus: org.dunsControlStatus?.operatingStatus?.description || null
+      };
+    } catch (error) {
+      console.error("[D&B] Profile error:", error);
+      return {
+        dunsNumber,
+        companyName: "",
+        tradeName: null,
+        address: null,
+        city: null,
+        state: null,
+        postalCode: null,
+        country: null,
+        phone: null,
+        yearStarted: null,
+        employees: null,
+        annualRevenue: null,
+        industryCode: null,
+        industryDescription: null,
+        operatingStatus: null,
+        error: error.message
+      };
+    }
+  }
+  /**
+   * Verify a DUNS number is valid and active.
+   */
+  async verifyDuns(dunsNumber) {
+    const profile = await this.getCompanyProfile(dunsNumber);
+    return {
+      valid: !profile.error && profile.operatingStatus === "Active",
+      status: profile.operatingStatus,
+      companyName: profile.companyName || null
+    };
+  }
+};
+var dnbService = new DnBService();
+
+// server/services/listing-distribution/adapters/dnbAdapter.ts
+var DnBAdapter = class extends BaseListingAdapter {
+  adapterKey = "dnb";
+  displayName = "Dun & Bradstreet";
+  isConfigured() {
+    return dnbService.isConfigured;
+  }
+  async submitListing(data) {
+    return {
+      success: false,
+      status: "skipped",
+      message: "D&B distribution requires a verified DUNS number. Use the DUNS lookup in / publish to verify."
+    };
+  }
+  async updateListing(externalId, data) {
+    const verification = await dnbService.verifyDuns(externalId);
+    if (!verification.valid) {
+      return {
+        success: false,
+        status: "error",
+        message: `DUNS number ${externalId} is not active: ${verification.status}`
+      };
+    }
+    return {
+      success: true,
+      externalId,
+      status: "active",
+      message: `DUNS number ${externalId} verified as active. D&B data cloud is propagating your business information to 80+ directories.`
+    };
+  }
+  async verifyListing(externalId) {
+    const verification = await dnbService.verifyDuns(externalId);
+    return {
+      success: verification.valid,
+      externalId,
+      status: verification.valid ? "active" : "error",
+      message: verification.valid ? `Active \u2014 registered as ${verification.companyName}` : `Status: ${verification.status || "Unknown"}`
+    };
+  }
+  getCapabilities() {
+    return {
+      supportsCreate: false,
+      // DUNS numbers are obtained through D&B, not created via API
+      supportsUpdate: true,
+      // Can verify/refresh status
+      supportsDelete: false,
+      supportsVerify: true,
+      supportsPhotos: false,
+      supportsHours: false,
+      supportsCategories: false,
+      supportsDescription: false,
+      supportsSocialLinks: false,
+      supportsServiceArea: false
+    };
+  }
+  getDownstreamDirectories() {
+    return [
+      "Apple Maps",
+      "Bing",
+      "Yahoo",
+      "MapQuest",
+      "HERE Technologies",
+      "Garmin",
+      "D&B Business Directory",
+      "Hoovers",
+      "Creditsafe",
+      "Kompass",
+      "Manta",
+      "DandB.com"
+    ];
+  }
+};
+
 // server/services/listing-distribution/listingAdapterFactory.ts
 var adapterInstances = /* @__PURE__ */ new Map();
 var adapterConstructors = {
@@ -15619,7 +15963,8 @@ var adapterConstructors = {
   gbp: () => new GbpListingAdapter(),
   facebook: () => new FacebookListingAdapter(),
   bing: () => new BingPlacesAdapter(),
-  apple: () => new AppleConnectAdapter()
+  apple: () => new AppleConnectAdapter(),
+  dnb: () => new DnBAdapter()
 };
 function getAdapter(key) {
   if (!adapterConstructors[key]) return null;
@@ -16408,8 +16753,149 @@ listingDistributionRouter.post("/admin/distribution/resync", async (req, res) =>
   }
 });
 
-// server/routes/chat.ts
+// server/routes/dnb.ts
 import { Router as Router18 } from "express";
+init_db();
+init_schema();
+import { eq as eq25 } from "drizzle-orm";
+var dnbRouter = Router18();
+dnbRouter.get("/api/dnb/status", async (req, res) => {
+  try {
+    const clientId = req.session?.clientId;
+    if (!clientId) return res.status(401).json({ message: "Not authenticated" });
+    const [profile] = await db.select().from(canonicalBusinessProfiles).where(eq25(canonicalBusinessProfiles.clientId, clientId)).limit(1);
+    res.json({
+      apiConfigured: dnbService.isConfigured,
+      dunsNumber: profile?.dunsNumber || null,
+      dunsVerified: profile?.dunsVerified || false,
+      dunsVerifiedAt: profile?.dunsVerifiedAt || null,
+      dunsCompanyName: profile?.dunsCompanyName || null,
+      dunsLastChecked: profile?.dunsLastChecked || null
+    });
+  } catch (error) {
+    console.error("[D&B] Status error:", error);
+    res.status(500).json({ message: "Failed to get D&B status" });
+  }
+});
+dnbRouter.post("/api/dnb/lookup", async (req, res) => {
+  try {
+    const clientId = req.session?.clientId;
+    if (!clientId) return res.status(401).json({ message: "Not authenticated" });
+    const { businessName, address, city, state, postalCode, country } = req.body;
+    if (!businessName) {
+      return res.status(400).json({ message: "Business name is required" });
+    }
+    const result = await dnbService.lookupDuns(
+      businessName,
+      address || "",
+      city || "",
+      state || "",
+      postalCode || "",
+      country || "US"
+    );
+    const [profile] = await db.select().from(canonicalBusinessProfiles).where(eq25(canonicalBusinessProfiles.clientId, clientId)).limit(1);
+    if (profile) {
+      await db.update(canonicalBusinessProfiles).set({
+        dunsLastChecked: /* @__PURE__ */ new Date(),
+        ...result.found ? {
+          dunsNumber: result.dunsNumber,
+          dunsMatchConfidence: result.confidence,
+          dunsCompanyName: result.companyName,
+          dunsAddress: [result.address, result.city, result.state, result.postalCode].filter(Boolean).join(", ")
+        } : {}
+      }).where(eq25(canonicalBusinessProfiles.clientId, clientId));
+    }
+    res.json(result);
+  } catch (error) {
+    console.error("[D&B] Lookup error:", error);
+    res.status(500).json({ message: "Failed to look up DUNS number" });
+  }
+});
+dnbRouter.post("/api/dnb/verify", async (req, res) => {
+  try {
+    const clientId = req.session?.clientId;
+    if (!clientId) return res.status(401).json({ message: "Not authenticated" });
+    const { dunsNumber } = req.body;
+    if (!dunsNumber || dunsNumber.length !== 9) {
+      return res.status(400).json({ message: "Valid 9-digit DUNS number is required" });
+    }
+    const verification = await dnbService.verifyDuns(dunsNumber);
+    if (!verification.valid) {
+      return res.json({
+        verified: false,
+        message: verification.status ? `DUNS number found but status is: ${verification.status}` : "DUNS number could not be verified"
+      });
+    }
+    await db.update(canonicalBusinessProfiles).set({
+      dunsNumber,
+      dunsVerified: true,
+      dunsVerifiedAt: /* @__PURE__ */ new Date(),
+      dunsCompanyName: verification.companyName,
+      dunsLastChecked: /* @__PURE__ */ new Date()
+    }).where(eq25(canonicalBusinessProfiles.clientId, clientId));
+    await db.update(clients).set({ dunsNumber }).where(eq25(clients.id, clientId));
+    res.json({
+      verified: true,
+      dunsNumber,
+      companyName: verification.companyName,
+      message: "DUNS number verified and saved"
+    });
+  } catch (error) {
+    console.error("[D&B] Verify error:", error);
+    res.status(500).json({ message: "Failed to verify DUNS number" });
+  }
+});
+dnbRouter.get("/api/dnb/profile/:dunsNumber", async (req, res) => {
+  try {
+    const { dunsNumber } = req.params;
+    const profile = await dnbService.getCompanyProfile(dunsNumber);
+    res.json(profile);
+  } catch (error) {
+    console.error("[D&B] Profile error:", error);
+    res.status(500).json({ message: "Failed to get company profile" });
+  }
+});
+dnbRouter.post("/api/dnb/manual", async (req, res) => {
+  try {
+    const clientId = req.session?.clientId;
+    if (!clientId) return res.status(401).json({ message: "Not authenticated" });
+    const { dunsNumber } = req.body;
+    if (!dunsNumber || !/^\d{9}$/.test(dunsNumber)) {
+      return res.status(400).json({ message: "DUNS number must be exactly 9 digits" });
+    }
+    if (dnbService.isConfigured) {
+      const verification = await dnbService.verifyDuns(dunsNumber);
+      if (verification.valid) {
+        await db.update(canonicalBusinessProfiles).set({
+          dunsNumber,
+          dunsVerified: true,
+          dunsVerifiedAt: /* @__PURE__ */ new Date(),
+          dunsCompanyName: verification.companyName,
+          dunsLastChecked: /* @__PURE__ */ new Date()
+        }).where(eq25(canonicalBusinessProfiles.clientId, clientId));
+        await db.update(clients).set({ dunsNumber }).where(eq25(clients.id, clientId));
+        return res.json({ verified: true, dunsNumber, companyName: verification.companyName });
+      }
+    }
+    await db.update(canonicalBusinessProfiles).set({
+      dunsNumber,
+      dunsVerified: false,
+      dunsLastChecked: /* @__PURE__ */ new Date()
+    }).where(eq25(canonicalBusinessProfiles.clientId, clientId));
+    await db.update(clients).set({ dunsNumber }).where(eq25(clients.id, clientId));
+    res.json({
+      verified: false,
+      dunsNumber,
+      message: dnbService.isConfigured ? "DUNS number saved but could not be verified with D&B" : "DUNS number saved. Verification unavailable (D&B API not configured)."
+    });
+  } catch (error) {
+    console.error("[D&B] Manual entry error:", error);
+    res.status(500).json({ message: "Failed to save DUNS number" });
+  }
+});
+
+// server/routes/chat.ts
+import { Router as Router19 } from "express";
 
 // server/middleware/auth.ts
 init_jwt();
@@ -16450,10 +16936,10 @@ async function requireAuth(req, res, next) {
 // server/routes/chat.ts
 init_db();
 init_schema();
-import { eq as eq26, and as and19, desc as desc12, sql as sql10 } from "drizzle-orm";
+import { eq as eq27, and as and19, desc as desc12, sql as sql10 } from "drizzle-orm";
 import { z as z7 } from "zod";
 import { nanoid as nanoid2 } from "nanoid";
-var router12 = Router18();
+var router12 = Router19();
 var widgetCors = (req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -16469,11 +16955,11 @@ router12.get("/widget/settings/:clientId", widgetCors, async (req, res) => {
     if (isNaN(clientId) || clientId <= 0) {
       return res.status(400).json({ error: "Invalid client ID" });
     }
-    const [client] = await db.select({ id: clients.id }).from(clients).where(eq26(clients.id, clientId)).limit(1);
+    const [client] = await db.select({ id: clients.id }).from(clients).where(eq27(clients.id, clientId)).limit(1);
     if (!client) {
       return res.status(404).json({ error: "Client not found" });
     }
-    const [settings] = await db.select().from(chatWidgetSettings).where(eq26(chatWidgetSettings.clientId, clientId)).limit(1);
+    const [settings] = await db.select().from(chatWidgetSettings).where(eq27(chatWidgetSettings.clientId, clientId)).limit(1);
     if (!settings) {
       return res.json({
         clientId,
@@ -16525,12 +17011,12 @@ var createSessionSchema = z7.object({
 router12.post("/widget/sessions", widgetCors, async (req, res) => {
   try {
     const data = createSessionSchema.parse(req.body);
-    const [client] = await db.select({ id: clients.id }).from(clients).where(eq26(clients.id, data.clientId)).limit(1);
+    const [client] = await db.select({ id: clients.id }).from(clients).where(eq27(clients.id, data.clientId)).limit(1);
     if (!client) {
       return res.status(404).json({ error: "Client not found" });
     }
     const sessionId = data.sessionId || `sess_${nanoid2(16)}`;
-    const [existingSession] = await db.select().from(livechatSessions).where(eq26(livechatSessions.sessionId, sessionId)).limit(1);
+    const [existingSession] = await db.select().from(livechatSessions).where(eq27(livechatSessions.sessionId, sessionId)).limit(1);
     if (existingSession) {
       return res.json({
         sessionId: existingSession.sessionId,
@@ -16564,8 +17050,8 @@ router12.post("/widget/sessions", widgetCors, async (req, res) => {
     if (data.visitorEmail) {
       try {
         const [existingContact] = await db.select().from(crmContacts).where(and19(
-          eq26(crmContacts.clientId, data.clientId),
-          eq26(crmContacts.email, data.visitorEmail)
+          eq27(crmContacts.clientId, data.clientId),
+          eq27(crmContacts.email, data.visitorEmail)
         )).limit(1);
         if (!existingContact) {
           await db.insert(crmContacts).values({
@@ -16613,7 +17099,7 @@ var sendMessageSchema = z7.object({
 router12.post("/widget/messages", widgetCors, async (req, res) => {
   try {
     const data = sendMessageSchema.parse(req.body);
-    const [session2] = await db.select().from(livechatSessions).where(eq26(livechatSessions.sessionId, data.sessionId)).limit(1);
+    const [session2] = await db.select().from(livechatSessions).where(eq27(livechatSessions.sessionId, data.sessionId)).limit(1);
     if (!session2 || !session2.conversationId) {
       return res.status(404).json({ error: "Session not found" });
     }
@@ -16635,7 +17121,7 @@ router12.post("/widget/messages", widgetCors, async (req, res) => {
       lastMessageAt: /* @__PURE__ */ new Date(),
       lastMessagePreview: data.content.substring(0, 100),
       unreadCount: sql10`${inboxConversations.unreadCount} + 1`
-    }).where(eq26(inboxConversations.id, session2.conversationId));
+    }).where(eq27(inboxConversations.id, session2.conversationId));
     await db.insert(chatAnalyticsEvents).values({
       clientId: session2.clientId,
       eventType: "message_sent",
@@ -16656,11 +17142,11 @@ router12.post("/widget/messages", widgetCors, async (req, res) => {
 router12.get("/widget/messages/:sessionId", widgetCors, async (req, res) => {
   try {
     const { sessionId } = req.params;
-    const [session2] = await db.select().from(livechatSessions).where(eq26(livechatSessions.sessionId, sessionId)).limit(1);
+    const [session2] = await db.select().from(livechatSessions).where(eq27(livechatSessions.sessionId, sessionId)).limit(1);
     if (!session2 || !session2.conversationId) {
       return res.status(404).json({ error: "Session not found" });
     }
-    const messages = await db.select().from(inboxMessages2).where(eq26(inboxMessages2.conversationId, session2.conversationId)).orderBy(inboxMessages2.createdAt);
+    const messages = await db.select().from(inboxMessages2).where(eq27(inboxMessages2.conversationId, session2.conversationId)).orderBy(inboxMessages2.createdAt);
     res.json({
       messages: messages.map((m) => ({
         id: m.id,
@@ -16715,9 +17201,9 @@ router12.get("/dashboard/conversations/:clientId", requireAuth, async (req, res)
       unreadCount: inboxConversations.unreadCount,
       createdAt: inboxConversations.createdAt
     }).from(inboxConversations).where(and19(
-      eq26(inboxConversations.clientId, clientId),
-      eq26(inboxConversations.primaryChannelType, "livechat"),
-      status !== "all" ? eq26(inboxConversations.status, status) : void 0
+      eq27(inboxConversations.clientId, clientId),
+      eq27(inboxConversations.primaryChannelType, "livechat"),
+      status !== "all" ? eq27(inboxConversations.status, status) : void 0
     )).orderBy(desc12(inboxConversations.lastMessageAt)).limit(limit).offset((page - 1) * limit);
     res.json({ conversations, page, limit });
   } catch (error) {
@@ -16733,15 +17219,15 @@ router12.get("/dashboard/conversations/:clientId/:conversationId", requireAuth, 
     }
     const conversationId = parseInt(req.params.conversationId);
     const [conversation] = await db.select().from(inboxConversations).where(and19(
-      eq26(inboxConversations.id, conversationId),
-      eq26(inboxConversations.clientId, clientId)
+      eq27(inboxConversations.id, conversationId),
+      eq27(inboxConversations.clientId, clientId)
     )).limit(1);
     if (!conversation) {
       return res.status(404).json({ error: "Conversation not found" });
     }
-    const [session2] = await db.select().from(livechatSessions).where(eq26(livechatSessions.conversationId, conversationId)).limit(1);
-    const messages = await db.select().from(inboxMessages2).where(eq26(inboxMessages2.conversationId, conversationId)).orderBy(inboxMessages2.createdAt);
-    await db.update(inboxConversations).set({ unreadCount: 0 }).where(eq26(inboxConversations.id, conversationId));
+    const [session2] = await db.select().from(livechatSessions).where(eq27(livechatSessions.conversationId, conversationId)).limit(1);
+    const messages = await db.select().from(inboxMessages2).where(eq27(inboxMessages2.conversationId, conversationId)).orderBy(inboxMessages2.createdAt);
+    await db.update(inboxConversations).set({ unreadCount: 0 }).where(eq27(inboxConversations.id, conversationId));
     res.json({
       conversation,
       session: session2,
@@ -16774,13 +17260,13 @@ router12.post("/dashboard/messages/:clientId", requireAuth, async (req, res) => 
     }
     const data = agentMessageSchema.parse(req.body);
     const [conversation] = await db.select().from(inboxConversations).where(and19(
-      eq26(inboxConversations.id, data.conversationId),
-      eq26(inboxConversations.clientId, clientId)
+      eq27(inboxConversations.id, data.conversationId),
+      eq27(inboxConversations.clientId, clientId)
     )).limit(1);
     if (!conversation) {
       return res.status(404).json({ error: "Conversation not found" });
     }
-    const [session2] = await db.select().from(livechatSessions).where(eq26(livechatSessions.conversationId, data.conversationId)).limit(1);
+    const [session2] = await db.select().from(livechatSessions).where(eq27(livechatSessions.conversationId, data.conversationId)).limit(1);
     const [message] = await db.insert(inboxMessages2).values({
       conversationId: data.conversationId,
       channelType: "livechat",
@@ -16797,7 +17283,7 @@ router12.post("/dashboard/messages/:clientId", requireAuth, async (req, res) => 
     await db.update(inboxConversations).set({
       lastMessageAt: /* @__PURE__ */ new Date(),
       lastMessagePreview: data.content.substring(0, 100)
-    }).where(eq26(inboxConversations.id, data.conversationId));
+    }).where(eq27(inboxConversations.id, data.conversationId));
     res.json({
       messageId: message.id,
       timestamp: message.createdAt
@@ -16815,13 +17301,13 @@ router12.put("/dashboard/conversations/:clientId/:conversationId/close", require
     }
     const conversationId = parseInt(req.params.conversationId);
     await db.update(inboxConversations).set({ status: "resolved" }).where(and19(
-      eq26(inboxConversations.id, conversationId),
-      eq26(inboxConversations.clientId, clientId)
+      eq27(inboxConversations.id, conversationId),
+      eq27(inboxConversations.clientId, clientId)
     ));
     await db.update(livechatSessions).set({
       status: "ended",
       endedAt: /* @__PURE__ */ new Date()
-    }).where(eq26(livechatSessions.conversationId, conversationId));
+    }).where(eq27(livechatSessions.conversationId, conversationId));
     res.json({ success: true });
   } catch (error) {
     console.error("Error closing conversation:", error);
@@ -16834,7 +17320,7 @@ router12.get("/settings/:clientId", requireAuth, async (req, res) => {
     if (clientId !== req.clientId) {
       return res.status(403).json({ error: "Access denied" });
     }
-    const [settings] = await db.select().from(chatWidgetSettings).where(eq26(chatWidgetSettings.clientId, clientId)).limit(1);
+    const [settings] = await db.select().from(chatWidgetSettings).where(eq27(chatWidgetSettings.clientId, clientId)).limit(1);
     if (!settings) {
       return res.json({
         clientId,
@@ -16862,9 +17348,9 @@ router12.put("/settings/:clientId", requireAuth, async (req, res) => {
       return res.status(403).json({ error: "Access denied" });
     }
     const updates = updateChatWidgetSettingsSchema.parse(req.body);
-    const [existing] = await db.select().from(chatWidgetSettings).where(eq26(chatWidgetSettings.clientId, clientId)).limit(1);
+    const [existing] = await db.select().from(chatWidgetSettings).where(eq27(chatWidgetSettings.clientId, clientId)).limit(1);
     if (existing) {
-      const [updated] = await db.update(chatWidgetSettings).set({ ...updates, updatedAt: /* @__PURE__ */ new Date() }).where(eq26(chatWidgetSettings.clientId, clientId)).returning();
+      const [updated] = await db.update(chatWidgetSettings).set({ ...updates, updatedAt: /* @__PURE__ */ new Date() }).where(eq27(chatWidgetSettings.clientId, clientId)).returning();
       return res.json(updated);
     } else {
       const [created] = await db.insert(chatWidgetSettings).values({ clientId, ...updates }).returning();
@@ -16912,18 +17398,18 @@ router12.get("/analytics/:clientId", async (req, res) => {
         startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1e3);
     }
     const conversationCount = await db.select({ count: sql10`count(*)` }).from(inboxConversations).where(and19(
-      eq26(inboxConversations.clientId, clientId),
-      eq26(inboxConversations.primaryChannelType, "livechat"),
+      eq27(inboxConversations.clientId, clientId),
+      eq27(inboxConversations.primaryChannelType, "livechat"),
       sql10`${inboxConversations.createdAt} >= ${startDate}`
     ));
     const messageCount = await db.select({ count: sql10`count(*)` }).from(chatAnalyticsEvents).where(and19(
-      eq26(chatAnalyticsEvents.clientId, clientId),
-      eq26(chatAnalyticsEvents.eventType, "message_sent"),
+      eq27(chatAnalyticsEvents.clientId, clientId),
+      eq27(chatAnalyticsEvents.eventType, "message_sent"),
       sql10`${chatAnalyticsEvents.createdAt} >= ${startDate}`
     ));
     const widgetOpens = await db.select({ count: sql10`count(*)` }).from(chatAnalyticsEvents).where(and19(
-      eq26(chatAnalyticsEvents.clientId, clientId),
-      eq26(chatAnalyticsEvents.eventType, "widget_opened"),
+      eq27(chatAnalyticsEvents.clientId, clientId),
+      eq27(chatAnalyticsEvents.eventType, "widget_opened"),
       sql10`${chatAnalyticsEvents.createdAt} >= ${startDate}`
     ));
     res.json({
@@ -16940,7 +17426,7 @@ router12.get("/analytics/:clientId", async (req, res) => {
 var chatRouter = router12;
 
 // server/routes/ai-coach.ts
-import { Router as Router19 } from "express";
+import { Router as Router20 } from "express";
 
 // server/services/aiCoach.ts
 init_ai_provider();
@@ -16949,7 +17435,7 @@ init_ai_settings();
 // server/services/scansblue.ts
 init_db();
 init_schema();
-import { eq as eq28 } from "drizzle-orm";
+import { eq as eq29 } from "drizzle-orm";
 var ScansBlueService = class {
   apiKey;
   baseUrl;
@@ -17104,7 +17590,7 @@ var ScansBlueService = class {
         fullReportUrl: reportUrl,
         fullReportStatus: status,
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq28(scansBlueResults.assessmentId, assessmentId));
+      }).where(eq29(scansBlueResults.assessmentId, assessmentId));
       console.log(`[ScansBlue] Full Report status updated: ${status}`);
     } catch (error) {
       console.error("[ScansBlue] Error updating report status:", error);
@@ -17112,7 +17598,7 @@ var ScansBlueService = class {
   }
   async getResults(assessmentId) {
     try {
-      const [results] = await db.select().from(scansBlueResults).where(eq28(scansBlueResults.assessmentId, assessmentId)).limit(1);
+      const [results] = await db.select().from(scansBlueResults).where(eq29(scansBlueResults.assessmentId, assessmentId)).limit(1);
       if (results && results.criticalIssues) {
         return {
           ...results,
@@ -17147,7 +17633,7 @@ var scansBlueService = new ScansBlueService();
 init_db();
 init_schema();
 init_knowledge_base();
-import { eq as eq29, desc as desc13, sql as sql11 } from "drizzle-orm";
+import { eq as eq30, desc as desc13, sql as sql11 } from "drizzle-orm";
 
 // import("../../shared/knowledge-base/apps/**/*") in server/services/aiCoach.ts
 var globImport_shared_knowledge_base_apps2 = __glob({
@@ -17196,7 +17682,7 @@ When giving advice, recommend specific apps that solve the user's problem. Refer
     const productKnowledge = this.getProductKnowledgeContext();
     let taskContext = "";
     try {
-      const tasks2 = await db.select().from(setupTasks).where(eq29(setupTasks.clientId, clientId)).orderBy(setupTasks.cadenceOrder);
+      const tasks2 = await db.select().from(setupTasks).where(eq30(setupTasks.clientId, clientId)).orderBy(setupTasks.cadenceOrder);
       if (tasks2.length > 0) {
         const completed = tasks2.filter((t) => t.status === "completed").length;
         const total = tasks2.length;
@@ -17551,13 +18037,13 @@ Format as JSON with actionItems array containing task, priority, estimatedTime, 
    * Get all conversations for a client
    */
   async getConversations(clientId) {
-    return db.select().from(aiCoachConversations).where(eq29(aiCoachConversations.clientId, clientId)).orderBy(desc13(aiCoachConversations.updatedAt));
+    return db.select().from(aiCoachConversations).where(eq30(aiCoachConversations.clientId, clientId)).orderBy(desc13(aiCoachConversations.updatedAt));
   }
   /**
    * Get all messages in a conversation
    */
   async getMessages(conversationId) {
-    return db.select().from(aiCoachMessages).where(eq29(aiCoachMessages.conversationId, conversationId)).orderBy(aiCoachMessages.createdAt);
+    return db.select().from(aiCoachMessages).where(eq30(aiCoachMessages.conversationId, conversationId)).orderBy(aiCoachMessages.createdAt);
   }
   /**
    * Send a message in a conversation and get AI response
@@ -17587,9 +18073,9 @@ Format as JSON with actionItems array containing task, priority, estimatedTime, 
       const history2 = await this.getMessages(conversationId);
       if (history2.length <= 2) {
         const title = userMessage.length > 60 ? userMessage.substring(0, 57) + "..." : userMessage;
-        await db.update(aiCoachConversations).set({ title, updatedAt: /* @__PURE__ */ new Date() }).where(eq29(aiCoachConversations.id, conversationId));
+        await db.update(aiCoachConversations).set({ title, updatedAt: /* @__PURE__ */ new Date() }).where(eq30(aiCoachConversations.id, conversationId));
       } else {
-        await db.update(aiCoachConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq29(aiCoachConversations.id, conversationId));
+        await db.update(aiCoachConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq30(aiCoachConversations.id, conversationId));
       }
       return { role: "assistant", content: matchedResponse.response, isControlled: true };
     }
@@ -17621,9 +18107,9 @@ Format as JSON with actionItems array containing task, priority, estimatedTime, 
       });
       if (history.length <= 1) {
         const title = userMessage.length > 60 ? userMessage.substring(0, 57) + "..." : userMessage;
-        await db.update(aiCoachConversations).set({ title, updatedAt: /* @__PURE__ */ new Date() }).where(eq29(aiCoachConversations.id, conversationId));
+        await db.update(aiCoachConversations).set({ title, updatedAt: /* @__PURE__ */ new Date() }).where(eq30(aiCoachConversations.id, conversationId));
       } else {
-        await db.update(aiCoachConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq29(aiCoachConversations.id, conversationId));
+        await db.update(aiCoachConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq30(aiCoachConversations.id, conversationId));
       }
       return { role: "assistant", content: aiMessage };
     } catch (error) {
@@ -17644,7 +18130,7 @@ Format as JSON with actionItems array containing task, priority, estimatedTime, 
    */
   async createTaskFromAdvice(clientId, item) {
     if (item.type === "task") {
-      const existing = await db.select({ maxOrder: sql11`MAX(${setupTasks.cadenceOrder})` }).from(setupTasks).where(eq29(setupTasks.clientId, clientId));
+      const existing = await db.select({ maxOrder: sql11`MAX(${setupTasks.cadenceOrder})` }).from(setupTasks).where(eq30(setupTasks.clientId, clientId));
       const nextOrder = (existing[0]?.maxOrder || 0) + 1;
       await db.insert(setupTasks).values({
         clientId,
@@ -17672,7 +18158,7 @@ Format as JSON with actionItems array containing task, priority, estimatedTime, 
 var aiCoachService = new AICoachService();
 
 // server/routes/ai-coach.ts
-var aiCoachRouter = Router19();
+var aiCoachRouter = Router20();
 aiCoachRouter.get(
   "/api/ai-coach/conversations",
   requireClientPortalAccess,
@@ -17773,7 +18259,7 @@ aiCoachRouter.post(
 // server/routes/send.ts
 init_db();
 init_schema();
-import { eq as eq30, desc as desc14, sql as sql12, and as and20, inArray as inArray3 } from "drizzle-orm";
+import { eq as eq31, desc as desc14, sql as sql12, and as and20, inArray as inArray3 } from "drizzle-orm";
 import { Resend as Resend3 } from "resend";
 
 // server/services/telnyx.ts
@@ -18406,7 +18892,7 @@ function registerSendRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const [contactCount] = await db.select({ count: sql12`count(*)::int` }).from(sendContacts).where(eq30(sendContacts.clientId, clientId));
+        const [contactCount] = await db.select({ count: sql12`count(*)::int` }).from(sendContacts).where(eq31(sendContacts.clientId, clientId));
         const [campaignStats] = await db.select({
           emailsSent: sql12`coalesce(sum(${sendCampaigns.emailsSent}), 0)::int`,
           emailsOpened: sql12`coalesce(sum(${sendCampaigns.emailsOpened}), 0)::int`,
@@ -18414,7 +18900,7 @@ function registerSendRoutes(app2) {
           emailsBounced: sql12`coalesce(sum(${sendCampaigns.emailsBounced}), 0)::int`,
           smsSent: sql12`coalesce(sum(${sendCampaigns.smsSent}), 0)::int`,
           smsDelivered: sql12`coalesce(sum(${sendCampaigns.smsDelivered}), 0)::int`
-        }).from(sendCampaigns).where(eq30(sendCampaigns.clientId, clientId));
+        }).from(sendCampaigns).where(eq31(sendCampaigns.clientId, clientId));
         const totalContacts = contactCount?.count ?? 0;
         const emailsSent = campaignStats?.emailsSent ?? 0;
         const emailsOpened = campaignStats?.emailsOpened ?? 0;
@@ -18458,7 +18944,7 @@ function registerSendRoutes(app2) {
           parseInt(req.query.limit) || 10,
           50
         );
-        const campaigns2 = await db.select().from(sendCampaigns).where(eq30(sendCampaigns.clientId, clientId)).orderBy(desc14(sendCampaigns.createdAt)).limit(limit);
+        const campaigns2 = await db.select().from(sendCampaigns).where(eq31(sendCampaigns.clientId, clientId)).orderBy(desc14(sendCampaigns.createdAt)).limit(limit);
         const activityItems = campaigns2.map((c) => ({
           id: c.id,
           type: "campaign",
@@ -18491,16 +18977,16 @@ function registerSendRoutes(app2) {
         const status = req.query.status;
         let query = db.select().from(sendCampaigns).where(
           status ? and20(
-            eq30(sendCampaigns.clientId, clientId),
-            eq30(sendCampaigns.status, status)
-          ) : eq30(sendCampaigns.clientId, clientId)
+            eq31(sendCampaigns.clientId, clientId),
+            eq31(sendCampaigns.status, status)
+          ) : eq31(sendCampaigns.clientId, clientId)
         ).orderBy(desc14(sendCampaigns.createdAt)).limit(limit).offset(offset);
         const campaigns2 = await query;
         const [countResult] = await db.select({ count: sql12`count(*)::int` }).from(sendCampaigns).where(
           status ? and20(
-            eq30(sendCampaigns.clientId, clientId),
-            eq30(sendCampaigns.status, status)
-          ) : eq30(sendCampaigns.clientId, clientId)
+            eq31(sendCampaigns.clientId, clientId),
+            eq31(sendCampaigns.status, status)
+          ) : eq31(sendCampaigns.clientId, clientId)
         );
         res.json({
           success: true,
@@ -18584,8 +19070,8 @@ function registerSendRoutes(app2) {
         }
         const [campaign] = await db.select().from(sendCampaigns).where(
           and20(
-            eq30(sendCampaigns.id, id),
-            eq30(sendCampaigns.clientId, clientId)
+            eq31(sendCampaigns.id, id),
+            eq31(sendCampaigns.clientId, clientId)
           )
         );
         if (!campaign) {
@@ -18619,8 +19105,8 @@ function registerSendRoutes(app2) {
         }
         const [existing] = await db.select().from(sendCampaigns).where(
           and20(
-            eq30(sendCampaigns.id, id),
-            eq30(sendCampaigns.clientId, clientId)
+            eq31(sendCampaigns.id, id),
+            eq31(sendCampaigns.clientId, clientId)
           )
         );
         if (!existing) {
@@ -18638,7 +19124,7 @@ function registerSendRoutes(app2) {
         const updateData = { ...req.body, updatedAt: /* @__PURE__ */ new Date() };
         delete updateData.clientId;
         delete updateData.id;
-        const [campaign] = await db.update(sendCampaigns).set(updateData).where(eq30(sendCampaigns.id, id)).returning();
+        const [campaign] = await db.update(sendCampaigns).set(updateData).where(eq31(sendCampaigns.id, id)).returning();
         res.json({ success: true, campaign });
       } catch (error) {
         console.error("Error updating campaign:", error);
@@ -18664,8 +19150,8 @@ function registerSendRoutes(app2) {
         }
         const [existing] = await db.select().from(sendCampaigns).where(
           and20(
-            eq30(sendCampaigns.id, id),
-            eq30(sendCampaigns.clientId, clientId)
+            eq31(sendCampaigns.id, id),
+            eq31(sendCampaigns.clientId, clientId)
           )
         );
         if (!existing) {
@@ -18680,7 +19166,7 @@ function registerSendRoutes(app2) {
             message: "Only draft campaigns can be deleted"
           });
         }
-        await db.delete(sendCampaigns).where(eq30(sendCampaigns.id, id));
+        await db.delete(sendCampaigns).where(eq31(sendCampaigns.id, id));
         res.json({
           success: true,
           message: "Campaign deleted successfully"
@@ -18701,11 +19187,11 @@ function registerSendRoutes(app2) {
       try {
         const clientId = req.clientId;
         const type = req.query.type;
-        let query = db.select().from(sendTemplates).where(eq30(sendTemplates.clientId, clientId)).orderBy(desc14(sendTemplates.updatedAt));
+        let query = db.select().from(sendTemplates).where(eq31(sendTemplates.clientId, clientId)).orderBy(desc14(sendTemplates.updatedAt));
         const templates = await (type ? db.select().from(sendTemplates).where(
           and20(
-            eq30(sendTemplates.clientId, clientId),
-            eq30(sendTemplates.templateType, type)
+            eq31(sendTemplates.clientId, clientId),
+            eq31(sendTemplates.templateType, type)
           )
         ).orderBy(desc14(sendTemplates.updatedAt)) : query);
         res.json({ success: true, templates });
@@ -18769,7 +19255,7 @@ function registerSendRoutes(app2) {
           return res.status(400).json({ success: false, message: "Invalid template ID" });
         }
         const [template] = await db.select().from(sendTemplates).where(
-          and20(eq30(sendTemplates.id, id), eq30(sendTemplates.clientId, clientId))
+          and20(eq31(sendTemplates.id, id), eq31(sendTemplates.clientId, clientId))
         );
         if (!template) {
           return res.status(404).json({ success: false, message: "Template not found" });
@@ -18792,7 +19278,7 @@ function registerSendRoutes(app2) {
           return res.status(400).json({ success: false, message: "Invalid template ID" });
         }
         const [existing] = await db.select().from(sendTemplates).where(
-          and20(eq30(sendTemplates.id, id), eq30(sendTemplates.clientId, clientId))
+          and20(eq31(sendTemplates.id, id), eq31(sendTemplates.clientId, clientId))
         );
         if (!existing) {
           return res.status(404).json({ success: false, message: "Template not found" });
@@ -18800,7 +19286,7 @@ function registerSendRoutes(app2) {
         const updateData = { ...req.body, updatedAt: /* @__PURE__ */ new Date() };
         delete updateData.clientId;
         delete updateData.id;
-        const [template] = await db.update(sendTemplates).set(updateData).where(eq30(sendTemplates.id, id)).returning();
+        const [template] = await db.update(sendTemplates).set(updateData).where(eq31(sendTemplates.id, id)).returning();
         res.json({ success: true, template });
       } catch (error) {
         console.error("Error updating template:", error);
@@ -18819,7 +19305,7 @@ function registerSendRoutes(app2) {
           return res.status(400).json({ success: false, message: "Invalid template ID" });
         }
         const [existing] = await db.select().from(sendTemplates).where(
-          and20(eq30(sendTemplates.id, id), eq30(sendTemplates.clientId, clientId))
+          and20(eq31(sendTemplates.id, id), eq31(sendTemplates.clientId, clientId))
         );
         if (!existing) {
           return res.status(404).json({ success: false, message: "Template not found" });
@@ -18830,7 +19316,7 @@ function registerSendRoutes(app2) {
             message: "System templates cannot be deleted"
           });
         }
-        await db.delete(sendTemplates).where(eq30(sendTemplates.id, id));
+        await db.delete(sendTemplates).where(eq31(sendTemplates.id, id));
         res.json({ success: true, message: "Template deleted successfully" });
       } catch (error) {
         console.error("Error deleting template:", error);
@@ -18848,7 +19334,7 @@ function registerSendRoutes(app2) {
         if (isNaN(campaignId)) {
           return res.status(400).json({ success: false, message: "Invalid campaign ID" });
         }
-        const [campaign] = await db.select().from(sendCampaigns).where(and20(eq30(sendCampaigns.id, campaignId), eq30(sendCampaigns.clientId, clientId)));
+        const [campaign] = await db.select().from(sendCampaigns).where(and20(eq31(sendCampaigns.id, campaignId), eq31(sendCampaigns.clientId, clientId)));
         if (!campaign) {
           return res.status(404).json({ success: false, message: "Campaign not found" });
         }
@@ -18861,20 +19347,20 @@ function registerSendRoutes(app2) {
         const { listId } = req.body;
         let recipientContacts;
         if (listId) {
-          const listContactRows = await db.select({ contactId: sendListContacts.contactId }).from(sendListContacts).where(eq30(sendListContacts.listId, parseInt(listId)));
+          const listContactRows = await db.select({ contactId: sendListContacts.contactId }).from(sendListContacts).where(eq31(sendListContacts.listId, parseInt(listId)));
           const contactIds = listContactRows.map((r) => r.contactId).filter((id) => id !== null);
           if (contactIds.length === 0) {
             return res.status(400).json({ success: false, message: "No contacts in the selected list" });
           }
-          recipientContacts = await db.select({ id: sendContacts.id, email: sendContacts.email, phone: sendContacts.phone }).from(sendContacts).where(and20(eq30(sendContacts.clientId, clientId), inArray3(sendContacts.id, contactIds)));
+          recipientContacts = await db.select({ id: sendContacts.id, email: sendContacts.email, phone: sendContacts.phone }).from(sendContacts).where(and20(eq31(sendContacts.clientId, clientId), inArray3(sendContacts.id, contactIds)));
         } else {
-          recipientContacts = await db.select({ id: sendContacts.id, email: sendContacts.email, phone: sendContacts.phone }).from(sendContacts).where(eq30(sendContacts.clientId, clientId));
+          recipientContacts = await db.select({ id: sendContacts.id, email: sendContacts.email, phone: sendContacts.phone }).from(sendContacts).where(eq31(sendContacts.clientId, clientId));
         }
         if (recipientContacts.length === 0) {
           return res.status(400).json({ success: false, message: "No eligible recipients found" });
         }
         const fullContacts = await db.select().from(sendContacts).where(and20(
-          eq30(sendContacts.clientId, clientId),
+          eq31(sendContacts.clientId, clientId),
           inArray3(sendContacts.id, recipientContacts.map((c) => c.id))
         ));
         const substituteVars = (template, contact) => {
@@ -18884,7 +19370,7 @@ function registerSendRoutes(app2) {
           status: "sending",
           totalRecipients: fullContacts.length,
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq30(sendCampaigns.id, campaignId));
+        }).where(eq31(sendCampaigns.id, campaignId));
         res.json({
           success: true,
           message: `Campaign sending to ${fullContacts.length} recipients`,
@@ -18917,7 +19403,7 @@ function registerSendRoutes(app2) {
                     subject,
                     html
                   });
-                  await db.update(sendCampaignSends).set({ status: "sent" }).where(eq30(sendCampaignSends.id, sendRecord.id));
+                  await db.update(sendCampaignSends).set({ status: "sent" }).where(eq31(sendCampaignSends.id, sendRecord.id));
                   emailsSent++;
                   logContactActivity({
                     clientId,
@@ -18960,7 +19446,7 @@ function registerSendRoutes(app2) {
                     from: fromPhone,
                     text: smsText
                   });
-                  await db.update(sendCampaignSends).set({ status: "sent" }).where(eq30(sendCampaignSends.id, sendRecord.id));
+                  await db.update(sendCampaignSends).set({ status: "sent" }).where(eq31(sendCampaignSends.id, sendRecord.id));
                   smsSent++;
                 } catch (err) {
                   console.error(`[Campaign ${campaignId}] SMS failed for ${contact.phone}:`, err);
@@ -18978,7 +19464,7 @@ function registerSendRoutes(app2) {
             emailSentAt: emailsSent > 0 ? /* @__PURE__ */ new Date() : null,
             smsSentAt: smsSent > 0 ? /* @__PURE__ */ new Date() : null,
             updatedAt: /* @__PURE__ */ new Date()
-          }).where(eq30(sendCampaigns.id, campaignId));
+          }).where(eq31(sendCampaigns.id, campaignId));
           console.log(`[Campaign ${campaignId}] Complete: ${emailsSent} emails, ${smsSent} SMS sent. Failures: ${emailsFailed} email, ${smsFailed} SMS`);
         })().catch((err) => {
           console.error(`[Campaign ${campaignId}] Async dispatch failed:`, err);
@@ -19003,7 +19489,7 @@ function registerSendRoutes(app2) {
         if (!emailScheduledFor && !smsScheduledFor) {
           return res.status(400).json({ success: false, message: "At least one schedule time is required" });
         }
-        const [campaign] = await db.select().from(sendCampaigns).where(and20(eq30(sendCampaigns.id, campaignId), eq30(sendCampaigns.clientId, clientId)));
+        const [campaign] = await db.select().from(sendCampaigns).where(and20(eq31(sendCampaigns.id, campaignId), eq31(sendCampaigns.clientId, clientId)));
         if (!campaign) {
           return res.status(404).json({ success: false, message: "Campaign not found" });
         }
@@ -19013,7 +19499,7 @@ function registerSendRoutes(app2) {
           smsScheduledFor: smsScheduledFor ? new Date(smsScheduledFor) : null,
           segmentRules: listId ? { listId: parseInt(listId) } : campaign.segmentRules,
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq30(sendCampaigns.id, campaignId));
+        }).where(eq31(sendCampaigns.id, campaignId));
         res.json({
           success: true,
           message: "Campaign scheduled successfully",
@@ -19032,7 +19518,7 @@ function registerSendRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const lists = await db.select().from(sendLists).where(eq30(sendLists.clientId, clientId)).orderBy(desc14(sendLists.createdAt));
+        const lists = await db.select().from(sendLists).where(eq31(sendLists.clientId, clientId)).orderBy(desc14(sendLists.createdAt));
         res.json({ success: true, lists });
       } catch (error) {
         console.error("Error fetching lists:", error);
@@ -19074,7 +19560,7 @@ function registerSendRoutes(app2) {
         if (isNaN(listId) || !Array.isArray(contactIds) || contactIds.length === 0) {
           return res.status(400).json({ success: false, message: "Valid list ID and contact IDs required" });
         }
-        const [list] = await db.select().from(sendLists).where(and20(eq30(sendLists.id, listId), eq30(sendLists.clientId, clientId)));
+        const [list] = await db.select().from(sendLists).where(and20(eq31(sendLists.id, listId), eq31(sendLists.clientId, clientId)));
         if (!list) {
           return res.status(404).json({ success: false, message: "List not found" });
         }
@@ -19086,8 +19572,8 @@ function registerSendRoutes(app2) {
           } catch {
           }
         }
-        const [countResult] = await db.select({ count: sql12`count(*)::int` }).from(sendListContacts).where(eq30(sendListContacts.listId, listId));
-        await db.update(sendLists).set({ totalContacts: countResult?.count ?? 0, updatedAt: /* @__PURE__ */ new Date() }).where(eq30(sendLists.id, listId));
+        const [countResult] = await db.select({ count: sql12`count(*)::int` }).from(sendListContacts).where(eq31(sendListContacts.listId, listId));
+        await db.update(sendLists).set({ totalContacts: countResult?.count ?? 0, updatedAt: /* @__PURE__ */ new Date() }).where(eq31(sendLists.id, listId));
         res.json({ success: true, added, totalContacts: countResult?.count ?? 0 });
       } catch (error) {
         console.error("Error adding contacts to list:", error);
@@ -19105,12 +19591,12 @@ function registerSendRoutes(app2) {
         if (isNaN(listId)) {
           return res.status(400).json({ success: false, message: "Invalid list ID" });
         }
-        const [list] = await db.select().from(sendLists).where(and20(eq30(sendLists.id, listId), eq30(sendLists.clientId, clientId)));
+        const [list] = await db.select().from(sendLists).where(and20(eq31(sendLists.id, listId), eq31(sendLists.clientId, clientId)));
         if (!list) {
           return res.status(404).json({ success: false, message: "List not found" });
         }
-        await db.delete(sendListContacts).where(eq30(sendListContacts.listId, listId));
-        await db.delete(sendLists).where(eq30(sendLists.id, listId));
+        await db.delete(sendListContacts).where(eq31(sendListContacts.listId, listId));
+        await db.delete(sendLists).where(eq31(sendLists.id, listId));
         res.json({ success: true, message: "List deleted successfully" });
       } catch (error) {
         console.error("Error deleting list:", error);
@@ -19175,7 +19661,7 @@ function registerSendRoutes(app2) {
 // server/routes/optimize.ts
 init_db();
 init_schema();
-import { eq as eq31, desc as desc15, and as and21, sql as sql13, asc as asc5 } from "drizzle-orm";
+import { eq as eq32, desc as desc15, and as and21, sql as sql13, asc as asc5 } from "drizzle-orm";
 
 // server/services/seo-crawler.ts
 async function analyzePage(url) {
@@ -19608,7 +20094,7 @@ function registerOptimizeRoutes(app2) {
         if (!domain) {
           return res.status(400).json({ success: false, message: "Domain is required" });
         }
-        const existing = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const existing = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (existing.length > 0) {
           const [updated] = await db.update(seoProfiles).set({
             domain,
@@ -19619,7 +20105,7 @@ function registerOptimizeRoutes(app2) {
             competitors: competitors || [],
             localEnabled: localEnabled || false,
             updatedAt: /* @__PURE__ */ new Date()
-          }).where(eq31(seoProfiles.id, existing[0].id)).returning();
+          }).where(eq32(seoProfiles.id, existing[0].id)).returning();
           return res.json({ success: true, profile: updated });
         }
         const [profile] = await db.insert(seoProfiles).values({
@@ -19654,7 +20140,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profiles = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profiles = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profiles.length === 0) {
           return res.json({ success: true, profile: null });
         }
@@ -19671,7 +20157,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) {
           return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
         }
@@ -19698,7 +20184,7 @@ function registerOptimizeRoutes(app2) {
             const pageData = await analyzePage(
               profileData.domain.startsWith("http") ? profileData.domain : `https://${profileData.domain}`
             );
-            const existingPage = await db.select().from(seoPages).where(and21(eq31(seoPages.profileId, profileData.id), eq31(seoPages.url, pageData.url))).limit(1);
+            const existingPage = await db.select().from(seoPages).where(and21(eq32(seoPages.profileId, profileData.id), eq32(seoPages.url, pageData.url))).limit(1);
             const pageScore = calculatePageScore(pageData);
             if (existingPage.length > 0) {
               await db.update(seoPages).set({
@@ -19709,7 +20195,7 @@ function registerOptimizeRoutes(app2) {
                 score: pageScore,
                 issues: pageData,
                 lastAnalyzed: /* @__PURE__ */ new Date()
-              }).where(eq31(seoPages.id, existingPage[0].id));
+              }).where(eq32(seoPages.id, existingPage[0].id));
             } else {
               await db.insert(seoPages).values({
                 profileId: profileData.id,
@@ -19729,11 +20215,11 @@ function registerOptimizeRoutes(app2) {
               medium: sql13`count(*) filter (where ${seoTechnicalIssues.severity} = 'medium')`,
               low: sql13`count(*) filter (where ${seoTechnicalIssues.severity} = 'low')`
             }).from(seoTechnicalIssues).where(and21(
-              eq31(seoTechnicalIssues.profileId, profileData.id),
-              eq31(seoTechnicalIssues.status, "open")
+              eq32(seoTechnicalIssues.profileId, profileData.id),
+              eq32(seoTechnicalIssues.status, "open")
             ));
             const issueCounts = issueCountResult[0] || { critical: 0, high: 0, medium: 0, low: 0 };
-            const keywordCount = await db.select({ count: sql13`count(*)` }).from(seoKeywords).where(eq31(seoKeywords.profileId, profileData.id));
+            const keywordCount = await db.select({ count: sql13`count(*)` }).from(seoKeywords).where(eq32(seoKeywords.profileId, profileData.id));
             const overallScore = calculateSeoScore({
               technicalIssues: {
                 critical: Number(issueCounts.critical),
@@ -19754,10 +20240,10 @@ function registerOptimizeRoutes(app2) {
               metrics: auditResult,
               issues: auditResult.issues,
               status: "completed"
-            }).where(eq31(seoScans.id, scan.id));
+            }).where(eq32(seoScans.id, scan.id));
           } catch (err) {
             console.error("[Optimize] Scan failed:", err);
-            await db.update(seoScans).set({ status: "failed" }).where(eq31(seoScans.id, scan.id));
+            await db.update(seoScans).set({ status: "failed" }).where(eq32(seoScans.id, scan.id));
           }
         })();
         res.json({ success: true, scan: { id: scan.id, status: "running" } });
@@ -19773,9 +20259,9 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, scans: [] });
-        const scans = await db.select().from(seoScans).where(eq31(seoScans.profileId, profile[0].id)).orderBy(desc15(seoScans.createdAt)).limit(20);
+        const scans = await db.select().from(seoScans).where(eq32(seoScans.profileId, profile[0].id)).orderBy(desc15(seoScans.createdAt)).limit(20);
         res.json({ success: true, scans });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to fetch scans" });
@@ -19787,7 +20273,7 @@ function registerOptimizeRoutes(app2) {
     requireAuth,
     async (req, res) => {
       try {
-        const scan = await db.select().from(seoScans).where(eq31(seoScans.id, parseInt(req.params.id))).limit(1);
+        const scan = await db.select().from(seoScans).where(eq32(seoScans.id, parseInt(req.params.id))).limit(1);
         if (scan.length === 0) return res.status(404).json({ success: false, message: "Scan not found" });
         res.json({ success: true, scan: scan[0] });
       } catch (error) {
@@ -19801,18 +20287,18 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, data: null });
         const profileId = profile[0].id;
-        const latestScan = await db.select().from(seoScans).where(and21(eq31(seoScans.profileId, profileId), eq31(seoScans.status, "completed"))).orderBy(desc15(seoScans.createdAt)).limit(1);
+        const latestScan = await db.select().from(seoScans).where(and21(eq32(seoScans.profileId, profileId), eq32(seoScans.status, "completed"))).orderBy(desc15(seoScans.createdAt)).limit(1);
         const issueCounts = await db.select({
           severity: seoTechnicalIssues.severity,
           count: sql13`count(*)::int`
-        }).from(seoTechnicalIssues).where(and21(eq31(seoTechnicalIssues.profileId, profileId), eq31(seoTechnicalIssues.status, "open"))).groupBy(seoTechnicalIssues.severity);
-        const keywordStats = await db.select({ count: sql13`count(*)::int` }).from(seoKeywords).where(and21(eq31(seoKeywords.profileId, profileId), eq31(seoKeywords.status, "tracking")));
-        const pageStats = await db.select({ count: sql13`count(*)::int` }).from(seoPages).where(eq31(seoPages.profileId, profileId));
-        const actionStats = await db.select({ count: sql13`count(*)::int` }).from(seoActionItems).where(and21(eq31(seoActionItems.profileId, profileId), eq31(seoActionItems.status, "pending")));
-        const recentScans = await db.select().from(seoScans).where(eq31(seoScans.profileId, profileId)).orderBy(desc15(seoScans.createdAt)).limit(5);
+        }).from(seoTechnicalIssues).where(and21(eq32(seoTechnicalIssues.profileId, profileId), eq32(seoTechnicalIssues.status, "open"))).groupBy(seoTechnicalIssues.severity);
+        const keywordStats = await db.select({ count: sql13`count(*)::int` }).from(seoKeywords).where(and21(eq32(seoKeywords.profileId, profileId), eq32(seoKeywords.status, "tracking")));
+        const pageStats = await db.select({ count: sql13`count(*)::int` }).from(seoPages).where(eq32(seoPages.profileId, profileId));
+        const actionStats = await db.select({ count: sql13`count(*)::int` }).from(seoActionItems).where(and21(eq32(seoActionItems.profileId, profileId), eq32(seoActionItems.status, "pending")));
+        const recentScans = await db.select().from(seoScans).where(eq32(seoScans.profileId, profileId)).orderBy(desc15(seoScans.createdAt)).limit(5);
         const issueMap = {};
         for (const ic of issueCounts) {
           issueMap[ic.severity || "unknown"] = ic.count;
@@ -19851,9 +20337,9 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, keywords: [] });
-        const keywords = await db.select().from(seoKeywords).where(and21(eq31(seoKeywords.profileId, profile[0].id), eq31(seoKeywords.status, "tracking"))).orderBy(asc5(seoKeywords.keyword));
+        const keywords = await db.select().from(seoKeywords).where(and21(eq32(seoKeywords.profileId, profile[0].id), eq32(seoKeywords.status, "tracking"))).orderBy(asc5(seoKeywords.keyword));
         res.json({ success: true, keywords });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to fetch keywords" });
@@ -19866,7 +20352,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
         const { keywords } = req.body;
         const keywordList = Array.isArray(keywords) ? keywords : [keywords];
@@ -19891,7 +20377,7 @@ function registerOptimizeRoutes(app2) {
     requireAuth,
     async (req, res) => {
       try {
-        await db.update(seoKeywords).set({ status: "removed" }).where(eq31(seoKeywords.id, parseInt(req.params.id)));
+        await db.update(seoKeywords).set({ status: "removed" }).where(eq32(seoKeywords.id, parseInt(req.params.id)));
         res.json({ success: true });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to delete keyword" });
@@ -19903,7 +20389,7 @@ function registerOptimizeRoutes(app2) {
     requireAuth,
     async (req, res) => {
       try {
-        const history = await db.select().from(seoKeywordRankings).where(eq31(seoKeywordRankings.keywordId, parseInt(req.params.id))).orderBy(desc15(seoKeywordRankings.date)).limit(90);
+        const history = await db.select().from(seoKeywordRankings).where(eq32(seoKeywordRankings.keywordId, parseInt(req.params.id))).orderBy(desc15(seoKeywordRankings.date)).limit(90);
         res.json({ success: true, history });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to fetch rank history" });
@@ -19916,7 +20402,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
         const { seeds } = req.body;
         const seedKeywords = seeds || profile[0].targetKeywords || [];
@@ -19935,9 +20421,9 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, pages: [] });
-        const pages = await db.select().from(seoPages).where(eq31(seoPages.profileId, profile[0].id)).orderBy(desc15(seoPages.lastAnalyzed));
+        const pages = await db.select().from(seoPages).where(eq32(seoPages.profileId, profile[0].id)).orderBy(desc15(seoPages.lastAnalyzed));
         res.json({ success: true, pages });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to fetch pages" });
@@ -19949,7 +20435,7 @@ function registerOptimizeRoutes(app2) {
     requireAuth,
     async (req, res) => {
       try {
-        const page = await db.select().from(seoPages).where(eq31(seoPages.id, parseInt(req.params.id))).limit(1);
+        const page = await db.select().from(seoPages).where(eq32(seoPages.id, parseInt(req.params.id))).limit(1);
         if (page.length === 0) return res.status(404).json({ success: false, message: "Page not found" });
         res.json({ success: true, page: page[0] });
       } catch (error) {
@@ -19963,13 +20449,13 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
         const { url } = req.body;
         if (!url) return res.status(400).json({ success: false, message: "URL is required" });
         const pageData = await analyzePage(url);
         const score = calculatePageScore(pageData);
-        const existing = await db.select().from(seoPages).where(and21(eq31(seoPages.profileId, profile[0].id), eq31(seoPages.url, url))).limit(1);
+        const existing = await db.select().from(seoPages).where(and21(eq32(seoPages.profileId, profile[0].id), eq32(seoPages.url, url))).limit(1);
         let page;
         if (existing.length > 0) {
           [page] = await db.update(seoPages).set({
@@ -19981,7 +20467,7 @@ function registerOptimizeRoutes(app2) {
             issues: pageData,
             suggestions: generatePageSuggestions(pageData),
             lastAnalyzed: /* @__PURE__ */ new Date()
-          }).where(eq31(seoPages.id, existing[0].id)).returning();
+          }).where(eq32(seoPages.id, existing[0].id)).returning();
         } else {
           [page] = await db.insert(seoPages).values({
             profileId: profile[0].id,
@@ -20009,9 +20495,9 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, issues: [] });
-        let query = db.select().from(seoTechnicalIssues).where(eq31(seoTechnicalIssues.profileId, profile[0].id)).orderBy(
+        let query = db.select().from(seoTechnicalIssues).where(eq32(seoTechnicalIssues.profileId, profile[0].id)).orderBy(
           sql13`CASE ${seoTechnicalIssues.severity} WHEN 'critical' THEN 1 WHEN 'high' THEN 2 WHEN 'medium' THEN 3 WHEN 'low' THEN 4 END`,
           desc15(seoTechnicalIssues.createdAt)
         );
@@ -20028,7 +20514,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const { status } = req.body;
-        const [updated] = await db.update(seoTechnicalIssues).set({ status }).where(eq31(seoTechnicalIssues.id, parseInt(req.params.id))).returning();
+        const [updated] = await db.update(seoTechnicalIssues).set({ status }).where(eq32(seoTechnicalIssues.id, parseInt(req.params.id))).returning();
         res.json({ success: true, issue: updated });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to update issue" });
@@ -20041,9 +20527,9 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, briefs: [] });
-        const briefs = await db.select().from(seoContentBriefs).where(eq31(seoContentBriefs.profileId, profile[0].id)).orderBy(desc15(seoContentBriefs.createdAt));
+        const briefs = await db.select().from(seoContentBriefs).where(eq32(seoContentBriefs.profileId, profile[0].id)).orderBy(desc15(seoContentBriefs.createdAt));
         res.json({ success: true, briefs });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to fetch content briefs" });
@@ -20056,7 +20542,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
         const { targetKeyword } = req.body;
         if (!targetKeyword) return res.status(400).json({ success: false, message: "Target keyword is required" });
@@ -20082,9 +20568,9 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.json({ success: true, items: [] });
-        const items = await db.select().from(seoActionItems).where(eq31(seoActionItems.profileId, profile[0].id)).orderBy(
+        const items = await db.select().from(seoActionItems).where(eq32(seoActionItems.profileId, profile[0].id)).orderBy(
           sql13`CASE ${seoActionItems.priority} WHEN 'critical' THEN 1 WHEN 'high' THEN 2 WHEN 'medium' THEN 3 WHEN 'low' THEN 4 END`,
           desc15(seoActionItems.createdAt)
         );
@@ -20100,13 +20586,13 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const profile = await db.select().from(seoProfiles).where(eq31(seoProfiles.clientId, clientId)).limit(1);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
         const profileData = profile[0];
-        const latestScan = await db.select().from(seoScans).where(and21(eq31(seoScans.profileId, profileData.id), eq31(seoScans.status, "completed"))).orderBy(desc15(seoScans.createdAt)).limit(1);
-        const keywords = await db.select().from(seoKeywords).where(and21(eq31(seoKeywords.profileId, profileData.id), eq31(seoKeywords.status, "tracking")));
-        const pages = await db.select().from(seoPages).where(eq31(seoPages.profileId, profileData.id));
-        const issues = await db.select().from(seoTechnicalIssues).where(and21(eq31(seoTechnicalIssues.profileId, profileData.id), eq31(seoTechnicalIssues.status, "open")));
+        const latestScan = await db.select().from(seoScans).where(and21(eq32(seoScans.profileId, profileData.id), eq32(seoScans.status, "completed"))).orderBy(desc15(seoScans.createdAt)).limit(1);
+        const keywords = await db.select().from(seoKeywords).where(and21(eq32(seoKeywords.profileId, profileData.id), eq32(seoKeywords.status, "tracking")));
+        const pages = await db.select().from(seoPages).where(eq32(seoPages.profileId, profileData.id));
+        const issues = await db.select().from(seoTechnicalIssues).where(and21(eq32(seoTechnicalIssues.profileId, profileData.id), eq32(seoTechnicalIssues.status, "open")));
         const actionItems = await generateActionPlan({
           domain: profileData.domain,
           industry: profileData.industry || void 0,
@@ -20142,7 +20628,7 @@ function registerOptimizeRoutes(app2) {
     async (req, res) => {
       try {
         const { status } = req.body;
-        const [updated] = await db.update(seoActionItems).set({ status }).where(eq31(seoActionItems.id, parseInt(req.params.id))).returning();
+        const [updated] = await db.update(seoActionItems).set({ status }).where(eq32(seoActionItems.id, parseInt(req.params.id))).returning();
         res.json({ success: true, item: updated });
       } catch (error) {
         res.status(500).json({ success: false, message: "Failed to update action item" });
@@ -20200,14 +20686,14 @@ function generatePageSuggestions(pageData) {
 
 // server/routes/amplify.ts
 init_db();
-import { Router as Router20 } from "express";
+import { Router as Router21 } from "express";
 init_schema();
-import { eq as eq33, and as and23, desc as desc16, sql as sql14, inArray as inArray4 } from "drizzle-orm";
+import { eq as eq34, and as and23, desc as desc16, sql as sql14, inArray as inArray4 } from "drizzle-orm";
 
 // server/services/reddit-ads.ts
 init_db();
 init_schema();
-import { eq as eq32, and as and22 } from "drizzle-orm";
+import { eq as eq33, and as and22 } from "drizzle-orm";
 import crypto14 from "crypto";
 var REDDIT_ADS_API = "https://ads-api.reddit.com";
 var REDDIT_OAUTH_API = "https://oauth.reddit.com";
@@ -20684,9 +21170,9 @@ var RedditAdsService = class {
     try {
       const [connection] = await db.select().from(adAccountConnections).where(
         and22(
-          eq32(adAccountConnections.clientId, typeof clientId === "string" ? parseInt(clientId) || 0 : clientId),
-          eq32(adAccountConnections.platform, "reddit"),
-          eq32(adAccountConnections.status, "active")
+          eq33(adAccountConnections.clientId, typeof clientId === "string" ? parseInt(clientId) || 0 : clientId),
+          eq33(adAccountConnections.platform, "reddit"),
+          eq33(adAccountConnections.status, "active")
         )
       ).limit(1);
       if (!connection || !connection.accessToken) {
@@ -20701,7 +21187,7 @@ var RedditAdsService = class {
       }
       if (!refreshToken) {
         console.error(`[RedditAds] Token expired and no refresh token for client ${clientId}`);
-        await db.update(adAccountConnections).set({ status: "expired", updatedAt: /* @__PURE__ */ new Date() }).where(eq32(adAccountConnections.id, connection.id));
+        await db.update(adAccountConnections).set({ status: "expired", updatedAt: /* @__PURE__ */ new Date() }).where(eq33(adAccountConnections.id, connection.id));
         return null;
       }
       console.log(`[RedditAds] Refreshing expired token for client ${clientId}`);
@@ -20711,7 +21197,7 @@ var RedditAdsService = class {
         refreshToken: encryptToken(tokens.refresh_token),
         tokenExpiresAt: new Date(Date.now() + tokens.expires_in * 1e3),
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq32(adAccountConnections.id, connection.id));
+      }).where(eq33(adAccountConnections.id, connection.id));
       return tokens.access_token;
     } catch (error) {
       console.error(`[RedditAds] getValidToken error for client ${clientId}:`, error);
@@ -20722,8 +21208,8 @@ var RedditAdsService = class {
     try {
       const [existing] = await db.select().from(adAccountConnections).where(
         and22(
-          eq32(adAccountConnections.clientId, typeof clientId === "string" ? parseInt(clientId) || 0 : clientId),
-          eq32(adAccountConnections.platform, "reddit")
+          eq33(adAccountConnections.clientId, typeof clientId === "string" ? parseInt(clientId) || 0 : clientId),
+          eq33(adAccountConnections.platform, "reddit")
         )
       ).limit(1);
       const tokenData = {
@@ -20736,7 +21222,7 @@ var RedditAdsService = class {
         updatedAt: /* @__PURE__ */ new Date()
       };
       if (existing) {
-        await db.update(adAccountConnections).set(tokenData).where(eq32(adAccountConnections.id, existing.id));
+        await db.update(adAccountConnections).set(tokenData).where(eq33(adAccountConnections.id, existing.id));
         console.log(`[RedditAds] Updated token for client ${clientId}`);
       } else {
         await db.insert(adAccountConnections).values({
@@ -20758,7 +21244,7 @@ var redditAdsService = new RedditAdsService();
 // server/routes/amplify.ts
 init_ai_provider();
 import crypto15 from "crypto";
-var router13 = Router20();
+var router13 = Router21();
 var GOOGLE_CLIENT_ID2 = process.env.GOOGLE_CLIENT_ID;
 var GOOGLE_CLIENT_SECRET2 = process.env.GOOGLE_CLIENT_SECRET;
 var GOOGLE_ADS_DEVELOPER_TOKEN = process.env.GOOGLE_ADS_DEVELOPER_TOKEN;
@@ -20769,19 +21255,19 @@ function getUserId(req) {
 }
 router13.get("/api/amplify/overview", isAuthenticated, async (req, res) => {
   try {
-    const accountsResult = await db.select({ count: sql14`count(*)::int` }).from(adAccountConnections).where(eq33(adAccountConnections.status, "active"));
-    const activeCampaignsResult = await db.select({ count: sql14`count(*)::int` }).from(amplifyCampaigns).where(eq33(amplifyCampaigns.status, "active"));
+    const accountsResult = await db.select({ count: sql14`count(*)::int` }).from(adAccountConnections).where(eq34(adAccountConnections.status, "active"));
+    const activeCampaignsResult = await db.select({ count: sql14`count(*)::int` }).from(amplifyCampaigns).where(eq34(amplifyCampaigns.status, "active"));
     const now = /* @__PURE__ */ new Date();
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const spendResult = await db.select({
       total: sql14`coalesce(sum(spend_to_date::numeric), 0)::text`
     }).from(amplifyCampaigns).where(
       and23(
-        eq33(amplifyCampaigns.status, "active"),
+        eq34(amplifyCampaigns.status, "active"),
         sql14`${amplifyCampaigns.createdAt} >= ${monthStart}`
       )
     );
-    const topCampaign = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.status, "active")).orderBy(desc16(amplifyCampaigns.roas)).limit(1);
+    const topCampaign = await db.select().from(amplifyCampaigns).where(eq34(amplifyCampaigns.status, "active")).orderBy(desc16(amplifyCampaigns.roas)).limit(1);
     res.json({
       success: true,
       data: {
@@ -20805,7 +21291,7 @@ router13.get("/api/amplify/stats", isAuthenticated, async (_req, res) => {
     const avgRoasResult = await db.select({
       avg: sql14`coalesce(avg(roas::numeric), 0)::text`
     }).from(amplifyCampaigns).where(sql14`${amplifyCampaigns.roas} is not null`);
-    const activeCampaignsResult = await db.select({ count: sql14`count(*)::int` }).from(amplifyCampaigns).where(eq33(amplifyCampaigns.status, "active"));
+    const activeCampaignsResult = await db.select({ count: sql14`count(*)::int` }).from(amplifyCampaigns).where(eq34(amplifyCampaigns.status, "active"));
     const platformBreakdown = await db.select({
       platform: amplifyCampaigns.platform,
       count: sql14`count(*)::int`,
@@ -20828,7 +21314,7 @@ router13.get("/api/amplify/stats", isAuthenticated, async (_req, res) => {
 });
 router13.get("/api/amplify/accounts", isAuthenticated, async (_req, res) => {
   try {
-    const accounts = await db.select().from(adAccountConnections).where(eq33(adAccountConnections.status, "active")).orderBy(desc16(adAccountConnections.createdAt));
+    const accounts = await db.select().from(adAccountConnections).where(eq34(adAccountConnections.status, "active")).orderBy(desc16(adAccountConnections.createdAt));
     res.json({ success: true, accounts });
   } catch (error) {
     console.error("[Amplify] List accounts error:", error);
@@ -21050,7 +21536,7 @@ router13.delete(
       if (isNaN(accountId)) {
         return res.status(400).json({ success: false, message: "Invalid account ID" });
       }
-      const [updated] = await db.update(adAccountConnections).set({ status: "disconnected", updatedAt: /* @__PURE__ */ new Date() }).where(eq33(adAccountConnections.id, accountId)).returning();
+      const [updated] = await db.update(adAccountConnections).set({ status: "disconnected", updatedAt: /* @__PURE__ */ new Date() }).where(eq34(adAccountConnections.id, accountId)).returning();
       if (!updated) {
         return res.status(404).json({ success: false, message: "Account not found" });
       }
@@ -21073,10 +21559,10 @@ router13.get("/api/amplify/campaigns", isAuthenticated, async (req, res) => {
     const offset = (pageNum - 1) * limitNum;
     const conditions = [];
     if (platform) {
-      conditions.push(eq33(amplifyCampaigns.platform, platform));
+      conditions.push(eq34(amplifyCampaigns.platform, platform));
     }
     if (status) {
-      conditions.push(eq33(amplifyCampaigns.status, status));
+      conditions.push(eq34(amplifyCampaigns.status, status));
     }
     const whereClause = conditions.length > 0 ? and23(...conditions) : void 0;
     const campaigns2 = await db.select().from(amplifyCampaigns).where(whereClause).orderBy(desc16(amplifyCampaigns.createdAt)).limit(limitNum).offset(offset);
@@ -21106,10 +21592,10 @@ router13.get(
       const limitNum = Math.min(parseInt(limit) || 20, 100);
       const offset = (pageNum - 1) * limitNum;
       const conditions = [
-        eq33(amplifyCampaigns.platform, "reddit")
+        eq34(amplifyCampaigns.platform, "reddit")
       ];
       if (status) {
-        conditions.push(eq33(amplifyCampaigns.status, status));
+        conditions.push(eq34(amplifyCampaigns.status, status));
       }
       const whereClause = and23(...conditions);
       const campaigns2 = await db.select().from(amplifyCampaigns).where(whereClause).orderBy(desc16(amplifyCampaigns.createdAt)).limit(limitNum).offset(offset);
@@ -21139,9 +21625,9 @@ router13.get(
       const pageNum = parseInt(page) || 1;
       const limitNum = Math.min(parseInt(limit) || 20, 100);
       const offset = (pageNum - 1) * limitNum;
-      const conditions = [eq33(amplifyCampaigns.platform, "meta")];
+      const conditions = [eq34(amplifyCampaigns.platform, "meta")];
       if (status) {
-        conditions.push(eq33(amplifyCampaigns.status, status));
+        conditions.push(eq34(amplifyCampaigns.status, status));
       }
       const whereClause = and23(...conditions);
       const campaigns2 = await db.select().from(amplifyCampaigns).where(whereClause).orderBy(desc16(amplifyCampaigns.createdAt)).limit(limitNum).offset(offset);
@@ -21172,10 +21658,10 @@ router13.get(
       const limitNum = Math.min(parseInt(limit) || 20, 100);
       const offset = (pageNum - 1) * limitNum;
       const conditions = [
-        eq33(amplifyCampaigns.platform, "google")
+        eq34(amplifyCampaigns.platform, "google")
       ];
       if (status) {
-        conditions.push(eq33(amplifyCampaigns.status, status));
+        conditions.push(eq34(amplifyCampaigns.status, status));
       }
       const whereClause = and23(...conditions);
       const campaigns2 = await db.select().from(amplifyCampaigns).where(whereClause).orderBy(desc16(amplifyCampaigns.createdAt)).limit(limitNum).offset(offset);
@@ -21261,7 +21747,7 @@ router13.post("/api/amplify/campaigns/google", isAuthenticated, async (req, res)
       endDate: endDate ? new Date(endDate) : null,
       status: "draft"
     }).returning();
-    const [googleAccount] = await db.select().from(adAccountConnections).where(and23(eq33(adAccountConnections.platform, "google"), eq33(adAccountConnections.status, "active")));
+    const [googleAccount] = await db.select().from(adAccountConnections).where(and23(eq34(adAccountConnections.platform, "google"), eq34(adAccountConnections.status, "active")));
     if (googleAccount?.accessToken && GOOGLE_ADS_DEVELOPER_TOKEN) {
       try {
         let accessToken = googleAccount.accessToken;
@@ -21279,7 +21765,7 @@ router13.post("/api/amplify/campaigns/google", isAuthenticated, async (req, res)
           const refreshData = await refreshResponse.json();
           if (refreshData.access_token) {
             accessToken = refreshData.access_token;
-            await db.update(adAccountConnections).set({ accessToken, tokenExpiresAt: new Date(Date.now() + (refreshData.expires_in || 3600) * 1e3) }).where(eq33(adAccountConnections.id, googleAccount.id));
+            await db.update(adAccountConnections).set({ accessToken, tokenExpiresAt: new Date(Date.now() + (refreshData.expires_in || 3600) * 1e3) }).where(eq34(adAccountConnections.id, googleAccount.id));
           }
         }
         console.log(`[Amplify] Google campaign ${campaign.id} created. Google Ads API submission ready when campaign is activated.`);
@@ -21367,7 +21853,7 @@ router13.post(
         const token = await redditAdsService.getValidToken(userId);
         if (!token) return;
         if (!token) throw new Error("No valid Reddit token \u2014 connect your account first");
-        const [redditAccount] = await db.select().from(adAccountConnections).where(and23(eq33(adAccountConnections.clientId, parseInt(userId) || 0), eq33(adAccountConnections.platform, "reddit"))).limit(1);
+        const [redditAccount] = await db.select().from(adAccountConnections).where(and23(eq34(adAccountConnections.clientId, parseInt(userId) || 0), eq34(adAccountConnections.platform, "reddit"))).limit(1);
         const redditAccountId = redditAccount?.accountId || "default";
         const redditCampaign = await redditAdsService.createCampaign(token, redditAccountId, {
           name: name.trim(),
@@ -21399,7 +21885,7 @@ router13.post(
           externalCampaignId,
           status: "active",
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq33(amplifyCampaigns.id, campaign.id));
+        }).where(eq34(amplifyCampaigns.id, campaign.id));
         await db.insert(amplifyAdSets).values({
           campaignId: campaign.id,
           externalAdSetId: externalAdGroupId,
@@ -21408,7 +21894,7 @@ router13.post(
           budget: dailyBudget || lifetimeBudget || "0",
           status: "active"
         });
-        const [adSet] = await db.select().from(amplifyAdSets).where(eq33(amplifyAdSets.campaignId, campaign.id)).limit(1);
+        const [adSet] = await db.select().from(amplifyAdSets).where(eq34(amplifyAdSets.campaignId, campaign.id)).limit(1);
         if (adSet) {
           await db.insert(amplifyAds).values({
             adSetId: adSet.id,
@@ -21429,8 +21915,8 @@ router13.post(
           "[Amplify] Reddit API error during campaign creation:",
           apiError
         );
-        await db.update(amplifyCampaigns).set({ status: "draft", updatedAt: /* @__PURE__ */ new Date() }).where(eq33(amplifyCampaigns.id, campaign.id));
-        const [updatedCampaign] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaign.id));
+        await db.update(amplifyCampaigns).set({ status: "draft", updatedAt: /* @__PURE__ */ new Date() }).where(eq34(amplifyCampaigns.id, campaign.id));
+        const [updatedCampaign] = await db.select().from(amplifyCampaigns).where(eq34(amplifyCampaigns.id, campaign.id));
         return res.status(207).json({
           success: true,
           partial: true,
@@ -21438,7 +21924,7 @@ router13.post(
           message: "Campaign saved locally but Reddit API submission failed: " + apiError.message + ". Connect your Reddit account or check credentials."
         });
       }
-      const [finalCampaign] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaign.id));
+      const [finalCampaign] = await db.select().from(amplifyCampaigns).where(eq34(amplifyCampaigns.id, campaign.id));
       res.json({
         success: true,
         campaign: finalCampaign,
@@ -21466,7 +21952,7 @@ router13.put(
       if (isNaN(campaignId)) {
         return res.status(400).json({ success: false, message: "Invalid campaign ID" });
       }
-      const [existing] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).limit(1);
+      const [existing] = await db.select().from(amplifyCampaigns).where(eq34(amplifyCampaigns.id, campaignId)).limit(1);
       if (!existing) {
         return res.status(404).json({ success: false, message: "Campaign not found" });
       }
@@ -21475,7 +21961,7 @@ router13.put(
           const userId = getUserId(req);
           const token = await redditAdsService.getValidToken(userId);
           if (!token) return;
-          const [acct] = await db.select().from(adAccountConnections).where(and23(eq33(adAccountConnections.clientId, parseInt(userId) || 0), eq33(adAccountConnections.platform, "reddit"))).limit(1);
+          const [acct] = await db.select().from(adAccountConnections).where(and23(eq34(adAccountConnections.clientId, parseInt(userId) || 0), eq34(adAccountConnections.platform, "reddit"))).limit(1);
           await redditAdsService.updateCampaign(
             token,
             acct?.accountId || "default",
@@ -21489,7 +21975,7 @@ router13.put(
           );
         }
       }
-      const [updated] = await db.update(amplifyCampaigns).set({ status: "paused", updatedAt: /* @__PURE__ */ new Date() }).where(eq33(amplifyCampaigns.id, campaignId)).returning();
+      const [updated] = await db.update(amplifyCampaigns).set({ status: "paused", updatedAt: /* @__PURE__ */ new Date() }).where(eq34(amplifyCampaigns.id, campaignId)).returning();
       res.json({ success: true, campaign: updated });
     } catch (error) {
       console.error("[Amplify] Pause campaign error:", error);
@@ -21506,7 +21992,7 @@ router13.put(
       if (isNaN(campaignId)) {
         return res.status(400).json({ success: false, message: "Invalid campaign ID" });
       }
-      const [existing] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).limit(1);
+      const [existing] = await db.select().from(amplifyCampaigns).where(eq34(amplifyCampaigns.id, campaignId)).limit(1);
       if (!existing) {
         return res.status(404).json({ success: false, message: "Campaign not found" });
       }
@@ -21515,7 +22001,7 @@ router13.put(
           const userId = getUserId(req);
           const token = await redditAdsService.getValidToken(userId);
           if (!token) return;
-          const [acct] = await db.select().from(adAccountConnections).where(and23(eq33(adAccountConnections.clientId, parseInt(userId) || 0), eq33(adAccountConnections.platform, "reddit"))).limit(1);
+          const [acct] = await db.select().from(adAccountConnections).where(and23(eq34(adAccountConnections.clientId, parseInt(userId) || 0), eq34(adAccountConnections.platform, "reddit"))).limit(1);
           await redditAdsService.updateCampaign(
             token,
             acct?.accountId || "default",
@@ -21529,7 +22015,7 @@ router13.put(
           );
         }
       }
-      const [updated] = await db.update(amplifyCampaigns).set({ status: "active", updatedAt: /* @__PURE__ */ new Date() }).where(eq33(amplifyCampaigns.id, campaignId)).returning();
+      const [updated] = await db.update(amplifyCampaigns).set({ status: "active", updatedAt: /* @__PURE__ */ new Date() }).where(eq34(amplifyCampaigns.id, campaignId)).returning();
       res.json({ success: true, campaign: updated });
     } catch (error) {
       console.error("[Amplify] Resume campaign error:", error);
@@ -21546,18 +22032,18 @@ router13.delete(
       if (isNaN(campaignId)) {
         return res.status(400).json({ success: false, message: "Invalid campaign ID" });
       }
-      const [existing] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).limit(1);
+      const [existing] = await db.select().from(amplifyCampaigns).where(eq34(amplifyCampaigns.id, campaignId)).limit(1);
       if (!existing) {
         return res.status(404).json({ success: false, message: "Campaign not found" });
       }
-      const adSets = await db.select().from(amplifyAdSets).where(eq33(amplifyAdSets.campaignId, campaignId));
+      const adSets = await db.select().from(amplifyAdSets).where(eq34(amplifyAdSets.campaignId, campaignId));
       if (adSets.length > 0) {
         const adSetIds = adSets.map((s) => s.id);
         await db.delete(amplifyAds).where(inArray4(amplifyAds.adSetId, adSetIds));
-        await db.delete(amplifyAdSets).where(eq33(amplifyAdSets.campaignId, campaignId));
+        await db.delete(amplifyAdSets).where(eq34(amplifyAdSets.campaignId, campaignId));
       }
-      await db.delete(redditAdComments).where(eq33(redditAdComments.campaignId, campaignId));
-      const [deleted] = await db.delete(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).returning();
+      await db.delete(redditAdComments).where(eq34(redditAdComments.campaignId, campaignId));
+      const [deleted] = await db.delete(amplifyCampaigns).where(eq34(amplifyCampaigns.id, campaignId)).returning();
       res.json({ success: true, message: "Campaign deleted", campaign: deleted });
     } catch (error) {
       console.error("[Amplify] Delete campaign error:", error);
@@ -21626,15 +22112,15 @@ router13.post("/api/amplify/audiences/from-crm", isAuthenticated, async (req, re
     }
     const clientId = req.session?.clientId;
     const { crmContacts: crmContacts2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-    const conditions = [eq33(crmContacts2.clientId, clientId)];
+    const conditions = [eq34(crmContacts2.clientId, clientId)];
     if (filter?.lifecycleStage) {
-      conditions.push(eq33(crmContacts2.lifecycleStage, filter.lifecycleStage));
+      conditions.push(eq34(crmContacts2.lifecycleStage, filter.lifecycleStage));
     }
     if (filter?.leadSource) {
-      conditions.push(eq33(crmContacts2.leadSource, filter.leadSource));
+      conditions.push(eq34(crmContacts2.leadSource, filter.leadSource));
     }
     if (filter?.status) {
-      conditions.push(eq33(crmContacts2.status, filter.status));
+      conditions.push(eq34(crmContacts2.status, filter.status));
     }
     const contacts = await db.select({ id: crmContacts2.id, email: crmContacts2.email, firstName: crmContacts2.firstName, lastName: crmContacts2.lastName }).from(crmContacts2).where(and23(...conditions));
     const contactEmails = contacts.filter((c) => c.email).map((c) => c.email);
@@ -21678,7 +22164,7 @@ router13.post("/api/amplify/attribute", isAuthenticated, async (req, res) => {
     if (!contactId || !campaignId) {
       return res.status(400).json({ success: false, message: "contactId and campaignId are required" });
     }
-    const [campaign] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).limit(1);
+    const [campaign] = await db.select().from(amplifyCampaigns).where(eq34(amplifyCampaigns.id, campaignId)).limit(1);
     const campaignName = campaign?.name || `Campaign #${campaignId}`;
     const { logContactActivity: logContactActivity2 } = await Promise.resolve().then(() => (init_timeline_logger(), timeline_logger_exports));
     await logContactActivity2({
@@ -21710,7 +22196,7 @@ router13.get("/api/amplify/budget", isAuthenticated, async (_req, res) => {
     const currentMonth = `${now.getFullYear()}-${String(
       now.getMonth() + 1
     ).padStart(2, "0")}`;
-    const budgets = await db.select().from(amplifyBudgetAllocations).where(eq33(amplifyBudgetAllocations.month, currentMonth));
+    const budgets = await db.select().from(amplifyBudgetAllocations).where(eq34(amplifyBudgetAllocations.month, currentMonth));
     res.json({
       success: true,
       month: currentMonth,
@@ -21738,7 +22224,7 @@ router13.put("/api/amplify/budget", isAuthenticated, async (req, res) => {
     const currentMonth = `${now.getFullYear()}-${String(
       now.getMonth() + 1
     ).padStart(2, "0")}`;
-    const existing = await db.select().from(amplifyBudgetAllocations).where(eq33(amplifyBudgetAllocations.month, currentMonth)).limit(1);
+    const existing = await db.select().from(amplifyBudgetAllocations).where(eq34(amplifyBudgetAllocations.month, currentMonth)).limit(1);
     let budget;
     if (existing.length > 0) {
       [budget] = await db.update(amplifyBudgetAllocations).set({
@@ -21749,7 +22235,7 @@ router13.put("/api/amplify/budget", isAuthenticated, async (req, res) => {
         redditAllocation: redditAllocation || "0",
         otherAllocations: otherAllocations || null,
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq33(amplifyBudgetAllocations.id, existing[0].id)).returning();
+      }).where(eq34(amplifyBudgetAllocations.id, existing[0].id)).returning();
     } else {
       [budget] = await db.insert(amplifyBudgetAllocations).values({
         month: currentMonth,
@@ -21772,7 +22258,7 @@ router13.get("/api/amplify/reports", isAuthenticated, async (req, res) => {
     const { startDate, endDate, platform } = req.query;
     const conditions = [];
     if (platform) {
-      conditions.push(eq33(amplifyCampaigns.platform, platform));
+      conditions.push(eq34(amplifyCampaigns.platform, platform));
     }
     if (startDate) {
       conditions.push(
@@ -21813,7 +22299,7 @@ router13.get("/api/amplify/reports", isAuthenticated, async (req, res) => {
 });
 router13.get("/api/amplify/insights", isAuthenticated, async (_req, res) => {
   try {
-    const activeCampaigns = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.status, "active"));
+    const activeCampaigns = await db.select().from(amplifyCampaigns).where(eq34(amplifyCampaigns.status, "active"));
     const insights = [];
     if (activeCampaigns.length > 0) {
       const platformPerf = {};
@@ -22136,11 +22622,11 @@ router13.get(
       const { sentiment, responded } = req.query;
       const conditions = [];
       if (sentiment && typeof sentiment === "string") {
-        conditions.push(eq33(redditAdComments.sentiment, sentiment));
+        conditions.push(eq34(redditAdComments.sentiment, sentiment));
       }
       if (responded !== void 0) {
         conditions.push(
-          eq33(redditAdComments.responded, responded === "true")
+          eq34(redditAdComments.responded, responded === "true")
         );
       }
       const whereClause = conditions.length > 0 ? and23(...conditions) : void 0;
@@ -22161,7 +22647,7 @@ router13.get(
       if (isNaN(campaignId)) {
         return res.status(400).json({ success: false, message: "Invalid campaign ID" });
       }
-      const comments = await db.select().from(redditAdComments).where(eq33(redditAdComments.campaignId, campaignId)).orderBy(desc16(redditAdComments.createdAt));
+      const comments = await db.select().from(redditAdComments).where(eq34(redditAdComments.campaignId, campaignId)).orderBy(desc16(redditAdComments.createdAt));
       refreshCampaignComments(campaignId, getUserId(req)).catch(
         (err) => console.warn(
           `[Amplify] Background comment refresh failed for campaign ${campaignId}:`,
@@ -22176,7 +22662,7 @@ router13.get(
   }
 );
 async function refreshCampaignComments(campaignId, userId) {
-  const [campaign] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).limit(1);
+  const [campaign] = await db.select().from(amplifyCampaigns).where(eq34(amplifyCampaigns.id, campaignId)).limit(1);
   if (!campaign || !campaign.externalCampaignId) return;
   const token = await redditAdsService.getValidToken(userId);
   if (!token) return;
@@ -22185,7 +22671,7 @@ async function refreshCampaignComments(campaignId, userId) {
     campaign.externalCampaignId
   );
   for (const comment of apiComments) {
-    const existing = await db.select().from(redditAdComments).where(eq33(redditAdComments.externalCommentId, comment.id)).limit(1);
+    const existing = await db.select().from(redditAdComments).where(eq34(redditAdComments.externalCommentId, comment.id)).limit(1);
     if (existing.length > 0) continue;
     let sentiment = "neutral";
     let suggestedResponse = null;
@@ -22223,11 +22709,11 @@ async function refreshCampaignComments(campaignId, userId) {
       responded: false
     });
   }
-  const countResult = await db.select({ count: sql14`count(*)::int` }).from(redditAdComments).where(eq33(redditAdComments.campaignId, campaignId));
+  const countResult = await db.select({ count: sql14`count(*)::int` }).from(redditAdComments).where(eq34(redditAdComments.campaignId, campaignId));
   await db.update(amplifyCampaigns).set({
     redditCommentCount: countResult[0]?.count || 0,
     updatedAt: /* @__PURE__ */ new Date()
-  }).where(eq33(amplifyCampaigns.id, campaignId));
+  }).where(eq34(amplifyCampaigns.id, campaignId));
 }
 router13.post(
   "/api/amplify/reddit/campaigns/:id/comments/:commentId/respond",
@@ -22242,7 +22728,7 @@ router13.post(
       if (!responseText || typeof responseText !== "string" || !responseText.trim()) {
         return res.status(400).json({ success: false, message: "Response text is required" });
       }
-      const [comment] = await db.select().from(redditAdComments).where(eq33(redditAdComments.id, commentId)).limit(1);
+      const [comment] = await db.select().from(redditAdComments).where(eq34(redditAdComments.id, commentId)).limit(1);
       if (!comment) {
         return res.status(404).json({ success: false, message: "Comment not found" });
       }
@@ -22267,7 +22753,7 @@ router13.post(
         responded: true,
         respondedAt: /* @__PURE__ */ new Date(),
         suggestedResponse: responseText.trim()
-      }).where(eq33(redditAdComments.id, commentId)).returning();
+      }).where(eq34(redditAdComments.id, commentId)).returning();
       res.json({ success: true, comment: updated });
     } catch (error) {
       console.error("[Amplify] Reddit respond error:", error);
@@ -22284,14 +22770,14 @@ router13.get(
       if (isNaN(campaignId)) {
         return res.status(400).json({ success: false, message: "Invalid campaign ID" });
       }
-      const [campaign] = await db.select().from(amplifyCampaigns).where(eq33(amplifyCampaigns.id, campaignId)).limit(1);
+      const [campaign] = await db.select().from(amplifyCampaigns).where(eq34(amplifyCampaigns.id, campaignId)).limit(1);
       if (!campaign) {
         return res.status(404).json({ success: false, message: "Campaign not found" });
       }
       const sentimentBreakdown = await db.select({
         sentiment: redditAdComments.sentiment,
         count: sql14`count(*)::int`
-      }).from(redditAdComments).where(eq33(redditAdComments.campaignId, campaignId)).groupBy(redditAdComments.sentiment);
+      }).from(redditAdComments).where(eq34(redditAdComments.campaignId, campaignId)).groupBy(redditAdComments.sentiment);
       const sentimentMap = {};
       for (const s of sentimentBreakdown) {
         sentimentMap[s.sentiment || "unknown"] = s.count;
@@ -22546,7 +23032,7 @@ var PricingEngine = class {
 // server/services/productRecommendations.ts
 init_db();
 init_schema();
-import { eq as eq34 } from "drizzle-orm";
+import { eq as eq35 } from "drizzle-orm";
 var ProductRecommendationService = class {
   /**
    * Generate product recommendations based on assessment scores
@@ -22585,7 +23071,7 @@ var ProductRecommendationService = class {
     if (weakCategories.length === 0) {
       return [];
     }
-    const allProducts = await db.select().from(products).where(eq34(products.isActive, true));
+    const allProducts = await db.select().from(products).where(eq35(products.isActive, true));
     for (const weakCat of weakCategories) {
       const matchingProducts = allProducts.filter(
         (product) => product.improvesCategory?.includes(weakCat.category)
@@ -22681,7 +23167,7 @@ var ProductRecommendationService = class {
       categoryAffected: assessmentProductRecommendations.categoryAffected,
       isAccepted: assessmentProductRecommendations.isAccepted,
       isPurchased: assessmentProductRecommendations.isPurchased
-    }).from(assessmentProductRecommendations).innerJoin(products, eq34(assessmentProductRecommendations.productId, products.productId)).where(eq34(assessmentProductRecommendations.assessmentId, assessmentId));
+    }).from(assessmentProductRecommendations).innerJoin(products, eq35(assessmentProductRecommendations.productId, products.productId)).where(eq35(assessmentProductRecommendations.assessmentId, assessmentId));
     return recs;
   }
 };
@@ -22689,7 +23175,7 @@ var productRecommendationService = new ProductRecommendationService();
 
 // server/routes/subscriptions.ts
 init_db();
-import { eq as eq35 } from "drizzle-orm";
+import { eq as eq36 } from "drizzle-orm";
 import { z as z8 } from "zod";
 function calculateNextBillingDate(billingCycle) {
   const now = /* @__PURE__ */ new Date();
@@ -22705,7 +23191,7 @@ function calculateNextBillingDate(billingCycle) {
 function registerSubscriptionRoutes(app2, emailService2) {
   app2.get("/api/subscription-plans", async (req, res) => {
     try {
-      const plans = await db.select().from(subscriptionPlans).where(eq35(subscriptionPlans.isActive, true));
+      const plans = await db.select().from(subscriptionPlans).where(eq36(subscriptionPlans.isActive, true));
       res.json({
         success: true,
         plans: plans.map((plan) => ({
@@ -22725,7 +23211,7 @@ function registerSubscriptionRoutes(app2, emailService2) {
   });
   app2.get("/api/subscription-addons", async (req, res) => {
     try {
-      const addons = await db.select().from(subscriptionAddons).where(eq35(subscriptionAddons.isActive, true));
+      const addons = await db.select().from(subscriptionAddons).where(eq36(subscriptionAddons.isActive, true));
       const categoryIconMap = {
         seo: "Globe",
         social: "Users",
@@ -22889,14 +23375,14 @@ function registerSubscriptionRoutes(app2, emailService2) {
           message: "Plan ID is required"
         });
       }
-      const plan = await db.select().from(subscriptionPlans).where(eq35(subscriptionPlans.planId, planId)).limit(1);
+      const plan = await db.select().from(subscriptionPlans).where(eq36(subscriptionPlans.planId, planId)).limit(1);
       if (plan.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Plan not found"
         });
       }
-      const addons = await db.select().from(subscriptionAddons).where(eq35(subscriptionAddons.isActive, true));
+      const addons = await db.select().from(subscriptionAddons).where(eq36(subscriptionAddons.isActive, true));
       const pricing = PricingEngine.calculateSubscriptionPrice(
         plan[0],
         addons,
@@ -22933,7 +23419,7 @@ function registerSubscriptionRoutes(app2, emailService2) {
         diy: "diy-platform"
       };
       const planStringId = planIdMap[pathway];
-      const [plan] = await db.select().from(subscriptionPlans).where(eq35(subscriptionPlans.planId, planStringId)).limit(1);
+      const [plan] = await db.select().from(subscriptionPlans).where(eq36(subscriptionPlans.planId, planStringId)).limit(1);
       if (!plan) {
         return res.status(404).json({
           success: false,
@@ -23015,7 +23501,7 @@ function registerSubscriptionRoutes(app2, emailService2) {
         diy: "diy-platform"
       };
       const planStringId = planIdMap[pathway];
-      const [plan] = await db.select().from(subscriptionPlans).where(eq35(subscriptionPlans.planId, planStringId)).limit(1);
+      const [plan] = await db.select().from(subscriptionPlans).where(eq36(subscriptionPlans.planId, planStringId)).limit(1);
       if (!plan) {
         return res.status(404).json({
           success: false,
@@ -23096,7 +23582,7 @@ function registerSubscriptionRoutes(app2, emailService2) {
   app2.get("/api/subscriptions/:id/trial-status", async (req, res) => {
     try {
       const { id } = req.params;
-      const [subscription] = await db.select().from(subscriptions).where(eq35(subscriptions.id, parseInt(id)));
+      const [subscription] = await db.select().from(subscriptions).where(eq36(subscriptions.id, parseInt(id)));
       if (!subscription) {
         return res.status(404).json({
           success: false,
@@ -23161,14 +23647,14 @@ function registerSubscriptionRoutes(app2, emailService2) {
         paymentToken,
         customerInfo
       } = validation.data;
-      const plan = await db.select().from(subscriptionPlans).where(eq35(subscriptionPlans.planId, planId)).limit(1);
+      const plan = await db.select().from(subscriptionPlans).where(eq36(subscriptionPlans.planId, planId)).limit(1);
       if (plan.length === 0) {
         return res.status(404).json({
           success: false,
           message: "Plan not found"
         });
       }
-      const addons = await db.select().from(subscriptionAddons).where(eq35(subscriptionAddons.isActive, true));
+      const addons = await db.select().from(subscriptionAddons).where(eq36(subscriptionAddons.isActive, true));
       const pricing = PricingEngine.calculateSubscriptionPrice(
         plan[0],
         addons,
@@ -23323,10 +23809,10 @@ function registerSubscriptionRoutes(app2, emailService2) {
       const deliveryMethod = req.query.deliveryMethod;
       const category = req.query.category;
       const { products: products2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-      const { eq: eq45, and: and32 } = await import("drizzle-orm");
-      const conditions = [eq45(products2.isActive, true)];
+      const { eq: eq46, and: and32 } = await import("drizzle-orm");
+      const conditions = [eq46(products2.isActive, true)];
       if (category) {
-        conditions.push(eq45(products2.category, category));
+        conditions.push(eq46(products2.category, category));
       }
       const allProducts = await db.select().from(products2).where(and32(...conditions));
       const filteredProducts = deliveryMethod ? allProducts.filter(
@@ -23348,8 +23834,8 @@ function registerSubscriptionRoutes(app2, emailService2) {
     try {
       const productId = parseInt(req.params.id);
       const { products: products2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-      const { eq: eq45 } = await import("drizzle-orm");
-      const [product] = await db.select().from(products2).where(eq45(products2.id, productId));
+      const { eq: eq46 } = await import("drizzle-orm");
+      const [product] = await db.select().from(products2).where(eq46(products2.id, productId));
       if (!product) {
         return res.status(404).json({
           success: false,
@@ -24895,7 +25381,7 @@ var ResendEmailService = class {
 init_db();
 init_schema();
 import nodemailer from "nodemailer";
-import { eq as eq36, and as and25 } from "drizzle-orm";
+import { eq as eq37, and as and25 } from "drizzle-orm";
 var InboxEmailService = class {
   transporter;
   constructor() {
@@ -24916,7 +25402,7 @@ var InboxEmailService = class {
    * @throws Error with details about the failure
    */
   async sendMessage(conversationId, content, fromName) {
-    const [conversation] = await db.select().from(inboxConversations).where(eq36(inboxConversations.id, conversationId)).limit(1);
+    const [conversation] = await db.select().from(inboxConversations).where(eq37(inboxConversations.id, conversationId)).limit(1);
     if (!conversation) {
       throw new Error("Conversation not found");
     }
@@ -24924,9 +25410,9 @@ var InboxEmailService = class {
       throw new Error("Conversation is not an email thread");
     }
     const [channelConnection] = await db.select().from(inboxChannelConnections).where(and25(
-      eq36(inboxChannelConnections.clientId, conversation.clientId),
-      eq36(inboxChannelConnections.channelType, "email"),
-      eq36(inboxChannelConnections.status, "active")
+      eq37(inboxChannelConnections.clientId, conversation.clientId),
+      eq37(inboxChannelConnections.channelType, "email"),
+      eq37(inboxChannelConnections.status, "active")
     )).limit(1);
     const fromEmail = channelConnection?.channelIdentifier || process.env.FROM_EMAIL || "inbox@businessblueprint.io";
     const toEmail = conversation.contactIdentifier;
@@ -24999,9 +25485,9 @@ var InboxEmailService = class {
   async handleIncomingEmail(data) {
     try {
       let conversation = await db.select().from(inboxConversations).where(and25(
-        eq36(inboxConversations.clientId, data.clientId),
-        eq36(inboxConversations.contactIdentifier, data.from),
-        eq36(inboxConversations.primaryChannelType, "email")
+        eq37(inboxConversations.clientId, data.clientId),
+        eq37(inboxConversations.contactIdentifier, data.from),
+        eq37(inboxConversations.primaryChannelType, "email")
       )).limit(1);
       let conversationId;
       if (conversation.length === 0) {
@@ -25020,7 +25506,7 @@ var InboxEmailService = class {
         await db.update(inboxConversations).set({
           subject: data.subject,
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq36(inboxConversations.id, conversationId));
+        }).where(eq37(inboxConversations.id, conversationId));
       }
       const [message] = await db.insert(inboxMessages2).values({
         conversationId,
@@ -26597,7 +27083,7 @@ var presenceScannerService = new PresenceScannerService();
 // server/services/listingSync.ts
 init_db();
 init_schema();
-import { eq as eq37, and as and26 } from "drizzle-orm";
+import { eq as eq38, and as and26 } from "drizzle-orm";
 var ListingSyncService = class {
   /**
    * Sync listings for a client by searching Google Places and Yelp
@@ -26655,7 +27141,7 @@ var ListingSyncService = class {
    * Returns 'created' or 'updated'.
    */
   async upsertListing(clientId, platform, data) {
-    const existing = await db.select().from(businessListings).where(and26(eq37(businessListings.clientId, clientId), eq37(businessListings.platform, platform))).limit(1);
+    const existing = await db.select().from(businessListings).where(and26(eq38(businessListings.clientId, clientId), eq38(businessListings.platform, platform))).limit(1);
     const now = /* @__PURE__ */ new Date();
     if (existing.length > 0) {
       await db.update(businessListings).set({
@@ -26674,7 +27160,7 @@ var ListingSyncService = class {
         syncError: null,
         status: "active",
         updatedAt: now
-      }).where(eq37(businessListings.id, existing[0].id));
+      }).where(eq38(businessListings.id, existing[0].id));
       return "updated";
     }
     await db.insert(businessListings).values({
@@ -26703,7 +27189,7 @@ var listingSyncService = new ListingSyncService();
 // server/services/reviewSync.ts
 init_db();
 init_schema();
-import { eq as eq38, and as and27, desc as desc17, sql as sql15 } from "drizzle-orm";
+import { eq as eq39, and as and27, desc as desc17, sql as sql15 } from "drizzle-orm";
 function classifySentiment(rating) {
   if (rating >= 4) return "positive";
   if (rating <= 2) return "negative";
@@ -26741,7 +27227,7 @@ var ReviewSyncService = class {
             if (firstName) {
               const contacts = await db.select().from(crmContacts2).where(
                 and27(
-                  eq38(crmContacts2.clientId, clientId),
+                  eq39(crmContacts2.clientId, clientId),
                   sql15`LOWER(${crmContacts2.firstName}) = LOWER(${firstName})`,
                   lastName ? sql15`LOWER(${crmContacts2.lastName}) = LOWER(${lastName})` : sql15`1=1`
                 )
@@ -26794,7 +27280,7 @@ var ReviewSyncService = class {
             if (firstName) {
               const contacts = await db.select().from(crmContacts2).where(
                 and27(
-                  eq38(crmContacts2.clientId, clientId),
+                  eq39(crmContacts2.clientId, clientId),
                   sql15`LOWER(${crmContacts2.firstName}) = LOWER(${firstName})`,
                   lastName ? sql15`LOWER(${crmContacts2.lastName}) = LOWER(${lastName})` : sql15`1=1`
                 )
@@ -26829,8 +27315,8 @@ var ReviewSyncService = class {
   async upsertReview(clientId, data) {
     const existing = await db.select().from(businessReviews).where(
       and27(
-        eq38(businessReviews.clientId, clientId),
-        eq38(businessReviews.platformReviewId, data.platformReviewId)
+        eq39(businessReviews.clientId, clientId),
+        eq39(businessReviews.platformReviewId, data.platformReviewId)
       )
     ).limit(1);
     const sentiment = classifySentiment(data.rating);
@@ -26841,7 +27327,7 @@ var ReviewSyncService = class {
         reviewText: data.reviewText,
         sentiment,
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq38(businessReviews.id, existing[0].id));
+      }).where(eq39(businessReviews.id, existing[0].id));
       return "updated";
     }
     await db.insert(businessReviews).values({
@@ -26861,7 +27347,7 @@ var ReviewSyncService = class {
    * Get all reviews for a client
    */
   async getClientReviews(clientId) {
-    return db.select().from(businessReviews).where(eq38(businessReviews.clientId, clientId)).orderBy(desc17(businessReviews.reviewDate));
+    return db.select().from(businessReviews).where(eq39(businessReviews.clientId, clientId)).orderBy(desc17(businessReviews.reviewDate));
   }
   /**
    * Get review analytics for a client
@@ -26894,7 +27380,7 @@ var ReviewSyncService = class {
    * Get a single review by ID
    */
   async getReviewById(reviewId) {
-    const [review] = await db.select().from(businessReviews).where(eq38(businessReviews.id, reviewId));
+    const [review] = await db.select().from(businessReviews).where(eq39(businessReviews.id, reviewId));
     return review || null;
   }
   /**
@@ -26906,17 +27392,17 @@ var ReviewSyncService = class {
       responseDate: /* @__PURE__ */ new Date(),
       isAIGenerated: isAI,
       updatedAt: /* @__PURE__ */ new Date()
-    }).where(eq38(businessReviews.id, reviewId));
-    const [review] = await db.select().from(businessReviews).where(eq38(businessReviews.id, reviewId)).limit(1);
+    }).where(eq39(businessReviews.id, reviewId));
+    const [review] = await db.select().from(businessReviews).where(eq39(businessReviews.id, reviewId)).limit(1);
     if (!review) return;
     if (review.platform === "google" && review.platformReviewId) {
       try {
         const { socialMediaAccounts: socialMediaAccounts2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
         const [googleAccount] = await db.select().from(socialMediaAccounts2).where(
           and27(
-            eq38(socialMediaAccounts2.clientId, review.clientId),
-            eq38(socialMediaAccounts2.platform, "google_business"),
-            eq38(socialMediaAccounts2.isActive, true)
+            eq39(socialMediaAccounts2.clientId, review.clientId),
+            eq39(socialMediaAccounts2.platform, "google_business"),
+            eq39(socialMediaAccounts2.isActive, true)
           )
         ).limit(1);
         if (googleAccount?.accessToken && googleAccount?.platformAccountId) {
@@ -26947,7 +27433,7 @@ var ReviewSyncService = class {
       if (firstName && lastName) {
         const [contact] = await db.select().from(crmContacts2).where(
           and27(
-            eq38(crmContacts2.clientId, review.clientId),
+            eq39(crmContacts2.clientId, review.clientId),
             sql15`LOWER(${crmContacts2.firstName}) = LOWER(${firstName})`,
             sql15`LOWER(${crmContacts2.lastName}) = LOWER(${lastName})`
           )
@@ -26957,7 +27443,7 @@ var ReviewSyncService = class {
       if (!matchedContact && firstName && firstName.length > 2) {
         const allMatches = await db.select().from(crmContacts2).where(
           and27(
-            eq38(crmContacts2.clientId, review.clientId),
+            eq39(crmContacts2.clientId, review.clientId),
             sql15`LOWER(${crmContacts2.firstName}) = LOWER(${firstName})`
           )
         );
@@ -27388,17 +27874,17 @@ async function sendAdminNotification(assessment) {
 // server/routes.ts
 init_schema();
 init_db();
-import { eq as eq40, desc as desc18, and as and28, or as or4, lte as lte2, sql as sql16 } from "drizzle-orm";
+import { eq as eq41, desc as desc18, and as and28, or as or4, lte as lte2, sql as sql16 } from "drizzle-orm";
 import { z as z9 } from "zod";
 
 // server/routes/auth.ts
 init_db();
 init_schema();
-import { Router as Router21 } from "express";
+import { Router as Router22 } from "express";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
-import { eq as eq39 } from "drizzle-orm";
-var router14 = Router21();
+import { eq as eq40 } from "drizzle-orm";
+var router14 = Router22();
 var emailService = new ResendEmailService();
 router14.post("/api/auth/login", async (req, res) => {
   try {
@@ -27406,7 +27892,7 @@ router14.post("/api/auth/login", async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ success: false, message: "Email and password are required" });
     }
-    const [user] = await db.select().from(users).where(eq39(users.email, email.trim().toLowerCase()));
+    const [user] = await db.select().from(users).where(eq40(users.email, email.trim().toLowerCase()));
     if (!user) {
       return res.status(401).json({ success: false, message: "Invalid email or password" });
     }
@@ -27464,7 +27950,7 @@ router14.post("/api/auth/magic-link", async (req, res) => {
       return res.status(400).json({ success: false, message: "Email is required" });
     }
     const normalizedEmail = email.trim().toLowerCase();
-    const [user] = await db.select().from(users).where(eq39(users.email, normalizedEmail));
+    const [user] = await db.select().from(users).where(eq40(users.email, normalizedEmail));
     if (!user) {
       return res.json({ success: true, message: "If an account exists, a login link has been sent." });
     }
@@ -27501,7 +27987,7 @@ router14.get("/api/auth/verify-magic-link", async (req, res) => {
     if (!tokenStr) {
       return res.status(400).json({ success: false, message: "Token is required" });
     }
-    const [magicToken] = await db.select().from(magicLinkTokens).where(eq39(magicLinkTokens.token, tokenStr));
+    const [magicToken] = await db.select().from(magicLinkTokens).where(eq40(magicLinkTokens.token, tokenStr));
     if (!magicToken) {
       return res.status(400).json({ success: false, message: "Invalid or expired token" });
     }
@@ -27511,11 +27997,11 @@ router14.get("/api/auth/verify-magic-link", async (req, res) => {
     if (/* @__PURE__ */ new Date() > magicToken.expiresAt) {
       return res.status(400).json({ success: false, message: "This link has expired" });
     }
-    const [user] = await db.select().from(users).where(eq39(users.email, magicToken.email));
+    const [user] = await db.select().from(users).where(eq40(users.email, magicToken.email));
     if (!user) {
       return res.status(400).json({ success: false, message: "Account not found" });
     }
-    await db.update(magicLinkTokens).set({ used: true, usedAt: /* @__PURE__ */ new Date() }).where(eq39(magicLinkTokens.token, tokenStr));
+    await db.update(magicLinkTokens).set({ used: true, usedAt: /* @__PURE__ */ new Date() }).where(eq40(magicLinkTokens.token, tokenStr));
     const sessionUser = {
       claims: {
         sub: user.id,
@@ -27563,7 +28049,7 @@ router14.post("/api/auth/set-password", isAuthenticated, async (req, res) => {
       return res.status(401).json({ success: false, message: "Not authenticated" });
     }
     const passwordHash = await bcrypt.hash(password, 12);
-    await db.update(users).set({ passwordHash, updatedAt: /* @__PURE__ */ new Date() }).where(eq39(users.id, userId));
+    await db.update(users).set({ passwordHash, updatedAt: /* @__PURE__ */ new Date() }).where(eq40(users.id, userId));
     console.log("[Auth] Password set for user:", userId);
     return res.json({ success: true, message: "Password updated successfully" });
   } catch (error) {
@@ -27735,7 +28221,7 @@ async function registerRoutes(app2) {
         `[Assessment] Linked assessment ${assessment.id} to client ${client.id}`
       );
       try {
-        const existingCrmContact = await db.select().from(crmContacts).where(eq40(crmContacts.email, validatedData.email)).limit(1);
+        const existingCrmContact = await db.select().from(crmContacts).where(eq41(crmContacts.email, validatedData.email)).limit(1);
         let crmContactId = null;
         if (existingCrmContact.length === 0) {
           const [crmContact] = await db.insert(crmContacts).values({
@@ -27790,7 +28276,7 @@ async function registerRoutes(app2) {
               assessmentId: assessment.id
             },
             updatedAt: /* @__PURE__ */ new Date()
-          }).where(eq40(crmContacts.id, crmContactId));
+          }).where(eq41(crmContacts.id, crmContactId));
         }
       } catch (crmError) {
         console.error("[Assessment] Failed to create CRM contact:", crmError);
@@ -27996,7 +28482,7 @@ async function registerRoutes(app2) {
       updateData.scanDetections = scanDetectionsData;
       updateData.scanCorrections = scanCorrectionsData;
       updateData.updatedAt = /* @__PURE__ */ new Date();
-      await db.update(assessments).set(updateData).where(eq40(assessments.id, id));
+      await db.update(assessments).set(updateData).where(eq41(assessments.id, id));
       const updatedAssessment = await storage.getAssessment(id);
       if (!updatedAssessment) return res.status(404).json({ error: "Assessment not found after update" });
       const operationalScore = presenceScannerService.calculateOperationalScore({
@@ -28088,7 +28574,7 @@ async function registerRoutes(app2) {
       if (!assessment.selectedPathway || assessment.selectedPathway === "none") {
         return res.status(400).json({ message: "No pathway selected yet" });
       }
-      const existingSubscriptions = await db.select().from(subscriptions).where(eq40(subscriptions.assessmentId, id));
+      const existingSubscriptions = await db.select().from(subscriptions).where(eq41(subscriptions.assessmentId, id));
       if (existingSubscriptions.length > 0) {
         return res.status(400).json({ message: "Subscription already exists" });
       }
@@ -28136,20 +28622,20 @@ async function registerRoutes(app2) {
         const latestCampaign = campaigns2.length > 0 ? campaigns2[0] : null;
         let crmStats = { contactsCount: 0, activeDeals: 0, tasksDue: 0 };
         try {
-          const contacts = await db.select().from(crmContacts).where(eq40(crmContacts.clientId, clientId));
+          const contacts = await db.select().from(crmContacts).where(eq41(crmContacts.clientId, clientId));
           crmStats.contactsCount = contacts.length;
           const activeDeals = await db.select().from(crmDeals).where(
-            and28(eq40(crmDeals.clientId, clientId), eq40(crmDeals.status, "open"))
+            and28(eq41(crmDeals.clientId, clientId), eq41(crmDeals.status, "open"))
           );
           crmStats.activeDeals = activeDeals.length;
           const today = /* @__PURE__ */ new Date();
           today.setHours(23, 59, 59, 999);
           const tasks2 = await db.select().from(crmTasks).where(
             and28(
-              eq40(crmTasks.clientId, clientId),
+              eq41(crmTasks.clientId, clientId),
               or4(
-                eq40(crmTasks.status, "pending"),
-                eq40(crmTasks.status, "in_progress")
+                eq41(crmTasks.status, "pending"),
+                eq41(crmTasks.status, "in_progress")
               )
             )
           );
@@ -28166,7 +28652,7 @@ async function registerRoutes(app2) {
           lastUpdated: client.updatedAt,
           listings: await (async () => {
             try {
-              const allListings = await db.select().from(businessListings).where(eq40(businessListings.clientId, clientId));
+              const allListings = await db.select().from(businessListings).where(eq41(businessListings.clientId, clientId));
               const activeCount = allListings.filter((l) => l.status === "active").length;
               const pendingCount = allListings.filter((l) => l.status === "pending").length;
               const platforms = Array.from(new Set(allListings.map((l) => l.platform)));
@@ -28215,7 +28701,7 @@ async function registerRoutes(app2) {
           },
           socialMedia: await (async () => {
             try {
-              const accounts = await db.select().from(socialMediaAccounts).where(and28(eq40(socialMediaAccounts.clientId, clientId), eq40(socialMediaAccounts.isActive, true)));
+              const accounts = await db.select().from(socialMediaAccounts).where(and28(eq41(socialMediaAccounts.clientId, clientId), eq41(socialMediaAccounts.isActive, true)));
               return {
                 isSetup: accounts.length > 0,
                 connectedProfiles: accounts.length,
@@ -28229,8 +28715,8 @@ async function registerRoutes(app2) {
           })(),
           livechat: await (async () => {
             try {
-              const [widgetSettings] = await db.select().from(chatWidgetSettings).where(eq40(chatWidgetSettings.clientId, clientId)).limit(1);
-              const sessions2 = await db.select().from(livechatSessions).where(eq40(livechatSessions.clientId, clientId));
+              const [widgetSettings] = await db.select().from(chatWidgetSettings).where(eq41(chatWidgetSettings.clientId, clientId)).limit(1);
+              const sessions2 = await db.select().from(livechatSessions).where(eq41(livechatSessions.clientId, clientId));
               const activeSessions = sessions2.filter((s) => s.status === "active" || s.status === "waiting");
               return {
                 isSetup: !!widgetSettings,
@@ -28519,7 +29005,7 @@ async function registerRoutes(app2) {
       if (!token || token.length !== 64) {
         return res.status(400).json({ message: "Invalid prescription token" });
       }
-      const [prescription] = await db.select().from(prescriptions).where(eq40(prescriptions.accessToken, token)).limit(1);
+      const [prescription] = await db.select().from(prescriptions).where(eq41(prescriptions.accessToken, token)).limit(1);
       if (!prescription) {
         return res.status(404).json({ message: "Prescription not found" });
       }
@@ -28538,7 +29024,7 @@ async function registerRoutes(app2) {
         };
       });
       if (!prescription.viewedAt) {
-        await db.update(prescriptions).set({ viewedAt: /* @__PURE__ */ new Date(), updatedAt: /* @__PURE__ */ new Date() }).where(eq40(prescriptions.id, prescription.id));
+        await db.update(prescriptions).set({ viewedAt: /* @__PURE__ */ new Date(), updatedAt: /* @__PURE__ */ new Date() }).where(eq41(prescriptions.id, prescription.id));
       }
       res.json({
         prescription: {
@@ -28567,18 +29053,18 @@ async function registerRoutes(app2) {
   app2.get("/api/portal/prescriptions", requireClientPortalAccess, async (req, res) => {
     try {
       const clientEmail = req.clientEmail;
-      const [client] = await db.select().from(clients).where(eq40(clients.email, clientEmail)).limit(1);
+      const [client] = await db.select().from(clients).where(eq41(clients.email, clientEmail)).limit(1);
       if (!client) {
         return res.json({ prescriptions: [] });
       }
       const clientPrescriptions = await db.select({
         prescription: prescriptions
-      }).from(prescriptions).where(eq40(prescriptions.clientId, client.id)).orderBy(desc18(prescriptions.createdAt));
+      }).from(prescriptions).where(eq41(prescriptions.clientId, client.id)).orderBy(desc18(prescriptions.createdAt));
       const { assessments: assessmentsTable } = await Promise.resolve().then(() => (init_schema(), schema_exports));
       const assessmentPrescriptions = await db.select({
         prescription: prescriptions,
         assessment: assessmentsTable
-      }).from(prescriptions).innerJoin(assessmentsTable, eq40(prescriptions.assessmentId, assessmentsTable.id)).where(eq40(assessmentsTable.email, clientEmail)).orderBy(desc18(prescriptions.createdAt));
+      }).from(prescriptions).innerJoin(assessmentsTable, eq41(prescriptions.assessmentId, assessmentsTable.id)).where(eq41(assessmentsTable.email, clientEmail)).orderBy(desc18(prescriptions.createdAt));
       const allPrescriptions = [
         ...clientPrescriptions.map((p) => p.prescription),
         ...assessmentPrescriptions.map((p) => p.prescription)
@@ -28599,12 +29085,12 @@ async function registerRoutes(app2) {
       if (isNaN(prescriptionId)) {
         return res.status(400).json({ message: "Invalid prescription ID" });
       }
-      const [prescription] = await db.select().from(prescriptions).where(eq40(prescriptions.id, prescriptionId)).limit(1);
+      const [prescription] = await db.select().from(prescriptions).where(eq41(prescriptions.id, prescriptionId)).limit(1);
       if (!prescription) {
         return res.status(404).json({ message: "Prescription not found" });
       }
       let hasAccess = false;
-      const [client] = await db.select().from(clients).where(eq40(clients.email, clientEmail)).limit(1);
+      const [client] = await db.select().from(clients).where(eq41(clients.email, clientEmail)).limit(1);
       if (client && prescription.clientId === client.id) {
         hasAccess = true;
       }
@@ -28632,7 +29118,7 @@ async function registerRoutes(app2) {
         };
       });
       if (!prescription.viewedAt) {
-        await db.update(prescriptions).set({ viewedAt: /* @__PURE__ */ new Date(), updatedAt: /* @__PURE__ */ new Date() }).where(eq40(prescriptions.id, prescription.id));
+        await db.update(prescriptions).set({ viewedAt: /* @__PURE__ */ new Date(), updatedAt: /* @__PURE__ */ new Date() }).where(eq41(prescriptions.id, prescription.id));
       }
       res.json({
         prescription,
@@ -28662,12 +29148,12 @@ async function registerRoutes(app2) {
       if (typeof implementationProgress !== "number" || implementationProgress < 0 || implementationProgress > 100) {
         return res.status(400).json({ message: "Progress must be a number between 0 and 100" });
       }
-      const [prescription] = await db.select().from(prescriptions).where(eq40(prescriptions.id, prescriptionId)).limit(1);
+      const [prescription] = await db.select().from(prescriptions).where(eq41(prescriptions.id, prescriptionId)).limit(1);
       if (!prescription) {
         return res.status(404).json({ message: "Prescription not found" });
       }
       let hasAccess = false;
-      const [client] = await db.select().from(clients).where(eq40(clients.email, clientEmail)).limit(1);
+      const [client] = await db.select().from(clients).where(eq41(clients.email, clientEmail)).limit(1);
       if (client && prescription.clientId === client.id) {
         hasAccess = true;
       }
@@ -28684,7 +29170,7 @@ async function registerRoutes(app2) {
         implementationProgress,
         status: implementationProgress === 100 ? "completed" : "in_progress",
         updatedAt: /* @__PURE__ */ new Date()
-      }).where(eq40(prescriptions.id, prescriptionId)).returning();
+      }).where(eq41(prescriptions.id, prescriptionId)).returning();
       res.json(updated);
     } catch (error) {
       console.error("Error updating prescription progress:", error);
@@ -28769,7 +29255,7 @@ async function registerRoutes(app2) {
       });
       console.log("[Magic Link Verify] Login tracking updated");
       try {
-        const existingCrmContact = await db.select().from(crmContacts).where(eq40(crmContacts.email, client.email)).limit(1);
+        const existingCrmContact = await db.select().from(crmContacts).where(eq41(crmContacts.email, client.email)).limit(1);
         if (existingCrmContact.length === 0) {
           const [crmContact] = await db.insert(crmContacts).values({
             clientId: client.id,
@@ -28794,7 +29280,7 @@ async function registerRoutes(app2) {
           });
         } else {
           if (!existingCrmContact[0].clientId) {
-            await db.update(crmContacts).set({ clientId: client.id, updatedAt: /* @__PURE__ */ new Date() }).where(eq40(crmContacts.id, existingCrmContact[0].id));
+            await db.update(crmContacts).set({ clientId: client.id, updatedAt: /* @__PURE__ */ new Date() }).where(eq41(crmContacts.id, existingCrmContact[0].id));
             console.log(
               `[Magic Link Verify] Linked existing CRM contact ${existingCrmContact[0].id} to client ${client.id}`
             );
@@ -28950,7 +29436,7 @@ async function registerRoutes(app2) {
       if (!isActive) {
         return res.status(401).json({ message: "Token has been revoked" });
       }
-      const [dashboardRecord] = await db.select().from(dashboardAccess).where(eq40(dashboardAccess.accessToken, token));
+      const [dashboardRecord] = await db.select().from(dashboardAccess).where(eq41(dashboardAccess.accessToken, token));
       if (!dashboardRecord) {
         return res.status(404).json({ message: "Dashboard access not found" });
       }
@@ -29042,7 +29528,7 @@ async function registerRoutes(app2) {
         );
       }
       if (client && autoAccounts[normalizedEmail]?.isAdmin && !client.isAdmin) {
-        await db.update(clients).set({ isAdmin: true }).where(eq40(clients.id, client.id));
+        await db.update(clients).set({ isAdmin: true }).where(eq41(clients.id, client.id));
         client = { ...client, isAdmin: true };
       }
       if (!client) {
@@ -29146,7 +29632,7 @@ async function registerRoutes(app2) {
       if (!client) {
         return res.status(404).json({ error: "Client not found" });
       }
-      const rows = await db.select().from(businessListings).where(eq40(businessListings.clientId, clientId));
+      const rows = await db.select().from(businessListings).where(eq41(businessListings.clientId, clientId));
       const total = rows.length;
       const verified = rows.filter((r) => r.status === "active").length;
       const pending = rows.filter((r) => r.status === "pending").length;
@@ -29174,7 +29660,7 @@ async function registerRoutes(app2) {
         if (!client) {
           return res.status(404).json({ error: "Client not found" });
         }
-        const rows = await db.select().from(businessListings).where(eq40(businessListings.clientId, clientId)).orderBy(desc18(businessListings.updatedAt));
+        const rows = await db.select().from(businessListings).where(eq41(businessListings.clientId, clientId)).orderBy(desc18(businessListings.updatedAt));
         const listings = rows.map((r) => ({
           id: r.id,
           platform: platformDisplayName(r.platform),
@@ -29208,7 +29694,7 @@ async function registerRoutes(app2) {
         if (!client) {
           return res.status(404).json({ error: "Client not found" });
         }
-        const rows = await db.select().from(businessListings).where(eq40(businessListings.clientId, clientId));
+        const rows = await db.select().from(businessListings).where(eq41(businessListings.clientId, clientId));
         const totalListings = rows.length;
         const activeListings = rows.filter((r) => r.status === "active").length;
         const pendingListings = rows.filter((r) => r.status === "pending").length;
@@ -29220,7 +29706,7 @@ async function registerRoutes(app2) {
         const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1e3);
         const metricsRows = await db.select().from(listingMetricsSnapshots).where(
           and28(
-            eq40(listingMetricsSnapshots.clientId, clientId),
+            eq41(listingMetricsSnapshots.clientId, clientId),
             lte2(sql16`${listingMetricsSnapshots.periodStart}`, /* @__PURE__ */ new Date())
           )
         );
@@ -29498,7 +29984,7 @@ async function registerRoutes(app2) {
         listingsUpdated: result.updated,
         errors: result.errors.length > 0 ? result.errors : null,
         completedAt: /* @__PURE__ */ new Date()
-      }).where(eq40(listingSyncLogs.id, syncLog.id));
+      }).where(eq41(listingSyncLogs.id, syncLog.id));
       res.json({
         success: true,
         ...result
@@ -29521,7 +30007,7 @@ async function registerRoutes(app2) {
         if (!client) {
           return res.status(404).json({ error: "Client not found" });
         }
-        const listings = await db.select().from(businessListings).where(eq40(businessListings.clientId, clientId));
+        const listings = await db.select().from(businessListings).where(eq41(businessListings.clientId, clientId));
         if (listings.length === 0) {
           return res.json({ success: true, snapshotsCreated: 0, message: "No listings to snapshot" });
         }
@@ -29532,9 +30018,9 @@ async function registerRoutes(app2) {
         for (const listing of listings) {
           const existing = await db.select().from(listingMetricsSnapshots).where(
             and28(
-              eq40(listingMetricsSnapshots.clientId, clientId),
-              eq40(listingMetricsSnapshots.listingId, listing.id),
-              eq40(listingMetricsSnapshots.periodStart, periodStart)
+              eq41(listingMetricsSnapshots.clientId, clientId),
+              eq41(listingMetricsSnapshots.listingId, listing.id),
+              eq41(listingMetricsSnapshots.periodStart, periodStart)
             )
           );
           if (existing.length === 0) {
@@ -29570,8 +30056,8 @@ async function registerRoutes(app2) {
       }
       const [existing] = await db.select().from(businessListings).where(
         and28(
-          eq40(businessListings.id, listingId),
-          eq40(businessListings.clientId, clientId)
+          eq41(businessListings.id, listingId),
+          eq41(businessListings.clientId, clientId)
         )
       ).limit(1);
       if (!existing) {
@@ -29582,7 +30068,7 @@ async function registerRoutes(app2) {
         return res.status(400).json({ error: "Invalid update data", details: parsed.error.issues });
       }
       const updates = { ...parsed.data, updatedAt: /* @__PURE__ */ new Date() };
-      await db.update(businessListings).set(updates).where(eq40(businessListings.id, listingId));
+      await db.update(businessListings).set(updates).where(eq41(businessListings.id, listingId));
       res.json({
         success: true,
         message: "Listing updated successfully",
@@ -29838,8 +30324,8 @@ async function registerRoutes(app2) {
       if (!fromNumber || !messageText) return;
       const [existingConv] = await db.select().from(inboxConversations).where(
         and28(
-          eq40(inboxConversations.contactIdentifier, fromNumber),
-          eq40(inboxConversations.primaryChannelType, "sms")
+          eq41(inboxConversations.contactIdentifier, fromNumber),
+          eq41(inboxConversations.primaryChannelType, "sms")
         )
       ).limit(1);
       if (existingConv) {
@@ -29864,7 +30350,7 @@ async function registerRoutes(app2) {
           lastMessagePreview: messageText.substring(0, 100),
           unreadCount: (existingConv.unreadCount || 0) + 1,
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq40(inboxConversations.id, existingConv.id));
+        }).where(eq41(inboxConversations.id, existingConv.id));
         console.log(`[Telnyx] SMS received from ${fromNumber} \u2192 conversation ${existingConv.id}`);
       } else {
         const [newConv] = await db.insert(inboxConversations).values({
@@ -29913,6 +30399,7 @@ async function registerRoutes(app2) {
   app2.use("/api/v1", publicApiRouter);
   app2.use(aiCoachRouter);
   app2.use("/api", listingDistributionRouter);
+  app2.use(dnbRouter);
   app2.post("/api/admin/test-emails", async (req, res) => {
     try {
       const { email, assessmentId } = req.body;
@@ -30248,9 +30735,9 @@ Focus on the ${highPriorityCount} high-priority recommendations first for maximu
         let fastCheckData = void 0;
         try {
           const [fastCheckResult] = await db.select().from(scansBlueResults).where(and28(
-            eq40(scansBlueResults.assessmentId, assessmentId),
-            eq40(scansBlueResults.type, "fast_check"),
-            eq40(scansBlueResults.status, "completed")
+            eq41(scansBlueResults.assessmentId, assessmentId),
+            eq41(scansBlueResults.type, "fast_check"),
+            eq41(scansBlueResults.status, "completed")
           )).limit(1);
           if (fastCheckResult) {
             fastCheckData = {
@@ -30392,7 +30879,7 @@ async function registerInboxRoutes(app2) {
       let crmContactId = null;
       if (validatedData.visitorEmail) {
         try {
-          const existing = await db.select().from(crmContacts).where(eq40(crmContacts.email, validatedData.visitorEmail)).limit(1);
+          const existing = await db.select().from(crmContacts).where(eq41(crmContacts.email, validatedData.visitorEmail)).limit(1);
           if (existing.length > 0) {
             crmContactId = existing[0].id;
             await db.insert(crmTimeline).values({
@@ -30470,10 +30957,10 @@ async function registerInboxRoutes(app2) {
     async (req, res) => {
       try {
         const clientId = req.clientId;
-        const conversations = await db.select().from(inboxConversations).where(eq40(inboxConversations.clientId, clientId)).orderBy(desc18(inboxConversations.updatedAt));
+        const conversations = await db.select().from(inboxConversations).where(eq41(inboxConversations.clientId, clientId)).orderBy(desc18(inboxConversations.updatedAt));
         const conversationsWithMessages = await Promise.all(
           conversations.map(async (conv) => {
-            const lastMessage = await db.select().from(inboxMessages2).where(eq40(inboxMessages2.conversationId, conv.id)).orderBy(desc18(inboxMessages2.createdAt)).limit(1);
+            const lastMessage = await db.select().from(inboxMessages2).where(eq41(inboxMessages2.conversationId, conv.id)).orderBy(desc18(inboxMessages2.createdAt)).limit(1);
             return {
               id: conv.id,
               contactName: conv.contactName,
@@ -30504,14 +30991,14 @@ async function registerInboxRoutes(app2) {
         const conversationId = parseInt(req.params.conversationId);
         const [conversation] = await db.select().from(inboxConversations).where(
           and28(
-            eq40(inboxConversations.id, conversationId),
-            eq40(inboxConversations.clientId, clientId)
+            eq41(inboxConversations.id, conversationId),
+            eq41(inboxConversations.clientId, clientId)
           )
         ).limit(1);
         if (!conversation) {
           return res.status(404).json({ error: "Conversation not found or access denied" });
         }
-        const messages = await db.select().from(inboxMessages2).where(eq40(inboxMessages2.conversationId, conversationId)).orderBy(inboxMessages2.createdAt);
+        const messages = await db.select().from(inboxMessages2).where(eq41(inboxMessages2.conversationId, conversationId)).orderBy(inboxMessages2.createdAt);
         res.json(messages);
       } catch (error) {
         console.error("Error fetching messages:", error);
@@ -30531,14 +31018,14 @@ async function registerInboxRoutes(app2) {
         }
         const [conversation] = await db.select().from(inboxConversations).where(
           and28(
-            eq40(inboxConversations.id, conversationId),
-            eq40(inboxConversations.clientId, clientId)
+            eq41(inboxConversations.id, conversationId),
+            eq41(inboxConversations.clientId, clientId)
           )
         ).limit(1);
         if (!conversation) {
           return res.status(404).json({ error: "Conversation not found or access denied" });
         }
-        const [client] = await db.select({ companyName: clients.companyName, email: clients.email }).from(clients).where(eq40(clients.id, clientId)).limit(1);
+        const [client] = await db.select({ companyName: clients.companyName, email: clients.email }).from(clients).where(eq41(clients.id, clientId)).limit(1);
         const agentName = client?.companyName || "Support";
         const agentEmail = client?.email || "support@businessblueprint.io";
         let deliveryStatus = "sent";
@@ -30588,7 +31075,7 @@ async function registerInboxRoutes(app2) {
               return res.status(400).json({ error: "No channel connection for this conversation" });
             }
             const { inboxChannelConnections: inboxChannelConnections2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
-            const [channel] = await db.select().from(inboxChannelConnections2).where(eq40(inboxChannelConnections2.id, channelId));
+            const [channel] = await db.select().from(inboxChannelConnections2).where(eq41(inboxChannelConnections2.id, channelId));
             if (!channel || !channel.credentials) {
               return res.status(400).json({ error: "Channel connection not found or missing credentials" });
             }
@@ -30637,13 +31124,13 @@ async function registerInboxRoutes(app2) {
           toName: conversation.contactName || void 0,
           status: deliveryStatus
         }).returning();
-        await db.update(inboxConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq40(inboxConversations.id, conversationId));
+        await db.update(inboxConversations).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq41(inboxConversations.id, conversationId));
         try {
           const { logContactActivity: logContactActivity2 } = await Promise.resolve().then(() => (init_timeline_logger(), timeline_logger_exports));
           const { crmContacts: crmContactsTable } = await Promise.resolve().then(() => (init_schema(), schema_exports));
           const [crmContact] = await db.select({ id: crmContactsTable.id }).from(crmContactsTable).where(and28(
-            eq40(crmContactsTable.clientId, clientId),
-            eq40(crmContactsTable.email, conversation.contactIdentifier)
+            eq41(crmContactsTable.clientId, clientId),
+            eq41(crmContactsTable.email, conversation.contactIdentifier)
           )).limit(1);
           if (crmContact) {
             logContactActivity2({
@@ -30717,7 +31204,7 @@ async function registerInboxRoutes(app2) {
         const parsedAssessmentId = parseInt(assessmentId);
         const assessment = await storage.getAssessment(parsedAssessmentId);
         if (assessment) {
-          const [purchase] = await db.select().from(scansBluePurchases).where(eq40(scansBluePurchases.assessmentId, parsedAssessmentId)).limit(1);
+          const [purchase] = await db.select().from(scansBluePurchases).where(eq41(scansBluePurchases.assessmentId, parsedAssessmentId)).limit(1);
           const customerEmail = purchase?.email || assessment.email;
           if (customerEmail) {
             console.log(`[Webhook] Sending full report email to ${customerEmail}`);
@@ -30729,7 +31216,7 @@ async function registerInboxRoutes(app2) {
               reportData: reportData || summary || {}
             });
             if (purchase) {
-              await db.update(scansBluePurchases).set({ reportDeliveredAt: /* @__PURE__ */ new Date() }).where(eq40(scansBluePurchases.id, purchase.id));
+              await db.update(scansBluePurchases).set({ reportDeliveredAt: /* @__PURE__ */ new Date() }).where(eq41(scansBluePurchases.id, purchase.id));
             }
           }
         }
@@ -30883,7 +31370,7 @@ init_schema();
 init_jwt();
 init_timeline_logger();
 import { Server } from "socket.io";
-import { eq as eq41, and as and29 } from "drizzle-orm";
+import { eq as eq42, and as and29 } from "drizzle-orm";
 function setupWebSocket(server) {
   const io = new Server(server, {
     cors: {
@@ -30952,7 +31439,7 @@ function setupWebSocket(server) {
             lastMessagePreview: data.message.substring(0, 100)
           }).returning();
           conversationId = conversation.id;
-          await db.update(livechatSessions).set({ conversationId }).where(eq41(livechatSessions.sessionId, data.sessionId));
+          await db.update(livechatSessions).set({ conversationId }).where(eq42(livechatSessions.sessionId, data.sessionId));
         }
         const [message] = await db.insert(inboxMessages2).values({
           conversationId,
@@ -30970,9 +31457,9 @@ function setupWebSocket(server) {
         await db.update(inboxConversations).set({
           lastMessageAt: /* @__PURE__ */ new Date(),
           lastMessagePreview: data.message.substring(0, 100),
-          unreadCount: db.$count(inboxMessages2, eq41(inboxMessages2.conversationId, conversationId)),
+          unreadCount: db.$count(inboxMessages2, eq42(inboxMessages2.conversationId, conversationId)),
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq41(inboxConversations.id, conversationId));
+        }).where(eq42(inboxConversations.id, conversationId));
         io.to(`conversation:${conversationId}`).emit("message:new", {
           ...message,
           conversationId
@@ -30994,7 +31481,7 @@ function setupWebSocket(server) {
     });
     socket.on("agent:message", async (data) => {
       try {
-        const [conversation] = await db.select().from(inboxConversations).where(eq41(inboxConversations.id, data.conversationId)).limit(1);
+        const [conversation] = await db.select().from(inboxConversations).where(eq42(inboxConversations.id, data.conversationId)).limit(1);
         if (!conversation) {
           socket.emit("message:error", { error: "Conversation not found" });
           return;
@@ -31017,7 +31504,7 @@ function setupWebSocket(server) {
           lastMessageAt: /* @__PURE__ */ new Date(),
           lastMessagePreview: data.message.substring(0, 100),
           updatedAt: /* @__PURE__ */ new Date()
-        }).where(eq41(inboxConversations.id, data.conversationId));
+        }).where(eq42(inboxConversations.id, data.conversationId));
         io.to(`conversation:${data.conversationId}`).emit("message:new", {
           ...message,
           conversationId: data.conversationId
@@ -31037,8 +31524,8 @@ function setupWebSocket(server) {
         if (conversation.primaryChannelType === "livechat") {
           const { crmContacts: crmContacts2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
           const [contact] = await db.select({ id: crmContacts2.id }).from(crmContacts2).where(and29(
-            eq41(crmContacts2.clientId, data.clientId),
-            eq41(crmContacts2.email, conversation.contactIdentifier)
+            eq42(crmContacts2.clientId, data.clientId),
+            eq42(crmContacts2.email, conversation.contactIdentifier)
           )).limit(1);
           if (contact) {
             logContactActivity({
@@ -31078,11 +31565,11 @@ function setupWebSocket(server) {
           readAt: /* @__PURE__ */ new Date()
         }).where(
           and29(
-            eq41(inboxMessages2.conversationId, data.conversationId),
-            eq41(inboxMessages2.direction, "inbound")
+            eq42(inboxMessages2.conversationId, data.conversationId),
+            eq42(inboxMessages2.direction, "inbound")
           )
         );
-        await db.update(inboxConversations).set({ unreadCount: 0 }).where(eq41(inboxConversations.id, data.conversationId));
+        await db.update(inboxConversations).set({ unreadCount: 0 }).where(eq42(inboxConversations.id, data.conversationId));
         io.to(`conversation:${data.conversationId}`).emit("messages:read", {
           conversationId: data.conversationId
         });
@@ -31095,9 +31582,9 @@ function setupWebSocket(server) {
       socket.join(`session:${sessionId}`);
       console.log(`Customer ${socket.id} joined session: ${sessionId}`);
       try {
-        const [session2] = await db.select().from(livechatSessions).where(eq41(livechatSessions.sessionId, sessionId)).limit(1);
+        const [session2] = await db.select().from(livechatSessions).where(eq42(livechatSessions.sessionId, sessionId)).limit(1);
         if (session2 && session2.conversationId) {
-          const messages = await db.select().from(inboxMessages2).where(eq41(inboxMessages2.conversationId, session2.conversationId)).orderBy(inboxMessages2.createdAt);
+          const messages = await db.select().from(inboxMessages2).where(eq42(inboxMessages2.conversationId, session2.conversationId)).orderBy(inboxMessages2.createdAt);
           socket.emit("message:history", { messages });
         }
       } catch (error) {
@@ -31113,11 +31600,11 @@ function setupWebSocket(server) {
 }
 
 // server/routes/payment-webhook.ts
-import { Router as Router22 } from "express";
+import { Router as Router23 } from "express";
 init_db();
 init_schema();
-import { eq as eq42 } from "drizzle-orm";
-var router15 = Router22();
+import { eq as eq43 } from "drizzle-orm";
+var router15 = Router23();
 router15.post("/api/webhooks/swipesblue", async (req, res) => {
   try {
     const rawBody = typeof req.body === "string" ? req.body : JSON.stringify(req.body);
@@ -31135,7 +31622,7 @@ router15.post("/api/webhooks/swipesblue", async (req, res) => {
           await db.update(subscriptions).set({
             status: "active",
             updatedAt: /* @__PURE__ */ new Date()
-          }).where(eq42(subscriptions.swipesblueSubscriptionId, data.subscriptionId));
+          }).where(eq43(subscriptions.swipesblueSubscriptionId, data.subscriptionId));
         }
         console.log(`[SwipesBlue Webhook] Payment succeeded for subscription ${data.subscriptionId}`);
         break;
@@ -31145,7 +31632,7 @@ router15.post("/api/webhooks/swipesblue", async (req, res) => {
           await db.update(subscriptions).set({
             status: "past_due",
             updatedAt: /* @__PURE__ */ new Date()
-          }).where(eq42(subscriptions.swipesblueSubscriptionId, data.subscriptionId));
+          }).where(eq43(subscriptions.swipesblueSubscriptionId, data.subscriptionId));
         }
         console.log(`[SwipesBlue Webhook] Payment failed for subscription ${data.subscriptionId}`);
         break;
@@ -31155,7 +31642,7 @@ router15.post("/api/webhooks/swipesblue", async (req, res) => {
           await db.update(subscriptions).set({
             status: "cancelled",
             updatedAt: /* @__PURE__ */ new Date()
-          }).where(eq42(subscriptions.swipesblueSubscriptionId, data.subscriptionId));
+          }).where(eq43(subscriptions.swipesblueSubscriptionId, data.subscriptionId));
         }
         console.log(`[SwipesBlue Webhook] Subscription cancelled: ${data.subscriptionId}`);
         break;
@@ -31165,7 +31652,7 @@ router15.post("/api/webhooks/swipesblue", async (req, res) => {
           await db.update(subscriptions).set({
             status: "active",
             updatedAt: /* @__PURE__ */ new Date()
-          }).where(eq42(subscriptions.swipesblueSubscriptionId, data.subscriptionId));
+          }).where(eq43(subscriptions.swipesblueSubscriptionId, data.subscriptionId));
         }
         console.log(`[SwipesBlue Webhook] Subscription renewed: ${data.subscriptionId}`);
         break;

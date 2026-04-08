@@ -240,6 +240,7 @@ export const clients = pgTable("clients", {
   website: text("website"),
   address: text("address"),
   businessCategory: text("business_category"),
+  dunsNumber: varchar("duns_number", { length: 9 }),
   enabledFeatures: text("enabled_features"), // CO,VI,SP,RE,SO,RI
   
   // System protection - prevents automated deletion
@@ -3485,6 +3486,15 @@ export const canonicalBusinessProfiles = pgTable("canonical_business_profiles", 
   paymentMethods: text("payment_methods").array(),
   amenities: text("amenities").array(),
   serviceArea: jsonb("service_area"),
+
+  // D&B DUNS Number
+  dunsNumber: varchar("duns_number", { length: 9 }),
+  dunsVerified: boolean("duns_verified").default(false),
+  dunsVerifiedAt: timestamp("duns_verified_at"),
+  dunsMatchConfidence: integer("duns_match_confidence"), // 1-10 confidence score from D&B
+  dunsCompanyName: varchar("duns_company_name", { length: 255 }), // Name as registered with D&B
+  dunsAddress: text("duns_address"), // Address as registered with D&B
+  dunsLastChecked: timestamp("duns_last_checked"),
 
   // PIN protection
   editPin: varchar("edit_pin", { length: 255 }), // bcrypt hash of 4-6 digit PIN

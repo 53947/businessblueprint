@@ -7,6 +7,7 @@ import { GbpListingAdapter } from "./adapters/gbpListingAdapter";
 import { FacebookListingAdapter } from "./adapters/facebookListingAdapter";
 import { BingPlacesAdapter } from "./adapters/bingPlacesAdapter";
 import { AppleConnectAdapter } from "./adapters/appleConnectAdapter";
+import { DnBAdapter } from "./adapters/dnbAdapter";
 
 /**
  * Factory for listing distribution adapters.
@@ -24,6 +25,7 @@ const adapterConstructors: Record<string, () => BaseListingAdapter> = {
   facebook: () => new FacebookListingAdapter(),
   bing: () => new BingPlacesAdapter(),
   apple: () => new AppleConnectAdapter(),
+  dnb: () => new DnBAdapter(),
 };
 
 export function getAdapter(key: string): BaseListingAdapter | null {

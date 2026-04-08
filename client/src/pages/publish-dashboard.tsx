@@ -72,6 +72,11 @@ export default function PublishDashboard() {
   const [showPinDialog, setShowPinDialog] = useState(false);
   const [showProfileEdit, setShowProfileEdit] = useState(false);
   const [unlockToken, setUnlockToken] = useState<string | null>(null);
+
+  // D&B DUNS state
+  const [dunsLookupLoading, setDunsLookupLoading] = useState(false);
+  const [dunsResult, setDunsResult] = useState<any>(null);
+  const [manualDuns, setManualDuns] = useState('');
   
   const crmPresence = useCrmPresence();
 
@@ -99,6 +104,19 @@ export default function PublishDashboard() {
   // Check if PIN is set
   const { data: pinData } = useQuery<{ hasPin: boolean }>({
     queryKey: [`/api/clients/${clientId}/distribution/profile/has-pin`],
+    enabled: !!clientId,
+  });
+
+  // Fetch D&B status
+  const { data: dnbStatus } = useQuery<{
+    apiConfigured: boolean;
+    dunsNumber: string | null;
+    dunsVerified: boolean;
+    dunsVerifiedAt: string | null;
+    dunsCompanyName: string | null;
+    dunsLastChecked: string | null;
+  }>({
+    queryKey: ['/api/dnb/status'],
     enabled: !!clientId,
   });
 
@@ -342,6 +360,192 @@ export default function PublishDashboard() {
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           {/* Overview Tab */}
           <TabsContent value="overview">
+            {/* D&B DUNS Number Section */}
+            <Card className="border-2 border-[#064A6C]/20 bg-[#064A6C]/[0.02] mb-8">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-lg font-['Archivo_Semi_Expanded',sans-serif]">
+                      D&B DUNS Number
+                    </CardTitle>
+                    <CardDescription>
+                      Your DUNS number is the key to 80+ directory listings. One verified number, everywhere.
+                    </CardDescription>
+                  </div>
+                  {dnbStatus?.dunsVerified && (
+                    <Badge className="bg-green-500 text-white">
+                      <CheckCircle2 className="w-3 h-3 mr-1" />
+                      Verified
+                    </Badge>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                {dnbStatus?.dunsVerified ? (
+                  /* VERIFIED STATE */
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-4">
+                      <div>
+                        <div className="text-xs text-gray-500">DUNS Number</div>
+                        <div className="text-2xl font-bold font-mono text-[#064A6C]">
+                          {dnbStatus.dunsNumber}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500">Registered As</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {dnbStatus.dunsCompanyName}
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Your verified DUNS number is being used to maintain accurate listings across 80+ directories.
+                      Verified {dnbStatus.dunsVerifiedAt ? new Date(dnbStatus.dunsVerifiedAt).toLocaleDateString() : ''}.
+                    </p>
+                  </div>
+                ) : dnbStatus?.dunsNumber ? (
+                  /* FOUND BUT NOT VERIFIED */
+                  <div className="space-y-4">
+                    <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                      <p className="text-sm text-amber-800">
+                        We found DUNS number <span className="font-mono font-bold">{dnbStatus.dunsNumber}</span> associated
+                        with your business, but it hasn't been verified yet.
+                      </p>
+                    </div>
+                    <Button
+                      onClick={async () => {
+                        try {
+                          const res = await apiRequest('POST', '/api/dnb/verify', { dunsNumber: dnbStatus.dunsNumber });
+                          const data = await res.json();
+                          if (data.verified) {
+                            toast({ title: 'DUNS Verified', description: `Verified as ${data.companyName}` });
+                            queryClient.invalidateQueries({ queryKey: ['/api/dnb/status'] });
+                          } else {
+                            toast({ title: 'Verification Issue', description: data.message, variant: 'destructive' });
+                          }
+                        } catch {
+                          toast({ title: 'Error', description: 'Verification failed', variant: 'destructive' });
+                        }
+                      }}
+                      style={{ backgroundColor: '#064A6C' }}
+                      className="text-white"
+                    >
+                      Verify This DUNS Number
+                    </Button>
+                  </div>
+                ) : (
+                  /* NO DUNS — LOOKUP OR ENTER */
+                  <div className="space-y-4">
+                    <p className="text-sm text-gray-600">
+                      Many businesses already have a DUNS number without knowing it. Let's check.
+                    </p>
+
+                    {/* Auto Lookup */}
+                    {profileData?.profile && (
+                      <Button
+                        onClick={async () => {
+                          setDunsLookupLoading(true);
+                          try {
+                            const p = profileData.profile;
+                            const res = await apiRequest('POST', '/api/dnb/lookup', {
+                              businessName: p.businessName,
+                              address: p.address1,
+                              city: p.city,
+                              state: p.state,
+                              postalCode: p.zip,
+                              country: 'US',
+                            });
+                            const data = await res.json();
+                            setDunsResult(data);
+                            if (data.found) {
+                              toast({ title: 'DUNS Number Found', description: `Found: ${data.dunsNumber} (${data.companyName})` });
+                              queryClient.invalidateQueries({ queryKey: ['/api/dnb/status'] });
+                            } else {
+                              toast({ title: 'No DUNS Found', description: 'Your business may not have a DUNS number yet.' });
+                            }
+                          } catch {
+                            toast({ title: 'Lookup Failed', description: 'Could not reach D&B.', variant: 'destructive' });
+                          }
+                          setDunsLookupLoading(false);
+                        }}
+                        disabled={dunsLookupLoading}
+                        style={{ backgroundColor: '#064A6C' }}
+                        className="text-white w-full"
+                      >
+                        {dunsLookupLoading ? 'Checking D&B...' : 'Check If I Have a DUNS Number'}
+                      </Button>
+                    )}
+
+                    {/* Lookup Result */}
+                    {dunsResult?.found && (
+                      <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                        <p className="text-sm text-green-800 font-medium mb-1">Found a match!</p>
+                        <p className="text-sm text-green-700">
+                          DUNS: <span className="font-mono font-bold">{dunsResult.dunsNumber}</span>
+                          {' — '}{dunsResult.companyName}
+                        </p>
+                        <p className="text-xs text-green-600 mt-1">
+                          Confidence: {dunsResult.confidence}/10 • {dunsResult.address}, {dunsResult.city}, {dunsResult.state}
+                        </p>
+                      </div>
+                    )}
+
+                    {dunsResult && !dunsResult.found && (
+                      <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <p className="text-sm text-gray-700 mb-2">
+                          No DUNS number found for your business. You can apply for one for free — it takes about 30 days.
+                        </p>
+                        <a
+                          href="https://www.dnb.com/en-us/smb/duns/get-a-duns.html"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-medium text-[#064A6C] hover:underline"
+                        >
+                          Apply for a Free DUNS Number at D&B →
+                        </a>
+                      </div>
+                    )}
+
+                    {/* Manual Entry */}
+                    <div className="pt-4 border-t border-gray-200">
+                      <p className="text-xs text-gray-500 mb-2">Already know your DUNS number?</p>
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="9-digit DUNS number"
+                          value={manualDuns}
+                          onChange={(e) => setManualDuns(e.target.value.replace(/\D/g, '').slice(0, 9))}
+                          maxLength={9}
+                          className="font-mono"
+                        />
+                        <Button
+                          variant="outline"
+                          disabled={manualDuns.length !== 9}
+                          onClick={async () => {
+                            try {
+                              const res = await apiRequest('POST', '/api/dnb/manual', { dunsNumber: manualDuns });
+                              const data = await res.json();
+                              toast({
+                                title: data.verified ? 'DUNS Verified' : 'DUNS Saved',
+                                description: data.verified
+                                  ? `Verified as ${data.companyName}`
+                                  : data.message,
+                              });
+                              queryClient.invalidateQueries({ queryKey: ['/api/dnb/status'] });
+                              setManualDuns('');
+                            } catch {
+                              toast({ title: 'Error', description: 'Failed to save DUNS number', variant: 'destructive' });
+                            }
+                          }}
+                        >
+                          Save
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <Card data-testid="card-total-listings">

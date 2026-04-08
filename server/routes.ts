@@ -23,6 +23,7 @@ import { setupTasksRouter } from "./routes/setup-tasks";
 import { setupNotesRouter } from "./routes/setup-notes";
 import { publicApiRouter } from "./routes/api";
 import { listingDistributionRouter } from "./routes/listing-distribution";
+import { dnbRouter } from "./routes/dnb";
 import { chatRouter } from "./routes/chat";
 import { aiCoachRouter } from "./routes/ai-coach";
 import { registerSendRoutes } from "./routes/send";
@@ -3184,6 +3185,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Listing Distribution Routes (push to 100+ directories)
   app.use("/api", listingDistributionRouter);
+
+  // D&B DUNS Number Routes
+  app.use(dnbRouter);
 
   // Test Email Endpoint (Admin only - for reviewing email templates)
   app.post("/api/admin/test-emails", async (req, res) => {
