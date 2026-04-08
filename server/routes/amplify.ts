@@ -279,17 +279,11 @@ router.get(
 
       if (oauthError) {
         console.error("[Amplify] Reddit OAuth denied:", oauthError);
-        return res.status(400).json({
-          success: false,
-          message: `Reddit OAuth denied: ${oauthError}`,
-        });
+        return res.redirect("/amplify/dashboard?error=reddit_denied");
       }
 
       if (!code || typeof code !== "string") {
-        return res.status(400).json({
-          success: false,
-          message: "Missing authorization code from Reddit",
-        });
+        return res.redirect("/amplify/dashboard?error=reddit_missing_code");
       }
 
       // Exchange the code for access + refresh tokens
@@ -304,17 +298,10 @@ router.get(
         userId
       );
 
-      res.json({
-        success: true,
-        message: "Reddit ad account connected successfully",
-        accountName: "Reddit Ads",
-      });
+      res.redirect("/amplify/dashboard?connected=reddit");
     } catch (error: any) {
       console.error("[Amplify] Reddit OAuth callback error:", error);
-      res.status(500).json({
-        success: false,
-        message: "Failed to complete Reddit OAuth: " + error.message,
-      });
+      res.redirect("/amplify/dashboard?error=reddit_failed");
     }
   }
 );
