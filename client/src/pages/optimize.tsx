@@ -409,8 +409,13 @@ function SiteHealthTab() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [urlInput, setUrlInput] = useState('');
-  const [activeSection, setActiveSection] = useState<'issues' | 'pages' | 'vitals' | 'schema' | 'images' | 'internal-links'>('issues');
+  const [activeSection, setActiveSection] = useState<'issues' | 'pages' | 'vitals' | 'schema' | 'images' | 'internal-links' | 'redirects' | 'headings' | 'density'>('issues');
   const [imageAuditData, setImageAuditData] = useState<any>(null);
+  const [redirectData, setRedirectData] = useState<any>(null);
+  const [headingData, setHeadingData] = useState<any>(null);
+  const [densityUrl, setDensityUrl] = useState('');
+  const [densityKeyword, setDensityKeyword] = useState('');
+  const [densityData, setDensityData] = useState<any>(null);
 
   const { data: issuesData, isLoading: issuesLoading } = useQuery({
     queryKey: ['/api/seo/technical-issues'],
@@ -494,6 +499,48 @@ function SiteHealthTab() {
     },
   });
 
+  const checkRedirects = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/pages/redirect-chains', {});
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setRedirectData(data);
+      toast({ title: "Redirect Check Complete", description: `Found ${data.chains?.length || 0} redirect chains` });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to check redirects", variant: "destructive" });
+    },
+  });
+
+  const analyzeHeadings = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/pages/heading-structure', {});
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setHeadingData(data);
+      toast({ title: "Heading Analysis Complete", description: `Analyzed ${data.pages?.length || 0} pages` });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to analyze headings", variant: "destructive" });
+    },
+  });
+
+  const analyzeKeywordDensity = useMutation({
+    mutationFn: async ({ url, keyword }: { url: string; keyword: string }) => {
+      const res = await apiRequest('POST', '/api/seo/pages/keyword-density', { url, keyword });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setDensityData(data);
+      toast({ title: "Density Analysis Complete" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to analyze keyword density", variant: "destructive" });
+    },
+  });
+
   if (issuesLoading || pagesLoading) return <LoadingState />;
 
   const issues = issuesData?.issues || [];
@@ -513,6 +560,9 @@ function SiteHealthTab() {
     { id: 'vitals' as const, label: 'Core Web Vitals', count: null },
     { id: 'schema' as const, label: 'Schema Markup', count: null },
     { id: 'images' as const, label: 'Image Audit', count: null },
+    { id: 'redirects' as const, label: 'Redirects', count: null },
+    { id: 'headings' as const, label: 'Headings', count: null },
+    { id: 'density' as const, label: 'Keyword Density', count: null },
   ];
 
   return (
@@ -974,6 +1024,348 @@ function SiteHealthTab() {
           )}
         </div>
       )}
+
+      {/* Redirects Section */}
+      {activeSection === 'redirects' && (
+        <div className="space-y-6">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${OPTIMIZE_COLOR}15` }}>
+                  <ChevronRight className="w-6 h-6" style={{ color: OPTIMIZE_COLOR }} />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg mb-1" style={{ color: OPTIMIZE_COLOR }}>Redirect Chain Detection</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Redirect chains happen when one URL redirects to another, which redirects to another, and so on. Each hop slows down page loading and dilutes the SEO value passed through the link. Ideally, every redirect should go directly to the final destination in a single hop.
+                  </p>
+                  <div className="mt-3 flex items-center gap-3">
+                    <Button
+                      onClick={() => checkRedirects.mutate()}
+                      disabled={checkRedirects.isPending}
+                      style={{ backgroundColor: OPTIMIZE_COLOR }}
+                      className="text-white"
+                    >
+                      {checkRedirects.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+                      {checkRedirects.isPending ? 'Checking...' : 'Check Redirects'}
+                    </Button>
+                    <PriorityBadge level="relevant" />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {redirectData?.chains && redirectData.chains.length > 0 ? (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <ChevronRight className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                    Redirect Chains Found ({redirectData.chains.length})
+                  </CardTitle>
+                  <PriorityBadge level="relevant" />
+                </div>
+                <CardDescription>Each chain shows the path a request takes before reaching the final URL</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {redirectData.chains.map((chain: any, i: number) => (
+                    <div key={i} className="p-4 border rounded-lg">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-medium" style={{ color: OPTIMIZE_COLOR }}>
+                          Chain #{i + 1} — {chain.hops?.length || chain.urls?.length || 0} hops
+                        </span>
+                        <Badge variant={
+                          (chain.hops?.length || chain.urls?.length || 0) > 3 ? 'destructive' :
+                          (chain.hops?.length || chain.urls?.length || 0) > 1 ? 'secondary' : 'default'
+                        } className="text-xs">
+                          {(chain.hops?.length || chain.urls?.length || 0) > 3 ? 'Fix urgently' :
+                           (chain.hops?.length || chain.urls?.length || 0) > 1 ? 'Should fix' : 'OK'}
+                        </Badge>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2 text-sm">
+                        {(chain.urls || chain.hops || []).map((url: string, j: number, arr: string[]) => (
+                          <React.Fragment key={j}>
+                            <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-xs truncate max-w-[300px] block">
+                              {url}
+                            </a>
+                            {j < arr.length - 1 && (
+                              <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                      {chain.suggestion && (
+                        <div className="mt-3 text-xs text-gray-600 bg-gray-50 p-3 rounded">
+                          <strong className="text-gray-700">Suggestion:</strong> {chain.suggestion}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ) : redirectData && (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <CheckCircle2 className="w-12 h-12 mx-auto mb-4 text-green-400" />
+                <p className="text-gray-500">No redirect chains found. Your redirects are clean.</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {!redirectData && (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <ChevronRight className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <p className="text-gray-500">Click "Check Redirects" above to scan your site for redirect chains.</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
+
+      {/* Headings Section */}
+      {activeSection === 'headings' && (
+        <div className="space-y-6">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${OPTIMIZE_COLOR}15` }}>
+                  <Hash className="w-6 h-6" style={{ color: OPTIMIZE_COLOR }} />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg mb-1" style={{ color: OPTIMIZE_COLOR }}>Heading Structure Analysis</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Search engines use your heading structure (H1, H2, H3, etc.) to understand what your page is about.
+                    A well-organized heading hierarchy helps both search engines and visitors navigate your content. Every page should have exactly one H1, with H2s and H3s nested logically beneath it.
+                  </p>
+                  <div className="mt-3 flex items-center gap-3">
+                    <Button
+                      onClick={() => analyzeHeadings.mutate()}
+                      disabled={analyzeHeadings.isPending}
+                      style={{ backgroundColor: OPTIMIZE_COLOR }}
+                      className="text-white"
+                    >
+                      {analyzeHeadings.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Hash className="w-4 h-4 mr-2" />}
+                      {analyzeHeadings.isPending ? 'Analyzing...' : 'Analyze Headings'}
+                    </Button>
+                    <PriorityBadge level="relevant" />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {headingData?.pages && headingData.pages.length > 0 ? (
+            <div className="space-y-4">
+              {headingData.pages.map((page: any, i: number) => (
+                <Card key={i}>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="min-w-0 flex-1">
+                        <CardTitle className="text-sm truncate">{page.url}</CardTitle>
+                      </div>
+                      {page.issues && page.issues.length > 0 && (
+                        <PriorityBadge level="relevant" />
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {page.headings && page.headings.length > 0 ? (
+                      <div className="space-y-1 font-mono text-sm">
+                        {page.headings.map((h: any, j: number) => {
+                          const level = h.level || 1;
+                          const indent = (level - 1) * 24;
+                          return (
+                            <div key={j} className="flex items-start gap-2" style={{ paddingLeft: `${indent}px` }}>
+                              <span className="text-xs font-bold px-1.5 py-0.5 rounded flex-shrink-0" style={{
+                                backgroundColor: level === 1 ? `${OPTIMIZE_COLOR}20` : level === 2 ? `${OPTIMIZE_COLOR}10` : '#f3f4f6',
+                                color: level <= 2 ? OPTIMIZE_COLOR : '#6b7280',
+                              }}>
+                                H{level}
+                              </span>
+                              <span className="text-gray-700 text-sm">{h.text}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-400">No headings found on this page.</p>
+                    )}
+                    {page.issues && page.issues.length > 0 && (
+                      <div className="mt-4 space-y-1 border-t pt-3">
+                        {page.issues.map((issue: string, k: number) => (
+                          <p key={k} className="text-xs text-amber-700 flex items-start gap-1">
+                            <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" /> {issue}
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : headingData && (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <CheckCircle2 className="w-12 h-12 mx-auto mb-4 text-green-400" />
+                <p className="text-gray-500">No heading issues found.</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {!headingData && (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <Hash className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <p className="text-gray-500">Click "Analyze Headings" above to check your heading structure across all pages.</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
+
+      {/* Keyword Density Section */}
+      {activeSection === 'density' && (
+        <div className="space-y-6">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${OPTIMIZE_COLOR}15` }}>
+                  <Tag className="w-6 h-6" style={{ color: OPTIMIZE_COLOR }} />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg mb-1" style={{ color: OPTIMIZE_COLOR }}>Keyword Density Analysis</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Check how well a specific keyword is used on any page. This tells you whether the keyword appears in the right places (title, H1, meta description, body) and whether the density is appropriate. Too little and search engines won't know what the page is about. Too much and it looks like spam.
+                  </p>
+                  <div className="mt-2">
+                    <PriorityBadge level="relevant" />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Analyze a Page</CardTitle>
+              <CardDescription>Enter a URL and keyword to check placement and density</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <Label className="text-xs text-gray-500 mb-1 block">Page URL</Label>
+                    <Input
+                      placeholder="https://example.com/page"
+                      value={densityUrl}
+                      onChange={(e) => setDensityUrl(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <Label className="text-xs text-gray-500 mb-1 block">Target Keyword</Label>
+                    <Input
+                      placeholder="e.g., plumber near me"
+                      value={densityKeyword}
+                      onChange={(e) => setDensityKeyword(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && densityUrl.trim() && densityKeyword.trim() && analyzeKeywordDensity.mutate({ url: densityUrl.trim(), keyword: densityKeyword.trim() })}
+                    />
+                  </div>
+                </div>
+                <Button
+                  onClick={() => densityUrl.trim() && densityKeyword.trim() && analyzeKeywordDensity.mutate({ url: densityUrl.trim(), keyword: densityKeyword.trim() })}
+                  disabled={analyzeKeywordDensity.isPending || !densityUrl.trim() || !densityKeyword.trim()}
+                  style={{ backgroundColor: OPTIMIZE_COLOR }}
+                  className="text-white"
+                >
+                  {analyzeKeywordDensity.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Search className="w-4 h-4 mr-2" />}
+                  {analyzeKeywordDensity.isPending ? 'Analyzing...' : 'Analyze'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {densityData && (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Tag className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                    Density Results for "{densityData.keyword || densityKeyword}"
+                  </CardTitle>
+                  <PriorityBadge level="relevant" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {/* Density Percentage */}
+                  <div className="flex items-center gap-4 p-4 rounded-lg border">
+                    <div className="text-center">
+                      <p className="text-3xl font-bold" style={{ color: OPTIMIZE_COLOR }}>
+                        {densityData.density != null ? `${densityData.density.toFixed(1)}%` : '—'}
+                      </p>
+                      <p className="text-xs text-gray-500">Keyword Density</p>
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      {densityData.density != null && (
+                        densityData.density < 0.5 ? 'Your keyword density is low. Consider adding more natural mentions of this keyword.' :
+                        densityData.density > 3 ? 'Your keyword density is high. This could be seen as keyword stuffing by search engines.' :
+                        'Your keyword density is in a healthy range.'
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Placement Checklist */}
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-gray-700">Keyword Placement Checklist</p>
+                    {[
+                      { key: 'inTitle', label: 'Keyword in page title' },
+                      { key: 'inH1', label: 'Keyword in H1 heading' },
+                      { key: 'inMeta', label: 'Keyword in meta description' },
+                      { key: 'inFirstParagraph', label: 'Keyword in first paragraph' },
+                      { key: 'inUrl', label: 'Keyword in URL' },
+                      { key: 'inAltText', label: 'Keyword in image alt text' },
+                      { key: 'inSubheadings', label: 'Keyword in subheadings (H2/H3)' },
+                    ].map((item) => {
+                      const found = densityData.placements?.[item.key];
+                      return (
+                        <div key={item.key} className="flex items-center gap-2 text-sm">
+                          {found ? (
+                            <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
+                          ) : (
+                            <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                          )}
+                          <span className={found ? 'text-gray-700' : 'text-gray-400'}>{item.label}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* AI Recommendation */}
+                  {densityData.recommendation && (
+                    <div className="p-4 rounded-lg border-l-4" style={{ borderLeftColor: OPTIMIZE_COLOR, backgroundColor: `${OPTIMIZE_COLOR}08` }}>
+                      <p className="text-sm font-medium mb-1" style={{ color: OPTIMIZE_COLOR }}>AI Recommendation</p>
+                      <p className="text-sm text-gray-600">{densityData.recommendation}</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {!densityData && (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <Tag className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <p className="text-gray-500">Enter a URL and keyword above to analyze keyword placement and density.</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -987,6 +1379,9 @@ function CompetitorsTab() {
   const queryClient = useQueryClient();
   const [domainInput, setDomainInput] = useState('');
   const [gapData, setGapData] = useState<any>(null);
+  const [comparisonData, setComparisonData] = useState<any>(null);
+  const [contentGapData, setContentGapData] = useState<any>(null);
+  const [trafficData, setTrafficData] = useState<Record<string, any>>({});
 
   const { data: competitorsData, isLoading } = useQuery({
     queryKey: ['/api/seo/competitors'],
@@ -1038,6 +1433,48 @@ function CompetitorsTab() {
     },
     onError: () => {
       toast({ title: "Error", description: "Failed to analyze competitors", variant: "destructive" });
+    },
+  });
+
+  const compareDomains = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/competitors/compare', {});
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setComparisonData(data);
+      toast({ title: "Comparison Complete" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to compare domains", variant: "destructive" });
+    },
+  });
+
+  const analyzeContentGap = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/competitors/content-gap', {});
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setContentGapData(data);
+      toast({ title: "Content Gap Analysis Complete", description: `Found ${data.gaps?.length || 0} content gaps` });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to analyze content gaps", variant: "destructive" });
+    },
+  });
+
+  const checkCompetitorTraffic = useMutation({
+    mutationFn: async (domain: string) => {
+      const res = await apiRequest('POST', '/api/seo/competitors/traffic', { domain });
+      return res.json();
+    },
+    onSuccess: (data, domain) => {
+      setTrafficData(prev => ({ ...prev, [domain]: data }));
+      toast({ title: "Traffic Estimated", description: `Estimated traffic for ${domain}` });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to estimate traffic", variant: "destructive" });
     },
   });
 
@@ -1101,6 +1538,14 @@ function CompetitorsTab() {
             >
               {analyzeGaps.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <TrendingUp className="w-4 h-4 mr-2" />}
               Keyword Gap Analysis
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => compareDomains.mutate()}
+              disabled={compareDomains.isPending || (apiCompetitors.length === 0 && profileCompetitors.length === 0)}
+            >
+              {compareDomains.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <BarChart3 className="w-4 h-4 mr-2" />}
+              Compare Domains
             </Button>
           </div>
         </CardContent>
@@ -1243,6 +1688,186 @@ function CompetitorsTab() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Domain Comparison Results */}
+      {comparisonData?.domains && comparisonData.domains.length > 0 && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <BarChart3 className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                Domain Comparison
+              </CardTitle>
+              <PriorityBadge level="relevant" />
+            </div>
+            <CardDescription>Side-by-side comparison of domain metrics</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b text-left">
+                    <th className="pb-3 text-sm font-medium text-gray-500">Domain</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">DA</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Backlinks</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Keywords</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Est. Traffic</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comparisonData.domains.map((d: any, i: number) => (
+                    <tr key={i} className="border-b last:border-0">
+                      <td className="py-3">
+                        <div className="flex items-center gap-2">
+                          <Globe className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <span className="font-medium text-sm">{d.domain}</span>
+                          {d.isYours && <Badge variant="default" className="text-xs">You</Badge>}
+                        </div>
+                      </td>
+                      <td className="py-3 text-center">
+                        {d.domainAuthority != null ? (
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${
+                            d.domainAuthority >= 50 ? 'bg-green-100 text-green-700' :
+                            d.domainAuthority >= 20 ? 'bg-yellow-100 text-yellow-700' :
+                            'bg-gray-100 text-gray-600'
+                          }`}>{d.domainAuthority}</span>
+                        ) : <span className="text-gray-400">—</span>}
+                      </td>
+                      <td className="py-3 text-center text-sm text-gray-600">{d.backlinks?.toLocaleString() || '—'}</td>
+                      <td className="py-3 text-center text-sm text-gray-600">{d.keywords?.toLocaleString() || '—'}</td>
+                      <td className="py-3 text-center text-sm text-gray-600">{d.estimatedTraffic?.toLocaleString() || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Content Gap Analysis */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <FileText className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                Content Gap Analysis
+              </CardTitle>
+              <CardDescription>Find keywords your competitors rank for in content you haven't created yet</CardDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <PriorityBadge level="relevant" />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => analyzeContentGap.mutate()}
+                disabled={analyzeContentGap.isPending || (apiCompetitors.length === 0 && profileCompetitors.length === 0)}
+              >
+                {analyzeContentGap.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Search className="w-4 h-4 mr-2" />}
+                Analyze Content Gap
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {contentGapData?.gaps && contentGapData.gaps.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b text-left">
+                    <th className="pb-3 text-sm font-medium text-gray-500">Keyword</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Competitor Position</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Your Position</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Volume</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Difficulty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {contentGapData.gaps.map((gap: any, i: number) => (
+                    <tr key={i} className="border-b last:border-0">
+                      <td className="py-3 font-medium text-sm">{gap.keyword}</td>
+                      <td className="py-3 text-center">
+                        {gap.competitorPosition ? (
+                          <span className="text-sm font-bold text-orange-600">#{gap.competitorPosition}</span>
+                        ) : <span className="text-gray-400">—</span>}
+                      </td>
+                      <td className="py-3 text-center">
+                        {gap.yourPosition ? (
+                          <span className={`text-sm font-bold ${gap.yourPosition <= 10 ? 'text-green-600' : 'text-gray-500'}`}>#{gap.yourPosition}</span>
+                        ) : <span className="text-xs text-red-500">Not ranking</span>}
+                      </td>
+                      <td className="py-3 text-center text-sm text-gray-600">{gap.volume?.toLocaleString() || '—'}</td>
+                      <td className="py-3 text-center">
+                        {gap.difficulty != null ? (
+                          <Badge variant={gap.difficulty <= 30 ? 'default' : gap.difficulty <= 60 ? 'secondary' : 'destructive'} className="text-xs">
+                            {gap.difficulty}/100
+                          </Badge>
+                        ) : <span className="text-gray-400">—</span>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-6">
+              <FileText className="w-10 h-10 mx-auto mb-3 text-gray-300" />
+              <p className="text-sm text-gray-500">Click "Analyze Content Gap" to discover keyword opportunities your competitors are capitalizing on.</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Competitor Traffic Estimates */}
+      {(apiCompetitors.length > 0 || profileCompetitors.length > 0) && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Activity className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                Competitor Traffic Estimates
+              </CardTitle>
+              <PriorityBadge level="relevant" />
+            </div>
+            <CardDescription>Estimate how much organic search traffic each competitor receives</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {[...apiCompetitors.map((c: any) => c.domain), ...profileCompetitors.filter((d: string) => !apiCompetitors.some((c: any) => c.domain === d))].map((domain: string, i: number) => (
+                <div key={i} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <Globe className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    <span className="font-medium text-sm truncate">{domain}</span>
+                  </div>
+                  <div className="flex items-center gap-3 ml-4">
+                    {trafficData[domain] ? (
+                      <div className="text-right">
+                        <p className="text-sm font-bold" style={{ color: OPTIMIZE_COLOR }}>
+                          {trafficData[domain].estimatedMonthlyTraffic?.toLocaleString() || '—'} <span className="font-normal text-xs text-gray-500">visits/mo</span>
+                        </p>
+                        {trafficData[domain].topKeywords && (
+                          <p className="text-xs text-gray-400">Top keywords: {trafficData[domain].topKeywords}</p>
+                        )}
+                      </div>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => checkCompetitorTraffic.mutate(domain)}
+                        disabled={checkCompetitorTraffic.isPending}
+                      >
+                        {checkCompetitorTraffic.isPending ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <TrendingUp className="w-3 h-3 mr-1" />}
+                        Estimate Traffic
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
@@ -2090,6 +2715,11 @@ function BacklinksTab() {
     queryFn: async () => { const res = await apiRequest('GET', '/api/seo/profiles'); return res.json(); },
   });
 
+  const { data: referringData } = useQuery({
+    queryKey: ['/api/seo/backlinks/referring-domains'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/backlinks/referring-domains'); return res.json(); },
+  });
+
   const [checkingUrl, setCheckingUrl] = useState(false);
   const [checkedBacklinks, setCheckedBacklinks] = useState<any[]>([]);
 
@@ -2244,6 +2874,32 @@ function BacklinksTab() {
             </button>
           ))}
         </div>
+      )}
+
+      {/* Referring Domains Over Time */}
+      {referringData?.dataPoints?.length > 0 && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg">Referring Domains Over Time</CardTitle>
+              <PriorityBadge level="relevant" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-end gap-1 h-32">
+              {referringData.dataPoints.slice(-30).map((dp: any, i: number) => {
+                const max = Math.max(...referringData.dataPoints.map((d: any) => d.count));
+                const height = max > 0 ? (dp.count / max) * 100 : 0;
+                return (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                    <div className="w-full rounded-t" style={{ height: `${height}%`, backgroundColor: OPTIMIZE_COLOR, minHeight: dp.count > 0 ? '4px' : '0' }} />
+                    {i % 5 === 0 && <span className="text-[9px] text-gray-400">{new Date(dp.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Backlinks Table */}
