@@ -106,5 +106,6 @@ ALL payment processing through swipesblue.com. Zero Stripe references in any cus
 | 2026-03-26 | Landing pages, file renames, prescriptions score, old name fixes all verified. |
 | 2026-03-25 | Lucide icons, How It Works, SwipesBlue cleanup committed. |
 | 2026-04-02 | Ecosystem footer tagline prompt written. |
+| 2026-04-07 | D&B DUNS integration (schema, service, routes, publish dashboard, listing adapter). Site-wide cleanup: routes manifest, about, contact, find-results, knowledge-base, assessment-confirmation, client-portal, api-docs. Reddit OAuth redirect fix. About page ecosystem logos. |
 
 **AGENTS: Update this section on every commit. Your work is not done until this changelog reflects it.**

@@ -1,6 +1,6 @@
 # AGENT BRIEFING — businessblueprint.io
-# Written: April 7, 2026
-# Author: Claude Opus 4.6 (prior agent session)
+# Written: April 8, 2026
+# Author: Claude Opus 4.6 (session 2)
 # Purpose: Bring the next agent fully up to speed
 
 ---
@@ -59,80 +59,104 @@ If you skip these, you will break something. Dean does not tolerate placeholder 
 
 ## KEY FILES MAP
 
-| File | Purpose | Size |
-|------|---------|------|
-| `shared/schema.ts` | Database schema — 50+ tables, single source of truth | ~121KB |
-| `server/routes.ts` | Main routes — 100+ endpoints | ~157KB |
-| `server/routes/crm.ts` | CRM routes | ~81KB |
-| `server/routes/content.ts` | / post routes (posts, media, platforms, analytics, AI) | ~893 lines |
-| `server/routes/amplify.ts` | / amplify routes (campaigns, audiences, budget, Reddit) | ~2393 lines |
+| File | Purpose | Lines |
+|------|---------|-------|
+| `shared/schema.ts` | Database schema — 50+ tables, single source of truth | ~4165 |
+| `server/routes.ts` | Main routes — 100+ endpoints | ~4292 |
+| `server/routes/crm.ts` | CRM routes | ~2502 |
+| `server/routes/amplify.ts` | / amplify routes (campaigns, audiences, budget, Reddit OAuth) | ~2496 |
+| `server/routes/content.ts` | / post routes (posts, media, platforms, analytics, AI) | ~909 |
+| `server/routes/dnb.ts` | D&B DUNS routes (status, lookup, verify, profile, manual) | ~220 |
+| `server/services/dnb.ts` | D&B Direct+ API service (OAuth2, lookup, verify, profile) | ~368 |
+| `server/services/timeline-logger.ts` | CRM timeline logging — `logContactActivity()` | ~38 |
+| `server/services/reviewSync.ts` | Review sync from Google/Yelp + response push + contact matching |
+| `server/services/analyticsSync.ts` | Post analytics sync from connected platforms |
+| `server/services/googlePlaces.ts` | Google Places API + review reply |
+| `server/services/listing-distribution/listingAdapterFactory.ts` | Factory for 9 listing adapters (incl. D&B) | ~70 |
+| `server/services/listing-distribution/adapters/dnbAdapter.ts` | D&B listing distribution adapter | ~98 |
 | `client/src/config/app-registry.ts` | SINGLE SOURCE OF TRUTH for app names, colors, pricing |
 | `client/src/components/side-nav.tsx` | Sidebar navigation (3 zones: Tools / Guide / Admin) |
 | `client/src/components/header.tsx` | Header component |
 | `client/src/App.tsx` | App router |
-| `server/services/timeline-logger.ts` | CRM timeline logging — `logContactActivity()` |
-| `server/services/reviewSync.ts` | Review sync from Google/Yelp + response push + contact matching |
-| `server/services/analyticsSync.ts` | Post analytics sync from connected platforms |
-| `server/services/googlePlaces.ts` | Google Places API + review reply |
+| `client/src/pages/publish-dashboard.tsx` | / publish dashboard (includes D&B DUNS section) | ~1200 |
+| `client/src/pages/about.tsx` | About page (rewritten this session — ecosystem logos, apps) | ~192 |
+| `client/src/pages/contact.tsx` | Contact page (cleaned this session — no yellow, real info) | ~136 |
+| `shared/routes.ts` | Route manifest for sitemap (cleaned this session — no dead routes) | ~119 |
 | `drizzle.config.ts` | Uses `DATABASE_URL` env var for db:push |
 
 ---
 
-## WHAT WAS DONE THIS SESSION (April 7, 2026)
+## WHAT WAS DONE THIS SESSION (April 7-8, 2026)
 
-Commit: `821565a` — `feat: complete spoke apps — elevate review push + contact matching, post analytics tab, amplify CRM audiences`
+### Commit `c9bc485` — D&B DUNS Number Integration (/ publish)
+**5-part integration of Dun & Bradstreet DUNS number lookup/verification:**
 
-### Part 1 — / elevate (Review Response Push + Contact Matching)
-- **Added** `replyToReview()` method to `server/services/googlePlaces.ts` — pushes review replies to Google My Business API via `PUT /v4/accounts/{accountId}/locations/{locationId}/reviews/{reviewId}/reply`
-- **Rewrote** `respondToReview()` in `server/services/reviewSync.ts`:
-  1. Saves response to DB (existing)
-  2. Attempts Google API push if Google Business OAuth credentials exist
-  3. Matches reviewer name to CRM contacts (full name match, then unique first-name match)
-  4. Logs `review_responded` event to CRM timeline via `logContactActivity()`
-- **Added** contact matching on incoming review sync (both Google and Yelp loops in `syncClientReviews`):
-  - Matches reviewer to CRM contact by name
-  - Logs `review_received` event to CRM timeline
-- **Added** `sql` import to drizzle-orm imports in reviewSync.ts
-- Note: Yelp API does NOT support automated review replies — this is a platform limitation, not a code gap
+1. **Schema** (`shared/schema.ts`):
+   - Added `dunsNumber` (varchar 9) to `clients` table
+   - Added 7 DUNS columns to `canonicalBusinessProfiles`: `dunsNumber`, `dunsVerified`, `dunsVerifiedAt`, `dunsMatchConfidence`, `dunsCompanyName`, `dunsAddress`, `dunsLastChecked`
 
-### Part 2 — / post (Analytics Tab + Engagement Data)
-- **Added** `analyticsData` query to `post-management.tsx` — fetches from `/api/post/${clientId}/analytics`
-- **Replaced** the "Coming Soon" placeholder in the analytics tab with real engagement metrics:
-  - Aggregate cards: Likes, Comments, Shares, Impressions (using `#FF44CC` / post color)
-  - Per-post breakdown showing platform + engagement per post
-  - Empty state when no analytics data exists
-- **Added** Sync button that calls `POST /api/post/${clientId}/analytics/sync`
-- **Added** `POST /:clientId/analytics/sync` endpoint in `server/routes/content.ts` — triggers `analyticsSyncService.syncClientAnalytics()`
-- **Added** engagement milestone logging in `analyticsSync.ts`
-- **Added** `RefreshCw` to Lucide imports
-- **Removed** "Coming Soon" badge from analytics tab
+2. **D&B Service** (`server/services/dnb.ts`):
+   - OAuth2 client credentials flow with token caching
+   - `lookupDuns()` — match business by name+address → DUNS number + confidence
+   - `getCompanyProfile()` — full firmographic data by DUNS number
+   - `verifyDuns()` — check if DUNS is valid and active
+   - Graceful fallback when `DNB_API_KEY`/`DNB_API_SECRET` not set
 
-### Part 3 — / amplify (CRM Audience Targeting)
-- **Schema change**: Added `sourceType` (varchar 50) and `crmFilter` (jsonb) columns to `amplify_audiences` table in `shared/schema.ts`
-- **Added** `POST /api/amplify/audiences/from-crm` endpoint in `server/routes/amplify.ts`:
-  - Creates audiences from CRM contacts with optional filters (lifecycleStage, leadSource, status)
-  - Logs `ad_campaign_targeted` timeline events for each contact (capped at 500)
-- **Added** `POST /api/amplify/attribute` endpoint:
-  - Logs ad attribution (`ad_attribution` event) linking a contact to a campaign
-  - Accepts UTM parameters
-- **Added** `CrmAudienceCard` component in `amplify-dashboard.tsx`:
-  - Audience name input
-  - Contact filter dropdown (All, Customers, Leads, Subscribers)
-  - Target platform dropdown (Meta, Google, Reddit)
-  - "Build Audience from / connect" button
-- **Removed** `ComingSoonCard` component (was unused but contained "Coming Soon" badge)
+3. **API Routes** (`server/routes/dnb.ts`, registered in `server/routes.ts` line ~3190):
+   - `GET /api/dnb/status` — config check + current DUNS status for client
+   - `POST /api/dnb/lookup` — auto-lookup from canonical profile data
+   - `POST /api/dnb/verify` — verify + mark as verified in DB
+   - `GET /api/dnb/profile/:dunsNumber` — full D&B company profile
+   - `POST /api/dnb/manual` — manually enter a known DUNS number
+
+4. **Publish Dashboard** (`client/src/pages/publish-dashboard.tsx`):
+   - D&B DUNS card at top of Overview tab with 3 states: verified, found-not-verified, no DUNS
+   - Auto-lookup button pulls from canonical business profile
+   - Manual entry with 9-digit validation
+   - Link to apply for free DUNS at D&B when not found
+
+5. **Listing Adapter** (`server/services/listing-distribution/adapters/dnbAdapter.ts`):
+   - Registered in factory as `dnb`, reports 12 downstream directories
+   - Verify/update support via `BaseListingAdapter` interface
+
+### Commit `15e8aec` — Site-Wide Page Cleanup (8 files)
+
+1. **`shared/routes.ts`** — Full rewrite of `routeManifest`. Removed all dead routes (CommVerse, LocalBlue, /send, /inbox, /livechat, /content, /listings, /reputation, /relationships, /ai-coach, /subscription, /pathways, /biif, /tour, /brand-studio, /logo-preview). Added correct Compass Suite, Anchor Suite, / connect, Coach Blue, Portal routes.
+
+2. **`client/src/pages/about.tsx`** — Full rewrite. Clean hero with Archivo font on `bg-[#E9ECF0]`, "What We Do" section, apps in two columns with "/" + color rendering, CTA with `#09080E` button. No fake stats, no team section.
+
+3. **`client/src/pages/contact.tsx`** — Full rewrite. Replaced `bg-gray-50` → `bg-[#E9ECF0]`, all yellow → `#064A6C`/`#09080E`, removed "empower" references, added Archivo font. Real contact info: contact@businessblueprint.io, +1 (575) 201-3515, Mon-Sat 8am-5pm MST.
+
+4. **`client/src/pages/find-results.tsx`** — `bg-gray-50` → `bg-[#E9ECF0]` on both page-level divs.
+
+5. **`client/src/pages/knowledge-base.tsx`** — Score labels updated to 5 correct ranges (Exceptional/Strong/Building Momentum/Room to Grow/Getting Started) with brand colors. `DIGITAL_IQ_AREAS` updated to 9 areas mapped 1:1 to apps with ~7.78 pts each. FAQs fixed (removed DIY/Managed Services). Step 4 now references Directions for Use + Coach Blue.
+
+6. **`client/src/pages/assessment-confirmation.tsx`** — Removed all `dark:` classes, gradient → `bg-[#E9ECF0]`, "Google Business Intelligence" → "our proprietary digital scanner", "Expert Review & Delivery (within 24 hours)" → "Prescription Delivery (2-3 minutes)", manual review → automatic delivery.
+
+7. **`client/src/pages/client-portal.tsx`** — Removed all `dark:` classes, Digital IQ card gradient → `bg-[#09080E]`, three `bg-gray-50` → `bg-[#E9ECF0]`.
+
+8. **`client/src/pages/api-docs.tsx`** — Removed all `dark:` classes, hero gradient → `bg-[#E9ECF0]`, added Archivo font to heading.
+
+### Commit `1f7b128` — Reddit OAuth Callback Fix
+- All 4 response paths in the Reddit OAuth callback (`server/routes/amplify.ts` ~line 272) now `res.redirect()` to `/amplify/dashboard?connected=reddit` or `?error=...` instead of returning JSON.
+
+### Commit `2de0ff6` — About Page Ecosystem Logos
+- Replaced plain-text ecosystem section with actual logo images (same as footer pattern): `triadblueEcosystem`, `bbLogo`, `swipesLogo`, `hostsLogo`, `scansLogo`, `builderLogo`.
+- Removed `BrandLogo` component import and `ECOSYSTEM` const.
 
 ---
 
 ## PENDING SCHEMA MIGRATION
 
-The schema change (2 new nullable columns on `amplify_audiences`) has NOT been pushed to the production database yet.
+The D&B schema changes (DUNS fields on `canonicalBusinessProfiles` + `clients`) and the amplify schema changes (`sourceType`/`crmFilter` on `amplify_audiences`) need to be pushed to production.
 
-**To push**: In the Replit Shell, run:
+**To push on Replit Shell:**
 ```bash
 git pull --rebase origin main && DATABASE_URL="$DATABASE_URL" npm run db:push
 ```
-Check `env | grep -i database` first to confirm you're hitting the production DB, not a dev instance.
+Check `env | grep -i database` first to confirm you're hitting the production DB.
+
+**Dean was given this command.** If the schema push already happened, these columns will already exist and `db:push` will be a no-op.
 
 ---
 
@@ -145,6 +169,19 @@ Check `env | grep -i database` first to confirm you're hitting the production DB
 
 ---
 
+## PAGES THAT STILL NEED CLEANUP
+
+The site-wide cleanup (commit `15e8aec`) covered 8 files. These pages were NOT touched and may still have issues:
+
+- `client/src/pages/journey.tsx` — still references "Google Business Intelligence" (confirmed via grep)
+- `client/src/pages/biif.tsx` — exists but route was removed from manifest; may need deletion or redirect
+- `client/src/pages/checkout.tsx` — may have old yellow/dark: patterns
+- `client/src/pages/optimize.tsx` — not audited
+- `client/src/pages/assessment-form.tsx` — not audited
+- `client/src/pages/promote-api-docs.tsx` — not audited
+
+---
+
 ## CRITICAL RULES FOR ALL AGENTS
 
 1. **Payment**: ALL payment goes through swipesblue.com. The words "Stripe" and "NMI" must NEVER appear in any TRIADBLUE codebase except swipesblue itself.
@@ -152,19 +189,27 @@ Check `env | grep -i database` first to confirm you're hitting the production DB
 3. **No placeholder content**: Everything must be production-ready.
 4. **No old names**: CommVerse, Commverse, LocalBlue, Localblue, AI Coach, AICoach — these are dead.
 5. **Brand colors**: Triad Black #09080E, Triad White #E9ECF0 (not #FFFFFF on dark backgrounds), Triad Gray #808080. Pure Blue #0000FF is logo-only, never in UI.
-6. **Font**: Archivo Semi Expanded
+6. **Font**: Archivo Semi Expanded for headings.
 7. **App names always link**: Every app name displayed anywhere must be clickable.
 8. **Section dividers**: Always include visible borders/lines between sections.
 9. **Dark backgrounds**: WHITE TEXT ONLY. No app colors. No exceptions.
-10. **Verification**: Before reporting task complete, read actual file content. Show changed lines as proof. Tables of checkmarks are not verification.
-11. **Dean decides**: Never make architecture, business, or product decisions without his explicit direction.
-12. **TRIADBLUE is always ALL CAPS**. All other platform names are lowercase: businessblueprint.io, hostsblue.com, swipesblue.com, scansblue.com, Console.Blue
+10. **No dark mode**: Do not add `dark:` classes. We do not have dark mode.
+11. **No bg-gray-50**: Use `bg-[#E9ECF0]` or `bg-white` for page backgrounds.
+12. **No yellow/gold/indigo as accent colors**: Not brand colors.
+13. **No "Managed Services" or "DIY"**: These concepts do not exist in our product.
+14. **No fabricated statistics**: If we don't have real numbers, don't make them up.
+15. **No "Google Business Intelligence"**: Our scanner is proprietary.
+16. **Score labels**: Exceptional (130-140), Strong (115-129), Building Momentum (100-114), Room to Grow (85-99), Getting Started (70-84). NO letter grades.
+17. **Verification**: Before reporting task complete, read actual file content. Show changed lines as proof.
+18. **Dean decides**: Never make architecture, business, or product decisions without his explicit direction.
+19. **TRIADBLUE is always ALL CAPS**. All other platform names are lowercase.
+20. **Always push after commit**: Do not ask — just push to origin immediately.
 
 ---
 
-## CONNECT HUB (Most Recent Feature Before This Session)
+## CONNECT HUB + TIMELINE LOGGER
 
-The Connect hub has cross-app activity logging across 4 phases (commit `3bff5ee`). Timeline logger infrastructure, app colors, and event icons are all in place. The `logContactActivity()` function in `server/services/timeline-logger.ts` is the single entry point for all CRM timeline events. It accepts:
+The Connect hub has cross-app activity logging across 4 phases (commit `3bff5ee`). The `logContactActivity()` function in `server/services/timeline-logger.ts` is the single entry point for all CRM timeline events:
 
 ```typescript
 {
@@ -187,8 +232,8 @@ The Connect hub has cross-app activity logging across 4 phases (commit `3bff5ee`
 ## DIGITAL IQ SCORING
 
 Digital IQ = Scan Score (0-70) + Operational Score (0-70) = 0-140
-Grade Scale: A (120-140), B (100-119), C (80-99), D (60-79), F (0-59)
-9 categories mapped 1:1 to 9 apps.
+Grade Scale: Exceptional (130-140), Strong (115-129), Building Momentum (100-114), Room to Grow (85-99), Getting Started (70-84)
+9 categories mapped 1:1 to 9 apps. Each ~7.78 points.
 
 ---
 
@@ -207,6 +252,39 @@ Non-subscribers see Coach Blue tab grayed out.
 
 ---
 
+## D&B DUNS INTEGRATION (NEW THIS SESSION)
+
+The D&B Direct+ API requires a subscription. Dean needs to obtain `DNB_API_KEY` and `DNB_API_SECRET` from D&B and add them to the environment. The service gracefully handles missing credentials — everything works except live API calls, and the manual entry path is always available.
+
+**API endpoints:**
+- Auth: `POST https://plus.dnb.com/v2/token` (Basic auth with key:secret)
+- Match: `POST https://plus.dnb.com/v1/match/cleanseMatch`
+- Profile: `GET https://plus.dnb.com/v1/data/duns/{dunsNumber}?blockIDs=companyinfo_L1_v1`
+
+**Listing adapter** registered in factory as `dnb` — reports 12 downstream directories (Apple Maps, Bing, Yahoo, MapQuest, etc.)
+
+---
+
+## CONTACT INFO (CONFIRMED)
+
+- Email: contact@businessblueprint.io
+- Phone: +1 (575) 201-3515
+- Hours: Mon-Sat 8am-5pm MST
+- Office: Remote - businessblueprint.io
+
+---
+
+## ECOSYSTEM TAGLINES (CONFIRMED)
+
+- businessblueprint.io → "Get Assessed. Get Prescribed. Get Business."
+- swipesblue.com → "Go Blue. Get Swiped. Get Paid."
+- hostsblue.com → "Go Blue. Get Site. Go Live."
+- scansblue.com → "Go Blue. Get Scanned. Get Scored."
+- BUILDERBLUE2.COM → "Go Blue. Get Vibed. Get Ahead."
+- TRIADBLUE.COM → "Six Platforms. One Ecosystem. Go Blue."
+
+---
+
 ## DEAN'S PREFERENCES
 
 - Does NOT want work lost between sessions
@@ -217,6 +295,7 @@ Non-subscribers see Coach Blue tab grayed out.
 - Prefers terse responses — no trailing summaries
 - Uses full URL format for platform names (businessblueprint.io, not "BusinessBlueprint")
 - Logo images in headers, not text
+- **Always push to origin after every commit — never ask, just do it**
 
 ---
 
