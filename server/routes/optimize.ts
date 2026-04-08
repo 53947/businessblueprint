@@ -1401,6 +1401,534 @@ Return ONLY a JSON array of objects: [{"url": "...", "suggestedAlt": "..."}]`;
   );
 
   // =============================================
+  // CONTENT TOOLS — ADVANCED
+  // =============================================
+
+  /** Content length recommendations based on AI analysis of top-ranking pages */
+  app.post(
+    "/api/seo/content/length-recommendations",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+
+        const { keyword } = req.body;
+        if (!keyword || typeof keyword !== 'string') {
+          return res.status(400).json({ success: false, message: "Keyword is required" });
+        }
+
+        const settings = await aiSettingsService.getAllSettings();
+        const provider = ((settings.length > 0 ? settings[0].provider : null) || 'openai') as AIProvider;
+
+        const prompt = `You are an SEO content strategist. For the keyword "${keyword}" in the ${profile[0].industry || 'general business'} industry:
+
+Analyze what typical top-ranking pages look like and recommend an ideal word count.
+
+Return a JSON object:
+{
+  "keyword": "${keyword}",
+  "recommendedWordCount": 1500,
+  "topResultsAverage": 1800,
+  "range": { "min": 1200, "max": 2500 },
+  "contentType": "comprehensive guide",
+  "recommendation": "Top results for this keyword average about 1,800 words. We recommend at least 1,500 words with thorough coverage of subtopics to compete effectively."
+}
+
+Base your estimates on typical content patterns for this type of keyword.`;
+
+        const result = await unifiedAI.getCompletion(provider, {
+          messages: [
+            { role: 'system', content: 'You are an SEO content length expert. Return only valid JSON.' },
+            { role: 'user', content: prompt },
+          ],
+          temperature: 0.5,
+        });
+
+        let data: any = {};
+        try {
+          const cleaned = (result.content || '').replace(/```json?\n?/g, '').replace(/```/g, '').trim();
+          data = JSON.parse(cleaned);
+        } catch {
+          data = {
+            keyword,
+            recommendedWordCount: 1500,
+            topResultsAverage: 1500,
+            range: { min: 1000, max: 2000 },
+            contentType: 'article',
+            recommendation: 'Aim for at least 1,500 words with comprehensive coverage of the topic.',
+          };
+        }
+
+        res.json({ success: true, ...data });
+      } catch (error: any) {
+        console.error("[Optimize] Content length recommendation error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate content length recommendations" });
+      }
+    }
+  );
+
+  /** Click/CTR estimates per keyword */
+  app.post(
+    "/api/seo/content/click-potential",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+
+        const profileId = profile[0].id;
+
+        let keywordsData: { keyword: string; position: number; searchVolume: number }[];
+
+        if (req.body.keywords && Array.isArray(req.body.keywords)) {
+          keywordsData = req.body.keywords.map((kw: any) => ({
+            keyword: kw.keyword,
+            position: kw.position || 0,
+            searchVolume: kw.searchVolume || 0,
+          }));
+        } else {
+          // Pull from tracked keywords
+          const keywords = await db.select().from(seoKeywords).where(eq(seoKeywords.profileId, profileId));
+          keywordsData = keywords.map(kw => ({
+            keyword: kw.keyword,
+            position: kw.currentRank || 0,
+            searchVolume: kw.searchVolume || 0,
+          }));
+        }
+
+        const estimates = keywordsData.map(kw => {
+          const ctr = getCtrForPosition(kw.position);
+          const estimatedClicks = Math.round(kw.searchVolume * ctr);
+          return {
+            keyword: kw.keyword,
+            position: kw.position,
+            searchVolume: kw.searchVolume,
+            estimatedCtr: Math.round(ctr * 10000) / 100,
+            estimatedClicks,
+            potentialClicks: kw.position > 1 ? Math.round(kw.searchVolume * getCtrForPosition(1)) : estimatedClicks,
+            opportunityGap: kw.position > 1 ? Math.round(kw.searchVolume * getCtrForPosition(1)) - estimatedClicks : 0,
+          };
+        }).sort((a, b) => b.opportunityGap - a.opportunityGap);
+
+        const totalEstimatedClicks = estimates.reduce((sum, e) => sum + e.estimatedClicks, 0);
+        const totalPotentialClicks = estimates.reduce((sum, e) => sum + e.potentialClicks, 0);
+
+        res.json({
+          success: true,
+          estimates,
+          summary: {
+            totalKeywords: estimates.length,
+            totalEstimatedClicks,
+            totalPotentialClicks,
+            opportunityGap: totalPotentialClicks - totalEstimatedClicks,
+          },
+        });
+      } catch (error: any) {
+        console.error("[Optimize] Click potential error:", error);
+        res.status(500).json({ success: false, message: "Failed to estimate click potential" });
+      }
+    }
+  );
+
+  /** Question-based keyword ideas — "People Also Ask" style */
+  app.post(
+    "/api/seo/content/question-keywords",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+
+        const { keyword } = req.body;
+        if (!keyword || typeof keyword !== 'string') {
+          return res.status(400).json({ success: false, message: "Keyword is required" });
+        }
+
+        const settings = await aiSettingsService.getAllSettings();
+        const provider = ((settings.length > 0 ? settings[0].provider : null) || 'openai') as AIProvider;
+
+        const prompt = `You are an SEO keyword research expert. For the keyword "${keyword}" in the ${profile[0].industry || 'general business'} industry (${profile[0].location || 'US'}):
+
+Generate question-based keywords that people search for — the kind that appear in Google's "People Also Ask" section.
+
+Return a JSON object:
+{
+  "keyword": "${keyword}",
+  "questions": [
+    {
+      "question": "How much does [keyword] cost?",
+      "estimatedVolume": 500,
+      "difficulty": 35,
+      "intent": "informational",
+      "contentFormat": "comparison table with pricing breakdown"
+    }
+  ]
+}
+
+Provide 15-20 questions. Include a mix of:
+- "How" questions (process/method)
+- "What" questions (definition/explanation)
+- "Why" questions (reasoning)
+- "Where/When" questions (location/timing)
+- "Is/Can/Does" questions (yes/no intent)
+- Cost/price questions
+- Comparison questions ("vs", "or", "difference between")
+
+Estimate search volume and keyword difficulty (0-100) realistically.`;
+
+        const result = await unifiedAI.getCompletion(provider, {
+          messages: [
+            { role: 'system', content: 'You are an SEO question keyword expert. Return only valid JSON.' },
+            { role: 'user', content: prompt },
+          ],
+          temperature: 0.7,
+        });
+
+        let data: any = { keyword, questions: [] };
+        try {
+          const cleaned = (result.content || '').replace(/```json?\n?/g, '').replace(/```/g, '').trim();
+          data = JSON.parse(cleaned);
+        } catch {
+          // AI response wasn't valid JSON — return empty
+        }
+
+        res.json({ success: true, ...data });
+      } catch (error: any) {
+        console.error("[Optimize] Question keywords error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate question keywords" });
+      }
+    }
+  );
+
+  /** Topic clustering — group related keywords into content clusters */
+  app.post(
+    "/api/seo/content/topic-clusters",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+
+        const profileId = profile[0].id;
+
+        let keywords: string[];
+        if (req.body.keywords && Array.isArray(req.body.keywords) && req.body.keywords.length > 0) {
+          keywords = req.body.keywords;
+        } else {
+          const tracked = await db.select().from(seoKeywords).where(eq(seoKeywords.profileId, profileId));
+          keywords = tracked.map(kw => kw.keyword);
+        }
+
+        if (keywords.length === 0) {
+          return res.status(400).json({ success: false, message: "No keywords available. Add keywords to your profile first." });
+        }
+
+        const settings = await aiSettingsService.getAllSettings();
+        const provider = ((settings.length > 0 ? settings[0].provider : null) || 'openai') as AIProvider;
+
+        const prompt = `You are an SEO content strategist. Group these keywords into topic clusters for ${profile[0].domain || 'a business website'} in the ${profile[0].industry || 'general business'} industry:
+
+Keywords: ${keywords.slice(0, 50).join(', ')}
+
+Return a JSON object:
+{
+  "clusters": [
+    {
+      "topic": "Cluster name / pillar topic",
+      "pillarKeyword": "main keyword for the pillar page",
+      "keywords": ["keyword1", "keyword2"],
+      "suggestedContent": "A comprehensive guide covering...",
+      "contentType": "pillar page",
+      "estimatedPages": 5
+    }
+  ]
+}
+
+Group related keywords together. Each cluster should have:
+- A clear pillar topic
+- The specific keywords that belong in that cluster
+- A suggested content piece (pillar page or supporting content)
+- The type of content that would work best
+
+Provide 3-8 clusters depending on keyword variety. Every keyword should be in exactly one cluster.`;
+
+        const result = await unifiedAI.getCompletion(provider, {
+          messages: [
+            { role: 'system', content: 'You are an SEO topic clustering expert. Return only valid JSON.' },
+            { role: 'user', content: prompt },
+          ],
+          temperature: 0.5,
+        });
+
+        let data: any = { clusters: [] };
+        try {
+          const cleaned = (result.content || '').replace(/```json?\n?/g, '').replace(/```/g, '').trim();
+          data = JSON.parse(cleaned);
+        } catch {
+          // Return empty clusters
+        }
+
+        res.json({ success: true, clusters: data.clusters || [] });
+      } catch (error: any) {
+        console.error("[Optimize] Topic clusters error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate topic clusters" });
+      }
+    }
+  );
+
+  /** SEO writing assistant — score content for SEO quality */
+  app.post(
+    "/api/seo/content/seo-score",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const { content, targetKeyword } = req.body;
+        if (!content || typeof content !== 'string') {
+          return res.status(400).json({ success: false, message: "Content is required" });
+        }
+        if (!targetKeyword || typeof targetKeyword !== 'string') {
+          return res.status(400).json({ success: false, message: "Target keyword is required" });
+        }
+
+        const checks: { name: string; passed: boolean; detail: string }[] = [];
+        const suggestions: string[] = [];
+
+        // 1. Content length
+        const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
+        if (wordCount >= 1500) {
+          checks.push({ name: 'Content Length', passed: true, detail: `${wordCount} words — comprehensive length` });
+        } else if (wordCount >= 600) {
+          checks.push({ name: 'Content Length', passed: true, detail: `${wordCount} words — adequate, but longer content may rank better` });
+          suggestions.push(`Consider expanding to 1,500+ words for more thorough coverage`);
+        } else {
+          checks.push({ name: 'Content Length', passed: false, detail: `${wordCount} words — too short for competitive keywords` });
+          suggestions.push(`Expand content to at least 600 words, ideally 1,500+ for this keyword`);
+        }
+
+        // 2. Keyword usage
+        const keywordLower = targetKeyword.toLowerCase();
+        const contentLower = content.toLowerCase();
+        const keywordCount = contentLower.split(keywordLower).length - 1;
+        const keywordDensity = wordCount > 0 ? Math.round((keywordCount / wordCount) * 10000) / 100 : 0;
+
+        if (keywordCount === 0) {
+          checks.push({ name: 'Keyword Usage', passed: false, detail: 'Target keyword not found in content' });
+          suggestions.push(`Include "${targetKeyword}" naturally throughout the content`);
+        } else if (keywordDensity > 3) {
+          checks.push({ name: 'Keyword Usage', passed: false, detail: `Keyword density ${keywordDensity}% — too high, may be seen as keyword stuffing` });
+          suggestions.push(`Reduce keyword density from ${keywordDensity}% to 1-2%`);
+        } else if (keywordDensity >= 0.5) {
+          checks.push({ name: 'Keyword Usage', passed: true, detail: `Keyword used ${keywordCount} times (${keywordDensity}% density)` });
+        } else {
+          checks.push({ name: 'Keyword Usage', passed: false, detail: `Keyword density ${keywordDensity}% — too low` });
+          suggestions.push(`Use "${targetKeyword}" a few more times naturally — aim for 1-2% density`);
+        }
+
+        // 3. Keyword in first 100 words
+        const first100Words = content.split(/\s+/).slice(0, 100).join(' ').toLowerCase();
+        const keywordInIntro = first100Words.includes(keywordLower);
+        checks.push({
+          name: 'Keyword in Introduction',
+          passed: keywordInIntro,
+          detail: keywordInIntro ? 'Target keyword appears in the first 100 words' : 'Target keyword missing from the opening paragraph',
+        });
+        if (!keywordInIntro) suggestions.push('Include the target keyword in your first paragraph');
+
+        // 4. Heading structure
+        const headingMatches = content.match(/^#{1,6}\s+.+/gm) || content.match(/<h[1-6][^>]*>.*?<\/h[1-6]>/gi) || [];
+        if (headingMatches.length >= 3) {
+          checks.push({ name: 'Heading Structure', passed: true, detail: `${headingMatches.length} headings found — well-structured` });
+        } else if (headingMatches.length > 0) {
+          checks.push({ name: 'Heading Structure', passed: true, detail: `${headingMatches.length} heading(s) found — consider adding more subheadings` });
+          suggestions.push('Add more subheadings (H2, H3) to break up the content and improve readability');
+        } else {
+          checks.push({ name: 'Heading Structure', passed: false, detail: 'No headings detected' });
+          suggestions.push('Add H2 and H3 headings to structure your content — search engines use headings to understand page topics');
+        }
+
+        // 5. Sentence length / readability
+        const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 0);
+        const avgSentenceLength = sentences.length > 0 ? Math.round(wordCount / sentences.length) : 0;
+        if (avgSentenceLength <= 20) {
+          checks.push({ name: 'Readability', passed: true, detail: `Average sentence length: ${avgSentenceLength} words — easy to read` });
+        } else if (avgSentenceLength <= 25) {
+          checks.push({ name: 'Readability', passed: true, detail: `Average sentence length: ${avgSentenceLength} words — readable but could be tighter` });
+          suggestions.push('Some sentences are long — try breaking them up for better readability');
+        } else {
+          checks.push({ name: 'Readability', passed: false, detail: `Average sentence length: ${avgSentenceLength} words — too complex` });
+          suggestions.push('Shorten your sentences — aim for 15-20 words per sentence for better readability');
+        }
+
+        // 6. Paragraph length
+        const paragraphs = content.split(/\n\n+/).filter(p => p.trim().length > 0);
+        const longParagraphs = paragraphs.filter(p => p.split(/\s+/).length > 150);
+        if (longParagraphs.length === 0) {
+          checks.push({ name: 'Paragraph Length', passed: true, detail: 'All paragraphs are a reasonable length' });
+        } else {
+          checks.push({ name: 'Paragraph Length', passed: false, detail: `${longParagraphs.length} paragraph(s) over 150 words` });
+          suggestions.push('Break up long paragraphs — aim for 3-5 sentences per paragraph for web content');
+        }
+
+        // 7. Internal link placeholders (check for markdown links or HTML links)
+        const linkMatches = content.match(/\[.*?\]\(.*?\)/g) || content.match(/<a\s+[^>]*href[^>]*>/gi) || [];
+        if (linkMatches.length >= 2) {
+          checks.push({ name: 'Internal Links', passed: true, detail: `${linkMatches.length} links found` });
+        } else if (linkMatches.length === 1) {
+          checks.push({ name: 'Internal Links', passed: true, detail: '1 link found — consider adding more' });
+          suggestions.push('Add 2-3 more internal links to related content on your site');
+        } else {
+          checks.push({ name: 'Internal Links', passed: false, detail: 'No links found in content' });
+          suggestions.push('Add internal links to related pages on your site — this helps search engines understand your site structure');
+        }
+
+        // Calculate overall score
+        const passedChecks = checks.filter(c => c.passed).length;
+        const score = Math.round((passedChecks / checks.length) * 100);
+
+        res.json({
+          success: true,
+          score,
+          grade: score >= 90 ? 'A' : score >= 75 ? 'B' : score >= 60 ? 'C' : score >= 40 ? 'D' : 'F',
+          checks,
+          suggestions,
+          wordCount,
+          keywordDensity,
+        });
+      } catch (error: any) {
+        console.error("[Optimize] SEO score error:", error);
+        res.status(500).json({ success: false, message: "Failed to score content" });
+      }
+    }
+  );
+
+  // =============================================
+  // SNIPPET PREVIEW
+  // =============================================
+
+  /** Generate SERP snippet preview for a given URL */
+  app.post(
+    "/api/seo/pages/snippet-preview",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+
+        const { url } = req.body;
+        if (!url || typeof url !== 'string') {
+          return res.status(400).json({ success: false, message: "URL is required" });
+        }
+
+        const profileId = profile[0].id;
+
+        // Check if we have page data stored
+        const pages = await db.select().from(seoPages).where(
+          and(eq(seoPages.profileId, profileId), eq(seoPages.url, url))
+        ).limit(1);
+
+        let title = '';
+        let metaDescription = '';
+
+        if (pages.length > 0) {
+          title = pages[0].title || '';
+          metaDescription = pages[0].metaDescription || '';
+        }
+
+        // If no stored data, try to fetch the page
+        if (!title && !metaDescription) {
+          try {
+            const fetchUrl = url.startsWith('http') ? url : `https://${url}`;
+            const response = await fetch(fetchUrl, {
+              headers: { 'User-Agent': 'Mozilla/5.0 (compatible; BusinessBlueprint SEO Analyzer)' },
+              signal: AbortSignal.timeout(10000),
+            });
+            const html = await response.text();
+
+            const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+            title = titleMatch ? titleMatch[1].trim() : '';
+
+            const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([\s\S]*?)["'][^>]*>/i) ||
+              html.match(/<meta[^>]*content=["']([\s\S]*?)["'][^>]*name=["']description["'][^>]*>/i);
+            metaDescription = descMatch ? descMatch[1].trim() : '';
+          } catch {
+            // Can't fetch — return what we have (which may be empty)
+          }
+        }
+
+        // Build snippet analysis
+        const titleLength = title.length;
+        const descLength = metaDescription.length;
+
+        const issues: string[] = [];
+        if (!title) issues.push('Missing page title');
+        else if (titleLength > 60) issues.push(`Title is ${titleLength} characters — Google typically shows 50-60. It may be truncated.`);
+        else if (titleLength < 30) issues.push(`Title is only ${titleLength} characters — you have room to add more descriptive keywords.`);
+
+        if (!metaDescription) issues.push('Missing meta description — Google will auto-generate one, which may not be what you want.');
+        else if (descLength > 160) issues.push(`Description is ${descLength} characters — Google typically shows 150-160. It may be truncated.`);
+        else if (descLength < 70) issues.push(`Description is only ${descLength} characters — a longer description gives you more SERP real estate.`);
+
+        // Generate AI-improved suggestions
+        let suggestions: { title: string; description: string } | null = null;
+        if (title || metaDescription) {
+          try {
+            const settings = await aiSettingsService.getAllSettings();
+            const provider = ((settings.length > 0 ? settings[0].provider : null) || 'openai') as AIProvider;
+
+            const prompt = `You are an SEO specialist. Given this page's current SERP snippet data:
+Title: "${title}"
+Meta Description: "${metaDescription}"
+URL: ${url}
+Industry: ${profile[0].industry || 'general business'}
+
+Suggest an improved title (50-60 chars) and meta description (140-155 chars) that would get more clicks. Keep it natural and compelling — not keyword-stuffed.
+
+Return ONLY a JSON object: {"title": "...", "description": "..."}`;
+
+            const result = await unifiedAI.getCompletion(provider, {
+              messages: [
+                { role: 'system', content: 'You are an SEO copywriter. Return only valid JSON.' },
+                { role: 'user', content: prompt },
+              ],
+              temperature: 0.6,
+            });
+
+            const cleaned = (result.content || '').replace(/```json?\n?/g, '').replace(/```/g, '').trim();
+            suggestions = JSON.parse(cleaned);
+          } catch {
+            // AI suggestion failed — still return the preview without suggestions
+          }
+        }
+
+        const displayUrl = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+        res.json({
+          success: true,
+          snippet: {
+            title: title || '(No title found)',
+            titleLength,
+            metaDescription: metaDescription || '(No meta description found)',
+            descriptionLength: descLength,
+            displayUrl,
+            issues,
+            score: issues.length === 0 ? 'good' : issues.length <= 1 ? 'fair' : 'poor',
+          },
+          suggestions,
+        });
+      } catch (error: any) {
+        console.error("[Optimize] Snippet preview error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate snippet preview" });
+      }
+    }
+  );
+
+  // =============================================
   // ACTION ITEMS
   // =============================================
 
@@ -1619,6 +2147,311 @@ Return ONLY a JSON array of objects: [{"url": "...", "suggestedAlt": "..."}]`;
       } catch (error: any) {
         console.error("[Optimize] Referring domains error:", error);
         res.status(500).json({ success: false, message: "Failed to fetch referring domain history" });
+      }
+    }
+  );
+
+  // =============================================
+  // BACKLINKS — TOXIC / OPPORTUNITIES / BROKEN / ANCHOR TEXT
+  // =============================================
+
+  /** Flag toxic/spam backlinks */
+  app.post(
+    "/api/seo/backlinks/toxic-check",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+
+        const profileId = profile[0].id;
+        const backlinks = await db.select().from(seoBacklinks).where(eq(seoBacklinks.profileId, profileId));
+
+        const suspiciousTlds = ['.xyz', '.top', '.work', '.click', '.link', '.gq', '.cf', '.tk', '.ml', '.ga', '.buzz', '.icu'];
+        const flagged: { id: number; sourceUrl: string | null; spamScore: number; reason: string }[] = [];
+
+        for (const bl of backlinks) {
+          let spamScore = 0;
+          const reasons: string[] = [];
+
+          // Low domain authority
+          if (bl.domainAuthority !== null && bl.domainAuthority < 10) {
+            spamScore += 30;
+            reasons.push(`Very low domain authority (${bl.domainAuthority})`);
+          } else if (bl.domainAuthority !== null && bl.domainAuthority < 20) {
+            spamScore += 15;
+            reasons.push(`Low domain authority (${bl.domainAuthority})`);
+          }
+
+          // Suspicious TLD
+          const sourceUrl = bl.sourceUrl || '';
+          try {
+            const hostname = new URL(sourceUrl).hostname;
+            if (suspiciousTlds.some(tld => hostname.endsWith(tld))) {
+              spamScore += 35;
+              reasons.push(`Suspicious TLD: ${hostname.split('.').pop()}`);
+            }
+          } catch {
+            // invalid URL
+          }
+
+          // Keyword-stuffed anchor text (more than 5 words, all lowercase, no brand name)
+          const anchor = bl.anchorText || '';
+          if (anchor.length > 0) {
+            const wordCount = anchor.split(/\s+/).length;
+            if (wordCount > 5 && anchor === anchor.toLowerCase()) {
+              spamScore += 25;
+              reasons.push('Keyword-stuffed anchor text');
+            }
+            // Exact-match commercial anchors
+            const commercialTerms = ['buy', 'cheap', 'best price', 'discount', 'order', 'online'];
+            if (commercialTerms.some(t => anchor.toLowerCase().includes(t))) {
+              spamScore += 20;
+              reasons.push('Commercial/spammy anchor text');
+            }
+          }
+
+          // nofollow links from low DA are less concerning, but ugc/sponsored from unknown sites still flag
+          if (bl.linkType === 'ugc' && (bl.domainAuthority === null || bl.domainAuthority < 15)) {
+            spamScore += 10;
+            reasons.push('UGC link from low-authority site');
+          }
+
+          if (spamScore >= 30) {
+            flagged.push({ id: bl.id, sourceUrl: bl.sourceUrl, spamScore: Math.min(100, spamScore), reason: reasons.join('; ') });
+
+            // Update the record in the database
+            await db.update(seoBacklinks)
+              .set({ isSpam: true, spamScore: Math.min(100, spamScore) })
+              .where(eq(seoBacklinks.id, bl.id));
+          }
+        }
+
+        const recommendation = flagged.length === 0
+          ? 'No toxic backlinks detected. Your backlink profile looks healthy.'
+          : flagged.length <= 3
+            ? `Found ${flagged.length} potentially toxic backlink(s). Consider disavowing them through Google Search Console if they persist.`
+            : `Found ${flagged.length} toxic backlinks. We recommend creating a disavow file and submitting it to Google Search Console to protect your rankings.`;
+
+        res.json({ success: true, flagged: flagged.length, backlinks: flagged, recommendation });
+      } catch (error: any) {
+        console.error("[Optimize] Toxic backlink check error:", error);
+        res.status(500).json({ success: false, message: "Failed to run toxic backlink check" });
+      }
+    }
+  );
+
+  /** Link building opportunities — find domains linking to competitors but not to you */
+  app.post(
+    "/api/seo/backlinks/opportunities",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+
+        const profileId = profile[0].id;
+        const profileData = profile[0];
+
+        // Get user's existing backlink domains
+        const userBacklinks = await db.select().from(seoBacklinks).where(eq(seoBacklinks.profileId, profileId));
+        const userDomains = new Set<string>();
+        for (const bl of userBacklinks) {
+          try { userDomains.add(new URL(bl.sourceUrl || '').hostname); } catch {}
+        }
+
+        // Get competitor info
+        const competitors = await db.select().from(seoCompetitors).where(eq(seoCompetitors.profileId, profileId));
+        const competitorDomains = competitors.map(c => c.domain).filter(Boolean);
+
+        // Use AI to generate link building opportunities based on industry and competitor info
+        const settings = await aiSettingsService.getAllSettings();
+        const provider = ((settings.length > 0 ? settings[0].provider : null) || 'openai') as AIProvider;
+
+        const prompt = `You are an SEO link building expert. Analyze link building opportunities for:
+
+Domain: ${profileData.domain}
+Industry: ${profileData.industry || 'general business'}
+Location: ${profileData.location || 'not specified'}
+Competitors: ${competitorDomains.join(', ') || 'none specified'}
+Current backlink domains (${userDomains.size} total): ${Array.from(userDomains).slice(0, 20).join(', ')}
+
+Return a JSON object with this structure:
+{
+  "opportunities": [
+    {
+      "domain": "example.com",
+      "domainAuthority": 45,
+      "linksToCompetitor": true,
+      "suggestedApproach": "Guest posting about [topic]",
+      "relevance": "high"
+    }
+  ]
+}
+
+Provide 10-15 realistic link building opportunities. Include a mix of:
+- Domains that likely link to competitors in this industry
+- Industry directories and resource pages
+- Local business directories (if location is known)
+- Guest posting targets
+- Partnership opportunities
+
+Do NOT include domains the user already has backlinks from: ${Array.from(userDomains).slice(0, 30).join(', ')}`;
+
+        const result = await unifiedAI.getCompletion(provider, {
+          messages: [
+            { role: 'system', content: 'You are an SEO link building expert. Return only valid JSON.' },
+            { role: 'user', content: prompt },
+          ],
+          temperature: 0.7,
+        });
+
+        let opportunities = [];
+        try {
+          const cleaned = (result.content || '').replace(/```json?\n?/g, '').replace(/```/g, '').trim();
+          const parsed = JSON.parse(cleaned);
+          opportunities = parsed.opportunities || [];
+        } catch {
+          opportunities = [];
+        }
+
+        res.json({ success: true, opportunities });
+      } catch (error: any) {
+        console.error("[Optimize] Backlink opportunities error:", error);
+        res.status(500).json({ success: false, message: "Failed to find link building opportunities" });
+      }
+    }
+  );
+
+  /** Find broken backlinks — external sites linking to your 404 pages */
+  app.post(
+    "/api/seo/backlinks/broken",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+
+        const profileId = profile[0].id;
+        const backlinks = await db.select().from(seoBacklinks)
+          .where(and(eq(seoBacklinks.profileId, profileId), eq(seoBacklinks.isLost, false)));
+
+        const broken: { sourceUrl: string | null; targetUrl: string | null; anchorText: string | null; suggestedFix: string }[] = [];
+
+        // Check each target URL for 404 status (limit to avoid excessive requests)
+        const targetUrls = new Map<string, typeof backlinks>();
+        for (const bl of backlinks) {
+          const target = bl.targetUrl || '';
+          if (!target) continue;
+          if (!targetUrls.has(target)) targetUrls.set(target, []);
+          targetUrls.get(target)!.push(bl);
+        }
+
+        // Check up to 50 unique target URLs
+        const urlsToCheck = Array.from(targetUrls.keys()).slice(0, 50);
+
+        for (const url of urlsToCheck) {
+          try {
+            const response = await fetch(url, { method: 'HEAD', redirect: 'follow', signal: AbortSignal.timeout(5000) });
+            if (response.status === 404 || response.status === 410) {
+              const linkedBacklinks = targetUrls.get(url) || [];
+              for (const bl of linkedBacklinks) {
+                broken.push({
+                  sourceUrl: bl.sourceUrl,
+                  targetUrl: bl.targetUrl,
+                  anchorText: bl.anchorText,
+                  suggestedFix: `This page returns a ${response.status}. Set up a 301 redirect to the most relevant live page to reclaim the link equity, or fix the page if the content should still exist.`,
+                });
+              }
+            }
+          } catch {
+            // Timeout or network error — skip
+          }
+        }
+
+        res.json({
+          success: true,
+          broken,
+          totalChecked: urlsToCheck.length,
+          totalBacklinks: backlinks.length,
+          recommendation: broken.length === 0
+            ? 'No broken backlinks found. All checked target URLs are returning valid responses.'
+            : `Found ${broken.length} broken backlink(s). Each one represents lost link equity — set up 301 redirects to reclaim ranking power.`,
+        });
+      } catch (error: any) {
+        console.error("[Optimize] Broken backlinks error:", error);
+        res.status(500).json({ success: false, message: "Failed to check for broken backlinks" });
+      }
+    }
+  );
+
+  /** Anchor text distribution analysis */
+  app.get(
+    "/api/seo/backlinks/anchor-text",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, distribution: [], warnings: [] });
+
+        const profileId = profile[0].id;
+        const backlinks = await db.select().from(seoBacklinks).where(eq(seoBacklinks.profileId, profileId));
+
+        // Group by anchor text
+        const anchorCounts = new Map<string, number>();
+        for (const bl of backlinks) {
+          const anchor = (bl.anchorText || '(no anchor text)').trim();
+          anchorCounts.set(anchor, (anchorCounts.get(anchor) || 0) + 1);
+        }
+
+        const total = backlinks.length || 1;
+        const distribution = Array.from(anchorCounts.entries())
+          .map(([anchorText, count]) => ({
+            anchorText,
+            count,
+            percentage: Math.round((count / total) * 10000) / 100,
+          }))
+          .sort((a, b) => b.count - a.count);
+
+        // Flag over-optimized anchors
+        const warnings: string[] = [];
+        const domain = profile[0].domain || '';
+        const brandName = profile[0].businessName || domain;
+
+        for (const item of distribution) {
+          if (item.anchorText === '(no anchor text)') continue;
+          // If a single non-brand anchor makes up more than 15% of all backlinks, it's over-optimized
+          const isBrandAnchor = item.anchorText.toLowerCase().includes(domain.toLowerCase()) ||
+            item.anchorText.toLowerCase().includes(brandName.toLowerCase());
+          if (!isBrandAnchor && item.percentage > 15) {
+            warnings.push(`"${item.anchorText}" makes up ${item.percentage}% of backlinks — this looks over-optimized and may trigger a penalty`);
+          }
+        }
+
+        // Check overall diversity
+        const uniqueAnchors = distribution.filter(d => d.anchorText !== '(no anchor text)').length;
+        if (uniqueAnchors < 5 && backlinks.length >= 10) {
+          warnings.push('Low anchor text diversity — a natural backlink profile should have varied anchor text');
+        }
+
+        // Check brand vs non-brand ratio
+        const brandAnchors = distribution.filter(d => {
+          const anchor = d.anchorText.toLowerCase();
+          return anchor.includes(domain.toLowerCase()) || anchor.includes(brandName.toLowerCase());
+        });
+        const brandPercentage = brandAnchors.reduce((sum, d) => sum + d.percentage, 0);
+        if (brandPercentage < 20 && backlinks.length >= 10) {
+          warnings.push(`Only ${Math.round(brandPercentage)}% of anchors are branded — healthy profiles typically have 30-50% branded anchors`);
+        }
+
+        res.json({ success: true, distribution, warnings });
+      } catch (error: any) {
+        console.error("[Optimize] Anchor text analysis error:", error);
+        res.status(500).json({ success: false, message: "Failed to analyze anchor text distribution" });
       }
     }
   );

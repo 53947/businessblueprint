@@ -409,7 +409,7 @@ function SiteHealthTab() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [urlInput, setUrlInput] = useState('');
-  const [activeSection, setActiveSection] = useState<'issues' | 'pages' | 'vitals' | 'schema' | 'images' | 'internal-links' | 'redirects' | 'headings' | 'density'>('issues');
+  const [activeSection, setActiveSection] = useState<'issues' | 'pages' | 'vitals' | 'schema' | 'images' | 'internal-links' | 'redirects' | 'headings' | 'density' | 'snippets'>('issues');
   const [imageAuditData, setImageAuditData] = useState<any>(null);
   const [redirectData, setRedirectData] = useState<any>(null);
   const [headingData, setHeadingData] = useState<any>(null);
@@ -563,6 +563,7 @@ function SiteHealthTab() {
     { id: 'redirects' as const, label: 'Redirects', count: null },
     { id: 'headings' as const, label: 'Headings', count: null },
     { id: 'density' as const, label: 'Keyword Density', count: null },
+    { id: 'snippets' as const, label: 'Snippet Preview', count: null },
   ];
 
   return (
@@ -1366,6 +1367,8 @@ function SiteHealthTab() {
           )}
         </div>
       )}
+
+      {activeSection === 'snippets' && <SnippetPreviewSection />}
     </div>
   );
 }
@@ -2575,7 +2578,375 @@ function ContentTab() {
           ))}
         </div>
       )}
+
+      {/* Content Length Recommendations */}
+      <ContentLengthRecommendations />
+
+      {/* Click Potential / CTR Estimates */}
+      <ContentClickPotential />
+
+      {/* Question-Based Keywords */}
+      <ContentQuestionKeywords />
+
+      {/* Topic Clustering */}
+      <ContentTopicClusters />
+
+      {/* SEO Writing Assistant */}
+      <ContentSeoWritingAssistant />
     </div>
+  );
+}
+
+function ContentLengthRecommendations() {
+  const { toast } = useToast();
+  const [keyword, setKeyword] = useState('');
+  const [lengthData, setLengthData] = useState<any>(null);
+  const checkLength = useMutation({
+    mutationFn: async (kw: string) => {
+      const res = await apiRequest('POST', '/api/seo/content/length-recommendations', { keyword: kw });
+      return res.json();
+    },
+    onSuccess: (data) => { setLengthData(data); toast({ title: "Length Analysis Complete" }); },
+    onError: () => { toast({ title: "Error", description: "Failed to get length recommendations", variant: "destructive" }); },
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <FileText className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            Content Length Recommendations
+          </CardTitle>
+          <PriorityBadge level="optional" />
+        </div>
+        <CardDescription>Find out how long your content should be to compete for a given keyword</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex gap-3 mb-4">
+          <Input
+            placeholder="Enter a target keyword..."
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && keyword.trim() && checkLength.mutate(keyword.trim())}
+          />
+          <Button
+            onClick={() => keyword.trim() && checkLength.mutate(keyword.trim())}
+            disabled={checkLength.isPending || !keyword.trim()}
+            style={{ backgroundColor: OPTIMIZE_COLOR }}
+            className="text-white"
+          >
+            {checkLength.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Search className="w-4 h-4 mr-2" />}
+            Analyze
+          </Button>
+        </div>
+        {lengthData && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 border rounded-lg text-center">
+              <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>{lengthData.recommendedWordCount?.toLocaleString() || '—'}</p>
+              <p className="text-xs text-gray-500 font-medium">Recommended Words</p>
+            </div>
+            <div className="p-4 border rounded-lg text-center">
+              <p className="text-2xl font-bold text-blue-600">{lengthData.topResultsAverage?.toLocaleString() || '—'}</p>
+              <p className="text-xs text-gray-500 font-medium">Top Results Average</p>
+            </div>
+            <div className="p-4 border rounded-lg text-center">
+              <p className="text-2xl font-bold text-green-600">{lengthData.yourWordCount?.toLocaleString() || 'N/A'}</p>
+              <p className="text-xs text-gray-500 font-medium">Your Word Count</p>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function ContentClickPotential() {
+  const { toast } = useToast();
+  const [ctrData, setCtrData] = useState<any>(null);
+  const estimateClicks = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/content/click-potential', {});
+      return res.json();
+    },
+    onSuccess: (data) => { setCtrData(data); toast({ title: "CTR Estimates Ready" }); },
+    onError: () => { toast({ title: "Error", description: "Failed to estimate click potential", variant: "destructive" }); },
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <TrendingUp className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            Click Potential / CTR Estimates
+          </CardTitle>
+          <PriorityBadge level="optional" />
+        </div>
+        <CardDescription>Estimate how many clicks your tracked keywords could bring each month based on position and search volume</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button
+          onClick={() => estimateClicks.mutate()}
+          disabled={estimateClicks.isPending}
+          style={{ backgroundColor: OPTIMIZE_COLOR }}
+          className="text-white mb-4"
+        >
+          {estimateClicks.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <BarChart3 className="w-4 h-4 mr-2" />}
+          Estimate Clicks
+        </Button>
+        {ctrData?.keywords?.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b text-left">
+                  <th className="pb-3 text-sm font-medium text-gray-500">Keyword</th>
+                  <th className="pb-3 text-sm font-medium text-gray-500 text-center">Position</th>
+                  <th className="pb-3 text-sm font-medium text-gray-500 text-center">Volume</th>
+                  <th className="pb-3 text-sm font-medium text-gray-500 text-center">CTR</th>
+                  <th className="pb-3 text-sm font-medium text-gray-500 text-center">Est. Clicks/mo</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ctrData.keywords.map((kw: any, i: number) => (
+                  <tr key={i} className="border-b last:border-0">
+                    <td className="py-2 text-sm font-medium">{kw.keyword}</td>
+                    <td className="py-2 text-center text-sm">{kw.position || '—'}</td>
+                    <td className="py-2 text-center text-sm text-gray-600">{kw.volume?.toLocaleString() || '—'}</td>
+                    <td className="py-2 text-center text-sm text-gray-600">{kw.ctr != null ? `${kw.ctr}%` : '—'}</td>
+                    <td className="py-2 text-center text-sm font-bold" style={{ color: OPTIMIZE_COLOR }}>{kw.estimatedClicks?.toLocaleString() || '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function ContentQuestionKeywords() {
+  const { toast } = useToast();
+  const [keyword, setKeyword] = useState('');
+  const [questionsData, setQuestionsData] = useState<any>(null);
+  const findQuestions = useMutation({
+    mutationFn: async (kw: string) => {
+      const res = await apiRequest('POST', '/api/seo/content/question-keywords', { keyword: kw });
+      return res.json();
+    },
+    onSuccess: (data) => { setQuestionsData(data); toast({ title: "Questions Found", description: `Found ${data.questions?.length || 0} questions` }); },
+    onError: () => { toast({ title: "Error", description: "Failed to find questions", variant: "destructive" }); },
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Hash className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            Question-Based Keywords
+          </CardTitle>
+          <PriorityBadge level="optional" />
+        </div>
+        <CardDescription>Discover "People Also Ask" style questions your audience is searching for</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex gap-3 mb-4">
+          <Input
+            placeholder="Enter a seed keyword..."
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && keyword.trim() && findQuestions.mutate(keyword.trim())}
+          />
+          <Button
+            onClick={() => keyword.trim() && findQuestions.mutate(keyword.trim())}
+            disabled={findQuestions.isPending || !keyword.trim()}
+            style={{ backgroundColor: OPTIMIZE_COLOR }}
+            className="text-white"
+          >
+            {findQuestions.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Search className="w-4 h-4 mr-2" />}
+            Find Questions
+          </Button>
+        </div>
+        {questionsData?.questions?.length > 0 && (
+          <div className="space-y-2">
+            {questionsData.questions.map((q: any, i: number) => (
+              <div key={i} className="flex items-start gap-3 p-3 border rounded-lg">
+                <span className="text-lg" style={{ color: OPTIMIZE_COLOR }}>?</span>
+                <div>
+                  <p className="text-sm font-medium">{typeof q === 'string' ? q : q.question}</p>
+                  {typeof q !== 'string' && q.volume && (
+                    <p className="text-xs text-gray-400 mt-1">Volume: {q.volume}/mo</p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function ContentTopicClusters() {
+  const { toast } = useToast();
+  const [clusterData, setClusterData] = useState<any>(null);
+  const generateClusters = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/content/topic-clusters', {});
+      return res.json();
+    },
+    onSuccess: (data) => { setClusterData(data); toast({ title: "Topic Clusters Generated" }); },
+    onError: () => { toast({ title: "Error", description: "Failed to generate topic clusters", variant: "destructive" }); },
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Sparkles className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            Topic Clustering
+          </CardTitle>
+          <PriorityBadge level="optional" />
+        </div>
+        <CardDescription>Group your keywords into topic clusters to plan content that covers subjects thoroughly</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button
+          onClick={() => generateClusters.mutate()}
+          disabled={generateClusters.isPending}
+          style={{ backgroundColor: OPTIMIZE_COLOR }}
+          className="text-white mb-4"
+        >
+          {generateClusters.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
+          Generate Clusters
+        </Button>
+        {clusterData?.clusters?.length > 0 && (
+          <div className="grid gap-4 md:grid-cols-2">
+            {clusterData.clusters.map((cluster: any, i: number) => (
+              <div key={i} className="p-4 border rounded-lg">
+                <h4 className="font-bold text-sm mb-2" style={{ color: OPTIMIZE_COLOR }}>{cluster.topic || cluster.name}</h4>
+                <div className="flex flex-wrap gap-1">
+                  {(cluster.keywords || []).map((kw: string, j: number) => (
+                    <span key={j} className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-600">{kw}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function ContentSeoWritingAssistant() {
+  const { toast } = useToast();
+  const [content, setContent] = useState('');
+  const [keyword, setKeyword] = useState('');
+  const [scoreData, setScoreData] = useState<any>(null);
+  const analyzeContent = useMutation({
+    mutationFn: async (params: { content: string; keyword: string }) => {
+      const res = await apiRequest('POST', '/api/seo/content/seo-score', params);
+      return res.json();
+    },
+    onSuccess: (data) => { setScoreData(data); toast({ title: "SEO Analysis Complete" }); },
+    onError: () => { toast({ title: "Error", description: "Failed to analyze content", variant: "destructive" }); },
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <PenTool className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            SEO Writing Assistant
+          </CardTitle>
+          <PriorityBadge level="optional" />
+        </div>
+        <CardDescription>Paste your content and a target keyword to get a real-time SEO quality score and suggestions</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3 mb-4">
+          <div>
+            <Label className="text-xs text-gray-500 mb-1 block">Target Keyword</Label>
+            <Input
+              placeholder="e.g., best plumber in Austin"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+            />
+          </div>
+          <div>
+            <Label className="text-xs text-gray-500 mb-1 block">Your Content</Label>
+            <Textarea
+              placeholder="Paste your article, blog post, or page content here..."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={6}
+            />
+          </div>
+          <Button
+            onClick={() => content.trim() && keyword.trim() && analyzeContent.mutate({ content: content.trim(), keyword: keyword.trim() })}
+            disabled={analyzeContent.isPending || !content.trim() || !keyword.trim()}
+            style={{ backgroundColor: OPTIMIZE_COLOR }}
+            className="text-white"
+          >
+            {analyzeContent.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Gauge className="w-4 h-4 mr-2" />}
+            Analyze Content
+          </Button>
+        </div>
+        {scoreData && (
+          <div className="space-y-4">
+            {/* Score Circle */}
+            <div className="flex items-center gap-6">
+              <div className="w-20 h-20 rounded-full border-4 flex items-center justify-center" style={{ borderColor: (scoreData.score ?? 0) >= 70 ? '#22c55e' : (scoreData.score ?? 0) >= 40 ? '#f59e0b' : '#ef4444' }}>
+                <span className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>{scoreData.score ?? '—'}</span>
+              </div>
+              <div>
+                <p className="font-medium text-sm" style={{ color: OPTIMIZE_COLOR }}>SEO Content Score</p>
+                <p className="text-xs text-gray-500">
+                  {(scoreData.score ?? 0) >= 70 ? 'Well optimized for search engines.' : (scoreData.score ?? 0) >= 40 ? 'Needs some improvement.' : 'Significant optimization needed.'}
+                </p>
+              </div>
+            </div>
+
+            {/* Checklist */}
+            {scoreData.checks?.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-gray-700">SEO Checklist</p>
+                {scoreData.checks.map((check: any, i: number) => (
+                  <div key={i} className="flex items-center gap-2 text-sm">
+                    {check.pass ? (
+                      <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
+                    ) : (
+                      <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                    )}
+                    <span className={check.pass ? 'text-gray-700' : 'text-gray-400'}>{check.label || check.message}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Suggestions */}
+            {scoreData.suggestions?.length > 0 && (
+              <div className="p-4 rounded-lg border-l-4" style={{ borderLeftColor: OPTIMIZE_COLOR, backgroundColor: `${OPTIMIZE_COLOR}08` }}>
+                <p className="text-sm font-medium mb-2" style={{ color: OPTIMIZE_COLOR }}>Suggestions</p>
+                <ul className="space-y-1">
+                  {scoreData.suggestions.map((s: string, i: number) => (
+                    <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                      <ChevronRight className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: OPTIMIZE_COLOR }} />
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -2983,6 +3354,420 @@ function BacklinksTab() {
             </div>
             );
           })())}
+        </CardContent>
+      </Card>
+
+      {/* Toxic Link Check */}
+      <BacklinksToxicCheck />
+
+      {/* Link Building Opportunities */}
+      <BacklinksOpportunities />
+
+      {/* Broken Backlink Finder */}
+      <BacklinksBrokenFinder />
+
+      {/* Anchor Text Distribution */}
+      <BacklinksAnchorText />
+    </div>
+  );
+}
+
+function BacklinksToxicCheck() {
+  const { toast } = useToast();
+  const [toxicData, setToxicData] = useState<any>(null);
+  const checkToxic = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/backlinks/toxic-check', {});
+      return res.json();
+    },
+    onSuccess: (data) => { setToxicData(data); toast({ title: "Toxic Check Complete", description: `Found ${data.flagged || 0} suspicious links` }); },
+    onError: () => { toast({ title: "Error", description: "Failed to run toxic link check", variant: "destructive" }); },
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <ShieldCheck className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            Toxic Link Check
+          </CardTitle>
+          <PriorityBadge level="optional" />
+        </div>
+        <CardDescription>Identify potentially harmful backlinks that could hurt your rankings</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button
+          onClick={() => checkToxic.mutate()}
+          disabled={checkToxic.isPending}
+          style={{ backgroundColor: OPTIMIZE_COLOR }}
+          className="text-white mb-4"
+        >
+          {checkToxic.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ShieldCheck className="w-4 h-4 mr-2" />}
+          Check for Toxic Links
+        </Button>
+        {toxicData && (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-600">Found <strong>{toxicData.flagged || 0}</strong> suspicious links</p>
+            {toxicData.links?.length > 0 && (
+              <div className="space-y-2">
+                {toxicData.links.map((link: any, i: number) => (
+                  <div key={i} className="flex items-center justify-between p-3 border rounded-lg bg-red-50">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium truncate">{link.url || link.sourceUrl}</p>
+                      <p className="text-xs text-gray-500">{link.reason || 'Suspicious pattern detected'}</p>
+                    </div>
+                    <div className="text-right ml-4">
+                      <span className="text-xs font-bold text-red-600">Spam Score: {link.spamScore ?? '—'}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {(!toxicData.links || toxicData.links.length === 0) && toxicData.flagged === 0 && (
+              <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg">
+                <CheckCircle2 className="w-5 h-5 text-green-600" />
+                <p className="text-sm text-green-700">No toxic links detected. Your backlink profile looks clean.</p>
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function BacklinksOpportunities() {
+  const { toast } = useToast();
+  const [opportunitiesData, setOpportunitiesData] = useState<any>(null);
+  const findOpportunities = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/backlinks/opportunities', {});
+      return res.json();
+    },
+    onSuccess: (data) => { setOpportunitiesData(data); toast({ title: "Opportunities Found", description: `Found ${data.opportunities?.length || 0} link building opportunities` }); },
+    onError: () => { toast({ title: "Error", description: "Failed to find opportunities", variant: "destructive" }); },
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <TrendingUp className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            Link Building Opportunities
+          </CardTitle>
+          <PriorityBadge level="optional" />
+        </div>
+        <CardDescription>Discover websites that might link to you based on your content and industry</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button
+          onClick={() => findOpportunities.mutate()}
+          disabled={findOpportunities.isPending}
+          style={{ backgroundColor: OPTIMIZE_COLOR }}
+          className="text-white mb-4"
+        >
+          {findOpportunities.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Search className="w-4 h-4 mr-2" />}
+          Find Opportunities
+        </Button>
+        {opportunitiesData?.opportunities?.length > 0 && (
+          <div className="grid gap-3 md:grid-cols-2">
+            {opportunitiesData.opportunities.map((opp: any, i: number) => (
+              <div key={i} className="p-4 border rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="font-medium text-sm truncate">{opp.domain}</p>
+                  {opp.da != null && (
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">DA {opp.da}</span>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500">{opp.approach || opp.suggestedApproach || 'Reach out with relevant content'}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function BacklinksBrokenFinder() {
+  const { toast } = useToast();
+  const [brokenData, setBrokenData] = useState<any>(null);
+  const findBroken = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/backlinks/broken', {});
+      return res.json();
+    },
+    onSuccess: (data) => { setBrokenData(data); toast({ title: "Broken Check Complete", description: `Found ${data.broken?.length || 0} broken backlinks` }); },
+    onError: () => { toast({ title: "Error", description: "Failed to check for broken backlinks", variant: "destructive" }); },
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <AlertTriangle className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            Broken Backlink Finder
+          </CardTitle>
+          <PriorityBadge level="optional" />
+        </div>
+        <CardDescription>Find backlinks pointing to pages that no longer exist so you can reclaim that link value</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button
+          onClick={() => findBroken.mutate()}
+          disabled={findBroken.isPending}
+          style={{ backgroundColor: OPTIMIZE_COLOR }}
+          className="text-white mb-4"
+        >
+          {findBroken.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <AlertTriangle className="w-4 h-4 mr-2" />}
+          Find Broken Backlinks
+        </Button>
+        {brokenData && (
+          <div className="space-y-3">
+            {brokenData.broken?.length > 0 ? (
+              brokenData.broken.map((bl: any, i: number) => (
+                <div key={i} className="p-3 border rounded-lg bg-yellow-50">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs text-gray-500">Source: <span className="font-medium text-gray-700">{bl.sourceUrl}</span></p>
+                      <p className="text-xs text-gray-500 mt-1">Target: <span className="font-medium text-red-600">{bl.targetUrl}</span></p>
+                      {bl.suggestedFix && (
+                        <p className="text-xs mt-1 text-green-700">Fix: {bl.suggestedFix}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg">
+                <CheckCircle2 className="w-5 h-5 text-green-600" />
+                <p className="text-sm text-green-700">No broken backlinks found.</p>
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function BacklinksAnchorText() {
+  const { data: anchorData, isLoading } = useQuery({
+    queryKey: ['/api/seo/backlinks/anchor-text'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/backlinks/anchor-text'); return res.json(); },
+  });
+
+  const anchors = anchorData?.anchors || [];
+  const maxCount = anchors.length > 0 ? Math.max(...anchors.map((a: any) => a.count || 0)) : 1;
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Tag className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+            Anchor Text Distribution
+          </CardTitle>
+          <PriorityBadge level="optional" />
+        </div>
+        <CardDescription>See what anchor text other sites use when linking to you. A diverse anchor text profile looks more natural to search engines.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="flex justify-center py-6"><Loader2 className="w-6 h-6 animate-spin text-gray-400" /></div>
+        ) : anchors.length === 0 ? (
+          <p className="text-sm text-gray-500 text-center py-4">No anchor text data available yet. Check your backlinks first.</p>
+        ) : (
+          <div className="space-y-3">
+            {anchors.map((anchor: any, i: number) => {
+              const pct = maxCount > 0 ? ((anchor.count || 0) / maxCount) * 100 : 0;
+              return (
+                <div key={i} className="space-y-1">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium text-gray-700 truncate mr-4">{anchor.text || '(no anchor)'}</span>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className="text-xs text-gray-500">{anchor.count} link{anchor.count !== 1 ? 's' : ''}</span>
+                      {anchor.warning && (
+                        <span className="text-xs text-yellow-600 flex items-center gap-1">
+                          <AlertTriangle className="w-3 h-3" /> {anchor.warning}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div className="h-2 rounded-full" style={{ width: `${pct}%`, backgroundColor: OPTIMIZE_COLOR }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function SnippetPreviewSection() {
+  const { toast } = useToast();
+  const [url, setUrl] = useState('');
+  const [snippetData, setSnippetData] = useState<any>(null);
+  const [suggestions, setSuggestions] = useState<any>(null);
+
+  const analyzeSnippet = useMutation({
+    mutationFn: async (targetUrl: string) => {
+      const res = await apiRequest('POST', '/api/seo/pages/snippet-preview', { url: targetUrl });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setSnippetData(data.snippet);
+      setSuggestions(data.suggestions || null);
+      toast({ title: "Snippet Preview Ready" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to generate snippet preview", variant: "destructive" });
+    },
+  });
+
+  const scoreColor = snippetData?.score === 'good' ? 'text-green-600' : snippetData?.score === 'fair' ? 'text-yellow-600' : 'text-red-600';
+  const scoreBg = snippetData?.score === 'good' ? 'bg-green-50 border-green-200' : snippetData?.score === 'fair' ? 'bg-yellow-50 border-yellow-200' : 'bg-red-50 border-red-200';
+
+  return (
+    <div className="space-y-4">
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Eye className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+              SERP Snippet Preview
+            </CardTitle>
+            <PriorityBadge level="optional" />
+          </div>
+          <CardDescription>See how your pages appear in Google search results and get suggestions to improve click-through rates</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-3 mb-4">
+            <Input
+              placeholder="Enter a page URL (e.g. https://yourdomain.com/about)..."
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && url.trim() && analyzeSnippet.mutate(url.trim())}
+            />
+            <Button
+              onClick={() => url.trim() && analyzeSnippet.mutate(url.trim())}
+              disabled={analyzeSnippet.isPending || !url.trim()}
+              style={{ backgroundColor: OPTIMIZE_COLOR }}
+              className="text-white"
+            >
+              {analyzeSnippet.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+              Preview
+            </Button>
+          </div>
+
+          {snippetData && (
+            <div className="space-y-4">
+              {/* Google-style snippet preview */}
+              <div className="border rounded-lg p-4 bg-white">
+                <p className="text-sm text-gray-500 mb-1">Preview — how this might appear in Google:</p>
+                <div className="mt-3 space-y-1">
+                  <p className="text-sm text-green-700">{snippetData.displayUrl}</p>
+                  <p className="text-xl text-blue-700 hover:underline cursor-pointer leading-snug">
+                    {snippetData.title.length > 60 ? snippetData.title.slice(0, 60) + '...' : snippetData.title}
+                  </p>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {snippetData.metaDescription.length > 160 ? snippetData.metaDescription.slice(0, 160) + '...' : snippetData.metaDescription}
+                  </p>
+                </div>
+              </div>
+
+              {/* Character counts */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3 border rounded-lg">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-700">Title Length</span>
+                    <span className={`text-sm font-bold ${snippetData.titleLength >= 30 && snippetData.titleLength <= 60 ? 'text-green-600' : 'text-yellow-600'}`}>
+                      {snippetData.titleLength}/60
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div
+                      className="h-2 rounded-full transition-all"
+                      style={{
+                        width: `${Math.min((snippetData.titleLength / 60) * 100, 100)}%`,
+                        backgroundColor: snippetData.titleLength >= 30 && snippetData.titleLength <= 60 ? '#16a34a' : '#ca8a04',
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="p-3 border rounded-lg">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-700">Description Length</span>
+                    <span className={`text-sm font-bold ${snippetData.descriptionLength >= 70 && snippetData.descriptionLength <= 160 ? 'text-green-600' : 'text-yellow-600'}`}>
+                      {snippetData.descriptionLength}/160
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div
+                      className="h-2 rounded-full transition-all"
+                      style={{
+                        width: `${Math.min((snippetData.descriptionLength / 160) * 100, 100)}%`,
+                        backgroundColor: snippetData.descriptionLength >= 70 && snippetData.descriptionLength <= 160 ? '#16a34a' : '#ca8a04',
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Issues */}
+              {snippetData.issues.length > 0 && (
+                <div className={`p-4 border rounded-lg ${scoreBg}`}>
+                  <p className={`text-sm font-semibold mb-2 ${scoreColor}`}>
+                    {snippetData.issues.length} issue{snippetData.issues.length !== 1 ? 's' : ''} found
+                  </p>
+                  <ul className="space-y-1">
+                    {snippetData.issues.map((issue: string, i: number) => (
+                      <li key={i} className="text-sm text-gray-700 flex items-start gap-2">
+                        <AlertTriangle className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" />
+                        {issue}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {snippetData.issues.length === 0 && (
+                <div className="p-4 border rounded-lg bg-green-50 border-green-200">
+                  <p className="text-sm font-semibold text-green-600 flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4" /> Your snippet looks good — title and description are within recommended lengths.
+                  </p>
+                </div>
+              )}
+
+              {/* AI Suggestions */}
+              {suggestions && (
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Sparkles className="w-4 h-4" style={{ color: OPTIMIZE_COLOR }} />
+                      AI-Suggested Improvements
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium mb-1">Suggested Title ({suggestions.title?.length || 0} chars)</p>
+                      <p className="text-sm text-blue-700 font-medium">{suggestions.title}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium mb-1">Suggested Description ({suggestions.description?.length || 0} chars)</p>
+                      <p className="text-sm text-gray-700">{suggestions.description}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
