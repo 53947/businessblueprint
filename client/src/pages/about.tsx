@@ -3,6 +3,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import triadblueEcosystem from "@assets/images_logos/triadblue-ecosystem-logo.png";
+import bbLogo from "@assets/images_logos/bb-header-logo.png";
+import swipesLogo from "@assets/images_logos/swipesblue_logo_image_and_text_as_url.png";
+import hostsLogo from "@assets/images_logos/hostsblue_logo_image_and_text_as_url.png";
+import scansLogo from "@assets/images_logos/scansblue_logo_image_and_text_as_url.png";
+import builderLogo from "@assets/images_logos/builderblue2-logo-url.png";
 
 const APPS = {
   compass: {
@@ -29,14 +35,6 @@ const APPS = {
   },
 };
 
-const ECOSYSTEM = [
-  { name: "businessblueprint.io", tagline: "Get Assessed. Get Prescribed. Get Business." },
-  { name: "swipesblue.com", tagline: "Payment processing for every business" },
-  { name: "hostsblue.com", tagline: "Domains, hosting, email, website builder" },
-  { name: "scansblue.com", tagline: "Website auditing and scanning" },
-  { name: "BUILDERBLUE2.COM", tagline: "AI-powered vibe coding platform" },
-  { name: "TRIADBLUE.COM", tagline: "The parent company behind it all" },
-];
 
 export default function About() {
   return (
@@ -70,21 +68,49 @@ export default function About() {
         </section>
 
         {/* The Ecosystem */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-[#09080E] mb-6 font-['Archivo_Semi_Expanded',sans-serif]">
-            The TRIADBLUE Ecosystem
-          </h2>
-          <div className="space-y-4">
-            {ECOSYSTEM.map((platform) => (
-              <div key={platform.name} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
-                <span className="text-sm font-bold text-[#09080E] min-w-[200px]">
-                  {platform.name}
-                </span>
-                <span className="text-sm text-gray-600">{platform.tagline}</span>
-              </div>
-            ))}
+        <div className="mb-16 max-w-md mx-auto">
+          <div className="text-center mb-8">
+            <img src={triadblueEcosystem} alt="TRIADBLUE.COM ECOSYSTEM" style={{ height: 40, objectFit: 'contain' }} className="mx-auto" />
+            <p className="text-xs mt-2 text-gray-500">Six Platforms. One Ecosystem. Go Blue.</p>
           </div>
-        </section>
+
+          <div style={{ borderTop: '0.5px solid rgba(9,8,14,0.5)', marginBottom: 24 }} />
+
+          <div className="space-y-5">
+            <div className="text-center">
+              <img src={bbLogo} alt="businessblueprint.io" style={{ height: 32, objectFit: 'contain' }} className="mx-auto" />
+              <p className="text-sm mt-2 text-gray-500">Get Assessed. Get Prescribed. Get Business.</p>
+            </div>
+
+            <div className="text-center">
+              <a href="https://swipesblue.com" target="_blank" rel="noopener noreferrer">
+                <img src={swipesLogo} alt="swipesblue.com" style={{ height: 22, objectFit: 'contain' }} className="mx-auto" />
+              </a>
+              <p className="text-xs mt-1 text-gray-500">Go Blue. Get Swiped. Get Paid.</p>
+            </div>
+
+            <div className="text-center">
+              <a href="https://hostsblue.com" target="_blank" rel="noopener noreferrer">
+                <img src={hostsLogo} alt="hostsblue.com" style={{ height: 22, objectFit: 'contain' }} className="mx-auto" />
+              </a>
+              <p className="text-xs mt-1 text-gray-500">Go Blue. Get Site. Go Live.</p>
+            </div>
+
+            <div className="text-center">
+              <a href="https://scansblue.com" target="_blank" rel="noopener noreferrer">
+                <img src={scansLogo} alt="scansblue.com" style={{ height: 22, objectFit: 'contain' }} className="mx-auto" />
+              </a>
+              <p className="text-xs mt-1 text-gray-500">Go Blue. Get Scanned. Get Scored.</p>
+            </div>
+
+            <div className="text-center">
+              <a href="https://builderblue2.com" target="_blank" rel="noopener noreferrer">
+                <img src={builderLogo} alt="BUILDERBLUE2.COM" style={{ height: 22, objectFit: 'contain' }} className="mx-auto" />
+              </a>
+              <p className="text-xs mt-1 text-gray-500">Go Blue. Get Vibed. Get Ahead.</p>
+            </div>
+          </div>
+        </div>
 
         {/* The Apps */}
         <section className="mb-16">
