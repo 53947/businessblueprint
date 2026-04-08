@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -409,7 +409,8 @@ function SiteHealthTab() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [urlInput, setUrlInput] = useState('');
-  const [activeSection, setActiveSection] = useState<'issues' | 'pages' | 'vitals' | 'schema' | 'internal-links'>('issues');
+  const [activeSection, setActiveSection] = useState<'issues' | 'pages' | 'vitals' | 'schema' | 'images' | 'internal-links'>('issues');
+  const [imageAuditData, setImageAuditData] = useState<any>(null);
 
   const { data: issuesData, isLoading: issuesLoading } = useQuery({
     queryKey: ['/api/seo/technical-issues'],
@@ -479,6 +480,20 @@ function SiteHealthTab() {
     },
   });
 
+  const runImageAudit = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/pages/image-audit', {});
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setImageAuditData(data);
+      toast({ title: "Image Audit Complete", description: `Found ${data.totalImages || 0} images across your pages` });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to run image audit", variant: "destructive" });
+    },
+  });
+
   if (issuesLoading || pagesLoading) return <LoadingState />;
 
   const issues = issuesData?.issues || [];
@@ -497,6 +512,7 @@ function SiteHealthTab() {
     { id: 'pages' as const, label: 'Page Analysis', count: pages.length },
     { id: 'vitals' as const, label: 'Core Web Vitals', count: null },
     { id: 'schema' as const, label: 'Schema Markup', count: null },
+    { id: 'images' as const, label: 'Image Audit', count: null },
   ];
 
   return (
@@ -832,6 +848,132 @@ function SiteHealthTab() {
 
       {/* Schema Markup Section */}
       {activeSection === 'schema' && <SchemaTab />}
+
+      {/* Image Audit Section */}
+      {activeSection === 'images' && (
+        <div className="space-y-6">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${OPTIMIZE_COLOR}15` }}>
+                  <Eye className="w-6 h-6" style={{ color: OPTIMIZE_COLOR }} />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg mb-1" style={{ color: OPTIMIZE_COLOR }}>Image Audit</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Images without alt text hurt your accessibility and SEO. Oversized images slow down your site.
+                    Run an image audit to find missing alt text, oversized files, and get AI-generated alt text suggestions.
+                  </p>
+                  <div className="mt-3">
+                    <Button
+                      onClick={() => runImageAudit.mutate()}
+                      disabled={runImageAudit.isPending}
+                      style={{ backgroundColor: OPTIMIZE_COLOR }}
+                      className="text-white"
+                    >
+                      {runImageAudit.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+                      {runImageAudit.isPending ? 'Auditing...' : 'Run Image Audit'}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {imageAuditData && (
+            <>
+              {/* Summary Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card>
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>{imageAuditData.totalImages || 0}</p>
+                    <p className="text-xs text-gray-500 font-medium">Total Images</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <p className="text-2xl font-bold text-red-600">{imageAuditData.withoutAlt || 0}</p>
+                    <p className="text-xs text-gray-500 font-medium">Without Alt Text</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <p className="text-2xl font-bold text-amber-600">{imageAuditData.oversized || 0}</p>
+                    <p className="text-xs text-gray-500 font-medium">Oversized</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Alt Text Suggestions */}
+              {imageAuditData.suggestions && imageAuditData.suggestions.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <Sparkles className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                        AI Alt Text Suggestions
+                      </CardTitle>
+                      <PriorityBadge level="important" />
+                    </div>
+                    <CardDescription>AI-generated alt text for images missing descriptions</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b text-left">
+                            <th className="pb-3 text-sm font-medium text-gray-500">Image</th>
+                            <th className="pb-3 text-sm font-medium text-gray-500">Page</th>
+                            <th className="pb-3 text-sm font-medium text-gray-500">Suggested Alt Text</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {imageAuditData.suggestions.map((s: any, i: number) => (
+                            <tr key={i} className="border-b last:border-0">
+                              <td className="py-3 text-sm">
+                                <a href={s.src || s.imageUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline truncate block max-w-[200px]">
+                                  {s.src || s.imageUrl || 'Image'} <ExternalLink className="w-3 h-3 inline" />
+                                </a>
+                              </td>
+                              <td className="py-3 text-sm text-gray-600 truncate max-w-[200px]">{s.pageUrl || '—'}</td>
+                              <td className="py-3 text-sm">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-gray-700">{s.suggestedAlt || s.altText || '—'}</span>
+                                  {(s.suggestedAlt || s.altText) && (
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => {
+                                        navigator.clipboard.writeText(s.suggestedAlt || s.altText);
+                                        toast({ title: "Copied", description: "Alt text copied to clipboard" });
+                                      }}
+                                    >
+                                      <Copy className="w-3 h-3" />
+                                    </Button>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          )}
+
+          {!imageAuditData && (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <Eye className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <p className="text-gray-500">Click "Run Image Audit" above to scan your pages for image issues and get AI alt text suggestions.</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -844,6 +986,12 @@ function CompetitorsTab() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [domainInput, setDomainInput] = useState('');
+  const [gapData, setGapData] = useState<any>(null);
+
+  const { data: competitorsData, isLoading } = useQuery({
+    queryKey: ['/api/seo/competitors'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/competitors'); return res.json(); },
+  });
 
   const { data: profileData } = useQuery({
     queryKey: ['/api/seo/profiles'],
@@ -865,11 +1013,43 @@ function CompetitorsTab() {
     },
   });
 
-  // Try to load competitors from profile
-  const competitors = (profileData?.profile?.competitors as string[]) || [];
+  const deleteCompetitor = useMutation({
+    mutationFn: async (id: number) => {
+      const res = await apiRequest('DELETE', `/api/seo/competitors/${id}`);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/seo/competitors'] });
+      toast({ title: "Competitor Removed" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to remove competitor", variant: "destructive" });
+    },
+  });
+
+  const analyzeGaps = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/competitors/analyze', {});
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setGapData(data);
+      toast({ title: "Analysis Complete", description: `Found ${data.gaps?.length || 0} keyword gaps` });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to analyze competitors", variant: "destructive" });
+    },
+  });
+
+  if (isLoading) return <LoadingState />;
+
+  // Merge API competitors with profile competitors
+  const apiCompetitors = competitorsData?.competitors || [];
+  const profileCompetitors = (profileData?.profile?.competitors as string[]) || [];
 
   return (
     <div className="space-y-6">
+      {/* Explainer */}
       <Card>
         <CardContent className="pt-6">
           <div className="flex items-start gap-4">
@@ -883,11 +1063,16 @@ function CompetitorsTab() {
                 See which keywords they rank for that you don't, find backlink opportunities they have that you're missing,
                 and understand where you stand in your market.
               </p>
+              <div className="mt-2">
+                <PriorityBadge level="important" />
+                <span className="text-xs text-gray-500 ml-2">Knowing your competition is key to outranking them</span>
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
+      {/* Add Competitor */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">Add Competitor</CardTitle>
@@ -909,38 +1094,90 @@ function CompetitorsTab() {
             >
               <Plus className="w-4 h-4 mr-2" /> Add
             </Button>
+            <Button
+              variant="outline"
+              onClick={() => analyzeGaps.mutate()}
+              disabled={analyzeGaps.isPending || (apiCompetitors.length === 0 && profileCompetitors.length === 0)}
+            >
+              {analyzeGaps.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <TrendingUp className="w-4 h-4 mr-2" />}
+              Keyword Gap Analysis
+            </Button>
           </div>
         </CardContent>
       </Card>
 
-      {competitors.length > 0 ? (
+      {/* Competitors Table */}
+      {(apiCompetitors.length > 0 || profileCompetitors.length > 0) ? (
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Tracked Competitors ({competitors.length})</CardTitle>
+            <CardTitle className="text-lg">Tracked Competitors ({apiCompetitors.length + profileCompetitors.length})</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {competitors.map((domain: string, i: number) => (
-                <div key={i} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Globe className="w-5 h-5 text-gray-400" />
-                    <div>
-                      <p className="font-medium text-sm">{domain}</p>
-                      <p className="text-xs text-gray-400">Added from your SEO profile</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <PriorityBadge level="important" />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-sm text-blue-700">
-                <strong>Connect a data provider to unlock:</strong> keyword comparison, domain authority scores,
-                backlink analysis, content gap reports, and traffic estimates.
-              </p>
-              <p className="text-xs text-blue-500 mt-1">Set DATAFORSEO_LOGIN and DATAFORSEO_PASSWORD environment variables to enable.</p>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b text-left">
+                    <th className="pb-3 text-sm font-medium text-gray-500">Domain</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Domain Authority</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Last Checked</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Source</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {apiCompetitors.map((comp: any) => (
+                    <tr key={comp.id} className="border-b last:border-0">
+                      <td className="py-3">
+                        <div className="flex items-center gap-2">
+                          <Globe className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <span className="font-medium text-sm">{comp.domain}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 text-center">
+                        {comp.domainAuthority ? (
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${
+                            comp.domainAuthority >= 50 ? 'bg-green-100 text-green-700' :
+                            comp.domainAuthority >= 20 ? 'bg-yellow-100 text-yellow-700' :
+                            'bg-gray-100 text-gray-600'
+                          }`}>{comp.domainAuthority}</span>
+                        ) : <span className="text-gray-400">—</span>}
+                      </td>
+                      <td className="py-3 text-center text-xs text-gray-400">
+                        {comp.lastChecked ? new Date(comp.lastChecked).toLocaleDateString() : '—'}
+                      </td>
+                      <td className="py-3 text-center">
+                        <Badge variant="default" className="text-xs">tracked</Badge>
+                      </td>
+                      <td className="py-3 text-right">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-red-400 hover:text-red-600"
+                          onClick={() => deleteCompetitor.mutate(comp.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                  {profileCompetitors.filter((d: string) => !apiCompetitors.some((c: any) => c.domain === d)).map((domain: string, i: number) => (
+                    <tr key={`profile-${i}`} className="border-b last:border-0">
+                      <td className="py-3">
+                        <div className="flex items-center gap-2">
+                          <Globe className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <span className="font-medium text-sm">{domain}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 text-center"><span className="text-gray-400">—</span></td>
+                      <td className="py-3 text-center text-xs text-gray-400">—</td>
+                      <td className="py-3 text-center">
+                        <Badge variant="secondary" className="text-xs">profile</Badge>
+                      </td>
+                      <td className="py-3 text-right"></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </CardContent>
         </Card>
@@ -949,6 +1186,64 @@ function CompetitorsTab() {
           <CardContent className="py-8 text-center">
             <Users className="w-12 h-12 mx-auto mb-4 text-gray-300" />
             <p className="text-gray-500">No competitors tracked yet. Add competitor domains above or in your SEO profile settings.</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Gap Analysis Results */}
+      {gapData?.gaps && gapData.gaps.length > 0 && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <TrendingUp className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                Keyword Gap Analysis
+              </CardTitle>
+              <PriorityBadge level="important" />
+            </div>
+            <CardDescription>Keywords your competitors rank for that you may be missing</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b text-left">
+                    <th className="pb-3 text-sm font-medium text-gray-500">Keyword</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Competitor Rank</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Your Rank</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Volume</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Difficulty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {gapData.gaps.map((gap: any, i: number) => (
+                    <tr key={i} className="border-b last:border-0">
+                      <td className="py-3 font-medium text-sm">{gap.keyword}</td>
+                      <td className="py-3 text-center">
+                        {gap.competitorRank ? (
+                          <span className="text-sm font-bold text-orange-600">#{gap.competitorRank}</span>
+                        ) : <span className="text-gray-400">—</span>}
+                      </td>
+                      <td className="py-3 text-center">
+                        {gap.yourRank ? (
+                          <span className={`text-sm font-bold ${gap.yourRank <= 10 ? 'text-green-600' : 'text-gray-500'}`}>#{gap.yourRank}</span>
+                        ) : <span className="text-xs text-red-500">Not ranking</span>}
+                      </td>
+                      <td className="py-3 text-center text-sm text-gray-600">
+                        {gap.volume?.toLocaleString() || '—'}
+                      </td>
+                      <td className="py-3 text-center">
+                        {gap.difficulty ? (
+                          <Badge variant={gap.difficulty <= 30 ? 'default' : gap.difficulty <= 60 ? 'secondary' : 'destructive'} className="text-xs">
+                            {gap.difficulty}/100
+                          </Badge>
+                        ) : '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </CardContent>
         </Card>
       )}
@@ -964,6 +1259,11 @@ function KeywordsTab() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [keywordInput, setKeywordInput] = useState('');
+  const [intentData, setIntentData] = useState<Record<string, { intent: string; confidence: number }>>({});
+  const [longTailData, setLongTailData] = useState<Record<number, any[]>>({});
+  const [expandedKeyword, setExpandedKeyword] = useState<number | null>(null);
+  const [locationKeyword, setLocationKeyword] = useState('');
+  const [locationInput, setLocationInput] = useState('');
 
   const { data, isLoading } = useQuery({
     queryKey: ['/api/seo/keywords'],
@@ -1005,6 +1305,55 @@ function KeywordsTab() {
     },
   });
 
+  const classifyIntent = useMutation({
+    mutationFn: async (keywords: string[]) => {
+      const res = await apiRequest('POST', '/api/seo/keywords/classify-intent', { keywords });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      const map: Record<string, any> = {};
+      (data.classifications || []).forEach((c: any) => { map[c.keyword] = c; });
+      setIntentData(map);
+      toast({ title: "Intent Classified", description: `Classified ${data.classifications?.length || 0} keywords` });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to classify intent", variant: "destructive" });
+    },
+  });
+
+  const generateLongTail = useMutation({
+    mutationFn: async ({ keywordId, keyword }: { keywordId: number; keyword: string }) => {
+      const res = await apiRequest('POST', '/api/seo/keywords/long-tail', { keyword });
+      return res.json();
+    },
+    onSuccess: (data, variables) => {
+      setLongTailData(prev => ({ ...prev, [variables.keywordId]: data.variations || [] }));
+      setExpandedKeyword(variables.keywordId);
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to generate long-tail variations", variant: "destructive" });
+    },
+  });
+
+  const checkLocationRank = useMutation({
+    mutationFn: async ({ keyword, location }: { keyword: string; location: string }) => {
+      const res = await apiRequest('POST', '/api/seo/local-rankings/check', { keyword, location });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      if (data.ranking) {
+        toast({ title: "Rank Checked", description: `Position tracked for "${data.ranking.keyword}" in ${data.ranking.location}` });
+      } else {
+        toast({ title: "Rank Check", description: data.message || "Check completed." });
+      }
+      setLocationKeyword('');
+      setLocationInput('');
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to check local ranking", variant: "destructive" });
+    },
+  });
+
   if (isLoading) return <LoadingState />;
 
   const keywords = data?.keywords || [];
@@ -1039,6 +1388,18 @@ function KeywordsTab() {
             >
               {researchKeywords.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
               AI Research
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                const kws = keywords.map((kw: any) => kw.keyword);
+                if (kws.length > 0) classifyIntent.mutate(kws);
+              }}
+              disabled={classifyIntent.isPending || keywords.length === 0}
+              data-testid="button-classify-intent"
+            >
+              {classifyIntent.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Tag className="w-4 h-4 mr-2" />}
+              Classify All
             </Button>
           </div>
         </CardContent>
@@ -1095,13 +1456,15 @@ function KeywordsTab() {
                     <th className="pb-3 text-sm font-medium text-gray-500 text-center">Rank</th>
                     <th className="pb-3 text-sm font-medium text-gray-500 text-center">Est. Volume</th>
                     <th className="pb-3 text-sm font-medium text-gray-500 text-center">Est. Difficulty</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Intent</th>
                     <th className="pb-3 text-sm font-medium text-gray-500 text-center">Source</th>
                     <th className="pb-3 text-sm font-medium text-gray-500"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {keywords.map((kw: any) => (
-                    <tr key={kw.id} className="border-b last:border-0">
+                    <React.Fragment key={kw.id}>
+                    <tr className="border-b last:border-0">
                       <td className="py-3 font-medium text-sm">{kw.keyword}</td>
                       <td className="py-3 text-center">
                         {kw.currentRank ? (
@@ -1122,23 +1485,124 @@ function KeywordsTab() {
                           </Badge>
                         ) : '—'}
                       </td>
+                      <td className="py-3 text-center">
+                        {intentData[kw.keyword] ? (
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                            intentData[kw.keyword].intent === 'transactional' ? 'bg-green-50 text-green-700 border border-green-200' :
+                            intentData[kw.keyword].intent === 'commercial' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
+                            intentData[kw.keyword].intent === 'navigational' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                            'bg-gray-50 text-gray-600 border border-gray-200'
+                          }`}>
+                            {intentData[kw.keyword].intent}
+                          </span>
+                        ) : <span className="text-gray-400">—</span>}
+                      </td>
                       <td className="py-3 text-center text-xs text-gray-400">{kw.source}</td>
                       <td className="py-3 text-right">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="text-red-400 hover:text-red-600"
-                          onClick={() => deleteKeyword.mutate(kw.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-gray-400 hover:text-gray-600"
+                            onClick={() => {
+                              if (expandedKeyword === kw.id) {
+                                setExpandedKeyword(null);
+                              } else {
+                                generateLongTail.mutate({ keywordId: kw.id, keyword: kw.keyword });
+                              }
+                            }}
+                            title="Long-tail variations"
+                            disabled={generateLongTail.isPending}
+                          >
+                            <ChevronRight className={`w-4 h-4 transition-transform ${expandedKeyword === kw.id ? 'rotate-90' : ''}`} />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-400 hover:text-red-600"
+                            onClick={() => deleteKeyword.mutate(kw.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </td>
                     </tr>
+                    {expandedKeyword === kw.id && longTailData[kw.id] && (
+                      <tr><td colSpan={7} className="bg-gray-50 p-3">
+                        <div className="space-y-1">
+                          <p className="text-xs font-medium text-gray-600 mb-2">Long-tail variations for "{kw.keyword}":</p>
+                          {longTailData[kw.id].length === 0 ? (
+                            <p className="text-xs text-gray-400">No variations found.</p>
+                          ) : (
+                            longTailData[kw.id].map((lt: any, j: number) => (
+                              <div key={j} className="flex items-center justify-between text-xs px-2 py-1 rounded hover:bg-gray-100">
+                                <span>{lt.keyword}</span>
+                                <span className="text-gray-400">Vol: ~{lt.estimatedVolume?.toLocaleString()} | Diff: {lt.difficulty}/100</span>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </td></tr>
+                    )}
+                    </React.Fragment>
                   ))}
                 </tbody>
               </table>
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      {/* Rank by Location */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <MapPin className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                Rank by Location
+              </CardTitle>
+              <CardDescription>Check how a keyword ranks in a specific geographic location</CardDescription>
+            </div>
+            <PriorityBadge level="important" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col sm:flex-row gap-3">
+            {keywords.length > 0 ? (
+              <Select value={locationKeyword} onValueChange={setLocationKeyword}>
+                <SelectTrigger className="flex-1">
+                  <SelectValue placeholder="Select a keyword..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {keywords.map((kw: any) => (
+                    <SelectItem key={kw.id} value={kw.keyword}>{kw.keyword}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <Input placeholder="Add keywords above first..." disabled className="flex-1" />
+            )}
+            <Input
+              placeholder="Location (e.g., Hartford, CT)"
+              value={locationInput}
+              onChange={(e) => setLocationInput(e.target.value)}
+              className="flex-1"
+            />
+            <Button
+              onClick={() => {
+                const kw = locationKeyword.trim();
+                const loc = locationInput.trim();
+                if (kw && loc) checkLocationRank.mutate({ keyword: kw, location: loc });
+              }}
+              disabled={checkLocationRank.isPending || !locationKeyword.trim() || !locationInput.trim()}
+              style={{ backgroundColor: OPTIMIZE_COLOR }}
+              className="text-white"
+            >
+              {checkLocationRank.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Search className="w-4 h-4 mr-2" />}
+              Check Rank
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
@@ -1613,6 +2077,7 @@ function ActionPlanTab() {
 function BacklinksTab() {
   const { toast } = useToast();
   const [urlInput, setUrlInput] = useState('');
+  const [backlinkFilter, setBacklinkFilter] = useState<'all' | 'new' | 'lost' | 'spam'>('all');
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -1666,6 +2131,10 @@ function BacklinksTab() {
                 The more quality backlinks you have, the more search engines trust your website, which helps you rank higher in search results.
                 Links from well-known, reputable sites carry more weight than links from unknown sites.
               </p>
+              <div className="mt-2">
+                <PriorityBadge level="important" />
+                <span className="text-xs text-gray-500 ml-2">Backlinks are one of Google's top ranking factors</span>
+              </div>
             </div>
           </div>
         </CardContent>
@@ -1705,11 +2174,11 @@ function BacklinksTab() {
 
       {/* Backlinks Summary */}
       {backlinks.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <Card>
             <CardContent className="pt-4 pb-4 text-center">
               <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>{backlinks.length}</p>
-              <p className="text-xs text-gray-500 font-medium">Total Backlinks</p>
+              <p className="text-xs text-gray-500 font-medium">Total</p>
             </CardContent>
           </Card>
           <Card>
@@ -1717,7 +2186,23 @@ function BacklinksTab() {
               <p className="text-2xl font-bold text-green-600">
                 {backlinks.filter((b: any) => b.status === 'active').length}
               </p>
-              <p className="text-xs text-gray-500 font-medium">Active Links</p>
+              <p className="text-xs text-gray-500 font-medium">Active</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-4 pb-4 text-center">
+              <p className="text-2xl font-bold text-red-500">
+                {backlinks.filter((b: any) => b.isLost).length}
+              </p>
+              <p className="text-xs text-gray-500 font-medium">Lost</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="pt-4 pb-4 text-center">
+              <p className="text-2xl font-bold text-emerald-600">
+                {backlinks.filter((b: any) => b.isNew).length}
+              </p>
+              <p className="text-xs text-gray-500 font-medium">New</p>
             </CardContent>
           </Card>
           <Card>
@@ -1735,9 +2220,29 @@ function BacklinksTab() {
               <p className="text-2xl font-bold text-purple-600">
                 {Math.round(backlinks.reduce((sum: number, b: any) => sum + (b.domainAuthority || 0), 0) / (backlinks.length || 1))}
               </p>
-              <p className="text-xs text-gray-500 font-medium">Avg. Domain Authority</p>
+              <p className="text-xs text-gray-500 font-medium">Avg DA</p>
             </CardContent>
           </Card>
+        </div>
+      )}
+
+      {/* Filter Bar */}
+      {backlinks.length > 0 && (
+        <div className="flex gap-2">
+          {(['all', 'new', 'lost', 'spam'] as const).map((f) => (
+            <button
+              key={f}
+              onClick={() => setBacklinkFilter(f)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                backlinkFilter === f
+                  ? 'text-white'
+                  : 'text-gray-500 hover:text-gray-700 bg-gray-100 hover:bg-gray-200'
+              }`}
+              style={backlinkFilter === f ? { backgroundColor: OPTIMIZE_COLOR } : {}}
+            >
+              {f.charAt(0).toUpperCase() + f.slice(1)}
+            </button>
+          ))}
         </div>
       )}
 
@@ -1749,8 +2254,16 @@ function BacklinksTab() {
         <CardContent>
           {backlinks.length === 0 ? (
             <EmptyState message="Add your domain above to discover your backlink profile. We'll find sites that link to you." />
-          ) : (
+          ) : ((() => {
+            const filtered = backlinkFilter === 'all' ? backlinks :
+              backlinkFilter === 'new' ? backlinks.filter((b: any) => b.isNew) :
+              backlinkFilter === 'lost' ? backlinks.filter((b: any) => b.isLost) :
+              backlinks.filter((b: any) => b.isSpam);
+            return (
             <div className="overflow-x-auto">
+              {filtered.length === 0 ? (
+                <p className="text-center py-6 text-sm text-gray-500">No backlinks match the "{backlinkFilter}" filter.</p>
+              ) : (
               <table className="w-full">
                 <thead>
                   <tr className="border-b text-left">
@@ -1763,7 +2276,7 @@ function BacklinksTab() {
                   </tr>
                 </thead>
                 <tbody>
-                  {backlinks.map((bl: any) => {
+                  {filtered.map((bl: any) => {
                     let sourceDomain = bl.sourceUrl || '—';
                     try { sourceDomain = new URL(bl.sourceUrl).hostname; } catch {}
                     return (
@@ -1810,8 +2323,10 @@ function BacklinksTab() {
                   })}
                 </tbody>
               </table>
+              )}
             </div>
-          )}
+            );
+          })())}
         </CardContent>
       </Card>
     </div>
@@ -2684,6 +3199,7 @@ function SchemaTab() {
 
 function ReportsTab() {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [dateRange, setDateRange] = useState('30');
 
   const { data: dashData, isLoading: dashLoading } = useQuery({
@@ -2714,6 +3230,25 @@ function ReportsTab() {
   const { data: scansData } = useQuery({
     queryKey: ['/api/seo/scans'],
     queryFn: async () => { const res = await apiRequest('GET', '/api/seo/scans'); return res.json(); },
+  });
+
+  const { data: storedReportsData } = useQuery({
+    queryKey: ['/api/seo/reports'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/reports'); return res.json(); },
+  });
+
+  const generateReport = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/reports/generate', {});
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/seo/reports'] });
+      toast({ title: "Report Generated", description: "Your SEO report has been saved." });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to generate report", variant: "destructive" });
+    },
   });
 
   const isLoading = dashLoading || keywordsLoading || pagesLoading || issuesLoading;
@@ -2817,6 +3352,17 @@ function ReportsTab() {
             </Select>
           </div>
           <Button
+            onClick={() => generateReport.mutate()}
+            disabled={generateReport.isPending}
+            style={{ backgroundColor: OPTIMIZE_COLOR }}
+            className="text-white"
+            size="sm"
+            data-testid="button-generate-report"
+          >
+            {generateReport.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Sparkles className="w-4 h-4 mr-2" />}
+            Generate Report
+          </Button>
+          <Button
             onClick={handleExport}
             variant="outline"
             size="sm"
@@ -2826,6 +3372,48 @@ function ReportsTab() {
           </Button>
         </div>
       </div>
+
+      {/* Stored Reports */}
+      {(storedReportsData?.reports?.length > 0) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Saved Reports</CardTitle>
+            <CardDescription>Previously generated SEO performance reports</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {storedReportsData.reports.map((report: any) => (
+                <div key={report.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: `${OPTIMIZE_COLOR}15` }}>
+                      <BarChart3 className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">
+                        {report.period || (report.createdAt ? `Report — ${new Date(report.createdAt).toLocaleDateString()}` : 'SEO Report')}
+                      </p>
+                      <div className="flex items-center gap-3 text-xs text-gray-500 mt-0.5">
+                        {report.overallScore !== null && report.overallScore !== undefined && (
+                          <span>Score: <strong className={report.overallScore >= 70 ? 'text-green-600' : report.overallScore >= 40 ? 'text-yellow-600' : 'text-red-600'}>{report.overallScore}/100</strong></span>
+                        )}
+                        {report.issueCount !== null && report.issueCount !== undefined && (
+                          <span>Issues: {report.issueCount}</span>
+                        )}
+                        {report.keywordCount !== null && report.keywordCount !== undefined && (
+                          <span>Keywords: {report.keywordCount}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-xs text-gray-400">
+                    {report.createdAt ? new Date(report.createdAt).toLocaleDateString() : ''}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Score Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">

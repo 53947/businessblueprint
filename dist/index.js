@@ -19696,7 +19696,7 @@ function registerSendRoutes(app2) {
 // server/routes/optimize.ts
 init_db();
 init_schema();
-import { eq as eq32, desc as desc15, and as and21, sql as sql13, asc as asc5 } from "drizzle-orm";
+import { eq as eq32, desc as desc15, and as and21, sql as sql13, asc as asc5, gte as gte2 } from "drizzle-orm";
 
 // server/services/seo-crawler.ts
 async function analyzePage(url) {
@@ -20167,6 +20167,127 @@ Return ONLY a JSON array of objects. No markdown, no explanation.`;
     return [];
   }
 }
+async function analyzeKeywordGap(domain, competitors, industry, currentKeywords) {
+  const settings = await aiSettingsService.getAllSettings();
+  const provider = (settings.length > 0 ? settings[0].provider : null) || "openai";
+  const prompt = `You are an SEO expert performing a keyword gap analysis.
+
+Business Domain: ${domain}
+Industry: ${industry}
+Currently Tracking: ${currentKeywords.join(", ") || "None"}
+Competitors: ${competitors.join(", ")}
+
+Analyze the competitive landscape and identify:
+1. Keyword opportunities the business is likely missing
+2. Competitor strengths (what competitors are likely ranking for)
+3. Strategic recommendations
+
+Return JSON with this structure:
+{
+  "opportunities": [{"keyword": "", "estimatedVolume": 0, "difficulty": 0, "relevance": "high", "type": "long-tail"}],
+  "competitorStrengths": ["..."],
+  "recommendations": ["..."]
+}
+
+Return ONLY valid JSON. No markdown.`;
+  try {
+    const result = await unifiedAI.getCompletion(provider, {
+      messages: [
+        { role: "system", content: "You are an SEO competitive analysis expert. Return only valid JSON." },
+        { role: "user", content: prompt }
+      ],
+      temperature: 0.7,
+      maxTokens: 2e3,
+      responseFormat: "json"
+    });
+    const cleaned = result.content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    return JSON.parse(cleaned);
+  } catch (error) {
+    console.error("[SEO Keywords] Gap analysis failed:", error.message);
+    return { opportunities: [], competitorStrengths: [], recommendations: [] };
+  }
+}
+async function generateLongTailKeywords(keyword, industry, location) {
+  const settings = await aiSettingsService.getAllSettings();
+  const provider = (settings.length > 0 ? settings[0].provider : null) || "openai";
+  const prompt = `You are an SEO expert specializing in long-tail keyword research.
+
+Given this seed keyword: "${keyword}"
+Industry: ${industry}
+${location ? `Location: ${location}` : ""}
+
+Generate 10-15 long-tail variations of this keyword. Long-tail keywords are longer, more specific phrases that are easier to rank for.
+
+Include variations such as:
+- Question-based ("how to...", "what is the best...")
+- Location-specific (if location provided)
+- Intent-specific ("buy", "near me", "reviews", "cost")
+- Comparison ("vs", "alternative to")
+- Modifier-based ("best", "top", "affordable", "professional")
+
+For each keyword, provide:
+- keyword: the long-tail search term
+- estimatedVolume: realistic monthly search volume (long-tail = lower volume, typically 10-500)
+- difficulty: SEO difficulty score 1-100 (long-tail = generally lower difficulty)
+- type: "question", "local", "comparison", "transactional", "informational", or "modifier"
+
+Return ONLY a JSON array. No markdown, no explanation.`;
+  try {
+    const result = await unifiedAI.getCompletion(provider, {
+      messages: [
+        { role: "system", content: "You are an SEO long-tail keyword expert. Return only valid JSON arrays." },
+        { role: "user", content: prompt }
+      ],
+      temperature: 0.7,
+      maxTokens: 2e3,
+      responseFormat: "json"
+    });
+    const cleaned = result.content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    const parsed = JSON.parse(cleaned);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.error("[SEO Keywords] Long-tail generation failed:", error.message);
+    return [];
+  }
+}
+async function classifySearchIntent(keywords) {
+  const settings = await aiSettingsService.getAllSettings();
+  const provider = (settings.length > 0 ? settings[0].provider : null) || "openai";
+  const prompt = `You are an SEO expert. Classify the search intent for each of these keywords.
+
+Keywords:
+${keywords.map((k, i) => `${i + 1}. ${k}`).join("\n")}
+
+For each keyword, determine the search intent:
+- "informational" \u2014 user wants to learn something
+- "transactional" \u2014 user wants to buy or take action
+- "navigational" \u2014 user is looking for a specific website or page
+- "commercial" \u2014 user is researching before a purchase decision
+
+For each keyword provide:
+- keyword: the original keyword
+- intent: one of "informational", "transactional", "navigational", "commercial"
+- confidence: confidence score 0.0 to 1.0
+
+Return ONLY a JSON array. No markdown, no explanation.`;
+  try {
+    const result = await unifiedAI.getCompletion(provider, {
+      messages: [
+        { role: "system", content: "You are an SEO search intent classification expert. Return only valid JSON arrays." },
+        { role: "user", content: prompt }
+      ],
+      temperature: 0.3,
+      maxTokens: 1500,
+      responseFormat: "json"
+    });
+    const cleaned = result.content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    const parsed = JSON.parse(cleaned);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    console.error("[SEO Keywords] Intent classification failed:", error.message);
+    return [];
+  }
+}
 
 // server/services/seo-content.ts
 init_ai_provider();
@@ -20295,6 +20416,8 @@ Return ONLY valid JSON array. No markdown.`;
 }
 
 // server/routes/optimize.ts
+init_ai_provider();
+init_ai_settings();
 function registerOptimizeRoutes(app2) {
   app2.post(
     "/api/seo/profiles",
@@ -20631,6 +20754,88 @@ function registerOptimizeRoutes(app2) {
       }
     }
   );
+  app2.post(
+    "/api/seo/keywords/long-tail",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
+        const { keyword } = req.body;
+        if (!keyword || typeof keyword !== "string") {
+          return res.status(400).json({ success: false, message: "A keyword is required" });
+        }
+        const industry = profile[0].industry || "General";
+        const variations = await generateLongTailKeywords(keyword, industry, profile[0].location || void 0);
+        res.json({ success: true, variations });
+      } catch (error) {
+        console.error("[Optimize] Long-tail keyword error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate long-tail keywords" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/keywords/classify-intent",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const { keywords } = req.body;
+        if (!keywords || !Array.isArray(keywords) || keywords.length === 0) {
+          return res.status(400).json({ success: false, message: "An array of keywords is required" });
+        }
+        const limited = keywords.slice(0, 50).filter((k) => typeof k === "string" && k.trim().length > 0);
+        const classifications = await classifySearchIntent(limited);
+        res.json({ success: true, classifications });
+      } catch (error) {
+        console.error("[Optimize] Intent classification error:", error);
+        res.status(500).json({ success: false, message: "Failed to classify search intent" });
+      }
+    }
+  );
+  app2.get(
+    "/api/seo/keywords/:id/locations",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
+        const keywordId = parseInt(req.params.id);
+        const profileId = profile[0].id;
+        const keywordRecord = await db.select().from(seoKeywords).where(and21(eq32(seoKeywords.id, keywordId), eq32(seoKeywords.profileId, profileId))).limit(1);
+        if (keywordRecord.length === 0) return res.status(404).json({ success: false, message: "Keyword not found" });
+        let rankings;
+        const locationsParam = req.query.locations;
+        if (locationsParam) {
+          const locationList = locationsParam.split("|").map((l) => l.trim()).filter(Boolean);
+          rankings = await db.select().from(seoLocalRankings).where(and21(
+            eq32(seoLocalRankings.profileId, profileId),
+            eq32(seoLocalRankings.keywordId, keywordId),
+            sql13`${seoLocalRankings.location} = ANY(${locationList})`
+          )).orderBy(desc15(seoLocalRankings.checkedAt));
+        } else {
+          rankings = await db.select().from(seoLocalRankings).where(and21(
+            eq32(seoLocalRankings.profileId, profileId),
+            eq32(seoLocalRankings.keywordId, keywordId)
+          )).orderBy(desc15(seoLocalRankings.checkedAt));
+        }
+        res.json({
+          success: true,
+          keyword: keywordRecord[0].keyword,
+          rankings: rankings.map((r) => ({
+            location: r.location,
+            mapPackPosition: r.mapPackPosition,
+            organicPosition: r.organicPosition,
+            checkedAt: r.checkedAt
+          }))
+        });
+      } catch (error) {
+        console.error("[Optimize] Keyword locations error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch keyword location rankings" });
+      }
+    }
+  );
   app2.get(
     "/api/seo/pages",
     requireAuth,
@@ -20702,6 +20907,170 @@ function registerOptimizeRoutes(app2) {
       } catch (error) {
         console.error("[Optimize] Page analyze error:", error);
         res.status(500).json({ success: false, message: "Failed to analyze page" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/pages/internal-links",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const profileId = profile[0].id;
+        const domain = profile[0].domain.replace(/^https?:\/\//, "").replace(/\/+$/, "");
+        const pages = await db.select().from(seoPages).where(eq32(seoPages.profileId, profileId));
+        if (pages.length === 0) {
+          return res.json({ success: true, pages: [], orphanPages: [], suggestions: [], message: "No pages analyzed yet. Run a site crawl first." });
+        }
+        const pageUrls = new Set(pages.map((p) => p.url));
+        const linkMap = {};
+        for (const p of pages) {
+          if (!linkMap[p.url]) linkMap[p.url] = { internalLinksOut: [], internalLinksIn: [] };
+        }
+        for (const p of pages) {
+          const data = p.data || p.crawlData || {};
+          const links = data.internalLinks || data.links || [];
+          for (const link of links) {
+            let normalized = link;
+            try {
+              const url = new URL(link, `https://${domain}`);
+              if (url.hostname.replace("www.", "") === domain.replace("www.", "")) {
+                normalized = url.pathname;
+              } else {
+                continue;
+              }
+            } catch {
+              if (!link.startsWith("/")) continue;
+              normalized = link;
+            }
+            if (linkMap[p.url]) {
+              linkMap[p.url].internalLinksOut.push(normalized);
+            }
+            const targetPage = pages.find((tp) => tp.url === normalized || tp.url.endsWith(normalized));
+            if (targetPage && linkMap[targetPage.url]) {
+              linkMap[targetPage.url].internalLinksIn.push(p.url);
+            }
+          }
+        }
+        const orphanPages = pages.filter((p) => {
+          const entry = linkMap[p.url];
+          return entry && entry.internalLinksIn.length === 0 && p.url !== "/" && p.url !== `https://${domain}/`;
+        }).map((p) => p.url);
+        const suggestions = [];
+        for (const orphan of orphanPages.slice(0, 10)) {
+          const bestSource = pages.filter((p) => p.url !== orphan && (linkMap[p.url]?.internalLinksIn.length || 0) > 0).sort((a, b) => (b.score || 0) - (a.score || 0))[0];
+          if (bestSource) {
+            suggestions.push(`Add a link from "${bestSource.url}" to "${orphan}" \u2014 this page has no internal links pointing to it.`);
+          }
+        }
+        for (const p of pages) {
+          const entry = linkMap[p.url];
+          if (entry && entry.internalLinksOut.length < 2 && pages.length > 3) {
+            suggestions.push(`"${p.url}" only links to ${entry.internalLinksOut.length} internal page(s). Add links to related content.`);
+          }
+        }
+        const result = pages.map((p) => ({
+          url: p.url,
+          internalLinksIn: linkMap[p.url]?.internalLinksIn.length || 0,
+          internalLinksOut: linkMap[p.url]?.internalLinksOut.length || 0
+        }));
+        res.json({ success: true, pages: result, orphanPages, suggestions });
+      } catch (error) {
+        console.error("[Optimize] Internal links analysis error:", error);
+        res.status(500).json({ success: false, message: "Failed to analyze internal links" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/pages/image-audit",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const profileId = profile[0].id;
+        const pages = await db.select().from(seoPages).where(eq32(seoPages.profileId, profileId));
+        if (pages.length === 0) {
+          return res.json({ success: true, totalImages: 0, withoutAlt: 0, oversized: 0, suggestions: [], message: "No pages analyzed yet. Run a site crawl first." });
+        }
+        const allImages = [];
+        for (const p of pages) {
+          const data = p.data || p.crawlData || {};
+          const images = data.images || [];
+          for (const img of images) {
+            allImages.push({
+              pageUrl: p.url,
+              src: img.src || img.url || "",
+              alt: img.alt || null,
+              sizeKb: img.sizeKb || img.size || null,
+              format: img.format || img.type || null
+            });
+          }
+        }
+        const withoutAlt = allImages.filter((img) => !img.alt || img.alt.trim().length === 0);
+        const oversized = allImages.filter((img) => img.sizeKb != null && img.sizeKb > 200);
+        const notWebp = allImages.filter((img) => img.format && !["webp", "avif"].includes(img.format.toLowerCase()));
+        let altSuggestions = [];
+        if (withoutAlt.length > 0) {
+          try {
+            const settings = await aiSettingsService.getAllSettings();
+            const provider = (settings.length > 0 ? settings[0].provider : null) || "openai";
+            const imagesToDescribe = withoutAlt.slice(0, 20).map((img) => ({
+              src: img.src,
+              pageUrl: img.pageUrl
+            }));
+            const prompt = `You are an SEO and accessibility expert. Generate descriptive alt text for these images.
+The images are from a business website in the ${profile[0].industry || "general"} industry.
+
+Images needing alt text:
+${imagesToDescribe.map((img, i) => `${i + 1}. URL: ${img.src} (found on page: ${img.pageUrl})`).join("\n")}
+
+For each image, write a concise, descriptive alt text (under 125 characters) based on:
+- The image filename/URL pattern
+- The page it appears on
+- The business industry
+
+Return ONLY a JSON array of objects: [{"url": "...", "suggestedAlt": "..."}]`;
+            const result = await unifiedAI.getCompletion(provider, {
+              messages: [
+                { role: "system", content: "You are an SEO alt text expert. Return only valid JSON arrays." },
+                { role: "user", content: prompt }
+              ],
+              temperature: 0.5,
+              maxTokens: 1500,
+              responseFormat: "json"
+            });
+            const cleaned = result.content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+            const parsed = JSON.parse(cleaned);
+            if (Array.isArray(parsed)) {
+              altSuggestions = parsed.map((s) => ({
+                url: s.url || "",
+                currentAlt: null,
+                suggestedAlt: s.suggestedAlt || ""
+              }));
+            }
+          } catch (aiError) {
+            console.error("[Optimize] AI alt text generation failed:", aiError.message);
+          }
+        }
+        res.json({
+          success: true,
+          totalImages: allImages.length,
+          withoutAlt: withoutAlt.length,
+          oversized: oversized.length,
+          notWebp: notWebp.length,
+          suggestions: altSuggestions,
+          details: {
+            missingAlt: withoutAlt.map((img) => ({ src: img.src, pageUrl: img.pageUrl })),
+            oversizedImages: oversized.map((img) => ({ src: img.src, pageUrl: img.pageUrl, sizeKb: img.sizeKb }))
+          }
+        });
+      } catch (error) {
+        console.error("[Optimize] Image audit error:", error);
+        res.status(500).json({ success: false, message: "Failed to audit images" });
       }
     }
   );
@@ -20894,6 +21263,110 @@ function registerOptimizeRoutes(app2) {
       } catch (error) {
         console.error("[Optimize] Backlinks fetch error:", error);
         res.status(500).json({ success: false, message: "Failed to fetch backlinks" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/competitors",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const { domain, name } = req.body;
+        if (!domain || typeof domain !== "string") {
+          return res.status(400).json({ success: false, message: "Competitor domain is required" });
+        }
+        const normalizedDomain = domain.replace(/^https?:\/\//, "").replace(/\/+$/, "").toLowerCase();
+        const existing = await db.select().from(seoCompetitors).where(and21(eq32(seoCompetitors.profileId, profile[0].id), eq32(seoCompetitors.domain, normalizedDomain))).limit(1);
+        if (existing.length > 0) {
+          return res.status(409).json({ success: false, message: "This competitor is already being tracked" });
+        }
+        const [competitor] = await db.insert(seoCompetitors).values({
+          profileId: profile[0].id,
+          domain: normalizedDomain,
+          name: name || null
+        }).returning();
+        res.json({ success: true, competitor });
+      } catch (error) {
+        console.error("[Optimize] Add competitor error:", error);
+        res.status(500).json({ success: false, message: "Failed to add competitor" });
+      }
+    }
+  );
+  app2.get(
+    "/api/seo/competitors",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, competitors: [] });
+        const competitors = await db.select().from(seoCompetitors).where(eq32(seoCompetitors.profileId, profile[0].id)).orderBy(desc15(seoCompetitors.createdAt));
+        res.json({ success: true, competitors });
+      } catch (error) {
+        console.error("[Optimize] List competitors error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch competitors" });
+      }
+    }
+  );
+  app2.delete(
+    "/api/seo/competitors/:id",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile" });
+        const competitorId = parseInt(req.params.id);
+        const competitor = await db.select().from(seoCompetitors).where(and21(eq32(seoCompetitors.id, competitorId), eq32(seoCompetitors.profileId, profile[0].id))).limit(1);
+        if (competitor.length === 0) return res.status(404).json({ success: false, message: "Competitor not found" });
+        await db.delete(seoCompetitors).where(eq32(seoCompetitors.id, competitorId));
+        res.json({ success: true, message: "Competitor removed" });
+      } catch (error) {
+        console.error("[Optimize] Delete competitor error:", error);
+        res.status(500).json({ success: false, message: "Failed to remove competitor" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/competitors/analyze",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const profileData = profile[0];
+        const { competitorId } = req.body;
+        let competitorDomains;
+        if (competitorId) {
+          const comp = await db.select().from(seoCompetitors).where(and21(eq32(seoCompetitors.id, competitorId), eq32(seoCompetitors.profileId, profileData.id))).limit(1);
+          if (comp.length === 0) return res.status(404).json({ success: false, message: "Competitor not found" });
+          competitorDomains = [comp[0].domain];
+        } else {
+          const comps = await db.select().from(seoCompetitors).where(eq32(seoCompetitors.profileId, profileData.id));
+          competitorDomains = comps.map((c) => c.domain);
+          if (competitorDomains.length === 0) {
+            competitorDomains = profileData.competitors || [];
+          }
+        }
+        if (competitorDomains.length === 0) {
+          return res.status(400).json({ success: false, message: "No competitors to analyze. Add at least one competitor first." });
+        }
+        const trackedKeywords = await db.select().from(seoKeywords).where(and21(eq32(seoKeywords.profileId, profileData.id), eq32(seoKeywords.status, "tracking")));
+        const currentKeywordList = trackedKeywords.map((k) => k.keyword);
+        const gapAnalysis = await analyzeKeywordGap(
+          profileData.domain,
+          competitorDomains,
+          profileData.industry || "General",
+          currentKeywordList
+        );
+        res.json({ success: true, analysis: gapAnalysis });
+      } catch (error) {
+        console.error("[Optimize] Competitor analysis error:", error);
+        res.status(500).json({ success: false, message: "Failed to analyze competitors" });
       }
     }
   );
@@ -21149,11 +21622,65 @@ function registerOptimizeRoutes(app2) {
         const now = /* @__PURE__ */ new Date();
         const currentPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
         const reportData = await gatherReportData(profileId);
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1e3);
+        const recentRankings = await db.select().from(seoKeywordRankings).where(and21(
+          sql13`${seoKeywordRankings.keywordId} IN (SELECT id FROM seo_keywords WHERE profile_id = ${profileId})`,
+          gte2(seoKeywordRankings.date, thirtyDaysAgo)
+        )).orderBy(asc5(seoKeywordRankings.date));
+        const rankingChanges = {};
+        for (const r of recentRankings) {
+          if (!rankingChanges[r.keywordId]) {
+            rankingChanges[r.keywordId] = { oldest: r.position, newest: r.position };
+          } else {
+            rankingChanges[r.keywordId].newest = r.position;
+          }
+        }
+        const keywordMovement = {
+          improved: 0,
+          declined: 0,
+          unchanged: 0,
+          changes: []
+        };
+        for (const [kwId, change] of Object.entries(rankingChanges)) {
+          const diff = (change.oldest || 100) - (change.newest || 100);
+          if (diff > 0) keywordMovement.improved++;
+          else if (diff < 0) keywordMovement.declined++;
+          else keywordMovement.unchanged++;
+          keywordMovement.changes.push({
+            keywordId: parseInt(kwId),
+            from: change.oldest,
+            to: change.newest,
+            change: diff
+          });
+        }
+        const allBacklinks = await db.select().from(seoBacklinks).where(eq32(seoBacklinks.profileId, profileId));
+        const newBacklinks = allBacklinks.filter((b) => b.firstSeen && new Date(b.firstSeen) >= thirtyDaysAgo).length;
+        const lostBacklinks = allBacklinks.filter((b) => b.isLost && b.lastSeen && new Date(b.lastSeen) >= thirtyDaysAgo).length;
+        const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const prevPeriod = `${prevMonth.getFullYear()}-${String(prevMonth.getMonth() + 1).padStart(2, "0")}`;
+        const prevReports = await db.select().from(seoReports).where(and21(eq32(seoReports.profileId, profileId), eq32(seoReports.period, prevPeriod))).orderBy(desc15(seoReports.generatedAt)).limit(1);
+        const prevData = prevReports.length > 0 ? prevReports[0].data : null;
+        const comparison = prevData ? {
+          previousPeriod: prevPeriod,
+          scoreChange: (reportData.overallScore ?? 0) - (prevData.overallScore ?? 0),
+          keywordCountChange: reportData.keywords.tracked - (prevData.keywords?.tracked ?? 0),
+          issueCountChange: reportData.issues.total - (prevData.issues?.total ?? 0),
+          backlinkCountChange: reportData.backlinks.total - (prevData.backlinks?.total ?? 0)
+        } : null;
+        const enhancedData = {
+          ...reportData,
+          keywordMovement,
+          backlinkActivity: {
+            newInPeriod: newBacklinks,
+            lostInPeriod: lostBacklinks
+          },
+          ...comparison ? { comparison } : {}
+        };
         const [report] = await db.insert(seoReports).values({
           profileId,
           type: "monthly",
           period: currentPeriod,
-          data: reportData
+          data: enhancedData
         }).returning();
         res.json({ success: true, report });
       } catch (error) {
