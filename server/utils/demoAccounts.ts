@@ -3,7 +3,7 @@ import { clients } from '@shared/schema';
 import { eq } from 'drizzle-orm';
 
 const DEMO_EMAILS = [
-  'demo@businessblueprint.io',
+  'admin@businessblueprint.io',
   'test@businessblueprint.io',
   'agency@businessblueprint.io',
 ];

@@ -7,7 +7,7 @@ import { clients } from "../shared/schema";
 import { eq } from "drizzle-orm";
 
 const ownerClients = [
-  { email: "demo@businessblueprint.io", companyName: "businessblueprint.io" },
+  { email: "admin@businessblueprint.io", companyName: "businessblueprint.io" },
   { email: "demo@hostsblue.com", companyName: "hostsblue.com" },
   { email: "demo@swipesblue.com", companyName: "swipesblue.com" },
   { email: "demo@builderblue2.com", companyName: "builderblue2.com" },

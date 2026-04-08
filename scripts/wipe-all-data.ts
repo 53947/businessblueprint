@@ -29,7 +29,7 @@ async function wipe() {
     // Re-seed the demo accounts
     console.log("\nRe-seeding demo accounts...");
     const demoAccounts = [
-      { email: "demo@businessblueprint.io", companyName: "businessblueprint.io" },
+      { email: "admin@businessblueprint.io", companyName: "businessblueprint.io" },
       { email: "demo@hostsblue.com", companyName: "hostsblue.com" },
       { email: "demo@swipesblue.com", companyName: "swipesblue.com" },
       { email: "demo@builderblue2.com", companyName: "builderblue2.com" },

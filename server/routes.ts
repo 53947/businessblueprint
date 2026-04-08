@@ -188,8 +188,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           accountStatus: "active" as const,
         },
         {
-          companyName: "Demo Restaurant",
-          email: "demo@businessblueprint.io",
+          companyName: "businessblueprint.io",
+          email: "admin@businessblueprint.io",
           accountStatus: "active" as const,
         },
         {
@@ -1577,7 +1577,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const isDemoEmail = [
         "53947@triadblue.com",
         "53947@businessblueprint.io",
-        "demo@businessblueprint.io",
+        "admin@businessblueprint.io",
         "test@businessblueprint.io",
         "agency@businessblueprint.io",
       ].includes(magicToken.email.toLowerCase());
@@ -1990,7 +1990,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const autoAccounts: Record<string, { companyName: string; isAdmin?: boolean }> = {
         "53947@triadblue.com": { companyName: "TriadBlue Inc.", isAdmin: true },
         "53947@businessblueprint.io": { companyName: "BusinessBlueprint User" },
-        "demo@businessblueprint.io": { companyName: "Demo Restaurant" },
+        "admin@businessblueprint.io": { companyName: "businessblueprint.io" },
         "test@businessblueprint.io": { companyName: "Test Business" },
         "agency@businessblueprint.io": { companyName: "Social Media Agency" },
       };
@@ -2034,7 +2034,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const isDemoAccount = [
         "53947@triadblue.com",
         "53947@businessblueprint.io",
-        "demo@businessblueprint.io",
+        "admin@businessblueprint.io",
         "test@businessblueprint.io",
         "agency@businessblueprint.io",
       ].includes(normalizedEmail);

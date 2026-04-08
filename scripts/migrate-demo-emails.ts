@@ -6,7 +6,7 @@
 import { pool } from "../server/db";
 
 const migrations = [
-  { from: "53947@businessblueprint.io", to: "demo@businessblueprint.io" },
+  { from: "53947@businessblueprint.io", to: "admin@businessblueprint.io" },
   { from: "53947@hostsblue.com", to: "demo@hostsblue.com" },
   { from: "53947@swipesblue.com", to: "demo@swipesblue.com" },
   { from: "53947@builderblue2.com", to: "demo@builderblue2.com" },
