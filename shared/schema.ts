@@ -3857,6 +3857,10 @@ export const seoPages = pgTable("seo_pages", {
   suggestions: jsonb("suggestions"),
   lastAnalyzed: timestamp("last_analyzed"),
   createdAt: timestamp("created_at").defaultNow(),
+  coreWebVitals: jsonb("core_web_vitals"), // { lcp, fid, cls, inp }
+  schemaMarkup: jsonb("schema_markup"), // detected structured data
+  internalLinksIn: integer("internal_links_in").default(0),
+  internalLinksOut: integer("internal_links_out").default(0),
 }, (table) => [
   index("idx_seo_page_profile").on(table.profileId),
 ]);
@@ -3893,6 +3897,11 @@ export const seoBacklinks = pgTable("seo_backlinks", {
   status: varchar("status", { length: 20 }).default("active"),
   firstSeen: timestamp("first_seen").defaultNow(),
   lastSeen: timestamp("last_seen"),
+  isSpam: boolean("is_spam").default(false),
+  spamScore: integer("spam_score"),
+  linkType: varchar("link_type", { length: 20 }), // dofollow, nofollow, ugc, sponsored
+  isNew: boolean("is_new").default(true),
+  isLost: boolean("is_lost").default(false),
 }, (table) => [
   index("idx_seo_backlink_profile").on(table.profileId),
 ]);
@@ -3956,6 +3965,11 @@ export const seoCompetitors = pgTable("seo_competitors", {
   profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
   domain: varchar("domain", { length: 500 }).notNull(),
   name: varchar("name", { length: 255 }),
+  domainAuthority: integer("domain_authority"),
+  estimatedTraffic: integer("estimated_traffic"),
+  totalBacklinks: integer("total_backlinks"),
+  totalKeywords: integer("total_keywords"),
+  lastChecked: timestamp("last_checked"),
   createdAt: timestamp("created_at").defaultNow(),
 }, (table) => [
   index("idx_seo_competitor_profile").on(table.profileId),
@@ -3974,6 +3988,23 @@ export const seoCompetitorData = pgTable("seo_competitor_data", {
   index("idx_seo_comp_data_competitor").on(table.competitorId),
 ]);
 
+/**
+ * SEO Local Rankings — Local rank tracking by location.
+ */
+export const seoLocalRankings = pgTable("seo_local_rankings", {
+  id: serial("id").primaryKey(),
+  profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+  keywordId: integer("keyword_id").references(() => seoKeywords.id),
+  keyword: varchar("keyword", { length: 500 }).notNull(),
+  location: varchar("location", { length: 255 }).notNull(),
+  mapPackPosition: integer("map_pack_position"), // 1-3, null = not in pack
+  organicPosition: integer("organic_position"), // 1-100, null = not found
+  checkedAt: timestamp("checked_at").defaultNow(),
+}, (table) => [
+  index("idx_seo_local_rank_profile").on(table.profileId),
+  index("idx_seo_local_rank_keyword").on(table.keywordId),
+]);
+
 // SEO Optimization Schemas
 export const insertSeoProfileSchema = createInsertSchema(seoProfiles);
 export const insertSeoScanSchema = createInsertSchema(seoScans);
@@ -3987,6 +4018,7 @@ export const insertSeoActionItemSchema = createInsertSchema(seoActionItems);
 export const insertSeoReportSchema = createInsertSchema(seoReports);
 export const insertSeoCompetitorSchema = createInsertSchema(seoCompetitors);
 export const insertSeoCompetitorDataSchema = createInsertSchema(seoCompetitorData);
+export const insertSeoLocalRankingSchema = createInsertSchema(seoLocalRankings);
 
 // SEO Optimization Types
 export type SeoProfile = typeof seoProfiles.$inferSelect;
@@ -4013,6 +4045,8 @@ export type SeoCompetitor = typeof seoCompetitors.$inferSelect;
 export type InsertSeoCompetitor = z.infer<typeof insertSeoCompetitorSchema>;
 export type SeoCompetitorData = typeof seoCompetitorData.$inferSelect;
 export type InsertSeoCompetitorData = z.infer<typeof insertSeoCompetitorDataSchema>;
+export type SeoLocalRanking = typeof seoLocalRankings.$inferSelect;
+export type InsertSeoLocalRanking = z.infer<typeof insertSeoLocalRankingSchema>;
 
 // ============================================================
 // /amplify - Ad Account Connections & Campaign Management

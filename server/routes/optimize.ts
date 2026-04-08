@@ -16,6 +16,8 @@ import {
   seoContentBriefs,
   seoActionItems,
   seoReports,
+  seoLocalRankings,
+  seoCompetitors,
   insertSeoProfileSchema,
   insertSeoKeywordSchema,
   insertSeoContentBriefSchema,
@@ -156,7 +158,11 @@ export function registerOptimizeRoutes(app: Express) {
         // Run audit asynchronously
         (async () => {
           try {
-            const auditResult = await runTechnicalAudit(profileData.domain);
+            const auditResult = await runTechnicalAudit(profileData.domain, {
+              businessName: profileData.businessName || undefined,
+              industry: profileData.industry || undefined,
+              location: profileData.location || undefined,
+            });
 
             // Store technical issues
             for (const issue of auditResult.issues) {
@@ -842,24 +848,630 @@ export function registerOptimizeRoutes(app: Express) {
   );
 
   // =============================================
-  // SHELL ENDPOINTS (Coming Soon)
+  // BACKLINKS
   // =============================================
 
-  app.get("/api/seo/backlinks", requireAuth, async (_req, res) => {
-    res.json({ success: true, backlinks: [], message: "Backlink monitoring coming soon" });
-  });
+  /** List backlinks for the user's SEO profile */
+  app.get(
+    "/api/seo/backlinks",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, backlinks: [], summary: null });
 
-  app.get("/api/seo/local", requireAuth, async (_req, res) => {
-    res.json({ success: true, data: null, message: "Local SEO optimizer coming soon" });
-  });
+        const profileId = profile[0].id;
 
-  app.get("/api/seo/schema-markup", requireAuth, async (_req, res) => {
-    res.json({ success: true, data: null, message: "Schema markup generator coming soon" });
-  });
+        // If DATAFORSEO_LOGIN exists, we could fetch fresh data here
+        const hasDataProvider = !!process.env.DATAFORSEO_LOGIN;
 
-  app.get("/api/seo/reports", requireAuth, async (_req, res) => {
-    res.json({ success: true, reports: [], message: "Reporting & insights coming soon" });
-  });
+        const backlinks = await db
+          .select()
+          .from(seoBacklinks)
+          .where(eq(seoBacklinks.profileId, profileId))
+          .orderBy(desc(seoBacklinks.firstSeen));
+
+        // Calculate summary stats
+        const total = backlinks.length;
+        const active = backlinks.filter(b => b.status === 'active' && !b.isLost).length;
+        const lost = backlinks.filter(b => b.isLost).length;
+        const newLinks = backlinks.filter(b => b.isNew).length;
+        const referringDomains = new Set(
+          backlinks
+            .filter(b => b.sourceUrl)
+            .map(b => {
+              try { return new URL(b.sourceUrl!).hostname; } catch { return b.sourceUrl; }
+            })
+        ).size;
+        const daValues = backlinks.filter(b => b.domainAuthority != null).map(b => b.domainAuthority!);
+        const avgDA = daValues.length > 0 ? Math.round(daValues.reduce((a, b) => a + b, 0) / daValues.length) : null;
+
+        res.json({
+          success: true,
+          backlinks,
+          summary: {
+            total,
+            active,
+            lost,
+            new: newLinks,
+            referringDomains,
+            avgDomainAuthority: avgDA,
+          },
+          dataProviderConnected: hasDataProvider,
+          ...(!hasDataProvider && total === 0 ? { message: "Connect a data provider to automatically discover backlinks." } : {}),
+        });
+      } catch (error: any) {
+        console.error("[Optimize] Backlinks fetch error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch backlinks" });
+      }
+    }
+  );
+
+  // =============================================
+  // LOCAL RANK TRACKING
+  // =============================================
+
+  /** List local rankings for the user's profile */
+  app.get(
+    "/api/seo/local-rankings",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, rankings: [], grouped: {} });
+
+        const profileId = profile[0].id;
+        const rankings = await db
+          .select()
+          .from(seoLocalRankings)
+          .where(eq(seoLocalRankings.profileId, profileId))
+          .orderBy(desc(seoLocalRankings.checkedAt));
+
+        // Group by keyword
+        const grouped: Record<string, typeof rankings> = {};
+        for (const r of rankings) {
+          if (!grouped[r.keyword]) grouped[r.keyword] = [];
+          grouped[r.keyword].push(r);
+        }
+
+        res.json({ success: true, rankings, grouped });
+      } catch (error: any) {
+        console.error("[Optimize] Local rankings fetch error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch local rankings" });
+      }
+    }
+  );
+
+  /** Trigger a local rank check for a keyword + location */
+  app.post(
+    "/api/seo/local-rankings/check",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+
+        const { keyword, location } = req.body;
+        if (!keyword || !location) {
+          return res.status(400).json({ success: false, message: "Both keyword and location are required" });
+        }
+
+        const hasDataProvider = !!process.env.DATAFORSEO_LOGIN;
+
+        if (!hasDataProvider) {
+          // Store the keyword/location pair with null positions so the user can track it manually
+          const [ranking] = await db.insert(seoLocalRankings).values({
+            profileId: profile[0].id,
+            keyword: keyword.trim(),
+            location: location.trim(),
+            mapPackPosition: null,
+            organicPosition: null,
+          }).returning();
+
+          return res.json({
+            success: true,
+            ranking,
+            message: "Connect a SERP data provider to track local rankings automatically.",
+          });
+        }
+
+        // DataForSEO SERP API call
+        try {
+          const credentials = Buffer.from(`${process.env.DATAFORSEO_LOGIN}:${process.env.DATAFORSEO_PASSWORD}`).toString('base64');
+          const serpResponse = await fetch('https://api.dataforseo.com/v3/serp/google/organic/live/advanced', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Basic ${credentials}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify([{
+              keyword: keyword.trim(),
+              location_name: location.trim(),
+              language_name: 'English',
+              device: 'desktop',
+            }]),
+            signal: AbortSignal.timeout(30000),
+          });
+
+          const serpData = await serpResponse.json() as any;
+          let mapPackPosition: number | null = null;
+          let organicPosition: number | null = null;
+
+          if (serpData?.tasks?.[0]?.result?.[0]?.items) {
+            const items = serpData.tasks[0].result[0].items;
+            const domain = profile[0].domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+            for (const item of items) {
+              if (item.type === 'local_pack' && item.items) {
+                const packIdx = item.items.findIndex((p: any) => p.domain?.includes(domain));
+                if (packIdx >= 0) mapPackPosition = packIdx + 1;
+              }
+              if (item.type === 'organic' && item.domain?.includes(domain)) {
+                organicPosition = item.rank_absolute;
+              }
+            }
+          }
+
+          const [ranking] = await db.insert(seoLocalRankings).values({
+            profileId: profile[0].id,
+            keyword: keyword.trim(),
+            location: location.trim(),
+            mapPackPosition,
+            organicPosition,
+          }).returning();
+
+          res.json({ success: true, ranking });
+        } catch (apiErr: any) {
+          console.error("[Optimize] DataForSEO SERP error:", apiErr);
+          // Still store the check attempt
+          const [ranking] = await db.insert(seoLocalRankings).values({
+            profileId: profile[0].id,
+            keyword: keyword.trim(),
+            location: location.trim(),
+            mapPackPosition: null,
+            organicPosition: null,
+          }).returning();
+          res.json({ success: true, ranking, message: "Rank check was stored but the data provider returned an error." });
+        }
+      } catch (error: any) {
+        console.error("[Optimize] Local rank check error:", error);
+        res.status(500).json({ success: false, message: "Failed to check local ranking" });
+      }
+    }
+  );
+
+  // =============================================
+  // SCHEMA MARKUP
+  // =============================================
+
+  /** Generate and analyze schema markup for the user's site */
+  app.get(
+    "/api/seo/schema-markup",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+
+        const profileData = profile[0];
+
+        // Generate LocalBusiness JSON-LD from profile data
+        const generated: Record<string, any> = {
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: profileData.businessName || profileData.domain,
+          url: profileData.domain.startsWith('http') ? profileData.domain : `https://${profileData.domain}`,
+        };
+
+        if (profileData.industry) {
+          // Map common industries to schema.org types
+          const industryTypeMap: Record<string, string> = {
+            'restaurant': 'Restaurant',
+            'dental': 'Dentist',
+            'dentist': 'Dentist',
+            'plumbing': 'Plumber',
+            'plumber': 'Plumber',
+            'law': 'LegalService',
+            'legal': 'LegalService',
+            'attorney': 'Attorney',
+            'real estate': 'RealEstateAgent',
+            'auto repair': 'AutoRepair',
+            'salon': 'BeautySalon',
+            'beauty': 'BeautySalon',
+            'gym': 'ExerciseGym',
+            'fitness': 'ExerciseGym',
+            'medical': 'MedicalBusiness',
+            'doctor': 'Physician',
+            'veterinary': 'VeterinaryCare',
+            'accounting': 'AccountingService',
+            'insurance': 'InsuranceAgency',
+            'hotel': 'Hotel',
+          };
+          const lowerIndustry = profileData.industry.toLowerCase();
+          for (const [key, schemaType] of Object.entries(industryTypeMap)) {
+            if (lowerIndustry.includes(key)) {
+              generated["@type"] = schemaType;
+              break;
+            }
+          }
+        }
+
+        if (profileData.location) {
+          generated.address = {
+            "@type": "PostalAddress",
+            addressLocality: profileData.location,
+          };
+        }
+
+        // Check existing schema markup on the site
+        const existing: any[] = [];
+        const recommendations: string[] = [];
+
+        try {
+          const siteUrl = profileData.domain.startsWith('http') ? profileData.domain : `https://${profileData.domain}`;
+          const siteRes = await fetch(siteUrl, { signal: AbortSignal.timeout(15000) });
+          const html = await siteRes.text();
+
+          // Find JSON-LD blocks
+          const jsonLdRegex = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+          let match;
+          while ((match = jsonLdRegex.exec(html)) !== null) {
+            try {
+              const parsed = JSON.parse(match[1].trim());
+              existing.push(parsed);
+            } catch {}
+          }
+
+          if (existing.length === 0) {
+            recommendations.push("No structured data found on your site. Adding LocalBusiness schema helps search engines understand your business.");
+            recommendations.push("Copy the generated JSON-LD below and add it to your site's <head> section.");
+          } else {
+            const types = existing.map(e => e["@type"] || 'Unknown').flat();
+            if (!types.some(t => typeof t === 'string' && t.includes('LocalBusiness') || t === generated["@type"])) {
+              recommendations.push(`Your site has schema markup (${types.join(', ')}) but is missing LocalBusiness schema. Add it for better local search visibility.`);
+            }
+            if (!types.includes('WebSite')) {
+              recommendations.push("Consider adding WebSite schema with a SearchAction for sitelinks search box in Google.");
+            }
+          }
+
+          // Check for breadcrumbs
+          if (!html.includes('BreadcrumbList')) {
+            recommendations.push("Add BreadcrumbList schema to improve how your pages appear in search results.");
+          }
+        } catch {
+          recommendations.push("Could not fetch your site to check existing schema markup. Make sure the domain is accessible.");
+        }
+
+        if (!profileData.location) {
+          recommendations.push("Add your business location in the SEO profile to generate complete LocalBusiness schema.");
+        }
+
+        // Also check if we have any page-level schema data stored
+        const pages = await db
+          .select({ url: seoPages.url, schemaMarkup: seoPages.schemaMarkup })
+          .from(seoPages)
+          .where(eq(seoPages.profileId, profileData.id));
+
+        const pagesWithSchema = pages.filter(p => p.schemaMarkup);
+
+        res.json({
+          success: true,
+          generated,
+          existing,
+          recommendations,
+          pagesWithSchema: pagesWithSchema.length,
+          totalPagesAnalyzed: pages.length,
+        });
+      } catch (error: any) {
+        console.error("[Optimize] Schema markup error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate schema markup" });
+      }
+    }
+  );
+
+  // =============================================
+  // REPORTS
+  // =============================================
+
+  /** List SEO reports, auto-generate current month if missing */
+  app.get(
+    "/api/seo/reports",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, reports: [] });
+
+        const profileId = profile[0].id;
+
+        // Check if a report exists for the current month
+        const now = new Date();
+        const currentPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+        const reports = await db
+          .select()
+          .from(seoReports)
+          .where(eq(seoReports.profileId, profileId))
+          .orderBy(desc(seoReports.generatedAt));
+
+        const hasCurrentMonth = reports.some(r => r.period === currentPeriod);
+
+        if (!hasCurrentMonth) {
+          // Auto-generate a report for the current month
+          const reportData = await gatherReportData(profileId);
+          const [newReport] = await db.insert(seoReports).values({
+            profileId,
+            type: 'monthly',
+            period: currentPeriod,
+            data: reportData as any,
+          }).returning();
+          reports.unshift(newReport);
+        }
+
+        res.json({ success: true, reports });
+      } catch (error: any) {
+        console.error("[Optimize] Reports fetch error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch reports" });
+      }
+    }
+  );
+
+  /** Generate a fresh SEO report on demand */
+  app.post(
+    "/api/seo/reports/generate",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+
+        const profileId = profile[0].id;
+        const now = new Date();
+        const currentPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+        const reportData = await gatherReportData(profileId);
+
+        const [report] = await db.insert(seoReports).values({
+          profileId,
+          type: 'monthly',
+          period: currentPeriod,
+          data: reportData as any,
+        }).returning();
+
+        res.json({ success: true, report });
+      } catch (error: any) {
+        console.error("[Optimize] Report generate error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate report" });
+      }
+    }
+  );
+
+  // =============================================
+  // CORE WEB VITALS
+  // =============================================
+
+  /** Measure Core Web Vitals via Google PageSpeed Insights API */
+  app.post(
+    "/api/seo/core-web-vitals",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+
+        const profileData = profile[0];
+        let targetUrl = req.body.url;
+
+        if (!targetUrl) {
+          targetUrl = profileData.domain.startsWith('http') ? profileData.domain : `https://${profileData.domain}`;
+        }
+
+        // Google PageSpeed Insights API (free, no key required for basic usage)
+        const apiKey = process.env.GOOGLE_PAGESPEED_API_KEY || '';
+        const psiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(targetUrl)}&strategy=mobile${apiKey ? `&key=${apiKey}` : ''}`;
+
+        const psiRes = await fetch(psiUrl, { signal: AbortSignal.timeout(60000) });
+
+        if (!psiRes.ok) {
+          const errText = await psiRes.text();
+          console.error("[Optimize] PageSpeed API error:", errText);
+          return res.status(502).json({ success: false, message: "PageSpeed Insights API returned an error. The URL may be unreachable." });
+        }
+
+        const psiData = await psiRes.json() as any;
+
+        // Extract Core Web Vitals from Lighthouse audit
+        const audits = psiData.lighthouseResult?.audits || {};
+        const fieldData = psiData.loadingExperience?.metrics || {};
+
+        // Lighthouse lab data
+        const lcpMs = audits['largest-contentful-paint']?.numericValue ?? null;
+        const clsScore = audits['cumulative-layout-shift']?.numericValue ?? null;
+        const tbtMs = audits['total-blocking-time']?.numericValue ?? null; // proxy for FID
+        const inpMs = audits['interaction-to-next-paint']?.numericValue ?? null;
+        const speedIndex = audits['speed-index']?.numericValue ?? null;
+
+        // Field data (CrUX) if available
+        const fieldLcp = fieldData.LARGEST_CONTENTFUL_PAINT_MS?.percentile ?? null;
+        const fieldCls = fieldData.CUMULATIVE_LAYOUT_SHIFT_SCORE?.percentile ?? null;
+        const fieldInp = fieldData.INTERACTION_TO_NEXT_PAINT?.percentile ?? null;
+        const fieldFid = fieldData.FIRST_INPUT_DELAY_MS?.percentile ?? null;
+
+        // Thresholds for pass/needs-improvement/fail
+        const vitals = {
+          lcp: {
+            lab: lcpMs ? Math.round(lcpMs) : null,
+            field: fieldLcp,
+            unit: 'ms',
+            status: lcpMs ? (lcpMs <= 2500 ? 'good' : lcpMs <= 4000 ? 'needs-improvement' : 'poor') : 'unknown',
+            explanation: 'Largest Contentful Paint measures how long it takes for the biggest visible element to load. Under 2.5 seconds is good — your visitors see your main content quickly.',
+          },
+          cls: {
+            lab: clsScore != null ? Math.round(clsScore * 1000) / 1000 : null,
+            field: fieldCls != null ? fieldCls / 100 : null,
+            unit: 'score',
+            status: clsScore != null ? (clsScore <= 0.1 ? 'good' : clsScore <= 0.25 ? 'needs-improvement' : 'poor') : 'unknown',
+            explanation: 'Cumulative Layout Shift measures how much your page jumps around while loading. Under 0.1 is good — your visitors won\'t accidentally click the wrong thing.',
+          },
+          tbt: {
+            lab: tbtMs ? Math.round(tbtMs) : null,
+            field: null,
+            unit: 'ms',
+            status: tbtMs ? (tbtMs <= 200 ? 'good' : tbtMs <= 600 ? 'needs-improvement' : 'poor') : 'unknown',
+            explanation: 'Total Blocking Time measures how long the page is unresponsive during load. Under 200ms is good — your visitors can interact with your site without waiting.',
+          },
+          inp: {
+            lab: inpMs ? Math.round(inpMs) : null,
+            field: fieldInp,
+            unit: 'ms',
+            status: fieldInp ? (fieldInp <= 200 ? 'good' : fieldInp <= 500 ? 'needs-improvement' : 'poor') :
+                    inpMs ? (inpMs <= 200 ? 'good' : inpMs <= 500 ? 'needs-improvement' : 'poor') : 'unknown',
+            explanation: 'Interaction to Next Paint measures how quickly your site responds when someone clicks or taps. Under 200ms is good — your site feels snappy and responsive.',
+          },
+          fid: {
+            lab: null,
+            field: fieldFid,
+            unit: 'ms',
+            status: fieldFid ? (fieldFid <= 100 ? 'good' : fieldFid <= 300 ? 'needs-improvement' : 'poor') : 'unknown',
+            explanation: 'First Input Delay measures the time from when a visitor first interacts with your page to when the browser responds. Under 100ms is good.',
+          },
+        };
+
+        const performanceScore = psiData.lighthouseResult?.categories?.performance?.score ?? null;
+
+        const coreWebVitalsData = {
+          url: targetUrl,
+          measuredAt: new Date().toISOString(),
+          performanceScore: performanceScore != null ? Math.round(performanceScore * 100) : null,
+          vitals,
+          speedIndex: speedIndex ? Math.round(speedIndex) : null,
+          hasFieldData: !!(fieldLcp || fieldCls || fieldInp || fieldFid),
+        };
+
+        // Store in seoPages if we have a matching page
+        const existingPage = await db
+          .select()
+          .from(seoPages)
+          .where(and(eq(seoPages.profileId, profileData.id), eq(seoPages.url, targetUrl)))
+          .limit(1);
+
+        if (existingPage.length > 0) {
+          await db.update(seoPages).set({
+            coreWebVitals: coreWebVitalsData as any,
+          }).where(eq(seoPages.id, existingPage[0].id));
+        } else {
+          await db.insert(seoPages).values({
+            profileId: profileData.id,
+            url: targetUrl,
+            coreWebVitals: coreWebVitalsData as any,
+            lastAnalyzed: new Date(),
+          });
+        }
+
+        res.json({ success: true, ...coreWebVitalsData });
+      } catch (error: any) {
+        console.error("[Optimize] Core Web Vitals error:", error);
+        res.status(500).json({ success: false, message: "Failed to measure Core Web Vitals" });
+      }
+    }
+  );
+}
+
+// =============================================
+// REPORT DATA GATHERER
+// =============================================
+
+async function gatherReportData(profileId: number) {
+  // Latest scan
+  const latestScan = await db
+    .select()
+    .from(seoScans)
+    .where(and(eq(seoScans.profileId, profileId), eq(seoScans.status, 'completed')))
+    .orderBy(desc(seoScans.createdAt))
+    .limit(1);
+
+  // Issue counts
+  const issueCounts = await db
+    .select({
+      severity: seoTechnicalIssues.severity,
+      count: sql<number>`count(*)::int`,
+    })
+    .from(seoTechnicalIssues)
+    .where(and(eq(seoTechnicalIssues.profileId, profileId), eq(seoTechnicalIssues.status, 'open')))
+    .groupBy(seoTechnicalIssues.severity);
+
+  const issueMap: Record<string, number> = {};
+  for (const ic of issueCounts) {
+    issueMap[ic.severity || 'unknown'] = ic.count;
+  }
+
+  // Keyword stats
+  const keywords = await db
+    .select()
+    .from(seoKeywords)
+    .where(and(eq(seoKeywords.profileId, profileId), eq(seoKeywords.status, 'tracking')));
+
+  // Page stats
+  const pages = await db
+    .select()
+    .from(seoPages)
+    .where(eq(seoPages.profileId, profileId));
+
+  const avgPageScore = pages.length > 0
+    ? Math.round(pages.filter(p => p.score != null).reduce((sum, p) => sum + (p.score || 0), 0) / Math.max(1, pages.filter(p => p.score != null).length))
+    : null;
+
+  // Backlink stats
+  const backlinks = await db
+    .select()
+    .from(seoBacklinks)
+    .where(eq(seoBacklinks.profileId, profileId));
+
+  // Action items
+  const pendingActions = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(seoActionItems)
+    .where(and(eq(seoActionItems.profileId, profileId), eq(seoActionItems.status, 'pending')));
+
+  return {
+    generatedAt: new Date().toISOString(),
+    overallScore: latestScan[0]?.overallScore ?? null,
+    performanceScore: latestScan[0]?.performanceScore ?? null,
+    seoScore: latestScan[0]?.seoScore ?? null,
+    accessibilityScore: latestScan[0]?.accessibilityScore ?? null,
+    issues: {
+      critical: issueMap.critical || 0,
+      high: issueMap.high || 0,
+      medium: issueMap.medium || 0,
+      low: issueMap.low || 0,
+      total: Object.values(issueMap).reduce((a, b) => a + b, 0),
+    },
+    keywords: {
+      tracked: keywords.length,
+      withRank: keywords.filter(k => k.currentRank != null).length,
+      avgRank: keywords.filter(k => k.currentRank != null).length > 0
+        ? Math.round(keywords.filter(k => k.currentRank != null).reduce((sum, k) => sum + (k.currentRank || 0), 0) / keywords.filter(k => k.currentRank != null).length)
+        : null,
+    },
+    pages: {
+      total: pages.length,
+      avgScore: avgPageScore,
+    },
+    backlinks: {
+      total: backlinks.length,
+      active: backlinks.filter(b => !b.isLost).length,
+      lost: backlinks.filter(b => b.isLost).length,
+    },
+    pendingActions: pendingActions[0]?.count || 0,
+  };
 }
 
 // =============================================

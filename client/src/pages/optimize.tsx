@@ -11,7 +11,7 @@ import {
   AlertTriangle, CheckCircle2, Clock, ArrowUp, ArrowDown, Minus,
   Loader2, X, ChevronRight, Eye, TrendingUp, Copy, Download,
   Globe, Phone, Building2, ShieldCheck, Star, Info, Calendar,
-  Hash, Tag, Clipboard
+  Hash, Tag, Clipboard, Users, Zap, Activity, Gauge
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
@@ -31,16 +31,46 @@ const OPTIMIZE_COLOR = '#374151';
 
 const TABS = [
   { id: 'overview', label: 'Overview', icon: Target },
+  { id: 'site-health', label: 'Site Health', icon: Wrench },
   { id: 'keywords', label: 'Keywords', icon: Search },
-  { id: 'on-page', label: 'On-Page', icon: FileText },
-  { id: 'technical', label: 'Technical', icon: Wrench },
-  { id: 'content', label: 'Content', icon: PenTool },
+  { id: 'competitors', label: 'Competitors', icon: Users },
   { id: 'backlinks', label: 'Backlinks', icon: Link2 },
-  { id: 'local-seo', label: 'Local SEO', icon: MapPin },
-  { id: 'schema', label: 'Schema', icon: Code2 },
-  { id: 'action-plan', label: 'Action Plan', icon: Sparkles },
+  { id: 'content', label: 'Content', icon: PenTool },
+  { id: 'local', label: 'Local SEO', icon: MapPin },
   { id: 'reports', label: 'Reports', icon: BarChart3 },
 ];
+
+// =============================================
+// PRIORITY LAYER SYSTEM
+// =============================================
+
+type PriorityLevel = 'critical' | 'important' | 'relevant' | 'optional';
+
+const PRIORITY_CONFIG = {
+  critical: { label: 'Critical', color: '#DC2626', bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', description: 'Fix these immediately. They are actively costing you customers right now.' },
+  important: { label: 'Important', color: '#F97316', bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', description: 'These significantly impact your rankings. Address them this month.' },
+  relevant: { label: 'Relevant', color: '#2563EB', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', description: 'These give you a competitive edge. Work on them as time allows.' },
+  optional: { label: 'Optional', color: '#6B7280', bg: 'bg-gray-50', text: 'text-gray-600', border: 'border-gray-200', description: 'Advanced features for power users. Nice to have, not urgent.' },
+};
+
+function PriorityBadge({ level }: { level: PriorityLevel }) {
+  const c = PRIORITY_CONFIG[level];
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${c.bg} ${c.text} ${c.border} border`}>
+      {c.label}
+    </span>
+  );
+}
+
+function mapSeverityToLayer(severity: string): PriorityLevel {
+  switch (severity) {
+    case 'critical': return 'critical';
+    case 'high': return 'important';
+    case 'medium': return 'relevant';
+    case 'low': return 'optional';
+    default: return 'relevant';
+  }
+}
 
 export default function OptimizeDashboard() {
   const [, setLocation] = useLocation();
@@ -101,15 +131,13 @@ export default function OptimizeDashboard() {
         </div>
 
         {/* Tab Content */}
-        {activeTab === 'overview' && <OverviewTab />}
+        {activeTab === 'overview' && <OverviewTab onTabChange={setActiveTab} />}
+        {activeTab === 'site-health' && <SiteHealthTab />}
         {activeTab === 'keywords' && <KeywordsTab />}
-        {activeTab === 'on-page' && <OnPageTab />}
-        {activeTab === 'technical' && <TechnicalTab />}
-        {activeTab === 'content' && <ContentTab />}
+        {activeTab === 'competitors' && <CompetitorsTab />}
         {activeTab === 'backlinks' && <BacklinksTab />}
-        {activeTab === 'local-seo' && <LocalSeoTab />}
-        {activeTab === 'schema' && <SchemaTab />}
-        {activeTab === 'action-plan' && <ActionPlanTab />}
+        {activeTab === 'content' && <ContentTab />}
+        {activeTab === 'local' && <LocalSeoTab />}
         {activeTab === 'reports' && <ReportsTab />}
       </div>
       <Footer />
@@ -121,13 +149,23 @@ export default function OptimizeDashboard() {
 // OVERVIEW TAB
 // =============================================
 
-function OverviewTab() {
+function OverviewTab({ onTabChange }: { onTabChange: (tab: string) => void }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: ['/api/seo/dashboard'],
     queryFn: async () => { const res = await apiRequest('GET', '/api/seo/dashboard'); return res.json(); },
+  });
+
+  const { data: issuesData } = useQuery({
+    queryKey: ['/api/seo/technical-issues'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/technical-issues'); return res.json(); },
+  });
+
+  const { data: actionsData } = useQuery({
+    queryKey: ['/api/seo/action-items'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/action-items'); return res.json(); },
   });
 
   const scanMutation = useMutation({
@@ -137,7 +175,10 @@ function OverviewTab() {
     },
     onSuccess: () => {
       toast({ title: "Scan Started", description: "Your SEO scan is running. Results will appear shortly." });
-      setTimeout(() => queryClient.invalidateQueries({ queryKey: ['/api/seo/dashboard'] }), 5000);
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['/api/seo/dashboard'] });
+        queryClient.invalidateQueries({ queryKey: ['/api/seo/technical-issues'] });
+      }, 5000);
     },
     onError: () => {
       toast({ title: "Error", description: "Failed to start scan", variant: "destructive" });
@@ -146,15 +187,48 @@ function OverviewTab() {
 
   if (isLoading) return <LoadingState />;
   const d = data?.data;
-  if (!d) return <EmptyState message="No data yet. Run your first scan to get started." />;
+  if (!d) return (
+    <div className="space-y-6">
+      <Card>
+        <CardContent className="pt-8 pb-8 text-center">
+          <Target className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+          <h3 className="text-lg font-bold mb-2" style={{ color: OPTIMIZE_COLOR }}>Welcome to / optimize</h3>
+          <p className="text-gray-500 mb-4 max-w-md mx-auto">Run your first SEO scan to get a complete picture of your website's search health — and a prioritized list of exactly what to fix.</p>
+          <Button
+            className="text-white"
+            style={{ backgroundColor: OPTIMIZE_COLOR }}
+            onClick={() => scanMutation.mutate()}
+            disabled={scanMutation.isPending}
+          >
+            {scanMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+            {scanMutation.isPending ? 'Scanning...' : 'Run Your First Scan'}
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
 
   const score = d.overallScore;
+  const allIssues = (issuesData?.issues || []).filter((i: any) => i.status === 'open');
+  const allActions = (actionsData?.items || []).filter((i: any) => i.status === 'pending' || i.status === 'in-progress');
+
+  // Group issues by priority layer
+  const criticalItems = allIssues.filter((i: any) => i.severity === 'critical');
+  const importantItems = allIssues.filter((i: any) => i.severity === 'high');
+  const relevantItems = allIssues.filter((i: any) => i.severity === 'medium');
+  const optionalItems = allIssues.filter((i: any) => i.severity === 'low');
+
+  const layerGroups: { level: PriorityLevel; items: any[]; tab: string }[] = [
+    { level: 'critical', items: criticalItems, tab: 'site-health' },
+    { level: 'important', items: importantItems, tab: 'site-health' },
+    { level: 'relevant', items: relevantItems, tab: 'site-health' },
+    { level: 'optional', items: optionalItems, tab: 'site-health' },
+  ];
 
   return (
     <div className="space-y-6">
       {/* Score + Actions Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Score Card */}
         <Card className="md:col-span-1">
           <CardContent className="pt-6 text-center">
             <div className="relative inline-flex items-center justify-center w-32 h-32 mb-4">
@@ -187,18 +261,17 @@ function OverviewTab() {
           </CardContent>
         </Card>
 
-        {/* Stats Cards */}
         <Card className="md:col-span-2">
           <CardContent className="pt-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <StatCard label="Issues" value={d.issues?.total || 0} icon={AlertTriangle}
-                subtext={d.issues?.critical > 0 ? `${d.issues.critical} critical` : 'No critical'}
-                color={d.issues?.critical > 0 ? '#ef4444' : '#22c55e'} />
+              <StatCard label="Issues" value={allIssues.length} icon={AlertTriangle}
+                subtext={criticalItems.length > 0 ? `${criticalItems.length} critical` : 'No critical'}
+                color={criticalItems.length > 0 ? '#DC2626' : '#22c55e'} />
               <StatCard label="Keywords" value={d.keywordsTracked || 0} icon={Search}
                 subtext="Tracked" color="#3b82f6" />
               <StatCard label="Pages" value={d.pagesAnalyzed || 0} icon={FileText}
                 subtext="Analyzed" color="#8b5cf6" />
-              <StatCard label="Actions" value={d.pendingActions || 0} icon={Sparkles}
+              <StatCard label="Actions" value={allActions.length} icon={Sparkles}
                 subtext="Pending" color="#f59e0b" />
             </div>
           </CardContent>
@@ -214,32 +287,85 @@ function OverviewTab() {
         </div>
       )}
 
-      {/* Issue Breakdown */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Issue Summary</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-4 gap-4">
-            <div className="text-center p-3 rounded-lg bg-red-50">
-              <p className="text-2xl font-bold text-red-600">{d.issues?.critical || 0}</p>
-              <p className="text-xs text-red-600 font-medium">Critical</p>
+      {/* Priority Layer Issue Groups */}
+      {layerGroups.map(({ level, items, tab }) => {
+        if (items.length === 0) return null;
+        const config = PRIORITY_CONFIG[level];
+        return (
+          <Card key={level} className="border-l-4" style={{ borderLeftColor: config.color }}>
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <PriorityBadge level={level} />
+                  <span className="text-sm font-bold" style={{ color: config.color }}>{items.length} issue{items.length !== 1 ? 's' : ''}</span>
+                </div>
+                <button
+                  onClick={() => onTabChange(tab)}
+                  className="text-xs font-medium hover:underline"
+                  style={{ color: OPTIMIZE_COLOR }}
+                >
+                  View in Site Health →
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">{config.description}</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {items.slice(0, 5).map((issue: any) => (
+                  <div key={issue.id} className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50">
+                    <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: config.color }} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-800">{issue.description}</p>
+                      {issue.howToFix && (
+                        <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{issue.howToFix}</p>
+                      )}
+                      {issue.url && (
+                        <p className="text-xs text-blue-600 mt-0.5 truncate">{issue.url}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {items.length > 5 && (
+                  <button
+                    onClick={() => onTabChange(tab)}
+                    className="text-xs font-medium w-full text-center py-2 hover:bg-gray-50 rounded"
+                    style={{ color: OPTIMIZE_COLOR }}
+                  >
+                    +{items.length - 5} more — view all in Site Health
+                  </button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })}
+
+      {/* Action Items from All Layers */}
+      {allActions.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Sparkles className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+              Your SEO Action Plan
+            </CardTitle>
+            <CardDescription>Prioritized tasks from your latest analysis — work through them top to bottom.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {allActions.slice(0, 8).map((item: any) => (
+                <div key={item.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                  <PriorityBadge level={mapSeverityToLayer(item.priority)} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium">{item.title}</p>
+                    {item.description && <p className="text-xs text-gray-500 truncate">{item.description}</p>}
+                  </div>
+                  <Badge variant="outline" className="text-xs flex-shrink-0">{item.category}</Badge>
+                </div>
+              ))}
             </div>
-            <div className="text-center p-3 rounded-lg bg-orange-50">
-              <p className="text-2xl font-bold text-orange-600">{d.issues?.high || 0}</p>
-              <p className="text-xs text-orange-600 font-medium">High</p>
-            </div>
-            <div className="text-center p-3 rounded-lg bg-yellow-50">
-              <p className="text-2xl font-bold text-yellow-600">{d.issues?.medium || 0}</p>
-              <p className="text-xs text-yellow-600 font-medium">Medium</p>
-            </div>
-            <div className="text-center p-3 rounded-lg bg-blue-50">
-              <p className="text-2xl font-bold text-blue-600">{d.issues?.low || 0}</p>
-              <p className="text-xs text-blue-600 font-medium">Low</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Recent Scans */}
       {d.recentScans?.length > 0 && (
@@ -268,6 +394,561 @@ function OverviewTab() {
                 </div>
               ))}
             </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+// =============================================
+// SITE HEALTH TAB (merges On-Page + Technical + Schema + Core Web Vitals)
+// =============================================
+
+function SiteHealthTab() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [urlInput, setUrlInput] = useState('');
+  const [activeSection, setActiveSection] = useState<'issues' | 'pages' | 'vitals' | 'schema' | 'internal-links'>('issues');
+
+  const { data: issuesData, isLoading: issuesLoading } = useQuery({
+    queryKey: ['/api/seo/technical-issues'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/technical-issues'); return res.json(); },
+  });
+
+  const { data: pagesData, isLoading: pagesLoading } = useQuery({
+    queryKey: ['/api/seo/pages'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/pages'); return res.json(); },
+  });
+
+  const { data: profileData } = useQuery({
+    queryKey: ['/api/seo/profiles'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/profiles'); return res.json(); },
+  });
+
+  const scanMutation = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/scan', { scanType: 'full' });
+      return res.json();
+    },
+    onSuccess: () => {
+      toast({ title: "Scan Started" });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['/api/seo/technical-issues'] });
+        queryClient.invalidateQueries({ queryKey: ['/api/seo/pages'] });
+      }, 5000);
+    },
+  });
+
+  const analyzePage = useMutation({
+    mutationFn: async (url: string) => {
+      const res = await apiRequest('POST', '/api/seo/pages/analyze', { url });
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/seo/pages'] });
+      setUrlInput('');
+      toast({ title: "Page Analyzed" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to analyze page", variant: "destructive" });
+    },
+  });
+
+  const checkVitals = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/core-web-vitals', {});
+      return res.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/seo/pages'] });
+      toast({ title: "Core Web Vitals Checked", description: data.vitals ? "Results are in." : "Check your PageSpeed Insights configuration." });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to check Core Web Vitals", variant: "destructive" });
+    },
+  });
+
+  const updateIssue = useMutation({
+    mutationFn: async ({ id, status }: { id: number; status: string }) => {
+      const res = await apiRequest('PATCH', `/api/seo/technical-issues/${id}`, { status });
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/seo/technical-issues'] });
+    },
+  });
+
+  if (issuesLoading || pagesLoading) return <LoadingState />;
+
+  const issues = issuesData?.issues || [];
+  const openIssues = issues.filter((i: any) => i.status === 'open');
+  const resolvedIssues = issues.filter((i: any) => i.status !== 'open');
+  const pages = pagesData?.pages || [];
+
+  // Group open issues by priority layer
+  const criticalIssues = openIssues.filter((i: any) => i.severity === 'critical');
+  const importantIssues = openIssues.filter((i: any) => i.severity === 'high');
+  const relevantIssues = openIssues.filter((i: any) => i.severity === 'medium');
+  const optionalIssues = openIssues.filter((i: any) => i.severity === 'low');
+
+  const sections = [
+    { id: 'issues' as const, label: 'All Issues', count: openIssues.length },
+    { id: 'pages' as const, label: 'Page Analysis', count: pages.length },
+    { id: 'vitals' as const, label: 'Core Web Vitals', count: null },
+    { id: 'schema' as const, label: 'Schema Markup', count: null },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Header + Actions */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h3 className="text-lg font-bold" style={{ color: OPTIMIZE_COLOR }}>Site Health</h3>
+          <p className="text-sm text-gray-500">Technical issues, page analysis, Core Web Vitals, and schema markup — all in one place.</p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => scanMutation.mutate()}
+            disabled={scanMutation.isPending}
+            style={{ backgroundColor: OPTIMIZE_COLOR }}
+            className="text-white"
+          >
+            {scanMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+            Run Full Scan
+          </Button>
+        </div>
+      </div>
+
+      {/* Priority Summary Bar */}
+      <div className="grid grid-cols-4 gap-3">
+        <div className="text-center p-3 rounded-lg bg-red-50 border border-red-200">
+          <p className="text-2xl font-bold text-red-600">{criticalIssues.length}</p>
+          <p className="text-xs text-red-600 font-medium">Critical</p>
+        </div>
+        <div className="text-center p-3 rounded-lg bg-orange-50 border border-orange-200">
+          <p className="text-2xl font-bold text-orange-600">{importantIssues.length}</p>
+          <p className="text-xs text-orange-600 font-medium">Important</p>
+        </div>
+        <div className="text-center p-3 rounded-lg bg-blue-50 border border-blue-200">
+          <p className="text-2xl font-bold text-blue-600">{relevantIssues.length}</p>
+          <p className="text-xs text-blue-600 font-medium">Relevant</p>
+        </div>
+        <div className="text-center p-3 rounded-lg bg-gray-50 border border-gray-200">
+          <p className="text-2xl font-bold text-gray-600">{optionalIssues.length}</p>
+          <p className="text-xs text-gray-600 font-medium">Optional</p>
+        </div>
+      </div>
+
+      {/* Section Tabs */}
+      <div className="flex gap-2 border-b border-gray-200 pb-2">
+        {sections.map((sec) => (
+          <button
+            key={sec.id}
+            onClick={() => setActiveSection(sec.id)}
+            className={`px-4 py-2 rounded-t-lg text-sm font-medium transition-colors ${
+              activeSection === sec.id
+                ? 'text-white'
+                : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+            }`}
+            style={activeSection === sec.id ? { backgroundColor: OPTIMIZE_COLOR } : {}}
+          >
+            {sec.label}
+            {sec.count !== null && (
+              <span className="ml-1.5 text-xs opacity-75">({sec.count})</span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Issues Section */}
+      {activeSection === 'issues' && (
+        <div className="space-y-4">
+          {openIssues.length === 0 && resolvedIssues.length === 0 ? (
+            <EmptyState message="No technical issues found. Run a scan to check for issues." />
+          ) : (
+            <>
+              {/* Issues grouped by priority layer */}
+              {([
+                { level: 'critical' as PriorityLevel, items: criticalIssues },
+                { level: 'important' as PriorityLevel, items: importantIssues },
+                { level: 'relevant' as PriorityLevel, items: relevantIssues },
+                { level: 'optional' as PriorityLevel, items: optionalIssues },
+              ] as const).map(({ level, items }) => {
+                if (items.length === 0) return null;
+                const config = PRIORITY_CONFIG[level];
+                return (
+                  <div key={level} className="space-y-2">
+                    <div className="flex items-center gap-2 pt-2">
+                      <PriorityBadge level={level} />
+                      <span className="text-sm text-gray-500">{config.description}</span>
+                    </div>
+                    {items.map((issue: any) => (
+                      <Card key={issue.id} className="border-l-4" style={{ borderLeftColor: config.color }}>
+                        <CardContent className="py-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <PriorityBadge level={level} />
+                                <span className="text-xs text-gray-400">{issue.type}</span>
+                              </div>
+                              <p className="font-medium text-sm mb-1">{issue.description}</p>
+                              {issue.url && (
+                                <a href={issue.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 mb-2 block hover:underline">
+                                  {issue.url} <ExternalLink className="w-3 h-3 inline" />
+                                </a>
+                              )}
+                              {issue.howToFix && (
+                                <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded mt-2">
+                                  <strong className="text-gray-700">How to fix:</strong> {issue.howToFix}
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex gap-1 ml-4">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="text-green-600"
+                                onClick={() => updateIssue.mutate({ id: issue.id, status: 'resolved' })}
+                                title="Mark as resolved"
+                              >
+                                <CheckCircle2 className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="text-gray-400"
+                                onClick={() => updateIssue.mutate({ id: issue.id, status: 'dismissed' })}
+                                title="Dismiss"
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                );
+              })}
+
+              {resolvedIssues.length > 0 && (
+                <details className="mt-4">
+                  <summary className="text-sm text-gray-500 cursor-pointer hover:text-gray-700">
+                    {resolvedIssues.length} resolved/dismissed issues
+                  </summary>
+                  <div className="mt-2 space-y-2">
+                    {resolvedIssues.map((issue: any) => (
+                      <div key={issue.id} className="p-3 bg-gray-50 rounded-lg opacity-60">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="text-xs">{issue.status}</Badge>
+                          <span className="text-sm">{issue.description}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Pages Section */}
+      {activeSection === 'pages' && (
+        <div className="space-y-6">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex gap-3">
+                <Input
+                  placeholder="Enter a URL to analyze (e.g., https://example.com/page)..."
+                  value={urlInput}
+                  onChange={(e) => setUrlInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && urlInput.trim() && analyzePage.mutate(urlInput.trim())}
+                />
+                <Button
+                  onClick={() => urlInput.trim() && analyzePage.mutate(urlInput.trim())}
+                  disabled={analyzePage.isPending}
+                  style={{ backgroundColor: OPTIMIZE_COLOR }}
+                  className="text-white"
+                >
+                  {analyzePage.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+                  Analyze
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Analyzed Pages ({pages.length})</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {pages.length === 0 ? (
+                <EmptyState message="No pages analyzed yet. Enter a URL above to start." />
+              ) : (
+                <div className="space-y-3">
+                  {pages.map((page: any) => (
+                    <div key={page.id} className="p-4 bg-gray-50 rounded-lg">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate">{page.title || 'Untitled'}</p>
+                          <a href={page.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline truncate block">
+                            {page.url} <ExternalLink className="w-3 h-3 inline" />
+                          </a>
+                        </div>
+                        <div className="flex items-center gap-2 ml-4">
+                          <ScoreBadge score={page.score} />
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+                        <span>Words: {page.wordCount || '—'}</span>
+                        <span>H1: {page.h1 ? '✓' : '✕'}</span>
+                        <span>Meta: {page.metaDescription ? '✓' : '✕'}</span>
+                        <span>Links In: {page.internalLinksIn ?? '—'}</span>
+                        <span>Links Out: {page.internalLinksOut ?? '—'}</span>
+                        {page.lastAnalyzed && (
+                          <span>Analyzed: {new Date(page.lastAnalyzed).toLocaleDateString()}</span>
+                        )}
+                      </div>
+                      {page.suggestions && Array.isArray(page.suggestions) && page.suggestions.length > 0 && (
+                        <div className="mt-2 space-y-1">
+                          {(page.suggestions as string[]).slice(0, 3).map((s: string, i: number) => (
+                            <p key={i} className="text-xs text-amber-700 flex items-start gap-1">
+                              <AlertTriangle className="w-3 h-3 mt-0.5 flex-shrink-0" /> {s}
+                            </p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Core Web Vitals Section */}
+      {activeSection === 'vitals' && (
+        <div className="space-y-6">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${OPTIMIZE_COLOR}15` }}>
+                  <Gauge className="w-6 h-6" style={{ color: OPTIMIZE_COLOR }} />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg mb-1" style={{ color: OPTIMIZE_COLOR }}>Core Web Vitals</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    Google uses Core Web Vitals as ranking signals. These metrics measure how fast your site loads, how quickly it responds to user input, and how stable the layout is. Poor scores here directly hurt your search rankings.
+                  </p>
+                  <div className="mt-3">
+                    <PriorityBadge level="critical" />
+                    <span className="text-xs text-gray-500 ml-2">Google uses these as ranking signals</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg">Check Your Vitals</CardTitle>
+                <Button
+                  onClick={() => checkVitals.mutate()}
+                  disabled={checkVitals.isPending}
+                  style={{ backgroundColor: OPTIMIZE_COLOR }}
+                  className="text-white"
+                >
+                  {checkVitals.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Activity className="w-4 h-4 mr-2" />}
+                  {checkVitals.isPending ? 'Checking...' : 'Run Vitals Check'}
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {(() => {
+                const homePage = pages.find((p: any) => {
+                  const domain = profileData?.profile?.domain || '';
+                  return p.url === `https://${domain}` || p.url === `https://${domain}/` || p.url === domain;
+                }) || pages[0];
+                const vitals = homePage?.coreWebVitals as any;
+                if (!vitals) {
+                  return (
+                    <div className="text-center py-8">
+                      <Activity className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                      <p className="text-gray-500 mb-2">No Core Web Vitals data yet.</p>
+                      <p className="text-xs text-gray-400">Click "Run Vitals Check" to measure your site's performance using Google PageSpeed Insights.</p>
+                    </div>
+                  );
+                }
+                const metrics = [
+                  { key: 'lcp', label: 'Largest Contentful Paint (LCP)', unit: 's', good: 2.5, poor: 4, explain: 'How fast your main content loads. Under 2.5s is good.' },
+                  { key: 'fid', label: 'First Input Delay (FID)', unit: 'ms', good: 100, poor: 300, explain: 'How quickly your site responds to the first click or tap. Under 100ms is good.' },
+                  { key: 'cls', label: 'Cumulative Layout Shift (CLS)', unit: '', good: 0.1, poor: 0.25, explain: 'How much the page layout jumps around while loading. Under 0.1 is good.' },
+                  { key: 'inp', label: 'Interaction to Next Paint (INP)', unit: 'ms', good: 200, poor: 500, explain: 'How responsive your site is to all interactions. Under 200ms is good.' },
+                ];
+                return (
+                  <div className="space-y-4">
+                    {metrics.map((m) => {
+                      const data = vitals[m.key];
+                      if (!data) return null;
+                      const rating = data.rating || (data.value <= m.good ? 'good' : data.value <= m.poor ? 'needs-improvement' : 'poor');
+                      const ratingColor = rating === 'good' ? '#22c55e' : rating === 'needs-improvement' ? '#f59e0b' : '#ef4444';
+                      const ratingLabel = rating === 'good' ? 'Good' : rating === 'needs-improvement' ? 'Needs Work' : 'Poor';
+                      return (
+                        <div key={m.key} className="p-4 border rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <div>
+                              <p className="text-sm font-medium">{m.label}</p>
+                              <p className="text-xs text-gray-500">{m.explain}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-lg font-bold" style={{ color: ratingColor }}>
+                                {m.key === 'cls' ? data.value.toFixed(3) : m.unit === 's' ? data.value.toFixed(1) + 's' : Math.round(data.value) + 'ms'}
+                              </p>
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium" style={{ backgroundColor: `${ratingColor}15`, color: ratingColor }}>
+                                {ratingLabel}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className="h-2 rounded-full transition-all" style={{
+                              width: `${Math.min(100, (data.value / m.poor) * 100)}%`,
+                              backgroundColor: ratingColor,
+                            }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Schema Markup Section */}
+      {activeSection === 'schema' && <SchemaTab />}
+    </div>
+  );
+}
+
+// =============================================
+// COMPETITORS TAB
+// =============================================
+
+function CompetitorsTab() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [domainInput, setDomainInput] = useState('');
+
+  const { data: profileData } = useQuery({
+    queryKey: ['/api/seo/profiles'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/profiles'); return res.json(); },
+  });
+
+  const addCompetitor = useMutation({
+    mutationFn: async (domain: string) => {
+      const res = await apiRequest('POST', '/api/seo/competitors', { domain });
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/seo/competitors'] });
+      setDomainInput('');
+      toast({ title: "Competitor Added" });
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to add competitor", variant: "destructive" });
+    },
+  });
+
+  // Try to load competitors from profile
+  const competitors = (profileData?.profile?.competitors as string[]) || [];
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${OPTIMIZE_COLOR}15` }}>
+              <Users className="w-6 h-6" style={{ color: OPTIMIZE_COLOR }} />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-1" style={{ color: OPTIMIZE_COLOR }}>Competitor Analysis</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Track how your competitors rank for the same keywords you care about.
+                See which keywords they rank for that you don't, find backlink opportunities they have that you're missing,
+                and understand where you stand in your market.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Add Competitor</CardTitle>
+          <CardDescription>Enter a competitor's domain to start tracking their SEO performance</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-3">
+            <Input
+              placeholder="Enter competitor domain (e.g., competitor.com)..."
+              value={domainInput}
+              onChange={(e) => setDomainInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && domainInput.trim() && addCompetitor.mutate(domainInput.trim())}
+            />
+            <Button
+              onClick={() => domainInput.trim() && addCompetitor.mutate(domainInput.trim())}
+              disabled={addCompetitor.isPending}
+              style={{ backgroundColor: OPTIMIZE_COLOR }}
+              className="text-white"
+            >
+              <Plus className="w-4 h-4 mr-2" /> Add
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {competitors.length > 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Tracked Competitors ({competitors.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {competitors.map((domain: string, i: number) => (
+                <div key={i} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Globe className="w-5 h-5 text-gray-400" />
+                    <div>
+                      <p className="font-medium text-sm">{domain}</p>
+                      <p className="text-xs text-gray-400">Added from your SEO profile</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <PriorityBadge level="important" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <p className="text-sm text-blue-700">
+                <strong>Connect a data provider to unlock:</strong> keyword comparison, domain authority scores,
+                backlink analysis, content gap reports, and traffic estimates.
+              </p>
+              <p className="text-xs text-blue-500 mt-1">Set DATAFORSEO_LOGIN and DATAFORSEO_PASSWORD environment variables to enable.</p>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardContent className="py-8 text-center">
+            <Users className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+            <p className="text-gray-500">No competitors tracked yet. Add competitor domains above or in your SEO profile settings.</p>
           </CardContent>
         </Card>
       )}
@@ -1076,6 +1757,7 @@ function BacklinksTab() {
                     <th className="pb-3 text-sm font-medium text-gray-500">Source Domain</th>
                     <th className="pb-3 text-sm font-medium text-gray-500">Anchor Text</th>
                     <th className="pb-3 text-sm font-medium text-gray-500 text-center">DA</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Type</th>
                     <th className="pb-3 text-sm font-medium text-gray-500 text-center">Status</th>
                     <th className="pb-3 text-sm font-medium text-gray-500 text-center">First Seen</th>
                   </tr>
@@ -1110,9 +1792,15 @@ function BacklinksTab() {
                           ) : <span className="text-gray-400">—</span>}
                         </td>
                         <td className="py-3 text-center">
-                          <Badge variant={bl.status === 'active' ? 'default' : 'secondary'} className="text-xs">
-                            {bl.status || 'active'}
-                          </Badge>
+                          <span className="text-xs text-gray-500">{bl.linkType || 'dofollow'}</span>
+                        </td>
+                        <td className="py-3 text-center">
+                          <div className="flex items-center justify-center gap-1">
+                            <Badge variant={bl.status === 'active' ? 'default' : 'secondary'} className="text-xs">
+                              {bl.isLost ? 'lost' : bl.isNew ? 'new' : bl.status || 'active'}
+                            </Badge>
+                            {bl.isSpam && <Badge variant="destructive" className="text-xs">spam</Badge>}
+                          </div>
                         </td>
                         <td className="py-3 text-center text-xs text-gray-400">
                           {bl.firstSeen ? new Date(bl.firstSeen).toLocaleDateString() : '—'}
@@ -1135,6 +1823,11 @@ function BacklinksTab() {
 // =============================================
 
 function LocalSeoTab() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [rankKeyword, setRankKeyword] = useState('');
+  const [rankLocation, setRankLocation] = useState('');
+
   const { data: profileData, isLoading: profileLoading } = useQuery({
     queryKey: ['/api/seo/profiles'],
     queryFn: async () => { const res = await apiRequest('GET', '/api/seo/profiles'); return res.json(); },
@@ -1150,11 +1843,37 @@ function LocalSeoTab() {
     queryFn: async () => { const res = await apiRequest('GET', '/api/seo/keywords'); return res.json(); },
   });
 
+  const { data: localRankData } = useQuery({
+    queryKey: ['/api/seo/local-rankings'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/local-rankings'); return res.json(); },
+  });
+
+  const checkLocalRank = useMutation({
+    mutationFn: async ({ keyword, location }: { keyword: string; location: string }) => {
+      const res = await apiRequest('POST', '/api/seo/local-rankings/check', { keyword, location });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/seo/local-rankings'] });
+      if (data.ranking) {
+        toast({ title: "Rank Checked", description: `Position tracked for "${data.ranking.keyword}" in ${data.ranking.location}` });
+      } else {
+        toast({ title: "Rank Check", description: data.message || "Check completed." });
+      }
+      setRankKeyword('');
+      setRankLocation('');
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to check local ranking", variant: "destructive" });
+    },
+  });
+
   if (profileLoading) return <LoadingState />;
 
   const profile = profileData?.profile;
   const dashboard = dashData?.data;
   const keywords = keywordsData?.keywords || [];
+  const localRankings = localRankData?.rankings || [];
   const localEnabled = profile?.localEnabled || false;
   const location = profile?.location || '';
   const businessName = profile?.businessName || '';
@@ -1338,6 +2057,98 @@ function LocalSeoTab() {
                   <span className="text-sm font-medium">{kw}</span>
                 </div>
               ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Local Rank Tracking */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <MapPin className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                Local Rank Tracking
+              </CardTitle>
+              <CardDescription>Track your position in Google's local map pack for target keywords in specific locations</CardDescription>
+            </div>
+            <PriorityBadge level="critical" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col sm:flex-row gap-3 mb-4">
+            <Input
+              placeholder="Keyword (e.g., plumber)"
+              value={rankKeyword}
+              onChange={(e) => setRankKeyword(e.target.value)}
+              className="flex-1"
+            />
+            <Input
+              placeholder={location || "Location (e.g., Hartford, CT)"}
+              value={rankLocation}
+              onChange={(e) => setRankLocation(e.target.value)}
+              className="flex-1"
+            />
+            <Button
+              onClick={() => {
+                const kw = rankKeyword.trim();
+                const loc = rankLocation.trim() || location;
+                if (kw && loc) checkLocalRank.mutate({ keyword: kw, location: loc });
+              }}
+              disabled={checkLocalRank.isPending || !rankKeyword.trim()}
+              style={{ backgroundColor: OPTIMIZE_COLOR }}
+              className="text-white"
+            >
+              {checkLocalRank.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Search className="w-4 h-4 mr-2" />}
+              Check Rank
+            </Button>
+          </div>
+
+          {localRankings.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b text-left">
+                    <th className="pb-3 text-sm font-medium text-gray-500">Keyword</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500">Location</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Map Pack</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Organic</th>
+                    <th className="pb-3 text-sm font-medium text-gray-500 text-center">Checked</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {localRankings.map((r: any) => (
+                    <tr key={r.id} className="border-b last:border-0">
+                      <td className="py-3 font-medium text-sm">{r.keyword}</td>
+                      <td className="py-3 text-sm text-gray-600">{r.location}</td>
+                      <td className="py-3 text-center">
+                        {r.mapPackPosition ? (
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-bold ${
+                            r.mapPackPosition <= 3 ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                          }`}>#{r.mapPackPosition}</span>
+                        ) : <span className="text-xs text-gray-400">Not in pack</span>}
+                      </td>
+                      <td className="py-3 text-center">
+                        {r.organicPosition ? (
+                          <span className={`font-bold text-sm ${
+                            r.organicPosition <= 10 ? 'text-green-600' : r.organicPosition <= 30 ? 'text-yellow-600' : 'text-gray-500'
+                          }`}>#{r.organicPosition}</span>
+                        ) : <span className="text-xs text-gray-400">Not found</span>}
+                      </td>
+                      <td className="py-3 text-center text-xs text-gray-400">
+                        {r.checkedAt ? new Date(r.checkedAt).toLocaleDateString() : '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-6">
+              <MapPin className="w-10 h-10 mx-auto mb-3 text-gray-300" />
+              <p className="text-sm text-gray-500">No local rankings tracked yet. Enter a keyword and location above to start.</p>
+              <p className="text-xs text-gray-400 mt-1">For the local map pack, this is the most important ranking to monitor.</p>
             </div>
           )}
         </CardContent>

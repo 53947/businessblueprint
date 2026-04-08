@@ -158,6 +158,7 @@ __export(schema_exports, {
   insertSeoContentBriefSchema: () => insertSeoContentBriefSchema,
   insertSeoKeywordRankingSchema: () => insertSeoKeywordRankingSchema,
   insertSeoKeywordSchema: () => insertSeoKeywordSchema,
+  insertSeoLocalRankingSchema: () => insertSeoLocalRankingSchema,
   insertSeoPageSchema: () => insertSeoPageSchema,
   insertSeoProfileSchema: () => insertSeoProfileSchema,
   insertSeoReportSchema: () => insertSeoReportSchema,
@@ -203,6 +204,7 @@ __export(schema_exports, {
   seoContentBriefs: () => seoContentBriefs,
   seoKeywordRankings: () => seoKeywordRankings,
   seoKeywords: () => seoKeywords,
+  seoLocalRankings: () => seoLocalRankings,
   seoPages: () => seoPages,
   seoProfiles: () => seoProfiles,
   seoReports: () => seoReports,
@@ -247,7 +249,7 @@ import {
 import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-var sessions, users, assessments, recommendations, scansBlueResults, scansBluePurchases, insertScansBluePurchaseSchema, clients, magicLinkTokens, inboxMessages, campaigns, emailChangeHistory, dashboardAccess, clientAssessments, accountStatusHistory, insertAssessmentSchema, insertRecommendationSchema, insertClientSchema, insertAccountStatusHistorySchema, insertMagicLinkTokenSchema, insertEmailChangeHistorySchema, insertInboxMessageSchema, insertCampaignSchema, subscriptionPlans, subscriptionAddons, subscriptions, subscriptionAddonSelections, products, assessmentProductRecommendations, billingHistory, insertSubscriptionPlanSchema, insertSubscriptionAddonSchema, insertSubscriptionSchema, insertBillingHistorySchema, insertProductSchema, insertAssessmentProductRecommendationSchema, sendContacts, sendLists, sendListContacts, sendTemplates, sendCampaigns, sendCampaignSends, sendAutomations, sendConsentRecords, sendSuppressionList, sendBounceLog, sendPreferenceCenter, sendUnsubscribeRecords, insertSendContactSchema, insertSendListSchema, insertSendTemplateSchema, insertSendCampaignSchema, insertSendAutomationSchema, domains, dnsRecords, domainTransfers, nameserverHistory, impersonationSessions, impersonationAuditLog, insertDomainSchema, insertDnsRecordSchema, insertDomainTransferSchema, insertImpersonationSessionSchema, insertImpersonationAuditSchema, inboxChannelConnections, inboxConversations, inboxMessages2, inboxAttachments, inboxQuickReplies, inboxParticipants, livechatSessions, brandAssets, insertChannelConnectionSchema, insertConversationSchema, insertInboxMessage2Schema, insertQuickReplySchema, insertLivechatSessionSchema, insertBrandAssetSchema, socialMediaAccounts, contentMedia, contentPosts, contentAnalytics, contentTemplates, insertSocialMediaAccountSchema, insertContentMediaSchema, insertContentPostSchema, insertContentTemplateSchema, aiCoachConversations, aiCoachMessages, tasks, insertTaskSchema, brandColors, insertBrandColorSchema, crmCompanies, crmContacts, crmPipelines, crmPipelineStages, crmDeals, crmTasks, crmNotes, crmTimeline, crmSegments, crmSegmentMembers, crmCustomFieldDefs, crmAppointments, crmTags, crmSubscriptions, crmLeadForms, insertCrmCompanySchema, insertCrmContactSchema, insertCrmPipelineSchema, insertCrmPipelineStageSchema, insertCrmDealSchema, insertCrmTaskSchema, insertCrmNoteSchema, insertCrmTimelineSchema, insertCrmSegmentSchema, insertCrmAppointmentSchema, insertCrmTagSchema, insertCrmCustomFieldDefSchema, insertCrmSubscriptionSchema, insertCrmLeadFormSchema, crmAutomations, crmAutomationSteps, crmAutomationExecutions, insertCrmAutomationSchema, insertCrmAutomationStepSchema, setupTasks, insertSetupTaskSchema, setupNotes, insertSetupNoteSchema, setupTaskEvents, apiKeys, insertApiKeySchema, webhookSubscriptions, insertWebhookSubscriptionSchema, supportTickets, ticketComments, prescriptions, adminActivityLog, emailLogs, emailTemplates, aiSettings, insertSupportTicketSchema, insertTicketCommentSchema, insertPrescriptionSchema, insertAdminActivityLogSchema, updateSupportTicketSchema, updatePrescriptionSchema, insertEmailLogSchema, insertEmailTemplateSchema, updateEmailTemplateSchema, businessListings, listingSyncLogs, listingMetricsSnapshots, insertBusinessListingSchema, updateBusinessListingSchema, insertListingSyncLogSchema, businessReviews, canonicalBusinessProfiles, distributionTargets, distributionSubmissions, distributionLogs, insertCanonicalProfileSchema, updateCanonicalProfileSchema, setPinSchema, verifyPinSchema, chatWidgetSettings, chatAgents, chatAnalyticsEvents, insertChatWidgetSettingsSchema, updateChatWidgetSettingsSchema, insertChatAgentSchema, insertChatAnalyticsEventSchema, seoProfiles, seoScans, seoKeywords, seoKeywordRankings, seoPages, seoTechnicalIssues, seoBacklinks, seoContentBriefs, seoActionItems, seoReports, seoCompetitors, seoCompetitorData, insertSeoProfileSchema, insertSeoScanSchema, insertSeoKeywordSchema, insertSeoKeywordRankingSchema, insertSeoPageSchema, insertSeoTechnicalIssueSchema, insertSeoBacklinkSchema, insertSeoContentBriefSchema, insertSeoActionItemSchema, insertSeoReportSchema, insertSeoCompetitorSchema, insertSeoCompetitorDataSchema, adAccountConnections, amplifyCampaigns, amplifyAdSets, amplifyAds, amplifyAudiences, amplifyBudgetAllocations, amplifySpendAlerts, redditAdComments, insertAdAccountConnectionSchema, insertAmplifyCampaignSchema, insertAmplifyAdSetSchema, insertAmplifyAdSchema, insertAmplifyAudienceSchema, insertAmplifyBudgetAllocationSchema, insertAmplifySpendAlertSchema, insertRedditAdCommentSchema;
+var sessions, users, assessments, recommendations, scansBlueResults, scansBluePurchases, insertScansBluePurchaseSchema, clients, magicLinkTokens, inboxMessages, campaigns, emailChangeHistory, dashboardAccess, clientAssessments, accountStatusHistory, insertAssessmentSchema, insertRecommendationSchema, insertClientSchema, insertAccountStatusHistorySchema, insertMagicLinkTokenSchema, insertEmailChangeHistorySchema, insertInboxMessageSchema, insertCampaignSchema, subscriptionPlans, subscriptionAddons, subscriptions, subscriptionAddonSelections, products, assessmentProductRecommendations, billingHistory, insertSubscriptionPlanSchema, insertSubscriptionAddonSchema, insertSubscriptionSchema, insertBillingHistorySchema, insertProductSchema, insertAssessmentProductRecommendationSchema, sendContacts, sendLists, sendListContacts, sendTemplates, sendCampaigns, sendCampaignSends, sendAutomations, sendConsentRecords, sendSuppressionList, sendBounceLog, sendPreferenceCenter, sendUnsubscribeRecords, insertSendContactSchema, insertSendListSchema, insertSendTemplateSchema, insertSendCampaignSchema, insertSendAutomationSchema, domains, dnsRecords, domainTransfers, nameserverHistory, impersonationSessions, impersonationAuditLog, insertDomainSchema, insertDnsRecordSchema, insertDomainTransferSchema, insertImpersonationSessionSchema, insertImpersonationAuditSchema, inboxChannelConnections, inboxConversations, inboxMessages2, inboxAttachments, inboxQuickReplies, inboxParticipants, livechatSessions, brandAssets, insertChannelConnectionSchema, insertConversationSchema, insertInboxMessage2Schema, insertQuickReplySchema, insertLivechatSessionSchema, insertBrandAssetSchema, socialMediaAccounts, contentMedia, contentPosts, contentAnalytics, contentTemplates, insertSocialMediaAccountSchema, insertContentMediaSchema, insertContentPostSchema, insertContentTemplateSchema, aiCoachConversations, aiCoachMessages, tasks, insertTaskSchema, brandColors, insertBrandColorSchema, crmCompanies, crmContacts, crmPipelines, crmPipelineStages, crmDeals, crmTasks, crmNotes, crmTimeline, crmSegments, crmSegmentMembers, crmCustomFieldDefs, crmAppointments, crmTags, crmSubscriptions, crmLeadForms, insertCrmCompanySchema, insertCrmContactSchema, insertCrmPipelineSchema, insertCrmPipelineStageSchema, insertCrmDealSchema, insertCrmTaskSchema, insertCrmNoteSchema, insertCrmTimelineSchema, insertCrmSegmentSchema, insertCrmAppointmentSchema, insertCrmTagSchema, insertCrmCustomFieldDefSchema, insertCrmSubscriptionSchema, insertCrmLeadFormSchema, crmAutomations, crmAutomationSteps, crmAutomationExecutions, insertCrmAutomationSchema, insertCrmAutomationStepSchema, setupTasks, insertSetupTaskSchema, setupNotes, insertSetupNoteSchema, setupTaskEvents, apiKeys, insertApiKeySchema, webhookSubscriptions, insertWebhookSubscriptionSchema, supportTickets, ticketComments, prescriptions, adminActivityLog, emailLogs, emailTemplates, aiSettings, insertSupportTicketSchema, insertTicketCommentSchema, insertPrescriptionSchema, insertAdminActivityLogSchema, updateSupportTicketSchema, updatePrescriptionSchema, insertEmailLogSchema, insertEmailTemplateSchema, updateEmailTemplateSchema, businessListings, listingSyncLogs, listingMetricsSnapshots, insertBusinessListingSchema, updateBusinessListingSchema, insertListingSyncLogSchema, businessReviews, canonicalBusinessProfiles, distributionTargets, distributionSubmissions, distributionLogs, insertCanonicalProfileSchema, updateCanonicalProfileSchema, setPinSchema, verifyPinSchema, chatWidgetSettings, chatAgents, chatAnalyticsEvents, insertChatWidgetSettingsSchema, updateChatWidgetSettingsSchema, insertChatAgentSchema, insertChatAnalyticsEventSchema, seoProfiles, seoScans, seoKeywords, seoKeywordRankings, seoPages, seoTechnicalIssues, seoBacklinks, seoContentBriefs, seoActionItems, seoReports, seoCompetitors, seoCompetitorData, seoLocalRankings, insertSeoProfileSchema, insertSeoScanSchema, insertSeoKeywordSchema, insertSeoKeywordRankingSchema, insertSeoPageSchema, insertSeoTechnicalIssueSchema, insertSeoBacklinkSchema, insertSeoContentBriefSchema, insertSeoActionItemSchema, insertSeoReportSchema, insertSeoCompetitorSchema, insertSeoCompetitorDataSchema, insertSeoLocalRankingSchema, adAccountConnections, amplifyCampaigns, amplifyAdSets, amplifyAds, amplifyAudiences, amplifyBudgetAllocations, amplifySpendAlerts, redditAdComments, insertAdAccountConnectionSchema, insertAmplifyCampaignSchema, insertAmplifyAdSetSchema, insertAmplifyAdSchema, insertAmplifyAudienceSchema, insertAmplifyBudgetAllocationSchema, insertAmplifySpendAlertSchema, insertRedditAdCommentSchema;
 var init_schema = __esm({
   "shared/schema.ts"() {
     "use strict";
@@ -3435,7 +3437,13 @@ var init_schema = __esm({
       issues: jsonb("issues"),
       suggestions: jsonb("suggestions"),
       lastAnalyzed: timestamp("last_analyzed"),
-      createdAt: timestamp("created_at").defaultNow()
+      createdAt: timestamp("created_at").defaultNow(),
+      coreWebVitals: jsonb("core_web_vitals"),
+      // { lcp, fid, cls, inp }
+      schemaMarkup: jsonb("schema_markup"),
+      // detected structured data
+      internalLinksIn: integer("internal_links_in").default(0),
+      internalLinksOut: integer("internal_links_out").default(0)
     }, (table) => [
       index("idx_seo_page_profile").on(table.profileId)
     ]);
@@ -3466,7 +3474,13 @@ var init_schema = __esm({
       domainAuthority: integer("domain_authority"),
       status: varchar("status", { length: 20 }).default("active"),
       firstSeen: timestamp("first_seen").defaultNow(),
-      lastSeen: timestamp("last_seen")
+      lastSeen: timestamp("last_seen"),
+      isSpam: boolean("is_spam").default(false),
+      spamScore: integer("spam_score"),
+      linkType: varchar("link_type", { length: 20 }),
+      // dofollow, nofollow, ugc, sponsored
+      isNew: boolean("is_new").default(true),
+      isLost: boolean("is_lost").default(false)
     }, (table) => [
       index("idx_seo_backlink_profile").on(table.profileId)
     ]);
@@ -3520,6 +3534,11 @@ var init_schema = __esm({
       profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
       domain: varchar("domain", { length: 500 }).notNull(),
       name: varchar("name", { length: 255 }),
+      domainAuthority: integer("domain_authority"),
+      estimatedTraffic: integer("estimated_traffic"),
+      totalBacklinks: integer("total_backlinks"),
+      totalKeywords: integer("total_keywords"),
+      lastChecked: timestamp("last_checked"),
       createdAt: timestamp("created_at").defaultNow()
     }, (table) => [
       index("idx_seo_competitor_profile").on(table.profileId)
@@ -3533,6 +3552,21 @@ var init_schema = __esm({
     }, (table) => [
       index("idx_seo_comp_data_competitor").on(table.competitorId)
     ]);
+    seoLocalRankings = pgTable("seo_local_rankings", {
+      id: serial("id").primaryKey(),
+      profileId: integer("profile_id").references(() => seoProfiles.id).notNull(),
+      keywordId: integer("keyword_id").references(() => seoKeywords.id),
+      keyword: varchar("keyword", { length: 500 }).notNull(),
+      location: varchar("location", { length: 255 }).notNull(),
+      mapPackPosition: integer("map_pack_position"),
+      // 1-3, null = not in pack
+      organicPosition: integer("organic_position"),
+      // 1-100, null = not found
+      checkedAt: timestamp("checked_at").defaultNow()
+    }, (table) => [
+      index("idx_seo_local_rank_profile").on(table.profileId),
+      index("idx_seo_local_rank_keyword").on(table.keywordId)
+    ]);
     insertSeoProfileSchema = createInsertSchema(seoProfiles);
     insertSeoScanSchema = createInsertSchema(seoScans);
     insertSeoKeywordSchema = createInsertSchema(seoKeywords);
@@ -3545,6 +3579,7 @@ var init_schema = __esm({
     insertSeoReportSchema = createInsertSchema(seoReports);
     insertSeoCompetitorSchema = createInsertSchema(seoCompetitors);
     insertSeoCompetitorDataSchema = createInsertSchema(seoCompetitorData);
+    insertSeoLocalRankingSchema = createInsertSchema(seoLocalRankings);
     adAccountConnections = pgTable("ad_account_connections", {
       id: serial("id").primaryKey(),
       clientId: integer("client_id").references(() => clients.id),
@@ -19674,7 +19709,7 @@ async function analyzePage(url) {
       throw new Error(`HTTP ${response.status}`);
     }
     const html = await response.text();
-    return parseHtml(url, html);
+    return await parseHtml(url, html);
   } catch (error) {
     console.error(`[SEO Crawler] Failed to analyze ${url}:`, error.message);
     return {
@@ -19684,15 +19719,16 @@ async function analyzePage(url) {
       h1: null,
       h2s: [],
       wordCount: 0,
-      images: { total: 0, withoutAlt: 0 },
-      links: { internal: 0, external: 0, broken: 0 },
+      images: { total: 0, withoutAlt: 0, largeImages: [] },
+      links: { internal: 0, external: 0, broken: 0, brokenUrls: [] },
+      headings: [],
       hasSchemaMarkup: false,
       hasMobileViewport: false,
       hasCanonical: false
     };
   }
 }
-function parseHtml(url, html) {
+async function parseHtml(url, html) {
   const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
   const title = titleMatch ? titleMatch[1].trim() : null;
   const metaDescMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([\s\S]*?)["'][^>]*\/?>/i) || html.match(/<meta[^>]*content=["']([\s\S]*?)["'][^>]*name=["']description["'][^>]*\/?>/i);
@@ -19701,25 +19737,91 @@ function parseHtml(url, html) {
   const h1 = h1Match ? h1Match[1].replace(/<[^>]*>/g, "").trim() : null;
   const h2Matches = html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/gi) || [];
   const h2s = h2Matches.map((m) => m.replace(/<[^>]*>/g, "").trim()).slice(0, 20);
+  const headings = [];
+  const headingRegex = /<(h[1-6])[^>]*>([\s\S]*?)<\/\1>/gi;
+  let headingMatch;
+  while ((headingMatch = headingRegex.exec(html)) !== null) {
+    const level = parseInt(headingMatch[1].charAt(1));
+    const text2 = headingMatch[2].replace(/<[^>]*>/g, "").trim();
+    if (text2) headings.push({ level, text: text2 });
+  }
   const bodyMatch = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
   const bodyText = bodyMatch ? bodyMatch[1].replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "").replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "";
   const wordCount = bodyText ? bodyText.split(/\s+/).length : 0;
   const imgMatches = html.match(/<img[^>]*>/gi) || [];
   const imagesWithoutAlt = imgMatches.filter((img) => !img.match(/alt=["'][^"']+["']/i)).length;
+  const largeImages = [];
+  for (const imgTag of imgMatches) {
+    const srcMatch = imgTag.match(/src=["']([^"']+?)["']/i);
+    if (!srcMatch) continue;
+    const src = srcMatch[1];
+    if (src.startsWith("data:")) continue;
+    try {
+      const imgUrl = new URL(src, url).href;
+      const headRes = await fetch(imgUrl, {
+        method: "HEAD",
+        signal: AbortSignal.timeout(5e3),
+        headers: { "User-Agent": "BusinessBlueprint-SEO-Bot/1.0" }
+      });
+      const contentLength = headRes.headers.get("content-length");
+      if (contentLength) {
+        const kb = Math.round(parseInt(contentLength) / 1024);
+        if (kb > 200) {
+          largeImages.push({ src: imgUrl, estimatedKb: kb });
+        }
+      }
+    } catch {
+    }
+    if (largeImages.length >= 10) break;
+  }
   const linkMatches = html.match(/<a[^>]*href=["']([^"']*?)["'][^>]*>/gi) || [];
   const parsedUrl = new URL(url);
-  let internal = 0, external = 0;
+  let internal = 0, external = 0, broken = 0;
+  const brokenUrls = [];
+  const linkUrlsToCheck = [];
   for (const link of linkMatches) {
     const hrefMatch = link.match(/href=["']([^"']*?)["']/i);
     if (hrefMatch) {
       const href = hrefMatch[1];
-      if (href.startsWith("#") || href.startsWith("javascript:") || href.startsWith("mailto:")) continue;
+      if (href.startsWith("#") || href.startsWith("javascript:") || href.startsWith("mailto:") || href.startsWith("tel:")) continue;
       try {
         const linkUrl = new URL(href, url);
-        if (linkUrl.hostname === parsedUrl.hostname) internal++;
-        else external++;
+        if (linkUrl.hostname === parsedUrl.hostname) {
+          internal++;
+        } else {
+          external++;
+        }
+        if (linkUrlsToCheck.length < 30 && !linkUrlsToCheck.includes(linkUrl.href)) {
+          linkUrlsToCheck.push(linkUrl.href);
+        }
       } catch {
         internal++;
+      }
+    }
+  }
+  const checkBrokenLink = async (checkUrl) => {
+    try {
+      const res = await fetch(checkUrl, {
+        method: "HEAD",
+        signal: AbortSignal.timeout(8e3),
+        headers: { "User-Agent": "BusinessBlueprint-SEO-Bot/1.0" },
+        redirect: "follow"
+      });
+      return res.status >= 400;
+    } catch {
+      return true;
+    }
+  };
+  for (let i = 0; i < linkUrlsToCheck.length; i += 10) {
+    const batch = linkUrlsToCheck.slice(i, i + 10);
+    const results = await Promise.all(batch.map(async (linkUrl) => ({
+      url: linkUrl,
+      isBroken: await checkBrokenLink(linkUrl)
+    })));
+    for (const result of results) {
+      if (result.isBroken) {
+        broken++;
+        brokenUrls.push(result.url);
       }
     }
   }
@@ -19733,14 +19835,78 @@ function parseHtml(url, html) {
     h1,
     h2s,
     wordCount,
-    images: { total: imgMatches.length, withoutAlt: imagesWithoutAlt },
-    links: { internal, external, broken: 0 },
+    images: { total: imgMatches.length, withoutAlt: imagesWithoutAlt, largeImages },
+    links: { internal, external, broken, brokenUrls },
+    headings,
     hasSchemaMarkup,
     hasMobileViewport,
     hasCanonical
   };
 }
-async function runTechnicalAudit(domain) {
+function getPriorityLayer(type) {
+  const layerMap = {
+    "no-ssl": "critical",
+    "missing-title": "critical",
+    "missing-meta-description": "critical",
+    "missing-h1": "critical",
+    "no-mobile-viewport": "critical",
+    "slow-performance": "critical",
+    "missing-sitemap": "important",
+    "missing-robots": "important",
+    "missing-alt-text": "important",
+    "no-schema-markup": "important",
+    "long-title": "relevant",
+    "content-length": "relevant"
+  };
+  return layerMap[type] || "optional";
+}
+function personalizedFix(type, genericFix, ctx, pageData) {
+  if (!ctx?.businessName) return genericFix;
+  const name = ctx.businessName;
+  const industry = ctx.industry || "services";
+  const location = ctx.location || "";
+  const locationSuffix = location ? ` in ${location}` : "";
+  switch (type) {
+    case "missing-title":
+      return `Add this title to your homepage: '${name} \u2014 ${industry.charAt(0).toUpperCase() + industry.slice(1)}${locationSuffix}'. Keep it under 60 characters.`;
+    case "long-title": {
+      const shortened = `${name} \u2014 ${industry.charAt(0).toUpperCase() + industry.slice(1)}${locationSuffix}`;
+      return `Shorten your title to under 60 characters. Suggested: '${shortened.substring(0, 58)}'. Currently ${pageData?.title?.length || "over 60"} characters.`;
+    }
+    case "missing-meta-description": {
+      const desc21 = `${name} provides ${industry} services${locationSuffix}. Contact us today for a free consultation.`;
+      return `Add this meta description: '${desc21.substring(0, 155)}' \u2014 keep it between 150-160 characters.`;
+    }
+    case "missing-h1":
+      return `Add this H1 to your homepage: '${name} \u2014 ${industry.charAt(0).toUpperCase() + industry.slice(1)}${locationSuffix}'. Use only one H1 per page.`;
+    case "no-ssl":
+      return `Your site ${name.toLowerCase().replace(/\s/g, "")}.com is not secure. Install a free SSL certificate via Let's Encrypt through your hosting provider. Google penalizes non-HTTPS sites in search rankings.`;
+    case "no-mobile-viewport":
+      return `Add <meta name="viewport" content="width=device-width, initial-scale=1"> to your <head> tag. Without this, mobile visitors to ${name} see a tiny desktop version of your site.`;
+    case "no-schema-markup": {
+      const schema = `Add LocalBusiness schema markup to your homepage. Include: name "${name}", type "${industry}", ${location ? `address "${location}",` : ""} and your phone number. Use JSON-LD format in your <head> tag.`;
+      return schema;
+    }
+    case "missing-alt-text": {
+      const count2 = pageData?.images?.withoutAlt || 0;
+      return `${count2} images on your site are missing alt text. Add descriptions like "alt=\\"${name} ${industry} team\\"" or "alt=\\"${name} storefront${locationSuffix}\\"". This helps Google image search find your business.`;
+    }
+    case "missing-robots":
+      return `Create a robots.txt file at the root of your site with:
+User-agent: *
+Allow: /
+Sitemap: https://${name.toLowerCase().replace(/\s/g, "")}.com/sitemap.xml
+
+This tells Google which pages to crawl on your ${name} website.`;
+    case "missing-sitemap":
+      return `Generate an XML sitemap listing every page on your ${name} website. Submit it at Google Search Console > Sitemaps. Most CMS platforms (WordPress, Wix, Squarespace) can generate this automatically.`;
+    case "slow-performance":
+      return `Your ${name} site scores poorly on mobile speed. Compress images to WebP format, enable browser caching, minimize JavaScript, and consider a CDN. Slow pages lose 53% of mobile visitors.`;
+    default:
+      return genericFix;
+  }
+}
+async function runTechnicalAudit(domain, context) {
   const issues = [];
   const baseUrl = domain.startsWith("http") ? domain : `https://${domain}`;
   let hasRobotsTxt = false;
@@ -19750,11 +19916,13 @@ async function runTechnicalAudit(domain) {
   } catch {
   }
   if (!hasRobotsTxt) {
+    const type = "missing-robots";
     issues.push({
-      type: "missing-robots",
+      type,
       severity: "medium",
+      priorityLayer: getPriorityLayer(type),
       description: "Missing or empty robots.txt file",
-      howToFix: "Create a robots.txt file in your website root that tells search engines which pages to crawl."
+      howToFix: personalizedFix(type, "Create a robots.txt file in your website root that tells search engines which pages to crawl.", context)
     });
   }
   let hasSitemap = false;
@@ -19764,11 +19932,13 @@ async function runTechnicalAudit(domain) {
   } catch {
   }
   if (!hasSitemap) {
+    const type = "missing-sitemap";
     issues.push({
-      type: "missing-sitemap",
+      type,
       severity: "high",
+      priorityLayer: getPriorityLayer(type),
       description: "Missing or invalid sitemap.xml",
-      howToFix: "Generate an XML sitemap listing all important pages and submit it to Google Search Console."
+      howToFix: personalizedFix(type, "Generate an XML sitemap listing all important pages and submit it to Google Search Console.", context)
     });
   }
   let hasSSL = false;
@@ -19778,77 +19948,94 @@ async function runTechnicalAudit(domain) {
   } catch {
   }
   if (!hasSSL) {
+    const type = "no-ssl";
     issues.push({
-      type: "no-ssl",
+      type,
       severity: "critical",
+      priorityLayer: getPriorityLayer(type),
       description: "Website is not accessible via HTTPS",
-      howToFix: "Install an SSL certificate on your web server. Many hosting providers offer free SSL via Let's Encrypt."
+      howToFix: personalizedFix(type, "Install an SSL certificate on your web server. Many hosting providers offer free SSL via Let's Encrypt.", context)
     });
   }
   let hasMobileViewport = false;
+  let pageData;
   try {
-    const pageData = await analyzePage(baseUrl);
+    pageData = await analyzePage(baseUrl);
     hasMobileViewport = pageData.hasMobileViewport;
     if (!pageData.title) {
+      const type = "missing-title";
       issues.push({
-        type: "missing-title",
+        type,
         severity: "critical",
+        priorityLayer: getPriorityLayer(type),
         url: baseUrl,
         description: "Homepage is missing a title tag",
-        howToFix: "Add a descriptive <title> tag in the <head> section of your homepage."
+        howToFix: personalizedFix(type, "Add a descriptive <title> tag in the <head> section of your homepage.", context, pageData)
       });
     } else if (pageData.title.length > 60) {
+      const type = "long-title";
       issues.push({
-        type: "long-title",
+        type,
         severity: "low",
+        priorityLayer: getPriorityLayer(type),
         url: baseUrl,
         description: `Title tag is too long (${pageData.title.length} chars, recommended: 50-60)`,
-        howToFix: "Shorten your title tag to under 60 characters for optimal search display."
+        howToFix: personalizedFix(type, "Shorten your title tag to under 60 characters for optimal search display.", context, pageData)
       });
     }
     if (!pageData.metaDescription) {
+      const type = "missing-meta-description";
       issues.push({
-        type: "missing-meta-description",
+        type,
         severity: "high",
+        priorityLayer: getPriorityLayer(type),
         url: baseUrl,
         description: "Homepage is missing a meta description",
-        howToFix: 'Add a compelling <meta name="description"> tag (150-160 chars) to your homepage.'
+        howToFix: personalizedFix(type, 'Add a compelling <meta name="description"> tag (150-160 chars) to your homepage.', context, pageData)
       });
     }
     if (!pageData.h1) {
+      const type = "missing-h1";
       issues.push({
-        type: "missing-h1",
+        type,
         severity: "high",
+        priorityLayer: getPriorityLayer(type),
         url: baseUrl,
         description: "Homepage is missing an H1 heading",
-        howToFix: "Add a single, descriptive H1 heading to your homepage that includes your primary keyword."
+        howToFix: personalizedFix(type, "Add a single, descriptive H1 heading to your homepage that includes your primary keyword.", context, pageData)
       });
     }
     if (!pageData.hasMobileViewport) {
+      const type = "no-mobile-viewport";
       issues.push({
-        type: "no-mobile-viewport",
+        type,
         severity: "critical",
+        priorityLayer: getPriorityLayer(type),
         url: baseUrl,
         description: "Missing mobile viewport meta tag",
-        howToFix: 'Add <meta name="viewport" content="width=device-width, initial-scale=1"> to your <head>.'
+        howToFix: personalizedFix(type, 'Add <meta name="viewport" content="width=device-width, initial-scale=1"> to your <head>.', context, pageData)
       });
     }
     if (!pageData.hasSchemaMarkup) {
+      const type = "no-schema-markup";
       issues.push({
-        type: "no-schema-markup",
+        type,
         severity: "medium",
+        priorityLayer: getPriorityLayer(type),
         url: baseUrl,
         description: "No structured data (Schema.org) found",
-        howToFix: "Add JSON-LD structured data to help search engines understand your content."
+        howToFix: personalizedFix(type, "Add JSON-LD structured data to help search engines understand your content.", context, pageData)
       });
     }
     if (pageData.images.withoutAlt > 0) {
+      const type = "missing-alt-text";
       issues.push({
-        type: "missing-alt-text",
+        type,
         severity: "medium",
+        priorityLayer: getPriorityLayer(type),
         url: baseUrl,
         description: `${pageData.images.withoutAlt} of ${pageData.images.total} images missing alt text`,
-        howToFix: "Add descriptive alt attributes to all images for accessibility and SEO."
+        howToFix: personalizedFix(type, "Add descriptive alt attributes to all images for accessibility and SEO.", context, pageData)
       });
     }
   } catch {
@@ -19856,29 +20043,53 @@ async function runTechnicalAudit(domain) {
   let performanceScore;
   let seoScore;
   let accessibilityScore;
-  const apiKey = process.env.GOOGLE_PAGESPEED_API_KEY;
-  if (apiKey) {
-    try {
-      const psiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(baseUrl)}&key=${apiKey}&category=performance&category=seo&category=accessibility&strategy=mobile`;
-      const res = await fetch(psiUrl, { signal: AbortSignal.timeout(3e4) });
-      if (res.ok) {
-        const data = await res.json();
-        performanceScore = Math.round((data.lighthouseResult?.categories?.performance?.score || 0) * 100);
-        seoScore = Math.round((data.lighthouseResult?.categories?.seo?.score || 0) * 100);
-        accessibilityScore = Math.round((data.lighthouseResult?.categories?.accessibility?.score || 0) * 100);
-        if (performanceScore < 50) {
-          issues.push({
-            type: "slow-performance",
-            severity: "high",
-            url: baseUrl,
-            description: `Poor mobile performance score: ${performanceScore}/100`,
-            howToFix: "Optimize images, minimize JavaScript/CSS, enable caching, and consider a CDN."
-          });
+  let coreWebVitals;
+  try {
+    const apiKey = process.env.GOOGLE_PAGESPEED_API_KEY;
+    const keyParam = apiKey ? `&key=${apiKey}` : "";
+    const psiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(baseUrl)}${keyParam}&category=performance&category=seo&category=accessibility&strategy=mobile`;
+    const res = await fetch(psiUrl, { signal: AbortSignal.timeout(6e4) });
+    if (res.ok) {
+      const data = await res.json();
+      const lighthouse = data.lighthouseResult;
+      performanceScore = Math.round((lighthouse?.categories?.performance?.score || 0) * 100);
+      seoScore = Math.round((lighthouse?.categories?.seo?.score || 0) * 100);
+      accessibilityScore = Math.round((lighthouse?.categories?.accessibility?.score || 0) * 100);
+      const audits = lighthouse?.audits;
+      if (audits) {
+        const lcpMs = audits["largest-contentful-paint"]?.numericValue;
+        const fidMs = audits["max-potential-fid"]?.numericValue;
+        const clsVal = audits["cumulative-layout-shift"]?.numericValue;
+        const inpMs = audits["interaction-to-next-paint"]?.numericValue;
+        const rateLcp = (ms) => ms <= 2500 ? "good" : ms <= 4e3 ? "needs-improvement" : "poor";
+        const rateFid = (ms) => ms <= 100 ? "good" : ms <= 300 ? "needs-improvement" : "poor";
+        const rateCls = (val) => val <= 0.1 ? "good" : val <= 0.25 ? "needs-improvement" : "poor";
+        const rateInp = (ms) => ms <= 200 ? "good" : ms <= 500 ? "needs-improvement" : "poor";
+        if (lcpMs !== void 0 && fidMs !== void 0 && clsVal !== void 0) {
+          coreWebVitals = {
+            lcp: { value: Math.round(lcpMs), rating: rateLcp(lcpMs) },
+            fid: { value: Math.round(fidMs), rating: rateFid(fidMs) },
+            cls: { value: parseFloat(clsVal.toFixed(3)), rating: rateCls(clsVal) }
+          };
+          if (inpMs !== void 0) {
+            coreWebVitals.inp = { value: Math.round(inpMs), rating: rateInp(inpMs) };
+          }
         }
       }
-    } catch (err) {
-      console.log("[SEO Crawler] PageSpeed API unavailable:", err.message);
+      if (performanceScore < 50) {
+        const type = "slow-performance";
+        issues.push({
+          type,
+          severity: "high",
+          priorityLayer: getPriorityLayer(type),
+          url: baseUrl,
+          description: `Poor mobile performance score: ${performanceScore}/100`,
+          howToFix: personalizedFix(type, "Optimize images, minimize JavaScript/CSS, enable caching, and consider a CDN.", context, pageData)
+        });
+      }
     }
+  } catch (err) {
+    console.log("[SEO Crawler] PageSpeed API unavailable:", err.message);
   }
   return {
     domain,
@@ -19889,7 +20100,8 @@ async function runTechnicalAudit(domain) {
     issues,
     performanceScore,
     seoScore,
-    accessibilityScore
+    accessibilityScore,
+    coreWebVitals
   };
 }
 function calculateSeoScore(metrics) {
@@ -20169,7 +20381,11 @@ function registerOptimizeRoutes(app2) {
         }).returning();
         (async () => {
           try {
-            const auditResult = await runTechnicalAudit(profileData.domain);
+            const auditResult = await runTechnicalAudit(profileData.domain, {
+              businessName: profileData.businessName || void 0,
+              industry: profileData.industry || void 0,
+              location: profileData.location || void 0
+            });
             for (const issue of auditResult.issues) {
               await db.insert(seoTechnicalIssues).values({
                 profileId: profileData.id,
@@ -20635,18 +20851,461 @@ function registerOptimizeRoutes(app2) {
       }
     }
   );
-  app2.get("/api/seo/backlinks", requireAuth, async (_req, res) => {
-    res.json({ success: true, backlinks: [], message: "Backlink monitoring coming soon" });
-  });
-  app2.get("/api/seo/local", requireAuth, async (_req, res) => {
-    res.json({ success: true, data: null, message: "Local SEO optimizer coming soon" });
-  });
-  app2.get("/api/seo/schema-markup", requireAuth, async (_req, res) => {
-    res.json({ success: true, data: null, message: "Schema markup generator coming soon" });
-  });
-  app2.get("/api/seo/reports", requireAuth, async (_req, res) => {
-    res.json({ success: true, reports: [], message: "Reporting & insights coming soon" });
-  });
+  app2.get(
+    "/api/seo/backlinks",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, backlinks: [], summary: null });
+        const profileId = profile[0].id;
+        const hasDataProvider = !!process.env.DATAFORSEO_LOGIN;
+        const backlinks = await db.select().from(seoBacklinks).where(eq32(seoBacklinks.profileId, profileId)).orderBy(desc15(seoBacklinks.firstSeen));
+        const total = backlinks.length;
+        const active = backlinks.filter((b) => b.status === "active" && !b.isLost).length;
+        const lost = backlinks.filter((b) => b.isLost).length;
+        const newLinks = backlinks.filter((b) => b.isNew).length;
+        const referringDomains = new Set(
+          backlinks.filter((b) => b.sourceUrl).map((b) => {
+            try {
+              return new URL(b.sourceUrl).hostname;
+            } catch {
+              return b.sourceUrl;
+            }
+          })
+        ).size;
+        const daValues = backlinks.filter((b) => b.domainAuthority != null).map((b) => b.domainAuthority);
+        const avgDA = daValues.length > 0 ? Math.round(daValues.reduce((a, b) => a + b, 0) / daValues.length) : null;
+        res.json({
+          success: true,
+          backlinks,
+          summary: {
+            total,
+            active,
+            lost,
+            new: newLinks,
+            referringDomains,
+            avgDomainAuthority: avgDA
+          },
+          dataProviderConnected: hasDataProvider,
+          ...!hasDataProvider && total === 0 ? { message: "Connect a data provider to automatically discover backlinks." } : {}
+        });
+      } catch (error) {
+        console.error("[Optimize] Backlinks fetch error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch backlinks" });
+      }
+    }
+  );
+  app2.get(
+    "/api/seo/local-rankings",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, rankings: [], grouped: {} });
+        const profileId = profile[0].id;
+        const rankings = await db.select().from(seoLocalRankings).where(eq32(seoLocalRankings.profileId, profileId)).orderBy(desc15(seoLocalRankings.checkedAt));
+        const grouped = {};
+        for (const r of rankings) {
+          if (!grouped[r.keyword]) grouped[r.keyword] = [];
+          grouped[r.keyword].push(r);
+        }
+        res.json({ success: true, rankings, grouped });
+      } catch (error) {
+        console.error("[Optimize] Local rankings fetch error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch local rankings" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/local-rankings/check",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const { keyword, location } = req.body;
+        if (!keyword || !location) {
+          return res.status(400).json({ success: false, message: "Both keyword and location are required" });
+        }
+        const hasDataProvider = !!process.env.DATAFORSEO_LOGIN;
+        if (!hasDataProvider) {
+          const [ranking] = await db.insert(seoLocalRankings).values({
+            profileId: profile[0].id,
+            keyword: keyword.trim(),
+            location: location.trim(),
+            mapPackPosition: null,
+            organicPosition: null
+          }).returning();
+          return res.json({
+            success: true,
+            ranking,
+            message: "Connect a SERP data provider to track local rankings automatically."
+          });
+        }
+        try {
+          const credentials = Buffer.from(`${process.env.DATAFORSEO_LOGIN}:${process.env.DATAFORSEO_PASSWORD}`).toString("base64");
+          const serpResponse = await fetch("https://api.dataforseo.com/v3/serp/google/organic/live/advanced", {
+            method: "POST",
+            headers: {
+              "Authorization": `Basic ${credentials}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify([{
+              keyword: keyword.trim(),
+              location_name: location.trim(),
+              language_name: "English",
+              device: "desktop"
+            }]),
+            signal: AbortSignal.timeout(3e4)
+          });
+          const serpData = await serpResponse.json();
+          let mapPackPosition = null;
+          let organicPosition = null;
+          if (serpData?.tasks?.[0]?.result?.[0]?.items) {
+            const items = serpData.tasks[0].result[0].items;
+            const domain = profile[0].domain.replace(/^https?:\/\//, "").replace(/\/$/, "");
+            for (const item of items) {
+              if (item.type === "local_pack" && item.items) {
+                const packIdx = item.items.findIndex((p) => p.domain?.includes(domain));
+                if (packIdx >= 0) mapPackPosition = packIdx + 1;
+              }
+              if (item.type === "organic" && item.domain?.includes(domain)) {
+                organicPosition = item.rank_absolute;
+              }
+            }
+          }
+          const [ranking] = await db.insert(seoLocalRankings).values({
+            profileId: profile[0].id,
+            keyword: keyword.trim(),
+            location: location.trim(),
+            mapPackPosition,
+            organicPosition
+          }).returning();
+          res.json({ success: true, ranking });
+        } catch (apiErr) {
+          console.error("[Optimize] DataForSEO SERP error:", apiErr);
+          const [ranking] = await db.insert(seoLocalRankings).values({
+            profileId: profile[0].id,
+            keyword: keyword.trim(),
+            location: location.trim(),
+            mapPackPosition: null,
+            organicPosition: null
+          }).returning();
+          res.json({ success: true, ranking, message: "Rank check was stored but the data provider returned an error." });
+        }
+      } catch (error) {
+        console.error("[Optimize] Local rank check error:", error);
+        res.status(500).json({ success: false, message: "Failed to check local ranking" });
+      }
+    }
+  );
+  app2.get(
+    "/api/seo/schema-markup",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const profileData = profile[0];
+        const generated = {
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: profileData.businessName || profileData.domain,
+          url: profileData.domain.startsWith("http") ? profileData.domain : `https://${profileData.domain}`
+        };
+        if (profileData.industry) {
+          const industryTypeMap = {
+            "restaurant": "Restaurant",
+            "dental": "Dentist",
+            "dentist": "Dentist",
+            "plumbing": "Plumber",
+            "plumber": "Plumber",
+            "law": "LegalService",
+            "legal": "LegalService",
+            "attorney": "Attorney",
+            "real estate": "RealEstateAgent",
+            "auto repair": "AutoRepair",
+            "salon": "BeautySalon",
+            "beauty": "BeautySalon",
+            "gym": "ExerciseGym",
+            "fitness": "ExerciseGym",
+            "medical": "MedicalBusiness",
+            "doctor": "Physician",
+            "veterinary": "VeterinaryCare",
+            "accounting": "AccountingService",
+            "insurance": "InsuranceAgency",
+            "hotel": "Hotel"
+          };
+          const lowerIndustry = profileData.industry.toLowerCase();
+          for (const [key, schemaType] of Object.entries(industryTypeMap)) {
+            if (lowerIndustry.includes(key)) {
+              generated["@type"] = schemaType;
+              break;
+            }
+          }
+        }
+        if (profileData.location) {
+          generated.address = {
+            "@type": "PostalAddress",
+            addressLocality: profileData.location
+          };
+        }
+        const existing = [];
+        const recommendations2 = [];
+        try {
+          const siteUrl = profileData.domain.startsWith("http") ? profileData.domain : `https://${profileData.domain}`;
+          const siteRes = await fetch(siteUrl, { signal: AbortSignal.timeout(15e3) });
+          const html = await siteRes.text();
+          const jsonLdRegex = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+          let match;
+          while ((match = jsonLdRegex.exec(html)) !== null) {
+            try {
+              const parsed = JSON.parse(match[1].trim());
+              existing.push(parsed);
+            } catch {
+            }
+          }
+          if (existing.length === 0) {
+            recommendations2.push("No structured data found on your site. Adding LocalBusiness schema helps search engines understand your business.");
+            recommendations2.push("Copy the generated JSON-LD below and add it to your site's <head> section.");
+          } else {
+            const types = existing.map((e) => e["@type"] || "Unknown").flat();
+            if (!types.some((t) => typeof t === "string" && t.includes("LocalBusiness") || t === generated["@type"])) {
+              recommendations2.push(`Your site has schema markup (${types.join(", ")}) but is missing LocalBusiness schema. Add it for better local search visibility.`);
+            }
+            if (!types.includes("WebSite")) {
+              recommendations2.push("Consider adding WebSite schema with a SearchAction for sitelinks search box in Google.");
+            }
+          }
+          if (!html.includes("BreadcrumbList")) {
+            recommendations2.push("Add BreadcrumbList schema to improve how your pages appear in search results.");
+          }
+        } catch {
+          recommendations2.push("Could not fetch your site to check existing schema markup. Make sure the domain is accessible.");
+        }
+        if (!profileData.location) {
+          recommendations2.push("Add your business location in the SEO profile to generate complete LocalBusiness schema.");
+        }
+        const pages = await db.select({ url: seoPages.url, schemaMarkup: seoPages.schemaMarkup }).from(seoPages).where(eq32(seoPages.profileId, profileData.id));
+        const pagesWithSchema = pages.filter((p) => p.schemaMarkup);
+        res.json({
+          success: true,
+          generated,
+          existing,
+          recommendations: recommendations2,
+          pagesWithSchema: pagesWithSchema.length,
+          totalPagesAnalyzed: pages.length
+        });
+      } catch (error) {
+        console.error("[Optimize] Schema markup error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate schema markup" });
+      }
+    }
+  );
+  app2.get(
+    "/api/seo/reports",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, reports: [] });
+        const profileId = profile[0].id;
+        const now = /* @__PURE__ */ new Date();
+        const currentPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+        const reports = await db.select().from(seoReports).where(eq32(seoReports.profileId, profileId)).orderBy(desc15(seoReports.generatedAt));
+        const hasCurrentMonth = reports.some((r) => r.period === currentPeriod);
+        if (!hasCurrentMonth) {
+          const reportData = await gatherReportData(profileId);
+          const [newReport] = await db.insert(seoReports).values({
+            profileId,
+            type: "monthly",
+            period: currentPeriod,
+            data: reportData
+          }).returning();
+          reports.unshift(newReport);
+        }
+        res.json({ success: true, reports });
+      } catch (error) {
+        console.error("[Optimize] Reports fetch error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch reports" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/reports/generate",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const profileId = profile[0].id;
+        const now = /* @__PURE__ */ new Date();
+        const currentPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+        const reportData = await gatherReportData(profileId);
+        const [report] = await db.insert(seoReports).values({
+          profileId,
+          type: "monthly",
+          period: currentPeriod,
+          data: reportData
+        }).returning();
+        res.json({ success: true, report });
+      } catch (error) {
+        console.error("[Optimize] Report generate error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate report" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/core-web-vitals",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const profileData = profile[0];
+        let targetUrl = req.body.url;
+        if (!targetUrl) {
+          targetUrl = profileData.domain.startsWith("http") ? profileData.domain : `https://${profileData.domain}`;
+        }
+        const apiKey = process.env.GOOGLE_PAGESPEED_API_KEY || "";
+        const psiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(targetUrl)}&strategy=mobile${apiKey ? `&key=${apiKey}` : ""}`;
+        const psiRes = await fetch(psiUrl, { signal: AbortSignal.timeout(6e4) });
+        if (!psiRes.ok) {
+          const errText = await psiRes.text();
+          console.error("[Optimize] PageSpeed API error:", errText);
+          return res.status(502).json({ success: false, message: "PageSpeed Insights API returned an error. The URL may be unreachable." });
+        }
+        const psiData = await psiRes.json();
+        const audits = psiData.lighthouseResult?.audits || {};
+        const fieldData = psiData.loadingExperience?.metrics || {};
+        const lcpMs = audits["largest-contentful-paint"]?.numericValue ?? null;
+        const clsScore = audits["cumulative-layout-shift"]?.numericValue ?? null;
+        const tbtMs = audits["total-blocking-time"]?.numericValue ?? null;
+        const inpMs = audits["interaction-to-next-paint"]?.numericValue ?? null;
+        const speedIndex = audits["speed-index"]?.numericValue ?? null;
+        const fieldLcp = fieldData.LARGEST_CONTENTFUL_PAINT_MS?.percentile ?? null;
+        const fieldCls = fieldData.CUMULATIVE_LAYOUT_SHIFT_SCORE?.percentile ?? null;
+        const fieldInp = fieldData.INTERACTION_TO_NEXT_PAINT?.percentile ?? null;
+        const fieldFid = fieldData.FIRST_INPUT_DELAY_MS?.percentile ?? null;
+        const vitals = {
+          lcp: {
+            lab: lcpMs ? Math.round(lcpMs) : null,
+            field: fieldLcp,
+            unit: "ms",
+            status: lcpMs ? lcpMs <= 2500 ? "good" : lcpMs <= 4e3 ? "needs-improvement" : "poor" : "unknown",
+            explanation: "Largest Contentful Paint measures how long it takes for the biggest visible element to load. Under 2.5 seconds is good \u2014 your visitors see your main content quickly."
+          },
+          cls: {
+            lab: clsScore != null ? Math.round(clsScore * 1e3) / 1e3 : null,
+            field: fieldCls != null ? fieldCls / 100 : null,
+            unit: "score",
+            status: clsScore != null ? clsScore <= 0.1 ? "good" : clsScore <= 0.25 ? "needs-improvement" : "poor" : "unknown",
+            explanation: "Cumulative Layout Shift measures how much your page jumps around while loading. Under 0.1 is good \u2014 your visitors won't accidentally click the wrong thing."
+          },
+          tbt: {
+            lab: tbtMs ? Math.round(tbtMs) : null,
+            field: null,
+            unit: "ms",
+            status: tbtMs ? tbtMs <= 200 ? "good" : tbtMs <= 600 ? "needs-improvement" : "poor" : "unknown",
+            explanation: "Total Blocking Time measures how long the page is unresponsive during load. Under 200ms is good \u2014 your visitors can interact with your site without waiting."
+          },
+          inp: {
+            lab: inpMs ? Math.round(inpMs) : null,
+            field: fieldInp,
+            unit: "ms",
+            status: fieldInp ? fieldInp <= 200 ? "good" : fieldInp <= 500 ? "needs-improvement" : "poor" : inpMs ? inpMs <= 200 ? "good" : inpMs <= 500 ? "needs-improvement" : "poor" : "unknown",
+            explanation: "Interaction to Next Paint measures how quickly your site responds when someone clicks or taps. Under 200ms is good \u2014 your site feels snappy and responsive."
+          },
+          fid: {
+            lab: null,
+            field: fieldFid,
+            unit: "ms",
+            status: fieldFid ? fieldFid <= 100 ? "good" : fieldFid <= 300 ? "needs-improvement" : "poor" : "unknown",
+            explanation: "First Input Delay measures the time from when a visitor first interacts with your page to when the browser responds. Under 100ms is good."
+          }
+        };
+        const performanceScore = psiData.lighthouseResult?.categories?.performance?.score ?? null;
+        const coreWebVitalsData = {
+          url: targetUrl,
+          measuredAt: (/* @__PURE__ */ new Date()).toISOString(),
+          performanceScore: performanceScore != null ? Math.round(performanceScore * 100) : null,
+          vitals,
+          speedIndex: speedIndex ? Math.round(speedIndex) : null,
+          hasFieldData: !!(fieldLcp || fieldCls || fieldInp || fieldFid)
+        };
+        const existingPage = await db.select().from(seoPages).where(and21(eq32(seoPages.profileId, profileData.id), eq32(seoPages.url, targetUrl))).limit(1);
+        if (existingPage.length > 0) {
+          await db.update(seoPages).set({
+            coreWebVitals: coreWebVitalsData
+          }).where(eq32(seoPages.id, existingPage[0].id));
+        } else {
+          await db.insert(seoPages).values({
+            profileId: profileData.id,
+            url: targetUrl,
+            coreWebVitals: coreWebVitalsData,
+            lastAnalyzed: /* @__PURE__ */ new Date()
+          });
+        }
+        res.json({ success: true, ...coreWebVitalsData });
+      } catch (error) {
+        console.error("[Optimize] Core Web Vitals error:", error);
+        res.status(500).json({ success: false, message: "Failed to measure Core Web Vitals" });
+      }
+    }
+  );
+}
+async function gatherReportData(profileId) {
+  const latestScan = await db.select().from(seoScans).where(and21(eq32(seoScans.profileId, profileId), eq32(seoScans.status, "completed"))).orderBy(desc15(seoScans.createdAt)).limit(1);
+  const issueCounts = await db.select({
+    severity: seoTechnicalIssues.severity,
+    count: sql13`count(*)::int`
+  }).from(seoTechnicalIssues).where(and21(eq32(seoTechnicalIssues.profileId, profileId), eq32(seoTechnicalIssues.status, "open"))).groupBy(seoTechnicalIssues.severity);
+  const issueMap = {};
+  for (const ic of issueCounts) {
+    issueMap[ic.severity || "unknown"] = ic.count;
+  }
+  const keywords = await db.select().from(seoKeywords).where(and21(eq32(seoKeywords.profileId, profileId), eq32(seoKeywords.status, "tracking")));
+  const pages = await db.select().from(seoPages).where(eq32(seoPages.profileId, profileId));
+  const avgPageScore = pages.length > 0 ? Math.round(pages.filter((p) => p.score != null).reduce((sum, p) => sum + (p.score || 0), 0) / Math.max(1, pages.filter((p) => p.score != null).length)) : null;
+  const backlinks = await db.select().from(seoBacklinks).where(eq32(seoBacklinks.profileId, profileId));
+  const pendingActions = await db.select({ count: sql13`count(*)::int` }).from(seoActionItems).where(and21(eq32(seoActionItems.profileId, profileId), eq32(seoActionItems.status, "pending")));
+  return {
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    overallScore: latestScan[0]?.overallScore ?? null,
+    performanceScore: latestScan[0]?.performanceScore ?? null,
+    seoScore: latestScan[0]?.seoScore ?? null,
+    accessibilityScore: latestScan[0]?.accessibilityScore ?? null,
+    issues: {
+      critical: issueMap.critical || 0,
+      high: issueMap.high || 0,
+      medium: issueMap.medium || 0,
+      low: issueMap.low || 0,
+      total: Object.values(issueMap).reduce((a, b) => a + b, 0)
+    },
+    keywords: {
+      tracked: keywords.length,
+      withRank: keywords.filter((k) => k.currentRank != null).length,
+      avgRank: keywords.filter((k) => k.currentRank != null).length > 0 ? Math.round(keywords.filter((k) => k.currentRank != null).reduce((sum, k) => sum + (k.currentRank || 0), 0) / keywords.filter((k) => k.currentRank != null).length) : null
+    },
+    pages: {
+      total: pages.length,
+      avgScore: avgPageScore
+    },
+    backlinks: {
+      total: backlinks.length,
+      active: backlinks.filter((b) => !b.isLost).length,
+      lost: backlinks.filter((b) => b.isLost).length
+    },
+    pendingActions: pendingActions[0]?.count || 0
+  };
 }
 function calculatePageScore(pageData) {
   let score = 100;
