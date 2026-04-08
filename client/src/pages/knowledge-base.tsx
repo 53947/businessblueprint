@@ -23,25 +23,23 @@ import {
 } from 'lucide-react';
 
 const DIGITAL_IQ_AREAS = [
-  { number: 1, title: 'Website & SEO Fundamentals', points: 20, desc: 'Is your website fast, secure, and mobile-friendly? Can people find you on Google?' },
-  { number: 2, title: 'Business Listings & Citations', points: 18, desc: 'Are you listed on Google, Yelp, and other directories? Is your information consistent everywhere?' },
-  { number: 3, title: 'Google Business Profile', points: 16, desc: 'Is your profile complete and optimized? Do you post updates and photos regularly?' },
-  { number: 4, title: 'Reputation Management', points: 16, desc: 'Do you respond to reviews? Are you actively managing your online reputation?' },
-  { number: 5, title: 'Review Quality & Quantity', points: 15, desc: 'How many reviews do you have? What\'s your average rating?' },
-  { number: 6, title: 'Customer Response & Timing', points: 15, desc: 'How quickly do you respond to inquiries? Do you have systems to capture every lead?' },
-  { number: 7, title: 'Email & SMS Marketing', points: 15, desc: 'Do you have a customer email list? Do you send regular campaigns?' },
-  { number: 8, title: 'Social Media Content', points: 13, desc: 'Are you active on social media? Do you post regularly?' },
-  { number: 9, title: 'CRM & Organization', points: 12, desc: 'Do you track customer relationships? Are you organized and systematic?' },
+  { number: 1, title: 'Email & SMS Marketing', app: '/ promote', points: '~7.78', desc: 'Do you collect emails? Send campaigns? Follow up with SMS?' },
+  { number: 2, title: 'Social Media Content', app: '/ post', points: '~7.78', desc: 'Are you active on social media? Do you post regularly and consistently?' },
+  { number: 3, title: 'Reputation Management', app: '/ elevate', points: '~7.78', desc: 'Do you respond to reviews? Are you monitoring your ratings across platforms?' },
+  { number: 4, title: 'Unified Inbox & Response', app: '/ respond', points: '~7.78', desc: 'How quickly do you respond to inquiries? Is everything in one place?' },
+  { number: 5, title: 'Live Chat', app: '/ engage', points: '~7.78', desc: 'Do you have live chat on your website? Are conversations being tracked?' },
+  { number: 6, title: 'Business Listings & GBP', app: '/ publish', points: '~7.78', desc: 'Are your listings consistent across directories? Is your Google Business Profile active?' },
+  { number: 7, title: 'Website & SEO', app: '/ optimize', points: '~7.78', desc: 'Is your website fast, secure, and mobile-friendly? Are you ranking for your keywords?' },
+  { number: 8, title: 'CRM & Customer Management', app: '/ connect', points: '~7.78', desc: 'Do you track customer relationships? Is your data organized in one system?' },
+  { number: 9, title: 'Advertising & Paid Media', app: '/ amplify', points: '~7.78', desc: 'Do you run ads? Are your campaigns tracked and optimized?' },
 ];
 
 const SCORE_RANGES = [
-  { range: '130-140', label: 'Exceptional', color: 'bg-green-600' },
-  { range: '120-129', label: 'Excellent', color: 'bg-green-500' },
-  { range: '110-119', label: 'Strong', color: 'bg-blue-500' },
-  { range: '100-109', label: 'Good', color: 'bg-blue-500' },
-  { range: '90-99', label: 'Average', color: 'bg-orange-400' },
-  { range: '80-89', label: 'Below Average', color: 'bg-orange-500' },
-  { range: '70-79', label: 'Needs Work', color: 'bg-red-500' },
+  { range: '130-140', label: 'Exceptional', color: 'bg-[#008060]' },
+  { range: '115-129', label: 'Strong', color: 'bg-[#1844A6]' },
+  { range: '100-114', label: 'Building Momentum', color: 'bg-[#064A6C]' },
+  { range: '85-99', label: 'Room to Grow', color: 'bg-[#E9B307]' },
+  { range: '70-84', label: 'Getting Started', color: 'bg-[#F97316]' },
 ];
 
 const FAQ_ITEMS = [
@@ -50,8 +48,8 @@ const FAQ_ITEMS = [
   { q: 'Can I retake the assessment?', a: 'Yes! We recommend reassessing every 3-6 months to track progress.' },
   { q: 'Is Coach Blue a real person?', a: 'Coach Blue is an AI powered by advanced language models, trained specifically on digital marketing for local businesses. Think of it as having an expert consultant available 24/7.' },
   { q: 'What if I disagree with a recommendation?', a: 'Every recommendation includes the "why" behind it. You can also ask Coach Blue to explain further or suggest alternatives.' },
-  { q: 'Can I implement this myself or do I need to hire you?', a: 'Both! You can follow the DIY path and do everything yourself with Coach Blue\'s guidance, or choose our Managed Services if you want us to handle it.' },
-  { q: 'How much does this cost?', a: 'The assessment and prescription are free. Implementation costs vary based on whether you DIY or choose Managed Services.' },
+  { q: 'Can I implement this myself?', a: 'Yes. Every step is guided by your Directions for Use and Coach Blue. You follow the plan at your own pace — no technical knowledge required.' },
+  { q: 'How much does this cost?', a: 'The Digital IQ Assessment is free. Apps are $29/mo each, suites are $99/mo. Coach Blue is $99/mo standalone, $59/mo with one suite, or free with both suites.' },
   { q: 'What if I get stuck?', a: 'Coach Blue is always available to help. You can also reach our support team at support@businessblueprint.io' },
 ];
 
@@ -215,7 +213,7 @@ export default function KnowledgeBase() {
                     </div>
                     <div className="flex-1">
                       <h4 className="text-lg font-bold text-[#0000FF] mb-1">
-                        {area.title} <span className="text-[#FF6B00]">({area.points} points)</span>
+                        {area.title} <span className="text-[#FF6B00]">({area.points} pts)</span>
                       </h4>
                       <p className="text-gray-600">{area.desc}</p>
                     </div>
@@ -231,7 +229,7 @@ export default function KnowledgeBase() {
             Understanding Your Score
           </h2>
 
-          <div className="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-4">
+          <div className="grid grid-cols-3 md:grid-cols-5 gap-2 md:gap-4">
             {SCORE_RANGES.map((item) => (
               <Card key={item.range} className="text-center" data-testid={`card-score-${item.range}`}>
                 <CardContent className="p-3 md:pt-6">
@@ -432,7 +430,7 @@ export default function KnowledgeBase() {
                   <div className="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-bold flex-shrink-0">4</div>
                   <div>
                     <h3 className="text-xl font-bold text-[#0000FF] mb-2">Start Implementing</h3>
-                    <p className="text-gray-600 mb-3">Choose the DIY path (follow your prescription with Coach Blue's guidance) or the Managed Services path (we implement everything for you with professional execution).</p>
+                    <p className="text-gray-600 mb-3">Follow your Directions for Use — a step-by-step setup plan built from your prescription. Coach Blue walks you through each step and tells you exactly what to do next.</p>
                   </div>
                 </div>
               </CardContent>

@@ -145,7 +145,7 @@ export default function FindResults() {
   // Show loading state while checking token
   if (isCheckingToken) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-[#E9ECF0] flex flex-col">
         <Header />
         <main className="flex-1 py-12 flex items-center justify-center">
           <div className="text-center">
@@ -159,7 +159,7 @@ export default function FindResults() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-[#E9ECF0] flex flex-col">
       <Header />
       
       <main className="flex-1 py-12">

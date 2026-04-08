@@ -1,203 +1,165 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
-import { 
-  Brain, 
-  Globe, 
-  Zap, 
-  Users, 
-  Target,
-  CheckCircle,
-  ArrowRight
-} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { BrandLogo } from "@/components/brand-logo";
+
+const APPS = {
+  compass: {
+    label: "Compass Suite",
+    price: "$99/mo",
+    color: "#F97316",
+    apps: [
+      { name: "promote", color: "#1844A6", desc: "Email and SMS marketing" },
+      { name: "respond", color: "#001882", desc: "Unified inbox for all channels" },
+      { name: "engage", color: "#660099", desc: "Live chat widget for your website" },
+      { name: "post", color: "#FF44CC", desc: "Social media scheduling and management" },
+    ],
+  },
+  anchor: {
+    label: "Anchor Suite",
+    price: "$99/mo",
+    color: "#2073E3",
+    apps: [
+      { name: "publish", color: "#064A6C", desc: "Directory listing management" },
+      { name: "elevate", color: "#E9B307", desc: "Review monitoring and ratings" },
+      { name: "optimize", color: "#374151", desc: "SEO health monitoring" },
+      { name: "amplify", color: "#97ACCA", desc: "Advertising management" },
+    ],
+  },
+};
+
+const ECOSYSTEM = [
+  { name: "businessblueprint.io", tagline: "Get Assessed. Get Prescribed. Get Business." },
+  { name: "swipesblue.com", tagline: "Payment processing for every business" },
+  { name: "hostsblue.com", tagline: "Domains, hosting, email, website builder" },
+  { name: "scansblue.com", tagline: "Website auditing and scanning" },
+  { name: "BUILDERBLUE2.COM", tagline: "AI-powered vibe coding platform" },
+  { name: "TRIADBLUE.COM", tagline: "The parent company behind it all" },
+];
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <Header showNavigation={true} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <Badge variant="outline" className="mb-4 text-indigo-600 border-indigo-200">
+      {/* Hero */}
+      <section className="bg-[#E9ECF0] py-20">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h1 className="text-4xl lg:text-5xl font-bold text-[#09080E] mb-4 font-['Archivo_Semi_Expanded',sans-serif]">
             About businessblueprint.io
-          </Badge>
-          <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            Helping Local Businesses Succeed Online
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            We help local businesses get found, get customers, and get business. Our AI-powered platform provides the digital intelligence and step-by-step guidance needed to succeed online.
+          <p className="text-xl text-gray-700">
+            Get Assessed. Get Prescribed. Get Business.
           </p>
         </div>
+      </section>
 
-        {/* Mission Section */}
-        <div className="grid lg:grid-cols-2 gap-12 mb-16">
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
-            <p className="text-lg text-gray-600 mb-6">
-              To democratize digital marketing success by making enterprise-level tools and insights 
-              accessible to businesses of all sizes. We combine AI intelligence with human expertise 
-              to create personalized pathways for digital growth.
-            </p>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-[#FFD700]" />
-                <span>AI-powered business intelligence</span>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* What We Do */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-[#09080E] mb-6 font-['Archivo_Semi_Expanded',sans-serif]">
+            What We Do
+          </h2>
+          <p className="text-lg text-gray-700 mb-4">
+            businessblueprint.io scans your digital presence, diagnoses what's costing you customers, and prescribes the exact tools to fix it. No guesswork. No generic advice. A plan built from your actual data.
+          </p>
+          <p className="text-lg text-gray-700">
+            Nine integrated apps, one AI coach, one CRM that connects everything. Each piece works together so you're not juggling disconnected tools that don't talk to each other.
+          </p>
+        </section>
+
+        {/* The Ecosystem */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-[#09080E] mb-6 font-['Archivo_Semi_Expanded',sans-serif]">
+            The TRIADBLUE Ecosystem
+          </h2>
+          <div className="space-y-4">
+            {ECOSYSTEM.map((platform) => (
+              <div key={platform.name} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
+                <span className="text-sm font-bold text-[#09080E] min-w-[200px]">
+                  {platform.name}
+                </span>
+                <span className="text-sm text-gray-600">{platform.tagline}</span>
               </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-[#FFD700]" />
-                <span>Personalized digital strategies</span>
+            ))}
+          </div>
+        </section>
+
+        {/* The Apps */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-[#09080E] mb-6 font-['Archivo_Semi_Expanded',sans-serif]">
+            The Apps
+          </h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Compass Suite */}
+            <div>
+              <h3 className="text-xl font-bold mb-4 font-['Archivo_Semi_Expanded',sans-serif]">
+                <span style={{ color: APPS.compass.color }}>Compass Suite</span>
+                <span className="text-sm font-normal text-gray-500 ml-2">{APPS.compass.price}</span>
+              </h3>
+              <div className="space-y-3">
+                {APPS.compass.apps.map((app) => (
+                  <div key={app.name} className="flex items-start gap-2">
+                    <Link href={`/${app.name}`} className="hover:underline">
+                      <span className="text-[#09080E] font-bold">/</span>{" "}
+                      <span style={{ color: app.color }} className="font-bold">{app.name}</span>
+                    </Link>
+                    <span className="text-gray-600 text-sm">— {app.desc}</span>
+                  </div>
+                ))}
               </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="h-5 w-5 text-[#FFD700]" />
-                <span>Complete ecosystem integration</span>
+            </div>
+
+            {/* Anchor Suite */}
+            <div>
+              <h3 className="text-xl font-bold mb-4 font-['Archivo_Semi_Expanded',sans-serif]">
+                <span style={{ color: APPS.anchor.color }}>Anchor Suite</span>
+                <span className="text-sm font-normal text-gray-500 ml-2">{APPS.anchor.price}</span>
+              </h3>
+              <div className="space-y-3">
+                {APPS.anchor.apps.map((app) => (
+                  <div key={app.name} className="flex items-start gap-2">
+                    <Link href={`/${app.name}`} className="hover:underline">
+                      <span className="text-[#09080E] font-bold">/</span>{" "}
+                      <span style={{ color: app.color }} className="font-bold">{app.name}</span>
+                    </Link>
+                    <span className="text-gray-600 text-sm">— {app.desc}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-          
-          <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-200">
-            <CardContent className="p-8">
-              <h3 className="text-2xl font-bold text-indigo-900 mb-4">Our Vision</h3>
-              <p className="text-indigo-800 mb-6">
-                A world where every business has the digital tools and knowledge to thrive online, 
-                regardless of size, industry, or technical expertise.
-              </p>
-              <div className="grid grid-cols-2 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-indigo-600">10,000+</div>
-                  <div className="text-sm text-indigo-700">Businesses Empowered</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-indigo-600">95%</div>
-                  <div className="text-sm text-indigo-700">Success Rate</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
 
-        {/* Platform Ecosystem */}
-        <div className="mb-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Complete Ecosystem</h2>
-            <p className="text-xl text-gray-600">
-              Three specialized platforms working together for your success
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center border-blue-200 hover:shadow-lg transition-shadow p-6">
-              <CardContent className="flex flex-col">
-                <div className="flex justify-center items-center mb-6 h-20">
-                  <div style={{ transform: 'scale(1.2)', transformOrigin: 'center' }}>
-                    <BrandLogo brand="businessblueprint" size="lg" showIcon={true} />
-                  </div>
-                </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">Digital Intelligence Platform</p>
-                <ul className="text-xs sm:text-sm text-gray-500 space-y-1 mb-6">
-                  <li>• AI-powered business analysis</li>
-                  <li>• Personalized coaching</li>
-                  <li>• Client portal dashboard</li>
-                  <li>• / promote - Email & SMS Marketing</li>
-                  <li>• / respond - Unified Communications</li>
-                  <li>• / engage - Live Chat Widget</li>
-                  <li>• / post - Social Media Mgmt</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center border-purple-200 hover:shadow-lg transition-shadow p-6">
-              <CardContent className="flex flex-col">
-                <div className="flex justify-center items-center mb-6 h-20">
-                  <div style={{ transform: 'scale(0.85)', transformOrigin: 'center' }}>
-                    <BrandLogo brand="hostsblue" size="md" showIcon={true} />
-                  </div>
-                </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">Web Services Platform</p>
-                <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
-                  <li>• High-performance hosting</li>
-                  <li>• Domain management</li>
-                  <li>• Website Builder</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center border-red-200 hover:shadow-lg transition-shadow p-6">
-              <CardContent className="flex flex-col">
-                <div className="flex justify-center items-center mb-6 h-20">
-                  <div style={{ transform: 'scale(0.85)', transformOrigin: 'center' }}>
-                    <BrandLogo brand="swipesblue" size="md" showIcon={true} />
-                  </div>
-                </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">Payment Gateway Platform</p>
-                <ul className="text-xs sm:text-sm text-gray-500 space-y-2 mb-6">
-                  <li>• Secure payment processing</li>
-                  <li>• Transaction management</li>
-                  <li>• Shopping cart and Checkout</li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
-        {/* Team & Values */}
-        <div className="grid lg:grid-cols-2 gap-12 mb-16">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-blue-500" />
-                Our Team
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">
-                We're a distributed team of digital marketing experts, AI engineers, and business strategists 
-                united by one goal: helping businesses succeed online.
-              </p>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <Target className="h-4 w-4 text-blue-500" />
-                  <span className="text-sm">Customer-first approach</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Brain className="h-4 w-4 text-blue-500" />
-                  <span className="text-sm">Innovation through AI</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Globe className="h-4 w-4 text-blue-500" />
-                  <span className="text-sm">Global perspective</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-yellow-50 border-yellow-200">
-            <CardHeader>
-              <CardTitle className="text-yellow-900">Ready to Get Started?</CardTitle>
-              <CardDescription className="text-yellow-700">
-                Join thousands of businesses already empowering their digital presence
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Link href="/assessment">
-                <Button className="w-full bg-[#FFD700] hover:bg-[#FFC700]">
-                  Start Free Assessment
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+          {/* Standalone */}
+          <div className="mt-8 pt-8 border-t border-gray-200 space-y-3">
+            <div className="flex items-start gap-2">
+              <Link href="/connect" className="hover:underline">
+                <span className="text-[#09080E] font-bold">/</span>{" "}
+                <span style={{ color: "#008060" }} className="font-bold">connect</span>
               </Link>
-              <Link href="/contact">
-                <Button variant="outline" className="w-full border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700] hover:text-white">
-                  Contact Our Team
-                </Button>
+              <span className="text-gray-600 text-sm">— CRM. Free Starter (100 contacts) or $29/mo Performance.</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <Link href="/coach-blue" className="hover:underline">
+                <span style={{ color: "#0000FF" }} className="font-bold">Coach Blue</span>
               </Link>
-            </CardContent>
-          </Card>
-        </div>
+              <span className="text-gray-600 text-sm">— AI business coach. $99/mo standalone, $59/mo with one suite, free with both suites.</span>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="text-center py-12">
+          <Link href="/assessment">
+            <Button size="lg" className="bg-[#09080E] hover:bg-[#09080E]/80 text-white text-lg px-8 py-6">
+              Start Your Free Digital IQ Assessment
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </Link>
+        </section>
       </div>
+
       <Footer />
     </div>
   );
