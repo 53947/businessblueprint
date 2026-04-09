@@ -1,5 +1,5 @@
 # CLAUDE.md — businessblueprint.io
-# Last updated: April 2, 2026
+# Last updated: April 8, 2026
 
 ---
 
@@ -16,7 +16,7 @@ Those rules govern colors, fonts, naming, payments, and ecosystem standards. The
 ## PLATFORM IDENTITY
 
 **Name:** businessblueprint.io
-**Tagline:** We assess. We prescribe. You grow.
+**Tagline:** Get Assessed. Get Prescribed. Get Business.
 **Role:** Flagship platform — local business marketing and management SaaS
 **Stack:** React + TypeScript + Tailwind + shadcn/ui + Express + Drizzle ORM + PostgreSQL + Wouter
 **Deployment:** Railway
@@ -44,22 +44,33 @@ Coach Blue — $99/mo standalone, $59/mo with one suite, FREE with both suites.
 **Diagnostic Apps**
 / scan (#E00420), / assess (#960D71)
 
-### Setup Cadence (fixed order)
-1. / connect → 2. / publish → 3. / elevate → 4. / respond → 5. / engage → 6. / post → 7. / promote → 8. / amplify
+### Setup Cadence (fixed order — 9 steps)
+1. / connect → 2. / publish → 3. / elevate → 4. / optimize → 5. / respond → 6. / engage → 7. / post → 8. / promote → 9. / amplify
 
 ### Digital IQ Scoring
 Digital IQ = Scan Score (0-70) + Operational Score (0-70) = 0-140
-Grade Scale: A (120-140), B (100-119), C (80-99), D (60-79), F (0-59)
+Display: 70-140 scale. Formula: `displayScore = 70 + Math.round(rawScore / 2)`
+Shared utility: `shared/score-utils.ts` with `getDisplayScore()`, `getScoreLabel()`, `getScoreColor()`
+
+**NO LETTER GRADES ANYWHERE.** Use descriptive labels only:
+- 130-140: Exceptional
+- 115-129: Strong
+- 100-114: Building Momentum
+- 85-99: Room to Grow
+- 70-84: Getting Started
 
 9 scoring categories mapped 1:1 to 9 apps: promote, post, elevate, respond, engage, publish, optimize, connect, amplify.
 
 ### Key Files
 - `client/src/config/app-registry.ts` — SINGLE SOURCE OF TRUTH for app names, colors, pricing
 - `shared/schema.ts` — database schema
+- `shared/score-utils.ts` — Digital IQ display score, labels, colors (70-140 scale)
 - `shared/knowledge-base/` — KB TypeScript files for Directions for Use + Coach Blue
 - `client/src/components/side-nav.tsx` — sidebar navigation (3 zones: Tools / Guide / Admin)
+- `server/services/assessment-ai.ts` — AssessmentAIService (DeepSeek narratives + recommendations)
+- `server/services/timeline-logger.ts` — cross-app activity logging to / connect contact records
 - `server/routes.ts` — main routes
-- `server/prompts/` — NOT in this repo (those are in scansblue)
+- `server/routes/optimize.ts` — / optimize SEO tool routes (57KB)
 
 ### Sidebar Structure (3 Zones)
 1. **Your Tools** — / connect + Anchor Suite apps + Compass Suite apps
@@ -71,7 +82,7 @@ Two tabs: Tab 1 = Support Agent (Socket.IO), Tab 2 = Coach Blue (REST API)
 Non-subscribers see Coach Blue tab grayed out.
 
 ### Payment Rules
-ALL payment processing through swipesblue.com. Zero Stripe references in any customer-facing code. All `STRIPE_` env vars should be deleted — nothing reads them. SwipesBlue env vars (API_KEY, API_URL, MERCHANT_ID, WEBHOOK_SECRET) are configured.
+ALL payment processing through swipesblue.com. Zero Stripe references in any customer-facing code. All `STRIPE_` env vars have been deleted. `schema.ts` `paymentProvider` default is `"swipesblue"`. SwipesBlue env vars (API_KEY, API_URL, MERCHANT_ID, WEBHOOK_SECRET) are configured. SwipesBlue `POST /api/v1/checkout/sessions` endpoint exists with redirect + embedded modes.
 
 ---
 
@@ -84,24 +95,33 @@ ALL payment processing through swipesblue.com. Zero Stripe references in any cus
 - How It Works 6 steps ✓
 - SwipesBlue payment cleanup ✓
 - Directions for Use Phases 1-4 (knowledge base, DB tables, APIs, page, sidebar, Coach Blue KB, two-tab chat widget, triggers/email) ✓
-- Product ID rename + scoring restructure (c96e49d) ✓
-- Assessment redesign Phase A — detection methods (bundled into c96e49d) ✓
-- Assessment redesign Phase B — scan-first form (fcde37d) ✓
+- Product ID rename + scoring restructure ✓
+- Assessment redesign Phase A — detection methods ✓
+- Assessment redesign Phase B — scan-first form ✓
 - Homepage/footer fixes (white bg, 100 contacts, amplify color, Coach Blue image, integration section) ✓
+- Prescription journey redesign — assessment-ai.ts, narrative DeepSeek output, architect grid paper UI, suggestedDate on setup_tasks, task generation on user click only ✓
+- Connect hub activity logging — timeline-logger.ts, app colors, event icons, wired promote/respond/engage ✓
+- Spoke apps completion — elevate review push + contact matching, post analytics tab, amplify CRM audiences ✓
+- D&B DUNS integration — lookup, verify, manual entry, listing distribution adapter ✓
+- Site-wide page cleanup — routes manifest, about, contact, find-results, knowledge-base, assessment-confirmation, client-portal, api-docs ✓
+- Reddit OAuth callback fix ✓
+- About page ecosystem fix — uses real logo images ✓
+- Digital IQ score display — 70-140 scale, descriptive labels, no letter grades ✓
+- / optimize Phase A — critical layer: AI fix instructions, Core Web Vitals, schema generator, local rank tracking, 8-tab restructure, PriorityBadge system ✓
+- / optimize Phases B-D — important/relevant/optional layers: DataForSEO integration, competitor enrichment, backlinks, enhanced keywords, reports, content tools, snippet preview ✓
+- Results page journey — full prescription display for pre-signup visitors, architect grid paper, strengths + prescription narratives, polling, conversion CTA ✓
 
 ## PENDING
 
-- SwipesBlue POST /api/v1/checkout/sessions endpoint (redirect + embedded modes)
-- 11 STRIPE_ env vars need deletion from Railway environment
-- schema.ts paymentProvider default "stripe" → "swipesblue"
-- Ecosystem footer taglines need updating (prompt written: ECOSYSTEM_FOOTER_1_BUSINESSBLUEPRINT.md)
-- **External AI Audit — staging site setup**
-  - Deploy clone to `review.businessblueprint.io` (or similar subdomain)
-  - New Railway service from same repo, separate fresh Postgres database
-  - Seed with admin account + sample data so auditor sees full functionality
-  - Decide: copy real API keys (stay hidden in Railway env vars) or skip external integrations
-  - Auditor gets full site access, zero access to secrets/keys/production data
-  - Tear down Railway service + DNS record when audit is complete
+- Email delivery — Resend silently failing (logs `Resend ID: undefined`). Root MX record added. `send.send.businessblueprint.io` typo DNS records need deleting.
+- Journey email cadence — drip emails need rewriting to reference current products, suites, Coach Blue, Directions for Use
+- D&B Direct+ API credentials — Dean needs to obtain from D&B (sales-driven). Code handles missing credentials gracefully.
+- Reddit Ads API credentials — Dean applied. Manual approval required (~7 day turnaround). Code fully built.
+- DataForSEO credentials — needed for / optimize real data features. Pay-per-use. `DATAFORSEO_LOGIN` + `DATAFORSEO_PASSWORD`.
+- / elevate gaps — Google review response API push needs real OAuth credentials from business owner. Yelp does not support automated replies.
+- / post gaps — social engagement → CRM contact matching not built (needs platform OAuth commenter identity data)
+- / amplify gaps — campaign-to-contact targeting not wired to actual ad platform APIs
+- Header — may still show "Inbox" instead of "/ respond" — verify
 
 ---
 
