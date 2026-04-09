@@ -27,19 +27,23 @@ export interface MediaMetadata {
 
 export class MediaStorageService {
   async uploadMedia(options: UploadMediaOptions) {
+    if (!objectStorage.isConfigured()) {
+      throw new Error('File storage is not configured. Media uploads require object storage.');
+    }
+
     const { clientId, file, fileName, mimeType, folder = 'Uploads', altText, tags } = options;
-    
+
     const ext = fileName.split('.').pop() || '';
     const storageKey = `content/${clientId}/${folder}/${nanoid()}.${ext}`;
-    
+
     const fileType = this.determineFileType(mimeType);
     const metadata = await this.getMediaMetadata(file, mimeType, fileType);
-    
+
     let thumbnailUrl: string | null = null;
     if (fileType === 'video') {
       thumbnailUrl = await this.generateVideoThumbnail(file, storageKey);
     }
-    
+
     const storageUrl = await objectStorage.uploadBuffer(file, storageKey, mimeType);
     
     const [mediaRecord] = await db

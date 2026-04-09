@@ -111,6 +111,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Register credential/magic-link auth routes (for production login)
   app.use(authRouter);
 
+  // Health check for Railway
+  app.get("/api/health", (_req, res) => {
+    res.json({ status: "ok", timestamp: new Date().toISOString() });
+  });
+
   // Serve favicon.ico from attached_assets (short cache — OGA manages the real favicon)
   app.get("/favicon.ico", (req, res) => {
     res.setHeader("Cache-Control", "public, max-age=300");

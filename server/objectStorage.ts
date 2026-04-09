@@ -40,6 +40,11 @@ export class ObjectNotFoundError extends Error {
 export class ObjectStorageService {
   constructor() {}
 
+  /** Returns true if Replit Object Storage sidecar is available */
+  isConfigured(): boolean {
+    return !!process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID;
+  }
+
   getPublicObjectSearchPaths(): Array<string> {
     const pathsStr = process.env.PUBLIC_OBJECT_SEARCH_PATHS || "";
     const paths = Array.from(

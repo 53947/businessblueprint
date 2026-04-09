@@ -25,7 +25,7 @@ export function getSession() {
     rolling: true,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production' || process.env.REPLIT_DOMAINS !== undefined,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: sessionTtlSeconds * 1000,
     },

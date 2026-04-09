@@ -20,8 +20,8 @@ interface SocketData {
 export function setupWebSocket(server: HTTPServer) {
   const io = new Server(server, {
     cors: {
-      origin: process.env.NODE_ENV === 'production' 
-        ? ['https://*.replit.app', 'https://*.replit.dev']
+      origin: process.env.NODE_ENV === 'production'
+        ? ['https://businessblueprint.io', 'https://www.businessblueprint.io']
         : ['http://localhost:5000', 'http://127.0.0.1:5000'],
       credentials: true
     },
