@@ -34,6 +34,7 @@ import { generateActionPlan } from "../services/seo-action-plan";
 import { unifiedAI, type AIProvider } from "../services/ai-provider";
 import { aiSettingsService } from "../services/ai-settings";
 import { dataForSEO } from "../services/dataforseo";
+import { mozBacklinks } from "../services/moz-backlinks";
 
 export function registerOptimizeRoutes(app: Express) {
   // =============================================
@@ -2228,12 +2229,12 @@ Return ONLY a JSON object: {"title": "...", "description": "..."}`;
         const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
         if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found." });
 
-        if (!dataForSEO.isConfigured()) {
+        if (!mozBacklinks.isConfigured()) {
           return res.json({ success: false, message: "Connect a data provider to discover backlinks.", requiresDataProvider: true });
         }
 
         const profileId = profile[0].id;
-        const { backlinks: fetchedLinks } = await dataForSEO.getBacklinks(profile[0].domain, 200);
+        const { backlinks: fetchedLinks } = await mozBacklinks.getBacklinks(profile[0].domain, 200);
 
         const existingBacklinks = await db.select().from(seoBacklinks)
           .where(eq(seoBacklinks.profileId, profileId));
@@ -2842,33 +2843,11 @@ Do NOT include domains the user already has backlinks from: ${Array.from(userDom
           return res.status(400).json({ success: false, message: "Provide either competitorId or domain" });
         }
 
-        const hasDataProvider = !!process.env.DATAFORSEO_LOGIN;
+        const hasBacklinkProvider = mozBacklinks.isConfigured();
 
-        if (hasDataProvider) {
+        if (hasBacklinkProvider) {
           try {
-            const credentials = Buffer.from(`${process.env.DATAFORSEO_LOGIN}:${process.env.DATAFORSEO_PASSWORD}`).toString('base64');
-            const apiRes = await fetch('https://api.dataforseo.com/v3/backlinks/backlinks/live', {
-              method: 'POST',
-              headers: {
-                'Authorization': `Basic ${credentials}`,
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify([{
-                target: targetDomain,
-                limit: 100,
-                order_by: ["rank,desc"],
-              }]),
-              signal: AbortSignal.timeout(30000),
-            });
-
-            const apiData = await apiRes.json() as any;
-            const items = apiData?.tasks?.[0]?.result?.[0]?.items || [];
-
-            const backlinks = items.map((item: any) => ({
-              sourceUrl: item.url_from || item.source_url || '',
-              anchorText: item.anchor || '',
-              domainAuthority: item.rank || item.page_rank || null,
-            }));
+            const backlinks = await mozBacklinks.getCompetitorBacklinksList(targetDomain, 100);
 
             // Get user's own backlinks for opportunity detection
             const userBacklinks = await db.select().from(seoBacklinks)
@@ -2878,15 +2857,27 @@ Do NOT include domains the user already has backlinks from: ${Array.from(userDom
             );
 
             const linkOpportunities = backlinks
-              .filter((bl: any) => {
+              .filter((bl) => {
                 try { return !userSourceDomains.has(new URL(bl.sourceUrl).hostname); } catch { return false; }
               })
               .slice(0, 20)
-              .map((bl: any) => `${bl.sourceUrl} links to ${targetDomain} but not to you (anchor: "${bl.anchorText}")`);
+              .map((bl) => `${bl.sourceUrl} links to ${targetDomain} but not to you (anchor: "${bl.anchorText}")`);
 
-            return res.json({ success: true, domain: targetDomain, backlinks, linkOpportunities });
+            return res.json({
+              success: true,
+              domain: targetDomain,
+              backlinks: backlinks.map(bl => ({
+                sourceUrl: bl.sourceUrl,
+                anchorText: bl.anchorText,
+                domainAuthority: bl.domainAuthority,
+                linkType: bl.linkType,
+                spamScore: bl.spamScore,
+              })),
+              linkOpportunities,
+              dataProviderConnected: true,
+            });
           } catch (apiErr: any) {
-            console.error("[Optimize] DataForSEO backlinks API error:", apiErr.message);
+            console.error("[Optimize] Moz backlinks API error:", apiErr.message);
             // Fall through to AI estimation
           }
         }
