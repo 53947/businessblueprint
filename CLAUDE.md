@@ -95,6 +95,13 @@ ALL payment processing through swipesblue.com. Zero Stripe references in any cus
 - 11 STRIPE_ env vars need deletion from Railway environment
 - schema.ts paymentProvider default "stripe" → "swipesblue"
 - Ecosystem footer taglines need updating (prompt written: ECOSYSTEM_FOOTER_1_BUSINESSBLUEPRINT.md)
+- **External AI Audit — staging site setup**
+  - Deploy clone to `review.businessblueprint.io` (or similar subdomain)
+  - New Railway service from same repo, separate fresh Postgres database
+  - Seed with admin account + sample data so auditor sees full functionality
+  - Decide: copy real API keys (stay hidden in Railway env vars) or skip external integrations
+  - Auditor gets full site access, zero access to secrets/keys/production data
+  - Tear down Railway service + DNS record when audit is complete
 
 ---
 
@@ -111,5 +118,6 @@ ALL payment processing through swipesblue.com. Zero Stripe references in any cus
 | 2026-04-08 | / optimize Phase B — important layer. Services: long-tail keyword gen, search intent classification. Routes: 9 new (keywords/long-tail, keywords/classify-intent, keywords/:id/locations, competitors CRUD+analyze, pages/internal-links, pages/image-audit). Enhanced reports with ranking changes + backlink activity. Client: KeywordsTab (intent badges, long-tail expansion, location tracking), CompetitorsTab (real CRUD, gap analysis), BacklinksTab (6 stats, filters), SiteHealthTab (image audit), ReportsTab (generate + stored reports). |
 | 2026-04-08 | / optimize Phase C — relevant layer. Routes: 10 new (competitors/backlinks, competitors/content-gap, competitors/traffic, competitors/top-pages, competitors/compare, pages/redirect-chains, pages/heading-structure, pages/keyword-density, backlinks/referring-domains). Client: CompetitorsTab (domain comparison, content gap, traffic estimates), SiteHealthTab (redirect chains, heading structure, keyword density), BacklinksTab (referring domains chart). |
 | 2026-04-08 | / optimize Phase D — optional/polish layer. Routes: 6 new (content/length-recommendations, content/click-potential, content/question-keywords, content/topic-clusters, content/seo-score, pages/snippet-preview). Client: ContentTab (length recommendations, CTR estimates, question keywords, topic clusters, SEO writing assistant), SiteHealthTab (SERP snippet preview), BacklinksTab (anchor text distribution). |
+| 2026-04-08 | Results page journey — full rewrite of find-results.tsx. Architect grid paper prescription display (score, strengths narrative, prescription narrative, numbered action items with app colors, IQ summary with projected score). Polling for in-progress assessments. Email lookup renders full prescription inline. Removed all temporary access/expired language. Conversion CTA with Coach Blue teaser. Legacy recommendation fallback for older assessments. Admin email renamed demo@ → admin@businessblueprint.io. |
 
 **AGENTS: Update this section on every commit. Your work is not done until this changelog reflects it.**
