@@ -21,6 +21,9 @@ Those rules govern colors, fonts, naming, payments, and ecosystem standards. The
 **Stack:** React + TypeScript + Tailwind + shadcn/ui + Express + Drizzle ORM + PostgreSQL + Wouter
 **Deployment:** Railway (migrated from Replit 2026-04-09)
 **Database:** Neon PostgreSQL (Dean-owned project, separate from Replit)
+**Object Storage:** Cloudflare R2 — bucket `content-storage`, ENAM region. Used for / post media uploads. Env vars: `CLOUDFLARE_R2_ACCESS_KEY_ID`, `CLOUDFLARE_R2_SECRET_ACCESS_KEY`, `CLOUDFLARE_R2_ENDPOINT`, `CLOUDFLARE_R2_BUCKET`.
+**Auth:** Magic-link + credential auth (production). Replit OIDC removed. Future: OpenAuth on Cloudflare Workers for social login (Google, GitHub, etc.)
+**Cloudflare Account:** `53947@triadblue.com` — manages DNS, R2, and future Workers. Wrangler CLI authenticated locally.
 **Environments:** Production (`main` branch) + Staging (`staging` branch) on Railway
 **Local path:** `/Users/deanlewis/businessblueprint`
 **Preview URL:** `businessblueprint-production-f6a9.up.railway.app`
@@ -130,11 +133,12 @@ ALL payment processing through swipesblue.com. Zero Stripe references in any cus
 - Backlink provider swap — DataForSEO Backlinks API ($100/mo) replaced with Moz Links API ($5/mo). DataForSEO retained for SERP/keywords/DA only. ✓
 - Railway migration — moved from Replit to Railway. WebSocket CORS, health check endpoint, PORT env var, Replit Vite plugins removed, Object Storage graceful degradation, process.cwd() fix for esbuild, dist/ gitignored, Procfile/railway.toml removed ✓
 - Admin email — renamed from demo@businessblueprint.io to admin@businessblueprint.io ✓
+- Cloudflare R2 Object Storage — replaced Replit sidecar with R2 bucket `content-storage` for / post media uploads ✓
 
 ## PENDING
 
 - **Post-Railway audit** — full audit of staging + production needed to confirm everything works after migration
-- **Object Storage replacement** — Replit Object Storage sidecar is gone on Railway. Media uploads (/ post) need S3/R2 replacement or will show error. Non-critical for launch.
+- **Object Storage replacement** — DONE. Swapped Replit sidecar to Cloudflare R2 (`content-storage` bucket). ✓
 - **Replit decommission** — once Railway is stable, stop Replit deployments. Old Neon DB on Replit project can be kept as backup.
 - Email delivery — Resend silently failing (logs `Resend ID: undefined`). Root MX record added. `send.send.businessblueprint.io` typo DNS records need deleting.
 - Journey email cadence — drip emails need rewriting to reference current products, suites, Coach Blue, Directions for Use
@@ -146,6 +150,7 @@ ALL payment processing through swipesblue.com. Zero Stripe references in any cus
 - / post gaps — social engagement → CRM contact matching not built (needs platform OAuth commenter identity data)
 - / amplify gaps — campaign-to-contact targeting not wired to actual ad platform APIs
 - Header — may still show "Inbox" instead of "/ respond" — verify
+- **OpenAuth on Cloudflare Workers** — replace magic-link auth with OpenAuth (openauth.js.org) for social login (Google, GitHub, etc.). Self-hosted on Cloudflare Workers, free, no user limits. Not urgent — current magic-link auth works.
 - **External AI Audit** — staging site setup planned for independent review (deferred from April 8)
 
 ---
