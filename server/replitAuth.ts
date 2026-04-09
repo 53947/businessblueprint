@@ -153,7 +153,7 @@ export async function setupAuth(app: Express) {
     app.get("/api/logout", (req, res) => {
       req.logout(() => {
         req.session.destroy(() => {
-          res.redirect("/login");
+          res.redirect("/portal/login");
         });
       });
     });
