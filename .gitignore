@@ -7,4 +7,4 @@ vite.config.ts.*
 # Screenshots — Replit dumps these, never track them
 **/Screenshot*
 **/screenshot*
-**/dashboard_screenshots/
+**/dashboard_screenshots/dist/

@@ -3376,6 +3376,10 @@ var init_schema = __esm({
       competitors: jsonb("competitors"),
       // string[]
       localEnabled: boolean("local_enabled").default(false),
+      domainAuthority: integer("domain_authority"),
+      organicTraffic: integer("organic_traffic"),
+      totalBacklinks: integer("total_backlinks"),
+      lastDaCheck: timestamp("last_da_check"),
       createdAt: timestamp("created_at").defaultNow(),
       updatedAt: timestamp("updated_at").defaultNow()
     }, (table) => [
@@ -7768,6 +7772,10 @@ var ObjectNotFoundError = class _ObjectNotFoundError extends Error {
 var ObjectStorageService = class {
   constructor() {
   }
+  /** Returns true if Replit Object Storage sidecar is available */
+  isConfigured() {
+    return !!process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID;
+  }
   getPublicObjectSearchPaths() {
     const pathsStr = process.env.PUBLIC_OBJECT_SEARCH_PATHS || "";
     const paths = Array.from(
@@ -7992,6 +8000,9 @@ var ObjectStorageService = class {
 var objectStorage = new ObjectStorageService();
 var MediaStorageService = class {
   async uploadMedia(options) {
+    if (!objectStorage.isConfigured()) {
+      throw new Error("File storage is not configured. Media uploads require object storage.");
+    }
     const { clientId, file, fileName, mimeType, folder = "Uploads", altText, tags } = options;
     const ext = fileName.split(".").pop() || "";
     const storageKey = `content/${clientId}/${folder}/${nanoid()}.${ext}`;
@@ -8108,7 +8119,7 @@ init_db();
 init_schema();
 import { eq as eq4 } from "drizzle-orm";
 var DEMO_EMAILS = [
-  "demo@businessblueprint.io",
+  "admin@businessblueprint.io",
   "test@businessblueprint.io",
   "agency@businessblueprint.io"
 ];
@@ -10845,7 +10856,7 @@ function getSession() {
     rolling: true,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production" || process.env.REPLIT_DOMAINS !== void 0,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: sessionTtlSeconds * 1e3
     }
@@ -20418,6 +20429,298 @@ Return ONLY valid JSON array. No markdown.`;
 // server/routes/optimize.ts
 init_ai_provider();
 init_ai_settings();
+
+// server/services/dataforseo.ts
+var DataForSEOService = class {
+  credentials = null;
+  constructor() {
+    const login = process.env.DATAFORSEO_LOGIN;
+    const password = process.env.DATAFORSEO_PASSWORD;
+    if (login && password) {
+      this.credentials = Buffer.from(`${login}:${password}`).toString("base64");
+    }
+  }
+  isConfigured() {
+    return this.credentials !== null;
+  }
+  async request(endpoint, body) {
+    if (!this.credentials) throw new Error("DataForSEO not configured");
+    const response = await fetch(`https://api.dataforseo.com/v3/${endpoint}`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Basic ${this.credentials}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(3e4)
+    });
+    if (!response.ok) {
+      throw new Error(`DataForSEO ${response.status}: ${await response.text()}`);
+    }
+    return response.json();
+  }
+  async getDomainAuthority(domain) {
+    try {
+      const data = await this.request("dataforseo_labs/google/domain_rank/live", [
+        { target: domain }
+      ]);
+      const result = data?.tasks?.[0]?.result?.[0];
+      if (!result) return null;
+      return {
+        domainRank: result.domain_rank ?? 0,
+        organicTraffic: result.organic_traffic ?? 0,
+        totalBacklinks: result.backlinks ?? 0,
+        totalKeywords: result.organic_keywords ?? 0
+      };
+    } catch (error) {
+      console.error("[DataForSEO] getDomainAuthority error:", error);
+      return null;
+    }
+  }
+  async getBacklinks(domain, limit = 100) {
+    try {
+      const listData = await this.request("backlinks/backlinks/live", [
+        {
+          target: domain,
+          limit,
+          order_by: ["rank.desc"],
+          filters: ["dofollow", "=", true]
+        }
+      ]);
+      const items = listData?.tasks?.[0]?.result?.[0]?.items || [];
+      const backlinks = items.map((item) => ({
+        sourceUrl: item.url_from || "",
+        targetUrl: item.url_to || "",
+        anchorText: item.anchor || "",
+        domainAuthority: item.page_from_rank ?? null,
+        linkType: item.dofollow ? "dofollow" : "nofollow",
+        firstSeen: item.first_seen || null,
+        lastSeen: item.last_seen || null,
+        isSpam: (item.page_from_spam_score || 0) > 50,
+        spamScore: item.page_from_spam_score ?? null
+      }));
+      let summary = { totalBacklinks: 0, referringDomains: 0, brokenBacklinks: 0 };
+      try {
+        const summaryData = await this.request("backlinks/summary/live", [
+          { target: domain }
+        ]);
+        const s = summaryData?.tasks?.[0]?.result?.[0];
+        if (s) {
+          summary = {
+            totalBacklinks: s.backlinks ?? 0,
+            referringDomains: s.referring_domains ?? 0,
+            brokenBacklinks: s.broken_backlinks ?? 0
+          };
+        }
+      } catch {
+      }
+      return { backlinks, summary };
+    } catch (error) {
+      console.error("[DataForSEO] getBacklinks error:", error);
+      return { backlinks: [], summary: { totalBacklinks: 0, referringDomains: 0, brokenBacklinks: 0 } };
+    }
+  }
+  async getCompetitorKeywords(domain, limit = 100) {
+    try {
+      const data = await this.request("dataforseo_labs/google/ranked_keywords/live", [
+        {
+          target: domain,
+          limit,
+          order_by: ["keyword_data.keyword_info.search_volume,desc"]
+        }
+      ]);
+      const items = data?.tasks?.[0]?.result?.[0]?.items || [];
+      return items.map((item) => ({
+        keyword: item.keyword_data?.keyword || "",
+        position: item.ranked_serp_element?.serp_item?.rank_absolute ?? 0,
+        searchVolume: item.keyword_data?.keyword_info?.search_volume ?? 0,
+        difficulty: item.keyword_data?.keyword_info?.competition_level || "unknown",
+        url: item.ranked_serp_element?.serp_item?.url || ""
+      }));
+    } catch (error) {
+      console.error("[DataForSEO] getCompetitorKeywords error:", error);
+      return [];
+    }
+  }
+  async getCompetitorBacklinks(domain) {
+    try {
+      const data = await this.request("backlinks/summary/live", [
+        { target: domain }
+      ]);
+      const result = data?.tasks?.[0]?.result?.[0];
+      if (!result) return { totalBacklinks: 0, referringDomains: 0, brokenBacklinks: 0 };
+      return {
+        totalBacklinks: result.backlinks ?? 0,
+        referringDomains: result.referring_domains ?? 0,
+        brokenBacklinks: result.broken_backlinks ?? 0
+      };
+    } catch (error) {
+      console.error("[DataForSEO] getCompetitorBacklinks error:", error);
+      return { totalBacklinks: 0, referringDomains: 0, brokenBacklinks: 0 };
+    }
+  }
+  async getKeywordData(keywords, location) {
+    try {
+      const data = await this.request("dataforseo_labs/google/keyword_info/live", [
+        {
+          keywords,
+          location_name: location || "United States",
+          language_name: "English"
+        }
+      ]);
+      const items = data?.tasks?.[0]?.result || [];
+      return items.map((item) => ({
+        keyword: item.keyword || "",
+        searchVolume: item.search_volume ?? 0,
+        difficulty: item.competition_level || "unknown",
+        cpc: item.cpc ?? 0
+      }));
+    } catch (error) {
+      console.error("[DataForSEO] getKeywordData error:", error);
+      return [];
+    }
+  }
+};
+var dataForSEO = new DataForSEOService();
+
+// server/services/moz-backlinks.ts
+import { randomUUID as randomUUID2 } from "crypto";
+var MOZ_API_URL = "https://api.moz.com/jsonrpc";
+var MozBacklinksService = class {
+  token = null;
+  constructor() {
+    this.token = process.env.MOZ_API_TOKEN || null;
+  }
+  isConfigured() {
+    return this.token !== null;
+  }
+  async request(method, params) {
+    if (!this.token) throw new Error("Moz API not configured");
+    const response = await fetch(MOZ_API_URL, {
+      method: "POST",
+      headers: {
+        "x-moz-token": this.token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: randomUUID2(),
+        method,
+        params: { data: params }
+      }),
+      signal: AbortSignal.timeout(3e4)
+    });
+    if (!response.ok) {
+      const text2 = await response.text();
+      throw new Error(`Moz API ${response.status}: ${text2}`);
+    }
+    const data = await response.json();
+    if (data.error) {
+      throw new Error(`Moz API error: ${data.error.message || JSON.stringify(data.error)}`);
+    }
+    return data.result;
+  }
+  /**
+   * Get backlinks for a domain.
+   * Moz method: link.list
+   */
+  async getBacklinks(domain, limit = 100) {
+    try {
+      const linksResult = await this.request("link.list", {
+        target: domain,
+        target_scope: "root_domain",
+        filter: "external+nofollow+follow",
+        sort: "source_domain_authority",
+        limit
+      });
+      const items = linksResult?.results || [];
+      const backlinks = items.map((item) => ({
+        sourceUrl: item.source?.page || "",
+        targetUrl: item.target?.page || "",
+        anchorText: item.anchor_text || "",
+        domainAuthority: item.source?.domain_authority ?? null,
+        linkType: item.nofollow ? "nofollow" : "dofollow",
+        firstSeen: item.first_seen || null,
+        lastSeen: item.last_seen || null,
+        isSpam: (item.source?.spam_score ?? 0) > 5,
+        spamScore: item.source?.spam_score ?? null
+      }));
+      let summary = { totalBacklinks: 0, referringDomains: 0, brokenBacklinks: 0 };
+      try {
+        const metricsResult = await this.request("url_metrics.fetch", {
+          targets: [domain],
+          daily_history_values: [],
+          monthly_history_values: []
+        });
+        const metrics = metricsResult?.results?.[0];
+        if (metrics) {
+          summary = {
+            totalBacklinks: metrics.external_links_to_root_domain ?? 0,
+            referringDomains: metrics.external_links_to_root_domain_root_domains ?? 0,
+            brokenBacklinks: 0
+          };
+        }
+      } catch {
+      }
+      return { backlinks, summary };
+    } catch (error) {
+      console.error("[Moz] getBacklinks error:", error);
+      return { backlinks: [], summary: { totalBacklinks: 0, referringDomains: 0, brokenBacklinks: 0 } };
+    }
+  }
+  /**
+   * Get backlink summary for a competitor domain.
+   * Moz method: url_metrics.fetch
+   */
+  async getCompetitorBacklinks(domain) {
+    try {
+      const result = await this.request("url_metrics.fetch", {
+        targets: [domain],
+        daily_history_values: [],
+        monthly_history_values: []
+      });
+      const metrics = result?.results?.[0];
+      if (!metrics) return { totalBacklinks: 0, referringDomains: 0, brokenBacklinks: 0 };
+      return {
+        totalBacklinks: metrics.external_links_to_root_domain ?? 0,
+        referringDomains: metrics.external_links_to_root_domain_root_domains ?? 0,
+        brokenBacklinks: 0
+      };
+    } catch (error) {
+      console.error("[Moz] getCompetitorBacklinks error:", error);
+      return { totalBacklinks: 0, referringDomains: 0, brokenBacklinks: 0 };
+    }
+  }
+  /**
+   * Get backlinks for a competitor domain (full list).
+   * Used by competitors/backlinks endpoint.
+   */
+  async getCompetitorBacklinksList(domain, limit = 100) {
+    try {
+      const result = await this.request("link.list", {
+        target: domain,
+        target_scope: "root_domain",
+        filter: "external+nofollow+follow",
+        sort: "source_domain_authority",
+        limit
+      });
+      const items = result?.results || [];
+      return items.map((item) => ({
+        sourceUrl: item.source?.page || "",
+        anchorText: item.anchor_text || "",
+        domainAuthority: item.source?.domain_authority ?? null,
+        linkType: item.nofollow ? "nofollow" : "dofollow",
+        spamScore: item.source?.spam_score ?? null
+      }));
+    } catch (error) {
+      console.error("[Moz] getCompetitorBacklinksList error:", error);
+      return [];
+    }
+  }
+};
+var mozBacklinks = new MozBacklinksService();
+
+// server/routes/optimize.ts
 function registerOptimizeRoutes(app2) {
   app2.post(
     "/api/seo/profiles",
@@ -20833,6 +21136,50 @@ function registerOptimizeRoutes(app2) {
       } catch (error) {
         console.error("[Optimize] Keyword locations error:", error);
         res.status(500).json({ success: false, message: "Failed to fetch keyword location rankings" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/keywords/enrich",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found." });
+        if (!dataForSEO.isConfigured()) {
+          const keywords2 = await db.select().from(seoKeywords).where(eq32(seoKeywords.profileId, profile[0].id));
+          return res.json({ success: true, keywords: keywords2, requiresDataProvider: true, message: "Connect a data provider to enrich keyword data with real search volumes." });
+        }
+        const profileId = profile[0].id;
+        const keywords = await db.select().from(seoKeywords).where(eq32(seoKeywords.profileId, profileId));
+        if (keywords.length === 0) {
+          return res.json({ success: true, keywords: [], message: "No keywords to enrich. Add keywords first." });
+        }
+        const kwStrings = keywords.map((k) => k.keyword);
+        const enriched = await dataForSEO.getKeywordData(kwStrings, profile[0].location || void 0);
+        const enrichedMap = /* @__PURE__ */ new Map();
+        for (const e of enriched) {
+          enrichedMap.set(e.keyword.toLowerCase(), e);
+        }
+        const updatedKeywords = [];
+        for (const kw of keywords) {
+          const data = enrichedMap.get(kw.keyword.toLowerCase());
+          if (data) {
+            const difficultyMap = { low: 20, medium: 50, high: 80, unknown: 0 };
+            const [updated] = await db.update(seoKeywords).set({
+              searchVolume: data.searchVolume,
+              difficulty: difficultyMap[data.difficulty] ?? 50
+            }).where(eq32(seoKeywords.id, kw.id)).returning();
+            updatedKeywords.push(updated);
+          } else {
+            updatedKeywords.push(kw);
+          }
+        }
+        res.json({ success: true, keywords: updatedKeywords, enriched: enriched.length });
+      } catch (error) {
+        console.error("[Optimize] Keyword enrich error:", error);
+        res.status(500).json({ success: false, message: "Failed to enrich keywords" });
       }
     }
   );
@@ -21413,6 +21760,442 @@ Return ONLY a JSON array of objects: [{"url": "...", "suggestedAlt": "..."}]`;
       }
     }
   );
+  app2.post(
+    "/api/seo/content/length-recommendations",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const { keyword } = req.body;
+        if (!keyword || typeof keyword !== "string") {
+          return res.status(400).json({ success: false, message: "Keyword is required" });
+        }
+        const settings = await aiSettingsService.getAllSettings();
+        const provider = (settings.length > 0 ? settings[0].provider : null) || "openai";
+        const prompt = `You are an SEO content strategist. For the keyword "${keyword}" in the ${profile[0].industry || "general business"} industry:
+
+Analyze what typical top-ranking pages look like and recommend an ideal word count.
+
+Return a JSON object:
+{
+  "keyword": "${keyword}",
+  "recommendedWordCount": 1500,
+  "topResultsAverage": 1800,
+  "range": { "min": 1200, "max": 2500 },
+  "contentType": "comprehensive guide",
+  "recommendation": "Top results for this keyword average about 1,800 words. We recommend at least 1,500 words with thorough coverage of subtopics to compete effectively."
+}
+
+Base your estimates on typical content patterns for this type of keyword.`;
+        const result = await unifiedAI.getCompletion(provider, {
+          messages: [
+            { role: "system", content: "You are an SEO content length expert. Return only valid JSON." },
+            { role: "user", content: prompt }
+          ],
+          temperature: 0.5
+        });
+        let data = {};
+        try {
+          const cleaned = (result.content || "").replace(/```json?\n?/g, "").replace(/```/g, "").trim();
+          data = JSON.parse(cleaned);
+        } catch {
+          data = {
+            keyword,
+            recommendedWordCount: 1500,
+            topResultsAverage: 1500,
+            range: { min: 1e3, max: 2e3 },
+            contentType: "article",
+            recommendation: "Aim for at least 1,500 words with comprehensive coverage of the topic."
+          };
+        }
+        res.json({ success: true, ...data });
+      } catch (error) {
+        console.error("[Optimize] Content length recommendation error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate content length recommendations" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/content/click-potential",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const profileId = profile[0].id;
+        let keywordsData;
+        if (req.body.keywords && Array.isArray(req.body.keywords)) {
+          keywordsData = req.body.keywords.map((kw) => ({
+            keyword: kw.keyword,
+            position: kw.position || 0,
+            searchVolume: kw.searchVolume || 0
+          }));
+        } else {
+          const keywords = await db.select().from(seoKeywords).where(eq32(seoKeywords.profileId, profileId));
+          keywordsData = keywords.map((kw) => ({
+            keyword: kw.keyword,
+            position: kw.currentRank || 0,
+            searchVolume: kw.searchVolume || 0
+          }));
+        }
+        const estimates = keywordsData.map((kw) => {
+          const ctr = getCtrForPosition(kw.position);
+          const estimatedClicks = Math.round(kw.searchVolume * ctr);
+          return {
+            keyword: kw.keyword,
+            position: kw.position,
+            searchVolume: kw.searchVolume,
+            estimatedCtr: Math.round(ctr * 1e4) / 100,
+            estimatedClicks,
+            potentialClicks: kw.position > 1 ? Math.round(kw.searchVolume * getCtrForPosition(1)) : estimatedClicks,
+            opportunityGap: kw.position > 1 ? Math.round(kw.searchVolume * getCtrForPosition(1)) - estimatedClicks : 0
+          };
+        }).sort((a, b) => b.opportunityGap - a.opportunityGap);
+        const totalEstimatedClicks = estimates.reduce((sum, e) => sum + e.estimatedClicks, 0);
+        const totalPotentialClicks = estimates.reduce((sum, e) => sum + e.potentialClicks, 0);
+        res.json({
+          success: true,
+          estimates,
+          summary: {
+            totalKeywords: estimates.length,
+            totalEstimatedClicks,
+            totalPotentialClicks,
+            opportunityGap: totalPotentialClicks - totalEstimatedClicks
+          }
+        });
+      } catch (error) {
+        console.error("[Optimize] Click potential error:", error);
+        res.status(500).json({ success: false, message: "Failed to estimate click potential" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/content/question-keywords",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const { keyword } = req.body;
+        if (!keyword || typeof keyword !== "string") {
+          return res.status(400).json({ success: false, message: "Keyword is required" });
+        }
+        const settings = await aiSettingsService.getAllSettings();
+        const provider = (settings.length > 0 ? settings[0].provider : null) || "openai";
+        const prompt = `You are an SEO keyword research expert. For the keyword "${keyword}" in the ${profile[0].industry || "general business"} industry (${profile[0].location || "US"}):
+
+Generate question-based keywords that people search for \u2014 the kind that appear in Google's "People Also Ask" section.
+
+Return a JSON object:
+{
+  "keyword": "${keyword}",
+  "questions": [
+    {
+      "question": "How much does [keyword] cost?",
+      "estimatedVolume": 500,
+      "difficulty": 35,
+      "intent": "informational",
+      "contentFormat": "comparison table with pricing breakdown"
+    }
+  ]
+}
+
+Provide 15-20 questions. Include a mix of:
+- "How" questions (process/method)
+- "What" questions (definition/explanation)
+- "Why" questions (reasoning)
+- "Where/When" questions (location/timing)
+- "Is/Can/Does" questions (yes/no intent)
+- Cost/price questions
+- Comparison questions ("vs", "or", "difference between")
+
+Estimate search volume and keyword difficulty (0-100) realistically.`;
+        const result = await unifiedAI.getCompletion(provider, {
+          messages: [
+            { role: "system", content: "You are an SEO question keyword expert. Return only valid JSON." },
+            { role: "user", content: prompt }
+          ],
+          temperature: 0.7
+        });
+        let data = { keyword, questions: [] };
+        try {
+          const cleaned = (result.content || "").replace(/```json?\n?/g, "").replace(/```/g, "").trim();
+          data = JSON.parse(cleaned);
+        } catch {
+        }
+        res.json({ success: true, ...data });
+      } catch (error) {
+        console.error("[Optimize] Question keywords error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate question keywords" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/content/topic-clusters",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const profileId = profile[0].id;
+        let keywords;
+        if (req.body.keywords && Array.isArray(req.body.keywords) && req.body.keywords.length > 0) {
+          keywords = req.body.keywords;
+        } else {
+          const tracked = await db.select().from(seoKeywords).where(eq32(seoKeywords.profileId, profileId));
+          keywords = tracked.map((kw) => kw.keyword);
+        }
+        if (keywords.length === 0) {
+          return res.status(400).json({ success: false, message: "No keywords available. Add keywords to your profile first." });
+        }
+        const settings = await aiSettingsService.getAllSettings();
+        const provider = (settings.length > 0 ? settings[0].provider : null) || "openai";
+        const prompt = `You are an SEO content strategist. Group these keywords into topic clusters for ${profile[0].domain || "a business website"} in the ${profile[0].industry || "general business"} industry:
+
+Keywords: ${keywords.slice(0, 50).join(", ")}
+
+Return a JSON object:
+{
+  "clusters": [
+    {
+      "topic": "Cluster name / pillar topic",
+      "pillarKeyword": "main keyword for the pillar page",
+      "keywords": ["keyword1", "keyword2"],
+      "suggestedContent": "A comprehensive guide covering...",
+      "contentType": "pillar page",
+      "estimatedPages": 5
+    }
+  ]
+}
+
+Group related keywords together. Each cluster should have:
+- A clear pillar topic
+- The specific keywords that belong in that cluster
+- A suggested content piece (pillar page or supporting content)
+- The type of content that would work best
+
+Provide 3-8 clusters depending on keyword variety. Every keyword should be in exactly one cluster.`;
+        const result = await unifiedAI.getCompletion(provider, {
+          messages: [
+            { role: "system", content: "You are an SEO topic clustering expert. Return only valid JSON." },
+            { role: "user", content: prompt }
+          ],
+          temperature: 0.5
+        });
+        let data = { clusters: [] };
+        try {
+          const cleaned = (result.content || "").replace(/```json?\n?/g, "").replace(/```/g, "").trim();
+          data = JSON.parse(cleaned);
+        } catch {
+        }
+        res.json({ success: true, clusters: data.clusters || [] });
+      } catch (error) {
+        console.error("[Optimize] Topic clusters error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate topic clusters" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/content/seo-score",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const { content, targetKeyword } = req.body;
+        if (!content || typeof content !== "string") {
+          return res.status(400).json({ success: false, message: "Content is required" });
+        }
+        if (!targetKeyword || typeof targetKeyword !== "string") {
+          return res.status(400).json({ success: false, message: "Target keyword is required" });
+        }
+        const checks = [];
+        const suggestions = [];
+        const wordCount = content.split(/\s+/).filter((w) => w.length > 0).length;
+        if (wordCount >= 1500) {
+          checks.push({ name: "Content Length", passed: true, detail: `${wordCount} words \u2014 comprehensive length` });
+        } else if (wordCount >= 600) {
+          checks.push({ name: "Content Length", passed: true, detail: `${wordCount} words \u2014 adequate, but longer content may rank better` });
+          suggestions.push(`Consider expanding to 1,500+ words for more thorough coverage`);
+        } else {
+          checks.push({ name: "Content Length", passed: false, detail: `${wordCount} words \u2014 too short for competitive keywords` });
+          suggestions.push(`Expand content to at least 600 words, ideally 1,500+ for this keyword`);
+        }
+        const keywordLower = targetKeyword.toLowerCase();
+        const contentLower = content.toLowerCase();
+        const keywordCount = contentLower.split(keywordLower).length - 1;
+        const keywordDensity = wordCount > 0 ? Math.round(keywordCount / wordCount * 1e4) / 100 : 0;
+        if (keywordCount === 0) {
+          checks.push({ name: "Keyword Usage", passed: false, detail: "Target keyword not found in content" });
+          suggestions.push(`Include "${targetKeyword}" naturally throughout the content`);
+        } else if (keywordDensity > 3) {
+          checks.push({ name: "Keyword Usage", passed: false, detail: `Keyword density ${keywordDensity}% \u2014 too high, may be seen as keyword stuffing` });
+          suggestions.push(`Reduce keyword density from ${keywordDensity}% to 1-2%`);
+        } else if (keywordDensity >= 0.5) {
+          checks.push({ name: "Keyword Usage", passed: true, detail: `Keyword used ${keywordCount} times (${keywordDensity}% density)` });
+        } else {
+          checks.push({ name: "Keyword Usage", passed: false, detail: `Keyword density ${keywordDensity}% \u2014 too low` });
+          suggestions.push(`Use "${targetKeyword}" a few more times naturally \u2014 aim for 1-2% density`);
+        }
+        const first100Words = content.split(/\s+/).slice(0, 100).join(" ").toLowerCase();
+        const keywordInIntro = first100Words.includes(keywordLower);
+        checks.push({
+          name: "Keyword in Introduction",
+          passed: keywordInIntro,
+          detail: keywordInIntro ? "Target keyword appears in the first 100 words" : "Target keyword missing from the opening paragraph"
+        });
+        if (!keywordInIntro) suggestions.push("Include the target keyword in your first paragraph");
+        const headingMatches = content.match(/^#{1,6}\s+.+/gm) || content.match(/<h[1-6][^>]*>.*?<\/h[1-6]>/gi) || [];
+        if (headingMatches.length >= 3) {
+          checks.push({ name: "Heading Structure", passed: true, detail: `${headingMatches.length} headings found \u2014 well-structured` });
+        } else if (headingMatches.length > 0) {
+          checks.push({ name: "Heading Structure", passed: true, detail: `${headingMatches.length} heading(s) found \u2014 consider adding more subheadings` });
+          suggestions.push("Add more subheadings (H2, H3) to break up the content and improve readability");
+        } else {
+          checks.push({ name: "Heading Structure", passed: false, detail: "No headings detected" });
+          suggestions.push("Add H2 and H3 headings to structure your content \u2014 search engines use headings to understand page topics");
+        }
+        const sentences = content.split(/[.!?]+/).filter((s) => s.trim().length > 0);
+        const avgSentenceLength = sentences.length > 0 ? Math.round(wordCount / sentences.length) : 0;
+        if (avgSentenceLength <= 20) {
+          checks.push({ name: "Readability", passed: true, detail: `Average sentence length: ${avgSentenceLength} words \u2014 easy to read` });
+        } else if (avgSentenceLength <= 25) {
+          checks.push({ name: "Readability", passed: true, detail: `Average sentence length: ${avgSentenceLength} words \u2014 readable but could be tighter` });
+          suggestions.push("Some sentences are long \u2014 try breaking them up for better readability");
+        } else {
+          checks.push({ name: "Readability", passed: false, detail: `Average sentence length: ${avgSentenceLength} words \u2014 too complex` });
+          suggestions.push("Shorten your sentences \u2014 aim for 15-20 words per sentence for better readability");
+        }
+        const paragraphs = content.split(/\n\n+/).filter((p) => p.trim().length > 0);
+        const longParagraphs = paragraphs.filter((p) => p.split(/\s+/).length > 150);
+        if (longParagraphs.length === 0) {
+          checks.push({ name: "Paragraph Length", passed: true, detail: "All paragraphs are a reasonable length" });
+        } else {
+          checks.push({ name: "Paragraph Length", passed: false, detail: `${longParagraphs.length} paragraph(s) over 150 words` });
+          suggestions.push("Break up long paragraphs \u2014 aim for 3-5 sentences per paragraph for web content");
+        }
+        const linkMatches = content.match(/\[.*?\]\(.*?\)/g) || content.match(/<a\s+[^>]*href[^>]*>/gi) || [];
+        if (linkMatches.length >= 2) {
+          checks.push({ name: "Internal Links", passed: true, detail: `${linkMatches.length} links found` });
+        } else if (linkMatches.length === 1) {
+          checks.push({ name: "Internal Links", passed: true, detail: "1 link found \u2014 consider adding more" });
+          suggestions.push("Add 2-3 more internal links to related content on your site");
+        } else {
+          checks.push({ name: "Internal Links", passed: false, detail: "No links found in content" });
+          suggestions.push("Add internal links to related pages on your site \u2014 this helps search engines understand your site structure");
+        }
+        const passedChecks = checks.filter((c) => c.passed).length;
+        const score = Math.round(passedChecks / checks.length * 100);
+        res.json({
+          success: true,
+          score,
+          grade: score >= 90 ? "A" : score >= 75 ? "B" : score >= 60 ? "C" : score >= 40 ? "D" : "F",
+          checks,
+          suggestions,
+          wordCount,
+          keywordDensity
+        });
+      } catch (error) {
+        console.error("[Optimize] SEO score error:", error);
+        res.status(500).json({ success: false, message: "Failed to score content" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/pages/snippet-preview",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const { url } = req.body;
+        if (!url || typeof url !== "string") {
+          return res.status(400).json({ success: false, message: "URL is required" });
+        }
+        const profileId = profile[0].id;
+        const pages = await db.select().from(seoPages).where(
+          and21(eq32(seoPages.profileId, profileId), eq32(seoPages.url, url))
+        ).limit(1);
+        let title = "";
+        let metaDescription = "";
+        if (pages.length > 0) {
+          title = pages[0].title || "";
+          metaDescription = pages[0].metaDescription || "";
+        }
+        if (!title && !metaDescription) {
+          try {
+            const fetchUrl = url.startsWith("http") ? url : `https://${url}`;
+            const response = await fetch(fetchUrl, {
+              headers: { "User-Agent": "Mozilla/5.0 (compatible; BusinessBlueprint SEO Analyzer)" },
+              signal: AbortSignal.timeout(1e4)
+            });
+            const html = await response.text();
+            const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+            title = titleMatch ? titleMatch[1].trim() : "";
+            const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([\s\S]*?)["'][^>]*>/i) || html.match(/<meta[^>]*content=["']([\s\S]*?)["'][^>]*name=["']description["'][^>]*>/i);
+            metaDescription = descMatch ? descMatch[1].trim() : "";
+          } catch {
+          }
+        }
+        const titleLength = title.length;
+        const descLength = metaDescription.length;
+        const issues = [];
+        if (!title) issues.push("Missing page title");
+        else if (titleLength > 60) issues.push(`Title is ${titleLength} characters \u2014 Google typically shows 50-60. It may be truncated.`);
+        else if (titleLength < 30) issues.push(`Title is only ${titleLength} characters \u2014 you have room to add more descriptive keywords.`);
+        if (!metaDescription) issues.push("Missing meta description \u2014 Google will auto-generate one, which may not be what you want.");
+        else if (descLength > 160) issues.push(`Description is ${descLength} characters \u2014 Google typically shows 150-160. It may be truncated.`);
+        else if (descLength < 70) issues.push(`Description is only ${descLength} characters \u2014 a longer description gives you more SERP real estate.`);
+        let suggestions = null;
+        if (title || metaDescription) {
+          try {
+            const settings = await aiSettingsService.getAllSettings();
+            const provider = (settings.length > 0 ? settings[0].provider : null) || "openai";
+            const prompt = `You are an SEO specialist. Given this page's current SERP snippet data:
+Title: "${title}"
+Meta Description: "${metaDescription}"
+URL: ${url}
+Industry: ${profile[0].industry || "general business"}
+
+Suggest an improved title (50-60 chars) and meta description (140-155 chars) that would get more clicks. Keep it natural and compelling \u2014 not keyword-stuffed.
+
+Return ONLY a JSON object: {"title": "...", "description": "..."}`;
+            const result = await unifiedAI.getCompletion(provider, {
+              messages: [
+                { role: "system", content: "You are an SEO copywriter. Return only valid JSON." },
+                { role: "user", content: prompt }
+              ],
+              temperature: 0.6
+            });
+            const cleaned = (result.content || "").replace(/```json?\n?/g, "").replace(/```/g, "").trim();
+            suggestions = JSON.parse(cleaned);
+          } catch {
+          }
+        }
+        const displayUrl = url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+        res.json({
+          success: true,
+          snippet: {
+            title: title || "(No title found)",
+            titleLength,
+            metaDescription: metaDescription || "(No meta description found)",
+            descriptionLength: descLength,
+            displayUrl,
+            issues,
+            score: issues.length === 0 ? "good" : issues.length <= 1 ? "fair" : "poor"
+          },
+          suggestions
+        });
+      } catch (error) {
+        console.error("[Optimize] Snippet preview error:", error);
+        res.status(500).json({ success: false, message: "Failed to generate snippet preview" });
+      }
+    }
+  );
   app2.get(
     "/api/seo/action-items",
     requireAuth,
@@ -21571,6 +22354,362 @@ Return ONLY a JSON array of objects: [{"url": "...", "suggestedAlt": "..."}]`;
     }
   );
   app2.post(
+    "/api/seo/backlinks/discover",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found." });
+        if (!mozBacklinks.isConfigured()) {
+          return res.json({ success: false, message: "Connect a data provider to discover backlinks.", requiresDataProvider: true });
+        }
+        const profileId = profile[0].id;
+        const { backlinks: fetchedLinks } = await mozBacklinks.getBacklinks(profile[0].domain, 200);
+        const existingBacklinks = await db.select().from(seoBacklinks).where(eq32(seoBacklinks.profileId, profileId));
+        const existingMap = /* @__PURE__ */ new Map();
+        for (const bl of existingBacklinks) {
+          existingMap.set(`${bl.sourceUrl}|${bl.targetUrl}`, bl);
+        }
+        let newCount = 0;
+        let updatedCount = 0;
+        const seenKeys = /* @__PURE__ */ new Set();
+        for (const link of fetchedLinks) {
+          const key = `${link.sourceUrl}|${link.targetUrl}`;
+          seenKeys.add(key);
+          const existing = existingMap.get(key);
+          if (existing) {
+            await db.update(seoBacklinks).set({
+              lastSeen: link.lastSeen ? new Date(link.lastSeen) : /* @__PURE__ */ new Date(),
+              domainAuthority: link.domainAuthority,
+              status: "active",
+              isLost: false
+            }).where(eq32(seoBacklinks.id, existing.id));
+            updatedCount++;
+          } else {
+            await db.insert(seoBacklinks).values({
+              profileId,
+              sourceUrl: link.sourceUrl,
+              targetUrl: link.targetUrl,
+              anchorText: link.anchorText,
+              domainAuthority: link.domainAuthority,
+              linkType: link.linkType,
+              firstSeen: link.firstSeen ? new Date(link.firstSeen) : /* @__PURE__ */ new Date(),
+              lastSeen: link.lastSeen ? new Date(link.lastSeen) : /* @__PURE__ */ new Date(),
+              status: "active",
+              isNew: true,
+              isLost: false,
+              isSpam: link.isSpam,
+              spamScore: link.spamScore
+            });
+            newCount++;
+          }
+        }
+        let lostCount = 0;
+        for (const [key, bl] of Array.from(existingMap.entries())) {
+          if (!seenKeys.has(key) && !bl.isLost) {
+            await db.update(seoBacklinks).set({ isLost: true, status: "lost" }).where(eq32(seoBacklinks.id, bl.id));
+            lostCount++;
+          }
+        }
+        res.json({ success: true, discovered: newCount, updated: updatedCount, lost: lostCount });
+      } catch (error) {
+        console.error("[Optimize] Backlink discovery error:", error);
+        res.status(500).json({ success: false, message: "Failed to discover backlinks" });
+      }
+    }
+  );
+  app2.get(
+    "/api/seo/backlinks/summary",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, summary: null });
+        const profileId = profile[0].id;
+        const backlinks = await db.select().from(seoBacklinks).where(eq32(seoBacklinks.profileId, profileId));
+        const total = backlinks.length;
+        const active = backlinks.filter((b) => !b.isLost).length;
+        const lost = backlinks.filter((b) => b.isLost).length;
+        const newLinks = backlinks.filter((b) => b.isNew).length;
+        const dofollowCount = backlinks.filter((b) => b.linkType === "dofollow").length;
+        const nofollowCount = total - dofollowCount;
+        const domainCounts = /* @__PURE__ */ new Map();
+        for (const bl of backlinks) {
+          if (!bl.sourceUrl || bl.isLost) continue;
+          let hostname = "";
+          try {
+            hostname = new URL(bl.sourceUrl).hostname;
+          } catch {
+            continue;
+          }
+          const entry = domainCounts.get(hostname) || { count: 0, totalDA: 0 };
+          entry.count++;
+          if (bl.domainAuthority != null) entry.totalDA += bl.domainAuthority;
+          domainCounts.set(hostname, entry);
+        }
+        const topReferringDomains = Array.from(domainCounts.entries()).map(([domain, data]) => ({
+          domain,
+          count: data.count,
+          avgDA: data.count > 0 ? Math.round(data.totalDA / data.count) : 0
+        })).sort((a, b) => b.count - a.count).slice(0, 10);
+        const daValues = backlinks.filter((b) => b.domainAuthority != null && !b.isLost).map((b) => b.domainAuthority);
+        const avgDomainAuthority = daValues.length > 0 ? Math.round(daValues.reduce((a, b) => a + b, 0) / daValues.length) : 0;
+        res.json({
+          success: true,
+          summary: {
+            total,
+            active,
+            lost,
+            new: newLinks,
+            referringDomains: domainCounts.size,
+            avgDomainAuthority,
+            dofollowCount,
+            nofollowCount,
+            topReferringDomains
+          }
+        });
+      } catch (error) {
+        console.error("[Optimize] Backlink summary error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch backlink summary" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/backlinks/toxic-check",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const profileId = profile[0].id;
+        const backlinks = await db.select().from(seoBacklinks).where(eq32(seoBacklinks.profileId, profileId));
+        const suspiciousTlds = [".xyz", ".top", ".work", ".click", ".link", ".gq", ".cf", ".tk", ".ml", ".ga", ".buzz", ".icu"];
+        const flagged = [];
+        for (const bl of backlinks) {
+          let spamScore = 0;
+          const reasons = [];
+          if (bl.domainAuthority !== null && bl.domainAuthority < 10) {
+            spamScore += 30;
+            reasons.push(`Very low domain authority (${bl.domainAuthority})`);
+          } else if (bl.domainAuthority !== null && bl.domainAuthority < 20) {
+            spamScore += 15;
+            reasons.push(`Low domain authority (${bl.domainAuthority})`);
+          }
+          const sourceUrl = bl.sourceUrl || "";
+          try {
+            const hostname = new URL(sourceUrl).hostname;
+            if (suspiciousTlds.some((tld) => hostname.endsWith(tld))) {
+              spamScore += 35;
+              reasons.push(`Suspicious TLD: ${hostname.split(".").pop()}`);
+            }
+          } catch {
+          }
+          const anchor = bl.anchorText || "";
+          if (anchor.length > 0) {
+            const wordCount = anchor.split(/\s+/).length;
+            if (wordCount > 5 && anchor === anchor.toLowerCase()) {
+              spamScore += 25;
+              reasons.push("Keyword-stuffed anchor text");
+            }
+            const commercialTerms = ["buy", "cheap", "best price", "discount", "order", "online"];
+            if (commercialTerms.some((t) => anchor.toLowerCase().includes(t))) {
+              spamScore += 20;
+              reasons.push("Commercial/spammy anchor text");
+            }
+          }
+          if (bl.linkType === "ugc" && (bl.domainAuthority === null || bl.domainAuthority < 15)) {
+            spamScore += 10;
+            reasons.push("UGC link from low-authority site");
+          }
+          if (spamScore >= 30) {
+            flagged.push({ id: bl.id, sourceUrl: bl.sourceUrl, spamScore: Math.min(100, spamScore), reason: reasons.join("; ") });
+            await db.update(seoBacklinks).set({ isSpam: true, spamScore: Math.min(100, spamScore) }).where(eq32(seoBacklinks.id, bl.id));
+          }
+        }
+        const recommendation = flagged.length === 0 ? "No toxic backlinks detected. Your backlink profile looks healthy." : flagged.length <= 3 ? `Found ${flagged.length} potentially toxic backlink(s). Consider disavowing them through Google Search Console if they persist.` : `Found ${flagged.length} toxic backlinks. We recommend creating a disavow file and submitting it to Google Search Console to protect your rankings.`;
+        res.json({ success: true, flagged: flagged.length, backlinks: flagged, recommendation });
+      } catch (error) {
+        console.error("[Optimize] Toxic backlink check error:", error);
+        res.status(500).json({ success: false, message: "Failed to run toxic backlink check" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/backlinks/opportunities",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const profileId = profile[0].id;
+        const profileData = profile[0];
+        const userBacklinks = await db.select().from(seoBacklinks).where(eq32(seoBacklinks.profileId, profileId));
+        const userDomains = /* @__PURE__ */ new Set();
+        for (const bl of userBacklinks) {
+          try {
+            userDomains.add(new URL(bl.sourceUrl || "").hostname);
+          } catch {
+          }
+        }
+        const competitors = await db.select().from(seoCompetitors).where(eq32(seoCompetitors.profileId, profileId));
+        const competitorDomains = competitors.map((c) => c.domain).filter(Boolean);
+        const settings = await aiSettingsService.getAllSettings();
+        const provider = (settings.length > 0 ? settings[0].provider : null) || "openai";
+        const prompt = `You are an SEO link building expert. Analyze link building opportunities for:
+
+Domain: ${profileData.domain}
+Industry: ${profileData.industry || "general business"}
+Location: ${profileData.location || "not specified"}
+Competitors: ${competitorDomains.join(", ") || "none specified"}
+Current backlink domains (${userDomains.size} total): ${Array.from(userDomains).slice(0, 20).join(", ")}
+
+Return a JSON object with this structure:
+{
+  "opportunities": [
+    {
+      "domain": "example.com",
+      "domainAuthority": 45,
+      "linksToCompetitor": true,
+      "suggestedApproach": "Guest posting about [topic]",
+      "relevance": "high"
+    }
+  ]
+}
+
+Provide 10-15 realistic link building opportunities. Include a mix of:
+- Domains that likely link to competitors in this industry
+- Industry directories and resource pages
+- Local business directories (if location is known)
+- Guest posting targets
+- Partnership opportunities
+
+Do NOT include domains the user already has backlinks from: ${Array.from(userDomains).slice(0, 30).join(", ")}`;
+        const result = await unifiedAI.getCompletion(provider, {
+          messages: [
+            { role: "system", content: "You are an SEO link building expert. Return only valid JSON." },
+            { role: "user", content: prompt }
+          ],
+          temperature: 0.7
+        });
+        let opportunities = [];
+        try {
+          const cleaned = (result.content || "").replace(/```json?\n?/g, "").replace(/```/g, "").trim();
+          const parsed = JSON.parse(cleaned);
+          opportunities = parsed.opportunities || [];
+        } catch {
+          opportunities = [];
+        }
+        res.json({ success: true, opportunities });
+      } catch (error) {
+        console.error("[Optimize] Backlink opportunities error:", error);
+        res.status(500).json({ success: false, message: "Failed to find link building opportunities" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/backlinks/broken",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found. Complete setup first." });
+        const profileId = profile[0].id;
+        const backlinks = await db.select().from(seoBacklinks).where(and21(eq32(seoBacklinks.profileId, profileId), eq32(seoBacklinks.isLost, false)));
+        const broken = [];
+        const targetUrls = /* @__PURE__ */ new Map();
+        for (const bl of backlinks) {
+          const target = bl.targetUrl || "";
+          if (!target) continue;
+          if (!targetUrls.has(target)) targetUrls.set(target, []);
+          targetUrls.get(target).push(bl);
+        }
+        const urlsToCheck = Array.from(targetUrls.keys()).slice(0, 50);
+        for (const url of urlsToCheck) {
+          try {
+            const response = await fetch(url, { method: "HEAD", redirect: "follow", signal: AbortSignal.timeout(5e3) });
+            if (response.status === 404 || response.status === 410) {
+              const linkedBacklinks = targetUrls.get(url) || [];
+              for (const bl of linkedBacklinks) {
+                broken.push({
+                  sourceUrl: bl.sourceUrl,
+                  targetUrl: bl.targetUrl,
+                  anchorText: bl.anchorText,
+                  suggestedFix: `This page returns a ${response.status}. Set up a 301 redirect to the most relevant live page to reclaim the link equity, or fix the page if the content should still exist.`
+                });
+              }
+            }
+          } catch {
+          }
+        }
+        res.json({
+          success: true,
+          broken,
+          totalChecked: urlsToCheck.length,
+          totalBacklinks: backlinks.length,
+          recommendation: broken.length === 0 ? "No broken backlinks found. All checked target URLs are returning valid responses." : `Found ${broken.length} broken backlink(s). Each one represents lost link equity \u2014 set up 301 redirects to reclaim ranking power.`
+        });
+      } catch (error) {
+        console.error("[Optimize] Broken backlinks error:", error);
+        res.status(500).json({ success: false, message: "Failed to check for broken backlinks" });
+      }
+    }
+  );
+  app2.get(
+    "/api/seo/backlinks/anchor-text",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, distribution: [], warnings: [] });
+        const profileId = profile[0].id;
+        const backlinks = await db.select().from(seoBacklinks).where(eq32(seoBacklinks.profileId, profileId));
+        const anchorCounts = /* @__PURE__ */ new Map();
+        for (const bl of backlinks) {
+          const anchor = (bl.anchorText || "(no anchor text)").trim();
+          anchorCounts.set(anchor, (anchorCounts.get(anchor) || 0) + 1);
+        }
+        const total = backlinks.length || 1;
+        const distribution = Array.from(anchorCounts.entries()).map(([anchorText, count2]) => ({
+          anchorText,
+          count: count2,
+          percentage: Math.round(count2 / total * 1e4) / 100
+        })).sort((a, b) => b.count - a.count);
+        const warnings = [];
+        const domain = profile[0].domain || "";
+        const brandName = profile[0].businessName || domain;
+        for (const item of distribution) {
+          if (item.anchorText === "(no anchor text)") continue;
+          const isBrandAnchor = item.anchorText.toLowerCase().includes(domain.toLowerCase()) || item.anchorText.toLowerCase().includes(brandName.toLowerCase());
+          if (!isBrandAnchor && item.percentage > 15) {
+            warnings.push(`"${item.anchorText}" makes up ${item.percentage}% of backlinks \u2014 this looks over-optimized and may trigger a penalty`);
+          }
+        }
+        const uniqueAnchors = distribution.filter((d) => d.anchorText !== "(no anchor text)").length;
+        if (uniqueAnchors < 5 && backlinks.length >= 10) {
+          warnings.push("Low anchor text diversity \u2014 a natural backlink profile should have varied anchor text");
+        }
+        const brandAnchors = distribution.filter((d) => {
+          const anchor = d.anchorText.toLowerCase();
+          return anchor.includes(domain.toLowerCase()) || anchor.includes(brandName.toLowerCase());
+        });
+        const brandPercentage = brandAnchors.reduce((sum, d) => sum + d.percentage, 0);
+        if (brandPercentage < 20 && backlinks.length >= 10) {
+          warnings.push(`Only ${Math.round(brandPercentage)}% of anchors are branded \u2014 healthy profiles typically have 30-50% branded anchors`);
+        }
+        res.json({ success: true, distribution, warnings });
+      } catch (error) {
+        console.error("[Optimize] Anchor text analysis error:", error);
+        res.status(500).json({ success: false, message: "Failed to analyze anchor text distribution" });
+      }
+    }
+  );
+  app2.post(
     "/api/seo/competitors",
     requireAuth,
     async (req, res) => {
@@ -21694,30 +22833,10 @@ Return ONLY a JSON array of objects: [{"url": "...", "suggestedAlt": "..."}]`;
         } else {
           return res.status(400).json({ success: false, message: "Provide either competitorId or domain" });
         }
-        const hasDataProvider = !!process.env.DATAFORSEO_LOGIN;
-        if (hasDataProvider) {
+        const hasBacklinkProvider = mozBacklinks.isConfigured();
+        if (hasBacklinkProvider) {
           try {
-            const credentials = Buffer.from(`${process.env.DATAFORSEO_LOGIN}:${process.env.DATAFORSEO_PASSWORD}`).toString("base64");
-            const apiRes = await fetch("https://api.dataforseo.com/v3/backlinks/backlinks/live", {
-              method: "POST",
-              headers: {
-                "Authorization": `Basic ${credentials}`,
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify([{
-                target: targetDomain,
-                limit: 100,
-                order_by: ["rank,desc"]
-              }]),
-              signal: AbortSignal.timeout(3e4)
-            });
-            const apiData = await apiRes.json();
-            const items = apiData?.tasks?.[0]?.result?.[0]?.items || [];
-            const backlinks = items.map((item) => ({
-              sourceUrl: item.url_from || item.source_url || "",
-              anchorText: item.anchor || "",
-              domainAuthority: item.rank || item.page_rank || null
-            }));
+            const backlinks = await mozBacklinks.getCompetitorBacklinksList(targetDomain, 100);
             const userBacklinks2 = await db.select().from(seoBacklinks).where(eq32(seoBacklinks.profileId, profileData.id));
             const userSourceDomains2 = new Set(
               userBacklinks2.map((b) => {
@@ -21735,9 +22854,21 @@ Return ONLY a JSON array of objects: [{"url": "...", "suggestedAlt": "..."}]`;
                 return false;
               }
             }).slice(0, 20).map((bl) => `${bl.sourceUrl} links to ${targetDomain} but not to you (anchor: "${bl.anchorText}")`);
-            return res.json({ success: true, domain: targetDomain, backlinks, linkOpportunities });
+            return res.json({
+              success: true,
+              domain: targetDomain,
+              backlinks: backlinks.map((bl) => ({
+                sourceUrl: bl.sourceUrl,
+                anchorText: bl.anchorText,
+                domainAuthority: bl.domainAuthority,
+                linkType: bl.linkType,
+                spamScore: bl.spamScore
+              })),
+              linkOpportunities,
+              dataProviderConnected: true
+            });
           } catch (apiErr) {
-            console.error("[Optimize] DataForSEO backlinks API error:", apiErr.message);
+            console.error("[Optimize] Moz backlinks API error:", apiErr.message);
           }
         }
         const settings = await aiSettingsService.getAllSettings();
@@ -22129,6 +23260,132 @@ Base estimates on industry norms and relative domain strength.`;
       }
     }
   );
+  app2.post(
+    "/api/seo/competitors/:id/enrich",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const competitorId = parseInt(req.params.id);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found." });
+        const competitor = await db.select().from(seoCompetitors).where(and21(eq32(seoCompetitors.id, competitorId), eq32(seoCompetitors.profileId, profile[0].id))).limit(1);
+        if (competitor.length === 0) return res.status(404).json({ success: false, message: "Competitor not found." });
+        if (!dataForSEO.isConfigured()) {
+          return res.json({ success: false, message: "Connect a data provider to enrich competitor data.", requiresDataProvider: true });
+        }
+        const domainData = await dataForSEO.getDomainAuthority(competitor[0].domain);
+        const keywords = await dataForSEO.getCompetitorKeywords(competitor[0].domain, 50);
+        const updateData = { lastChecked: /* @__PURE__ */ new Date() };
+        if (domainData) {
+          updateData.domainAuthority = domainData.domainRank;
+          updateData.estimatedTraffic = domainData.organicTraffic;
+          updateData.totalBacklinks = domainData.totalBacklinks;
+          updateData.totalKeywords = domainData.totalKeywords;
+        }
+        const [updated] = await db.update(seoCompetitors).set(updateData).where(eq32(seoCompetitors.id, competitorId)).returning();
+        if (keywords.length > 0) {
+          await db.insert(seoCompetitorData).values({
+            competitorId,
+            metric: "ranked_keywords",
+            value: JSON.stringify(keywords)
+          });
+        }
+        res.json({ success: true, competitor: updated, keywords });
+      } catch (error) {
+        console.error("[Optimize] Competitor enrich error:", error);
+        res.status(500).json({ success: false, message: "Failed to enrich competitor data" });
+      }
+    }
+  );
+  app2.get(
+    "/api/seo/competitors/:id/keywords",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const competitorId = parseInt(req.params.id);
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, keywords: [] });
+        const competitor = await db.select().from(seoCompetitors).where(and21(eq32(seoCompetitors.id, competitorId), eq32(seoCompetitors.profileId, profile[0].id))).limit(1);
+        if (competitor.length === 0) return res.json({ success: true, keywords: [] });
+        const data = await db.select().from(seoCompetitorData).where(and21(eq32(seoCompetitorData.competitorId, competitorId), eq32(seoCompetitorData.metric, "ranked_keywords"))).orderBy(desc15(seoCompetitorData.date)).limit(1);
+        let keywords = [];
+        if (data.length > 0 && data[0].value) {
+          try {
+            keywords = JSON.parse(data[0].value);
+          } catch {
+          }
+        }
+        res.json({ success: true, keywords, lastUpdated: data[0]?.date || null });
+      } catch (error) {
+        console.error("[Optimize] Competitor keywords error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch competitor keywords" });
+      }
+    }
+  );
+  app2.get(
+    "/api/seo/domain-authority",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found." });
+        const profileData = profile[0];
+        if (profileData.lastDaCheck && profileData.domainAuthority != null) {
+          const hoursSinceCheck = (Date.now() - new Date(profileData.lastDaCheck).getTime()) / (1e3 * 60 * 60);
+          if (hoursSinceCheck < 24) {
+            return res.json({
+              success: true,
+              domainAuthority: profileData.domainAuthority,
+              organicTraffic: profileData.organicTraffic,
+              totalBacklinks: profileData.totalBacklinks,
+              lastChecked: profileData.lastDaCheck,
+              cached: true
+            });
+          }
+        }
+        if (!dataForSEO.isConfigured()) {
+          return res.json({
+            success: true,
+            domainAuthority: profileData.domainAuthority,
+            organicTraffic: profileData.organicTraffic,
+            totalBacklinks: profileData.totalBacklinks,
+            lastChecked: profileData.lastDaCheck,
+            requiresDataProvider: !profileData.domainAuthority,
+            message: profileData.domainAuthority ? void 0 : "Connect a data provider to track domain authority."
+          });
+        }
+        const data = await dataForSEO.getDomainAuthority(profileData.domain);
+        if (data) {
+          await db.update(seoProfiles).set({
+            domainAuthority: data.domainRank,
+            organicTraffic: data.organicTraffic,
+            totalBacklinks: data.totalBacklinks,
+            lastDaCheck: /* @__PURE__ */ new Date()
+          }).where(eq32(seoProfiles.id, profileData.id));
+          return res.json({
+            success: true,
+            domainAuthority: data.domainRank,
+            organicTraffic: data.organicTraffic,
+            totalBacklinks: data.totalBacklinks,
+            lastChecked: /* @__PURE__ */ new Date()
+          });
+        }
+        res.json({
+          success: true,
+          domainAuthority: profileData.domainAuthority,
+          organicTraffic: profileData.organicTraffic,
+          totalBacklinks: profileData.totalBacklinks,
+          lastChecked: profileData.lastDaCheck
+        });
+      } catch (error) {
+        console.error("[Optimize] Domain authority error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch domain authority" });
+      }
+    }
+  );
   app2.get(
     "/api/seo/local-rankings",
     requireAuth,
@@ -22389,9 +23646,9 @@ Base estimates on industry norms and relative domain strength.`;
         const rankingChanges = {};
         for (const r of recentRankings) {
           if (!rankingChanges[r.keywordId]) {
-            rankingChanges[r.keywordId] = { oldest: r.position, newest: r.position };
+            rankingChanges[r.keywordId] = { oldest: r.rank, newest: r.rank };
           } else {
-            rankingChanges[r.keywordId].newest = r.position;
+            rankingChanges[r.keywordId].newest = r.rank;
           }
         }
         const keywordMovement = {
@@ -22445,6 +23702,89 @@ Base estimates on industry norms and relative domain strength.`;
       } catch (error) {
         console.error("[Optimize] Report generate error:", error);
         res.status(500).json({ success: false, message: "Failed to generate report" });
+      }
+    }
+  );
+  app2.post(
+    "/api/seo/reports/email",
+    requireAuth,
+    async (req, res) => {
+      try {
+        const clientId = req.clientId;
+        const profile = await db.select().from(seoProfiles).where(eq32(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found." });
+        const profileId = profile[0].id;
+        const reports = await db.select().from(seoReports).where(eq32(seoReports.profileId, profileId)).orderBy(desc15(seoReports.generatedAt)).limit(1);
+        if (reports.length === 0) {
+          return res.status(404).json({ success: false, message: "No reports available. Generate a report first." });
+        }
+        const report = reports[0];
+        const reportData = report.data;
+        const period = report.period || "current";
+        const monthLabel = period ? (/* @__PURE__ */ new Date(`${period}-01`)).toLocaleDateString("en-US", { month: "long", year: "numeric" }) : "Current";
+        const { clients: clients4 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+        const [client] = await db.select({ email: clients4.email }).from(clients4).where(eq32(clients4.id, clientId)).limit(1);
+        if (!client?.email) {
+          return res.status(400).json({ success: false, message: "No email address found for your account." });
+        }
+        const scoreChange = reportData.comparison?.scoreChange ?? reportData.keywordMovement?.improved ?? 0;
+        const scoreDirection = scoreChange > 0 ? "improved" : scoreChange < 0 ? "declined" : "stayed the same";
+        const scoreArrow = scoreChange > 0 ? "\u2191" : scoreChange < 0 ? "\u2193" : "\u2192";
+        const emailHtml = `
+          <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;color:#333;">
+            <h1 style="color:#374151;">/ optimize \u2014 Monthly SEO Report</h1>
+            <h2 style="color:#666;">${profile[0].businessName || profile[0].domain} \u2014 ${monthLabel}</h2>
+            <div style="padding:20px;background:#f9fafb;border-radius:8px;margin:20px 0;">
+              <p style="font-size:24px;font-weight:bold;color:#374151;margin:0;">
+                ${scoreArrow} Your SEO score ${scoreDirection}${scoreChange !== 0 ? ` by ${Math.abs(scoreChange)} points` : ""}
+              </p>
+              <p style="color:#666;margin:8px 0 0;">Overall Score: ${reportData.overallScore ?? "N/A"}</p>
+            </div>
+            <table style="width:100%;border-collapse:collapse;margin:20px 0;">
+              <tr>
+                <td style="padding:12px;border:1px solid #e5e7eb;text-align:center;">
+                  <strong style="font-size:20px;color:#374151;">${reportData.keywords?.tracked ?? 0}</strong><br/>
+                  <span style="color:#888;font-size:12px;">Keywords Tracked</span>
+                </td>
+                <td style="padding:12px;border:1px solid #e5e7eb;text-align:center;">
+                  <strong style="font-size:20px;color:#374151;">${reportData.backlinks?.total ?? 0}</strong><br/>
+                  <span style="color:#888;font-size:12px;">Backlinks</span>
+                </td>
+                <td style="padding:12px;border:1px solid #e5e7eb;text-align:center;">
+                  <strong style="font-size:20px;color:#374151;">${reportData.issues?.total ?? 0}</strong><br/>
+                  <span style="color:#888;font-size:12px;">Open Issues</span>
+                </td>
+              </tr>
+            </table>
+            <p style="margin-top:24px;">
+              <a href="https://businessblueprint.io/optimize" style="display:inline-block;padding:12px 24px;background:#374151;color:#fff;text-decoration:none;border-radius:6px;">
+                View Full Report
+              </a>
+            </p>
+            <p style="color:#999;font-size:12px;margin-top:24px;">businessblueprint.io \u2014 / optimize SEO Report</p>
+          </div>
+        `;
+        try {
+          const { Resend: Resend7 } = await import("resend");
+          const resendKey = process.env.RESEND_API_KEY;
+          if (!resendKey) {
+            return res.status(500).json({ success: false, message: "Email service not configured." });
+          }
+          const resend = new Resend7(resendKey);
+          await resend.emails.send({
+            from: "noreply@send.businessblueprint.io",
+            to: client.email,
+            subject: `Your / optimize Monthly SEO Report \u2014 ${monthLabel}`,
+            html: emailHtml
+          });
+        } catch (emailErr) {
+          console.error("[Optimize] Email send error:", emailErr);
+          return res.status(500).json({ success: false, message: "Failed to send email." });
+        }
+        res.json({ success: true, sentTo: client.email });
+      } catch (error) {
+        console.error("[Optimize] Report email error:", error);
+        res.status(500).json({ success: false, message: "Failed to email report" });
       }
     }
   );
@@ -22588,8 +23928,27 @@ async function gatherReportData(profileId) {
     backlinks: {
       total: backlinks.length,
       active: backlinks.filter((b) => !b.isLost).length,
-      lost: backlinks.filter((b) => b.isLost).length
+      lost: backlinks.filter((b) => b.isLost).length,
+      referringDomains: new Set(
+        backlinks.filter((b) => b.sourceUrl && !b.isLost).map((b) => {
+          try {
+            return new URL(b.sourceUrl).hostname;
+          } catch {
+            return "";
+          }
+        }).filter(Boolean)
+      ).size
     },
+    coreWebVitals: (() => {
+      const pagesWithVitals = pages.filter((p) => p.coreWebVitals != null);
+      if (pagesWithVitals.length === 0) return null;
+      const vitals = pagesWithVitals[0].coreWebVitals;
+      return {
+        lcp: vitals?.lcp ?? null,
+        cls: vitals?.cls ?? null,
+        fid: vitals?.fid ?? null
+      };
+    })(),
     pendingActions: pendingActions[0]?.count || 0
   };
 }
@@ -30038,6 +31397,9 @@ function platformInternalName(display) {
 async function registerRoutes(app2) {
   await setupAuth(app2);
   app2.use(authRouter);
+  app2.get("/api/health", (_req, res) => {
+    res.json({ status: "ok", timestamp: (/* @__PURE__ */ new Date()).toISOString() });
+  });
   app2.get("/favicon.ico", (req, res) => {
     res.setHeader("Cache-Control", "public, max-age=300");
     res.sendFile(
@@ -30101,8 +31463,8 @@ async function registerRoutes(app2) {
           accountStatus: "active"
         },
         {
-          companyName: "Demo Restaurant",
-          email: "demo@businessblueprint.io",
+          companyName: "businessblueprint.io",
+          email: "admin@businessblueprint.io",
           accountStatus: "active"
         },
         {
@@ -31146,7 +32508,7 @@ async function registerRoutes(app2) {
       const isDemoEmail2 = [
         "53947@triadblue.com",
         "53947@businessblueprint.io",
-        "demo@businessblueprint.io",
+        "admin@businessblueprint.io",
         "test@businessblueprint.io",
         "agency@businessblueprint.io"
       ].includes(magicToken.email.toLowerCase());
@@ -31460,7 +32822,7 @@ async function registerRoutes(app2) {
       const autoAccounts = {
         "53947@triadblue.com": { companyName: "TriadBlue Inc.", isAdmin: true },
         "53947@businessblueprint.io": { companyName: "BusinessBlueprint User" },
-        "demo@businessblueprint.io": { companyName: "Demo Restaurant" },
+        "admin@businessblueprint.io": { companyName: "businessblueprint.io" },
         "test@businessblueprint.io": { companyName: "Test Business" },
         "agency@businessblueprint.io": { companyName: "Social Media Agency" }
       };
@@ -31492,7 +32854,7 @@ async function registerRoutes(app2) {
       const isDemoAccount = [
         "53947@triadblue.com",
         "53947@businessblueprint.io",
-        "demo@businessblueprint.io",
+        "admin@businessblueprint.io",
         "test@businessblueprint.io",
         "agency@businessblueprint.io"
       ].includes(normalizedEmail);
@@ -33202,27 +34564,21 @@ import { createServer as createViteServer, createLogger } from "vite";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path2 from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+var root = process.cwd();
 var vite_config_default = defineConfig({
   plugins: [
-    react(),
-    runtimeErrorOverlay(),
-    ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
-      await import("@replit/vite-plugin-cartographer").then(
-        (m) => m.cartographer()
-      )
-    ] : []
+    react()
   ],
   resolve: {
     alias: {
-      "@": path2.resolve(import.meta.dirname, "client", "src"),
-      "@shared": path2.resolve(import.meta.dirname, "shared"),
-      "@assets": path2.resolve(import.meta.dirname, "attached_assets")
+      "@": path2.resolve(root, "client", "src"),
+      "@shared": path2.resolve(root, "shared"),
+      "@assets": path2.resolve(root, "attached_assets")
     }
   },
-  root: path2.resolve(import.meta.dirname, "client"),
+  root: path2.resolve(root, "client"),
   build: {
-    outDir: path2.resolve(import.meta.dirname, "dist/public"),
+    outDir: path2.resolve(root, "dist/public"),
     emptyOutDir: true
   },
   server: {
@@ -33269,8 +34625,7 @@ async function setupVite(app2, server) {
     const url = req.originalUrl;
     try {
       const clientTemplate = path3.resolve(
-        import.meta.dirname,
-        "..",
+        process.cwd(),
         "client",
         "index.html"
       );
@@ -33288,7 +34643,7 @@ async function setupVite(app2, server) {
   });
 }
 function serveStatic(app2) {
-  const distPath = path3.resolve(import.meta.dirname, "..", "dist", "public");
+  const distPath = path3.resolve(process.cwd(), "dist", "public");
   const indexPath = path3.join(distPath, "index.html");
   log(`Checking for static files at: ${distPath}`, "static");
   if (!fs.existsSync(distPath)) {
@@ -33324,7 +34679,7 @@ import { eq as eq42, and as and29 } from "drizzle-orm";
 function setupWebSocket(server) {
   const io = new Server(server, {
     cors: {
-      origin: process.env.NODE_ENV === "production" ? ["https://*.replit.app", "https://*.replit.dev"] : ["http://localhost:5000", "http://127.0.0.1:5000"],
+      origin: process.env.NODE_ENV === "production" ? ["https://businessblueprint.io", "https://www.businessblueprint.io"] : ["http://localhost:5000", "http://127.0.0.1:5000"],
       credentials: true
     },
     transports: ["websocket", "polling"]
@@ -33675,7 +35030,7 @@ app.use((req, res, next) => {
   } else {
     serveStatic(app);
   }
-  const port = 5e3;
+  const port = parseInt(process.env.PORT || "5000", 10);
   server.listen({
     port,
     host: "0.0.0.0",
