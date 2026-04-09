@@ -1,7 +1,0 @@
-[build]
-builder = "nixpacks"
-buildCommand = "cd mcp-server && npm install && npm run build"
-watchPatterns = ["mcp-server/**"]
-
-[deploy]
-startCommand = "cd mcp-server && npm start"
