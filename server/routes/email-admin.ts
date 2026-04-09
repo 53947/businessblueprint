@@ -3,7 +3,7 @@ import { db } from '../db';
 import { emailLogs, emailTemplates } from '@shared/schema';
 import { insertEmailTemplateSchema, updateEmailTemplateSchema } from '@shared/schema';
 import { eq, desc, and, sql, ilike, gte, lte, or } from 'drizzle-orm';
-import { isAuthenticated } from '../replitAuth';
+import { isAuthenticated } from '../auth';
 import { Resend } from 'resend';
 
 let connectionSettings: any;
