@@ -202,9 +202,9 @@ export const RESOURCES_MENU: {
       title: "Developers",
       icon: codeIcon,
       items: [
-        { label: "/ promote API Docs", description: "Email & SMS API reference", href: "/api-docs", icon: fileTextIcon, testId: "link-resources-api" },
-        { label: "/ respond API Docs", description: "Unified communications API", href: "/api-docs", icon: fileTextIcon, testId: "link-resources-respond-api" },
-        { label: "/ post API Docs", description: "Social media posting API", href: "/api-docs", icon: fileTextIcon, testId: "link-resources-post-api" },
+        { label: "/ promote API Docs", description: "Email and SMS Campaigns API reference", href: "/api-docs", icon: fileTextIcon, testId: "link-resources-api" },
+        { label: "/ respond API Docs", description: "Multi-Channel Unified Inbox API", href: "/api-docs", icon: fileTextIcon, testId: "link-resources-respond-api" },
+        { label: "/ post API Docs", description: "Social Media Posting API", href: "/api-docs", icon: fileTextIcon, testId: "link-resources-post-api" },
         { label: "/ engage Installation", description: "Widget integration guide", href: "/engage/install", icon: codeIcon, testId: "link-resources-engage-install" },
         { label: "Site Map", description: "Complete navigation", href: "/sitemap", icon: compassIcon, testId: "link-resources-sitemap" },
       ],

@@ -67,6 +67,20 @@ Shared utility: `shared/score-utils.ts` with `getDisplayScore()`, `getScoreLabel
 
 9 scoring categories mapped 1:1 to 9 apps: promote, post, elevate, respond, engage, publish, optimize, connect, amplify.
 
+### Locked App Descriptions (exact — never paraphrase)
+- / publish — Directory Listings Management Tool
+- / elevate — Reviews and Ratings Management Tool
+- / optimize — SEO Management Tool
+- / amplify — Digital Advertising Tool
+- / promote — Email and SMS Campaigns Tool
+- / respond — Multi-Channel Unified Inbox
+- / engage — Live Chat Widget Tool
+- / post — Create, Schedule and Post Social Media Tool
+- / connect — CRM — Customer Relationship Management
+- Coach Blue — AI Business Coach
+- Anchor Suite — Local Solution. Get Found, Stay Credible.
+- Compass Suite — Complete Communications Engine.
+
 ### Key Files
 - `client/src/config/app-registry.ts` — SINGLE SOURCE OF TRUTH for app names, colors, pricing
 - `shared/schema.ts` — database schema
