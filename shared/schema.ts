@@ -3783,6 +3783,10 @@ export const seoProfiles = pgTable("seo_profiles", {
   targetKeywords: jsonb("target_keywords"), // string[]
   competitors: jsonb("competitors"), // string[]
   localEnabled: boolean("local_enabled").default(false),
+  domainAuthority: integer("domain_authority"),
+  organicTraffic: integer("organic_traffic"),
+  totalBacklinks: integer("total_backlinks"),
+  lastDaCheck: timestamp("last_da_check"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 }, (table) => [

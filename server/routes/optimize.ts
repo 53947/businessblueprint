@@ -23,6 +23,7 @@ import {
   insertSeoContentBriefSchema,
   insertSeoActionItemSchema,
   insertSeoCompetitorSchema,
+  seoCompetitorData,
 } from "@shared/schema";
 import { eq, desc, and, sql, asc, gte } from "drizzle-orm";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth";
@@ -32,6 +33,7 @@ import { generateContentBrief } from "../services/seo-content";
 import { generateActionPlan } from "../services/seo-action-plan";
 import { unifiedAI, type AIProvider } from "../services/ai-provider";
 import { aiSettingsService } from "../services/ai-settings";
+import { dataForSEO } from "../services/dataforseo";
 
 export function registerOptimizeRoutes(app: Express) {
   // =============================================
@@ -630,6 +632,67 @@ export function registerOptimizeRoutes(app: Express) {
       } catch (error: any) {
         console.error("[Optimize] Keyword locations error:", error);
         res.status(500).json({ success: false, message: "Failed to fetch keyword location rankings" });
+      }
+    }
+  );
+
+  // =============================================
+  // KEYWORD ENRICHMENT (DataForSEO)
+  // =============================================
+
+  /** Enrich tracked keywords with real search volume and difficulty data */
+  app.post(
+    "/api/seo/keywords/enrich",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found." });
+
+        if (!dataForSEO.isConfigured()) {
+          // Return existing data as-is
+          const keywords = await db.select().from(seoKeywords)
+            .where(eq(seoKeywords.profileId, profile[0].id));
+          return res.json({ success: true, keywords, requiresDataProvider: true, message: "Connect a data provider to enrich keyword data with real search volumes." });
+        }
+
+        const profileId = profile[0].id;
+        const keywords = await db.select().from(seoKeywords)
+          .where(eq(seoKeywords.profileId, profileId));
+
+        if (keywords.length === 0) {
+          return res.json({ success: true, keywords: [], message: "No keywords to enrich. Add keywords first." });
+        }
+
+        const kwStrings = keywords.map(k => k.keyword);
+        const enriched = await dataForSEO.getKeywordData(kwStrings, profile[0].location || undefined);
+
+        // Map enriched data back to keywords and update
+        const enrichedMap = new Map<string, typeof enriched[0]>();
+        for (const e of enriched) {
+          enrichedMap.set(e.keyword.toLowerCase(), e);
+        }
+
+        const updatedKeywords = [];
+        for (const kw of keywords) {
+          const data = enrichedMap.get(kw.keyword.toLowerCase());
+          if (data) {
+            const difficultyMap: Record<string, number> = { low: 20, medium: 50, high: 80, unknown: 0 };
+            const [updated] = await db.update(seoKeywords).set({
+              searchVolume: data.searchVolume,
+              difficulty: difficultyMap[data.difficulty] ?? 50,
+            }).where(eq(seoKeywords.id, kw.id)).returning();
+            updatedKeywords.push(updated);
+          } else {
+            updatedKeywords.push(kw);
+          }
+        }
+
+        res.json({ success: true, keywords: updatedKeywords, enriched: enriched.length });
+      } catch (error: any) {
+        console.error("[Optimize] Keyword enrich error:", error);
+        res.status(500).json({ success: false, message: "Failed to enrich keywords" });
       }
     }
   );
@@ -2152,6 +2215,155 @@ Return ONLY a JSON object: {"title": "...", "description": "..."}`;
   );
 
   // =============================================
+  // BACKLINKS — DISCOVER & SUMMARY (DataForSEO)
+  // =============================================
+
+  /** Discover backlinks via DataForSEO and store them */
+  app.post(
+    "/api/seo/backlinks/discover",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found." });
+
+        if (!dataForSEO.isConfigured()) {
+          return res.json({ success: false, message: "Connect a data provider to discover backlinks.", requiresDataProvider: true });
+        }
+
+        const profileId = profile[0].id;
+        const { backlinks: fetchedLinks } = await dataForSEO.getBacklinks(profile[0].domain, 200);
+
+        const existingBacklinks = await db.select().from(seoBacklinks)
+          .where(eq(seoBacklinks.profileId, profileId));
+
+        const existingMap = new Map<string, typeof existingBacklinks[0]>();
+        for (const bl of existingBacklinks) {
+          existingMap.set(`${bl.sourceUrl}|${bl.targetUrl}`, bl);
+        }
+
+        let newCount = 0;
+        let updatedCount = 0;
+        const seenKeys = new Set<string>();
+
+        for (const link of fetchedLinks) {
+          const key = `${link.sourceUrl}|${link.targetUrl}`;
+          seenKeys.add(key);
+
+          const existing = existingMap.get(key);
+          if (existing) {
+            await db.update(seoBacklinks).set({
+              lastSeen: link.lastSeen ? new Date(link.lastSeen) : new Date(),
+              domainAuthority: link.domainAuthority,
+              status: 'active',
+              isLost: false,
+            }).where(eq(seoBacklinks.id, existing.id));
+            updatedCount++;
+          } else {
+            await db.insert(seoBacklinks).values({
+              profileId,
+              sourceUrl: link.sourceUrl,
+              targetUrl: link.targetUrl,
+              anchorText: link.anchorText,
+              domainAuthority: link.domainAuthority,
+              linkType: link.linkType,
+              firstSeen: link.firstSeen ? new Date(link.firstSeen) : new Date(),
+              lastSeen: link.lastSeen ? new Date(link.lastSeen) : new Date(),
+              status: 'active',
+              isNew: true,
+              isLost: false,
+              isSpam: link.isSpam,
+              spamScore: link.spamScore,
+            });
+            newCount++;
+          }
+        }
+
+        // Mark backlinks not in API response as lost
+        let lostCount = 0;
+        for (const [key, bl] of Array.from(existingMap.entries())) {
+          if (!seenKeys.has(key) && !bl.isLost) {
+            await db.update(seoBacklinks).set({ isLost: true, status: 'lost' }).where(eq(seoBacklinks.id, bl.id));
+            lostCount++;
+          }
+        }
+
+        res.json({ success: true, discovered: newCount, updated: updatedCount, lost: lostCount });
+      } catch (error: any) {
+        console.error("[Optimize] Backlink discovery error:", error);
+        res.status(500).json({ success: false, message: "Failed to discover backlinks" });
+      }
+    }
+  );
+
+  /** Get backlink summary stats */
+  app.get(
+    "/api/seo/backlinks/summary",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, summary: null });
+
+        const profileId = profile[0].id;
+        const backlinks = await db.select().from(seoBacklinks)
+          .where(eq(seoBacklinks.profileId, profileId));
+
+        const total = backlinks.length;
+        const active = backlinks.filter(b => !b.isLost).length;
+        const lost = backlinks.filter(b => b.isLost).length;
+        const newLinks = backlinks.filter(b => b.isNew).length;
+        const dofollowCount = backlinks.filter(b => b.linkType === 'dofollow').length;
+        const nofollowCount = total - dofollowCount;
+
+        // Referring domains
+        const domainCounts = new Map<string, { count: number; totalDA: number }>();
+        for (const bl of backlinks) {
+          if (!bl.sourceUrl || bl.isLost) continue;
+          let hostname = '';
+          try { hostname = new URL(bl.sourceUrl).hostname; } catch { continue; }
+          const entry = domainCounts.get(hostname) || { count: 0, totalDA: 0 };
+          entry.count++;
+          if (bl.domainAuthority != null) entry.totalDA += bl.domainAuthority;
+          domainCounts.set(hostname, entry);
+        }
+
+        const topReferringDomains = Array.from(domainCounts.entries())
+          .map(([domain, data]) => ({
+            domain,
+            count: data.count,
+            avgDA: data.count > 0 ? Math.round(data.totalDA / data.count) : 0,
+          }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 10);
+
+        const daValues = backlinks.filter(b => b.domainAuthority != null && !b.isLost).map(b => b.domainAuthority!);
+        const avgDomainAuthority = daValues.length > 0 ? Math.round(daValues.reduce((a, b) => a + b, 0) / daValues.length) : 0;
+
+        res.json({
+          success: true,
+          summary: {
+            total,
+            active,
+            lost,
+            new: newLinks,
+            referringDomains: domainCounts.size,
+            avgDomainAuthority,
+            dofollowCount,
+            nofollowCount,
+            topReferringDomains,
+          },
+        });
+      } catch (error: any) {
+        console.error("[Optimize] Backlink summary error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch backlink summary" });
+      }
+    }
+  );
+
+  // =============================================
   // BACKLINKS — TOXIC / OPPORTUNITIES / BROKEN / ANCHOR TEXT
   // =============================================
 
@@ -3163,6 +3375,168 @@ Base estimates on industry norms and relative domain strength.`;
   );
 
   // =============================================
+  // COMPETITOR ENRICHMENT (DataForSEO)
+  // =============================================
+
+  /** Enrich competitor with live DataForSEO data */
+  app.post(
+    "/api/seo/competitors/:id/enrich",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const competitorId = parseInt(req.params.id);
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found." });
+
+        const competitor = await db.select().from(seoCompetitors)
+          .where(and(eq(seoCompetitors.id, competitorId), eq(seoCompetitors.profileId, profile[0].id)))
+          .limit(1);
+        if (competitor.length === 0) return res.status(404).json({ success: false, message: "Competitor not found." });
+
+        if (!dataForSEO.isConfigured()) {
+          return res.json({ success: false, message: "Connect a data provider to enrich competitor data.", requiresDataProvider: true });
+        }
+
+        const domainData = await dataForSEO.getDomainAuthority(competitor[0].domain);
+        const keywords = await dataForSEO.getCompetitorKeywords(competitor[0].domain, 50);
+
+        const updateData: any = { lastChecked: new Date() };
+        if (domainData) {
+          updateData.domainAuthority = domainData.domainRank;
+          updateData.estimatedTraffic = domainData.organicTraffic;
+          updateData.totalBacklinks = domainData.totalBacklinks;
+          updateData.totalKeywords = domainData.totalKeywords;
+        }
+
+        const [updated] = await db.update(seoCompetitors)
+          .set(updateData)
+          .where(eq(seoCompetitors.id, competitorId))
+          .returning();
+
+        // Store keyword list
+        if (keywords.length > 0) {
+          await db.insert(seoCompetitorData).values({
+            competitorId,
+            metric: 'ranked_keywords',
+            value: JSON.stringify(keywords),
+          });
+        }
+
+        res.json({ success: true, competitor: updated, keywords });
+      } catch (error: any) {
+        console.error("[Optimize] Competitor enrich error:", error);
+        res.status(500).json({ success: false, message: "Failed to enrich competitor data" });
+      }
+    }
+  );
+
+  /** Get stored keyword rankings for a specific competitor */
+  app.get(
+    "/api/seo/competitors/:id/keywords",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const competitorId = parseInt(req.params.id);
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.json({ success: true, keywords: [] });
+
+        const competitor = await db.select().from(seoCompetitors)
+          .where(and(eq(seoCompetitors.id, competitorId), eq(seoCompetitors.profileId, profile[0].id)))
+          .limit(1);
+        if (competitor.length === 0) return res.json({ success: true, keywords: [] });
+
+        const data = await db.select().from(seoCompetitorData)
+          .where(and(eq(seoCompetitorData.competitorId, competitorId), eq(seoCompetitorData.metric, 'ranked_keywords')))
+          .orderBy(desc(seoCompetitorData.date))
+          .limit(1);
+
+        let keywords: any[] = [];
+        if (data.length > 0 && data[0].value) {
+          try { keywords = JSON.parse(data[0].value); } catch {}
+        }
+
+        res.json({ success: true, keywords, lastUpdated: data[0]?.date || null });
+      } catch (error: any) {
+        console.error("[Optimize] Competitor keywords error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch competitor keywords" });
+      }
+    }
+  );
+
+  /** Get user's own domain authority score */
+  app.get(
+    "/api/seo/domain-authority",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found." });
+
+        const profileData = profile[0];
+
+        // Return cached data if checked recently (within 24 hours)
+        if (profileData.lastDaCheck && profileData.domainAuthority != null) {
+          const hoursSinceCheck = (Date.now() - new Date(profileData.lastDaCheck).getTime()) / (1000 * 60 * 60);
+          if (hoursSinceCheck < 24) {
+            return res.json({
+              success: true,
+              domainAuthority: profileData.domainAuthority,
+              organicTraffic: profileData.organicTraffic,
+              totalBacklinks: profileData.totalBacklinks,
+              lastChecked: profileData.lastDaCheck,
+              cached: true,
+            });
+          }
+        }
+
+        if (!dataForSEO.isConfigured()) {
+          return res.json({
+            success: true,
+            domainAuthority: profileData.domainAuthority,
+            organicTraffic: profileData.organicTraffic,
+            totalBacklinks: profileData.totalBacklinks,
+            lastChecked: profileData.lastDaCheck,
+            requiresDataProvider: !profileData.domainAuthority,
+            message: profileData.domainAuthority ? undefined : "Connect a data provider to track domain authority.",
+          });
+        }
+
+        const data = await dataForSEO.getDomainAuthority(profileData.domain);
+        if (data) {
+          await db.update(seoProfiles).set({
+            domainAuthority: data.domainRank,
+            organicTraffic: data.organicTraffic,
+            totalBacklinks: data.totalBacklinks,
+            lastDaCheck: new Date(),
+          }).where(eq(seoProfiles.id, profileData.id));
+
+          return res.json({
+            success: true,
+            domainAuthority: data.domainRank,
+            organicTraffic: data.organicTraffic,
+            totalBacklinks: data.totalBacklinks,
+            lastChecked: new Date(),
+          });
+        }
+
+        res.json({
+          success: true,
+          domainAuthority: profileData.domainAuthority,
+          organicTraffic: profileData.organicTraffic,
+          totalBacklinks: profileData.totalBacklinks,
+          lastChecked: profileData.lastDaCheck,
+        });
+      } catch (error: any) {
+        console.error("[Optimize] Domain authority error:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch domain authority" });
+      }
+    }
+  );
+
+  // =============================================
   // LOCAL RANK TRACKING
   // =============================================
 
@@ -3505,9 +3879,9 @@ Base estimates on industry norms and relative domain strength.`;
         const rankingChanges: Record<number, { oldest: number | null; newest: number | null }> = {};
         for (const r of recentRankings) {
           if (!rankingChanges[r.keywordId]) {
-            rankingChanges[r.keywordId] = { oldest: r.position, newest: r.position };
+            rankingChanges[r.keywordId] = { oldest: r.rank, newest: r.rank };
           } else {
-            rankingChanges[r.keywordId].newest = r.position;
+            rankingChanges[r.keywordId].newest = r.rank;
           }
         }
 
@@ -3574,6 +3948,107 @@ Base estimates on industry norms and relative domain strength.`;
       } catch (error: any) {
         console.error("[Optimize] Report generate error:", error);
         res.status(500).json({ success: false, message: "Failed to generate report" });
+      }
+    }
+  );
+
+  /** Email latest SEO report to the user */
+  app.post(
+    "/api/seo/reports/email",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const profile = await db.select().from(seoProfiles).where(eq(seoProfiles.clientId, clientId)).limit(1);
+        if (profile.length === 0) return res.status(404).json({ success: false, message: "No SEO profile found." });
+
+        const profileId = profile[0].id;
+
+        // Get latest report
+        const reports = await db.select().from(seoReports)
+          .where(eq(seoReports.profileId, profileId))
+          .orderBy(desc(seoReports.generatedAt))
+          .limit(1);
+
+        if (reports.length === 0) {
+          return res.status(404).json({ success: false, message: "No reports available. Generate a report first." });
+        }
+
+        const report = reports[0];
+        const reportData = report.data as any;
+        const period = report.period || 'current';
+        const monthLabel = period ? new Date(`${period}-01`).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Current';
+
+        // Get user email
+        const { clients } = await import("@shared/schema");
+        const [client] = await db.select({ email: clients.email }).from(clients).where(eq(clients.id, clientId)).limit(1);
+        if (!client?.email) {
+          return res.status(400).json({ success: false, message: "No email address found for your account." });
+        }
+
+        // Build email HTML
+        const scoreChange = reportData.comparison?.scoreChange ?? reportData.keywordMovement?.improved ?? 0;
+        const scoreDirection = scoreChange > 0 ? 'improved' : scoreChange < 0 ? 'declined' : 'stayed the same';
+        const scoreArrow = scoreChange > 0 ? '↑' : scoreChange < 0 ? '↓' : '→';
+
+        const emailHtml = `
+          <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;color:#333;">
+            <h1 style="color:#374151;">/ optimize — Monthly SEO Report</h1>
+            <h2 style="color:#666;">${profile[0].businessName || profile[0].domain} — ${monthLabel}</h2>
+            <div style="padding:20px;background:#f9fafb;border-radius:8px;margin:20px 0;">
+              <p style="font-size:24px;font-weight:bold;color:#374151;margin:0;">
+                ${scoreArrow} Your SEO score ${scoreDirection}${scoreChange !== 0 ? ` by ${Math.abs(scoreChange)} points` : ''}
+              </p>
+              <p style="color:#666;margin:8px 0 0;">Overall Score: ${reportData.overallScore ?? 'N/A'}</p>
+            </div>
+            <table style="width:100%;border-collapse:collapse;margin:20px 0;">
+              <tr>
+                <td style="padding:12px;border:1px solid #e5e7eb;text-align:center;">
+                  <strong style="font-size:20px;color:#374151;">${reportData.keywords?.tracked ?? 0}</strong><br/>
+                  <span style="color:#888;font-size:12px;">Keywords Tracked</span>
+                </td>
+                <td style="padding:12px;border:1px solid #e5e7eb;text-align:center;">
+                  <strong style="font-size:20px;color:#374151;">${reportData.backlinks?.total ?? 0}</strong><br/>
+                  <span style="color:#888;font-size:12px;">Backlinks</span>
+                </td>
+                <td style="padding:12px;border:1px solid #e5e7eb;text-align:center;">
+                  <strong style="font-size:20px;color:#374151;">${reportData.issues?.total ?? 0}</strong><br/>
+                  <span style="color:#888;font-size:12px;">Open Issues</span>
+                </td>
+              </tr>
+            </table>
+            <p style="margin-top:24px;">
+              <a href="https://businessblueprint.io/optimize" style="display:inline-block;padding:12px 24px;background:#374151;color:#fff;text-decoration:none;border-radius:6px;">
+                View Full Report
+              </a>
+            </p>
+            <p style="color:#999;font-size:12px;margin-top:24px;">businessblueprint.io — / optimize SEO Report</p>
+          </div>
+        `;
+
+        // Send via Resend
+        try {
+          const { Resend } = await import('resend');
+          const resendKey = process.env.RESEND_API_KEY;
+          if (!resendKey) {
+            return res.status(500).json({ success: false, message: "Email service not configured." });
+          }
+          const resend = new Resend(resendKey);
+          await resend.emails.send({
+            from: 'noreply@send.businessblueprint.io',
+            to: client.email,
+            subject: `Your / optimize Monthly SEO Report — ${monthLabel}`,
+            html: emailHtml,
+          });
+        } catch (emailErr: any) {
+          console.error("[Optimize] Email send error:", emailErr);
+          return res.status(500).json({ success: false, message: "Failed to send email." });
+        }
+
+        res.json({ success: true, sentTo: client.email });
+      } catch (error: any) {
+        console.error("[Optimize] Report email error:", error);
+        res.status(500).json({ success: false, message: "Failed to email report" });
       }
     }
   );
@@ -3794,7 +4269,22 @@ async function gatherReportData(profileId: number) {
       total: backlinks.length,
       active: backlinks.filter(b => !b.isLost).length,
       lost: backlinks.filter(b => b.isLost).length,
+      referringDomains: new Set(
+        backlinks.filter(b => b.sourceUrl && !b.isLost).map(b => {
+          try { return new URL(b.sourceUrl!).hostname; } catch { return ''; }
+        }).filter(Boolean)
+      ).size,
     },
+    coreWebVitals: (() => {
+      const pagesWithVitals = pages.filter(p => p.coreWebVitals != null);
+      if (pagesWithVitals.length === 0) return null;
+      const vitals = pagesWithVitals[0].coreWebVitals as any;
+      return {
+        lcp: vitals?.lcp ?? null,
+        cls: vitals?.cls ?? null,
+        fid: vitals?.fid ?? null,
+      };
+    })(),
     pendingActions: pendingActions[0]?.count || 0,
   };
 }

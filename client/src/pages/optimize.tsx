@@ -50,7 +50,7 @@ const PRIORITY_CONFIG = {
   critical: { label: 'Critical', color: '#DC2626', bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', description: 'Fix these immediately. They are actively costing you customers right now.' },
   important: { label: 'Important', color: '#F97316', bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', description: 'These significantly impact your rankings. Address them this month.' },
   relevant: { label: 'Relevant', color: '#2563EB', bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', description: 'These give you a competitive edge. Work on them as time allows.' },
-  optional: { label: 'Optional', color: '#6B7280', bg: 'bg-gray-50', text: 'text-gray-600', border: 'border-gray-200', description: 'Advanced features for power users. Nice to have, not urgent.' },
+  optional: { label: 'Optional', color: '#6B7280', bg: 'bg-white', text: 'text-gray-600', border: 'border-gray-200', description: 'Advanced features for power users. Nice to have, not urgent.' },
 };
 
 function PriorityBadge({ level }: { level: PriorityLevel }) {
@@ -101,7 +101,7 @@ export default function OptimizeDashboard() {
   if (!profileData?.profile) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#E9ECF0]">
       <SectionHeader
         title="/ optimize"
         subtitle="SEO Optimization Suite"
@@ -166,6 +166,21 @@ function OverviewTab({ onTabChange }: { onTabChange: (tab: string) => void }) {
   const { data: actionsData } = useQuery({
     queryKey: ['/api/seo/action-items'],
     queryFn: async () => { const res = await apiRequest('GET', '/api/seo/action-items'); return res.json(); },
+  });
+
+  const { data: daData } = useQuery({
+    queryKey: ['/api/seo/domain-authority'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/domain-authority'); return res.json(); },
+  });
+
+  const { data: blSummary } = useQuery({
+    queryKey: ['/api/seo/backlinks/summary'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/backlinks/summary'); return res.json(); },
+  });
+
+  const { data: reportsData } = useQuery({
+    queryKey: ['/api/seo/reports'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/reports'); return res.json(); },
   });
 
   const scanMutation = useMutation({
@@ -287,6 +302,67 @@ function OverviewTab({ onTabChange }: { onTabChange: (tab: string) => void }) {
         </div>
       )}
 
+      {/* Phase B Overview Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Domain Authority */}
+        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onTabChange('competitors')}>
+          <CardContent className="pt-4 pb-4">
+            <p className="text-xs text-gray-500 font-medium mb-1">Domain Authority</p>
+            {daData?.domainAuthority != null ? (
+              <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>{daData.domainAuthority}</p>
+            ) : (
+              <p className="text-sm text-gray-400">{daData?.requiresDataProvider ? 'No data provider' : '—'}</p>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Backlinks */}
+        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onTabChange('backlinks')}>
+          <CardContent className="pt-4 pb-4">
+            <p className="text-xs text-gray-500 font-medium mb-1">Backlinks</p>
+            <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>
+              {blSummary?.summary?.total ?? '—'}
+            </p>
+            {blSummary?.summary?.new > 0 && (
+              <p className="text-xs text-green-600">+{blSummary.summary.new} new</p>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Keywords Trend */}
+        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onTabChange('keywords')}>
+          <CardContent className="pt-4 pb-4">
+            <p className="text-xs text-gray-500 font-medium mb-1">Keywords</p>
+            <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>
+              {d?.keywordsTracked ?? '—'}
+            </p>
+            {(() => {
+              const latestReport = reportsData?.reports?.[0]?.data as any;
+              const improved = latestReport?.keywordMovement?.improved;
+              const declined = latestReport?.keywordMovement?.declined;
+              if (improved || declined) {
+                return <p className="text-xs text-gray-500">{improved || 0} up, {declined || 0} down</p>;
+              }
+              return null;
+            })()}
+          </CardContent>
+        </Card>
+
+        {/* Monthly Report */}
+        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => onTabChange('reports')}>
+          <CardContent className="pt-4 pb-4">
+            <p className="text-xs text-gray-500 font-medium mb-1">Monthly Report</p>
+            {reportsData?.reports?.length > 0 ? (
+              <p className="text-sm font-medium text-green-600">
+                {reportsData.reports[0].period} ready
+              </p>
+            ) : (
+              <p className="text-sm text-gray-400">No reports yet</p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Priority Layer Issue Groups */}
       {layerGroups.map(({ level, items, tab }) => {
         if (items.length === 0) return null;
@@ -312,7 +388,7 @@ function OverviewTab({ onTabChange }: { onTabChange: (tab: string) => void }) {
             <CardContent>
               <div className="space-y-2">
                 {items.slice(0, 5).map((issue: any) => (
-                  <div key={issue.id} className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50">
+                  <div key={issue.id} className="flex items-start gap-3 p-2 rounded-lg hover:bg-white">
                     <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: config.color }} />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-800">{issue.description}</p>
@@ -328,7 +404,7 @@ function OverviewTab({ onTabChange }: { onTabChange: (tab: string) => void }) {
                 {items.length > 5 && (
                   <button
                     onClick={() => onTabChange(tab)}
-                    className="text-xs font-medium w-full text-center py-2 hover:bg-gray-50 rounded"
+                    className="text-xs font-medium w-full text-center py-2 hover:bg-white rounded"
                     style={{ color: OPTIMIZE_COLOR }}
                   >
                     +{items.length - 5} more — view all in Site Health
@@ -353,7 +429,7 @@ function OverviewTab({ onTabChange }: { onTabChange: (tab: string) => void }) {
           <CardContent>
             <div className="space-y-2">
               {allActions.slice(0, 8).map((item: any) => (
-                <div key={item.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <div key={item.id} className="flex items-center gap-3 p-3 bg-white rounded-lg">
                   <PriorityBadge level={mapSeverityToLayer(item.priority)} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium">{item.title}</p>
@@ -376,7 +452,7 @@ function OverviewTab({ onTabChange }: { onTabChange: (tab: string) => void }) {
           <CardContent>
             <div className="space-y-2">
               {d.recentScans.map((scan: any) => (
-                <div key={scan.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={scan.id} className="flex items-center justify-between p-3 bg-white rounded-lg">
                   <div className="flex items-center gap-3">
                     <Badge variant={scan.status === 'completed' ? 'default' : scan.status === 'running' ? 'secondary' : 'destructive'}>
                       {scan.status}
@@ -601,7 +677,7 @@ function SiteHealthTab() {
           <p className="text-2xl font-bold text-blue-600">{relevantIssues.length}</p>
           <p className="text-xs text-blue-600 font-medium">Relevant</p>
         </div>
-        <div className="text-center p-3 rounded-lg bg-gray-50 border border-gray-200">
+        <div className="text-center p-3 rounded-lg bg-white border border-gray-200">
           <p className="text-2xl font-bold text-gray-600">{optionalIssues.length}</p>
           <p className="text-xs text-gray-600 font-medium">Optional</p>
         </div>
@@ -666,7 +742,7 @@ function SiteHealthTab() {
                                 </a>
                               )}
                               {issue.howToFix && (
-                                <div className="text-xs text-gray-600 bg-gray-50 p-3 rounded mt-2">
+                                <div className="text-xs text-gray-600 bg-white p-3 rounded mt-2">
                                   <strong className="text-gray-700">How to fix:</strong> {issue.howToFix}
                                 </div>
                               )}
@@ -706,7 +782,7 @@ function SiteHealthTab() {
                   </summary>
                   <div className="mt-2 space-y-2">
                     {resolvedIssues.map((issue: any) => (
-                      <div key={issue.id} className="p-3 bg-gray-50 rounded-lg opacity-60">
+                      <div key={issue.id} className="p-3 bg-white rounded-lg opacity-60">
                         <div className="flex items-center gap-2">
                           <Badge variant="outline" className="text-xs">{issue.status}</Badge>
                           <span className="text-sm">{issue.description}</span>
@@ -756,7 +832,7 @@ function SiteHealthTab() {
               ) : (
                 <div className="space-y-3">
                   {pages.map((page: any) => (
-                    <div key={page.id} className="p-4 bg-gray-50 rounded-lg">
+                    <div key={page.id} className="p-4 bg-white rounded-lg">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1 min-w-0">
                           <p className="font-medium text-sm truncate">{page.title || 'Untitled'}</p>
@@ -1098,7 +1174,7 @@ function SiteHealthTab() {
                         ))}
                       </div>
                       {chain.suggestion && (
-                        <div className="mt-3 text-xs text-gray-600 bg-gray-50 p-3 rounded">
+                        <div className="mt-3 text-xs text-gray-600 bg-white p-3 rounded">
                           <strong className="text-gray-700">Suggestion:</strong> {chain.suggestion}
                         </div>
                       )}
@@ -1385,6 +1461,8 @@ function CompetitorsTab() {
   const [comparisonData, setComparisonData] = useState<any>(null);
   const [contentGapData, setContentGapData] = useState<any>(null);
   const [trafficData, setTrafficData] = useState<Record<string, any>>({});
+  const [expandedCompetitor, setExpandedCompetitor] = useState<number | null>(null);
+  const [competitorKeywords, setCompetitorKeywords] = useState<Record<number, any[]>>({});
 
   const { data: competitorsData, isLoading } = useQuery({
     queryKey: ['/api/seo/competitors'],
@@ -1481,6 +1559,39 @@ function CompetitorsTab() {
     },
   });
 
+  const enrichCompetitor = useMutation({
+    mutationFn: async (id: number) => {
+      const res = await apiRequest('POST', `/api/seo/competitors/${id}/enrich`, {});
+      return res.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/seo/competitors'] });
+      if (data.requiresDataProvider) {
+        toast({ title: "Data Provider Required", description: data.message });
+      } else {
+        toast({ title: "Competitor Data Refreshed" });
+      }
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to enrich competitor", variant: "destructive" });
+    },
+  });
+
+  const fetchCompetitorKw = async (id: number) => {
+    try {
+      const res = await apiRequest('GET', `/api/seo/competitors/${id}/keywords`);
+      const data = await res.json();
+      setCompetitorKeywords(prev => ({ ...prev, [id]: data.keywords || [] }));
+    } catch {
+      toast({ title: "Error", description: "Failed to fetch competitor keywords", variant: "destructive" });
+    }
+  };
+
+  const { data: daData } = useQuery({
+    queryKey: ['/api/seo/domain-authority'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/domain-authority'); return res.json(); },
+  });
+
   if (isLoading) return <LoadingState />;
 
   // Merge API competitors with profile competitors
@@ -1509,6 +1620,37 @@ function CompetitorsTab() {
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Domain Authority Hero */}
+      <Card>
+        <CardContent className="pt-6">
+          {daData?.domainAuthority != null ? (
+            <div className="flex items-center gap-6">
+              <div className="w-20 h-20 rounded-full border-4 flex items-center justify-center flex-shrink-0" style={{ borderColor: OPTIMIZE_COLOR }}>
+                <span className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>{daData.domainAuthority}</span>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Your Domain Authority</p>
+                <div className="flex gap-4 mt-1 text-sm text-gray-600">
+                  {daData.organicTraffic != null && <span>Est. Traffic: <strong>{daData.organicTraffic.toLocaleString()}</strong>/mo</span>}
+                  {daData.totalBacklinks != null && <span>Backlinks: <strong>{daData.totalBacklinks.toLocaleString()}</strong></span>}
+                </div>
+                {daData.lastChecked && <p className="text-xs text-gray-400 mt-1">Last checked: {new Date(daData.lastChecked).toLocaleDateString()}</p>}
+              </div>
+            </div>
+          ) : daData?.requiresDataProvider ? (
+            <div className="text-center py-4">
+              <Info className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+              <p className="text-sm text-gray-500">{daData.message || "Connect a data provider to track domain authority."}</p>
+            </div>
+          ) : (
+            <div className="text-center py-4">
+              <Loader2 className="w-6 h-6 mx-auto mb-2 text-gray-300 animate-spin" />
+              <p className="text-sm text-gray-400">Loading domain authority...</p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -1574,7 +1716,8 @@ function CompetitorsTab() {
                 </thead>
                 <tbody>
                   {apiCompetitors.map((comp: any) => (
-                    <tr key={comp.id} className="border-b last:border-0">
+                    <React.Fragment key={comp.id}>
+                    <tr className="border-b last:border-0">
                       <td className="py-3">
                         <div className="flex items-center gap-2">
                           <Globe className="w-4 h-4 text-gray-400 flex-shrink-0" />
@@ -1597,16 +1740,80 @@ function CompetitorsTab() {
                         <Badge variant="default" className="text-xs">tracked</Badge>
                       </td>
                       <td className="py-3 text-right">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="text-red-400 hover:text-red-600"
-                          onClick={() => deleteCompetitor.mutate(comp.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        <div className="flex items-center gap-1 justify-end">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => {
+                              enrichCompetitor.mutate(comp.id);
+                            }}
+                            disabled={enrichCompetitor.isPending}
+                          >
+                            {enrichCompetitor.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => {
+                              if (expandedCompetitor === comp.id) {
+                                setExpandedCompetitor(null);
+                              } else {
+                                setExpandedCompetitor(comp.id);
+                                if (!competitorKeywords[comp.id]) fetchCompetitorKw(comp.id);
+                              }
+                            }}
+                          >
+                            <ChevronRight className={`w-4 h-4 transition-transform ${expandedCompetitor === comp.id ? 'rotate-90' : ''}`} />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-400 hover:text-red-600"
+                            onClick={() => deleteCompetitor.mutate(comp.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </td>
                     </tr>
+                    {expandedCompetitor === comp.id && (
+                      <tr>
+                        <td colSpan={5} className="py-3 px-4 bg-[#E9ECF0]">
+                          {competitorKeywords[comp.id] ? (
+                            competitorKeywords[comp.id].length > 0 ? (
+                              <div className="overflow-x-auto">
+                                <p className="text-xs font-semibold text-gray-500 mb-2">Top Keywords for {comp.domain}</p>
+                                <table className="w-full text-sm">
+                                  <thead>
+                                    <tr className="border-b text-left">
+                                      <th className="pb-2 text-xs text-gray-500">Keyword</th>
+                                      <th className="pb-2 text-xs text-gray-500 text-center">Their Position</th>
+                                      <th className="pb-2 text-xs text-gray-500 text-center">Volume</th>
+                                      <th className="pb-2 text-xs text-gray-500 text-center">Difficulty</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {competitorKeywords[comp.id].slice(0, 15).map((kw: any, i: number) => (
+                                      <tr key={i} className="border-b last:border-0">
+                                        <td className="py-1.5 text-gray-700">{kw.keyword}</td>
+                                        <td className="py-1.5 text-center font-semibold">{kw.position || '—'}</td>
+                                        <td className="py-1.5 text-center text-gray-500">{kw.searchVolume?.toLocaleString() || '—'}</td>
+                                        <td className="py-1.5 text-center text-gray-500">{kw.difficulty || '—'}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              <p className="text-sm text-gray-500 text-center py-2">No keyword data. Click the refresh button to fetch from DataForSEO.</p>
+                            )
+                          ) : (
+                            <div className="flex justify-center py-3"><Loader2 className="w-5 h-5 animate-spin text-gray-400" /></div>
+                          )}
+                        </td>
+                      </tr>
+                    )}
+                    </React.Fragment>
                   ))}
                   {profileCompetitors.filter((d: string) => !apiCompetitors.some((c: any) => c.domain === d)).map((domain: string, i: number) => (
                     <tr key={`profile-${i}`} className="border-b last:border-0">
@@ -1982,9 +2189,34 @@ function KeywordsTab() {
     },
   });
 
+  const enrichKeywords = useMutation({
+    mutationFn: async () => {
+      const res = await apiRequest('POST', '/api/seo/keywords/enrich', {});
+      return res.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/seo/keywords'] });
+      if (data.requiresDataProvider) {
+        toast({ title: "Data Provider Required", description: data.message });
+      } else {
+        toast({ title: "Keywords Enriched", description: `Updated ${data.enriched || 0} keywords with real data` });
+      }
+    },
+    onError: () => {
+      toast({ title: "Error", description: "Failed to enrich keywords", variant: "destructive" });
+    },
+  });
+
   if (isLoading) return <LoadingState />;
 
   const keywords = data?.keywords || [];
+
+  const intentColors: Record<string, string> = {
+    informational: 'bg-blue-100 text-blue-700',
+    transactional: 'bg-green-100 text-green-700',
+    navigational: 'bg-gray-100 text-gray-600',
+    commercial: 'bg-orange-100 text-orange-700',
+  };
 
   return (
     <div className="space-y-6">
@@ -2029,6 +2261,14 @@ function KeywordsTab() {
               {classifyIntent.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Tag className="w-4 h-4 mr-2" />}
               Classify All
             </Button>
+            <Button
+              variant="outline"
+              onClick={() => enrichKeywords.mutate()}
+              disabled={enrichKeywords.isPending || keywords.length === 0}
+            >
+              {enrichKeywords.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+              Enrich Keywords
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -2045,7 +2285,7 @@ function KeywordsTab() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {researchKeywords.data.suggestions.map((s: any, i: number) => (
-                <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={i} className="flex items-center justify-between p-3 bg-white rounded-lg">
                   <div>
                     <p className="font-medium text-sm">{s.keyword}</p>
                     <p className="text-xs text-gray-500">
@@ -2116,10 +2356,10 @@ function KeywordsTab() {
                       <td className="py-3 text-center">
                         {intentData[kw.keyword] ? (
                           <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                            intentData[kw.keyword].intent === 'transactional' ? 'bg-green-50 text-green-700 border border-green-200' :
-                            intentData[kw.keyword].intent === 'commercial' ? 'bg-purple-50 text-purple-700 border border-purple-200' :
-                            intentData[kw.keyword].intent === 'navigational' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                            'bg-gray-50 text-gray-600 border border-gray-200'
+                            intentData[kw.keyword].intent === 'transactional' ? 'bg-green-100 text-green-700' :
+                            intentData[kw.keyword].intent === 'commercial' ? 'bg-orange-100 text-orange-700' :
+                            intentData[kw.keyword].intent === 'navigational' ? 'bg-gray-100 text-gray-600' :
+                            'bg-blue-100 text-blue-700'
                           }`}>
                             {intentData[kw.keyword].intent}
                           </span>
@@ -2156,7 +2396,7 @@ function KeywordsTab() {
                       </td>
                     </tr>
                     {expandedKeyword === kw.id && longTailData[kw.id] && (
-                      <tr><td colSpan={7} className="bg-gray-50 p-3">
+                      <tr><td colSpan={7} className="bg-white p-3">
                         <div className="space-y-1">
                           <p className="text-xs font-medium text-gray-600 mb-2">Long-tail variations for "{kw.keyword}":</p>
                           {longTailData[kw.id].length === 0 ? (
@@ -2308,7 +2548,7 @@ function OnPageTab() {
           ) : (
             <div className="space-y-3">
               {pages.map((page: any) => (
-                <div key={page.id} className="p-4 bg-gray-50 rounded-lg">
+                <div key={page.id} className="p-4 bg-white rounded-lg">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm truncate">{page.title || 'Untitled'}</p>
@@ -2428,7 +2668,7 @@ function TechnicalTab() {
                       <p className="text-xs text-blue-600 mb-2">{issue.url}</p>
                     )}
                     {issue.howToFix && (
-                      <p className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
+                      <p className="text-xs text-gray-500 bg-white p-2 rounded">
                         <strong>Fix:</strong> {issue.howToFix}
                       </p>
                     )}
@@ -2465,7 +2705,7 @@ function TechnicalTab() {
               </summary>
               <div className="mt-2 space-y-2">
                 {resolvedIssues.map((issue: any) => (
-                  <div key={issue.id} className="p-3 bg-gray-50 rounded-lg opacity-60">
+                  <div key={issue.id} className="p-3 bg-white rounded-lg opacity-60">
                     <div className="flex items-center gap-2">
                       <Badge variant="outline" className="text-xs">{issue.status}</Badge>
                       <span className="text-sm">{issue.description}</span>
@@ -3052,7 +3292,7 @@ function ActionPlanTab() {
               </summary>
               <div className="mt-2 space-y-2">
                 {completed.map((item: any) => (
-                  <div key={item.id} className="p-3 bg-gray-50 rounded-lg opacity-60 flex items-center gap-2">
+                  <div key={item.id} className="p-3 bg-white rounded-lg opacity-60 flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-green-500" />
                     <span className="text-sm">{item.title}</span>
                   </div>
@@ -3091,8 +3331,12 @@ function BacklinksTab() {
     queryFn: async () => { const res = await apiRequest('GET', '/api/seo/backlinks/referring-domains'); return res.json(); },
   });
 
+  const { data: summaryData } = useQuery({
+    queryKey: ['/api/seo/backlinks/summary'],
+    queryFn: async () => { const res = await apiRequest('GET', '/api/seo/backlinks/summary'); return res.json(); },
+  });
+
   const [checkingUrl, setCheckingUrl] = useState(false);
-  const [checkedBacklinks, setCheckedBacklinks] = useState<any[]>([]);
 
   const handleCheckUrl = async () => {
     if (!urlInput.trim()) return;
@@ -3141,35 +3385,46 @@ function BacklinksTab() {
         </CardContent>
       </Card>
 
-      {/* URL Check */}
+      {/* Discover Backlinks */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Search className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
-            Check Your Backlinks
-          </CardTitle>
-          <CardDescription>Enter your domain to discover who links to your website</CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Search className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                Discover Backlinks
+              </CardTitle>
+              <CardDescription>Fetch real backlink data from DataForSEO and store it for monitoring</CardDescription>
+            </div>
+            <PriorityBadge level="important" />
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-3">
-            <Input
-              placeholder={domain ? domain : "Enter your domain (e.g., example.com)..."}
-              value={urlInput}
-              onChange={(e) => setUrlInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleCheckUrl()}
-              data-testid="input-backlink-url"
-            />
-            <Button
-              onClick={handleCheckUrl}
-              disabled={checkingUrl}
-              style={{ backgroundColor: OPTIMIZE_COLOR }}
-              className="text-white"
-              data-testid="button-check-backlinks"
-            >
-              {checkingUrl ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Search className="w-4 h-4 mr-2" />}
-              Check
-            </Button>
-          </div>
+          <Button
+            onClick={async () => {
+              setCheckingUrl(true);
+              try {
+                const res = await apiRequest('POST', '/api/seo/backlinks/discover', {});
+                const result = await res.json();
+                if (result.requiresDataProvider) {
+                  toast({ title: "Data Provider Required", description: result.message });
+                } else {
+                  toast({ title: "Backlinks Discovered", description: `${result.discovered} new, ${result.updated} updated, ${result.lost} lost` });
+                  queryClient.invalidateQueries({ queryKey: ['/api/seo/backlinks'] });
+                  queryClient.invalidateQueries({ queryKey: ['/api/seo/backlinks/summary'] });
+                }
+              } catch {
+                toast({ title: "Error", description: "Failed to discover backlinks", variant: "destructive" });
+              }
+              setCheckingUrl(false);
+            }}
+            disabled={checkingUrl}
+            style={{ backgroundColor: OPTIMIZE_COLOR }}
+            className="text-white"
+          >
+            {checkingUrl ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Search className="w-4 h-4 mr-2" />}
+            Discover Backlinks
+          </Button>
         </CardContent>
       </Card>
 
@@ -3273,6 +3528,43 @@ function BacklinksTab() {
         </Card>
       )}
 
+      {/* Top Referring Domains */}
+      {summaryData?.summary?.topReferringDomains?.length > 0 && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Globe className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
+                Top Referring Domains
+              </CardTitle>
+              <PriorityBadge level="important" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {summaryData.summary.topReferringDomains.map((rd: any, i: number) => {
+                const maxCount = summaryData.summary.topReferringDomains[0]?.count || 1;
+                const pct = (rd.count / maxCount) * 100;
+                return (
+                  <div key={i} className="space-y-1">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="font-medium text-gray-700">{rd.domain}</span>
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <span>{rd.count} link{rd.count !== 1 ? 's' : ''}</span>
+                        {rd.avgDA > 0 && <span>DA {rd.avgDA}</span>}
+                      </div>
+                    </div>
+                    <div className="w-full bg-gray-100 rounded-full h-2">
+                      <div className="h-2 rounded-full" style={{ width: `${pct}%`, backgroundColor: OPTIMIZE_COLOR }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Backlinks Table */}
       <Card>
         <CardHeader>
@@ -3332,7 +3624,11 @@ function BacklinksTab() {
                           ) : <span className="text-gray-400">—</span>}
                         </td>
                         <td className="py-3 text-center">
-                          <span className="text-xs text-gray-500">{bl.linkType || 'dofollow'}</span>
+                          {(() => {
+                            const lt = bl.linkType || 'dofollow';
+                            const ltColors: Record<string, string> = { dofollow: 'bg-green-100 text-green-700', nofollow: 'bg-gray-100 text-gray-600', ugc: 'bg-blue-100 text-blue-700', sponsored: 'bg-orange-100 text-orange-700' };
+                            return <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${ltColors[lt] || 'bg-gray-100 text-gray-600'}`}>{lt}</span>;
+                          })()}
                         </td>
                         <td className="py-3 text-center">
                           <div className="flex items-center justify-center gap-1">
@@ -3969,7 +4265,7 @@ function LocalSeoTab() {
           ) : (
             <div className="space-y-3">
               {businessName && (
-                <div className="p-3 bg-gray-50 rounded-lg mb-4">
+                <div className="p-3 bg-white rounded-lg mb-4">
                   <p className="text-xs text-gray-500 mb-1">Your Business Info</p>
                   <p className="font-medium text-sm">{businessName}</p>
                   {location && <p className="text-sm text-gray-600">{location}</p>}
@@ -4008,7 +4304,7 @@ function LocalSeoTab() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {localKeywordSuggestions.map((kw, i) => (
-                <div key={i} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                <div key={i} className="flex items-center gap-2 p-3 bg-white rounded-lg">
                   <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
                   <span className="text-sm font-medium">{kw}</span>
                 </div>
@@ -4566,7 +4862,7 @@ function SchemaTab() {
                 className={`p-3 rounded-lg border text-sm font-medium transition-colors ${
                   schemaType === type.value
                     ? 'text-white border-transparent'
-                    : 'text-gray-600 border-gray-200 hover:bg-gray-50'
+                    : 'text-gray-600 border-gray-200 hover:bg-white'
                 }`}
                 style={schemaType === type.value ? { backgroundColor: OPTIMIZE_COLOR } : {}}
               >
@@ -4811,6 +5107,25 @@ function ReportsTab() {
           >
             <Download className="w-4 h-4 mr-2" /> Export
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={async () => {
+              try {
+                const res = await apiRequest('POST', '/api/seo/reports/email', {});
+                const data = await res.json();
+                if (data.success) {
+                  toast({ title: "Report Emailed", description: `Sent to ${data.sentTo}` });
+                } else {
+                  toast({ title: "Error", description: data.message || "Failed to send email", variant: "destructive" });
+                }
+              } catch {
+                toast({ title: "Error", description: "Failed to email report", variant: "destructive" });
+              }
+            }}
+          >
+            <FileText className="w-4 h-4 mr-2" /> Email Report
+          </Button>
         </div>
       </div>
 
@@ -4824,7 +5139,7 @@ function ReportsTab() {
           <CardContent>
             <div className="space-y-3">
               {storedReportsData.reports.map((report: any) => (
-                <div key={report.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                <div key={report.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-white">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: `${OPTIMIZE_COLOR}15` }}>
                       <BarChart3 className="w-5 h-5" style={{ color: OPTIMIZE_COLOR }} />
@@ -4846,9 +5161,23 @@ function ReportsTab() {
                       </div>
                     </div>
                   </div>
-                  <span className="text-xs text-gray-400">
-                    {report.createdAt ? new Date(report.createdAt).toLocaleDateString() : ''}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    {(() => {
+                      const rd = report.data as any;
+                      const change = rd?.comparison?.scoreChange ?? rd?.keywordMovement?.improved;
+                      if (change != null && change !== 0) {
+                        return (
+                          <span className={`text-xs font-bold px-2 py-0.5 rounded ${change > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                            {change > 0 ? '↑' : '↓'}{Math.abs(change)} pts
+                          </span>
+                        );
+                      }
+                      return null;
+                    })()}
+                    <span className="text-xs text-gray-400">
+                      {report.createdAt ? new Date(report.createdAt).toLocaleDateString() : ''}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -4962,7 +5291,7 @@ function ReportsTab() {
             </div>
             <div className="space-y-2">
               {openIssues.slice(0, 5).map((issue: any) => (
-                <div key={issue.id} className="flex items-center gap-2 text-sm p-2 bg-gray-50 rounded">
+                <div key={issue.id} className="flex items-center gap-2 text-sm p-2 bg-white rounded">
                   <Badge variant={issue.severity === 'critical' || issue.severity === 'high' ? 'destructive' : 'secondary'} className="text-xs">
                     {issue.severity}
                   </Badge>
@@ -5032,7 +5361,7 @@ function ReportsTab() {
             <CardTitle className="text-lg">Page Analysis Summary</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-4 mb-4 p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center gap-4 mb-4 p-3 bg-white rounded-lg">
               <span className="text-sm text-gray-600">Average Page Score:</span>
               <ScoreBadge score={avgPageScore} />
             </div>
@@ -5060,7 +5389,7 @@ function ReportsTab() {
           <CardContent>
             <div className="space-y-2">
               {filteredScans.map((scan: any) => (
-                <div key={scan.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={scan.id} className="flex items-center justify-between p-3 bg-white rounded-lg">
                   <div className="flex items-center gap-3">
                     <Badge variant={scan.status === 'completed' ? 'default' : scan.status === 'running' ? 'secondary' : 'destructive'}>
                       {scan.status}
@@ -5112,7 +5441,7 @@ function ScoreBreakdownItem({ label, score }: { label: string; score: number | n
 
 function StatCard({ label, value, icon: Icon, subtext, color }: { label: string; value: number; icon: any; subtext: string; color: string }) {
   return (
-    <div className="text-center p-4 rounded-lg bg-gray-50">
+    <div className="text-center p-4 rounded-lg bg-white">
       <Icon className="w-5 h-5 mx-auto mb-1" style={{ color }} />
       <p className="text-2xl font-bold" style={{ color: OPTIMIZE_COLOR }}>{value}</p>
       <p className="text-xs font-medium text-gray-600">{label}</p>
