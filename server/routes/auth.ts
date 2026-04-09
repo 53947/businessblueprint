@@ -4,7 +4,7 @@ import { randomBytes } from "crypto";
 import { db } from "../db";
 import { users, magicLinkTokens } from "@shared/schema";
 import { eq } from "drizzle-orm";
-import { isAuthenticated } from "../replitAuth";
+import { isAuthenticated } from "../auth";
 import { ResendEmailService } from "../services/resend-email";
 
 const router = Router();

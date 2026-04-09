@@ -106,7 +106,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
     if (isAuthenticated) {
       window.location.href = "/api/logout";
     } else {
-      window.location.href = "/login";
+      window.location.href = "/portal/login";
     }
   };
 
@@ -432,7 +432,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (
-                  <a href="/login" className="flex items-center px-2 py-1.5 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium transition-colors" data-testid="button-login">
+                  <a href="/portal/login" className="flex items-center px-2 py-1.5 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium transition-colors" data-testid="button-login">
                     Login
                   </a>
                 )}
@@ -444,7 +444,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 )}
 
                 <a
-                  href={isLoggedIn ? "/respond/dashboard" : "/login?redirect=/respond/dashboard"}
+                  href={isLoggedIn ? "/respond/dashboard" : "/portal/login?redirect=/respond/dashboard"}
                   className="flex items-center px-2 py-1.5 bg-white border border-[#001882] hover:bg-blue-50 text-[#001882] rounded-md font-bold text-xs transition-colors"
                   data-testid="button-quick-respond"
                 >
@@ -452,7 +452,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                 </a>
 
                 <a
-                  href={isLoggedIn ? "/assessment" : "/login?redirect=/assessment"}
+                  href={isLoggedIn ? "/assessment" : "/portal/login?redirect=/assessment"}
                   className="flex items-center px-2 py-1.5 border-2 border-[#960D71] text-[#960D71] bg-transparent hover:bg-[#960D71] hover:text-white rounded-md text-xs font-bold transition-all whitespace-nowrap"
                   data-testid="button-digital-iq"
                 >
@@ -476,7 +476,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
         <div className="lg:hidden flex items-center justify-between gap-2 h-16 border-t border-gray-200 flex-wrap p-2">
           {showNavigation && (
             <>
-              <a href={isLoggedIn ? "/respond/dashboard" : "/login?redirect=/respond/dashboard"} className="flex-1 px-2 py-2 bg-white border border-[#001882] hover:bg-blue-50 text-[#001882] rounded-md font-bold text-xs text-center transition-colors" data-testid="button-respond-mobile">
+              <a href={isLoggedIn ? "/respond/dashboard" : "/portal/login?redirect=/respond/dashboard"} className="flex-1 px-2 py-2 bg-white border border-[#001882] hover:bg-blue-50 text-[#001882] rounded-md font-bold text-xs text-center transition-colors" data-testid="button-respond-mobile">
                 <span style={{ color: "#09080E" }}>/</span>&nbsp;respond
               </a>
               {isLoggedIn ? (
@@ -505,11 +505,11 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <a href="/login" className="flex-1 px-2 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium text-center transition-colors" data-testid="button-login-mobile">
+                <a href="/portal/login" className="flex-1 px-2 py-2 border border-gray-900 hover:bg-gray-100 text-gray-900 rounded-md text-xs font-medium text-center transition-colors" data-testid="button-login-mobile">
                   Login
                 </a>
               )}
-              <a href={isLoggedIn ? "/assessment" : "/login?redirect=/assessment"} className="flex-1 px-2 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs font-bold text-center transition-all" data-testid="button-digital-iq-mobile">
+              <a href={isLoggedIn ? "/assessment" : "/portal/login?redirect=/assessment"} className="flex-1 px-2 py-2 border-2 border-orange-500 text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white rounded-md text-xs font-bold text-center transition-all" data-testid="button-digital-iq-mobile">
                 Digital IQ
               </a>
             </>
@@ -679,7 +679,7 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   Dashboard
                 </a>
               ) : (
-                <a href="/login" className="flex items-center justify-center gap-3 w-full p-4 border-2 border-gray-900 text-gray-900 rounded-lg font-bold text-lg active:bg-gray-50 transition-colors" data-testid="mobile-login-btn">
+                <a href="/portal/login" className="flex items-center justify-center gap-3 w-full p-4 border-2 border-gray-900 text-gray-900 rounded-lg font-bold text-lg active:bg-gray-50 transition-colors" data-testid="mobile-login-btn">
                   Login
                 </a>
               )}

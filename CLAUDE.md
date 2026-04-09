@@ -1,5 +1,5 @@
 # CLAUDE.md — businessblueprint.io
-# Last updated: April 8, 2026
+# Last updated: April 9, 2026
 
 ---
 
@@ -19,8 +19,14 @@ Those rules govern colors, fonts, naming, payments, and ecosystem standards. The
 **Tagline:** Get Assessed. Get Prescribed. Get Business.
 **Role:** Flagship platform — local business marketing and management SaaS
 **Stack:** React + TypeScript + Tailwind + shadcn/ui + Express + Drizzle ORM + PostgreSQL + Wouter
-**Deployment:** Railway
+**Deployment:** Railway (migrated from Replit 2026-04-09)
+**Database:** Neon PostgreSQL (Dean-owned project, separate from Replit)
+**Object Storage:** Cloudflare R2 — bucket `content-storage`, ENAM region. Used for / post media uploads. Env vars: `CLOUDFLARE_R2_ACCESS_KEY_ID`, `CLOUDFLARE_R2_SECRET_ACCESS_KEY`, `CLOUDFLARE_R2_ENDPOINT`, `CLOUDFLARE_R2_BUCKET`.
+**Auth:** Magic-link + credential auth (production). Replit OIDC removed. Future: OpenAuth on Cloudflare Workers for social login (Google, GitHub, etc.)
+**Cloudflare Account:** `53947@triadblue.com` — manages DNS, R2, and future Workers. Wrangler CLI authenticated locally.
+**Environments:** Production (`main` branch) + Staging (`staging` branch) on Railway
 **Local path:** `/Users/deanlewis/businessblueprint`
+**Preview URL:** `businessblueprint-production-f6a9.up.railway.app`
 
 ---
 
@@ -61,6 +67,20 @@ Shared utility: `shared/score-utils.ts` with `getDisplayScore()`, `getScoreLabel
 
 9 scoring categories mapped 1:1 to 9 apps: promote, post, elevate, respond, engage, publish, optimize, connect, amplify.
 
+### Locked App Descriptions (exact — never paraphrase)
+- / publish — Directory Listings Management Tool
+- / elevate — Reviews and Ratings Management Tool
+- / optimize — SEO Management Tool
+- / amplify — Digital Advertising Tool
+- / promote — Email and SMS Campaigns Tool
+- / respond — Multi-Channel Unified Inbox
+- / engage — Live Chat Widget Tool
+- / post — Create, Schedule and Post Social Media Tool
+- / connect — CRM — Customer Relationship Management
+- Coach Blue — AI Business Coach
+- Anchor Suite — Local Solution. Get Found, Stay Credible.
+- Compass Suite — Complete Communications Engine.
+
 ### Key Files
 - `client/src/config/app-registry.ts` — SINGLE SOURCE OF TRUTH for app names, colors, pricing
 - `shared/schema.ts` — database schema
@@ -69,8 +89,12 @@ Shared utility: `shared/score-utils.ts` with `getDisplayScore()`, `getScoreLabel
 - `client/src/components/side-nav.tsx` — sidebar navigation (3 zones: Tools / Guide / Admin)
 - `server/services/assessment-ai.ts` — AssessmentAIService (DeepSeek narratives + recommendations)
 - `server/services/timeline-logger.ts` — cross-app activity logging to / connect contact records
+- `server/services/dataforseo.ts` — DataForSEO centralized service (SERP, keywords, DA — NOT backlinks)
+- `server/services/moz-backlinks.ts` — Moz Links API for all backlink data ($5/mo vs DataForSEO $100/mo)
 - `server/routes.ts` — main routes
-- `server/routes/optimize.ts` — / optimize SEO tool routes (57KB)
+- `server/routes/optimize.ts` — / optimize SEO tool routes
+- `railway.json` — Railway build + deploy config
+- `vite.config.ts` — uses `process.cwd()` (NOT `import.meta.dirname` — breaks in esbuild bundle)
 
 ### Sidebar Structure (3 Zones)
 1. **Your Tools** — / connect + Anchor Suite apps + Compass Suite apps
@@ -80,6 +104,16 @@ Shared utility: `shared/score-utils.ts` with `getDisplayScore()`, `getScoreLabel
 ### Chat Widget
 Two tabs: Tab 1 = Support Agent (Socket.IO), Tab 2 = Coach Blue (REST API)
 Non-subscribers see Coach Blue tab grayed out.
+
+### Deployment & Git Workflow
+- **All code changes go to `staging` branch. NEVER push directly to `main`.**
+- Railway production deploys from `main`. Railway staging deploys from `staging`.
+- Dean tests on staging URL, then uses Railway's Sync feature (pull from staging into production) to go live.
+- Railway sync is a PULL: go to the receiving environment, click Sync, choose source. When syncing to production, exclude `DATABASE_URL` from the changeset.
+- Production and staging each have their own Neon database branch. Never cross them.
+- `dist/` is gitignored — Railway builds fresh every deploy via `rm -rf dist && npm run build`.
+- `import.meta.dirname` is FORBIDDEN in any server-bundled file — use `process.cwd()` instead. esbuild ESM bundles break with it.
+- No `Procfile` or `railway.toml` — `railway.json` is the only deploy config.
 
 ### Payment Rules
 ALL payment processing through swipesblue.com. Zero Stripe references in any customer-facing code. All `STRIPE_` env vars have been deleted. `schema.ts` `paymentProvider` default is `"swipesblue"`. SwipesBlue env vars (API_KEY, API_URL, MERCHANT_ID, WEBHOOK_SECRET) are configured. SwipesBlue `POST /api/v1/checkout/sessions` endpoint exists with redirect + embedded modes.
@@ -110,18 +144,28 @@ ALL payment processing through swipesblue.com. Zero Stripe references in any cus
 - / optimize Phase A — critical layer: AI fix instructions, Core Web Vitals, schema generator, local rank tracking, 8-tab restructure, PriorityBadge system ✓
 - / optimize Phases B-D — important/relevant/optional layers: DataForSEO integration, competitor enrichment, backlinks, enhanced keywords, reports, content tools, snippet preview ✓
 - Results page journey — full prescription display for pre-signup visitors, architect grid paper, strengths + prescription narratives, polling, conversion CTA ✓
+- Backlink provider swap — DataForSEO Backlinks API ($100/mo) replaced with Moz Links API ($5/mo). DataForSEO retained for SERP/keywords/DA only. ✓
+- Railway migration — moved from Replit to Railway. WebSocket CORS, health check endpoint, PORT env var, Replit Vite plugins removed, Object Storage graceful degradation, process.cwd() fix for esbuild, dist/ gitignored, Procfile/railway.toml removed ✓
+- Admin email — renamed from demo@businessblueprint.io to admin@businessblueprint.io ✓
+- Cloudflare R2 Object Storage — replaced Replit sidecar with R2 bucket `content-storage` for / post media uploads ✓
 
 ## PENDING
 
+- **Post-Railway audit** — full audit of staging + production needed to confirm everything works after migration
+- **Object Storage replacement** — DONE. Swapped Replit sidecar to Cloudflare R2 (`content-storage` bucket). ✓
+- **Replit decommission** — once Railway is stable, stop Replit deployments. Old Neon DB on Replit project can be kept as backup.
 - Email delivery — Resend silently failing (logs `Resend ID: undefined`). Root MX record added. `send.send.businessblueprint.io` typo DNS records need deleting.
 - Journey email cadence — drip emails need rewriting to reference current products, suites, Coach Blue, Directions for Use
 - D&B Direct+ API credentials — Dean needs to obtain from D&B (sales-driven). Code handles missing credentials gracefully.
 - Reddit Ads API credentials — Dean applied. Manual approval required (~7 day turnaround). Code fully built.
 - DataForSEO credentials — needed for / optimize real data features. Pay-per-use. `DATAFORSEO_LOGIN` + `DATAFORSEO_PASSWORD`.
+- MOZ_API_TOKEN — set in Railway env vars. $5/mo Moz Links API for backlink data.
 - / elevate gaps — Google review response API push needs real OAuth credentials from business owner. Yelp does not support automated replies.
 - / post gaps — social engagement → CRM contact matching not built (needs platform OAuth commenter identity data)
 - / amplify gaps — campaign-to-contact targeting not wired to actual ad platform APIs
 - Header — may still show "Inbox" instead of "/ respond" — verify
+- **OpenAuth on Cloudflare Workers** — replace magic-link auth with OpenAuth (openauth.js.org) for social login (Google, GitHub, etc.). Self-hosted on Cloudflare Workers, free, no user limits. Not urgent — current magic-link auth works.
+- **External AI Audit** — staging site setup planned for independent review (deferred from April 8)
 
 ---
 
@@ -140,5 +184,8 @@ ALL payment processing through swipesblue.com. Zero Stripe references in any cus
 | 2026-04-08 | / optimize Phase D — optional/polish layer. Routes: 6 new (content/length-recommendations, content/click-potential, content/question-keywords, content/topic-clusters, content/seo-score, pages/snippet-preview). Client: ContentTab (length recommendations, CTR estimates, question keywords, topic clusters, SEO writing assistant), SiteHealthTab (SERP snippet preview), BacklinksTab (anchor text distribution). |
 | 2026-04-08 | Results page journey — full rewrite of find-results.tsx. Architect grid paper prescription display (score, strengths narrative, prescription narrative, numbered action items with app colors, IQ summary with projected score). Polling for in-progress assessments. Email lookup renders full prescription inline. Removed all temporary access/expired language. Conversion CTA with Coach Blue teaser. Legacy recommendation fallback for older assessments. Admin email renamed demo@ → admin@businessblueprint.io. |
 | 2026-04-08 | / optimize Phase B rebuild — DataForSEO centralized service (server/services/dataforseo.ts). Schema: seoProfiles +4 cols (domainAuthority, organicTraffic, totalBacklinks, lastDaCheck). Routes: 7 new (competitors/:id/enrich, competitors/:id/keywords, domain-authority, backlinks/discover, backlinks/summary, keywords/enrich, reports/email). Enhanced gatherReportData with CWV + referringDomains. Client: OverviewTab (DA/backlinks/keywords/report cards), CompetitorsTab (enrich button, expandable keyword rows, DA hero), BacklinksTab (discover button, summary query, referring domains, link type badges), KeywordsTab (enrich button, intent color fix), ReportsTab (email button, score change badges). Fixed position→rank TS error in reports. Replaced all bg-gray-50 with bg-white. |
+| 2026-04-08 | Backlink provider swap — replaced DataForSEO Backlinks API with Moz Links API (server/services/moz-backlinks.ts). Swapped backlinks/discover + competitors/backlinks endpoints to use Moz. DataForSEO retained for SERP, keywords, DA, competitor keywords only. |
+| 2026-04-09 | Railway migration — deleted Procfile + railway.toml (were launching MCP server). Created railway.json. Fixed import.meta.dirname → process.cwd() in vite.config.ts + server/vite.ts. Removed dist/ from git, added to .gitignore. Updated WebSocket CORS to businessblueprint.io. Added /api/health endpoint. PORT reads from env var. Removed Replit Vite plugins. Object Storage graceful degradation. Deleted mcp-server/ directory. Created staging branch. Set up Railway staging/production environments with separate Neon database branches. |
 
 **AGENTS: Update this section on every commit. Your work is not done until this changelog reflects it.**
+**AGENTS: All changes go to `staging` branch. NEVER push to `main` directly.**

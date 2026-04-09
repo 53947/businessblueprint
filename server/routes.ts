@@ -82,7 +82,7 @@ import { eq, desc, and, or, lte, sql, count, avg } from "drizzle-orm";
 import { db } from "./db";
 import { z } from "zod";
 import { requireAuth, type AuthenticatedRequest } from "./middleware/auth";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated } from "./auth";
 import { authRouter } from "./routes/auth";
 import { requireClientPortalAccess } from "./middleware/clientPortalAuth";
 

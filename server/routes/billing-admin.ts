@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { storage } from '../storage';
 import { z } from 'zod';
-import { isAuthenticated } from '../replitAuth';
+import { isAuthenticated } from '../auth';
 import { db } from '../db';
 import { clients } from '@shared/schema';
 import { eq } from 'drizzle-orm';

@@ -9,7 +9,7 @@
 
 import { Router } from "express";
 import { db } from "../db";
-import { isAuthenticated } from "../replitAuth";
+import { isAuthenticated } from "../auth";
 import {
   adAccountConnections,
   amplifyCampaigns,

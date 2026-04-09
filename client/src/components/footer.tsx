@@ -68,22 +68,23 @@ export function Footer() {
             <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-900 mb-4">Platform</h3>
             <ul className="space-y-2 text-sm" style={{ fontFamily: 'Archivo Semi Expanded, Archivo, sans-serif', fontWeight: 600, fontSize: 14 }}>
               {[
-                { href: "/assessment", slash: true, name: "assess", color: "#960D71" },
-                { href: "/connect", slash: true, name: "connect", color: "#008060" },
-                { href: "/publish", slash: true, name: "publish", color: "#064A6C" },
-                { href: "/elevate", slash: true, name: "elevate", color: "#E9B307" },
-                { href: "/optimize", slash: true, name: "optimize", color: "#374151" },
-                { href: "/amplify", slash: true, name: "amplify", color: "#97ACCA" },
-                { href: "/respond", slash: true, name: "respond", color: "#001882" },
-                { href: "/engage", slash: true, name: "engage", color: "#660099" },
-                { href: "/post", slash: true, name: "post", color: "#FF44CC" },
-                { href: "/promote", slash: true, name: "promote", color: "#1844A6" },
+                { href: "/assessment", slash: true, name: "assess", color: "#960D71", description: "Digital IQ Assessment" },
+                { href: "/connect", slash: true, name: "connect", color: "#008060", description: "CRM — Customer Relationship Management" },
+                { href: "/publish", slash: true, name: "publish", color: "#064A6C", description: "Directory Listings Management Tool" },
+                { href: "/elevate", slash: true, name: "elevate", color: "#E9B307", description: "Reviews and Ratings Management Tool" },
+                { href: "/optimize", slash: true, name: "optimize", color: "#374151", description: "SEO Management Tool" },
+                { href: "/amplify", slash: true, name: "amplify", color: "#97ACCA", description: "Digital Advertising Tool" },
+                { href: "/respond", slash: true, name: "respond", color: "#001882", description: "Multi-Channel Unified Inbox" },
+                { href: "/engage", slash: true, name: "engage", color: "#660099", description: "Live Chat Widget Tool" },
+                { href: "/post", slash: true, name: "post", color: "#FF44CC", description: "Create, Schedule and Post Social Media Tool" },
+                { href: "/promote", slash: true, name: "promote", color: "#1844A6", description: "Email and SMS Campaigns Tool" },
               ].map((app) => (
                 <li key={app.name}>
                   <a href={app.href} className="hover:opacity-80 transition-opacity">
                     <span style={{ color: '#09080E' }}>/ </span>
                     <span style={{ color: app.color }}>{app.name}</span>
                   </a>
+                  <p className="text-[10px] mt-0.5" style={{ color: '#6B7280' }}>{app.description}</p>
                 </li>
               ))}
             </ul>

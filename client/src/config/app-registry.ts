@@ -88,7 +88,7 @@ export const APP_REGISTRY: SlashApp[] = [
     id: "publish",
     name: "publish",
     color: "#064A6C",
-    description: "Business Listings",
+    description: "Directory Listings Management Tool",
     icon: "BookOpen",
     landingRoute: "/publish",
     dashboardRoute: "/publish/dashboard",
@@ -101,7 +101,7 @@ export const APP_REGISTRY: SlashApp[] = [
     id: "elevate",
     name: "elevate",
     color: "#E9B307",
-    description: "Reviews & Ratings",
+    description: "Reviews and Ratings Management Tool",
     icon: "Star",
     landingRoute: "/elevate",
     dashboardRoute: "/elevate/dashboard",
@@ -114,7 +114,7 @@ export const APP_REGISTRY: SlashApp[] = [
     id: "optimize",
     name: "optimize",
     color: "#374151",
-    description: "Website SEO",
+    description: "SEO Management Tool",
     icon: "Target",
     landingRoute: "/optimize",
     dashboardRoute: "/optimize/dashboard",
@@ -127,7 +127,7 @@ export const APP_REGISTRY: SlashApp[] = [
     id: "promote",
     name: "promote",
     color: "#1844A6",
-    description: "Email & SMS Campaigns",
+    description: "Email and SMS Campaigns Tool",
     icon: "Mail",
     landingRoute: "/promote",
     dashboardRoute: "/promote/dashboard",
@@ -140,7 +140,7 @@ export const APP_REGISTRY: SlashApp[] = [
     id: "respond",
     name: "respond",
     color: "#001882",
-    description: "Unified Mailbox",
+    description: "Multi-Channel Unified Inbox",
     icon: "Inbox",
     landingRoute: "/respond",
     dashboardRoute: "/respond/dashboard",
@@ -153,7 +153,7 @@ export const APP_REGISTRY: SlashApp[] = [
     id: "engage",
     name: "engage",
     color: "#660099",
-    description: "Live Chat",
+    description: "Live Chat Widget Tool",
     icon: "MessageCircle",
     landingRoute: "/engage",
     dashboardRoute: "/engage/dashboard",
@@ -166,7 +166,7 @@ export const APP_REGISTRY: SlashApp[] = [
     id: "post",
     name: "post",
     color: "#FF44CC",
-    description: "Social Media",
+    description: "Create, Schedule and Post Social Media Tool",
     icon: "Share2",
     landingRoute: "/post",
     dashboardRoute: "/post/dashboard",
@@ -179,7 +179,7 @@ export const APP_REGISTRY: SlashApp[] = [
     id: "amplify",
     name: "amplify",
     color: "#97ACCA",
-    description: "Digital Advertising",
+    description: "Digital Advertising Tool",
     icon: "Megaphone",
     landingRoute: "/amplify",
     dashboardRoute: "/amplify/dashboard",
@@ -198,7 +198,7 @@ export const BUNDLE_REGISTRY: BundleConfig[] = [
     icon: "Anchor",
     price: 99,
     appIds: ["publish", "elevate", "optimize", "amplify"],
-    description: "Local SEO & Reputation Bundle",
+    description: "Local Solution. Get Found, Stay Credible.",
   },
   {
     id: "compass",
@@ -207,7 +207,7 @@ export const BUNDLE_REGISTRY: BundleConfig[] = [
     icon: "Compass",
     price: 99,
     appIds: ["promote", "respond", "engage", "post"],
-    description: "Communication & Marketing Bundle",
+    description: "Complete Communications Engine.",
   },
 ];
 
@@ -221,7 +221,7 @@ export const CONNECT_CRM: ConnectConfig = {
     { name: "Starter", price: 0, contactLimit: 100 },
     { name: "Unlimited", price: 29, contactLimit: null },
   ],
-  description: "Customer Relationship Management Tool",
+  description: "CRM — Customer Relationship Management",
 };
 
 export const COACH_BLUE: CoachBlueConfig = {
@@ -234,7 +234,7 @@ export const COACH_BLUE: CoachBlueConfig = {
   standalonePrice: 99,
   withOneBundlePrice: 59,
   withBothBundlesPrice: 0,
-  description: "Personal AI Business Coach",
+  description: "AI Business Coach",
 };
 
 export const DIGITAL_IQ: DigitalIQConfig = {
