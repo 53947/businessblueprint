@@ -318,9 +318,9 @@ export class SetupTriggerService {
     htmlBody: string
   ): Promise<void> {
     try {
-      const apiKey = process.env.RESEND_API_KEY;
+      const apiKey = process.env.ONBOARDING_RESEND_API_KEY;
       if (!apiKey) {
-        console.error('[SetupTriggers] No RESEND_API_KEY — cannot send email');
+        console.error('[SetupTriggers] No ONBOARDING_RESEND_API_KEY — cannot send email');
         return;
       }
 

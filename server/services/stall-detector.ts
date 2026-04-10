@@ -164,7 +164,7 @@ async function sendStallNudge(
   );
 
   try {
-    const apiKey = process.env.RESEND_API_KEY;
+    const apiKey = process.env.ONBOARDING_RESEND_API_KEY;
     if (!apiKey) return;
 
     const resend = new Resend(apiKey);
