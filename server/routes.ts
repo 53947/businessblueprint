@@ -105,6 +105,52 @@ function platformInternalName(display: string): string {
   return entry ? entry[0] : display.toLowerCase().replace(/\s+/g, "_");
 }
 
+/**
+ * Middleware for CRM and Tasks routes.
+ * Accepts client portal sessions (any client), admin sessions, and JWT tokens.
+ * Unlike isAuthenticated, does NOT require isAdmin for client sessions.
+ */
+function requireClientOrAdminAccess(req: any, res: any, next: any) {
+  // DEV MODE BYPASS
+  if (process.env.NODE_ENV !== 'production') {
+    return next();
+  }
+
+  const session = req.session as any;
+
+  // 1. Client portal session — ANY client, admin or not
+  if (session?.clientId) {
+    return next();
+  }
+
+  // 2. Admin credential/magic-link session
+  if (session?.userId) {
+    return next();
+  }
+
+  // 3. Passport session (legacy Replit OIDC)
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    return next();
+  }
+
+  // 4. JWT Bearer token from Authorization header
+  const authHeader = req.headers?.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      const token = authHeader.replace('Bearer ', '');
+      const payload = jwtService.verifyToken(token);
+      if (payload?.clientId) {
+        (req as any).clientId = payload.clientId;
+        return next();
+      }
+    } catch (e) {
+      // Token invalid — fall through to 401
+    }
+  }
+
+  return res.status(401).json({ message: "Unauthorized" });
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
 
@@ -3350,7 +3396,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Task Management Routes (protected by authentication)
-  app.use("/api/tasks", isAuthenticated, tasksRouter);
+  app.use("/api/tasks", requireClientOrAdminAccess, tasksRouter);
 
   // Brand Colors Routes
   app.use("/api/brand-colors", brandColorsRoutes);
@@ -3363,46 +3409,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerPaymentRoutes(app);
 
   // CRM (/relationships) Routes — accepts any authenticated client or admin session
-  app.use("/api/crm", (req: any, res, next) => {
-    // DEV MODE BYPASS
-    if (process.env.NODE_ENV !== 'production') {
-      return next();
-    }
-
-    const session = req.session as any;
-
-    // Accept any client portal session (admin or regular)
-    if (session?.clientId) {
-      return next();
-    }
-
-    // Accept admin credential/magic-link session
-    if (session?.userId) {
-      return next();
-    }
-
-    // Accept Passport session
-    if (req.isAuthenticated && req.isAuthenticated()) {
-      return next();
-    }
-
-    // Accept JWT Bearer token
-    const authHeader = req.headers.authorization;
-    if (authHeader?.startsWith('Bearer ')) {
-      try {
-        const token = authHeader.replace('Bearer ', '');
-        const payload = jwtService.verifyToken(token);
-        if (payload?.clientId) {
-          (req as any).clientId = payload.clientId;
-          return next();
-        }
-      } catch (e) {
-        // Token invalid, fall through to 401
-      }
-    }
-
-    return res.status(401).json({ message: "Unauthorized" });
-  }, crmRouter);
+  app.use("/api/crm", requireClientOrAdminAccess, crmRouter);
 
   // Setup Tasks & Notes — Directions for Use (client portal auth)
   app.use("/api/setup-tasks", setupTasksRouter);
