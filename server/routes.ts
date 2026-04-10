@@ -105,6 +105,52 @@ function platformInternalName(display: string): string {
   return entry ? entry[0] : display.toLowerCase().replace(/\s+/g, "_");
 }
 
+/**
+ * Middleware for CRM and Tasks routes.
+ * Accepts client portal sessions (any client), admin sessions, and JWT tokens.
+ * Unlike isAuthenticated, does NOT require isAdmin for client sessions.
+ */
+function requireClientOrAdminAccess(req: any, res: any, next: any) {
+  // DEV MODE BYPASS
+  if (process.env.NODE_ENV !== 'production') {
+    return next();
+  }
+
+  const session = req.session as any;
+
+  // 1. Client portal session — ANY client, admin or not
+  if (session?.clientId) {
+    return next();
+  }
+
+  // 2. Admin credential/magic-link session
+  if (session?.userId) {
+    return next();
+  }
+
+  // 3. Passport session (legacy Replit OIDC)
+  if (req.isAuthenticated && req.isAuthenticated()) {
+    return next();
+  }
+
+  // 4. JWT Bearer token from Authorization header
+  const authHeader = req.headers?.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      const token = authHeader.replace('Bearer ', '');
+      const payload = jwtService.verifyToken(token);
+      if (payload?.clientId) {
+        (req as any).clientId = payload.clientId;
+        return next();
+      }
+    } catch (e) {
+      // Token invalid — fall through to 401
+    }
+  }
+
+  return res.status(401).json({ message: "Unauthorized" });
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
 
@@ -2114,6 +2160,197 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Client Portal Registration - Email + Password
+  app.post("/api/clients/register", async (req, res) => {
+    try {
+      const { email, password, companyName } = req.body;
+
+      if (!email || !password || !companyName) {
+        return res.status(400).json({
+          success: false,
+          message: "Email, password, and company name are required",
+        });
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          success: false,
+          message: "Please enter a valid email address",
+        });
+      }
+
+      if (password.length < 8) {
+        return res.status(400).json({
+          success: false,
+          message: "Password must be at least 8 characters",
+        });
+      }
+
+      const normalizedEmail = email.trim().toLowerCase();
+
+      const existing = await storage.getClientByEmail(normalizedEmail);
+      if (existing) {
+        return res.status(409).json({
+          success: false,
+          message: "An account with this email already exists. Please log in.",
+        });
+      }
+
+      const bcrypt = await import("bcryptjs");
+      const passwordHash = await bcrypt.hash(password, 12);
+
+      const client = await storage.createClient({
+        companyName: companyName.trim(),
+        email: normalizedEmail,
+        passwordHash,
+        accountStatus: "active",
+      });
+
+      // Auto-create CRM contact
+      try {
+        const [crmContact] = await db
+          .insert(crmContacts)
+          .values({
+            clientId: client.id,
+            firstName: companyName.trim().split(" ")[0] || "New",
+            lastName: "Client",
+            email: normalizedEmail,
+            lifecycleStage: "lead",
+            leadSource: "portal_signup",
+          })
+          .returning();
+
+        await db.insert(crmTimeline).values({
+          clientId: client.id,
+          contactId: crmContact.id,
+          eventType: "account_created",
+          title: `Account created for ${companyName}`,
+          occurredAt: new Date(),
+          sourceApp: "connect",
+          actorType: "system",
+        });
+      } catch (crmError) {
+        console.error("[Register] CRM contact creation failed:", crmError);
+      }
+
+      const jwtToken = await jwtService.createDashboardToken(client.id, client.email);
+
+      (req.session as any).clientId = client.id;
+      (req.session as any).email = client.email;
+      (req.session as any).isAdmin = false;
+
+      // Link any existing assessment to this client
+      try {
+        const existingAssessment = await db
+          .select()
+          .from(assessments)
+          .where(eq(assessments.email, normalizedEmail))
+          .orderBy(desc(assessments.createdAt))
+          .limit(1);
+
+        if (existingAssessment.length > 0 && !existingAssessment[0].clientId) {
+          await db
+            .update(assessments)
+            .set({ clientId: client.id })
+            .where(eq(assessments.id, existingAssessment[0].id));
+          console.log(`[Register] Linked assessment ${existingAssessment[0].id} to new client ${client.id}`);
+        }
+      } catch (linkError) {
+        console.error("[Register] Assessment linking failed:", linkError);
+      }
+
+      console.log(`[Register] New account created: ${normalizedEmail} (ID: ${client.id})`);
+
+      res.json({
+        success: true,
+        client: {
+          id: client.id,
+          companyName: client.companyName,
+          email: client.email,
+        },
+        token: jwtToken,
+        message: "Account created successfully",
+      });
+    } catch (error: any) {
+      console.error("[Register] Error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Registration failed. Please try again.",
+      });
+    }
+  });
+
+  // Client Portal Login - Email + Password
+  app.post("/api/clients/password-login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).json({
+          success: false,
+          message: "Email and password are required",
+        });
+      }
+
+      const normalizedEmail = email.trim().toLowerCase();
+      const client = await storage.getClientByEmail(normalizedEmail);
+
+      if (!client) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid email or password",
+        });
+      }
+
+      if (!client.passwordHash) {
+        return res.status(401).json({
+          success: false,
+          message: "This account uses magic link login. Please click 'Send Login Link' instead, or set a password in your account settings.",
+        });
+      }
+
+      const bcrypt = await import("bcryptjs");
+      const isValid = await bcrypt.compare(password, client.passwordHash);
+      if (!isValid) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid email or password",
+        });
+      }
+
+      await storage.updateClient(client.id, {
+        lastLoginTime: new Date(),
+        loginCount: (client.loginCount || 0) + 1,
+      });
+
+      const jwtToken = await jwtService.createDashboardToken(client.id, client.email);
+
+      (req.session as any).clientId = client.id;
+      (req.session as any).email = client.email;
+      (req.session as any).isAdmin = client.isAdmin || false;
+
+      console.log(`[Login] Password login: ${normalizedEmail} (ID: ${client.id})`);
+
+      res.json({
+        success: true,
+        client: {
+          id: client.id,
+          companyName: client.companyName,
+          email: client.email,
+        },
+        token: jwtToken,
+        message: "Login successful",
+      });
+    } catch (error: any) {
+      console.error("[Login] Password login error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Login failed. Please try again.",
+      });
+    }
+  });
+
   // Client Portal endpoints
   app.get("/api/client/dashboard/:clientId", async (req, res) => {
     try {
@@ -3159,7 +3396,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Task Management Routes (protected by authentication)
-  app.use("/api/tasks", isAuthenticated, tasksRouter);
+  app.use("/api/tasks", requireClientOrAdminAccess, tasksRouter);
 
   // Brand Colors Routes
   app.use("/api/brand-colors", brandColorsRoutes);
@@ -3171,8 +3408,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Payment Routes
   registerPaymentRoutes(app);
 
-  // CRM (/relationships) Routes
-  app.use("/api/crm", isAuthenticated, crmRouter);
+  // CRM (/relationships) Routes — accepts any authenticated client or admin session
+  app.use("/api/crm", requireClientOrAdminAccess, crmRouter);
 
   // Setup Tasks & Notes — Directions for Use (client portal auth)
   app.use("/api/setup-tasks", setupTasksRouter);
