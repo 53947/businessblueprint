@@ -67,6 +67,7 @@ import OptimizeSetup from "@/pages/optimize-setup";
 import OptimizeDashboard from "@/pages/optimize";
 import AdminLogin from "@/pages/login";
 import VerifyAdminMagicLink from "@/pages/verify-admin-magic-link";
+import ClientSignup from "@/pages/client-signup";
 import DirectionsForUse from "@/pages/directions-for-use";
 import NotFound from "@/pages/not-found";
 import { ChatWidget } from "@/components/chat-widget";
@@ -81,6 +82,8 @@ function Router() {
       <Route path="/coach-blue" component={CoachBluePage} />
       <Route path="/login" component={AdminLogin} />
       <Route path="/auth/verify" component={VerifyAdminMagicLink} />
+      <Route path="/auth/login" component={ClientLogin} />
+      <Route path="/auth/signup" component={ClientSignup} />
       <Route path="/portal/login" component={ClientLogin} />
       <Route path="/portal/verify" component={VerifyMagicLink} />
       <Route path="/portal/test" component={PortalTestAccess} />

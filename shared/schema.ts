@@ -236,6 +236,7 @@ export const clients = pgTable("clients", {
   externalId: text("external_id").unique(), // External reference
   companyName: text("company_name").notNull(),
   email: text("email").notNull().unique(), // Primary login identifier
+  passwordHash: varchar("password_hash"),
   phone: text("phone"),
   website: text("website"),
   address: text("address"),
@@ -425,6 +426,7 @@ export const insertClientSchema = createInsertSchema(clients).pick({
   externalId: true,
   companyName: true,
   email: true,
+  passwordHash: true,
   phone: true,
   website: true,
   address: true,
