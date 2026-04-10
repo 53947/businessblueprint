@@ -256,38 +256,72 @@ export function Header({ showNavigation = true }: HeaderProps) {
                         <span>{NAV_ITEMS[3].label}</span>
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <div className="grid gap-4 p-6 w-[90vw] max-w-[700px] grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:[&>*+*]:border-l-[0.5px] md:[&>*+*]:border-[#09080E]">
-                          {/* Learn column */}
-                          <ResourceColumn column={RESOURCES_MENU.columns[0]} />
+                        <div className="grid gap-0 p-6 w-[90vw] max-w-[950px] grid-cols-1 md:grid-cols-3 md:[&>*+*]:border-l-[0.5px] md:[&>*+*]:border-[#09080E]">
 
-                          {/* Platforms column (rendered separately — includes registry apps) */}
-                          <div className="space-y-3 md:pl-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              {(() => { const Icon = ICON_MAP[NAV_ITEMS[2].icon]; return Icon ? <Icon className="w-4 h-4 text-orange-500" /> : null; })()}
-                              <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide">Platforms</h4>
+                          {/* ═══ COLUMN 1 — PLATFORMS + LEARN ═══ */}
+                          <div className="pr-4 space-y-3">
+                            {/* PLATFORMS section */}
+                            <div>
+                              <div className="flex items-center gap-2 pb-2">
+                                {(() => { const Icon = ICON_MAP["LayoutGrid"]; return Icon ? <Icon className="w-4 h-4 text-gray-500" /> : null; })()}
+                                <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide">Platforms</h4>
+                              </div>
+                              <div className="space-y-1">
+                                {SOLUTIONS_MENU.platforms.map((p) => (
+                                  <NavigationMenuLink key={p.id} asChild>
+                                    <a
+                                      className="group flex flex-col rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
+                                      href={p.href}
+                                      data-testid={`link-resources-${p.id}`}
+                                    >
+                                      <img
+                                        src={p.icon}
+                                        alt={p.name}
+                                        className="object-contain"
+                                        style={{ height: 16 }}
+                                      />
+                                      <p className="text-[10px] text-gray-500 mt-1">{p.description}</p>
+                                    </a>
+                                  </NavigationMenuLink>
+                                ))}
+                              </div>
                             </div>
-                            {SOLUTIONS_MENU.platforms.map((p) => (
-                              <NavigationMenuLink key={p.id} asChild>
-                                <a
-                                  className="group flex flex-col rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent"
-                                  href={p.href}
-                                  data-testid={`link-resources-${p.id}`}
-                                >
-                                  <img
-                                    src={p.icon}
-                                    alt={p.name}
-                                    className="object-contain"
-                                    style={{ height: 16 }}
-                                  />
-                                  <p className="text-[10px] text-gray-500 mt-1">{p.description}</p>
-                                </a>
-                              </NavigationMenuLink>
-                            ))}
-                            {/* Connect + Slash Apps */}
+
+                            {/* Divider */}
+                            <div className="border-t-[0.5px] border-[#09080E]" />
+
+                            {/* LEARN section */}
+                            <ResourceColumn column={RESOURCES_MENU.columns[0]} />
+                          </div>
+
+                          {/* ═══ COLUMN 2 — PRODUCT CATALOG ═══ */}
+                          <div className="md:pl-4 md:pr-4 space-y-3">
+                            <div className="flex items-center gap-2 pb-1">
+                              {(() => { const Icon = ICON_MAP["ShoppingBasket"]; return Icon ? <Icon className="w-4 h-4 text-gray-500" /> : null; })()}
+                              <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide">Product Catalog</h4>
+                            </div>
+
+                            {/* / assess — standalone */}
                             <NavigationMenuLink asChild>
-                              <a className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent" href="/connect" data-testid="link-resources-connect">
-                                <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                  <AppIcon name={CONNECT_CRM.icon} size={16} color={CONNECT_CRM.color} />
+                              <a className="group flex items-start gap-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent" href="/assessment" data-testid="link-resources-assess">
+                                <div className="flex-shrink-0">
+                                  <AppIcon name="Lightbulb" size={20} color="#960D71" />
+                                </div>
+                                <div>
+                                  <div className="text-sm font-semibold" style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif" }}>
+                                    <span style={{ color: "#09080E" }}>/</span>{" "}
+                                    <span style={{ color: "#960D71" }}>assess</span>
+                                  </div>
+                                  <p className="text-xs text-gray-600">Digital IQ Assessment</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* / connect — highlighted card */}
+                            <NavigationMenuLink asChild>
+                              <a className="group flex items-start gap-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent border border-gray-200" href="/connect" data-testid="link-resources-connect">
+                                <div className="flex-shrink-0">
+                                  <AppIcon name={CONNECT_CRM.icon} size={20} color={CONNECT_CRM.color} />
                                 </div>
                                 <div>
                                   <AppName appId="connect" size="sm" iconSize={0} />
@@ -295,30 +329,80 @@ export function Header({ showNavigation = true }: HeaderProps) {
                                 </div>
                               </a>
                             </NavigationMenuLink>
-                            {APP_REGISTRY.map((app) => (
-                              <NavigationMenuLink key={app.id} asChild>
-                                <a className="group flex items-start space-x-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent" href={app.landingRoute} data-testid={`link-resources-${app.id}`}>
-                                  <div className="w-4 h-4 mt-0.5 flex-shrink-0">
-                                    <AppIcon name={app.icon} size={16} color={app.color} />
+
+                            {/* Coach Blue — PNG icon */}
+                            <NavigationMenuLink asChild>
+                              <a className="group flex items-start gap-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent" href="/coach-blue" data-testid="link-resources-coachblue">
+                                <img src={coachBlueIcon} alt="Coach Blue" className="flex-shrink-0 object-contain" style={{ width: 20, height: 20, borderRadius: 4 }} />
+                                <div>
+                                  <div className="text-sm font-semibold" style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif", color: "#0000FF" }}>Coach Blue</div>
+                                  <p className="text-xs text-gray-600">{COACH_BLUE.description}</p>
+                                </div>
+                              </a>
+                            </NavigationMenuLink>
+
+                            {/* Anchor Suite */}
+                            {(() => {
+                              const anchorBundle = BUNDLE_REGISTRY.find((b) => b.id === "anchor")!;
+                              const anchorApps = getAppsByBundle("anchor");
+                              return (
+                                <div className="space-y-1">
+                                  <div className="text-xs font-bold uppercase tracking-wide px-2 pt-1" style={{ color: anchorBundle.color }}>
+                                    {anchorBundle.name}
                                   </div>
-                                  <div>
-                                    <AppName appId={app.id} size="sm" iconSize={0} />
-                                    <p className="text-xs text-gray-600">{app.description}</p>
+                                  {anchorApps.map((app) => (
+                                    <NavigationMenuLink key={app.id} asChild>
+                                      <a className="group flex items-start gap-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent" href={app.landingRoute} data-testid={`link-resources-${app.id}`}>
+                                        <div className="flex-shrink-0">
+                                          <AppIcon name={app.icon} size={18} color={app.color} />
+                                        </div>
+                                        <div>
+                                          <AppName appId={app.id} size="sm" iconSize={0} />
+                                          <p className="text-xs text-gray-600">{app.description}</p>
+                                        </div>
+                                      </a>
+                                    </NavigationMenuLink>
+                                  ))}
+                                </div>
+                              );
+                            })()}
+
+                            {/* Compass Suite */}
+                            {(() => {
+                              const compassBundle = BUNDLE_REGISTRY.find((b) => b.id === "compass")!;
+                              const compassApps = getAppsByBundle("compass");
+                              return (
+                                <div className="space-y-1">
+                                  <div className="text-xs font-bold uppercase tracking-wide px-2 pt-1" style={{ color: compassBundle.color }}>
+                                    {compassBundle.name}
                                   </div>
-                                </a>
-                              </NavigationMenuLink>
-                            ))}
+                                  {compassApps.map((app) => (
+                                    <NavigationMenuLink key={app.id} asChild>
+                                      <a className="group flex items-start gap-2 rounded-md p-2 leading-none no-underline outline-none transition-colors hover:bg-accent" href={app.landingRoute} data-testid={`link-resources-${app.id}`}>
+                                        <div className="flex-shrink-0">
+                                          <AppIcon name={app.icon} size={18} color={app.color} />
+                                        </div>
+                                        <div>
+                                          <AppName appId={app.id} size="sm" iconSize={0} />
+                                          <p className="text-xs text-gray-600">{app.description}</p>
+                                        </div>
+                                      </a>
+                                    </NavigationMenuLink>
+                                  ))}
+                                </div>
+                              );
+                            })()}
                           </div>
 
-                          {/* Right side: Developers + Support stacked */}
-                          <div className="space-y-3 md:pl-4">
+                          {/* ═══ COLUMN 3 — DEVELOPERS + SUPPORT ═══ */}
+                          <div className="md:pl-4 space-y-3">
                             <ResourceColumn column={RESOURCES_MENU.columns[1]} />
                             <div className="border-t-[0.5px] border-[#09080E] pt-2 mt-2">
                               <ResourceColumn column={RESOURCES_MENU.columns[2]} />
                             </div>
                           </div>
 
-                          {/* CTA */}
+                          {/* CTA — full width */}
                           <div className="col-span-3 border-t-[0.5px] border-[#09080E] pt-3 mt-1">
                             <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-3">
                               <div className="flex items-center justify-between">
@@ -611,53 +695,153 @@ export function Header({ showNavigation = true }: HeaderProps) {
                             {/* Resources (mobile) */}
                             {item.label === "Resources" && (
                               <div className="space-y-4">
-                                {RESOURCES_MENU.columns.map((col) => (
-                                  <div key={col.title} className="border-t pt-3 first:border-t-0 first:pt-0">
-                                    <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">{col.title}</h4>
-                                    <div className="space-y-2">
-                                      {col.items.map((link) => (
-                                        <a key={link.testId} href={link.href} className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                          <div className="font-bold">{link.label}</div>
-                                          <p className="text-xs text-gray-600">{link.description}</p>
+                                {/* PLATFORMS */}
+                                <div>
+                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2 flex items-center gap-2">
+                                    {(() => { const Icon = ICON_MAP["LayoutGrid"]; return Icon ? <Icon className="w-4 h-4" /> : null; })()}
+                                    Platforms
+                                  </h4>
+                                  <div className="space-y-2">
+                                    {SOLUTIONS_MENU.platforms.map((p) => (
+                                      <a key={p.id} href={p.href} className="flex items-center p-2 text-gray-900 hover:bg-gray-50 rounded text-sm" data-testid={`mobile-link-resources-${p.id}`}>
+                                        <img src={p.icon} alt={p.name} className="object-contain" style={{ height: 16 }} />
+                                        <p className="text-xs text-gray-600 ml-2">{p.description}</p>
+                                      </a>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* LEARN */}
+                                <div className="border-t pt-3">
+                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2 flex items-center gap-2">
+                                    {(() => { const Icon = ICON_MAP["GraduationCap"]; return Icon ? <Icon className="w-4 h-4" /> : null; })()}
+                                    {RESOURCES_MENU.columns[0].title}
+                                  </h4>
+                                  <div className="space-y-2">
+                                    {RESOURCES_MENU.columns[0].items.map((link) => {
+                                      const LinkIcon = ICON_MAP[link.icon];
+                                      return (
+                                        <a key={link.testId} href={link.href} className="flex items-start gap-2 p-2 text-gray-900 hover:bg-gray-50 rounded text-sm" data-testid={`mobile-${link.testId}`}>
+                                          {LinkIcon && <LinkIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-gray-500" />}
+                                          <div>
+                                            <div className="font-bold">{link.label}</div>
+                                            <p className="text-xs text-gray-600">{link.description}</p>
+                                          </div>
+                                        </a>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+
+                                {/* PRODUCT CATALOG */}
+                                <div className="border-t pt-3">
+                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Product Catalog</h4>
+                                  <div className="space-y-2">
+                                    {/* / assess */}
+                                    <a href="/assessment" className="flex items-start gap-2 p-2 text-gray-900 hover:bg-gray-50 rounded text-sm" data-testid="mobile-link-resources-assess">
+                                      <div className="flex-shrink-0"><AppIcon name="Lightbulb" size={20} color="#960D71" /></div>
+                                      <div>
+                                        <div className="text-sm font-semibold" style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif" }}>
+                                          <span style={{ color: "#09080E" }}>/</span>{" "}
+                                          <span style={{ color: "#960D71" }}>assess</span>
+                                        </div>
+                                        <p className="text-xs text-gray-600">Digital IQ Assessment</p>
+                                      </div>
+                                    </a>
+
+                                    {/* / connect — highlighted */}
+                                    <a href="/connect" className="flex items-start gap-2 p-2 text-gray-900 hover:bg-gray-50 rounded text-sm border border-gray-200" data-testid="mobile-link-resources-connect">
+                                      <div className="flex-shrink-0"><AppIcon name={CONNECT_CRM.icon} size={20} color={CONNECT_CRM.color} /></div>
+                                      <div>
+                                        <AppName appId="connect" size="sm" iconSize={0} />
+                                        <p className="text-xs text-gray-600">{CONNECT_CRM.description}</p>
+                                      </div>
+                                    </a>
+
+                                    {/* Coach Blue */}
+                                    <a href="/coach-blue" className="flex items-start gap-2 p-2 text-gray-900 hover:bg-gray-50 rounded text-sm" data-testid="mobile-link-resources-coachblue">
+                                      <img src={coachBlueIcon} alt="Coach Blue" className="flex-shrink-0 object-contain" style={{ width: 20, height: 20, borderRadius: 4 }} />
+                                      <div>
+                                        <div className="text-sm font-semibold" style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif", color: "#0000FF" }}>Coach Blue</div>
+                                        <p className="text-xs text-gray-600">{COACH_BLUE.description}</p>
+                                      </div>
+                                    </a>
+
+                                    {/* Anchor Suite */}
+                                    <div className="pt-1">
+                                      <div className="text-xs font-bold uppercase tracking-wide px-2" style={{ color: BUNDLE_REGISTRY.find((b) => b.id === "anchor")!.color }}>
+                                        {BUNDLE_REGISTRY.find((b) => b.id === "anchor")!.name}
+                                      </div>
+                                      {getAppsByBundle("anchor").map((app) => (
+                                        <a key={app.id} href={app.landingRoute} className="flex items-start gap-2 p-2 text-gray-900 hover:bg-gray-50 rounded text-sm" data-testid={`mobile-link-resources-${app.id}`}>
+                                          <div className="flex-shrink-0"><AppIcon name={app.icon} size={18} color={app.color} /></div>
+                                          <div>
+                                            <AppName appId={app.id} size="sm" iconSize={0} />
+                                            <p className="text-xs text-gray-600">{app.description}</p>
+                                          </div>
+                                        </a>
+                                      ))}
+                                    </div>
+
+                                    {/* Compass Suite */}
+                                    <div className="pt-1">
+                                      <div className="text-xs font-bold uppercase tracking-wide px-2" style={{ color: BUNDLE_REGISTRY.find((b) => b.id === "compass")!.color }}>
+                                        {BUNDLE_REGISTRY.find((b) => b.id === "compass")!.name}
+                                      </div>
+                                      {getAppsByBundle("compass").map((app) => (
+                                        <a key={app.id} href={app.landingRoute} className="flex items-start gap-2 p-2 text-gray-900 hover:bg-gray-50 rounded text-sm" data-testid={`mobile-link-resources-${app.id}`}>
+                                          <div className="flex-shrink-0"><AppIcon name={app.icon} size={18} color={app.color} /></div>
+                                          <div>
+                                            <AppName appId={app.id} size="sm" iconSize={0} />
+                                            <p className="text-xs text-gray-600">{app.description}</p>
+                                          </div>
                                         </a>
                                       ))}
                                     </div>
                                   </div>
-                                ))}
-                                {/* Platforms list */}
+                                </div>
+
+                                {/* DEVELOPERS */}
                                 <div className="border-t pt-3">
-                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2">Platforms</h4>
+                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2 flex items-center gap-2">
+                                    {(() => { const Icon = ICON_MAP["Code"]; return Icon ? <Icon className="w-4 h-4" /> : null; })()}
+                                    {RESOURCES_MENU.columns[1].title}
+                                  </h4>
                                   <div className="space-y-2">
-                                    {SOLUTIONS_MENU.platforms.map((p) => (
-                                      <a key={p.id} href={p.href} className="flex items-center p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                        <img
-                                          src={p.icon}
-                                          alt={p.name}
-                                          className="object-contain"
-                                          style={{ height: 16 }}
-                                        />
-                                        <p className="text-xs text-gray-600 ml-2">{p.description}</p>
-                                      </a>
-                                    ))}
-                                    <a href="/connect" className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                      <AppName appId="connect" size="sm" iconSize={0} />
-                                      <p className="text-xs text-gray-600">{CONNECT_CRM.description}</p>
-                                    </a>
-                                    {APP_REGISTRY.map((app) => (
-                                      <a key={app.id} href={app.landingRoute} className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                        <AppName appId={app.id} size="sm" iconSize={0} />
-                                        <p className="text-xs text-gray-600">{app.description}</p>
-                                      </a>
-                                    ))}
-                                    {BUNDLE_REGISTRY.map((bundle) => (
-                                      <a key={bundle.id} href={`/${bundle.id}`} className="block p-2 text-gray-900 hover:bg-gray-50 rounded text-sm">
-                                        <div className="font-bold" style={{ fontFamily: "Archivo Semi Expanded, Archivo, sans-serif" }}>
-                                          <span style={{ color: "#09080E" }}>/</span>{" "}
-                                          <span style={{ color: bundle.color }}>{bundle.name}</span>
-                                        </div>
-                                        <p className="text-xs text-gray-600">{bundle.description}</p>
-                                      </a>
-                                    ))}
+                                    {RESOURCES_MENU.columns[1].items.map((link) => {
+                                      const LinkIcon = ICON_MAP[link.icon];
+                                      return (
+                                        <a key={link.testId} href={link.href} className="flex items-start gap-2 p-2 text-gray-900 hover:bg-gray-50 rounded text-sm" data-testid={`mobile-${link.testId}`}>
+                                          {LinkIcon && <LinkIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-gray-500" />}
+                                          <div>
+                                            <div className="font-bold">{link.label}</div>
+                                            <p className="text-xs text-gray-600">{link.description}</p>
+                                          </div>
+                                        </a>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+
+                                {/* SUPPORT */}
+                                <div className="border-t pt-3">
+                                  <h4 className="text-xs font-bold text-gray-700 uppercase mb-2 flex items-center gap-2">
+                                    {(() => { const Icon = ICON_MAP["HelpCircle"]; return Icon ? <Icon className="w-4 h-4" /> : null; })()}
+                                    {RESOURCES_MENU.columns[2].title}
+                                  </h4>
+                                  <div className="space-y-2">
+                                    {RESOURCES_MENU.columns[2].items.map((link) => {
+                                      const LinkIcon = ICON_MAP[link.icon];
+                                      return (
+                                        <a key={link.testId} href={link.href} className="flex items-start gap-2 p-2 text-gray-900 hover:bg-gray-50 rounded text-sm" data-testid={`mobile-${link.testId}`}>
+                                          {LinkIcon && <LinkIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-gray-500" />}
+                                          <div>
+                                            <div className="font-bold">{link.label}</div>
+                                            <p className="text-xs text-gray-600">{link.description}</p>
+                                          </div>
+                                        </a>
+                                      );
+                                    })}
                                   </div>
                                 </div>
                               </div>
