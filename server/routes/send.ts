@@ -1344,7 +1344,7 @@ export function registerSendRoutes(app: Express) {
 
           // Email dispatch via Resend
           if (campaign.campaignType === "email" || campaign.campaignType === "both") {
-            const resendApiKey = process.env.RESEND_API_KEY;
+            const resendApiKey = process.env.PROMOTE_RESEND_API_KEY;
             const fromEmail = process.env.FROM_EMAIL || "noreply@businessblueprint.io";
 
             if (resendApiKey) {
@@ -1405,7 +1405,7 @@ export function registerSendRoutes(app: Express) {
                 }
               }
             } else {
-              console.warn(`[Campaign ${campaignId}] RESEND_API_KEY not configured — emails not sent`);
+              console.warn(`[Campaign ${campaignId}] PROMOTE_RESEND_API_KEY not configured — emails not sent`);
             }
           }
 

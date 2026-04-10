@@ -1,10 +1,10 @@
 import { Resend } from 'resend';
 
 async function getResendCredentials(): Promise<{ apiKey: string; fromEmail: string } | null> {
-  // Check RESEND_API_KEY env var FIRST (works on Railway, Replit, and all deployments)
-  const envApiKey = process.env.RESEND_API_KEY;
+  // Check ONBOARDING_RESEND_API_KEY env var FIRST (works on Railway, Replit, and all deployments)
+  const envApiKey = process.env.ONBOARDING_RESEND_API_KEY;
   if (envApiKey) {
-    console.log('[Email] Using RESEND_API_KEY from environment');
+    console.log('[Email] Using ONBOARDING_RESEND_API_KEY from environment');
     return { apiKey: envApiKey, fromEmail: process.env.FROM_EMAIL || 'noreply@businessblueprint.io' };
   }
 
@@ -12,7 +12,7 @@ async function getResendCredentials(): Promise<{ apiKey: string; fromEmail: stri
   try {
     const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
     if (!hostname) {
-      console.error('[Email] FAILED — no RESEND_API_KEY env var and no Replit connector configured');
+      console.error('[Email] FAILED — no ONBOARDING_RESEND_API_KEY env var and no Replit connector configured');
       return null;
     }
 
@@ -23,7 +23,7 @@ async function getResendCredentials(): Promise<{ apiKey: string; fromEmail: stri
       : null;
 
     if (!xReplitToken) {
-      console.error('[Email] FAILED — no RESEND_API_KEY env var and no Replit connector configured');
+      console.error('[Email] FAILED — no ONBOARDING_RESEND_API_KEY env var and no Replit connector configured');
       return null;
     }
 
@@ -40,10 +40,10 @@ async function getResendCredentials(): Promise<{ apiKey: string; fromEmail: stri
       };
     }
 
-    console.error('[Email] FAILED — no RESEND_API_KEY env var and no Replit connector configured');
+    console.error('[Email] FAILED — no ONBOARDING_RESEND_API_KEY env var and no Replit connector configured');
     return null;
   } catch (error) {
-    console.error('[Email] FAILED — no RESEND_API_KEY env var and no Replit connector configured');
+    console.error('[Email] FAILED — no ONBOARDING_RESEND_API_KEY env var and no Replit connector configured');
     return null;
   }
 }

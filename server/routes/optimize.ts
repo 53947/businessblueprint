@@ -4020,7 +4020,7 @@ Base estimates on industry norms and relative domain strength.`;
         // Send via Resend
         try {
           const { Resend } = await import('resend');
-          const resendKey = process.env.RESEND_API_KEY;
+          const resendKey = process.env.ONBOARDING_RESEND_API_KEY;
           if (!resendKey) {
             return res.status(500).json({ success: false, message: "Email service not configured." });
           }
