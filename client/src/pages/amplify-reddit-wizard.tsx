@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Header } from "@/components/header";
+import { SectionHeader } from "@/components/section-header";
 import { Footer } from "@/components/footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -1393,6 +1394,12 @@ export default function AmplifyRedditWizard() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
+      <SectionHeader
+        title="/ amplify"
+        subtitle="Reddit Ads Setup"
+        showHomeButton={true}
+        homeRoute="/portal"
+      />
 
       <main className="flex-1 w-full max-w-4xl mx-auto px-4 py-8">
         {/* Top bar */}

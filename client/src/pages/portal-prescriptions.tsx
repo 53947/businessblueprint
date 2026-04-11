@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/header";
+import { SectionHeader } from "@/components/section-header";
 import { Footer } from "@/components/footer";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { getDisplayScore as sharedGetDisplayScore, getScoreLabel, getScoreColor as sharedGetScoreColor } from "@shared/score-utils";
@@ -556,6 +557,12 @@ export default function PortalPrescriptions() {
   return (
     <div className="min-h-screen bg-[#E9ECF0]">
       <Header />
+      <SectionHeader
+        title="Digital IQ Prescriptions"
+        subtitle="Your personalized growth prescriptions"
+        showHomeButton={true}
+        homeRoute="/portal"
+      />
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {matchToken ? (
           <PrescriptionDetail token={tokenParams?.token} />

@@ -300,12 +300,18 @@ function generateAssessmentConfirmationHTML(assessment: AssessmentData): string 
       
       <div class="email-notice">
         <h4>📧 Check Your Email</h4>
-        <p style="margin: 0;">You'll receive another notification when your prescription is ready. In the meantime, you can check the status anytime in your client portal.</p>
+        <p style="margin: 0;">Your prescription is being prepared now. Create your free account to access your personalized Directions for Use — step-by-step setup tasks with suggested timelines built from your prescription.</p>
       </div>
-      
+
       <div style="text-align: center; margin: 30px 0;">
-        <a href="https://businessblueprint.io/portal/assessments" class="button">
-          Check Status in Portal
+        <a href="https://businessblueprint.io/auth/signup"
+           style="display: inline-block; background: #008060; color: white; border: 2px solid #008060; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 10px 0; font-weight: 700; font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;">
+          Create Your Free Account →
+        </a>
+        <br/>
+        <a href="https://businessblueprint.io/find-results"
+           style="display: inline-block; background: transparent; color: #F97316; border: 2px solid #F97316; padding: 14px 32px; text-decoration: none; border-radius: 8px; margin: 10px 0; font-weight: 700; font-family: 'Archivo Semi Expanded', 'Archivo', sans-serif;">
+          View Your Results
         </a>
       </div>
       </div>

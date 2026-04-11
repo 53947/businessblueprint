@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -64,7 +65,8 @@ import {
   PieChart,
   Target,
   Zap,
-  KeyRound
+  KeyRound,
+  Trash2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
@@ -265,6 +267,7 @@ export default function AdminPanel() {
   const [expandedSubscription, setExpandedSubscription] = useState<number | null>(null);
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [clientToDelete, setClientToDelete] = useState<any>(null);
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
@@ -890,6 +893,16 @@ export default function AdminPanel() {
                                     <ExternalLink className="h-4 w-4 mr-2" />
                                     Portal
                                   </Button>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                                    onClick={() => setClientToDelete(client)}
+                                    data-testid={`button-delete-${client.id}`}
+                                    disabled={(client as any).isProtected}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
                                 </div>
                               </TableCell>
                             </TableRow>
@@ -959,6 +972,37 @@ export default function AdminPanel() {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
+
+              {/* Delete Client Confirmation */}
+              <AlertDialog open={!!clientToDelete} onOpenChange={(open) => { if (!open) setClientToDelete(null); }}>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Client</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete <strong>{clientToDelete?.companyName}</strong> ({clientToDelete?.email}) and ALL related data including contacts, deals, tasks, notes, and timeline history. This cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                      onClick={async () => {
+                        try {
+                          await apiRequest("DELETE", `/api/admin/clients/${clientToDelete.id}`);
+                          toast({ title: "Client deleted", description: `${clientToDelete.companyName} has been removed.` });
+                          queryClient.invalidateQueries({ queryKey: ["/api/admin/clients"] });
+                          setClientToDelete(null);
+                        } catch (error: any) {
+                          toast({ title: "Delete failed", description: error?.message || "Could not delete client", variant: "destructive" });
+                        }
+                      }}
+                      data-testid="button-confirm-delete-client"
+                    >
+                      Delete Permanently
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           )}
 

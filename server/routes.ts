@@ -40,13 +40,19 @@ import {
   inboxMessages2,
   brandAssets,
   crmContacts,
+  crmCompanies,
   crmDeals,
   crmTasks,
+  crmNotes,
   crmTimeline,
   supportTickets,
   ticketComments,
   prescriptions,
   clients,
+  magicLinkTokens,
+  setupTasks,
+  setupNotes,
+  setupTaskEvents,
   insertSupportTicketSchema,
   insertTicketCommentSchema,
   updateSupportTicketSchema,
@@ -989,6 +995,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delete a client and all related data (admin only, blocked for protected clients)
+  app.delete("/api/admin/clients/:id", isAuthenticated, async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      if (isNaN(clientId)) {
+        return res.status(400).json({ success: false, message: "Invalid client ID" });
+      }
+
+      // Check if client exists
+      const [client] = await db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
+      if (!client) {
+        return res.status(404).json({ success: false, message: "Client not found" });
+      }
+
+      // Check if protected
+      if (client.isProtected) {
+        return res.status(403).json({
+          success: false,
+          message: "This client is protected and cannot be deleted. Remove protection first.",
+        });
+      }
+
+      // Delete related data in order (foreign key constraints)
+      // Timeline events
+      await db.delete(crmTimeline).where(eq(crmTimeline.clientId, clientId));
+      // CRM notes
+      await db.delete(crmNotes).where(eq(crmNotes.clientId, clientId));
+      // CRM tasks
+      await db.delete(crmTasks).where(eq(crmTasks.clientId, clientId));
+      // CRM deals
+      await db.delete(crmDeals).where(eq(crmDeals.clientId, clientId));
+      // CRM contacts
+      await db.delete(crmContacts).where(eq(crmContacts.clientId, clientId));
+      // CRM companies
+      await db.delete(crmCompanies).where(eq(crmCompanies.clientId, clientId));
+      // Setup tasks and notes
+      await db.delete(setupTasks).where(eq(setupTasks.clientId, clientId));
+      await db.delete(setupNotes).where(eq(setupNotes.clientId, clientId));
+      await db.delete(setupTaskEvents).where(eq(setupTaskEvents.clientId, clientId));
+      // Magic link tokens
+      await db.delete(magicLinkTokens).where(eq(magicLinkTokens.email, client.email));
+      // Note: assessments are NOT linked to clients via clientId — they're keyed by email,
+      // so they remain in place after a client is deleted (assessment data is preserved).
+      // Finally delete the client
+      await db.delete(clients).where(eq(clients.id, clientId));
+
+      console.log(`[Admin] Deleted client ${clientId} (${client.email})`);
+      res.json({ success: true, message: `Client ${client.companyName} deleted successfully` });
+    } catch (error: any) {
+      console.error("[Admin] Delete client error:", error);
+      res.status(500).json({ success: false, message: "Failed to delete client: " + error.message });
+    }
+  });
+
   // ========================================
   // ADMIN - Support Tickets
   // ========================================
@@ -1274,6 +1334,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching portal subscription:", error);
       res.status(500).json({ message: "Failed to fetch subscription" });
+    }
+  });
+
+  // Update current client's business profile (requires typed-name confirmation)
+  app.patch("/api/portal/profile", requireClientPortalAccess, async (req: any, res) => {
+    try {
+      const clientId = req.clientId;
+      const { companyName, phone, address, website, confirmationText } = req.body;
+
+      if (!clientId) {
+        return res.status(401).json({ success: false, message: "Not authenticated" });
+      }
+
+      // Get current client data
+      const [client] = await db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
+      if (!client) {
+        return res.status(404).json({ success: false, message: "Account not found" });
+      }
+
+      // Require confirmation: user must type their company name to confirm changes
+      if (!confirmationText || confirmationText.trim().toLowerCase() !== client.companyName.trim().toLowerCase()) {
+        return res.status(400).json({
+          success: false,
+          message: "Please type your current business name to confirm changes",
+        });
+      }
+
+      // Build update object — only include fields that were provided
+      const updates: Record<string, any> = { updatedAt: new Date() };
+      if (companyName !== undefined) updates.companyName = companyName.trim();
+      if (phone !== undefined) updates.phone = phone.trim() || null;
+      if (address !== undefined) updates.address = address.trim() || null;
+      if (website !== undefined) updates.website = website.trim() || null;
+
+      await db.update(clients).set(updates).where(eq(clients.id, clientId));
+
+      // Log timeline event
+      try {
+        const existingContact = await db.select().from(crmContacts).where(eq(crmContacts.clientId, clientId)).limit(1);
+        if (existingContact.length > 0) {
+          await db.insert(crmTimeline).values({
+            clientId,
+            contactId: existingContact[0].id,
+            eventType: "profile_updated",
+            title: "Business information updated via portal",
+            occurredAt: new Date(),
+            sourceApp: "connect",
+            actorType: "client",
+          });
+        }
+      } catch (timelineError) {
+        console.error("[Profile Update] Timeline logging failed:", timelineError);
+      }
+
+      console.log(`[Profile] Client ${clientId} updated profile`);
+      res.json({ success: true, message: "Profile updated successfully" });
+    } catch (error: any) {
+      console.error("[Profile] Update error:", error);
+      res.status(500).json({ success: false, message: "Failed to update profile" });
     }
   });
 

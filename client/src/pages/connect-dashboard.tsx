@@ -63,6 +63,7 @@ import {
   Heart,
   Megaphone,
   Inbox,
+  Home,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -234,6 +235,7 @@ const sidebarItems = [
 ];
 
 export default function ConnectDashboard() {
+  const [, setLocation] = useLocation();
   const [activeSection, setActiveSection] = useState<Section>("dashboard");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -352,12 +354,21 @@ export default function ConnectDashboard() {
                   data-testid="input-search"
                 />
               </div>
-              <Button 
+              <Button
                 className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
                 data-testid="btn-header-add-contact"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Contact
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setLocation("/portal")}
+                data-testid="button-home"
+              >
+                <Home className="h-4 w-4 mr-2" />
+                Dashboard
               </Button>
             </div>
           </div>
