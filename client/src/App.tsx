@@ -61,6 +61,7 @@ import ConnectDashboard from "@/pages/connect-dashboard";
 import ConvertLanding from "@/pages/convert-landing";
 import ConvertDashboard from "@/pages/convert-dashboard";
 import ConvertHostedForm from "@/pages/convert-hosted-form";
+import ConvertBuilder from "@/pages/convert-builder";
 import ApiDocs from "@/pages/api-docs";
 import AssessmentConfirmation from "@/pages/assessment-confirmation";
 import KnowledgeBase from "@/pages/knowledge-base";
@@ -149,6 +150,8 @@ function Router() {
       <Route path="/connect/dashboard" component={ConnectDashboard} />
       <Route path="/convert" component={ConvertLanding} />
       <Route path="/convert/dashboard" component={ConvertDashboard} />
+      <Route path="/convert/builder/new" component={ConvertBuilder} />
+      <Route path="/convert/builder/:formId" component={ConvertBuilder} />
       <Route path="/convert/f/:formSlug" component={ConvertHostedForm} />
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/portal/assessment/confirmation" component={AssessmentConfirmation} />
