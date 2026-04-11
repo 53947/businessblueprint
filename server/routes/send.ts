@@ -15,6 +15,7 @@ import {
   sendLists,
   sendListContacts,
   sendCampaignSends,
+  crmContacts,
 } from "@shared/schema";
 import { eq, desc, sql, and, inArray } from "drizzle-orm";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth";
@@ -253,6 +254,84 @@ export function registerSendRoutes(app: Express) {
           success: false,
           message: "Failed to delete contact",
         });
+      }
+    },
+  );
+
+  // Auto-populate sendContacts from CRM contacts (remove approach — user removes who they don't want)
+  app.post(
+    "/api/send/:clientId/sync-crm",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = parseInt(req.params.clientId);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ success: false, error: "Invalid client ID" });
+        }
+        if (clientId !== req.clientId) {
+          return res.status(403).json({ success: false, error: "Access denied" });
+        }
+
+        const crmContactsList = await db
+          .select()
+          .from(crmContacts)
+          .where(eq(crmContacts.clientId, clientId));
+
+        let synced = 0;
+        let skipped = 0;
+
+        for (const contact of crmContactsList) {
+          // Skip contacts without email AND without phone
+          if (!contact.email && !contact.phone) {
+            skipped++;
+            continue;
+          }
+
+          // Check if already exists in sendContacts (by email)
+          if (contact.email) {
+            const [existing] = await db
+              .select()
+              .from(sendContacts)
+              .where(
+                and(
+                  eq(sendContacts.clientId, clientId),
+                  eq(sendContacts.email, contact.email),
+                ),
+              )
+              .limit(1);
+
+            if (existing) {
+              skipped++;
+              continue;
+            }
+          }
+
+          // Create sendContact from CRM contact
+          // Email consent inferred from CRM (the contact gave it to the business);
+          // SMS consent must be explicit, so default to false / unsubscribed.
+          await db.insert(sendContacts).values({
+            clientId,
+            email: contact.email || null,
+            phone: contact.phone || null,
+            firstName: contact.firstName || null,
+            lastName: contact.lastName || null,
+            emailConsent: contact.email ? true : false,
+            emailConsentDate: contact.email ? new Date() : null,
+            emailConsentMethod: "crm_sync",
+            smsConsent: false,
+            emailStatus: "subscribed",
+            smsStatus: "unsubscribed",
+            source: "crm_sync",
+          });
+
+          synced++;
+        }
+
+        console.log(`[Promote] CRM sync for client ${clientId}: ${synced} synced, ${skipped} skipped`);
+        res.json({ success: true, synced, skipped, total: crmContactsList.length });
+      } catch (error: any) {
+        console.error("[Promote] CRM sync error:", error);
+        res.status(500).json({ success: false, error: "Failed to sync CRM contacts" });
       }
     },
   );

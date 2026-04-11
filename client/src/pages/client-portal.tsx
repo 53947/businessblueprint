@@ -9,6 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { Footer } from "@/components/footer";
 import { SideNav } from "@/components/side-nav";
@@ -37,7 +41,10 @@ import {
   DollarSign,
   Package,
   Users,
-  Sparkles
+  Sparkles,
+  Pencil,
+  Save,
+  X
 } from "lucide-react";
 
 export default function ClientPortal() {
@@ -47,6 +54,12 @@ export default function ClientPortal() {
   const [activeTab, setActiveTab] = useState("overview");
   const [showTaskDialog, setShowTaskDialog] = useState(false);
   const [taskFilter, setTaskFilter] = useState("all");
+  // Profile editing state
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [profileForm, setProfileForm] = useState({ companyName: "", phone: "", address: "", website: "" });
+  const [smsConsentEdit, setSmsConsentEdit] = useState(false);
+  const [showProfileConfirm, setShowProfileConfirm] = useState(false);
+  const [profileConfirmText, setProfileConfirmText] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -105,6 +118,60 @@ export default function ClientPortal() {
       apiRequest("PATCH", `/api/crm/tasks/${id}`, { status }).then(r => r.json()),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [tasksQueryKey] }),
   });
+
+  const updateProfileMutation = useMutation({
+    mutationFn: (payload: { companyName: string; phone: string; address: string; website: string; confirmationText: string; smsConsent: boolean }) =>
+      apiRequest("PATCH", "/api/portal/profile", payload).then(r => r.json()),
+    onSuccess: (result: any) => {
+      if (result?.success === false) {
+        toast({ title: "Update failed", description: result.message, variant: "destructive" });
+        return;
+      }
+      toast({ title: "Profile updated", description: "Your business information has been saved." });
+      queryClient.invalidateQueries({ queryKey: [`/api/clients/${clientId}/dashboard`] });
+      setIsEditingProfile(false);
+      setShowProfileConfirm(false);
+      setProfileConfirmText("");
+      setSmsConsentEdit(false);
+    },
+    onError: (error: any) => {
+      toast({ title: "Update failed", description: error?.message || "Could not update profile", variant: "destructive" });
+    },
+  });
+
+  const startEditingProfile = () => {
+    const c = dashboardData?.data?.client;
+    if (!c) return;
+    setProfileForm({
+      companyName: c.companyName || "",
+      phone: c.phone || "",
+      address: c.address || "",
+      website: c.website || "",
+    });
+    setSmsConsentEdit(false);
+    setIsEditingProfile(true);
+  };
+
+  const cancelEditingProfile = () => {
+    setIsEditingProfile(false);
+    setShowProfileConfirm(false);
+    setProfileConfirmText("");
+    setSmsConsentEdit(false);
+  };
+
+  const handleConfirmProfileSave = () => {
+    const currentPhone = clientData?.client?.phone || "";
+    const phoneChanged = profileForm.phone.trim() && profileForm.phone.trim() !== currentPhone.trim();
+    if (phoneChanged && !smsConsentEdit) {
+      toast({
+        title: "Consent required",
+        description: "You must agree to receive SMS notifications to update your phone number.",
+        variant: "destructive",
+      });
+      return;
+    }
+    updateProfileMutation.mutate({ ...profileForm, confirmationText: profileConfirmText, smsConsent: smsConsentEdit });
+  };
 
   const handleSignOut = () => {
     // Clear all session data including JWT token
@@ -287,47 +354,219 @@ export default function ClientPortal() {
           {/* Business Information - Upper Right */}
           <Card className="border-2 border-blue-200">
             <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-base">
-                <MapPin className="h-4 w-4" />
-                Business Information
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <MapPin className="h-4 w-4" />
+                  Business Information
+                </CardTitle>
+                {!isEditingProfile ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={startEditingProfile}
+                    data-testid="button-edit-profile"
+                  >
+                    <Pencil className="h-3.5 w-3.5 mr-1" />
+                    Edit
+                  </Button>
+                ) : (
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={cancelEditingProfile}
+                      data-testid="button-cancel-profile"
+                    >
+                      <X className="h-3.5 w-3.5 mr-1" />
+                      Cancel
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="text-white"
+                      style={{ backgroundColor: "#008060" }}
+                      onClick={() => setShowProfileConfirm(true)}
+                      data-testid="button-save-profile"
+                    >
+                      <Save className="h-3.5 w-3.5 mr-1" />
+                      Save Changes
+                    </Button>
+                  </div>
+                )}
+              </div>
             </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Users className="h-3.5 w-3.5 text-gray-500" />
-                <span className="text-sm font-semibold">{clientData.client.companyName}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="h-3.5 w-3.5 text-gray-500" />
-                <span className="text-sm">{clientData.client.email}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="h-3.5 w-3.5 text-gray-500" />
-                <span className="text-sm">{clientData.client.phone || "Not set"}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="h-3.5 w-3.5 text-gray-500" />
-                <span className="text-sm">{clientData.client.address || "Not set"}</span>
-              </div>
-              {clientData.client.website && (
-                <div className="flex items-center gap-2">
-                  <Globe className="h-3.5 w-3.5 text-gray-500" />
-                  <a href={clientData.client.website} target="_blank" rel="noopener noreferrer"
-                     className="text-sm text-blue-600 hover:text-blue-800 break-all underline">
-                    {clientData.client.website}
-                  </a>
+            <CardContent className="space-y-3">
+              {!isEditingProfile ? (
+                <>
+                  <div className="flex items-center gap-2">
+                    <Users className="h-3.5 w-3.5 text-gray-500" />
+                    <span className="text-sm font-semibold">{clientData.client.companyName}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-3.5 w-3.5 text-gray-500" />
+                    <span className="text-sm">{clientData.client.email}</span>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Lock className="h-3 w-3 text-gray-400" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs">Contact support to change your email address</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-3.5 w-3.5 text-gray-500" />
+                    <span className="text-sm">{clientData.client.phone || "Not set"}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-3.5 w-3.5 text-gray-500" />
+                    <span className="text-sm">{clientData.client.address || "Not set"}</span>
+                  </div>
+                  {clientData.client.website && (
+                    <div className="flex items-center gap-2">
+                      <Globe className="h-3.5 w-3.5 text-gray-500" />
+                      <a href={clientData.client.website} target="_blank" rel="noopener noreferrer"
+                         className="text-sm text-blue-600 hover:text-blue-800 break-all underline">
+                        {clientData.client.website}
+                      </a>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="space-y-3">
+                  <div>
+                    <Label htmlFor="edit-company" className="text-xs text-gray-600">Business Name</Label>
+                    <Input
+                      id="edit-company"
+                      value={profileForm.companyName}
+                      onChange={(e) => setProfileForm({ ...profileForm, companyName: e.target.value })}
+                      className="mt-1"
+                      data-testid="input-profile-company"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs text-gray-600 flex items-center gap-1">
+                      Email <Lock className="h-3 w-3 text-gray-400" />
+                    </Label>
+                    <Input
+                      value={clientData.client.email}
+                      disabled
+                      className="mt-1 bg-gray-100 text-gray-500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Contact support to change your email address</p>
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-phone" className="text-xs text-gray-600">Phone</Label>
+                    <Input
+                      id="edit-phone"
+                      value={profileForm.phone}
+                      onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
+                      className="mt-1"
+                      data-testid="input-profile-phone"
+                    />
+                    {profileForm.phone.trim() && profileForm.phone.trim() !== (clientData.client.phone || "").trim() && (
+                      <div className="flex items-start gap-2 mt-2">
+                        <input
+                          type="checkbox"
+                          id="smsConsentEdit"
+                          checked={smsConsentEdit}
+                          onChange={(e) => setSmsConsentEdit(e.target.checked)}
+                          className="mt-1 h-4 w-4 rounded border-gray-300 text-[#008060] focus:ring-[#008060]"
+                          data-testid="checkbox-sms-consent-edit"
+                        />
+                        <label htmlFor="smsConsentEdit" className="text-xs text-gray-600 leading-tight">
+                          I agree to receive SMS notifications from businessblueprint.io about my account and platform updates. Message and data rates may apply. Reply STOP to unsubscribe.
+                        </label>
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-address" className="text-xs text-gray-600">Address</Label>
+                    <Input
+                      id="edit-address"
+                      value={profileForm.address}
+                      onChange={(e) => setProfileForm({ ...profileForm, address: e.target.value })}
+                      className="mt-1"
+                      data-testid="input-profile-address"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-website" className="text-xs text-gray-600">Website</Label>
+                    <Input
+                      id="edit-website"
+                      value={profileForm.website}
+                      onChange={(e) => setProfileForm({ ...profileForm, website: e.target.value })}
+                      className="mt-1"
+                      data-testid="input-profile-website"
+                    />
+                  </div>
                 </div>
               )}
               <div className="mt-3 pt-3 border-t border-gray-200">
                 <Alert className="bg-amber-50 border-amber-200">
                   <Lock className="h-4 w-4 text-amber-600" />
                   <AlertDescription className="text-xs text-amber-800">
-                    <strong>Protected:</strong> This information is used for Local SEO listings and citations. Changes require verification.
+                    Your business information is used across directory listings and citations. Changes are tracked and logged.
                   </AlertDescription>
                 </Alert>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full mt-3"
+                  onClick={() => setLocation("/publish/dashboard")}
+                  data-testid="button-use-profile-publish"
+                >
+                  Use this profile for&nbsp;<span style={{ color: "#09080E" }}>/</span>&nbsp;<span style={{ color: "#064A6C" }}>publish</span>
+                </Button>
               </div>
             </CardContent>
           </Card>
+
+          {/* Profile Change Confirmation Dialog */}
+          <Dialog open={showProfileConfirm} onOpenChange={(open) => { if (!open) { setShowProfileConfirm(false); setProfileConfirmText(""); } }}>
+            <DialogContent data-testid="dialog-profile-confirm">
+              <DialogHeader>
+                <DialogTitle>Confirm Profile Changes</DialogTitle>
+                <DialogDescription>
+                  Changing your business information affects your directory listings and local SEO. To confirm, type your current business name:
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-2 py-2">
+                <Label htmlFor="profile-confirm-input" className="text-sm text-gray-600">
+                  Current business name: <strong>{clientData.client.companyName}</strong>
+                </Label>
+                <Input
+                  id="profile-confirm-input"
+                  value={profileConfirmText}
+                  onChange={(e) => setProfileConfirmText(e.target.value)}
+                  placeholder="Type your current business name"
+                  data-testid="input-profile-confirm"
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => { setShowProfileConfirm(false); setProfileConfirmText(""); }}
+                  data-testid="button-profile-confirm-cancel"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="text-white"
+                  style={{ backgroundColor: "#008060" }}
+                  disabled={
+                    profileConfirmText.trim().toLowerCase() !== (clientData.client.companyName || "").trim().toLowerCase() ||
+                    updateProfileMutation.isPending
+                  }
+                  onClick={handleConfirmProfileSave}
+                  data-testid="button-profile-confirm-save"
+                >
+                  {updateProfileMutation.isPending ? "Saving..." : "Confirm & Save"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* CRM Hub - Prominent Entry Point */}
@@ -372,7 +611,7 @@ export default function ClientPortal() {
                 <Button
                   variant="outline"
                   className="border-green-500 text-green-700 hover:bg-green-100"
-                  onClick={() => setLocation("/connect")}
+                  onClick={() => setLocation("/connect/dashboard")}
                   data-testid="button-open-crm"
                 >
                   <Users className="w-4 h-4 mr-2" />
@@ -380,7 +619,7 @@ export default function ClientPortal() {
                 </Button>
                 <Button
                   className="bg-green-600 hover:bg-green-700 text-white"
-                  onClick={() => setLocation("/connect")}
+                  onClick={() => setLocation("/connect/dashboard?action=add-contact")}
                   data-testid="button-add-contact"
                 >
                   <Sparkles className="w-4 h-4 mr-2" />

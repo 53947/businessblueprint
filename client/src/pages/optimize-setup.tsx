@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Target, Globe, Search, Users, X, Plus, Loader2, ArrowRight, ArrowLeft } from "lucide-react";
 import { Header } from "@/components/header";
+import { SectionHeader } from "@/components/section-header";
 import { Footer } from "@/components/footer";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -78,6 +79,12 @@ export default function OptimizeSetup() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
+      <SectionHeader
+        title="/ optimize Setup"
+        subtitle="Configure your SEO monitoring"
+        showHomeButton={true}
+        homeRoute="/portal"
+      />
       <div className="max-w-2xl mx-auto px-4 py-12">
         {/* Progress */}
         <div className="flex items-center justify-center mb-8 gap-2">

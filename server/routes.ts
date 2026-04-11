@@ -40,13 +40,19 @@ import {
   inboxMessages2,
   brandAssets,
   crmContacts,
+  crmCompanies,
   crmDeals,
   crmTasks,
+  crmNotes,
   crmTimeline,
   supportTickets,
   ticketComments,
   prescriptions,
   clients,
+  magicLinkTokens,
+  setupTasks,
+  setupNotes,
+  setupTaskEvents,
   insertSupportTicketSchema,
   insertTicketCommentSchema,
   updateSupportTicketSchema,
@@ -288,8 +294,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertAssessmentSchema.parse(req.body);
 
-      // Create assessment with pending status
+      // Create assessment with pending status (smsConsent flows through validatedData)
       const assessment = await storage.createAssessment(validatedData);
+
+      // Capture SMS consent metadata for TCPA compliance if user opted in
+      const consentIp = (req.headers['x-forwarded-for'] as string) || req.ip || null;
+      const consentDate = validatedData.smsConsent ? new Date() : null;
 
       // Create or find client account for this email
       let client = await storage.getClientByEmail(validatedData.email);
@@ -303,11 +313,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           `${validatedData.city}, ${validatedData.state} ${validatedData.zipCode}`,
           validatedData.country || 'United States'
         ].filter(Boolean).join('\n');
-        
+
         client = await storage.createClient({
           companyName: validatedData.businessName,
           email: validatedData.email,
           phone: validatedData.phone,
+          smsConsent: validatedData.smsConsent || false,
+          smsConsentDate: consentDate,
+          smsConsentIp: validatedData.smsConsent ? consentIp : null,
           website: validatedData.website || undefined,
           address: fullAddress,
           accountStatus: "active" as const,
@@ -989,6 +1002,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delete a client and all related data (admin only, blocked for protected clients)
+  app.delete("/api/admin/clients/:id", isAuthenticated, async (req, res) => {
+    try {
+      const clientId = parseInt(req.params.id);
+      if (isNaN(clientId)) {
+        return res.status(400).json({ success: false, message: "Invalid client ID" });
+      }
+
+      // Check if client exists
+      const [client] = await db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
+      if (!client) {
+        return res.status(404).json({ success: false, message: "Client not found" });
+      }
+
+      // Check if protected
+      if (client.isProtected) {
+        return res.status(403).json({
+          success: false,
+          message: "This client is protected and cannot be deleted. Remove protection first.",
+        });
+      }
+
+      // Delete related data in order (foreign key constraints)
+      // Timeline events
+      await db.delete(crmTimeline).where(eq(crmTimeline.clientId, clientId));
+      // CRM notes
+      await db.delete(crmNotes).where(eq(crmNotes.clientId, clientId));
+      // CRM tasks
+      await db.delete(crmTasks).where(eq(crmTasks.clientId, clientId));
+      // CRM deals
+      await db.delete(crmDeals).where(eq(crmDeals.clientId, clientId));
+      // CRM contacts
+      await db.delete(crmContacts).where(eq(crmContacts.clientId, clientId));
+      // CRM companies
+      await db.delete(crmCompanies).where(eq(crmCompanies.clientId, clientId));
+      // Setup tasks and notes
+      await db.delete(setupTasks).where(eq(setupTasks.clientId, clientId));
+      await db.delete(setupNotes).where(eq(setupNotes.clientId, clientId));
+      await db.delete(setupTaskEvents).where(eq(setupTaskEvents.clientId, clientId));
+      // Magic link tokens
+      await db.delete(magicLinkTokens).where(eq(magicLinkTokens.email, client.email));
+      // Note: assessments are NOT linked to clients via clientId — they're keyed by email,
+      // so they remain in place after a client is deleted (assessment data is preserved).
+      // Finally delete the client
+      await db.delete(clients).where(eq(clients.id, clientId));
+
+      console.log(`[Admin] Deleted client ${clientId} (${client.email})`);
+      res.json({ success: true, message: `Client ${client.companyName} deleted successfully` });
+    } catch (error: any) {
+      console.error("[Admin] Delete client error:", error);
+      res.status(500).json({ success: false, message: "Failed to delete client: " + error.message });
+    }
+  });
+
   // ========================================
   // ADMIN - Support Tickets
   // ========================================
@@ -1274,6 +1341,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching portal subscription:", error);
       res.status(500).json({ message: "Failed to fetch subscription" });
+    }
+  });
+
+  // Update current client's business profile (requires typed-name confirmation)
+  app.patch("/api/portal/profile", requireClientPortalAccess, async (req: any, res) => {
+    try {
+      const clientId = req.clientId;
+      const { companyName, phone, address, website, confirmationText, smsConsent } = req.body;
+
+      if (!clientId) {
+        return res.status(401).json({ success: false, message: "Not authenticated" });
+      }
+
+      // Get current client data
+      const [client] = await db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
+      if (!client) {
+        return res.status(404).json({ success: false, message: "Account not found" });
+      }
+
+      // Require confirmation: user must type their company name to confirm changes
+      if (!confirmationText || confirmationText.trim().toLowerCase() !== client.companyName.trim().toLowerCase()) {
+        return res.status(400).json({
+          success: false,
+          message: "Please type your current business name to confirm changes",
+        });
+      }
+
+      // Build update object — only include fields that were provided
+      const updates: Record<string, any> = { updatedAt: new Date() };
+      if (companyName !== undefined) updates.companyName = companyName.trim();
+      if (phone !== undefined) {
+        const trimmedPhone = phone.trim() || null;
+        const phoneChanged = trimmedPhone !== ((client.phone || "").trim() || null);
+        // TCPA: require explicit consent on any phone change
+        if (phoneChanged && trimmedPhone && !smsConsent) {
+          return res.status(400).json({
+            success: false,
+            message: "You must agree to receive SMS notifications to update your phone number.",
+          });
+        }
+        updates.phone = trimmedPhone;
+        if (phoneChanged && trimmedPhone && smsConsent) {
+          updates.smsConsent = true;
+          updates.smsConsentDate = new Date();
+          updates.smsConsentIp = (req.headers['x-forwarded-for'] as string) || req.ip || null;
+        }
+      }
+      if (address !== undefined) updates.address = address.trim() || null;
+      if (website !== undefined) updates.website = website.trim() || null;
+
+      await db.update(clients).set(updates).where(eq(clients.id, clientId));
+
+      // Log timeline event
+      try {
+        const existingContact = await db.select().from(crmContacts).where(eq(crmContacts.clientId, clientId)).limit(1);
+        if (existingContact.length > 0) {
+          await db.insert(crmTimeline).values({
+            clientId,
+            contactId: existingContact[0].id,
+            eventType: "profile_updated",
+            title: "Business information updated via portal",
+            occurredAt: new Date(),
+            sourceApp: "connect",
+            actorType: "client",
+          });
+        }
+      } catch (timelineError) {
+        console.error("[Profile Update] Timeline logging failed:", timelineError);
+      }
+
+      console.log(`[Profile] Client ${clientId} updated profile`);
+      res.json({ success: true, message: "Profile updated successfully" });
+    } catch (error: any) {
+      console.error("[Profile] Update error:", error);
+      res.status(500).json({ success: false, message: "Failed to update profile" });
     }
   });
 
@@ -1761,6 +1903,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Don't fail login if CRM sync fails
       }
 
+      // Transfer assessment data to client record on magic-link login (returning users)
+      try {
+        const existingAssessment = await db
+          .select()
+          .from(assessments)
+          .where(eq(assessments.email, client.email))
+          .orderBy(desc(assessments.createdAt))
+          .limit(1);
+
+        if (existingAssessment.length > 0) {
+          const assess = existingAssessment[0];
+          const clientUpdates: Record<string, any> = {};
+
+          if (assess.phone && !client.phone) clientUpdates.phone = assess.phone;
+          if (assess.address && !client.address) {
+            const addressParts = [assess.address, assess.city, assess.state, assess.zipCode].filter(Boolean);
+            clientUpdates.address = addressParts.join(", ");
+          }
+          if (assess.website && !client.website) clientUpdates.website = assess.website;
+          if (assess.industry && !client.businessCategory) clientUpdates.businessCategory = assess.industry;
+
+          if (Object.keys(clientUpdates).length > 0) {
+            clientUpdates.updatedAt = new Date();
+            await db.update(clients).set(clientUpdates).where(eq(clients.id, client.id));
+            console.log(`[Magic Link Verify] Transferred assessment data to client ${client.id}:`, Object.keys(clientUpdates));
+          }
+
+          // Also update the CRM contact with assessment data
+          try {
+            const [existingCrmContact] = await db
+              .select()
+              .from(crmContacts)
+              .where(eq(crmContacts.clientId, client.id))
+              .limit(1);
+
+            if (existingCrmContact) {
+              const crmUpdates: Record<string, any> = {};
+              if (assess.phone && !existingCrmContact.phone) crmUpdates.phone = assess.phone;
+              if (assess.businessName) {
+                const nameParts = assess.businessName.split(" ");
+                if (!existingCrmContact.firstName || existingCrmContact.firstName === "Portal") {
+                  crmUpdates.firstName = nameParts[0] || existingCrmContact.firstName;
+                }
+                if (nameParts.length > 1 && existingCrmContact.lastName === "User") {
+                  crmUpdates.lastName = nameParts.slice(1).join(" ");
+                }
+              }
+              if (Object.keys(crmUpdates).length > 0) {
+                crmUpdates.updatedAt = new Date();
+                await db.update(crmContacts).set(crmUpdates).where(eq(crmContacts.id, existingCrmContact.id));
+              }
+            }
+          } catch (crmUpdateError) {
+            console.error("[Magic Link Verify] CRM contact update from assessment failed:", crmUpdateError);
+          }
+        }
+      } catch (transferError) {
+        console.error("[Magic Link Verify] Assessment data transfer failed:", transferError);
+      }
+
       // Generate JWT token
       console.log(
         "[Magic Link Verify] Creating dashboard token for client ID:",
@@ -2163,7 +2365,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Client Portal Registration - Email + Password
   app.post("/api/clients/register", async (req, res) => {
     try {
-      const { email, password, companyName } = req.body;
+      const { email, password, companyName, phone, smsConsent } = req.body;
 
       if (!email || !password || !companyName) {
         return res.status(400).json({
@@ -2187,6 +2389,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      // TCPA: phone requires explicit SMS consent
+      if (phone?.trim() && !smsConsent) {
+        return res.status(400).json({
+          success: false,
+          message: "You must agree to receive SMS notifications to save your phone number.",
+        });
+      }
+
       const normalizedEmail = email.trim().toLowerCase();
 
       const existing = await storage.getClientByEmail(normalizedEmail);
@@ -2200,10 +2410,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const bcrypt = await import("bcryptjs");
       const passwordHash = await bcrypt.hash(password, 12);
 
+      const consentIp = (req.headers['x-forwarded-for'] as string) || req.ip || null;
+
       const client = await storage.createClient({
         companyName: companyName.trim(),
         email: normalizedEmail,
         passwordHash,
+        phone: phone?.trim() || null,
+        smsConsent: smsConsent || false,
+        smsConsentDate: smsConsent ? new Date() : null,
+        smsConsentIp: smsConsent ? consentIp : null,
         accountStatus: "active",
       });
 
@@ -2255,6 +2471,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .set({ clientId: client.id })
             .where(eq(assessments.id, existingAssessment[0].id));
           console.log(`[Register] Linked assessment ${existingAssessment[0].id} to new client ${client.id}`);
+        }
+
+        // Transfer assessment data to client record (fills in phone, address, website, etc.)
+        if (existingAssessment.length > 0) {
+          const assess = existingAssessment[0];
+          const clientUpdates: Record<string, any> = {};
+
+          if (assess.phone && !client.phone) clientUpdates.phone = assess.phone;
+          if (assess.address && !client.address) {
+            const addressParts = [assess.address, assess.city, assess.state, assess.zipCode].filter(Boolean);
+            clientUpdates.address = addressParts.join(", ");
+          }
+          if (assess.website && !client.website) clientUpdates.website = assess.website;
+          if (assess.industry && !client.businessCategory) clientUpdates.businessCategory = assess.industry;
+
+          if (Object.keys(clientUpdates).length > 0) {
+            clientUpdates.updatedAt = new Date();
+            await db.update(clients).set(clientUpdates).where(eq(clients.id, client.id));
+            console.log(`[Register] Transferred assessment data to client ${client.id}:`, Object.keys(clientUpdates));
+          }
+
+          // Also update the CRM contact with assessment data
+          try {
+            const [existingCrmContact] = await db
+              .select()
+              .from(crmContacts)
+              .where(eq(crmContacts.clientId, client.id))
+              .limit(1);
+
+            if (existingCrmContact) {
+              const crmUpdates: Record<string, any> = {};
+              if (assess.phone && !existingCrmContact.phone) crmUpdates.phone = assess.phone;
+              if (assess.businessName) {
+                const nameParts = assess.businessName.split(" ");
+                if (!existingCrmContact.firstName || existingCrmContact.firstName === "New") {
+                  crmUpdates.firstName = nameParts[0] || existingCrmContact.firstName;
+                }
+                if (nameParts.length > 1 && existingCrmContact.lastName === "Client") {
+                  crmUpdates.lastName = nameParts.slice(1).join(" ");
+                }
+              }
+              if (Object.keys(crmUpdates).length > 0) {
+                crmUpdates.updatedAt = new Date();
+                await db.update(crmContacts).set(crmUpdates).where(eq(crmContacts.id, existingCrmContact.id));
+              }
+            }
+          } catch (crmUpdateError) {
+            console.error("[Register] CRM contact update from assessment failed:", crmUpdateError);
+          }
         }
       } catch (linkError) {
         console.error("[Register] Assessment linking failed:", linkError);

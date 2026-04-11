@@ -318,6 +318,7 @@ export function AssessmentForm() {
       zipCode: "",
       country: "United States",
       phone: "",
+      smsConsent: false,
       email: "",
       website: "",
       collectsEmails: "",
@@ -972,6 +973,19 @@ export function AssessmentForm() {
                     {form.formState.errors.phone && (
                       <p className="text-sm text-red-600 mt-1">{form.formState.errors.phone.message}</p>
                     )}
+                    <div className="flex items-start gap-2 mt-2">
+                      <input
+                        type="checkbox"
+                        id="smsConsent"
+                        {...form.register("smsConsent")}
+                        className="mt-1 h-4 w-4 rounded border-gray-300 text-[#008060] focus:ring-[#008060]"
+                      />
+                      <label htmlFor="smsConsent" className="text-xs text-gray-600 leading-tight">
+                        I agree to receive SMS notifications from businessblueprint.io about my assessment results and account updates. Message and data rates may apply. Reply STOP to unsubscribe. View our{" "}
+                        <a href="/privacy" className="text-[#008060] underline" target="_blank">Privacy Policy</a> and{" "}
+                        <a href="/terms" className="text-[#008060] underline" target="_blank">Terms of Service</a>.
+                      </label>
+                    </div>
                   </div>
                 </div>
                 </div>

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check, Users, Building2, Target, BarChart3, Kanban, Clock, Zap, ArrowRight } from "lucide-react";
@@ -7,6 +8,14 @@ import { AppName } from "@/components/app-name";
 import { CONNECT_CRM } from "@/config/app-registry";
 
 export default function ConnectLanding() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const clientId = sessionStorage.getItem("clientId");
+    const authToken = sessionStorage.getItem("authToken");
+    setIsLoggedIn(!!(clientId && authToken));
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
@@ -24,41 +33,68 @@ export default function ConnectLanding() {
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
               Most business owners carry their customer relationships in their head. A name here. A number there. A note in their phone. It works — until it doesn't. Until someone on your team can't find the history. Until you forget you already talked to that prospect twice. Until a good customer stops coming back and you never find out why. / connect is the place where every customer relationship lives — organized, searchable, and connected to every other app in businessblueprint.io.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white font-bold"
-                style={{ backgroundColor: '#FF6B00' }}
-                onClick={() => {
-                  const event = new CustomEvent('addToCart', {
-                    detail: { sku: 'relationships-addon', name: '/ connect', price: CONNECT_CRM.tiers[1].price, type: 'addon' }
-                  });
-                  window.dispatchEvent(event);
-                }}
-                data-testid="button-add-to-cart"
-              >
-                Add to Cart - $29/mo
-              </Button>
-              <Button
-                size="lg"
-                className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity"
-                style={{ backgroundColor: '#008060', color: '#fff' }}
-                asChild
-                data-testid="button-get-started"
-              >
-                <a href="/connect/dashboard">Open Dashboard</a>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="text-lg px-8 py-6 shadow-md hover:bg-blue-50 transition-colors"
-                style={{ borderColor: '#008060', color: '#008060' }}
-                asChild
-                data-testid="button-view-pricing"
-              >
-                <a href="/pricing">View All Pricing</a>
-              </Button>
-            </div>
+            {isLoggedIn ? (
+              <div className="space-y-4 text-center">
+                <div className="inline-block bg-[#008060]/10 border-2 border-[#008060] rounded-lg px-6 py-4">
+                  <p className="text-lg font-bold" style={{ color: "#008060" }}>
+                    ✓ Your FREE Starter Plan is Active
+                  </p>
+                  <p className="text-sm text-gray-600">Up to 100 contacts — no credit card required</p>
+                </div>
+                <div className="flex gap-3 justify-center">
+                  <Button
+                    size="lg"
+                    className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white font-bold"
+                    style={{ backgroundColor: "#008060" }}
+                    asChild
+                    data-testid="button-open-your-crm"
+                  >
+                    <a href="/connect/dashboard">Open Your CRM →</a>
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button
+                    size="lg"
+                    className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity text-white font-bold"
+                    style={{ backgroundColor: '#FF6B00' }}
+                    onClick={() => {
+                      const event = new CustomEvent('addToCart', {
+                        detail: { sku: 'relationships-addon', name: '/ connect', price: CONNECT_CRM.tiers[1].price, type: 'addon' }
+                      });
+                      window.dispatchEvent(event);
+                    }}
+                    data-testid="button-add-to-cart"
+                  >
+                    Add to Cart - $29/mo
+                  </Button>
+                  <Button
+                    size="lg"
+                    className="text-lg px-8 py-6 shadow-lg hover:opacity-90 transition-opacity"
+                    style={{ backgroundColor: '#008060', color: '#fff' }}
+                    asChild
+                    data-testid="button-get-started"
+                  >
+                    <a href="/connect/dashboard">Open Dashboard</a>
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="text-lg px-8 py-6 shadow-md hover:bg-blue-50 transition-colors"
+                    style={{ borderColor: '#008060', color: '#008060' }}
+                    asChild
+                    data-testid="button-view-pricing"
+                  >
+                    <a href="/pricing">View All Pricing</a>
+                  </Button>
+                </div>
+                <p className="text-sm text-gray-500 mt-4">
+                  FREE Starter plan includes up to 100 contacts. No credit card required.
+                </p>
+              </>
+            )}
           </div>
         </div>
       </section>

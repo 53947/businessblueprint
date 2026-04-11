@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/header";
+import { SectionHeader } from "@/components/section-header";
 import { SideNav } from "@/components/side-nav";
 import { AppIcon, ICON_MAP } from "@/components/app-name";
 import { APP_REGISTRY, CONNECT_CRM } from "@/config/app-registry";
@@ -581,6 +582,12 @@ export default function DirectionsForUse() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <Header showNavigation={true} />
+      <SectionHeader
+        title="Directions for Use"
+        subtitle="Your guided setup journey"
+        showHomeButton={true}
+        homeRoute="/portal"
+      />
 
       <div className="flex flex-1">
         <SideNav

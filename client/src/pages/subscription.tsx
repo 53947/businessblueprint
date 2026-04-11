@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { Header } from '@/components/header';
+import { SectionHeader } from '@/components/section-header';
 import { Footer } from '@/components/footer';
 import { SwipesBluePaymentForm, PaymentFormData } from '@/components/swipesblue-payment-form';
 import { SubscriptionPlan, SubscriptionAddon } from '@shared/schema';
@@ -210,7 +211,13 @@ export default function SubscriptionPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header showNavigation={true} />
-      
+      <SectionHeader
+        title="Subscription"
+        subtitle="Manage your plan"
+        showHomeButton={true}
+        homeRoute="/portal"
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">

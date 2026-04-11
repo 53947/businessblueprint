@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { 
@@ -63,6 +63,9 @@ import {
   Heart,
   Megaphone,
   Inbox,
+  Home,
+  LayoutDashboard,
+  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -234,8 +237,25 @@ const sidebarItems = [
 ];
 
 export default function ConnectDashboard() {
+  const [, setLocation] = useLocation();
   const [activeSection, setActiveSection] = useState<Section>("dashboard");
   const [searchQuery, setSearchQuery] = useState("");
+  const [pendingAction, setPendingAction] = useState<"add-contact" | "import-contacts" | null>(null);
+
+  // Honor ?action=... URL params (e.g., /connect/dashboard?action=add-contact)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get("action");
+    if (action === "add-contact") {
+      setActiveSection("contacts");
+      setPendingAction("add-contact");
+      window.history.replaceState({}, "", "/connect/dashboard");
+    } else if (action === "import-contacts") {
+      setActiveSection("contacts");
+      setPendingAction("import-contacts");
+      window.history.replaceState({}, "", "/connect/dashboard");
+    }
+  }, []);
 
   const { data: stats, isLoading: statsLoading } = useQuery<CrmStats>({
     queryKey: ["/api/crm/stats"],
@@ -309,19 +329,36 @@ export default function ConnectDashboard() {
           </div>
         </div>
 
-        {/* Exit to Portal */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-          <Link href="/portal/dashboard">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full flex items-center justify-center gap-2"
-              data-testid="btn-exit-to-portal"
-            >
-              <img src={bbLogo} alt="businessblueprint.io" className="h-4" />
-              <span>Exit to Portal</span>
-            </Button>
-          </Link>
+        {/* Bottom Actions */}
+        <div className="p-4 border-t border-gray-200 space-y-1">
+          <button
+            onClick={() => setLocation("/portal/dashboard")}
+            className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg w-full transition-colors"
+            data-testid="btn-exit-to-dashboard"
+          >
+            <LayoutDashboard className="w-4 h-4" />
+            Exit to Dashboard
+          </button>
+          <button
+            onClick={() => {
+              sessionStorage.clear();
+              localStorage.clear();
+              window.location.href = "/portal/login";
+            }}
+            className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg w-full transition-colors"
+            data-testid="btn-logout"
+          >
+            <LogOut className="w-4 h-4" />
+            Logout
+          </button>
+          <a
+            href="/"
+            className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg w-full transition-colors"
+            data-testid="btn-exit-to-portal"
+          >
+            <img src={bbLogo} alt="businessblueprint.io" className="h-4 object-contain" />
+            Exit to Portal
+          </a>
         </div>
       </aside>
 
@@ -352,12 +389,21 @@ export default function ConnectDashboard() {
                   data-testid="input-search"
                 />
               </div>
-              <Button 
+              <Button
                 className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
                 data-testid="btn-header-add-contact"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Contact
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setLocation("/portal")}
+                data-testid="button-home"
+              >
+                <Home className="h-4 w-4 mr-2" />
+                Dashboard
               </Button>
             </div>
           </div>
@@ -366,14 +412,24 @@ export default function ConnectDashboard() {
         {/* Content */}
         <div className="p-6">
           {activeSection === "dashboard" && (
-            <DashboardView 
-              stats={stats} 
-              contacts={contactsData?.contacts || []} 
+            <DashboardView
+              stats={stats}
+              contacts={contactsData?.contacts || []}
               tasks={tasksData?.tasks || []}
               isLoading={statsLoading || contactsLoading || tasksLoading}
+              onNavigate={setActiveSection}
+              onAddContact={() => { setActiveSection("contacts"); setPendingAction("add-contact"); }}
+              onCreateDeal={() => { setActiveSection("pipeline"); }}
+              onCreateTask={() => { setActiveSection("tasks"); }}
+              onImportContacts={() => { setActiveSection("contacts"); setPendingAction("import-contacts"); }}
             />
           )}
-          {activeSection === "contacts" && <ContactsView />}
+          {activeSection === "contacts" && (
+            <ContactsView
+              pendingAction={pendingAction}
+              onPendingActionHandled={() => setPendingAction(null)}
+            />
+          )}
           {activeSection === "companies" && <CompaniesView />}
           {activeSection === "pipeline" && <PipelineView />}
           {activeSection === "tasks" && <TasksView />}
@@ -388,69 +444,86 @@ export default function ConnectDashboard() {
   );
 }
 
-function DashboardView({ 
-  stats, 
-  contacts, 
+function DashboardView({
+  stats,
+  contacts,
   tasks,
-  isLoading 
-}: { 
-  stats?: CrmStats; 
+  isLoading,
+  onNavigate,
+  onAddContact,
+  onCreateDeal,
+  onCreateTask,
+  onImportContacts,
+}: {
+  stats?: CrmStats;
   contacts: CrmContact[];
   tasks: CrmTask[];
   isLoading: boolean;
+  onNavigate: (section: Section) => void;
+  onAddContact: () => void;
+  onCreateDeal: () => void;
+  onCreateTask: () => void;
+  onImportContacts: () => void;
 }) {
   return (
     <div className="space-y-6">
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard 
-          title="Total Contacts" 
+        <StatCard
+          title="Total Contacts"
           value={stats?.contacts || 0}
           icon={Users}
           change="+12%"
           isLoading={isLoading}
+          onClick={() => onNavigate("contacts")}
         />
-        <StatCard 
-          title="Companies" 
+        <StatCard
+          title="Companies"
           value={stats?.companies || 0}
           icon={Building2}
           change="+5%"
           isLoading={isLoading}
+          onClick={() => onNavigate("companies")}
         />
-        <StatCard 
-          title="Open Deals" 
+        <StatCard
+          title="Open Deals"
           value={stats?.openDeals || 0}
           icon={Target}
           suffix={stats?.dealValue ? `$${(stats.dealValue / 1000).toFixed(1)}k value` : undefined}
           isLoading={isLoading}
+          onClick={() => onNavigate("pipeline")}
         />
-        <StatCard 
-          title="Pending Tasks" 
+        <StatCard
+          title="Pending Tasks"
           value={stats?.pendingTasks || 0}
           icon={CheckSquare}
           isLoading={isLoading}
+          onClick={() => onNavigate("tasks")}
         />
       </div>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <QuickActionCard 
-          title="Add Contact" 
+        <QuickActionCard
+          title="Add Contact"
           description="Import or create a new contact"
           icon={UserPlus}
           action="Add Contact"
+          onClick={onAddContact}
         />
-        <QuickActionCard 
-          title="Schedule Meeting" 
+        <QuickActionCard
+          title="Schedule Meeting"
           description="Book time with a contact"
           icon={Calendar}
           action="Schedule"
+          onClick={() => onNavigate("scheduler")}
         />
-        <QuickActionCard 
-          title="Create Deal" 
+        <QuickActionCard
+          title="Create Deal"
           description="Start tracking a new opportunity"
           icon={Target}
           action="Create Deal"
+          onClick={onCreateDeal}
         />
       </div>
 
@@ -462,7 +535,13 @@ function DashboardView({
               <CardTitle className="text-lg">Recent Contacts</CardTitle>
               <CardDescription>Your latest customer additions</CardDescription>
             </div>
-            <Button variant="ghost" size="sm" className="text-[#22C55E]">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-[#22C55E]"
+              onClick={() => onNavigate("contacts")}
+              data-testid="button-view-all-contacts"
+            >
               View All <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </CardHeader>
@@ -470,13 +549,17 @@ function DashboardView({
             {contacts.length === 0 ? (
               <div className="text-center py-8">
                 <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                <h3 className="text-sm font-medium text-gray-900 mb-1">
                   No contacts yet
                 </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                <p className="text-sm text-gray-500 mb-4">
                   Start building your customer database
                 </p>
-                <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white">
+                <Button
+                  className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                  onClick={onAddContact}
+                  data-testid="button-add-first-contact"
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Add First Contact
                 </Button>
@@ -484,9 +567,10 @@ function DashboardView({
             ) : (
               <div className="space-y-3">
                 {contacts.slice(0, 5).map((contact) => (
-                  <div 
+                  <div
                     key={contact.id}
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+                    onClick={() => onNavigate("contacts")}
                     data-testid={`contact-row-${contact.id}`}
                   >
                     <Avatar className="h-10 w-10">
@@ -495,10 +579,10 @@ function DashboardView({
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      <p className="text-sm font-medium text-gray-900 truncate">
                         {contact.firstName} {contact.lastName}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      <p className="text-xs text-gray-500 truncate">
                         {contact.email || contact.phone || "No contact info"}
                       </p>
                     </div>
@@ -519,7 +603,13 @@ function DashboardView({
               <CardTitle className="text-lg">Upcoming Tasks</CardTitle>
               <CardDescription>Tasks due soon</CardDescription>
             </div>
-            <Button variant="ghost" size="sm" className="text-[#22C55E]">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-[#22C55E]"
+              onClick={() => onNavigate("tasks")}
+              data-testid="button-view-all-tasks"
+            >
               View All <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </CardHeader>
@@ -527,13 +617,17 @@ function DashboardView({
             {tasks.length === 0 ? (
               <div className="text-center py-8">
                 <CheckSquare className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                <h3 className="text-sm font-medium text-gray-900 mb-1">
                   No pending tasks
                 </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                <p className="text-sm text-gray-500 mb-4">
                   Create tasks to stay organized
                 </p>
-                <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white">
+                <Button
+                  className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                  onClick={onCreateTask}
+                  data-testid="button-create-task"
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Create Task
                 </Button>
@@ -541,22 +635,23 @@ function DashboardView({
             ) : (
               <div className="space-y-3">
                 {tasks.map((task) => (
-                  <div 
+                  <div
                     key={task.id}
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+                    onClick={() => onNavigate("tasks")}
                     data-testid={`task-row-${task.id}`}
                   >
                     <div className={cn(
                       "w-2 h-2 rounded-full",
-                      task.priority === "high" ? "bg-red-500" : 
+                      task.priority === "high" ? "bg-red-500" :
                       task.priority === "medium" ? "bg-yellow-500" : "bg-gray-400"
                     )} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                      <p className="text-sm font-medium text-gray-900 truncate">
                         {task.title}
                       </p>
                       {task.dueDate && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
+                        <p className="text-xs text-gray-500 flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           {new Date(task.dueDate).toLocaleDateString()}
                         </p>
@@ -574,24 +669,32 @@ function DashboardView({
       </div>
 
       {/* Getting Started */}
-      <Card className="bg-gradient-to-r from-[#22C55E]/5 to-transparent border-[#22C55E]/20">
+      <Card className="border-[#22C55E]/20">
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-xl bg-[#22C55E]/10 flex items-center justify-center">
               <Star className="w-6 h-6 text-[#22C55E]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">
                 Welcome to / connect
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-sm text-gray-600 mb-4">
                 Your single source of truth for all customer data. Get started by importing contacts or creating your first customer record.
               </p>
               <div className="flex gap-3">
-                <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white">
+                <Button
+                  className="bg-[#22C55E] hover:bg-[#16A34A] text-white"
+                  onClick={onImportContacts}
+                  data-testid="button-import-contacts"
+                >
                   Import Contacts
                 </Button>
-                <Button variant="outline">
+                <Button
+                  variant="outline"
+                  onClick={() => window.open("/knowledge-base", "_blank")}
+                  data-testid="button-watch-tutorial"
+                >
                   Watch Tutorial
                 </Button>
               </div>
@@ -603,39 +706,45 @@ function DashboardView({
   );
 }
 
-function StatCard({ 
-  title, 
-  value, 
+function StatCard({
+  title,
+  value,
   icon: Icon,
   change,
   suffix,
-  isLoading 
-}: { 
-  title: string; 
+  isLoading,
+  onClick,
+}: {
+  title: string;
   value: number;
   icon: any;
   change?: string;
   suffix?: string;
   isLoading: boolean;
+  onClick?: () => void;
 }) {
   return (
-    <Card>
+    <Card
+      className={onClick ? "cursor-pointer hover:border-[#22C55E]/50 transition-colors" : ""}
+      onClick={onClick}
+      data-testid={`stat-card-${title.toLowerCase().replace(/\s+/g, "-")}`}
+    >
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</span>
+          <span className="text-sm font-medium text-gray-500">{title}</span>
           <div className="w-8 h-8 rounded-lg bg-[#22C55E]/10 flex items-center justify-center">
             <Icon className="w-4 h-4 text-[#22C55E]" />
           </div>
         </div>
         {isLoading ? (
-          <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          <div className="h-8 w-16 bg-gray-200 rounded animate-pulse" />
         ) : (
           <>
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="text-2xl font-bold text-gray-900">
               {value.toLocaleString()}
             </div>
             {(change || suffix) && (
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs text-gray-500 mt-1">
                 {change && <span className="text-[#22C55E]">{change}</span>}
                 {suffix && <span className="ml-1">{suffix}</span>}
               </p>
@@ -647,27 +756,33 @@ function StatCard({
   );
 }
 
-function QuickActionCard({ 
-  title, 
-  description, 
+function QuickActionCard({
+  title,
+  description,
   icon: Icon,
-  action 
-}: { 
-  title: string; 
+  action,
+  onClick,
+}: {
+  title: string;
   description: string;
   icon: any;
   action: string;
+  onClick?: () => void;
 }) {
   return (
-    <Card className="hover:border-[#22C55E]/50 transition-colors cursor-pointer group">
+    <Card
+      className="hover:border-[#22C55E]/50 transition-colors cursor-pointer group"
+      onClick={onClick}
+      data-testid={`quick-action-${title.toLowerCase().replace(/\s+/g, "-")}`}
+    >
       <CardContent className="p-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-[#22C55E]/10 flex items-center justify-center group-hover:bg-[#22C55E]/20 transition-colors">
             <Icon className="w-5 h-5 text-[#22C55E]" />
           </div>
           <div className="flex-1">
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white">{title}</h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{description}</p>
+            <h3 className="text-sm font-medium text-gray-900">{title}</h3>
+            <p className="text-xs text-gray-500">{description}</p>
           </div>
           <ArrowUpRight className="w-4 h-4 text-gray-400 group-hover:text-[#22C55E] transition-colors" />
         </div>
@@ -1210,7 +1325,13 @@ function ContactDetailView({ contactId, onBack }: { contactId: number; onBack: (
   );
 }
 
-function ContactsView() {
+function ContactsView({
+  pendingAction,
+  onPendingActionHandled,
+}: {
+  pendingAction?: "add-contact" | "import-contacts" | null;
+  onPendingActionHandled?: () => void;
+} = {}) {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStage, setSelectedStage] = useState<string>("all");
@@ -1221,6 +1342,17 @@ function ContactsView() {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showImportDialog, setShowImportDialog] = useState(false);
+
+  // Honor pending actions from the parent (e.g., from portal Add Contact button or URL param)
+  useEffect(() => {
+    if (pendingAction === "add-contact") {
+      setShowAddDialog(true);
+      onPendingActionHandled?.();
+    } else if (pendingAction === "import-contacts") {
+      setShowImportDialog(true);
+      onPendingActionHandled?.();
+    }
+  }, [pendingAction, onPendingActionHandled]);
   const [importStep, setImportStep] = useState<"upload" | "mapping" | "preview">("upload");
   const [csvData, setCsvData] = useState<{ headers: string[]; rows: string[][] }>({ headers: [], rows: [] });
   const [columnMapping, setColumnMapping] = useState<Record<string, string>>({});

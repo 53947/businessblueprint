@@ -61,9 +61,10 @@ export const assessments = pgTable("assessments", {
   location: varchar("location", { length: 255 }), // Now optional, computed from city/state
   
   phone: varchar("phone", { length: 20 }).notNull(),
+  smsConsent: boolean("sms_consent").default(false),
   email: varchar("email", { length: 255 }).notNull(),
   website: varchar("website", { length: 500 }),
-  
+
   // Google Business data
   googleBusinessData: jsonb("google_business_data"),
   
@@ -238,6 +239,10 @@ export const clients = pgTable("clients", {
   email: text("email").notNull().unique(), // Primary login identifier
   passwordHash: varchar("password_hash"),
   phone: text("phone"),
+  // SMS consent (TCPA compliance)
+  smsConsent: boolean("sms_consent").default(false),
+  smsConsentDate: timestamp("sms_consent_date"),
+  smsConsentIp: varchar("sms_consent_ip", { length: 45 }),
   website: text("website"),
   address: text("address"),
   businessCategory: text("business_category"),
@@ -375,6 +380,7 @@ export const insertAssessmentSchema = createInsertSchema(assessments).pick({
   zipCode: true,
   country: true,
   phone: true,
+  smsConsent: true,
   email: true,
   website: true,
   // Operational assessment questions
@@ -428,6 +434,9 @@ export const insertClientSchema = createInsertSchema(clients).pick({
   email: true,
   passwordHash: true,
   phone: true,
+  smsConsent: true,
+  smsConsentDate: true,
+  smsConsentIp: true,
   website: true,
   address: true,
   businessCategory: true,
@@ -3665,6 +3674,11 @@ export const chatWidgetSettings = pgTable("chat_widget_settings", {
   enableFileUpload: boolean("enable_file_upload").default(false),
   enableEmoji: boolean("enable_emoji").default(true),
   enablePreChatForm: boolean("enable_pre_chat_form").default(true),
+
+  // Email configuration
+  contactEmail: varchar("contact_email", { length: 255 }),
+  notificationEmail: varchar("notification_email", { length: 255 }),
+  notifyOnNewChat: boolean("notify_on_new_chat").default(true),
 
   isActive: boolean("is_active").default(true),
 

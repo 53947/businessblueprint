@@ -70,6 +70,9 @@ function ChatSettingsPanel({ clientId }: { clientId: number }) {
   const [primaryColor, setPrimaryColor] = useState("#0000FF");
   const [position, setPosition] = useState("bottom-right");
   const [offlineMessage, setOfflineMessage] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [notificationEmail, setNotificationEmail] = useState("");
+  const [notifyOnNewChat, setNotifyOnNewChat] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -79,6 +82,9 @@ function ChatSettingsPanel({ clientId }: { clientId: number }) {
       setPrimaryColor(settings.primaryColor || "#0000FF");
       setPosition(settings.position || "bottom-right");
       setOfflineMessage(settings.offlineMessage || "");
+      setContactEmail(settings.contactEmail || "");
+      setNotificationEmail(settings.notificationEmail || "");
+      setNotifyOnNewChat(settings.notifyOnNewChat ?? true);
     }
   }, [settings]);
 
@@ -87,6 +93,9 @@ function ChatSettingsPanel({ clientId }: { clientId: number }) {
     try {
       await apiRequest("PUT", `/api/chat/settings/${clientId}`, {
         companyName, welcomeMessage, primaryColor, position, offlineMessage,
+        contactEmail: contactEmail || null,
+        notificationEmail: notificationEmail || null,
+        notifyOnNewChat,
       });
       queryClient.invalidateQueries({ queryKey: [`/api/chat/settings/${clientId}`] });
       toast({ title: "Settings saved" });
@@ -136,6 +145,48 @@ function ChatSettingsPanel({ clientId }: { clientId: number }) {
             <Label>Offline Message</Label>
             <Textarea value={offlineMessage} onChange={(e) => setOfflineMessage(e.target.value)} placeholder="We're offline. Leave a message!" rows={2} data-testid="input-offline-message" />
           </div>
+
+          <div className="border-t border-gray-200 pt-4 space-y-4">
+            <h3 className="text-sm font-semibold text-gray-700">Email Configuration</h3>
+            <div className="space-y-2">
+              <Label htmlFor="contactEmail">Contact Email (shown to visitors)</Label>
+              <Input
+                id="contactEmail"
+                type="email"
+                placeholder="hello@yourbusiness.com"
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
+                data-testid="input-contact-email"
+              />
+              <p className="text-xs text-gray-500 mt-1">Visitors can see this email address in the chat widget</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="notificationEmail">Notification Email</Label>
+              <Input
+                id="notificationEmail"
+                type="email"
+                placeholder="alerts@yourbusiness.com"
+                value={notificationEmail}
+                onChange={(e) => setNotificationEmail(e.target.value)}
+                data-testid="input-notification-email"
+              />
+              <p className="text-xs text-gray-500 mt-1">Get notified when a visitor starts a new chat</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="notifyOnNewChat"
+                checked={notifyOnNewChat}
+                onChange={(e) => setNotifyOnNewChat(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300"
+                data-testid="checkbox-notify-on-new-chat"
+              />
+              <label htmlFor="notifyOnNewChat" className="text-sm text-gray-700">
+                Send email notification when a new chat starts
+              </label>
+            </div>
+          </div>
+
           <Button onClick={handleSave} disabled={saving} className="w-full" data-testid="button-save-settings">
             {saving ? "Saving..." : "Save Settings"}
           </Button>

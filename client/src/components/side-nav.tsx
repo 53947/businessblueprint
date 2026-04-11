@@ -11,6 +11,7 @@ import {
   Settings,
   BarChart3,
   ClipboardList,
+  Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { APP_REGISTRY, BUNDLE_REGISTRY } from "@/config/app-registry";
@@ -102,7 +103,16 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
   };
 
   const navItems: NavItem[] = [
-    // / connect CRM at the top
+    // Dashboard home — always first
+    {
+      id: "dashboard-home",
+      label: "Dashboard",
+      icon: <Home className="w-7 h-7" style={{ color: "#09080E" }} />,
+      external: true,
+      href: "/portal/dashboard",
+    },
+    { id: "divider-home", label: "", icon: null, isDivider: true },
+    // / connect CRM
     connectNavItem,
     { id: "divider-0", label: "", icon: null, isDivider: true },
     // Anchor Suite
