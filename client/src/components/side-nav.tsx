@@ -23,7 +23,7 @@ import hostsBlueWordmark from "@assets/images_logos/hostsblue_logo_image_and_tex
 import swipesBlueWordmark from "@assets/images_logos/swipesblue_logo_image_and_text_as_url.png";
 import builderBlueWordmark from "@assets/images_logos/builderblue2-logo-image-and-text-as-url-for-header.png";
 import scansBlueWordmark from "@assets/images_logos/scansblue_logo_image_and_text_as_url.png";
-import { CONNECT_CRM } from "@/config/app-registry";
+import { CONNECT_CRM, CONVERT_FORM } from "@/config/app-registry";
 
 interface SideNavProps extends React.HTMLAttributes<HTMLDivElement> {
   activeTab?: string;
@@ -102,6 +102,19 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
     appColor: CONNECT_CRM.color,
   };
 
+  // / convert nav item from registry
+  const ConvertIcon = ICON_MAP[CONVERT_FORM.icon];
+  const convertNavItem: NavItem = {
+    id: CONVERT_FORM.id,
+    label: CONVERT_FORM.name,
+    hoverLabel: CONVERT_FORM.description,
+    icon: ConvertIcon ? <ConvertIcon className="w-7 h-7" style={{ color: CONVERT_FORM.color }} /> : null,
+    external: true,
+    href: "/convert/dashboard",
+    isSlashApp: true,
+    appColor: CONVERT_FORM.color,
+  };
+
   const navItems: NavItem[] = [
     // Dashboard home — always first
     {
@@ -112,8 +125,9 @@ export function SideNav({ activeTab = "list", onTabChange, onSignOut, className,
       href: "/portal/dashboard",
     },
     { id: "divider-home", label: "", icon: null, isDivider: true },
-    // / connect CRM
+    // / connect CRM + / convert forms (both always free alongside any subscription)
     connectNavItem,
+    convertNavItem,
     { id: "divider-0", label: "", icon: null, isDivider: true },
     // Anchor Suite
     { id: "anchor-heading", label: "Anchor Suite", icon: null, isHeading: true, headingColor: anchorBundle.color },

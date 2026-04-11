@@ -2,13 +2,14 @@ import {
   BookOpen, Star, Target, Mail, Inbox, MessageCircle, Share2, Megaphone,
   Anchor, Compass, Users, BarChart3, ScanLine, ClipboardCheck, FileText,
   GraduationCap, TrendingUp, Layers, ShoppingBasket, Lightbulb, LayoutGrid, Code,
-  HelpCircle, Video, MessageSquare, LogIn, Settings,
+  HelpCircle, Video, MessageSquare, LogIn, Settings, ArrowRightLeft,
   type LucideIcon,
 } from "lucide-react";
 import {
   APP_REGISTRY,
   BUNDLE_REGISTRY,
   CONNECT_CRM,
+  CONVERT_FORM,
   COACH_BLUE,
   DIGITAL_IQ,
 } from "@/config/app-registry";
@@ -21,7 +22,7 @@ export const ICON_MAP: Record<string, LucideIcon> = {
   BookOpen, Star, Target, Mail, Inbox, MessageCircle, Share2, Megaphone,
   Anchor, Compass, Users, BarChart3, ScanLine, ClipboardCheck, FileText,
   GraduationCap, TrendingUp, Layers, ShoppingBasket, Lightbulb, LayoutGrid, Code,
-  HelpCircle, Video, MessageSquare, LogIn, Settings,
+  HelpCircle, Video, MessageSquare, LogIn, Settings, ArrowRightLeft,
 };
 
 // ─────────────────────────────────────────────
@@ -79,6 +80,9 @@ function lookupApp(id: string): {
 
   if (id === CONNECT_CRM.id)
     return { ...CONNECT_CRM, isSlashApp: CONNECT_CRM.isSlashApp };
+
+  if (id === CONVERT_FORM.id)
+    return { ...CONVERT_FORM, isSlashApp: CONVERT_FORM.isSlashApp };
 
   // Coach Blue keeps PNG icon
   if (id === COACH_BLUE.id)

@@ -58,6 +58,9 @@ import PortalPrescriptions from "@/pages/portal-prescriptions";
 import FindResults from "@/pages/find-results";
 import ConnectLanding from "@/pages/connect-landing";
 import ConnectDashboard from "@/pages/connect-dashboard";
+import ConvertLanding from "@/pages/convert-landing";
+import ConvertDashboard from "@/pages/convert-dashboard";
+import ConvertHostedForm from "@/pages/convert-hosted-form";
 import ApiDocs from "@/pages/api-docs";
 import AssessmentConfirmation from "@/pages/assessment-confirmation";
 import KnowledgeBase from "@/pages/knowledge-base";
@@ -144,6 +147,9 @@ function Router() {
       <Route path="/find-results" component={FindResults} />
       <Route path="/connect" component={ConnectLanding} />
       <Route path="/connect/dashboard" component={ConnectDashboard} />
+      <Route path="/convert" component={ConvertLanding} />
+      <Route path="/convert/dashboard" component={ConvertDashboard} />
+      <Route path="/convert/f/:formSlug" component={ConvertHostedForm} />
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/portal/assessment/confirmation" component={AssessmentConfirmation} />
       <Route path="/knowledge-base" component={KnowledgeBase} />
