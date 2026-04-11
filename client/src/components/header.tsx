@@ -521,6 +521,35 @@ export function Header({ showNavigation = true }: HeaderProps) {
                   </a>
                 )}
 
+                {/* Contextual App Dashboard button — appears on app landing pages for logged-in users */}
+                {isLoggedIn && (() => {
+                  const path = typeof window !== "undefined" ? window.location.pathname : "";
+                  const appRoutes: Record<string, { label: string; dashboard: string; color: string }> = {
+                    "/connect": { label: "connect Dashboard", dashboard: "/connect/dashboard", color: "#008060" },
+                    "/publish": { label: "publish Dashboard", dashboard: "/publish/dashboard", color: "#064A6C" },
+                    "/elevate": { label: "elevate Dashboard", dashboard: "/elevate/dashboard", color: "#E9B307" },
+                    "/optimize": { label: "optimize Dashboard", dashboard: "/optimize/dashboard", color: "#374151" },
+                    "/amplify": { label: "amplify Dashboard", dashboard: "/amplify/dashboard", color: "#97ACCA" },
+                    "/promote": { label: "promote Dashboard", dashboard: "/promote/dashboard", color: "#1844A6" },
+                    "/respond": { label: "respond Dashboard", dashboard: "/respond/dashboard", color: "#001882" },
+                    "/engage": { label: "engage Dashboard", dashboard: "/engage/dashboard", color: "#660099" },
+                    "/post": { label: "post Dashboard", dashboard: "/post/dashboard", color: "#FF44CC" },
+                  };
+                  const match = Object.entries(appRoutes).find(([route]) => path === route || path === route + "-landing");
+                  if (!match) return null;
+                  const [, info] = match;
+                  return (
+                    <a
+                      href={info.dashboard}
+                      className="flex items-center px-2 py-1.5 border hover:bg-gray-100 rounded-md text-xs font-bold transition-colors"
+                      style={{ borderColor: info.color, color: info.color }}
+                      data-testid="button-app-dashboard"
+                    >
+                      <span style={{ color: "#09080E" }}>/</span>&nbsp;{info.label}
+                    </a>
+                  );
+                })()}
+
                 {isLoggedIn && (
                   <a href={isAuthenticated ? "/admin" : "/portal/dashboard"} className="flex items-center px-2 py-1.5 bg-gray-900 hover:bg-gray-800 text-white rounded-md text-xs font-medium transition-colors" data-testid="button-dashboard">
                     Dashboard

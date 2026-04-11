@@ -481,6 +481,15 @@ export default function ClientPortal() {
                     Your business information is used across directory listings and citations. Changes are tracked and logged.
                   </AlertDescription>
                 </Alert>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full mt-3"
+                  onClick={() => setLocation("/publish/dashboard")}
+                  data-testid="button-use-profile-publish"
+                >
+                  Use this profile for&nbsp;<span style={{ color: "#09080E" }}>/</span>&nbsp;<span style={{ color: "#064A6C" }}>publish</span>
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -573,7 +582,7 @@ export default function ClientPortal() {
                 <Button
                   variant="outline"
                   className="border-green-500 text-green-700 hover:bg-green-100"
-                  onClick={() => setLocation("/connect")}
+                  onClick={() => setLocation("/connect/dashboard")}
                   data-testid="button-open-crm"
                 >
                   <Users className="w-4 h-4 mr-2" />
@@ -581,7 +590,7 @@ export default function ClientPortal() {
                 </Button>
                 <Button
                   className="bg-green-600 hover:bg-green-700 text-white"
-                  onClick={() => setLocation("/connect")}
+                  onClick={() => setLocation("/connect/dashboard?action=add-contact")}
                   data-testid="button-add-contact"
                 >
                   <Sparkles className="w-4 h-4 mr-2" />
