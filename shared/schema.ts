@@ -4285,6 +4285,10 @@ export const convertForms = pgTable("convert_forms", {
   utmMedium: varchar("utm_medium", { length: 100 }),
   utmCampaign: varchar("utm_campaign", { length: 100 }),
 
+  // Builder state — design (theme/colors/layout) + settings (form-level config)
+  design: jsonb("design"),
+  settings: jsonb("settings"),
+
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
   publishedAt: timestamp("published_at"),
@@ -4327,6 +4331,9 @@ export const convertFormFields = pgTable("convert_form_fields", {
 
   // CRM mapping
   mapsTo: varchar("maps_to", { length: 50 }), // crm_first_name, crm_last_name, crm_email, crm_phone, crm_company, email_consent, sms_consent, custom
+
+  // Type-specific config (fileTypes, maxFileSize, ratingScale, dateFormat, paymentAmount, etc.)
+  config: jsonb("config"),
 
   createdAt: timestamp("created_at").defaultNow(),
 }, (table) => [

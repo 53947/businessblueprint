@@ -169,11 +169,39 @@ router.post("/:clientId/forms/:formId/publish", requireAuth, requireClientMatch,
   try {
     const clientId = parseInt(req.params.clientId);
     const formId = parseInt(req.params.formId);
+
+    const [existingForm] = await db.select().from(convertForms)
+      .where(and(eq(convertForms.id, formId), eq(convertForms.clientId, clientId)))
+      .limit(1);
+    if (!existingForm) return res.status(404).json({ error: "Form not found" });
+
+    // Pre-publish validation: must have an input-capable field and a way to reach the submitter.
+    const fields = await db.select().from(convertFormFields)
+      .where(eq(convertFormFields.formId, formId));
+
+    const LAYOUT_TYPES = new Set(["heading", "paragraph", "divider", "spacer", "image", "page_break"]);
+    const inputFields = fields.filter((f) => !LAYOUT_TYPES.has(f.fieldType));
+    if (inputFields.length === 0) {
+      return res.status(400).json({ error: "Add at least one input field before publishing." });
+    }
+
+    const hasEmailField = fields.some((f) => f.fieldType === "email" || f.mapsTo === "crm_email");
+    const hasPhoneField = fields.some((f) => f.fieldType === "phone" || f.mapsTo === "crm_phone");
+    if (!hasEmailField && !hasPhoneField) {
+      return res.status(400).json({
+        error: "Add an email or phone field so submissions can reach / connect.",
+      });
+    }
+
+    const missingLabels = fields.filter((f) => !f.label || f.label.trim() === "");
+    if (missingLabels.length > 0) {
+      return res.status(400).json({ error: "Every field needs a label before publishing." });
+    }
+
     const [form] = await db.update(convertForms)
       .set({ status: "published", publishedAt: new Date(), updatedAt: new Date() })
       .where(and(eq(convertForms.id, formId), eq(convertForms.clientId, clientId)))
       .returning();
-    if (!form) return res.status(404).json({ error: "Form not found" });
     res.json({ success: true, form });
   } catch (error: any) {
     console.error("[Convert] Publish error:", error);
@@ -194,6 +222,154 @@ router.post("/:clientId/forms/:formId/unpublish", requireAuth, requireClientMatc
   } catch (error: any) {
     console.error("[Convert] Unpublish error:", error);
     res.status(500).json({ error: "Failed to unpublish form" });
+  }
+});
+
+// ─── BUILDER (visual form builder state) ───
+
+// Returns form + fields + design + settings in the shape the builder expects.
+// Field names are mapped from Phase A's column names to the builder's vocabulary:
+//   pageNumber → step, columnSpan → width (1=half/2=full), mapsTo → crmMapping,
+//   conditionalRules → conditions.
+router.get("/:clientId/forms/:formId/builder", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const formId = parseInt(req.params.formId);
+
+    const [form] = await db.select().from(convertForms)
+      .where(and(eq(convertForms.id, formId), eq(convertForms.clientId, clientId)))
+      .limit(1);
+    if (!form) return res.status(404).json({ error: "Form not found" });
+
+    const fields = await db.select().from(convertFormFields)
+      .where(eq(convertFormFields.formId, formId))
+      .orderBy(convertFormFields.sortOrder);
+
+    const builderFields = fields.map((f) => ({
+      fieldId: f.id,
+      type: f.fieldType,
+      label: f.label,
+      placeholder: f.placeholder || "",
+      helpText: f.helpText || "",
+      required: !!f.isRequired,
+      width: (f.columnSpan === 1 ? "half" : "full") as "half" | "full",
+      sortOrder: f.sortOrder,
+      step: f.pageNumber || 1,
+      options: (f.options as any) || [],
+      defaultValue: f.defaultValue || "",
+      validation: {
+        minLength: f.minLength ?? undefined,
+        maxLength: f.maxLength ?? undefined,
+        pattern: f.validationPattern ?? undefined,
+      },
+      crmMapping: f.mapsTo || null,
+      conditions: (f.conditionalRules as any) || null,
+      config: (f.config as any) || {},
+    }));
+
+    res.json({
+      success: true,
+      form: {
+        id: form.id,
+        name: form.name,
+        slug: form.slug,
+        formType: form.formType,
+        status: form.status,
+        submissionCount: form.submissionCount || 0,
+        viewCount: form.viewCount || 0,
+      },
+      fields: builderFields,
+      design: (form.design as any) || null,
+      settings: (form.settings as any) || null,
+    });
+  } catch (error: any) {
+    console.error("[Convert] Builder get error:", error);
+    res.status(500).json({ error: "Failed to load builder state" });
+  }
+});
+
+// Single-shot save: replaces form name/design/settings and upserts fields.
+// Fields are matched by fieldId — missing IDs = insert, missing rows = delete.
+router.put("/:clientId/forms/:formId/builder", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const formId = parseInt(req.params.formId);
+
+    const [existingForm] = await db.select().from(convertForms)
+      .where(and(eq(convertForms.id, formId), eq(convertForms.clientId, clientId)))
+      .limit(1);
+    if (!existingForm) return res.status(404).json({ error: "Form not found" });
+
+    const body = req.body || {};
+    const incomingFields: any[] = Array.isArray(body.fields) ? body.fields : [];
+
+    // Update form-level builder state
+    const formUpdates: Record<string, any> = { updatedAt: new Date() };
+    if (typeof body.name === "string" && body.name.trim() !== "") {
+      formUpdates.name = body.name.trim();
+    }
+    if (body.design !== undefined) formUpdates.design = body.design;
+    if (body.settings !== undefined) formUpdates.settings = body.settings;
+    await db.update(convertForms).set(formUpdates).where(eq(convertForms.id, formId));
+
+    // Diff existing fields vs incoming. Match by fieldId.
+    const existingFields = await db.select().from(convertFormFields)
+      .where(eq(convertFormFields.formId, formId));
+    const existingById = new Map<number, typeof existingFields[number]>();
+    for (const f of existingFields) existingById.set(f.id, f);
+
+    const keptIds = new Set<number>();
+    const savedFields: Array<{ fieldId: number; tempId?: string }> = [];
+
+    for (let i = 0; i < incomingFields.length; i++) {
+      const f = incomingFields[i] || {};
+      if (!f.type || !f.label) continue;
+
+      const fieldRow = {
+        formId,
+        fieldType: String(f.type),
+        label: String(f.label),
+        placeholder: f.placeholder || null,
+        helpText: f.helpText || null,
+        isRequired: !!f.required,
+        columnSpan: f.width === "half" ? 1 : 2,
+        pageNumber: Number.isFinite(f.step) ? f.step : 1,
+        sortOrder: i,
+        options: f.options ?? null,
+        defaultValue: f.defaultValue || null,
+        mapsTo: f.crmMapping || null,
+        conditionalRules: f.conditions ?? null,
+        config: f.config ?? null,
+        validationPattern: f.validation?.pattern || null,
+        minLength: f.validation?.minLength ?? null,
+        maxLength: f.validation?.maxLength ?? null,
+      };
+
+      if (f.fieldId && existingById.has(f.fieldId)) {
+        await db.update(convertFormFields).set(fieldRow)
+          .where(and(eq(convertFormFields.id, f.fieldId), eq(convertFormFields.formId, formId)));
+        keptIds.add(f.fieldId);
+        savedFields.push({ fieldId: f.fieldId, tempId: f.tempId });
+      } else {
+        const [inserted] = await db.insert(convertFormFields)
+          .values(fieldRow)
+          .returning({ id: convertFormFields.id });
+        savedFields.push({ fieldId: inserted.id, tempId: f.tempId });
+      }
+    }
+
+    // Delete any existing field rows that weren't in the incoming set
+    const existingIds = Array.from(existingById.keys());
+    for (const id of existingIds) {
+      if (!keptIds.has(id)) {
+        await db.delete(convertFormFields).where(eq(convertFormFields.id, id));
+      }
+    }
+
+    res.json({ success: true, savedFields });
+  } catch (error: any) {
+    console.error("[Convert] Builder save error:", error);
+    res.status(500).json({ error: "Failed to save builder state" });
   }
 });
 
