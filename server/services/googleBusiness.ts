@@ -26,7 +26,7 @@ export class GoogleBusinessService {
   constructor() {
     this.apiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.GOOGLE_API_KEY || "";
     if (!this.apiKey) {
-      throw new Error("Google API key is required");
+      console.warn("[GoogleBusiness] No API key configured — Google Business features disabled");
     }
   }
 

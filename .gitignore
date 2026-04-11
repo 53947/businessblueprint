@@ -9,3 +9,4 @@ vite.config.ts.*
 **/screenshot*
 **/dashboard_screenshots/dist/
 .wrangler/
+.env
