@@ -19,15 +19,18 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, Eye } from "lucide-react";
+import { ArrowLeft, Save, Eye, Monitor, Smartphone, Code2, Palette, Settings as SettingsIcon, Sliders } from "lucide-react";
 import type {
   BuilderField, DesignSettings, FormSettings,
 } from "@/components/convert/builder-types";
 import {
-  DEFAULT_DESIGN, DEFAULT_SETTINGS, makeField, LAYOUT_FIELD_TYPES,
+  DEFAULT_DESIGN, DEFAULT_SETTINGS, makeField,
 } from "@/components/convert/builder-types";
 import { FieldPalette } from "@/components/convert/field-palette";
 import { BuilderCanvas } from "@/components/convert/builder-canvas";
+import { PropertiesPanel } from "@/components/convert/properties-panel";
+import { DesignPanel } from "@/components/convert/design-panel";
+import { SettingsPanel } from "@/components/convert/settings-panel";
 
 const ACCENT = "#8000FF";
 
@@ -72,7 +75,9 @@ export default function ConvertBuilder() {
 
   const [selectedTempId, setSelectedTempId] = useState<string | null>(null);
   const [activeStep, setActiveStep] = useState<number>(1);
-  const [previewMode] = useState<"desktop" | "mobile" | "embed">("desktop");
+  const [previewMode, setPreviewMode] = useState<"desktop" | "mobile" | "embed">("desktop");
+  const [builderView, setBuilderView] = useState<"canvas" | "settings">("canvas");
+  const [rightPanel, setRightPanel] = useState<"field" | "design">("field");
   const [dirty, setDirty] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
   const [publishing, setPublishing] = useState<boolean>(false);
@@ -292,6 +297,54 @@ export default function ConvertBuilder() {
 
         <div className="flex-1" />
 
+        {/* Builder view switcher (canvas vs settings) */}
+        <div className="flex items-center gap-1 border border-gray-200 rounded p-0.5">
+          <button
+            onClick={() => setBuilderView("canvas")}
+            className={`px-2 py-1 rounded text-xs flex items-center gap-1 ${builderView === "canvas" ? "bg-gray-900 text-white" : "text-gray-600 hover:bg-gray-100"}`}
+            data-testid="view-canvas"
+          >
+            <Sliders className="w-3 h-3" /> Build
+          </button>
+          <button
+            onClick={() => setBuilderView("settings")}
+            className={`px-2 py-1 rounded text-xs flex items-center gap-1 ${builderView === "settings" ? "bg-gray-900 text-white" : "text-gray-600 hover:bg-gray-100"}`}
+            data-testid="view-settings"
+          >
+            <SettingsIcon className="w-3 h-3" /> Settings
+          </button>
+        </div>
+
+        {/* Preview mode toggles — only relevant in canvas view */}
+        {builderView === "canvas" && (
+          <div className="flex items-center gap-1 border border-gray-200 rounded p-0.5">
+            <button
+              onClick={() => setPreviewMode("desktop")}
+              className={`p-1.5 rounded ${previewMode === "desktop" ? "bg-gray-900 text-white" : "text-gray-600 hover:bg-gray-100"}`}
+              title="Desktop preview"
+              data-testid="preview-desktop"
+            >
+              <Monitor className="w-3 h-3" />
+            </button>
+            <button
+              onClick={() => setPreviewMode("mobile")}
+              className={`p-1.5 rounded ${previewMode === "mobile" ? "bg-gray-900 text-white" : "text-gray-600 hover:bg-gray-100"}`}
+              title="Mobile preview"
+              data-testid="preview-mobile"
+            >
+              <Smartphone className="w-3 h-3" />
+            </button>
+            <button
+              onClick={() => setPreviewMode("embed")}
+              className={`p-1.5 rounded ${previewMode === "embed" ? "bg-gray-900 text-white" : "text-gray-600 hover:bg-gray-100"}`}
+              title="Embed preview"
+              data-testid="preview-embed"
+            >
+              <Code2 className="w-3 h-3" />
+            </button>
+          </div>
+        )}
+
         <Button variant="outline" size="sm" onClick={() => saveDraft()} disabled={saving || !dirty}>
           <Save className="w-4 h-4 mr-1" />
           {saving ? "Saving..." : "Save Draft"}
@@ -327,94 +380,93 @@ export default function ConvertBuilder() {
         </div>
       )}
 
-      {/* ─── Three-panel layout ─── */}
+      {/* ─── Main body: either 3-panel builder OR full-width settings ─── */}
       <div className="flex-1 flex overflow-hidden">
-        <FieldPalette />
+        {builderView === "settings" ? (
+          <SettingsPanel
+            formName={formName}
+            onNameChange={(n) => { setFormName(n); markDirty(); }}
+            settings={settings}
+            onChange={(updates) => { setSettings({ ...settings, ...updates }); markDirty(); }}
+          />
+        ) : (
+          <>
+            <FieldPalette />
 
-        <BuilderCanvas
-          fields={fields}
-          design={design}
-          previewMode={previewMode}
-          selectedFieldTempId={selectedTempId}
-          activeStep={activeStep}
-          onSelectField={setSelectedTempId}
-          onAddField={addField}
-          onReorderField={reorderField}
-          onDeleteField={deleteField}
-        />
+            <BuilderCanvas
+              fields={fields}
+              design={design}
+              previewMode={previewMode}
+              selectedFieldTempId={selectedTempId}
+              activeStep={activeStep}
+              onSelectField={setSelectedTempId}
+              onAddField={addField}
+              onReorderField={reorderField}
+              onDeleteField={deleteField}
+            />
 
-        {/* Right panel placeholder — full properties/design/settings panels land in slice 3 */}
-        <div className="w-72 flex-shrink-0 bg-white border-l border-gray-200 overflow-y-auto p-4">
-          {selectedField ? (
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">Selected field</h3>
-              <div className="text-xs text-gray-600 space-y-2">
-                <div><span className="font-semibold">Type:</span> {selectedField.type}</div>
-                <div><span className="font-semibold">Label:</span> {selectedField.label}</div>
-                <div><span className="font-semibold">Required:</span> {selectedField.required ? "Yes" : "No"}</div>
-                {selectedField.crmMapping && <div><span className="font-semibold">CRM:</span> {selectedField.crmMapping}</div>}
-              </div>
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <p className="text-xs text-gray-500">
-                  Field editing panel arrives in Phase B slice 3. For now you can add, drag, and delete fields.
-                </p>
-              </div>
-              {!LAYOUT_FIELD_TYPES.has(selectedField.type as any) && (
-                <QuickEditor
-                  field={selectedField}
-                  onChange={(updates) => {
-                    setFields(fields.map((f) => (
-                      f.tempId === selectedField.tempId ? { ...f, ...updates } : f
-                    )));
-                    markDirty();
-                  }}
+            {/* Right panel: properties (field selected) or design (toggle) */}
+            {rightPanel === "design" ? (
+              <div className="flex flex-col">
+                <div className="flex border-b border-gray-200 bg-white">
+                  <button
+                    onClick={() => setRightPanel("field")}
+                    className="flex-1 px-3 py-2 text-xs text-gray-600 hover:bg-gray-100"
+                  >
+                    Field
+                  </button>
+                  <button
+                    onClick={() => setRightPanel("design")}
+                    className="flex-1 px-3 py-2 text-xs font-semibold border-b-2"
+                    style={{ borderColor: ACCENT, color: ACCENT }}
+                  >
+                    <Palette className="w-3 h-3 inline mr-1" /> Design
+                  </button>
+                </div>
+                <DesignPanel
+                  design={design}
+                  onChange={(updates) => { setDesign({ ...design, ...updates }); markDirty(); }}
                 />
-              )}
-            </div>
-          ) : (
-            <div className="text-center text-xs text-gray-400 py-12">
-              Click a field on the canvas to edit it.
-            </div>
-          )}
-        </div>
+              </div>
+            ) : (
+              <div className="flex flex-col">
+                <div className="flex border-b border-gray-200 bg-white">
+                  <button
+                    onClick={() => setRightPanel("field")}
+                    className="flex-1 px-3 py-2 text-xs font-semibold border-b-2"
+                    style={{ borderColor: ACCENT, color: ACCENT }}
+                  >
+                    Field
+                  </button>
+                  <button
+                    onClick={() => setRightPanel("design")}
+                    className="flex-1 px-3 py-2 text-xs text-gray-600 hover:bg-gray-100"
+                  >
+                    <Palette className="w-3 h-3 inline mr-1" /> Design
+                  </button>
+                </div>
+                {selectedField ? (
+                  <PropertiesPanel
+                    field={selectedField}
+                    allFields={fields}
+                    onChange={(updates) => {
+                      setFields(fields.map((f) => (
+                        f.tempId === selectedField.tempId ? { ...f, ...updates } : f
+                      )));
+                      markDirty();
+                    }}
+                    onDelete={() => deleteField(selectedField.tempId)}
+                  />
+                ) : (
+                  <div className="w-72 flex-shrink-0 bg-white border-l border-gray-200 text-center text-xs text-gray-400 py-12 px-4">
+                    Click a field on the canvas to edit it, or drag a new one from the palette.
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )}
       </div>
-    </div>
-  );
-}
-
-/**
- * Minimal inline editor so slice 2 is actually usable without the full
- * properties panel. Full editing (validation, CRM mapping, options, conditional
- * logic) arrives in slice 3.
- */
-function QuickEditor({ field, onChange }: { field: BuilderField; onChange: (updates: Partial<BuilderField>) => void }) {
-  return (
-    <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
-      <div>
-        <label className="block text-xs font-medium text-gray-700 mb-1">Label</label>
-        <Input
-          value={field.label}
-          onChange={(e) => onChange({ label: e.target.value })}
-          className="text-sm h-8"
-        />
-      </div>
-      <div>
-        <label className="block text-xs font-medium text-gray-700 mb-1">Placeholder</label>
-        <Input
-          value={field.placeholder}
-          onChange={(e) => onChange({ placeholder: e.target.value })}
-          className="text-sm h-8"
-        />
-      </div>
-      <label className="flex items-center gap-2 text-xs text-gray-700">
-        <input
-          type="checkbox"
-          checked={field.required}
-          onChange={(e) => onChange({ required: e.target.checked })}
-          style={{ accentColor: ACCENT }}
-        />
-        Required
-      </label>
     </div>
   );
 }
