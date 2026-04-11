@@ -620,6 +620,9 @@ router.get("/settings/:clientId", requireAuth, async (req: Request, res: Respons
         offlineMessage: "We're offline. Leave a message and we'll get back to you!",
         enableFileUpload: true,
         enableEmoji: true,
+        contactEmail: null,
+        notificationEmail: null,
+        notifyOnNewChat: true,
       });
     }
 

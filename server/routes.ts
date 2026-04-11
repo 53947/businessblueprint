@@ -1903,6 +1903,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Don't fail login if CRM sync fails
       }
 
+      // Transfer assessment data to client record on magic-link login (returning users)
+      try {
+        const existingAssessment = await db
+          .select()
+          .from(assessments)
+          .where(eq(assessments.email, client.email))
+          .orderBy(desc(assessments.createdAt))
+          .limit(1);
+
+        if (existingAssessment.length > 0) {
+          const assess = existingAssessment[0];
+          const clientUpdates: Record<string, any> = {};
+
+          if (assess.phone && !client.phone) clientUpdates.phone = assess.phone;
+          if (assess.address && !client.address) {
+            const addressParts = [assess.address, assess.city, assess.state, assess.zipCode].filter(Boolean);
+            clientUpdates.address = addressParts.join(", ");
+          }
+          if (assess.website && !client.website) clientUpdates.website = assess.website;
+          if (assess.industry && !client.businessCategory) clientUpdates.businessCategory = assess.industry;
+
+          if (Object.keys(clientUpdates).length > 0) {
+            clientUpdates.updatedAt = new Date();
+            await db.update(clients).set(clientUpdates).where(eq(clients.id, client.id));
+            console.log(`[Magic Link Verify] Transferred assessment data to client ${client.id}:`, Object.keys(clientUpdates));
+          }
+
+          // Also update the CRM contact with assessment data
+          try {
+            const [existingCrmContact] = await db
+              .select()
+              .from(crmContacts)
+              .where(eq(crmContacts.clientId, client.id))
+              .limit(1);
+
+            if (existingCrmContact) {
+              const crmUpdates: Record<string, any> = {};
+              if (assess.phone && !existingCrmContact.phone) crmUpdates.phone = assess.phone;
+              if (assess.businessName) {
+                const nameParts = assess.businessName.split(" ");
+                if (!existingCrmContact.firstName || existingCrmContact.firstName === "Portal") {
+                  crmUpdates.firstName = nameParts[0] || existingCrmContact.firstName;
+                }
+                if (nameParts.length > 1 && existingCrmContact.lastName === "User") {
+                  crmUpdates.lastName = nameParts.slice(1).join(" ");
+                }
+              }
+              if (Object.keys(crmUpdates).length > 0) {
+                crmUpdates.updatedAt = new Date();
+                await db.update(crmContacts).set(crmUpdates).where(eq(crmContacts.id, existingCrmContact.id));
+              }
+            }
+          } catch (crmUpdateError) {
+            console.error("[Magic Link Verify] CRM contact update from assessment failed:", crmUpdateError);
+          }
+        }
+      } catch (transferError) {
+        console.error("[Magic Link Verify] Assessment data transfer failed:", transferError);
+      }
+
       // Generate JWT token
       console.log(
         "[Magic Link Verify] Creating dashboard token for client ID:",
@@ -2411,6 +2471,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
             .set({ clientId: client.id })
             .where(eq(assessments.id, existingAssessment[0].id));
           console.log(`[Register] Linked assessment ${existingAssessment[0].id} to new client ${client.id}`);
+        }
+
+        // Transfer assessment data to client record (fills in phone, address, website, etc.)
+        if (existingAssessment.length > 0) {
+          const assess = existingAssessment[0];
+          const clientUpdates: Record<string, any> = {};
+
+          if (assess.phone && !client.phone) clientUpdates.phone = assess.phone;
+          if (assess.address && !client.address) {
+            const addressParts = [assess.address, assess.city, assess.state, assess.zipCode].filter(Boolean);
+            clientUpdates.address = addressParts.join(", ");
+          }
+          if (assess.website && !client.website) clientUpdates.website = assess.website;
+          if (assess.industry && !client.businessCategory) clientUpdates.businessCategory = assess.industry;
+
+          if (Object.keys(clientUpdates).length > 0) {
+            clientUpdates.updatedAt = new Date();
+            await db.update(clients).set(clientUpdates).where(eq(clients.id, client.id));
+            console.log(`[Register] Transferred assessment data to client ${client.id}:`, Object.keys(clientUpdates));
+          }
+
+          // Also update the CRM contact with assessment data
+          try {
+            const [existingCrmContact] = await db
+              .select()
+              .from(crmContacts)
+              .where(eq(crmContacts.clientId, client.id))
+              .limit(1);
+
+            if (existingCrmContact) {
+              const crmUpdates: Record<string, any> = {};
+              if (assess.phone && !existingCrmContact.phone) crmUpdates.phone = assess.phone;
+              if (assess.businessName) {
+                const nameParts = assess.businessName.split(" ");
+                if (!existingCrmContact.firstName || existingCrmContact.firstName === "New") {
+                  crmUpdates.firstName = nameParts[0] || existingCrmContact.firstName;
+                }
+                if (nameParts.length > 1 && existingCrmContact.lastName === "Client") {
+                  crmUpdates.lastName = nameParts.slice(1).join(" ");
+                }
+              }
+              if (Object.keys(crmUpdates).length > 0) {
+                crmUpdates.updatedAt = new Date();
+                await db.update(crmContacts).set(crmUpdates).where(eq(crmContacts.id, existingCrmContact.id));
+              }
+            }
+          } catch (crmUpdateError) {
+            console.error("[Register] CRM contact update from assessment failed:", crmUpdateError);
+          }
         }
       } catch (linkError) {
         console.error("[Register] Assessment linking failed:", linkError);

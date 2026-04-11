@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -56,9 +57,60 @@ interface ActivityItem {
 export default function PromoteDashboard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('overview');
-  
+  const [autoSyncTriggered, setAutoSyncTriggered] = useState(false);
+
   const crmPresence = useCrmPresence();
+  const crmContactsFromHook = crmPresence.contacts;
+
+  const storedClientId = typeof window !== "undefined" ? sessionStorage.getItem("clientId") : null;
+  const clientId = storedClientId ? parseInt(storedClientId) : null;
+
+  // Fetch / promote send contacts (separate from CRM contacts) for empty-state detection
+  const { data: sendContactsData } = useQuery<{ contacts: any[] }>({
+    queryKey: [`/api/send/contacts`],
+    enabled: !!clientId,
+  });
+
+  const syncCrmContacts = async () => {
+    if (!clientId) return;
+    try {
+      const res = await apiRequest("POST", `/api/send/${clientId}/sync-crm`);
+      const result = await res.json();
+      if (result?.success) {
+        queryClient.invalidateQueries({ queryKey: [`/api/send/contacts`] });
+        toast({
+          title: "CRM Contacts Synced",
+          description: `${result.synced} synced, ${result.skipped} skipped (already in / promote).`,
+        });
+      } else {
+        toast({ title: "Sync failed", description: result?.error || "Unknown error", variant: "destructive" });
+      }
+    } catch (error: any) {
+      toast({ title: "Sync failed", description: error?.message || "Could not reach server", variant: "destructive" });
+    }
+  };
+
+  // Auto-sync from CRM on first visit when / promote contact list is empty
+  useEffect(() => {
+    if (
+      !autoSyncTriggered &&
+      clientId &&
+      sendContactsData &&
+      Array.isArray(sendContactsData.contacts) &&
+      sendContactsData.contacts.length === 0 &&
+      crmContactsFromHook &&
+      crmContactsFromHook.length > 0
+    ) {
+      setAutoSyncTriggered(true);
+      apiRequest("POST", `/api/send/${clientId}/sync-crm`)
+        .then(() => {
+          queryClient.invalidateQueries({ queryKey: [`/api/send/contacts`] });
+        })
+        .catch((err) => console.error("CRM auto-sync failed:", err));
+    }
+  }, [sendContactsData, clientId, autoSyncTriggered, crmContactsFromHook, queryClient]);
 
   // Fetch dashboard metrics
   const { data: metrics, isLoading: metricsLoading } = useQuery<DashboardMetrics>({
@@ -595,14 +647,14 @@ export default function PromoteDashboard() {
                       <ExternalLink className="w-4 h-4 mr-2" />
                       Open / connect CRM
                     </Button>
-                    <Button 
-                      className="w-full justify-start" 
+                    <Button
+                      className="w-full justify-start"
                       variant="outline"
-                      onClick={() => toast({ title: 'Sync', description: 'Contacts are synced in real-time' })}
+                      onClick={syncCrmContacts}
                       data-testid="button-sync-contacts"
                     >
                       <Link2 className="w-4 h-4 mr-2" />
-                      Sync Status: Live
+                      Sync CRM Contacts
                     </Button>
                   </CardContent>
                 </Card>

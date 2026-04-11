@@ -3675,6 +3675,11 @@ export const chatWidgetSettings = pgTable("chat_widget_settings", {
   enableEmoji: boolean("enable_emoji").default(true),
   enablePreChatForm: boolean("enable_pre_chat_form").default(true),
 
+  // Email configuration
+  contactEmail: varchar("contact_email", { length: 255 }),
+  notificationEmail: varchar("notification_email", { length: 255 }),
+  notifyOnNewChat: boolean("notify_on_new_chat").default(true),
+
   isActive: boolean("is_active").default(true),
 
   createdAt: timestamp("created_at").defaultNow(),
