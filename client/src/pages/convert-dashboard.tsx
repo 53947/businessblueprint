@@ -29,6 +29,7 @@ import {
   ArrowLeft, Layers, Check, ChevronUp, ChevronDown, Wand2,
 } from "lucide-react";
 import { TemplateModal } from "@/components/convert/template-modal";
+import { EmbedCodePanel } from "@/components/convert/embed-code-panel";
 
 const ACCENT = CONVERT_FORM.color; // #8000FF
 
@@ -843,6 +844,10 @@ function FormDetailView({
         </CardContent>
       </Card>
 
+      <div className="mb-6">
+        <EmbedCodePanel clientId={clientId} formId={form.id} formStatus={form.status} />
+      </div>
+
       <Card className="border border-gray-200 bg-white">
         <CardContent className="pt-6">
           <h3 className="text-lg font-bold text-gray-900 mb-4">Thank-you message</h3>
@@ -850,7 +855,7 @@ function FormDetailView({
             {form.thankYouMessage || "Thank you for your submission!"}
           </p>
           <p className="text-xs text-gray-400">
-            Editing thank-you copy, brand color, autoresponder, and notification email comes in Phase B.
+            Full thank-you editing, autoresponder, and notification email live in the builder's Settings tab. Click "Edit in Builder" above.
           </p>
         </CardContent>
       </Card>
