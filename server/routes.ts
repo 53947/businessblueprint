@@ -294,8 +294,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertAssessmentSchema.parse(req.body);
 
-      // Create assessment with pending status
+      // Create assessment with pending status (smsConsent flows through validatedData)
       const assessment = await storage.createAssessment(validatedData);
+
+      // Capture SMS consent metadata for TCPA compliance if user opted in
+      const consentIp = (req.headers['x-forwarded-for'] as string) || req.ip || null;
+      const consentDate = validatedData.smsConsent ? new Date() : null;
 
       // Create or find client account for this email
       let client = await storage.getClientByEmail(validatedData.email);
@@ -309,11 +313,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           `${validatedData.city}, ${validatedData.state} ${validatedData.zipCode}`,
           validatedData.country || 'United States'
         ].filter(Boolean).join('\n');
-        
+
         client = await storage.createClient({
           companyName: validatedData.businessName,
           email: validatedData.email,
           phone: validatedData.phone,
+          smsConsent: validatedData.smsConsent || false,
+          smsConsentDate: consentDate,
+          smsConsentIp: validatedData.smsConsent ? consentIp : null,
           website: validatedData.website || undefined,
           address: fullAddress,
           accountStatus: "active" as const,
@@ -1341,7 +1348,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.patch("/api/portal/profile", requireClientPortalAccess, async (req: any, res) => {
     try {
       const clientId = req.clientId;
-      const { companyName, phone, address, website, confirmationText } = req.body;
+      const { companyName, phone, address, website, confirmationText, smsConsent } = req.body;
 
       if (!clientId) {
         return res.status(401).json({ success: false, message: "Not authenticated" });
@@ -1364,7 +1371,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Build update object — only include fields that were provided
       const updates: Record<string, any> = { updatedAt: new Date() };
       if (companyName !== undefined) updates.companyName = companyName.trim();
-      if (phone !== undefined) updates.phone = phone.trim() || null;
+      if (phone !== undefined) {
+        const trimmedPhone = phone.trim() || null;
+        const phoneChanged = trimmedPhone !== ((client.phone || "").trim() || null);
+        // TCPA: require explicit consent on any phone change
+        if (phoneChanged && trimmedPhone && !smsConsent) {
+          return res.status(400).json({
+            success: false,
+            message: "You must agree to receive SMS notifications to update your phone number.",
+          });
+        }
+        updates.phone = trimmedPhone;
+        if (phoneChanged && trimmedPhone && smsConsent) {
+          updates.smsConsent = true;
+          updates.smsConsentDate = new Date();
+          updates.smsConsentIp = (req.headers['x-forwarded-for'] as string) || req.ip || null;
+        }
+      }
       if (address !== undefined) updates.address = address.trim() || null;
       if (website !== undefined) updates.website = website.trim() || null;
 
@@ -2282,7 +2305,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Client Portal Registration - Email + Password
   app.post("/api/clients/register", async (req, res) => {
     try {
-      const { email, password, companyName } = req.body;
+      const { email, password, companyName, phone, smsConsent } = req.body;
 
       if (!email || !password || !companyName) {
         return res.status(400).json({
@@ -2306,6 +2329,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      // TCPA: phone requires explicit SMS consent
+      if (phone?.trim() && !smsConsent) {
+        return res.status(400).json({
+          success: false,
+          message: "You must agree to receive SMS notifications to save your phone number.",
+        });
+      }
+
       const normalizedEmail = email.trim().toLowerCase();
 
       const existing = await storage.getClientByEmail(normalizedEmail);
@@ -2319,10 +2350,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const bcrypt = await import("bcryptjs");
       const passwordHash = await bcrypt.hash(password, 12);
 
+      const consentIp = (req.headers['x-forwarded-for'] as string) || req.ip || null;
+
       const client = await storage.createClient({
         companyName: companyName.trim(),
         email: normalizedEmail,
         passwordHash,
+        phone: phone?.trim() || null,
+        smsConsent: smsConsent || false,
+        smsConsentDate: smsConsent ? new Date() : null,
+        smsConsentIp: smsConsent ? consentIp : null,
         accountStatus: "active",
       });
 

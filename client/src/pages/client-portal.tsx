@@ -57,6 +57,7 @@ export default function ClientPortal() {
   // Profile editing state
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [profileForm, setProfileForm] = useState({ companyName: "", phone: "", address: "", website: "" });
+  const [smsConsentEdit, setSmsConsentEdit] = useState(false);
   const [showProfileConfirm, setShowProfileConfirm] = useState(false);
   const [profileConfirmText, setProfileConfirmText] = useState("");
   const { toast } = useToast();
@@ -119,7 +120,7 @@ export default function ClientPortal() {
   });
 
   const updateProfileMutation = useMutation({
-    mutationFn: (payload: { companyName: string; phone: string; address: string; website: string; confirmationText: string }) =>
+    mutationFn: (payload: { companyName: string; phone: string; address: string; website: string; confirmationText: string; smsConsent: boolean }) =>
       apiRequest("PATCH", "/api/portal/profile", payload).then(r => r.json()),
     onSuccess: (result: any) => {
       if (result?.success === false) {
@@ -131,6 +132,7 @@ export default function ClientPortal() {
       setIsEditingProfile(false);
       setShowProfileConfirm(false);
       setProfileConfirmText("");
+      setSmsConsentEdit(false);
     },
     onError: (error: any) => {
       toast({ title: "Update failed", description: error?.message || "Could not update profile", variant: "destructive" });
@@ -146,6 +148,7 @@ export default function ClientPortal() {
       address: c.address || "",
       website: c.website || "",
     });
+    setSmsConsentEdit(false);
     setIsEditingProfile(true);
   };
 
@@ -153,10 +156,21 @@ export default function ClientPortal() {
     setIsEditingProfile(false);
     setShowProfileConfirm(false);
     setProfileConfirmText("");
+    setSmsConsentEdit(false);
   };
 
   const handleConfirmProfileSave = () => {
-    updateProfileMutation.mutate({ ...profileForm, confirmationText: profileConfirmText });
+    const currentPhone = clientData?.client?.phone || "";
+    const phoneChanged = profileForm.phone.trim() && profileForm.phone.trim() !== currentPhone.trim();
+    if (phoneChanged && !smsConsentEdit) {
+      toast({
+        title: "Consent required",
+        description: "You must agree to receive SMS notifications to update your phone number.",
+        variant: "destructive",
+      });
+      return;
+    }
+    updateProfileMutation.mutate({ ...profileForm, confirmationText: profileConfirmText, smsConsent: smsConsentEdit });
   };
 
   const handleSignOut = () => {
@@ -451,6 +465,21 @@ export default function ClientPortal() {
                       className="mt-1"
                       data-testid="input-profile-phone"
                     />
+                    {profileForm.phone.trim() && profileForm.phone.trim() !== (clientData.client.phone || "").trim() && (
+                      <div className="flex items-start gap-2 mt-2">
+                        <input
+                          type="checkbox"
+                          id="smsConsentEdit"
+                          checked={smsConsentEdit}
+                          onChange={(e) => setSmsConsentEdit(e.target.checked)}
+                          className="mt-1 h-4 w-4 rounded border-gray-300 text-[#008060] focus:ring-[#008060]"
+                          data-testid="checkbox-sms-consent-edit"
+                        />
+                        <label htmlFor="smsConsentEdit" className="text-xs text-gray-600 leading-tight">
+                          I agree to receive SMS notifications from businessblueprint.io about my account and platform updates. Message and data rates may apply. Reply STOP to unsubscribe.
+                        </label>
+                      </div>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="edit-address" className="text-xs text-gray-600">Address</Label>
