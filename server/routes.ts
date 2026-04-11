@@ -29,6 +29,7 @@ import { aiCoachRouter } from "./routes/ai-coach";
 import { registerSendRoutes } from "./routes/send";
 import { registerOptimizeRoutes } from "./routes/optimize";
 import { amplifyRouter } from "./routes/amplify";
+import { convertRouter } from "./routes/convert";
 import { registerSubscriptionRoutes } from "./routes/subscriptions";
 import {
   assessments,
@@ -3301,6 +3302,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Amplify paid advertising routes (extracted to server/routes/amplify.ts)
   app.use(amplifyRouter);
+
+  // / convert lead capture routes (server/routes/convert.ts)
+  // Auth is enforced per-route inside the router — public /public/* and /submit/* endpoints
+  // are intentionally un-middlewared so the embed script and hosted form page work without login.
+  app.use("/api/convert", convertRouter);
 
   // ============================================================================
   // Brand Studio API Routes - Asset Management

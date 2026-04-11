@@ -152,6 +152,26 @@ export class ResendEmailService {
     }
   }
 
+  async sendRawEmail(to: string, subject: string, html: string): Promise<boolean> {
+    try {
+      const resendClient = await getResendClient();
+      if (!resendClient) {
+        console.warn('[ResendEmailService] sendRawEmail skipped — Resend not configured');
+        return false;
+      }
+      await resendClient.client.emails.send({
+        from: resendClient.fromEmail,
+        to,
+        subject,
+        html,
+      });
+      return true;
+    } catch (error) {
+      console.error('Error sending raw email:', error);
+      return false;
+    }
+  }
+
   async sendReviewAlert(email: string, data: ReviewAlertData): Promise<boolean> {
     try {
       const resendClient = await getResendClient();
