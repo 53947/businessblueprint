@@ -42,7 +42,6 @@ import {
   blueprintIcon,
   hostsBlueIcon,
   swipesBlueIcon,
-  consoleBlueIcon,
   scansBlueIcon,
   settingsIcon,
 } from "@/config/menu-config";

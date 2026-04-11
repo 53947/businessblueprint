@@ -137,6 +137,8 @@ export const assessments = pgTable("assessments", {
   scanDetections: jsonb("scan_detections"),   // What was auto-detected by the presence scanner
   scanCorrections: jsonb("scan_corrections"), // What the user corrected from auto-detected values
 
+  clientId: integer("client_id").references(() => clients.id),
+
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

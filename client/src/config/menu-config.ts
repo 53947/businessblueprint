@@ -229,4 +229,4 @@ export const RESOURCES_MENU: {
 
 // Re-export for convenience
 export { APP_REGISTRY, BUNDLE_REGISTRY, CONNECT_CRM, COACH_BLUE, DIGITAL_IQ, SCANNING_TOOL, getAppsByBundle };
-export { blueprintIcon, hostsBlueIcon, swipesBlueIcon, consoleBlueIcon, scansBlueIcon, settingsIcon };
+export { blueprintIcon, hostsBlueIcon, swipesBlueIcon, scansBlueIcon, settingsIcon };
