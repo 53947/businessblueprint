@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useLocation } from "wouter";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Header } from "@/components/header";
@@ -25,8 +26,9 @@ import { useToast } from "@/hooks/use-toast";
 import { CONVERT_FORM } from "@/config/app-registry";
 import {
   FileText, Bell, UserCheck, Plus, Trash2, Copy, Eye, EyeOff,
-  ArrowLeft, Layers, Check, ChevronUp, ChevronDown,
+  ArrowLeft, Layers, Check, ChevronUp, ChevronDown, Wand2,
 } from "lucide-react";
+import { TemplateModal } from "@/components/convert/template-modal";
 
 const ACCENT = CONVERT_FORM.color; // #8000FF
 
@@ -113,10 +115,12 @@ function typeIcon(formType: string) {
 export default function ConvertDashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedFormId, setSelectedFormId] = useState<number | null>(null);
   const [templateDialog, setTemplateDialog] = useState<ConvertTemplate | null>(null);
   const [newFormName, setNewFormName] = useState("");
+  const [templateModalOpen, setTemplateModalOpen] = useState(false);
   const [deleteFormId, setDeleteFormId] = useState<number | null>(null);
   const [expandedSubmission, setExpandedSubmission] = useState<number | null>(null);
   const [submissionFilter, setSubmissionFilter] = useState<number | "all">("all");
@@ -315,9 +319,10 @@ export default function ConvertDashboard() {
                       <Button
                         className="w-full justify-start text-white"
                         style={{ backgroundColor: ACCENT }}
-                        onClick={() => setActiveTab("templates")}
+                        onClick={() => setTemplateModalOpen(true)}
+                        data-testid="quick-create-form"
                       >
-                        <Plus className="w-4 h-4 mr-2" /> Create from template
+                        <Plus className="w-4 h-4 mr-2" /> Create new form
                       </Button>
                       <Button
                         variant="outline"
@@ -372,22 +377,23 @@ export default function ConvertDashboard() {
                 <Button
                   className="text-white"
                   style={{ backgroundColor: ACCENT }}
-                  onClick={() => setActiveTab("templates")}
+                  onClick={() => setTemplateModalOpen(true)}
+                  data-testid="forms-create-new"
                 >
-                  <Plus className="w-4 h-4 mr-2" /> Create from template
+                  <Plus className="w-4 h-4 mr-2" /> Create new form
                 </Button>
               </div>
 
               {forms.length === 0 ? (
                 <Card className="border border-gray-200 bg-white">
                   <CardContent className="pt-6 pb-6 text-center">
-                    <p className="text-gray-600 mb-4">No forms yet. Start from a template.</p>
+                    <p className="text-gray-600 mb-4">No forms yet. Start blank or from a template.</p>
                     <Button
                       className="text-white"
                       style={{ backgroundColor: ACCENT }}
-                      onClick={() => setActiveTab("templates")}
+                      onClick={() => setTemplateModalOpen(true)}
                     >
-                      Browse templates
+                      Create new form
                     </Button>
                   </CardContent>
                 </Card>
@@ -428,6 +434,15 @@ export default function ConvertDashboard() {
                           <td className="px-4 py-3 text-gray-500">{formatDate(form.updatedAt)}</td>
                           <td className="px-4 py-3 text-right">
                             <div className="flex items-center justify-end gap-2">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setLocation(`/convert/builder/${form.id}`)}
+                                title="Edit in builder"
+                                data-testid={`row-edit-builder-${form.id}`}
+                              >
+                                <Wand2 className="w-4 h-4" style={{ color: ACCENT }} />
+                              </Button>
                               <Button size="sm" variant="ghost" onClick={() => publishForm(form)}>
                                 {form.status === "published" ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                               </Button>
@@ -583,6 +598,13 @@ export default function ConvertDashboard() {
         </DialogContent>
       </Dialog>
 
+      {/* Template picker modal — opens the builder with a pre-populated form */}
+      <TemplateModal
+        open={templateModalOpen}
+        onOpenChange={setTemplateModalOpen}
+        clientId={clientId}
+      />
+
       {/* Delete form confirm */}
       <AlertDialog open={deleteFormId !== null} onOpenChange={(open) => { if (!open) setDeleteFormId(null); }}>
         <AlertDialogContent>
@@ -639,6 +661,7 @@ function FormDetailView({
   onFieldsChanged: () => void;
 }) {
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const [newFieldType, setNewFieldType] = useState("text");
   const [newFieldLabel, setNewFieldLabel] = useState("");
   const [newFieldRequired, setNewFieldRequired] = useState(false);
@@ -704,17 +727,21 @@ function FormDetailView({
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            onClick={() => setLocation(`/convert/builder/${form.id}`)}
+            className="text-white"
+            style={{ backgroundColor: ACCENT }}
+            data-testid="open-in-builder"
+          >
+            <Wand2 className="w-4 h-4 mr-2" /> Edit in Builder
+          </Button>
           <Button variant="outline" onClick={onCopyHosted}>
             <Copy className="w-4 h-4 mr-2" /> Hosted link
           </Button>
           <Button variant="outline" onClick={onCopyEmbed}>
             <Copy className="w-4 h-4 mr-2" /> Embed code
           </Button>
-          <Button
-            onClick={onPublishToggle}
-            className="text-white"
-            style={{ backgroundColor: ACCENT }}
-          >
+          <Button variant="outline" onClick={onPublishToggle}>
             {form.status === "published" ? <><EyeOff className="w-4 h-4 mr-2" /> Unpublish</> : <><Eye className="w-4 h-4 mr-2" /> Publish</>}
           </Button>
           <Button variant="outline" onClick={onDelete}>
