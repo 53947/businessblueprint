@@ -41,7 +41,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Semi+Expanded:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- OGA: Online Global Assets (managed at console.blue) -->
-    <script src="https://console.blue/api/oga/embed.js?key=oga_646aab91ac480757f88b0fe84bce045892d13fe8d559e4fd84a64f8ddc886c9c" async></script>
+    <!-- VITE_OGA_KEY_BUSINESSBLUEPRINT must be set in Railway as a shared variable. Vite substitutes at build time. -->
+    <script src="https://console.blue/api/oga/embed.js?key=%VITE_OGA_KEY_BUSINESSBLUEPRINT%" async></script>
   </head>
   <body>
     <div id="root"></div>

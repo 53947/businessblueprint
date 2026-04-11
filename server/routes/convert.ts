@@ -8,9 +8,9 @@
  * hosted form page.
  */
 
-import { Router, Request, Response, NextFunction } from "express";
-import { randomBytes } from "crypto";
-import { eq, and, desc } from "drizzle-orm";
+import express, { Router, Request, Response, NextFunction } from "express";
+import { randomBytes, createHmac, timingSafeEqual } from "crypto";
+import { eq, and, desc, sql } from "drizzle-orm";
 import { db } from "../db";
 import {
   convertForms,
@@ -52,6 +52,234 @@ function requireClientMatch(req: AuthenticatedRequest, res: Response, next: Next
     return;
   }
   next();
+}
+
+// CORS middleware for public endpoints used by the embed script on third-party sites.
+// Matches the pattern used by the / engage chat widget in server/routes/chat.ts.
+function convertPublicCors(req: Request, res: Response, next: NextFunction): void {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") {
+    res.sendStatus(200);
+    return;
+  }
+  next();
+}
+
+/**
+ * Runs steps 2-5 of the submission pipeline against a submission that's already
+ * been inserted into convert_submissions:
+ *   (2) CRM contact upsert + form_submitted timeline event
+ *   (3) sendContacts upsert with TCPA-compliant consent flags
+ *   (4) Autoresponder email (fire-and-forget, respects autoresponderDelayMinutes)
+ *   (5) Owner notification email (fire-and-forget)
+ *
+ * Both POST /submit (synchronous) and the SwipesBlue webhook (after successful
+ * payment) call this helper. It re-derives the mapped values (email, phone,
+ * name, consent flags) from submission.data + the form's fields so callers
+ * don't need to stash them separately.
+ */
+async function runPostSubmissionPipeline(submissionId: number): Promise<void> {
+  const [submission] = await db.select().from(convertSubmissions)
+    .where(eq(convertSubmissions.id, submissionId))
+    .limit(1);
+  if (!submission) {
+    console.warn(`[Convert] runPostSubmissionPipeline: submission ${submissionId} not found`);
+    return;
+  }
+
+  const [form] = await db.select().from(convertForms)
+    .where(eq(convertForms.id, submission.formId))
+    .limit(1);
+  if (!form) {
+    console.warn(`[Convert] runPostSubmissionPipeline: form ${submission.formId} not found`);
+    return;
+  }
+
+  const fields = await db.select().from(convertFormFields)
+    .where(eq(convertFormFields.formId, form.id));
+
+  const data = (submission.data as any) || {};
+
+  // Extract mapped values — mirror of the logic in POST /submit
+  let crmEmail: string | null = null;
+  let crmPhone: string | null = null;
+  let crmFirstName: string | null = null;
+  let crmLastName: string | null = null;
+  let emailConsent = !!submission.emailConsent;
+  let smsConsent = !!submission.smsConsent;
+
+  for (const field of fields) {
+    const value = data[field.id.toString()] ?? data[field.label];
+    if (value === undefined || value === null || value === "") continue;
+    switch (field.mapsTo) {
+      case "crm_email": crmEmail = String(value).trim().toLowerCase(); break;
+      case "crm_phone": crmPhone = String(value).trim(); break;
+      case "crm_first_name": crmFirstName = String(value).trim(); break;
+      case "crm_last_name": crmLastName = String(value).trim(); break;
+      case "email_consent": emailConsent = Boolean(value); break;
+      case "sms_consent": smsConsent = Boolean(value); break;
+    }
+  }
+  // Fallback: identify by field type if no explicit mapping
+  for (const field of fields) {
+    const value = data[field.id.toString()] ?? data[field.label];
+    if (!value) continue;
+    if (field.fieldType === "email" && !crmEmail) crmEmail = String(value).trim().toLowerCase();
+    if (field.fieldType === "phone" && !crmPhone) crmPhone = String(value).trim();
+  }
+
+  const clientId = submission.clientId;
+  const consentIp = submission.consentIp;
+
+  // STEP 2: CRM upsert + timeline
+  let crmContactId: number | null = null;
+  if (crmEmail || crmPhone) {
+    try {
+      let existingContact: typeof crmContacts.$inferSelect | undefined;
+      if (crmEmail) {
+        const [found] = await db.select().from(crmContacts)
+          .where(and(eq(crmContacts.clientId, clientId), eq(crmContacts.email, crmEmail)))
+          .limit(1);
+        existingContact = found;
+      }
+
+      if (existingContact) {
+        crmContactId = existingContact.id;
+        const crmUpdates: Record<string, any> = { updatedAt: new Date() };
+        if (crmPhone && !existingContact.phone) crmUpdates.phone = crmPhone;
+        if (crmFirstName && (!existingContact.firstName || existingContact.firstName === "New")) crmUpdates.firstName = crmFirstName;
+        if (crmLastName && existingContact.lastName === "Client") crmUpdates.lastName = crmLastName;
+        if (Object.keys(crmUpdates).length > 1) {
+          await db.update(crmContacts).set(crmUpdates).where(eq(crmContacts.id, existingContact.id));
+        }
+      } else {
+        const [newContact] = await db.insert(crmContacts).values({
+          clientId,
+          firstName: crmFirstName || "Form",
+          lastName: crmLastName || "Submission",
+          email: crmEmail || null,
+          phone: crmPhone || null,
+          lifecycleStage: "lead",
+          leadSource: "convert_form",
+          sourceType: "form",
+          sourceId: String(form.id),
+          sourceMetadata: { formName: form.name, formType: form.formType, submissionId: submission.id },
+        }).returning();
+        crmContactId = newContact.id;
+      }
+
+      await db.update(convertSubmissions)
+        .set({ crmContactId })
+        .where(eq(convertSubmissions.id, submission.id));
+
+      await logContactActivity({
+        clientId,
+        contactId: crmContactId,
+        eventType: "form_submitted",
+        title: `Form submitted: ${form.name}`,
+        description: `Via ${form.deployTarget} — ${form.formType}`,
+        sourceApp: "convert",
+        sourceEntityType: "convert_submission",
+        sourceEntityId: String(submission.id),
+        metadata: { formId: form.id, submissionId: submission.id, formType: form.formType },
+        actorType: "system",
+      });
+    } catch (crmError) {
+      console.error("[Convert] CRM contact upsert failed:", crmError);
+    }
+  }
+
+  // STEP 3: sendContacts upsert with consent
+  if (crmEmail && emailConsent) {
+    try {
+      const [existingSend] = await db.select().from(sendContacts)
+        .where(and(eq(sendContacts.clientId, clientId), eq(sendContacts.email, crmEmail)))
+        .limit(1);
+
+      if (!existingSend) {
+        const [sendContact] = await db.insert(sendContacts).values({
+          clientId,
+          email: crmEmail,
+          phone: crmPhone || null,
+          firstName: crmFirstName || null,
+          lastName: crmLastName || null,
+          emailConsent: true,
+          emailConsentDate: new Date(),
+          emailConsentIp: consentIp,
+          emailConsentMethod: "convert_form",
+          smsConsent,
+          smsConsentDate: smsConsent ? new Date() : null,
+          smsConsentIp: smsConsent ? consentIp : null,
+          smsConsentMethod: smsConsent ? "convert_form" : null,
+          emailStatus: form.doubleOptin ? "pending" : "subscribed",
+          smsStatus: smsConsent ? "subscribed" : "unsubscribed",
+          source: "convert_form",
+        }).returning();
+
+        await db.update(convertSubmissions)
+          .set({ sendContactId: sendContact.id })
+          .where(eq(convertSubmissions.id, submission.id));
+      } else {
+        const sendUpdates: Record<string, any> = {};
+        if (!existingSend.emailConsent && emailConsent) {
+          sendUpdates.emailConsent = true;
+          sendUpdates.emailConsentDate = new Date();
+          sendUpdates.emailConsentIp = consentIp;
+          sendUpdates.emailConsentMethod = "convert_form";
+          sendUpdates.emailStatus = "subscribed";
+        }
+        if (!existingSend.smsConsent && smsConsent) {
+          sendUpdates.smsConsent = true;
+          sendUpdates.smsConsentDate = new Date();
+          sendUpdates.smsConsentIp = consentIp;
+          sendUpdates.smsConsentMethod = "convert_form";
+          sendUpdates.smsStatus = "subscribed";
+        }
+        if (Object.keys(sendUpdates).length > 0) {
+          await db.update(sendContacts).set(sendUpdates).where(eq(sendContacts.id, existingSend.id));
+        }
+        await db.update(convertSubmissions)
+          .set({ sendContactId: existingSend.id })
+          .where(eq(convertSubmissions.id, submission.id));
+      }
+    } catch (sendError) {
+      console.error("[Convert] Send contact upsert failed:", sendError);
+    }
+  }
+
+  // STEP 4: autoresponder (fire-and-forget)
+  if (form.autoresponderEnabled && crmEmail && form.autoresponderSubject && form.autoresponderBody) {
+    const delay = (form.autoresponderDelayMinutes || 0) * 60 * 1000;
+    const subject = form.autoresponderSubject;
+    const body = form.autoresponderBody;
+    const toEmail = crmEmail;
+    setTimeout(() => {
+      emailService.sendRawEmail(toEmail, subject, body).catch((autoErr) => {
+        console.error("[Convert] Autoresponder send failed:", autoErr);
+      });
+    }, delay);
+  }
+
+  // STEP 5: owner notification
+  if (form.notifyEnabled && form.notifyEmail) {
+    const subject = `New form submission: ${form.name}`;
+    const contactLine = crmEmail || crmPhone || "unknown";
+    const body = `<h2>New submission on "${form.name}"</h2>
+      <p><strong>From:</strong> ${crmFirstName || ""} ${crmLastName || ""} (${contactLine})</p>
+      <p><strong>Form type:</strong> ${form.formType}</p>
+      <p><strong>Source:</strong> ${submission.sourceUrl || "direct"}</p>
+      <p><strong>Email consent:</strong> ${emailConsent ? "Yes" : "No"}</p>
+      <p><strong>SMS consent:</strong> ${smsConsent ? "Yes" : "No"}</p>
+      ${submission.paymentStatus === "completed" ? `<p><strong>Payment:</strong> Received (${submission.paymentAmount ? `${(submission.paymentAmount / 100).toFixed(2)} ${submission.paymentCurrency?.toUpperCase() || "USD"}` : "amount unknown"})</p>` : ""}
+      <p><a href="https://businessblueprint.io/convert/dashboard">View in Dashboard</a></p>`;
+    emailService.sendRawEmail(form.notifyEmail, subject, body).catch((notifErr) => {
+      console.error("[Convert] Notification send failed:", notifErr);
+    });
+  }
+
+  console.log(`[Convert] Pipeline completed for submission ${submission.id} on form "${form.name}" (client ${clientId})`);
 }
 
 // ─── TEMPLATES (authenticated — any logged-in client can browse) ───
@@ -383,12 +611,28 @@ router.get("/:clientId/forms/:formId/embed-code", requireAuth, requireClientMatc
     if (!form) return res.status(404).json({ error: "Form not found" });
 
     const baseUrl = "https://businessblueprint.io";
-    const embedCode = form.formType === "popup"
-      ? `<script src="${baseUrl}/convert/embed.js" data-form-id="${form.slug}" data-client-id="${clientId}" data-type="popup" data-trigger="${form.popupTrigger || "time_delay"}" data-delay="${form.popupDelaySeconds || 5}"></script>`
-      : `<script src="${baseUrl}/convert/embed.js" data-form-id="${form.slug}" data-client-id="${clientId}"></script>`;
+    const commonAttrs = `src="${baseUrl}/convert/embed.js" data-form-id="${form.slug}" data-client-id="${clientId}"`;
+
+    // Embed code variants:
+    //   - formType: "popup"  → centered modal with overlay
+    //   - formType: "optin"  with popup trigger → slide-in panel from edge
+    //   - everything else    → inline render at the script tag position
+    let embedCode: string;
+    if (form.formType === "popup") {
+      embedCode = `<script ${commonAttrs} data-type="popup" data-trigger="${form.popupTrigger || "time_delay"}" data-delay="${form.popupDelaySeconds || 5}" data-position="${form.popupPosition || "center"}" data-frequency="${form.popupShowFrequency || "once_per_session"}"></script>`;
+    } else if (form.formType === "optin" && form.popupTrigger) {
+      embedCode = `<script ${commonAttrs} data-type="slide_in" data-trigger="${form.popupTrigger || "time_delay"}" data-delay="${form.popupDelaySeconds || 5}" data-position="${form.popupPosition || "bottom_right"}" data-frequency="${form.popupShowFrequency || "once_per_session"}"></script>`;
+    } else {
+      embedCode = `<script ${commonAttrs}></script>`;
+    }
+
+    // Alternate: explicit-container inline embed. Useful when the host site
+    // wants to control exactly where the form renders (e.g., inside a grid cell).
+    const inlineEmbed = `<div id="bb-convert-${form.slug}"></div>\n<script ${commonAttrs} data-container="#bb-convert-${form.slug}"></script>`;
+
     const hostedUrl = `${baseUrl}/convert/f/${form.slug}?client=${clientId}`;
 
-    res.json({ success: true, embedCode, hostedUrl });
+    res.json({ success: true, embedCode, inlineEmbed, hostedUrl });
   } catch (error: any) {
     console.error("[Convert] Embed code error:", error);
     res.status(500).json({ error: "Failed to generate embed code" });
@@ -633,7 +877,11 @@ router.get("/:clientId/analytics", requireAuth, requireClientMatch, async (req: 
 
 // ─── PUBLIC ENDPOINTS (no auth) ───
 
-router.get("/public/:clientId/:formSlug", async (req: Request, res: Response) => {
+// Preflight for both public endpoints
+router.options("/public/:clientId/:formSlug", convertPublicCors, (_req, res) => res.sendStatus(200));
+router.options("/submit/:clientId/:formSlug", convertPublicCors, (_req, res) => res.sendStatus(200));
+
+router.get("/public/:clientId/:formSlug", convertPublicCors, async (req: Request, res: Response) => {
   try {
     const clientId = parseInt(req.params.clientId);
     const formSlug = req.params.formSlug;
@@ -666,6 +914,7 @@ router.get("/public/:clientId/:formSlug", async (req: Request, res: Response) =>
       form: {
         id: form.id,
         name: form.name,
+        slug: form.slug,
         formType: form.formType,
         brandColor: form.brandColor,
         showBranding: form.showBranding,
@@ -680,8 +929,32 @@ router.get("/public/:clientId/:formSlug", async (req: Request, res: Response) =>
         popupDelaySeconds: form.popupDelaySeconds,
         popupScrollPercent: form.popupScrollPercent,
         popupPosition: form.popupPosition,
+        popupShowFrequency: form.popupShowFrequency,
+        // Phase C: expose the full builder design + settings JSON so the embed
+        // script can apply theme colors, fonts, spacing, autoresponder config, etc.
+        design: form.design,
+        settings: form.settings,
       },
-      fields,
+      fields: fields.map((f) => ({
+        id: f.id,
+        fieldType: f.fieldType,
+        label: f.label,
+        placeholder: f.placeholder,
+        helpText: f.helpText,
+        isRequired: f.isRequired,
+        validationPattern: f.validationPattern,
+        validationMessage: f.validationMessage,
+        minLength: f.minLength,
+        maxLength: f.maxLength,
+        options: f.options,
+        conditionalRules: f.conditionalRules,
+        sortOrder: f.sortOrder,
+        columnSpan: f.columnSpan,
+        pageNumber: f.pageNumber,
+        defaultValue: f.defaultValue,
+        mapsTo: f.mapsTo,
+        config: f.config,
+      })),
       client: {
         companyName: client?.companyName || "",
         website: client?.website || "",
@@ -693,7 +966,7 @@ router.get("/public/:clientId/:formSlug", async (req: Request, res: Response) =>
   }
 });
 
-router.post("/submit/:clientId/:formSlug", async (req: Request, res: Response) => {
+router.post("/submit/:clientId/:formSlug", convertPublicCors, async (req: Request, res: Response) => {
   try {
     const clientId = parseInt(req.params.clientId);
     const formSlug = req.params.formSlug;
@@ -715,38 +988,21 @@ router.post("/submit/:clientId/:formSlug", async (req: Request, res: Response) =
 
     const consentIp = getConsentIp(req);
 
+    // Peek at form fields to populate consent flags on the row itself (so the
+    // helper can trust them) — the helper still re-derives the full mapped
+    // values from submission.data + fields.
     const fields = await db.select().from(convertFormFields)
       .where(eq(convertFormFields.formId, form.id));
-
-    // Extract mapped values
-    let crmEmail: string | null = null;
-    let crmPhone: string | null = null;
-    let crmFirstName: string | null = null;
-    let crmLastName: string | null = null;
     let emailConsent = false;
     let smsConsent = false;
-
     for (const field of fields) {
       const value = (data as any)[field.id.toString()] ?? (data as any)[field.label];
       if (value === undefined || value === null || value === "") continue;
-      switch (field.mapsTo) {
-        case "crm_email": crmEmail = String(value).trim().toLowerCase(); break;
-        case "crm_phone": crmPhone = String(value).trim(); break;
-        case "crm_first_name": crmFirstName = String(value).trim(); break;
-        case "crm_last_name": crmLastName = String(value).trim(); break;
-        case "email_consent": emailConsent = Boolean(value); break;
-        case "sms_consent": smsConsent = Boolean(value); break;
-      }
-    }
-    // Fallback: identify by field type if no explicit mapping
-    for (const field of fields) {
-      const value = (data as any)[field.id.toString()] ?? (data as any)[field.label];
-      if (!value) continue;
-      if (field.fieldType === "email" && !crmEmail) crmEmail = String(value).trim().toLowerCase();
-      if (field.fieldType === "phone" && !crmPhone) crmPhone = String(value).trim();
+      if (field.mapsTo === "email_consent") emailConsent = Boolean(value);
+      if (field.mapsTo === "sms_consent") smsConsent = Boolean(value);
     }
 
-    // STEP 1: insert submission
+    // Insert submission as "completed" — non-payment flow
     const [submission] = await db.insert(convertSubmissions).values({
       formId: form.id,
       clientId,
@@ -761,158 +1017,14 @@ router.post("/submit/:clientId/:formSlug", async (req: Request, res: Response) =
       utmMedium: utmMedium || form.utmMedium || null,
       utmCampaign: utmCampaign || form.utmCampaign || null,
       userAgent: userAgent || null,
+      paymentStatus: "none",
     }).returning();
 
     await db.update(convertForms)
       .set({ submissionCount: (form.submissionCount || 0) + 1 })
       .where(eq(convertForms.id, form.id));
 
-    // STEP 2: CRM contact upsert
-    let crmContactId: number | null = null;
-    if (crmEmail || crmPhone) {
-      try {
-        let existingContact: typeof crmContacts.$inferSelect | undefined;
-        if (crmEmail) {
-          const [found] = await db.select().from(crmContacts)
-            .where(and(eq(crmContacts.clientId, clientId), eq(crmContacts.email, crmEmail)))
-            .limit(1);
-          existingContact = found;
-        }
-
-        if (existingContact) {
-          crmContactId = existingContact.id;
-          const crmUpdates: Record<string, any> = { updatedAt: new Date() };
-          if (crmPhone && !existingContact.phone) crmUpdates.phone = crmPhone;
-          if (crmFirstName && (!existingContact.firstName || existingContact.firstName === "New")) crmUpdates.firstName = crmFirstName;
-          if (crmLastName && existingContact.lastName === "Client") crmUpdates.lastName = crmLastName;
-          if (Object.keys(crmUpdates).length > 1) {
-            await db.update(crmContacts).set(crmUpdates).where(eq(crmContacts.id, existingContact.id));
-          }
-        } else {
-          const [newContact] = await db.insert(crmContacts).values({
-            clientId,
-            firstName: crmFirstName || "Form",
-            lastName: crmLastName || "Submission",
-            email: crmEmail || null,
-            phone: crmPhone || null,
-            lifecycleStage: "lead",
-            leadSource: "convert_form",
-            sourceType: "form",
-            sourceId: String(form.id),
-            sourceMetadata: { formName: form.name, formType: form.formType, submissionId: submission.id },
-          }).returning();
-          crmContactId = newContact.id;
-        }
-
-        await db.update(convertSubmissions)
-          .set({ crmContactId })
-          .where(eq(convertSubmissions.id, submission.id));
-
-        // Timeline event
-        await logContactActivity({
-          clientId,
-          contactId: crmContactId,
-          eventType: "form_submitted",
-          title: `Form submitted: ${form.name}`,
-          description: `Via ${form.deployTarget} — ${form.formType}`,
-          sourceApp: "convert",
-          sourceEntityType: "convert_submission",
-          sourceEntityId: String(submission.id),
-          metadata: { formId: form.id, submissionId: submission.id, formType: form.formType },
-          actorType: "system",
-        });
-      } catch (crmError) {
-        console.error("[Convert] CRM contact upsert failed:", crmError);
-      }
-    }
-
-    // STEP 3: sendContacts upsert with consent
-    if (crmEmail && emailConsent) {
-      try {
-        const [existingSend] = await db.select().from(sendContacts)
-          .where(and(eq(sendContacts.clientId, clientId), eq(sendContacts.email, crmEmail)))
-          .limit(1);
-
-        if (!existingSend) {
-          const [sendContact] = await db.insert(sendContacts).values({
-            clientId,
-            email: crmEmail,
-            phone: crmPhone || null,
-            firstName: crmFirstName || null,
-            lastName: crmLastName || null,
-            emailConsent: true,
-            emailConsentDate: new Date(),
-            emailConsentIp: consentIp,
-            emailConsentMethod: "convert_form",
-            smsConsent,
-            smsConsentDate: smsConsent ? new Date() : null,
-            smsConsentIp: smsConsent ? consentIp : null,
-            smsConsentMethod: smsConsent ? "convert_form" : null,
-            emailStatus: form.doubleOptin ? "pending" : "subscribed",
-            smsStatus: smsConsent ? "subscribed" : "unsubscribed",
-            source: "convert_form",
-          }).returning();
-
-          await db.update(convertSubmissions)
-            .set({ sendContactId: sendContact.id })
-            .where(eq(convertSubmissions.id, submission.id));
-        } else {
-          const sendUpdates: Record<string, any> = {};
-          if (!existingSend.emailConsent && emailConsent) {
-            sendUpdates.emailConsent = true;
-            sendUpdates.emailConsentDate = new Date();
-            sendUpdates.emailConsentIp = consentIp;
-            sendUpdates.emailConsentMethod = "convert_form";
-            sendUpdates.emailStatus = "subscribed";
-          }
-          if (!existingSend.smsConsent && smsConsent) {
-            sendUpdates.smsConsent = true;
-            sendUpdates.smsConsentDate = new Date();
-            sendUpdates.smsConsentIp = consentIp;
-            sendUpdates.smsConsentMethod = "convert_form";
-            sendUpdates.smsStatus = "subscribed";
-          }
-          if (Object.keys(sendUpdates).length > 0) {
-            await db.update(sendContacts).set(sendUpdates).where(eq(sendContacts.id, existingSend.id));
-          }
-          await db.update(convertSubmissions)
-            .set({ sendContactId: existingSend.id })
-            .where(eq(convertSubmissions.id, submission.id));
-        }
-      } catch (sendError) {
-        console.error("[Convert] Send contact upsert failed:", sendError);
-      }
-    }
-
-    // STEP 4: autoresponder (fire-and-forget)
-    if (form.autoresponderEnabled && crmEmail && form.autoresponderSubject && form.autoresponderBody) {
-      const delay = (form.autoresponderDelayMinutes || 0) * 60 * 1000;
-      const subject = form.autoresponderSubject;
-      const body = form.autoresponderBody;
-      setTimeout(() => {
-        emailService.sendRawEmail(crmEmail!, subject, body).catch((autoErr) => {
-          console.error("[Convert] Autoresponder send failed:", autoErr);
-        });
-      }, delay);
-    }
-
-    // STEP 5: owner notification
-    if (form.notifyEnabled && form.notifyEmail) {
-      const subject = `New form submission: ${form.name}`;
-      const contactLine = crmEmail || crmPhone || "unknown";
-      const body = `<h2>New submission on "${form.name}"</h2>
-        <p><strong>From:</strong> ${crmFirstName || ""} ${crmLastName || ""} (${contactLine})</p>
-        <p><strong>Form type:</strong> ${form.formType}</p>
-        <p><strong>Source:</strong> ${sourceUrl || "direct"}</p>
-        <p><strong>Email consent:</strong> ${emailConsent ? "Yes" : "No"}</p>
-        <p><strong>SMS consent:</strong> ${smsConsent ? "Yes" : "No"}</p>
-        <p><a href="https://businessblueprint.io/convert/dashboard">View in Dashboard</a></p>`;
-      emailService.sendRawEmail(form.notifyEmail, subject, body).catch((notifErr) => {
-        console.error("[Convert] Notification send failed:", notifErr);
-      });
-    }
-
-    console.log(`[Convert] Submission ${submission.id} on form "${form.name}" (client ${clientId})`);
+    await runPostSubmissionPipeline(submission.id);
 
     res.json({
       success: true,
@@ -926,5 +1038,283 @@ router.post("/submit/:clientId/:formSlug", async (req: Request, res: Response) =
     res.status(500).json({ error: "Failed to submit form" });
   }
 });
+
+// ─── PAYMENT: SwipesBlue checkout + webhook ───
+
+/**
+ * POST /api/convert/public/:clientId/:formSlug/checkout
+ *
+ * Creates a pending convert_submissions row + a SwipesBlue checkout session.
+ * The embed script calls this when a form contains a "payment" field. The
+ * returned checkoutUrl redirects the end user to SwipesBlue's hosted checkout.
+ *
+ * Runs the CRM / send / timeline / autoresponder / notification pipeline ONLY
+ * after SwipesBlue's checkout.session.completed webhook fires — otherwise we'd
+ * be creating CRM contacts for abandoned payment attempts.
+ *
+ * Credentials come from platform-wide env vars (SWIPESBLUE_API_URL,
+ * SWIPESBLUE_API_KEY, SWIPESBLUE_WEBHOOK_SECRET) per CLAUDE.md. Per-client
+ * SwipesBlue credentials are not yet supported.
+ */
+router.post("/public/:clientId/:formSlug/checkout", convertPublicCors, async (req: Request, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const formSlug = req.params.formSlug;
+    if (isNaN(clientId)) return res.status(400).json({ error: "Invalid client ID" });
+
+    const [form] = await db.select().from(convertForms)
+      .where(and(
+        eq(convertForms.clientId, clientId),
+        eq(convertForms.slug, formSlug),
+        eq(convertForms.status, "published"),
+      ))
+      .limit(1);
+    if (!form) return res.status(404).json({ error: "Form not found" });
+
+    const {
+      amount,
+      currency = "usd",
+      description,
+      customerEmail,
+      formData,
+      sourceUrl,
+      referrerUrl,
+      utmSource,
+      utmMedium,
+      utmCampaign,
+      userAgent,
+    } = req.body || {};
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return res.status(400).json({ error: "Invalid amount" });
+    }
+    if (!formData || typeof formData !== "object") {
+      return res.status(400).json({ error: "formData is required" });
+    }
+
+    const apiKey = process.env.SWIPESBLUE_API_KEY;
+    const apiUrl = process.env.SWIPESBLUE_API_URL || "https://swipesblue.com/api/v1";
+    if (!apiKey) {
+      console.error("[Convert] SWIPESBLUE_API_KEY not configured — payment field cannot process checkout");
+      return res.status(503).json({ error: "Payment processing not configured" });
+    }
+
+    const consentIp = getConsentIp(req);
+
+    // Peek for consent flags so the row reflects them from the start
+    const fields = await db.select().from(convertFormFields)
+      .where(eq(convertFormFields.formId, form.id));
+    let emailConsent = false;
+    let smsConsent = false;
+    for (const field of fields) {
+      const value = (formData as any)[field.id.toString()] ?? (formData as any)[field.label];
+      if (value === undefined || value === null || value === "") continue;
+      if (field.mapsTo === "email_consent") emailConsent = Boolean(value);
+      if (field.mapsTo === "sms_consent") smsConsent = Boolean(value);
+    }
+
+    // Create the submission first, in pending state. The pipeline won't run
+    // until the webhook confirms payment.
+    const [submission] = await db.insert(convertSubmissions).values({
+      formId: form.id,
+      clientId,
+      data: formData,
+      emailConsent,
+      smsConsent,
+      consentIp,
+      consentTimestamp: (emailConsent || smsConsent) ? new Date() : null,
+      sourceUrl: sourceUrl || null,
+      referrerUrl: referrerUrl || null,
+      utmSource: utmSource || form.utmSource || null,
+      utmMedium: utmMedium || form.utmMedium || null,
+      utmCampaign: utmCampaign || form.utmCampaign || null,
+      userAgent: userAgent || null,
+      paymentStatus: "pending",
+      paymentAmount: Math.round(amount),
+      paymentCurrency: String(currency).toLowerCase().substring(0, 10),
+    }).returning();
+
+    const baseUrl = "https://businessblueprint.io";
+    const successUrl = `${baseUrl}/convert/f/${form.slug}?client=${clientId}&payment=success&submission=${submission.id}`;
+    const cancelUrl = `${baseUrl}/convert/f/${form.slug}?client=${clientId}&payment=cancelled`;
+
+    try {
+      const swipesRes = await fetch(`${apiUrl}/checkout/sessions`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: Math.round(amount),
+          currency: String(currency).toLowerCase(),
+          description: description || form.name,
+          customer_email: customerEmail || null,
+          success_url: successUrl,
+          cancel_url: cancelUrl,
+          mode: "redirect",
+          metadata: {
+            submissionId: String(submission.id),
+            formId: String(form.id),
+            clientId: String(clientId),
+            source: "convert",
+          },
+        }),
+      });
+
+      if (!swipesRes.ok) {
+        const errText = await swipesRes.text().catch(() => "");
+        console.error(`[Convert] SwipesBlue session creation failed (${swipesRes.status}):`, errText);
+        await db.update(convertSubmissions)
+          .set({ paymentStatus: "failed" })
+          .where(eq(convertSubmissions.id, submission.id));
+        return res.status(502).json({ error: "Payment processor error" });
+      }
+
+      const session = await swipesRes.json();
+      const sessionId = session?.id;
+      const checkoutUrl = session?.url || session?.checkout_url;
+
+      if (!sessionId || !checkoutUrl) {
+        console.error("[Convert] SwipesBlue response missing id/url:", session);
+        await db.update(convertSubmissions)
+          .set({ paymentStatus: "failed" })
+          .where(eq(convertSubmissions.id, submission.id));
+        return res.status(502).json({ error: "Payment processor returned unexpected response" });
+      }
+
+      await db.update(convertSubmissions)
+        .set({ paymentSessionId: String(sessionId) })
+        .where(eq(convertSubmissions.id, submission.id));
+
+      res.json({
+        success: true,
+        checkoutUrl,
+        submissionId: submission.id,
+        sessionId,
+      });
+    } catch (fetchErr: any) {
+      console.error("[Convert] SwipesBlue checkout fetch error:", fetchErr);
+      await db.update(convertSubmissions)
+        .set({ paymentStatus: "failed" })
+        .where(eq(convertSubmissions.id, submission.id));
+      res.status(502).json({ error: "Could not reach payment processor" });
+    }
+  } catch (error: any) {
+    console.error("[Convert] Checkout error:", error);
+    res.status(500).json({ error: "Failed to create checkout session" });
+  }
+});
+
+/**
+ * POST /api/convert/webhook/swipesblue
+ *
+ * SwipesBlue webhook endpoint. Verifies signature via HMAC-SHA256 of the raw
+ * request body using SWIPESBLUE_WEBHOOK_SECRET. Handles:
+ *
+ *   checkout.session.completed  → mark submission completed, run pipeline,
+ *                                 bump form.submissionCount
+ *   checkout.session.failed     → mark submission failed
+ *
+ * Signature header: X-Swipesblue-Signature (hex-encoded HMAC-SHA256). If the
+ * real SwipesBlue webhook uses a different scheme, this will need adjustment —
+ * but without public webhook docs the hex-HMAC pattern is the safest default.
+ *
+ * Uses express.raw() specifically on this route so we can HMAC the exact bytes
+ * the sender signed, not a re-serialised JSON body.
+ */
+router.post(
+  "/webhook/swipesblue",
+  express.raw({ type: "application/json", limit: "1mb" }),
+  async (req: Request, res: Response) => {
+    try {
+      const rawBody = req.body as Buffer;
+      if (!Buffer.isBuffer(rawBody)) {
+        return res.status(400).json({ error: "Expected raw body" });
+      }
+
+      const signature = (req.headers["x-swipesblue-signature"] as string) || "";
+      const secret = process.env.SWIPESBLUE_WEBHOOK_SECRET;
+
+      if (!secret) {
+        console.error("[Convert] SWIPESBLUE_WEBHOOK_SECRET not set — rejecting webhook");
+        return res.status(500).json({ error: "Webhook not configured" });
+      }
+      if (!signature) {
+        return res.status(400).json({ error: "Missing signature" });
+      }
+
+      const expected = createHmac("sha256", secret).update(rawBody).digest("hex");
+      let valid = false;
+      try {
+        const a = Buffer.from(signature, "hex");
+        const b = Buffer.from(expected, "hex");
+        valid = a.length === b.length && timingSafeEqual(a, b);
+      } catch {
+        valid = false;
+      }
+      if (!valid) {
+        console.warn("[Convert] SwipesBlue webhook signature mismatch");
+        return res.status(401).json({ error: "Invalid signature" });
+      }
+
+      let event: any;
+      try {
+        event = JSON.parse(rawBody.toString("utf8"));
+      } catch {
+        return res.status(400).json({ error: "Invalid JSON" });
+      }
+
+      const eventType: string = event?.type || "";
+      const sessionObj = event?.data?.object || event?.data || {};
+      const sessionId: string | undefined = sessionObj?.id || sessionObj?.session_id;
+
+      console.log(`[Convert] SwipesBlue webhook received: ${eventType}${sessionId ? ` session=${sessionId}` : ""}`);
+
+      if (!sessionId) {
+        return res.json({ received: true, ignored: "no session id" });
+      }
+
+      if (eventType === "checkout.session.completed" || eventType === "payment_intent.succeeded") {
+        const [submission] = await db.select().from(convertSubmissions)
+          .where(eq(convertSubmissions.paymentSessionId, sessionId))
+          .limit(1);
+        if (!submission) {
+          console.warn(`[Convert] Webhook for unknown session ${sessionId}`);
+          return res.json({ received: true, ignored: "unknown session" });
+        }
+        if (submission.paymentStatus === "completed") {
+          return res.json({ received: true, idempotent: true });
+        }
+
+        await db.update(convertSubmissions)
+          .set({ paymentStatus: "completed" })
+          .where(eq(convertSubmissions.id, submission.id));
+
+        // Bump form.submissionCount only now — successful payment = real submission
+        await db.update(convertForms)
+          .set({ submissionCount: sql`${convertForms.submissionCount} + 1` })
+          .where(eq(convertForms.id, submission.formId));
+
+        await runPostSubmissionPipeline(submission.id);
+
+        return res.json({ received: true, submissionId: submission.id });
+      }
+
+      if (eventType === "checkout.session.failed" || eventType === "checkout.session.expired" || eventType === "payment_intent.payment_failed") {
+        await db.update(convertSubmissions)
+          .set({ paymentStatus: "failed" })
+          .where(eq(convertSubmissions.paymentSessionId, sessionId));
+        return res.json({ received: true, marked: "failed" });
+      }
+
+      // Unknown event type — ack and ignore
+      res.json({ received: true, ignored: eventType });
+    } catch (error: any) {
+      console.error("[Convert] Webhook handler error:", error);
+      res.status(500).json({ error: "Webhook processing failed" });
+    }
+  }
+);
 
 export { router as convertRouter };
