@@ -4371,14 +4371,25 @@ export const convertSubmissions = pgTable("convert_submissions", {
   doubleOptinConfirmed: boolean("double_optin_confirmed").default(false),
   doubleOptinConfirmedAt: timestamp("double_optin_confirmed_at"),
 
-  // Status
+  // Status — CRM lifecycle ("has the business owner followed up yet")
   status: varchar("status", { length: 20 }).default("new"), // new, read, contacted, converted, spam
+
+  // Payment lifecycle (separate state machine from CRM status — Phase C)
+  //   none      = non-payment form, always "completed"
+  //   pending   = payment session created, awaiting checkout.session.completed webhook
+  //   completed = payment successful, downstream pipeline (CRM / send / timeline) fired
+  //   failed    = swipesblue reported failure; submission remains inspectable
+  paymentStatus: varchar("payment_status", { length: 20 }).default("none"),
+  paymentSessionId: varchar("payment_session_id", { length: 128 }),
+  paymentAmount: integer("payment_amount"), // cents
+  paymentCurrency: varchar("payment_currency", { length: 10 }),
 
   createdAt: timestamp("created_at").defaultNow(),
 }, (table) => [
   index("idx_convert_subs_form").on(table.formId),
   index("idx_convert_subs_client").on(table.clientId),
   index("idx_convert_subs_created").on(table.createdAt),
+  index("idx_convert_subs_payment_session").on(table.paymentSessionId),
 ]);
 
 export const convertTemplates = pgTable("convert_templates", {

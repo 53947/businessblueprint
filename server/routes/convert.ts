@@ -54,6 +54,19 @@ function requireClientMatch(req: AuthenticatedRequest, res: Response, next: Next
   next();
 }
 
+// CORS middleware for public endpoints used by the embed script on third-party sites.
+// Matches the pattern used by the / engage chat widget in server/routes/chat.ts.
+function convertPublicCors(req: Request, res: Response, next: NextFunction): void {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") {
+    res.sendStatus(200);
+    return;
+  }
+  next();
+}
+
 // ─── TEMPLATES (authenticated — any logged-in client can browse) ───
 
 router.get("/templates", requireAuth, async (_req: AuthenticatedRequest, res: Response) => {
@@ -383,12 +396,28 @@ router.get("/:clientId/forms/:formId/embed-code", requireAuth, requireClientMatc
     if (!form) return res.status(404).json({ error: "Form not found" });
 
     const baseUrl = "https://businessblueprint.io";
-    const embedCode = form.formType === "popup"
-      ? `<script src="${baseUrl}/convert/embed.js" data-form-id="${form.slug}" data-client-id="${clientId}" data-type="popup" data-trigger="${form.popupTrigger || "time_delay"}" data-delay="${form.popupDelaySeconds || 5}"></script>`
-      : `<script src="${baseUrl}/convert/embed.js" data-form-id="${form.slug}" data-client-id="${clientId}"></script>`;
+    const commonAttrs = `src="${baseUrl}/convert/embed.js" data-form-id="${form.slug}" data-client-id="${clientId}"`;
+
+    // Embed code variants:
+    //   - formType: "popup"  → centered modal with overlay
+    //   - formType: "optin"  with popup trigger → slide-in panel from edge
+    //   - everything else    → inline render at the script tag position
+    let embedCode: string;
+    if (form.formType === "popup") {
+      embedCode = `<script ${commonAttrs} data-type="popup" data-trigger="${form.popupTrigger || "time_delay"}" data-delay="${form.popupDelaySeconds || 5}" data-position="${form.popupPosition || "center"}" data-frequency="${form.popupShowFrequency || "once_per_session"}"></script>`;
+    } else if (form.formType === "optin" && form.popupTrigger) {
+      embedCode = `<script ${commonAttrs} data-type="slide_in" data-trigger="${form.popupTrigger || "time_delay"}" data-delay="${form.popupDelaySeconds || 5}" data-position="${form.popupPosition || "bottom_right"}" data-frequency="${form.popupShowFrequency || "once_per_session"}"></script>`;
+    } else {
+      embedCode = `<script ${commonAttrs}></script>`;
+    }
+
+    // Alternate: explicit-container inline embed. Useful when the host site
+    // wants to control exactly where the form renders (e.g., inside a grid cell).
+    const inlineEmbed = `<div id="bb-convert-${form.slug}"></div>\n<script ${commonAttrs} data-container="#bb-convert-${form.slug}"></script>`;
+
     const hostedUrl = `${baseUrl}/convert/f/${form.slug}?client=${clientId}`;
 
-    res.json({ success: true, embedCode, hostedUrl });
+    res.json({ success: true, embedCode, inlineEmbed, hostedUrl });
   } catch (error: any) {
     console.error("[Convert] Embed code error:", error);
     res.status(500).json({ error: "Failed to generate embed code" });
@@ -633,7 +662,11 @@ router.get("/:clientId/analytics", requireAuth, requireClientMatch, async (req: 
 
 // ─── PUBLIC ENDPOINTS (no auth) ───
 
-router.get("/public/:clientId/:formSlug", async (req: Request, res: Response) => {
+// Preflight for both public endpoints
+router.options("/public/:clientId/:formSlug", convertPublicCors, (_req, res) => res.sendStatus(200));
+router.options("/submit/:clientId/:formSlug", convertPublicCors, (_req, res) => res.sendStatus(200));
+
+router.get("/public/:clientId/:formSlug", convertPublicCors, async (req: Request, res: Response) => {
   try {
     const clientId = parseInt(req.params.clientId);
     const formSlug = req.params.formSlug;
@@ -666,6 +699,7 @@ router.get("/public/:clientId/:formSlug", async (req: Request, res: Response) =>
       form: {
         id: form.id,
         name: form.name,
+        slug: form.slug,
         formType: form.formType,
         brandColor: form.brandColor,
         showBranding: form.showBranding,
@@ -680,8 +714,32 @@ router.get("/public/:clientId/:formSlug", async (req: Request, res: Response) =>
         popupDelaySeconds: form.popupDelaySeconds,
         popupScrollPercent: form.popupScrollPercent,
         popupPosition: form.popupPosition,
+        popupShowFrequency: form.popupShowFrequency,
+        // Phase C: expose the full builder design + settings JSON so the embed
+        // script can apply theme colors, fonts, spacing, autoresponder config, etc.
+        design: form.design,
+        settings: form.settings,
       },
-      fields,
+      fields: fields.map((f) => ({
+        id: f.id,
+        fieldType: f.fieldType,
+        label: f.label,
+        placeholder: f.placeholder,
+        helpText: f.helpText,
+        isRequired: f.isRequired,
+        validationPattern: f.validationPattern,
+        validationMessage: f.validationMessage,
+        minLength: f.minLength,
+        maxLength: f.maxLength,
+        options: f.options,
+        conditionalRules: f.conditionalRules,
+        sortOrder: f.sortOrder,
+        columnSpan: f.columnSpan,
+        pageNumber: f.pageNumber,
+        defaultValue: f.defaultValue,
+        mapsTo: f.mapsTo,
+        config: f.config,
+      })),
       client: {
         companyName: client?.companyName || "",
         website: client?.website || "",
@@ -693,7 +751,7 @@ router.get("/public/:clientId/:formSlug", async (req: Request, res: Response) =>
   }
 });
 
-router.post("/submit/:clientId/:formSlug", async (req: Request, res: Response) => {
+router.post("/submit/:clientId/:formSlug", convertPublicCors, async (req: Request, res: Response) => {
   try {
     const clientId = parseInt(req.params.clientId);
     const formSlug = req.params.formSlug;
