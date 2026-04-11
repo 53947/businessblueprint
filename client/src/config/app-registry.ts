@@ -67,6 +67,16 @@ export interface ConnectConfig {
   description: string;
 }
 
+export interface ConvertConfig {
+  id: string;
+  name: string;
+  color: string;
+  icon: string;
+  isSlashApp: true;
+  tiers: { name: string; price: number; period: string; features: string[] }[];
+  description: string;
+}
+
 export interface HowItWorksStep {
   step: number;
   title: string;
@@ -222,6 +232,47 @@ export const CONNECT_CRM: ConnectConfig = {
     { name: "Unlimited", price: 29, contactLimit: null },
   ],
   description: "CRM — Customer Relationship Management",
+};
+
+export const CONVERT_FORM: ConvertConfig = {
+  id: "convert",
+  name: "convert",
+  color: "#8000FF",
+  icon: "ArrowRightLeft",
+  isSlashApp: true,
+  tiers: [
+    {
+      name: "Free",
+      price: 0,
+      period: "forever",
+      features: [
+        "All form types (forms, popups, opt-ins)",
+        "16 pre-built templates",
+        "10 preset color themes",
+        "CRM contact auto-creation",
+        "Email & SMS consent capture",
+        "Basic field types",
+        "businessblueprint.io/convert branding",
+      ],
+    },
+    {
+      name: "Premium",
+      price: 59,
+      period: "year",
+      features: [
+        "Everything in Free",
+        "Remove businessblueprint.io branding",
+        "Full color & font customization",
+        "Custom CSS",
+        "Advanced field types (file upload, signature, payment)",
+        "Conditional logic",
+        "A/B testing",
+        "Advanced analytics",
+        "Multi-step forms",
+      ],
+    },
+  ],
+  description: "Lead Capture and Conversion Tool",
 };
 
 export const COACH_BLUE: CoachBlueConfig = {
