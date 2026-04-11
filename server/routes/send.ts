@@ -16,6 +16,8 @@ import {
   sendListContacts,
   sendCampaignSends,
   crmContacts,
+  convertSubmissions,
+  convertForms,
 } from "@shared/schema";
 import { eq, desc, sql, and, inArray } from "drizzle-orm";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth";
@@ -982,6 +984,127 @@ export function registerSendRoutes(app: Express) {
     },
   );
 
+  /**
+   * GET /api/send/campaigns/:id/conversions
+   *
+   * Returns / convert form submissions attributed to this / promote campaign.
+   * Attribution is the submission's sourceCampaignId, populated when the
+   * recipient clicks a {{formUrl:SLUG}} link with utm_source=promote and
+   * utm_campaign=<campaignId>.
+   */
+  app.get(
+    "/api/send/campaigns/:id/conversions",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+          return res.status(400).json({ success: false, message: "Invalid campaign ID" });
+        }
+
+        // Verify campaign ownership before exposing conversions
+        const [campaign] = await db
+          .select({ id: sendCampaigns.id })
+          .from(sendCampaigns)
+          .where(and(eq(sendCampaigns.id, id), eq(sendCampaigns.clientId, clientId)))
+          .limit(1);
+        if (!campaign) {
+          return res.status(404).json({ success: false, message: "Campaign not found" });
+        }
+
+        // Aggregate submissions per form for this campaign
+        const rows = await db
+          .select({
+            formId: convertForms.id,
+            formName: convertForms.name,
+            formSlug: convertForms.slug,
+            submissionCount: sql<number>`count(${convertSubmissions.id})::int`,
+            emailConsents: sql<number>`count(case when ${convertSubmissions.emailConsent} = true then 1 end)::int`,
+            smsConsents: sql<number>`count(case when ${convertSubmissions.smsConsent} = true then 1 end)::int`,
+          })
+          .from(convertSubmissions)
+          .innerJoin(convertForms, eq(convertSubmissions.formId, convertForms.id))
+          .where(
+            and(
+              eq(convertSubmissions.sourceCampaignId, id),
+              eq(convertSubmissions.clientId, clientId),
+            ),
+          )
+          .groupBy(convertForms.id, convertForms.name, convertForms.slug);
+
+        const totalSubmissions = rows.reduce((s, r) => s + Number(r.submissionCount || 0), 0);
+        const totalEmailConsents = rows.reduce((s, r) => s + Number(r.emailConsents || 0), 0);
+        const totalSmsConsents = rows.reduce((s, r) => s + Number(r.smsConsents || 0), 0);
+
+        res.json({
+          success: true,
+          conversions: rows,
+          totalSubmissions,
+          totalEmailConsents,
+          totalSmsConsents,
+        });
+      } catch (error) {
+        console.error("Error fetching campaign conversions:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch conversions" });
+      }
+    },
+  );
+
+  /**
+   * GET /api/send/forms-sent
+   *
+   * Dashboard metric: total sends across campaigns that reference at least one
+   * {{formUrl:...}} variable in email HTML / email text / SMS body.
+   */
+  app.get(
+    "/api/send/forms-sent",
+    requireAuth,
+    async (req: AuthenticatedRequest, res) => {
+      try {
+        const clientId = req.clientId!;
+
+        const campaignsWithFormLinks = await db
+          .select({ id: sendCampaigns.id })
+          .from(sendCampaigns)
+          .where(
+            and(
+              eq(sendCampaigns.clientId, clientId),
+              sql`(
+                ${sendCampaigns.emailHtml} LIKE '%{{formUrl:%'
+                OR ${sendCampaigns.emailText} LIKE '%{{formUrl:%'
+                OR ${sendCampaigns.smsBody} LIKE '%{{formUrl:%'
+              )`,
+            ),
+          );
+
+        if (campaignsWithFormLinks.length === 0) {
+          return res.json({ success: true, formLinksSent: 0, campaignCount: 0 });
+        }
+
+        const campaignIds = campaignsWithFormLinks.map((c) => c.id);
+        const [countRow] = await db
+          .select({ sent: sql<number>`count(*)::int` })
+          .from(sendCampaignSends)
+          .where(
+            and(
+              inArray(sendCampaignSends.campaignId, campaignIds),
+              eq(sendCampaignSends.status, "sent"),
+            ),
+          );
+
+        res.json({
+          success: true,
+          formLinksSent: Number(countRow?.sent || 0),
+          campaignCount: campaignsWithFormLinks.length,
+        });
+      } catch (error) {
+        console.error("Error fetching forms-sent metric:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch metric" });
+      }
+    },
+  );
+
   // Update campaign (with client ownership validation)
   app.patch(
     "/api/send/campaigns/:id",
@@ -1386,14 +1509,30 @@ export function registerSendRoutes(app: Express) {
             inArray(sendContacts.id, recipientContacts.map((c) => c.id)),
           ));
 
-        // Template variable substitution helper
-        const substituteVars = (template: string, contact: typeof fullContacts[0]) => {
-          return template
+        // Template variable substitution helper.
+        // Phase D: resolves {{formUrl:SLUG}} to the hosted form URL with
+        // utm_source=promote / utm_medium=<sendType> / utm_campaign=<campaignId>
+        // so form submissions auto-attribute back to this campaign. The
+        // submission endpoint parses utm_campaign into convertSubmissions.sourceCampaignId.
+        const substituteVars = (
+          template: string,
+          contact: typeof fullContacts[0],
+          sendType: "email" | "sms",
+        ) => {
+          const baseUrl = process.env.BASE_URL || "https://businessblueprint.io";
+          let result = template
             .replace(/\{\{firstName\}\}/g, contact.firstName || "")
             .replace(/\{\{lastName\}\}/g, contact.lastName || "")
             .replace(/\{\{email\}\}/g, contact.email || "")
             .replace(/\{\{company\}\}/g, "")
-            .replace(/\{\{unsubscribeUrl\}\}/g, `${process.env.BASE_URL || "https://businessblueprint.io"}/unsubscribe?id=${contact.id}`);
+            .replace(/\{\{unsubscribeUrl\}\}/g, `${baseUrl}/unsubscribe?id=${contact.id}`);
+
+          // {{formUrl:slug}} → full hosted URL with campaign attribution UTM params
+          result = result.replace(/\{\{formUrl:([a-zA-Z0-9_-]+)\}\}/g, (_match, slug) => {
+            return `${baseUrl}/convert/f/${slug}?client=${clientId}&utm_source=promote&utm_medium=${sendType}&utm_campaign=${campaignId}`;
+          });
+
+          return result;
         };
 
         // Update campaign status immediately
@@ -1442,11 +1581,11 @@ export function registerSendRoutes(app: Express) {
                   }).returning();
 
                   const subject = campaign.emailSubject
-                    ? substituteVars(campaign.emailSubject, contact)
+                    ? substituteVars(campaign.emailSubject, contact, "email")
                     : campaign.name;
                   const html = campaign.emailHtml
-                    ? substituteVars(campaign.emailHtml, contact)
-                    : `<p>${substituteVars(campaign.emailText || campaign.name, contact)}</p>`;
+                    ? substituteVars(campaign.emailHtml, contact, "email")
+                    : `<p>${substituteVars(campaign.emailText || campaign.name, contact, "email")}</p>`;
 
                   await resend.emails.send({
                     from: fromEmail,
@@ -1505,7 +1644,7 @@ export function registerSendRoutes(app: Express) {
                   }).returning();
 
                   const smsText = campaign.smsBody
-                    ? substituteVars(campaign.smsBody, contact)
+                    ? substituteVars(campaign.smsBody, contact, "sms")
                     : campaign.name;
 
                   await telnyxService.sendSms({

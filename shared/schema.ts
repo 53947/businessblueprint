@@ -4366,6 +4366,12 @@ export const convertSubmissions = pgTable("convert_submissions", {
   utmCampaign: varchar("utm_campaign", { length: 100 }),
   userAgent: text("user_agent"),
 
+  // Phase D: direct FK to send_campaigns for / promote attribution.
+  // Populated on submit when utm_source=promote and utm_campaign is a numeric ID.
+  // Coexists with the string UTM columns above — string UTM tracks any source,
+  // sourceCampaignId is the / promote-specific relational link.
+  sourceCampaignId: integer("source_campaign_id"),
+
   // Double opt-in
   doubleOptinToken: varchar("double_optin_token", { length: 64 }),
   doubleOptinConfirmed: boolean("double_optin_confirmed").default(false),
