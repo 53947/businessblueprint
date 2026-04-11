@@ -4219,3 +4219,189 @@ export type AmplifySpendAlert = typeof amplifySpendAlerts.$inferSelect;
 export type InsertAmplifySpendAlert = z.infer<typeof insertAmplifySpendAlertSchema>;
 export type RedditAdComment = typeof redditAdComments.$inferSelect;
 export type InsertRedditAdComment = z.infer<typeof insertRedditAdCommentSchema>;
+
+// ═══════════════════════════════════════
+// / convert — Lead Capture and Conversion Tool
+// ═══════════════════════════════════════
+
+export const convertForms = pgTable("convert_forms", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+
+  // Form identity
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull(),
+  formType: varchar("form_type", { length: 30 }).notNull(), // form, popup, optin
+  status: varchar("status", { length: 20 }).notNull().default("draft"), // draft, published, archived
+
+  // Deployment context
+  deployTarget: varchar("deploy_target", { length: 30 }).notNull().default("website"), // website, email, sms
+
+  // Design
+  templateId: varchar("template_id", { length: 50 }),
+  brandColor: varchar("brand_color", { length: 7 }),
+  customCss: text("custom_css"),
+  showBranding: boolean("show_branding").notNull().default(true),
+  logoUrl: text("logo_url"),
+
+  // Popup settings (form_type = 'popup')
+  popupTrigger: varchar("popup_trigger", { length: 30 }), // exit_intent, scroll, time_delay, click, page_load
+  popupDelaySeconds: integer("popup_delay_seconds"),
+  popupScrollPercent: integer("popup_scroll_percent"),
+  popupPosition: varchar("popup_position", { length: 20 }), // center, bottom_right, bottom_left, top_bar, slide_left, slide_right
+  popupShowFrequency: varchar("popup_show_frequency", { length: 30 }), // once, once_per_session, every_visit
+  popupStartDate: timestamp("popup_start_date"),
+  popupEndDate: timestamp("popup_end_date"),
+
+  // Opt-in settings (form_type = 'optin')
+  optinType: varchar("optin_type", { length: 30 }), // email_only, sms_only, email_and_sms, newsletter
+  consentTextEmail: text("consent_text_email"),
+  consentTextSms: text("consent_text_sms"),
+  doubleOptin: boolean("double_optin").default(false),
+
+  // Thank you / redirect
+  thankYouType: varchar("thank_you_type", { length: 20 }).default("message"), // message, redirect, close
+  thankYouMessage: text("thank_you_message"),
+  thankYouRedirectUrl: text("thank_you_redirect_url"),
+
+  // Autoresponder
+  autoresponderEnabled: boolean("autoresponder_enabled").default(false),
+  autoresponderSubject: text("autoresponder_subject"),
+  autoresponderBody: text("autoresponder_body"),
+  autoresponderDelayMinutes: integer("autoresponder_delay_minutes").default(0),
+
+  // Notification
+  notifyEmail: varchar("notify_email", { length: 255 }),
+  notifyEnabled: boolean("notify_enabled").default(true),
+
+  // Analytics counters
+  viewCount: integer("view_count").default(0),
+  startCount: integer("start_count").default(0),
+  submissionCount: integer("submission_count").default(0),
+
+  // Campaign tracking
+  sourceCampaignId: integer("source_campaign_id"),
+  utmSource: varchar("utm_source", { length: 100 }),
+  utmMedium: varchar("utm_medium", { length: 100 }),
+  utmCampaign: varchar("utm_campaign", { length: 100 }),
+
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  publishedAt: timestamp("published_at"),
+}, (table) => [
+  unique().on(table.clientId, table.slug),
+  index("idx_convert_forms_client").on(table.clientId),
+  index("idx_convert_forms_status").on(table.status),
+]);
+
+export const convertFormFields = pgTable("convert_form_fields", {
+  id: serial("id").primaryKey(),
+  formId: integer("form_id").references(() => convertForms.id, { onDelete: "cascade" }).notNull(),
+
+  // Field definition
+  fieldType: varchar("field_type", { length: 30 }).notNull(), // text, email, phone, textarea, select, radio, checkbox, heading, paragraph, hidden
+  label: text("label").notNull(),
+  placeholder: text("placeholder"),
+  helpText: text("help_text"),
+
+  // Validation
+  isRequired: boolean("is_required").default(false),
+  validationPattern: text("validation_pattern"),
+  validationMessage: text("validation_message"),
+  minLength: integer("min_length"),
+  maxLength: integer("max_length"),
+
+  // Options (for select, radio, checkbox)
+  options: jsonb("options"), // [{value, label, selected?}]
+
+  // Conditional logic
+  conditionalRules: jsonb("conditional_rules"), // [{fieldId, operator, value, action}]
+
+  // Layout
+  sortOrder: integer("sort_order").notNull().default(0),
+  columnSpan: integer("column_span").default(2), // 1 = half, 2 = full
+  pageNumber: integer("page_number").default(1),
+
+  // Hidden field default
+  defaultValue: text("default_value"),
+
+  // CRM mapping
+  mapsTo: varchar("maps_to", { length: 50 }), // crm_first_name, crm_last_name, crm_email, crm_phone, crm_company, email_consent, sms_consent, custom
+
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_convert_fields_form").on(table.formId),
+]);
+
+export const convertSubmissions = pgTable("convert_submissions", {
+  id: serial("id").primaryKey(),
+  formId: integer("form_id").references(() => convertForms.id, { onDelete: "cascade" }).notNull(),
+  clientId: integer("client_id").references(() => clients.id).notNull(),
+
+  // Submission data
+  data: jsonb("data").notNull(), // {fieldId: value, ...}
+
+  // Contact creation
+  crmContactId: integer("crm_contact_id"),
+  sendContactId: integer("send_contact_id"),
+
+  // Consent captured
+  emailConsent: boolean("email_consent").default(false),
+  smsConsent: boolean("sms_consent").default(false),
+  consentIp: varchar("consent_ip", { length: 45 }),
+  consentTimestamp: timestamp("consent_timestamp"),
+
+  // Source tracking
+  sourceUrl: text("source_url"),
+  referrerUrl: text("referrer_url"),
+  utmSource: varchar("utm_source", { length: 100 }),
+  utmMedium: varchar("utm_medium", { length: 100 }),
+  utmCampaign: varchar("utm_campaign", { length: 100 }),
+  userAgent: text("user_agent"),
+
+  // Double opt-in
+  doubleOptinToken: varchar("double_optin_token", { length: 64 }),
+  doubleOptinConfirmed: boolean("double_optin_confirmed").default(false),
+  doubleOptinConfirmedAt: timestamp("double_optin_confirmed_at"),
+
+  // Status
+  status: varchar("status", { length: 20 }).default("new"), // new, read, contacted, converted, spam
+
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_convert_subs_form").on(table.formId),
+  index("idx_convert_subs_client").on(table.clientId),
+  index("idx_convert_subs_created").on(table.createdAt),
+]);
+
+export const convertTemplates = pgTable("convert_templates", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  category: varchar("category", { length: 50 }).notNull(), // contact, lead_capture, feedback, registration, appointment, newsletter, quote, contest, survey, custom
+  formType: varchar("form_type", { length: 30 }).notNull(), // form, popup, optin
+  deployTarget: varchar("deploy_target", { length: 30 }).notNull(), // website, email, sms
+  description: text("description"),
+  previewImageUrl: text("preview_image_url"),
+  fields: jsonb("fields").notNull(), // array of field definitions
+  design: jsonb("design").notNull(), // {brandColor, layout, thankYouMessage, etc.}
+  presetColors: jsonb("preset_colors"), // ["#8000FF", "#008060", ...]
+  isFree: boolean("is_free").default(true),
+  isActive: boolean("is_active").default(true),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertConvertFormSchema = createInsertSchema(convertForms);
+export const insertConvertFieldSchema = createInsertSchema(convertFormFields);
+export const insertConvertSubmissionSchema = createInsertSchema(convertSubmissions);
+export const insertConvertTemplateSchema = createInsertSchema(convertTemplates);
+
+export type ConvertForm = typeof convertForms.$inferSelect;
+export type InsertConvertForm = z.infer<typeof insertConvertFormSchema>;
+export type ConvertFormField = typeof convertFormFields.$inferSelect;
+export type InsertConvertFormField = z.infer<typeof insertConvertFieldSchema>;
+export type ConvertSubmission = typeof convertSubmissions.$inferSelect;
+export type InsertConvertSubmission = z.infer<typeof insertConvertSubmissionSchema>;
+export type ConvertTemplate = typeof convertTemplates.$inferSelect;
+export type InsertConvertTemplate = z.infer<typeof insertConvertTemplateSchema>;
