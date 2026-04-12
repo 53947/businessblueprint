@@ -12,6 +12,7 @@ export default function ClientSignup() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [smsConsent, setSmsConsent] = useState(false);
+  const [emailConsent, setEmailConsent] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -58,6 +59,7 @@ export default function ClientSignup() {
           password,
           phone: phone.trim() || undefined,
           smsConsent: smsConsent,
+          emailConsent: emailConsent,
         }),
       });
 
@@ -135,6 +137,21 @@ export default function ClientSignup() {
                   data-testid="input-email"
                 />
               </div>
+              <div className="flex items-start gap-2 mt-2">
+                <input
+                  type="checkbox"
+                  id="emailConsent"
+                  checked={emailConsent}
+                  onChange={(e) => setEmailConsent(e.target.checked)}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 text-[#008060] focus:ring-[#008060]"
+                  data-testid="checkbox-email-consent"
+                />
+                <label htmlFor="emailConsent" className="text-xs text-gray-600 leading-tight">
+                  I agree to receive email communications from businessblueprint.io about my account, recommendations, and platform updates. View our{" "}
+                  <a href="/privacy" className="text-[#008060] underline" target="_blank">Privacy Policy</a> and{" "}
+                  <a href="/terms" className="text-[#008060] underline" target="_blank">Terms of Service</a>.
+                </label>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -144,7 +161,7 @@ export default function ClientSignup() {
                 <Input
                   id="phone"
                   type="tel"
-                  placeholder="(555) 123-4567"
+                  placeholder="+1 (555) 000-0000"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className="pl-10"

@@ -2767,7 +2767,7 @@ function CompaniesView() {
                     <FormItem>
                       <FormLabel>Phone</FormLabel>
                       <FormControl>
-                        <Input placeholder="+1 555-0123" {...field} data-testid="input-company-phone" />
+                        <Input placeholder="+1 (555) 000-0000" {...field} data-testid="input-company-phone" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

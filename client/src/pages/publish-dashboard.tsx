@@ -1142,7 +1142,7 @@ export default function PublishDashboard() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="add-phone">Phone</Label>
-                  <Input id="add-phone" placeholder="(555) 123-4567" data-testid="input-add-phone" />
+                  <Input id="add-phone" placeholder="+1 (555) 000-0000" data-testid="input-add-phone" />
                 </div>
                 <div>
                   <Label htmlFor="add-website">Website</Label>

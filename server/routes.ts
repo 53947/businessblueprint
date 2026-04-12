@@ -2366,7 +2366,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Client Portal Registration - Email + Password
   app.post("/api/clients/register", async (req, res) => {
     try {
-      const { email, password, companyName, phone, smsConsent } = req.body;
+      const { email, password, companyName, phone, smsConsent, emailConsent } = req.body;
 
       if (!email || !password || !companyName) {
         return res.status(400).json({
@@ -2421,6 +2421,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         smsConsent: smsConsent || false,
         smsConsentDate: smsConsent ? new Date() : null,
         smsConsentIp: smsConsent ? consentIp : null,
+        emailConsent: emailConsent || false,
+        emailConsentDate: emailConsent ? new Date() : null,
+        emailConsentIp: emailConsent ? consentIp : null,
         accountStatus: "active",
       });
 
