@@ -297,6 +297,9 @@ export default function PromoteDashboard() {
           </div>
         )}
 
+        {/* Phase D: / convert form-links-sent metric */}
+        <FormLinksSentCard />
+
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList>
@@ -821,5 +824,51 @@ export default function PromoteDashboard() {
 
       <Footer />
     </div>
+  );
+}
+
+/**
+ * Phase D: shows the total number of campaign sends across any campaigns that
+ * include a {{formUrl:...}} variable in their content. Hides itself when the
+ * count is zero so the dashboard doesn't show a cold metric.
+ */
+function FormLinksSentCard() {
+  const { data } = useQuery<{ success: boolean; formLinksSent: number; campaignCount: number }>({
+    queryKey: ["/api/send/forms-sent"],
+  });
+
+  if (!data?.success || data.formLinksSent === 0) return null;
+
+  return (
+    <Card className="mb-8 border-2" style={{ borderColor: "#8000FF" }}>
+      <CardContent className="pt-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: "#8000FF" }}>
+                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+              </div>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Form Links Sent</p>
+            </div>
+            <p className="text-3xl font-bold text-gray-900 dark:text-white" data-testid="metric-form-links-sent">
+              {data.formLinksSent.toLocaleString()}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              across {data.campaignCount} campaign{data.campaignCount === 1 ? "" : "s"} with / convert form links
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            asChild
+            style={{ borderColor: "#8000FF", color: "#8000FF" }}
+          >
+            <a href="/convert/dashboard" data-testid="link-open-convert">Open / convert</a>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

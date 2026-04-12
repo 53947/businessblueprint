@@ -1002,6 +1002,16 @@ router.post("/submit/:clientId/:formSlug", convertPublicCors, async (req: Reques
       if (field.mapsTo === "sms_consent") smsConsent = Boolean(value);
     }
 
+    // Phase D: extract direct campaign ID when the form was reached via a
+    // / promote campaign (embed script injects utm_source=promote + utm_campaign=<id>)
+    const effectiveUtmSource = utmSource || form.utmSource || null;
+    const effectiveUtmCampaign = utmCampaign || form.utmCampaign || null;
+    let sourceCampaignId: number | null = null;
+    if (effectiveUtmSource === "promote" && effectiveUtmCampaign) {
+      const parsed = parseInt(String(effectiveUtmCampaign), 10);
+      if (Number.isFinite(parsed)) sourceCampaignId = parsed;
+    }
+
     // Insert submission as "completed" — non-payment flow
     const [submission] = await db.insert(convertSubmissions).values({
       formId: form.id,
@@ -1013,10 +1023,11 @@ router.post("/submit/:clientId/:formSlug", convertPublicCors, async (req: Reques
       consentTimestamp: (emailConsent || smsConsent) ? new Date() : null,
       sourceUrl: sourceUrl || null,
       referrerUrl: referrerUrl || null,
-      utmSource: utmSource || form.utmSource || null,
+      utmSource: effectiveUtmSource,
       utmMedium: utmMedium || form.utmMedium || null,
-      utmCampaign: utmCampaign || form.utmCampaign || null,
+      utmCampaign: effectiveUtmCampaign,
       userAgent: userAgent || null,
+      sourceCampaignId,
       paymentStatus: "none",
     }).returning();
 
@@ -1113,6 +1124,15 @@ router.post("/public/:clientId/:formSlug/checkout", convertPublicCors, async (re
       if (field.mapsTo === "sms_consent") smsConsent = Boolean(value);
     }
 
+    // Phase D: direct / promote campaign attribution for payment-form flows
+    const effectiveUtmSource = utmSource || form.utmSource || null;
+    const effectiveUtmCampaign = utmCampaign || form.utmCampaign || null;
+    let sourceCampaignId: number | null = null;
+    if (effectiveUtmSource === "promote" && effectiveUtmCampaign) {
+      const parsed = parseInt(String(effectiveUtmCampaign), 10);
+      if (Number.isFinite(parsed)) sourceCampaignId = parsed;
+    }
+
     // Create the submission first, in pending state. The pipeline won't run
     // until the webhook confirms payment.
     const [submission] = await db.insert(convertSubmissions).values({
@@ -1125,10 +1145,11 @@ router.post("/public/:clientId/:formSlug/checkout", convertPublicCors, async (re
       consentTimestamp: (emailConsent || smsConsent) ? new Date() : null,
       sourceUrl: sourceUrl || null,
       referrerUrl: referrerUrl || null,
-      utmSource: utmSource || form.utmSource || null,
+      utmSource: effectiveUtmSource,
       utmMedium: utmMedium || form.utmMedium || null,
-      utmCampaign: utmCampaign || form.utmCampaign || null,
+      utmCampaign: effectiveUtmCampaign,
       userAgent: userAgent || null,
+      sourceCampaignId,
       paymentStatus: "pending",
       paymentAmount: Math.round(amount),
       paymentCurrency: String(currency).toLowerCase().substring(0, 10),
