@@ -32,9 +32,19 @@ import {
   Users,
   Clock,
   Calendar,
+  ArrowRightLeft,
+  ChevronDown,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { FormPickerModal, type ConvertFormSummary } from "@/components/convert/form-picker-modal";
+import { CampaignConversions } from "@/components/promote/campaign-conversions";
 
 interface Campaign {
   id: number;
@@ -70,6 +80,66 @@ export default function PromoteCampaignEditor() {
   const [selectedListId, setSelectedListId] = useState<string>("");
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
+
+  // Form picker state — used by both the email "Insert Form" button and the
+  // SMS "Insert Form Link" button. `formPickerTarget` tells the handler which
+  // textarea to insert into.
+  const [formPickerOpen, setFormPickerOpen] = useState(false);
+  const [formPickerTarget, setFormPickerTarget] = useState<"email" | "sms">("email");
+
+  const storedClientId = typeof window !== "undefined" ? sessionStorage.getItem("clientId") : null;
+  const clientId = storedClientId ? parseInt(storedClientId) : null;
+
+  const insertIntoField = (setter: (v: string) => void, current: string, snippet: string) => {
+    setter((current ? current + "\n\n" : "") + snippet);
+  };
+
+  const openFormPickerForEmail = () => { setFormPickerTarget("email"); setFormPickerOpen(true); };
+  const openFormPickerForSms = () => { setFormPickerTarget("sms"); setFormPickerOpen(true); };
+
+  const handleFormSelect = (form: ConvertFormSummary) => {
+    const brand = form.brandColor || "#8000FF";
+    if (formPickerTarget === "email") {
+      // Email-safe CTA block: table layout, inline styles, works in every client.
+      const cta = `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 24px 0;">
+  <tr>
+    <td align="center">
+      <a href="{{formUrl:${form.slug}}}"
+         style="display: inline-block; padding: 14px 32px; background-color: ${brand}; color: #ffffff; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: 600; font-family: Arial, sans-serif;">
+        ${form.name}
+      </a>
+    </td>
+  </tr>
+</table>`;
+      insertIntoField(setEmailHtml, emailHtml, cta);
+      toast({
+        title: "Form CTA inserted",
+        description: "Edit the button text in the HTML if you want something other than the form name.",
+      });
+    } else {
+      insertIntoField(setSmsBody, smsBody, `{{formUrl:${form.slug}}}`);
+      toast({
+        title: "Form link inserted",
+        description: "At send time this resolves to the full hosted URL with campaign tracking.",
+      });
+    }
+  };
+
+  const insertVariable = (target: "email" | "sms", variable: string) => {
+    if (target === "email") {
+      setEmailHtml(emailHtml + (emailHtml.endsWith(" ") || emailHtml === "" ? "" : " ") + variable);
+    } else {
+      setSmsBody(smsBody + (smsBody.endsWith(" ") || smsBody === "" ? "" : " ") + variable);
+    }
+  };
+
+  const TEMPLATE_VARIABLES = [
+    { key: "{{firstName}}", label: "First name" },
+    { key: "{{lastName}}", label: "Last name" },
+    { key: "{{email}}", label: "Email" },
+    { key: "{{company}}", label: "Company" },
+    { key: "{{unsubscribeUrl}}", label: "Unsubscribe URL" },
+  ];
 
   // Check campaign type from URL params (for new campaigns)
   useEffect(() => {
@@ -313,6 +383,38 @@ export default function PromoteCampaignEditor() {
                 )}
               </div>
 
+              {/* Phase D toolbar — Insert Form (opens / convert form picker) + Insert Variable dropdown */}
+              {!showPreview && (
+                <div className="flex flex-wrap gap-2 mb-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={openFormPickerForEmail}
+                    className="h-8 text-xs"
+                    style={{ borderColor: "#8000FF", color: "#8000FF" }}
+                    data-testid="email-insert-form"
+                  >
+                    <ArrowRightLeft className="w-3 h-3 mr-1" /> Insert Form
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button type="button" variant="outline" size="sm" className="h-8 text-xs" data-testid="email-insert-variable">
+                        Insert Variable <ChevronDown className="w-3 h-3 ml-1" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      {TEMPLATE_VARIABLES.map((v) => (
+                        <DropdownMenuItem key={v.key} onClick={() => insertVariable("email", v.key)}>
+                          <span className="font-mono text-xs mr-2">{v.key}</span>
+                          <span className="text-xs text-gray-500">{v.label}</span>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              )}
+
               {showPreview ? (
                 <div className="border rounded-lg p-4 bg-white dark:bg-gray-800 min-h-[300px]">
                   {emailHtml ? (
@@ -369,6 +471,36 @@ export default function PromoteCampaignEditor() {
               <CardDescription>Compose your SMS message (160 char limit per segment)</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Phase D toolbar — Insert Form Link + Insert Variable */}
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={openFormPickerForSms}
+                  className="h-8 text-xs"
+                  style={{ borderColor: "#8000FF", color: "#8000FF" }}
+                  data-testid="sms-insert-form"
+                >
+                  <ArrowRightLeft className="w-3 h-3 mr-1" /> Insert Form Link
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button type="button" variant="outline" size="sm" className="h-8 text-xs" data-testid="sms-insert-variable">
+                      Insert Variable <ChevronDown className="w-3 h-3 ml-1" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {TEMPLATE_VARIABLES.map((v) => (
+                      <DropdownMenuItem key={v.key} onClick={() => insertVariable("sms", v.key)}>
+                        <span className="font-mono text-xs mr-2">{v.key}</span>
+                        <span className="text-xs text-gray-500">{v.label}</span>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
               <div className="space-y-2">
                 <Textarea
                   placeholder="Hi {{firstName}}, your SMS message here..."
@@ -398,14 +530,14 @@ export default function PromoteCampaignEditor() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {["{{firstName}}", "{{lastName}}", "{{email}}", "{{company}}", "{{unsubscribeUrl}}"].map((variable) => (
+              {["{{firstName}}", "{{lastName}}", "{{email}}", "{{company}}", "{{unsubscribeUrl}}", "{{formUrl:slug}}"].map((variable) => (
                 <Badge key={variable} variant="secondary" className="font-mono text-xs">
                   {variable}
                 </Badge>
               ))}
             </div>
             <p className="text-xs text-gray-500 mt-2">
-              Use these variables in your content and they'll be replaced with contact data
+              Contact variables ({`{{firstName}}`} etc.) are replaced with each recipient's data. <code>{`{{formUrl:slug}}`}</code> resolves to a / convert form URL with campaign tracking — use the Insert Form buttons above to pick a form.
             </p>
           </CardContent>
         </Card>
@@ -572,7 +704,24 @@ export default function PromoteCampaignEditor() {
         </div>
       </div>
 
+      {/* Phase D: form conversion analytics — only shown once the campaign exists (edit mode) */}
+      {isEditMode && campaignId && (
+        <div className="max-w-5xl mx-auto px-4 pb-6">
+          <CampaignConversions campaignId={campaignId} />
+        </div>
+      )}
+
       <Footer />
+
+      {/* Phase D: / convert form picker modal — shared by the email and SMS Insert Form buttons */}
+      {clientId && (
+        <FormPickerModal
+          open={formPickerOpen}
+          onClose={() => setFormPickerOpen(false)}
+          onSelect={handleFormSelect}
+          clientId={clientId}
+        />
+      )}
     </div>
   );
 }
