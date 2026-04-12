@@ -10,7 +10,7 @@
 
 import express, { Router, Request, Response, NextFunction } from "express";
 import { randomBytes, createHmac, timingSafeEqual } from "crypto";
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, sql, inArray } from "drizzle-orm";
 import { db } from "../db";
 import {
   convertForms,
@@ -1207,6 +1207,336 @@ router.get("/:clientId/forms/:formId/analytics", requireAuth, requireClientMatch
   }
 });
 
+// ─── Phase E: A/B TESTS ───
+
+/**
+ * POST /api/convert/:clientId/ab-tests
+ * Body: { originalFormId, name?, trafficSplit? }
+ *
+ * Creates an A/B test by duplicating the original form as Variant B. Both the
+ * original and the duplicate get abTestId set so the embed script can find
+ * them. Returns the test with both form IDs so the UI can open the variant in
+ * the builder.
+ *
+ * Premium-gated: free-tier clients get 403.
+ */
+router.post("/:clientId/ab-tests", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const premium = await isConvertPremium(clientId);
+    if (!premium) {
+      return res.status(403).json({
+        error: "A/B testing requires / convert Premium ($59/year)",
+        feature: "ab_testing",
+        upgradeUrl: "/convert",
+      });
+    }
+
+    const { originalFormId, name } = req.body || {};
+    if (!Number.isFinite(originalFormId)) {
+      return res.status(400).json({ error: "originalFormId is required" });
+    }
+
+    const [original] = await db.select().from(convertForms)
+      .where(and(eq(convertForms.id, originalFormId), eq(convertForms.clientId, clientId)))
+      .limit(1);
+    if (!original) return res.status(404).json({ error: "Original form not found" });
+    if (original.status !== "published") {
+      return res.status(400).json({ error: "Original form must be published before creating an A/B test" });
+    }
+
+    // Duplicate the form row for Variant B
+    const variantSlug = generateSlug(`${original.name}-variant-b`);
+    const [variant] = await db.insert(convertForms).values({
+      clientId,
+      name: `${original.name} — Variant B`,
+      slug: variantSlug,
+      formType: original.formType,
+      deployTarget: original.deployTarget || "website",
+      status: "draft",
+      templateId: original.templateId,
+      brandColor: original.brandColor,
+      showBranding: original.showBranding,
+      logoUrl: original.logoUrl,
+      popupTrigger: original.popupTrigger,
+      popupDelaySeconds: original.popupDelaySeconds,
+      popupScrollPercent: original.popupScrollPercent,
+      popupPosition: original.popupPosition,
+      popupShowFrequency: original.popupShowFrequency,
+      optinType: original.optinType,
+      consentTextEmail: original.consentTextEmail,
+      consentTextSms: original.consentTextSms,
+      thankYouType: original.thankYouType,
+      thankYouMessage: original.thankYouMessage,
+      thankYouRedirectUrl: original.thankYouRedirectUrl,
+      notifyEmail: original.notifyEmail,
+      notifyEnabled: original.notifyEnabled,
+      design: original.design,
+      settings: original.settings,
+    }).returning();
+
+    // Duplicate all the original's fields into the variant
+    const originalFields = await db.select().from(convertFormFields)
+      .where(eq(convertFormFields.formId, original.id));
+    for (const f of originalFields) {
+      await db.insert(convertFormFields).values({
+        formId: variant.id,
+        fieldType: f.fieldType,
+        label: f.label,
+        placeholder: f.placeholder,
+        helpText: f.helpText,
+        isRequired: f.isRequired,
+        validationPattern: f.validationPattern,
+        validationMessage: f.validationMessage,
+        minLength: f.minLength,
+        maxLength: f.maxLength,
+        options: f.options,
+        conditionalRules: f.conditionalRules,
+        sortOrder: f.sortOrder,
+        columnSpan: f.columnSpan,
+        pageNumber: f.pageNumber,
+        defaultValue: f.defaultValue,
+        mapsTo: f.mapsTo,
+        config: f.config,
+      });
+    }
+
+    // Create the A/B test row with a 50/50 traffic split
+    const [test] = await db.insert(convertAbTests).values({
+      clientId,
+      name: name || `Test: ${original.name}`,
+      status: "draft",
+      originalFormId: original.id,
+      trafficSplit: [
+        { formId: original.id, percentage: 50 },
+        { formId: variant.id, percentage: 50 },
+      ],
+      winnerMetric: "conversion_rate",
+    }).returning();
+
+    // Link both forms back to the test
+    await db.update(convertForms).set({ abTestId: test.id }).where(eq(convertForms.id, original.id));
+    await db.update(convertForms).set({ abTestId: test.id }).where(eq(convertForms.id, variant.id));
+
+    res.json({
+      success: true,
+      test,
+      originalFormId: original.id,
+      variantFormId: variant.id,
+      variantSlug: variant.slug,
+    });
+  } catch (error: any) {
+    console.error("[Convert] AB test create error:", error);
+    res.status(500).json({ error: "Failed to create A/B test" });
+  }
+});
+
+router.get("/:clientId/ab-tests", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const tests = await db.select().from(convertAbTests)
+      .where(eq(convertAbTests.clientId, clientId))
+      .orderBy(desc(convertAbTests.createdAt));
+    res.json({ success: true, tests });
+  } catch (error: any) {
+    console.error("[Convert] AB test list error:", error);
+    res.status(500).json({ error: "Failed to list A/B tests" });
+  }
+});
+
+/**
+ * GET /api/convert/:clientId/ab-tests/:testId
+ * Returns the test + per-variant live stats (views, starts, submissions,
+ * conversion rate) + a simple confidence indicator when both variants have at
+ * least minSampleSize views.
+ */
+router.get("/:clientId/ab-tests/:testId", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const testId = parseInt(req.params.testId);
+
+    const [test] = await db.select().from(convertAbTests)
+      .where(and(eq(convertAbTests.id, testId), eq(convertAbTests.clientId, clientId)))
+      .limit(1);
+    if (!test) return res.status(404).json({ error: "A/B test not found" });
+
+    const split = (test.trafficSplit as Array<{ formId: number; percentage: number }>) || [];
+    const variantIds = split.map((s) => s.formId);
+
+    const variantForms = variantIds.length > 0
+      ? await db.select().from(convertForms).where(inArray(convertForms.id, variantIds))
+      : [];
+
+    const variants = variantForms.map((f) => {
+      const views = f.viewCount || 0;
+      const starts = f.startCount || 0;
+      const submissions = f.submissionCount || 0;
+      const conversionRate = views > 0 ? Number(((submissions / views) * 100).toFixed(1)) : 0;
+      return {
+        formId: f.id,
+        name: f.name,
+        slug: f.slug,
+        isOriginal: f.id === test.originalFormId,
+        views,
+        starts,
+        submissions,
+        conversionRate,
+        percentage: split.find((s) => s.formId === f.id)?.percentage ?? 0,
+      };
+    });
+
+    // Winner confidence (simple two-proportion z-test approximation)
+    // Only returned when both variants have >= minSampleSize views
+    let confidence: { leader: number | null; confidencePercent: number; ready: boolean } = {
+      leader: null,
+      confidencePercent: 0,
+      ready: false,
+    };
+    const minSample = test.minSampleSize || 100;
+    if (variants.length === 2 && variants[0].views >= minSample && variants[1].views >= minSample) {
+      const a = variants[0];
+      const b = variants[1];
+      const pA = a.submissions / a.views;
+      const pB = b.submissions / b.views;
+      const pPooled = (a.submissions + b.submissions) / (a.views + b.views);
+      const se = Math.sqrt(pPooled * (1 - pPooled) * (1 / a.views + 1 / b.views));
+      const z = se > 0 ? Math.abs(pA - pB) / se : 0;
+      // Normal CDF approximation (Abramowitz & Stegun 7.1.26)
+      const p = 0.3275911;
+      const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429;
+      const sign = z < 0 ? -1 : 1;
+      const zAbs = Math.abs(z) / Math.sqrt(2);
+      const t = 1 / (1 + p * zAbs);
+      const erf = sign * (1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-zAbs * zAbs));
+      const confidencePercent = Number((erf * 100).toFixed(1));
+      confidence = {
+        leader: pA > pB ? a.formId : b.formId,
+        confidencePercent: Math.max(0, confidencePercent),
+        ready: confidencePercent >= 95,
+      };
+    }
+
+    res.json({ success: true, test, variants, confidence });
+  } catch (error: any) {
+    console.error("[Convert] AB test detail error:", error);
+    res.status(500).json({ error: "Failed to get A/B test details" });
+  }
+});
+
+router.patch("/:clientId/ab-tests/:testId/start", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const testId = parseInt(req.params.testId);
+    const [test] = await db.select().from(convertAbTests)
+      .where(and(eq(convertAbTests.id, testId), eq(convertAbTests.clientId, clientId)))
+      .limit(1);
+    if (!test) return res.status(404).json({ error: "Test not found" });
+
+    // Publish the variant if it's still a draft (the user has presumably
+    // finished editing it by now)
+    const split = (test.trafficSplit as Array<{ formId: number; percentage: number }>) || [];
+    for (const v of split) {
+      await db.update(convertForms)
+        .set({ status: "published", publishedAt: new Date() })
+        .where(eq(convertForms.id, v.formId));
+    }
+
+    const [updated] = await db.update(convertAbTests)
+      .set({ status: "running", startedAt: new Date(), updatedAt: new Date() })
+      .where(eq(convertAbTests.id, testId))
+      .returning();
+    res.json({ success: true, test: updated });
+  } catch (error: any) {
+    console.error("[Convert] AB test start error:", error);
+    res.status(500).json({ error: "Failed to start test" });
+  }
+});
+
+router.patch("/:clientId/ab-tests/:testId/stop", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const testId = parseInt(req.params.testId);
+    const [updated] = await db.update(convertAbTests)
+      .set({ status: "completed", endedAt: new Date(), updatedAt: new Date() })
+      .where(and(eq(convertAbTests.id, testId), eq(convertAbTests.clientId, clientId)))
+      .returning();
+    if (!updated) return res.status(404).json({ error: "Test not found" });
+    res.json({ success: true, test: updated });
+  } catch (error: any) {
+    console.error("[Convert] AB test stop error:", error);
+    res.status(500).json({ error: "Failed to stop test" });
+  }
+});
+
+router.patch("/:clientId/ab-tests/:testId/winner", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const testId = parseInt(req.params.testId);
+    const { formId } = req.body || {};
+    if (!Number.isFinite(formId)) return res.status(400).json({ error: "formId is required" });
+
+    const [test] = await db.select().from(convertAbTests)
+      .where(and(eq(convertAbTests.id, testId), eq(convertAbTests.clientId, clientId)))
+      .limit(1);
+    if (!test) return res.status(404).json({ error: "Test not found" });
+
+    const split = (test.trafficSplit as Array<{ formId: number; percentage: number }>) || [];
+    if (!split.some((v) => v.formId === formId)) {
+      return res.status(400).json({ error: "formId is not a variant of this test" });
+    }
+
+    // Archive losing variants
+    for (const v of split) {
+      if (v.formId !== formId) {
+        await db.update(convertForms)
+          .set({ status: "archived", updatedAt: new Date() })
+          .where(eq(convertForms.id, v.formId));
+      }
+    }
+
+    const [updated] = await db.update(convertAbTests)
+      .set({
+        status: "completed",
+        winnerFormId: formId,
+        winnerDeclaredAt: new Date(),
+        endedAt: test.endedAt || new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(convertAbTests.id, testId))
+      .returning();
+    res.json({ success: true, test: updated });
+  } catch (error: any) {
+    console.error("[Convert] AB test winner error:", error);
+    res.status(500).json({ error: "Failed to declare winner" });
+  }
+});
+
+router.delete("/:clientId/ab-tests/:testId", requireAuth, requireClientMatch, async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const clientId = parseInt(req.params.clientId);
+    const testId = parseInt(req.params.testId);
+    const [test] = await db.select().from(convertAbTests)
+      .where(and(eq(convertAbTests.id, testId), eq(convertAbTests.clientId, clientId)))
+      .limit(1);
+    if (!test) return res.status(404).json({ error: "Test not found" });
+
+    // Unlink forms from this test
+    const split = (test.trafficSplit as Array<{ formId: number; percentage: number }>) || [];
+    for (const v of split) {
+      await db.update(convertForms)
+        .set({ abTestId: null, updatedAt: new Date() })
+        .where(eq(convertForms.id, v.formId));
+    }
+
+    await db.delete(convertAbTests).where(eq(convertAbTests.id, testId));
+    res.json({ success: true, message: "A/B test deleted" });
+  } catch (error: any) {
+    console.error("[Convert] AB test delete error:", error);
+    res.status(500).json({ error: "Failed to delete A/B test" });
+  }
+});
+
+
 // ─── PUBLIC ENDPOINTS (no auth) ───
 
 // Preflight for public endpoints
@@ -1279,6 +1609,32 @@ router.get("/public/:clientId/:formSlug", convertPublicCors, async (req: Request
     const premium = await isConvertPremium(clientId);
     const enforcedShowBranding = premium ? form.showBranding : true;
 
+    // Phase E: if this form is part of a running A/B test, return the test's
+    // traffic-split configuration + the slug of each variant so the embed
+    // script can assign the visitor client-side and re-fetch the assigned form.
+    let abTestInfo: { testId: number; variants: Array<{ formId: number; percentage: number; slug: string | null }> } | null = null;
+    if (form.abTestId) {
+      const [runningTest] = await db.select().from(convertAbTests)
+        .where(and(eq(convertAbTests.id, form.abTestId), eq(convertAbTests.status, "running")))
+        .limit(1);
+      if (runningTest) {
+        const split = (runningTest.trafficSplit as Array<{ formId: number; percentage: number }>) || [];
+        const variantFormRows = split.length > 0
+          ? await db.select({ id: convertForms.id, slug: convertForms.slug }).from(convertForms)
+              .where(inArray(convertForms.id, split.map((v) => v.formId)))
+          : [];
+        const slugByFormId = new Map(variantFormRows.map((r) => [r.id, r.slug]));
+        abTestInfo = {
+          testId: runningTest.id,
+          variants: split.map((v) => ({
+            formId: v.formId,
+            percentage: v.percentage,
+            slug: slugByFormId.get(v.formId) || null,
+          })),
+        };
+      }
+    }
+
     const [client] = await db.select({
       companyName: clients.companyName,
       website: clients.website,
@@ -1310,6 +1666,8 @@ router.get("/public/:clientId/:formSlug", convertPublicCors, async (req: Request
         design: form.design,
         settings: form.settings,
       },
+      // Phase E: A/B test info (null when not part of a running test)
+      abTest: abTestInfo,
       fields: fields.map((f) => ({
         id: f.id,
         fieldType: f.fieldType,
