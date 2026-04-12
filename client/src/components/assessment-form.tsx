@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BusinessClassificationSelect } from "@/components/business-classification-select";
 import { useToast } from "@/hooks/use-toast";
 import { insertAssessmentSchema, type InsertAssessment } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
@@ -899,28 +900,51 @@ export function AssessmentForm() {
                       )}
                     </div>
                     <div className="md:pl-6">
-                      <Label htmlFor="industry">Industry *</Label>
+                      <Label htmlFor="industry">Business Classification *</Label>
+                      <BusinessClassificationSelect
+                        value={form.watch("industry") || ""}
+                        onChange={(value) => form.setValue("industry", value, { shouldValidate: true })}
+                        error={form.formState.errors.industry?.message}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Customer context questions — always visible */}
+                  <div className="grid md:grid-cols-2 gap-6 mt-6">
+                    <div>
+                      <Label>How do customers typically reach you?</Label>
                       <Select
-                        value={form.watch("industry")}
-                        onValueChange={(value) => form.setValue("industry", value, { shouldValidate: true })}
+                        value={(form.watch as any)("customerFlow") || ""}
+                        onValueChange={(value) => form.setValue("customerFlow" as any, value)}
                       >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select your industry" />
+                        <SelectTrigger className="mt-1">
+                          <SelectValue placeholder="Select one" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="restaurant">Restaurant/Food Service</SelectItem>
-                          <SelectItem value="retail">Retail</SelectItem>
-                          <SelectItem value="healthcare">Healthcare</SelectItem>
-                          <SelectItem value="professional">Professional Services</SelectItem>
-                          <SelectItem value="home-services">Home Services</SelectItem>
-                          <SelectItem value="automotive">Automotive</SelectItem>
-                          <SelectItem value="beauty">Beauty/Wellness</SelectItem>
+                          <SelectItem value="in_person">Customers come to my location</SelectItem>
+                          <SelectItem value="go_to_customers">I go to my customers</SelectItem>
+                          <SelectItem value="online">Everything is online</SelectItem>
+                          <SelectItem value="mixed">Mix of in-person and online</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label>How do most customers find you?</Label>
+                      <Select
+                        value={(form.watch as any)("customerDiscovery") || ""}
+                        onValueChange={(value) => form.setValue("customerDiscovery" as any, value)}
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue placeholder="Select one" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="word_of_mouth">Word of mouth / Referrals</SelectItem>
+                          <SelectItem value="online_search">Online search (Google, Bing)</SelectItem>
+                          <SelectItem value="social_media">Social media</SelectItem>
+                          <SelectItem value="advertising">Paid advertising</SelectItem>
                           <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                       </Select>
-                      {form.formState.errors.industry && (
-                        <p className="text-sm text-red-600 mt-1">{form.formState.errors.industry.message}</p>
-                      )}
                     </div>
                   </div>
                 </div>
