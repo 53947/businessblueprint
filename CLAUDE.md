@@ -1,5 +1,5 @@
 # CLAUDE.md — businessblueprint.io
-# Last updated: April 11, 2026
+# Last updated: April 12, 2026
 
 ---
 
@@ -45,13 +45,14 @@ Scan a business's online presence → diagnose what's broken → prescribe targe
 
 **Standalone**
 / connect CRM — FREE Starter (100 contacts) or $29/mo Performance. Never bundled.
+/ convert — Lead Capture and Conversion Tool. FREE (with branding) or $59/year Premium (removes branding, advanced fields, conditional logic, multi-step, A/B testing, custom design). Never bundled.
 Coach Blue — $99/mo standalone, $59/mo with one suite, FREE with both suites.
 
 **Diagnostic Apps**
 / scan (#E00420), / assess (#960D71)
 
-### Setup Cadence (fixed order — 9 steps)
-1. / connect → 2. / publish → 3. / elevate → 4. / optimize → 5. / respond → 6. / engage → 7. / post → 8. / promote → 9. / amplify
+### Setup Cadence (fixed order — 10 steps)
+1. / connect + / convert → 2. / publish → 3. / elevate → 4. / optimize → 5. / respond → 6. / engage → 7. / post → 8. / promote → 9. / amplify
 
 ### Digital IQ Scoring
 Digital IQ = Scan Score (0-70) + Operational Score (0-70) = 0-140
@@ -77,27 +78,42 @@ Shared utility: `shared/score-utils.ts` with `getDisplayScore()`, `getScoreLabel
 - / engage — Live Chat Widget Tool
 - / post — Create, Schedule and Post Social Media Tool
 - / connect — CRM — Customer Relationship Management
+- / convert — Lead Capture and Conversion Tool
 - Coach Blue — AI Business Coach
 - Anchor Suite — Local Solution. Get Found, Stay Credible.
 - Compass Suite — Complete Communications Engine.
 
 ### Key Files
-- `client/src/config/app-registry.ts` — SINGLE SOURCE OF TRUTH for app names, colors, pricing
-- `shared/schema.ts` — database schema
+- `client/src/config/app-registry.ts` — SINGLE SOURCE OF TRUTH for app names, colors, pricing (includes CONVERT_FORM)
+- `shared/schema.ts` — database schema (~4,500 lines, 60+ tables including convert_forms/fields/submissions/templates/analytics_daily/ab_tests)
 - `shared/score-utils.ts` — Digital IQ display score, labels, colors (70-140 scale)
+- `shared/google-business-categories.ts` — 517 Google Business Profile categories for assessment autocomplete
 - `shared/knowledge-base/` — KB TypeScript files for Directions for Use + Coach Blue
-- `client/src/components/side-nav.tsx` — sidebar navigation (3 zones: Tools / Guide / Admin)
-- `server/services/assessment-ai.ts` — AssessmentAIService (DeepSeek narratives + recommendations)
+- `client/src/components/side-nav.tsx` — sidebar navigation (3 zones: Tools / Guide / Admin). / connect + / convert are first two items.
+- `server/services/assessment-ai.ts` — AssessmentAIService (DeepSeek narratives + recommendations, tone rules for personality-driven output)
 - `server/services/timeline-logger.ts` — cross-app activity logging to / connect contact records
+- `server/services/resend-email.ts` — all email templates (Coach Blue approved design: orange borders, transparent outline buttons, Archivo font, anti-dark-mode meta)
+- `server/services/presenceScanner.ts` — presence scanner with expanded chat detection (40+ patterns + DOM-based)
 - `server/services/dataforseo.ts` — DataForSEO centralized service (SERP, keywords, DA — NOT backlinks)
 - `server/services/moz-backlinks.ts` — Moz Links API for all backlink data ($5/mo vs DataForSEO $100/mo)
-- `server/routes.ts` — main routes
+- `server/routes.ts` — main routes (~3,000 lines)
+- `server/routes/convert.ts` — / convert routes (~1,800 lines: forms CRUD, builder GET/PUT, public endpoints with CORS, submission pipeline with extracted helper, SwipesBlue checkout + webhook, analytics, A/B tests, premium enforcement)
+- `server/routes/send.ts` — / promote routes (~1,700 lines: campaign CRUD, send dispatch, substituteVars with {{formUrl:SLUG}} resolution, conversions endpoint, forms-sent metric)
+- `server/routes/crm.ts` — CRM routes (~81KB). Contact delete cleans up 7 FK-linked tables before deleting.
 - `server/routes/optimize.ts` — / optimize SEO tool routes
-- `railway.json` — Railway build + deploy config
+- `client/public/convert/embed.js` — vanilla JS embed script (1,200+ lines: inline/popup/slide-in, 20 field types, multi-step, conditional logic, A/B traffic splitting, start tracking, payment checkout)
+- `railway.json` — Railway build + deploy config. Build command: `rm -rf dist && npm run build && npm run db:push` (db:push runs on every deploy so schema stays in sync automatically)
 - `vite.config.ts` — uses `process.cwd()` (NOT `import.meta.dirname` — breaks in esbuild bundle)
 
+### / convert Architecture (Phases A-E shipped 2026-04-11/12)
+- **Phase A:** 4 DB tables (convert_forms, convert_form_fields, convert_submissions, convert_templates), 16 seeded templates, CRUD routes, 6-step submission pipeline (insert → CRM upsert → sendContacts → timeline → autoresponder → notification), landing page, dashboard (5 tabs), hosted form page, side-nav + app-registry entry
+- **Phase B:** Visual form builder at /convert/builder/:formId with 3-panel layout (field palette → canvas → properties/design panel), HTML5 drag-and-drop, 20 field types, multi-step, template-based creation, 30s auto-save, 10 preset color themes
+- **Phase C:** Vanilla JS embed script at /convert/embed.js (inline/popup/slide-in modes, 5 popup triggers, localStorage show frequency, conditional logic runtime, signature canvas, star rating widget, global window.bbConvert API), CORS on public endpoints, SwipesBlue payment checkout + webhook with HMAC verification, dashboard embed-code panel with copy buttons + iframe preview
+- **Phase D:** / promote integration — {{formUrl:SLUG}} template variable in substituteVars (resolves to hosted URL with utm_source=promote + campaign attribution), form picker modal in campaign editor (Insert Form + Insert Form Link buttons), sourceCampaignId on convert_submissions, campaign conversions endpoint + UI panel, Form Links Sent dashboard metric
+- **Phase E:** Daily analytics tracking table (convert_analytics_daily), /start endpoint for funnel middle tracking, per-form analytics endpoint with timeline + source breakdown + step drop-off, A/B testing (7 endpoints: create/list/get/start/stop/winner/delete with form duplication + z-test confidence), premium tier enforcement (isConvertPremium helper gates 10+ features server-side with 403), branding enforcement in public endpoint, PremiumUpgradeModal, Analytics dashboard tab with Recharts timeline + funnel + per-form breakdown, AbTestPanel with 4 states
+
 ### Sidebar Structure (3 Zones)
-1. **Your Tools** — / connect + Anchor Suite apps + Compass Suite apps
+1. **Your Tools** — / connect + / convert + Anchor Suite apps + Compass Suite apps
 2. **Your Guide** — Coach Blue + Digital IQ + Directions for Use
 3. **Admin** — Settings (Billing inside Settings as sub-section)
 
@@ -108,22 +124,25 @@ Non-subscribers see Coach Blue tab grayed out.
 ### Deployment & Git Workflow
 - **All code changes go to `staging` branch. NEVER push directly to `main`.**
 - Railway production deploys from `main`. Railway staging deploys from `staging`.
-- Dean tests on staging URL, then uses Railway's Sync feature (pull from staging into production) to go live.
-- Railway sync is a PULL: go to the receiving environment, click Sync, choose source. When syncing to production, exclude `DATABASE_URL` from the changeset.
+- After every PR merge (staging → main), sync main back into staging: `git pull origin main && git push origin staging` — prevents drift.
+- `npm run db:push` runs automatically on every Railway deploy (added to `railway.json` build command 2026-04-11). Schema changes are applied to whichever Neon branch the environment's DATABASE_URL points to.
 - Production and staging each have their own Neon database branch. Never cross them.
-- `dist/` is gitignored — Railway builds fresh every deploy via `rm -rf dist && npm run build`.
+- `dist/` is gitignored and untracked — Railway builds fresh every deploy via `rm -rf dist && npm run build && npm run db:push`.
 - `import.meta.dirname` is FORBIDDEN in any server-bundled file — use `process.cwd()` instead. esbuild ESM bundles break with it.
 - No `Procfile` or `railway.toml` — `railway.json` is the only deploy config.
+- The "MCP Server Claude" Railway service was deleted (2026-04-12). Only `businessblueprint` service remains.
 
 ### Payment Rules
 ALL payment processing through swipesblue.com. Zero Stripe references in any customer-facing code. All `STRIPE_` env vars have been deleted. `schema.ts` `paymentProvider` default is `"swipesblue"`. SwipesBlue env vars (API_KEY, API_URL, MERCHANT_ID, WEBHOOK_SECRET) are configured. SwipesBlue `POST /api/v1/checkout/sessions` endpoint exists with redirect + embedded modes.
+
+/ convert payment fields use the platform-wide SwipesBlue env vars (not per-client credentials). The `/api/convert/public/:clientId/:formSlug/checkout` endpoint creates a pending submission + SwipesBlue session. The `/api/convert/webhook/swipesblue` endpoint verifies HMAC-SHA256 signature and runs the submission pipeline on checkout.session.completed.
 
 ### Email / SMTP Env Vars (CRITICAL — split by purpose)
 There is **NO `RESEND_API_KEY` env var.** Two separate Resend API keys are configured on Railway:
 
 - **`ONBOARDING_RESEND_API_KEY`** — system / onboarding emails. Used by:
   - `server/services/assessment-emails.ts` (assessment confirmations, admin notifications)
-  - `server/services/resend-email.ts` (magic link, generic system mail)
+  - `server/services/resend-email.ts` (magic link, generic system mail, sendRawEmail for / convert autoresponders + notifications)
   - `server/services/setup-triggers.ts` (Directions for Use trigger emails)
   - `server/services/stall-detector.ts` (re-engagement nudges)
   - `server/routes/optimize.ts` (monthly SEO report email)
@@ -139,14 +158,40 @@ If you add a new system email path, use `ONBOARDING_RESEND_API_KEY`. If you add 
 - `RESEND_BUSINESSBLUEPRINT_SMTP_API_KEY`
 Never reference `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS`/`EMAIL_USER`/`EMAIL_PASS` — those env vars do not exist on Railway.
 
-### TCPA / SMS Consent (do not bypass)
-SMS phone numbers stored in `clients`, `assessments`, or `sendContacts` MUST have explicit consent.
+### Email Template Design Standard
+ALL email templates match the Coach Blue approved design:
+- Container: `#EEFBFF` background, `.email-outline` border: `2px solid #F97316` (orange)
+- Header/footer: `#f2f4f6` background with blue architect grid lines at 8% opacity, `border: 4px solid #F97316`
+- Buttons: `background: transparent; color: #F97316; border: 2px solid #F97316;` — NEVER solid fill. Secondary buttons use `#0000FF` border.
+- Font: Archivo Semi Expanded. Text color: `#09080E`.
+- Anti-dark-mode meta tags in every email `<head>`: `<meta name="color-scheme" content="light only">`
+- Copyright: `© 2026 businessblueprint.io`
+- No purple gradients. No Segoe UI. No solid green/blue/orange fill buttons.
+
+### Consent (TCPA + CAN-SPAM)
+**SMS consent** — phone numbers stored in `clients`, `assessments`, or `sendContacts` MUST have explicit consent.
 - `clients` table: `smsConsent`, `smsConsentDate`, `smsConsentIp`
-- `assessments` table: `smsConsent` (consent IP/date are stored on the linked client)
-- `sendContacts` table: existing `smsConsent`/`smsConsentDate`/`smsConsentIp`/`smsConsentMethod` fields
-- UI rule: consent checkbox appears next to phone field on assessment form (always), client signup (only when phone is non-empty), and client portal profile edit (only when phone is being CHANGED)
-- Server rule: `POST /api/clients/register`, `PATCH /api/portal/profile`, and `POST /api/assessments` all reject phone updates without consent and store `smsConsentIp` from `x-forwarded-for` / `req.ip`
-- CRM → / promote auto-sync (`POST /api/send/:clientId/sync-crm`) sets `smsConsent: false` and `smsStatus: "unsubscribed"` — never auto-grants SMS consent. Email consent IS inferred from CRM (the contact gave it to the business).
+- `assessments` table: `smsConsent`
+- `sendContacts` table: `smsConsent`/`smsConsentDate`/`smsConsentIp`/`smsConsentMethod`
+- UI: consent checkbox next to phone field on assessment form (always), client signup (only when phone is non-empty), client portal profile edit (only when phone is CHANGED)
+- Server: register/profile/assessment endpoints reject phone without consent, store consent IP from `x-forwarded-for`/`req.ip`
+- CRM → / promote auto-sync sets `smsConsent: false` — never auto-grants SMS consent
+
+**Email consent** — added 2026-04-12:
+- `clients` table: `emailConsent`, `emailConsentDate`, `emailConsentIp`
+- UI: always-visible checkbox below email field on client signup page
+- Server: register endpoint stores emailConsent + date + IP
+
+**/ convert form consent** — handled per-submission via field mappings (`email_consent`, `sms_consent` mapsTo values). Consent metadata (IP, timestamp, method="convert_form") stored on both `convertSubmissions` and `sendContacts` rows.
+
+### Assessment Form — Business Classification
+The industry field uses a **searchable autocomplete** backed by 517 Google Business Profile categories (`shared/google-business-categories.ts`), NOT a hardcoded dropdown. The component is `client/src/components/business-classification-select.tsx`.
+
+Two supplemental context questions follow the classification:
+- "How do customers typically reach you?" → `assessments.customerFlow` (in_person / go_to_customers / online / mixed)
+- "How do most customers find you?" → `assessments.customerDiscovery` (word_of_mouth / online_search / social_media / advertising / other)
+
+Both feed into DeepSeek via the assessment-ai.ts prompt for industry-specific prescriptions.
 
 ### Assessment → Client Data Transfer
 On `POST /api/clients/register` AND `GET /api/clients/verify-magic-link`, if an assessment exists for that email, the server copies these fields to the new client (only when client doesn't already have them):
@@ -155,85 +200,38 @@ On `POST /api/clients/register` AND `GET /api/clients/verify-magic-link`, if an 
 - `website` → `clients.website`
 - `industry` → `clients.businessCategory`
 And patches the auto-created CRM contact's `phone`/`firstName`/`lastName` (only if they're still the default `New Client` / `Portal User`).
-This is what makes / publish auto-create a populated profile and downstream apps have something to work with.
+
+### Phone Placeholder Standard
+Every phone input across the platform uses: `+1 (555) 000-0000` — international format, consistent everywhere.
 
 ---
 
-## COMPLETED SYSTEMS
-
-- Landing page copy — all 9 app pages ✓
-- File renames and route cleanup ✓
-- Prescriptions score fix ✓
-- Lucide icon replacement ✓
-- How It Works 6 steps ✓
-- SwipesBlue payment cleanup ✓
-- Directions for Use Phases 1-4 (knowledge base, DB tables, APIs, page, sidebar, Coach Blue KB, two-tab chat widget, triggers/email) ✓
-- Product ID rename + scoring restructure ✓
-- Assessment redesign Phase A — detection methods ✓
-- Assessment redesign Phase B — scan-first form ✓
-- Homepage/footer fixes (white bg, 100 contacts, amplify color, Coach Blue image, integration section) ✓
-- Prescription journey redesign — assessment-ai.ts, narrative DeepSeek output, architect grid paper UI, suggestedDate on setup_tasks, task generation on user click only ✓
-- Connect hub activity logging — timeline-logger.ts, app colors, event icons, wired promote/respond/engage ✓
-- Spoke apps completion — elevate review push + contact matching, post analytics tab, amplify CRM audiences ✓
-- D&B DUNS integration — lookup, verify, manual entry, listing distribution adapter ✓
-- Site-wide page cleanup — routes manifest, about, contact, find-results, knowledge-base, assessment-confirmation, client-portal, api-docs ✓
-- Reddit OAuth callback fix ✓
-- About page ecosystem fix — uses real logo images ✓
-- Digital IQ score display — 70-140 scale, descriptive labels, no letter grades ✓
-- / optimize Phase A — critical layer: AI fix instructions, Core Web Vitals, schema generator, local rank tracking, 8-tab restructure, PriorityBadge system ✓
-- / optimize Phases B-D — important/relevant/optional layers: DataForSEO integration, competitor enrichment, backlinks, enhanced keywords, reports, content tools, snippet preview ✓
-- Results page journey — full prescription display for pre-signup visitors, architect grid paper, strengths + prescription narratives, polling, conversion CTA ✓
-- Backlink provider swap — DataForSEO Backlinks API ($100/mo) replaced with Moz Links API ($5/mo). DataForSEO retained for SERP/keywords/DA only. ✓
-- Railway migration — moved from Replit to Railway. WebSocket CORS, health check endpoint, PORT env var, Replit Vite plugins removed, Object Storage graceful degradation, process.cwd() fix for esbuild, dist/ gitignored, Procfile/railway.toml removed ✓
-- Admin email — renamed from demo@businessblueprint.io to admin@businessblueprint.io ✓
-- Cloudflare R2 Object Storage — replaced Replit sidecar with R2 bucket `content-storage` for / post media uploads ✓
-- Resend env var split — generic `RESEND_API_KEY` references replaced with `ONBOARDING_RESEND_API_KEY` (system) and `PROMOTE_RESEND_API_KEY` (campaigns) across 6 files. This was the silent-failure root cause. ✓
-- Portal Dashboard navigation — `SectionHeader` (with `showHomeButton`) added to post-management, portal-prescriptions, directions-for-use, optimize-setup, amplify-reddit-wizard, subscription. Top-right Home button added to connect-dashboard. `Dashboard` is now the FIRST item in `side-nav.tsx`. ✓
-- Profile editing — `PATCH /api/portal/profile` endpoint with typed-business-name confirmation. Editable Business Information card on client-portal.tsx (Edit/Save/Cancel + AlertDialog confirmation). Email locked with tooltip. ✓
-- Admin delete client — `DELETE /api/admin/clients/:id` (rejects `isProtected` clients with 403, cleans CRM/setup/magic-link FK rows). Red Trash button + AlertDialog in admin-panel.tsx. NOTE: assessments are preserved (linked by email, not FK). ✓
-- Assessment confirmation email CTA — replaced "Check Status in Portal" (which broke for users without an account) with green "Create Your Free Account" + orange "View Your Results" buttons. Updated email-notice copy. ✓
-- All 12 CRM Overview buttons wired — `DashboardView` now takes `onNavigate`/`onAddContact`/`onCreateDeal`/`onCreateTask`/`onImportContacts`. `StatCard` and `QuickActionCard` accept `onClick`. `pendingAction` state on `ConnectDashboard` flows down to `ContactsView` to auto-open Add/Import dialogs. URL params `?action=add-contact` / `?action=import-contacts` honored on first render. ✓
-- CRM sidebar exit links — replaced single "Exit to Portal" with three stacked buttons: `Exit to Dashboard` (`/portal/dashboard`), `Logout` (clears storage + redirects to `/portal/login`), `Exit to Portal` (`/`). ✓
-- Header contextual App Dashboard button — for logged-in users on any of 9 app landing pages (`/connect`, `/publish`, `/elevate`, `/optimize`, `/amplify`, `/promote`, `/respond`, `/engage`, `/post`), header shows a `/ [app] Dashboard` button in the app's brand color, before the existing portal Dashboard button. ✓
-- Connect landing celebrates free plan — logged-in users see a green "✓ Your FREE Starter Plan is Active" badge + single "Open Your CRM →" button instead of cart/pricing CTAs. Logged-out users still see existing 3-button layout with added free-plan note. ✓
-- "Use this profile for / publish" button on Business Information card — links to `/publish/dashboard`. ✓
-- SMS consent / TCPA compliance — schema fields on `clients` (smsConsent/Date/Ip) and `assessments` (smsConsent). Consent checkbox on assessment form (next to phone), client signup (conditional on phone being entered), and client portal profile edit (conditional on phone being CHANGED). Server validation on register, profile patch, and assessment creation. Consent IP captured from `x-forwarded-for`/`req.ip`. CRM→/promote sync defaults SMS consent to false. ✓
-- Assessment → client data transfer — `POST /api/clients/register` and `GET /api/clients/verify-magic-link` now copy phone/address/website/industry from the assessment to the new client record (only if client doesn't already have those fields). Also patches the CRM contact's first/last name from `assessment.businessName` if still default. ✓
-- inbox-email.ts SMTP env vars — replaced `SMTP_HOST`/`PORT`/`USER`/`PASS`/`EMAIL_USER`/`EMAIL_PASS` references with `RESEND_BUSINESSBLUEPRINT_SMTP_HOSTNAME`/`PORT`/`USER`/`API_KEY`. ✓
-- / engage email config — schema fields on `chatWidgetSettings`: `contactEmail` (shown to visitors), `notificationEmail` (where alerts go), `notifyOnNewChat` (boolean). UI in engage-dashboard.tsx ChatSettingsPanel "Email Configuration" section. GET defaults branch + PUT both updated. ✓
-- / promote CRM auto-populate — new `POST /api/send/:clientId/sync-crm` endpoint pulls all CRM contacts into `sendContacts` (skipping ones without email/phone or already present). Auto-fires on first / promote visit when `sendContacts` is empty AND CRM has contacts. The existing "Sync Status: Live" button is now wired to "Sync CRM Contacts" via `syncCrmContacts()`. **Remove approach:** all contacts auto-populate, user removes the ones they don't want via the existing delete endpoint. ✓
-
 ## PENDING
 
-### CRITICAL — must address before production sync
-- **3 pre-existing TypeScript errors** (NOT introduced this week, but blocking clean builds):
-  1. `client/src/config/menu-config.ts:232` — `consoleBlueIcon` is referenced but never imported / declared. Likely should be `scansBlueIcon` or a new `consoleBlueIcon` import.
-  2. `server/routes.ts` (registration handler, currently around lines 2468 + 2471) — references `assessments.clientId` but the `assessments` table has NO `clientId` column. The code does `existingAssessment[0].clientId` and `db.update(assessments).set({ clientId: client.id })`. Either add `clientId` to the assessments schema (and run db:push) or rip out the linking lines and rely on email-based lookup. The code somehow runs in prod (silent runtime failure?), but tsc has been complaining for at least a week.
-- **DB push branch verification** — `npm run db:push` was run twice on 2026-04-11 against whatever the local `.env` `DATABASE_URL` points to (Neon endpoint `ep-blue-darkness-amgf40q5-pooler-...`). Both migrations are additive nullable columns (safe), but **before merging staging → main** confirm the OTHER Neon branch also got the new columns. If only one branch was migrated, Railway will throw runtime errors when the code references missing columns. Pushed schema additions:
-  - `clients`: `sms_consent`, `sms_consent_date`, `sms_consent_ip`
-  - `assessments`: `sms_consent`
-  - `chat_widget_settings`: `contact_email`, `notification_email`, `notify_on_new_chat`
-- **Verify Railway env vars exist on BOTH staging and production environments:**
-  - `ONBOARDING_RESEND_API_KEY` (was the silent-failure root cause when missing)
-  - `PROMOTE_RESEND_API_KEY`
-  - `RESEND_BUSINESSBLUEPRINT_SMTP_HOSTNAME` / `_PORT` / `_USER` / `_API_KEY`
-
-### Other pending
-- **Post-Railway audit** — full audit of staging + production needed to confirm everything works after migration
-- **Replit decommission** — once Railway is stable, stop Replit deployments. Old Neon DB on Replit project can be kept as backup.
-- Email DNS cleanup — `send.send.businessblueprint.io` typo DNS records still need deleting (root MX record was added during the Resend troubleshooting; the code-side issue was the env var name, fixed 2026-04-11)
-- Journey email cadence — drip emails need rewriting to reference current products, suites, Coach Blue, Directions for Use
+### API Credentials (Dean's side)
 - D&B Direct+ API credentials — Dean needs to obtain from D&B (sales-driven). Code handles missing credentials gracefully.
 - Reddit Ads API credentials — Dean applied. Manual approval required (~7 day turnaround). Code fully built.
 - DataForSEO credentials — needed for / optimize real data features. Pay-per-use. `DATAFORSEO_LOGIN` + `DATAFORSEO_PASSWORD`.
 - MOZ_API_TOKEN — set in Railway env vars. $5/mo Moz Links API for backlink data.
-- / elevate gaps — Google review response API push needs real OAuth credentials from business owner. Yelp does not support automated replies.
-- / post gaps — social engagement → CRM contact matching not built (needs platform OAuth commenter identity data)
-- / amplify gaps — campaign-to-contact targeting not wired to actual ad platform APIs
-- **OpenAuth on Cloudflare Workers** — replace magic-link auth with OpenAuth (openauth.js.org) for social login (Google, GitHub, etc.). Self-hosted on Cloudflare Workers, free, no user limits. Not urgent — current magic-link auth works.
-- **External AI Audit** — staging site setup planned for independent review (deferred from April 8)
-- **/ engage notification email send** — schema + UI for `notificationEmail` and `notifyOnNewChat` shipped, but the actual "send a notification email when a new chat starts" code path is NOT yet wired. Wherever new chat conversations are inserted (search for `inboxConversations` insert + 'chat' channel type, or chat widget Socket.IO new-conversation handler), read the client's `chatWidgetSettings.notifyOnNewChat` and send via `ONBOARDING_RESEND_API_KEY` if true.
-- **/ engage contact email surfacing** — the `contactEmail` field is stored, but not yet rendered in the public chat-widget JS (`client/public/chat-widget.js`). Widget needs to read it from the settings endpoint and display it to visitors.
+
+### Feature Gaps
+- / elevate — Google review response API push needs real OAuth credentials from business owner. Yelp does not support automated replies.
+- / post — social engagement → CRM contact matching not built (needs platform OAuth committer identity data)
+- / amplify — campaign-to-contact targeting not wired to actual ad platform APIs
+- / engage notification email send — schema + UI shipped, but the actual "send a notification email when a new chat starts" code path is NOT yet wired
+- / engage contact email surfacing — `contactEmail` stored but not yet rendered in `client/public/chat-widget.js`
+- SwipesBlue webhook signature format — current implementation assumes hex-HMAC-SHA256. Needs verification against SwipesBlue's actual docs before real payment forms go live.
+
+### Infrastructure
+- Email DNS cleanup — `send.send.businessblueprint.io` typo DNS records still need deleting
+- Journey email cadence — drip emails need rewriting to reference current products, suites, Coach Blue, Directions for Use
+- OpenAuth on Cloudflare Workers — replace magic-link auth with social login (Google, GitHub, etc.). Not urgent.
+- External AI Audit — staging site setup planned for independent review
+
+### Intentional Design Choices (do not "fix")
+- `connect-dashboard.tsx` is 253KB. Do not refactor or split without explicit instruction.
+- `dashboardData.data.client` (NOT `dashboardData.client`) — the portal dashboard endpoint returns nested under `.data`.
+- CRM sidebar bottom actions: "Return to Dashboard" / "Return to Homepage" / "Logout" — renamed from "Exit to..." on 2026-04-12.
 
 ---
 
@@ -241,59 +239,50 @@ This is what makes / publish auto-create a populated profile and downstream apps
 
 | Date | Changes |
 |------|---------|
-| 2026-03-31 | Directions for Use Phases 1-4 verified complete. Assessment redesign Phases A+B committed. |
-| 2026-03-26 | Landing pages, file renames, prescriptions score, old name fixes all verified. |
-| 2026-03-25 | Lucide icons, How It Works, SwipesBlue cleanup committed. |
-| 2026-04-02 | Ecosystem footer tagline prompt written. |
-| 2026-04-07 | D&B DUNS integration (schema, service, routes, publish dashboard, listing adapter). Site-wide cleanup: routes manifest, about, contact, find-results, knowledge-base, assessment-confirmation, client-portal, api-docs. Reddit OAuth redirect fix. About page ecosystem logos. |
-| 2026-04-08 | / optimize Phase A — critical layer build. Schema: seo_backlinks +5 cols, seo_competitors +5 cols, seo_pages +4 cols, new seo_local_rankings table. Crawler: AI fix instructions, broken link detection, Core Web Vitals, priority layers. Routes: replaced 4 stubs (backlinks, local-rankings, schema-markup, reports, core-web-vitals). Client: 10→8 tabs, PriorityBadge system, Overview priority dashboard, SiteHealthTab, CompetitorsTab, local rank tracking UI. |
-| 2026-04-08 | / optimize Phase B — important layer. Services: long-tail keyword gen, search intent classification. Routes: 9 new (keywords/long-tail, keywords/classify-intent, keywords/:id/locations, competitors CRUD+analyze, pages/internal-links, pages/image-audit). Enhanced reports with ranking changes + backlink activity. Client: KeywordsTab (intent badges, long-tail expansion, location tracking), CompetitorsTab (real CRUD, gap analysis), BacklinksTab (6 stats, filters), SiteHealthTab (image audit), ReportsTab (generate + stored reports). |
-| 2026-04-08 | / optimize Phase C — relevant layer. Routes: 10 new (competitors/backlinks, competitors/content-gap, competitors/traffic, competitors/top-pages, competitors/compare, pages/redirect-chains, pages/heading-structure, pages/keyword-density, backlinks/referring-domains). Client: CompetitorsTab (domain comparison, content gap, traffic estimates), SiteHealthTab (redirect chains, heading structure, keyword density), BacklinksTab (referring domains chart). |
-| 2026-04-08 | / optimize Phase D — optional/polish layer. Routes: 6 new (content/length-recommendations, content/click-potential, content/question-keywords, content/topic-clusters, content/seo-score, pages/snippet-preview). Client: ContentTab (length recommendations, CTR estimates, question keywords, topic clusters, SEO writing assistant), SiteHealthTab (SERP snippet preview), BacklinksTab (anchor text distribution). |
-| 2026-04-08 | Results page journey — full rewrite of find-results.tsx. Architect grid paper prescription display (score, strengths narrative, prescription narrative, numbered action items with app colors, IQ summary with projected score). Polling for in-progress assessments. Email lookup renders full prescription inline. Removed all temporary access/expired language. Conversion CTA with Coach Blue teaser. Legacy recommendation fallback for older assessments. Admin email renamed demo@ → admin@businessblueprint.io. |
-| 2026-04-08 | / optimize Phase B rebuild — DataForSEO centralized service (server/services/dataforseo.ts). Schema: seoProfiles +4 cols (domainAuthority, organicTraffic, totalBacklinks, lastDaCheck). Routes: 7 new (competitors/:id/enrich, competitors/:id/keywords, domain-authority, backlinks/discover, backlinks/summary, keywords/enrich, reports/email). Enhanced gatherReportData with CWV + referringDomains. Client: OverviewTab (DA/backlinks/keywords/report cards), CompetitorsTab (enrich button, expandable keyword rows, DA hero), BacklinksTab (discover button, summary query, referring domains, link type badges), KeywordsTab (enrich button, intent color fix), ReportsTab (email button, score change badges). Fixed position→rank TS error in reports. Replaced all bg-gray-50 with bg-white. |
-| 2026-04-08 | Backlink provider swap — replaced DataForSEO Backlinks API with Moz Links API (server/services/moz-backlinks.ts). Swapped backlinks/discover + competitors/backlinks endpoints to use Moz. DataForSEO retained for SERP, keywords, DA, competitor keywords only. |
-| 2026-04-09 | Railway migration — deleted Procfile + railway.toml (were launching MCP server). Created railway.json. Fixed import.meta.dirname → process.cwd() in vite.config.ts + server/vite.ts. Removed dist/ from git, added to .gitignore. Updated WebSocket CORS to businessblueprint.io. Added /api/health endpoint. PORT reads from env var. Removed Replit Vite plugins. Object Storage graceful degradation. Deleted mcp-server/ directory. Created staging branch. Set up Railway staging/production environments with separate Neon database branches. |
-| 2026-04-11 | **Resend env var fix (commit `284e718`)** — replaced 8 references to `process.env.RESEND_API_KEY` (which doesn't exist on Railway → silent email failure root cause) with `ONBOARDING_RESEND_API_KEY` for system mail (assessment-emails.ts, resend-email.ts, setup-triggers.ts, stall-detector.ts, optimize.ts) and `PROMOTE_RESEND_API_KEY` for campaign mail (routes/send.ts). Updated all error log messages to match. |
-| 2026-04-11 | **Portal UX (commit `87f9215`)** — 4 fixes in 1 commit. (1) `SectionHeader` with `showHomeButton` added to post-management, portal-prescriptions, directions-for-use, optimize-setup, amplify-reddit-wizard, subscription. Top-right Home button on connect-dashboard. `Dashboard` is now first item in side-nav. (2) `PATCH /api/portal/profile` endpoint with typed-business-name confirmation; editable Business Information card with Edit/Save/Cancel + AlertDialog confirm; email locked. (3) `DELETE /api/admin/clients/:id` admin endpoint (rejects `isProtected` 403, cleans CRM/setup/magic-link FK rows, preserves assessments which are linked by email not FK); red Trash button + AlertDialog in admin-panel.tsx. Added `crmNotes`, `crmCompanies`, `setupTasks`, `setupNotes`, `setupTaskEvents`, `magicLinkTokens` to schema imports. (4) Assessment confirmation email CTA replaced with green "Create Your Free Account" + orange "View Your Results" buttons. Discovered: `assessments.clientId` doesn't exist in schema — diverged from spec by removing the `db.update(assessments).set({clientId: null})` line. |
-| 2026-04-11 | **CRM buttons + portal links (commit `60ddb79`)** — 6 fixes. (1) Portal "Open CRM" → `/connect/dashboard`; "Add Contact" → `/connect/dashboard?action=add-contact`. (2) All 12 CRM Overview buttons wired: added `pendingAction` state + URL param parsing in `ConnectDashboard`; `DashboardView` now takes `onNavigate`/`onAddContact`/`onCreateDeal`/`onCreateTask`/`onImportContacts`; `StatCard` and `QuickActionCard` accept `onClick`; `ContactsView` accepts `pendingAction` prop and auto-opens its `showAddDialog` / `showImportDialog`. Stripped `dark:` classes from edited sections. (3) CRM sidebar bottom replaced with three buttons: Exit to Dashboard / Logout / Exit to Portal. (4) Header contextual `/ [app] Dashboard` button for the 9 app landing pages (`/connect`, `/publish`, `/elevate`, `/optimize`, `/amplify`, `/promote`, `/respond`, `/engage`, `/post`), placed before the existing portal Dashboard button. (5) Connect landing celebrates free plan for logged-in users (green badge + single "Open Your CRM →" button). (6) "Use this profile for / publish" button added to Business Information card. |
-| 2026-04-11 | **SMS consent / TCPA (commit `4236759`)** — schema additions on `clients` (smsConsent, smsConsentDate, smsConsentIp) and `assessments` (smsConsent), added to `insertClientSchema` and `insertAssessmentSchema` `.pick({...})`. Assessment form: `smsConsent: false` default + checkbox under phone field. Client signup page: optional Phone field + conditional checkbox (only when phone is non-empty) + client-side validation. Client portal profile edit: `smsConsentEdit` state + conditional checkbox (only when phone is being CHANGED). Server: register endpoint validates + stores consent + IP (`x-forwarded-for`/`req.ip`); profile patch validates + stores + records consent date/IP only on phone changes; assessment creation propagates consent through `validatedData.smsConsent`. Ran `npm run db:push` against local `.env` Neon endpoint successfully. |
-| 2026-04-11 | **Data flow fixes (commit `39ef26c`)** — 4 fixes. (1) Assessment → client data transfer: `POST /api/clients/register` and `GET /api/clients/verify-magic-link` now copy `phone`/`address`+`city`+`state`+`zipCode`/`website`/`industry` from the assessment to the new client (only if client doesn't already have those fields), and patch the auto-created CRM contact's phone/firstName/lastName from `assessment.businessName`. (2) `inbox-email.ts` SMTP env vars: replaced `SMTP_HOST`/`PORT`/`USER`/`PASS`/`EMAIL_USER`/`EMAIL_PASS` with `RESEND_BUSINESSBLUEPRINT_SMTP_HOSTNAME`/`PORT`/`USER`/`API_KEY`. (3) / engage email config: schema `chat_widget_settings.contact_email`/`notification_email`/`notify_on_new_chat`. UI in engage-dashboard.tsx ChatSettingsPanel adds an "Email Configuration" subsection with both email inputs + notify checkbox. GET defaults branch + PUT updated. (4) / promote CRM auto-populate: new `POST /api/send/:clientId/sync-crm` endpoint pulls all `crmContacts` for the client into `sendContacts` (skips no-email-no-phone, skips already-synced by email). TCPA-safe defaults: `emailConsent: true`, `emailConsentMethod: "crm_sync"`, `smsConsent: false`, `smsStatus: "unsubscribed"`. Auto-fires on first / promote dashboard visit when `sendContacts` is empty AND CRM has contacts. The existing fake "Sync Status: Live" button is now wired to "Sync CRM Contacts" via `syncCrmContacts()`. Ran `npm run db:push` again successfully. |
+| 2026-03-25 | Lucide icons, How It Works, SwipesBlue cleanup |
+| 2026-03-26 | Landing pages, file renames, prescriptions score, old name fixes |
+| 2026-03-31 | Directions for Use Phases 1-4. Assessment redesign Phases A+B |
+| 2026-04-02 | Ecosystem footer tagline |
+| 2026-04-07 | D&B DUNS integration. Site-wide page cleanup. Reddit OAuth fix. About page ecosystem logos |
+| 2026-04-08 | / optimize Phases A-D (4 builds). Results page journey. DataForSEO service. Backlink swap to Moz |
+| 2026-04-09 | Railway migration. Staging branch created. MCP server directory deleted |
+| 2026-04-11 | Resend env var split. Portal UX (SectionHeader, profile editing, admin delete). CRM buttons + portal links. SMS consent / TCPA. Data flow fixes (assessment→client transfer, SMTP vars, engage email config, promote CRM auto-sync) |
+| 2026-04-11 | Pre-existing tsc errors fixed (consoleBlueIcon removed, assessments.clientId added to schema). Railway db:push added to build command. dist/ untracked. Staging/main drift fixed. mcp-server/ deleted from repo |
+| 2026-04-11–12 | **/ convert Phase A** — 4 DB tables, 16 seeded templates, CRUD routes, 6-step submission pipeline, landing page, dashboard, hosted form page, side-nav + app-registry entry (PR #6) |
+| 2026-04-12 | **/ convert Phase B** — Visual form builder with 3-panel drag-drop, 20 field types, properties/design/settings panels, template modal, preview modes, multi-step (PR #7) |
+| 2026-04-12 | **/ convert Phase C** — Vanilla JS embed script (1,129 lines), CORS, SwipesBlue payment checkout + webhook, embed-code panel with tabs + iframe preview (PR #9) |
+| 2026-04-12 | **/ convert Phase D** — / promote integration: {{formUrl:SLUG}} in substituteVars, form picker modal, campaign conversion analytics, sourceCampaignId attribution, Form Links Sent dashboard metric (PR #10) |
+| 2026-04-12 | **/ convert Phase E** — Daily analytics tracking, per-form analytics endpoint with Recharts timeline, A/B testing (7 endpoints + embed traffic splitting + z-test confidence), premium tier enforcement (isConvertPremium gates 10+ features), PremiumUpgradeModal, Analytics tab, AbTestPanel (PR #11) |
+| 2026-04-12 | **Assessment experience fixes** — Email templates redesigned to Coach Blue standard (orange borders, transparent buttons, anti-dark-mode, Archivo font, 2026 copyright). Chat detection expanded (40+ patterns + DOM-based + GTM logging). Industry dropdown replaced with 517-category Google Business Profile autocomplete. DeepSeek tone rules for personality-driven prescriptions. customerFlow + customerDiscovery assessment questions (PR #12) |
+| 2026-04-12 | CRM contact delete FK cleanup (7 related tables cleaned before contact deletion). CRM sidebar buttons renamed "Return to Dashboard" / "Return to Homepage" / "Logout" (PR #13) |
+| 2026-04-12 | Phone placeholders standardized to +1 (555) 000-0000 across 7 files. Email consent checkbox + schema + server on client signup (PR #14) |
 
 **AGENTS: Update this section on every commit. Your work is not done until this changelog reflects it.**
 **AGENTS: All changes go to `staging` branch. NEVER push to `main` directly.**
+**AGENTS: After every PR merge, sync main back into staging: `git pull origin main && git push origin staging`**
 
 ---
 
-## HANDOFF NOTES FOR THE NEXT AGENT (2026-04-11)
+## HANDOFF NOTES FOR THE NEXT AGENT (2026-04-12)
 
-**Current branch state:** `staging` is **5 commits ahead of `main`**. Commits in order (oldest → newest):
-1. `284e718` — fix: use correct Resend API key env vars — ONBOARDING for system emails, PROMOTE for campaigns
-2. `87f9215` — feat: portal UX — dashboard button everywhere, profile editing, admin delete, email CTA fix
-3. `60ddb79` — fix: wire all CRM buttons, portal links, header app dashboard, connect free plan celebration
-4. `4236759` — feat: SMS consent opt-in on assessment, signup, and profile — TCPA compliance
-5. `39ef26c` — feat: data flow fixes — assessment→client transfer, SMTP vars, engage email config, promote CRM auto-sync
+**Current branch state:** `staging` and `main` are **in sync** at commit `f05aff9`. No drift. Working tree is clean.
 
-**Before merging staging → main, do these in order:**
-1. Visually QA staging (Railway preview URL) for the new portal UX, CRM button wiring, profile editing flow, signup phone+consent, engage email config, and promote CRM sync.
-2. Confirm Railway env vars exist on **both** environments: `ONBOARDING_RESEND_API_KEY`, `PROMOTE_RESEND_API_KEY`, `RESEND_BUSINESSBLUEPRINT_SMTP_*`. If staging is missing any of these, system email will silently fail there.
-3. Run `npm run db:push` against the production Neon branch. The local `.env` `DATABASE_URL` was used for both pushes today — if it points only at staging, production will throw "column does not exist" runtime errors when the new code references the new columns. Schema additions are 100% additive nullable columns (safe to apply to either branch independently).
-4. (Optional but recommended) Fix the 3 pre-existing TypeScript errors before they accumulate further:
-   - `client/src/config/menu-config.ts:232` — `consoleBlueIcon` undefined
-   - `server/routes.ts` (registration handler) — 2 references to `assessments.clientId` on a column that doesn't exist
-5. After production sync via Railway, smoke-test: take an unauthenticated user through assessment → results → signup → portal dashboard → CRM Open CRM → Add Contact → / promote (verify auto-sync happened) → / engage settings → save email config.
+**Recent session (2026-04-11–12) delivered:**
+- / convert Phases A through E (complete app: data model → visual builder → embed script → / promote integration → analytics + A/B testing + premium enforcement)
+- Assessment experience fixes (email templates, chat detection, Google taxonomy autocomplete, DeepSeek tone rules)
+- CRM delete FK fix, sidebar rename, phone placeholder standardization, email consent on signup
+- Pre-existing tsc error fixes, Railway db:push automation, dist/ cleanup, mcp-server/ removal, staging/main drift resolution
+- `.github` CLAUDE.MD updated with / convert in the universal brand rules
+- Total: ~10,000+ lines of new code across 14 sliced commits, 14 PRs merged, zero tsc errors at every checkpoint
 
 **Things that look broken but are intentional:**
-- `connect-dashboard.tsx` is 253KB. Do not refactor or split it without explicit instruction — Dean has said to keep it intact.
-- `assessments` table has no `clientId` column despite existing code referencing it. The 2 tsc errors in the register handler have been there for at least a week and prod still works. Don't touch unless fixing both code AND schema.
-- `dashboardData.data.client` (NOT `dashboardData.client`) — the portal dashboard endpoint returns nested under `.data`. Easy gotcha when adding new client-portal.tsx code.
+- `connect-dashboard.tsx` is 253KB. Do not refactor without explicit instruction.
+- `dashboardData.data.client` (NOT `dashboardData.client`) — nested response.
+- Premium features in / convert show lock icons and "$59/year" badges but are cosmetically gated (server enforces via 403). The billing checkout for Premium is not yet wired to SwipesBlue — the "Upgrade Now" button links to the /convert landing page.
 
-**Key file map for the work that just landed:**
-- Portal/CRM/header buttons → `client/src/pages/client-portal.tsx`, `connect-dashboard.tsx`, `connect-landing.tsx`, `components/header.tsx`, `components/side-nav.tsx`
-- Profile editing + SMS consent UI → `client/src/pages/client-portal.tsx`, `client-signup.tsx`, `components/assessment-form.tsx`
-- Profile editing + SMS consent API → `server/routes.ts` (search for `/api/portal/profile`, `/api/clients/register`, `/api/assessments`, `/api/clients/verify-magic-link`)
-- Admin delete → `server/routes.ts` (`/api/admin/clients/:id` DELETE) + `client/src/pages/admin-panel.tsx`
-- Engage email config → `shared/schema.ts` (`chatWidgetSettings`), `server/routes/chat.ts` (settings GET/PUT), `client/src/pages/engage-dashboard.tsx` (`ChatSettingsPanel`)
-- Promote CRM sync → `server/routes/send.ts` (`/api/send/:clientId/sync-crm`), `client/src/pages/promote-dashboard.tsx`
-- SMTP for inbox → `server/services/inbox-email.ts`
-- Resend env var split → `server/services/assessment-emails.ts`, `resend-email.ts`, `setup-triggers.ts`, `stall-detector.ts`, `routes/optimize.ts`, `routes/send.ts`
+**Key file map:**
+- / convert: `server/routes/convert.ts`, `client/src/pages/convert-*.tsx`, `client/src/components/convert/*.tsx`, `client/public/convert/embed.js`, `shared/schema.ts` (search for `convert_`)
+- / promote integration: `server/routes/send.ts` (substituteVars, conversions, forms-sent), `client/src/pages/promote-campaign-editor.tsx`, `client/src/components/promote/campaign-conversions.tsx`, `client/src/components/convert/form-picker-modal.tsx`
+- Assessment: `client/src/components/assessment-form.tsx`, `client/src/components/business-classification-select.tsx`, `shared/google-business-categories.ts`, `server/services/assessment-ai.ts`, `server/services/presenceScanner.ts`
+- Emails: `server/services/resend-email.ts`, `server/services/assessment-emails.ts`
+- CRM: `server/routes/crm.ts` (contact delete with FK cleanup), `client/src/pages/connect-dashboard.tsx`
