@@ -502,6 +502,8 @@ export class ResendEmailService {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light only">
   <title>Your Digital IQ Assessment Results</title>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Archivo+Semi+Expanded:wght@600;700&display=swap" rel="stylesheet">
   <style>
@@ -519,7 +521,7 @@ export class ResendEmailService {
       background: #EEFBFF;
     }
     .email-outline {
-      border: 2px solid #09080E;
+      border: 2px solid #F97316;
       border-radius: 8px;
       overflow: hidden;
     }
@@ -651,9 +653,9 @@ export class ResendEmailService {
     }
     .cta-button {
       display: inline-block;
-      background: #F97316;
-      color: #EEFBFF;
-      padding: 16px 32px;
+      background: transparent;
+      color: #F97316;
+      padding: 14px 32px;
       text-decoration: none;
       border-radius: 8px;
       font-weight: 700;
@@ -663,7 +665,8 @@ export class ResendEmailService {
       border: 2px solid #F97316;
     }
     .cta-button.secondary {
-      background: #0000FF;
+      background: transparent;
+      color: #0000FF;
       border: 2px solid #0000FF;
     }
     .footer {
@@ -816,7 +819,62 @@ export class ResendEmailService {
   }
 
   private generateVerificationEmailHTML(companyName: string, verificationCode: string): string {
-    return `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Verify Your Email</title><style>body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; background: #f5f5f5; }.container { background: white; margin: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }.header { background: linear-gradient(135deg, #8B5CF6, #0057FF); color: white; padding: 40px; text-align: center; }.content { padding: 40px; }.code-box { background: #f8f9fa; border: 2px dashed #8B5CF6; padding: 30px; text-align: center; border-radius: 8px; margin: 30px 0; }.code { font-size: 36px; font-weight: bold; color: #8B5CF6; letter-spacing: 8px; font-family: 'Courier New', monospace; }.footer { background: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }.warning { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 15px; margin: 20px 0; border-radius: 4px; }</style></head><body><div class="container"><div class="header"><h1>📧 Verify Your Email</h1><p>${companyName}</p></div><div class="content"><p>Hello,</p><p>Please use the verification code below to confirm your email address and activate your account:</p><div class="code-box"><div class="code">${verificationCode}</div></div><p>Enter this code on the verification page to complete your email confirmation.</p><div class="warning"><p style="margin: 0;"><strong>Security Note:</strong> This code expires in 15 minutes. Never share this code with anyone.</p></div><p>If you didn't request this verification, you can safely ignore this email.</p></div><div class="footer"><p>Need help? Contact our support team.</p><p><small>© 2024 businessblueprint.io</small></p></div></div></body></html>`;
+    return `<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light only">
+<title>Verify Your Email</title>
+<style>
+  :root { color-scheme: light only; }
+  body { font-family: 'Archivo Semi Expanded', Archivo, sans-serif; line-height: 1.6; color: #09080E; max-width: 600px; margin: 0 auto; background: #EEFBFF; }
+  .email-container { max-width: 600px; margin: 0 auto; background: #EEFBFF; }
+  .email-outline { border: 2px solid #F97316; border-radius: 8px; overflow: hidden; }
+  .header {
+    background: #f2f4f6;
+    background-image:
+      linear-gradient(0deg, transparent 24%, rgba(0,0,255,0.08) 25%, rgba(0,0,255,0.08) 26%, transparent 27%, transparent 74%, rgba(0,0,255,0.08) 75%, rgba(0,0,255,0.08) 76%, transparent 77%, transparent),
+      linear-gradient(90deg, transparent 24%, rgba(0,0,255,0.08) 25%, rgba(0,0,255,0.08) 26%, transparent 27%, transparent 74%, rgba(0,0,255,0.08) 75%, rgba(0,0,255,0.08) 76%, transparent 77%, transparent);
+    background-size: 50px 50px;
+    color: #09080E; padding: 40px 30px; text-align: center; border-bottom: 4px solid #F97316;
+  }
+  .content { padding: 40px; background: #EEFBFF;
+    background-image:
+      linear-gradient(0deg, transparent 24%, rgba(0,0,255,0.04) 25%, rgba(0,0,255,0.04) 26%, transparent 27%, transparent 74%, rgba(0,0,255,0.04) 75%, rgba(0,0,255,0.04) 76%, transparent 77%, transparent),
+      linear-gradient(90deg, transparent 24%, rgba(0,0,255,0.04) 25%, rgba(0,0,255,0.04) 26%, transparent 27%, transparent 74%, rgba(0,0,255,0.04) 75%, rgba(0,0,255,0.04) 76%, transparent 77%, transparent);
+    background-size: 50px 50px; }
+  .code-box { background: #FFFFFF; border: 2px dashed #F97316; padding: 30px; text-align: center; border-radius: 8px; margin: 30px 0; }
+  .code { font-size: 36px; font-weight: bold; color: #F97316; letter-spacing: 8px; font-family: 'Archivo Semi Expanded', monospace; }
+  .footer {
+    background: #f2f4f6;
+    background-image:
+      linear-gradient(0deg, transparent 24%, rgba(0,0,255,0.08) 25%, rgba(0,0,255,0.08) 26%, transparent 27%, transparent 74%, rgba(0,0,255,0.08) 75%, rgba(0,0,255,0.08) 76%, transparent 77%, transparent),
+      linear-gradient(90deg, transparent 24%, rgba(0,0,255,0.08) 25%, rgba(0,0,255,0.08) 26%, transparent 27%, transparent 74%, rgba(0,0,255,0.08) 75%, rgba(0,0,255,0.08) 76%, transparent 77%, transparent);
+    background-size: 50px 50px; padding: 20px; text-align: center; color: #09080E; font-size: 14px; border-top: 4px solid #F97316; }
+  .warning { background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 15px; margin: 20px 0; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="email-container"><div class="email-outline">
+  <div class="header">
+    <h1 style="font-family: 'Archivo Semi Expanded', sans-serif; margin: 0 0 8px;">Verify Your Email</h1>
+    <p style="margin: 0; font-size: 16px;">${companyName}</p>
+  </div>
+  <div class="content">
+    <p>Hello,</p>
+    <p>Please use the verification code below to confirm your email address and activate your account:</p>
+    <div class="code-box"><div class="code">${verificationCode}</div></div>
+    <p>Enter this code on the verification page to complete your email confirmation.</p>
+    <div class="warning"><p style="margin: 0;"><strong>Security Note:</strong> This code expires in 15 minutes. Never share this code with anyone.</p></div>
+    <p>If you didn't request this verification, you can safely ignore this email.</p>
+  </div>
+  <div class="footer">
+    <p>Need help? Contact our support team.</p>
+    <p><small>&copy; 2026 businessblueprint.io</small></p>
+  </div>
+</div></div>
+</body></html>`;
   }
 
   private generateEmailChangeNotificationHTML(companyName: string, newEmail: string): string {
@@ -855,6 +913,8 @@ export class ResendEmailService {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light only">
   <title>Meet Coach Blue</title>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Archivo+Semi+Expanded:wght@600;700&display=swap" rel="stylesheet">
   <style>
@@ -872,7 +932,7 @@ export class ResendEmailService {
       background: #EEFBFF;
     }
     .email-outline {
-      border: 2px solid #09080E;
+      border: 2px solid #F97316;
       border-radius: 8px;
       overflow: hidden;
     }

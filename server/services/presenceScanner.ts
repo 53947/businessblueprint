@@ -652,27 +652,56 @@ export class PresenceScannerService {
     detected: boolean;
     platform: string | null;
   } {
+    // Script-based detection — catches widgets loaded via inline script tags
     const platforms: Record<string, RegExp[]> = {
-      'intercom': [/intercom/i, /intercomSettings/i, /widget\.intercom\.io/i],
-      'drift': [/drift\.com/i, /driftt\.com/i, /js\.driftt/i],
-      'tawk': [/tawk\.to/i, /embed\.tawk/i],
-      'livechat': [/livechatinc\.com/i, /cdn\.livechatinc/i],
-      'zendesk_chat': [/zopim/i, /static\.zdassets/i, /zendesk.*chat/i],
-      'crisp': [/crisp\.chat/i, /client\.crisp/i],
-      'tidio': [/tidio\.co/i, /code\.tidio/i],
+      'intercom': [/intercom/i, /intercomSettings/i, /widget\.intercom\.io/i, /intercom-container/i, /intercom-lightweight-app/i],
+      'drift': [/drift\.com/i, /driftt\.com/i, /js\.driftt/i, /drift-widget/i, /drift-frame-controller/i],
+      'tawk': [/tawk\.to/i, /embed\.tawk/i, /tawk-min/i],
+      'livechat': [/livechatinc\.com/i, /cdn\.livechatinc/i, /livechat-widget/i, /__lc_inited/i],
+      'zendesk_chat': [/zopim/i, /static\.zdassets/i, /zendesk.*chat/i, /zE\(/i, /zESettings/i],
+      'crisp': [/crisp\.chat/i, /client\.crisp/i, /crisp-client/i, /CRISP_WEBSITE_ID/i],
+      'tidio': [/tidio\.co/i, /code\.tidio/i, /tidio-chat/i, /tidioChatCode/i],
       'olark': [/olark\.com/i, /static\.olark/i],
-      'hubspot_chat': [/js\.usemessages\.com/i, /HubSpotConversations/i],
-      'freshchat': [/wchat\.freshchat/i, /freshdesk\.com.*widget/i],
+      'hubspot_chat': [/js\.usemessages\.com/i, /HubSpotConversations/i, /hubspot-messages-iframe/i, /hs-script-loader/i],
+      'freshchat': [/wchat\.freshchat/i, /freshdesk\.com.*widget/i, /freshchat-widget/i],
       'facebook_messenger': [/customerchat/i, /facebook.*messenger.*plugin/i, /fb-customerchat/i],
       'chatwoot': [/chatwoot/i, /app\.chatwoot/i],
       'gorgias': [/gorgias/i],
       'helpscout': [/beacon-v2/i, /helpscout/i],
+      'generic_chat': [/chat-widget/i, /chatWidget/i, /live-chat/i, /livechat-/i, /chat-container/i, /chat-bubble/i, /chat-launcher/i, /chat-button/i],
     };
 
     for (const [name, patterns] of Object.entries(platforms)) {
       if (patterns.some(p => p.test(html))) {
+        return { detected: true, platform: name === 'generic_chat' ? 'unknown' : name };
+      }
+    }
+
+    // DOM element detection — catch widgets by their container elements even
+    // when the JavaScript hasn't loaded (container divs are often in the
+    // server-rendered HTML)
+    const domPatterns: Record<string, RegExp[]> = {
+      'intercom': [/id="intercom-container"/i, /class="intercom/i],
+      'drift': [/id="drift-widget"/i, /class="drift-/i],
+      'tawk': [/id="tawkchat-/i, /class="tawk-/i],
+      'zendesk_chat': [/id="launcher"/i, /id="webWidget"/i],
+      'crisp': [/id="crisp-chatbox"/i, /class="crisp-/i],
+      'tidio': [/id="tidio-chat"/i],
+      'hubspot_chat': [/id="hubspot-messages-iframe-container"/i],
+      'freshchat': [/id="freshchat-container"/i],
+    };
+
+    for (const [name, patterns] of Object.entries(domPatterns)) {
+      if (patterns.some(p => p.test(html))) {
         return { detected: true, platform: name };
       }
+    }
+
+    // GTM check — if Google Tag Manager is present, the chat widget may be
+    // loaded via tag manager (undetectable without JS rendering). Log it for
+    // awareness but don't flag as detected — too many false positives.
+    if (/googletagmanager\.com\/gtm\.js/i.test(html) || /GTM-[A-Z0-9]+/i.test(html)) {
+      console.log('[PresenceScanner] GTM detected — chat widget may be loaded via tag manager (undetectable without JS rendering)');
     }
 
     return { detected: false, platform: null };
